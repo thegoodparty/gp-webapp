@@ -5,6 +5,7 @@ import { IssuesProvider } from '@shared/hooks/IssuesProvider'
 import IssuesHeader from './IssuesHeader'
 import EmptyIssueState from './EmptyIssueState'
 import IssueList from './IssueList'
+import SearchContainer from './SearchContainer'
 
 export default function IssuesPage({
   pathname,
@@ -17,6 +18,7 @@ export default function IssuesPage({
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
         <IssuesHeader />
+        <SearchContainer />
         {issues?.length === 0 ? <EmptyIssueState /> : <IssueList />}
       </IssuesProvider>
     </DashboardLayout>
