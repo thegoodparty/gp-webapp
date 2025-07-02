@@ -17,10 +17,12 @@ export const dynamic = 'force-dynamic'
 export default async function Page() {
   await adminAccessOnly() // TODO: remove this once feature is live
 
-  const websiteResp = await serverFetch(apiRoutes.website.get)
-  const website = websiteResp.ok ? websiteResp.data : null
+  const [websiteResp, contactsResp] = await Promise.all([
+    serverFetch(apiRoutes.website.get),
+    serverFetch(apiRoutes.website.getContacts),
+  ])
 
-  const contactsResp = await serverFetch(apiRoutes.website.getContacts)
+  const website = websiteResp.ok ? websiteResp.data : null
   const contacts = contactsResp.ok ? contactsResp.data : null
 
   return (

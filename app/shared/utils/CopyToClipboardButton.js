@@ -8,6 +8,8 @@ export default function CopyToClipboardButton({
   copyText,
   size,
   color,
+  variant,
+  className = '',
   children,
 }) {
   const [copied, setCopied] = useState(false)
@@ -22,7 +24,12 @@ export default function CopyToClipboardButton({
   }
   return (
     <CopyToClipboard text={copyText} onCopy={handleOnCopy}>
-      <Button size={size} color={color} className="flex items-center">
+      <Button
+        size={size}
+        color={color}
+        variant={variant}
+        className={`flex items-center ${className}`}
+      >
         {copied ? (
           <CheckRounded className="mr-2" />
         ) : (
