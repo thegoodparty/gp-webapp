@@ -19,7 +19,12 @@
     "format": "prettier -c .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "detect-circular-dependencies": "npx madge --circular --warning app"
+    "detect-circular-dependencies": "npx madge --circular --warning app",
+    "build:sitemaps": "node scripts/generate-sitemaps.js",
+    "build:sitemaps:dev": "cross-env NODE_ENV=development node scripts/generate-sitemaps.js",
+    "clean:sitemaps": "rm -rf public/sitemaps",
+    "prune-invalid-urls": "node scripts/prune-invalid-urls.js",
+    "prune-invalid-urls:dry-run": "node scripts/prune-invalid-urls.js --dry-run"
   },
   "dependencies": {
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
@@ -95,6 +100,7 @@
     "@stylistic/eslint-plugin": "^3.1.0",
     "autoprefixer": "^10.4.14",
     "cross-env": "^7.0.3",
+    "dotenv": "^17.0.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.2.4",
     "eslint-plugin-mdx": "^2.1.0",
@@ -102,6 +108,8 @@
     "eslint-plugin-storybook": "^0.6.12",
     "eslint-plugin-unused-imports": "^4.1.4",
     "madge": "^8.0.0",
+    "node-fetch": "^3.3.2",
+    "p-limit": "^6.2.0",
     "postcss": "^8.4.23",
     "prettier": "^2.7.1",
     "storybook": "8.6.12"
