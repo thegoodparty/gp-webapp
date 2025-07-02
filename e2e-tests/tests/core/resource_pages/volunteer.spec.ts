@@ -12,13 +12,12 @@ test.beforeEach(async ({ page }) => {
 const volunteerCaseId = 8;
 setupTestReporting(test, volunteerCaseId);
 
-test.skip('Verify For Voters / Volunteer page', async ({ page }) => {
+test('Verify For Voters / Volunteer page', async ({ page }) => {
     const pageTitle = /Get Involved/;
     const pageHeader = /Turn dissatisfaction into action/;
     const pageButtons = [
         'Start taking action',
-        'Get Involved',
-        'Schedule info session'
+        'Get Involved'
     ];
     const pageImgAltText = [
         'megaphone', 'Whatever you can do!', 'Help with your creativity!',
@@ -27,7 +26,6 @@ test.skip('Verify For Voters / Volunteer page', async ({ page }) => {
     ];
     const volunteerButton = /Start taking action/
     const volunteerConfirm = /Thank you! we will be in touch soon./
-    const volunteerError = /Error submitting your form. Please refresh and try again./
 
     // Verify page title
     await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
