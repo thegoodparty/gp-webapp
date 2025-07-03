@@ -11,6 +11,7 @@ import {
   MdLibraryBooks,
   MdMessage,
   MdSensorDoor,
+  MdWeb,
 } from 'react-icons/md'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
@@ -115,6 +116,14 @@ const TEXTING_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
 }
 
+const WEBSITE_MENU_ITEM = {
+  id: 'website-dashboard',
+  label: 'Website',
+  link: '/dashboard/website',
+  icon: <MdWeb />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
+}
+
 // admin user only
 const ISSUES_MENU_ITEM = {
   id: 'issues-dashboard',
@@ -153,6 +162,7 @@ export default function DashboardMenu({
   }, [campaign, ecanvasser])
   if (userIsAdmin(user)) {
     menuItems.push(TEXTING_MENU_ITEM)
+    menuItems.push(WEBSITE_MENU_ITEM)
     menuItems.push(ISSUES_MENU_ITEM)
   }
 
