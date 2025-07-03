@@ -1,0 +1,37 @@
+import TextField from '@shared/inputs/TextField'
+import ImageInput from '@shared/inputs/ImageInput'
+import Caption from './Caption'
+import Label from './Label'
+import H2 from '@shared/typography/H2'
+
+export default function HeroStep({
+  title,
+  tagline,
+  image,
+  onTitleChange,
+  onTaglineChange,
+  onImageChange,
+}) {
+  return (
+    <div>
+      <H2 className="mb-6">Customize the content visitors will see first</H2>
+      <Label>Title</Label>
+      <TextField
+        value={title}
+        onChange={(e) => onTitleChange(e.target.value)}
+        placeholder="Jane Smith for City Council"
+        fullWidth
+      />
+      <Label className="mt-4">Tagline</Label>
+      <TextField
+        value={tagline}
+        onChange={(e) => onTaglineChange(e.target.value)}
+        placeholder="Building a Brighter Future Together"
+        fullWidth
+      />
+      <Label className="mt-4">Main Image</Label>
+      <ImageInput imageUrl={image} onChange={onImageChange} />
+      <Caption>Recommended size: 1920x600px. PNG or JPG format.</Caption>
+    </div>
+  )
+}
