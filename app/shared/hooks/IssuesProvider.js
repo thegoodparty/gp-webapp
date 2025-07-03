@@ -3,7 +3,7 @@ import { createContext, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-export const IssuesContext = createContext([[], () => {}])
+export const IssuesContext = createContext([])
 
 export function IssuesProvider({ children, issues: initialIssues }) {
   const [issues, setIssues] = useState(initialIssues)
@@ -18,8 +18,10 @@ export function IssuesProvider({ children, issues: initialIssues }) {
     }
   }
 
+  const contextValue = [issues, setIssues, refreshIssues]
+
   return (
-    <IssuesContext.Provider value={[issues, setIssues, refreshIssues]}>
+    <IssuesContext.Provider value={contextValue}>
       {children}
     </IssuesContext.Provider>
   )

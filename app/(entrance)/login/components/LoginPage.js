@@ -56,7 +56,7 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, token } = await login(state.email, state.password)
+      const { user, campaign, token } = await login(state.email, state.password)
 
       if (user) {
         await saveToken(token)
@@ -65,7 +65,7 @@ export default function LoginPage() {
         const { id, email, firstName, lastName, phone, zip } = user
         analytics.identify(id, { email, firstName, lastName, phone, zip })
 
-        await doLoginRedirect(router, user)
+        await doLoginRedirect(router, user, campaign)
       } else {
         errorSnackbar(
           'Invalid login. Please check your credentials and try again.',

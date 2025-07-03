@@ -4,16 +4,21 @@ import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
 
-export default function CopyScriptButton({ scriptText, trackingAttrs = {} }) {
+export default function CopyScriptButton({
+  scriptText,
+  trackingAttrs = {},
+  onCopy = () => {},
+}) {
   const [copied, setCopied] = useState(false)
 
-  async function handleOnCopy(_text, result) {
+  async function handleOnCopy(text, result) {
     if (result) {
       setCopied(true)
     }
     setTimeout(() => {
       setCopied(false)
     }, 1500)
+    onCopy(text, result)
   }
   return (
     <CopyToClipboard text={scriptText} onCopy={handleOnCopy}>

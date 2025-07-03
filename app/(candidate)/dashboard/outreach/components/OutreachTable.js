@@ -12,6 +12,7 @@ import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outrea
 import Popover from '@mui/material/Popover'
 import { OutreachActions } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const NotApplicableLabel = () => <span className="text-gray-500">n/a</span>
 
@@ -104,7 +105,12 @@ export const OutreachTable = ({ mockOutreaches }) => {
     setPopoverPosition({ top: 0, left: 0 })
   }
 
-  const handleActionClick = () => {
+  const handleActionClick = (action) => {
+    trackEvent(EVENTS.Outreach.ActionClicked, {
+      outreachId: actOnOutreach.id,
+      medium: actOnOutreach.outreachType,
+      action,
+    })
     setActOnOutreach(null)
   }
 

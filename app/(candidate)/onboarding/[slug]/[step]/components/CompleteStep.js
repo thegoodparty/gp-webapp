@@ -4,16 +4,13 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { getUserCookie } from 'helpers/cookieHelper'
-import {
-  buildTrackingAttrs,
-  EVENTS,
-  trackEvent,
-} from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { ONBOARDING_STEPS } from 'app/(candidate)/onboarding/onboarding.consts'
 
 async function launchCampaign() {
   try {
@@ -39,7 +36,7 @@ export default function CompleteStep() {
 
     trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard)
 
-    const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }]
+    const attr = [{ key: 'data.currentStep', value: ONBOARDING_STEPS.COMPLETE }]
 
     await updateCampaign(attr)
     const res = await launchCampaign()

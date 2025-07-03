@@ -21,7 +21,7 @@ const nextConfig = {
     return [
       {
         source: '/sitemap.xml',
-        destination: '/api/sitemap',
+        destination: '/sitemaps/sitemap-index.xml',
       },
       {
         source: '/news-feed.xml',

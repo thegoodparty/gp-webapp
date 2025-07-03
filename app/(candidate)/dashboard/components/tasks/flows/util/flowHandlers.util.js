@@ -11,7 +11,7 @@ export const handleScheduleOutreach =
     { budget, audience } = {},
   ) =>
   async (outreach = {}) => {
-    const { audienceRequest } = audience || {}
+    const { audience_request: audienceRequest } = audience || {}
     const result = await scheduleVoterMessagingCampaign(
       outreach.id,
       audienceRequest,
@@ -20,7 +20,7 @@ export const handleScheduleOutreach =
       errorSnackbar('There was an error scheduling your campaign')
       return
     }
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignRequested, {
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       medium: type,
       price: budget,
       voterContacts: audience.count || 0,
@@ -31,13 +31,14 @@ export const handleScheduleOutreach =
 export const handleCreateOutreach =
   ({
     type = '',
-    state: { script, schedule, image, voterFileFilter },
+    state: { script, schedule, image, voterFileFilter, audience },
     campaignId,
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
   }) =>
   async () => {
+    const { audience_request: audienceRequest } = audience || {}
     const { message } = schedule || {}
     const date = schedule?.date
     const outreach = await createOutreach(
@@ -49,6 +50,7 @@ export const handleCreateOutreach =
         script,
         ...(date ? { date } : {}),
         ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
+        ...(audienceRequest ? { audienceRequest } : {}),
       },
       image,
     )
