@@ -1,6 +1,6 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { objectToFormData } from 'helpers/formDataHelper'
+import { serialize } from 'object-to-formdata'
 
 export const WEBSITE_STATUS = {
   published: 'published',
@@ -17,7 +17,7 @@ export function createWebsite() {
 
 export function updateWebsite(content) {
   try {
-    const formData = objectToFormData(content, ['logoFile', 'heroFile'])
+    const formData = serialize(content, { indices: true })
     return clientFetch(apiRoutes.website.update, formData)
   } catch (e) {
     console.error('error', e)
@@ -34,5 +34,11 @@ export function publishWebsite() {
 export function unpublishWebsite() {
   return clientFetch(apiRoutes.website.update, {
     status: WEBSITE_STATUS.unpublished,
+  })
+}
+
+export function validateVanityPath(vanityPath) {
+  return clientFetch(apiRoutes.website.validateVanityPath, {
+    vanityPath,
   })
 }

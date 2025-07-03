@@ -4,6 +4,7 @@ import WebsiteEditorPage from './components/WebsiteEditorPage'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
+import { WebsiteProvider } from '../components/WebsiteProvider'
 
 const meta = pageMetaData({
   title: 'Website Editor | GoodParty.org',
@@ -25,9 +26,8 @@ export default async function Page() {
   }
 
   return (
-    <WebsiteEditorPage
-      pathname="/dashboard/website/editor"
-      preloadedWebsite={website}
-    />
+    <WebsiteProvider website={website}>
+      <WebsiteEditorPage pathname="/dashboard/website/editor" />
+    </WebsiteProvider>
   )
 }

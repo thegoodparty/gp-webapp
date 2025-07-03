@@ -577,6 +577,10 @@ export const apiRoutes = {
       path: '/websites/:vanityPath/contact-form',
       method: 'POST',
     },
+    validateVanityPath: {
+      path: '/websites/validate-vanity-path',
+      method: 'POST',
+    },
   },
 }
 

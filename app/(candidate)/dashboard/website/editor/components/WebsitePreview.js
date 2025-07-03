@@ -17,7 +17,8 @@ export default function WebsitePreview({ website, campaign }) {
           <Button
             nativeLink
             href={`/c/${website.vanityPath}/preview`}
-            variant="outline"
+            target="_blank"
+            variant="outlined"
             size="sm"
             className="flex items-center gap-1"
           >
