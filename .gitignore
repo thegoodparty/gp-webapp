@@ -41,6 +41,11 @@ next-env.d.ts
 
 /storybook-static
 
+# sitemap reports
+/public/sitemaps/generation-report-*.json
+/public/sitemaps/validation-report-*.json
+/public/sitemaps/pruning-report-*.json
+
 # editor config
 /.vscode
 

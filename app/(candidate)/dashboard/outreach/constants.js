@@ -53,3 +53,7 @@ export const OUTREACH_TYPES = {
   socialMedia: 'socialMedia',
   robocall: 'robocall',
 }
+export const OUTREACH_ACTIONS_TYPES = {
+  copyScript: 'copyScript',
+  downloadAudience: 'downloadAudience',
+}

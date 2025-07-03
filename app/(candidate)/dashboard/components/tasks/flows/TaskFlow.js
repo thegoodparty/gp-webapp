@@ -255,11 +255,11 @@ export default function TaskFlow({
             audience={state.audience}
             {...callbackProps}
             onCreateOutreach={onCreateOutreach}
+            voterCount={state.voterCount}
           />
         )}
         {stepName === STEPS.socialPost && (
           <SocialPostStep
-            type={type}
             scriptText={state.scriptText}
             {...callbackProps}
             onCreateOutreach={onCreateOutreach}
