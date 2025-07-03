@@ -101,14 +101,28 @@ export default function DashboardPage({
     }
   }, [])
 
-  trackEvent(EVENTS.Dashboard.Viewed, 
-    {
-      p2vCompleted: `${(pathToVictory && pathToVictory?.p2vStatus === 'Complete') 
-        ? 'true' 
+  trackEvent(EVENTS.Dashboard.Viewed, {
+    p2vCompleted: `${
+      pathToVictory && pathToVictory?.p2vStatus === 'Complete'
+        ? 'true'
         : 'false'
-      }` 
-    }
-  )
+    }`,
+  })
+
+  const electionInPast =
+    weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate
+  const primaryLost = primaryResultState.primaryResult === 'lost'
+
+  if (electionInPast || primaryLost) {
+    //for usersnap to pick up if this issue persists. https://goodparty.atlassian.net/browse/WEB-3915
+    console.log(
+      `displaying election over - electionInPast: ${electionInPast}, primaryLost: ${primaryLost}, resolvedDate: ${resolvedDate}, weeksUntil: ${JSON.stringify(
+        weeksUntil,
+      )}, primaryElectionDate: ${primaryElectionDate}, electionDate: ${electionDate}, primaryResult: ${
+        primaryResultState.primaryResult
+      }, now: ${now.toISOString()}`,
+    )
+  }
 
   return (
     <VoterContactsProvider>
@@ -119,9 +133,7 @@ export default function DashboardPage({
               <div>
                 {contactGoals ? (
                   <>
-                    {(weeksUntil.weeks < 0 &&
-                      resolvedDate !== primaryElectionDate) ||
-                    primaryResultState.primaryResult === 'lost' ? (
+                    {electionInPast || primaryLost ? (
                       <ElectionOver />
                     ) : (
                       <TasksList campaign={campaign} tasks={tasks} />

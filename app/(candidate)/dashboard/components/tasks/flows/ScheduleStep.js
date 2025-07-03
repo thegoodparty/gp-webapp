@@ -16,7 +16,7 @@ export default function ScheduleStep({
   nextCallback,
   backCallback,
   onCreateOutreach = async () => {},
-  onScheduleOutreach = async () => {},
+  onScheduleOutreach = async (outreach = {}) => {},
   type,
   schedule,
 }) {
