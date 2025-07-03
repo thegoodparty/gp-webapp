@@ -10,10 +10,8 @@ export default function CopyToClipboard({ children, text, onCopy }) {
   }
 
   return (
-    <div>
-      <CopyHelper text={text} onCopy={onCopyHandler}>
-        <div>{children}</div>
-      </CopyHelper>
-    </div>
+    <CopyHelper text={text} onCopy={onCopyHandler}>
+      {children}
+    </CopyHelper>
   )
 }

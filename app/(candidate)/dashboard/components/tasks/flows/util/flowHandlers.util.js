@@ -20,7 +20,7 @@ export const handleScheduleOutreach =
       errorSnackbar('There was an error scheduling your campaign')
       return
     }
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignRequested, {
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       medium: type,
       price: budget,
       voterContacts: audience.count || 0,

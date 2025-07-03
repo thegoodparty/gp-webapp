@@ -11,6 +11,7 @@ import {
   ProUpgradeModal,
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const OUTREACH_OPTIONS = [
   {
@@ -55,14 +56,18 @@ export default function OutreachCreateCards() {
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
 
-  const handleCreateClick = (type) => {
+  const openProUpgradeModal = () => {
+    setShowProUpgradeModal(true)
+  }
+
+  const openTaskFlow = (type) =>
     setFlowModalTask({
       flowType: type,
     })
-  }
 
-  const openProUpgradeModal = () => {
-    setShowProUpgradeModal(true)
+  const handleCreateClick = (requiresPro) => (type) => {
+    trackEvent(EVENTS.Outreach.ClickCreate, { type })
+    return requiresPro && !isPro ? openProUpgradeModal() : openTaskFlow(type)
   }
 
   return (
@@ -93,8 +98,7 @@ export default function OutreachCreateCards() {
             title,
             impact,
             cost,
-            onClick:
-              requiresPro && !isPro ? openProUpgradeModal : handleCreateClick,
+            onClick: handleCreateClick(requiresPro),
             requiresPro,
           }}
         />
