@@ -24,18 +24,18 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 **Usage**:
 ```bash
 # Generate sitemaps for production
-npm run build:sitemaps
+node scripts/generate-sitemaps.js
 
 # Generate sitemaps for development environment
-npm run build:sitemaps:dev
+NODE_ENV=development node scripts/generate-sitemaps.js
 
 # Generate sitemaps with URL validation (slower)
-npm run build:sitemaps:dev -- --validate
+NODE_ENV=development node scripts/generate-sitemaps.js --validate
 ```
 
 **Output**:
-- `public/sitemaps/sitemap.xml` - Main sitemap with core pages
-- `public/sitemaps/sitemap-index.xml` - Index of all sitemaps
+- `public/sitemap.xml` - Main sitemap index (root entry point)
+- `public/sitemaps/sitemap.xml` - Main sitemap with core pages  
 - `public/sitemaps/state/{state}/sitemap/{index}.xml` - State-specific sitemaps
 - `public/sitemaps/candidates/{state}/sitemap/{index}.xml` - Candidate sitemaps
 - `public/sitemaps/generation-report-{timestamp}.json` - Generation report
@@ -82,10 +82,10 @@ npm run build:sitemaps:dev -- --validate
 **Usage**:
 ```bash
 # Preview what would be removed (safe dry-run)
-npm run prune-invalid-urls:dry-run
+node scripts/prune-invalid-urls.js --dry-run
 
 # Remove invalid URLs using most recent validation report
-npm run prune-invalid-urls
+node scripts/prune-invalid-urls.js
 
 # Use specific validation report
 node scripts/prune-invalid-urls.js --report path/to/validation-report.json
@@ -102,7 +102,7 @@ node scripts/prune-invalid-urls.js --report path/to/report.json --dry-run
 
 **Output**:
 - Updates existing sitemap XML files (removes invalid URLs)
-- Regenerates `sitemap-index.xml`
+- Regenerates main sitemap index (`public/sitemap.xml`)
 - Creates `public/sitemaps/pruning-report-{timestamp}.json`
 
 ---
@@ -120,18 +120,22 @@ node scripts/prune-invalid-urls.js --report path/to/report.json --dry-run
 - **`ensureDirectoryExists()`**: Creates directories as needed
 - **`writeSitemapXML()`**: Writes XML content to files
 
-## NPM Scripts
+## Direct Script Execution
 
-The following npm scripts are available for easy use:
+All scripts can be run directly with Node.js:
 
-```json
-{
-  "build:sitemaps": "node scripts/generate-sitemaps.js",
-  "build:sitemaps:dev": "cross-env NODE_ENV=development node scripts/generate-sitemaps.js", 
-  "clean:sitemaps": "rm -rf public/sitemaps",
-  "prune-invalid-urls": "node scripts/prune-invalid-urls.js",
-  "prune-invalid-urls:dry-run": "node scripts/prune-invalid-urls.js --dry-run"
-}
+```bash
+# Main generation script
+node scripts/generate-sitemaps.js
+
+# URL validation (standalone)
+node scripts/validate-sitemap-urls.js
+
+# Invalid URL pruning
+node scripts/prune-invalid-urls.js
+
+# Clean sitemaps directory
+rm -rf public/sitemaps
 ```
 
 ## Recommended Workflow
@@ -139,10 +143,10 @@ The following npm scripts are available for easy use:
 ### 🚀 **Initial Setup / Full Regeneration**
 ```bash
 # Clean any existing sitemaps
-npm run clean:sitemaps
+rm -rf public/sitemaps
 
 # Generate fresh sitemaps with validation
-npm run build:sitemaps:dev -- --validate
+NODE_ENV=development node scripts/generate-sitemaps.js --validate
 
 # This creates both sitemaps AND validation report
 ```
@@ -150,16 +154,16 @@ npm run build:sitemaps:dev -- --validate
 ### ⚡ **Regular Maintenance**
 ```bash
 # Regenerate sitemaps (when content changes)
-npm run build:sitemaps:dev
+NODE_ENV=development node scripts/generate-sitemaps.js
 
 # Clean up invalid URLs using existing validation report
-npm run prune-invalid-urls
+node scripts/prune-invalid-urls.js
 ```
 
 ### 🔍 **Quality Assurance**
 ```bash
 # Preview what URLs would be removed
-npm run prune-invalid-urls:dry-run
+node scripts/prune-invalid-urls.js --dry-run
 
 # Check recent validation report
 cat public/sitemaps/validation-report-*.json | jq '.summary'
@@ -183,9 +187,10 @@ All generated files are saved to `public/sitemaps/` and include timestamps to av
 
 ### 📋 **Sitemap Files**
 - `sitemap.xml` - Main sitemap with core pages
-- `sitemap-index.xml` - Index listing all sitemaps
 - `state/{state}/sitemap/{index}.xml` - State-specific sitemaps
 - `candidates/{state}/sitemap/{index}.xml` - Candidate sitemaps
+
+**Note**: The main sitemap index is served from the root as `public/sitemap.xml`
 
 ### 📊 **Report Files**
 - `generation-report-{timestamp}.json` - Generation statistics and metadata
@@ -227,7 +232,7 @@ The scripts include comprehensive error handling:
 Add sitemap generation to your build process:
 ```bash
 # In your CI/CD pipeline
-npm run build:sitemaps
+node scripts/generate-sitemaps.js
 ```
 
 ### **Deployment**

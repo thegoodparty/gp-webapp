@@ -89,55 +89,11 @@ const dbRedirects = {
   '/elections/senate/me': '/',
 }
 
-/**
- * Generate empty sitemap XML for fallback
- */
-function generateEmptySitemap() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-</urlset>`
-}
-
-/**
- * Handle missing sitemap files with appropriate fallback
- */
-async function handleMissingSitemap(pathname) {
-  // For main sitemap.xml, return empty sitemap instead of 404
-  if (pathname === '/sitemap.xml') {
-    return new NextResponse(generateEmptySitemap(), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
-      },
-    })
-  }
-  
-  // For other sitemap files, check if they're valid sitemap paths
-  if (pathname.startsWith('/sitemaps/') && pathname.endsWith('.xml')) {
-    // Return empty sitemap for valid but missing sitemap paths
-    return new NextResponse(generateEmptySitemap(), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=3600',
-      },
-    })
-  }
-  
-  // For invalid paths, return 404
-  return new NextResponse('Sitemap not found', { status: 404 })
-}
-
 export default async function middleware(req) {
   const { pathname } = req.nextUrl
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('x-pathname', pathname)
-
-  // Note: Static sitemap fallback is handled by Next.js automatically
-  // If static files don't exist, Next.js will serve 404
-  // Custom fallback logic can be added here if needed
 
   if (dbRedirects && dbRedirects[pathname]) {
     const url = dbRedirects[pathname]

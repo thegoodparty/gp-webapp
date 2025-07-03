@@ -19,12 +19,7 @@
     "format": "prettier -c .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "detect-circular-dependencies": "npx madge --circular --warning app",
-    "build:sitemaps": "node scripts/generate-sitemaps.js",
-    "build:sitemaps:dev": "cross-env NODE_ENV=development node scripts/generate-sitemaps.js",
-    "clean:sitemaps": "rm -rf public/sitemaps",
-    "prune-invalid-urls": "node scripts/prune-invalid-urls.js",
-    "prune-invalid-urls:dry-run": "node scripts/prune-invalid-urls.js --dry-run"
+    "detect-circular-dependencies": "npx madge --circular --warning app"
   },
   "dependencies": {
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
