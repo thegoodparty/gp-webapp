@@ -19,7 +19,7 @@ export default function ViewModeToggle({ viewMode, onViewModeChange }) {
         <Button
           onClick={() => onViewModeChange('board')}
           color={viewMode === 'board' ? 'white' : 'neutral'}
-          className="mr-2 flex items-center"
+          className="flex items-center"
         >
           <TbLayoutGrid />
           <span className="ml-2">Board</span>
