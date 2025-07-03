@@ -74,6 +74,7 @@ export default function AddIssueForm() {
       description: state.description,
       location: state.location,
       channel: mapChannelToValue[state.channel],
+      status: 'accepted',
     })
     setIsLoading(false)
     if (resp.ok) {

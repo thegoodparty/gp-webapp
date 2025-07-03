@@ -7,7 +7,7 @@ import Body2 from '@shared/typography/Body2'
 const columnTypes = {
   accepted: {
     title: 'Accepted',
-    statuses: ['accepted', 'newIssue'],
+    statuses: ['accepted'],
   },
   inProgress: {
     title: 'In Progress',

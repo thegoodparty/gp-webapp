@@ -67,7 +67,7 @@ export default function IssueBoard() {
   }
 
   const getCurrentColumnType = (status) => {
-    if (['accepted', 'newIssue'].includes(status)) return 'accepted'
+    if (['accepted'].includes(status)) return 'accepted'
     if (['inProgress'].includes(status)) return 'inProgress'
     if (['completed', 'wontDo'].includes(status)) return 'completed'
     return 'accepted'
