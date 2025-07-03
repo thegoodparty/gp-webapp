@@ -14,11 +14,12 @@ export default function IssuesPage({
   issues,
 }) {
   const [campaign] = useCampaign(initCampaign)
+  const initFilters = { status: 'all', search: '' }
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
-        <SearchFiltersProvider>
+        <SearchFiltersProvider initFilters={initFilters}>
           <IssuesHeader />
           <SearchContainer />
           {issues?.length === 0 ? <EmptyIssueState /> : <IssueList />}

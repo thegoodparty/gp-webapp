@@ -2,7 +2,7 @@
 import { useContext, useMemo } from 'react'
 import { SearchFiltersContext } from './SearchFiltersProvider'
 
-export const useSearchFilters = (issues = []) => {
+export const useSearchFilters = () => {
   const context = useContext(SearchFiltersContext)
   if (!context) {
     throw new Error(
@@ -12,29 +12,25 @@ export const useSearchFilters = (issues = []) => {
 
   const [filters, setFilters] = context
 
-  const filteredIssues = useMemo(() => {
-    return (
-      issues?.filter((issue) => {
-        // Search filter
-        const matchesSearch =
-          filters.search === '' ||
-          issue.title?.toLowerCase().includes(filters.search.toLowerCase()) ||
-          issue.description
-            ?.toLowerCase()
-            .includes(filters.search.toLowerCase())
+  const filterItems = useMemo(() => {
+    return (items = []) => {
+      return (
+        items?.filter((item) => {
+          const matchesSearch =
+            filters.search === '' ||
+            item.title?.toLowerCase().includes(filters.search.toLowerCase()) ||
+            item.description
+              ?.toLowerCase()
+              .includes(filters.search.toLowerCase())
 
-        // Status filter
-        const matchesStatus =
-          filters.status === 'all' || issue.status === filters.status
+          const matchesStatus =
+            filters.status === 'all' || item.status === filters.status
 
-        return matchesSearch && matchesStatus
-      }) || []
-    )
-  }, [issues, filters])
+          return matchesSearch && matchesStatus
+        }) || []
+      )
+    }
+  }, [filters])
 
-  return {
-    issues: filteredIssues,
-    filters,
-    setFilters,
-  }
+  return [filters, setFilters, filterItems]
 }
