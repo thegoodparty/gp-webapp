@@ -67,6 +67,139 @@ NODE_ENV=development node scripts/generate-sitemaps.js --validate
 
 ---
 
+### 🔄 `validate-sitemap-urls-enhanced.js` (New)
+
+**Purpose**: Enhanced validation that follows redirects and provides multiple strategies for handling them in sitemaps according to SEO best practices.
+
+**Problem it solves**: The standard validation treats redirects as valid without checking if they ultimately lead to 404 errors. This enhanced version follows redirect chains to validate the final destination and supports removing ALL redirects from sitemaps (SEO best practice).
+
+**What it does**:
+- Follows redirect chains up to a configurable depth (default: 5)
+- Validates the final destination URL
+- Detects circular redirects and redirect loops
+- Tracks complete redirect chains for analysis
+- Identifies redirects that lead to 404s or other errors
+- Provides detailed redirect statistics
+- **Supports three redirect handling strategies**:
+  - `remove`: Remove all redirects from sitemaps (recommended for SEO)
+  - `replace`: Replace redirects with their final destinations (with deduplication)
+  - `keep`: Keep redirects if final destination is valid (old behavior)
+
+**Enhanced Features**:
+- **Redirect Following**: Validates the entire redirect chain
+- **Circular Detection**: Identifies redirect loops
+- **Chain Analysis**: Shows full path from original URL to final destination
+- **Smart Validation**: Marks URLs as invalid if redirect destination is inaccessible
+- **Deduplication**: Prevents multiple redirects pointing to the same final URL
+- **Flexible Handling**: Choose how to handle redirects based on your SEO strategy
+- **Detailed Reporting**: Includes redirect statistics and problematic chains
+
+**Redirect Handling Strategies**:
+
+1. **`remove` (Recommended for SEO)**:
+   ```bash
+   # Remove all redirects from sitemap
+   node scripts/generate-sitemaps.js --validate --redirect-handling remove
+   ```
+   - Removes all URLs that redirect (even successful ones)
+   - Cleanest sitemap with only direct 200 OK responses
+   - Best for SEO as search engines prefer canonical URLs
+
+2. **`replace` (Alternative SEO approach)**:
+   ```bash
+   # Replace redirects with their final destinations
+   node scripts/generate-sitemaps.js --validate --redirect-handling replace
+   ```
+   - Replaces redirect URLs with their final destinations
+   - Includes deduplication to prevent multiple URLs pointing to same page
+   - Good for preserving URL coverage while maintaining SEO quality
+
+3. **`keep` (Legacy behavior)**:
+   ```bash
+   # Keep redirects if they lead to valid destinations
+   node scripts/generate-sitemaps.js --validate --redirect-handling keep
+   ```
+   - Keeps redirects in sitemap if final destination is accessible
+   - Only removes redirects that lead to 404s
+   - Maintains backward compatibility
+
+**Usage Examples**:
+```bash
+# Recommended: Remove all redirects (cleanest for SEO)
+node scripts/generate-sitemaps.js --validate --redirect-handling remove
+
+# Alternative: Replace redirects with destinations
+node scripts/generate-sitemaps.js --validate --redirect-handling replace
+
+# Legacy: Keep successful redirects
+node scripts/generate-sitemaps.js --validate --redirect-handling keep
+
+# Validate with custom redirect depth
+node scripts/generate-sitemaps.js --validate --redirect-handling remove --max-redirects 10
+
+# Disable redirect following (fastest)
+node scripts/generate-sitemaps.js --validate --no-follow-redirects
+```
+
+**Example Redirect Validation Results**:
+```
+# With redirect-handling=remove
+/old-page → 301 → /new-page → 200
+Result: URL removed from sitemap (redirect)
+
+# With redirect-handling=replace  
+/old-page → 301 → /new-page → 200
+Result: URL replaced with /new-page in sitemap
+
+# With redirect-handling=keep
+/old-page → 301 → /new-page → 200
+Result: URL kept in sitemap (valid destination)
+
+# All strategies handle broken redirects the same way
+/broken → 301 → /missing → 404
+Result: URL removed from sitemap (broken redirect)
+
+# Circular redirects are always removed
+/page-a → 301 → /page-b → 301 → /page-a
+Result: URL removed from sitemap (circular redirect)
+```
+
+**Enhanced Report Output**:
+The validation report now includes:
+- `redirectStats`: Detailed statistics about redirect patterns
+  - `successfulRedirects`: Redirects that lead to 200 OK
+  - `brokenRedirects`: Redirects that lead to 404s or errors
+  - `redirectsRemoved`: Count of redirects removed from sitemap
+  - `redirectsReplaced`: Count of redirects replaced with destinations
+  - `duplicatesFound`: Count of duplicate final destinations prevented
+- `problematicRedirects`: Array of redirects leading to errors
+- `byFinalStatus`: URLs grouped by their final status after redirects
+- `allRedirectChains`: Complete redirect paths for analysis
+
+**Deduplication Logic**:
+When using `replace` mode, the system automatically handles deduplication:
+```
+/old-url-1 → 301 → /final-page → 200
+/old-url-2 → 301 → /final-page → 200
+/old-url-3 → 301 → /final-page → 200
+
+Result: Only one /final-page entry in sitemap
+Actions: 
+- /old-url-1 → replaced with /final-page
+- /old-url-2 → removed (duplicate)
+- /old-url-3 → removed (duplicate)
+```
+
+**Performance Impact**:
+- `remove` mode: Fastest (no deduplication needed)
+- `replace` mode: Moderate (includes deduplication processing)
+- `keep` mode: Fastest (legacy behavior)
+
+**SEO Recommendation**:
+Use `remove` mode for optimal SEO performance. This ensures your sitemap only contains direct, canonical URLs that return 200 OK responses, which is exactly what search engines prefer.
+
+---
+
 ### 🧹 `prune-invalid-urls.js`
 
 **Purpose**: Removes invalid URLs from existing sitemaps using validation reports (much faster than re-validation).
