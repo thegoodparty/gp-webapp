@@ -15,18 +15,13 @@ export const CampaignCountdown = ({ electionDate }) => {
 
   if (weeks === 0 && days === 0) {
     return (
-      <div>
-        <div className="max-w-xs mb-4">
-          <HighFiveAnimation loop={true} />
-        </div>
-        <H1 className="mb-4">Today is Election Day!</H1>
-      </div>
+      <H1 className="mb-4">Today is Election Day!</H1>
     )
   }
 
   return (
     <div>
-      <div className="relative w-20 h-20 mb-4 z-[5000]">
+      <div className="relative size-20 mb-4 z-50">
         <HighFiveAnimation />
       </div>
       <H1 className="mb-4 mt-4">
