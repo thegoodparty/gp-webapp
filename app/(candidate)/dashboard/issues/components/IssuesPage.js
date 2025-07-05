@@ -5,8 +5,7 @@ import { IssuesProvider } from '@shared/hooks/IssuesProvider'
 import { SearchFiltersProvider } from '@shared/hooks/SearchFiltersProvider'
 import { ViewModeProvider } from '@shared/hooks/ViewModeProvider'
 import IssuesHeader from './IssuesHeader'
-import EmptyIssueState from './EmptyIssueState'
-import IssueContainer from './IssueContainer'
+import IssuesContainer from './IssuesContainer'
 import SearchContainer from './search/SearchContainer'
 
 export default function IssuesPage({
@@ -24,7 +23,7 @@ export default function IssuesPage({
           <ViewModeProvider>
             <IssuesHeader />
             <SearchContainer />
-            {issues?.length === 0 ? <EmptyIssueState /> : <IssueContainer />}
+            <IssuesContainer />
           </ViewModeProvider>
         </SearchFiltersProvider>
       </IssuesProvider>

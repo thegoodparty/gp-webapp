@@ -6,6 +6,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { ISSUE_STATUSES } from '../../shared/constants'
 
 const fields = [
   {
@@ -74,7 +75,7 @@ export default function AddIssueForm() {
       description: state.description,
       location: state.location,
       channel: mapChannelToValue[state.channel],
-      status: 'accepted',
+      status: ISSUE_STATUSES.ACCEPTED,
     })
     setIsLoading(false)
     if (resp.ok) {

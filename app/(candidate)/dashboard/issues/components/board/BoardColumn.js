@@ -3,19 +3,20 @@ import H4 from '@shared/typography/H4'
 import IssueCard from './IssueCard'
 import { LuClipboardX } from 'react-icons/lu'
 import Body2 from '@shared/typography/Body2'
+import { ISSUE_STATUSES } from '../../shared/constants'
 
 const columnTypes = {
   accepted: {
     title: 'Accepted',
-    statuses: ['accepted'],
+    statuses: [ISSUE_STATUSES.ACCEPTED],
   },
   inProgress: {
     title: 'In Progress',
-    statuses: ['inProgress'],
+    statuses: [ISSUE_STATUSES.IN_PROGRESS],
   },
   completed: {
     title: 'Resolved or Deferred',
-    statuses: ['completed', 'wontDo'],
+    statuses: [ISSUE_STATUSES.COMPLETED, ISSUE_STATUSES.WONT_DO],
   },
 }
 
@@ -50,11 +51,7 @@ export default function BoardColumn({ type, issues = [] }) {
             : ''
         }`}
       >
-        {columnIssues.map((issue) => (
-          <IssueCard key={issue.id} issue={issue} />
-        ))}
-
-        {columnIssues.length === 0 && (
+        {columnIssues.length === 0 ? (
           <div className="flex items-center justify-center mt-16  text-slate-400 ">
             <div className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 flex items-center justify-center rounded-full bg-slate-200">
@@ -63,6 +60,10 @@ export default function BoardColumn({ type, issues = [] }) {
               <Body2 className="text-slate-400">No issues</Body2>
             </div>
           </div>
+        ) : (
+          columnIssues.map((issue) => (
+            <IssueCard key={issue.id} issue={issue} />
+          ))
         )}
       </div>
     </div>
