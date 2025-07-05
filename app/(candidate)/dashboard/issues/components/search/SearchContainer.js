@@ -11,7 +11,7 @@ import Paper from '@shared/utils/Paper'
 export default function SearchContainer() {
   const [allIssues] = useIssues()
   const [filters, setFilters] = useSearchFilters()
-  const { viewMode, setViewMode } = useViewMode()
+  const [viewMode, setViewMode] = useViewMode()
 
   const totalIssueCount = allIssues?.length || 0
 

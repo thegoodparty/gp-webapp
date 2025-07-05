@@ -10,8 +10,5 @@ export const useViewMode = () => {
 
   const [viewMode, setViewMode] = context
 
-  return {
-    viewMode,
-    setViewMode,
-  }
+  return [viewMode, setViewMode]
 }

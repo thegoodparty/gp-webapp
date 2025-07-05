@@ -21,7 +21,7 @@ const updateIssueStatus = async (issueId, status) => {
 }
 
 export default function IssueBoard() {
-  const { issues, setIssues } = useIssues()
+  const [issues, setIssues] = useIssues()
   const [activeIssue, setActiveIssue] = useState(null)
 
   const handleDragStart = (event) => {
@@ -58,7 +58,6 @@ export default function IssueBoard() {
 
     setIssues(updatedIssues)
 
-    // console.log(`Update issue ${draggedIssue.id} to status: ${newStatus}`)
     await updateIssueStatus(draggedIssue.id, newStatus)
   }
 
