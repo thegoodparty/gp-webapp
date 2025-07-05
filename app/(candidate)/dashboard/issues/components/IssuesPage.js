@@ -3,10 +3,10 @@ import DashboardLayout from '../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { IssuesProvider } from '@shared/hooks/IssuesProvider'
 import { SearchFiltersProvider } from '@shared/hooks/SearchFiltersProvider'
+import { ViewModeProvider } from '@shared/hooks/ViewModeProvider'
 import IssuesHeader from './IssuesHeader'
-import EmptyIssueState from './EmptyIssueState'
-import IssueList from './IssueList'
-import SearchContainer from './SearchContainer'
+import IssuesContainer from './IssuesContainer'
+import SearchContainer from './search/SearchContainer'
 
 export default function IssuesPage({
   pathname,
@@ -20,9 +20,11 @@ export default function IssuesPage({
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
         <SearchFiltersProvider initFilters={initFilters}>
-          <IssuesHeader />
-          <SearchContainer />
-          {issues?.length === 0 ? <EmptyIssueState /> : <IssueList />}
+          <ViewModeProvider>
+            <IssuesHeader />
+            <SearchContainer />
+            <IssuesContainer />
+          </ViewModeProvider>
         </SearchFiltersProvider>
       </IssuesProvider>
     </DashboardLayout>

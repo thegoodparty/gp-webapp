@@ -1,13 +1,13 @@
 'use client'
 import { FormControl, Select, MenuItem } from '@mui/material'
+import { ISSUE_STATUSES } from '../../shared/constants'
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Status' },
-  { value: 'newIssue', label: 'New Issue' },
-  { value: 'accepted', label: 'Accepted' },
-  { value: 'inProgress', label: 'In Progress' },
-  { value: 'wontDo', label: "Won't Do" },
-  { value: 'completed', label: 'Completed' },
+  { value: ISSUE_STATUSES.ACCEPTED, label: 'Accepted' },
+  { value: ISSUE_STATUSES.IN_PROGRESS, label: 'In Progress' },
+  { value: ISSUE_STATUSES.WONT_DO, label: "Won't Do" },
+  { value: ISSUE_STATUSES.COMPLETED, label: 'Completed' },
 ]
 
 export default function StatusFilter({ value, onChange }) {

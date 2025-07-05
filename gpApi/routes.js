@@ -537,6 +537,10 @@ export const apiRoutes = {
       path: '/community-issues',
       method: 'POST',
     },
+    update: {
+      path: '/community-issues/:id',
+      method: 'PUT',
+    },
   },
   outreach: {
     create: {
