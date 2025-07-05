@@ -6,11 +6,8 @@ export const SearchFiltersContext = createContext({
   setFilters: () => {},
 })
 
-export function SearchFiltersProvider({ children }) {
-  const [filters, setFilters] = useState({
-    search: '',
-    status: 'all',
-  })
+export function SearchFiltersProvider({ children, initFilters = {} }) {
+  const [filters, setFilters] = useState(initFilters)
 
   const contextValue = [filters, setFilters]
 

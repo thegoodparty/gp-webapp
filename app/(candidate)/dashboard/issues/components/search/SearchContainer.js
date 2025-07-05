@@ -9,8 +9,8 @@ import ViewModeToggle from './ViewModeToggle'
 import Paper from '@shared/utils/Paper'
 
 export default function SearchContainer() {
-  const { issues: allIssues } = useIssues()
-  const { filters, setFilters } = useSearchFilters(allIssues)
+  const [allIssues] = useIssues()
+  const [filters, setFilters] = useSearchFilters()
   const { viewMode, setViewMode } = useViewMode()
 
   const totalIssueCount = allIssues?.length || 0
@@ -43,10 +43,7 @@ export default function SearchContainer() {
       <div className="flex justify-between mt-6">
         <StatusFilter value={filters.status} onChange={handleStatusChange} />
 
-        <ViewModeToggle
-          viewMode={viewMode}
-          onViewModeChange={handleViewModeChange}
-        />
+        <ViewModeToggle value={viewMode} onChange={handleViewModeChange} />
       </div>
     </Paper>
   )
