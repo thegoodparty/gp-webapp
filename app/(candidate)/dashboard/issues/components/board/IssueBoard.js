@@ -6,12 +6,11 @@ import BoardColumn from './BoardColumn'
 import IssueCard from './IssueCard'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-
-const columnToStatusMap = {
-  accepted: 'accepted',
-  inProgress: 'inProgress',
-  completed: 'completed',
-}
+import {
+  BOARD_COLUMNS,
+  COLUMN_TO_STATUS_MAP,
+  getColumnTypeFromStatus,
+} from '../../shared/constants'
 
 const updateIssueStatus = async (issueId, status) => {
   const resp = await clientFetch(apiRoutes.issues.update, {
@@ -44,11 +43,11 @@ export default function IssueBoard() {
     if (!draggedIssue || !targetColumn) return
 
     // Check if the issue is being moved to a different column
-    const currentColumnType = getCurrentColumnType(draggedIssue.status)
+    const currentColumnType = getColumnTypeFromStatus(draggedIssue.status)
     if (currentColumnType === targetColumn) return
 
     // Get the new status based on the target column
-    const newStatus = columnToStatusMap[targetColumn]
+    const newStatus = COLUMN_TO_STATUS_MAP[targetColumn]
     if (!newStatus) return
 
     // Update the issue status locally
@@ -65,13 +64,6 @@ export default function IssueBoard() {
     setActiveIssue(null)
   }
 
-  const getCurrentColumnType = (status) => {
-    if (['accepted'].includes(status)) return 'accepted'
-    if (['inProgress'].includes(status)) return 'inProgress'
-    if (['completed', 'wontDo'].includes(status)) return 'completed'
-    return 'accepted'
-  }
-
   return (
     <DndContext
       collisionDetection={closestCenter}
@@ -80,9 +72,9 @@ export default function IssueBoard() {
       onDragCancel={handleDragCancel}
     >
       <div className="mt-8 flex flex-col md:flex-row gap-4 justify-between w-full">
-        <BoardColumn type="accepted" issues={issues} />
-        <BoardColumn type="inProgress" issues={issues} />
-        <BoardColumn type="completed" issues={issues} />
+        <BoardColumn type={BOARD_COLUMNS.ACCEPTED} issues={issues} />
+        <BoardColumn type={BOARD_COLUMNS.IN_PROGRESS} issues={issues} />
+        <BoardColumn type={BOARD_COLUMNS.COMPLETED} issues={issues} />
       </div>
 
       <DragOverlay>
