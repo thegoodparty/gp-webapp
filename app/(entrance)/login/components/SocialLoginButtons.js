@@ -1,15 +1,15 @@
 'use client'
-import { deleteCookie, getCookie } from 'helpers/cookieHelper'
 import { useRouter } from 'next/navigation'
 import GoogleLoginButton from './GoogleLoginButton'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { useUser } from '@shared/hooks/useUser'
 import Overline from '@shared/typography/Overline'
 import saveToken from 'helpers/saveToken'
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+
+import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
 
 async function login(payload) {
   try {
@@ -49,7 +49,7 @@ export default function SocialLoginButtons() {
         if (largeImg) {
           socialPic = largeImg
         }
-        ({ idToken } = socialUser._token)
+        ;({ idToken } = socialUser._token)
       } catch (e) {
         console.log('large image error')
       }
@@ -67,23 +67,7 @@ export default function SocialLoginButtons() {
       await saveToken(token)
       setUser(user)
       successSnackbar('Welcome back to GoodParty.org!')
-      const returnCookie = getCookie('returnUrl')
-      if (returnCookie) {
-        deleteCookie('returnUrl')
-        router.push(returnCookie)
-      } else {
-        const status = await fetchCampaignStatus()
-
-        if (status?.status === 'candidate') {
-          window.location.href = '/dashboard'
-          return
-        }
-        if (status?.status === 'volunteer') {
-          window.location.href = '/volunteer-dashboard'
-          return
-        }
-        window.location.href = '/'
-      }
+      await doLoginRedirect(router, user)
     } else {
       errorSnackbar('Error [loginType] in')
     }
