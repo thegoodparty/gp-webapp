@@ -1,7 +1,8 @@
 'use client'
 import { DndContext, DragOverlay, closestCenter } from '@dnd-kit/core'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useIssues } from '@shared/hooks/useIssues'
+import { useSearchFilters } from '@shared/hooks/useSearchFilters'
 import BoardColumn from './BoardColumn'
 import IssueCard from './IssueCard'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -20,8 +21,14 @@ const updateIssueStatus = async (issueId, status) => {
 }
 
 export default function IssueBoard() {
-  const [issues, setIssues] = useIssues()
+  const [allIssues, setAllIssues] = useIssues()
+  const [filters, setFilters, filterItems] = useSearchFilters()
+  const [issues, setIssues] = useState(allIssues)
   const [activeIssue, setActiveIssue] = useState(null)
+
+  useEffect(() => {
+    setIssues(filterItems(allIssues))
+  }, [allIssues, filterItems])
 
   const handleDragStart = (event) => {
     const { active } = event
@@ -50,12 +57,12 @@ export default function IssueBoard() {
     const newStatus = COLUMN_TO_STATUS_MAP[targetColumn]
     if (!newStatus) return
 
-    // Update the issue status locally
-    const updatedIssues = issues.map((issue) =>
+    // Update the issue status locally in both allIssues and filtered issues
+    const updatedAllIssues = allIssues.map((issue) =>
       issue.id === draggedIssue.id ? { ...issue, status: newStatus } : issue,
     )
 
-    setIssues(updatedIssues)
+    setAllIssues(updatedAllIssues)
 
     await updateIssueStatus(draggedIssue.id, newStatus)
   }
