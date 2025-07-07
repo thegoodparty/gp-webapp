@@ -1,71 +1,14 @@
 'use client'
-import { useState } from 'react'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { useSnackbar } from '@shared/utils/Snackbar'
-import EditForm from './EditForm'
-import WebsitePreview from './WebsitePreview'
-import {
-  updateWebsite,
-  publishWebsite,
-  unpublishWebsite,
-  WEBSITE_STATUS,
-} from '../../util/website.util'
+import WebsiteCreateFlow from './WebsiteCreateFlow'
 
-export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
+export default function WebsiteEditorPage({ pathname }) {
   const [campaign] = useCampaign()
-  const [website, setWebsite] = useState(preloadedWebsite)
-  const [saveLoading, setSaveLoading] = useState(false)
-  const { errorSnackbar } = useSnackbar()
-
-  function handleChange(updatedContent) {
-    setWebsite((current) => ({ ...current, content: updatedContent }))
-  }
-
-  async function handleSave(updatedContent) {
-    setSaveLoading(true)
-    const resp = await updateWebsite(updatedContent)
-    setSaveLoading(false)
-    if (!resp.ok) {
-      console.error('Failed to update website', resp)
-      errorSnackbar('Failed to update website')
-    }
-  }
-
-  async function handlePublish() {
-    const resp = await publishWebsite()
-    setWebsite((current) => ({ ...current, status: WEBSITE_STATUS.published }))
-    if (!resp.ok) {
-      console.error('Failed to publish website', resp)
-      errorSnackbar('Failed to publish website')
-    }
-  }
-
-  async function handleUnpublish() {
-    const resp = await unpublishWebsite()
-    setWebsite((current) => ({
-      ...current,
-      status: WEBSITE_STATUS.unpublished,
-    }))
-    if (!resp.ok) {
-      console.error('Failed to unpublish website', resp)
-      errorSnackbar('Failed to unpublish website')
-    }
-  }
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <div className="flex gap-4">
-        <EditForm
-          onChange={handleChange}
-          onSave={handleSave}
-          saveLoading={saveLoading}
-          website={website}
-          onPublish={handlePublish}
-          onUnpublish={handleUnpublish}
-        />
-        <WebsitePreview website={website} campaign={campaign} />
-      </div>
+      <WebsiteCreateFlow campaign={campaign} />
     </DashboardLayout>
   )
 }

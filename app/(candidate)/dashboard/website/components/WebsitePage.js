@@ -2,13 +2,14 @@
 import { useState } from 'react'
 import DashboardLayout from '../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import EmptyState from './EmptyState'
 import { createWebsite } from '../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
-import WebsiteStatus from './WebsiteStatus'
 import { useRouter } from 'next/navigation'
-import WebsiteInbox from './WebsiteInbox'
 import { useWebsite } from './WebsiteProvider'
+import { WEBSITE_STATUS } from '../util/website.util'
+import EmptyState from './EmptyState'
+import DraftState from './DraftState'
+import PublishedState from './PublishedState'
 
 export default function WebsitePage({ pathname }) {
   const router = useRouter()
@@ -31,9 +32,12 @@ export default function WebsitePage({ pathname }) {
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <WebsiteStatus className="mb-6 lg:mb-8" website={website} />
       {website ? (
-        <WebsiteInbox />
+        website.status === WEBSITE_STATUS.unpublished ? (
+          <DraftState />
+        ) : (
+          <PublishedState />
+        )
       ) : (
         <EmptyState
           onClickCreate={handleCreate}

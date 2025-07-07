@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { CameraAltRounded } from '@mui/icons-material'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Overline from '@shared/typography/Overline'
+import { LuCloudUpload } from 'react-icons/lu'
 
 // TODO: add more file types
 const ACCEPTED_FILE_TYPES = {
@@ -24,6 +24,7 @@ const ACCEPTED_FILE_TYPES = {
  * @returns
  */
 export default function FileDropZone({
+  label = 'Add a Photo',
   fileTypes = ACCEPTED_FILE_TYPES.image,
   maxSize = 5000000,
   onChange,
@@ -115,7 +116,7 @@ export default function FileDropZone({
     <div
       role="button"
       tabIndex={0}
-      className={`w-full h-52 border-2 border-dashed border-black/[0.12] rounded-2xl ${
+      className={`w-full h-32 border-2 border-dashed border-gray-500 rounded-2xl flex items-center justify-center ${
         isDragging
           ? 'bg-indigo-100'
           : cannotDrop
@@ -130,8 +131,8 @@ export default function FileDropZone({
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
       <div className="pointer-events-none text-center">
-        <CameraAltRounded className="text-5xl mt-16" />
-        {<Overline className="mt-4">Add a Photo</Overline>}
+        <LuCloudUpload size={24} className="inline" />
+        {<Overline className="mt-2">{label}</Overline>}
       </div>
       <input
         ref={inputRef}

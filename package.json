@@ -54,6 +54,7 @@
     "match-sorter": "^6.3.1",
     "next": "^15.3.2",
     "next-pwa": "^5.6.0",
+    "object-to-formdata": "^4.5.1",
     "path-to-regexp": "^8.2.0",
     "query-string": "^9.1.0",
     "quill": "^2.0.3",

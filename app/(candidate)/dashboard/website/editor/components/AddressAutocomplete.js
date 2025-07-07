@@ -4,11 +4,7 @@ import Script from 'next/script'
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
-export default function AddressAutocomplete({
-  value,
-  onChange,
-  label = 'Address',
-}) {
+export default function AddressAutocomplete({ value, onChange }) {
   const inputRef = useRef(null)
   const autocompleteRef = useRef(null)
   const [inputValue, setInputValue] = useState(value || '')
@@ -61,7 +57,6 @@ export default function AddressAutocomplete({
       />
       <TextField
         ref={inputRef}
-        label={label}
         fullWidth
         value={inputValue}
         onChange={handleInputChange}

@@ -1,30 +1,26 @@
-import { OpenInNewRounded } from '@mui/icons-material'
-import Button from '@shared/buttons/Button'
+import { memo } from 'react'
 import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
 import Paper from '@shared/utils/Paper'
+import Link from 'next/link'
 
-export default function WebsitePreview({ website, campaign }) {
+const WebsitePreview = memo(function WebsitePreview({ website, campaign }) {
+  const url = `goodparty.org/c/${website.vanityPath}`
+
   return (
     <Paper className="!p-0 flex-grow h-full flex flex-col">
-      <div className="p-4 border-b flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-          <div className="text-center text-sm text-gray-500">Preview</div>
+      <div className="p-4 border-b flex items-center gap-6 sticky">
+        <div className="flex items-center space-x-1">
+          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+          <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
         </div>
-        <div className="flex items-center gap-4">
-          <Button
-            nativeLink
-            href={`/c/${website.vanityPath}/preview`}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1"
-          >
-            <OpenInNewRounded className="h-4 w-4" />
-            Preview Website
-          </Button>
-        </div>
+        <Link
+          href={`https://${url}`}
+          className="text-gray-500 text-xs truncate"
+          target="_blank"
+        >
+          Preview: {url}
+        </Link>
       </div>
       <div className="flex-1 overflow-y-auto">
         {campaign && website && (
@@ -33,4 +29,6 @@ export default function WebsitePreview({ website, campaign }) {
       </div>
     </Paper>
   )
-}
+})
+
+export default WebsitePreview
