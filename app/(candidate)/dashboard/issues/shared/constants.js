@@ -29,6 +29,5 @@ export const STATUS_TO_COLUMN_MAP = {
   [ISSUE_STATUSES.WONT_DO]: BOARD_COLUMNS.COMPLETED,
 }
 
-export const getColumnTypeFromStatus = (status) => {
-  return STATUS_TO_COLUMN_MAP[status] || BOARD_COLUMNS.ACCEPTED
-}
+export const getColumnTypeFromStatus = (status) =>
+  STATUS_TO_COLUMN_MAP[status] || BOARD_COLUMNS.ACCEPTED
