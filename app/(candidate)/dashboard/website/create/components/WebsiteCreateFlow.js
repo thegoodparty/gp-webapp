@@ -3,15 +3,15 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
-import WebsitePreview from './WebsitePreview'
-import Stepper from './Stepper'
-import VanityPathStep from './VanityPathStep'
-import LogoStep from './LogoStep'
-import ThemeStep from './ThemeStep'
-import HeroStep from './HeroStep'
-import AboutStep from './AboutStep'
-import ContactStep from './ContactStep'
-import CompleteStep from './CompleteStep'
+import WebsitePreview from '../../editor/components/WebsitePreview'
+import Stepper from '../../editor/components/Stepper'
+import VanityPathStep from '../../editor/components/VanityPathStep'
+import LogoStep from '../../editor/components/LogoStep'
+import ThemeStep from '../../editor/components/ThemeStep'
+import HeroStep from '../../editor/components/HeroStep'
+import AboutStep from '../../editor/components/AboutStep'
+import ContactStep from '../../editor/components/ContactStep'
+import CompleteStep from '../../editor/components/CompleteStep'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
@@ -31,13 +31,11 @@ export default function WebsiteCreateFlow({ campaign }) {
     const saved = await handleSave()
 
     if (saved) {
-      console.log('saved', saved)
       router.push('/dashboard/website')
     }
   }
 
   async function handleComplete() {
-    setWebsite((current) => ({ ...current, status: WEBSITE_STATUS.published }))
     const saved = await handleSave(true)
 
     if (saved) {
@@ -225,7 +223,11 @@ export default function WebsiteCreateFlow({ campaign }) {
           </Button>
         </div>
         <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
+          <div
+            className={`lg:col-span-1 ${
+              step === COMPLETE_STEP ? 'lg:col-span-3' : ''
+            }`}
+          >
             {step === 1 && (
               <VanityPathStep
                 vanityPath={website.vanityPath}
@@ -281,12 +283,18 @@ export default function WebsiteCreateFlow({ campaign }) {
               <CompleteStep vanityPath={website.vanityPath} />
             )}
           </div>
-          <div className="hidden lg:block lg:col-span-2 max-h-[60vh]">
-            <WebsitePreview website={website} campaign={campaign} />
-          </div>
+          {step !== COMPLETE_STEP && (
+            <div className="hidden lg:block lg:col-span-2 max-h-[60vh]">
+              <WebsitePreview website={website} campaign={campaign} />
+            </div>
+          )}
         </div>
         {step === COMPLETE_STEP ? (
-          <Button className="self-end" size="large" href="/dashboard/website">
+          <Button
+            className="self-end lg:self-center"
+            size="large"
+            href="/dashboard/website"
+          >
             Finish
           </Button>
         ) : (

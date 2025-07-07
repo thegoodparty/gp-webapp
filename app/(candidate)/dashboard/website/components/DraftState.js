@@ -13,7 +13,7 @@ function DraftState() {
       <H1 className="mt-2 mb-8">Finish your website</H1>
       <StepList type="draft" />
       <Button
-        href="/dashboard/website/editor"
+        href="/dashboard/website/create"
         color="secondary"
         className="mt-12 w-full md:w-auto px-10"
       >

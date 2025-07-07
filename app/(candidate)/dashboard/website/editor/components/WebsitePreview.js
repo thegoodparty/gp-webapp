@@ -3,8 +3,10 @@ import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/Web
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
+
 const WebsitePreview = memo(function WebsitePreview({ website, campaign }) {
-  const url = `goodparty.org/c/${website.vanityPath}`
+  const url = `${BASE_URL}/c/${website.vanityPath}`
 
   return (
     <Paper className="!p-0 flex-grow h-full flex flex-col">

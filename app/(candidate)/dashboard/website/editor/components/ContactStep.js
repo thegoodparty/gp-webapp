@@ -11,10 +11,11 @@ export default function ContactStep({
   onAddressChange,
   onEmailChange,
   onPhoneChange,
+  noHeading = false,
 }) {
   return (
     <div>
-      <H2 className="mb-6">How can people find you?</H2>
+      {!noHeading && <H2 className="mb-6">How can people find you?</H2>}
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}

@@ -22,7 +22,7 @@ export default function WebsitePage({ pathname }) {
     setCreateLoading(true)
     const resp = await createWebsite()
     if (resp.ok) {
-      router.push(`/dashboard/website/editor`)
+      router.push(`/dashboard/website/create`)
     } else {
       setWebsite(null)
       errorSnackbar('Failed to create website')

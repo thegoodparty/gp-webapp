@@ -1,14 +1,14 @@
 'use client'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import WebsiteEditFlow from './WebsiteEditFlow'
+import WebsiteCreateFlow from './WebsiteCreateFlow'
 
-export default function WebsiteEditorPage({ pathname }) {
+export default function WebsiteCreatePage({ pathname }) {
   const [campaign] = useCampaign()
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <WebsiteEditFlow campaign={campaign} />
+      <WebsiteCreateFlow campaign={campaign} />
     </DashboardLayout>
   )
 }
