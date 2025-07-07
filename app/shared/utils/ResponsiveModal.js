@@ -52,7 +52,7 @@ export default function ResponsiveModal({
           absolute 
           ${showContent && open ? 'bottom-0' : '-bottom-[100%]'} md:!bottom-auto
           md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2
-          w-full md:w-auto md:min-w-[500px] md:max-w-[90vw] max-h-[80vh] 
+          w-full md:w-auto md:min-w-[600px] md:max-w-[90vw] max-h-[80vh] 
           !px-4 !pt-16 !pb-8 md:!px-8 lg:!p-16
           !rounded-b-none md:!rounded-b-xl
           transition-[bottom] duration-${SLIDE_DURATION} ease-out

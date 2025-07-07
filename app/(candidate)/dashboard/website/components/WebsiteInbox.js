@@ -111,7 +111,7 @@ export default function WebsiteInbox({}) {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+      <div className="flex flex-row justify-between items-start mb-2">
         <H4 className="m-0">Your website form submissions</H4>
         <PaginationButtons
           currentPage={page}
