@@ -5,7 +5,6 @@ import { useMediaQuery } from '@mui/material'
 import { CloseRounded } from '@mui/icons-material'
 import MuiModal from '@mui/material/Modal'
 import Paper from './Paper'
-import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 
 const SLIDE_DURATION = 200
