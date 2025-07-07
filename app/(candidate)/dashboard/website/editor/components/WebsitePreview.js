@@ -7,7 +7,7 @@ const WebsitePreview = memo(function WebsitePreview({ website, campaign }) {
   const url = `goodparty.org/c/${website.vanityPath}`
 
   return (
-    <Paper className={`!p-0 flex-grow h-full flex flex-col`}>
+    <Paper className="!p-0 flex-grow h-full flex flex-col">
       <div className="p-4 border-b flex items-center gap-6 sticky">
         <div className="flex items-center space-x-1">
           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
