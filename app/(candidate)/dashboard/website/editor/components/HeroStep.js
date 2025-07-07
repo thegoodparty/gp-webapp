@@ -1,6 +1,6 @@
 import TextField from '@shared/inputs/TextField'
 import ImageInput from '@shared/inputs/ImageInput'
-import Caption from './Caption'
+import Caption from './WebsiteEditorPageCaption'
 import Label from './Label'
 import H2 from '@shared/typography/H2'
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import WebsitePreview from '../../editor/components/WebsitePreview'
-import Stepper from '../../editor/components/Stepper'
+import WebsiteEditorPageStepper from '../../editor/components/WebsiteEditorPageStepper'
 import VanityPathStep from '../../editor/components/VanityPathStep'
 import LogoStep from '../../editor/components/LogoStep'
 import ThemeStep from '../../editor/components/ThemeStep'
@@ -298,7 +298,7 @@ export default function WebsiteCreateFlow({ campaign }) {
             Finish
           </Button>
         ) : (
-          <Stepper
+          <WebsiteEditorPageStepper
             totalSteps={NUM_STEPS}
             currentStep={step}
             onStepChange={handleStepChange}

@@ -1,6 +1,6 @@
 'use client'
 import ImageInput from '@shared/inputs/ImageInput'
-import Caption from './Caption'
+import Caption from './WebsiteEditorPageCaption'
 import H2 from '@shared/typography/H2'
 
 export default function LogoStep({ logo, onChange, noHeading = false }) {

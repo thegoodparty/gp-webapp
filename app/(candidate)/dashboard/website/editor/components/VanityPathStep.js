@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import TextField from '@shared/inputs/TextField'
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
 import { validateVanityPath } from '../../util/website.util'
-import Caption from './Caption'
+import Caption from './WebsiteEditorPageCaption'
 import H2 from '@shared/typography/H2'
 
 const DEBOUNCE_TIME = 500
