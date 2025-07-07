@@ -8,8 +8,10 @@ import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import ShareModal from './ShareModal'
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
+
 function WebsiteCard({ website, className = '' }) {
-  const url = `goodparty.org/c/${website.vanityPath}`
+  const url = `${BASE_URL}/c/${website.vanityPath}`
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   return (
@@ -50,7 +52,7 @@ function WebsiteCard({ website, className = '' }) {
       <ShareModal
         open={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        url={`https://goodparty.org/c/${website.vanityPath}`}
+        url={url}
       />
     </>
   )

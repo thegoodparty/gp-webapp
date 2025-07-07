@@ -8,6 +8,8 @@ import H2 from '@shared/typography/H2'
 
 const DEBOUNCE_TIME = 500
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
+
 export default function VanityPathStep({ vanityPath, onChange }) {
   const [validated, setValidated] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -63,7 +65,9 @@ export default function VanityPathStep({ vanityPath, onChange }) {
           ),
         }}
       />
-      <Caption>goodparty.org/c/{vanityPath}</Caption>
+      <Caption>
+        {BASE_URL}/c/{vanityPath}
+      </Caption>
     </>
   )
 }
