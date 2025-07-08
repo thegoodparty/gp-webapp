@@ -31,3 +31,27 @@ export const STATUS_TO_COLUMN_MAP = {
 
 export const getColumnTypeFromStatus = (status) =>
   STATUS_TO_COLUMN_MAP[status] || BOARD_COLUMNS.ACCEPTED
+
+// Status display mapping for timeline
+export const STATUS_DISPLAY_MAP = {
+  submitted: {
+    title: 'Issue Submitted',
+    description: 'Issue has been submitted',
+  },
+  [ISSUE_STATUSES.ACCEPTED]: {
+    title: 'Issue Accepted',
+    description: 'Issue has been accepted',
+  },
+  [ISSUE_STATUSES.IN_PROGRESS]: {
+    title: 'In Progress',
+    description: 'Work is in progress',
+  },
+  [ISSUE_STATUSES.COMPLETED]: {
+    title: 'Completed',
+    description: 'Issue has been completed',
+  },
+  [ISSUE_STATUSES.WONT_DO]: {
+    title: "Won't Do",
+    description: 'Issue will not be addressed',
+  },
+}

@@ -13,9 +13,9 @@ import {
   getColumnTypeFromStatus,
 } from '../../shared/constants'
 
-const updateIssueStatus = async (issueId, status) => {
+const updateIssueStatus = async (uuid, status) => {
   const resp = await clientFetch(apiRoutes.issues.update, {
-    id: issueId,
+    uuid,
     status,
   })
 }
@@ -64,7 +64,7 @@ export default function IssueBoard() {
 
     setAllIssues(updatedAllIssues)
 
-    await updateIssueStatus(draggedIssue.id, newStatus)
+    await updateIssueStatus(draggedIssue.uuid, newStatus)
   }
 
   const handleDragCancel = () => {

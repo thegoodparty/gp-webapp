@@ -22,7 +22,7 @@ const statusToColor = {
 }
 
 export default function IssueSnippet({ issue }) {
-  const { id, title, description, updatedAt, status } = issue
+  const { uuid, title, description, updatedAt, status } = issue
   return (
     <Paper className="">
       <H3>{title}</H3>
@@ -37,7 +37,12 @@ export default function IssueSnippet({ issue }) {
           {statusToText[status]}
         </div>
       </div>
-      <Button className="mt-8 w-full" color="neutral" variant="outlined">
+      <Button
+        className="mt-8 w-full"
+        color="neutral"
+        variant="outlined"
+        href={`/dashboard/issues/${uuid}`}
+      >
         View Details
       </Button>
     </Paper>
