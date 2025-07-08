@@ -1,860 +1,512 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://goodparty.org/candidate/betty-sparkman/pass-christian-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/robbie-barlow/learned-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/gary-lennep/moss-point-city-council-ward-6</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/betty-darnell/caledonia-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/bill-strauss/columbus-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/ashby-foote/jackson-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/beulah-jones/edwards-town-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/fred-tolon/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/carolyn-glin/edwards-town-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/harmon-hill/sandersville-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/helen-harris/bolton-town-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/carol-parrett/satartia-village-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/beth-sanford/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/alan-kegley/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/aj-shields/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/kirk-mcdaniel/flowood-city-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/candidate/andy-linville/biloxi-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jim-seymour/flowood-city-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/laura-smith/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/dwight-knight/pearl-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/lendell-mack/bolton-town-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/leonard-gaskin/columbus-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/loretta-thornton/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/bobby-rayburn/learned-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/matt-chisolm/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/matthew-quick/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/c-white/sandersville-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/curtis-robinson/sandersville-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/crystal-wingo/diberville-city-council-at-large</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/ricky-lawson/edwards-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/anthony-snow/gautier-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/anthony-hudson/laurel-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/derrick-clark/edwards-town-council-at-large</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/brady-holder/bolton-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/bob-young/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/calvin-williams/utica-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/carlos-stallworth/pascagoula-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/casey-vaughan/gautier-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/chipper-gibbes/learned-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/eddie-jones/pelahatchie-town-council-at-large</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/diane-hill/pelahatchie-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/darlene-hill/sandersville-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/darren-leach/columbus-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/david-gray/pelahatchie-town-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/latonya-malone/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/garsheo-black/richland-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/donald-pope/columbus-city-council-ward-6</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/dre-helms/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jason-capers/laurel-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/amanda-ware/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/clay-burns/richland-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/shaun-mcinnish/pelahatchie-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/tameka-rice/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/karl-vanhorn/pelahatchie-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/kedra-williams-pope/edwards-town-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/george-walker/utica-town-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/deron-harmon/flowood-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/colby-parks/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/gregory-shaffer/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/henry-riggin/learned-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/david-jackson/florence-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/hank-watson/sturgis-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/james-harrell/pelahatchie-town-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jacqueline-furnari/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/james-lewis/ocean-springs-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jason-chrest/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/greg-gipson/ocean-springs-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jerry-bane/sturgis-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/jewell-holcomb/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/angle-scruggs/laurel-city-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/john-hamilton/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/anthony-hudson/laurel-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/john-rozell/edwards-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/beth-sanford/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/joseph-piernas/pass-christian-city-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/derrick-clark/edwards-town-council-at-large</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/jonathan-mccardle/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/helen-harris/bolton-town-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/joshua-ward/gautier-city-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/betty-darnell/caledonia-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/joyce-lowery/crawford-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/beulah-jones/edwards-town-council-ward-4</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/kenneth-broome/utica-town-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/betty-sparkman/pass-christian-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/kim-martin/bentonia-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/kirk-mcdaniel/flowood-city-council-ward-3</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/lori-carpenter/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/c-white/sandersville-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/linda-adams/pelahatchie-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/matt-chisolm/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/lekentric-caston/edwards-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/matthew-quick/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/lamon-alexander/bolton-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/calvin-williams/utica-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/lorenzo-fuller/gautier-city-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/farren-santibanez/biloxi-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/everett-butler/pearl-city-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/maurice-lamb/bolton-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/michelle-douglas/satartia-village-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/mike-hickson/sandersville-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/curtis-robinson/sandersville-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/myangel-brim/canton-city-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/monica-willis/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/morgan-bowser/bolton-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/odvie-oneal/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/oren-zweig/ocean-springs-city-council-at-large</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/pierre-beard/columbus-city-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/bethany-edwards/learned-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/steven-griffin/laurel-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/renee-black/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/richard-white/byram-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/kathleen-nesbit/satartia-village-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/robby-moudy/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/robert-jacob/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/robert-scarbrough/sandersville-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/robert-demus/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/bob-young/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/robin-hicks-robinson/utica-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/carlos-stallworth/pascagoula-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/ryshonda-beechem/pelahatchie-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/david-jackson/florence-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/sandra-harvey/pelahatchie-town-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/sheila-gray/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/stephan-santibanez/biloxi-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/shirley-mason/bolton-town-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/steven-pigg/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/susanna-mcclelland/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/tammy-mccool/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/tamara-boatner/bentonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/timothy-bentley/byram-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/tim-bunkley/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/travares-comegys/laurel-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/vera-powell/bolton-town-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/walter-peeples/canton-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/stephanie-boutwell/satartia-village-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/walter-bridges/crawford-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/william-woods/bolton-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/samuel-luckey/caledonia-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/reginald-king/bolton-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/larry-douglas/satartia-village-marshal</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/laura-watson/sturgis-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/tommy-brown/edwards-town-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/aj-shields/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/sonya-white/biloxi-city-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/scot-mancil/richland-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/dwight-knight/pearl-city-council-ward-5</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/shirley-williams/learned-town-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/stephan-santibanez/biloxi-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/willie-parson/crawford-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/shirley-mason/bolton-town-council-ward-3</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/alan-kegley/florence-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/tammy-mccool/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/tim-bunkley/florence-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/timothy-bentley/byram-city-council-ward-5</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/tommy-brown/edwards-town-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/clay-burns/richland-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/lamon-alexander/bolton-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/kedra-williams-pope/edwards-town-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/carolyn-glin/edwards-town-council-ward-3</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/kenneth-broome/utica-town-council-ward-4</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/r-thompson/florence-city-council</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/sabrina-washington/crawford-town-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/john-rozell/edwards-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/hayden-king/clinton-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/john-hamilton/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/robby-moudy/florence-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/richard-white/byram-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/jacqueline-furnari/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/jason-chrest/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/jason-capers/laurel-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/samuel-luckey/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/reginald-king/bolton-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/scot-mancil/richland-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/robin-hicks-robinson/utica-town-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/farren-santibanez/biloxi-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/garsheo-black/richland-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/george-walker/utica-town-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/deron-harmon/flowood-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/mike-hickson/sandersville-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/brady-holder/bolton-town-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/steven-griffin/laurel-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/gary-lennep/moss-point-city-council-ward-6</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/robert-jacob/caledonia-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/dre-helms/florence-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/jonathan-mccardle/florence-city-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/jim-seymour/flowood-city-council-ward-4</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/joseph-piernas/pass-christian-city-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/crystal-wingo/diberville-city-council-at-large</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/maurice-lamb/bolton-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/ricky-lawson/edwards-town-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/harmon-hill/sandersville-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/darlene-hill/sandersville-town-council</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/lendell-mack/bolton-town-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/morgan-bowser/bolton-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/lekentric-caston/edwards-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/william-woods/bolton-town-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/everett-butler/pearl-city-council-ward-3</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/travares-comegys/laurel-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/vera-powell/bolton-town-council-ward-4</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/walter-peeples/canton-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/ashby-foote/jackson-city-council-ward-1</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/dalaney-mecham/gulfport-city-council-ward-4</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/kim-wade/jackson-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/grace-greene/jackson-city-council-ward-1</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/candidate/lillie-stewart-robinson/jackson-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/lynn-bumpers/picayune-city-council-ward-2</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/marques-jackson/jackson-city-council-ward-3</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/ray-mccants/jackson-city-council-ward-5</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/rodney-depriest/jackson-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/candidate/ron-aldridge/jackson-city-council-ward-7</loc>
-    <lastmod>2025-07-02</lastmod>
+    <loc>https://goodparty.org/candidate/hayden-king/clinton-city-council-ward-5</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://goodparty.org/candidate/zach-servis/jackson-city-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/kim-wade/jackson-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/lillie-stewart-robinson/jackson-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/lyn-bumpers/picayune-city-council-ward-2</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/marques-jackson/jackson-city-council-ward-3</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/ray-mccants/jackson-city-council-ward-5</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/rodney-depriest/jackson-city-mayor</loc>
+    <lastmod>2025-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goodparty.org/candidate/ron-aldridge/jackson-city-council-ward-7</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
