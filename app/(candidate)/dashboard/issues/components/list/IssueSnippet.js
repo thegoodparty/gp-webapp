@@ -26,7 +26,7 @@ export default function IssueSnippet({ issue }) {
   return (
     <Paper className="">
       <H3>{title}</H3>
-      <Body1 className="text-slate-600 mt-1">{description}</Body1>
+      <Body1 className="text-slate-600 mt-1 line-clamp-2">{description}</Body1>
       <Body2 className="text-slate-500 mt-4">
         Updated: {dateUsHelper(updatedAt)}
       </Body2>
