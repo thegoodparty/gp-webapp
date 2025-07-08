@@ -2857,18 +2857,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/ca/los-altos-hills</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/ca/mcfarland-unified-school-district</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/ca/modoc-county</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -2923,12 +2911,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/ca/moreno-valley</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/ca/moreno-valley-unified-school-district</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -2954,12 +2936,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/ca/mountain-empire-unified-school-district</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/ca/mountain-house-elementary-school-district</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3037,12 +3013,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/ca/newport-mesa-unified-school-district</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/ca/north-county-joint-union-elementary-school-district</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -3050,12 +3020,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/ca/oak-grove-union-elementary-school-district</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/ca/oak-park-unified-school-district</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -4243,12 +4207,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/stanislaus-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -4465,12 +4423,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/monterey-county/airport-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -4544,12 +4496,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/parlier/city-executive-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -4639,12 +4585,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/santa-cruz-county/harbor-district-board-port-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -4658,12 +4598,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-benito-county/local-higher-education-board-community-college-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -4760,12 +4694,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/dublin/city-executive-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -4957,18 +4885,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/chula-vista-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5000,12 +4916,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/mendocino-county/water-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/gerber-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -5185,12 +5095,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/coalinga-huron-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5203,12 +5107,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-francisco-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5216,12 +5114,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/golden-plains-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -5276,12 +5168,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/tehachapi/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -5348,12 +5234,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/state-representative</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/apple-valley/fire-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -5539,12 +5419,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/pacheco-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5600,12 +5474,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/traver-joint-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -5731,12 +5599,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/us-representative</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5827,12 +5689,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/lakeside-union-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -5846,12 +5702,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/kingsburg-joint-union-high-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -6175,12 +6025,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -6433,12 +6277,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/monterey-county/county-oversight-board-of-local-school-districts</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -6643,12 +6481,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-bernardino-county/county-tax-assessor/recorder-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -6686,12 +6518,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/gravenstein-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -6811,12 +6637,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/sonoma-county/local-higher-education-board-community-college-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -6914,12 +6734,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/pacifica/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7075,12 +6889,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/bonita-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7207,19 +7015,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-tax-collector/treasurer-joint</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7261,12 +7057,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/el-dorado-county/general-services-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7298,12 +7088,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/oxnard-union-high-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7375,12 +7159,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/chicago-park-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7394,12 +7172,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/bennett-valley-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7579,19 +7351,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/columbia-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/glendale-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7759,18 +7519,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/pacific-grove-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7784,12 +7532,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/susanville-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7861,18 +7603,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/alameda-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7880,12 +7610,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-joaquin-county/fire-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/alpaugh-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7909,12 +7633,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/redding/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/palm-springs/city-executive-mayor</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -7922,18 +7640,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/dana-point/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7952,12 +7658,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/flournoy-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -7994,12 +7694,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/gridley-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -8203,12 +7897,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/midway-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -8347,12 +8035,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/lassen-county/county-legislature-executive-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/chino-hills/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -8455,12 +8137,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/seal-beach/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -8504,12 +8180,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/big-pine-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -8611,12 +8281,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/rim-of-the-world-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -8624,12 +8288,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-francisco-county/county-legislature-executive-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -8696,12 +8354,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/roseville/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -8983,12 +8635,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/placer-county/local-higher-education-board-community-college-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9008,12 +8654,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/chino-valley-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -9085,12 +8725,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/duarte-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9110,12 +8744,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/norwalk-la-mirada-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -9235,12 +8863,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/black-oak-mine-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9277,12 +8899,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/carpinteria/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9290,12 +8906,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/placer-county/county-clerk/recorder-joint</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -9314,12 +8924,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/st-helena/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -9349,12 +8953,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/solano-county/county-oversight-board-of-local-school-districts</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9368,12 +8966,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/monterey-county/parks-and-recreation-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -9571,12 +9163,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/alturas/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -9674,12 +9260,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/del-norte-county/county-tax-collector/treasurer-joint</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -10195,12 +9775,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/carpinteria-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -10399,19 +9973,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/junction-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -10765,12 +10327,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/la-puente/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -10826,12 +10382,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/sylvan-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -10993,12 +10543,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/amador-county/county-tax-collector/treasurer-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -11107,12 +10651,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/inglewood-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -11179,19 +10717,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -11324,12 +10850,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-jacinto-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -11491,12 +11011,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/hornbrook-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -11528,12 +11042,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/santa-clara-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/manteca/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -11689,12 +11197,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/briggs-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -11785,19 +11287,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -11816,12 +11306,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/riverside-county/parks-and-recreation-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -11917,12 +11401,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/alameda-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -11966,12 +11444,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/lemoore-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -12037,12 +11509,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/kings-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -12062,12 +11528,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/santa-clara-county/local-higher-education-board-community-college-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/mesa-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -12397,12 +11857,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/downey/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/duarte/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -12601,12 +12055,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/natomas-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -12638,18 +12086,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/covina/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/glendale-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -12829,12 +12265,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/delphic-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -12895,12 +12325,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/sutter-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -12932,18 +12356,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/santa-ynez-valley-union-high-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/downey/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13040,12 +12452,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/alameda-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/oceanside-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13171,12 +12577,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/amador-county/county-clerk/recorder-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -13267,12 +12667,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/los-nietos-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -13309,12 +12703,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-francisco-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -13328,12 +12716,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/mariposa-county/county-tax-collector/treasurer-joint</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13369,12 +12751,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/rancho-cucamonga/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -13382,12 +12758,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/lake-county/county-legislature-executive-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13603,12 +12973,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-juan-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -13777,31 +13141,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/carson/city-clerk-ward-officer</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/calaveras-county/county-coroner/public-administrator-joint</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13820,12 +13166,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -14095,18 +13435,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/state-representative</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -14150,12 +13478,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-luis-obispo-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -14269,12 +13591,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/monterey-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -14318,12 +13634,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/folsom/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -14659,18 +13969,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/lassen-county/county-tax-collector/treasurer-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -14684,12 +13982,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/orinda/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/lassen-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -14714,12 +14006,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/kerman-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -15122,18 +14408,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/porterville-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -15637,12 +14911,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-joaquin-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -15656,12 +14924,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/rowland-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -15686,12 +14948,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/kings-county/local-higher-education-board-community-college-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -15847,12 +15103,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/shasta-county/county-controller/auditor-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -15866,12 +15116,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/selma-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -16135,12 +15379,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/el-dorado-county/county-clerk/recorder-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -16220,12 +15458,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/charter-oak-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -16447,12 +15679,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/oakdale/city-executive-mayor</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -16472,12 +15698,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/us-representative</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -16675,12 +15895,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-bernardino-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -16765,18 +15979,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/bogus-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -16826,12 +16028,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-bernardino-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -16909,12 +16105,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/duarte/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -16958,12 +16148,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/lake-county/healthcare-district-board-hospital-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/pasadena-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17036,12 +16220,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/wasco/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17299,12 +16477,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/mesa-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-marcos/city-executive-mayor</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -17467,12 +16639,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/golden-valley-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -17491,18 +16657,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/carpinteria-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -17510,12 +16664,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/kingsburg/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17647,19 +16795,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/santa-clara-county/county-legislature-executive-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17696,12 +16832,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/thermalito-union-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17809,12 +16939,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -17906,12 +17030,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-luis-coastal-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -18097,12 +17215,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/sonora/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -18247,31 +17359,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/palm-springs/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/paramount/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -18373,12 +17467,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/culver-city-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -18457,12 +17545,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/goleta-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -18500,12 +17582,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/us-representative</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -18686,12 +17762,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/whittier/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -18901,12 +17971,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/pacific-grove-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -19033,12 +18097,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/plymouth/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -19046,12 +18104,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/wiseburn-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -19088,12 +18140,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/twin-ridges-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -19250,12 +18296,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/orange-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -19567,12 +18607,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/ventura-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -19867,12 +18901,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/mendocino-county/water-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -19880,12 +18908,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/state-representative</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -20155,12 +19177,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/south-gate/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -20342,12 +19358,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/fontana/city-executive-mayor</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -20731,18 +19741,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/tustin/city-executive-mayor</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -20821,12 +19819,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/twin-ridges-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -20846,12 +19838,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/pleasanton-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -20917,18 +19903,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/glendale-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/walnut/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -20954,12 +19928,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/mendota-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -21116,12 +20084,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/weaver-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -21493,12 +20455,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/beaumont-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -21619,12 +20575,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/alameda-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -21715,12 +20665,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/riverside-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -21806,12 +20750,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-buenaventura-ventura/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22063,12 +21001,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/madera-county/healthcare-district-board-hospital-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22100,12 +21032,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/angels/city-clerk-ward-officer</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/pasadena-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22273,12 +21199,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/petaluma/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22304,18 +21224,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/yolo-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22465,31 +21373,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/fremont/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/fairfield/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/pasadena-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22580,12 +21470,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/monterey/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22687,12 +21571,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/newport-beach/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22741,12 +21619,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/del-norte-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22784,12 +21656,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/menlo-park/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22855,12 +21721,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/manteca/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-miguel-joint-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22891,12 +21751,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/marin-county/healthcare-district-board-hospital-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -22904,12 +21758,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/san-bernardino-county/parks-and-recreation-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22982,12 +21830,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/savanna-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -23078,12 +21920,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/petaluma-city-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -23251,12 +22087,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-benito-county/healthcare-district-board-hospital-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -23305,12 +22135,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/bonny-doon-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -23330,12 +22154,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/watsonville/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -23665,12 +22483,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/tuolumne-county/county-tax-collector/treasurer-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -23708,12 +22520,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/corcoran/healthcare-district-board-hospital-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24019,12 +22825,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/oak-grove-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -24050,12 +22850,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/alpine-county/county-legislature-executive-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24181,12 +22975,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/pleasant-grove-joint-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -24206,18 +22994,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24271,12 +23047,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/el-dorado-county/county-legislature-executive-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -24307,31 +23077,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/shafter/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/ross-valley-elementary-school-district/state-appellate-court-justice-retention</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24374,12 +23126,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/paradise-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24487,12 +23233,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/oceanside-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/napa-valley-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -24529,19 +23269,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/shoreline-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24554,12 +23282,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/pomona-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24644,12 +23366,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/arroyo-grande/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24781,31 +23497,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/lewiston-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/us-representative</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24818,12 +23516,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/woodland-joint-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/elkins-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24871,19 +23563,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/fresno-county/county-superintendent-of-schools</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -24931,12 +23611,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/riverside-county/parks-and-recreation-district-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -24962,12 +23636,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/inyo-county/community-development-district-board-community-services-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25087,12 +23755,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/merced-county/county-tax-collector/treasurer-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -25130,12 +23792,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/yuba-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25183,12 +23839,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/arcohe-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -25202,12 +23852,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/lawndale-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25238,12 +23882,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/redwood-city-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25381,12 +24019,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/elkins-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/stone-corral-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -25411,25 +24043,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/pasadena-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/grover-beach/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/mesa-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/oceanside-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25586,12 +24200,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/placerville-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25843,12 +24451,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/meadows-union-elementary-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/placentia/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -25880,12 +24482,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/santa-clara-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -25933,12 +24529,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/tehachapi-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -25964,12 +24554,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/tulare-county/healthcare-district-board-hospital-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -26101,12 +24685,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/jefferson-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -26227,12 +24805,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/brentwood-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -26246,12 +24818,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/sonoma-county/local-higher-education-board-community-college-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -26276,12 +24842,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/alameda-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -26348,12 +24908,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/tulare-county/healthcare-district-board-hospital-district-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/mesa-union-elementary-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -26653,12 +25207,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/monterey-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -26881,12 +25429,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/san-rafael-city-high-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -26954,12 +25496,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/eastvale/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -27055,12 +25591,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/mariposa-county-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -27098,12 +25628,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/hemet-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -27187,12 +25711,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles/city-legislature</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/palm-springs/city-legislature</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -27200,12 +25718,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/scott-valley-unified-school-district/local-school-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -27487,12 +25999,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/shasta-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -27512,12 +26018,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/sonoma-county/local-higher-education-board-community-college-board</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -27745,12 +26245,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/butte-county/county-clerk/recorder-joint</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -27883,12 +26377,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodparty.org/elections/position/ca/state-senator</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://goodparty.org/elections/position/ca/novato-unified-school-district/local-school-board</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -27908,12 +26396,6 @@
   </url>
   <url>
     <loc>https://goodparty.org/elections/position/ca/winters/city-treasurer-finance-officer</loc>
-    <lastmod>2025-07-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://goodparty.org/elections/position/ca/los-angeles-county/county-court-judge</loc>
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
