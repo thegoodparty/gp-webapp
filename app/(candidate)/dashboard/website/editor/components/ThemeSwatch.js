@@ -5,7 +5,7 @@ import Body2 from '@shared/typography/Body2'
 import { LuCheck } from 'react-icons/lu'
 
 export function DisplaySwatch({ theme }) {
-  const themeObj = WEBSITE_THEMES[theme]
+  const themeObj = WEBSITE_THEMES[theme] || WEBSITE_THEMES.light
   return (
     <ThemeSwatch
       label={theme}
