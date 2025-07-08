@@ -6,11 +6,11 @@ import Paper from '@shared/utils/Paper'
 import StatusPill from '../../shared/StatusPill'
 
 export default function IssueCard({ issue }) {
-  const { id, title, description, status } = issue
+  const { uuid, title, description, status } = issue
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: id,
+      id: uuid,
       data: {
         type: 'issue',
         issue,

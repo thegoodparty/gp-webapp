@@ -59,7 +59,9 @@ export default function IssueBoard() {
 
     // Update the issue status locally in both allIssues and filtered issues
     const updatedAllIssues = allIssues.map((issue) =>
-      issue.id === draggedIssue.id ? { ...issue, status: newStatus } : issue,
+      issue.uuid === draggedIssue.uuid
+        ? { ...issue, status: newStatus }
+        : issue,
     )
 
     setAllIssues(updatedAllIssues)
