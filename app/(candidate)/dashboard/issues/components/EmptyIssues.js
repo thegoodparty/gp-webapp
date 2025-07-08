@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import AddIssueButton from './AddIssueButton'
 
-export default function EmptyIssueState() {
+export default function EmptyIssues() {
   return (
     <Paper className="mt-8">
       <div className="py-4 md:py-12 lg:py-24 flex flex-col items-center">
