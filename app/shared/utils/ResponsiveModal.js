@@ -55,7 +55,7 @@ export default function ResponsiveModal({
           ${
             fullSize
               ? 'w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh]'
-              : 'md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 w-full md:w-auto md:min-w-[600px] md:max-w-[90vw] max-h-[80vh]'
+              : 'md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 w-full md:w-auto md:min-w-[600px] md:max-w-[90vw] max-h-[90vh]'
           } 
           !px-4 !pt-16 !pb-8 md:!px-8 xl:!p-16
           !rounded-b-none md:!rounded-b-xl

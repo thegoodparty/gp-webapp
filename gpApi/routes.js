@@ -577,12 +577,20 @@ export const apiRoutes = {
       path: '/websites/mine/contacts',
       method: 'GET',
     },
+    getViews: {
+      path: '/websites/mine/views',
+      method: 'GET',
+    },
     submitContactForm: {
       path: '/websites/:vanityPath/contact-form',
       method: 'POST',
     },
     validateVanityPath: {
       path: '/websites/validate-vanity-path',
+      method: 'POST',
+    },
+    trackView: {
+      path: '/websites/:vanityPath/track-view',
       method: 'POST',
     },
   },

@@ -1,4 +1,5 @@
-import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
+import WebsiteContent from './components/WebsiteContent'
+import WebsiteViewTracker from './components/WebsiteViewTracker'
 import { notFound } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
@@ -33,5 +34,10 @@ export default async function CandidateWebsitePage({ params }) {
     notFound()
   }
 
-  return <WebsiteContent website={website} />
+  return (
+    <>
+      <WebsiteViewTracker vanityPath={website.vanityPath} />
+      <WebsiteContent website={website} />
+    </>
+  )
 }
