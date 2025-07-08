@@ -45,6 +45,7 @@ next-env.d.ts
 /public/sitemaps/generation-report-*.json
 /public/sitemaps/validation-report-*.json
 /public/sitemaps/pruning-report-*.json
+invalid_urls.csv
 
 # editor config
 /.vscode

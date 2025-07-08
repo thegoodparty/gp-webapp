@@ -127,7 +127,7 @@ function createErrorResult(url, error, redirectChain = []) {
 async function validateUrlWithRedirects(url, fetch, options = {}) {
   const { 
     maxRedirects = 5, 
-    redirectTimeout = 30000,
+    redirectTimeout = 10000,
     followRedirects = true,
     redirectHandling = 'remove' // 'remove', 'replace', or 'keep'
   } = options
@@ -248,7 +248,7 @@ async function validateUrlsEnhanced(urls, options = {}) {
     stopOnError = false,
     followRedirects = true,
     maxRedirects = 5,
-    redirectTimeout = 30000,
+    redirectTimeout = 10000,
     redirectHandling = 'remove', // 'remove', 'replace', or 'keep'
     deduplicateReplacements = true
   } = options
@@ -459,7 +459,14 @@ async function validateUrlsEnhanced(urls, options = {}) {
       successRate: validCount / totalUrls,
       sitemapInclusionRate: sitemapIncludeCount / totalUrls,
       errors,
-      redirectStats
+      redirectStats,
+      retryStats: {
+        retriedUrls: redirectStats.retriedUrls,
+        retriedSuccesses: redirectStats.retriedSuccesses,
+        retrySuccessRate: redirectStats.retriedUrls > 0 
+          ? redirectStats.retriedSuccesses / redirectStats.retriedUrls 
+          : 0
+      }
     }
   }
 }
@@ -646,7 +653,25 @@ module.exports = {
   
   // Enhanced filter function that handles redirects
   filterValidUrls: function(urlObjects, validationResults) {
-    const { processedUrls } = processUrlsForSitemap(validationResults, urlObjects)
-    return processedUrls
+    // Handle both calling patterns:
+    // 1. New: filterValidUrls(urlObjects, fullValidationResults)
+    // 2. Legacy: filterValidUrls(urlObjects, validationResults.results)
+    
+    if (Array.isArray(validationResults)) {
+      // Legacy pattern: validationResults is actually the results array
+      const validUrlSet = new Set(
+        validationResults
+          .filter(r => r.valid)
+          .map(r => r.url)
+      )
+      
+      return urlObjects.filter(urlObj => 
+        validUrlSet.has(typeof urlObj === 'string' ? urlObj : urlObj.url)
+      )
+    } else {
+      // New pattern: validationResults is the full object
+      const { processedUrls } = processUrlsForSitemap(validationResults, urlObjects)
+      return processedUrls
+    }
   }
 } 

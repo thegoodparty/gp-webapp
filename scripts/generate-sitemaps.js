@@ -5,8 +5,6 @@
  * This script generates all sitemaps and writes them to public/sitemaps/
  */
 
-require('dotenv').config()
-
 const fs = require('fs').promises
 const path = require('path')
 const { generateRootIndex, convertToXML } = require('./lib/xml')
@@ -15,8 +13,8 @@ const { validateUrls, generateValidationReport, filterValidUrls } = require('./v
 
 // Environment variables
 const APP_BASE = process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api-dev.goodparty.org'
-const ELECTION_API_BASE = process.env.NEXT_PUBLIC_ELECTION_API_BASE || 'https://election-api-dev.goodparty.org'
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api.goodparty.org'
+const ELECTION_API_BASE = process.env.NEXT_PUBLIC_ELECTION_API_BASE || 'https://election-api.goodparty.org'
 
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'sitemaps')
 
@@ -33,13 +31,18 @@ const flatStates = [
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 /**
- * Simple fetch implementation for Node.js
+ * Simple fetch implementation for Node.js with proper error handling
  */
 async function fetchData(url) {
   const fetch = (await import('node-fetch')).default
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' }
   })
+  
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText} for ${url}`)
+  }
+  
   return await response.json()
 }
 
@@ -70,7 +73,7 @@ async function fetchElectionData(path, params = {}) {
  */
 async function fetchBlogArticles() {
   try {
-    const articles = await fetchGPData('/api/v1/content/content', { type: 'blogArticle' })
+    const articles = await fetchGPData('/v1/content/type/blogArticle')
     return Array.isArray(articles) ? articles : []
   } catch (error) {
     console.error('Error fetching blog articles:', error.message)
@@ -83,7 +86,7 @@ async function fetchBlogArticles() {
  */
 async function fetchBlogSections() {
   try {
-    const sections = await fetchGPData('/api/v1/content/section')
+    const sections = await fetchGPData('/v1/content/blog-articles/by-section')
     return Array.isArray(sections) ? sections : []
   } catch (error) {
     console.error('Error fetching blog sections:', error.message)
@@ -96,7 +99,7 @@ async function fetchBlogSections() {
  */
 async function fetchFAQArticles() {
   try {
-    const faqs = await fetchGPData('/api/v1/content/content', { type: 'faqArticle' })
+    const faqs = await fetchGPData('/v1/content/type/faqArticle')
     return Array.isArray(faqs) ? faqs : []
   } catch (error) {
     console.error('Error fetching FAQ articles:', error.message)
@@ -109,8 +112,21 @@ async function fetchFAQArticles() {
  */
 async function fetchGlossaryTerms() {
   try {
-    const glossary = await fetchGPData('/api/v1/content/glossary-by-slug')
-    return glossary || {}
+    const glossary = await fetchGPData('/v1/content/type/glossaryItem/by-slug')
+    
+    // Validate that the response is a proper object (not an error response)
+    if (!glossary || typeof glossary !== 'object' || Array.isArray(glossary)) {
+      console.warn('Invalid glossary response format, using empty object')
+      return {}
+    }
+    
+    // Check if this looks like an error response (has error-like properties)
+    if (glossary.hasOwnProperty('error') || glossary.hasOwnProperty('statusCode') || glossary.hasOwnProperty('message')) {
+      console.warn('Glossary response appears to be an error object, using empty object')
+      return {}
+    }
+    
+    return glossary
   } catch (error) {
     console.error('Error fetching glossary terms:', error.message)
     return {}
@@ -249,6 +265,8 @@ async function generateMainSitemap() {
         priority: 0.7,
       })
     })
+  } else {
+    console.log(`   📚 No glossary terms found`)
   }
   
   return mainSitemap
@@ -344,7 +362,7 @@ async function generateCandidateSitemap(state, index) {
  * Main function to generate all sitemaps
  */
 async function generateSitemaps(options = {}) {
-  const { validate = false } = options
+  const { validate = false, validationOptions = {}, mainOnly = false } = options
   const startTime = Date.now()
   console.log('🚀 Starting sitemap generation...')
   console.log(`📁 Output directory: ${OUTPUT_DIR}`)
@@ -373,12 +391,12 @@ async function generateSitemaps(options = {}) {
     // Validate main URLs if needed
     if (validate && mainUrls.length > 0) {
       console.log('\n🔍 Validating main sitemap URLs...')
-      const validationResults = await validateUrls(mainUrls, { concurrency: 20 })
+      const validationResults = await validateUrls(mainUrls, validationOptions)
       validationReport = generateValidationReport(validationResults)
       
-      // Filter out invalid URLs
+      // Filter out invalid URLs using enhanced validation results
       const originalCount = mainUrls.length
-      mainUrls = filterValidUrls(mainUrls, validationResults.results)
+      mainUrls = filterValidUrls(mainUrls, validationResults)
       const removedCount = originalCount - mainUrls.length
       
       if (removedCount > 0) {
@@ -403,13 +421,15 @@ async function generateSitemaps(options = {}) {
       console.log(`   📄 Split into ${mainSitemapEntries.length} files due to size limits`)
     }
     
-    // Generate state sitemaps
-    console.log('\n📝 Generating state sitemaps...')
+    // Generate state sitemaps (skip if main-only mode)
     let stateCount = 0
     let stateUrlsTotal = 0
     const stateUrlsForValidation = []
     
-    for (let index = 0; index < flatStates.length; index++) {
+    if (!mainOnly) {
+      console.log('\n📝 Generating state sitemaps...')
+      
+      for (let index = 0; index < flatStates.length; index++) {
       const state = flatStates[index].toLowerCase()
       process.stdout.write(`  Processing ${state.toUpperCase()}... `)
       
@@ -448,42 +468,47 @@ async function generateSitemaps(options = {}) {
       } catch (error) {
         console.log(`❌ Error: ${error.message}`)
       }
-    }
-    console.log(`✅ Generated ${stateCount} state sitemaps with ${stateUrlsTotal} total URLs`)
-    
-    // Validate state URLs if needed
-    if (validate && stateUrlsForValidation.length > 0) {
-      console.log('\n🔍 Validating state sitemap URLs...')
-      const validationResults = await validateUrls(stateUrlsForValidation, { concurrency: 20 })
-      if (!validationReport) {
-        validationReport = generateValidationReport(validationResults)
-      } else {
-        // Merge results
-        validationReport.summary.total += validationResults.summary.total
-        validationReport.summary.valid += validationResults.summary.valid
-        validationReport.summary.invalid += validationResults.summary.invalid
-        validationReport.invalidUrls.push(...validationResults.summary.errors.map(e => ({
-          url: e.url,
-          status: e.status,
-          message: e.statusText,
-          duration: e.duration
-        })))
       }
+      console.log(`✅ Generated ${stateCount} state sitemaps with ${stateUrlsTotal} total URLs`)
       
-      const invalidCount = validationResults.summary.invalid
-      if (invalidCount > 0) {
-        console.log(`   ⚠️  Found ${invalidCount} invalid URLs in state sitemaps`)
-        console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+      // Validate state URLs if needed
+      if (validate && stateUrlsForValidation.length > 0) {
+        console.log('\n🔍 Validating state sitemap URLs...')
+        const stateValidationResults = await validateUrls(stateUrlsForValidation, validationOptions)
+        if (!validationReport) {
+          validationReport = generateValidationReport(stateValidationResults)
+        } else {
+          // Merge results
+          validationReport.summary.total += stateValidationResults.summary.total
+          validationReport.summary.valid += stateValidationResults.summary.valid
+          validationReport.summary.invalid += stateValidationResults.summary.invalid
+          validationReport.invalidUrls.push(...stateValidationResults.summary.errors.map(e => ({
+            url: e.url,
+            status: e.status,
+            message: e.statusText,
+            duration: e.duration
+          })))
+        }
+        
+        const invalidCount = stateValidationResults.summary.invalid
+        if (invalidCount > 0) {
+          console.log(`   ⚠️  Found ${invalidCount} invalid URLs in state sitemaps`)
+          console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+        }
       }
+    } else {
+      console.log('\n⏭️  Skipping state sitemaps (main-only mode)')
     }
     
-    // Generate candidate sitemaps
-    console.log('\n📝 Generating candidate sitemaps...')
+    // Generate candidate sitemaps (skip if main-only mode)
     let candidateCount = 0
     let candidateUrlsTotal = 0
     const candidateUrlsForValidation = []
     
-    for (let index = 0; index < flatStates.length; index++) {
+    if (!mainOnly) {
+      console.log('\n📝 Generating candidate sitemaps...')
+      
+      for (let index = 0; index < flatStates.length; index++) {
       const state = flatStates[index].toLowerCase()
       process.stdout.write(`  Processing ${state.toUpperCase()}... `)
       
@@ -522,33 +547,36 @@ async function generateSitemaps(options = {}) {
       } catch (error) {
         console.log(`❌ Error: ${error.message}`)
       }
-    }
-    console.log(`✅ Generated ${candidateCount} candidate sitemaps with ${candidateUrlsTotal} total URLs`)
-    
-    // Validate candidate URLs if needed
-    if (validate && candidateUrlsForValidation.length > 0) {
-      console.log('\n🔍 Validating candidate sitemap URLs...')
-      const validationResults = await validateUrls(candidateUrlsForValidation, { concurrency: 20 })
-      if (!validationReport) {
-        validationReport = generateValidationReport(validationResults)
-      } else {
-        // Merge results
-        validationReport.summary.total += validationResults.summary.total
-        validationReport.summary.valid += validationResults.summary.valid
-        validationReport.summary.invalid += validationResults.summary.invalid
-        validationReport.invalidUrls.push(...validationResults.summary.errors.map(e => ({
-          url: e.url,
-          status: e.status,
-          message: e.statusText,
-          duration: e.duration
-        })))
       }
+      console.log(`✅ Generated ${candidateCount} candidate sitemaps with ${candidateUrlsTotal} total URLs`)
       
-      const invalidCount = validationResults.summary.invalid
-      if (invalidCount > 0) {
-        console.log(`   ⚠️  Found ${invalidCount} invalid URLs in candidate sitemaps`)
-        console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+      // Validate candidate URLs if needed
+      if (validate && candidateUrlsForValidation.length > 0) {
+        console.log('\n🔍 Validating candidate sitemap URLs...')
+        const candidateValidationResults = await validateUrls(candidateUrlsForValidation, validationOptions)
+        if (!validationReport) {
+          validationReport = generateValidationReport(candidateValidationResults)
+        } else {
+          // Merge results
+          validationReport.summary.total += candidateValidationResults.summary.total
+          validationReport.summary.valid += candidateValidationResults.summary.valid
+          validationReport.summary.invalid += candidateValidationResults.summary.invalid
+          validationReport.invalidUrls.push(...candidateValidationResults.summary.errors.map(e => ({
+            url: e.url,
+            status: e.status,
+            message: e.statusText,
+            duration: e.duration
+          })))
+        }
+        
+        const invalidCount = candidateValidationResults.summary.invalid
+        if (invalidCount > 0) {
+          console.log(`   ⚠️  Found ${invalidCount} invalid URLs in candidate sitemaps`)
+          console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+        }
       }
+    } else {
+      console.log('\n⏭️  Skipping candidate sitemaps (main-only mode)')
     }
     
     // Generate root sitemap index
@@ -575,7 +603,7 @@ async function generateSitemaps(options = {}) {
     const report = {
       timestamp: new Date().toISOString(),
       duration: `${duration}s`,
-      environment: process.env.NODE_ENV || 'development',
+      environment: process.env.NODE_ENV || 'production',
       appBase: APP_BASE,
       sitemaps: {
         total: sitemapIndex.length,
@@ -644,9 +672,28 @@ async function generateSitemaps(options = {}) {
 // Handle CLI flags
 const args = process.argv.slice(2)
 const shouldValidate = args.includes('--validate')
+const mainOnly = args.includes('--main-only')
+
+// Parse redirect handling options
+const redirectHandling = args.find(arg => arg.startsWith('--redirect-handling='))?.split('=')[1] || 'remove'
+const maxRedirects = parseInt(args.find(arg => arg.startsWith('--max-redirects='))?.split('=')[1] || '5')
+const followRedirects = !args.includes('--no-follow-redirects')
+
+// Validation options
+const cliValidationOptions = {
+  concurrency: 20,
+  followRedirects,
+  maxRedirects,
+  redirectHandling,
+  deduplicateReplacements: true
+}
 
 // Run the generator
-generateSitemaps({ validate: shouldValidate }).catch(error => {
+generateSitemaps({ 
+  validate: shouldValidate,
+  mainOnly,
+  validationOptions: cliValidationOptions
+}).catch(error => {
   console.error('Unhandled error:', error)
   process.exit(1)
 }) 
