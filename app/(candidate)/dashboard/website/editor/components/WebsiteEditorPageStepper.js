@@ -2,7 +2,7 @@
 
 import Button from '@shared/buttons/Button'
 
-export default function Stepper({
+export default function WebsiteEditorPageStepper({
   totalSteps,
   currentStep,
   onStepChange,

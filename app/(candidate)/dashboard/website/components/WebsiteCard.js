@@ -7,10 +7,13 @@ import H5 from '@shared/typography/H5'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import ShareModal from './ShareModal'
+import { useWebsite } from './WebsiteProvider'
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
 
-function WebsiteCard({ website, className = '' }) {
+function WebsiteCard({ className = '' }) {
+  const { website } = useWebsite()
+
   const url = `${BASE_URL}/c/${website.vanityPath}`
   const [shareModalOpen, setShareModalOpen] = useState(false)
 

@@ -1,6 +1,6 @@
 import TextField from '@shared/inputs/TextField'
 import ImageInput from '@shared/inputs/ImageInput'
-import Caption from './Caption'
+import Caption from './WebsiteEditorPageCaption'
 import Label from './Label'
 import H2 from '@shared/typography/H2'
 
@@ -11,10 +11,13 @@ export default function HeroStep({
   onTitleChange,
   onTaglineChange,
   onImageChange,
+  noHeading = false,
 }) {
   return (
     <div>
-      <H2 className="mb-6">Customize the content visitors will see first</H2>
+      {!noHeading && (
+        <H2 className="mb-6">Customize the content visitors will see first</H2>
+      )}
       <Label>Title</Label>
       <TextField
         value={title}

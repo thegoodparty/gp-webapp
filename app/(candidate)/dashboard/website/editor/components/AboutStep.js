@@ -8,10 +8,11 @@ export default function AboutStep({
   issues,
   onBioChange,
   onIssuesChange,
+  noHeading = false,
 }) {
   return (
     <div>
-      <H2 className="mb-6">What is your campaign about?</H2>
+      {!noHeading && <H2 className="mb-6">What is your campaign about?</H2>}
       <Label>Your Bio</Label>
       <TextField
         fullWidth
