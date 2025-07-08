@@ -41,5 +41,15 @@ next-env.d.ts
 
 /storybook-static
 
+# sitemap reports
+/public/sitemaps/generation-report-*.json
+/public/sitemaps/validation-report-*.json
+/public/sitemaps/pruning-report-*.json
+invalid_urls.csv
+
 # editor config
 /.vscode
+
+# AI Tools
+/.ai/
+*repomix*

@@ -5,7 +5,7 @@ import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 
@@ -21,6 +21,7 @@ export default function DownloadStep({
   audience,
   scriptText,
   onCreateOutreach = async () => {},
+  voterCount = 0,
 }) {
   useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
 
@@ -46,7 +47,21 @@ export default function DownloadStep({
     [type],
   )
 
+  const trackCompletionEvent = () => {
+    trackEvent(
+      type === TASK_TYPES.doorKnocking
+        ? EVENTS.Outreach.DoorKnocking.Complete
+        : EVENTS.Outreach.PhoneBanking.Complete,
+      {
+        medium: type,
+        price: 0,
+        voterContacts: voterCount || 0,
+      },
+    )
+  }
+
   async function handleDownload() {
+    trackCompletionEvent()
     await downloadVoterList(
       {
         voterFileFilter: audience,
@@ -58,12 +73,13 @@ export default function DownloadStep({
   }
 
   return (
-    <div className="p-4 min-w-[500px]">
+    <div className="p-4">
       <H1 className="text-center mb-8">Download your materials</H1>
       <div className="flex flex-col gap-4 items-center">
         <CopyScriptButton
           scriptText={scriptText}
           trackingAttrs={copyTrackingAttrs}
+          onCopy={trackCompletionEvent}
         />
         <Button
           size="large"
@@ -77,6 +93,7 @@ export default function DownloadStep({
         </Button>
         <Button
           href={blogUrl}
+          onClick={trackCompletionEvent}
           target="_blank"
           size="large"
           color="neutral"

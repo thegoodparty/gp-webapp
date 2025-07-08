@@ -23,7 +23,10 @@ export default function DashboardLayout({
 
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
         <div className="hidden lg:block">
-          <DashboardMenu pathname={pathname || hookPathname} campaign={campaign} />
+          <DashboardMenu
+            pathname={pathname || hookPathname}
+            campaign={campaign}
+          />
         </div>
         <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}
