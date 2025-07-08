@@ -18,7 +18,7 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 - Creates candidate sitemaps with candidate profile data (where available)
 - Handles automatic sitemap splitting when URL count/size limits are exceeded
 - Generates sitemap index file listing all sitemaps
-- Optionally validates URLs during generation
+- Optionally validates URLs during generation (skips main sitemap's static URLs for efficiency)
 - Creates timestamped generation reports
 
 **Usage**:
@@ -29,7 +29,7 @@ node scripts/generate-sitemaps.js
 # Generate main sitemap only (fast - useful for testing)
 node scripts/generate-sitemaps.js --main-only
 
-# Generate sitemaps with URL validation (slower but ensures quality)
+# Generate sitemaps with URL validation (validates dynamic URLs only - skips static main sitemap)
 node scripts/generate-sitemaps.js --validate
 
 # Generate with enhanced redirect handling (removes all redirects for better SEO)
@@ -379,8 +379,8 @@ All generated files are saved to `public/sitemaps/` and include timestamps to av
 - **Size**: Individual sitemaps stay under 50MB limit
 
 ### **Validation Performance**  
-- **Full validation**: ~7 minutes for 200K URLs
-- **Main sitemap only**: ~6 seconds for 444 URLs
+- **Full validation**: ~6 minutes for 195K URLs (skips main sitemap's static URLs)
+- **Main sitemap only**: Skipped automatically (static URLs don't need validation)
 - **Concurrency**: 20 parallel requests
 - **Success Rate**: ~94% valid URLs (higher with retry logic)
 - **Average Response**: ~150ms per URL

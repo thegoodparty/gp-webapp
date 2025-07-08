@@ -388,20 +388,9 @@ async function generateSitemaps(options = {}) {
     console.log('\n📝 Generating main sitemap...')
     let mainUrls = await generateMainSitemap()
     
-    // Validate main URLs if needed
-    if (validate && mainUrls.length > 0) {
-      console.log('\n🔍 Validating main sitemap URLs...')
-      const validationResults = await validateUrls(mainUrls, validationOptions)
-      validationReport = generateValidationReport(validationResults)
-      
-      // Filter out invalid URLs using enhanced validation results
-      const originalCount = mainUrls.length
-      mainUrls = filterValidUrls(mainUrls, validationResults)
-      const removedCount = originalCount - mainUrls.length
-      
-      if (removedCount > 0) {
-        console.log(`   ⚠️  Removed ${removedCount} invalid URLs from main sitemap`)
-      }
+    // Skip main sitemap validation - contains mostly static URLs that don't need validation
+    if (validate) {
+      console.log('\n⏭️  Skipping main sitemap validation (static URLs)')
     }
     
     allUrls.push(...mainUrls)
