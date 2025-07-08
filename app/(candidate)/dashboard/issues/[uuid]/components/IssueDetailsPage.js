@@ -3,8 +3,6 @@ import IssueDetailsHeader from './IssueDetailsHeader'
 import IssueDescription from './IssueDescription'
 
 export default function IssueDetailsPage({ issue, statusHistory }) {
-  const { description } = issue
-
   return (
     <div className="bg-indigo-100 p-2 md:p-4 min-h-[calc(100vh-56px)]">
       <div className="max-w-4xl mx-auto mt-4">
