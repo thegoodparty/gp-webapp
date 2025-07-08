@@ -19,9 +19,9 @@ async function fetchIssueChangelog(uuid) {
 }
 
 const meta = pageMetaData({
-  title: 'Add Issue | GoodParty.org',
-  description: 'Add Issue',
-  slug: '/dashboard/issues/add-issue',
+  title: 'Issue Details | GoodParty.org',
+  description: 'View issue details',
+  slug: '/dashboard/issues/[uuid]',
 })
 export const metadata = meta
 
