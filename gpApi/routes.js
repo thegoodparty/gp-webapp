@@ -400,6 +400,16 @@ export const apiRoutes = {
       path: '/elections/races-by-year',
       method: 'GET',
     },
+    districts: {
+      types: {
+        path: '/elections/districts/types',
+        method: 'GET'
+      },
+      names: {
+        path: '/elections/districts/names',
+        method: 'GET'
+      }
+    }
   },
   payments: {
     createCheckoutSession: {
