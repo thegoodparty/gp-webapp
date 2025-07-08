@@ -69,8 +69,7 @@ export default function WebsiteVisits({ className = '' }) {
       <div className="flex justify-between items-center gap-2 mb-6">
         <div>
           <H5>
-            {totalVisitors || '#'}{' '}
-            {totalVisitors === 1 ? 'Visitor' : 'Visitors'}
+            {totalVisitors} {totalVisitors === 1 ? 'Visitor' : 'Visitors'}
           </H5>
           <Body2 className="mt-1 text-gray-500 text-xs">Last 7 days</Body2>
         </div>
