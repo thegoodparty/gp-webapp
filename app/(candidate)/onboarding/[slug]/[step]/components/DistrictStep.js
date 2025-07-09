@@ -26,7 +26,11 @@ export default function DistrictStep({ campaign, step, ...props }) {
         apiRoutes.elections.districts.types,
         { state, electionYear },
       )
-      setDistrictTypes(data)
+      console.log('elections.districts.types data: ', data)
+      setDistrictTypes(data.map(d => ({
+        ...d,
+        label: d.L2DistrictType.replace(/_/g, ' ')
+      })))
       setLoadingTypes(false)
     }) ()
 }, [state, electionYear])
@@ -59,7 +63,7 @@ export default function DistrictStep({ campaign, step, ...props }) {
   return (
     <PortalPanel color="#2CCDB0" {...props}>
       <div className="mt-8">
-        <H2 className="mb-8">Pick Your District</H2>
+        <H2 className="mb-8">Select Your District</H2>
 
         <div className="max-w-4xl mx-auto mx-auto grid lg:grid-cols-2 gap-6">
           {/* -------- District Type -------- */}
@@ -69,7 +73,7 @@ export default function DistrictStep({ campaign, step, ...props }) {
               loading={loadingTypes}
               options={districtTypes}
               value={selectedType}
-              getOptionLabel={(o) => o.L2DistrictType}
+              getOptionLabel={(o) => o.label}
               isOptionEqualToValue={(o, v) => o.id === v?.id}
               onChange={(_, v) => {
                 setSelectedType(v)
