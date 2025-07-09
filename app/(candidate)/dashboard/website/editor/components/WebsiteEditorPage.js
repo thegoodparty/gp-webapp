@@ -7,8 +7,13 @@ export default function WebsiteEditorPage({ pathname }) {
   const [campaign] = useCampaign()
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <WebsiteEditFlow campaign={campaign} />
+    <DashboardLayout
+      pathname={pathname}
+      campaign={campaign}
+      showAlert={false}
+      hideMenu
+    >
+      <WebsiteEditFlow />
     </DashboardLayout>
   )
 }

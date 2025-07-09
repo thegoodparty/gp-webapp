@@ -9,9 +9,10 @@ const nextConfig = {
   images: {
     domains: [
       'assets.goodparty.org',
+      'assets-dev.goodparty.org',
       'images.ctfassets.net',
       'maps.googleapis.com',
-      'assets.civicengine.com'
+      'assets.civicengine.com',
     ],
   },
   env: {

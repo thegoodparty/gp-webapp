@@ -3,6 +3,7 @@ import ShareButtons from '../../components/ShareButtons'
 import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import { LuPartyPopper } from 'react-icons/lu'
+import Button from '@shared/buttons/Button'
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
 
@@ -28,6 +29,15 @@ export default function CompleteStep({ vanityPath }) {
           website.
         </Body2>
         <ShareButtons url={url} />
+      </div>
+      <div className="col-span-2 flex mt-8 justify-end lg:justify-center">
+        <Button
+          size="large"
+          href="/dashboard/website"
+          className="!px-12 fixed bottom-4 lg:static"
+        >
+          Finish
+        </Button>
       </div>
     </div>
   )

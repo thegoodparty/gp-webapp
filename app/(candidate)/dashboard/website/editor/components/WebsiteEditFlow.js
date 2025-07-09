@@ -20,7 +20,7 @@ import { updateWebsite } from '../../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
 import EditSettingsMenu from './EditSettingsMenu'
 
-export default function WebsiteEditFlow({ campaign }) {
+export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
   const [editSection, setEditSection] = useState(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -70,9 +70,8 @@ export default function WebsiteEditFlow({ campaign }) {
       reader.onloadend = () => setLogo(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setLogo(undefined, undefined)
+      setLogo(null, undefined)
     }
-
     function setLogo(url, file) {
       setWebsite((current) => ({
         ...current,
@@ -121,7 +120,7 @@ export default function WebsiteEditFlow({ campaign }) {
       reader.onloadend = () => setHero(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setHero(undefined, undefined)
+      setHero(null, undefined)
     }
 
     function setHero(url, file) {
@@ -261,7 +260,7 @@ export default function WebsiteEditFlow({ campaign }) {
             loading={saveLoading}
             disabled={saveLoading}
           >
-            Publish Changes
+            Save
           </Button>
         </div>
       </div>
@@ -308,7 +307,7 @@ export default function WebsiteEditFlow({ campaign }) {
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
       >
-        <WebsitePreview website={website} campaign={campaign} />
+        <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
     </div>
   )

@@ -54,9 +54,9 @@ export default function EmailInput({
             }
           : {}
       }
-    inputProps={{
-    'data-testid': restProps['data-testid'],
-    }}
+      inputProps={{
+        'data-testid': restProps['data-testid'],
+      }}
       {...restProps}
     />
   )

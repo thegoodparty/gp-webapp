@@ -1,9 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { adminAccessOnly } from 'helpers/permissionHelper'
 import WebsitePage from './components/WebsitePage'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { WebsiteProvider } from './components/WebsiteProvider'
+import candidateAccess from '../shared/candidateAccess'
 
 const meta = pageMetaData({
   title: 'Website | GoodParty.org',
@@ -15,7 +15,7 @@ export const metadata = meta
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  await adminAccessOnly() // TODO: remove this once feature is live
+  await candidateAccess()
 
   const [websiteResp, contactsResp] = await Promise.all([
     serverFetch(apiRoutes.website.get),

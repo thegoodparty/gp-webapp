@@ -19,7 +19,7 @@ import { useWebsite } from '../../components/WebsiteProvider'
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
-export default function WebsiteCreateFlow({ campaign }) {
+export default function WebsiteCreateFlow() {
   const router = useRouter()
   const { errorSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
@@ -80,7 +80,7 @@ export default function WebsiteCreateFlow({ campaign }) {
       reader.onloadend = () => setLogo(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setLogo(undefined, undefined)
+      setLogo(null, undefined)
     }
 
     function setLogo(url, file) {
@@ -131,7 +131,7 @@ export default function WebsiteCreateFlow({ campaign }) {
       reader.onloadend = () => setHero(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setHero(undefined, undefined)
+      setHero(null, undefined)
     }
 
     function setHero(url, file) {
@@ -222,12 +222,8 @@ export default function WebsiteCreateFlow({ campaign }) {
             Preview
           </Button>
         </div>
-        <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-3 gap-6">
-          <div
-            className={`lg:col-span-1 ${
-              step === COMPLETE_STEP ? 'lg:col-span-3' : ''
-            }`}
-          >
+        <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
+          <div className={`${step === COMPLETE_STEP ? 'lg:col-span-2' : ''}`}>
             {step === 1 && (
               <VanityPathStep
                 vanityPath={website.vanityPath}
@@ -284,20 +280,12 @@ export default function WebsiteCreateFlow({ campaign }) {
             )}
           </div>
           {step !== COMPLETE_STEP && (
-            <div className="hidden lg:block lg:col-span-2 max-h-[60vh]">
-              <WebsitePreview website={website} campaign={campaign} />
+            <div className="hidden lg:block max-h-[60vh]">
+              <WebsitePreview website={website} />
             </div>
           )}
         </div>
-        {step === COMPLETE_STEP ? (
-          <Button
-            className="self-end lg:self-center"
-            size="large"
-            href="/dashboard/website"
-          >
-            Finish
-          </Button>
-        ) : (
+        {step !== COMPLETE_STEP && (
           <WebsiteEditorPageStepper
             totalSteps={NUM_STEPS}
             currentStep={step}
@@ -309,7 +297,7 @@ export default function WebsiteCreateFlow({ campaign }) {
         )}
       </div>
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
-        <WebsitePreview website={website} campaign={campaign} />
+        <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
     </>
   )

@@ -7,8 +7,13 @@ export default function WebsiteCreatePage({ pathname }) {
   const [campaign] = useCampaign()
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <WebsiteCreateFlow campaign={campaign} />
+    <DashboardLayout
+      pathname={pathname}
+      campaign={campaign}
+      showAlert={false}
+      hideMenu
+    >
+      <WebsiteCreateFlow />
     </DashboardLayout>
   )
 }
