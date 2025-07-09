@@ -40,7 +40,6 @@ export default function DistrictStep({ campaign, step, ...props }) {
         apiRoutes.elections.districts.types,
         { state, electionYear },
       )
-      console.log('elections.districts.types data: ', data)
       setDistrictTypes(data.map(d => ({
         ...d,
         label: d.L2DistrictType.replace(/_/g, ' ')
