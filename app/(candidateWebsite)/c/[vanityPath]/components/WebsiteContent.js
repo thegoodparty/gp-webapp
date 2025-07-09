@@ -1,0 +1,38 @@
+'use client'
+import { useState } from 'react'
+import { WEBSITE_THEMES } from '../constants/websiteContent.const'
+import PrivacyPolicyModal from './PrivacyPolicyModal'
+import WebsiteFooter from './WebsiteFooter'
+import ContactSection from './ContactSection'
+import AboutSection from './AboutSection'
+import HeroSection from './HeroSection'
+import WebsiteHeader from './WebsiteHeader'
+
+export default function WebsiteContent({ website }) {
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false)
+  const content = website?.content || {}
+  const activeTheme = WEBSITE_THEMES[content?.theme] || WEBSITE_THEMES.light
+
+  return (
+    <div className={`${activeTheme.bg} ${activeTheme.text}`}>
+      <WebsiteHeader activeTheme={activeTheme} website={website} />
+      <HeroSection activeTheme={activeTheme} content={content} />
+      <AboutSection activeTheme={activeTheme} content={content} />
+      <ContactSection
+        activeTheme={activeTheme}
+        content={content}
+        vanityPath={website.vanityPath}
+        onPrivacyPolicyClick={() => setShowPrivacyPolicy(true)}
+      />
+      <WebsiteFooter
+        activeTheme={activeTheme}
+        onPrivacyPolicyClick={() => setShowPrivacyPolicy(true)}
+      />
+      <PrivacyPolicyModal
+        open={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        content={content}
+      />
+    </div>
+  )
+}

@@ -11,6 +11,7 @@ import {
   MdLibraryBooks,
   MdMessage,
   MdSensorDoor,
+  MdWeb,
 } from 'react-icons/md'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
@@ -57,6 +58,13 @@ const DEFAULT_MENU_ITEMS = [
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
+  },
+  {
+    label: 'Website',
+    icon: <MdWeb />,
+    link: '/dashboard/website',
+    id: 'website-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
   },
   {
     label: 'My Profile',

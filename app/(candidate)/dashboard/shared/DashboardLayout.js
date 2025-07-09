@@ -13,6 +13,7 @@ export default function DashboardLayout({
   campaign,
   showAlert = true,
   wrapperClassName = '',
+  hideMenu = false,
 }) {
   const [user] = useUser()
   const hookPathname = usePathname()
@@ -22,12 +23,14 @@ export default function DashboardLayout({
       <UserSnapScript />
 
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
-        <div className="hidden lg:block">
-          <DashboardMenu
-            pathname={pathname || hookPathname}
-            campaign={campaign}
-          />
-        </div>
+        {!hideMenu && (
+          <div className="hidden lg:block">
+            <DashboardMenu
+              pathname={pathname || hookPathname}
+              campaign={campaign}
+            />
+          </div>
+        )}
         <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}
           <ProUpgradePrompt campaign={campaign} user={user} />
