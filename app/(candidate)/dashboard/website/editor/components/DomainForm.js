@@ -5,13 +5,15 @@ import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
 import DomainSearch from './DomainSearch'
 import CustomDomain from './CustomDomain'
+import { useWebsite } from '../../components/WebsiteProvider'
 
-export default function DomainForm({
-  website,
-  onVanityPathChange,
-  onRegisterSuccess,
-}) {
+export default function DomainForm({ onRegisterSuccess }) {
+  const { website, setWebsite } = useWebsite()
   const { vanityPath, domain } = website
+
+  function handleVanityPathChange(value) {
+    setWebsite({ ...website, vanityPath: value })
+  }
 
   return (
     <Paper className="max-w-md">
@@ -24,7 +26,7 @@ export default function DomainForm({
           fullWidth
           value={vanityPath || ''}
           disabled={!!domain}
-          onChange={(e) => onVanityPathChange(e.target.value)}
+          onChange={(e) => handleVanityPathChange(e.target.value)}
           InputLabelProps={{ shrink: true }}
           helperText={`This will be used for your website URL: goodparty.org/c/${
             vanityPath || '[vanity-path]'
