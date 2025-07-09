@@ -222,12 +222,8 @@ export default function WebsiteCreateFlow({ campaign }) {
             Preview
           </Button>
         </div>
-        <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-3 gap-6">
-          <div
-            className={`lg:col-span-1 ${
-              step === COMPLETE_STEP ? 'lg:col-span-3' : ''
-            }`}
-          >
+        <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
+          <div className={`${step === COMPLETE_STEP ? 'lg:col-span-2' : ''}`}>
             {step === 1 && (
               <VanityPathStep
                 vanityPath={website.vanityPath}
@@ -284,20 +280,12 @@ export default function WebsiteCreateFlow({ campaign }) {
             )}
           </div>
           {step !== COMPLETE_STEP && (
-            <div className="hidden lg:block lg:col-span-2 max-h-[60vh]">
+            <div className="hidden lg:block max-h-[60vh]">
               <WebsitePreview website={website} campaign={campaign} />
             </div>
           )}
         </div>
-        {step === COMPLETE_STEP ? (
-          <Button
-            className="self-end lg:self-center"
-            size="large"
-            href="/dashboard/website"
-          >
-            Finish
-          </Button>
-        ) : (
+        {step !== COMPLETE_STEP && (
           <WebsiteEditorPageStepper
             totalSteps={NUM_STEPS}
             currentStep={step}
@@ -309,7 +297,11 @@ export default function WebsiteCreateFlow({ campaign }) {
         )}
       </div>
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
-        <WebsitePreview website={website} campaign={campaign} />
+        <WebsitePreview
+          website={website}
+          campaign={campaign}
+          className="min-w-[60vw]"
+        />
       </ResponsiveModal>
     </>
   )

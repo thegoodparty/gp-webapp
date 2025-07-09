@@ -26,7 +26,7 @@ export default function ImageInput({
               onClick={() => onChange(null)}
               variant="text"
             >
-              Replace {imageLabel}
+              Remove {imageLabel}
             </Button>
           </div>
         </div>

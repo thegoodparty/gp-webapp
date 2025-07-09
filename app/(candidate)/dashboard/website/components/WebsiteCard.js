@@ -23,9 +23,9 @@ function WebsiteCard({ className = '' }) {
         className={`md:flex gap-4 justify-between !p-4 lg:!p-6 !rounded-lg ${className}`}
       >
         <div>
-          <H5 className="mt-2 md:mt-0 md:flex md:flex-row-reverse md:items-center gap-2">
+          <H5>
             <StatusChip status={website.status} />
-            <span className="block mt-1 md:mt-0">Your campaign website</span>
+            <span className="block mt-1">Your campaign website</span>
           </H5>
 
           <Link
@@ -36,7 +36,7 @@ function WebsiteCard({ className = '' }) {
             {url}
           </Link>
         </div>
-        <div className="flex gap-4 mt-4 md:mt-0">
+        <div className="flex gap-4 mt-4 md:mt-0 self-start">
           <Button
             className="flex-1 min-w-[150px]"
             onClick={() => setShareModalOpen(true)}

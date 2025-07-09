@@ -31,7 +31,7 @@ export function ThemeSwatch({
         textClass: theme.text,
       },
       {
-        className: `border-l-2 border-r-2 ${theme.secondary} ${theme.border}`,
+        className: `${theme.secondary}`,
         textClass: theme.text,
       },
       {
@@ -58,9 +58,7 @@ export function ThemeSwatch({
           <div
             key={idx}
             className={`flex grow items-center justify-center ${swatch.className}`}
-          >
-            <span className={`font-bold ${swatch.textClass}`}>A</span>
-          </div>
+          ></div>
         ))}
       </div>
       {!displayOnly && (

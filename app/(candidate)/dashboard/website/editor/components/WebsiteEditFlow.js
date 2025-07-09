@@ -261,7 +261,7 @@ export default function WebsiteEditFlow({ campaign }) {
             loading={saveLoading}
             disabled={saveLoading}
           >
-            Publish Changes
+            Save
           </Button>
         </div>
       </div>
@@ -308,7 +308,11 @@ export default function WebsiteEditFlow({ campaign }) {
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
       >
-        <WebsitePreview website={website} campaign={campaign} />
+        <WebsitePreview
+          website={website}
+          campaign={campaign}
+          className="min-w-[60vw]"
+        />
       </ResponsiveModal>
     </div>
   )

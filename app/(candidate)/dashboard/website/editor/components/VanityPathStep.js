@@ -5,6 +5,7 @@ import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValid
 import { validateVanityPath } from '../../util/website.util'
 import Caption from './WebsiteEditorPageCaption'
 import H2 from '@shared/typography/H2'
+import Label from './Label'
 
 const DEBOUNCE_TIME = 500
 
@@ -47,8 +48,8 @@ export default function VanityPathStep({ vanityPath, onChange }) {
   return (
     <>
       <H2 className="mb-6">What do you want your custom link to be?</H2>
+      <Label className="mt-6">Custom Link</Label>
       <TextField
-        label="Custom Link"
         placeholder="Enter your custom link"
         fullWidth
         required

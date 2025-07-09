@@ -48,7 +48,7 @@ export default function WebsiteEditorPageStepper({
       </Button>
       {currentStep === totalSteps ? (
         <Button
-          className="ml-auto md:ml-0 md:order-3"
+          className="ml-auto md:ml-0 md:order-3 whitespace-nowrap"
           size="large"
           onClick={onComplete}
           loading={completeLoading}
@@ -58,7 +58,7 @@ export default function WebsiteEditorPageStepper({
         </Button>
       ) : (
         <Button
-          className="ml-auto md:ml-0 md:order-3"
+          className="ml-auto md:ml-0 md:order-3 whitespace-nowrap"
           size="large"
           disabled={!hasNext}
           onClick={handleNextStep}

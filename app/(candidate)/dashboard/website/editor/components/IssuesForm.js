@@ -10,8 +10,6 @@ export default function IssuesForm({ issues = [], onChange }) {
   const [editingIssueIndex, setEditingIssueIndex] = useState(null)
 
   const handleAddIssue = () => {
-    const newIssues = [...issues, { title: '', description: '' }]
-    onChange(newIssues)
     setEditingIssue({ title: '', description: '' })
     setEditingIssueIndex(issues.length)
   }
@@ -44,7 +42,7 @@ export default function IssuesForm({ issues = [], onChange }) {
   return (
     <div className="mt-4">
       <Label>Key Issues</Label>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
         {issues?.map((issue, index) => (
           <Button
             key={index}

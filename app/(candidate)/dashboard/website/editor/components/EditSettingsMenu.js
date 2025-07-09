@@ -6,12 +6,14 @@ import { updateWebsite } from '../../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useRouter } from 'next/navigation'
 import { WEBSITE_STATUS } from '../../util/website.util'
+import AlertDialog from '@shared/utils/AlertDialog'
 
 export default function EditSettingsMenu() {
   const router = useRouter()
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -56,7 +58,7 @@ export default function EditSettingsMenu() {
         <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[160px]">
           <Button
             variant="text"
-            onClick={handleUnpublish}
+            onClick={() => setConfirmOpen(true)}
             disabled={loading}
             loading={loading}
             className="w-full"
@@ -66,6 +68,16 @@ export default function EditSettingsMenu() {
           </Button>
         </div>
       )}
+      <AlertDialog
+        open={confirmOpen}
+        handleClose={() => setConfirmOpen(false)}
+        handleProceed={handleUnpublish}
+        onCancel={() => setConfirmOpen(false)}
+        cancelLabel="Cancel"
+        proceedLabel="Unpublish"
+        title="Unpublish Website"
+        description="Are you sure you want to unpublish your website?"
+      />
     </div>
   )
 }

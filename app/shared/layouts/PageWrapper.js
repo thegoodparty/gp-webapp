@@ -44,7 +44,7 @@ const PageWrapper = async ({ children }) => {
                   <Suspense>
                     <CookiesSnackbar />
                   </Suspense>
-                  <SegmentIdentify/>
+                  <SegmentIdentify />
                 </div>
               </SnackbarProvider>
             </NavigationProvider>
