@@ -5,8 +5,6 @@
  * This script reads validation reports and removes 404/invalid URLs from static sitemap files
  */
 
-require('dotenv').config()
-
 const fs = require('fs').promises
 const path = require('path')
 const { generateRootIndex, convertToXML } = require('./lib/xml')
@@ -151,8 +149,8 @@ async function findSitemapFiles(dir) {
 }
 
 /**
- * Regenerate sitemap index after pruning
- * @param {string} outputDir - Output directory
+ * Regenerate root sitemap index after pruning
+ * @param {string} outputDir - Sitemaps directory (used to find sitemap files)
  * @returns {Object} Index generation stats
  */
 async function regenerateSitemapIndex(outputDir) {
@@ -173,9 +171,9 @@ async function regenerateSitemapIndex(outputDir) {
       })
     })
     
-    // Generate and write sitemap index
+    // Generate and write sitemap index to root location (same as generate-sitemaps.js)
     const indexXml = generateRootIndex(sitemapIndex)
-    await writeSitemapXML(path.join(outputDir, 'sitemap-index.xml'), indexXml)
+    await writeSitemapXML(path.join(process.cwd(), 'public', 'sitemap.xml'), indexXml)
     
     return {
       totalSitemaps: sitemapIndex.length,
@@ -294,11 +292,11 @@ async function pruneInvalidUrls(options = {}) {
       console.log('\n📝 Regenerating sitemap index...')
       const indexResult = await regenerateSitemapIndex(OUTPUT_DIR)
       
-      if (indexResult.indexGenerated) {
-        console.log(`✅ Sitemap index updated with ${indexResult.totalSitemaps} sitemaps`)
-      } else {
-        console.log(`❌ Failed to regenerate sitemap index: ${indexResult.error}`)
-      }
+          if (indexResult.indexGenerated) {
+      console.log(`✅ Root sitemap index (public/sitemap.xml) updated with ${indexResult.totalSitemaps} sitemaps`)
+    } else {
+      console.log(`❌ Failed to regenerate root sitemap index: ${indexResult.error}`)
+    }
     }
     
     // Generate summary report
