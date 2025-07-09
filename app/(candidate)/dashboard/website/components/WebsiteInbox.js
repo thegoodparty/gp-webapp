@@ -9,7 +9,7 @@ import { useWebsite } from './WebsiteProvider'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { formatToPhone } from 'helpers/numberHelper'
-import Modal from '@shared/utils/Modal'
+import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import H4 from '@shared/typography/H4'
 import PaginationButtons from '../../voter-records/components/PaginationButtons'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -137,7 +137,7 @@ export default function WebsiteInbox({}) {
 
 function ContactModal({ contact, onClose }) {
   return (
-    <Modal open={!!contact} closeCallback={onClose}>
+    <ResponsiveModal open={!!contact} onClose={onClose}>
       {contact && (
         <div className="p-8 [&>*]:!font-outfit">
           <ContactInfo
@@ -155,7 +155,7 @@ function ContactModal({ contact, onClose }) {
           />
         </div>
       )}
-    </Modal>
+    </ResponsiveModal>
   )
 }
 

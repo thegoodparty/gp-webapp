@@ -7,6 +7,7 @@ import {
   LuBadgeCheck,
   LuMessageCircleMore,
   LuTrendingUp,
+  LuLightbulb,
 } from 'react-icons/lu'
 
 const STEPS = {
@@ -45,6 +46,38 @@ const STEPS = {
       description: 'Track visitor count to gauge growing interest',
     },
   ],
+  increaseVisitors: [
+    {
+      icon: LuLightbulb,
+      title: 'Share on social media',
+      description:
+        'Post your website link on Facebook, Twitter, Instagram, and LinkedIn to reach more voters.',
+    },
+    {
+      icon: LuLightbulb,
+      title: 'Email your supporters',
+      description:
+        'Send the website to your email list and ask them to share it with friends and family.',
+    },
+    {
+      icon: LuLightbulb,
+      title: 'Add to campaign materials',
+      description:
+        'Include your website URL on business cards, flyers, yard signs, and other campaign materials.',
+    },
+    {
+      icon: LuLightbulb,
+      title: 'Local media outreach',
+      description:
+        'Contact local newspapers, radio stations, and blogs to feature your campaign and website.',
+    },
+    {
+      icon: LuLightbulb,
+      title: 'Community events',
+      description:
+        'Attend town halls, community meetings, and local events to share your website with voters.',
+    },
+  ],
 }
 
 function StepIcon({ Icon }) {
@@ -55,9 +88,11 @@ function StepIcon({ Icon }) {
   )
 }
 
-function StepItem({ icon, title, description }) {
+function StepItem({ icon, title, description, forceColumn = false }) {
   return (
-    <div className="flex md:flex-col items-center gap-4">
+    <div
+      className={`flex ${!forceColumn ? 'md:flex-col' : ''} items-center gap-4`}
+    >
       <StepIcon Icon={icon} />
       <div>
         <H5 className="mb-1">{title}</H5>
@@ -67,20 +102,29 @@ function StepItem({ icon, title, description }) {
   )
 }
 
-export default function StepList({ type = 'intro' }) {
+export default function StepList({ type = 'intro', forceColumn = false }) {
   const steps = STEPS[type] || STEPS.intro
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-3 py-2">
+    <div
+      className={`flex flex-col py-2 ${
+        !forceColumn ? 'md:grid md:grid-cols-3' : ''
+      }`}
+    >
       {steps.map((step, idx) => (
         <div key={step.title}>
           <StepItem
             icon={step.icon}
             title={step.title}
             description={step.description}
+            forceColumn={forceColumn}
           />
           {idx !== steps.length - 1 && (
-            <div className="md:hidden my-6 h-[1px] bg-black/[0.12]"></div>
+            <div
+              className={`${
+                !forceColumn ? 'md:hidden' : ''
+              } my-6 h-[1px] bg-black/[0.12]`}
+            ></div>
           )}
         </div>
       ))}
