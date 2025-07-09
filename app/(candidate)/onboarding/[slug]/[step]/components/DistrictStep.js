@@ -7,12 +7,14 @@ import PortalPanel from '@shared/layouts/PortalPanel'
 import { Autocomplete } from '@mui/material'
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { apiRoutes } from 'gpApi/routes'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { useRouter } from 'next/navigation'
 
-async function runP2V(slug) {
+async function updateDistrict(L2DistrictType, L2DistrictName, slug) {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
+    const resp = await clientFetch(apiRoutes.campaign.district, {
       slug,
+      L2DistrictType,
+      L2DistrictName
     })
 
     return resp.data
@@ -22,13 +24,15 @@ async function runP2V(slug) {
   }
 }
 
-export default function DistrictStep({ campaign, step, ...props }) {
+export default function DistrictStep({ campaign, step, adminMode, ...props }) {
+  const router = useRouter()
   const [districtTypes, setDistrictTypes] = useState([])
   const [districtNames, setDistrictNames] = useState([])
   const [selectedDistrictType, setselectedDistrictType] = useState(null)
   const [selectedDistrictName, setselectedDistrictName] = useState(null)
   const [loadingDistrictTypes, setloadingDistrictTypes] = useState(false)
   const [loadingDistrictNames, setloadingDistrictNames] = useState(false)
+  const [ processing, setProcessing] = useState(false)
   
   const electionYear = new Date(campaign.details.electionDate).getFullYear()
   const { state } = campaign.details
@@ -69,29 +73,30 @@ export default function DistrictStep({ campaign, step, ...props }) {
     }) ()
   }, [selectedDistrictType, electionYear, state])
 
-  const handleContinue = () => {
-    const attr = [
-      { 
-        // TODO: Rename electionType -> districtType
-        key: 'pathToVictory.electionType',
-        value: selectedDistrictType,
-      },
-      {
-        // TODO: Rename electionLocation -> districtLocation
-        key: 'pathToVictory.electionLocation',
-        value: selectedDistrictName,
-      }
-    ]
+  const canSubmit = !!selectedDistrictType && !!selectedDistrictName
 
-    // TODO: Rip out P2V logic once District picker solution is battle-tested
-    if (adminMode) {
-      updateCampaign(attr, campaign.slug)
-      runP2V(campaign.slug)
-    } else {
-      updateCampaign(attr)
-      runP2V()
+  const handleContinue = async () => {
+    if (!canSubmit || processing) return
+    setProcessing(true)
+    try {
+      if (adminMode) {
+        await updateDistrict(
+          selectedDistrictType.L2DistrictType, 
+          selectedDistrictName.L2DistrictName, 
+          campaign.slug
+        )
+      } else {
+        await updateDistrict(
+          selectedDistrictType.L2DistrictType, 
+          selectedDistrictName.L2DistrictName
+        )
+      }
+      router.push(`/onboarding/${campaign.slug}/${step + 1}`)
+    } catch(err) {
+      console.error(err)
+    } finally {
+      setProcessing(false)
     }
-    
   }
 
   return (
@@ -157,7 +162,7 @@ export default function DistrictStep({ campaign, step, ...props }) {
         <div className="flex justify-end mt-8">
           <BlackButtonClient
             onClick={handleContinue}
-            disabled={!selectedDistrictType || !selectedDistrictName}
+            disabled={!canSubmit || processing}
           >
             <strong>Continue</strong>
           </BlackButtonClient>

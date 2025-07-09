@@ -79,6 +79,10 @@ export const apiRoutes = {
     },
   },
   campaign: {
+    district: {
+      path: '/campaigns/mine/district',
+      method: 'PUT',
+    },
     pathToVictory: {
       create: {
         path: '/campaigns/mine/path-to-victory',
