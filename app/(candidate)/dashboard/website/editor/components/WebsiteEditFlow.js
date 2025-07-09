@@ -70,9 +70,8 @@ export default function WebsiteEditFlow({ campaign }) {
       reader.onloadend = () => setLogo(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setLogo(undefined, undefined)
+      setLogo(null, undefined)
     }
-
     function setLogo(url, file) {
       setWebsite((current) => ({
         ...current,
@@ -121,7 +120,7 @@ export default function WebsiteEditFlow({ campaign }) {
       reader.onloadend = () => setHero(reader.result, file)
       reader.readAsDataURL(file)
     } else {
-      setHero(undefined, undefined)
+      setHero(null, undefined)
     }
 
     function setHero(url, file) {
