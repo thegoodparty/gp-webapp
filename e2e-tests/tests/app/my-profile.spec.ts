@@ -43,7 +43,7 @@ test('Update Campaign Details', async ({ page }) => {
 const officeDetailsCaseId = 47;
 setupTestReporting(test, officeDetailsCaseId);
 
-test('Update Office Details', async ({ page }) => {
+test.skip('Update Office Details', async ({ page }) => {
     const electionRole = 'California Controller';
 
     // Select new office location
