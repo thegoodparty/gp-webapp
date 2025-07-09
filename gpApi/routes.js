@@ -529,6 +529,14 @@ export const apiRoutes = {
     },
   },
   issues: {
+    get: {
+      path: '/community-issues/:uuid',
+      method: 'GET',
+    },
+    getStatusHistory: {
+      path: '/community-issues/:uuid/status-history',
+      method: 'GET',
+    },
     list: {
       path: '/community-issues',
       method: 'GET',
@@ -536,6 +544,10 @@ export const apiRoutes = {
     create: {
       path: '/community-issues',
       method: 'POST',
+    },
+    update: {
+      path: '/community-issues/:uuid',
+      method: 'PUT',
     },
   },
   outreach: {

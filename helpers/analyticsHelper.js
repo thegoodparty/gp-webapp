@@ -363,6 +363,20 @@ export const EVENTS = {
       CancelDelete: 'Settings - Delete Account: Cancel Delete',
     },
   },
+  Outreach: {
+    ViewAccessed: 'Outreach - View Accessed',
+    ClickCreate: 'Outreach - Click Create',
+    SocialMedia: {
+      Complete: 'Outreach - Social Media: Complete',
+    },
+    DoorKnocking: {
+      Complete: 'Outreach - Door Knocking: Complete',
+    },
+    PhoneBanking: {
+      Complete: 'Outreach - Phone Banking: Complete',
+    },
+    ActionClicked: 'Outreach - Action Clicked',
+  },
 }
 
 export function extractClids(searchParams) {
