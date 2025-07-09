@@ -280,8 +280,6 @@ export async function loginAccount(
         }
       }
       
-      await page.waitForLoadState('networkidle', { timeout: 20000 });
-
       const currentUrl = page.url();
       if (!currentUrl.includes('/dashboard')) {
         throw new Error(`Login failed - not redirected to dashboard. Current URL: ${currentUrl}`);
