@@ -3,29 +3,15 @@ import { CSS } from '@dnd-kit/utilities'
 import Body1 from '@shared/typography/Body1'
 import H4 from '@shared/typography/H4'
 import Paper from '@shared/utils/Paper'
-
-const statusToText = {
-  newIssue: 'New Issue',
-  accepted: 'Accepted',
-  inProgress: 'In Progress',
-  wontDo: "Won't Do",
-  completed: 'Completed',
-}
-
-const statusToColor = {
-  newIssue: 'bg-slate-100',
-  accepted: 'bg-green-100',
-  inProgress: 'bg-yellow-100',
-  wontDo: 'bg-red-100',
-  completed: 'bg-green-100',
-}
+import StatusPill from '../../shared/StatusPill'
+import Button from '@shared/buttons/Button'
 
 export default function IssueCard({ issue }) {
-  const { id, title, description, status } = issue
+  const { uuid, title, description, status } = issue
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: id,
+      id: uuid,
       data: {
         type: 'issue',
         issue,
@@ -38,24 +24,30 @@ export default function IssueCard({ issue }) {
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className="cursor-grab active:cursor-grabbing"
-    >
+    <div ref={setNodeRef} style={style}>
       <Paper className="mb-3 p-4 hover:shadow-md transition-shadow">
-        <H4 className="mb-2">{title}</H4>
-        <Body1 className="text-slate-600 mb-3 line-clamp-3">
-          {description}
-        </Body1>
-
+        {/* Drag handle - only this area will be draggable */}
         <div
-          className={`rounded-full py-1 px-3 border border-slate-200 inline-block text-xs font-medium ${statusToColor[status]}`}
+          {...listeners}
+          {...attributes}
+          className="cursor-grab active:cursor-grabbing p-1 -m-1"
         >
-          {statusToText[status]}
+          <H4>{title}</H4>
+
+          <Body1 className="text-slate-600 mb-3 line-clamp-3">
+            {description}
+          </Body1>
+          <StatusPill status={status} />
         </div>
+
+        <Button
+          className="mt-8 w-full relative"
+          color="neutral"
+          variant="outlined"
+          href={`/dashboard/issues/${uuid}`}
+        >
+          View Details
+        </Button>
       </Paper>
     </div>
   )
