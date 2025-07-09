@@ -22,21 +22,16 @@ test('Update Campaign Details', async ({ page }) => {
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
     const newParty = 'Other';
+    const committeeInput = page.getByPlaceholder('Campaign Committee');
 
-    // Update campaign details
     await page.getByPlaceholder('Campaign Committee').isVisible({ timeout: 30000 });
     await page.getByPlaceholder('Campaign Committee').fill(newCampaignCommittee);
     await page.getByLabel('Occupation *').fill(newOccupation);
     await page.getByLabel('Campaign website').fill(newWebsite);
     await page.getByRole('combobox').selectOption(newParty);
-
     await page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
     await page.waitForTimeout(15000);
-
     await documentReady(page);
-
-    // Confirm new campaign details are saved with more robust assertions
-    const committeeInput = page.getByPlaceholder('Campaign Committee');
     await committeeInput.waitFor({ state: 'visible', timeout: 30000 });
     await expect(committeeInput).toHaveValue(newCampaignCommittee, { timeout: 30000 });
     await expect(page.getByLabel('Occupation *')).toHaveValue(newOccupation);
@@ -48,35 +43,37 @@ test('Update Campaign Details', async ({ page }) => {
 const officeDetailsCaseId = 47;
 setupTestReporting(test, officeDetailsCaseId);
 
-test.skip('Update Office Details', async ({ page }) => {
+test('Update Office Details', async ({ page }) => {
     const electionRole = 'California Controller';
 
     // Select new office location
-    await page.getByRole('button', { name: 'Edit Office Details' }).waitFor({ state: 'visible', timeout: 30000 });
+    await page.getByRole('button', { name: 'Edit Office Details' }).scrollIntoViewIfNeeded();
+    await page.getByRole('button', { name: 'Edit Office Details' }).waitFor({ state: 'visible', timeout: 45000 });
     await page.getByRole('button', { name: 'Edit Office Details' }).click();
+    await documentReady(page);
     await page.getByText('To pull accurate results,').isVisible();
 
     // Select first local office listing
-    const officeSelection = await page.getByRole('button', { name: electionRole }).first();
-    await officeSelection.click();
+    await page.getByRole('button', { name: electionRole }).first().click();
     await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
     await page.getByRole('button', { name: 'Save' }).click();
+    await documentReady(page);
 
     // Refresh page with error handling
     await page.waitForTimeout(10000);
     try {
         await page.reload({ waitUntil: 'domcontentloaded' });
         await documentReady(page);
+        await page.getByLabel('Office').waitFor({ state: 'visible', timeout: 30000 });
+        await expect(await page.getByLabel('Office').inputValue()).toBe(electionRole);
     } catch (error) {
         console.log('Page reload failed, trying navigation instead...');
         const currentUrl = page.url();
         await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
         await documentReady(page);
+        await page.getByLabel('Office').waitFor({ state: 'visible', timeout: 30000 });
+        await expect(await page.getByLabel('Office').inputValue()).toBe(electionRole);
     }
-
-    // Confirm new office details
-    await page.getByLabel('Office').waitFor({ state: 'visible', timeout: 30000 });
-    await expect(await page.getByLabel('Office').inputValue()).toBe(electionRole);
 });
 
 // Setup reporting for why statement test
@@ -91,17 +88,17 @@ test('Update Your Why Statement', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).nth(2).click();
     await documentReady(page);
     
-    // Refresh page with error handling
     try {
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.reload();
+        await documentReady(page);
+        await page.getByText(newWhyStatement).isVisible();
     } catch (error) {
         console.log('Page reload failed, trying navigation instead...');
         const currentUrl = page.url();
-        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+        await page.goto(currentUrl);
+        await documentReady(page);
+        await page.getByText(newWhyStatement).isVisible();
     }
-
-    // Confirm saved Why Statement
-    await page.getByText(newWhyStatement).isVisible();
 });
 
 const funFactsCaseId = 49;
@@ -110,23 +107,22 @@ setupTestReporting(test, funFactsCaseId);
 test('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
-    // Update Your Why Statement
     await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
     await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
     await page.getByRole('button', { name: 'Save' }).nth(3).click();
     await documentReady(page);
     
-    // Refresh page with error handling
     try {
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.reload();
+        await documentReady(page);
+        await page.getByText(newFunFacts).isVisible();
     } catch (error) {
         console.log('Page reload failed, trying navigation instead...');
         const currentUrl = page.url();
-        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+        await page.goto(currentUrl);
+        await documentReady(page);
+        await page.getByText(newFunFacts).isVisible();
     }
-
-    // Confirm saved Why Statement
-    await page.getByText(newFunFacts).isVisible();
 });
 
 // Setup reporting for opponent test
@@ -148,12 +144,14 @@ test('Add Opponent', async ({ page }) => {
 
     // Refresh page and confirm saved opponent data with error handling
     try {
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.reload();
+        await documentReady(page);
+        await page.getByText(opponent, { exact: true }).isVisible();
     } catch (error) {
         console.log('Page reload failed, trying navigation instead...');
         const currentUrl = page.url();
-        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+        await page.goto(currentUrl);
+        await documentReady(page);
+        await page.getByText(opponent, { exact: true }).isVisible();
     }
-    
-    await page.getByText(opponent, { exact: true }).isVisible();
 });
