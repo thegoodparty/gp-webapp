@@ -13,7 +13,7 @@ export default function WebsiteCreatePage({ pathname }) {
       showAlert={false}
       hideMenu
     >
-      <WebsiteCreateFlow campaign={campaign} />
+      <WebsiteCreateFlow />
     </DashboardLayout>
   )
 }

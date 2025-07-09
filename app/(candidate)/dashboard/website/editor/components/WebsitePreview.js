@@ -1,16 +1,32 @@
-import { memo } from 'react'
+'use client'
+
+import { memo, useMemo } from 'react'
 import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import { WEBSITE_STATUS } from '../../util/website.util'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useUser } from '@shared/hooks/useUser'
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
 
 const WebsitePreview = memo(function WebsitePreview({
-  website,
-  campaign,
+  website: propWebsite,
   className = '',
 }) {
+  const [campaign] = useCampaign()
+  const [user] = useUser()
+
+  const website = useMemo(() => {
+    if (propWebsite) {
+      return {
+        ...propWebsite,
+        campaign: { ...campaign, user },
+      }
+    }
+    return null
+  }, [propWebsite, campaign, user])
+
   const url = `${BASE_URL}/c/${website.vanityPath}${
     website.status === WEBSITE_STATUS.unpublished ? '/preview' : ''
   }`
@@ -32,9 +48,7 @@ const WebsitePreview = memo(function WebsitePreview({
         </Link>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {campaign && website && (
-          <WebsiteContent website={website} campaign={campaign} />
-        )}
+        {campaign && website && <WebsiteContent website={website} />}
       </div>
     </Paper>
   )

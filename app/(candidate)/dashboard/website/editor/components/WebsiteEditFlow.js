@@ -20,7 +20,7 @@ import { updateWebsite } from '../../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
 import EditSettingsMenu from './EditSettingsMenu'
 
-export default function WebsiteEditFlow({ campaign }) {
+export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
   const [editSection, setEditSection] = useState(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -307,11 +307,7 @@ export default function WebsiteEditFlow({ campaign }) {
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
       >
-        <WebsitePreview
-          website={website}
-          campaign={campaign}
-          className="min-w-[60vw]"
-        />
+        <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
     </div>
   )

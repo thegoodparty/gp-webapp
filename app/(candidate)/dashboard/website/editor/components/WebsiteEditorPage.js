@@ -13,7 +13,7 @@ export default function WebsiteEditorPage({ pathname }) {
       showAlert={false}
       hideMenu
     >
-      <WebsiteEditFlow campaign={campaign} />
+      <WebsiteEditFlow />
     </DashboardLayout>
   )
 }

@@ -19,7 +19,7 @@ import { useWebsite } from '../../components/WebsiteProvider'
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
-export default function WebsiteCreateFlow({ campaign }) {
+export default function WebsiteCreateFlow() {
   const router = useRouter()
   const { errorSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
@@ -281,7 +281,7 @@ export default function WebsiteCreateFlow({ campaign }) {
           </div>
           {step !== COMPLETE_STEP && (
             <div className="hidden lg:block max-h-[60vh]">
-              <WebsitePreview website={website} campaign={campaign} />
+              <WebsitePreview website={website} />
             </div>
           )}
         </div>
@@ -297,11 +297,7 @@ export default function WebsiteCreateFlow({ campaign }) {
         )}
       </div>
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
-        <WebsitePreview
-          website={website}
-          campaign={campaign}
-          className="min-w-[60vw]"
-        />
+        <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
     </>
   )
