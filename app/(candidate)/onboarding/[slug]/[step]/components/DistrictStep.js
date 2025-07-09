@@ -11,8 +11,8 @@ import { apiRoutes } from 'gpApi/routes'
 export default function DistrictStep({ campaign, step, ...props }) {
   const [districtTypes, setDistrictTypes] = useState([])
   const [districtNames, setDistrictNames] = useState([])
-  const [selectedType, setSelectedType] = useState('')
-  const [selectedName, setSelectedName] = useState('')
+  const [selectedType, setSelectedType] = useState(null)
+  const [selectedName, setSelectedName] = useState(null)
   const [loadingTypes, setLoadingTypes] = useState(false)
   const [loadingNames, setLoadingNames] = useState(false)
   
@@ -20,38 +20,37 @@ export default function DistrictStep({ campaign, step, ...props }) {
   const { state } = campaign.details
 
   useEffect(() => {
-    async function fetchTypes() {
+    (async () => {
       setLoadingTypes(true)
-      const resp = await clientFetch(apiRoutes.elections.districts.types, {
-        state,
-        electionYear,
-      })
-      console.log('district types resp', resp)
-      console.log('campaign looks like: ', campaign)
-      setDistrictTypes(resp?.data || [])
+      const { data = [] } = await clientFetch(
+        apiRoutes.elections.districts.types,
+        { state, electionYear },
+      )
+      setDistrictTypes(data)
       setLoadingTypes(false)
-  }
-  fetchTypes()
-}, [])
+    }) ()
+}, [state, electionYear])
 
   useEffect(() => {
     if (!selectedType) {
       setDistrictNames([])
       return
     }
-    async function fetchNames() {
+    
+    (async () => {
       setLoadingNames(true)
-      const resp = await clientFetch(apiRoutes.elections.districts.names, {
-        L2DistrictType: selectedType,
-        electionYear,
-        state,
-        // Fix this
-      })
-      setDistrictNames(resp?.data || [])
+      const { data = [] } = await clientFetch(
+        apiRoutes.elections.districts.names,
+        {
+          L2DistrictType: selectedType.L2DistrictType,
+          electionYear,
+          state,
+        }
+      )
+      setDistrictNames(data)
       setLoadingNames(false)
-    }
-    fetchNames()
-  }, [selectedType])
+    }) ()
+  }, [selectedType, electionYear, state])
 
   const handleContinue = () => {
     // Save to campaign, etc.
@@ -62,26 +61,25 @@ export default function DistrictStep({ campaign, step, ...props }) {
       <div className="mt-8">
         <H2 className="mb-8">Pick Your District</H2>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto mx-auto grid lg:grid-cols-2 gap-6">
           {/* -------- District Type -------- */}
           <div className="col-span-12 lg:col-span-6">
             <Autocomplete
+              fullWidth
               loading={loadingTypes}
               options={districtTypes}
-              value={
-                districtTypes.find((t) => t.id === selectedType) || null
-              }
-              getOptionLabel={(option) => option.L2DistrictType}
+              value={selectedType}
+              getOptionLabel={(o) => o.L2DistrictType}
+              isOptionEqualToValue={(o, v) => o.id === v?.id}
               onChange={(_, v) => {
-                setSelectedType(v ? v.id : null)
-                setSelectedName(null) // reset name when type changes
+                setSelectedType(v)
+                setSelectedName(null)
               }}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  fullWidth
+                <TextField 
+                  {...params} 
+                  label="District Type" 
                   required
-                  label="District Type"
                   variant="outlined"
                   InputProps={{
                     ...params.InputProps,
@@ -98,17 +96,14 @@ export default function DistrictStep({ campaign, step, ...props }) {
               <Autocomplete
                 loading={loadingNames}
                 options={districtNames}
-                value={
-                  districtNames.find((n) => n.id === selectedName) || null
-                }
-                getOptionLabel={(option) => option.L2DistrictName}
-                onChange={(_, v) => setSelectedName(v ? v.id : null)}
+                value={selectedName}
+                getOptionLabel={(o) => o.L2DistrictName}
+                onChange={(_, v) => setSelectedName(v)}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
+                  <TextField 
+                    {...params} 
+                    label="District Name" 
                     required
-                    label="District Name"
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
