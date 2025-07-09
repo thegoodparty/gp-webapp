@@ -7,21 +7,35 @@ import PortalPanel from '@shared/layouts/PortalPanel'
 import { Autocomplete } from '@mui/material'
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { apiRoutes } from 'gpApi/routes'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+
+async function runP2V(slug) {
+  try {
+    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
+      slug,
+    })
+
+    return resp.data
+  } catch (e) {
+    console.error('error', e)
+    return false
+  }
+}
 
 export default function DistrictStep({ campaign, step, ...props }) {
   const [districtTypes, setDistrictTypes] = useState([])
   const [districtNames, setDistrictNames] = useState([])
-  const [selectedType, setSelectedType] = useState(null)
-  const [selectedName, setSelectedName] = useState(null)
-  const [loadingTypes, setLoadingTypes] = useState(false)
-  const [loadingNames, setLoadingNames] = useState(false)
+  const [selectedDistrictType, setselectedDistrictType] = useState(null)
+  const [selectedDistrictName, setselectedDistrictName] = useState(null)
+  const [loadingDistrictTypes, setloadingDistrictTypes] = useState(false)
+  const [loadingDistrictNames, setloadingDistrictNames] = useState(false)
   
   const electionYear = new Date(campaign.details.electionDate).getFullYear()
   const { state } = campaign.details
 
   useEffect(() => {
     (async () => {
-      setLoadingTypes(true)
+      setloadingDistrictTypes(true)
       const { data = [] } = await clientFetch(
         apiRoutes.elections.districts.types,
         { state, electionYear },
@@ -31,33 +45,54 @@ export default function DistrictStep({ campaign, step, ...props }) {
         ...d,
         label: d.L2DistrictType.replace(/_/g, ' ')
       })))
-      setLoadingTypes(false)
+      setloadingDistrictTypes(false)
     }) ()
 }, [state, electionYear])
 
   useEffect(() => {
-    if (!selectedType) {
+    if (!selectedDistrictType) {
       setDistrictNames([])
       return
     }
     
     (async () => {
-      setLoadingNames(true)
+      setloadingDistrictNames(true)
       const { data = [] } = await clientFetch(
         apiRoutes.elections.districts.names,
         {
-          L2DistrictType: selectedType.L2DistrictType,
+          L2DistrictType: selectedDistrictType.L2DistrictType,
           electionYear,
           state,
         }
       )
       setDistrictNames(data)
-      setLoadingNames(false)
+      setloadingDistrictNames(false)
     }) ()
-  }, [selectedType, electionYear, state])
+  }, [selectedDistrictType, electionYear, state])
 
   const handleContinue = () => {
-    // Save to campaign, etc.
+    const attr = [
+      { 
+        // TODO: Rename electionType -> districtType
+        key: 'pathToVictory.electionType',
+        value: selectedDistrictType,
+      },
+      {
+        // TODO: Rename electionLocation -> districtLocation
+        key: 'pathToVictory.electionLocation',
+        value: selectedDistrictName,
+      }
+    ]
+
+    // TODO: Rip out P2V logic once District picker solution is battle-tested
+    if (adminMode) {
+      updateCampaign(attr, campaign.slug)
+      runP2V(campaign.slug)
+    } else {
+      updateCampaign(attr)
+      runP2V()
+    }
+    
   }
 
   return (
@@ -70,14 +105,14 @@ export default function DistrictStep({ campaign, step, ...props }) {
           <div className="col-span-12 lg:col-span-6">
             <Autocomplete
               fullWidth
-              loading={loadingTypes}
+              loading={loadingDistrictTypes}
               options={districtTypes}
-              value={selectedType}
+              value={selectedDistrictType}
               getOptionLabel={(o) => o.label}
               isOptionEqualToValue={(o, v) => o.id === v?.id}
               onChange={(_, v) => {
-                setSelectedType(v)
-                setSelectedName(null)
+                setselectedDistrictType(v)
+                setselectedDistrictName(null)
               }}
               renderInput={(params) => (
                 <TextField 
@@ -95,14 +130,14 @@ export default function DistrictStep({ campaign, step, ...props }) {
           </div>
 
           {/* -------- District Name -------- */}
-          {selectedType && (
+          {selectedDistrictType && (
             <div className="col-span-12 lg:col-span-6">
               <Autocomplete
-                loading={loadingNames}
+                loading={loadingDistrictNames}
                 options={districtNames}
-                value={selectedName}
+                value={selectedDistrictName}
                 getOptionLabel={(o) => o.L2DistrictName}
-                onChange={(_, v) => setSelectedName(v)}
+                onChange={(_, v) => setselectedDistrictName(v)}
                 renderInput={(params) => (
                   <TextField 
                     {...params} 
@@ -123,7 +158,7 @@ export default function DistrictStep({ campaign, step, ...props }) {
         <div className="flex justify-end mt-8">
           <BlackButtonClient
             onClick={handleContinue}
-            disabled={!selectedType || !selectedName}
+            disabled={!selectedDistrictType || !selectedDistrictName}
           >
             <strong>Continue</strong>
           </BlackButtonClient>
