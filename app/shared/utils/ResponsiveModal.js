@@ -24,7 +24,7 @@ export default function ResponsiveModal({
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   useEffect(() => {
-    if (isDesktop) {
+    if (isDesktop && !fullSize) {
       setShowContent(open)
     } else {
       // on mobile sizes, this timeout allows for the modal CSS transition
@@ -34,7 +34,7 @@ export default function ResponsiveModal({
       )
       return () => clearTimeout(timer)
     }
-  }, [open, isDesktop])
+  }, [open, isDesktop, fullSize])
 
   const handleClose = (e, reason) => {
     if (
@@ -51,11 +51,11 @@ export default function ResponsiveModal({
       <Paper
         className={`
           absolute 
-          ${showContent && open ? 'bottom-0' : '-bottom-[100%]'} lg:!bottom-auto
+          ${showContent && open ? 'bottom-0' : '-bottom-[100%]'}
           ${
             fullSize
               ? 'w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh]'
-              : 'lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-auto lg:min-w-[600px] lg:max-w-[90vw] max-h-[90vh]'
+              : 'lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2 w-full lg:w-auto lg:min-w-[600px] lg:max-w-[90vw] max-h-[90vh]'
           } 
           !px-4 !pt-16 !pb-8 lg:!px-8 xl:!p-16
           !rounded-b-none lg:!rounded-b-xl

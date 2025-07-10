@@ -8,12 +8,15 @@ import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import ShareModal from './ShareModal'
 import { useWebsite } from './WebsiteProvider'
-import { getWebsiteUrl } from '../util/website.util'
+import { getWebsiteUrl, WEBSITE_STATUS } from '../util/website.util'
 
 function WebsiteCard({ className = '' }) {
   const { website } = useWebsite()
 
-  const url = getWebsiteUrl(website)
+  const url = getWebsiteUrl(
+    website.vanityPath,
+    website.status === WEBSITE_STATUS.unpublished,
+  )
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   return (
@@ -38,6 +41,7 @@ function WebsiteCard({ className = '' }) {
         <div className="flex gap-4 mt-4 md:mt-0 self-start">
           <Button
             className="flex-1 min-w-[150px]"
+            variant="outlined"
             onClick={() => setShareModalOpen(true)}
           >
             Share

@@ -3,6 +3,7 @@ import { LuCloudUpload } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
 import { DisplaySwatch } from './ThemeSwatch'
 import { getWebsiteUrl } from '../../util/website.util'
+import H5 from '@shared/typography/H5'
 
 export const SECTIONS = {
   link: 'link',
@@ -45,12 +46,15 @@ export default function EditSectionButton({
   onSelect,
   website,
 }) {
-  const url = getWebsiteUrl(website)
+  const url = getWebsiteUrl(website.vanityPath, false)
   return (
     <Button
       variant="outlined"
-      className={`!text-left !border-[1px] !border-black/[0.12] ${
-        currentSection === section ? 'outline outline-2 outline-black' : ''
+      color="neutral"
+      className={`!text-left !border-[1px] !border-black/[0.12] !py-4 ${
+        currentSection === section
+          ? 'outline outline-2 outline-black !border-transparent'
+          : ''
       } ${
         section === SECTIONS.link ? 'flex items-center justify-between' : ''
       }`}
@@ -60,18 +64,14 @@ export default function EditSectionButton({
       {section === SECTIONS.link ? (
         <>
           <div className="text-left">
-            <div className="text-gray-500 text-sm font-semibold">
-              {SECTION_BTN_CONTENT[section].title}
-            </div>
-            <div className="text-gray-500 text-xs">{url}</div>
+            <H5>{SECTION_BTN_CONTENT[section].title}</H5>
+            <p className="text-gray-500 text-xs">{url}</p>
           </div>
           <LockOutlined className="text-gray-500" />
         </>
       ) : section === SECTIONS.logo ? (
         <>
-          <div className="font-semibold">
-            {SECTION_BTN_CONTENT[section].title}
-          </div>
+          <H5>{SECTION_BTN_CONTENT[section].title}</H5>
           <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
             <LuCloudUpload size={16} />
             {SECTION_BTN_CONTENT[section].description}
@@ -79,16 +79,12 @@ export default function EditSectionButton({
         </>
       ) : section === SECTIONS.theme ? (
         <>
-          <div className="font-semibold">
-            {SECTION_BTN_CONTENT[section].title}
-          </div>
+          <H5 className="mb-1">{SECTION_BTN_CONTENT[section].title}</H5>
           <DisplaySwatch theme={website.content.theme} />
         </>
       ) : (
         <>
-          <div className="font-semibold">
-            {SECTION_BTN_CONTENT[section].title}
-          </div>
+          <H5>{SECTION_BTN_CONTENT[section].title}</H5>
           <div className="text-xs text-gray-500 mt-1">
             {SECTION_BTN_CONTENT[section].description}
           </div>
