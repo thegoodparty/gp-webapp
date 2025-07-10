@@ -7,8 +7,8 @@ import Button from '@shared/buttons/Button'
 import { getWebsiteUrl } from '../../util/website.util'
 import Link from 'next/link'
 
-export default function CompleteStep({ website }) {
-  const url = getWebsiteUrl(website)
+export default function CompleteStep({ vanityPath }) {
+  const url = getWebsiteUrl(vanityPath, false)
   return (
     <div className="block lg:grid lg:grid-cols-2 items-center gap-12">
       <div className="lg:flex lg:flex-col lg:items-center lg:text-center">

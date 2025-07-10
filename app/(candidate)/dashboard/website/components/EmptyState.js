@@ -7,7 +7,7 @@ import Button from '@shared/buttons/Button'
 
 function EmptyState({ onClickCreate, createLoading }) {
   return (
-    <Paper className="!p-4 text-left md:text-center">
+    <Paper className="!p-4 !py-6 text-left md:text-center">
       <span className="px-2 py-1 rounded-full bg-gray-100 text-xs border border-black/[0.12]">
         10 minutes
       </span>

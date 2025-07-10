@@ -41,15 +41,15 @@ export default function IssuesForm({ issues = [], onChange }) {
 
   return (
     <div className="mt-4">
-      <Label>Key Issues</Label>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
+      <Label className="mb-2">Key Issues</Label>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {issues?.map((issue, index) => (
           <Button
             key={index}
             variant="outlined"
             size="large"
             color="neutral"
-            className="w-full mt-2 [&>span]:text-left !p-4 !py-3"
+            className="w-full [&>span]:text-left !p-4 !py-3 !border-[1px] !border-black/[0.12]"
             onClick={() => handleOpenEditDialog(issue, index)}
           >
             <span className="flex justify-between w-full">
@@ -66,7 +66,7 @@ export default function IssuesForm({ issues = [], onChange }) {
           size="large"
           color="neutral"
           onClick={handleAddIssue}
-          className="flex items-center w-full mt-2 !p-4 !py-3"
+          className="flex items-center w-full !p-4 !py-3 !border-[1px] !border-black/[0.12]"
         >
           Add issue
           <LuPlus className="ml-auto text-black" size={16} />
