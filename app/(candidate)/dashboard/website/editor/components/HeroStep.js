@@ -22,14 +22,12 @@ export default function HeroStep({
       <TextField
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
-        placeholder="Jane Smith for City Council"
         fullWidth
       />
       <Label className="mt-4">Tagline</Label>
       <TextField
         value={tagline}
         onChange={(e) => onTaglineChange(e.target.value)}
-        placeholder="Building a Brighter Future Together"
         fullWidth
       />
       <Label className="mt-4">Main Image</Label>

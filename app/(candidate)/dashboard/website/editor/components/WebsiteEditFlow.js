@@ -11,7 +11,7 @@ import HeroStep from './HeroStep'
 import AboutStep from './AboutStep'
 import ContactStep from './ContactStep'
 import WebsitePreview from './WebsitePreview'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import { useMediaQuery } from '@mui/material'
 import EditSectionButton, {
   SECTIONS,
   SECTION_BTN_CONTENT,
@@ -269,25 +269,27 @@ export default function WebsiteEditFlow() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b">
-        <Button variant="text" href="/dashboard/website">
-          <LuArrowLeft size={24} />
-        </Button>
-        <H4>Edit website</H4>
-        <EditSettingsMenu />
-      </div>
-
       <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4 p-4 lg:p-6 lg:px-12 lg:border-r lg:border-black/[0.12]">
-          {Object.values(SECTIONS).map((section) => (
-            <EditSectionButton
-              key={section}
-              section={section}
-              currentSection={editSection}
-              onSelect={handleEditSectionOpen}
-              website={website}
-            />
-          ))}
+        <div className="lg:border-r lg:border-black/[0.12]">
+          <div className="flex items-center justify-between p-2 pt-0 lg:px-8">
+            <Button variant="text" href="/dashboard/website">
+              <LuArrowLeft size={24} />
+            </Button>
+            <H4>Edit website</H4>
+            <EditSettingsMenu />
+          </div>
+
+          <div className="flex flex-col gap-4 p-4 lg:p-6 lg:px-12">
+            {Object.values(SECTIONS).map((section) => (
+              <EditSectionButton
+                key={section}
+                section={section}
+                currentSection={editSection}
+                onSelect={handleEditSectionOpen}
+                website={website}
+              />
+            ))}
+          </div>
         </div>
         {isLgUp && !!editSection && (
           <div className="hidden lg:block">

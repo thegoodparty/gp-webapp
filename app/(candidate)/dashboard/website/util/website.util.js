@@ -10,10 +10,8 @@ export const WEBSITE_STATUS = {
   unpublished: 'unpublished',
 }
 
-export function getWebsiteUrl(website) {
-  return `${BASE_URL}/c/${website.vanityPath}${
-    website.status !== WEBSITE_STATUS.published ? '/preview' : ''
-  }`
+export function getWebsiteUrl(vanityPath, preview = false) {
+  return `${BASE_URL}/c/${vanityPath}${preview ? '/preview' : ''}`
 }
 
 export function fetchWebsite() {

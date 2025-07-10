@@ -8,7 +8,7 @@ import { WEBSITE_STATUS } from '../util/website.util'
 
 function DraftState() {
   return (
-    <Paper className="!p-4 text-left md:text-center">
+    <Paper className="!p-4 !py-6 text-left md:text-center">
       <StatusChip status={WEBSITE_STATUS.unpublished} />
       <H1 className="mt-2 mb-8">Finish your website</H1>
       <StepList type="draft" />
