@@ -21,7 +21,7 @@ const NUM_STEPS = 6
 
 export default function WebsiteCreateFlow() {
   const router = useRouter()
-  const { errorSnackbar } = useSnackbar()
+  const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
@@ -40,6 +40,7 @@ export default function WebsiteCreateFlow() {
 
     if (saved) {
       setStep(COMPLETE_STEP)
+      successSnackbar('Your website has been published')
     } else {
       errorSnackbar('Failed to publish website')
     }
@@ -198,7 +199,7 @@ export default function WebsiteCreateFlow() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 h-full">
+      <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
             <Button variant="outlined" href="/dashboard/website">
@@ -222,7 +223,7 @@ export default function WebsiteCreateFlow() {
             Preview
           </Button>
         </div>
-        <div className="grow overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 lg:gap-24 lg:px-12">
+        <div className="grow overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 lg:gap-24 lg:px-12 lg:items-center">
           <div className={`${step === COMPLETE_STEP ? 'lg:col-span-2' : ''}`}>
             {step === 1 && (
               <VanityPathStep
@@ -275,11 +276,13 @@ export default function WebsiteCreateFlow() {
                 onPhoneChange={handlePhoneChange}
               />
             )}
-            {step === COMPLETE_STEP && <CompleteStep website={website} />}
+            {step === COMPLETE_STEP && (
+              <CompleteStep vanityPath={website.vanityPath} />
+            )}
           </div>
           {step !== COMPLETE_STEP && (
-            <div className="hidden lg:block max-h-[60vh]">
-              <WebsitePreview website={website} />
+            <div className="hidden lg:block h-[60vh]">
+              <WebsitePreview website={website} zoomScale={0.5} />
             </div>
           )}
         </div>

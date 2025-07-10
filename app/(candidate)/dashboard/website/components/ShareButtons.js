@@ -47,7 +47,7 @@ export default function ShareButtons({ url, className = '' }) {
       <CopyToClipboardButton
         copyText={url}
         variant="outlined"
-        className="w-full"
+        className="w-full !border-[1px] !border-black/[0.12]"
       >
         Copy link
       </CopyToClipboardButton>
@@ -55,7 +55,7 @@ export default function ShareButtons({ url, className = '' }) {
         <Button
           key={item.label}
           variant="outlined"
-          className="flex items-center gap-2 w-full"
+          className="flex items-center gap-2 w-full !border-[1px] !border-black/[0.12]"
           href={item.href}
           target="_blank"
           rel="noopener noreferrer"

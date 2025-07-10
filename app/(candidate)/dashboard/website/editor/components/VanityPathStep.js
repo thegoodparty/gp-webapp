@@ -15,7 +15,7 @@ export default function VanityPathStep({ website, onChange }) {
   const [validated, setValidated] = useState(true)
   const [loading, setLoading] = useState(false)
   const timeoutRef = useRef(null)
-  const websiteUrl = getWebsiteUrl(website)
+  const websiteUrl = getWebsiteUrl(website.vanityPath, false)
 
   function handleChange(value) {
     onChange(value)
@@ -51,7 +51,6 @@ export default function VanityPathStep({ website, onChange }) {
       <H2 className="mb-6">What do you want your custom link to be?</H2>
       <Label className="mt-6">Custom Link</Label>
       <TextField
-        placeholder="Enter your custom link"
         fullWidth
         required
         value={vanityPath}
