@@ -4,7 +4,7 @@ import OfficeStep from './OfficeStep'
 import PledgeStep from './PledgeStep'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import CompleteStep from './CompleteStep'
-import DistrictStep from './DistrictStep'
+import DistrictStep from './districts/DistrictStep'
 
 export default function OnboardingPage(props) {
   const { step } = props
