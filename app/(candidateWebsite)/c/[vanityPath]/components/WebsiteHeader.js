@@ -18,7 +18,7 @@ export default function WebsiteHeader({ activeTheme, website }) {
             <Image
               src={content.logo}
               alt="Campaign Logo"
-              height={32}
+              height={80}
               width={200}
               className="h-8 max-w-[200px] object-contain object-left"
             />
@@ -30,7 +30,7 @@ export default function WebsiteHeader({ activeTheme, website }) {
             <Image
               src={'/images/logo/heart.svg'}
               alt="Campaign Logo"
-              height={32}
+              height={80}
               width={200}
               className="h-8 max-w-[200px] object-contain object-left"
             />

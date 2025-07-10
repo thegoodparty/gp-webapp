@@ -34,7 +34,7 @@ export default function HeroStep({
       />
       <Label className="mt-4">Main Image</Label>
       <ImageInput imageUrl={image} onChange={onImageChange} />
-      <Caption>Recommended size: 1920x600px. PNG or JPG format.</Caption>
+      <Caption>Recommended size: 1280x640px. PNG or JPG format.</Caption>
     </div>
   )
 }

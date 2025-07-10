@@ -31,7 +31,9 @@ export default function DashboardLayout({
             />
           </div>
         )}
-        <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
+        <main
+          className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
+        >
           {campaign && showAlert && <AlertSection campaign={campaign} />}
           <ProUpgradePrompt campaign={campaign} user={user} />
           {children}

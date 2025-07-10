@@ -25,14 +25,14 @@ export default function WebsiteEditFlow() {
   const [editSection, setEditSection] = useState(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
-  const isMdUp = useMediaQuery('(min-width:768px)')
+  const isLgUp = useMediaQuery('(min-width:1024px)')
   const { errorSnackbar, successSnackbar } = useSnackbar()
 
   useEffect(() => {
-    if (isMdUp && editSection === null) {
+    if (isLgUp && editSection === null) {
       setEditSection(SECTIONS.logo)
     }
-  }, [isMdUp, editSection])
+  }, [isLgUp, editSection])
 
   async function handleSaveAndPublish() {
     setSaveLoading(true)
@@ -245,7 +245,7 @@ export default function WebsiteEditFlow() {
         </div>
         <div className="mt-auto flex justify-between">
           <Button
-            className="block md:hidden"
+            className="block lg:hidden"
             color="neutral"
             size="large"
             onClick={handleEditSectionClose}
@@ -277,8 +277,8 @@ export default function WebsiteEditFlow() {
         <EditSettingsMenu />
       </div>
 
-      <div className="flex-1 overflow-auto p-4 py-6 md:grid md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4 p-4 md:p-6 md:px-12 md:border-r md:border-black/[0.12]">
+      <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-4 p-4 lg:p-6 lg:px-12 lg:border-r lg:border-black/[0.12]">
           {Object.values(SECTIONS).map((section) => (
             <EditSectionButton
               key={section}
@@ -289,14 +289,14 @@ export default function WebsiteEditFlow() {
             />
           ))}
         </div>
-        {isMdUp && !!editSection && (
-          <div className="hidden md:block">
+        {isLgUp && !!editSection && (
+          <div className="hidden lg:block">
             <EditSection />
           </div>
         )}
       </div>
       <ResponsiveModal
-        open={!!editSection && !isMdUp}
+        open={!!editSection && !isLgUp}
         onClose={handleEditSectionClose}
         title={SECTION_BTN_CONTENT[editSection]?.title || 'Edit Content'}
       >

@@ -20,13 +20,13 @@ export default function HeroSection({ activeTheme, content }) {
           </Button>
         </div>
         {hasImage && (
-          <div className="w-full max-w-md h-80 rounded-lg shadow-lg overflow-hidden">
+          <div className="w-full h-80 rounded-lg shadow-lg overflow-hidden">
             <Image
               src={content?.main?.image}
               alt="Campaign Hero"
               className="w-full h-full object-cover"
-              height={320}
-              width={640}
+              height={640}
+              width={1280}
             />
           </div>
         )}

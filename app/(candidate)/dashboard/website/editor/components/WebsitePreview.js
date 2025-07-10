@@ -4,11 +4,9 @@ import { memo, useMemo } from 'react'
 import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
-import { WEBSITE_STATUS } from '../../util/website.util'
+import { getWebsiteUrl } from '../../util/website.util'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
 
 const WebsitePreview = memo(function WebsitePreview({
   website: propWebsite,
@@ -27,9 +25,7 @@ const WebsitePreview = memo(function WebsitePreview({
     return null
   }, [propWebsite, campaign, user])
 
-  const url = `${BASE_URL}/c/${website.vanityPath}${
-    website.status === WEBSITE_STATUS.unpublished ? '/preview' : ''
-  }`
+  const url = getWebsiteUrl(website)
 
   return (
     <Paper className={`!p-0 flex-grow h-full flex flex-col ${className}`}>
@@ -44,11 +40,15 @@ const WebsitePreview = memo(function WebsitePreview({
           className="text-gray-500 text-xs truncate"
           target="_blank"
         >
-          Preview: {url}
+          {url}
         </Link>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {campaign && website && <WebsiteContent website={website} />}
+        {campaign && website && (
+          <div className="pointer-events-none">
+            <WebsiteContent website={website} scale={0.5} />
+          </div>
+        )}
       </div>
     </Paper>
   )

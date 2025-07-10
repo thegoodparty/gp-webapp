@@ -2,8 +2,7 @@ import { LockOutlined } from '@mui/icons-material'
 import { LuCloudUpload } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
 import { DisplaySwatch } from './ThemeSwatch'
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
+import { getWebsiteUrl } from '../../util/website.util'
 
 export const SECTIONS = {
   link: 'link',
@@ -46,6 +45,7 @@ export default function EditSectionButton({
   onSelect,
   website,
 }) {
+  const url = getWebsiteUrl(website)
   return (
     <Button
       variant="outlined"
@@ -63,9 +63,7 @@ export default function EditSectionButton({
             <div className="text-gray-500 text-sm font-semibold">
               {SECTION_BTN_CONTENT[section].title}
             </div>
-            <div className="text-gray-500 text-xs">{`${BASE_URL}/c/${
-              website.vanityPath || ''
-            }`}</div>
+            <div className="text-gray-500 text-xs">{url}</div>
           </div>
           <LockOutlined className="text-gray-500" />
         </>
