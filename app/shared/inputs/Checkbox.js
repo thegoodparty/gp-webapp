@@ -3,11 +3,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import MuiCheckbox from '@mui/material/Checkbox'
 
 const Checkbox = (props) => {
-  const { label, ...restProps } = props
+  const { label, name, ...restProps } = props
   return label ? (
-    <FormControlLabel label={label} control={<MuiCheckbox {...restProps} />} />
+    <FormControlLabel
+      label={label}
+      control={<MuiCheckbox name={name} {...restProps} />}
+    />
   ) : (
-    <MuiCheckbox variant="outlined" {...props} />
+    <MuiCheckbox name={name} variant="outlined" {...props} />
   )
 }
 

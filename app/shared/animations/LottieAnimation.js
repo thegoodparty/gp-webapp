@@ -13,7 +13,6 @@ export default function LottieAnimation({
     }
   }
   return (
-    // NOTE: inert needs a string value here or React throws an error (Fixed in React 19)
     <div inert={true}>
       <Player
         loop={false}
