@@ -13,15 +13,16 @@ import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
 
 export default function OfficeStep({
-  campaign,
+  campaign: initCampaign,
   step,
   updateCallback,
   adminMode,
 }) {
+  const [campaign, setCampaign] = useState(initCampaign)
   const router = useRouter()
   const [state, setState] = useState({
     ballotOffice: false,
-    originalPosition: campaign.details?.positionId,
+    originalPosition: initCampaign.details?.positionId,
   })
   const user = useUser()
 
@@ -143,8 +144,10 @@ export default function OfficeStep({
       attr.push({ key: 'data.currentStep', value: currentStep })
     }
 
+    let updated
     if (adminMode) {
-      await updateCampaign(attr, campaign.slug)
+      updated = await updateCampaign(attr, campaign.slug)
+      setCampaign(updated)
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -157,14 +160,15 @@ export default function OfficeStep({
         ...trackingProperties, 
         officeManuallyInput: false, 
       })
-      await updateCampaign(attr)
+      updated = await updateCampaign(attr)
+      setCampaign(updated)
     }
 
     if (step) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     }
     if (updateCallback) {
-      await updateCallback()
+      await updateCallback(updated)
     }
     setProcessing(false)
   }

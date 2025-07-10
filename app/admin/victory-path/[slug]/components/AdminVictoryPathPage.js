@@ -18,7 +18,14 @@ import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSe
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import AdminDistrictPicker from './AdminDistrictPicker'
+import DistrictPicker from 'app/(candidate)/onboarding/[slug]/[step]/components/districts/DistrictPicker'
+
+const updateDistrict = (slug, L2DistrictType, L2DistrictName) =>
+  clientFetch(apiRoutes.campaign.district, {
+    slug,
+    L2DistrictType,
+    L2DistrictName,
+  })
 
 export async function sendVictoryMail(id) {
   try {
@@ -160,6 +167,21 @@ export default function AdminVictoryPathPage(props) {
     pathToVictory?.p2vNotNeeded || false,
   )
   const { successSnackbar, errorSnackbar } = useSnackbar()
+
+  const handleDistrictSave = async (typeObj, nameObj) => {
+    try {
+      await updateDistrict(
+        campaign.slug,
+        typeObj.L2DistrictType,
+        nameObj.L2DistrictName,
+      )
+      successSnackbar('District updated')
+      await refreshCampaign()
+    } catch (e) {
+      console.error(e)
+      errorSnackbar('Error updating district')
+    }
+  }
 
   useEffect(() => {
     if (!state.winNumber || !state.averageTurnoutPercent) {
@@ -406,9 +428,13 @@ export default function AdminVictoryPathPage(props) {
           </H3>{' '}
           <AdditionalFieldsSection />
           <P2VProSection />
-          <AdminDistrictPicker
-            campaign={campaign}
-            refreshCampaign={refreshCampaign}
+          <H2 className="mb-8">District Picker</H2>
+          <DistrictPicker
+            state={details.state}
+            electionYear={new Date(details?.electionDate).getFullYear()}
+            buttonText="Save District"
+            onSubmit={handleDistrictSave}
+            className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
           />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
