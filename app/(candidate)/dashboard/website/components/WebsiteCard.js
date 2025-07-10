@@ -8,13 +8,12 @@ import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import ShareModal from './ShareModal'
 import { useWebsite } from './WebsiteProvider'
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
+import { getWebsiteUrl } from '../util/website.util'
 
 function WebsiteCard({ className = '' }) {
   const { website } = useWebsite()
 
-  const url = `${BASE_URL}/c/${website.vanityPath}`
+  const url = getWebsiteUrl(website)
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   return (
@@ -29,7 +28,7 @@ function WebsiteCard({ className = '' }) {
           </H5>
 
           <Link
-            href={`/c/${website.vanityPath}`}
+            href={url}
             className="mt-1 text-gray-500 text-xs truncate"
             target="_blank"
           >

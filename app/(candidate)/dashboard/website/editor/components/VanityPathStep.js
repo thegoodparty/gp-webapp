@@ -6,15 +6,16 @@ import { validateVanityPath } from '../../util/website.util'
 import Caption from './WebsiteEditorPageCaption'
 import H2 from '@shared/typography/H2'
 import Label from './Label'
+import { getWebsiteUrl } from '../../util/website.util'
 
 const DEBOUNCE_TIME = 500
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'goodparty.org'
-
-export default function VanityPathStep({ vanityPath, onChange }) {
+export default function VanityPathStep({ website, onChange }) {
+  const vanityPath = website.vanityPath
   const [validated, setValidated] = useState(true)
   const [loading, setLoading] = useState(false)
   const timeoutRef = useRef(null)
+  const websiteUrl = getWebsiteUrl(website)
 
   function handleChange(value) {
     onChange(value)
@@ -66,9 +67,7 @@ export default function VanityPathStep({ vanityPath, onChange }) {
           ),
         }}
       />
-      <Caption>
-        {BASE_URL}/c/{vanityPath}
-      </Caption>
+      <Caption>{websiteUrl}</Caption>
     </>
   )
 }

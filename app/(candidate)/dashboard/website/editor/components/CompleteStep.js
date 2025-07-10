@@ -4,11 +4,11 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import { LuPartyPopper } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
+import { getWebsiteUrl } from '../../util/website.util'
+import Link from 'next/link'
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
-
-export default function CompleteStep({ vanityPath }) {
-  const url = `${BASE_URL}/c/${vanityPath}`
+export default function CompleteStep({ website }) {
+  const url = getWebsiteUrl(website)
   return (
     <div className="block lg:grid lg:grid-cols-2 items-center gap-12">
       <div className="lg:flex lg:flex-col lg:items-center lg:text-center">
@@ -18,7 +18,9 @@ export default function CompleteStep({ vanityPath }) {
         <H1 className="mb-2 lg:text-5xl">
           Congratulations, your website is live!
         </H1>
-        <Body2 className="text-gray-500">{url}</Body2>
+        <Link href={url} className="text-gray-500 mt-2" target="_blank">
+          {url}
+        </Link>
         <div className="my-6 h-[1px] bg-black/[0.12]"></div>
       </div>
 

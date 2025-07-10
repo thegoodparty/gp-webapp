@@ -222,11 +222,11 @@ export default function WebsiteCreateFlow() {
             Preview
           </Button>
         </div>
-        <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
+        <div className="grow overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 lg:gap-24 lg:px-12">
           <div className={`${step === COMPLETE_STEP ? 'lg:col-span-2' : ''}`}>
             {step === 1 && (
               <VanityPathStep
-                vanityPath={website.vanityPath}
+                website={website}
                 onChange={handleVanityPathChange}
               />
             )}
@@ -275,9 +275,7 @@ export default function WebsiteCreateFlow() {
                 onPhoneChange={handlePhoneChange}
               />
             )}
-            {step === COMPLETE_STEP && (
-              <CompleteStep vanityPath={website.vanityPath} />
-            )}
+            {step === COMPLETE_STEP && <CompleteStep website={website} />}
           </div>
           {step !== COMPLETE_STEP && (
             <div className="hidden lg:block max-h-[60vh]">

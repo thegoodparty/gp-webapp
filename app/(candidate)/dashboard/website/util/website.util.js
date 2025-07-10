@@ -2,9 +2,18 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { serialize } from 'object-to-formdata'
 
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
+
 export const WEBSITE_STATUS = {
   published: 'published',
   unpublished: 'unpublished',
+}
+
+export function getWebsiteUrl(website) {
+  return `${BASE_URL}/c/${website.vanityPath}${
+    website.status !== WEBSITE_STATUS.published ? '/preview' : ''
+  }`
 }
 
 export function fetchWebsite() {
