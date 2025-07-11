@@ -93,13 +93,13 @@ function PaymentFormContent({ domainName, price, onSuccess, onError }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-gray-50 p-4 rounded-lg">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-4">
           <span className="font-medium">Domain:</span>
           <span className="font-semibold">{domainName}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="font-medium">Price:</span>
-          <span className="font-semibold">${numberFormatter(price)}/year</span>
+          <span className="font-semibold">${numberFormatter(price)}</span>
         </div>
       </div>
 

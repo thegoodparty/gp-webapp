@@ -106,10 +106,10 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   return (
     <>
       <div className="space-y-4">
-        <H2>Domain Search</H2>
+        <H2>Choose your domain name</H2>
         <div className="flex gap-2">
           <TextField
-            label="Search Domain"
+            label="Search for a domain"
             placeholder="yourdomain.com"
             fullWidth
             value={searchTerm}
@@ -129,8 +129,8 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       </div>
 
       {searchResults && (
-        <div className="space-y-4">
-          <H3>Search Results</H3>
+        <div className="mt-8 ">
+          <H3 className="mb-4">Search Results</H3>
 
           <DomainResult
             domain={searchResults.domainName}
@@ -148,7 +148,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
           />
 
           {searchResults.suggestions?.length > 0 && (
-            <div className="space-y-3">
+            <div className="mt-8 space-y-3">
               <H3>Suggestions</H3>
               {searchResults.suggestions.map((suggestion, index) => (
                 <DomainResult

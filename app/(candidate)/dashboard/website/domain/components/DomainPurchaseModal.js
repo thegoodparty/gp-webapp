@@ -3,7 +3,7 @@
 import Modal from '@shared/utils/Modal'
 import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'
-import PaymentForm from './PaymentForm'
+import PaymentForm from '../../editor/components/PaymentForm'
 
 export default function DomainPurchaseModal({
   open,
