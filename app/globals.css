@@ -33,11 +33,11 @@ a.no-underline:hover {
 }
 
 .MuiInputLabel-root.Mui-focused {
-  color: #000 !important;
+  color: #000;
 }
 
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #000 !important;
+  border-color: #000;
 }
 
 .MuiInputLabel-root.Mui-error {
