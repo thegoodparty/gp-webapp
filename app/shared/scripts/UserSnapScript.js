@@ -18,19 +18,6 @@ export default function UserSnapScript() {
         },
       })
 
-      api.on('beforeSubmit', ({ values, api }) => {
-        try {
-          if (typeof FS !== 'undefined') {
-            const fullstoryUrl = FS('getSession', {
-              format: 'url.now',
-            })
-            api.setValue('custom', { ...values.custom, fullstoryUrl })
-          }
-        } catch (e) {
-          // no op
-        }
-      })
-
       api.on('submit', () => {
         trackEvent('usersnap_submission', {
           isVisitor: !user?.email,
