@@ -14,10 +14,10 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page({ params }) {
-  const { slug, step } = params
+  const { slug, step } = await params
   const campaign = await getCampaign(params)
 
-  const totalSteps = 4
+  const totalSteps = 5
 
   let stepInt = step ? parseInt(step, 10) : 1
   if (Number.isNaN(stepInt) || stepInt < 1 || stepInt > totalSteps) {
@@ -25,7 +25,7 @@ export default async function Page({ params }) {
   }
 
   let pledge
-  if (stepInt === 3) {
+  if (stepInt === 4) {
     pledge = await fetchContentByType('pledge')
   }
 

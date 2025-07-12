@@ -8,35 +8,21 @@ import BallotRaces from './ballotOffices/BallotRaces'
 import { useMemo, useState } from 'react'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
 
-async function runP2V(slug) {
-  try {
-    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
-      slug,
-    })
-
-    return resp.data
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
-}
-
 export default function OfficeStep({
-  campaign,
+  campaign: initCampaign,
   step,
   updateCallback,
   adminMode,
 }) {
+  const [campaign, setCampaign] = useState(initCampaign)
   const router = useRouter()
   const [state, setState] = useState({
     ballotOffice: false,
-    originalPosition: campaign.details?.positionId,
+    originalPosition: initCampaign.details?.positionId,
   })
   const user = useUser()
 
@@ -158,9 +144,10 @@ export default function OfficeStep({
       attr.push({ key: 'data.currentStep', value: currentStep })
     }
 
+    let updated
     if (adminMode) {
-      await updateCampaign(attr, campaign.slug)
-      await runP2V(campaign.slug)
+      updated = await updateCampaign(attr, campaign.slug)
+      setCampaign(updated)
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -173,15 +160,15 @@ export default function OfficeStep({
         ...trackingProperties, 
         officeManuallyInput: false, 
       })
-      await updateCampaign(attr)
-      await runP2V()
+      updated = await updateCampaign(attr)
+      setCampaign(updated)
     }
 
     if (step) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     }
     if (updateCallback) {
-      await updateCallback()
+      await updateCallback(updated)
     }
     setProcessing(false)
   }

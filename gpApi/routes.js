@@ -79,6 +79,10 @@ export const apiRoutes = {
     },
   },
   campaign: {
+    district: {
+      path: '/campaigns/mine/district',
+      method: 'PUT',
+    },
     pathToVictory: {
       create: {
         path: '/campaigns/mine/path-to-victory',
@@ -400,6 +404,16 @@ export const apiRoutes = {
       path: '/elections/races-by-year',
       method: 'GET',
     },
+    districts: {
+      types: {
+        path: '/elections/districts/types',
+        method: 'GET'
+      },
+      names: {
+        path: '/elections/districts/names',
+        method: 'GET'
+      }
+    }
   },
   payments: {
     createCheckoutSession: {
