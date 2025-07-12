@@ -5,6 +5,19 @@ import TextField from '@shared/inputs/TextField'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
+async function fetchDistrictNames(districtType, state, electionYear) {
+  try {
+    const { data = [] } = await clientFetch(
+      apiRoutes.elections.districts.names,
+      { L2DistrictType: districtType, state, electionYear },
+    )
+    return data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
+
 export default function DistrictNameAutocomplete({
   value,
   onChange,
@@ -19,21 +32,18 @@ export default function DistrictNameAutocomplete({
   useEffect(() => {
     let active = true
 
-    async function load() {
-      if (!districtType) {
-        setOptions([])
-        return
-      }
+    if (!districtType) {
+      setOptions([])
+      return
+    }
 
-      setLoading(true)
-      try {
-        const { data = [] } = await clientFetch(
-          apiRoutes.elections.districts.names,
-          { L2DistrictType: districtType, state, electionYear },
-        )
-        active && setOptions(data)
-      } finally {
-        active && setLoading(false)
+    setLoading(true)
+
+    async function load() {
+      const data = await fetchDistrictNames(districtType, state, electionYear)
+      if (active) {
+        setOptions(data)
+        setLoading(false)
       }
     }
 

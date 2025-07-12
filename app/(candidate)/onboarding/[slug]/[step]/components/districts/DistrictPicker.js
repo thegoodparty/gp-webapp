@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import BlackButtonClient from '@shared/buttons/BlackButtonClient'
+import Button from '@shared/buttons/Button'
 import DistrictTypeAutocomplete from './DistrictTypeAutocomplete'
 import DistrictNameAutocomplete from './DistrictNameAutocomplete'
 
@@ -8,7 +8,7 @@ export default function DistrictPicker({
   state,
   electionYear,        // number, derived from electionDate
   buttonText = 'Save',
-  onSubmit,
+  onSubmit = async () => Promise.resolve(),
   className = '',
 }) {
   const [type, setType]   = useState(null)
@@ -20,11 +20,8 @@ export default function DistrictPicker({
   const handleClick = async () => {
     if (!canSubmit) return
     setBusy(true)
-    try {
-      await onSubmit(type, name)
-    } finally {
-      setBusy(false)
-    }
+    await onSubmit(type, name)
+    setBusy(false)
   }
 
   return (
@@ -49,9 +46,9 @@ export default function DistrictPicker({
       />
 
       <div className="flex justify-end lg:col-span-2">
-        <BlackButtonClient onClick={handleClick} disabled={!canSubmit}>
-          <strong>{busy ? 'Saving…' : buttonText}</strong>
-        </BlackButtonClient>
+        <Button onClick={handleClick} disabled={!canSubmit} loading={busy}>
+          <strong>{buttonText}</strong>
+        </Button>
       </div>
     </div>
   )
