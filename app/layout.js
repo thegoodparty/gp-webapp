@@ -4,7 +4,6 @@ import Script from 'next/script'
 import PageWrapper from './shared/layouts/PageWrapper'
 import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
-import FullStoryScript from '@shared/scripts/FullStoryScript'
 import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
@@ -75,7 +74,6 @@ const RootLayout = ({ children }) => (
       <link rel="manifest" href="/manifest.json" />
       <SegmentScript />
       <VwoScript />
-      <FullStoryScript />
     </head>
     <body>
       <RouteTracker />
