@@ -30,7 +30,6 @@ export default function DistrictNameAutocomplete({
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    let active = true
 
     if (!districtType) {
       setOptions([])
@@ -41,15 +40,12 @@ export default function DistrictNameAutocomplete({
 
     async function load() {
       const data = await fetchDistrictNames(districtType, state, electionYear)
-      if (active) {
-        setOptions(data)
-        setLoading(false)
-      }
+      setOptions(data)
+      setLoading(false)
     }
 
     load()
     return () => {
-      active = false
     }
   }, [districtType, state, electionYear])
 

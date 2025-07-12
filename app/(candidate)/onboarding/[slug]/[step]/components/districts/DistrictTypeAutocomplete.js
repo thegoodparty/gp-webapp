@@ -29,25 +29,21 @@ export default function DistrictTypeAutocomplete({
 
   useEffect(() => {
     if (!state || !electionYear) return
-    let active = true
     setLoading(true)
 
     async function load() {
       const data = await fetchDistrictTypes(state, electionYear)
-      if (active) {
-        setOptions(
-          data.map((d) => ({
-            ...d,
-            label: d.L2DistrictType.replace(/_/g, ' '),
-          })),
-        )
-        setLoading(false)
-      }
+      setOptions(
+        data.map((d) => ({
+          ...d,
+          label: d.L2DistrictType.replace(/_/g, ' '),
+        })),
+      )
+      setLoading(false)
     }
 
     load()
     return () => {
-      active = false
     }
   }, [state, electionYear])
 
