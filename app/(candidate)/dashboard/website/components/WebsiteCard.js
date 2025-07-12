@@ -19,6 +19,10 @@ function WebsiteCard({ className = '' }) {
     website.vanityPath,
     website.status === WEBSITE_STATUS.unpublished,
   )
+  const url = getWebsiteUrl(
+    website.vanityPath,
+    website.status === WEBSITE_STATUS.unpublished,
+  )
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   return (
