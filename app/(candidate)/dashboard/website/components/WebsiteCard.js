@@ -15,9 +15,12 @@ import Body1 from '@shared/typography/Body1'
 function WebsiteCard({ className = '' }) {
   const { website } = useWebsite()
 
+  const { vanityPath, status, domain } = website
+
   const url = getWebsiteUrl(
-    website.vanityPath,
-    website.status === WEBSITE_STATUS.unpublished,
+    vanityPath,
+    status === WEBSITE_STATUS.unpublished,
+    domain,
   )
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
@@ -56,16 +59,17 @@ function WebsiteCard({ className = '' }) {
             </Button>
           </div>
         </div>
-
-        <Button
-          className="mt-4 gap-2 w-full flex justify-center items-center"
-          color="neutral"
-          variant="outlined"
-          href="/dashboard/website/domain"
-        >
-          <BsGlobe size={20} />
-          <Body1>Add a domain</Body1>
-        </Button>
+        {!domain?.name && (
+          <Button
+            className="mt-4 gap-2 w-full flex justify-center items-center"
+            color="neutral"
+            variant="outlined"
+            href="/dashboard/website/domain"
+          >
+            <BsGlobe size={20} />
+            <Body1>Add a domain</Body1>
+          </Button>
+        )}
       </Paper>
       <ShareModal
         open={shareModalOpen}

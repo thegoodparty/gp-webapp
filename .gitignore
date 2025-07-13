@@ -53,3 +53,6 @@ invalid_urls.csv
 # AI Tools
 /.ai/
 *repomix*
+
+# cursor local workspace
+*.code-workspace
