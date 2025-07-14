@@ -70,6 +70,7 @@ export const EVENTS = {
       ClickCampaignTeam: 'Navigation - Dashboard: Click Campaign Team',
       ClickFreeResources: 'Navigation - Dashboard: Click Free Resources',
       ClickCommunity: 'Navigation - Dashboard: Click Community',
+      ClickWebsite: 'Navigation - Dashboard: Click Website',
     },
   },
   Dashboard: {
@@ -488,13 +489,13 @@ export const trackEvent = (name, properties) => {
     }
     FS('trackEvent', { name, commonProperties })
   } catch (e) {
-    console.log('error tracking analytics (Segment + Fullstory) event', e)
+    console.log('error tracking analytics (Segment) event', e)
   }
 }
 
 /**
- * Helper function to simplify setting Fullstory tracking attributes for an Element
- * @param {string} name Unique name for this element in Fullstory
+ * Helper function to simplify setting tracking attributes for an Element
+ * @param {string} name Unique name for this element
  * @param {Object.<string, string | boolean | number | Date>} properties Object defining specific Element properties
  * @returns {Object}
  * @example

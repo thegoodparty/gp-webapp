@@ -34,6 +34,7 @@ function PhoneInput({
   className,
   placeholder,
   useLabel = true,
+  ...restProps
 }) {
   const [displayValue, setDisplayValue] = useState('')
   const [validPhone, setValidPhone] = useState(false)
@@ -112,6 +113,7 @@ function PhoneInput({
             }
           : {}
       }
+      {...restProps}
     />
   )
 }

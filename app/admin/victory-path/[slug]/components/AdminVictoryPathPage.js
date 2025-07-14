@@ -6,21 +6,26 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import TextField from '@shared/inputs/TextField'
-import { Autocomplete } from '@mui/material'
 import { revalidatePage } from 'helpers/cacheHelper'
 import H3 from '@shared/typography/H3'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import { dateUsHelper } from 'helpers/dateHelper'
 import Checkbox from '@shared/inputs/Checkbox'
-import VoterFileSection from './VoterFileSection'
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { ELECTION_TYPE_CHOICES } from '../constants/electionTypeChoices.const'
+import DistrictPicker from 'app/(candidate)/onboarding/[slug]/[step]/components/districts/DistrictPicker'
+
+const updateDistrict = (slug, L2DistrictType, L2DistrictName) =>
+  clientFetch(apiRoutes.campaign.district, {
+    slug,
+    L2DistrictType,
+    L2DistrictName,
+  })
 
 export async function sendVictoryMail(id) {
   try {
@@ -32,25 +37,6 @@ export async function sendVictoryMail(id) {
 }
 
 const sections = [
-  {
-    title: 'Voter File Settings',
-    fields: [
-      {
-        key: 'electionType',
-        label: 'Election Type',
-        type: 'text',
-        options: ELECTION_TYPE_CHOICES,
-        autocomplete: false,
-      },
-      {
-        key: 'electionLocation',
-        label: 'Election Location',
-        type: 'text',
-        options: ELECTION_TYPE_CHOICES,
-        autocomplete: true,
-      },
-    ],
-  },
   {
     title: 'Viability Score',
     fields: [
@@ -93,11 +79,6 @@ const sections = [
     title: 'Vote Goal',
     fields: [
       {
-        key: 'totalRegisteredVoters',
-        label: 'Total Registered Voters',
-        type: 'number',
-      },
-      {
         key: 'projectedTurnout',
         label: 'Projected Turnout number',
         type: 'number',
@@ -109,40 +90,6 @@ const sections = [
         type: 'number',
         formula: true,
       },
-    ],
-  },
-
-  {
-    title: 'Registered Voters',
-    fields: [
-      { key: 'republicans', label: 'Republicans', type: 'number' },
-      { key: 'democrats', label: 'Democrats', type: 'number' },
-      { key: 'indies', label: 'Indies', type: 'number' },
-      {
-        key: 'averageTurnout',
-        label: 'Average turnout number from past 3 races',
-        type: 'number',
-      },
-      {
-        key: 'averageTurnoutPercent',
-        label: 'Average Turnout Percent',
-        type: 'number',
-        formula: true,
-      },
-    ],
-  },
-
-  {
-    title: 'Voter Demographics',
-    fields: [
-      { key: 'allAvailVoters', label: 'All avail voters', type: 'number' },
-      { key: 'availVotersTo35', label: '18-35 avail voters', type: 'number' },
-      { key: 'women', label: 'Women', type: 'number' },
-      { key: 'men', label: 'Men', type: 'number' },
-      { key: 'africanAmerican', label: 'African American', type: 'number' },
-      { key: 'white', label: 'White', type: 'number' },
-      { key: 'asian', label: 'Asian', type: 'number' },
-      { key: 'hispanic', label: 'Hispanic', type: 'number' },
     ],
   },
   {
@@ -206,52 +153,35 @@ export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { pathToVictory: p2vObject, details } = campaign
   const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
-  const [locations, setLocations] = useState([])
-  const [loadingLocations, setLoadingLocations] = useState(false)
 
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
   })
 
-  async function getVoterLocations(electionType, state) {
-    try {
-      setLoadingLocations(true)
-      const locationResp = await clientFetch(apiRoutes.voters.locations, {
-        electionType,
-        state,
-      })
-      const items = locationResp?.data || []
-      setLocations(items)
-      setLoadingLocations(false)
-    } catch (e) {
-      console.error('error', e)
-      return false
-    }
-  }
-
   function isNumeric(str) {
     return !isNaN(str) && !isNaN(parseFloat(str))
   }
-
-  useEffect(() => {
-    if (
-      state.electionType &&
-      state.electionType !== '' &&
-      state.electionType !== null &&
-      campaign.details?.state &&
-      campaign.details?.state !== '' &&
-      campaign.details?.state !== null
-    ) {
-      console.log(`getting voter locations for ${state.electionType}`)
-      getVoterLocations(state.electionType, campaign.details?.state)
-    }
-  }, [state.electionType, campaign.details?.state])
 
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
   )
   const { successSnackbar, errorSnackbar } = useSnackbar()
+
+  const handleDistrictSave = async (typeObj, nameObj) => {
+    try {
+      await updateDistrict(
+        campaign.slug,
+        typeObj.L2DistrictType,
+        nameObj.L2DistrictName,
+      )
+      successSnackbar('District updated')
+      await refreshCampaign()
+    } catch (e) {
+      console.error(e)
+      errorSnackbar('Error updating district')
+    }
+  }
 
   useEffect(() => {
     if (!state.winNumber || !state.averageTurnoutPercent) {
@@ -362,31 +292,6 @@ export default function AdminVictoryPathPage(props) {
       voterContactGoal,
       'viability.candidatesPerSeat': candidatesPerSeat,
       'viability.score': score,
-    })
-  }
-
-  const onChangeLocation = async (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    })
-    let attr = []
-    attr.push({ key: 'pathToVictory.electionLocation', value })
-    attr.push({
-      key: 'pathToVictory.electionType',
-      value: state['electionType'],
-    })
-    await updateCampaign(attr, campaign.slug)
-    successSnackbar('Saved Election Location.')
-  }
-
-  const onChangeElectionType = async (key, value) => {
-    // we only want to update the election type if the location set
-    // now we clear the location options when the election type changes
-    setState({
-      ...state,
-      [key]: value,
-      ['electionLocation']: '',
     })
   }
 
@@ -523,6 +428,14 @@ export default function AdminVictoryPathPage(props) {
           </H3>{' '}
           <AdditionalFieldsSection />
           <P2VProSection />
+          <H2 className="mb-8">District Picker</H2>
+          <DistrictPicker
+            state={details.state}
+            electionYear={new Date(details?.electionDate).getFullYear()}
+            buttonText="Save District"
+            onSubmit={handleDistrictSave}
+            className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
+          />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. District:{' '}
@@ -552,83 +465,6 @@ export default function AdminVictoryPathPage(props) {
                           disabled
                           value={state[field.key]}
                         />
-                      </div>
-                    ) : field.key === 'electionType' ? (
-                      <div>
-                        <Autocomplete
-                          options={field.options}
-                          getOptionLabel={(option) => option.title}
-                          // value={state[field.key]}
-                          value={
-                            field.options.find(
-                              (option) => option.id === state[field.key],
-                            ) || null
-                          }
-                          onChange={(e, value) => {
-                            onChangeElectionType(
-                              field.key,
-                              value ? value.id : null,
-                            )
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label={field.label}
-                              required
-                              variant="outlined"
-                              InputProps={{
-                                ...params.InputProps,
-                                style: { borderRadius: '4px' },
-                              }}
-                            />
-                          )}
-                        />
-                      </div>
-                    ) : field.key === 'electionLocation' &&
-                      locations.length > 0 ? (
-                      <div>
-                        <>
-                          <Autocomplete
-                            options={locations}
-                            value={state[field.key]}
-                            onChange={(e, value) => {
-                              onChangeLocation(field.key, value)
-                            }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                disabled={
-                                  state?.electionType === undefined ||
-                                  state.electionType === ''
-                                }
-                                label={field.label}
-                                required
-                                variant="outlined"
-                                InputProps={{
-                                  ...params.InputProps,
-                                  style: { borderRadius: '4px' },
-                                }}
-                              />
-                            )}
-                          />
-                          {!notNeeded && <VoterFileSection />}
-                        </>
-                      </div>
-                    ) : field.key === 'electionLocation' &&
-                      locations.length === 0 ? (
-                      <div>
-                        {loadingLocations ? (
-                          <div role="status" className="animate-pulse w-full">
-                            <div className="h-10 bg-gray-200 rounded-[4px] dark:bg-gray-700 w-full"></div>
-                            <span className="sr-only">Loading...</span>
-                          </div>
-                        ) : (
-                          <TextField
-                            label={field.label}
-                            disabled
-                            value="No locations available"
-                          />
-                        )}
                       </div>
                     ) : (
                       <RenderInputField

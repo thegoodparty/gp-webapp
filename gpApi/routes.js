@@ -79,6 +79,10 @@ export const apiRoutes = {
     },
   },
   campaign: {
+    district: {
+      path: '/campaigns/mine/district',
+      method: 'PUT',
+    },
     pathToVictory: {
       create: {
         path: '/campaigns/mine/path-to-victory',
@@ -400,6 +404,16 @@ export const apiRoutes = {
       path: '/elections/races-by-year',
       method: 'GET',
     },
+    districts: {
+      types: {
+        path: '/elections/districts/types',
+        method: 'GET'
+      },
+      names: {
+        path: '/elections/districts/names',
+        method: 'GET'
+      }
+    }
   },
   payments: {
     createCheckoutSession: {
@@ -529,6 +543,14 @@ export const apiRoutes = {
     },
   },
   issues: {
+    get: {
+      path: '/community-issues/:uuid',
+      method: 'GET',
+    },
+    getStatusHistory: {
+      path: '/community-issues/:uuid/status-history',
+      method: 'GET',
+    },
     list: {
       path: '/community-issues',
       method: 'GET',
@@ -538,7 +560,7 @@ export const apiRoutes = {
       method: 'POST',
     },
     update: {
-      path: '/community-issues/:id',
+      path: '/community-issues/:uuid',
       method: 'PUT',
     },
   },
@@ -550,6 +572,48 @@ export const apiRoutes = {
     list: {
       path: '/outreach',
       method: 'GET',
+    },
+  },
+  website: {
+    get: {
+      path: '/websites/mine',
+      method: 'GET',
+    },
+    create: {
+      path: '/websites',
+      method: 'POST',
+    },
+    update: {
+      path: '/websites/mine',
+      method: 'PUT',
+    },
+    preview: {
+      path: '/websites/:vanityPath/preview',
+      method: 'GET',
+    },
+    view: {
+      path: '/websites/:vanityPath/view',
+      method: 'GET',
+    },
+    getContacts: {
+      path: '/websites/mine/contacts',
+      method: 'GET',
+    },
+    getViews: {
+      path: '/websites/mine/views',
+      method: 'GET',
+    },
+    submitContactForm: {
+      path: '/websites/:vanityPath/contact-form',
+      method: 'POST',
+    },
+    validateVanityPath: {
+      path: '/websites/validate-vanity-path',
+      method: 'POST',
+    },
+    trackView: {
+      path: '/websites/:vanityPath/track-view',
+      method: 'POST',
     },
   },
 }
