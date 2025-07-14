@@ -14,6 +14,8 @@ import Image from 'next/image'
 import MarketingH5 from '@shared/typography/MarketingH5'
 import Body1 from '@shared/typography/Body1'
 import { dateUsHelper } from 'helpers/dateHelper'
+import slugify from 'slugify'
+import Link from 'next/link'
 
 export default memo(function CampaignPreview({
   selectedCampaign,
@@ -44,6 +46,8 @@ export default memo(function CampaignPreview({
     ? /won/i.test(hubSpotUpdates?.election_results)
     : didWin
 
+  const candidateName = `${firstName} ${lastName}`
+
   return (
     <div className="absolute top-0 p-4 md:p-0 left-4 w-[calc(100vw-32px)]   md:left-[416px] lg:left-[516px] md:w-[320px]   md:shadow md:mt-4  rounded-2xl z-50">
       <div className="h-full bg-white p-4 rounded-2xl shadow-md md:shadow-none">
@@ -63,7 +67,7 @@ export default memo(function CampaignPreview({
               <Image
                 src={avatar}
                 fill
-                alt={`${firstName} ${lastName}`}
+                alt={candidateName}
                 priority
                 unoptimized
                 className="rounded-2xl w-28 h-28 object-cover object-center"
@@ -71,9 +75,11 @@ export default memo(function CampaignPreview({
             </div>
           )}
         </div>
-        <MarketingH5 className="mb-4">
-          {firstName} {lastName}
-        </MarketingH5>
+        <Link href={`/candidate/${slugify(candidateName)}/${slugify(office)}`}>
+          <MarketingH5 className="mb-4">
+            {candidateName}
+          </MarketingH5>
+        </Link>
         {office && (
           <div className="flex mb-3 items-center">
             <MdWorkHistory size={20} className="text-primary-light" />
