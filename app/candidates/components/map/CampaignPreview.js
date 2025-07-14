@@ -75,7 +75,7 @@ export default memo(function CampaignPreview({
             </div>
           )}
         </div>
-        <Link href={`/candidate/${slugify(candidateName)}/${slugify(office)}`}>
+        <Link href={`/candidate/${slugify(candidateName.toLowerCase())}/${slugify(office.toLowerCase())}`}>
           <MarketingH5 className="mb-4">
             {candidateName}
           </MarketingH5>
