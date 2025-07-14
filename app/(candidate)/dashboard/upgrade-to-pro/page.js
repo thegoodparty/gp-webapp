@@ -4,6 +4,7 @@ import candidateAccess from '../shared/candidateAccess'
 import { getServerUser } from 'helpers/userServerHelper'
 import UpgradeToProPage from './components/UpdateToProPage'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
+import Script from 'next/script'
 const meta = pageMetaData({
   title: 'Upgrade To Pro! | GoodParty.org',
   description: 'Upgrade To Pro!',
@@ -27,5 +28,15 @@ export default async function Page({ params, searchParams }) {
     candidatePositions,
     user,
   }
-  return <UpgradeToProPage {...childProps} />
+  return (
+    <>
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
+      <UpgradeToProPage {...childProps} />
+    </>
+  )
 }

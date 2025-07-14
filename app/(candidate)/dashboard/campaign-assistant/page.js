@@ -3,6 +3,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import CampaignAssistantPage from './components/CampaignAssistantPage'
 import { getServerUser } from 'helpers/userServerHelper'
 import candidateAccess from '../shared/candidateAccess'
+import Script from 'next/script'
 
 const meta = pageMetaData({
   title: 'AI Assistant | GoodParty.org',
@@ -24,5 +25,15 @@ export default async function Page({ params, searchParams }) {
     user,
     campaign,
   }
-  return <CampaignAssistantPage {...childProps} />
+  return (
+    <>
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
+      <CampaignAssistantPage {...childProps} />
+    </>
+  )
 }

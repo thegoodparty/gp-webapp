@@ -4,6 +4,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { WebsiteProvider } from './components/WebsiteProvider'
 import candidateAccess from '../shared/candidateAccess'
+import Script from 'next/script'
 
 const meta = pageMetaData({
   title: 'Website | GoodParty.org',
@@ -26,8 +27,16 @@ export default async function Page() {
   const contacts = contactsResp.ok ? contactsResp.data : null
 
   return (
-    <WebsiteProvider website={website} contacts={contacts}>
-      <WebsitePage pathname="/dashboard/website" />
-    </WebsiteProvider>
+    <>
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
+      <WebsiteProvider website={website} contacts={contacts}>
+        <WebsitePage pathname="/dashboard/website" />
+      </WebsiteProvider>
+    </>
   )
 }

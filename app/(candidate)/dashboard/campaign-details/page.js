@@ -7,6 +7,7 @@ import {
   serverFetchIssues,
   serverLoadCandidatePosition,
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
+import Script from 'next/script'
 
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',
@@ -37,5 +38,15 @@ export default async function Page({ params, searchParams }) {
     user,
   }
 
-  return <DetailsPage {...childProps} />
+  return (
+    <>
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
+      <DetailsPage {...childProps} />
+    </>
+  )
 }
