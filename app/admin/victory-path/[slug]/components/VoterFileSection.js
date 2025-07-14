@@ -7,13 +7,6 @@ export default function VoterFileSection() {
   return (
     <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <div>
-        {campaign?.details?.raceId === undefined ? (
-          <div className="my-4">
-            This campaign is not eligible for an Automatic Path To Victory
-            because the user manually selected an office.
-          </div>
-        ) : null}
-
         {campaign.pathToVictory?.p2vStatus === 'Waiting' &&
         campaign?.details?.raceId ? (
           <div className="my-4">
