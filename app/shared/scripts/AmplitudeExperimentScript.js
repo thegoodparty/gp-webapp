@@ -1,3 +1,4 @@
+'use client'
 import Script from 'next/script'
 import { AMPLITUDE_EXPERIMENT_API_KEY } from 'appEnv'
 
