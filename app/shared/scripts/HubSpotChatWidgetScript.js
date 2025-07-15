@@ -1,6 +1,6 @@
 import Script from 'next/script'
 
-const HubSpotScript = () => {
+const HubSpotChatWidgetScript = () => {
   return (
     <Script
       type="text/javascript"
@@ -11,4 +11,4 @@ const HubSpotScript = () => {
   )
 }
 
-export default HubSpotScript 
+export default HubSpotChatWidgetScript 

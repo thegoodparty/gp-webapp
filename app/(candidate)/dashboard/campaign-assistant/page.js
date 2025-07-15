@@ -3,7 +3,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import CampaignAssistantPage from './components/CampaignAssistantPage'
 import { getServerUser } from 'helpers/userServerHelper'
 import candidateAccess from '../shared/candidateAccess'
-import HubSpotScript from '@shared/scripts/HubSpotScript'
+import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 
 const meta = pageMetaData({
   title: 'AI Assistant | GoodParty.org',
@@ -27,7 +27,7 @@ export default async function Page({ params, searchParams }) {
   }
   return (
     <>
-      <HubSpotScript />
+      <HubSpotChatWidgetScript />
       <CampaignAssistantPage {...childProps} />
     </>
   )

@@ -4,7 +4,7 @@ import candidateAccess from '../shared/candidateAccess'
 import { getServerUser } from 'helpers/userServerHelper'
 import UpgradeToProPage from './components/UpdateToProPage'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
-import HubSpotScript from '@shared/scripts/HubSpotScript'
+import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 const meta = pageMetaData({
   title: 'Upgrade To Pro! | GoodParty.org',
   description: 'Upgrade To Pro!',
@@ -30,7 +30,7 @@ export default async function Page({ params, searchParams }) {
   }
   return (
     <>
-      <HubSpotScript />
+      <HubSpotChatWidgetScript />
       <UpgradeToProPage {...childProps} />
     </>
   )
