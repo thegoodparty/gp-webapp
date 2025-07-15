@@ -7,7 +7,7 @@ import {
   serverFetchIssues,
   serverLoadCandidatePosition,
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
-import Script from 'next/script'
+import HubSpotScript from '@shared/scripts/HubSpotScript'
 
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',
@@ -40,12 +40,7 @@ export default async function Page({ params, searchParams }) {
 
   return (
     <>
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
+      <HubSpotScript />
       <DetailsPage {...childProps} />
     </>
   )

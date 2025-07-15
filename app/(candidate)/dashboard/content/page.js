@@ -6,7 +6,7 @@ import ContentPage from './components/ContentPage'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import { getServerUser } from 'helpers/userServerHelper'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
-import Script from 'next/script'
+import HubSpotScript from '@shared/scripts/HubSpotScript'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,12 +47,7 @@ export default async function Page({ params, searchParams }) {
 
   return (
     <>
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
+      <HubSpotScript />
       <ContentPage {...childProps} />
     </>
   )
