@@ -117,19 +117,19 @@ export const RESOURCES_LINKS = [
     dataTestId: 'nav-blog',
   },
   {
-    label: 'Case Studies',
-    href: '/blog/for-candidates',
-    icon: <LuFileText />,
-    id: 'nav-case-studies',
-    dataTestId: 'nav-case-studies',
-  },
-  {
     label: 'Candidate Community',
     href: 'https://community.goodparty.org',
     icon: <LuUsersRound />,
     id: 'nav-community',
     dataTestId: 'nav-community',
     external: true,
+  },
+  {
+    label: 'Case Studies',
+    href: '/blog/section/for-candidates',
+    icon: <LuFileText />,
+    id: 'nav-case-studies',
+    dataTestId: 'nav-case-studies',
   },
 ]
 
@@ -149,18 +149,18 @@ export const ABOUT_US_LINKS = [
     dataTestId: 'nav-team',
   },
   {
-    label: 'Contact Us',
-    href: '/contact',
-    icon: <LuPhone />,
-    id: 'nav-contact-us',
-    dataTestId: 'nav-contact-us',
-  },
-  {
     label: 'GoodParty.org Candidates',
     href: '/candidates',
     icon: <LuUserSearch />,
     id: 'nav-find-candidates',
     dataTestId: 'nav-find-candidates',
+  },
+  {
+    label: 'Contact Us',
+    href: '/contact',
+    icon: <LuPhone />,
+    id: 'nav-contact-us',
+    dataTestId: 'nav-contact-us',
   },
 ]
 
