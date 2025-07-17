@@ -82,6 +82,22 @@ async function fetchBlogArticles() {
 }
 
 /**
+ * Extract blog sections from blog articles
+ */
+function extractBlogSections(blogArticles) {
+  const sectionsMap = new Map()
+  
+  blogArticles.forEach(article => {
+    if (article.section?.fields?.slug) {
+      const section = article.section.fields
+      sectionsMap.set(section.slug, section)
+    }
+  })
+  
+  return Array.from(sectionsMap.values())
+}
+
+/**
  * Fetch blog sections
  */
 async function fetchBlogSections() {
@@ -202,35 +218,43 @@ async function generateMainSitemap() {
 
   // Fetch and add dynamic content
   console.log('   📚 Fetching blog articles...')
-  const [blogArticles, blogSections, faqArticles, glossaryTerms] = await Promise.all([
+  const [blogArticles, faqArticles, glossaryTerms] = await Promise.all([
     fetchBlogArticles(),
-    fetchBlogSections(),  
     fetchFAQArticles(),
     fetchGlossaryTerms()
   ])
 
+  // Extract blog sections from articles
+  const blogSections = extractBlogSections(blogArticles)
+
   // Add blog articles
   if (blogArticles.length > 0) {
     console.log(`   📝 Adding ${blogArticles.length} blog articles`)
+    
+    let addedCount = 0
     blogArticles.forEach((article) => {
-      if (article.fields?.slug) {
+      if (article.slug) {
         mainSitemap.push({
-          url: `${APP_BASE}/blog/article/${article.fields.slug}`,
-          lastModified: article.fields?.publishDate ? new Date(article.fields.publishDate) : now,
+          url: `${APP_BASE}/blog/article/${article.slug}`,
+          lastModified: article.publishDate ? new Date(article.publishDate) : now,
           changeFrequency: 'monthly',
           priority: 0.9,
         })
+        addedCount++
       }
     })
+    console.log(`   ✅ Actually added ${addedCount} blog articles to sitemap`)
   }
 
   // Add blog sections
   if (blogSections.length > 0) {
     console.log(`   📂 Adding ${blogSections.length} blog sections`)
     blogSections.forEach((section) => {
-      if (section.fields?.slug) {
+      // Check both possible slug locations for flexibility
+      const slug = section.slug || section.fields?.slug
+      if (slug) {
         mainSitemap.push({
-          url: `${APP_BASE}/blog/section/${section.fields.slug}`,
+          url: `${APP_BASE}/blog/section/${slug}`,
           lastModified: now,
           changeFrequency: 'monthly',
           priority: 0.9,
@@ -383,21 +407,43 @@ async function generateSitemaps(options = {}) {
     // Track all URLs for validation
     const allUrls = []
     let validationReport = null
+    let mainValidationResults = null
     
     // Generate main sitemap
     console.log('\n📝 Generating main sitemap...')
     let mainUrls = await generateMainSitemap()
     
-    // Skip main sitemap validation - contains mostly static URLs that don't need validation
+    // Validate main sitemap URLs if validation is enabled
     if (validate) {
-      console.log('\n⏭️  Skipping main sitemap validation (static URLs)')
+      console.log('\n🔍 Validating main sitemap URLs...')
+      mainValidationResults = await validateUrls(mainUrls, validationOptions)
+      validationReport = generateValidationReport(mainValidationResults)
+      
+      const invalidCount = mainValidationResults.summary.invalid
+      if (invalidCount > 0) {
+        console.log(`   ⚠️  Found ${invalidCount} invalid URLs in main sitemap`)
+        console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+      } else {
+        console.log(`   ✅ All ${mainValidationResults.summary.valid} main sitemap URLs are valid`)
+      }
     }
     
     allUrls.push(...mainUrls)
     
+    // Filter main URLs based on validation results if validation was performed
+    let filteredMainUrls = mainUrls
+    if (validate && mainValidationResults) {
+      // Use the validation results to filter URLs (removes redirects, etc.)
+      filteredMainUrls = filterValidUrls(mainUrls, mainValidationResults)
+      const removedCount = mainUrls.length - filteredMainUrls.length
+      if (removedCount > 0) {
+        console.log(`   🗑️  Removed ${removedCount} URLs from sitemap based on validation results`)
+      }
+    }
+
     // Write main sitemap with size limit handling
     const mainSitemapEntries = await writeSplitSitemaps(
-      mainUrls,
+      filteredMainUrls,
       OUTPUT_DIR,
       'sitemap',
       convertToXML,
@@ -405,7 +451,7 @@ async function generateSitemaps(options = {}) {
     )
     sitemapIndex.push(...mainSitemapEntries)
     
-    console.log(`✅ Main sitemap generated with ${mainUrls.length} URLs`)
+    console.log(`✅ Main sitemap generated with ${filteredMainUrls.length} URLs`)
     if (mainSitemapEntries.length > 1) {
       console.log(`   📄 Split into ${mainSitemapEntries.length} files due to size limits`)
     }
@@ -583,8 +629,8 @@ async function generateSitemaps(options = {}) {
     console.log(`📁 Files saved to: ${OUTPUT_DIR}`)
     console.log('\n📊 Summary:')
     console.log(`   Total sitemaps: ${sitemapIndex.length}`)
-    console.log(`   Total URLs: ${mainUrls.length + stateUrlsTotal + candidateUrlsTotal}`)
-    console.log(`   - Main sitemap: ${mainUrls.length} URLs`)
+    console.log(`   Total URLs: ${filteredMainUrls.length + stateUrlsTotal + candidateUrlsTotal}`)
+    console.log(`   - Main sitemap: ${filteredMainUrls.length} URLs`)
     console.log(`   - State sitemaps: ${stateCount} files, ${stateUrlsTotal} URLs`)
     console.log(`   - Candidate sitemaps: ${candidateCount} files, ${candidateUrlsTotal} URLs`)
     
@@ -601,7 +647,7 @@ async function generateSitemaps(options = {}) {
         candidates: candidateCount
       },
       urls: {
-        main: mainUrls.length,
+        main: filteredMainUrls.length,
         states: stateUrlsTotal,
         candidates: candidateUrlsTotal,
         total: allUrls.length
