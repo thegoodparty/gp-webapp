@@ -8,6 +8,7 @@ import {
   CheckCircleRounded,
   CancelRounded,
 } from '@mui/icons-material'
+import DeleteDomain from './DeleteDomain'
 
 const statusConfig = {
   pending: {
@@ -24,7 +25,7 @@ const statusConfig = {
   },
   registered: {
     title: 'DNS Configuration Required',
-    description: 'Domain registered with AWS, DNS configuration pending',
+    description: 'Domain registered, DNS configuration pending',
     icon: SettingsRounded,
     theme: 'orange',
   },
@@ -56,7 +57,7 @@ export default function CustomDomain({ domain }) {
   const IconComponent = config.icon
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <H3>Custom Domain</H3>
       <div className={`${bg} border ${border} rounded-lg p-4`}>
         <div className="flex items-center gap-3">
@@ -72,6 +73,11 @@ export default function CustomDomain({ domain }) {
           </div>
         </div>
       </div>
+      {/* {domain.status === DOMAIN_STATUS.SUBMITTED && ( */}
+      <div className="flex gap-4 justify-center">
+        <DeleteDomain />
+      </div>
+      {/* )} */}
     </div>
   )
 }

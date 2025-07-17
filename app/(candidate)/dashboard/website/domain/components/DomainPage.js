@@ -1,23 +1,23 @@
 'use client'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
-import DomainForm from './DomainForm'
-import { useState } from 'react'
-import GreatSuccess from './GreatSuccess'
+import SelectDomain from './SelectDomain'
+import { useDomainStatus } from './DomainStatusProvider'
+import { DOMAIN_STATUS } from '../../util/domain.util'
+import { useWebsite } from '../../components/WebsiteProvider'
 
-export default function DomainPage({ pathname, campaign }) {
-  const [success, setSuccess] = useState(true)
+export default function DomainPage({ pathname }) {
   const handleSuccess = () => setSuccess(true)
+  const { status } = useDomainStatus()
+  const { website } = useWebsite()
+  const { vanityPath, domain } = website
+
+  const { message, paymentStatus } = status || {}
+
+  const showDomainSelection = message === DOMAIN_STATUS.NO_DOMAIN && !domain
   return (
-    <DashboardLayout
-      pathname={pathname}
-      campaign={campaign}
-      showAlert={false}
-      hideMenu
-    >
-      {!success ? (
-        <DomainForm onRegisterSuccess={handleSuccess} />
-      ) : (
-        <GreatSuccess />
+    <DashboardLayout pathname={pathname} showAlert={false} hideMenu>
+      {showDomainSelection && (
+        <SelectDomain onRegisterSuccess={handleSuccess} />
       )}
     </DashboardLayout>
   )

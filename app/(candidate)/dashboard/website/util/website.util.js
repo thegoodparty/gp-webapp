@@ -1,6 +1,7 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { serialize } from 'object-to-formdata'
+import { isDomainActive } from './domain.util'
 
 export const BASE_URL =
   process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
@@ -11,7 +12,7 @@ export const WEBSITE_STATUS = {
 }
 
 export function getWebsiteUrl(vanityPath, preview = false, domain = {}) {
-  if (domain?.name) {
+  if (domain?.name && isDomainActive(domain)) {
     return `https://${domain.name}`
   }
 

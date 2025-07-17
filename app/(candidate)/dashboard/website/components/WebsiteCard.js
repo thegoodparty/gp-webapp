@@ -11,6 +11,7 @@ import { useWebsite } from './WebsiteProvider'
 import { getWebsiteUrl, WEBSITE_STATUS } from '../util/website.util'
 import { BsGlobe } from 'react-icons/bs'
 import Body1 from '@shared/typography/Body1'
+import { isDomainActive } from '../util/domain.util'
 
 function WebsiteCard({ className = '' }) {
   const { website } = useWebsite()
@@ -23,6 +24,7 @@ function WebsiteCard({ className = '' }) {
     domain,
   )
   const [shareModalOpen, setShareModalOpen] = useState(false)
+  console.log('domain', domain)
 
   return (
     <>
@@ -59,7 +61,7 @@ function WebsiteCard({ className = '' }) {
             </Button>
           </div>
         </div>
-        {!domain?.name && (
+        {!isDomainActive(domain) && (
           <Button
             className="mt-4 gap-2 w-full flex justify-center items-center"
             color="neutral"
@@ -67,7 +69,11 @@ function WebsiteCard({ className = '' }) {
             href="/dashboard/website/domain"
           >
             <BsGlobe size={20} />
-            <Body1>Add a domain</Body1>
+            {domain?.name ? (
+              <Body1>Continue domain setup for {domain?.name}</Body1>
+            ) : (
+              <Body1>Add a domain</Body1>
+            )}
           </Button>
         )}
       </Paper>

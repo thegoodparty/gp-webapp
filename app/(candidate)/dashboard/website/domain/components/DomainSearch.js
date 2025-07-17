@@ -1,31 +1,25 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import TextField from '@shared/inputs/TextField'
 import H2 from '@shared/typography/H2'
 import H3 from '@shared/typography/H3'
 import Button from '@shared/buttons/Button'
-import {
-  searchDomains,
-  registerDomain,
-  completeRegistration,
-} from '../../util/domainFetch.util'
+import { searchDomains } from '../../util/domainFetch.util'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import DomainResult from './DomainResult'
-import DomainPurchaseModal from './DomainPurchaseModal'
+import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
+import { useWebsite } from '../../components/WebsiteProvider'
 
 export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(prefillSearch || '')
   const [searchResults, setSearchResults] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
-  const [purchaseLoading, setPurchaseLoading] = useState(null)
-  const [purchaseModal, setPurchaseModal] = useState({
-    open: false,
-    domain: null,
-    price: null,
-    clientSecret: null,
-  })
   const { errorSnackbar } = useSnackbar()
+  const { website } = useWebsite()
+  const { id: websiteId } = website
 
   const handleEnter = (e) => {
     if (e.key === 'Enter') {
@@ -58,49 +52,20 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
     }
   }
 
-  const handlePurchase = async (domainName, price) => {
-    setPurchaseLoading(domainName)
-    try {
-      const response = await registerDomain(domainName)
-      if (response.ok) {
-        setPurchaseModal({
-          open: true,
-          domain: domainName,
-          price,
-          clientSecret: response.data.paymentSecret,
-        })
-      } else {
-        console.error('Payment initialization error:', response)
-        errorSnackbar('Failed to initialize payment: ' + response.data?.error)
-      }
-    } catch (error) {
-      console.error('Payment initialization error:', error)
-      errorSnackbar('Failed to initialize payment: ' + error.message)
-    } finally {
-      setPurchaseLoading(null)
+  const handlePurchase = (domainName) => {
+    if (!websiteId) {
+      errorSnackbar('Website ID is required')
+      return
     }
-  }
 
-  const handleClosePurchaseModal = () => {
-    setPurchaseModal({
-      open: false,
-      domain: null,
-      price: null,
-      clientSecret: null,
-    })
-  }
-
-  const handlePurchaseSuccess = async () => {
-    const resp = await completeRegistration()
-    console.log('completeRegistration resp', resp)
-    if (resp.ok) {
-      setSearchResults(null)
-      onRegisterSuccess()
-    } else {
-      console.error('Complete registration failed', resp)
-      errorSnackbar('Failed to complete registration: ' + resp.data?.error)
-    }
-    handleClosePurchaseModal()
+    const purchaseUrl = `/dashboard/purchase?type=${
+      PURCHASE_TYPES.DOMAIN_REGISTRATION
+    }&domain=${encodeURIComponent(
+      domainName,
+    )}&websiteId=${websiteId}&returnUrl=${encodeURIComponent(
+      '/dashboard/website/domain?success=true',
+    )}`
+    router.push(purchaseUrl)
   }
 
   return (
@@ -136,13 +101,10 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
             domain={searchResults.domainName}
             price={searchResults.prices.registration}
             available={searchResults.availability === 'AVAILABLE'}
-            loading={purchaseLoading === searchResults.domainName}
+            loading={false}
             onClick={() => {
               if (searchResults.availability === 'AVAILABLE') {
-                handlePurchase(
-                  searchResults.domainName,
-                  searchResults.prices.registration,
-                )
+                handlePurchase(searchResults.domainName)
               }
             }}
           />
@@ -155,28 +117,14 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
                   key={index}
                   domain={suggestion.DomainName}
                   price={suggestion.prices.registration}
-                  loading={purchaseLoading === suggestion.DomainName}
-                  onClick={() =>
-                    handlePurchase(
-                      suggestion.DomainName,
-                      suggestion.prices.registration,
-                    )
-                  }
+                  loading={false}
+                  onClick={() => handlePurchase(suggestion.DomainName)}
                 />
               ))}
             </div>
           )}
         </div>
       )}
-
-      <DomainPurchaseModal
-        open={purchaseModal.open}
-        onClose={handleClosePurchaseModal}
-        onSuccess={handlePurchaseSuccess}
-        domainName={purchaseModal.domain}
-        price={purchaseModal.price}
-        clientSecret={purchaseModal.clientSecret}
-      />
     </>
   )
 }

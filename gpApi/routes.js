@@ -410,6 +410,14 @@ export const apiRoutes = {
       path: '/payments/purchase/portal-session',
       method: 'POST',
     },
+    createPurchaseIntent: {
+      path: '/payments/purchase/create-intent',
+      method: 'POST',
+    },
+    completePurchase: {
+      path: '/payments/purchase/complete',
+      method: 'POST',
+    },
   },
   jobs: {
     list: {
@@ -614,6 +622,14 @@ export const apiRoutes = {
     completeRegistration: {
       path: '/domains/complete',
       method: 'POST',
+    },
+    delete: {
+      path: '/domains/:id',
+      method: 'DELETE',
+    },
+    status: {
+      path: '/domains/status',
+      method: 'GET',
     },
   },
 }

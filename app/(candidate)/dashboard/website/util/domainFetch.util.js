@@ -12,3 +12,11 @@ export function registerDomain(domain) {
 export function completeRegistration() {
   return clientFetch(apiRoutes.domain.completeRegistration)
 }
+
+export function deleteDomain() {
+  return clientFetch(apiRoutes.domain.delete)
+}
+
+export function getDomainStatus() {
+  return clientFetch(apiRoutes.domain.status)
+}
