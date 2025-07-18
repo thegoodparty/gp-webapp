@@ -6,8 +6,10 @@ import H2 from '@shared/typography/H2'
 export default function AboutStep({
   bio,
   issues,
+  committee,
   onBioChange,
   onIssuesChange,
+  onCommitteeChange,
   noHeading = false,
 }) {
   return (
@@ -21,6 +23,15 @@ export default function AboutStep({
         rows={4}
         value={bio}
         onChange={(e) => onBioChange(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+      />
+
+      <Label className="mt-4">Committee</Label>
+      <TextField
+        fullWidth
+        required
+        value={committee}
+        onChange={(e) => onCommitteeChange(e.target.value)}
         InputLabelProps={{ shrink: true }}
       />
 

@@ -1,15 +1,11 @@
 'use client'
-import { LuArrowLeft, LuEye } from 'react-icons/lu'
+import { LuArrowLeft } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
 import { useWebsite } from '../../components/WebsiteProvider'
 import H4 from '@shared/typography/H4'
 import { useEffect, useState } from 'react'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
-import LogoStep from './LogoStep'
-import ThemeStep from './ThemeStep'
-import HeroStep from './HeroStep'
-import AboutStep from './AboutStep'
-import ContactStep from './ContactStep'
+import EditSection from './EditSection'
 import WebsitePreview from './WebsitePreview'
 import { useMediaQuery } from '@mui/material'
 import EditSectionButton, {
@@ -145,6 +141,16 @@ export default function WebsiteEditFlow() {
     }))
   }
 
+  function handleCommitteeChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        about: { ...current.content.about, committee: value },
+      },
+    }))
+  }
+
   function handleIssuesChange(issues) {
     setWebsite((current) => ({
       ...current,
@@ -185,88 +191,6 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  function EditSection() {
-    return (
-      <div className="p-4 flex flex-col gap-4 h-full max-h-[80vh]">
-        <div className="grow overflow-auto">
-          {editSection === SECTIONS.logo && (
-            <LogoStep
-              logo={website.content.logo}
-              onChange={handleLogoChange}
-              noHeading
-            />
-          )}
-          {editSection === SECTIONS.theme && (
-            <ThemeStep
-              theme={website.content.theme}
-              onChange={handleThemeChange}
-              noHeading
-            />
-          )}
-          {editSection === SECTIONS.title && (
-            <HeroStep
-              title={website.content.main?.title}
-              tagline={website.content.main?.tagline}
-              image={website.content.main?.image}
-              onTitleChange={handleTitleChange}
-              onTaglineChange={handleTaglineChange}
-              onImageChange={handleHeroChange}
-              noHeading
-            />
-          )}
-          {editSection === SECTIONS.about && (
-            <AboutStep
-              bio={website.content.about?.bio}
-              issues={website.content.about?.issues}
-              onBioChange={handleBioChange}
-              onIssuesChange={handleIssuesChange}
-              noHeading
-            />
-          )}
-          {editSection === SECTIONS.contact && (
-            <ContactStep
-              address={website.content.contact?.address}
-              email={website.content.contact?.email}
-              phone={website.content.contact?.phone}
-              onAddressChange={handleAddressChange}
-              onEmailChange={handleEmailChange}
-              onPhoneChange={handlePhoneChange}
-              noHeading
-            />
-          )}
-          <Button
-            variant="outlined"
-            className="mx-auto flex items-center justify-center gap-2 mt-8"
-            onClick={() => setPreviewOpen(true)}
-          >
-            <LuEye size={16} />
-            Preview
-          </Button>
-        </div>
-        <div className="mt-auto flex justify-between">
-          <Button
-            className="block lg:hidden"
-            color="neutral"
-            size="large"
-            onClick={handleEditSectionClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="ml-auto"
-            color="primary"
-            size="large"
-            onClick={handleSaveAndPublish}
-            loading={saveLoading}
-            disabled={saveLoading}
-          >
-            Save
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
@@ -293,7 +217,25 @@ export default function WebsiteEditFlow() {
         </div>
         {isLgUp && !!editSection && (
           <div className="hidden lg:block">
-            <EditSection />
+            <EditSection
+              editSection={editSection}
+              website={website}
+              onLogoChange={handleLogoChange}
+              onThemeChange={handleThemeChange}
+              onTitleChange={handleTitleChange}
+              onTaglineChange={handleTaglineChange}
+              onImageChange={handleHeroChange}
+              onBioChange={handleBioChange}
+              onIssuesChange={handleIssuesChange}
+              onCommitteeChange={handleCommitteeChange}
+              onAddressChange={handleAddressChange}
+              onEmailChange={handleEmailChange}
+              onPhoneChange={handlePhoneChange}
+              onPreviewOpen={() => setPreviewOpen(true)}
+              onSave={handleSaveAndPublish}
+              onClose={handleEditSectionClose}
+              saveLoading={saveLoading}
+            />
           </div>
         )}
       </div>
@@ -302,7 +244,25 @@ export default function WebsiteEditFlow() {
         onClose={handleEditSectionClose}
         title={SECTION_BTN_CONTENT[editSection]?.title || 'Edit Content'}
       >
-        <EditSection />
+        <EditSection
+          editSection={editSection}
+          website={website}
+          onLogoChange={handleLogoChange}
+          onThemeChange={handleThemeChange}
+          onTitleChange={handleTitleChange}
+          onTaglineChange={handleTaglineChange}
+          onImageChange={handleHeroChange}
+          onBioChange={handleBioChange}
+          onIssuesChange={handleIssuesChange}
+          onCommitteeChange={handleCommitteeChange}
+          onAddressChange={handleAddressChange}
+          onEmailChange={handleEmailChange}
+          onPhoneChange={handlePhoneChange}
+          onPreviewOpen={() => setPreviewOpen(true)}
+          onSave={handleSaveAndPublish}
+          onClose={handleEditSectionClose}
+          saveLoading={saveLoading}
+        />
       </ResponsiveModal>
       <ResponsiveModal
         fullSize
