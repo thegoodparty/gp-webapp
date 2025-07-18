@@ -46,7 +46,7 @@ export default function EditSectionButton({
   onSelect,
   website,
 }) {
-  const url = getWebsiteUrl(website.vanityPath, false)
+  const url = getWebsiteUrl(website.vanityPath, false, website.domain)
   return (
     <Button
       variant="outlined"
