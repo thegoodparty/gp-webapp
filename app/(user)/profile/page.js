@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import ProfilePage from './components/ProfilePage'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
-import { adminAccessOnly } from 'helpers/permissionHelper'
 
 const meta = pageMetaData({
   title: 'Profile Settings',
@@ -16,7 +15,6 @@ export default async function Page() {
   if (!user) {
     redirect('/login')
   }
-  adminAccessOnly
   const token = await getServerToken()
   const campaign = await fetchUserCampaign()
   const { subscriptionCancelAt } = campaign?.details || {}
