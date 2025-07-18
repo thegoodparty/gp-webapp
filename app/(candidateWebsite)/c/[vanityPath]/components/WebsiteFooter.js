@@ -1,9 +1,14 @@
 'use client'
 
-export default function WebsiteFooter({ activeTheme, onPrivacyPolicyClick }) {
+export default function WebsiteFooter({
+  activeTheme,
+  onPrivacyPolicyClick,
+  committee = '',
+}) {
   return (
     <footer className={`py-6 px-4 border-t ${activeTheme.border}`}>
       <div className="container mx-auto text-center">
+        <p className="text-base mb-4">Paid for and authorized by {committee}</p>
         <p className="text-sm mb-4">
           &copy; {new Date().getFullYear()} • All Rights Reserved •{' '}
           {

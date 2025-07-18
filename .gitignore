@@ -49,6 +49,7 @@ invalid_urls.csv
 
 # editor config
 /.vscode
+*.code-workspace
 
 # AI Tools
 /.ai/
