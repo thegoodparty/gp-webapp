@@ -7,11 +7,14 @@ import ContactSection from './ContactSection'
 import AboutSection from './AboutSection'
 import HeroSection from './HeroSection'
 import WebsiteHeader from './WebsiteHeader'
+import { getUserFullName } from '@shared/utils/getUserFullName'
 
 export default function WebsiteContent({ website, scale = 1 }) {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false)
   const content = website?.content || {}
   const activeTheme = WEBSITE_THEMES[content?.theme] || WEBSITE_THEMES.light
+
+  const candidateName = getUserFullName(website.campaign?.user)
 
   return (
     <div
@@ -32,6 +35,7 @@ export default function WebsiteContent({ website, scale = 1 }) {
       <WebsiteFooter
         activeTheme={activeTheme}
         onPrivacyPolicyClick={() => setShowPrivacyPolicy(true)}
+        committee={content.about?.committee || candidateName}
       />
       <PrivacyPolicyModal
         open={showPrivacyPolicy}
