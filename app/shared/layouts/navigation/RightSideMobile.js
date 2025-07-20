@@ -9,9 +9,9 @@ import { usePathname } from 'next/navigation'
 import H3 from '@shared/typography/H3'
 import DashboardMobile from '../DashboardMobile'
 import {
-  COMMUNITY_LINKS,
+  ABOUT_US_LINKS,
   RESOURCES_LINKS,
-  RUN_LINKS,
+  PRODUCT_LINKS,
 } from '@shared/layouts/navigation/NavigationProvider'
 import { useUser } from '@shared/hooks/useUser'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
@@ -21,9 +21,9 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
-  { title: 'For Candidates', links: RUN_LINKS },
-  { title: 'For Voters', links: COMMUNITY_LINKS },
+  { title: 'Product', links: PRODUCT_LINKS },
   { title: 'Resources', links: RESOURCES_LINKS },
+  { title: 'About Us', links: ABOUT_US_LINKS },
 ]
 
 export default function RightSideMobile() {

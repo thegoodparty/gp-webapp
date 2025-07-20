@@ -7,7 +7,6 @@ import ProfileDropdown from './ProfileDropdown'
 import DashboardOrContinue from './DashboardOrContinue'
 import { useUser } from '@shared/hooks/useUser'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
-import FullStorySelectiveInit from './FullStorySelectiveInit'
 import NavButton from './NavButton'
 import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
@@ -111,7 +110,6 @@ export default function RightSide() {
           </Button>
         </>
       )}
-      <FullStorySelectiveInit user={user} />
     </div>
   )
 }

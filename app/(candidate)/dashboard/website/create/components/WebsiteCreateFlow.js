@@ -198,6 +198,16 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
+  function handleCommitteeChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        about: { ...current.content.about, committee: value },
+      },
+    }))
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
@@ -262,8 +272,10 @@ export default function WebsiteCreateFlow() {
               <AboutStep
                 bio={website.content.about?.bio}
                 issues={website.content.about?.issues}
+                committee={website.content.about?.committee}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
+                onCommitteeChange={handleCommitteeChange}
               />
             )}
 

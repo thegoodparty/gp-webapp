@@ -4,6 +4,7 @@ import candidateAccess from './shared/candidateAccess'
 import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 
 const fetchTasks = async () => {
   const currentDate = new Date().toISOString().split('T')[0]
@@ -29,6 +30,9 @@ export default async function Page() {
   const tasks = await fetchTasks()
 
   return (
-    <DashboardPage pathname="/dashboard" campaign={campaign} tasks={tasks} />
+    <>
+      <HubSpotChatWidgetScript />
+      <DashboardPage pathname="/dashboard" campaign={campaign} tasks={tasks} />
+    </>
   )
 }
