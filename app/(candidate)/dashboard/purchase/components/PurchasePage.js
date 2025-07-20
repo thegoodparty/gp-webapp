@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { completePurchase } from 'helpers/purchaseHelper'
+import { completePurchase } from '../utils/purchaseFetch.utils'
 import PurchaseError from './PurchaseError'
 import PurchaseSuccess from './PurchaseSuccess'
 import PurchasePayment from './PurchasePayment'
@@ -21,7 +21,7 @@ export default function PurchasePage({
     try {
       const response = await completePurchase(paymentIntent.id)
 
-      if (response.ok && response.data.success) {
+      if (response.ok) {
         setPurchaseState('success')
       } else {
         setError(response.data?.data?.error || 'Failed to complete purchase')

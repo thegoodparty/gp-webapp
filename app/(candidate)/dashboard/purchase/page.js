@@ -29,16 +29,14 @@ const buildMetadata = (type, params) => {
 export default async function Page({ searchParams }) {
   await candidateAccess()
 
-  const { type, domain, websiteId, returnUrl } = searchParams
+  const { type, domain, websiteId, returnUrl } = await searchParams
 
   let purchaseIntent = null
   let error = null
 
-  // Validate purchase type
   if (!type || !PURCHASE_TYPES[type]) {
     error = 'Invalid purchase type'
   } else {
-    // Create purchase intent on server
     try {
       const metadata = buildMetadata(type, { domainName: domain, websiteId })
       const response = await serverFetch(

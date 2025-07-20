@@ -24,7 +24,6 @@ function WebsiteCard({ className = '' }) {
     domain,
   )
   const [shareModalOpen, setShareModalOpen] = useState(false)
-  console.log('domain', domain)
 
   return (
     <>

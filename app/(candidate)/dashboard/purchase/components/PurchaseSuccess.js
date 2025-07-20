@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { PURCHASE_TYPES, PURCHASE_TYPE_LABELS } from '/helpers/purchaseTypes'
+import { PURCHASE_TYPE_LABELS } from '/helpers/purchaseTypes'
 import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
-import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
+import { useEffect } from 'react'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
 export default function PurchaseSuccess({ type, returnUrl }) {
   const router = useRouter()
@@ -25,10 +25,7 @@ export default function PurchaseSuccess({ type, returnUrl }) {
   }, [router, returnUrl, type])
 
   return (
-    <div className="max-w-2xl mx-auto mt-8">
-      <div className="mb-6">
-        <CheckmarkAnimation width={120} height={120} className="mx-auto" />
-      </div>
+    <div className="max-w-2xl mx-auto mt-8 text-center">
       <H1>Purchase Successful!</H1>
       <Body1 className="mt-4">
         Your {PURCHASE_TYPE_LABELS[type]?.toLowerCase()} has been processed
