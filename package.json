@@ -5,8 +5,8 @@
   "author": "Tomer Almog",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51P8p2Y1taBPnTqn4IacUdFzw2mWPe8ljraPrpMlqMxtb8h1EvYTJvdGrj3kSeRIqm2ltL8RE8bAZL3EsLqpW3VNS00VZLcvudS next dev -p 4000",
-    "dev-dev": "cross-env NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=https://gp-api-dev.goodparty.org NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=https://api-dev.goodparty.org next dev -p 4000",
+    "dev": "cross-env NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next dev -p 4000",
+    "dev-dev": "cross-env NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=https://gp-api-dev.goodparty.org  next dev -p 4000",
     "deploy-dev": "git checkout develop && eb deploy",
     "deploy-qa": "git checkout qa && eb deploy",
     "deploy-prod": "git checkout master  && eb deploy",
