@@ -81,7 +81,7 @@ function PaymentFormContent({ domainName, price, onSuccess, onError }) {
       onError(error)
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       successSnackbar('Payment successful! Your domain is being registered.')
-      onSuccess()
+      onSuccess(paymentIntent)
     } else {
       // TODO: poll status as a fallback?
       setMessage('Payment processing...')
