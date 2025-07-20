@@ -1,6 +1,6 @@
 import Button from '@shared/buttons/Button'
 
-export default function SelectDomain() {
+export default function ExitButton() {
   return (
     <Button
       color="neutral"
