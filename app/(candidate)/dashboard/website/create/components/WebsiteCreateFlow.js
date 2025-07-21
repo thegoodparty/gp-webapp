@@ -30,10 +30,8 @@ export default function WebsiteCreateFlow() {
   const [contactFieldsCleared, setContactFieldsCleared] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
 
-  // Clear auto-filled contact information when website is first loaded
   useEffect(() => {
     if (website && !contactFieldsCleared && website.content?.contact) {
-      // Clear contact fields that may have been auto-filled by the backend
       setWebsite(current => ({
         ...current,
         content: {
@@ -239,6 +237,9 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
+  const { address, email, phone } = website.content?.contact || {}
+  const hasContactInfo = address || email || phone
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
@@ -312,9 +313,9 @@ export default function WebsiteCreateFlow() {
 
             {step === 6 && (
               <ContactStep
-                address={website.content.contact?.address}
-                email={website.content.contact?.email}
-                phone={website.content.contact?.phone}
+                address={address}
+                email={email}
+                phone={phone}
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
@@ -344,8 +345,8 @@ export default function WebsiteCreateFlow() {
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
         <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
-      <ResponsiveModal 
-        open={privacyModalOpen} 
+      <ResponsiveModal
+        open={privacyModalOpen}
         onClose={handlePrivacyModalCancel}
         title="Privacy Warning"
       >
@@ -353,36 +354,38 @@ export default function WebsiteCreateFlow() {
           <InfoAlert className="mb-6">
             <strong>Privacy Note:</strong> All contact information below will be visible to anyone who visits your website.
           </InfoAlert>
-          
+
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="font-semibold mb-3 text-gray-800">Contact Information to be Published:</h3>
-            
-            {website.content?.contact?.address && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Address:</span>
-                <div className="text-gray-600">{website.content.contact.address}</div>
-              </div>
-            )}
-            
-            {website.content?.contact?.email && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Email:</span>
-                <div className="text-gray-600">{website.content.contact.email}</div>
-              </div>
-            )}
-            
-            {website.content?.contact?.phone && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Phone:</span>
-                <div className="text-gray-600">{website.content.contact.phone}</div>
-              </div>
-            )}
-            
-            {!website.content?.contact?.address && !website.content?.contact?.email && !website.content?.contact?.phone && (
+
+            {hasContactInfo ? (
+              <>
+                {address && (
+                  <div className="mb-2">
+                    <span className="font-medium text-gray-700">Address:</span>
+                    <div className="text-gray-600">{address}</div>
+                  </div>
+                )}
+
+                {email && (
+                  <div className="mb-2">
+                    <span className="font-medium text-gray-700">Email:</span>
+                    <div className="text-gray-600">{email}</div>
+                  </div>
+                )}
+
+                {phone && (
+                  <div className="mb-2">
+                    <span className="font-medium text-gray-700">Phone:</span>
+                    <div className="text-gray-600">{phone}</div>
+                  </div>
+                )}
+              </>
+            ) : (
               <div className="text-gray-500 italic">No contact information provided</div>
             )}
           </div>
-          
+
           <div className="flex gap-3 justify-end">
             <Button
               variant="outlined"
