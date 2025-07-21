@@ -63,7 +63,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
     }&domain=${encodeURIComponent(
       domainName,
     )}&websiteId=${websiteId}&returnUrl=${encodeURIComponent(
-      '/dashboard/website/domain?success=true',
+      '/dashboard/website/domain',
     )}`
     router.push(purchaseUrl)
   }
@@ -99,7 +99,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
 
           <DomainResult
             domain={searchResults.domainName}
-            price={searchResults.prices.registration}
+            price={searchResults.price}
             available={searchResults.availability === 'AVAILABLE'}
             loading={false}
             onClick={() => {
@@ -116,7 +116,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
                 <DomainResult
                   key={index}
                   domain={suggestion.DomainName}
-                  price={suggestion.prices.registration}
+                  price={suggestion.price}
                   loading={false}
                   onClick={() => handlePurchase(suggestion.DomainName)}
                 />

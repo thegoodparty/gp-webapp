@@ -15,7 +15,7 @@ export default function PurchaseSuccess({ type, returnUrl }) {
       if (returnUrl) {
         router.push(returnUrl)
       } else if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION) {
-        router.push(`/dashboard/website/domain?success=true`)
+        router.push(`/dashboard/website/domain`)
       } else {
         router.push('/dashboard')
       }

@@ -18,7 +18,12 @@ export const DOMAIN_STATUS = {
 }
 
 export function isDomainActive(domain = {}) {
-  const status = domain?.status ? domain.status.toUpperCase() : 'Nope'
+  const status = domain?.status ? domain.status.toUpperCase() : null
+
+  if (!status) {
+    return false
+  }
+
   return (
     status === DOMAIN_STATUS.SUBMITTED ||
     status === DOMAIN_STATUS.IN_PROGRESS ||

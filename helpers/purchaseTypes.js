@@ -1,18 +1,12 @@
 export const PURCHASE_TYPES = {
   DOMAIN_REGISTRATION: 'DOMAIN_REGISTRATION',
-  PRO_SUBSCRIPTION: 'PRO_SUBSCRIPTION',
-  ADDITIONAL_FEATURES: 'ADDITIONAL_FEATURES',
 }
 
 export const PURCHASE_TYPE_LABELS = {
   [PURCHASE_TYPES.DOMAIN_REGISTRATION]: 'Domain Registration',
-  [PURCHASE_TYPES.PRO_SUBSCRIPTION]: 'Pro Subscription',
-  [PURCHASE_TYPES.ADDITIONAL_FEATURES]: 'Additional Features',
 }
 
 export const PURCHASE_TYPE_DESCRIPTIONS = {
   [PURCHASE_TYPES.DOMAIN_REGISTRATION]:
     'Register a custom domain for your website',
-  [PURCHASE_TYPES.PRO_SUBSCRIPTION]: 'Upgrade to Pro for advanced features',
-  [PURCHASE_TYPES.ADDITIONAL_FEATURES]: 'Add extra features to your campaign',
 }

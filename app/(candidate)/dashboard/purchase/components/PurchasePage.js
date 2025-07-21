@@ -6,6 +6,12 @@ import PurchaseError from './PurchaseError'
 import PurchaseSuccess from './PurchaseSuccess'
 import PurchasePayment from './PurchasePayment'
 
+const PURCHASE_STATE = {
+  PAYMENT: 'payment',
+  SUCCESS: 'success',
+  ERROR: 'error',
+}
+
 export default function PurchasePage({
   type,
   domain,
@@ -14,7 +20,7 @@ export default function PurchasePage({
   purchaseIntent,
   error: serverError,
 }) {
-  const [purchaseState, setPurchaseState] = useState('payment')
+  const [purchaseState, setPurchaseState] = useState(PURCHASE_STATE.PAYMENT)
   const [error, setError] = useState(null)
 
   const handlePaymentSuccess = async (paymentIntent) => {
@@ -22,35 +28,35 @@ export default function PurchasePage({
       const response = await completePurchase(paymentIntent.id)
 
       if (response.ok) {
-        setPurchaseState('success')
+        setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
         setError(response.data?.data?.error || 'Failed to complete purchase')
-        setPurchaseState('error')
+        setPurchaseState(PURCHASE_STATE.ERROR)
       }
     } catch (error) {
       setError('Failed to complete purchase')
-      setPurchaseState('error')
+      setPurchaseState(PURCHASE_STATE.ERROR)
     }
   }
 
   const handlePaymentError = (error) => {
     setError(error.message)
-    setPurchaseState('error')
+    setPurchaseState(PURCHASE_STATE.ERROR)
   }
 
   if (serverError || !purchaseIntent) {
     return <PurchaseError serverError={serverError} />
   }
 
-  if (purchaseState === 'error') {
+  if (purchaseState === PURCHASE_STATE.ERROR) {
     return <PurchaseError error={error} />
   }
 
-  if (purchaseState === 'success') {
+  if (purchaseState === PURCHASE_STATE.SUCCESS) {
     return <PurchaseSuccess type={type} returnUrl={returnUrl} />
   }
 
-  if (purchaseState === 'payment' && purchaseIntent.clientSecret) {
+  if (purchaseState === PURCHASE_STATE.PAYMENT && purchaseIntent.clientSecret) {
     return (
       <PurchasePayment
         type={type}

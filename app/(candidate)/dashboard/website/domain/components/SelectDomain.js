@@ -3,7 +3,7 @@
 import DomainSearch from './DomainSearch'
 import { useWebsite } from '../../components/WebsiteProvider'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import ExitButton from './ExitButton'
+import Button from '@shared/buttons/Button'
 
 export default function SelectDomain({ onRegisterSuccess }) {
   const { website } = useWebsite()
@@ -11,7 +11,14 @@ export default function SelectDomain({ onRegisterSuccess }) {
 
   return (
     <div className="space-y-4">
-      <ExitButton />
+      <Button
+        color="neutral"
+        variant="outlined"
+        className="mt-4 ml-4"
+        href="/dashboard/website"
+      >
+        Exit
+      </Button>
 
       <MaxWidth>
         <DomainSearch

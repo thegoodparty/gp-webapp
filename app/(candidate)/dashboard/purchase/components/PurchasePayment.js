@@ -13,8 +13,9 @@ import Body1 from '@shared/typography/Body1'
 import PurchaseForm from './PurchaseForm'
 import Paper from '@shared/utils/Paper'
 import DashboardLayout from '../../shared/DashboardLayout'
+import { NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY } from 'appEnv'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+const stripePromise = loadStripe(NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export default function PurchasePayment({
   type,

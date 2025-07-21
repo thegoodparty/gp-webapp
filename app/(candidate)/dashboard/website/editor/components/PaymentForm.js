@@ -11,8 +11,9 @@ import { loadStripe } from '@stripe/stripe-js'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import { numberFormatter } from 'helpers/numberHelper'
+import { NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY } from 'appEnv'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+const stripePromise = loadStripe(NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export default function PaymentForm({
   clientSecret,
@@ -83,7 +84,6 @@ function PaymentFormContent({ domainName, price, onSuccess, onError }) {
       successSnackbar('Payment successful! Your domain is being registered.')
       onSuccess(paymentIntent)
     } else {
-      // TODO: poll status as a fallback?
       setMessage('Payment processing...')
     }
 

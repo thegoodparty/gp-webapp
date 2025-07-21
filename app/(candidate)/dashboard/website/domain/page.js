@@ -4,7 +4,6 @@ import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
 import candidateAccess from '../../shared/candidateAccess'
 import DomainPage from './components/DomainPage'
-import { DomainProvider } from './components/DomainProvider'
 import { WebsiteProvider } from '../components/WebsiteProvider'
 import { DomainStatusProvider } from './components/DomainStatusProvider'
 
@@ -33,11 +32,9 @@ export default async function Page() {
 
   return (
     <WebsiteProvider website={website}>
-      <DomainProvider domain={website.domain}>
-        <DomainStatusProvider status={status}>
-          <DomainPage pathname="/dashboard/website/domain" />
-        </DomainStatusProvider>
-      </DomainProvider>
+      <DomainStatusProvider status={status}>
+        <DomainPage pathname="/dashboard/website/domain" />
+      </DomainStatusProvider>
     </WebsiteProvider>
   )
 }

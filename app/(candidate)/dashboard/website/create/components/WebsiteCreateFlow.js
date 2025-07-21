@@ -37,7 +37,6 @@ export default function WebsiteCreateFlow() {
 
   async function handleComplete() {
     const saved = await handleSave(true)
-    console.log('saved', saved)
 
     if (saved) {
       setStep(COMPLETE_STEP)
