@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -12,7 +12,6 @@ import HeroStep from '../../editor/components/HeroStep'
 import AboutStep from '../../editor/components/AboutStep'
 import ContactStep from '../../editor/components/ContactStep'
 import CompleteStep from '../../editor/components/CompleteStep'
-import { InfoAlert } from '@shared/alerts/InfoAlert'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
@@ -27,27 +26,6 @@ export default function WebsiteCreateFlow() {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
-  const [contactFieldsCleared, setContactFieldsCleared] = useState(false)
-  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
-
-  // Clear auto-filled contact information when website is first loaded
-  useEffect(() => {
-    if (website && !contactFieldsCleared && website.content?.contact) {
-      // Clear contact fields that may have been auto-filled by the backend
-      setWebsite(current => ({
-        ...current,
-        content: {
-          ...current.content,
-          contact: {
-            address: '',
-            email: '',
-            phone: ''
-          }
-        }
-      }))
-      setContactFieldsCleared(true)
-    }
-  }, [website, contactFieldsCleared, setWebsite])
 
   async function handleSaveAndExit() {
     const saved = await handleSave()
@@ -58,12 +36,6 @@ export default function WebsiteCreateFlow() {
   }
 
   async function handleComplete() {
-    // Show privacy modal before publishing
-    setPrivacyModalOpen(true)
-  }
-
-  async function handlePublishConfirm() {
-    setPrivacyModalOpen(false)
     const saved = await handleSave(true)
 
     if (saved) {
@@ -72,10 +44,6 @@ export default function WebsiteCreateFlow() {
     } else {
       errorSnackbar('Failed to publish website')
     }
-  }
-
-  function handlePrivacyModalCancel() {
-    setPrivacyModalOpen(false)
   }
 
   async function handleSave(publish = false) {
@@ -343,62 +311,6 @@ export default function WebsiteCreateFlow() {
       </div>
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
         <WebsitePreview website={website} className="min-w-[60vw]" />
-      </ResponsiveModal>
-      <ResponsiveModal 
-        open={privacyModalOpen} 
-        onClose={handlePrivacyModalCancel}
-        title="Privacy Warning"
-      >
-        <div className="p-6">
-          <InfoAlert className="mb-6">
-            <strong>Privacy Note:</strong> All contact information below will be visible to anyone who visits your website.
-          </InfoAlert>
-          
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold mb-3 text-gray-800">Contact Information to be Published:</h3>
-            
-            {website.content?.contact?.address && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Address:</span>
-                <div className="text-gray-600">{website.content.contact.address}</div>
-              </div>
-            )}
-            
-            {website.content?.contact?.email && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Email:</span>
-                <div className="text-gray-600">{website.content.contact.email}</div>
-              </div>
-            )}
-            
-            {website.content?.contact?.phone && (
-              <div className="mb-2">
-                <span className="font-medium text-gray-700">Phone:</span>
-                <div className="text-gray-600">{website.content.contact.phone}</div>
-              </div>
-            )}
-            
-            {!website.content?.contact?.address && !website.content?.contact?.email && !website.content?.contact?.phone && (
-              <div className="text-gray-500 italic">No contact information provided</div>
-            )}
-          </div>
-          
-          <div className="flex gap-3 justify-end">
-            <Button
-              variant="outlined"
-              onClick={handlePrivacyModalCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handlePublishConfirm}
-              loading={saveLoading}
-            >
-              Publish
-            </Button>
-          </div>
-        </div>
       </ResponsiveModal>
     </>
   )
