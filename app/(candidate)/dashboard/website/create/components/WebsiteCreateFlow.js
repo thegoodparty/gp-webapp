@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
