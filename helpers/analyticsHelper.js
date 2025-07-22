@@ -380,6 +380,17 @@ export const EVENTS = {
   },
 }
 
+export const getStoredSessionId = () => {
+  if (typeof sessionStorage === 'undefined') return 0
+  return sessionStorage.getItem('analytics_session_id') || 0
+}
+
+export const setSessionId = (sessionId) => {
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.setItem('analytics_session_id', sessionId)
+  }
+}
+
 export function extractClids(searchParams) {
   const clids = {}
 
@@ -481,6 +492,7 @@ export const trackEvent = (name, properties) => {
     // Segment has different environments, and should run even when FS is disabled
     const commonProperties = {
       ...getPersistedUtms(),
+      ...getAmplitudeIds(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)

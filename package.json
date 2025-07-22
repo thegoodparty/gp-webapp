@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@amplitude/experiment-js-client": "^1.16.1",
+    "@amplitude/session-replay-browser": "^1.27.0",
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
     "@contentful/rich-text-react-renderer": "^16.0.1",
     "@contentful/rich-text-types": "^16.0.1",

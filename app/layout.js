@@ -7,6 +7,8 @@ import VwoScript from '@shared/scripts/VwoScript'
 import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
+import AmplitudeInit from '@shared/AmplitudeInit'
+import AmplitudeSessionReplayMiddleware from '@shared/AmplitudeSessionReplayMiddleware'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
@@ -77,6 +79,8 @@ const RootLayout = ({ children }) => (
     </head>
     <body>
       <RouteTracker />
+      <AmplitudeInit />
+      <AmplitudeSessionReplayMiddleware />
       <PageWrapper>{children}</PageWrapper>
       <noscript>
         <iframe
