@@ -27,7 +27,25 @@ export default function WebsiteCreateFlow() {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
+  const [contactFieldsCleared, setContactFieldsCleared] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (website && !contactFieldsCleared && website.content?.contact) {
+      setWebsite(current => ({
+        ...current,
+        content: {
+          ...current.content,
+          contact: {
+            address: '',
+            email: '',
+            phone: ''
+          }
+        }
+      }))
+      setContactFieldsCleared(true)
+    }
+  }, [website, contactFieldsCleared, setWebsite])
 
   async function handleSaveAndExit() {
     const saved = await handleSave()
