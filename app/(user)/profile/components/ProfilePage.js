@@ -2,7 +2,7 @@ import NotificationSection from 'app/(user)/profile/components/NotificationSecti
 import PasswordSection from './PasswordSection'
 import PersonalSection from './PersonalSection'
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection'
-import TextingCompliance from './texting-compliance/TextingCompliance'
+import TextingCompliance from 'app/(user)/profile/texting-compliance/components/TextingCompliance'
 import { userIsAdmin } from 'helpers/userHelper'
 
 export default function ProfilePage(props) {
