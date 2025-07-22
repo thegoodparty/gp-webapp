@@ -162,7 +162,6 @@ export default function WebsiteEditFlow() {
   }
 
   function handleAddressChange(value, place) {
-    console.log('place', place)
     setWebsite((current) => ({
       ...current,
       content: {
