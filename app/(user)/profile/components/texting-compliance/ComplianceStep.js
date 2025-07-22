@@ -5,7 +5,6 @@ import { HiOutlineCheckCircle } from 'react-icons/hi'
 export default function ComplianceStep({ number, title, description, status }) {
   const isCompleted = status === 'completed'
   const isActive = status === 'active'
-  const isDisabled = status === 'disabled'
 
   const bgColor = isActive ? 'bg-white' : 'bg-gray-50'
   const cursorStyle = isActive ? 'cursor-pointer' : 'cursor-not-allowed'
@@ -16,7 +15,9 @@ export default function ComplianceStep({ number, title, description, status }) {
         isActive ? 'hover:bg-gray-50' : ''
       } transition-colors`}
     >
-      <div className={`flex ${isCompleted ? 'items-center' : 'items-start'} gap-3`}>
+      <div
+        className={`flex ${isCompleted ? 'items-center' : 'items-start'} gap-3`}
+      >
         {isCompleted ? (
           <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
             <HiOutlineCheckCircle className="w-6 h-6 text-gray-500" />
