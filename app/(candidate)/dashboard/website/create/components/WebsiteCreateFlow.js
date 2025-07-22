@@ -333,11 +333,14 @@ export default function WebsiteCreateFlow() {
       >
         <div className="p-6">
           <InfoAlert className="mb-6">
-            <strong>Privacy Note:</strong> All contact information below will be visible to anyone who visits your website.
+            <strong>Privacy Note:</strong> All contact information below will be
+            visible to anyone who visits your website.
           </InfoAlert>
 
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold mb-3 text-gray-800">Contact Information to be Published:</h3>
+            <h3 className="font-semibold mb-3 text-gray-800">
+              Contact Information to be Published:
+            </h3>
 
             {hasContactInfo ? (
               <>
@@ -363,15 +366,14 @@ export default function WebsiteCreateFlow() {
                 )}
               </>
             ) : (
-              <div className="text-gray-500 italic">No contact information provided</div>
+              <div className="text-gray-500 italic">
+                No contact information provided
+              </div>
             )}
           </div>
 
           <div className="flex gap-3 justify-end">
-            <Button
-              variant="outlined"
-              onClick={handlePrivacyModalCancel}
-            >
+            <Button variant="outlined" onClick={handlePrivacyModalCancel}>
               Cancel
             </Button>
             <Button
