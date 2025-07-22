@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 import Script from 'next/script'
+import { NEXT_PUBLIC_GOOGLE_MAPS_KEY } from 'appEnv'
 
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
+const MAPS_API_KEY = NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
 export default function AddressAutocomplete({ value, onChange }) {
   const inputRef = useRef(null)
@@ -27,7 +28,7 @@ export default function AddressAutocomplete({ value, onChange }) {
         const place = autocompleteRef.current.getPlace()
         if (place.formatted_address) {
           setInputValue(place.formatted_address)
-          onChange(place.formatted_address)
+          onChange(place.formatted_address, place)
         }
       },
     )

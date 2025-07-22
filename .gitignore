@@ -53,6 +53,9 @@ invalid_urls.csv
 
 # AI Tools
 /.ai/
+
 /.cursor
 *repomix*
+
 CLAUDE.md
+

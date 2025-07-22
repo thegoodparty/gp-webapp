@@ -1,46 +1,82 @@
-import H1 from '@shared/typography/H1'
-import ShareButtons from '../../components/ShareButtons'
-import Body2 from '@shared/typography/Body2'
-import H3 from '@shared/typography/H3'
-import { LuPartyPopper } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
 import { getWebsiteUrl } from '../../util/website.util'
 import Link from 'next/link'
+import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
+import ShareModal from '../../components/ShareModal'
+import { useState } from 'react'
+import Body2 from '@shared/typography/Body2'
+import { FaCheck } from 'react-icons/fa'
+import Body1 from '@shared/typography/Body1'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Image from 'next/image'
 
 export default function CompleteStep({ vanityPath }) {
   const url = getWebsiteUrl(vanityPath, false)
+  const [shareModalOpen, setShareModalOpen] = useState(false)
   return (
-    <div className="block lg:grid lg:grid-cols-2 items-center gap-12">
-      <div className="lg:flex lg:flex-col lg:items-center lg:text-center">
-        <div className="mb-2 rounded-full bg-gradient-to-br from-[#E0FFE0] to-[#FFF6E0] w-12 h-12 lg:w-20 lg:h-20 flex items-center justify-center">
-          <LuPartyPopper className="text-2xl lg:text-5xl" />
+    <div className="text-center flex flex-col items-center gap-4">
+      <div className="relative h-24 w-24">
+        <HighFiveAnimation />
+      </div>
+      <MarketingH3>
+        Congratulations,
+        <br />
+        your website is live!
+      </MarketingH3>
+      <Link href={url} className="text-sm" target="_blank">
+        {url}
+      </Link>
+      <Button onClick={() => setShareModalOpen(true)} color="neutral">
+        Share
+      </Button>
+      <div className=" bg-[#F1E5FF] rounded-lg p-4 md:p-12 w-full relative">
+        <div className="absolute top-0 left-0">
+          <Image
+            src="/images/website/purple-shape.png"
+            width={300}
+            height={400}
+            alt=""
+          />
         </div>
-        <H1 className="mb-2 lg:text-5xl">
-          Congratulations, your website is live!
-        </H1>
-        <Link href={url} className="text-gray-500 mt-2" target="_blank">
-          {url}
-        </Link>
-        <div className="my-6 h-[1px] bg-black/[0.12]"></div>
+        <div className="flex flex-col  gap-4 w-full  justify-evenly md:flex-row-reverse relative">
+          <div className="text-left md:w-1/2">
+            <MarketingH4>Unlock digital outreach with a domain</MarketingH4>
+            <Body2 className="text-gray-500 mt-2">({url})</Body2>
+            <div className="mt-12">
+              <div className="flex items-center gap-2 mb-4">
+                <FaCheck />
+                <Body1>Get 5,000 texts</Body1>
+              </div>
+              <div className="flex items-center gap-2 mb-4">
+                <FaCheck />
+                <Body1>Target the right voters</Body1>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaCheck />
+                <Body1>Make your campaign compliant</Body1>
+              </div>
+            </div>
+            <Button href="/dashboard/website/domain" className="mt-12">
+              Add a domain
+            </Button>
+          </div>
+          <div className="md:w-1/2 flex justify-center items-center">
+            <Image
+              src="/images/website/texting.png"
+              alt="texting"
+              width={265}
+              height={330}
+              priority
+            />
+          </div>
+        </div>
       </div>
-
-      <div className="lg:text-center lg:p-16 lg:bg-white lg:rounded-lg lg:border lg:border-black/[0.12]">
-        <H3 className="mb-2">Share with supporters</H3>
-        <Body2 className="mb-6">
-          Tell your friends, family and supporters about your new campaign
-          website.
-        </Body2>
-        <ShareButtons url={url} />
-      </div>
-      <div className="col-span-2 flex mt-8 justify-end lg:justify-center">
-        <Button
-          size="large"
-          href="/dashboard/website"
-          className="!px-12 fixed bottom-4 lg:static"
-        >
-          Finish
-        </Button>
-      </div>
+      <ShareModal
+        open={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        url={url}
+      />
     </div>
   )
 }
