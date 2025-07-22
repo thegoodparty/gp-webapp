@@ -12,7 +12,6 @@ import HeroStep from '../../editor/components/HeroStep'
 import AboutStep from '../../editor/components/AboutStep'
 import ContactStep from '../../editor/components/ContactStep'
 import CompleteStep from '../../editor/components/CompleteStep'
-import { InfoAlert } from '@shared/alerts/InfoAlert'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
@@ -27,7 +26,6 @@ export default function WebsiteCreateFlow() {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
-  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
 
   async function handleSaveAndExit() {
     const saved = await handleSave()
@@ -38,11 +36,6 @@ export default function WebsiteCreateFlow() {
   }
 
   async function handleComplete() {
-    setPrivacyModalOpen(true)
-  }
-
-  async function handlePublishConfirm() {
-    setPrivacyModalOpen(false)
     const saved = await handleSave(true)
 
     if (saved) {
@@ -51,10 +44,6 @@ export default function WebsiteCreateFlow() {
     } else {
       errorSnackbar('Failed to publish website')
     }
-  }
-
-  function handlePrivacyModalCancel() {
-    setPrivacyModalOpen(false)
   }
 
   async function handleSave(publish = false) {
@@ -218,9 +207,6 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
-  const { address, email, phone } = website.content?.contact || {}
-  const hasContactInfo = address || email || phone
-
   return (
     <>
       <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
@@ -294,9 +280,9 @@ export default function WebsiteCreateFlow() {
 
             {step === 6 && (
               <ContactStep
-                address={address}
-                email={email}
-                phone={phone}
+                address={website.content.contact?.address}
+                email={website.content.contact?.email}
+                phone={website.content.contact?.phone}
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
@@ -325,64 +311,6 @@ export default function WebsiteCreateFlow() {
       </div>
       <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
         <WebsitePreview website={website} className="min-w-[60vw]" />
-      </ResponsiveModal>
-      <ResponsiveModal
-        open={privacyModalOpen}
-        onClose={handlePrivacyModalCancel}
-        title="Privacy Warning"
-      >
-        <div className="p-6">
-          <InfoAlert className="mb-6">
-            <strong>Privacy Note:</strong> All contact information below will be visible to anyone who visits your website.
-          </InfoAlert>
-
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold mb-3 text-gray-800">Contact Information to be Published:</h3>
-
-            {hasContactInfo ? (
-              <>
-                {address && (
-                  <div className="mb-2">
-                    <span className="font-medium text-gray-700">Address:</span>
-                    <div className="text-gray-600">{address}</div>
-                  </div>
-                )}
-
-                {email && (
-                  <div className="mb-2">
-                    <span className="font-medium text-gray-700">Email:</span>
-                    <div className="text-gray-600">{email}</div>
-                  </div>
-                )}
-
-                {phone && (
-                  <div className="mb-2">
-                    <span className="font-medium text-gray-700">Phone:</span>
-                    <div className="text-gray-600">{phone}</div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-gray-500 italic">No contact information provided</div>
-            )}
-          </div>
-
-          <div className="flex gap-3 justify-end">
-            <Button
-              variant="outlined"
-              onClick={handlePrivacyModalCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handlePublishConfirm}
-              loading={saveLoading}
-            >
-              Publish
-            </Button>
-          </div>
-        </div>
       </ResponsiveModal>
     </>
   )

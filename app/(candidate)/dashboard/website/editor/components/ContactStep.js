@@ -3,8 +3,6 @@ import AddressAutocomplete from './AddressAutocomplete'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import H2 from '@shared/typography/H2'
-import Body2 from '@shared/typography/Body2'
-import { InfoAlert } from '@shared/alerts/InfoAlert'
 
 export default function ContactStep({
   address,
@@ -17,18 +15,7 @@ export default function ContactStep({
 }) {
   return (
     <div>
-      {!noHeading && (
-        <>
-          <H2 className="mb-4">Public Contact Information</H2>
-          <Body2 className="mb-6 text-gray-600">
-            This contact information will be displayed publicly on your campaign website. 
-            Supporters will be able to see and use these details to reach out to you.
-          </Body2>
-          <InfoAlert className="mb-6">
-            <strong>Privacy Note:</strong> All contact information below will be visible to anyone who visits your website.
-          </InfoAlert>
-        </>
-      )}
+      {!noHeading && <H2 className="mb-6">How can voters contact you?</H2>}
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}
