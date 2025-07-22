@@ -56,6 +56,7 @@ export default function WebsiteCreateFlow() {
   }
 
   async function handleComplete() {
+    // Show privacy modal before publishing
     setPrivacyModalOpen(true)
   }
 
