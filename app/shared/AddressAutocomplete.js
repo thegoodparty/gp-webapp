@@ -12,7 +12,6 @@ export default function AddressAutocomplete({ value, onChange }) {
   const { ref } = usePlacesWidget({
     apiKey: MAPS_API_KEY,
     onPlaceSelected: (place) => {
-      console.log('🎯 Place selected:', place)
       if (place && place.formatted_address) {
         setInputValue(place.formatted_address)
         onChange(place.formatted_address, place)
@@ -35,7 +34,6 @@ export default function AddressAutocomplete({ value, onChange }) {
   }
 
   if (!MAPS_API_KEY) {
-    console.warn('Google Maps API key is missing!')
     return (
       <TextField
         fullWidth
