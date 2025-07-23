@@ -98,15 +98,14 @@ export default function TextingComplianceRegistrationForm({
         value={phone}
         onChange={(e) => handleChange({ phone: e.target.value })}
       />
-      {/*
-        TODO: AddressAutocomplete has a known but and usage of deprecated GoogleMaps API.
-          Swap out with https://www.npmjs.com/package/react-google-autocomplete
-      */}
+
       <AddressAutocomplete
         {...{
           value: address,
-          onChange: (place) =>
-            handleChange({ address: place.formatted_address }),
+          onChange: (place) => handleChange({ address: place }),
+          onPlaceSelected: (place) => {
+            console.log('place selected', place)
+          },
         }}
       />
       <TextField
