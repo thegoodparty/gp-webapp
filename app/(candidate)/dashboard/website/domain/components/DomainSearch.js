@@ -11,6 +11,7 @@ import { useSnackbar } from '@shared/utils/Snackbar'
 import DomainResult from './DomainResult'
 import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
 import { useWebsite } from '../../components/WebsiteProvider'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const router = useRouter()
@@ -58,6 +59,18 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       setSelectedDomain(null)
     } else {
       setSelectedDomain(domainName)
+      
+      const domainData = searchResults.domainName === domainName 
+        ? searchResults 
+        : searchResults.suggestions?.find(s => s.DomainName === domainName)
+      
+      const price = domainData?.price || (domainData && typeof domainData.price !== 'undefined' ? domainData.price : null)
+      
+      trackEvent(EVENTS.CandidateWebsite.SelectedDomain, {
+        domainSearchedFor: searchTerm.trim(),
+        domainSelected: domainName,
+        priceOfSelectedDomain: price
+      })
     }
   }
 

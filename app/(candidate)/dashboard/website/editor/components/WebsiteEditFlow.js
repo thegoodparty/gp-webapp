@@ -12,9 +12,10 @@ import EditSectionButton, {
   SECTIONS,
   SECTION_BTN_CONTENT,
 } from './EditSectionButton'
-import { updateWebsite } from '../../util/website.util'
+import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
 import EditSettingsMenu from './EditSettingsMenu'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
@@ -40,6 +41,9 @@ export default function WebsiteEditFlow() {
 
     setSaveLoading(false)
     if (resp.ok) {
+      if (website.status === WEBSITE_STATUS.published) {
+        trackEvent(EVENTS.CandidateWebsite.Edited)
+      }
       setWebsite(resp.data)
       successSnackbar('Changes have been published')
     } else {

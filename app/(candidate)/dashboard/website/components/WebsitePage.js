@@ -10,6 +10,7 @@ import { WEBSITE_STATUS } from '../util/website.util'
 import EmptyState from './EmptyState'
 import DraftState from './DraftState'
 import PublishedState from './PublishedState'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function WebsitePage({ pathname }) {
   const router = useRouter()
@@ -22,6 +23,7 @@ export default function WebsitePage({ pathname }) {
     setCreateLoading(true)
     const resp = await createWebsite()
     if (resp.ok) {
+      trackEvent(EVENTS.CandidateWebsite.Started)
       router.push(`/dashboard/website/create`)
     } else {
       setWebsite(null)

@@ -7,6 +7,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { useRouter } from 'next/navigation'
 import { WEBSITE_STATUS } from '../../util/website.util'
 import AlertDialog from '@shared/utils/AlertDialog'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function EditSettingsMenu() {
   const router = useRouter()
@@ -34,6 +35,7 @@ export default function EditSettingsMenu() {
 
     setLoading(false)
     if (resp.ok) {
+      trackEvent(EVENTS.CandidateWebsite.Unpublished)
       successSnackbar('Website has been unpublished')
       setSettingsMenuOpen(false)
       router.push('/dashboard/website')
