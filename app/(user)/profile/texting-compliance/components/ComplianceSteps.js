@@ -39,21 +39,9 @@ const steps = [
 export default function ComplianceSteps() {
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
-      {steps.map(
-        (step, index) => (
-          // step.route && step.status === STEP_STATUS.ACTIVE ? (
-          //   <Link
-          //     key={index}
-          //     href={step.route}
-          //     className="!no-underline border-b border-2 border-gray-200 last:border-b-0"
-          //   >
-          //     <ComplianceStep number={index + 1} {...step} />
-          //   </Link>
-          // ) : (
-          <ComplianceStep key={index} number={index + 1} {...step} />
-        ),
-        // ),
-      )}
+      {steps.map((step, index) => (
+        <ComplianceStep key={index} number={index + 1} {...step} />
+      ))}
     </div>
   )
 }
