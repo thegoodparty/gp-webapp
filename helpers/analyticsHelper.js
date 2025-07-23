@@ -1,5 +1,6 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
+import cookie from 'js-cookie'
 
 const UTM_KEYS = [
   'utm_source',
@@ -381,14 +382,11 @@ export const EVENTS = {
 }
 
 export const getStoredSessionId = () => {
-  if (typeof sessionStorage === 'undefined') return 0
-  return sessionStorage.getItem('analytics_session_id') || 0
+  return Number(cookie.get('analytics_session_id') ?? 0)
 }
 
-export const setSessionId = (sessionId) => {
-  if (typeof sessionStorage !== 'undefined') {
-    sessionStorage.setItem('analytics_session_id', sessionId)
-  }
+export const setSessionId = (id) => {
+  cookie.set('analytics_session_id', String(id))
 }
 
 export function extractClids(searchParams) {
@@ -492,10 +490,10 @@ export const trackEvent = (name, properties) => {
     // Segment has different environments, and should run even when FS is disabled
     const commonProperties = {
       ...getPersistedUtms(),
-      ...getAmplitudeIds(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)
+    console.log('trackEvent fired')
     if (typeof FS === 'undefined') {
       return
     }

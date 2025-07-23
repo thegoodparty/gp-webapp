@@ -8,7 +8,7 @@ import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AmplitudeInit from '@shared/AmplitudeInit'
-import AmplitudeSessionReplayMiddleware from '@shared/AmplitudeSessionReplayMiddleware'
+import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
@@ -79,8 +79,8 @@ const RootLayout = ({ children }) => (
     </head>
     <body>
       <RouteTracker />
+      <AnalyticsSessionReplayMiddleware />
       <AmplitudeInit />
-      <AmplitudeSessionReplayMiddleware />
       <PageWrapper>{children}</PageWrapper>
       <noscript>
         <iframe

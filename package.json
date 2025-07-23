@@ -54,6 +54,7 @@
     "intro.js-react": "^1.0.0",
     "isbot": "^5.1.1",
     "isomorphic-dompurify": "^2.14.0",
+    "js-cookie": "^3.0.5",
     "libphonenumber-js": "^1.10.14",
     "marked": "^14.1.2",
     "match-sorter": "^6.3.1",
