@@ -8,6 +8,7 @@ const DomainResult = memo(function DomainResult({
   available = true,
   loading = false,
   onClick,
+  selected = false,
 }) {
   const isInteractive = available && !loading
   const displayText = available ? `$${numberFormatter(price)}` : 'Unavailable'
@@ -15,8 +16,10 @@ const DomainResult = memo(function DomainResult({
   return (
     <div
       className={`border rounded-lg p-3 transition-colors ${
+        selected ? 'bg-primary text-white' : ''
+      } ${
         isInteractive
-          ? 'hover:bg-gray-50 cursor-pointer'
+          ? 'hover:bg-gray-50 hover:text-primary cursor-pointer'
           : 'bg-gray-100 opacity-60'
       }`}
       onClick={isInteractive ? onClick : undefined}

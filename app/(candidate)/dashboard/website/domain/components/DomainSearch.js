@@ -17,6 +17,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const [searchTerm, setSearchTerm] = useState(prefillSearch || '')
   const [searchResults, setSearchResults] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
+  const [selectedDomain, setSelectedDomain] = useState(null)
   const { errorSnackbar } = useSnackbar()
   const { website } = useWebsite()
   const { id: websiteId } = website
@@ -52,16 +53,28 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
     }
   }
 
-  const handlePurchase = (domainName) => {
+  const handleToggleDomain = (domainName) => {
+    if (selectedDomain === domainName) {
+      setSelectedDomain(null)
+    } else {
+      setSelectedDomain(domainName)
+    }
+  }
+
+  const handlePurchase = () => {
     if (!websiteId) {
       errorSnackbar('Website ID is required')
+      return
+    }
+    if (!selectedDomain) {
+      errorSnackbar('Please select a domain')
       return
     }
 
     const purchaseUrl = `/dashboard/purchase?type=${
       PURCHASE_TYPES.DOMAIN_REGISTRATION
     }&domain=${encodeURIComponent(
-      domainName,
+      selectedDomain,
     )}&websiteId=${websiteId}&returnUrl=${encodeURIComponent(
       '/dashboard/website/domain',
     )}`
@@ -104,9 +117,10 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
             loading={false}
             onClick={() => {
               if (searchResults.availability === 'AVAILABLE') {
-                handlePurchase(searchResults.domainName)
+                handleToggleDomain(searchResults.domainName)
               }
             }}
+            selected={selectedDomain === searchResults.domainName}
           />
 
           {searchResults.suggestions?.length > 0 && (
@@ -118,13 +132,22 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
                   domain={suggestion.DomainName}
                   price={suggestion.price}
                   loading={false}
-                  onClick={() => handlePurchase(suggestion.DomainName)}
+                  onClick={() => handleToggleDomain(suggestion.DomainName)}
+                  selected={selectedDomain === suggestion.DomainName}
                 />
               ))}
             </div>
           )}
         </div>
       )}
+      <div className="h-24"></div>
+      <div className="fixed bottom-0 left-0 right-0 w-full bg-white p-4">
+        <div className="flex justify-end items-center">
+          <Button onClick={handlePurchase} disabled={!selectedDomain}>
+            Checkout
+          </Button>
+        </div>
+      </div>
     </>
   )
 }
