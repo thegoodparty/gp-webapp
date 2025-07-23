@@ -8,8 +8,8 @@ const MAPS_API_KEY = NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
 export default function AddressAutocomplete({
   value,
-  onChange,
-  onPlaceSelected,
+  onChange = () => {},
+  onPlaceSelected = () => {},
 }) {
   const [inputValue, setInputValue] = useState(value || '')
 
