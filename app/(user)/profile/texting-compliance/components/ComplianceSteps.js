@@ -26,13 +26,14 @@ const steps = [
     description:
       'Every candidate needs to register their campaign information in order to send political text messages.',
     route: '/profile/texting-compliance/register',
-    status: STEP_STATUS.ACTIVE,
+    status: STEP_STATUS.COMPLETED,
   },
   {
     title: 'Enter PIN',
     description:
       'To verify your identity you will receive a PIN via email from "CampaignVerify".',
-    status: STEP_STATUS.DISABLED,
+    route: '/profile/texting-compliance/submit-pin',
+    status: STEP_STATUS.ACTIVE,
   },
 ]
 
