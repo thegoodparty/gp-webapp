@@ -18,7 +18,7 @@ const DomainResult = memo(function DomainResult({
       className={`border rounded-lg p-3 transition-colors ${
         selected ? 'bg-primary text-white' : ''
       } ${
-        isInteractive
+        isInteractive && !selected
           ? 'hover:bg-gray-50 hover:text-primary cursor-pointer'
           : 'bg-gray-100 opacity-60'
       }`}
@@ -26,7 +26,9 @@ const DomainResult = memo(function DomainResult({
     >
       <div className="flex justify-between items-center">
         <span className="font-medium">{domain}</span>
-        <span className="text-sm text-gray-600">
+        <span
+          className={`text-sm ${selected ? 'text-white' : 'text-gray-600'}`}
+        >
           {loading ? <CircularProgress size={16} /> : displayText}
         </span>
       </div>
