@@ -1,4 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
+import TextingComplianceRegisterPage from './components/TextingComplianceRegisterPage'
 
 const meta = pageMetaData({
   title: 'Register - Texting Compliance | GoodParty.org',
@@ -7,9 +8,5 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default function Page() {
-  return (
-    <div>
-      <h1>Register for Texting Compliance</h1>
-    </div>
-  )
+  return <TextingComplianceRegisterPage />
 } 
