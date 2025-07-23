@@ -7,9 +7,9 @@ import { WebsiteProvider } from '../components/WebsiteProvider'
 import candidateAccess from '../../shared/candidateAccess'
 
 const meta = pageMetaData({
-  title: 'Website Editor | GoodParty.org',
-  description: 'Website Editor',
-  slug: '/dashboard/website/editor',
+  title: 'Website Creator | GoodParty.org',
+  description: 'Website Creator',
+  slug: '/dashboard/website/create',
 })
 export const metadata = meta
 
@@ -18,11 +18,11 @@ export const dynamic = 'force-dynamic'
 export default async function Page() {
   await candidateAccess()
 
-  const resp = await serverFetch(apiRoutes.website.get, {})
+  const resp = await serverFetch(apiRoutes.website.get)
   const website = resp.ok ? resp.data : null
 
-  if (!website) {
-    redirect('/dashboard/website')
+  if (website) {
+    redirect('/dashboard/website/editor')
   }
 
   return (
