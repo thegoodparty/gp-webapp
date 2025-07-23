@@ -3,9 +3,16 @@ import TextField from '@shared/inputs/TextField'
 import Checkbox from '@shared/inputs/Checkbox'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import { useState } from 'react'
+import { useFormData } from '@shared/hooks/useFormData'
+import TextinComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextinComplianceForm'
 import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
 import AddressAutocomplete from 'app/(candidate)/dashboard/website/editor/components/AddressAutocomplete'
+import isURL from 'validator/es/lib/isURL'
+import isMobilePhone from 'validator/es/lib/isMobilePhone'
+import isFQDN from 'validator/es/lib/isFQDN'
+import isEmail from 'validator/es/lib/isEmail'
+import isFilled from '@shared/inputs/IsFilled'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -19,14 +26,34 @@ const initialFormState = {
   verifyInfo: false,
 }
 
-export default function TextingComplianceRegistrationForm({
-  onChange = () => {},
-  initialFormData = initialFormState,
-}) {
-  const [formData, setFormData] = useState({
-    ...initialFormState,
-    ...initialFormData,
-  })
+export const validateRegistrationForm = (data) => {
+  const {
+    electionFilingLink,
+    campaignCommitteeName,
+    localTribeName,
+    ein,
+    phone,
+    address,
+    website,
+    email,
+    verifyInfo,
+  } = data
+
+  return (
+    isURL(electionFilingLink) &&
+    isFilled(campaignCommitteeName) &&
+    isFilled(localTribeName) &&
+    isValidEIN(ein) &&
+    isMobilePhone(phone, 'en-US') &&
+    isFilled(address) &&
+    (isFQDN(website) || isURL(website)) &&
+    isEmail(email) &&
+    verifyInfo === true
+  )
+}
+
+export default function TextingComplianceRegistrationForm() {
+  const { formData, handleChange } = useFormData()
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -39,15 +66,6 @@ export default function TextingComplianceRegistrationForm({
     verifyInfo,
   } = formData
 
-  const handleChange = (change) => {
-    const newFormData = {
-      ...formData,
-      ...change,
-    }
-    setFormData(newFormData)
-    onChange(newFormData)
-  }
-
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
   //  components to support signature change
   const [validEin, setValidEin] = useState(isValidEIN(ein))
@@ -57,7 +75,7 @@ export default function TextingComplianceRegistrationForm({
   }
 
   return (
-    <form className="space-y-4 pb-16 md:p-0">
+    <TextinComplianceForm>
       <TextField
         label="Election filing link"
         fullWidth
@@ -130,6 +148,6 @@ export default function TextingComplianceRegistrationForm({
         checked={verifyInfo}
         onChange={(e) => handleChange({ verifyInfo: e.target.checked })}
       />
-    </form>
+    </TextinComplianceForm>
   )
 }

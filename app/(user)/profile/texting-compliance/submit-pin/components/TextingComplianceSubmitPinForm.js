@@ -1,5 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useFormData } from '@shared/hooks/useFormData'
+import TextinComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextinComplianceForm'
+import isEmpty from 'validator/es/lib/isEmpty'
 import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
 
 const initialFormState = {
@@ -14,27 +16,17 @@ const initialFormState = {
   verifyInfo: false,
 }
 
-export const TextingComplianceSubmitPinForm = ({
-  onChange = () => {},
-  initialFormData = initialFormState,
-}) => {
-  const [formData, setFormData] = useState({
-    ...initialFormState,
-    ...initialFormData,
-  })
+export const validatePinForm = (data) => {
+  const { pin } = data
+  return !isEmpty(pin) && pin.length === 6
+}
+
+export const TextingComplianceSubmitPinForm = () => {
+  const { formData, handleChange } = useFormData()
   const { pin } = formData
 
-  const handleChange = (change) => {
-    const newFormData = {
-      ...formData,
-      ...change,
-    }
-    setFormData(newFormData)
-    onChange(newFormData)
-  }
-
   return (
-    <form className="space-y-4 pb-16 md:p-0">
+    <TextinComplianceForm>
       <NumbersOnlyTextField
         {...{
           maxLength: 6,
@@ -46,6 +38,6 @@ export const TextingComplianceSubmitPinForm = ({
           onChange: (e) => handleChange({ pin: e.target.value }),
         }}
       />
-    </form>
+    </TextinComplianceForm>
   )
 }

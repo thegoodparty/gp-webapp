@@ -26,7 +26,7 @@ const steps = [
     description:
       'Every candidate needs to register their campaign information in order to send political text messages.',
     route: '/profile/texting-compliance/register',
-    status: STEP_STATUS.COMPLETED,
+    status: STEP_STATUS.ACTIVE,
   },
   {
     title: 'Enter PIN',
