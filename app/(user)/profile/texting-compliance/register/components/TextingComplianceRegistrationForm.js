@@ -5,7 +5,7 @@ import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/regist
 import { useState } from 'react'
 import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
-import AddressAutocomplete from 'app/(candidate)/dashboard/website/editor/components/AddressAutocomplete'
+import AddressAutocomplete from '@shared/AddressAutocomplete'
 
 const initialFormState = {
   electionFilingLink: '',

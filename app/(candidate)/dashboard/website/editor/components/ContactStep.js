@@ -1,5 +1,5 @@
+import AddressAutocomplete from '@shared/AddressAutocomplete'
 import Label from './Label'
-import AddressAutocomplete from './AddressAutocomplete'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import H2 from '@shared/typography/H2'
