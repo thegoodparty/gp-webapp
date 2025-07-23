@@ -5,6 +5,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
 import { WebsiteProvider } from '../components/WebsiteProvider'
 import candidateAccess from '../../shared/candidateAccess'
+import { WEBSITE_STATUS } from '../util/website.util'
 
 const meta = pageMetaData({
   title: 'Website Creator | GoodParty.org',
@@ -21,7 +22,7 @@ export default async function Page() {
   const resp = await serverFetch(apiRoutes.website.get)
   const website = resp.ok ? resp.data : null
 
-  if (website) {
+  if (website && website.status === WEBSITE_STATUS.published) {
     redirect('/dashboard/website/editor')
   }
 

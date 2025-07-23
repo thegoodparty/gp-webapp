@@ -1,6 +1,4 @@
-import WebsiteContent from './components/WebsiteContent'
-import WebsiteViewTracker from './components/WebsiteViewTracker'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 
@@ -36,11 +34,7 @@ export default async function CandidateWebsitePage({ params }) {
   if (!website) {
     notFound()
   }
+  permanentRedirect(`${NEXT_PUBLIC_CANDIDATES_SITE_BASE}/${website.vanityPath}`)
 
-  return (
-    <>
-      <WebsiteViewTracker vanityPath={website.vanityPath} />
-      <WebsiteContent website={website} />
-    </>
-  )
+  return null
 }
