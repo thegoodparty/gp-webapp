@@ -14,7 +14,7 @@ export default function AddressAutocomplete({ value, onChange }) {
     onPlaceSelected: (place) => {
       if (place && place.formatted_address) {
         setInputValue(place.formatted_address)
-        onChange(place.formatted_address, place)
+        onChange(place)
       }
     },
     options: {

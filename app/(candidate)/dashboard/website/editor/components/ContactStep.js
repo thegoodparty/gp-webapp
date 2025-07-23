@@ -19,7 +19,7 @@ export default function ContactStep({
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}
-        onChange={(value, place) => onAddressChange(value, place)}
+        onChange={(place) => onAddressChange(place)}
       />
       <Label className="mt-4">Email</Label>
       <EmailInput
