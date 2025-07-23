@@ -33,7 +33,7 @@ export default function PurchasePage({
         if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
           const eventData = {
             domainSelected: domain,
-            priceOfSelectedDomain: purchaseIntent?.amount ? purchaseIntent.amount / 100 : null
+            priceOfSelectedDomain: paymentIntent?.amount ? paymentIntent.amount / 100 : null
           }
           trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
         }
