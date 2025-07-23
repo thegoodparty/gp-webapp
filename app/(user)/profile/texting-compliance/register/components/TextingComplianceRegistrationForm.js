@@ -105,7 +105,8 @@ export default function TextingComplianceRegistrationForm({
       <AddressAutocomplete
         {...{
           value: address,
-          onChange: (address) => handleChange({ address }),
+          onChange: (place) =>
+            handleChange({ address: place.formatted_address }),
         }}
       />
       <TextField
