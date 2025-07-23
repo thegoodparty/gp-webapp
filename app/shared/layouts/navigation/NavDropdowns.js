@@ -1,18 +1,31 @@
 import NavDropdown from '@shared/layouts/navigation/NavDropdown'
 import { useNav } from '@shared/layouts/navigation/useNav'
 
-export const NavDropdowns = () => {
+export const NavDropdowns = ({ dropdownIndices = null }) => {
   const { dropdowns, openStates, toggle, closeAll } = useNav()
 
-  return dropdowns.map(({ id, label, links, dataTestId = '' }, index) => (
-    <NavDropdown
-      key={index}
-      id={id}
-      dataTestId={dataTestId}
-      label={label}
-      links={links}
-      open={openStates[index]}
-      toggleCallback={toggle(index)}
-    />
-  ))
+  const filteredDropdowns = dropdownIndices 
+    ? dropdowns.filter((_, index) => dropdownIndices.includes(index))
+    : dropdowns
+
+  const getOriginalIndex = (filteredIndex) => {
+    if (!dropdownIndices) return filteredIndex
+    return dropdownIndices[filteredIndex]
+  }
+
+  return filteredDropdowns.map(({ id, label, links, dataTestId = '' }, filteredIndex) => {
+    const originalIndex = getOriginalIndex(filteredIndex)
+    
+    return (
+      <NavDropdown
+        key={originalIndex}
+        id={id}
+        dataTestId={dataTestId}
+        label={label}
+        links={links}
+        open={openStates[originalIndex]}
+        toggleCallback={toggle(originalIndex)}
+      />
+    )
+  })
 }

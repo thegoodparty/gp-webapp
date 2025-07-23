@@ -15,11 +15,11 @@ export default function ContactStep({
 }) {
   return (
     <div>
-      {!noHeading && <H2 className="mb-6">How can people find you?</H2>}
+      {!noHeading && <H2 className="mb-6">How can voters contact you?</H2>}
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}
-        onChange={(value) => onAddressChange(value)}
+        onChange={(value, place) => onAddressChange(value, place)}
       />
       <Label className="mt-4">Email</Label>
       <EmailInput

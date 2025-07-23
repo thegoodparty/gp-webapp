@@ -360,9 +360,10 @@ The scripts use the following environment variables (all default to production v
 All generated files are saved to `public/sitemaps/` and include timestamps to avoid conflicts:
 
 ### 📋 **Sitemap Files**
-- `sitemap.xml` - Main sitemap with core pages
-- `state/{state}/sitemap/{index}.xml` - State-specific sitemaps
-- `candidates/{state}/sitemap/{index}.xml` - Candidate sitemaps
+- `sitemap.xml` - Root sitemap linking to main, state-specific, and candidate sitemaps
+- `sitemaps/sitemap.xml` - Main sitemap with core pages
+- `sitemaps/state/{state}/sitemap/{index}.xml` - State-specific sitemaps
+- `sitemaps/candidates/{state}/sitemap/{index}.xml` - Candidate sitemaps
 
 **Note**: The main sitemap index is served from the root as `public/sitemap.xml`
 
