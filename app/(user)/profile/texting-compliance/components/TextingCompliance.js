@@ -2,7 +2,7 @@ import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
 import H3 from '@shared/typography/H3'
 import Body2 from '@shared/typography/Body2'
-import ComplianceSteps from './ComplianceSteps'
+import ComplianceSteps from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 
 export default function TextingCompliance() {
   return (
@@ -13,10 +13,11 @@ export default function TextingCompliance() {
           76% of candidates who use our full offering win
         </H3>
         <Body2 className="text-gray-600 mt-1">
-          Start sending 5,000 free targeted text messages by making your campaign compliant in 4 steps.
+          Start sending 5,000 free targeted text messages by making your
+          campaign compliant in 4 steps.
         </Body2>
       </div>
       <ComplianceSteps />
     </Paper>
   )
-} 
+}
