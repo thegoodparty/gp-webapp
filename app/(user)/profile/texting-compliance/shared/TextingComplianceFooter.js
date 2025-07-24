@@ -17,8 +17,6 @@ export default function TextingComplianceFooter({ children }) {
         p-4
         md:mx-auto
         md:max-w-2xl
-        {/*md:relative*/}
-        {/*md:mt-8*/}
         md:border-0
         md:p-8
         z-10
