@@ -2,14 +2,14 @@
 import { useEffect, useRef } from "react"
 import * as sessionReplay from '@amplitude/session-replay-browser'
 import { useAnalytics } from "./hooks/useAnalytics"
-import { getStoredSessionId, setSessionId } from "helpers/analyticsHelper"
+import { getStoredSessionId, storeSessionId } from "helpers/analyticsHelper"
 
 export default function AnalyticsSessionReplayMiddleware() {
   const analytics = useAnalytics()
   const middlewareAttached = useRef(false)
 
   useEffect(() => {
-    if (!analytics || middlewareAttached.current) return
+    if (middlewareAttached.current) return
 
     (async () => {
       await analytics.ready()
@@ -22,7 +22,7 @@ export default function AnalyticsSessionReplayMiddleware() {
           console.log('nextSessionId: ', nextSessionId)
   
           if (storedSessionId < nextSessionId) {
-            setSessionId(nextSessionId)
+            storeSessionId(nextSessionId)
             sessionReplay.setSessionId(nextSessionId)
           }
         }, 0)
@@ -31,7 +31,7 @@ export default function AnalyticsSessionReplayMiddleware() {
 
       analytics.addSourceMiddleware(({ payload, next }) => {
         const sessionReplayProperties = sessionReplay.getSessionReplayProperties()
-        console.log('sessionReplayProperties: ', sessionReplayProperties)
+        console.dir(sessionReplayProperties, {depth: 4})
         if (payload.type() === 'track') {
           payload.obj.properties = {
             ...payload.obj.properties,

@@ -385,7 +385,7 @@ export const getStoredSessionId = () => {
   return Number(cookie.get('analytics_session_id') ?? 0)
 }
 
-export const setSessionId = (id) => {
+export const storeSessionId = (id) => {
   cookie.set('analytics_session_id', String(id))
 }
 

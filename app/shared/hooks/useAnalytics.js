@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react"
+
 export const useAnalytics = () => 
   useSyncExternalStore(
     (notify) => {
