@@ -1,9 +1,13 @@
 'use client'
-import { useState, createContext, useContext } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 const FormDataContext = createContext()
 
-export const FormDataProvider = ({ children, initialState = {}, validator = () => true }) => {
+export const FormDataProvider = ({
+  children,
+  initialState = {},
+  validator = () => true,
+}) => {
   const [formData, setFormData] = useState(initialState)
   const [isValid, setIsValid] = useState(validator(initialState))
 
@@ -27,4 +31,4 @@ export const useFormData = () => {
     throw new Error('useFormData must be used within a FormDataProvider')
   }
   return context
-} 
+}

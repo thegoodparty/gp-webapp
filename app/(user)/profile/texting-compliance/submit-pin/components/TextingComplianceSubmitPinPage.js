@@ -7,7 +7,6 @@ import {
   TextingComplianceSubmitPinForm,
   validatePinForm,
 } from 'app/(user)/profile/texting-compliance/submit-pin/components/TextingComplianceSubmitPinForm'
-import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 
 const initialFormState = {
   pin: '',
@@ -28,7 +27,6 @@ const TextingComplianceSubmitPinPage = () => {
           validator={validatePinForm}
         >
           <TextingComplianceSubmitPinForm />
-          <TextingComplianceFooter />
         </FormDataProvider>
       </div>
     </div>
