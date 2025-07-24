@@ -10,6 +10,7 @@ import TextingComplianceRegistrationForm, {
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { FormDataProvider } from '@shared/hooks/useFormData'
 
+// TODO: This is temporary initial form state data for UI development.
 const initialFormState = {
   electionFilingLink: 'https://elections.example.com/filing123',
   campaignCommitteeName: 'Friends of Democracy',
