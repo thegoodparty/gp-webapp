@@ -5,8 +5,8 @@
   "author": "Tomer Almog",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 NEXT_PUBLIC_OLD_API_BASE=http://localhost:1337 next dev -p 4000",
-    "dev-dev": "cross-env NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=https://gp-api-dev.goodparty.org NEXT_PUBLIC_OLD_API_BASE=https://api-dev.goodparty.org next dev -p 4000",
+    "dev": "cross-env NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next dev -p 4000",
+    "dev-dev": "cross-env NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=https://gp-api-dev.goodparty.org  next dev -p 4000",
     "deploy-dev": "git checkout develop && eb deploy",
     "deploy-qa": "git checkout qa && eb deploy",
     "deploy-prod": "git checkout master  && eb deploy",
@@ -41,6 +41,8 @@
     "@mui/material": "^7.1.0",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.11.0",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.4.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/postcss": "^4.1.6",
     "@tailwindcss/typography": "^0.5.15",
@@ -56,6 +58,7 @@
     "isomorphic-dompurify": "^2.14.0",
     "js-cookie": "^3.0.5",
     "libphonenumber-js": "^1.10.14",
+    "lz-string": "^1.5.0",
     "marked": "^14.1.2",
     "match-sorter": "^6.3.1",
     "next": "^15.3.2",
@@ -72,6 +75,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "^19.1.0",
     "react-drag-reorder": "^1.2.0",
+    "react-google-autocomplete": "^2.7.5",
     "react-icons": "^5.5.0",
     "react-image-crop": "^10.1.5",
     "react-inlinesvg": "^4.2.0",
@@ -90,7 +94,8 @@
     "slick-carousel": "^1.8.1",
     "slugify": "^1.6.6",
     "tailwindcss": "^3.2.1",
-    "typewriter-effect": "^2.22.0"
+    "typewriter-effect": "^2.22.0",
+    "validator": "^13.15.15"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "8.6.12",

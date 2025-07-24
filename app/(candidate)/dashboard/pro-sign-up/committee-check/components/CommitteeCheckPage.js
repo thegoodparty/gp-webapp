@@ -4,20 +4,18 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Link from 'next/link'
 import TextField from '@shared/inputs/TextField'
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useRouter } from 'next/navigation'
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
-import {
-  EIN_PATTERN_FULL,
-  EinCheckInput,
-} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
+import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt'
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
 import Overline from '@shared/typography/Overline'
 import { Switch } from '@mui/material'
 import Button from '@shared/buttons/Button'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { isValidEIN } from '@shared/inputs/IsValidEIN'
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -49,7 +47,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   )
 
   const doEinCheck = useCallback(async () => {
-    const validEINFormat = EIN_PATTERN_FULL.test(einInputValue)
+    const validEINFormat = isValidEIN(einInputValue)
     const inputsValid = campaignCommittee && validEINFormat
 
     if (!inputsValid) {
@@ -63,8 +61,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     doEinCheck()
   }, [doEinCheck])
 
-  const onCampaignCommitteeBlur = () =>
-    doEinCheck(einInputValue, einInputValue)
+  const onCampaignCommitteeBlur = () => doEinCheck(einInputValue, einInputValue)
 
   const handleNextClick = async () => {
     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext)

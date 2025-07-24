@@ -79,10 +79,6 @@ export const apiRoutes = {
     },
   },
   campaign: {
-    district: {
-      path: '/campaigns/mine/district',
-      method: 'PUT',
-    },
     pathToVictory: {
       create: {
         path: '/campaigns/mine/path-to-victory',
@@ -215,6 +211,20 @@ export const apiRoutes = {
       delete: {
         path: '/campaigns/tasks/:taskId',
         method: 'DELETE',
+      },
+    },
+    tcrCompliance: {
+      fetch: {
+        path: '/campaigns/tcr-compliance/mine',
+        method: 'GET',
+      },
+      create: {
+        path: '/campaigns/tcr-compliance',
+        method: 'POST',
+      },
+      submitCvPin: {
+        path: '/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
+        method: 'POST',
       },
     },
   },
@@ -404,16 +414,6 @@ export const apiRoutes = {
       path: '/elections/races-by-year',
       method: 'GET',
     },
-    districts: {
-      types: {
-        path: '/elections/districts/types',
-        method: 'GET'
-      },
-      names: {
-        path: '/elections/districts/names',
-        method: 'GET'
-      }
-    }
   },
   payments: {
     createCheckoutSession: {
@@ -422,6 +422,14 @@ export const apiRoutes = {
     },
     createPortalSession: {
       path: '/payments/purchase/portal-session',
+      method: 'POST',
+    },
+    createPurchaseIntent: {
+      path: '/payments/purchase/create-intent',
+      method: 'POST',
+    },
+    completePurchase: {
+      path: '/payments/purchase/complete',
       method: 'POST',
     },
   },
@@ -614,6 +622,28 @@ export const apiRoutes = {
     trackView: {
       path: '/websites/:vanityPath/track-view',
       method: 'POST',
+    },
+  },
+  domain: {
+    search: {
+      path: '/domains/search',
+      method: 'GET',
+    },
+    register: {
+      path: '/domains',
+      method: 'POST',
+    },
+    completeRegistration: {
+      path: '/domains/complete',
+      method: 'POST',
+    },
+    delete: {
+      path: '/domains/:id',
+      method: 'DELETE',
+    },
+    status: {
+      path: '/domains/status',
+      method: 'GET',
     },
   },
 }

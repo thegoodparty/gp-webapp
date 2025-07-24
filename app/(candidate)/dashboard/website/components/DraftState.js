@@ -5,6 +5,7 @@ import StepList from './StepList'
 import Button from '@shared/buttons/Button'
 import StatusChip from './StatusChip'
 import { WEBSITE_STATUS } from '../util/website.util'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 function DraftState() {
   return (
@@ -16,6 +17,7 @@ function DraftState() {
         href="/dashboard/website/create"
         color="secondary"
         className="mt-12 w-full md:w-auto px-10"
+        onClick={() => trackEvent(EVENTS.CandidateWebsite.Continued)}
       >
         Complete and publish
       </Button>

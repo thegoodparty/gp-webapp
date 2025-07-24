@@ -33,5 +33,21 @@ export const APP_BASE = IS_LOCAL
         : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
     }`
 
-export const NEXT_PUBLIC_SEGMENT_WRITE_KEY = process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY
-export const NEXT_PUBLIC_AMPLITUDE_API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY
+
+export const NEXT_PUBLIC_AMPLITUDE_API_KEY = 
+  process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY
+
+export const NEXT_PUBLIC_SEGMENT_WRITE_KEY =
+  process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY
+
+export const NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+  'pk_test_51P8p2Y1taBPnTqn4IacUdFzw2mWPe8ljraPrpMlqMxtb8h1EvYTJvdGrj3kSeRIqm2ltL8RE8bAZL3EsLqpW3VNS00VZLcvudS'
+
+export const NEXT_PUBLIC_GOOGLE_MAPS_KEY =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ||
+  'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'
+
+export const NEXT_PUBLIC_CANDIDATES_SITE_BASE =
+  process.env.NEXT_PUBLIC_CANDIDATES_SITE_BASE ||
+  (IS_LOCAL ? 'http://localhost:4001' : 'https://candidates.goodparty.org')

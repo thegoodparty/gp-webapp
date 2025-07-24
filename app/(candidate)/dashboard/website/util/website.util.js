@@ -1,17 +1,22 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { serialize } from 'object-to-formdata'
+import { isDomainActive } from './domain.util'
+import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
 
-export const BASE_URL =
-  process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
+const CANDIDATES_SITE_BASE = NEXT_PUBLIC_CANDIDATES_SITE_BASE
 
 export const WEBSITE_STATUS = {
   published: 'published',
   unpublished: 'unpublished',
 }
 
-export function getWebsiteUrl(vanityPath, preview = false) {
-  return `${BASE_URL}/c/${vanityPath}${preview ? '/preview' : ''}`
+export function getWebsiteUrl(vanityPath, preview = false, domain = {}) {
+  if (domain?.name && isDomainActive(domain)) {
+    return `https://${domain.name}`
+  }
+
+  return `${CANDIDATES_SITE_BASE}/${vanityPath}${preview ? '/preview' : ''}`
 }
 
 export function fetchWebsite() {
