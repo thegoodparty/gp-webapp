@@ -3,9 +3,7 @@ import TextField from '@shared/inputs/TextField'
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import React from 'react'
-
-const EIN_PATTERN_PARTIAL = /^\d{1,2}-\d{0,7}$|^\d{2}$|^\d$/
-export const EIN_PATTERN_FULL = /^\d{2}-\d{7}$/
+import { EIN_PATTERN_PARTIAL } from '@shared/inputs/IsValidEIN'
 
 const EIN_HELP_MESSAGE = (
   <span>
@@ -20,7 +18,7 @@ const EIN_HELP_MESSAGE = (
 export const EinCheckInput = ({
   value = '',
   validated,
-  setValidated,
+  setValidated = () => {},
   onChange = () => {},
   ...restProps
 }) => {

@@ -167,12 +167,16 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
-  function handleAddressChange(value) {
+  function handleAddressChange(place) {
     setWebsite((current) => ({
       ...current,
       content: {
         ...current.content,
-        contact: { ...current.content.contact, address: value },
+        contact: {
+          ...current.content.contact,
+          address: place.formatted_address,
+          addressPlace: place,
+        },
       },
     }))
   }

@@ -6,6 +6,7 @@ import ContentPage from './components/ContentPage'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import { getServerUser } from 'helpers/userServerHelper'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
+import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,7 +45,12 @@ export default async function Page({ params, searchParams }) {
     user,
   }
 
-  return <ContentPage {...childProps} />
+  return (
+    <>
+      <HubSpotChatWidgetScript />
+      <ContentPage {...childProps} />
+    </>
+  )
 }
 
 function parsePrompts(promptsRaw) {

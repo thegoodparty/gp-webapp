@@ -4,6 +4,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { WebsiteProvider } from './components/WebsiteProvider'
 import candidateAccess from '../shared/candidateAccess'
+import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 
 const meta = pageMetaData({
   title: 'Website | GoodParty.org',
@@ -26,8 +27,11 @@ export default async function Page() {
   const contacts = contactsResp.ok ? contactsResp.data : null
 
   return (
-    <WebsiteProvider website={website} contacts={contacts}>
-      <WebsitePage pathname="/dashboard/website" />
-    </WebsiteProvider>
+    <>
+      <HubSpotChatWidgetScript />
+      <WebsiteProvider website={website} contacts={contacts}>
+        <WebsitePage pathname="/dashboard/website" />
+      </WebsiteProvider>
+    </>
   )
 }

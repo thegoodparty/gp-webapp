@@ -15,7 +15,7 @@ export default function VanityPathStep({ website, onChange }) {
   const [validated, setValidated] = useState(true)
   const [loading, setLoading] = useState(false)
   const timeoutRef = useRef(null)
-  const websiteUrl = getWebsiteUrl(website.vanityPath, false)
+  const websiteUrl = getWebsiteUrl(website.vanityPath, false, website.domain)
 
   function handleChange(value) {
     onChange(value)
