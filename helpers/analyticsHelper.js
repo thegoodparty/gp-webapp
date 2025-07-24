@@ -378,6 +378,16 @@ export const EVENTS = {
     },
     ActionClicked: 'Outreach - Action Clicked',
   },
+  CandidateWebsite: {
+    Started: 'Candidate Website - Started',
+    Continued: 'Candidate Website - Continued',
+    Published: 'Candidate Website - Published',
+    Unpublished: 'Candidate Website - Unpublished',
+    Edited: 'Candidate Website - Edited',
+    StartedDomainSelection: 'Candidate Website - Started domain selection',
+    SelectedDomain: 'Candidate Website - Selected domain',
+    PurchasedDomain: 'Candidate Website - Purchased domain',
+  },
 }
 
 export function extractClids(searchParams) {

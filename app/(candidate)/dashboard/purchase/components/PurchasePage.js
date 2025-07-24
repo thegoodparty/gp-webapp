@@ -5,6 +5,8 @@ import { completePurchase } from '../utils/purchaseFetch.utils'
 import PurchaseError from './PurchaseError'
 import PurchaseSuccess from './PurchaseSuccess'
 import PurchasePayment from './PurchasePayment'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const PURCHASE_STATE = {
   PAYMENT: 'payment',
@@ -28,6 +30,14 @@ export default function PurchasePage({
       const response = await completePurchase(paymentIntent.id)
 
       if (response.ok) {
+        if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
+          const eventData = {
+            domainSelected: domain,
+            priceOfSelectedDomain: paymentIntent?.amount ? paymentIntent.amount / 100 : null
+          }
+          trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
+        }
+
         setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
         setError(response.data?.data?.error || 'Failed to complete purchase')
