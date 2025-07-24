@@ -64,7 +64,6 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
   const router = useRouter()
 
   const handleFormSubmit = async (formData) => {
-    console.log('Form submitted with data:', formData)
     setLoading(true)
     try {
       await createTcrCompliance(formData)
