@@ -24,15 +24,14 @@ const Page = async () => {
   let tcrCompliance
   try {
     tcrCompliance = await fetchTcrCompliance()
+    if (!tcrCompliance) {
+      throw new Error('TCR Compliance data not found')
+    }
   } catch (e) {
     console.error('Error fetching TCR Compliance data:', e)
-    redirect('/profile')
+    return redirect('/profile')
   }
 
-  if (!tcrCompliance) {
-    console.error('TCR Compliance data not found')
-    redirect('/profile')
-  }
   return <TextingComplianceSubmitPinPage {...{ tcrCompliance }} />
 }
 
