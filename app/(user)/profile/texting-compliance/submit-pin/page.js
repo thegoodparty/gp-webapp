@@ -1,5 +1,17 @@
 import pageMetaData from 'helpers/metadataHelper'
 import TextingComplianceSubmitPinPage from 'app/(user)/profile/texting-compliance/submit-pin/components/TextingComplianceSubmitPinPage'
+import { serverFetch } from 'gpApi/serverFetch'
+import { apiRoutes } from 'gpApi/routes'
+import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import { redirect } from 'next/navigation'
+
+const fetchTcrCompliance = async () => {
+  const response = await serverFetch(apiRoutes.campaign.tcrCompliance.fetch)
+  if (!response.ok) {
+    throw new Error('Failed to fetch TCR Compliance data')
+  }
+  return response.data
+}
 
 const meta = pageMetaData({
   title: 'Submit PIN - Texting Compliance | GoodParty.org',
@@ -7,8 +19,21 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const Page = () => {
-  return <TextingComplianceSubmitPinPage />
+const Page = async () => {
+  await candidateAccess()
+  let tcrCompliance
+  try {
+    tcrCompliance = await fetchTcrCompliance()
+  } catch (e) {
+    console.error('Error fetching TCR Compliance data:', e)
+    redirect('/profile')
+  }
+
+  if (!tcrCompliance) {
+    console.error('TCR Compliance data not found')
+    redirect('/profile')
+  }
+  return <TextingComplianceSubmitPinPage {...{ tcrCompliance }} />
 }
 
 export default Page

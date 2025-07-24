@@ -222,6 +222,10 @@ export const apiRoutes = {
         path: '/campaigns/tcr-compliance',
         method: 'POST',
       },
+      submitCvPin: {
+        path: '/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
+        method: 'POST',
+      },
     },
   },
   content: {
