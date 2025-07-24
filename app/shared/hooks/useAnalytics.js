@@ -6,7 +6,8 @@ export const useAnalytics = () =>
       const id = setInterval(() => {
         if (typeof window !== 'undefined' && window.analytics) notify()
       }, 100)
-    return () => clearInterval(id)
+      return () => clearInterval(id)
     },
-    () => (typeof window !== 'undefined' ? window.analytics : undefined)
+    () => (typeof window !== 'undefined' ? window.analytics : undefined),
+    () => undefined
   )
