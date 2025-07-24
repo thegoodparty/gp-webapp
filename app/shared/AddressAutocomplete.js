@@ -6,7 +6,11 @@ import { NEXT_PUBLIC_GOOGLE_MAPS_KEY } from 'appEnv'
 
 const MAPS_API_KEY = NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
-export default function AddressAutocomplete({ value, onChange }) {
+export default function AddressAutocomplete({
+  value,
+  onChange = (inputValue) => {},
+  onSelect = (place) => {},
+}) {
   const [inputValue, setInputValue] = useState(value || '')
 
   const { ref } = usePlacesWidget({
@@ -14,7 +18,7 @@ export default function AddressAutocomplete({ value, onChange }) {
     onPlaceSelected: (place) => {
       if (place && place.formatted_address) {
         setInputValue(place.formatted_address)
-        onChange(place)
+        onSelect(place)
       }
     },
     options: {

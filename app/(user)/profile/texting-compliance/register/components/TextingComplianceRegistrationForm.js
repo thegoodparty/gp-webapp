@@ -26,6 +26,8 @@ const initialFormState = {
   verifyInfo: false,
 }
 
+const validateAddress = (address) => Boolean(address.formatted_address)
+
 export const validateRegistrationForm = (data) => {
   const {
     electionFilingLink,
@@ -48,7 +50,7 @@ export const validateRegistrationForm = (data) => {
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
-    isFilled(address) &&
+    validateAddress(address) &&
     (isFQDN(website) || isURL(website)) &&
     isEmail(email) &&
     verifyInfo === true
@@ -57,16 +59,6 @@ export const validateRegistrationForm = (data) => {
 
 export default function TextingComplianceRegistrationForm() {
   const { formData, handleChange } = useFormData()
-  // =======
-  // export default function TextingComplianceRegistrationForm({
-  //   onChange = () => {},
-  //   initialFormData = initialFormState,
-  // }) {
-  //   const [formData, setFormData] = useState({
-  //     ...initialFormState,
-  //     ...initialFormData,
-  //   })
-  // >>>>>>> origin/develop
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -79,18 +71,10 @@ export default function TextingComplianceRegistrationForm() {
     verifyInfo,
   } = formData
 
-  // <<<<<<< HEAD
-  // =======
-  //   const handleChange = (change) => {
-  //     const newFormData = {
-  //       ...formData,
-  //       ...change,
-  //     }
-  //     setFormData(newFormData)
-  //     onChange(newFormData)
-  //   }
+  const [addressInputValue, setAddressInputValue] = useState(
+    address.formatted_address || '',
+  )
 
-  // >>>>>>> origin/develop
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
   //  components to support signature change
   const [validEin, setValidEin] = useState(isValidEIN(ein))
@@ -100,11 +84,7 @@ export default function TextingComplianceRegistrationForm() {
   }
 
   return (
-    // <<<<<<< HEAD
     <TextingComplianceForm>
-      {/*=======*/}
-      {/*    <form className="space-y-4 pb-16 md:p-0">*/}
-      {/*>>>>>>> origin/develop*/}
       <TextField
         label="Election filing link"
         fullWidth
@@ -145,22 +125,19 @@ export default function TextingComplianceRegistrationForm() {
         value={phone}
         onChange={(e) => handleChange({ phone: e.target.value })}
       />
-      {/*
-        TODO: AddressAutocomplete has a known but and usage of deprecated GoogleMaps API.
-          Swap out with https://www.npmjs.com/package/react-google-autocomplete
-      */}
+
       <AddressAutocomplete
         {...{
-          value: address,
-          // <<<<<<< HEAD
-          onChange: (address) => {
-            console.log(`address =>`, address)
-            return handleChange({ address: address.formatted_address })
+          value: addressInputValue,
+          onChange: (inputValue) => {
+            console.log(`inputValue =>`, inputValue)
+            setAddressInputValue(inputValue)
           },
-          // =======
-          //           onChange: (place) =>
-          //             handleChange({ address: place.formatted_address }),
-          // >>>>>>> origin/develop
+          onSelect: (address) => {
+            console.log(`address =>`, address)
+            setAddressInputValue(address.formatted_address)
+            return handleChange({ address })
+          },
         }}
       />
       <TextField
@@ -185,10 +162,6 @@ export default function TextingComplianceRegistrationForm() {
         checked={verifyInfo}
         onChange={(e) => handleChange({ verifyInfo: e.target.checked })}
       />
-      {/*<<<<<<< HEAD*/}
     </TextingComplianceForm>
-    // =======
-    //     </form>
-    // >>>>>>> origin/develop
   )
 }

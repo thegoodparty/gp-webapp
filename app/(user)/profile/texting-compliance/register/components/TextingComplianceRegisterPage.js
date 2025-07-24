@@ -16,7 +16,7 @@ const initialFormState = {
   localTribeName: 'Cherokee Nation',
   ein: '12-3456789',
   phone: '(805) 550-3465',
-  address: '123 Main St, Springfield, IL 62701',
+  address: { formatted_address: '123 Main St, Springfield, IL 62701' },
   website: 'https://friendsofdemocracy.org',
   email: 'contact@friendsofdemocracy.org',
   verifyInfo: false,
