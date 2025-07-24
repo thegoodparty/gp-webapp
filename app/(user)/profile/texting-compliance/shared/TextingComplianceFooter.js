@@ -1,9 +1,8 @@
 'use client'
-import Button from '@shared/buttons/Button'
 import { useFormData } from '@shared/hooks/useFormData'
 
 export default function TextingComplianceFooter({ children }) {
-  const { isValid } = useFormData()
+  const { isValid, formData } = useFormData()
   return (
     <div
       className="
@@ -22,18 +21,7 @@ export default function TextingComplianceFooter({ children }) {
         z-10
       "
     >
-      <div className="flex gap-4 justify-end">
-        {children || (
-          <Button
-            color="primary"
-            size="large"
-            className="flex-1 md:flex-initial"
-            disabled={!isValid}
-          >
-            Submit
-          </Button>
-        )}
-      </div>
+      <div className="flex gap-4 justify-end">{children}</div>
     </div>
   )
 }
