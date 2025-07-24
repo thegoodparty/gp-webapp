@@ -19,7 +19,6 @@ export default function AnalyticsSessionReplayMiddleware() {
         setTimeout(() => {
           const storedSessionId = getStoredSessionId()
           const nextSessionId = payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
-          console.log('nextSessionId: ', nextSessionId)
   
           if (storedSessionId < nextSessionId) {
             storeSessionId(nextSessionId)
@@ -31,7 +30,6 @@ export default function AnalyticsSessionReplayMiddleware() {
 
       analytics.addSourceMiddleware(({ payload, next }) => {
         const sessionReplayProperties = sessionReplay.getSessionReplayProperties()
-        console.dir(sessionReplayProperties, {depth: 4})
         if (payload.type() === 'track') {
           payload.obj.properties = {
             ...payload.obj.properties,

@@ -493,7 +493,6 @@ export const trackEvent = (name, properties) => {
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)
-    console.log('trackEvent fired')
     if (typeof FS === 'undefined') {
       return
     }

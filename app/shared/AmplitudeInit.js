@@ -27,7 +27,6 @@ export default function AmplitudeInit() {
       
           const user = await analytics.user()
           const storedSessionId = getStoredSessionId()
-          console.log('storedSessionId: ', storedSessionId)
     
           await sessionReplay.init(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
             sessionId: storedSessionId,
