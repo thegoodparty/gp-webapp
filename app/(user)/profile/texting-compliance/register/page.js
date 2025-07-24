@@ -10,6 +10,7 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
+// <<<<<<< HEAD
 const Page = async () => {
   await candidateAccess()
   const user = await getServerUser()
@@ -23,6 +24,10 @@ const Page = async () => {
       }}
     />
   )
+  // =======
+  // const Page = () => {
+  //   return <TextingComplianceRegisterPage />
+  // >>>>>>> origin/develop
 }
 
 export default Page

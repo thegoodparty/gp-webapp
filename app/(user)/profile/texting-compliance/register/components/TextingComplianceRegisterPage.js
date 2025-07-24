@@ -7,6 +7,7 @@ import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/share
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
+// <<<<<<< HEAD
 import { FormDataProvider } from '@shared/hooks/useFormData'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -17,11 +18,19 @@ import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormD
 
 // TODO: This is temporary initial form state data for UI development.
 const mockInitialFormState = {
+  // =======
+  // import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
+  // import { FormDataProvider } from '@shared/hooks/useFormData'
+
+  // TODO: This is temporary initial form state data for UI development.
+  // const initialFormState = {
+  // >>>>>>> origin/develop
   electionFilingLink: 'https://elections.example.com/filing123',
   campaignCommitteeName: 'Friends of Democracy',
   localTribeName: 'Cherokee Nation',
   ein: '12-3456789',
   phone: '(805) 550-3465',
+  // <<<<<<< HEAD
   website: 'https://friendsofdemocracy.org',
   email: 'contact@friendsofdemocracy.org',
   verifyInfo: false,
@@ -78,6 +87,15 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       setLoading(false)
     }
   }
+  // =======
+  //   address: { formatted_address: '123 Main St, Springfield, IL 62701' },
+  //   website: 'https://friendsofdemocracy.org',
+  //   email: 'contact@friendsofdemocracy.org',
+  //   verifyInfo: false,
+  // }
+  //
+  // export default function TextingComplianceRegisterPage() {
+  // >>>>>>> origin/develop
   return (
     <div className="min-h-screen bg-white pt-2 md:pb-20 md:pt-0 md:min-h-0">
       <TextingComplianceHeader>
@@ -95,12 +113,17 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
           initialState={initialFormState}
           validator={validateRegistrationForm}
         >
+          {/*<<<<<<< HEAD*/}
           <TextingComplianceRegistrationForm
             {...{
               onSubmit: handleFormSubmit,
               loading,
             }}
           />
+          {/*=======*/}
+          {/*          <TextingComplianceRegistrationForm />*/}
+          {/*<TextingComplianceFooter />*/}
+          {/*>>>>>>> origin/develop*/}
         </FormDataProvider>
       </div>
     </div>

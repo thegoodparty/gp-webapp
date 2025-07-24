@@ -28,7 +28,12 @@ const initialFormState = {
   verifyInfo: false,
 }
 
-const validateAddress = (address) => Boolean(address.formatted_address && address.address_components)
+// <<<<<<< HEAD
+const validateAddress = (address) =>
+  Boolean(address.formatted_address && address.address_components)
+// =======
+// const validateAddress = (address) => Boolean(address.formatted_address)
+// >>>>>>> origin/develop
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -59,10 +64,14 @@ export const validateRegistrationForm = (data) => {
   )
 }
 
+// <<<<<<< HEAD
 export default function TextingComplianceRegistrationForm({
   onSubmit = (formData) => {},
   loading = false,
 }) {
+  // =======
+  // export default function TextingComplianceRegistrationForm() {
+  // >>>>>>> origin/develop
   const { formData, handleChange } = useFormData()
   const {
     electionFilingLink,
@@ -89,6 +98,7 @@ export default function TextingComplianceRegistrationForm({
   }
 
   return (
+    // <<<<<<< HEAD
     <>
       <TextingComplianceForm>
         <TextField
@@ -175,5 +185,82 @@ export default function TextingComplianceRegistrationForm({
         />
       </TextingComplianceFooter>
     </>
+    // =======
+    //     <TextingComplianceForm>
+    //       <TextField
+    //         label="Election filing link"
+    //         fullWidth
+    //         required
+    //         endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
+    //         value={electionFilingLink}
+    //         onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
+    //       />
+    //       <TextField
+    //         label="Campaign committee name"
+    //         placeholder="Jane for Council"
+    //         fullWidth
+    //         required
+    //         value={campaignCommitteeName}
+    //         onChange={(e) =>
+    //           handleChange({ campaignCommitteeName: e.target.value })
+    //         }
+    //       />
+    //       <TextField
+    //         label="Local/Tribe Name"
+    //         required
+    //         fullWidth
+    //         value={localTribeName}
+    //         onChange={(e) => handleChange({ localTribeName: e.target.value })}
+    //       />
+    //       <EinCheckInput
+    //         {...{
+    //           value: ein,
+    //           onChange: handleEINChange,
+    //           validated: validEin,
+    //         }}
+    //       />
+    //       <TextField
+    //         label="Phone"
+    //         placeholder="(555) 555-5555"
+    //         required
+    //         fullWidth
+    //         value={phone}
+    //         onChange={(e) => handleChange({ phone: e.target.value })}
+    //       />
+    //
+    //       <AddressAutocomplete
+    //         {...{
+    //           value: addressInputValue,
+    //           onChange: (inputValue) => setAddressInputValue(inputValue),
+    //           onSelect: (address) => {
+    //             setAddressInputValue(address.formatted_address)
+    //             return handleChange({ address })
+    //           },
+    //         }}
+    //       />
+    //       <TextField
+    //         label="Website"
+    //         placeholder="janesmithcitycouncil.co"
+    //         fullWidth
+    //         required
+    //         value={website}
+    //         onChange={(e) => handleChange({ website: e.target.value })}
+    //       />
+    //       <TextField
+    //         label="Email"
+    //         placeholder="jane@gmail.com"
+    //         fullWidth
+    //         required
+    //         value={email}
+    //         onChange={(e) => handleChange({ email: e.target.value })}
+    //       />
+    //       <Checkbox
+    //         label="I verify this information matches my election filing"
+    //         required
+    //         checked={verifyInfo}
+    //         onChange={(e) => handleChange({ verifyInfo: e.target.checked })}
+    //       />
+    //     </TextingComplianceForm>
+    // >>>>>>> origin/develop
   )
 }
