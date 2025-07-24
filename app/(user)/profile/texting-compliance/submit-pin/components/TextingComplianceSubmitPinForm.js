@@ -30,6 +30,8 @@ export const TextingComplianceSubmitPinForm = ({
   const { formData, handleChange } = useFormData()
   const { pin } = formData
 
+  const handleSubmit = () => onSubmit({ ...formData, pin: parseInt(pin) })
+
   return (
     <>
       <TextingComplianceForm>
@@ -48,7 +50,7 @@ export const TextingComplianceSubmitPinForm = ({
       <TextingComplianceFooter>
         <TextingComplianceSubmitButton
           {...{
-            onClick: () => onSubmit(formData),
+            onClick: handleSubmit,
             loading,
             isValid: validatePinForm(formData),
           }}
