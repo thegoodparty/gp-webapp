@@ -5,7 +5,6 @@ import isEmpty from 'validator/es/lib/isEmpty'
 import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { validateRegistrationForm } from 'app/(user)/profile/texting-compliance/register/components/TextingComplianceRegistrationForm'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -51,7 +50,7 @@ export const TextingComplianceSubmitPinForm = ({
           {...{
             onClick: () => onSubmit(formData),
             loading,
-            isValid: validateRegistrationForm(formData),
+            isValid: validatePinForm(formData),
           }}
         />
       </TextingComplianceFooter>
