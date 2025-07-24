@@ -1,5 +1,5 @@
+import AddressAutocomplete from '@shared/AddressAutocomplete'
 import Label from './Label'
-import AddressAutocomplete from './AddressAutocomplete'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import H2 from '@shared/typography/H2'
@@ -19,7 +19,7 @@ export default function ContactStep({
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}
-        onChange={(value, place) => onAddressChange(value, place)}
+        onChange={(place) => onAddressChange(place)}
       />
       <Label className="mt-4">Email</Label>
       <EmailInput

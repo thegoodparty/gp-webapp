@@ -1,6 +1,6 @@
 'use client'
 import { useFormData } from '@shared/hooks/useFormData'
-import TextinComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextinComplianceForm'
+import TextingComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
 import isEmpty from 'validator/es/lib/isEmpty'
 import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
 
@@ -26,7 +26,7 @@ export const TextingComplianceSubmitPinForm = () => {
   const { pin } = formData
 
   return (
-    <TextinComplianceForm>
+    <TextingComplianceForm>
       <NumbersOnlyTextField
         {...{
           maxLength: 6,
@@ -38,6 +38,6 @@ export const TextingComplianceSubmitPinForm = () => {
           onChange: (e) => handleChange({ pin: e.target.value }),
         }}
       />
-    </TextinComplianceForm>
+    </TextingComplianceForm>
   )
 }
