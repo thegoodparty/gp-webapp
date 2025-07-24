@@ -1,8 +1,8 @@
 'use client'
 import { useMemo } from 'react'
-import { WEBSITE_THEMES } from 'app/(candidateWebsite)/c/[vanityPath]/constants/websiteContent.const'
 import H2 from '@shared/typography/H2'
 import { ThemeSwatch } from './ThemeSwatch'
+import { WEBSITE_THEMES } from '../../shared/websiteConstants.const'
 
 export default function ThemeStep({ theme, onChange, noHeading = false }) {
   const themeOptions = useMemo(() => Object.entries(WEBSITE_THEMES), [])
