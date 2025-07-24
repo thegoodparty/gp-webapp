@@ -10,6 +10,7 @@ import Body1 from '@shared/typography/Body1'
 import MarketingH3 from '@shared/typography/MarketingH3'
 import MarketingH4 from '@shared/typography/MarketingH4'
 import Image from 'next/image'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function CompleteStep({ vanityPath }) {
   const url = getWebsiteUrl(vanityPath, false)
@@ -57,7 +58,7 @@ export default function CompleteStep({ vanityPath }) {
                 <Body1>Make your campaign compliant</Body1>
               </div>
             </div>
-            <Button href="/dashboard/website/domain" className="mt-12">
+            <Button href="/dashboard/website/domain" className="mt-12" onClick={() => trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)}>
               Add a domain
             </Button>
           </div>

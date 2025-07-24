@@ -1,4 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
+import TextingComplianceSubmitPinPage from 'app/(user)/profile/texting-compliance/submit-pin/components/TextingComplianceSubmitPinPage'
 
 const meta = pageMetaData({
   title: 'Submit PIN - Texting Compliance | GoodParty.org',
@@ -6,10 +7,8 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default function Page() {
-  return (
-    <div>
-      <h1>Submit PIN</h1>
-    </div>
-  )
-} 
+const Page = () => {
+  return <TextingComplianceSubmitPinPage />
+}
+
+export default Page

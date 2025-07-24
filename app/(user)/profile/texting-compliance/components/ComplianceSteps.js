@@ -32,7 +32,8 @@ const steps = [
     title: 'Enter PIN',
     description:
       'To verify your identity you will receive a PIN via email from "CampaignVerify".',
-    status: STEP_STATUS.DISABLED,
+    route: '/profile/texting-compliance/submit-pin',
+    status: STEP_STATUS.ACTIVE,
   },
 ]
 

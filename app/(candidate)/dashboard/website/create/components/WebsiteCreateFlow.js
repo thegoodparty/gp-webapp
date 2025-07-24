@@ -15,6 +15,7 @@ import CompleteStep from '../../editor/components/CompleteStep'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
@@ -39,6 +40,7 @@ export default function WebsiteCreateFlow() {
     const saved = await handleSave(true)
 
     if (saved) {
+      trackEvent(EVENTS.CandidateWebsite.Published)
       setStep(COMPLETE_STEP)
       successSnackbar('Your website has been published')
     } else {

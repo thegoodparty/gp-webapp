@@ -213,6 +213,16 @@ export const apiRoutes = {
         method: 'DELETE',
       },
     },
+    tcrCompliance: {
+      fetch: {
+        path: '/campaigns/tcr-compliance/mine',
+        method: 'GET',
+      },
+      create: {
+        path: '/campaigns/tcr-compliance',
+        method: 'POST',
+      },
+    },
   },
   content: {
     getByType: {

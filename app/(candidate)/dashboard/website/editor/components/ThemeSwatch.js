@@ -1,8 +1,8 @@
 'use client'
 import { useMemo } from 'react'
-import { WEBSITE_THEMES } from 'app/(candidateWebsite)/c/[vanityPath]/constants/websiteContent.const'
 import Body2 from '@shared/typography/Body2'
 import { LuCheck } from 'react-icons/lu'
+import { WEBSITE_THEMES } from '../../shared/websiteConstants.const'
 
 export function DisplaySwatch({ theme }) {
   const themeObj = WEBSITE_THEMES[theme] || WEBSITE_THEMES.light
