@@ -102,10 +102,7 @@ export default function TextingComplianceRegistrationForm({
       <AddressAutocomplete
         {...{
           value: address,
-          onChange: (place) => handleChange({ address: place }),
-          onPlaceSelected: (place) => {
-            console.log('place selected', place)
-          },
+          onSelect: (place) => handleChange({ address: place }),
         }}
       />
       <TextField
