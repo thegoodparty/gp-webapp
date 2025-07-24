@@ -14,7 +14,6 @@ function createWebsiteHash(website) {
 const WebsitePreview = memo(function WebsitePreview({
   website: propWebsite,
   className = '',
-  zoomScale = 1,
 }) {
   const [campaign] = useCampaign()
   const [user] = useUser()
@@ -49,7 +48,6 @@ const WebsitePreview = memo(function WebsitePreview({
         {campaign && website && (
           <div className="h-full">
             <iframe src={previewUrl} className="w-full h-full" />
-            {/* <WebsiteContent website={website} scale={zoomScale} /> */}
           </div>
         )}
       </div>
