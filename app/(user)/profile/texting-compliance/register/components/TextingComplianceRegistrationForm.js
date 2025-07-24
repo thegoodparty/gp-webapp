@@ -129,12 +129,8 @@ export default function TextingComplianceRegistrationForm() {
       <AddressAutocomplete
         {...{
           value: addressInputValue,
-          onChange: (inputValue) => {
-            console.log(`inputValue =>`, inputValue)
-            setAddressInputValue(inputValue)
-          },
+          onChange: (inputValue) => setAddressInputValue(inputValue),
           onSelect: (address) => {
-            console.log(`address =>`, address)
             setAddressInputValue(address.formatted_address)
             return handleChange({ address })
           },

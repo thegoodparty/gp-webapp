@@ -7,16 +7,8 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default function Page() {
+const Page = () => {
   return <TextingComplianceRegisterPage />
-  // <<<<<<< HEAD
 }
-{
-  /*=======*/
-}
-{
-  /*}*/
-}
-{
-  /*>>>>>>> origin/develop*/
-}
+
+export default Page
