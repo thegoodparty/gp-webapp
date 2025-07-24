@@ -5,10 +5,11 @@ import Paper from '@shared/utils/Paper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
+import LZString from 'lz-string'
 
 function createWebsiteHash(website) {
   const jsonString = JSON.stringify(website)
-  return btoa(unescape(encodeURIComponent(jsonString)))
+  return LZString.compressToEncodedURIComponent(jsonString)
 }
 
 const WebsitePreview = memo(function WebsitePreview({
