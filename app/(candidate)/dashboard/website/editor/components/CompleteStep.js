@@ -15,8 +15,8 @@ export default function CompleteStep({ vanityPath }) {
   const [shareModalOpen, setShareModalOpen] = useState(false)
   return (
     <div className="text-center flex flex-col items-center gap-4">
-      <div className="relative h-24 w-24">
-        <HighFiveAnimation />
+      <div className="relative h-24 w-24 cursor-pointer">
+        <HighFiveAnimation hover />
       </div>
       <h3 className="text-3xl font-medium md:text-4xl lg:text-5xl leading-tight">
         Congratulations,

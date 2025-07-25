@@ -25,7 +25,7 @@ export default function WebsiteCreateFlow() {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(COMPLETE_STEP) //temp
   const [saveLoading, setSaveLoading] = useState(false)
 
   async function handleSaveAndExit() {
