@@ -30,13 +30,13 @@ export default function WebsiteCreateFlow() {
 
   useEffect(() => {
     if (
-      website.content.step &&
-      website.content.step !== step &&
-      website.content.step !== COMPLETE_STEP
+      website.content.createStep &&
+      website.content.createStep !== step &&
+      website.content.createStep !== COMPLETE_STEP
     ) {
-      setStep(parseInt(website.content.step))
+      setStep(parseInt(website.content.createStep))
     }
-  }, [website.content.step])
+  }, [website.content.createStep])
 
   async function handleSaveAndExit() {
     const saved = await handleSave()
@@ -64,7 +64,7 @@ export default function WebsiteCreateFlow() {
       ...website.content,
       status: publish ? WEBSITE_STATUS.published : website.status,
       vanityPath: website.vanityPath,
-      step: publish ? COMPLETE_STEP : step,
+      createStep: publish ? COMPLETE_STEP : step,
     })
     setSaveLoading(false)
     if (resp.ok) {
