@@ -7,12 +7,49 @@ import {
   TextingComplianceSubmitPinForm,
   validatePinForm,
 } from 'app/(user)/profile/texting-compliance/submit-pin/components/TextingComplianceSubmitPinForm'
+import { useRouter } from 'next/navigation'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { useState } from 'react'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 const initialFormState = {
   pin: '',
 }
 
-const TextingComplianceSubmitPinPage = () => {
+const submitCvPin = async (tcrComplianceId, formData) => {
+  const response = await clientFetch(
+    apiRoutes.campaign.tcrCompliance.submitCvPin,
+    { ...formData, tcrComplianceId },
+  )
+
+  if (!response.ok) {
+    throw new Error('Failed to submit PIN')
+  }
+
+  return response.data
+}
+
+const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
+  const [loading, setLoading] = useState(false)
+  const { successSnackbar, errorSnackbar } = useSnackbar()
+  const router = useRouter()
+
+  const handleFormSubmit = async (formData) => {
+    setLoading(true)
+    try {
+      await submitCvPin(tcrCompliance.id, formData)
+      successSnackbar('Successfully submitted Campaign Verify PIN')
+      router.push('/profile')
+    } catch {
+      errorSnackbar(
+        'Failed to submit Campaign Verify PIN. Please try again later.',
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="bg-white pt-2 md:pt-0">
       <TextingComplianceHeader>
@@ -26,7 +63,12 @@ const TextingComplianceSubmitPinPage = () => {
           initialState={initialFormState}
           validator={validatePinForm}
         >
-          <TextingComplianceSubmitPinForm />
+          <TextingComplianceSubmitPinForm
+            {...{
+              onSubmit: handleFormSubmit,
+              loading,
+            }}
+          />
         </FormDataProvider>
       </div>
     </div>
