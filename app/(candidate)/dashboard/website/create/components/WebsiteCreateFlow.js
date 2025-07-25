@@ -32,7 +32,7 @@ export default function WebsiteCreateFlow() {
     const saved = await handleSave()
 
     if (saved) {
-      router.push('/dashboard/website')
+      window.location.href = '/dashboard/website'
     }
   }
 
@@ -219,7 +219,7 @@ export default function WebsiteCreateFlow() {
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
             <Button variant="outlined" href="/dashboard/website">
-              Exit
+              {step === COMPLETE_STEP ? 'Done' : 'Exit'}
             </Button>
           ) : (
             <Button
@@ -315,7 +315,11 @@ export default function WebsiteCreateFlow() {
           />
         )}
       </div>
-      <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
+      <ResponsiveModal
+        fullSize
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+      >
         <WebsitePreview website={website} className="min-w-[60vw]" />
       </ResponsiveModal>
     </>

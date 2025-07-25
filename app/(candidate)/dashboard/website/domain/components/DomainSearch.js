@@ -12,6 +12,8 @@ import DomainResult from './DomainResult'
 import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { isValidUrl } from 'helpers/linkhelper'
+import Body2 from '@shared/typography/Body2'
 
 export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const router = useRouter()
@@ -19,6 +21,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const [searchResults, setSearchResults] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
   const [selectedDomain, setSelectedDomain] = useState(null)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const { website } = useWebsite()
   const { id: websiteId } = website
@@ -59,28 +62,36 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       setSelectedDomain(null)
     } else {
       setSelectedDomain(domainName)
-      
-      const domainData = searchResults.domainName === domainName 
-        ? searchResults 
-        : searchResults.suggestions?.find(s => s.DomainName === domainName)
-      
-      const price = domainData?.price || (domainData && typeof domainData.price !== 'undefined' ? domainData.price : null)
-      
+
+      const domainData =
+        searchResults.domainName === domainName
+          ? searchResults
+          : searchResults.suggestions?.find((s) => s.DomainName === domainName)
+
+      const price =
+        domainData?.price ||
+        (domainData && typeof domainData.price !== 'undefined'
+          ? domainData.price
+          : null)
+
       trackEvent(EVENTS.CandidateWebsite.SelectedDomain, {
         domainSearchedFor: searchTerm.trim(),
         domainSelected: domainName,
-        priceOfSelectedDomain: price
+        priceOfSelectedDomain: price,
       })
     }
   }
 
   const handlePurchase = () => {
+    setCheckoutLoading(true)
     if (!websiteId) {
       errorSnackbar('Website ID is required')
+      setCheckoutLoading(false)
       return
     }
     if (!selectedDomain) {
       errorSnackbar('Please select a domain')
+      setCheckoutLoading(false)
       return
     }
 
@@ -92,7 +103,10 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       '/dashboard/website/domain',
     )}`
     router.push(purchaseUrl)
+    setCheckoutLoading(false)
   }
+
+  const isValidDomain = isValidUrl(`https://${searchTerm}`)
 
   return (
     <>
@@ -107,16 +121,22 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={handleEnter}
             InputLabelProps={{ shrink: true }}
+            error={!isValidDomain}
           />
           <Button
             onClick={handleSearch}
             loading={searchLoading}
-            disabled={!searchTerm.trim() || searchLoading}
+            disabled={!isValidDomain || searchLoading}
             className="whitespace-nowrap"
           >
             Search
           </Button>
         </div>
+        {!isValidDomain && (
+          <Body2 className="text-red-500">
+            Please enter a valid domain (example.com)
+          </Body2>
+        )}
       </div>
 
       {searchResults && (
@@ -156,7 +176,11 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       <div className="h-24"></div>
       <div className="fixed bottom-0 left-0 right-0 w-full bg-white p-4">
         <div className="flex justify-end items-center">
-          <Button onClick={handlePurchase} disabled={!selectedDomain}>
+          <Button
+            onClick={handlePurchase}
+            disabled={!selectedDomain}
+            loading={checkoutLoading}
+          >
             Checkout
           </Button>
         </div>

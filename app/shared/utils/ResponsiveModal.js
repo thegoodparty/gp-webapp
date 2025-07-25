@@ -54,7 +54,7 @@ export default function ResponsiveModal({
           ${showContent && open ? 'bottom-0' : '-bottom-[100%]'}
           ${
             fullSize
-              ? 'w-[100vw] h-[100vh] max-w-[100vw] max-h-[100vh]'
+              ? 'w-[100vw] h-[90vh] max-w-[100vw] max-h-[90vh]'
               : 'lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2 w-full lg:w-auto lg:min-w-[600px] lg:max-w-[90vw] max-h-[90vh]'
           } 
           !px-4 !pt-16 !pb-8 lg:!px-8 xl:!p-16
