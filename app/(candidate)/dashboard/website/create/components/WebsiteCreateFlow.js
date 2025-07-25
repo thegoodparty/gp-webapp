@@ -313,7 +313,7 @@ export default function WebsiteCreateFlow() {
           </div>
           {step !== COMPLETE_STEP && (
             <div className="hidden lg:block h-[60vh]">
-              <WebsitePreview website={website} zoomScale={0.5} />
+              <WebsitePreview website={website} zoomScale={0.5} step={step} />
             </div>
           )}
         </div>
@@ -333,7 +333,11 @@ export default function WebsiteCreateFlow() {
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
       >
-        <WebsitePreview website={website} className="min-w-[60vw]" />
+        <WebsitePreview
+          website={website}
+          className="min-w-[60vw]"
+          step={step}
+        />
       </ResponsiveModal>
     </>
   )
