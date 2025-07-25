@@ -16,7 +16,7 @@ export default function HighFiveAnimation({ loop = false, style = {}, className 
   const handleMouseEnter = () => {
     if (!isHovered) {
       setIsHovered(true)
-      // Change the key to force React to create a new Player instance
+      // Change the key to force React to create a new Player instance.
       setAnimationKey(prev => prev + 1)
     }
   }
