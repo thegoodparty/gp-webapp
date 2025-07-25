@@ -30,13 +30,13 @@ export default function WebsiteCreateFlow() {
 
   useEffect(() => {
     if (
-      website.content.createStep &&
+      website?.content?.createStep &&
       website.content.createStep !== step &&
       website.content.createStep !== COMPLETE_STEP
     ) {
       setStep(parseInt(website.content.createStep))
     }
-  }, [website.content.createStep])
+  }, [website?.content?.createStep])
 
   async function handleSaveAndExit() {
     const saved = await handleSave()
