@@ -12,6 +12,8 @@ import DomainResult from './DomainResult'
 import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { isValidUrl } from 'helpers/linkhelper'
+import Body2 from '@shared/typography/Body2'
 
 export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const router = useRouter()
@@ -103,6 +105,8 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
     router.push(purchaseUrl)
   }
 
+  const isValidDomain = isValidUrl(`https://${searchTerm}`)
+
   return (
     <>
       <div className="space-y-4">
@@ -116,16 +120,22 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={handleEnter}
             InputLabelProps={{ shrink: true }}
+            error={!isValidDomain}
           />
           <Button
             onClick={handleSearch}
             loading={searchLoading}
-            disabled={!searchTerm.trim() || searchLoading}
+            disabled={!isValidDomain || searchLoading}
             className="whitespace-nowrap"
           >
             Search
           </Button>
         </div>
+        {!isValidDomain && (
+          <Body2 className="text-red-500">
+            Please enter a valid domain (example.com)
+          </Body2>
+        )}
       </div>
 
       {searchResults && (
