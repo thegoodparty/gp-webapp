@@ -31,10 +31,12 @@ export default function WebsiteCreateFlow() {
   useEffect(() => {
     if (
       website?.content?.createStep &&
-      website.content.createStep !== step &&
       website.content.createStep !== COMPLETE_STEP
     ) {
-      setStep(parseInt(website.content.createStep))
+      const parsedStep = parseInt(website.content.createStep, 10)
+      if (!isNaN(parsedStep) && parsedStep !== step) {
+        setStep(parsedStep)
+      }
     }
   }, [website?.content?.createStep])
 
