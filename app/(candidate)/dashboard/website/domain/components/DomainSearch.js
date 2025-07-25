@@ -103,6 +103,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       '/dashboard/website/domain',
     )}`
     router.push(purchaseUrl)
+    setCheckoutLoading(false)
   }
 
   const isValidDomain = isValidUrl(`https://${searchTerm}`)
