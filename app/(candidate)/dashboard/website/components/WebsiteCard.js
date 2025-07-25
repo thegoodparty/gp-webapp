@@ -67,7 +67,9 @@ function WebsiteCard({ className = '' }) {
             color="neutral"
             variant="outlined"
             href="/dashboard/website/domain"
-            onClick={() => trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)}
+            onClick={() =>
+              trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
+            }
           >
             <BsGlobe size={20} />
             {domain?.name ? (
