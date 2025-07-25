@@ -9,16 +9,16 @@ import {
   LuSignpost,
   LuBanknote,
   LuTrophy,
-  LuMessagesSquare,
-  LuLaptop,
   LuLandmark,
   LuBookOpen,
   LuNewspaper,
   LuFileText,
   LuUsersRound,
-  LuStar,
   LuPhone,
   LuUserSearch,
+  LuSquarePlay,
+  LuContactRound,
+  LuHeart,
 } from 'react-icons/lu'
 
 import { usePathname } from 'next/navigation'
@@ -57,10 +57,11 @@ export const PRODUCT_LINKS = [
   },
   {
     label: 'Yard Signs',
-    href: '/yard-signs',
+    href: 'https://lp.goodparty.org/yard-signs',
     icon: <LuSignpost />,
     id: 'nav-yard-signs',
     dataTestId: 'nav-yard-signs',
+    external: true,
   },
   {
     label: 'Pricing',
@@ -83,14 +84,14 @@ export const RESOURCES_LINKS = [
   {
     label: 'Talk to an Expert',
     href: '/get-a-demo',
-    icon: <LuMessagesSquare />,
+    icon: <LuContactRound />,
     id: 'nav-get-demo',
     dataTestId: 'nav-get-demo',
   },
   {
     label: 'Product Tour',
     href: '/product-tour',
-    icon: <LuLaptop />,
+    icon: <LuSquarePlay />,
     id: 'nav-tour',
     dataTestId: 'nav-tour',
   },
@@ -137,7 +138,7 @@ export const ABOUT_US_LINKS = [
   {
     label: 'Our Mission',
     href: '/about',
-    icon: <LuStar />,
+    icon: <LuHeart />,
     id: 'nav-about',
     dataTestId: 'nav-about',
   },
