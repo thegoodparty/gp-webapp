@@ -9,6 +9,7 @@ import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
 const WebsitePreview = memo(function WebsitePreview({
   website: propWebsite,
   className = '',
+  step,
 }) {
   const [campaign] = useCampaign()
   const [user] = useUser()
@@ -34,27 +35,38 @@ const WebsitePreview = memo(function WebsitePreview({
 
     const iframe = iframeRef.current
 
-    const sendWebsiteData = () => {
+    const sendData = () => {
+      const { addressPlace, ...contactWithoutPlace } =
+        website?.content?.contact || {}
+      const websiteForMessage = {
+        ...website,
+        content: {
+          ...website.content,
+          contact: contactWithoutPlace,
+        },
+      }
+
       iframe.contentWindow?.postMessage(
         {
           type: 'WEBSITE_DATA',
-          data: website,
+          data: websiteForMessage,
+          step: step,
         },
         NEXT_PUBLIC_CANDIDATES_SITE_BASE,
       )
     }
 
     const handleLoad = () => {
-      setTimeout(sendWebsiteData, 100)
+      setTimeout(sendData, 100)
     }
 
     iframe.addEventListener('load', handleLoad)
-    sendWebsiteData()
+    sendData()
 
     return () => {
       iframe.removeEventListener('load', handleLoad)
     }
-  }, [website])
+  }, [website, step])
 
   return (
     <Paper className={`!p-0 flex-grow h-full flex flex-col ${className}`}>
