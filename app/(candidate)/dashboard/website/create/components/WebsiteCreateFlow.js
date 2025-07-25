@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -28,6 +28,16 @@ export default function WebsiteCreateFlow() {
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
 
+  useEffect(() => {
+    if (
+      website.content.step &&
+      website.content.step !== step &&
+      website.content.step !== COMPLETE_STEP
+    ) {
+      setStep(parseInt(website.content.step))
+    }
+  }, [website.content.step])
+
   async function handleSaveAndExit() {
     const saved = await handleSave()
 
@@ -54,6 +64,7 @@ export default function WebsiteCreateFlow() {
       ...website.content,
       status: publish ? WEBSITE_STATUS.published : website.status,
       vanityPath: website.vanityPath,
+      step: publish ? COMPLETE_STEP : step,
     })
     setSaveLoading(false)
     if (resp.ok) {
@@ -228,7 +239,7 @@ export default function WebsiteCreateFlow() {
               disabled={saveLoading}
               loading={saveLoading}
             >
-              Save & Exit
+              Save &amp; Exit
             </Button>
           )}
           <Button
