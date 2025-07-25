@@ -4,7 +4,11 @@ import H3 from '@shared/typography/H3'
 import Body2 from '@shared/typography/Body2'
 import ComplianceSteps from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 
-export default function TextingCompliance() {
+export default function TextingCompliance({
+  website,
+  domainStatus,
+  tcrCompliance,
+}) {
   return (
     <Paper className="mt-6">
       <H2>Texting Compliance</H2>
@@ -17,7 +21,7 @@ export default function TextingCompliance() {
           campaign compliant in 4 steps.
         </Body2>
       </div>
-      <ComplianceSteps />
+      <ComplianceSteps {...{ website, domainStatus, tcrCompliance }} />
     </Paper>
   )
 }
