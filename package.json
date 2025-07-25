@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@amplitude/experiment-js-client": "^1.16.1",
+    "@amplitude/session-replay-browser": "^1.27.0",
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
     "@contentful/rich-text-react-renderer": "^16.0.1",
     "@contentful/rich-text-types": "^16.0.1",
@@ -55,6 +56,7 @@
     "intro.js-react": "^1.0.0",
     "isbot": "^5.1.1",
     "isomorphic-dompurify": "^2.14.0",
+    "js-cookie": "^3.0.5",
     "libphonenumber-js": "^1.10.14",
     "lz-string": "^1.5.0",
     "marked": "^14.1.2",

@@ -1,5 +1,6 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
+import cookie from 'js-cookie'
 
 const UTM_KEYS = [
   'utm_source',
@@ -388,6 +389,14 @@ export const EVENTS = {
     SelectedDomain: 'Candidate Website - Selected domain',
     PurchasedDomain: 'Candidate Website - Purchased domain',
   },
+}
+
+export const getStoredSessionId = () => {
+  return Number(cookie.get('analytics_session_id') ?? 0)
+}
+
+export const storeSessionId = (id) => {
+  cookie.set('analytics_session_id', String(id))
 }
 
 export function extractClids(searchParams) {
