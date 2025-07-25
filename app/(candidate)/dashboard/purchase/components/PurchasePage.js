@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { completePurchase } from '../utils/purchaseFetch.utils'
 import PurchaseError from './PurchaseError'
 import PurchaseSuccess from './PurchaseSuccess'
 import PurchasePayment from './PurchasePayment'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import LoadingAnimation from '@shared/utils/LoadingAnimation'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 const PURCHASE_STATE = {
   PAYMENT: 'payment',
@@ -14,16 +17,40 @@ const PURCHASE_STATE = {
   ERROR: 'error',
 }
 
-export default function PurchasePage({
-  type,
-  domain,
-  websiteId,
-  returnUrl,
-  purchaseIntent,
-  error: serverError,
-}) {
+export default function PurchasePage({ type, domain, websiteId, returnUrl }) {
+  const [purchaseIntent, setPurchaseIntent] = useState(null)
   const [purchaseState, setPurchaseState] = useState(PURCHASE_STATE.PAYMENT)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!purchaseIntent) {
+      createPurchaseIntent()
+    }
+  }, [purchaseIntent])
+
+  const createPurchaseIntent = async () => {
+    if (!type || !PURCHASE_TYPES[type]) {
+      setError('Invalid purchase type')
+      return
+    }
+
+    const response = await clientFetch(
+      apiRoutes.payments.createPurchaseIntent,
+      {
+        type,
+        metadata: {
+          domainName: domain,
+          websiteId,
+        },
+      },
+    )
+
+    if (response.ok) {
+      setPurchaseIntent(response.data)
+    } else {
+      setError(response.data?.data?.error || 'Failed to create purchase intent')
+    }
+  }
 
   const handlePaymentSuccess = async (paymentIntent) => {
     try {
@@ -33,7 +60,9 @@ export default function PurchasePage({
         if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
           const eventData = {
             domainSelected: domain,
-            priceOfSelectedDomain: paymentIntent?.amount ? paymentIntent.amount / 100 : null
+            priceOfSelectedDomain: paymentIntent?.amount
+              ? paymentIntent.amount / 100
+              : null,
           }
           trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
         }
@@ -54,11 +83,11 @@ export default function PurchasePage({
     setPurchaseState(PURCHASE_STATE.ERROR)
   }
 
-  if (serverError || !purchaseIntent) {
-    return <PurchaseError serverError={serverError} />
+  if (!purchaseIntent) {
+    return <LoadingAnimation title="Initializing purchase form..." />
   }
 
-  if (purchaseState === PURCHASE_STATE.ERROR) {
+  if (error || !purchaseIntent || purchaseState === PURCHASE_STATE.ERROR) {
     return <PurchaseError error={error} />
   }
 

@@ -1,13 +1,11 @@
 import Button from '@shared/buttons/Button'
 import { getWebsiteUrl } from '../../util/website.util'
-import Link from 'next/link'
 import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import ShareModal from '../../components/ShareModal'
 import { useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import { FaCheck } from 'react-icons/fa'
 import Body1 from '@shared/typography/Body1'
-import MarketingH3 from '@shared/typography/MarketingH3'
 import MarketingH4 from '@shared/typography/MarketingH4'
 import Image from 'next/image'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -20,14 +18,12 @@ export default function CompleteStep({ vanityPath }) {
       <div className="relative h-24 w-24">
         <HighFiveAnimation />
       </div>
-      <MarketingH3>
+      <h3 className="text-3xl font-medium md:text-4xl lg:text-5xl leading-tight">
         Congratulations,
         <br />
         your website is live!
-      </MarketingH3>
-      <Link href={url} className="text-sm" target="_blank">
-        {url}
-      </Link>
+      </h3>
+
       <Button onClick={() => setShareModalOpen(true)} color="neutral">
         Share
       </Button>
@@ -58,7 +54,13 @@ export default function CompleteStep({ vanityPath }) {
                 <Body1>Make your campaign compliant</Body1>
               </div>
             </div>
-            <Button href="/dashboard/website/domain" className="mt-12" onClick={() => trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)}>
+            <Button
+              href="/dashboard/website/domain"
+              className="mt-12"
+              onClick={() =>
+                trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
+              }
+            >
               Add a domain
             </Button>
           </div>

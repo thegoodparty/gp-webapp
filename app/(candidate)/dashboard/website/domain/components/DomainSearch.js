@@ -19,6 +19,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
   const [searchResults, setSearchResults] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
   const [selectedDomain, setSelectedDomain] = useState(null)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const { website } = useWebsite()
   const { id: websiteId } = website
@@ -59,28 +60,36 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       setSelectedDomain(null)
     } else {
       setSelectedDomain(domainName)
-      
-      const domainData = searchResults.domainName === domainName 
-        ? searchResults 
-        : searchResults.suggestions?.find(s => s.DomainName === domainName)
-      
-      const price = domainData?.price || (domainData && typeof domainData.price !== 'undefined' ? domainData.price : null)
-      
+
+      const domainData =
+        searchResults.domainName === domainName
+          ? searchResults
+          : searchResults.suggestions?.find((s) => s.DomainName === domainName)
+
+      const price =
+        domainData?.price ||
+        (domainData && typeof domainData.price !== 'undefined'
+          ? domainData.price
+          : null)
+
       trackEvent(EVENTS.CandidateWebsite.SelectedDomain, {
         domainSearchedFor: searchTerm.trim(),
         domainSelected: domainName,
-        priceOfSelectedDomain: price
+        priceOfSelectedDomain: price,
       })
     }
   }
 
   const handlePurchase = () => {
+    setCheckoutLoading(true)
     if (!websiteId) {
       errorSnackbar('Website ID is required')
+      setCheckoutLoading(false)
       return
     }
     if (!selectedDomain) {
       errorSnackbar('Please select a domain')
+      setCheckoutLoading(false)
       return
     }
 
@@ -156,7 +165,11 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       <div className="h-24"></div>
       <div className="fixed bottom-0 left-0 right-0 w-full bg-white p-4">
         <div className="flex justify-end items-center">
-          <Button onClick={handlePurchase} disabled={!selectedDomain}>
+          <Button
+            onClick={handlePurchase}
+            disabled={!selectedDomain}
+            loading={checkoutLoading}
+          >
             Checkout
           </Button>
         </div>
