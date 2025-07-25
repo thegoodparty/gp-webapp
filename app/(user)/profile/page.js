@@ -5,7 +5,6 @@ import ProfilePage from './components/ProfilePage'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { DOMAIN_STATUS } from 'app/(candidate)/dashboard/website/util/domain.util'
 
 const meta = pageMetaData({
   title: 'Profile Settings',
@@ -36,17 +35,13 @@ export default async function Page() {
     ? tcrComplianceResponse.data
     : null
 
-  console.log(`website =>`, website)
-  console.log(`domainStatus =>`, domainStatus)
-  console.log(`tcrCompliance =>`, tcrCompliance)
-
   const childProps = {
     user,
     isPro: campaign?.isPro,
     subscriptionCancelAt,
     website,
-    domainStatus: { message: DOMAIN_STATUS.SUCCESSFUL },
-    tcrCompliance: { status: 'pending' },
+    domainStatus,
+    tcrCompliance,
   }
 
   return <ProfilePage {...childProps} />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import H6 from '@shared/typography/H6'
 import Paper from '@shared/utils/Paper'
@@ -8,7 +8,7 @@ import { LuInbox } from 'react-icons/lu'
 import { useWebsite } from './WebsiteProvider'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { formatToPhone } from 'helpers/numberHelper'
+import { formatPhoneNumber } from 'helpers/numberHelper'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import H4 from '@shared/typography/H4'
 import PaginationButtons from '../../voter-records/components/PaginationButtons'
@@ -71,7 +71,7 @@ export default function WebsiteInbox({}) {
       {
         header: 'Phone',
         accessorKey: 'phone',
-        cell: ({ row }) => formatToPhone(row.phone),
+        cell: ({ row }) => formatPhoneNumber(row.phone),
       },
       {
         header: 'Message',

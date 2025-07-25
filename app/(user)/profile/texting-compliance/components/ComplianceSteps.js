@@ -16,26 +16,46 @@ export const TCR_COMPLIANCE_STATUS = {
   ERROR: 'error',
 }
 
-const getSteps = (website, domainStatus, tcrCompliance) => {
-  const publishedWebsite = website?.status === WEBSITE_STATUS.published
-  const domainSuccessful = domainStatus.message === DOMAIN_STATUS.SUCCESSFUL
+export const getTcrComplianceStepCompletions = (
+  website,
+  domainStatus,
+  tcrCompliance,
+) => {
+  const websiteComplete = website?.status === WEBSITE_STATUS.published
+  const domainComplete = domainStatus?.message === DOMAIN_STATUS.SUCCESSFUL
   const registrationComplete = [
     TCR_COMPLIANCE_STATUS.SUBMITTED,
     TCR_COMPLIANCE_STATUS.PENDING,
     TCR_COMPLIANCE_STATUS.APPROVED,
   ].includes(tcrCompliance?.status)
+  const pinComplete = [
+    TCR_COMPLIANCE_STATUS.PENDING,
+    TCR_COMPLIANCE_STATUS.APPROVED,
+  ].includes(tcrCompliance?.status)
 
-  const websiteStepStatus = publishedWebsite
+  return {
+    websiteComplete,
+    domainComplete,
+    registrationComplete,
+    pinComplete,
+  }
+}
+
+const getSteps = (website, domainStatus, tcrCompliance) => {
+  const { websiteComplete, domainComplete, registrationComplete, pinComplete } =
+    getTcrComplianceStepCompletions(website, domainStatus, tcrCompliance)
+
+  const websiteStepStatus = websiteComplete
     ? STEP_STATUS.COMPLETED
     : STEP_STATUS.ACTIVE
   const domainStepStatus =
-    publishedWebsite && !domainSuccessful
+    websiteComplete && !domainComplete
       ? STEP_STATUS.ACTIVE
-      : publishedWebsite && domainSuccessful
+      : websiteComplete && domainComplete
       ? STEP_STATUS.COMPLETED
       : STEP_STATUS.DISABLED
   const activateRegisterStep =
-    publishedWebsite && domainSuccessful && !registrationComplete
+    websiteComplete && domainComplete && !registrationComplete
   const registerStepStatus = registrationComplete
     ? STEP_STATUS.COMPLETED
     : activateRegisterStep
@@ -43,6 +63,8 @@ const getSteps = (website, domainStatus, tcrCompliance) => {
     : STEP_STATUS.DISABLED
   const enterPinStepStatus = registrationComplete
     ? STEP_STATUS.ACTIVE
+    : pinComplete
+    ? STEP_STATUS.COMPLETED
     : STEP_STATUS.DISABLED
 
   return [
