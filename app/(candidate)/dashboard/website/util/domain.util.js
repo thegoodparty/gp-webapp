@@ -15,6 +15,7 @@ export const DOMAIN_STATUS = {
   ERROR: 'ERROR',
   SUCCESSFUL: 'SUCCESSFUL',
   FAILED: 'FAILED',
+  REGISTERED: 'REGISTERED',
 }
 
 export function isDomainActive(domain = {}) {
@@ -27,6 +28,7 @@ export function isDomainActive(domain = {}) {
   return (
     status === DOMAIN_STATUS.SUBMITTED ||
     status === DOMAIN_STATUS.IN_PROGRESS ||
+    status === DOMAIN_STATUS.REGISTERED ||
     status === DOMAIN_STATUS.SUCCESSFUL
   )
 }
