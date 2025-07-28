@@ -8,7 +8,7 @@ import saveToken from 'helpers/saveToken'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-
+import { analytics } from '@shared/utils/analytics'
 import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
 
 async function login(payload) {
@@ -66,6 +66,8 @@ export default function SocialLoginButtons() {
     if (user) {
       await saveToken(token)
       setUser(user)
+      const { id, email, firstName, lastName, phone, zip } = user
+      analytics.identify(id, { email, firstName, lastName, phone, zip })
       successSnackbar('Welcome back to GoodParty.org!')
       await doLoginRedirect(router, user)
     } else {
