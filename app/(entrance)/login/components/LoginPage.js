@@ -16,7 +16,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 import { useRouter } from 'next/navigation'
 
 import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
@@ -48,7 +48,6 @@ export default function LoginPage() {
 
   const [_, setUser] = useUser()
   const { errorSnackbar } = useSnackbar()
-  const analytics = useAnalytics()
   const router = useRouter()
 
   const enableSubmit = () =>

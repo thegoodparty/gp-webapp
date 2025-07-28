@@ -4,11 +4,10 @@ import { usePathname } from "next/navigation"
 import { isProductRoute } from "./utils/isProductRoute"
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from "appEnv"
 import * as sessionReplay from "@amplitude/session-replay-browser"
-import { useAnalytics } from "./hooks/useAnalytics"
+import { analytics } from "./utils/analytics"
 import { getStoredSessionId } from "helpers/analyticsHelper"
 
 export default function AmplitudeInit() {
-  const analytics = useAnalytics()
   const pathname = usePathname()
   const replayActive = useRef(false)
 

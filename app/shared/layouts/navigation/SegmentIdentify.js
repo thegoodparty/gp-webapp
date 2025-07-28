@@ -6,10 +6,9 @@ import { useSearchParams } from 'next/navigation'
 import { getPersistedUtms } from 'helpers/analyticsHelper'
 import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 
 export default function SegmentIdentify({extraTraits = {}}) {
-  const analytics = useAnalytics()
   const [user] = useUser()
   const searchParams = useSearchParams()
   useEffect(() => {

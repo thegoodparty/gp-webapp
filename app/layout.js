@@ -4,7 +4,6 @@ import Script from 'next/script'
 import PageWrapper from './shared/layouts/PageWrapper'
 import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
-import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AmplitudeInit from '@shared/AmplitudeInit'
@@ -74,7 +73,6 @@ const RootLayout = ({ children }) => (
       />
 
       <link rel="manifest" href="/manifest.json" />
-      <SegmentScript />
       <VwoScript />
     </head>
     <body>

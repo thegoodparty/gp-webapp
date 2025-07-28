@@ -22,7 +22,7 @@ import {
   trackEvent,
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -170,7 +170,6 @@ export default function SignUpPage() {
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
-  const analytics = useAnalytics()
 
   const {
     firstName,

@@ -1,11 +1,10 @@
 'use client'
 import { useEffect, useRef } from "react"
 import * as sessionReplay from '@amplitude/session-replay-browser'
-import { useAnalytics } from "./hooks/useAnalytics"
+import { analytics } from "./utils/analytics"
 import { getStoredSessionId, storeSessionId } from "helpers/analyticsHelper"
 
 export default function AnalyticsSessionReplayMiddleware() {
-  const analytics = useAnalytics()
   const middlewareAttached = useRef(false)
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function AnalyticsSessionReplayMiddleware() {
       middlewareAttached.current = true
 
       analytics.addSourceMiddleware(({ payload, next }) => {
-        setTimeout(() => {
+        // setTimeout(() => {
           const storedSessionId = getStoredSessionId()
           const nextSessionId = payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
   
@@ -24,7 +23,7 @@ export default function AnalyticsSessionReplayMiddleware() {
             storeSessionId(nextSessionId)
             sessionReplay.setSessionId(nextSessionId)
           }
-        }, 0)
+        // }, 0)
         next(payload)
       })
 
