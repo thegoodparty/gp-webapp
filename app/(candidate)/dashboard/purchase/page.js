@@ -1,6 +1,4 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { serverFetch } from 'gpApi/serverFetch'
-import { apiRoutes } from 'gpApi/routes'
 import PurchasePage from './components/PurchasePage'
 import candidateAccess from '../shared/candidateAccess'
 import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
@@ -31,39 +29,12 @@ export default async function Page({ searchParams }) {
 
   const { type, domain, websiteId, returnUrl } = await searchParams
 
-  let purchaseIntent = null
-  let error = null
-
-  if (!type || !PURCHASE_TYPES[type]) {
-    error = 'Invalid purchase type'
-  } else {
-    try {
-      const metadata = buildMetadata(type, { domainName: domain, websiteId })
-      const response = await serverFetch(
-        apiRoutes.payments.createPurchaseIntent,
-        {
-          type,
-          metadata,
-        },
-      )
-
-      if (response.ok) {
-        purchaseIntent = response.data
-      } else {
-        error = response.data?.error || 'Failed to initialize purchase'
-      }
-    } catch (err) {
-      error = 'Failed to initialize purchase'
-    }
-  }
 
   const childProps = {
     type,
     domain,
     websiteId,
     returnUrl,
-    purchaseIntent,
-    error,
   }
 
   return <PurchasePage {...childProps} />

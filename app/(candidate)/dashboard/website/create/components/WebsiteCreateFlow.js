@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -28,11 +28,23 @@ export default function WebsiteCreateFlow() {
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
 
+  useEffect(() => {
+    if (
+      website?.content?.createStep &&
+      website.content.createStep !== COMPLETE_STEP
+    ) {
+      const parsedStep = parseInt(website.content.createStep, 10)
+      if (!isNaN(parsedStep) && parsedStep !== step) {
+        setStep(parsedStep)
+      }
+    }
+  }, [website?.content?.createStep])
+
   async function handleSaveAndExit() {
     const saved = await handleSave()
 
     if (saved) {
-      router.push('/dashboard/website')
+      window.location.href = '/dashboard/website'
     }
   }
 
@@ -54,6 +66,7 @@ export default function WebsiteCreateFlow() {
       ...website.content,
       status: publish ? WEBSITE_STATUS.published : website.status,
       vanityPath: website.vanityPath,
+      createStep: publish ? COMPLETE_STEP : step,
     })
     setSaveLoading(false)
     if (resp.ok) {
@@ -219,7 +232,7 @@ export default function WebsiteCreateFlow() {
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
             <Button variant="outlined" href="/dashboard/website">
-              Exit
+              {step === COMPLETE_STEP ? 'Done' : 'Exit'}
             </Button>
           ) : (
             <Button
@@ -228,7 +241,7 @@ export default function WebsiteCreateFlow() {
               disabled={saveLoading}
               loading={saveLoading}
             >
-              Save & Exit
+              Save &amp; Exit
             </Button>
           )}
           <Button
@@ -300,7 +313,7 @@ export default function WebsiteCreateFlow() {
           </div>
           {step !== COMPLETE_STEP && (
             <div className="hidden lg:block h-[60vh]">
-              <WebsitePreview website={website} zoomScale={0.5} />
+              <WebsitePreview website={website} zoomScale={0.5} step={step} />
             </div>
           )}
         </div>
@@ -315,8 +328,16 @@ export default function WebsiteCreateFlow() {
           />
         )}
       </div>
-      <ResponsiveModal open={previewOpen} onClose={() => setPreviewOpen(false)}>
-        <WebsitePreview website={website} className="min-w-[60vw]" />
+      <ResponsiveModal
+        fullSize
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+      >
+        <WebsitePreview
+          website={website}
+          className="min-w-[60vw]"
+          step={step}
+        />
       </ResponsiveModal>
     </>
   )
