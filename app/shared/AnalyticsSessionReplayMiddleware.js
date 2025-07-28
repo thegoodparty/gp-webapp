@@ -15,15 +15,13 @@ export default function AnalyticsSessionReplayMiddleware() {
       middlewareAttached.current = true
 
       analytics.addSourceMiddleware(({ payload, next }) => {
-        // setTimeout(() => {
-          const storedSessionId = getStoredSessionId()
-          const nextSessionId = payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
-  
-          if (storedSessionId < nextSessionId) {
-            storeSessionId(nextSessionId)
-            sessionReplay.setSessionId(nextSessionId)
-          }
-        // }, 0)
+        const storedSessionId = getStoredSessionId()
+        const nextSessionId = payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
+
+        if (storedSessionId < nextSessionId) {
+          storeSessionId(nextSessionId)
+          sessionReplay.setSessionId(nextSessionId)
+        }
         next(payload)
       })
 
