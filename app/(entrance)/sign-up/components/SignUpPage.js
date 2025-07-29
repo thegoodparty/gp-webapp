@@ -107,7 +107,6 @@ async function register({
   }
 }
 
-const validUserNames = ({ firstName, lastName }) => firstName && lastName
 
 export default function SignUpPage() {
   const [state, setState] = useState({
@@ -139,7 +138,7 @@ export default function SignUpPage() {
 
 
   const enableSubmit =
-    validUserNames(state) && 
+    firstName && lastName && 
     isValidEmail(email) && 
     isValidPassword(password) &&
     isValidPhone(phone) && 
