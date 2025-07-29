@@ -29,7 +29,7 @@ export default function EditSection({
 }) {
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
-    [website],
+    [website?.id],
   )
   return (
     <div className="p-4 flex flex-col gap-4 h-full max-h-[80vh]">
