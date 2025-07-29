@@ -150,7 +150,7 @@ export const ABOUT_US_LINKS = [
     dataTestId: 'nav-team',
   },
   {
-    label: 'GoodParty.org Candidates',
+    label: 'Meet the Winners',
     href: '/candidates',
     icon: <LuUserSearch />,
     id: 'nav-find-candidates',
