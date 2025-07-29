@@ -30,15 +30,6 @@ export default function AboutStep({
         }}
         useOnChange
       />
-      {/* <TextField
-        fullWidth
-        required
-        multiline
-        rows={4}
-        value={bio}
-        onChange={(e) => onBioChange(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-      /> */}
 
       <Label className="mt-4">Committee</Label>
       <TextField
