@@ -11,6 +11,7 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
 })
 
 export default function AboutStep({
+  initialBio,
   bio,
   issues,
   committee,
@@ -24,7 +25,7 @@ export default function AboutStep({
       {!noHeading && <H2 className="mb-6">What is your campaign about?</H2>}
       <Label>Your Bio</Label>
       <RichEditor
-        initialText={bio}
+        initialText={initialBio}
         onChangeCallback={(content) => {
           onBioChange(content)
         }}
