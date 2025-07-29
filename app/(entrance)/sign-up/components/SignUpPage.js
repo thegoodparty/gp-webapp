@@ -1,8 +1,9 @@
 'use client'
 import { isValidEmail } from '@shared/inputs/EmailInput.js'
+import { isValidPhone } from '@shared/inputs/PhoneInput.js'
 import PasswordInput from '@shared/inputs/PasswrodInput.js'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import { isValidPassword } from '@shared/inputs/IsValidPassword'
 import Paper from '@shared/utils/Paper'
@@ -26,7 +27,6 @@ import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
-  FACILITATED: 'facilitated',
 }
 
 const SIGN_UP_FIELDS = [
@@ -43,24 +43,6 @@ const SIGN_UP_FIELDS = [
     type: 'text',
     placeholder: 'Doe',
     required: true,
-  },
-  {
-    key: 'signUpMode',
-    label: 'What best describes your situation?',
-    type: 'radio',
-    defaultValue: SIGN_UP_MODES.CANDIDATE,
-    options: [
-      {
-        key: SIGN_UP_MODES.CANDIDATE,
-        label: `I'm running for office`,
-        value: SIGN_UP_MODES.CANDIDATE,
-      },
-      {
-        key: SIGN_UP_MODES.FACILITATED,
-        label: `I'm helping someone who is running for office`,
-        value: SIGN_UP_MODES.FACILITATED,
-      },
-    ],
   },
   {
     key: 'email',
@@ -89,22 +71,6 @@ const SIGN_UP_FIELDS = [
   },
 ]
 
-const FACILITATED_SIGN_UP_FIELDS = [
-  {
-    key: 'candidateFirstName',
-    label: `Candidate's first name`,
-    type: 'text',
-    placeholder: 'Jane',
-    required: true,
-  },
-  {
-    key: 'candidateLastName',
-    label: `Candidate's last name`,
-    type: 'text',
-    placeholder: 'Doe',
-    required: true,
-  },
-]
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
@@ -130,6 +96,7 @@ async function register({
       password,
       signUpMode,
     })
+    
     if (resp.status === 409) {
       return { exists: true }
     }
@@ -140,32 +107,20 @@ async function register({
   }
 }
 
-const validUserNames = ({
-  firstName,
-  lastName,
-  candidateFirstName,
-  candidateLastName,
-  signUpMode,
-}) =>
-  (signUpMode === SIGN_UP_MODES.CANDIDATE && firstName && lastName) ||
-  (signUpMode === SIGN_UP_MODES.FACILITATED &&
-    candidateFirstName &&
-    candidateLastName)
+const validUserNames = ({ firstName, lastName }) => firstName && lastName
 
 export default function SignUpPage() {
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
     signUpMode: SIGN_UP_MODES.CANDIDATE,
-    candidateFirstName: '',
-    candidateLastName: '',
     email: '',
     phone: '',
     zip: '',
     password: '',
   })
 
-  const [fields, setFields] = useState([...SIGN_UP_FIELDS])
+  const [fields] = useState([...SIGN_UP_FIELDS])
   const [loading, setLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
@@ -180,23 +135,24 @@ export default function SignUpPage() {
     phone,
     zip,
     password,
-    candidateFirstName,
-    candidateLastName,
   } = state
 
-  const facilitatedSignUpMode = signUpMode === SIGN_UP_MODES.FACILITATED
 
   const enableSubmit =
-    validUserNames(state) && isValidEmail(email) && isValidPassword(password)
+    validUserNames(state) && 
+    isValidEmail(email) && 
+    isValidPassword(password) &&
+    isValidPhone(phone) && 
+    validateZip(zip)
 
   const handleSubmit = async () => {
     if (loading) return
     setLoading(true)
 
     if (enableSubmit) {
-      const { user, token, campaign } = await register({
-        firstName: facilitatedSignUpMode ? candidateFirstName : firstName,
-        lastName: facilitatedSignUpMode ? candidateLastName : lastName,
+      const result = await register({
+        firstName,
+        lastName,
         email,
         phone,
         zip,
@@ -204,10 +160,13 @@ export default function SignUpPage() {
         signUpMode,
       })
 
-      if (!user) {
+      if (!result || !result.user) {
         errorSnackbar('Failed to create account')
         setLoading(false)
+        return
       }
+
+      const { user, token, campaign } = result
 
       await saveToken(token)
       setUser(user)
@@ -217,23 +176,22 @@ export default function SignUpPage() {
         userId: user.id,
       })
 
-      const redirect = await doPostAuthRedirect(campaign)
-      setLoading(false)
-      router.push(redirect)
+      try {
+        const redirect = await doPostAuthRedirect(campaign)
+        setLoading(false)
+        if (redirect) {
+          router.push(redirect)
+        } else {
+          errorSnackbar('Failed to set up account. Please try logging in.')
+        }
+      } catch (error) {
+        console.error('Post-auth redirect error:', error)
+        setLoading(false)
+        errorSnackbar('Account created but failed to redirect. Please try logging in.')
+      }
     }
   }
 
-  useEffect(() => {
-    if (facilitatedSignUpMode) {
-      setFields([
-        ...SIGN_UP_FIELDS.slice(0, 3),
-        ...FACILITATED_SIGN_UP_FIELDS,
-        ...SIGN_UP_FIELDS.slice(3),
-      ])
-    } else {
-      setFields([...SIGN_UP_FIELDS])
-    }
-  }, [signUpMode])
 
   const onChangeField = (key, value) => {
     setState({
