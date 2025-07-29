@@ -1,6 +1,7 @@
 import { Outfit } from 'next/font/google'
 import localFont from 'next/font/local'
 import Script from 'next/script'
+import { Suspense } from 'react'
 import PageWrapper from './shared/layouts/PageWrapper'
 import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
@@ -76,7 +77,9 @@ const RootLayout = ({ children }) => (
       <VwoScript />
     </head>
     <body>
-      <RouteTracker />
+      <Suspense>
+        <RouteTracker />
+      </Suspense>
       <AnalyticsSessionReplayMiddleware />
       <AmplitudeInit />
       <PageWrapper>{children}</PageWrapper>
