@@ -4,7 +4,7 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper'
 import Tooltip from '@mui/material/Tooltip'
 import Table from '@shared/utils/Table'
 import { useMemo } from 'react'
-import { formatToPhone } from 'helpers/numberHelper'
+import { formatPhoneNumber } from 'helpers/numberHelper'
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
 import Actions from './Actions'
 import { userIsAdmin } from 'helpers/userHelper'
@@ -115,7 +115,7 @@ export default function AdminUsersPage(props) {
           if (!phone) return 'N/A'
           return (
             <Tooltip title={phone}>
-              <a href={`tel:${phone}`}>{formatToPhone(phone)}</a>
+              <a href={`tel:${phone}`}>{formatPhoneNumber(phone)}</a>
             </Tooltip>
           )
         },

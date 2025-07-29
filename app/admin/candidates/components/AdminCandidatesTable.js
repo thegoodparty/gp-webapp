@@ -7,7 +7,7 @@ import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
 import Actions from './Actions'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { BsFiletypeCsv } from 'react-icons/bs'
-import { formatToPhone } from 'helpers/numberHelper'
+import { formatPhoneNumber } from 'helpers/numberHelper'
 import { dateColumnSort } from 'helpers/dateColumnSort'
 import { IS_VERIFIED_OPTIONS_REVERSED } from '../../victory-path/[slug]/components/is-verified-options.constant'
 import { CANDIDATE_TIERS_REVERSED } from '../../victory-path/[slug]/components/candidate-tiers.constant'
@@ -545,7 +545,7 @@ export default function AdminCandidatesTable({ campaigns }) {
           }
           return (
             <a href={`tel:${row.original.phone}`} className="underline">
-              {formatToPhone(row.original.phone)}
+              {formatPhoneNumber(row.original.phone)}
             </a>
           )
         },

@@ -6,6 +6,7 @@ import HeroStep from './HeroStep'
 import AboutStep from './AboutStep'
 import ContactStep from './ContactStep'
 import { SECTIONS } from './EditSectionButton'
+import { useMemo } from 'react'
 
 export default function EditSection({
   editSection,
@@ -26,6 +27,10 @@ export default function EditSection({
   onClose,
   saveLoading,
 }) {
+  const initialBio = useMemo(
+    () => website?.content?.about?.bio || '',
+    [website],
+  )
   return (
     <div className="p-4 flex flex-col gap-4 h-full max-h-[80vh]">
       <div className="grow overflow-auto">
@@ -56,6 +61,7 @@ export default function EditSection({
         )}
         {editSection === SECTIONS.about && (
           <AboutStep
+            initialBio={initialBio}
             bio={website.content.about?.bio}
             issues={website.content.about?.issues}
             committee={website.content.about?.committee}
