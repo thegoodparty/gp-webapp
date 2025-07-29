@@ -19,7 +19,7 @@ export default function RichEditor({
       quill.clipboard.dangerouslyPasteHTML(initialText)
       setContent(initialText)
     }
-  }, [quill, initialText])
+  }, [quill])
 
   useEffect(() => {
     if (quill) {
