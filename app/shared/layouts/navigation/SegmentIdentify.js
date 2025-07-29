@@ -9,8 +9,6 @@ import { useEffect } from 'react'
 import { analytics } from '@shared/utils/analytics'
 
 const identify = async (user, searchParams) => {
-  if (!analytics) return
-  
   const analyticsUser = await analytics.user()
   if (analyticsUser.id() || analyticsUser.anonymousId()) return // No need to spam identity calls that have no new information
 
@@ -33,7 +31,7 @@ export default function SegmentIdentify() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    identify(user, searchParams)
+    analytics && identify(user, searchParams)
   }, [user, searchParams])
 
   return null
