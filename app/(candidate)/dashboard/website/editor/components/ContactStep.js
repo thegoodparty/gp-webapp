@@ -1,5 +1,5 @@
+import AddressAutocomplete from '@shared/AddressAutocomplete'
 import Label from './Label'
-import AddressAutocomplete from './AddressAutocomplete'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import H2 from '@shared/typography/H2'
@@ -15,11 +15,11 @@ export default function ContactStep({
 }) {
   return (
     <div>
-      {!noHeading && <H2 className="mb-6">How can people find you?</H2>}
+      {!noHeading && <H2 className="mb-6">How can voters contact you?</H2>}
       <Label>Address</Label>
       <AddressAutocomplete
         value={address}
-        onChange={(value) => onAddressChange(value)}
+        onSelect={(place) => onAddressChange(place)}
       />
       <Label className="mt-4">Email</Label>
       <EmailInput

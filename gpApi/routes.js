@@ -213,6 +213,20 @@ export const apiRoutes = {
         method: 'DELETE',
       },
     },
+    tcrCompliance: {
+      fetch: {
+        path: '/campaigns/tcr-compliance/mine',
+        method: 'GET',
+      },
+      create: {
+        path: '/campaigns/tcr-compliance',
+        method: 'POST',
+      },
+      submitCvPin: {
+        path: '/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
+        method: 'POST',
+      },
+    },
   },
   content: {
     getByType: {
@@ -410,6 +424,14 @@ export const apiRoutes = {
       path: '/payments/purchase/portal-session',
       method: 'POST',
     },
+    createPurchaseIntent: {
+      path: '/payments/purchase/create-intent',
+      method: 'POST',
+    },
+    completePurchase: {
+      path: '/payments/purchase/complete',
+      method: 'POST',
+    },
   },
   jobs: {
     list: {
@@ -600,6 +622,28 @@ export const apiRoutes = {
     trackView: {
       path: '/websites/:vanityPath/track-view',
       method: 'POST',
+    },
+  },
+  domain: {
+    search: {
+      path: '/domains/search',
+      method: 'GET',
+    },
+    register: {
+      path: '/domains',
+      method: 'POST',
+    },
+    completeRegistration: {
+      path: '/domains/complete',
+      method: 'POST',
+    },
+    delete: {
+      path: '/domains/:id',
+      method: 'DELETE',
+    },
+    status: {
+      path: '/domains/status',
+      method: 'GET',
     },
   },
 }

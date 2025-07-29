@@ -2,144 +2,187 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 
 import {
-  ConstructionRounded,
-  EmojiEventsRounded,
-  GroupRounded,
-  FolderSharedRounded,
-  LibraryBooksRounded,
-  SlideshowRounded,
-  SearchRounded,
-  VolunteerActivismRounded,
-  MailRounded,
-  NewspaperRounded,
-  ListRounded,
-  Diversity3,
-} from '@mui/icons-material'
-
-import MapIcon from '@mui/icons-material/Map'
+  LuHammer,
+  LuFiles,
+  LuFolderHeart,
+  LuSmartphone,
+  LuSignpost,
+  LuBanknote,
+  LuTrophy,
+  LuLandmark,
+  LuBookOpen,
+  LuNewspaper,
+  LuFileText,
+  LuUsersRound,
+  LuPhone,
+  LuUserSearch,
+  LuSquarePlay,
+  LuContactRound,
+  LuHeart,
+} from 'react-icons/lu'
 
 import { usePathname } from 'next/navigation'
 
-export const RUN_LINKS = [
+export const PRODUCT_LINKS = [
   {
-    label: 'Campaign Tools',
+    label: 'Campaign Toolkit',
     href: '/run-for-office',
-    icon: <ConstructionRounded />,
+    icon: <LuHammer />,
     id: 'nav-campaign-tools',
     dataTestId: 'nav-campaign-tools',
   },
   {
-    label: 'GoodParty.org Pro',
-    href: 'https://lp.goodparty.org/pro-lp/',
-    icon: <EmojiEventsRounded />,
-    id: 'nav-good-party-pro',
-    dataTestId: 'nav-good-party-pro',
-    external: true,
-  },
-  {
-    label: 'Get a Demo',
-    href: '/get-a-demo',
-    icon: <GroupRounded />,
-    id: 'nav-get-demo',
-    dataTestId: 'nav-get-demo',
-  },
-  {
-    label: 'Voter Data',
-    href: 'https://lp.goodparty.org/voter-data',
-    icon: <FolderSharedRounded />,
-    id: 'nav-voter-data',
-    dataTestId: 'nav-voter-data',
-    external: true,
-  },
-  {
     label: 'Template Library',
     href: 'https://lp.goodparty.org/template-library',
-    icon: <LibraryBooksRounded />,
+    icon: <LuFiles />,
     id: 'nav-template-library',
     dataTestId: 'nav-template-library',
     external: true,
   },
   {
+    label: 'Voter Data',
+    href: 'https://lp.goodparty.org/voter-data',
+    icon: <LuFolderHeart />,
+    id: 'nav-voter-data',
+    dataTestId: 'nav-voter-data',
+    external: true,
+  },
+  {
+    label: 'Texting',
+    href: 'https://lp.goodparty.org/sms-tools',
+    icon: <LuSmartphone />,
+    id: 'nav-texting',
+    dataTestId: 'nav-texting',
+    external: true,
+  },
+  {
+    label: 'Yard Signs',
+    href: 'https://lp.goodparty.org/yard-signs',
+    icon: <LuSignpost />,
+    id: 'nav-yard-signs',
+    dataTestId: 'nav-yard-signs',
+    external: true,
+  },
+  {
+    label: 'Pricing',
+    href: '/pricing',
+    icon: <LuBanknote />,
+    id: 'nav-pricing',
+    dataTestId: 'nav-pricing',
+  },
+  {
+    label: 'GoodParty.org Pro',
+    href: 'https://lp.goodparty.org/pro-lp',
+    icon: <LuTrophy />,
+    id: 'nav-good-party-pro',
+    dataTestId: 'nav-good-party-pro',
+    external: true,
+  },
+]
+
+export const RESOURCES_LINKS = [
+  {
+    label: 'Talk to an Expert',
+    href: '/get-a-demo',
+    icon: <LuContactRound />,
+    id: 'nav-get-demo',
+    dataTestId: 'nav-get-demo',
+  },
+  {
     label: 'Product Tour',
     href: '/product-tour',
-    icon: <SlideshowRounded />,
+    icon: <LuSquarePlay />,
     id: 'nav-tour',
     dataTestId: 'nav-tour',
   },
   {
-    label: 'Explore Offices',
+    label: 'Find Offices to Run For',
     href: '/elections',
-    icon: <SearchRounded />,
+    icon: <LuLandmark />,
     id: 'nav-explore-offices',
     dataTestId: 'nav-explore-offices',
   },
-]
-
-export const COMMUNITY_LINKS = [
   {
-    label: 'Volunteer',
-    href: '/volunteer',
-    icon: <VolunteerActivismRounded />,
-    id: 'nav-volunteer',
-    dataTestId: 'nav-volunteer',
-  },
-  {
-    label: 'Find Candidates',
-    href: '/candidates',
-    icon: <MapIcon />,
-    id: 'nav-find-candidates',
-    dataTestId: 'nav-find-candidates',
-  },
-  {
-    label: 'Get Stickers',
-    href: '/get-stickers',
-    icon: <MailRounded />,
-    id: 'nav-get-stickers',
-    dataTestId: 'nav-get-stickers',
-  },
-  {
-    label: 'GoodParty.org Community',
-    href: 'https://community.goodparty.org',
-    icon: <Diversity3 />,
-    id: 'nav-community',
-    dataTestId: 'nav-community',
+    label: 'How to Run for Office',
+    href: 'https://lp.goodparty.org/e-book',
+    icon: <LuBookOpen />,
+    id: 'nav-how-to-run',
+    dataTestId: 'nav-how-to-run',
     external: true,
   },
-]
-export const RESOURCES_LINKS = [
   {
     label: 'Blog',
     href: '/blog',
-    icon: <NewspaperRounded />,
+    icon: <LuNewspaper />,
     id: 'nav-blog',
     dataTestId: 'nav-blog',
   },
   {
-    label: 'Glossary',
-    href: '/political-terms',
-    icon: <ListRounded />,
-    id: 'nav-glossary',
-    dataTestId: 'nav-glossary',
+    label: 'Candidate Community',
+    href: 'https://community.goodparty.org',
+    icon: <LuUsersRound />,
+    id: 'nav-community',
+    dataTestId: 'nav-community',
+    external: true,
+  },
+  {
+    label: 'Case Studies',
+    href: '/blog/section/for-candidates',
+    icon: <LuFileText />,
+    id: 'nav-case-studies',
+    dataTestId: 'nav-case-studies',
   },
 ]
-const DROPDOWNS = [
+
+export const ABOUT_US_LINKS = [
   {
-    id: 'nav-candidates',
-    label: 'For Candidates',
-    dataTestId: 'nav-candidates',
-    links: RUN_LINKS,
+    label: 'Our Mission',
+    href: '/about',
+    icon: <LuHeart />,
+    id: 'nav-about',
+    dataTestId: 'nav-about',
   },
   {
-    id: 'nav-voters',
-    label: 'For Voters',
-    dataTestId: 'nav-voters',
-    links: COMMUNITY_LINKS,
+    label: 'Our Team',
+    href: '/team',
+    icon: <LuUsersRound />,
+    id: 'nav-team',
+    dataTestId: 'nav-team',
+  },
+  {
+    label: 'Meet the Winners',
+    href: '/candidates',
+    icon: <LuUserSearch />,
+    id: 'nav-find-candidates',
+    dataTestId: 'nav-find-candidates',
+  },
+  {
+    label: 'Contact Us',
+    href: '/contact',
+    icon: <LuPhone />,
+    id: 'nav-contact-us',
+    dataTestId: 'nav-contact-us',
+  },
+]
+
+const DROPDOWNS = [
+  {
+    id: 'nav-product',
+    label: 'Product',
+    dataTestId: 'nav-product',
+    links: PRODUCT_LINKS,
   },
   {
     id: 'nav-resources',
     label: 'Resources',
     dataTestId: 'nav-resources',
     links: RESOURCES_LINKS,
+  },
+  {
+    id: 'nav-about-us',
+    label: 'About Us',
+    dataTestId: 'nav-about-us',
+    links: ABOUT_US_LINKS,
   },
 ]
 const INITIAL_OPEN_STATES = Array(DROPDOWNS.length).fill(false)

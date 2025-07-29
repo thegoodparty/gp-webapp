@@ -3,10 +3,7 @@ import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
-import {
-  EIN_PATTERN_FULL,
-  EinCheckInput,
-} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
+import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -15,6 +12,7 @@ import { BiLinkExternal } from 'react-icons/bi'
 import Body2 from '@shared/typography/Body2'
 import TextField from '@shared/inputs/TextField'
 import { useComplianceForm } from './ComplianceFormContext'
+import { isValidEIN } from '@shared/inputs/IsValidEIN'
 
 export default function EINStep() {
   const router = useRouter()
@@ -24,13 +22,11 @@ export default function EINStep() {
   const einName = complianceForm?.name
   const einAddress = complianceForm?.address
 
-  const [validatedEin, setValidatedEin] = useState(
-    EIN_PATTERN_FULL.test(einNumber) || null,
-  )
+  const [validatedEin, setValidatedEin] = useState(isValidEIN(einNumber))
 
   useEffect(() => {
     // TODO: is this redundant?
-    einNumber && setValidatedEin(EIN_PATTERN_FULL.test(einNumber) || null)
+    einNumber && setValidatedEin(isValidEIN(einNumber))
   }, [einNumber])
 
   const handleEinChange = (value) => {
@@ -38,7 +34,7 @@ export default function EINStep() {
       ...current,
       ein: value,
     }))
-    setValidatedEin(EIN_PATTERN_FULL.test(value) || null)
+    setValidatedEin(isValidEIN(value))
   }
 
   const handleAddressChange = (value) => {

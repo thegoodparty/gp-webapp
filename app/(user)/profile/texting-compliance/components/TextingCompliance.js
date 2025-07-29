@@ -1,0 +1,63 @@
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
+import H3 from '@shared/typography/H3'
+import Body2 from '@shared/typography/Body2'
+import ComplianceSteps, {
+  getTcrComplianceStepCompletions,
+  TCR_COMPLIANCE_STATUS as TCR_COMPLIANCE,
+} from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
+import { formatPhoneNumber } from 'helpers/numberHelper'
+
+const TDlcNumber = ({ tdlcNumber }) => (
+  <div className="bg-gray-50 border border-gray-300 rounded-lg p-6 flex justify-center items-center">
+    <span className="font-outfit font-medium text-lg leading-6 text-black w-full text-left block">
+      {formatPhoneNumber(tdlcNumber)}
+    </span>
+  </div>
+)
+
+export default function TextingCompliance({
+  website,
+  domainStatus,
+  tcrCompliance,
+}) {
+  const { status: tcrComplianceStatus, tdlcNumber } = tcrCompliance || {}
+  const { websiteComplete, domainComplete, registrationComplete, pinComplete } =
+    getTcrComplianceStepCompletions(website, domainStatus, tcrCompliance)
+  const pendingCompliance =
+    websiteComplete &&
+    domainComplete &&
+    registrationComplete &&
+    tcrComplianceStatus === TCR_COMPLIANCE.PENDING
+  const complianceApproved = tcrComplianceStatus === TCR_COMPLIANCE.APPROVED
+
+  return (
+    <Paper className="mt-6">
+      <H2 className="mb-6">Texting Compliance</H2>
+      <div className="mt-1 mb-6">
+        <H3 className="text-gray-900">
+          {pendingCompliance
+            ? 'Your application is in review'
+            : complianceApproved
+            ? 'Your 10DLC number'
+            : '76% of candidates who use our full offering win'}
+        </H3>
+        <Body2 className="text-gray-600 mt-1">
+          {pendingCompliance
+            ? 'This can take 3-7 business days. We will send you an email once your campaign is approved, so you can start sending text messages.'
+            : complianceApproved
+            ? 'Texts you send will come from this number.'
+            : 'Start sending 5,000 free targeted text messages by making your campaign compliant in 4 steps.'}
+        </Body2>
+      </div>
+      {complianceApproved && tdlcNumber ? (
+        <TDlcNumber {...{ tdlcNumber }} />
+      ) : (
+        !pendingCompliance &&
+        !complianceApproved && (
+          <ComplianceSteps {...{ website, domainStatus, tcrCompliance }} />
+        )
+      )}
+    </Paper>
+  )
+}

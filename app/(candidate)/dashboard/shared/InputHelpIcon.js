@@ -1,7 +1,7 @@
 import { InputAdornment } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
-import { MdInfo } from 'react-icons/md'
+import { MdInfoOutline } from 'react-icons/md'
 import React from 'react'
 
 export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }) => (
@@ -12,7 +12,7 @@ export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }) => (
       onOpen={onOpen}
     >
       <IconButton className="cursor-help" edge="end">
-        <MdInfo className="text-info h-6 w-6" />
+        <MdInfoOutline className="text-info h-6 w-6" />
       </IconButton>
     </Tooltip>
   </InputAdornment>

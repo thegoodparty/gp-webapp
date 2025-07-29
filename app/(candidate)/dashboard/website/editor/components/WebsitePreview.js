@@ -1,18 +1,19 @@
 'use client'
 
-import { memo, useMemo } from 'react'
-import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
+import { memo, useMemo, useRef, useEffect } from 'react'
 import Paper from '@shared/utils/Paper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
+import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
 
 const WebsitePreview = memo(function WebsitePreview({
   website: propWebsite,
   className = '',
-  zoomScale = 1,
+  step,
 }) {
   const [campaign] = useCampaign()
   const [user] = useUser()
+  const iframeRef = useRef(null)
 
   const website = useMemo(() => {
     if (propWebsite) {
@@ -23,6 +24,49 @@ const WebsitePreview = memo(function WebsitePreview({
     }
     return null
   }, [propWebsite, campaign, user])
+
+  const previewUrl = useMemo(() => {
+    if (!website) return ''
+    return `${NEXT_PUBLIC_CANDIDATES_SITE_BASE}/${website.vanityPath}/preview`
+  }, [website?.vanityPath])
+
+  useEffect(() => {
+    if (!website || !iframeRef.current) return
+
+    const iframe = iframeRef.current
+
+    const sendData = () => {
+      const { addressPlace, ...contactWithoutPlace } =
+        website?.content?.contact || {}
+      const websiteForMessage = {
+        ...website,
+        content: {
+          ...website.content,
+          contact: contactWithoutPlace,
+        },
+      }
+
+      iframe.contentWindow?.postMessage(
+        {
+          type: 'WEBSITE_DATA',
+          data: websiteForMessage,
+          step: step,
+        },
+        NEXT_PUBLIC_CANDIDATES_SITE_BASE,
+      )
+    }
+
+    const handleLoad = () => {
+      setTimeout(sendData, 100)
+    }
+
+    iframe.addEventListener('load', handleLoad)
+    sendData()
+
+    return () => {
+      iframe.removeEventListener('load', handleLoad)
+    }
+  }, [website, step])
 
   return (
     <Paper className={`!p-0 flex-grow h-full flex flex-col ${className}`}>
@@ -36,8 +80,12 @@ const WebsitePreview = memo(function WebsitePreview({
       </div>
       <div className="flex-1 overflow-y-auto rounded-xl">
         {campaign && website && (
-          <div className="pointer-events-none">
-            <WebsiteContent website={website} scale={zoomScale} />
+          <div className="h-full">
+            <iframe
+              ref={iframeRef}
+              src={previewUrl}
+              className="w-full h-full"
+            />
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import PledgeStep from './PledgeStep'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import CompleteStep from './CompleteStep'
 
+
 export default function OnboardingPage(props) {
   const { step } = props
   return (

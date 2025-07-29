@@ -15,7 +15,7 @@ const pageMetaData = ({
       title,
       description,
     },
-  };
-};
+  }
+}
 
-export default pageMetaData;
+export default pageMetaData
