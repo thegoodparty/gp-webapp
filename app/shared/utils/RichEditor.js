@@ -15,7 +15,6 @@ export default function RichEditor({
   // Set initial content when editor is ready
   useEffect(() => {
     if (quill && initialText) {
-      console.log('Setting initial text:', initialText)
       quill.clipboard.dangerouslyPasteHTML(initialText)
       setContent(initialText)
     }
@@ -25,7 +24,6 @@ export default function RichEditor({
     if (quill) {
       const textChangeHandler = () => {
         const value = quill.root.innerHTML
-        console.log('Text changed:', value)
         if (value) {
           setContent(value)
           onChangeCallback(value)
