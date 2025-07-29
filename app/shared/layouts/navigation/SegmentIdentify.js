@@ -8,28 +8,33 @@ import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { analytics } from '@shared/utils/analytics'
 
+const identify = async (user, searchParams) => {
+  if (!analytics) return
+  
+  const analyticsUser = await analytics.user()
+  if (analyticsUser.id() || analyticsUser.anonymousId()) return // No need to spam identity calls that have no new information
+
+  persistUtmsOnce()
+
+  user?.id 
+    ? analytics.identify(user.id, {
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        phone: user.phone,
+        zip: user.zip,
+        ...getPersistedUtms(), 
+        ...extractClids(searchParams) 
+      })
+    : analytics.identify()
+}
+
 export default function SegmentIdentify() {
   const [user] = useUser()
   const searchParams = useSearchParams()
+
   useEffect(() => {
+    identify(user, searchParams)
+  }, [user, searchParams])
 
-    if (!analytics) return
-    (async () => {
-      const analyticsUser = await analytics.user()
-      if (analyticsUser.id() || analyticsUser.anonymousId()) return // No need to spam identity calls that have no new information
-
-      persistUtmsOnce()
-
-      user?.id 
-      ? analytics.identify(user.id, {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          phone: user.phone,
-          zip:   user.zip,
-          ...getPersistedUtms(), 
-          ...extractClids(searchParams) 
-        })
-      : analytics.identify()
-    })()
-  }, [user, searchParams, analytics])
+  return null
 }
