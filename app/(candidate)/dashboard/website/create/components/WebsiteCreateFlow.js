@@ -228,7 +228,7 @@ export default function WebsiteCreateFlow() {
 
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
-    [website],
+    [website?.id],
   )
 
   return (
