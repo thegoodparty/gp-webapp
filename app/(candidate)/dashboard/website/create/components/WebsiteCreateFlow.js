@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -226,6 +226,11 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
+  const initialBio = useMemo(
+    () => website?.content?.about?.bio || '',
+    [website?.id],
+  )
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
@@ -288,6 +293,7 @@ export default function WebsiteCreateFlow() {
 
             {step === 5 && (
               <AboutStep
+                initialBio={initialBio}
                 bio={website.content.about?.bio}
                 issues={website.content.about?.issues}
                 committee={website.content.about?.committee}

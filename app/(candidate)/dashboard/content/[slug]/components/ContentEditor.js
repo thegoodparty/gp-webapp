@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import PlanVersion from './PlanVersion'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
@@ -144,9 +144,7 @@ export default function ContentEditor({
     aiTotalCount++
     if (aiTotalCount >= 100) {
       //fail
-      setPlan(
-        'Failed to generate a campaign plan. Please contact us for help.',
-      )
+      setPlan('Failed to generate a campaign plan. Please contact us for help.')
       setLoading(false)
       setRegenerating(false)
       setIsFailed(true)
@@ -214,6 +212,11 @@ export default function ContentEditor({
 
     setShowModal(false)
   }
+
+  const initialText = useMemo(
+    () => campaignPlan[key].content || '',
+    [campaignPlan, key],
+  )
 
   return (
     <div>
@@ -379,7 +382,7 @@ export default function ContentEditor({
                     ) : (
                       <>
                         <RichEditor
-                          initialText={plan}
+                          initialText={initialText}
                           onChangeCallback={handleEdit}
                           useOnChange
                         />

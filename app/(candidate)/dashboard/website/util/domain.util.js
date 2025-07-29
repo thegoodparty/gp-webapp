@@ -6,6 +6,7 @@ export const PAYMENT_STATUS = {
   REQUIRES_CAPTURE: 'requires_capture',
   CANCELED: 'canceled',
   SUCCEEDED: 'succeeded',
+  FAILED: 'failed',
 }
 
 export const DOMAIN_STATUS = {
@@ -14,8 +15,6 @@ export const DOMAIN_STATUS = {
   IN_PROGRESS: 'IN_PROGRESS',
   ERROR: 'ERROR',
   SUCCESSFUL: 'SUCCESSFUL',
-  FAILED: 'FAILED',
-  REGISTERED: 'REGISTERED',
 }
 
 export function isDomainActive(domain = {}) {
@@ -28,7 +27,6 @@ export function isDomainActive(domain = {}) {
   return (
     status === DOMAIN_STATUS.SUBMITTED ||
     status === DOMAIN_STATUS.IN_PROGRESS ||
-    status === DOMAIN_STATUS.REGISTERED ||
     status === DOMAIN_STATUS.SUCCESSFUL
   )
 }
