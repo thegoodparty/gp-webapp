@@ -10,7 +10,6 @@ import Paper from '@shared/utils/Paper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
 
 async function setPasswordApi(email, password, token) {
   try {

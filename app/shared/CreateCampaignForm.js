@@ -12,7 +12,6 @@ import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/C
 import { getUserCookie } from 'helpers/cookieHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { analytics } from './utils/analytics'
 
 const createCampaign = async (payload) => {
   try {
