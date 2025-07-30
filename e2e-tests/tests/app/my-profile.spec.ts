@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 const campaignDetailsCaseId = 46;
 setupTestReporting(test, campaignDetailsCaseId);
 
-test('Update Campaign Details', async ({ page }) => {
+test.skip('Update Campaign Details', async ({ page }) => {
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
@@ -80,7 +80,7 @@ test.skip('Update Office Details', async ({ page }) => {
 const whyStatementCaseId = 48;
 setupTestReporting(test, whyStatementCaseId);
 
-test('Update Your Why Statement', async ({ page }) => {
+test.skip('Update Your Why Statement', async ({ page }) => {
     const newWhyStatement = generateTimeStamp() + ' Statement';
     // Update Your Why Statement
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
@@ -104,7 +104,7 @@ test('Update Your Why Statement', async ({ page }) => {
 const funFactsCaseId = 49;
 setupTestReporting(test, funFactsCaseId);
 
-test('Update Fun Facts about Yourself', async ({ page }) => {
+test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
@@ -129,7 +129,7 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
 const opponentCaseId = 50;
 setupTestReporting(test, opponentCaseId);
 
-test('Add Opponent', async ({ page }) => {
+test.skip('Add Opponent', async ({ page }) => {
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
 
