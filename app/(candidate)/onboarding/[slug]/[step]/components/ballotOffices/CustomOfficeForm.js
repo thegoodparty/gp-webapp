@@ -9,7 +9,7 @@ import {
 import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useUser } from '@shared/hooks/useUser'
 
@@ -69,7 +69,6 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
     electionDate: campaign.details?.electionDate || '',
   })
   const user = useUser()
-  const analytics = useAnalytics()
   const now = new Date()
   const selectedDate = dateFromNonStandardUSFormatString(state['electionDate'])
   const error =

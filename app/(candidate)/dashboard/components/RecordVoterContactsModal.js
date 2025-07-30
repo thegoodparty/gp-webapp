@@ -13,7 +13,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -47,7 +47,6 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
   const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts()
   const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
   const [formState, setFormState] = useState(INITIAL_FORM_STATE)
-  const analytics = useAnalytics()
 
   const trackingAttrs = useMemo(
     () =>
