@@ -1,3 +1,4 @@
+'use client'
 import WandAnimation from '@shared/animations/WandAnimation'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'

@@ -12,7 +12,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 
 export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.text]: 'How many text messages did you schedule?',
@@ -39,7 +39,6 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
   const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
   const [user] = useUser()
   const [value, setValue] = useState()
-  const analytics = useAnalytics()
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Log Task Contacts', { type: flowType, value }),

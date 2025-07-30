@@ -1,1 +1,0 @@
-export const useAnalytics = () => typeof window !== 'undefined' && window.analytics
