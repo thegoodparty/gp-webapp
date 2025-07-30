@@ -1,7 +1,7 @@
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
-import PasswordInput from '@shared/inputs/PasswrodInput'
+import PasswordInput from '@shared/inputs/PasswordInput'
 
 export default function ResetPasswordForm({
   password,

@@ -10,7 +10,7 @@ import MarketingH4 from '@shared/typography/MarketingH4'
 import Image from 'next/image'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export default function CompleteStep({ vanityPath }) {
+export default function CompleteStep({ vanityPath, domain }) {
   const url = getWebsiteUrl(vanityPath, false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   return (
@@ -27,54 +27,61 @@ export default function CompleteStep({ vanityPath }) {
       <Button onClick={() => setShareModalOpen(true)} color="neutral">
         Share
       </Button>
-      <div className=" bg-[#F1E5FF] rounded-lg p-4 md:p-12 w-full relative">
-        <div className="absolute top-0 left-0">
-          <Image
-            src="/images/website/purple-shape.png"
-            width={300}
-            height={400}
-            alt=""
-          />
-        </div>
-        <div className="flex flex-col  gap-4 w-full  justify-evenly md:flex-row-reverse relative">
-          <div className="text-left md:w-1/2">
-            <MarketingH4>Unlock digital outreach with a domain</MarketingH4>
-            <Body2 className="text-gray-500 mt-2">({url})</Body2>
-            <div className="mt-12">
-              <div className="flex items-center gap-2 mb-4">
-                <FaCheck />
-                <Body1>Get 5,000 texts</Body1>
-              </div>
-              <div className="flex items-center gap-2 mb-4">
-                <FaCheck />
-                <Body1>Target the right voters</Body1>
-              </div>
-              <div className="flex items-center gap-2">
-                <FaCheck />
-                <Body1>Make your campaign compliant</Body1>
-              </div>
-            </div>
-            <Button
-              href="/dashboard/website/domain"
-              className="mt-12"
-              onClick={() =>
-                trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
-              }
-            >
-              Add a domain
-            </Button>
-          </div>
-          <div className="md:w-1/2 flex justify-center items-center">
+      {!domain ? (
+        <div className=" bg-[#F1E5FF] rounded-lg p-4 md:p-12 w-full relative">
+          <div className="absolute top-0 left-0">
             <Image
-              src="/images/website/texting.png"
-              alt="texting"
-              width={265}
-              height={330}
-              priority
+              src="/images/website/purple-shape.png"
+              width={300}
+              height={400}
+              alt=""
             />
           </div>
+
+          <div className="flex flex-col  gap-4 w-full  justify-evenly md:flex-row-reverse relative">
+            <div className="text-left md:w-1/2">
+              <MarketingH4>Unlock digital outreach with a domain</MarketingH4>
+              <Body2 className="text-gray-500 mt-2">({url})</Body2>
+              <div className="mt-12">
+                <div className="flex items-center gap-2 mb-4">
+                  <FaCheck />
+                  <Body1>Get 5,000 texts</Body1>
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <FaCheck />
+                  <Body1>Target the right voters</Body1>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaCheck />
+                  <Body1>Make your campaign compliant</Body1>
+                </div>
+              </div>
+              <Button
+                href="/dashboard/website/domain"
+                className="mt-12"
+                onClick={() =>
+                  trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
+                }
+              >
+                Add a domain
+              </Button>
+            </div>
+            <div className="md:w-1/2 flex justify-center items-center">
+              <Image
+                src="/images/website/texting.png"
+                alt="texting"
+                width={265}
+                height={330}
+                priority
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <Button href="/dashboard/website" className="mt-12">
+          Back to website metrics
+        </Button>
+      )}
       <ShareModal
         open={shareModalOpen}
         onClose={() => setShareModalOpen(false)}

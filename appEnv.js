@@ -33,6 +33,10 @@ export const APP_BASE = IS_LOCAL
         : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
     }`
 
+
+export const NEXT_PUBLIC_AMPLITUDE_API_KEY = 
+  process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY
+
 export const NEXT_PUBLIC_SEGMENT_WRITE_KEY =
   process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY
 

@@ -10,7 +10,6 @@ import Paper from '@shared/utils/Paper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 async function setPasswordApi(email, password, token) {
   try {
@@ -43,7 +42,6 @@ export default function FormSection({ email, token }) {
   })
   const [resetSuccessful, setResetSuccesful] = useState(false)
   const { errorSnackbar, successSnackbar } = useSnackbar()
-  const analytics = useAnalytics()
 
   function handlePasswordChange(newPwd, pwdValid) {
     setPassword({

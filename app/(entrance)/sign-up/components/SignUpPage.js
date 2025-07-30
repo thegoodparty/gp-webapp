@@ -1,7 +1,7 @@
 'use client'
 import { isValidEmail } from '@shared/inputs/EmailInput.js'
 import { isValidPhone } from '@shared/inputs/PhoneInput.js'
-import PasswordInput from '@shared/inputs/PasswrodInput.js'
+import PasswordInput from '@shared/inputs/PasswordInput.js'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { Fragment, useState } from 'react'
 import H1 from '@shared/typography/H1'
@@ -23,7 +23,7 @@ import {
   trackEvent,
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
-import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { analytics } from '@shared/utils/analytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -107,7 +107,6 @@ async function register({
   }
 }
 
-const validUserNames = ({ firstName, lastName }) => firstName && lastName
 
 export default function SignUpPage() {
   const [state, setState] = useState({
@@ -125,7 +124,6 @@ export default function SignUpPage() {
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
-  const analytics = useAnalytics()
 
   const {
     firstName,
@@ -139,7 +137,7 @@ export default function SignUpPage() {
 
 
   const enableSubmit =
-    validUserNames(state) && 
+    firstName && lastName && 
     isValidEmail(email) && 
     isValidPassword(password) &&
     isValidPhone(phone) && 

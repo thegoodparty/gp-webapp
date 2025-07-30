@@ -13,6 +13,7 @@ import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
+import { analytics } from '@shared/utils/analytics'
 
 async function runP2V(slug) {
   try {

@@ -233,7 +233,7 @@ export default function WebsiteCreateFlow() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
+      <div className="flex flex-col gap-4 h-full min-h-full">
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
             <Button variant="outlined" href="/dashboard/website">
@@ -296,10 +296,8 @@ export default function WebsiteCreateFlow() {
                 initialBio={initialBio}
                 bio={website.content.about?.bio}
                 issues={website.content.about?.issues}
-                committee={website.content.about?.committee}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
-                onCommitteeChange={handleCommitteeChange}
               />
             )}
 
@@ -311,10 +309,15 @@ export default function WebsiteCreateFlow() {
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
+                committee={website.content.about?.committee}
+                onCommitteeChange={handleCommitteeChange}
               />
             )}
             {step === COMPLETE_STEP && (
-              <CompleteStep vanityPath={website.vanityPath} />
+              <CompleteStep
+                vanityPath={website.vanityPath}
+                domain={website.domain}
+              />
             )}
           </div>
           {step !== COMPLETE_STEP && (
