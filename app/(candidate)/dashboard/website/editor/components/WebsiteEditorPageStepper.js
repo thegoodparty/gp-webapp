@@ -24,7 +24,7 @@ export default function WebsiteEditorPageStepper({
   }
 
   return (
-    <div className="flex gap-4 md:gap-16 flex-wrap md:flex-nowrap w-full">
+    <div className="flex gap-4 md:gap-16 flex-wrap md:flex-nowrap w-full pb-6">
       <div className="md:order-2 flex grow items-center justify-between gap-x-2 w-full">
         {Array.from({ length: totalSteps }, (_, idx) => (
           <div
