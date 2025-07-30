@@ -1,7 +1,7 @@
 'use client'
 import { isValidEmail } from '@shared/inputs/EmailInput.js'
 import { isValidPhone } from '@shared/inputs/PhoneInput.js'
-import PasswordInput from '@shared/inputs/PasswrodInput.js'
+import PasswordInput from '@shared/inputs/PasswordInput.js'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { Fragment, useState } from 'react'
 import H1 from '@shared/typography/H1'
@@ -107,7 +107,6 @@ async function register({
   }
 }
 
-const validUserNames = ({ firstName, lastName }) => firstName && lastName
 
 export default function SignUpPage() {
   const [state, setState] = useState({
@@ -138,7 +137,7 @@ export default function SignUpPage() {
 
 
   const enableSubmit =
-    validUserNames(state) && 
+    firstName && lastName && 
     isValidEmail(email) && 
     isValidPassword(password) &&
     isValidPhone(phone) && 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import PasswordInput from './PasswrodInput'
+import PasswordInput from './PasswordInput'
 
 export default {
   title: 'Inputs/PasswordInput',
