@@ -296,10 +296,8 @@ export default function WebsiteCreateFlow() {
                 initialBio={initialBio}
                 bio={website.content.about?.bio}
                 issues={website.content.about?.issues}
-                committee={website.content.about?.committee}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
-                onCommitteeChange={handleCommitteeChange}
               />
             )}
 
@@ -311,6 +309,8 @@ export default function WebsiteCreateFlow() {
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
+                committee={website.content.about?.committee}
+                onCommitteeChange={handleCommitteeChange}
               />
             )}
             {step === COMPLETE_STEP && (

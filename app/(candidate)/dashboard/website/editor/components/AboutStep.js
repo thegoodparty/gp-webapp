@@ -1,5 +1,4 @@
 import Label from './Label'
-import TextField from '@shared/inputs/TextField'
 import IssuesForm from './IssuesForm'
 import H2 from '@shared/typography/H2'
 import dynamic from 'next/dynamic'
@@ -14,10 +13,8 @@ export default function AboutStep({
   initialBio,
   bio,
   issues,
-  committee,
   onBioChange,
   onIssuesChange,
-  onCommitteeChange,
   noHeading = false,
 }) {
   return (
@@ -30,15 +27,6 @@ export default function AboutStep({
           onBioChange(content)
         }}
         useOnChange
-      />
-
-      <Label className="mt-4">Committee</Label>
-      <TextField
-        fullWidth
-        required
-        value={committee}
-        onChange={(e) => onCommitteeChange(e.target.value)}
-        InputLabelProps={{ shrink: true }}
       />
 
       <IssuesForm issues={issues} onChange={onIssuesChange} />
