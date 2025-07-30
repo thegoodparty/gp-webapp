@@ -233,7 +233,7 @@ export default function WebsiteCreateFlow() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 h-full max-h-full overflow-hidden">
+      <div className="flex flex-col gap-4 h-full min-h-full">
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
             <Button variant="outlined" href="/dashboard/website">
