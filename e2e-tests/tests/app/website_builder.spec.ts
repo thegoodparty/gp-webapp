@@ -14,17 +14,12 @@ let candidateUrl: string;
 test.beforeEach(async ({ page, browser }) => {
     await prepareTest('user', '/dashboard/website', 'Create your free website', page, browser);
     
-    // Check if we already have a campaign slug from a previous test
     if (!campaignSlug) {
         try {
-            // Wait a bit to ensure page is fully loaded
             await page.waitForTimeout(2000);
             
-            // Check if we're on the website creation page or if a website already exists
             const createButton = page.getByRole('button', { name: /Create your website/ });
             const websiteExists = page.getByText('Your campaign website');
-            
-            // Try to find either the create button or existing website
             const createButtonVisible = await createButton.isVisible({ timeout: 5000 }).catch(() => false);
             const websiteExistsVisible = await websiteExists.isVisible({ timeout: 5000 }).catch(() => false);
             
@@ -76,7 +71,7 @@ test.beforeEach(async ({ page, browser }) => {
                 await page.getByRole('button', { name: /Publish website/ }).click();
                 await documentReady(page);
                 await expect(page.getByText(/your website is live!/)).toBeVisible();
-                await page.getByText(/Exit/).click();
+                await page.getByText(/Done/).click();
                 await documentReady(page);
                 await expect(page.getByText('Your campaign website')).toBeVisible();
                 console.log('Website created successfully');
@@ -129,7 +124,7 @@ async function extractCampaignSlug(page) {
 const websiteBuilderCaseId = 98;
 setupTestReporting(test, websiteBuilderCaseId);
 
-test.skip('Generate New Website', async ({ page }) => {
+test('Generate New Website', async ({ page }) => {
     await expect(page.getByText('Your campaign website')).toBeVisible();
     await page.goto(`${candidateUrl}/${campaignSlug}`);
     await documentReady(page);
@@ -139,7 +134,7 @@ test.skip('Generate New Website', async ({ page }) => {
 const websiteDashboardCaseId = 99;
 setupTestReporting(test, websiteDashboardCaseId);
 
-test.skip('Verify website dashboard page', async ({ page }) => {
+test('Verify website dashboard page', async ({ page }) => {
     await expect(page.getByRole('heading', { name: /Published Your campaign/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Increase visitors/ })).toBeVisible();
 });
@@ -147,7 +142,7 @@ test.skip('Verify website dashboard page', async ({ page }) => {
 const websiteFormCaseId = 100;
 setupTestReporting(test, websiteFormCaseId);
 
-test.skip('Verify website form submission', async ({ page }) => {
+test('Verify website form submission', async ({ page }) => {
     await page.goto(`${candidateUrl}/${campaignSlug}`);
     await documentReady(page);
     // Fill out form
