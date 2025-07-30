@@ -79,7 +79,7 @@ export default function CompleteStep({ vanityPath, domain }) {
         </div>
       ) : (
         <Button href="/dashboard/website" className="mt-12">
-          Back to website settings
+          Back to website metrics
         </Button>
       )}
       <ShareModal
