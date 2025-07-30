@@ -314,7 +314,10 @@ export default function WebsiteCreateFlow() {
               />
             )}
             {step === COMPLETE_STEP && (
-              <CompleteStep vanityPath={website.vanityPath} />
+              <CompleteStep
+                vanityPath={website.vanityPath}
+                domain={website.domain}
+              />
             )}
           </div>
           {step !== COMPLETE_STEP && (
