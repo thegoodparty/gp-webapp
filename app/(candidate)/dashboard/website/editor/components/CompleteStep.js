@@ -27,7 +27,7 @@ export default function CompleteStep({ vanityPath, domain }) {
       <Button onClick={() => setShareModalOpen(true)} color="neutral">
         Share
       </Button>
-      {!domain && (
+      {!domain ? (
         <div className=" bg-[#F1E5FF] rounded-lg p-4 md:p-12 w-full relative">
           <div className="absolute top-0 left-0">
             <Image
@@ -77,6 +77,10 @@ export default function CompleteStep({ vanityPath, domain }) {
             </div>
           </div>
         </div>
+      ) : (
+        <Button href="/dashboard/website" className="mt-12">
+          Back to website settings
+        </Button>
       )}
       <ShareModal
         open={shareModalOpen}
