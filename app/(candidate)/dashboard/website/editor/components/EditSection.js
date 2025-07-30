@@ -64,10 +64,8 @@ export default function EditSection({
             initialBio={initialBio}
             bio={website.content.about?.bio}
             issues={website.content.about?.issues}
-            committee={website.content.about?.committee}
             onBioChange={onBioChange}
             onIssuesChange={onIssuesChange}
-            onCommitteeChange={onCommitteeChange}
             noHeading
           />
         )}
@@ -79,6 +77,8 @@ export default function EditSection({
             onAddressChange={onAddressChange}
             onEmailChange={onEmailChange}
             onPhoneChange={onPhoneChange}
+            committee={website.content.about?.committee}
+            onCommitteeChange={onCommitteeChange}
             noHeading
           />
         )}

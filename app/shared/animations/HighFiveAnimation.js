@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Player, PlayerEvent } from '@lottiefiles/react-lottie-player'
 import * as data from './highFive.json'
 
@@ -12,6 +12,11 @@ export default function HighFiveAnimation({
 }) {
   const [animationKey, setAnimationKey] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleEvent = (event) => {
     if (event === PlayerEvent.Complete) {
@@ -29,6 +34,10 @@ export default function HighFiveAnimation({
 
   const handleMouseLeave = () => {
     setIsHovered(false)
+  }
+
+  if (!isMounted) {
+    return null
   }
 
   return (
