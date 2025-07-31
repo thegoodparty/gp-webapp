@@ -410,17 +410,28 @@ export function extractClids(searchParams) {
   return clids
 }
 
-export function trackRegistrationCompleted({
+export async function trackRegistrationCompleted({
   analytics,
   userId,
   signUpMethod = 'email',
 }) {
   const signUpDate = new Date().toISOString()
 
-  analytics.identify(userId, {
-    signUpDate,
-    signUpMethod,
-  })
+  try {
+    const analyticsInstance = await analytics
+    if (analyticsInstance && typeof analyticsInstance.identify === 'function') {
+      if (typeof analyticsInstance.ready === 'function') {
+        await analyticsInstance.ready()
+      }
+      analyticsInstance.identify(userId, {
+        signUpDate,
+        signUpMethod,
+      })
+    }
+  } catch (error) {
+    console.error('Error identifying user for registration:', error)
+  }
+
   trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
     signUpDate,
     signUpMethod,

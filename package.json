@@ -48,6 +48,7 @@
     "@tailwindcss/postcss": "^4.1.6",
     "@tailwindcss/typography": "^0.5.15",
     "@tanstack/react-table": "^8.21.3",
+    "chart.js": "^4.5.0",
     "classnames": "^2.3.2",
     "clsx": "^1.2.1",
     "date-fns": "^4.1.0",

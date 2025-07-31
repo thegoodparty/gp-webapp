@@ -12,7 +12,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.text]: 'How many text messages did you schedule?',
@@ -59,15 +59,18 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
 
     setReportedVoterGoals(nextGoals)
 
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       recipientCount: newAddition,
       price: 0,
       medium: flowType,
       method: 'unknown',
       campaignName: 'null',
     })
-    analytics.identify(user.id, {
-      voterContacts: Object.values(nextGoals).reduce((sum, v) => sum + (Number(v) || 0), 0) 
+    await identifyUser(user.id, {
+      voterContacts: Object.values(nextGoals).reduce(
+        (sum, v) => sum + (Number(v) || 0),
+        0,
+      ),
     })
 
     const newHistoryItem = await createUpdateHistory({
