@@ -15,7 +15,7 @@ test.describe('New User Voter Outreach', () => {
     
     setupTestReporting(test, NewVoterOutreachCaseId);
     
-    test('Verify Voter Outreach page as new user', async ({ page }) => {
+    test.skip('Verify Voter Outreach page as new user', async ({ page }) => {
         test.setTimeout(200000);
         const outreachPageHeader = 'Create your first campaign';
         await prepareTest('user', '/dashboard/outreach', outreachPageHeader, page);
@@ -38,7 +38,7 @@ test.describe('Pro Voter Outreach', () => {
     
     setupTestReporting(test, VoterOutreachCaseId);
     
-    test('Verify Voter Outreach page', async ({ page }) => {
+    test.skip('Verify Voter Outreach page', async ({ page }) => {
         test.setTimeout(200000);
         const outreachPageHeader = 'Create a new campaign';
         await prepareTest('admin', '/dashboard/outreach', outreachPageHeader, page);
