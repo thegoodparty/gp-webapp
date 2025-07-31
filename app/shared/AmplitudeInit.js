@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { isProductRoute } from './utils/isProductRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
-import { analytics } from './utils/analytics'
+import { getReadyAnalytics } from './utils/analytics'
 import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
 
 export default function AmplitudeInit() {
@@ -25,14 +25,10 @@ export default function AmplitudeInit() {
     if (wantReplay && !replayActive.current) {
       ;(async () => {
         try {
-          const analyticsInstance = await analytics
+          const analyticsInstance = await getReadyAnalytics()
           if (!analyticsInstance) {
             console.warn('Analytics not available for Session Replay')
             return
-          }
-
-          if (typeof analyticsInstance.ready === 'function') {
-            await analyticsInstance.ready()
           }
 
           // Get user and device ID (no retry needed after analytics.ready())

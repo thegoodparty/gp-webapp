@@ -13,7 +13,7 @@ import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 async function runP2V(slug) {
   try {
@@ -169,20 +169,7 @@ export default function OfficeStep({
         officeName: position.name,
         officeElectionDate: election.electionDay,
       }
-      try {
-        const analyticsInstance = await analytics
-        if (
-          analyticsInstance &&
-          typeof analyticsInstance.identify === 'function'
-        ) {
-          if (typeof analyticsInstance.ready === 'function') {
-            await analyticsInstance.ready()
-          }
-          analyticsInstance.identify(user.id, trackingProperties)
-        }
-      } catch (error) {
-        console.error('Error identifying user in OfficeStep:', error)
-      }
+      await identifyUser(user.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,

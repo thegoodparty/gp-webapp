@@ -13,7 +13,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -89,28 +89,12 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
       })
     }
 
-    try {
-      const analyticsInstance = await analytics
-      if (
-        analyticsInstance &&
-        typeof analyticsInstance.identify === 'function'
-      ) {
-        if (typeof analyticsInstance.ready === 'function') {
-          await analyticsInstance.ready()
-        }
-        analyticsInstance.identify(user.id, {
-          voterContacts: Object.values({
-            ...recordedVoterGoals,
-            ...newContactTotals,
-          }).reduce((sum, val) => sum + Number(val) || 0, 0),
-        })
-      }
-    } catch (error) {
-      console.error(
-        'Error identifying user in RecordVoterContactsModal:',
-        error,
-      )
-    }
+    await identifyUser(user.id, {
+      voterContacts: Object.values({
+        ...recordedVoterGoals,
+        ...newContactTotals,
+      }).reduce((sum, val) => sum + Number(val) || 0, 0),
+    })
 
     setRecordedVoterGoals({
       ...recordedVoterGoals,

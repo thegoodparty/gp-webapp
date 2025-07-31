@@ -9,7 +9,7 @@ import {
 import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useUser } from '@shared/hooks/useUser'
 
@@ -111,20 +111,7 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
       officeName: state.office,
       officeElectionDate: state.electionDate,
     }
-    try {
-      const analyticsInstance = await analytics
-      if (
-        analyticsInstance &&
-        typeof analyticsInstance.identify === 'function'
-      ) {
-        if (typeof analyticsInstance.ready === 'function') {
-          await analyticsInstance.ready()
-        }
-        analyticsInstance.identify(user.id, trackingProperties)
-      }
-    } catch (error) {
-      console.error('Error identifying user in CustomOfficeForm:', error)
-    }
+    await identifyUser(user.id, trackingProperties)
     trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
       ...trackingProperties,
       officeManuallyInput: true,
