@@ -1,3 +1,5 @@
+'use client'
+
 import LottieAnimation from './LottieAnimation'
 import * as animationData from './sadFace.json'
 export default function SadFaceAnimation() {
