@@ -8,6 +8,7 @@ export default function AnalyticsSessionReplayMiddleware() {
   const middlewareAttached = useRef(false)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
     if (middlewareAttached.current) return
     ;(async () => {
       try {
@@ -67,6 +68,28 @@ export default function AnalyticsSessionReplayMiddleware() {
                       replayError,
                     )
                   }
+                }
+
+                try {
+                  const user = analyticsInstance.user()
+                  if (user && typeof user.anonymousId === 'function') {
+                    const anonymousId = user.anonymousId()
+                    if (anonymousId) {
+                      if (!payload.obj.integrations) {
+                        payload.obj.integrations = {}
+                      }
+                      if (!payload.obj.integrations['Actions Amplitude']) {
+                        payload.obj.integrations['Actions Amplitude'] = {}
+                      }
+                      payload.obj.integrations['Actions Amplitude'].device_id =
+                        anonymousId
+                    }
+                  }
+                } catch (deviceIdError) {
+                  console.warn(
+                    'Failed to set device ID for Amplitude:',
+                    deviceIdError,
+                  )
                 }
               }
             } catch (error) {
