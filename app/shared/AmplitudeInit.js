@@ -14,11 +14,10 @@ export default function AmplitudeInit() {
   useEffect(() => {
     if (!NEXT_PUBLIC_AMPLITUDE_API_KEY) {
       console.warn(
-        'Amplitude API key not found. Analytics will not be initialized',
+        'Amplitude API key not found. Session Replay will not be initialized',
       )
       return
     }
-    if (typeof analytics === 'undefined') return
 
     const wantReplay = isProductRoute(pathname)
 
@@ -55,8 +54,6 @@ export default function AmplitudeInit() {
               .toString(36)
               .substr(2, 9)}`
           }
-
-          console.log('Session Replay using device ID:', deviceId)
 
           let sessionId = getStoredSessionId()
           if (!sessionId || sessionId <= 0) {

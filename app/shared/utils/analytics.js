@@ -1,11 +1,19 @@
 import { AnalyticsBrowser } from '@segment/analytics-next'
 import { NEXT_PUBLIC_SEGMENT_WRITE_KEY } from 'appEnv'
 
-export const analytics = AnalyticsBrowser.load({
-  writeKey: NEXT_PUBLIC_SEGMENT_WRITE_KEY,
-}).then((result) => {
-  return Array.isArray(result) ? result[0] : result
-})
+export const analytics = NEXT_PUBLIC_SEGMENT_WRITE_KEY
+  ? AnalyticsBrowser.load({
+      writeKey: NEXT_PUBLIC_SEGMENT_WRITE_KEY,
+    })
+      .then((result) => {
+        console.log('Segment analytics loaded successfully')
+        return Array.isArray(result) ? result[0] : result
+      })
+      .catch((error) => {
+        console.error('Segment analytics failed to load:', error)
+        return null
+      })
+  : Promise.resolve(null)
 
 // Helper function to get analytics instance and ensure it's ready
 export const getReadyAnalytics = async () => {
