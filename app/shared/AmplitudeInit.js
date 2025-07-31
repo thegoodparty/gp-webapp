@@ -5,7 +5,7 @@ import { isProductRoute } from './utils/isProductRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
 import { getAnalytics } from './utils/analytics'
-import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
+import { getStoredSessionId } from 'helpers/analyticsHelper'
 
 export default function AmplitudeInit() {
   const pathname = usePathname()
@@ -45,16 +45,12 @@ export default function AmplitudeInit() {
             return
           }
 
-          let sessionId = getStoredSessionId()
-          if (!sessionId || sessionId <= 0) {
-            sessionId = Date.now()
-            storeSessionId(sessionId)
-          }
-
-          sessionId = Number(sessionId)
+          const sessionId = getStoredSessionId()
 
           const deviceId =
-            typeof user.anonymousId === 'function' ? user.anonymousId() : null
+            typeof user.anonymousId === 'function'
+              ? user.anonymousId()
+              : undefined
           if (!deviceId) {
             console.warn('Device ID not available from analytics')
             return
