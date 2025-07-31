@@ -33,9 +33,13 @@ export default function AmplitudeInit() {
             return
           }
 
-          await analytics.ready()
+          if (typeof analytics.ready === 'function') {
+            await analytics.ready()
+          }
 
-          const user = await analytics.user()
+          const user =
+            typeof analytics.user === 'function' ? analytics.user() : null
+
           if (!user) {
             console.warn('Analytics user not available')
             return
@@ -47,10 +51,10 @@ export default function AmplitudeInit() {
             storeSessionId(sessionId)
           }
 
-          // Ensure session ID is a number as required by Amplitude
           sessionId = Number(sessionId)
 
-          const deviceId = user.anonymousId()
+          const deviceId =
+            typeof user.anonymousId === 'function' ? user.anonymousId() : null
           if (!deviceId) {
             console.warn('Device ID not available from analytics')
             return
@@ -64,7 +68,6 @@ export default function AmplitudeInit() {
 
           replayActive.current = true
 
-          // Signal that Session Replay is initialized
           window.sessionReplayInitialized = true
         } catch (error) {
           console.error('Failed to initialize Session Replay:', error)

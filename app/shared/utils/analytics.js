@@ -20,9 +20,10 @@ const createAnalytics = () => {
     analyticsPromise = AnalyticsBrowser.load({
       writeKey: NEXT_PUBLIC_SEGMENT_WRITE_KEY,
     })
-      .then((instance) => {
-        analyticsInstance = instance
-        return instance
+      .then((result) => {
+        const analytics = Array.isArray(result) ? result[0] : result
+        analyticsInstance = analytics
+        return analytics
       })
       .catch((error) => {
         console.error('Failed to load Segment analytics:', error)
@@ -55,12 +56,16 @@ export const identifyUser = async (userId, traits = {}) => {
     const analytics = await getAnalytics()
     if (!analytics) return false
 
-    await analytics.ready()
+    if (typeof analytics.ready === 'function') {
+      await analytics.ready()
+    }
 
-    if (userId) {
-      analytics.identify(userId, traits)
-    } else {
-      analytics.identify(traits)
+    if (typeof analytics.identify === 'function') {
+      if (userId) {
+        analytics.identify(userId, traits)
+      } else {
+        analytics.identify(traits)
+      }
     }
 
     return true
@@ -75,8 +80,12 @@ export const trackPage = async (name, properties = {}) => {
     const analytics = await getAnalytics()
     if (!analytics) return false
 
-    await analytics.ready()
-    analytics.page(name, properties)
+    if (typeof analytics.ready === 'function') {
+      await analytics.ready()
+    }
+    if (typeof analytics.page === 'function') {
+      analytics.page(name, properties)
+    }
     return true
   } catch (error) {
     console.error('Error tracking page:', error)
@@ -89,8 +98,12 @@ export const trackEvent = async (eventName, properties = {}) => {
     const analytics = await getAnalytics()
     if (!analytics) return false
 
-    await analytics.ready()
-    analytics.track(eventName, properties)
+    if (typeof analytics.ready === 'function') {
+      await analytics.ready()
+    }
+    if (typeof analytics.track === 'function') {
+      analytics.track(eventName, properties)
+    }
     return true
   } catch (error) {
     console.error('Error tracking event:', error)
@@ -98,7 +111,6 @@ export const trackEvent = async (eventName, properties = {}) => {
   }
 }
 
-// Debug utility for monitoring Session Replay integration
 export const getAnalyticsDebugInfo = async () => {
   try {
     const analytics = await getAnalytics()
@@ -109,12 +121,13 @@ export const getAnalyticsDebugInfo = async () => {
       hasSegmentWriteKey: !!NEXT_PUBLIC_SEGMENT_WRITE_KEY,
       hasAnalytics: hasSegment,
       sessionReplayInitialized,
-      analyticsReady: hasSegment
-        ? await analytics
-            .ready()
-            .then(() => true)
-            .catch(() => false)
-        : false,
+      analyticsReady:
+        hasSegment && typeof analytics.ready === 'function'
+          ? await analytics
+              .ready()
+              .then(() => true)
+              .catch(() => false)
+          : false,
     }
   } catch (error) {
     return {

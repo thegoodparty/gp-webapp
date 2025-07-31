@@ -12,64 +12,75 @@ export default function AnalyticsSessionReplayMiddleware() {
     ;(async () => {
       try {
         const analytics = await getAnalytics()
-        if (!analytics) return
+        if (!analytics) {
+          console.warn(
+            'Analytics not available. Session Replay will not be initialized',
+          )
+          return
+        }
 
-        await analytics.ready()
+        if (typeof analytics.ready === 'function') {
+          await analytics.ready()
+        }
         middlewareAttached.current = true
 
-        analytics.addSourceMiddleware(({ payload, next }) => {
-          try {
-            const storedSessionId = getStoredSessionId()
-            const nextSessionId =
-              payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
+        if (typeof analytics.addSourceMiddleware === 'function') {
+          analytics.addSourceMiddleware(({ payload, next }) => {
+            try {
+              const storedSessionId = getStoredSessionId()
+              const nextSessionId =
+                payload.obj.integrations?.['Actions Amplitude']?.session_id || 0
 
-            if (nextSessionId > 0 && storedSessionId < nextSessionId) {
-              storeSessionId(nextSessionId)
-              // Only update session ID if Session Replay is initialized
-              if (window.sessionReplayInitialized) {
-                try {
-                  sessionReplay.setSessionId(nextSessionId)
-                } catch (err) {
-                  console.warn('Failed to set session ID for replay:', err)
-                }
-              }
-            }
-          } catch (error) {
-            console.warn('Session ID middleware error:', error)
-          }
-          next(payload)
-        })
-
-        analytics.addSourceMiddleware(({ payload, next }) => {
-          try {
-            if (payload.type() === 'track') {
-              // Only try to get session replay properties if Session Replay is initialized
-              if (window.sessionReplayInitialized) {
-                try {
-                  const sessionReplayProperties =
-                    sessionReplay.getSessionReplayProperties()
-                  if (
-                    sessionReplayProperties &&
-                    Object.keys(sessionReplayProperties).length > 0
-                  ) {
-                    payload.obj.properties = {
-                      ...payload.obj.properties,
-                      ...sessionReplayProperties,
-                    }
+              if (nextSessionId > 0 && storedSessionId < nextSessionId) {
+                storeSessionId(nextSessionId)
+                // Only update session ID if Session Replay is initialized
+                if (window.sessionReplayInitialized) {
+                  try {
+                    sessionReplay.setSessionId(nextSessionId)
+                  } catch (err) {
+                    console.warn('Failed to set session ID for replay:', err)
                   }
-                } catch (replayError) {
-                  console.warn(
-                    'Failed to get session replay properties:',
-                    replayError,
-                  )
                 }
               }
+            } catch (error) {
+              console.warn('Session ID middleware error:', error)
             }
-          } catch (error) {
-            console.warn('Session Replay properties middleware error:', error)
-          }
-          next(payload)
-        })
+            next(payload)
+          })
+        }
+
+        if (typeof analytics.addSourceMiddleware === 'function') {
+          analytics.addSourceMiddleware(({ payload, next }) => {
+            try {
+              if (payload.type() === 'track') {
+                // Only try to get session replay properties if Session Replay is initialized
+                if (window.sessionReplayInitialized) {
+                  try {
+                    const sessionReplayProperties =
+                      sessionReplay.getSessionReplayProperties()
+                    if (
+                      sessionReplayProperties &&
+                      Object.keys(sessionReplayProperties).length > 0
+                    ) {
+                      payload.obj.properties = {
+                        ...payload.obj.properties,
+                        ...sessionReplayProperties,
+                      }
+                    }
+                  } catch (replayError) {
+                    console.warn(
+                      'Failed to get session replay properties:',
+                      replayError,
+                    )
+                  }
+                }
+              }
+            } catch (error) {
+              console.warn('Session Replay properties middleware error:', error)
+            }
+            next(payload)
+          })
+        }
       } catch (error) {
         console.error('Failed to set up analytics middleware:', error)
         middlewareAttached.current = false

@@ -417,10 +417,12 @@ export function trackRegistrationCompleted({
 }) {
   const signUpDate = new Date().toISOString()
 
-  analytics.identify(userId, {
-    signUpDate,
-    signUpMethod,
-  })
+  if (typeof analytics?.identify === 'function') {
+    analytics.identify(userId, {
+      signUpDate,
+      signUpMethod,
+    })
+  }
   trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
     signUpDate,
     signUpMethod,
