@@ -35,49 +35,32 @@ export default function AmplitudeInit() {
             await analyticsInstance.ready()
           }
 
-          let user = null
+          // Get user and device ID (no retry needed after analytics.ready())
+          const user =
+            typeof analyticsInstance.user === 'function'
+              ? analyticsInstance.user()
+              : null
+
           let deviceId = null
-          let attempts = 0
-          const maxAttempts = 5
 
-          while (attempts < maxAttempts && !deviceId) {
-            user =
-              typeof analyticsInstance.user === 'function'
-                ? analyticsInstance.user()
-                : null
+          if (user) {
+            // Try to get device ID (anonymous ID first, then user ID as backup)
+            deviceId =
+              typeof user.anonymousId === 'function' ? user.anonymousId() : null
 
-            if (user) {
-              deviceId =
-                typeof user.anonymousId === 'function'
-                  ? user.anonymousId()
-                  : null
-
-              const userId = typeof user.id === 'function' ? user.id() : null
-
-              if (deviceId || userId) {
-                deviceId = deviceId || userId
-                console.log('Session Replay using device ID:', deviceId)
-                break
-              }
-            }
-
-            attempts++
-            if (attempts < maxAttempts) {
-              await new Promise((resolve) => setTimeout(resolve, 100))
+            if (!deviceId && typeof user.id === 'function') {
+              deviceId = user.id()
             }
           }
 
+          // If no device ID available, generate fallback
           if (!deviceId) {
-            const fallbackDeviceId = `fallback-${Date.now()}-${Math.random()
+            deviceId = `fallback-${Date.now()}-${Math.random()
               .toString(36)
               .substr(2, 9)}`
-
-            console.log(
-              'Session Replay using fallback device ID:',
-              fallbackDeviceId,
-            )
-            deviceId = fallbackDeviceId
           }
+
+          console.log('Session Replay using device ID:', deviceId)
 
           let sessionId = getStoredSessionId()
           if (!sessionId || sessionId <= 0) {
