@@ -1,3 +1,5 @@
+'use client'
+
 import LottieAnimation from './LottieAnimation'
 import * as animationData from 'app/shared/animations/gears.json'
 export default function GearsAnimation(props) {

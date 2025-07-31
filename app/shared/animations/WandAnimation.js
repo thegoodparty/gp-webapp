@@ -1,3 +1,5 @@
+'use client'
+
 import LottieAnimation from './LottieAnimation'
 import * as data from './wand.json'
 export default function WandAnimation(props) {
