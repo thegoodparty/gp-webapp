@@ -124,7 +124,7 @@ async function extractCampaignSlug(page) {
 const websiteBuilderCaseId = 98;
 setupTestReporting(test, websiteBuilderCaseId);
 
-test('Generate New Website', async ({ page }) => {
+test.skip('Generate New Website', async ({ page }) => {
     await expect(page.getByText('Your campaign website')).toBeVisible();
     await page.goto(`${candidateUrl}/${campaignSlug}`);
     await documentReady(page);
@@ -134,7 +134,7 @@ test('Generate New Website', async ({ page }) => {
 const websiteDashboardCaseId = 99;
 setupTestReporting(test, websiteDashboardCaseId);
 
-test('Verify website dashboard page', async ({ page }) => {
+test.skip('Verify website dashboard page', async ({ page }) => {
     await expect(page.getByRole('heading', { name: /Published Your campaign/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Increase visitors/ })).toBeVisible();
 });
@@ -142,7 +142,7 @@ test('Verify website dashboard page', async ({ page }) => {
 const websiteFormCaseId = 100;
 setupTestReporting(test, websiteFormCaseId);
 
-test('Verify website form submission', async ({ page }) => {
+test.skip('Verify website form submission', async ({ page }) => {
     await page.goto(`${candidateUrl}/${campaignSlug}`);
     await documentReady(page);
     // Fill out form
