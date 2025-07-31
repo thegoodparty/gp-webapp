@@ -111,10 +111,23 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
       officeName: state.office,
       officeElectionDate: state.electionDate,
     }
-    analytics.identify(user.id, trackingProperties)
-    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, { 
-      ...trackingProperties, 
-      officeManuallyInput: true, 
+    try {
+      const analyticsInstance = await analytics
+      if (
+        analyticsInstance &&
+        typeof analyticsInstance.identify === 'function'
+      ) {
+        if (typeof analyticsInstance.ready === 'function') {
+          await analyticsInstance.ready()
+        }
+        analyticsInstance.identify(user.id, trackingProperties)
+      }
+    } catch (error) {
+      console.error('Error identifying user in CustomOfficeForm:', error)
+    }
+    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+      ...trackingProperties,
+      officeManuallyInput: true,
     })
   }
 

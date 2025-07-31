@@ -62,7 +62,26 @@ export default function LoginPage() {
         setUserCookie(user)
         setUser(user)
         const { id, email, firstName, lastName, phone, zip } = user
-        analytics.identify(id, { email, firstName, lastName, phone, zip })
+        try {
+          const analyticsInstance = await analytics
+          if (
+            analyticsInstance &&
+            typeof analyticsInstance.identify === 'function'
+          ) {
+            if (typeof analyticsInstance.ready === 'function') {
+              await analyticsInstance.ready()
+            }
+            analyticsInstance.identify(id, {
+              email,
+              firstName,
+              lastName,
+              phone,
+              zip,
+            })
+          }
+        } catch (error) {
+          console.error('Error identifying user on login:', error)
+        }
 
         await doLoginRedirect(router, user, campaign)
       } else {

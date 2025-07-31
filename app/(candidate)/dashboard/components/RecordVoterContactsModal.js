@@ -73,11 +73,14 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
     const newHistoryItems = await Promise.all(
       newHistoryItemsData.map((item) => createUpdateHistory(item)),
     )
-    const newContactTotals = calculateIncrementedFields(recordedVoterGoals, updatedFields)
+    const newContactTotals = calculateIncrementedFields(
+      recordedVoterGoals,
+      updatedFields,
+    )
 
     for (const [medium, recipientCount] of Object.entries(updatedFields)) {
       if (recipientCount.length <= 0 || Number(recipientCount) <= 0) continue
-      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
         recipientCount,
         price: 0,
         medium,
@@ -86,10 +89,28 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
       })
     }
 
-    analytics.identify(user.id, { 
-      voterContacts: Object.values({ ...recordedVoterGoals, ...newContactTotals })
-      .reduce((sum, val) => sum + Number(val) || 0, 0)
-    })
+    try {
+      const analyticsInstance = await analytics
+      if (
+        analyticsInstance &&
+        typeof analyticsInstance.identify === 'function'
+      ) {
+        if (typeof analyticsInstance.ready === 'function') {
+          await analyticsInstance.ready()
+        }
+        analyticsInstance.identify(user.id, {
+          voterContacts: Object.values({
+            ...recordedVoterGoals,
+            ...newContactTotals,
+          }).reduce((sum, val) => sum + Number(val) || 0, 0),
+        })
+      }
+    } catch (error) {
+      console.error(
+        'Error identifying user in RecordVoterContactsModal:',
+        error,
+      )
+    }
 
     setRecordedVoterGoals({
       ...recordedVoterGoals,

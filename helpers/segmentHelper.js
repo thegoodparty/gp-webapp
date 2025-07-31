@@ -1,4 +1,6 @@
 export const segmentTrackEvent = (eventName, properties) => {
   if (typeof window === 'undefined' || !window.analytics) return
-  window.analytics.track(eventName, properties)
+  if (typeof window.analytics.track === 'function') {
+    window.analytics.track(eventName, properties)
+  }
 }

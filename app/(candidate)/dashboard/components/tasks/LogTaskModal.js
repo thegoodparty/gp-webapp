@@ -59,16 +59,32 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
 
     setReportedVoterGoals(nextGoals)
 
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       recipientCount: newAddition,
       price: 0,
       medium: flowType,
       method: 'unknown',
       campaignName: 'null',
     })
-    analytics.identify(user.id, {
-      voterContacts: Object.values(nextGoals).reduce((sum, v) => sum + (Number(v) || 0), 0) 
-    })
+    try {
+      const analyticsInstance = await analytics
+      if (
+        analyticsInstance &&
+        typeof analyticsInstance.identify === 'function'
+      ) {
+        if (typeof analyticsInstance.ready === 'function') {
+          await analyticsInstance.ready()
+        }
+        analyticsInstance.identify(user.id, {
+          voterContacts: Object.values(nextGoals).reduce(
+            (sum, v) => sum + (Number(v) || 0),
+            0,
+          ),
+        })
+      }
+    } catch (error) {
+      console.error('Error identifying user in LogTaskModal:', error)
+    }
 
     const newHistoryItem = await createUpdateHistory({
       type: flowType,

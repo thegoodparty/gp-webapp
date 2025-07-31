@@ -52,9 +52,9 @@ export default function OfficeStep({
     [step],
   )
   useTrackOfficeSearch({
-    zip: ballotSearch?.zip, 
+    zip: ballotSearch?.zip,
     level: ballotSearch?.level,
-    officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter
+    officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter,
   })
 
   const canSubmit = () => {
@@ -90,7 +90,7 @@ export default function OfficeStep({
       setProcessing(false)
       return
     }
-    
+
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
       step,
     })
@@ -169,10 +169,23 @@ export default function OfficeStep({
         officeName: position.name,
         officeElectionDate: election.electionDay,
       }
-      analytics.identify(user.id, trackingProperties)
-      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, { 
-        ...trackingProperties, 
-        officeManuallyInput: false, 
+      try {
+        const analyticsInstance = await analytics
+        if (
+          analyticsInstance &&
+          typeof analyticsInstance.identify === 'function'
+        ) {
+          if (typeof analyticsInstance.ready === 'function') {
+            await analyticsInstance.ready()
+          }
+          analyticsInstance.identify(user.id, trackingProperties)
+        }
+      } catch (error) {
+        console.error('Error identifying user in OfficeStep:', error)
+      }
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+        ...trackingProperties,
+        officeManuallyInput: false,
       })
       await updateCampaign(attr)
       await runP2V()

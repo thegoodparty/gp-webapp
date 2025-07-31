@@ -9,21 +9,51 @@ import { useEffect } from 'react'
 import { analytics } from '@shared/utils/analytics'
 
 const identify = async (user, searchParams) => {
-  const analyticsUser = await analytics.user()
-  if (analyticsUser.id() || analyticsUser.anonymousId()) return // No need to spam identity calls that have no new information
+  try {
+    const analyticsInstance = await analytics
+    if (!analyticsInstance) return
 
-  persistUtmsOnce()
+    if (typeof analyticsInstance.ready === 'function') {
+      await analyticsInstance.ready()
+    }
 
-  user?.id 
-    ? analytics.identify(user.id, {
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        phone: user.phone,
-        zip: user.zip,
-        ...getPersistedUtms(), 
-        ...extractClids(searchParams) 
-      })
-    : analytics.identify()
+    const analyticsUser =
+      typeof analyticsInstance.user === 'function'
+        ? analyticsInstance.user()
+        : null
+
+    if (
+      analyticsUser &&
+      ((typeof analyticsUser.id === 'function' && analyticsUser.id()) ||
+        (typeof analyticsUser.anonymousId === 'function' &&
+          analyticsUser.anonymousId()))
+    ) {
+      return // No need to spam identity calls that have no new information
+    }
+
+    persistUtmsOnce()
+
+    const traits = {
+      ...getPersistedUtms(),
+      ...extractClids(searchParams),
+    }
+
+    if (typeof analyticsInstance.identify === 'function') {
+      if (user?.id) {
+        analyticsInstance.identify(user.id, {
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          phone: user.phone,
+          zip: user.zip,
+          ...traits,
+        })
+      } else {
+        analyticsInstance.identify(traits)
+      }
+    }
+  } catch (error) {
+    console.error('Error identifying user:', error)
+  }
 }
 
 export default function SegmentIdentify() {
@@ -31,7 +61,7 @@ export default function SegmentIdentify() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    analytics && identify(user, searchParams)
+    identify(user, searchParams)
   }, [user, searchParams])
 
   return null
