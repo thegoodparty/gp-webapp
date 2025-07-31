@@ -73,7 +73,7 @@ export default function AmplitudeInit() {
     }
 
     if (!wantReplay && replayActive.current) {
-      sessionReplay.shutdown().finally(() => {
+      sessionReplay?.shutdown()?.finally(() => {
         replayActive.current = false
         window.sessionReplayInitialized = false
       })
