@@ -16,7 +16,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 import { useRouter } from 'next/navigation'
 
 import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
@@ -62,7 +62,7 @@ export default function LoginPage() {
         setUserCookie(user)
         setUser(user)
         const { id, email, firstName, lastName, phone, zip } = user
-        analytics.identify(id, { email, firstName, lastName, phone, zip })
+        await identifyUser(id, { email, firstName, lastName, phone, zip })
 
         await doLoginRedirect(router, user, campaign)
       } else {

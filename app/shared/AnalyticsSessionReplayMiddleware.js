@@ -1,16 +1,19 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import * as sessionReplay from '@amplitude/session-replay-browser'
-import { analytics } from './utils/analytics'
+import { getAnalytics } from './utils/analytics'
 import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
 
 export default function AnalyticsSessionReplayMiddleware() {
   const middlewareAttached = useRef(false)
 
   useEffect(() => {
-    if (middlewareAttached.current || !analytics) return
+    if (middlewareAttached.current) return
     ;(async () => {
       try {
+        const analytics = await getAnalytics()
+        if (!analytics) return
+
         await analytics.ready()
         middlewareAttached.current = true
 

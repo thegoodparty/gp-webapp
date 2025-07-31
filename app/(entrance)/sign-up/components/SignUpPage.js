@@ -23,7 +23,7 @@ import {
   trackEvent,
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { getAnalytics } from '@shared/utils/analytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -71,7 +71,6 @@ const SIGN_UP_FIELDS = [
   },
 ]
 
-
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
   return validZip.test(zip)
@@ -96,7 +95,7 @@ async function register({
       password,
       signUpMode,
     })
-    
+
     if (resp.status === 409) {
       return { exists: true }
     }
@@ -106,7 +105,6 @@ async function register({
     return false
   }
 }
-
 
 export default function SignUpPage() {
   const [state, setState] = useState({
@@ -125,22 +123,14 @@ export default function SignUpPage() {
   const [_, setUser] = useUser()
   const router = useRouter()
 
-  const {
-    firstName,
-    lastName,
-    signUpMode,
-    email,
-    phone,
-    zip,
-    password,
-  } = state
-
+  const { firstName, lastName, signUpMode, email, phone, zip, password } = state
 
   const enableSubmit =
-    firstName && lastName && 
-    isValidEmail(email) && 
+    firstName &&
+    lastName &&
+    isValidEmail(email) &&
     isValidPassword(password) &&
-    isValidPhone(phone) && 
+    isValidPhone(phone) &&
     validateZip(zip)
 
   const handleSubmit = async () => {
@@ -169,10 +159,14 @@ export default function SignUpPage() {
       await saveToken(token)
       setUser(user)
 
-      trackRegistrationCompleted({
-        analytics,
-        userId: user.id,
-      })
+      const analytics = await getAnalytics()
+      if (analytics) {
+        await analytics.ready()
+        trackRegistrationCompleted({
+          analytics,
+          userId: user.id,
+        })
+      }
 
       try {
         const redirect = await doPostAuthRedirect(campaign)
@@ -185,11 +179,12 @@ export default function SignUpPage() {
       } catch (error) {
         console.error('Post-auth redirect error:', error)
         setLoading(false)
-        errorSnackbar('Account created but failed to redirect. Please try logging in.')
+        errorSnackbar(
+          'Account created but failed to redirect. Please try logging in.',
+        )
       }
     }
   }
-
 
   const onChangeField = (key, value) => {
     setState({

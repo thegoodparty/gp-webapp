@@ -13,7 +13,7 @@ import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 async function runP2V(slug) {
   try {
@@ -52,9 +52,9 @@ export default function OfficeStep({
     [step],
   )
   useTrackOfficeSearch({
-    zip: ballotSearch?.zip, 
+    zip: ballotSearch?.zip,
     level: ballotSearch?.level,
-    officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter
+    officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter,
   })
 
   const canSubmit = () => {
@@ -90,7 +90,7 @@ export default function OfficeStep({
       setProcessing(false)
       return
     }
-    
+
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
       step,
     })
@@ -169,10 +169,10 @@ export default function OfficeStep({
         officeName: position.name,
         officeElectionDate: election.electionDay,
       }
-      analytics.identify(user.id, trackingProperties)
-      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, { 
-        ...trackingProperties, 
-        officeManuallyInput: false, 
+      await identifyUser(user.id, trackingProperties)
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+        ...trackingProperties,
+        officeManuallyInput: false,
       })
       await updateCampaign(attr)
       await runP2V()

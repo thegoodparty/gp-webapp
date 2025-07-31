@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { isProductRoute } from './utils/isProductRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
-import { analytics } from './utils/analytics'
+import { getAnalytics } from './utils/analytics'
 import { getStoredSessionId } from 'helpers/analyticsHelper'
 
 export default function AmplitudeInit() {
@@ -19,18 +19,20 @@ export default function AmplitudeInit() {
       )
       return
     }
-    if (!analytics) {
-      console.warn(
-        'Analytics not available. Session Replay will not be initialized',
-      )
-      return
-    }
 
     const wantReplay = isProductRoute(pathname)
 
     if (wantReplay && !replayActive.current && !initPromise.current) {
       initPromise.current = (async () => {
         try {
+          const analytics = await getAnalytics()
+          if (!analytics) {
+            console.warn(
+              'Analytics not available. Session Replay will not be initialized',
+            )
+            return
+          }
+
           await analytics.ready()
 
           const user = await analytics.user()
