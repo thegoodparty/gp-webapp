@@ -22,9 +22,11 @@ export default function AnalyticsSessionReplayMiddleware() {
 
             if (nextSessionId > 0 && storedSessionId < nextSessionId) {
               storeSessionId(nextSessionId)
-              sessionReplay.setSessionId(nextSessionId).catch((err) => {
+              try {
+                sessionReplay.setSessionId(nextSessionId)
+              } catch (err) {
                 console.warn('Failed to set session ID for replay:', err)
-              })
+              }
             }
           } catch (error) {
             console.warn('Session ID middleware error:', error)
