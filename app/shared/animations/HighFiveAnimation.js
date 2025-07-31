@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Player, PlayerEvent } from '@lottiefiles/react-lottie-player'
 import * as data from './highFive.json'
 
 export default function HighFiveAnimation({
@@ -13,13 +12,28 @@ export default function HighFiveAnimation({
   const [animationKey, setAnimationKey] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [Player, setPlayer] = useState(null)
+  const [PlayerEvent, setPlayerEvent] = useState(null)
 
   useEffect(() => {
     setIsMounted(true)
+
+    const loadPlayer = async () => {
+      try {
+        const { Player: LottiePlayer, PlayerEvent: LottiePlayerEvent } =
+          await import('@lottiefiles/react-lottie-player')
+        setPlayer(() => LottiePlayer)
+        setPlayerEvent(LottiePlayerEvent)
+      } catch (error) {
+        console.warn('Failed to load Lottie player:', error)
+      }
+    }
+
+    loadPlayer()
   }, [])
 
   const handleEvent = (event) => {
-    if (event === PlayerEvent.Complete) {
+    if (PlayerEvent && event === PlayerEvent.Complete) {
       callback()
     }
   }
@@ -36,7 +50,7 @@ export default function HighFiveAnimation({
     setIsHovered(false)
   }
 
-  if (!isMounted) {
+  if (!isMounted || !Player) {
     return null
   }
 

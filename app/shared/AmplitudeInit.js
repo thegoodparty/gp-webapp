@@ -12,6 +12,8 @@ export default function AmplitudeInit() {
   const replayActive = useRef(false)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     if (!NEXT_PUBLIC_AMPLITUDE_API_KEY) {
       console.warn(
         'Amplitude API key not found. Session Replay will not be initialized',

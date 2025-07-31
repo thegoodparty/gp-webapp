@@ -8,6 +8,7 @@ export default function AnalyticsSessionReplayMiddleware() {
   const middlewareAttached = useRef(false)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
     if (middlewareAttached.current) return
     ;(async () => {
       try {
