@@ -1,10 +1,15 @@
 'use client'
 
-import { getPersistedClids, getPersistedUtms, persistClidsOnce, persistUtmsOnce } from "helpers/analyticsHelper"
-import { useEffect } from "react"
-import { usePathname } from "next/navigation"
-import { analytics } from "@shared/utils/analytics"
-import { useSearchParams } from "next/navigation"
+import {
+  getPersistedClids,
+  getPersistedUtms,
+  persistClidsOnce,
+  persistUtmsOnce,
+} from 'helpers/analyticsHelper'
+import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { trackPage } from '@shared/utils/analytics'
+import { useSearchParams } from 'next/navigation'
 
 export default function RouteTracker() {
   const pathname = usePathname()
@@ -16,11 +21,11 @@ export default function RouteTracker() {
   }, [])
 
   useEffect(() => {
-    analytics.page(undefined, { 
-      ...getPersistedUtms(), 
-      ...getPersistedClids() 
+    trackPage(undefined, {
+      ...getPersistedUtms(),
+      ...getPersistedClids(),
     })
-  }, [pathname, searchParams]) // We only want to run this when the pathname changes
+  }, [pathname, searchParams])
 
   return null
 }

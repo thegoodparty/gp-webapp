@@ -13,7 +13,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -73,11 +73,14 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
     const newHistoryItems = await Promise.all(
       newHistoryItemsData.map((item) => createUpdateHistory(item)),
     )
-    const newContactTotals = calculateIncrementedFields(recordedVoterGoals, updatedFields)
+    const newContactTotals = calculateIncrementedFields(
+      recordedVoterGoals,
+      updatedFields,
+    )
 
     for (const [medium, recipientCount] of Object.entries(updatedFields)) {
       if (recipientCount.length <= 0 || Number(recipientCount) <= 0) continue
-      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
         recipientCount,
         price: 0,
         medium,
@@ -86,9 +89,11 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
       })
     }
 
-    analytics.identify(user.id, { 
-      voterContacts: Object.values({ ...recordedVoterGoals, ...newContactTotals })
-      .reduce((sum, val) => sum + Number(val) || 0, 0)
+    await identifyUser(user.id, {
+      voterContacts: Object.values({
+        ...recordedVoterGoals,
+        ...newContactTotals,
+      }).reduce((sum, val) => sum + Number(val) || 0, 0),
     })
 
     setRecordedVoterGoals({
