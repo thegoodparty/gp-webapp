@@ -30,30 +30,24 @@ export default function AmplitudeInit() {
             return
           }
 
-          // Get user and device ID (no retry needed after analytics.ready())
           const user =
             typeof analyticsInstance.user === 'function'
               ? analyticsInstance.user()
               : null
 
           let deviceId = null
-
-          if (user) {
-            // Try to get device ID (anonymous ID first, then user ID as backup)
-            deviceId =
-              typeof user.anonymousId === 'function' ? user.anonymousId() : null
-
-            if (!deviceId && typeof user.id === 'function') {
-              deviceId = user.id()
-            }
+          if (user && typeof user.anonymousId === 'function') {
+            deviceId = user.anonymousId()
           }
 
-          // If no device ID available, generate fallback
           if (!deviceId) {
-            deviceId = `fallback-${Date.now()}-${Math.random()
-              .toString(36)
-              .substr(2, 9)}`
+            console.warn(
+              'Session Replay waiting for Segment anonymousId to be available. Device ID must match analytics events.',
+            )
+            return
           }
+
+          console.log('Session Replay device ID (anonymousId):', deviceId)
 
           let sessionId = getStoredSessionId()
           if (!sessionId || sessionId <= 0) {
