@@ -97,3 +97,32 @@ export const trackEvent = async (eventName, properties = {}) => {
     return false
   }
 }
+
+// Debug utility for monitoring Session Replay integration
+export const getAnalyticsDebugInfo = async () => {
+  try {
+    const analytics = await getAnalytics()
+    const hasSegment = !!analytics
+    const sessionReplayInitialized = !!window.sessionReplayInitialized
+
+    return {
+      hasSegmentWriteKey: !!NEXT_PUBLIC_SEGMENT_WRITE_KEY,
+      hasAnalytics: hasSegment,
+      sessionReplayInitialized,
+      analyticsReady: hasSegment
+        ? await analytics
+            .ready()
+            .then(() => true)
+            .catch(() => false)
+        : false,
+    }
+  } catch (error) {
+    return {
+      error: error.message,
+      hasSegmentWriteKey: !!NEXT_PUBLIC_SEGMENT_WRITE_KEY,
+      hasAnalytics: false,
+      sessionReplayInitialized: false,
+      analyticsReady: false,
+    }
+  }
+}

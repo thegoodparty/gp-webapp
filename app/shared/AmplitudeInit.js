@@ -5,7 +5,7 @@ import { isProductRoute } from './utils/isProductRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
 import { getAnalytics } from './utils/analytics'
-import { getStoredSessionId } from 'helpers/analyticsHelper'
+import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
 
 export default function AmplitudeInit() {
   const pathname = usePathname()
@@ -44,7 +44,11 @@ export default function AmplitudeInit() {
           let sessionId = getStoredSessionId()
           if (!sessionId || sessionId <= 0) {
             sessionId = Date.now()
+            storeSessionId(sessionId)
           }
+
+          // Ensure session ID is a number as required by Amplitude
+          sessionId = Number(sessionId)
 
           const deviceId = user.anonymousId()
           if (!deviceId) {
@@ -59,6 +63,9 @@ export default function AmplitudeInit() {
           }).promise
 
           replayActive.current = true
+
+          // Signal that Session Replay is initialized
+          window.sessionReplayInitialized = true
         } catch (error) {
           console.error('Failed to initialize Session Replay:', error)
           initPromise.current = null
@@ -70,6 +77,7 @@ export default function AmplitudeInit() {
       sessionReplay.shutdown().finally(() => {
         replayActive.current = false
         initPromise.current = null
+        window.sessionReplayInitialized = false
       })
     }
   }, [pathname])

@@ -25,10 +25,13 @@ export default function AnalyticsSessionReplayMiddleware() {
 
             if (nextSessionId > 0 && storedSessionId < nextSessionId) {
               storeSessionId(nextSessionId)
-              try {
-                sessionReplay.setSessionId(nextSessionId)
-              } catch (err) {
-                console.warn('Failed to set session ID for replay:', err)
+              // Only update session ID if Session Replay is initialized
+              if (window.sessionReplayInitialized) {
+                try {
+                  sessionReplay.setSessionId(nextSessionId)
+                } catch (err) {
+                  console.warn('Failed to set session ID for replay:', err)
+                }
               }
             }
           } catch (error) {
@@ -40,15 +43,25 @@ export default function AnalyticsSessionReplayMiddleware() {
         analytics.addSourceMiddleware(({ payload, next }) => {
           try {
             if (payload.type() === 'track') {
-              const sessionReplayProperties =
-                sessionReplay.getSessionReplayProperties()
-              if (
-                sessionReplayProperties &&
-                Object.keys(sessionReplayProperties).length > 0
-              ) {
-                payload.obj.properties = {
-                  ...payload.obj.properties,
-                  ...sessionReplayProperties,
+              // Only try to get session replay properties if Session Replay is initialized
+              if (window.sessionReplayInitialized) {
+                try {
+                  const sessionReplayProperties =
+                    sessionReplay.getSessionReplayProperties()
+                  if (
+                    sessionReplayProperties &&
+                    Object.keys(sessionReplayProperties).length > 0
+                  ) {
+                    payload.obj.properties = {
+                      ...payload.obj.properties,
+                      ...sessionReplayProperties,
+                    }
+                  }
+                } catch (replayError) {
+                  console.warn(
+                    'Failed to get session replay properties:',
+                    replayError,
+                  )
                 }
               }
             }

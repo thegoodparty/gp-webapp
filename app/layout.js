@@ -80,8 +80,8 @@ const RootLayout = ({ children }) => (
       <Suspense>
         <RouteTracker />
       </Suspense>
-      <AnalyticsSessionReplayMiddleware />
       <AmplitudeInit />
+      <AnalyticsSessionReplayMiddleware />
       <PageWrapper>{children}</PageWrapper>
       <noscript>
         <iframe
