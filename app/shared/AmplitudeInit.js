@@ -18,7 +18,7 @@ export default function AmplitudeInit() {
       )
       return
     }
-    if (!analytics) return
+    if (typeof analytics === 'undefined') return
 
     const wantReplay = isProductRoute(pathname)
 
