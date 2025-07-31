@@ -23,7 +23,6 @@ import {
   trackEvent,
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
-import { identifyUser } from '@shared/utils/analytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
