@@ -2,8 +2,8 @@
 import { useCampaign } from '@shared/hooks/useCampaign'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { OutreachActionWrapper } from 'app/(candidate)/dashboard/outreach/components/OutreachActionWrapper'
-import { htmlToPlainText } from 'helpers/stringHelper'
 import { MdContentCopy } from 'react-icons/md'
+import { stripHtml } from 'string-strip-html'
 
 export const CopyScriptActionOption = ({
   outreach = {},
@@ -13,8 +13,8 @@ export const CopyScriptActionOption = ({
 
   const text =
     campaign?.aiContent && outreach && campaign?.aiContent[outreach?.script]
-      ? htmlToPlainText(campaign?.aiContent[outreach?.script].content)
-      : outreach?.script
+      ? stripHtml(campaign?.aiContent[outreach?.script].content)
+      : outreach?.script || ''
 
   return (
     <CopyToClipboard

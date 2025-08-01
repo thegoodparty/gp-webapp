@@ -44,19 +44,3 @@ export function toTitleCase(str) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   })
 }
-
-export const htmlToPlainText = (html) => {
-  if (!html) return ''
-
-  const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = html
-
-  const textWithBreaks = tempDiv.innerHTML
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<\/h[1-6]>/gi, '\n')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/div>/gi, '\n')
-
-  tempDiv.innerHTML = textWithBreaks
-  return tempDiv.textContent || tempDiv.innerText || ''
-}
