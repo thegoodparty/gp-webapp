@@ -13,7 +13,7 @@ export const CopyScriptActionOption = ({
 
   const text =
     campaign?.aiContent && outreach && campaign?.aiContent[outreach?.script]
-      ? stripHtml(campaign?.aiContent[outreach?.script].content)
+      ? stripHtml(campaign?.aiContent[outreach?.script].content).result
       : outreach?.script || ''
 
   return (
