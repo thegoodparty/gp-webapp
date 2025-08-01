@@ -65,7 +65,6 @@ export default function AmplitudeInit() {
 
           replayActive.current = true
           window.sessionReplayInitialized = true
-          console.log('Session Replay initialized successfully')
         } catch (error) {
           console.error('Failed to initialize Session Replay:', error)
         }
