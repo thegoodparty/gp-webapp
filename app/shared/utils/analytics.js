@@ -7,7 +7,6 @@ export const analytics =
         writeKey: NEXT_PUBLIC_SEGMENT_WRITE_KEY,
       })
         .then((result) => {
-          console.log('Segment analytics loaded successfully')
           return Array.isArray(result) ? result[0] : result
         })
         .catch((error) => {
