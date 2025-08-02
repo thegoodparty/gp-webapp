@@ -11,6 +11,7 @@ export default function WebsiteEditorPageStepper({
   nextLabel = 'Next',
   completeLabel = 'Complete',
   completeLoading = false,
+  nextDisabled = false,
 }) {
   const hasNext = currentStep < totalSteps
   const hasPrev = currentStep > 1
@@ -60,7 +61,7 @@ export default function WebsiteEditorPageStepper({
         <Button
           className="ml-auto md:ml-0 md:order-3 whitespace-nowrap"
           size="large"
-          disabled={!hasNext}
+          disabled={!hasNext || nextDisabled}
           onClick={handleNextStep}
         >
           {nextLabel}

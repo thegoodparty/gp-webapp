@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import WebsitePreview from '../../editor/components/WebsitePreview'
@@ -21,12 +20,12 @@ const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
 export default function WebsiteCreateFlow() {
-  const router = useRouter()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
+  const [isValid, setIsValid] = useState(true)
 
   useEffect(() => {
     if (
@@ -231,6 +230,10 @@ export default function WebsiteCreateFlow() {
     [website?.id],
   )
 
+  function validateCallback(value) {
+    setIsValid(value)
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full min-h-full">
@@ -263,6 +266,7 @@ export default function WebsiteCreateFlow() {
               <VanityPathStep
                 website={website}
                 onChange={handleVanityPathChange}
+                validateCallback={validateCallback}
               />
             )}
 
@@ -334,6 +338,7 @@ export default function WebsiteCreateFlow() {
             onComplete={handleComplete}
             completeLabel="Publish website"
             completeLoading={saveLoading}
+            nextDisabled={!isValid}
           />
         )}
       </div>

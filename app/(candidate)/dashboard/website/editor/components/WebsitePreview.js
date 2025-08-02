@@ -27,7 +27,9 @@ const WebsitePreview = memo(function WebsitePreview({
 
   const previewUrl = useMemo(() => {
     if (!website) return ''
-    return `${NEXT_PUBLIC_CANDIDATES_SITE_BASE}/${website.vanityPath}/preview`
+    return `${NEXT_PUBLIC_CANDIDATES_SITE_BASE}/${
+      website.vanityPath || 'temp'
+    }/preview`
   }, [website?.vanityPath])
 
   useEffect(() => {
