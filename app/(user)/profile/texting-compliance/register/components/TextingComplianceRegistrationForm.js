@@ -15,6 +15,7 @@ import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -137,8 +138,23 @@ export default function TextingComplianceRegistrationForm({
           {...{
             value: addressInputValue,
             onChange: (inputValue) => setAddressInputValue(inputValue),
-            onSelect: (address) => {
+            onSelect: async (address) => {
               setAddressInputValue(address.formatted_address)
+
+              if (address.formatted_address && address.place_id) {
+                try {
+                  await updateCampaign([
+                    {
+                      key: 'formattedAddress',
+                      value: address.formatted_address,
+                    },
+                    { key: 'placeId', value: address.place_id },
+                  ])
+                } catch (error) {
+                  console.error('Failed to save address to campaign:', error)
+                }
+              }
+
               return handleChange({ address })
             },
           }}
