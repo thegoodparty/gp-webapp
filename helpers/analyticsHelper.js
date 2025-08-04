@@ -506,18 +506,12 @@ export function getPersistedClids() {
 }
 
 export const trackEvent = (name, properties) => {
-  // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS.
   try {
-    // Segment has different environments, and should run even when FS is disabled
     const commonProperties = {
       ...getPersistedUtms(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)
-    if (typeof FS === 'undefined') {
-      return
-    }
-    FS('trackEvent', { name, commonProperties })
   } catch (e) {
     console.log('error tracking analytics (Segment) event', e)
   }
