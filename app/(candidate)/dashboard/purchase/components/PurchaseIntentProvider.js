@@ -26,14 +26,9 @@ export const PurchaseIntentProvider = ({
       }
 
       const response = await createPurchaseIntent(type, purchaseMetaData)
-      console.log(`response =>`, response)
       if (response.ok) {
         setPurchaseIntent(response.data)
       } else {
-        console.log(
-          'setting error =>',
-          response.data?.data?.error || 'Failed to create purchase intent',
-        )
         setError(
           response.data?.data?.error || 'Failed to create purchase intent',
         )
