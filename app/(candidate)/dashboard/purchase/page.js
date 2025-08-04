@@ -2,6 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import PurchasePage from './components/PurchasePage'
 import candidateAccess from '../shared/candidateAccess'
 import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
+import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 
 const meta = pageMetaData({
   title: 'Purchase page | GoodParty.org',
@@ -26,16 +27,25 @@ const buildMetadata = (type, params) => {
 
 export default async function Page({ searchParams }) {
   await candidateAccess()
-
   const { type, domain, websiteId, returnUrl } = await searchParams
 
-
-  const childProps = {
-    type,
-    domain,
-    websiteId,
-    returnUrl,
-  }
-
-  return <PurchasePage {...childProps} />
+  return (
+    <PurchaseIntentProvider
+      {...{
+        type,
+        purchaseMetaData: buildMetadata(type, {
+          domainName: domain,
+          websiteId,
+        }),
+      }}
+    >
+      <PurchasePage
+        {...{
+          type,
+          domain,
+          returnUrl,
+        }}
+      />
+    </PurchaseIntentProvider>
+  )
 }
