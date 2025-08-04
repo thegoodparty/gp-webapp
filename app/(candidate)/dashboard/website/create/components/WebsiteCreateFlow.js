@@ -15,6 +15,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
@@ -181,7 +182,7 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
-  function handleAddressChange(place) {
+  async function handleAddressChange(place) {
     setWebsite((current) => ({
       ...current,
       content: {
@@ -189,10 +190,20 @@ export default function WebsiteCreateFlow() {
         contact: {
           ...current.content.contact,
           address: place.formatted_address,
-          addressPlace: place,
         },
       },
     }))
+
+    if (place.formatted_address && place.place_id) {
+      try {
+        await updateCampaign([
+          { key: 'formattedAddress', value: place.formatted_address },
+          { key: 'placeId', value: place.place_id },
+        ])
+      } catch (error) {
+        console.error('Failed to save address to campaign:', error)
+      }
+    }
   }
 
   function handleEmailChange(value) {
