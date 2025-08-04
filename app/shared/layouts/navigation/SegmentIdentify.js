@@ -6,24 +6,27 @@ import { useSearchParams } from 'next/navigation'
 import { getPersistedUtms } from 'helpers/analyticsHelper'
 import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
-import { analytics } from '@shared/utils/analytics'
+import { identifyUser } from '@shared/utils/analytics'
 
 const identify = async (user, searchParams) => {
-  const analyticsUser = await analytics.user()
-  if (analyticsUser.id() || analyticsUser.anonymousId()) return // No need to spam identity calls that have no new information
-
   persistUtmsOnce()
 
-  user?.id 
-    ? analytics.identify(user.id, {
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        phone: user.phone,
-        zip: user.zip,
-        ...getPersistedUtms(), 
-        ...extractClids(searchParams) 
-      })
-    : analytics.identify()
+  const traits = {
+    ...getPersistedUtms(),
+    ...extractClids(searchParams),
+  }
+
+  if (user?.id) {
+    await identifyUser(user.id, {
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      phone: user.phone,
+      zip: user.zip,
+      ...traits,
+    })
+  } else {
+    await identifyUser(null, traits)
+  }
 }
 
 export default function SegmentIdentify() {
@@ -31,7 +34,7 @@ export default function SegmentIdentify() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    analytics && identify(user, searchParams)
+    identify(user, searchParams)
   }, [user, searchParams])
 
   return null
