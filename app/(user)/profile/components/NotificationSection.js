@@ -18,7 +18,7 @@ const fields = [
     subTitle: 'Receive notification about your campaign action items',
   },
   {
-    key: 'textNotification',
+    key: 'textNotifications',
     label: 'SMS Messages',
     subTitle: 'Receive text notification about your campaign action items',
   },
@@ -43,7 +43,7 @@ export default function NotificationSection() {
     if (user && !initialUpdate) {
       let meta = {}
       try {
-        meta = JSON.parse(user.metaData)
+        meta = user?.metaData || {}
       } catch (error) {
         console.log('Error parsing user meta', error)
       }
