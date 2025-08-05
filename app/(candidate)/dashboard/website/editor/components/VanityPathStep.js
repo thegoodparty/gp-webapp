@@ -10,7 +10,11 @@ import { getWebsiteUrl } from '../../util/website.util'
 
 const DEBOUNCE_TIME = 500
 
-export default function VanityPathStep({ website, onChange }) {
+export default function VanityPathStep({
+  website,
+  onChange,
+  validateCallback,
+}) {
   const vanityPath = website.vanityPath
   const [validated, setValidated] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -31,8 +35,10 @@ export default function VanityPathStep({ website, onChange }) {
       setLoading(false)
       if (resp.ok && resp.data.available) {
         setValidated(true)
+        validateCallback(true)
       } else {
         setValidated(false)
+        validateCallback(false)
       }
     }, DEBOUNCE_TIME)
   }

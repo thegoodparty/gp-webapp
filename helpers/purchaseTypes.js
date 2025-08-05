@@ -10,3 +10,8 @@ export const PURCHASE_TYPE_DESCRIPTIONS = {
   [PURCHASE_TYPES.DOMAIN_REGISTRATION]:
     'Register a custom domain for your website',
 }
+export const PURCHASE_STATE = {
+  PAYMENT: 'payment',
+  SUCCESS: 'success',
+  ERROR: 'error',
+}
