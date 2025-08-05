@@ -59,7 +59,6 @@ const SIGN_UP_FIELDS = [
     placeholder: '(123) 456-6789',
     cols: 6,
     noBottomMargin: true,
-    required: true,
   },
   {
     key: 'zip',
@@ -143,7 +142,7 @@ export default function SignUpPage() {
     lastName &&
     isValidEmail(email) &&
     isValidPassword(password) &&
-    isValidPhone(phone) &&
+    (phone === '' || isValidPhone(phone)) &&
     validateZip(zip)
 
   const handleSubmit = async () => {
