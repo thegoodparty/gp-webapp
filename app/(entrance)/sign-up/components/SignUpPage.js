@@ -269,7 +269,7 @@ export default function SignUpPage() {
                     you consent to receive account notifications text messages.
                     Msg & data rates may apply. Msg frequency may vary. Reply
                     “STOP” to opt-out & “HELP” for help. View{' '}
-                    <Link href="/privacy-policy" className="underline">
+                    <Link href="/privacy" className="underline">
                       Privacy Policy
                     </Link>{' '}
                     for more info.
