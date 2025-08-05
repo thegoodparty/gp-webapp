@@ -154,7 +154,7 @@ export default function SignUpPage() {
         firstName,
         lastName,
         email,
-        phone,
+        phone: phone === '' ? undefined : phone,
         zip,
         password,
         signUpMode,
