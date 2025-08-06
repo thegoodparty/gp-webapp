@@ -1,17 +1,19 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import * as fs from 'fs';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-// Setup reporting for default voter file test
-const defaultVoterFileCaseId = 95;
-setupTestReporting(test, defaultVoterFileCaseId);
+setupMultiTestReporting(test, {
+    'Download default voter file': TEST_IDS.DEFAULT_VOTER_FILES,
+    'Generate custom voter file': TEST_IDS.CUSTOM_VOTER_FILES
+});
 
 test.skip('Download default voter file', async ({ page }) => {
     const voterFileName = 'Door Knocking (Default)';
@@ -40,67 +42,56 @@ test.skip('Download default voter file', async ({ page }) => {
     fs.unlinkSync(tempFilePath0);
 });
 
-// Setup reporting for custom voter file test
-const customVoterFileCaseId = 43;
-setupTestReporting(test, customVoterFileCaseId);
-
 test.skip('Generate custom voter file', async ({ page }) => {
     await prepareTest('admin', '/dashboard/voter-records', 'Voter File', page);
     
     // Wait for and click create custom voter file button
     const createButton = page.getByRole('button', { name: /Create a custom voter file/i }).first();
-    await createButton.waitFor({ state: 'visible', timeout: 60000 });
-    await expect(createButton).toBeEnabled({ timeout: 30000 });
+    await createButton.waitFor({ state: 'visible'});
+    await expect(createButton).toBeEnabled();
     await createButton.click();
 
     // Wait for form to be ready
-    await page.waitForLoadState('networkidle');
     await documentReady(page);
 
     // Select channel with proper waiting
     const channelSelect = page.getByLabel('Channel *');
-    await channelSelect.waitFor({ state: 'visible', timeout: 30000 });
-    await expect(channelSelect).toBeEnabled({ timeout: 30000 });
+    await channelSelect.waitFor({ state: 'visible'});
+    await expect(channelSelect).toBeEnabled();
     await channelSelect.click();
 
     const directMailOption = page.getByRole('option', { name: 'Direct Mail' });
-    await directMailOption.waitFor({ state: 'visible', timeout: 30000 });
+    await directMailOption.waitFor({ state: 'visible'});
     await directMailOption.click();
 
     const purposeSelect = page.getByLabel('Purpose');
-    await purposeSelect.waitFor({ state: 'visible', timeout: 30000 });
-    await expect(purposeSelect).toBeEnabled({ timeout: 30000 });
+    await purposeSelect.waitFor({ state: 'visible'});
+    await expect(purposeSelect).toBeEnabled();
     await purposeSelect.click();
 
     const gotvOption = page.getByRole('option', { name: 'GOTV' });
-    await gotvOption.waitFor({ state: 'visible', timeout: 30000 });
+    await gotvOption.waitFor({ state: 'visible'});
     await gotvOption.click();
+
     const nextButton = page.getByRole('button', { name: 'Next' });
-    await nextButton.waitFor({ state: 'visible', timeout: 30000 });
-    await expect(nextButton).toBeEnabled({ timeout: 30000 });
+    await nextButton.waitFor({ state: 'visible'});
+    await expect(nextButton).toBeEnabled();
     await nextButton.click();
 
-    await page.waitForLoadState('networkidle');
     await documentReady(page);
 
-    // Wait for and click create voter file button
     const createVoterFileButton = page.getByRole('button', { name: 'Create Voter File' });
     await createVoterFileButton.waitFor({ state: 'visible', timeout: 30000 });
     await expect(createVoterFileButton).toBeEnabled({ timeout: 30000 });
     await createVoterFileButton.click();
 
-    // Wait for file generation and page load
-    await page.waitForLoadState('networkidle');
     await documentReady(page);
 
-    // Wait for and click the generated file link
     const generatedFileLink = page.getByRole('link', { name: /Direct Mail - GOTV/ }).last();
     await generatedFileLink.waitFor({ state: 'visible', timeout: 60000 });
     await expect(generatedFileLink).toBeEnabled({ timeout: 30000 });
     await generatedFileLink.click();
 
-    // Wait for navigation and page load
-    await page.waitForLoadState('networkidle');
     await documentReady(page);
 
     // Wait for heading with retry

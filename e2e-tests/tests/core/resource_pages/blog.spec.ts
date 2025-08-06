@@ -1,15 +1,18 @@
 import "dotenv/config";
 import { test, expect } from "@playwright/test";
 import { checkButtons, documentReady } from "helpers/domHelpers";
-import { setupTestReporting } from "helpers/testrailHelper";
+import { setupMultiTestReporting, setupTestReporting } from "helpers/testrailHelper";
+import { TEST_IDS } from "constants/testIds";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/blog", { waitUntil: "commit" });
 });
 
-// Setup reporting for blog page test
-const blogPageCaseId = 12;
-setupTestReporting(test, blogPageCaseId);
+setupMultiTestReporting(test, {
+  'Verify Blog page': TEST_IDS.RESOURCES_BLOG,
+  'Verify Blog filtering': TEST_IDS.BLOG_CATEGORIES_FILTERS,
+  'Verify Blog article': TEST_IDS.BLOG_ARTICLE
+});
 
 test("Verify Blog page", async ({ page }) => {
   const pageTitle = "Blog";
@@ -39,10 +42,6 @@ test("Verify Blog page", async ({ page }) => {
   await expect(page).toHaveURL(/.*\/article/, { timeout: 10000 });
 });
 
-// Setup reporting for blog filtering test
-const blogFilteringCaseId = 16;
-setupTestReporting(test, blogFilteringCaseId);
-
 test("Verify Blog filtering", async ({ page }) => {
   // Filter blog page by category
   await page
@@ -64,10 +63,6 @@ test("Verify Blog filtering", async ({ page }) => {
   await documentReady(page);
   await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 10000 });
 });
-
-// Setup reporting for blog article test
-const blogArticleCaseId = 17;
-setupTestReporting(test, blogArticleCaseId);
 
 test.skip("Verify Blog Article page", async ({ page }) => {
   // Navigate to featured blog article
@@ -95,6 +90,6 @@ test.skip("Verify Blog Article page", async ({ page }) => {
   await page
     .locator('[data-testid="faqSection"] li:first-child button')
     .click();
-  await page.waitForLoadState("networkidle");
+  await documentReady(page);
   await expect(page).toHaveURL(/.*\/faqs/, { timeout: 5000 });
 });

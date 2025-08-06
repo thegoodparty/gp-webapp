@@ -4,6 +4,7 @@ import { setupTestReporting } from 'helpers/testrailHelper';
 import { prepareTest, testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
+import { TEST_IDS } from 'constants/testIds';
 test.use({
     storageState: 'admin-auth.json',
 });
@@ -14,9 +15,7 @@ test.beforeEach(async ({ page }) => {
     await prepareTest('admin', '/admin/campaign-statistics', 'Campaigns', page);
 });
 
-// Setup reporting for admin campaigns page test
-const adminCampaignsCaseId = 25;
-setupTestReporting(test, adminCampaignsCaseId);
+setupTestReporting(test, TEST_IDS.CAMPAIGNS);
 
 test('Verify admin user can access Admin Campaigns page', async ({ page }) => {
     // Verify Campaigns page
@@ -24,9 +23,7 @@ test('Verify admin user can access Admin Campaigns page', async ({ page }) => {
     await page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
 });
 
-// Setup reporting for impersonation test
-const impersonationCaseId = 73;
-setupTestReporting(test, impersonationCaseId);
+setupTestReporting(test, TEST_IDS.IMPERSONATE_USER);
 
 test.skip('Verify admin user can impersonate user', async ({ page }) => {
     // Search and select user for impersonation
@@ -41,9 +38,7 @@ test.skip('Verify admin user can impersonate user', async ({ page }) => {
     await expect(page.getByTestId('personal-email')).toHaveValue(testSearchEmail);
 });
 
-// Setup reporting for campaign management test
-const campaignManagementCaseId = 74;
-setupTestReporting(test, campaignManagementCaseId);
+setupTestReporting(test, TEST_IDS.ADD_CAMPAIGN_AS_ADMIN);
 
 test.skip('Verify admin user can add/delete campaigns', async ({ page }) => {
     const testFirstName = faker.person.firstName();

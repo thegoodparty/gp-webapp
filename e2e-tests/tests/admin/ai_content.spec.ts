@@ -2,13 +2,13 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-const caseId = 29;
-setupTestReporting(test, caseId);
+setupTestReporting(test, TEST_IDS.AI_CONTENT);
 
 test('Verify admin user can access AI Content page', async ({ page }) => {
 

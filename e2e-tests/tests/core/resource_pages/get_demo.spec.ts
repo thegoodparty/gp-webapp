@@ -1,16 +1,17 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { checkImgAltText, documentReady } from "helpers/domHelpers";
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/get-a-demo");
     await documentReady(page);
 });
 
-// Setup reporting for get demo test
-const getDemoCaseId = 5;
-setupTestReporting(test, getDemoCaseId);
+setupMultiTestReporting(test, {
+    'Verify Get a Demo page': TEST_IDS.FOR_CANDIDATES_GET_A_DEMO
+});
 
 test('Verify Get a Demo page', async ({ page }) => {
     const pageTitle = /Book a Demo/;

@@ -12,7 +12,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 1,
-  workers: 2,
+  workers: 1,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],

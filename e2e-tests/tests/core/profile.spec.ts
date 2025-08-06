@@ -1,11 +1,12 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import * as path from 'path';
 import { documentReady } from 'helpers/domHelpers';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'auth.json',
@@ -15,9 +16,11 @@ test.beforeEach(async ({ page }) => {
     await prepareTest('user', '/profile', 'Personal Information', page);
 });
 
-// Setup reporting for personal information test
-const personalInfoCaseId = 33;
-setupTestReporting(test, personalInfoCaseId);
+setupMultiTestReporting(test, {
+    'Adjust Personal Information': TEST_IDS.PERSONAL_INFORMATION,
+    'Adjust Notification Settings': TEST_IDS.NOTIFICATION_SETTINGS,
+    'Change Account Password': TEST_IDS.CHANGE_ACCOUNT_PASSWORD
+});
 
 test('Adjust Personal Information', async ({ page }) => {
     const firstName = userData.firstName;
@@ -42,20 +45,12 @@ test('Adjust Personal Information', async ({ page }) => {
     await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);
 });
 
-// Setup reporting for notification settings test
-const notificationSettingsCaseId = 34;
-setupTestReporting(test, notificationSettingsCaseId);
-
 test('Adjust Notification Settings', async ({ page }) => {
     await page.getByRole('checkbox').first().waitFor({ state: 'visible', timeout: 60000 });
     await page.getByRole('checkbox').first().click();
     await expect(page.locator('.MuiSwitch-switchBase').first()).toHaveClass(/Mui-checked/);
     await page.waitForTimeout(500);
 });
-
-// Setup reporting for password change test
-const passwordChangeCaseId = 35;
-setupTestReporting(test, passwordChangeCaseId);
 
 test.skip('Change Account Password', async ({ page }) => {
     const testAccountPath = path.resolve(__dirname, '../../testAccount.json');

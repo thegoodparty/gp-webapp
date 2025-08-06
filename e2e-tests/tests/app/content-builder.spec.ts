@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'auth.json',
@@ -12,9 +13,9 @@ test.beforeEach(async ({ page, browser }) => {
     await prepareTest('user', '/dashboard/content', 'Content Builder', page, browser);
 });
 
-// Setup reporting for content builder test
-const contentBuilderCaseId = 40;
-setupTestReporting(test, contentBuilderCaseId);
+setupMultiTestReporting(test, {
+    'Generate content with Content Builder': TEST_IDS.GENERATE_CAMPAIGN_ASSETS
+});
 
 test.skip('Generate content with Content Builder', async ({ page }) => {
     const testTemplate = /Voter Registration Drive Email/;

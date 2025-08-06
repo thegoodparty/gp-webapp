@@ -1,22 +1,19 @@
 import { test, expect } from '@playwright/test';
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
 test.describe('Sitemap Tests', () => {
     const BASE_URL = process.env.BASE_URL;
-    const testState = 'ca';
-    const validDomains = [
-        /^https:\/\/goodparty\.org\//,
-        /^https:\/\/gp-ui-git-develop-good-party\.vercel\.app\//,
-        /^https:\/\/dev\.goodparty\.org\//
-    ];
 
-    // Setup reporting for sitemap accessibility test
-    const sitemapAccessibilityCaseId = 86;
-    setupTestReporting(test, sitemapAccessibilityCaseId);
+    setupMultiTestReporting(test, {
+        'Verify sitemap accessibility': TEST_IDS.SITEMAP_ACCESSIBILITY,
+        'Verify state sitemaps contain valid URLs': TEST_IDS.STATE_SITEMAP_URLS,
+        'Verify sitemap URLs have valid lastmod dates': TEST_IDS.URL_LASTMODE_DATES
+    });
 
-    test.skip('verify sitemap accessibility', async () => {
+    test.skip('Verify sitemap accessibility', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         expect(response.status).toBe(200);
@@ -34,11 +31,7 @@ test.describe('Sitemap Tests', () => {
         expect(candidateSitemaps.length).toBe(51);
     });
 
-    // Setup reporting for state sitemaps test
-    const stateSitemapsCaseId = 87;
-    setupTestReporting(test, stateSitemapsCaseId);
-
-    test.skip('state sitemaps contain valid URLs', async () => {
+    test.skip('Verify state sitemaps contain valid URLs', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const mainResponse = await axios.get(mainSitemapUrl);
         const mainData = await parseStringPromise(mainResponse.data);
@@ -50,11 +43,7 @@ test.describe('Sitemap Tests', () => {
         console.log(`Found ${stateSitemaps.length} state sitemaps`);
     });
 
-    // Setup reporting for sitemap lastmod test
-    const sitemapLastmodCaseId = 89;
-    setupTestReporting(test, sitemapLastmodCaseId);
-
-    test.skip('verify sitemap URLs have valid lastmod dates', async () => {
+    test.skip('Verify sitemap URLs have valid lastmod dates', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         const data = await parseStringPromise(response.data);

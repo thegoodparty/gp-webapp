@@ -1,17 +1,17 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav } from 'helpers/navHelpers';
 import { checkButtons, checkImgAltText, documentReady } from "helpers/domHelpers";
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/run-for-office");
     await documentReady(page);
 });
 
-// Setup reporting for campaign tools test
-const campaignToolsCaseId = 4;
-setupTestReporting(test, campaignToolsCaseId);
+setupMultiTestReporting(test, {
+    'Verify Campaign Tools page': TEST_IDS.FOR_CANDIDATES_CAMPAIGN_TOOLS
+});
 
 test('Verify Campaign Tools page', async ({ page }) => {
     const pageTitle = /Campaign Tools/;

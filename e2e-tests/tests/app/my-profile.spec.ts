@@ -1,9 +1,10 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'auth.json',
@@ -13,11 +14,15 @@ test.beforeEach(async ({ page }) => {
     await prepareTest('user', '/dashboard/campaign-details', 'Campaign Details', page);
 });
 
-// Setup reporting for campaign details test
-const campaignDetailsCaseId = 46;
-setupTestReporting(test, campaignDetailsCaseId);
+setupMultiTestReporting(test, {
+    'Update Campaign Details': TEST_IDS.UPDATE_CAMPAIGN_DETAILS,
+    'Update Office Details': TEST_IDS.UPDATE_OFFICE_DETAILS,
+    'Update Your Why Statement': TEST_IDS.UPDATE_WHY_STATEMENT,
+    'Update Fun Facts': TEST_IDS.UPDATE_FUN_FACTS,
+    'Add Opponent': TEST_IDS.UPDATE_OPPONENT_INFO,
+});
 
-test.skip('Update Campaign Details', async ({ page }) => {
+test('Update Campaign Details', async ({ page }) => {
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
@@ -38,10 +43,6 @@ test.skip('Update Campaign Details', async ({ page }) => {
     await expect(page.getByLabel('Campaign website')).toHaveValue(newWebsite);
     await expect(page.getByRole('combobox')).toHaveValue(newParty);
 });
-
-// Setup reporting for office details test
-const officeDetailsCaseId = 47;
-setupTestReporting(test, officeDetailsCaseId);
 
 test.skip('Update Office Details', async ({ page }) => {
     const electionRole = 'California Controller';
@@ -76,11 +77,7 @@ test.skip('Update Office Details', async ({ page }) => {
     }
 });
 
-// Setup reporting for why statement test
-const whyStatementCaseId = 48;
-setupTestReporting(test, whyStatementCaseId);
-
-test.skip('Update Your Why Statement', async ({ page }) => {
+test('Update Your Why Statement', async ({ page }) => {
     const newWhyStatement = generateTimeStamp() + ' Statement';
     // Update Your Why Statement
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
@@ -100,9 +97,6 @@ test.skip('Update Your Why Statement', async ({ page }) => {
         await page.getByText(newWhyStatement).isVisible();
     }
 });
-
-const funFactsCaseId = 49;
-setupTestReporting(test, funFactsCaseId);
 
 test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
@@ -125,11 +119,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-// Setup reporting for opponent test
-const opponentCaseId = 50;
-setupTestReporting(test, opponentCaseId);
-
-test.skip('Add Opponent', async ({ page }) => {
+test('Add Opponent', async ({ page }) => {
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
 

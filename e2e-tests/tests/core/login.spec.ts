@@ -1,20 +1,20 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { userData } from 'helpers/dataHelpers';
-import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+import { TEST_IDS } from 'constants/testIds';
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/login");
     await documentReady(page);
 });
 
-// Setup reporting for invalid login test
-const invalidLoginCaseId = 22;
-setupTestReporting(test, invalidLoginCaseId);
+setupMultiTestReporting(test, {
+    'Verify invalid login credentials error message': TEST_IDS.INVALID_LOGIN_ERROR_MESSAGE,
+    'Verify user can log in with valid credentials': TEST_IDS.LOGIN_FLOW
+});
 
 test('Verify invalid login credentials error message', async ({ page }) => {
     const loginPageHeader = 'Login to GoodParty.org';
@@ -33,10 +33,6 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     // Verify error message
     await page.getByText(invalidErrorMessage).isVisible({ timeout: 10000 });
 });
-
-// Setup reporting for valid login test
-const validLoginCaseId = 19;
-setupTestReporting(test, validLoginCaseId);
 
 test.skip('Verify user can log in with valid credentials', async ({ page }) => {
     const testAdmin = process.env.TEST_USER_ADMIN;

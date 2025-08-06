@@ -1,28 +1,22 @@
 import 'dotenv/config';
-import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { test } from '@playwright/test';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
-import { prepareTest } from 'helpers/accountHelpers';
+import { useAdminCredentials, useTestAccountCredentials } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
-const VoterOutreachCaseId = 96;
-const NewVoterOutreachCaseId = 97;
 const campaignTypes = ['Text message', 'Robocall', 'Door knocking', 'Phone banking', 'Social post'];
 
-test.describe('New User Voter Outreach', () => {
-    test.use({
-        storageState: 'auth.json',
-    });
-    
-    setupTestReporting(test, NewVoterOutreachCaseId);
-    
-    test.skip('Verify Voter Outreach page as new user', async ({ page }) => {
-        test.setTimeout(200000);
-        const outreachPageHeader = 'Create your first campaign';
-        await prepareTest('user', '/dashboard/outreach', outreachPageHeader, page);
-        await documentReady(page);
-        await page.waitForTimeout(10000);
+setupMultiTestReporting(test, {
+    'Verify Voter Outreach page as new user': TEST_IDS.VOTER_OUTREACH,
+    'Verify Voter Outreach page as pro user': TEST_IDS.NEW_VOTER_OUTREACH
+});
 
-        await expect(page.getByText(outreachPageHeader)).toBeVisible();
+test.describe('New User Voter Outreach', () => {
+    test('Verify Voter Outreach page as new user', async ({ page }) => {
+        await useTestAccountCredentials(page);
+        await page.goto('/dashboard/outreach');
+        await documentReady(page);
 
         for (const campaignType of campaignTypes) {
             const campaignButton = page.getByRole('heading', { name: campaignType });
@@ -31,21 +25,11 @@ test.describe('New User Voter Outreach', () => {
     });
 });
 
-test.describe('Pro Voter Outreach', () => {
-    test.use({
-        storageState: 'admin-auth.json',
-    });
-    
-    setupTestReporting(test, VoterOutreachCaseId);
-    
-    test.skip('Verify Voter Outreach page', async ({ page }) => {
-        test.setTimeout(200000);
-        const outreachPageHeader = 'Create a new campaign';
-        await prepareTest('admin', '/dashboard/outreach', outreachPageHeader, page);
+test.describe('Pro Voter Outreach', () => {    
+    test('Verify Voter Outreach page as pro user', async ({ page }) => {
+        await useAdminCredentials(page);
+        await page.goto('/dashboard/outreach');
         await documentReady(page);
-        await page.waitForTimeout(10000);
-
-        await expect(page.getByText(outreachPageHeader)).toBeVisible();
 
         for (const campaignType of campaignTypes) {
             const campaignButton = page.getByRole('heading', { name: campaignType });

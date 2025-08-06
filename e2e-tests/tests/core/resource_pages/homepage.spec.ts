@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 const pageTitle = /GoodParty.org/
 const bannerText = /Join the GoodParty.org Community on Circle/
@@ -10,9 +11,9 @@ test.beforeEach(async ({ page }) => {
   await documentReady(page);
 });
 
-// Setup reporting for homepage test
-const homepageCaseId = 1;
-setupTestReporting(test, homepageCaseId);
+setupMultiTestReporting(test, {
+  'Verify Homepage': TEST_IDS.HOMEPAGE
+});
 
 test('Verify Homepage', async ({ page }) => {
   // Verify page title

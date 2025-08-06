@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { checkImgAltText, documentReady } from "helpers/domHelpers";
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting, setupTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
 test.describe.serial('Elections page', () => {
     test.skip(
@@ -9,9 +10,12 @@ test.describe.serial('Elections page', () => {
         'Skipping elections page tests on non-production environments'
     );
 
-    // Setup reporting for explore offices test
-    const exploreOfficesCaseId = 7;
-    setupTestReporting(test, exploreOfficesCaseId);
+setupMultiTestReporting(test, {
+    'Verify Explore Offices page': TEST_IDS.FOR_CANDIDATES_EXPLORE_OFFICES,
+    'Verify State-level Election page': TEST_IDS.STATE_ELECTION_PAGE,
+    'Verify County-level Election page': TEST_IDS.COUNTY_ELECTION_PAGE,
+    'Verify Municipal-level Election page': TEST_IDS.MUNICIPAL_ELECTION_PAGE
+});
 
     test('Verify Explore Offices page', async ({ page }) => {
         const pageTitle = /Election Research/;
@@ -32,10 +36,6 @@ test.describe.serial('Elections page', () => {
         await checkImgAltText(page, pageImgAltText);
     });
 
-    // Setup reporting for state election test
-    const stateElectionCaseId = 92;
-    setupTestReporting(test, stateElectionCaseId);
-
     test.skip('Verify State-level Election page', async ({ page }) => {
         const pageTitle = /Run for Office in California/;
         const pageHeader = /California state elections/;
@@ -55,10 +55,6 @@ test.describe.serial('Elections page', () => {
         await expect(page.getByRole('link', { name: testElection, exact: true })).toBeVisible();
     });
 
-    // Setup reporting for county election test
-    const countyElectionCaseId = 93;
-    setupTestReporting(test, countyElectionCaseId);
-
     test('Verify County-level Election page', async ({ page }) => {
         const pageTitle = /Run for Office in Dublin county, California/;
         const pageHeader = /Dublin elections/;
@@ -76,10 +72,6 @@ test.describe.serial('Elections page', () => {
         await expect(page.getByRole('link', { name: testRole }).first()).toBeVisible();
         await expect(page.getByText(fastFactsHeader)).toBeVisible();
     });
-
-    // Setup reporting for municipal election test
-    const municipalElectionCaseId = 94;
-    setupTestReporting(test, municipalElectionCaseId);
 
     test('Verify Municipal-level Election page', async ({ page }) => {
         const pageTitle = /Run for Office in Beverly township, Illinois/;
