@@ -65,6 +65,22 @@ const redirectList = {
   'volunteer-spotlight-join-goodparty-org-design-team': true,
   'volunteer-spotlight-join--goodparty-org-voter-outreach-team': true,
   'guide-voter-registration-durham': true,
+  'campaign-management-consulting-services-for-independent-politicians': true,
+  'running-as-an-independent-in-tennessee': true,
+  'independent-candidates-running-in-north-carolina': true,
+  'the-rise-of-the-entitlement-of-the-thin-skinned-modern-politician': true,
+  'the-destructive-threat-oppenheimer-warns-us-about-isnt-nuclear-bombs-its': true,
+  'threads-doesnt-want-news-and-politics-on-its-platform-and-thats-a-huge': true,
+  'tackling-voter-apathy-engaging-and-empowering-younger-voters': true,
+  'how-to-craft-a-compelling-message-for-your-independent-campaign': true,
+  'free-tools-for-candidates': true,
+  'ai-tools-for-running-a-successful-independent-political-campaign': true,
+  'social-media-and-politics-why-it-matters-6-tips-for-campaigns': true,
+  'good-party-academy-what-to-expect': true,
+  'raising-the-bar-best-practices-for-political-fundraising': true,
+  'how-to-raise-funds-as-an-independent': true,
+  'understanding-independent-voters-their-impact-on-american-politics': true,
+  'how-to-get-on-ballot-independent-2024': true,
 }
 
 export default redirectList
