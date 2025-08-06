@@ -501,9 +501,6 @@ export default function AdminVictoryPathPage(props) {
         return
       }
 
-      console.log('attr', attr)
-      console.log('state', state)
-
       await updateCampaign(attr, campaign.slug)
       successSnackbar('Saved')
       await revalidatePage('/admin/victory-path/[slug]')
