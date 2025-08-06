@@ -98,7 +98,7 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
     const purchaseUrl = `/dashboard/purchase?type=${
       PURCHASE_TYPES.DOMAIN_REGISTRATION
     }&domain=${encodeURIComponent(
-      selectedDomain,
+      selectedDomain.toLowerCase(),
     )}&websiteId=${websiteId}&returnUrl=${encodeURIComponent(
       '/dashboard/website/domain',
     )}`
