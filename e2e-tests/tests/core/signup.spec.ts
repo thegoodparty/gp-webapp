@@ -1,17 +1,18 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'auth.json',
 });
 
-// Setup reporting for onboarding test
-const onboardingCaseId = 18;
-setupTestReporting(test, onboardingCaseId);
+setupMultiTestReporting(test, {
+    'Verify onboarding': TEST_IDS.REGISTRATION_FLOW
+});
 
-test('Onboarding', async ({ page }) => {
+test('Verify onboarding', async ({ page }) => {
     // Test verifies that registration was successful during global setup phase
     await page.goto('/profile');
     await documentReady(page);

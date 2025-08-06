@@ -207,7 +207,7 @@ export async function loginAccount(
   password
 ) {
   const baseURL = process.env.BASE_URL;
-  const maxRetries = 2;
+  const maxRetries = 3;
   
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -220,7 +220,7 @@ export async function loginAccount(
       try {
         await page.goto(`${baseURL}/login`, { 
           waitUntil: 'domcontentloaded',
-          timeout: 20000
+          timeout: 30000
         });
       } catch (navError) {
         console.log(`Navigation failed: ${navError.message}`);
@@ -236,6 +236,13 @@ export async function loginAccount(
 
       await documentReady(page);
 
+      // Check if we're already logged in (redirected to dashboard)
+      let currentUrl = page.url();
+      if (currentUrl.includes('/dashboard')) {
+        console.log('Already on dashboard page, login successful');
+        return;
+      }
+
       const isLoginPageValid = await validateLoginPage(page);
       if (!isLoginPageValid) {
         throw new Error('Login page validation failed');
@@ -250,8 +257,8 @@ export async function loginAccount(
       
       console.log('Waiting for login form elements...');
       
-      const emailInput = page.getByTestId("login-email-input").nth(1);
-      const passwordInput = page.getByTestId("login-password-input").nth(1);
+      const emailInput = page.getByPlaceholder('hello@email.com');
+      const passwordInput = page.getByPlaceholder('Please don\'t use your dog\'s');
       const submitButton = page.getByTestId("login-submit-button");
       
       await emailInput.waitFor({ state: 'visible', timeout: 10000 });
@@ -266,7 +273,7 @@ export async function loginAccount(
       await documentReady(page);
       
       try {
-        await page.waitForURL(`${baseURL}/dashboard`, { timeout: 35000 });
+        await page.waitForURL(`${baseURL}/dashboard`, { timeout: 5000 });
       } catch (urlError) {
         console.log('URL wait failed, checking current URL...');
         const currentUrl = page.url();
@@ -280,7 +287,7 @@ export async function loginAccount(
         }
       }
       
-      const currentUrl = page.url();
+      currentUrl = page.url();
       if (!currentUrl.includes('/dashboard')) {
         throw new Error(`Login failed - not redirected to dashboard. Current URL: ${currentUrl}`);
       }
@@ -805,5 +812,29 @@ export async function prepareTest(type, url, text, page, browser = null) {
       
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
+  }
+}
+
+export async function authenticateWithTimeout(page, url, expectedText) {
+  const maxAuthTime = process.env.CI ? 180000 : 120000;
+  const startTime = Date.now();
+  
+  console.log(`Starting authentication process (timeout: ${maxAuthTime/1000}s)...`);
+  
+  try {
+    await Promise.race([
+      prepareTest('user', url, expectedText, page),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error(`Authentication timeout after ${maxAuthTime/1000}s`)), maxAuthTime)
+      )
+    ]);
+    
+    const authTime = Date.now() - startTime;
+    console.log(`Authentication completed successfully in ${authTime}ms`);
+    
+  } catch (error) {
+    const authTime = Date.now() - startTime;
+    console.error(`Authentication failed after ${authTime}ms:`, error.message);
+    throw error;
   }
 }

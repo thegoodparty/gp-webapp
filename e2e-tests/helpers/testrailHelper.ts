@@ -2,6 +2,15 @@ import 'dotenv/config';
 import axios from 'axios';
 import * as fs from 'fs';
 import { Page } from '@playwright/test';
+import * as path from 'path';
+
+// Test status enum to replace string literals
+const enum TestStatus {
+    PASSED = 'passed',
+    FAILED = 'failed',
+    SKIPPED = 'skipped',
+    TIMED_OUT = 'timedOut'
+}
 
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
@@ -10,6 +19,48 @@ const AUTH = {
 };
 
 const testResultStatuses = [];
+const reportedTestCases = new Set<string>();
+const REPORTED_CASES_FILE = path.resolve(__dirname, '../reported-test-cases.json');
+
+function loadReportedTestCases(): Set<string> {
+    try {
+        if (fs.existsSync(REPORTED_CASES_FILE)) {
+            const data = fs.readFileSync(REPORTED_CASES_FILE, 'utf-8');
+            const cases = JSON.parse(data);
+            console.log(`Loaded ${cases.length} previously reported test cases from file`);
+            return new Set(cases);
+        }
+    } catch (error) {
+        console.log('Error loading reported test cases file:', error.message);
+    }
+    return new Set<string>();
+}
+
+function saveReportedTestCases(cases: Set<string>) {
+    try {
+        const casesArray = Array.from(cases);
+        fs.writeFileSync(REPORTED_CASES_FILE, JSON.stringify(casesArray, null, 2));
+        console.log(`Saved ${casesArray.length} reported test cases to file`);
+    } catch (error) {
+        console.log('Error saving reported test cases file:', error.message);
+    }
+}
+
+function clearReportedTestCases() {
+    try {
+        if (fs.existsSync(REPORTED_CASES_FILE)) {
+            fs.unlinkSync(REPORTED_CASES_FILE);
+            console.log('Cleared reported test cases file');
+        }
+        reportedTestCases.clear();
+    } catch (error) {
+        console.log('Error clearing reported test cases file:', error.message);
+    }
+}
+
+const reportedTestCasesFromFile = loadReportedTestCases();
+reportedTestCasesFromFile.forEach(caseKey => reportedTestCases.add(caseKey));
+
 
 // Helper to post results to TestRail
 export async function addTestResult(runId, caseId, statusId, comment = '') {
@@ -37,6 +88,9 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
 
 // Helper to create a new test run
 export async function createTestRun(name: string, caseIds: number[], baseUrl: string) {
+    // Clear reported test cases at the start of a new test run
+    clearReportedTestCases();
+    
     const description = `Test Environment URL: ${baseUrl}\n\nAutomated test run created at ${new Date().toISOString()}`;
 
     const response = await axios.post(
@@ -125,35 +179,109 @@ export async function handleTestFailure(page: Page, runId: string, caseId: numbe
     }
 }
 
+
 export async function setupTestReporting(test: any, caseId: number) {
     const runId = fs.readFileSync('testRunId.txt', 'utf-8').trim();
+    const testKey = `${runId}_${caseId}`;
 
     test.afterEach(async ({ page }, testInfo) => {
+        if (reportedTestCases.has(testKey)) {
+            console.log(`Test case ${caseId} already reported, skipping duplicate report`);
+            return;
+        }
+
+        if (testInfo.retries !== undefined && testInfo.retry < testInfo.retries) {
+            console.log(`Test case ${caseId} retry ${testInfo.retry + 1}/${testInfo.retries + 1}, skipping intermediate report`);
+            return;
+        }
+
         console.log(`TestRail reporting for case ${caseId}: status=${testInfo.status}, retry=${testInfo.retry}, retries=${testInfo.retries}`);
         console.log(`Reporting result for case ${caseId} with status: ${testInfo.status}`);
         
         try {
-            if (testInfo.status === 'passed') {
+            if (testInfo.status === TestStatus.PASSED) {
                 console.log(`Marking case ${caseId} as PASSED`);
                 await addTestResult(runId, caseId, 1, 'Test passed successfully');
-            } else if (testInfo.status === 'failed') {
+            } else if (testInfo.status === TestStatus.FAILED) {
                 console.log(`Marking case ${caseId} as FAILED`);
                 await handleTestFailure(page, runId, caseId, testInfo.error);
-            } else if (testInfo.status === 'skipped') {
+            } else if (testInfo.status === TestStatus.SKIPPED) {
                 console.log(`Marking case ${caseId} as SKIPPED`);
                 await addTestResult(runId, caseId, 4, 'Test was skipped');
-            } else if (testInfo.status === 'timedOut') {
+            } else if (testInfo.status === TestStatus.TIMED_OUT) {
                 console.log(`Marking case ${caseId} as FAILED (timeout)`);
                 await addTestResult(runId, caseId, 5, `Test timed out after ${testInfo.timeout}ms`);
             } else {
                 console.log(`Marking case ${caseId} as FAILED (unknown status: ${testInfo.status})`);
                 await addTestResult(runId, caseId, 5, `Test failed with unknown status: ${testInfo.status}`);
             }
+            
+            reportedTestCases.add(testKey);
+            saveReportedTestCases(reportedTestCases);
         } catch (reportingError) {
             console.error(`Error reporting result for case ${caseId}:`, reportingError.message);
-            // Try to report the failure anyway
             try {
                 await addTestResult(runId, caseId, 5, `Error during reporting: ${reportingError.message}`);
+                reportedTestCases.add(testKey);
+            } catch (finalError) {
+                console.error(`Final reporting attempt failed for case ${caseId}:`, finalError.message);
+            }
+        }
+    });
+}
+
+export async function setupMultiTestReporting(test: any, caseIdMap: { [testTitle: string]: number }) {
+    const runId = fs.readFileSync('testRunId.txt', 'utf-8').trim();
+    
+    test.afterEach(async ({ page }, testInfo) => {
+        // Find the case ID for this test based on its title
+        const caseId = caseIdMap[testInfo.title];
+        
+        if (!caseId) {
+            console.log(`No case ID mapping found for test: ${testInfo.title}`);
+            return;
+        }
+        
+        const testKey = `${runId}_${caseId}`;
+        
+        if (reportedTestCases.has(testKey)) {
+            console.log(`Test case ${caseId} already reported, skipping duplicate report`);
+            return;
+        }
+
+        if (testInfo.retries !== undefined && testInfo.retry < testInfo.retries) {
+            console.log(`Test case ${caseId} retry ${testInfo.retry + 1}/${testInfo.retries + 1}, skipping intermediate report`);
+            return;
+        }
+
+        console.log(`TestRail reporting for case ${caseId}: status=${testInfo.status}, retry=${testInfo.retry}, retries=${testInfo.retries}`);
+        console.log(`Reporting result for case ${caseId} with status: ${testInfo.status}`);
+        
+        try {
+            if (testInfo.status === TestStatus.PASSED) {
+                console.log(`Marking case ${caseId} as PASSED`);
+                await addTestResult(runId, caseId, 1, 'Test passed successfully');
+            } else if (testInfo.status === TestStatus.FAILED) {
+                console.log(`Marking case ${caseId} as FAILED`);
+                await handleTestFailure(page, runId, caseId, testInfo.error);
+            } else if (testInfo.status === TestStatus.SKIPPED) {
+                console.log(`Marking case ${caseId} as SKIPPED`);
+                await addTestResult(runId, caseId, 4, 'Test was skipped');
+            } else if (testInfo.status === TestStatus.TIMED_OUT) {
+                console.log(`Marking case ${caseId} as FAILED (timeout)`);
+                await addTestResult(runId, caseId, 5, `Test timed out after ${testInfo.timeout}ms`);
+            } else {
+                console.log(`Marking case ${caseId} as FAILED (unknown status: ${testInfo.status})`);
+                await addTestResult(runId, caseId, 5, `Test failed with unknown status: ${testInfo.status}`);
+            }
+            
+            reportedTestCases.add(testKey);
+            saveReportedTestCases(reportedTestCases);
+        } catch (reportingError) {
+            console.error(`Error reporting result for case ${caseId}:`, reportingError.message);
+            try {
+                await addTestResult(runId, caseId, 5, `Error during reporting: ${reportingError.message}`);
+                reportedTestCases.add(testKey);
             } catch (finalError) {
                 console.error(`Final reporting attempt failed for case ${caseId}:`, finalError.message);
             }
@@ -181,4 +309,6 @@ export async function reportSkippedTests() {
     }
 }
 
-module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure, setupTestReporting, reportSkippedTests };
+
+
+module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure, setupTestReporting, setupMultiTestReporting, reportSkippedTests };

@@ -2,15 +2,17 @@ import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { userData } from 'helpers/dataHelpers';
 import { checkButtons, checkImgAltText, documentReady } from "helpers/domHelpers";
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/volunteer");
     await documentReady(page);
 });
-
-const volunteerCaseId = 8;
-setupTestReporting(test, volunteerCaseId);
+    
+setupMultiTestReporting(test, {
+    'Verify For Voters / Volunteer page': TEST_IDS.FOR_VOTERS_VOLUNTEER
+});
 
 test('Verify For Voters / Volunteer page', async ({ page }) => {
     const pageTitle = /Get Involved/;

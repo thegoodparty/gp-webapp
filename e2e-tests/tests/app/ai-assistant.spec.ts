@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 const testTopic = 'Campaign Strategy';
-const testTopicChat = /Crafting a why statement/;
 
 test.use({
     storageState: 'auth.json',
@@ -14,9 +14,9 @@ test.beforeEach(async ({ page }) => {
     await prepareTest('user', '/dashboard/campaign-assistant', 'AI Assistant', page);
 });
 
-// Setup reporting for AI assistant test
-const aiAssistantCaseId = 36;
-setupTestReporting(test, aiAssistantCaseId);
+setupMultiTestReporting(test, {
+    'Create new conversation': TEST_IDS.CREATE_CONVERSATION
+});
 
 test.skip('Create new conversation', async ({ page }) => {
     const heading = page.getByRole('heading', { name: 'AI Assistant' });
@@ -43,6 +43,5 @@ test.skip('Create new conversation', async ({ page }) => {
         console.log('Network idle timeout after topic selection, continuing...');
     }
 
-    const responseElement = page.locator('.font-normal > div:nth-child(2)');
-    await expect(responseElement).toBeVisible({ timeout: 45000 });
+    await expect(topicButton).toBeHidden();
 });

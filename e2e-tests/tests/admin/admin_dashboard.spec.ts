@@ -2,13 +2,13 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-const adminDashboardCaseId = 24;
-setupTestReporting(test, adminDashboardCaseId);
+setupTestReporting(test, TEST_IDS.ADMIN_DASHBOARD);
 
 test('Verify admin user can access admin dashboard', async ({ page }) => {
     await prepareTest('admin', '/admin', 'Admin Dashboard', page);

@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
+import { TEST_IDS } from 'constants/testIds';
 
-// Setup reporting for navbar test
-const navbarCaseId = 2;
-setupTestReporting(test, navbarCaseId);
+setupMultiTestReporting(test, {
+    'Verify Navigation Bar': TEST_IDS.NAVIGATION_BAR
+});
 
 test.skip('Verify Navigation Bar', async ({ page }) => {
   await page.goto('/', { waitUntil: "commit" });

@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
+import { addTestResult, handleTestFailure, setupMultiTestReporting } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { prepareTest, upgradeToPro } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -11,6 +12,11 @@ test.use({
 
 test.beforeEach(async ({ page }) => {
   await prepareTest('user', '/dashboard/voter-records', 'Voter File', page);
+});
+
+setupMultiTestReporting(test, {
+  'Voter Data shows Upgrade to Pro prompt for free users': TEST_IDS.UPGRADE_TO_PRO_PROMPT,
+  'Upgrade user to Pro': TEST_IDS.UPGRADE_TO_PRO_FLOW
 });
 
 test.describe.serial('Voter data pro features', () => {

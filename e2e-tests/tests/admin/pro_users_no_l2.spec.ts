@@ -2,14 +2,13 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-// Setup reporting for pro users test
-const proUsersCaseId = 30;
-setupTestReporting(test, proUsersCaseId);
+setupTestReporting(test, TEST_IDS.PRO_USERS_WITHOUT_L2_DATA);
 
 test('Verify admin user can access Pro users w/o voter file page', async ({ page }) => {
     await prepareTest('admin', '/admin/pro-no-voter-file', 'Pro Users without L2 Data', page);

@@ -1,9 +1,10 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { prepareTest, testAccountLastName } from 'helpers/accountHelpers';
 import { userData } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.use({
     storageState: 'admin-auth.json',
@@ -13,12 +14,13 @@ test.beforeEach(async ({ page }) => {
     await prepareTest('admin', '/admin/users', 'Users', page);
 });
 
-// Setup reporting for each test
-const adminUsersCaseId = 26;
-setupTestReporting(test, adminUsersCaseId);
+setupMultiTestReporting(test, {
+    'Admin users page': TEST_IDS.USERS,
+    'Send candidate invite': TEST_IDS.INVITE_CANDIDATE_USER,
+    'Send sales invite': TEST_IDS.INVITE_SALES_USER
+});
 
 test('Admin users page', async ({ page }) => {
-    // Verify admin users page
     await page.getByRole('heading', { name: 'Users' }).isVisible();
 
     await page.getByRole('columnheader', { name: 'Actions' }).isVisible();
@@ -28,10 +30,6 @@ test('Admin users page', async ({ page }) => {
     await page.getByRole('columnheader', { name: 'Last Visit' }).isVisible();
     await page.locator('td').first().isVisible();
 });
-
-// Setup reporting for candidate invite test
-const candidateInviteCaseId = 53;
-setupTestReporting(test, candidateInviteCaseId);
 
 test.skip('Send candidate invite', async ({ page }) => {
     const inviteFirstName = userData.firstName;
@@ -54,10 +52,6 @@ test.skip('Send candidate invite', async ({ page }) => {
     await page.getByRole('button', { name: 'Add User' }).click();
     await documentReady(page);
 });
-
-// Setup reporting for sales invite test
-const salesInviteCaseId = 54;
-setupTestReporting(test, salesInviteCaseId);
 
 test.skip('Send sales invite', async ({ page }) => {
     const inviteFirstName = userData.firstName;

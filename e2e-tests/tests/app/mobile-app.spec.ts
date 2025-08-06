@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { appNav } from '@helpers';
 import { prepareTest } from 'helpers/accountHelpers';
+import { TEST_IDS } from 'constants/testIds';
 
 test.describe('Mobile viewport tests - App pages', () => {
     test.use({
@@ -10,8 +11,7 @@ test.describe('Mobile viewport tests - App pages', () => {
         viewport: { width: 375, height: 667 }
     });
 
-    const mobileAppCaseId = 75;
-    setupTestReporting(test, mobileAppCaseId);
+    setupTestReporting(test, TEST_IDS.MOBILE_VIEW);
 
     test.skip('Verify app pages in mobile view', async ({ page }) => {
         await prepareTest('user', '/dashboard', 'Campaign progress', page);
