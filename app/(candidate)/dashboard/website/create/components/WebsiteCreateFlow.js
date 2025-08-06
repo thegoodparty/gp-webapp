@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import WebsitePreview from '../../editor/components/WebsitePreview'
@@ -16,17 +15,18 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
 export default function WebsiteCreateFlow() {
-  const router = useRouter()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
+  const [isValid, setIsValid] = useState(true)
 
   useEffect(() => {
     if (
@@ -182,7 +182,7 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
-  function handleAddressChange(place) {
+  async function handleAddressChange(place) {
     setWebsite((current) => ({
       ...current,
       content: {
@@ -190,10 +190,20 @@ export default function WebsiteCreateFlow() {
         contact: {
           ...current.content.contact,
           address: place.formatted_address,
-          addressPlace: place,
         },
       },
     }))
+
+    if (place.formatted_address && place.place_id) {
+      try {
+        await updateCampaign([
+          { key: 'formattedAddress', value: place.formatted_address },
+          { key: 'placeId', value: place.place_id },
+        ])
+      } catch (error) {
+        console.error('Failed to save address to campaign:', error)
+      }
+    }
   }
 
   function handleEmailChange(value) {
@@ -231,6 +241,10 @@ export default function WebsiteCreateFlow() {
     [website?.id],
   )
 
+  function validateCallback(value) {
+    setIsValid(value)
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full min-h-full">
@@ -263,6 +277,7 @@ export default function WebsiteCreateFlow() {
               <VanityPathStep
                 website={website}
                 onChange={handleVanityPathChange}
+                validateCallback={validateCallback}
               />
             )}
 
@@ -334,6 +349,7 @@ export default function WebsiteCreateFlow() {
             onComplete={handleComplete}
             completeLabel="Publish website"
             completeLoading={saveLoading}
+            nextDisabled={!isValid}
           />
         )}
       </div>
