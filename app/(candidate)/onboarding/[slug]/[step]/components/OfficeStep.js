@@ -29,14 +29,22 @@ async function runP2V(slug) {
 }
 
 async function updateRaceTargetDetails(slug = undefined) {
-  try {
-    const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
-      slug,
-    })
-    return resp.data
-  } catch (e) {
-    console.error('error: ', e)
+  const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
+    slug,
+  })
+  if (resp.data && resp.data.error) {
+    console.error('API error: ', resp.data)
     return false
+  }
+
+  return resp.data
+}
+
+async function runPostOfficeStepUpdates(attr, slug = undefined) {
+  await updateCampaign(attr, slug)
+  const raceTargetDetails = await updateRaceTargetDetails(slug)
+  if (!raceTargetDetails) {
+    await runP2V(slug)
   }
 }
 
@@ -172,11 +180,7 @@ export default function OfficeStep({
     }
 
     if (adminMode) {
-      await updateCampaign(attr, campaign.slug)
-      const raceTargetDetails = await updateRaceTargetDetails(campaign.slug)
-      if (!raceTargetDetails) {
-        await runP2V(campaign.slug)
-      }
+      await runPostOfficeStepUpdates(attr, campaign.slug)
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -189,11 +193,7 @@ export default function OfficeStep({
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      await updateCampaign(attr)
-      const raceTargetDetails = await updateRaceTargetDetails()
-      if (!raceTargetDetails) {
-        await runP2V()
-      }
+      await runPostOfficeStepUpdates(attr)
     }
 
     if (step) {

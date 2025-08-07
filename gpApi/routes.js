@@ -229,7 +229,7 @@ export const apiRoutes = {
     },
     raceTargetDetails: {
       update: {
-        path: 'campaigns/mine/race-target-details',
+        path: '/campaigns/mine/race-target-details',
         method: 'PUT'
       }
     }
