@@ -29,8 +29,19 @@ export function createWebsite() {
 
 export function updateWebsite(content) {
   try {
-    const formData = serialize(content, { indices: true })
-    return clientFetch(apiRoutes.website.update, formData)
+    const hasEmptyIssuesArray =
+      Array.isArray(content.about?.issues) && content.about.issues.length === 0
+
+    const formData = serialize(content, {
+      indices: true,
+    })
+
+    if (hasEmptyIssuesArray) {
+      formData.append('about[issues]', [])
+    }
+
+    // return clientFetch(apiRoutes.website.update, formData)
+    return clientFetch(apiRoutes.website.update, content)
   } catch (e) {
     console.error('error', e)
     return false

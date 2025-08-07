@@ -20,7 +20,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
-export default function WebsiteCreateFlow() {
+export default function WebsiteCreateFlow({ initialIssues }) {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -313,6 +313,7 @@ export default function WebsiteCreateFlow() {
                 issues={website.content.about?.issues}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
+                initialIssues={initialIssues}
               />
             )}
 
