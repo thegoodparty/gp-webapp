@@ -27,7 +27,7 @@ function combineIssues(issues = [], customIssues = []) {
   })
   const customIssuesWithDescription = customIssues.map((issue) => {
     return {
-      title: issue.position?.name || '',
+      title: issue.title || '',
       description: issue.position || '',
     }
   })
