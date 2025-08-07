@@ -1,17 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import TextField from '@shared/inputs/TextField'
 import Label from './Label'
 import { LuPlus, LuPencil } from 'react-icons/lu'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 
-export default function IssuesForm({ issues = [], onChange }) {
+export default function IssuesForm({
+  issues: websiteIssues = [],
+  onChange,
+  initialIssues, // top issues and custom issues from the campaign
+}) {
   const [editingIssue, setEditingIssue] = useState(null)
   const [editingIssueIndex, setEditingIssueIndex] = useState(null)
 
+  const currentIssues =
+    websiteIssues.length > 0 ? websiteIssues : initialIssues || []
+
+  useEffect(() => {
+    if (
+      websiteIssues.length === 0 &&
+      initialIssues &&
+      initialIssues.length > 0
+    ) {
+      onChange(initialIssues)
+    }
+  }, [initialIssues, websiteIssues, onChange])
+
   const handleAddIssue = () => {
     setEditingIssue({ title: '', description: '' })
-    setEditingIssueIndex(issues.length)
+    setEditingIssueIndex(currentIssues.length)
   }
 
   const handleOpenEditDialog = (issue, index) => {
@@ -26,7 +43,7 @@ export default function IssuesForm({ issues = [], onChange }) {
 
   const handleSaveIssue = () => {
     if (editingIssueIndex !== null && editingIssue) {
-      const newIssues = [...issues]
+      const newIssues = [...currentIssues]
       newIssues[editingIssueIndex] = editingIssue
       onChange(newIssues)
       handleCloseEditDialog()
@@ -34,7 +51,9 @@ export default function IssuesForm({ issues = [], onChange }) {
   }
 
   const handleDeleteIssue = () => {
-    const newIssues = issues.filter((_, index) => index !== editingIssueIndex)
+    const newIssues = currentIssues.filter(
+      (_, index) => index !== editingIssueIndex,
+    )
     onChange(newIssues)
     handleCloseEditDialog()
   }
@@ -43,7 +62,7 @@ export default function IssuesForm({ issues = [], onChange }) {
     <div className="mt-4">
       <Label className="mb-2">Key Issues</Label>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {issues?.map((issue, index) => (
+        {currentIssues?.map((issue, index) => (
           <Button
             key={index}
             variant="outlined"

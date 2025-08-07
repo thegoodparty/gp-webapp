@@ -24,6 +24,7 @@ import {
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
 import { analytics } from '@shared/utils/analytics'
+import Checkbox from '@shared/inputs/Checkbox'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -58,7 +59,6 @@ const SIGN_UP_FIELDS = [
     placeholder: '(123) 456-6789',
     cols: 6,
     noBottomMargin: true,
-    required: true,
   },
   {
     key: 'zip',
@@ -84,6 +84,7 @@ async function register({
   zip,
   password,
   signUpMode,
+  allowTexts,
 }) {
   try {
     const resp = await clientFetch(apiRoutes.authentication.register, {
@@ -94,6 +95,7 @@ async function register({
       zip,
       password,
       signUpMode,
+      allowTexts,
     })
 
     if (resp.status === 409) {
@@ -115,6 +117,7 @@ export default function SignUpPage() {
     phone: '',
     zip: '',
     password: '',
+    allowTexts: false,
   })
 
   const [fields] = useState([...SIGN_UP_FIELDS])
@@ -123,14 +126,23 @@ export default function SignUpPage() {
   const [_, setUser] = useUser()
   const router = useRouter()
 
-  const { firstName, lastName, signUpMode, email, phone, zip, password } = state
+  const {
+    firstName,
+    lastName,
+    signUpMode,
+    email,
+    phone,
+    zip,
+    password,
+    allowTexts,
+  } = state
 
   const enableSubmit =
     firstName &&
     lastName &&
     isValidEmail(email) &&
     isValidPassword(password) &&
-    isValidPhone(phone) &&
+    (phone === '' || isValidPhone(phone)) &&
     validateZip(zip)
 
   const handleSubmit = async () => {
@@ -142,10 +154,11 @@ export default function SignUpPage() {
         firstName,
         lastName,
         email,
-        phone,
+        phone: phone === '' ? undefined : phone,
         zip,
         password,
         signUpMode,
+        allowTexts,
       })
 
       if (!result || !result.user) {
@@ -242,6 +255,25 @@ export default function SignUpPage() {
                       placeholder="Please don't use your dog's name"
                     />
                   </div>
+                </div>
+                <div className="mt-8 flex">
+                  <Checkbox
+                    value={state.allowTexts}
+                    onChange={(e) => {
+                      onChangeField('allowTexts', e.target.checked)
+                    }}
+                    checked={!!state.allowTexts}
+                  />
+                  <Body2>
+                    By providing your telephone number and checking this box,
+                    you consent to receive account notifications text messages.
+                    Msg & data rates may apply. Msg frequency may vary. Reply
+                    “STOP” to opt-out & “HELP” for help. View{' '}
+                    <Link href="/privacy" className="underline">
+                      Privacy Policy
+                    </Link>{' '}
+                    for more info.
+                  </Body2>
                 </div>
 
                 <div className="mt-8" onClick={handleSubmit}>
