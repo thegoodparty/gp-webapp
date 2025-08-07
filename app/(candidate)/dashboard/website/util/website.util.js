@@ -1,6 +1,5 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { serialize } from 'object-to-formdata'
 import { isDomainActive } from './domain.util'
 import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
 
@@ -29,18 +28,6 @@ export function createWebsite() {
 
 export function updateWebsite(content) {
   try {
-    const hasEmptyIssuesArray =
-      Array.isArray(content.about?.issues) && content.about.issues.length === 0
-
-    const formData = serialize(content, {
-      indices: true,
-    })
-
-    if (hasEmptyIssuesArray) {
-      formData.append('about[issues]', [])
-    }
-
-    // return clientFetch(apiRoutes.website.update, formData)
     return clientFetch(apiRoutes.website.update, content)
   } catch (e) {
     console.error('error', e)
