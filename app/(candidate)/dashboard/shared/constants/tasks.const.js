@@ -26,6 +26,7 @@ export const STEPS = {
   complete: 'complete',
   download: 'download',
   socialPost: 'socialPost',
+  purchase: 'purchase',
 }
 
 export const STEPS_BY_TYPE = {
@@ -35,6 +36,7 @@ export const STEPS_BY_TYPE = {
     STEPS.script,
     STEPS.image,
     STEPS.schedule,
+    STEPS.purchase,
   ],
   [TASK_TYPES.robocall]: [
     STEPS.intro,

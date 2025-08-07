@@ -8,6 +8,8 @@ export const PurchaseIntentContext = createContext({
   setPaymentIntent: () => {},
   error: null,
   setError: () => {},
+  metaData: {},
+  setMetaData: () => {},
 })
 
 export const PurchaseIntentProvider = ({
@@ -17,6 +19,7 @@ export const PurchaseIntentProvider = ({
 }) => {
   const [purchaseIntent, setPurchaseIntent] = useState(null)
   const [error, setError] = useState(null)
+  const [metaData, setMetaData] = useState(purchaseMetaData)
 
   useEffect(() => {
     const createNewPurchaseIntent = async () => {
@@ -25,7 +28,7 @@ export const PurchaseIntentProvider = ({
         return
       }
 
-      const response = await createPurchaseIntent(type, purchaseMetaData)
+      const response = await createPurchaseIntent(type, metaData)
       if (response.ok) {
         setPurchaseIntent(response.data)
       } else {
@@ -42,7 +45,14 @@ export const PurchaseIntentProvider = ({
 
   return (
     <PurchaseIntentContext.Provider
-      value={{ purchaseIntent, setPurchaseIntent, error, setError }}
+      value={{
+        purchaseIntent,
+        setPurchaseIntent,
+        error,
+        setError,
+        metaData,
+        setMetaData,
+      }}
     >
       {children}
     </PurchaseIntentContext.Provider>

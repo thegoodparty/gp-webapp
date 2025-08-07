@@ -7,6 +7,9 @@ import { OutreachImpact } from 'app/(candidate)/dashboard/outreach/components/Ou
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { MdLockOutline } from 'react-icons/md'
 
+const formatCost = (cost) =>
+  cost === 0 ? 'Free' : `$${cost.toFixed(3).replace(/^0\./, '.')}\/msg`
+
 export const OutreachCreateCard = ({
   type,
   title,
@@ -39,7 +42,7 @@ export const OutreachCreateCard = ({
         </div>
         <div className="flex items-center justify-between">
           <OutreachImpact impact={impact} />
-          <span className="text-gray-700 text-xs">{cost}</span>
+          <span className="text-gray-700 text-xs">{formatCost(cost)}</span>
         </div>
       </CardContent>
     </Card>

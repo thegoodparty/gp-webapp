@@ -7,8 +7,10 @@ export const PurchaseHeader = ({ label, description, children = null }) => {
   const amount = purchaseIntent?.amount || 0
   return (
     <div className="bg-gray-50 p-4 rounded-lg mt-6 mb-8">
-      <H2>{label}</H2>
-      <Body1 className="text-gray-600 mt-2">{description}</Body1>
+      {label && <H2>{label}</H2>}
+      {description && (
+        <Body1 className="text-gray-600 mt-2">{description}</Body1>
+      )}
       {children}
       <Body1 className="font-semibold mt-2">Amount: ${amount}</Body1>
     </div>

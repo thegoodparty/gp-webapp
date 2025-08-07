@@ -88,3 +88,6 @@ export const formatPhoneNumber = (value) => {
     return `(${areaCode}`
   }
 }
+
+export const dollarsToCents = (dollarsDecimal) =>
+  Math.floor(dollarsDecimal * 100)

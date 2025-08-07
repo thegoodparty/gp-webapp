@@ -13,39 +13,39 @@ import {
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-const OUTREACH_OPTIONS = [
+export const OUTREACH_OPTIONS = [
   {
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
-    cost: '$.035/msg',
+    cost: 0.035,
     type: OUTREACH_TYPES.text,
     requiresPro: true,
   },
   {
     title: 'Robocall',
     impact: IMPACTS_LEVELS.medium,
-    cost: '$.045/msg',
+    cost: 0.045,
     type: OUTREACH_TYPES.robocall,
     requiresPro: true,
   },
   {
     title: 'Door knocking',
     impact: IMPACTS_LEVELS.high,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.doorKnocking,
     requiresPro: true,
   },
   {
     title: 'Phone banking',
     impact: IMPACTS_LEVELS.medium,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.phoneBanking,
     requiresPro: true,
   },
   {
     title: 'Social post',
     impact: IMPACTS_LEVELS.low,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.socialMedia,
   },
 ]

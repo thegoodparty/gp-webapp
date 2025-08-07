@@ -14,13 +14,25 @@ import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
-import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import {
+  useOutreach
+} from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
 import {
   handleCreateOutreach,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
+import {
+  OUTREACH_OPTIONS
+} from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
+import {
+  PurchaseIntentProvider
+} from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { dollarsToCents } from 'helpers/numberHelper'
+import {
+  PurchaseStep
+} from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -61,6 +73,16 @@ export default function TaskFlow({
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const outreachOption = OUTREACH_OPTIONS.find(
+    (outreach) => outreach.type === type,
+  )
+
+  const purchaseMetaData = {
+    contactCount: state.voterCount,
+    pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
+  }
+
+  console.log(`purchaseMetaData =>`, purchaseMetaData)
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
@@ -173,6 +195,15 @@ export default function TaskFlow({
     [type, state, errorSnackbar],
   )
 
+  const handlePurchaseComplete = async (purchaseInfo = {}) => {
+    await handleScheduleOutreach(
+      type,
+      errorSnackbar,
+      successSnackbar,
+      state,
+    )(await onCreateOutreach())
+  }
+
   return (
     <>
       <div
@@ -239,14 +270,30 @@ export default function TaskFlow({
             schedule={state.schedule}
             type={type}
             {...callbackProps}
-            onCreateOutreach={onCreateOutreach}
-            onScheduleOutreach={handleScheduleOutreach(
-              type,
-              errorSnackbar,
-              successSnackbar,
-              state,
-            )}
+            // TODO: remove these
+            // onCreateOutreach={onCreateOutreach}
+            // onScheduleOutreach={handleScheduleOutreach(
+            //   type,
+            //   errorSnackbar,
+            //   successSnackbar,
+            //   state,
+            // )}
           />
+        )}
+        {stepName === STEPS.purchase && (
+          <PurchaseIntentProvider
+            {...{
+              type: type.toUpperCase(),
+              purchaseMetaData,
+            }}
+          >
+            <PurchaseStep
+              {...{
+                onComplete: handlePurchaseComplete,
+                ...purchaseMetaData,
+              }}
+            />
+          </PurchaseIntentProvider>
         )}
         {stepName === STEPS.download && (
           <DownloadStep
@@ -269,3 +316,4 @@ export default function TaskFlow({
     </>
   )
 }
+
