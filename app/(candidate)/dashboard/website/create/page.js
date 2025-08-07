@@ -18,7 +18,7 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-function combineIssues(issues, customIssues) {
+function combineIssues(issues = [], customIssues = []) {
   const mappedIssues = issues.map((issue) => {
     return {
       title: issue.position?.name || '',
