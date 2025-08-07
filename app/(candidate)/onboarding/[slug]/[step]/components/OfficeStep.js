@@ -28,6 +28,18 @@ async function runP2V(slug) {
   }
 }
 
+async function updateRaceTargetDetails(slug = undefined) {
+  try {
+    const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
+      slug,
+    })
+    return resp.data
+  } catch (e) {
+    console.error('error: ', e)
+    return false
+  }
+}
+
 export default function OfficeStep({
   campaign,
   step,
@@ -161,7 +173,10 @@ export default function OfficeStep({
 
     if (adminMode) {
       await updateCampaign(attr, campaign.slug)
-      await runP2V(campaign.slug)
+      const raceTargetDetails = await updateRaceTargetDetails(campaign.slug)
+      if (!raceTargetDetails) {
+        await runP2V(campaign.slug)
+      }
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -175,7 +190,10 @@ export default function OfficeStep({
         officeManuallyInput: false,
       })
       await updateCampaign(attr)
-      await runP2V()
+      const raceTargetDetails = await updateRaceTargetDetails()
+      if (!raceTargetDetails) {
+        await runP2V()
+      }
     }
 
     if (step) {
