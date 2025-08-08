@@ -3,7 +3,7 @@ import DashboardLayout from '../../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import WebsiteCreateFlow from './WebsiteCreateFlow'
 
-export default function WebsiteCreatePage({ pathname }) {
+export default function WebsiteCreatePage({ pathname, initialIssues }) {
   const [campaign] = useCampaign()
 
   return (
@@ -13,7 +13,7 @@ export default function WebsiteCreatePage({ pathname }) {
       showAlert={false}
       hideMenu
     >
-      <WebsiteCreateFlow />
+      <WebsiteCreateFlow initialIssues={initialIssues} />
     </DashboardLayout>
   )
 }
