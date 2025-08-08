@@ -1,38 +1,33 @@
 import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import Button from '@shared/buttons/Button'
-import PurchasePayment from 'app/(candidate)/dashboard/purchase/components/PurchasePayment'
-import H6 from '@shared/typography/H6'
+import { useSnackbar } from 'helpers/useSnackbar'
 
-export const PurchaseStep = ({ onComplete = () => {} }) => {
+import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
+import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
+import { OutreachPurchaseForm } from 'app/(candidate)/dashboard/components/tasks/flows/OutreachPurchaseForm'
+
+export const PurchaseStep = ({ onComplete = () => {}, voterCount = 0 }) => {
   const { purchaseIntent, metaData, error, setError } = usePurchaseIntent()
-  console.log(`{ purchaseIntent, error, setError } =>`, {
-    purchaseIntent,
-    error,
-    metaData,
-  })
-  const handlePaymentSuccess = () => {}
+  const { errorSnackbar } = useSnackbar()
+
   const handlePaymentError = (error) => {
-    setError(error.message)
+    setError(error)
+    errorSnackbar(error.message)
   }
 
   return (
     <div className="p-4 w-[80vw] max-w-xl">
-      Purchase Step - to be implemented
-      <Button
-        {...{
-          onClick: onComplete,
-        }}
-      >
-        Do It
-      </Button>
-      {purchaseIntent && (
-        <PurchasePayment
-          onPaymentSuccess={handlePaymentSuccess}
-          onPaymentError={handlePaymentError}
-        >
-          <H6>Texts: {}</H6>
-          <H6>Amount: {purchaseIntent?.amount}</H6>
-        </PurchasePayment>
+      {error ? (
+        <PurchaseError {...{}} />
+      ) : !purchaseIntent ? (
+        <LoadingAnimation {...{}} />
+      ) : (
+        <OutreachPurchaseForm
+          {...{
+            voterCount,
+            onComplete,
+            onError: handlePaymentError,
+          }}
+        />
       )}
     </div>
   )

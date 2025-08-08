@@ -1,7 +1,8 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { createPurchaseIntent } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
 export const PurchaseIntentContext = createContext({
   paymentIntent: null,
@@ -21,7 +22,7 @@ export const PurchaseIntentProvider = ({
   const [error, setError] = useState(null)
   const [metaData, setMetaData] = useState(purchaseMetaData)
 
-  useEffect(() => {
+  useSingleEffect(() => {
     const createNewPurchaseIntent = async () => {
       if (!type || !PURCHASE_TYPES[type]) {
         setError('Invalid purchase type')

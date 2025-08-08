@@ -14,25 +14,18 @@ import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
-import {
-  useOutreach
-} from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
 import {
   handleCreateOutreach,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
-import {
-  OUTREACH_OPTIONS
-} from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
-import {
-  PurchaseIntentProvider
-} from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
+import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 import { dollarsToCents } from 'helpers/numberHelper'
-import {
-  PurchaseStep
-} from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
+import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
+import { noop } from '@shared/utils/noop'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -70,6 +63,7 @@ export default function TaskFlow({
   const [state, setState] = useState(DEFAULT_STATE)
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
+  // const stepName = STEPS.purchase
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
@@ -196,12 +190,13 @@ export default function TaskFlow({
   )
 
   const handlePurchaseComplete = async (purchaseInfo = {}) => {
-    await handleScheduleOutreach(
-      type,
-      errorSnackbar,
-      successSnackbar,
-      state,
-    )(await onCreateOutreach())
+    console.log(`purchaseInfo =>`, purchaseInfo)
+    // await handleScheduleOutreach(
+    //   type,
+    //   errorSnackbar,
+    //   successSnackbar,
+    //   state,
+    // )(await onCreateOutreach())
   }
 
   return (
@@ -255,11 +250,13 @@ export default function TaskFlow({
         )}
         {stepName === STEPS.script && (
           <AddScriptStep
-            type={type}
-            campaign={campaign}
-            onComplete={handleAddScriptOnComplete}
-            defaultAiTemplateId={defaultAiTemplateId}
-            {...callbackProps}
+            {...{
+              type,
+              campaign,
+              onComplete: handleAddScriptOnComplete,
+              defaultAiTemplateId,
+              ...callbackProps,
+            }}
           />
         )}
         {stepName === STEPS.image && (
@@ -270,14 +267,19 @@ export default function TaskFlow({
             schedule={state.schedule}
             type={type}
             {...callbackProps}
-            // TODO: remove these
-            // onCreateOutreach={onCreateOutreach}
-            // onScheduleOutreach={handleScheduleOutreach(
-            //   type,
-            //   errorSnackbar,
-            //   successSnackbar,
-            //   state,
-            // )}
+            // Only call onCreateOutreach if we're on the last step, otherwise
+            // we'll call it in the last step
+            onCreateOutreach={isLastStep ? onCreateOutreach : noop}
+            onScheduleOutreach={
+              isLastStep
+                ? handleScheduleOutreach(
+                    type,
+                    errorSnackbar,
+                    successSnackbar,
+                    state,
+                  )
+                : noop
+            }
           />
         )}
         {stepName === STEPS.purchase && (
@@ -290,6 +292,7 @@ export default function TaskFlow({
             <PurchaseStep
               {...{
                 onComplete: handlePurchaseComplete,
+                voterCount: state.voterCount,
                 ...purchaseMetaData,
               }}
             />
@@ -297,12 +300,14 @@ export default function TaskFlow({
         )}
         {stepName === STEPS.download && (
           <DownloadStep
-            type={type}
-            scriptText={state.scriptText}
-            audience={state.audience}
-            {...callbackProps}
-            onCreateOutreach={onCreateOutreach}
-            voterCount={state.voterCount}
+            {...{
+              type,
+              scriptText: state.scriptText,
+              audience: state.audience,
+              ...callbackProps,
+              onCreateOutreach,
+              voterCount: state.voterCount,
+            }}
           />
         )}
         {stepName === STEPS.socialPost && (
@@ -316,4 +321,3 @@ export default function TaskFlow({
     </>
   )
 }
-

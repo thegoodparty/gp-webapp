@@ -89,5 +89,4 @@ export const formatPhoneNumber = (value) => {
   }
 }
 
-export const dollarsToCents = (dollarsDecimal) =>
-  Math.floor(dollarsDecimal * 100)
+export const dollarsToCents = (dollarsDecimal) => dollarsDecimal * 100
