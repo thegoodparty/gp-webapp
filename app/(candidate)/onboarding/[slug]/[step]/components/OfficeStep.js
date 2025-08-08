@@ -29,15 +29,20 @@ async function runP2V(slug) {
 }
 
 async function updateRaceTargetDetails(slug = undefined) {
-  const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
-    slug,
-  })
-  if (resp.data && resp.data.error) {
-    console.error('API error: ', resp.data)
+  try {
+    const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
+      slug,
+    })
+
+    if (resp.data && resp.data.error) {
+      console.error('API error: ', resp.data)
+      return false
+    }
+    return resp.data
+  } catch (error) {
+    console.error('error: ', error)
     return false
   }
-
-  return resp.data
 }
 
 async function runPostOfficeStepUpdates(attr, slug = undefined) {
