@@ -227,6 +227,12 @@ export const apiRoutes = {
         method: 'POST',
       },
     },
+    raceTargetDetails: {
+      update: {
+        path: '/campaigns/mine/race-target-details',
+        method: 'PUT'
+      }
+    }
   },
   content: {
     getByType: {
