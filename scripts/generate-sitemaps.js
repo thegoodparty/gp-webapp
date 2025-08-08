@@ -154,14 +154,24 @@ async function fetchGlossaryTerms() {
  */
 function getFaqArticleRoute(article) {
   try {
-    // Import slugify to match frontend exactly
-    const slugify = require('slugify')
+    // Match the helper function exactly: custom slugify wrapper + toLowerCase()
+    const slugger = require('slugify')
+    const slugify = (text, lowercase) => {
+      if (!text) {
+        return ''
+      }
+      if (lowercase) {
+        return slugger(text, { lower: true })
+      }
+      return slugger(text)
+    }
+    
     const title = article.fields?.title || article.title || ''
     if (!title) {
-      return `/faqs/unknown-${Date.now()}`
+      return '/'
     }
-    const slug = slugify(title, { lower: true })
-    return `/faqs/${slug}`
+    const slug = slugify(title, true)
+    return `/faqs/${slug}`.toLowerCase()
   } catch (error) {
     console.error('Error generating FAQ route:', error)
     return `/faqs/unknown-${Date.now()}`

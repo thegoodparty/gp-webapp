@@ -15,14 +15,29 @@ export const fetchArticle = async (id) => {
 async function findArticleIdByTitle(titleSlug) {
   const faqArticles = await unAuthFetch(`${apiRoutes.content.byType.path}/articleCategories`)
   
-  for (const category of faqArticles) {
-    for (const article of category.articles) {
-      if (slugify(article.title, true) === titleSlug.toLowerCase()) {
-        return article.id
+  const matches = []
+  
+  faqArticles?.forEach((category) => {
+    category?.articles?.forEach((article) => {
+      if (article?.title && slugify(article.title, true) === slugify(titleSlug, true)) {
+        matches.push({
+          id: article.id,
+          title: article.title,
+          originalSlug: slugify(article.title, true)
+        })
       }
-    }
+    })
+  })
+  
+  if (matches.length === 0) {
+    return null
   }
-  return null
+  
+  if (matches.length > 1) {
+    console.warn(`Multiple FAQ articles found with slug "${titleSlug}":`, matches.map(m => m.title))
+  }
+  
+  return matches[0].id
 }
 
 export async function generateMetadata({ params }) {
