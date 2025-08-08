@@ -63,7 +63,6 @@ export default function TaskFlow({
   const [state, setState] = useState(DEFAULT_STATE)
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
-  // const stepName = STEPS.purchase
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
@@ -75,8 +74,6 @@ export default function TaskFlow({
     contactCount: state.voterCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
   }
-
-  console.log(`purchaseMetaData =>`, purchaseMetaData)
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
@@ -189,14 +186,14 @@ export default function TaskFlow({
     [type, state, errorSnackbar],
   )
 
-  const handlePurchaseComplete = async (purchaseInfo = {}) => {
-    console.log(`purchaseInfo =>`, purchaseInfo)
-    // await handleScheduleOutreach(
-    //   type,
-    //   errorSnackbar,
-    //   successSnackbar,
-    //   state,
-    // )(await onCreateOutreach())
+  const handlePurchaseComplete = async () => {
+    await handleScheduleOutreach(
+      type,
+      errorSnackbar,
+      successSnackbar,
+      state,
+    )(await onCreateOutreach())
+    handleNext()
   }
 
   return (
@@ -292,8 +289,7 @@ export default function TaskFlow({
             <PurchaseStep
               {...{
                 onComplete: handlePurchaseComplete,
-                voterCount: state.voterCount,
-                ...purchaseMetaData,
+                contactCount: purchaseMetaData?.contactCount,
               }}
             />
           </PurchaseIntentProvider>

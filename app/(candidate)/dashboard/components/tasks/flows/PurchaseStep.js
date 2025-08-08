@@ -5,8 +5,8 @@ import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 import { OutreachPurchaseForm } from 'app/(candidate)/dashboard/components/tasks/flows/OutreachPurchaseForm'
 
-export const PurchaseStep = ({ onComplete = () => {}, voterCount = 0 }) => {
-  const { purchaseIntent, metaData, error, setError } = usePurchaseIntent()
+export const PurchaseStep = ({ onComplete = () => {}, contactCount = 0 }) => {
+  const { purchaseIntent, error, setError } = usePurchaseIntent()
   const { errorSnackbar } = useSnackbar()
 
   const handlePaymentError = (error) => {
@@ -23,7 +23,7 @@ export const PurchaseStep = ({ onComplete = () => {}, voterCount = 0 }) => {
       ) : (
         <OutreachPurchaseForm
           {...{
-            voterCount,
+            contactCount,
             onComplete,
             onError: handlePaymentError,
           }}
