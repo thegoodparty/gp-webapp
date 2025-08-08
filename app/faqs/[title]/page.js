@@ -12,29 +12,51 @@ export const fetchArticle = async (id) => {
   return await unAuthFetch(`${apiRoutes.content.byId.path}/${id}`)
 }
 
+async function findArticleIdByTitle(titleSlug) {
+  const faqArticles = await unAuthFetch(`${apiRoutes.content.byType.path}/articleCategories`)
+  
+  for (const category of faqArticles) {
+    for (const article of category.articles) {
+      if (slugify(article.title, true) === titleSlug) {
+        return article.id
+      }
+    }
+  }
+  return null
+}
+
 export async function generateMetadata({ params }) {
-  const { titleId } = params
-  const title = titleId?.length > 0 ? titleId[0] : false
-  const id = titleId?.length > 1 ? titleId[1] : false
+  const { title } = await params
+  const id = await findArticleIdByTitle(title)
+  
+  if (!id) {
+    return {}
+  }
+  
   const content = await fetchArticle(id)
 
   const meta = pageMetaData({
     title: `${content?.title} | FAQs | GoodParty.org`,
     description: 'Frequently Asked Questions about GoodParty.org.',
-    slug: `/faqs/${title}/${id}`,
+    slug: `/faqs/${title}`,
   })
   return meta
 }
 
 export default async function Page({ params, searchParams }) {
-  const { titleId } = params
-  const title = titleId?.length > 0 ? titleId[0] : false
-  const id = titleId?.length > 1 ? titleId[1] : false
+  const { title } = await params
+  const id = await findArticleIdByTitle(title)
+  
+  if (!id) {
+    notFound()
+  }
+  
   const content = await fetchArticle(id)
 
   if (!content) {
     notFound()
   }
+  
   const articleTitle = content.title
 
   if (slugify(articleTitle, true) !== title.toLowerCase()) {
@@ -58,7 +80,7 @@ export async function generateStaticParams() {
   faqArticles?.forEach((category) => {
     category?.articles?.forEach((article) => {
       articles.push({
-        titleId: [slugify(article?.title, true), article?.id],
+        title: slugify(article?.title, true),
       })
     })
   })

@@ -150,16 +150,17 @@ async function fetchGlossaryTerms() {
 }
 
 /**
- * Generate FAQ article route (similar to faqArticleRoute helper)
+ * Generate FAQ article route (matches faqArticleRoute helper exactly)
  */
 function getFaqArticleRoute(article) {
   try {
-    if (article.fields?.slug) {
-      return `/faqs/${article.fields.slug}`
-    }
-    // Fallback route generation
+    // Import slugify to match frontend exactly
+    const slugify = require('slugify')
     const title = article.fields?.title || article.title || ''
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    if (!title) {
+      return `/faqs/unknown-${Date.now()}`
+    }
+    const slug = slugify(title, { lower: true })
     return `/faqs/${slug}`
   } catch (error) {
     console.error('Error generating FAQ route:', error)
