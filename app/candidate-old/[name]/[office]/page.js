@@ -1,11 +1,10 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatePage from './components/CandidatePage'
 import { permanentRedirect } from 'next/navigation'
-// import CandidateSchema from './components/CandidateSchema'
+import CandidateSchema from './components/CandidateSchema'
 import slugify from 'slugify'
 import { electionApiRoutes } from 'gpApi/routes'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
-import { PublicCandidateProvider } from './components/PublicCandidateProvider'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
@@ -51,13 +50,13 @@ export default async function Page({ params, searchParams }) {
     permanentRedirect('/candidates')
   }
 
-  const claimedCandidate = false
-  candidate.claimed = claimedCandidate
+  console.log('candidate', candidate)
 
+  const childProps = { candidate }
   return (
-    <PublicCandidateProvider candidate={candidate}>
-      <CandidatePage />
-      {/* <CandidateSchema {...childProps} slug={`candidate/${name}/${office}`} /> */}
-    </PublicCandidateProvider>
+    <>
+      <CandidatePage {...childProps} />
+      <CandidateSchema {...childProps} slug={`candidate/${name}/${office}`} />
+    </>
   )
 }
