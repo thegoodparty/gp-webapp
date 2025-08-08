@@ -17,7 +17,7 @@ async function findArticleIdByTitle(titleSlug) {
   
   for (const category of faqArticles) {
     for (const article of category.articles) {
-      if (slugify(article.title, true) === titleSlug) {
+      if (slugify(article.title, true) === titleSlug.toLowerCase()) {
         return article.id
       }
     }
