@@ -24,7 +24,7 @@ export default function IssuesForm({
     ) {
       onChange(initialIssues)
     }
-  }, [initialIssues, websiteIssues, onChange])
+  }, [initialIssues, websiteIssues])
 
   const handleAddIssue = () => {
     setEditingIssue({ title: '', description: '' })
