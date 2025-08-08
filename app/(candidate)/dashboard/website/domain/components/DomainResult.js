@@ -11,7 +11,9 @@ const DomainResult = memo(function DomainResult({
   selected = false,
 }) {
   const isInteractive = available && !loading
-  const displayText = available ? `$${numberFormatter(price)}` : 'Unavailable'
+  const displayText = available
+    ? `$${numberFormatter(price, 2)}`
+    : 'Unavailable'
 
   return (
     <div
