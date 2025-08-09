@@ -3,9 +3,11 @@ import CandidatePage from './components/CandidatePage'
 import { permanentRedirect } from 'next/navigation'
 // import CandidateSchema from './components/CandidateSchema'
 import slugify from 'slugify'
-import { electionApiRoutes } from 'gpApi/routes'
+import { apiRoutes, electionApiRoutes } from 'gpApi/routes'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { PublicCandidateProvider } from './components/PublicCandidateProvider'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
+import CandidateSchema from './components/CandidateSchema'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
@@ -31,6 +33,18 @@ export const fetchCandidate = async ({
   return false
 }
 
+const fetchClaimedCandidate = async ({ raceId, firstName, lastName }) => {
+  try {
+    const api = apiRoutes.publicCampaign.find.path
+    const payload = { raceId, firstName, lastName }
+    const res = await unAuthFetch(api, payload, 3600)
+    return res
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
 export async function generateMetadata({ params, searchParams }) {
   const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
@@ -46,7 +60,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function Page({ params, searchParams }) {
-  const { name, office } = params
+  const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
   const candidate = await fetchCandidate({
     slug,
@@ -57,13 +71,21 @@ export default async function Page({ params, searchParams }) {
     permanentRedirect('/candidates')
   }
 
-  const claimedCandidate = false
-  candidate.claimed = claimedCandidate
+  const claimedCandidate = await fetchClaimedCandidate({
+    raceId: candidate.raceId,
+    firstName: candidate.firstName,
+    lastName: candidate.lastName,
+  })
+
+  candidate.claimed = claimedCandidate || false
 
   return (
     <PublicCandidateProvider candidate={candidate}>
       <CandidatePage />
-      {/* <CandidateSchema {...childProps} slug={`candidate/${name}/${office}`} /> */}
+      <CandidateSchema
+        candidate={candidate}
+        slug={`candidate/${name}/${office}`}
+      />
     </PublicCandidateProvider>
   )
 }

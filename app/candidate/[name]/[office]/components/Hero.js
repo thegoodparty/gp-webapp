@@ -12,13 +12,13 @@ export default function Hero() {
   return (
     <div className="bg-[linear-gradient(82deg,_#0B1529_65.55%,_#26498F_139.02%)] p-6 w-full text-white">
       <MaxWidth>
-        <UnclaimedBanner />
-        <div className="lg:flex">
+        <UnclaimedBanner className="mb-4 lg:mb-12" />
+        <div className="lg:flex lg:mt-12">
           <div className="mb-4 lg:w-[400px] flex-shrink-0 lg:mr-4 pt-12 md:pt-0 flex lg:justify-center lg:items-center">
             <CandidateImage />
           </div>
           <div className="w-full ">
-            <h1 className="mb-2 font-medium text-4xl md:text-6xl">
+            <h1 className="mb-2 font-medium text-4xl lg:text-6xl">
               {firstName} {lastName}
             </h1>
             <h2 className="text-2xl lg:text-3xl font-medium ">

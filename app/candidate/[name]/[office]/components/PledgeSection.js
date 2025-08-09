@@ -2,6 +2,7 @@ import H3 from '@shared/typography/H3'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import { FaHandHoldingHeart, FaRegHeart, FaRegStar } from 'react-icons/fa'
 import { GrGroup } from 'react-icons/gr'
+import UnclaimedBanner from './UnclaimedBanner'
 const pledges = [
   {
     title: 'Independent',
@@ -61,6 +62,7 @@ export default function PledgeSection() {
             </div>
           ))}
         </div>
+        <UnclaimedBanner className="mt-12" />
       </div>
     </section>
   )

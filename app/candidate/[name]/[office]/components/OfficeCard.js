@@ -10,7 +10,6 @@ import H3 from '@shared/typography/H3'
 
 export default function OfficeCard(props) {
   const [candidate] = usePublicCandidate()
-  console.log('candidate', candidate)
   const { party, positionDescription, electionFrequency, Race } = candidate
 
   const { electionDate } = Race || {}

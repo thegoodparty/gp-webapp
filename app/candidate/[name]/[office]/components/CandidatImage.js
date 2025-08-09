@@ -9,7 +9,7 @@ export default function CandidateImage() {
   const { firstName, lastName, image } = candidate
 
   return (
-    <div className="lg:-mb-36">
+    <div className="lg:-mb-40">
       {image ? (
         <div className="bg-indigo-400 inline-block border border-white rounded-full relative w-40 h-40 lg:w-60 lg:h-60">
           <Image

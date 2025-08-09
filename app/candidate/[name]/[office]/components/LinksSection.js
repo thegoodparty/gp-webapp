@@ -6,6 +6,7 @@ import { AiOutlineLinkedin } from 'react-icons/ai'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import Paper from '@shared/utils/Paper'
 import H3 from '@shared/typography/H3'
+import { getWebsiteUrl } from 'app/(candidate)/dashboard/website/util/website.util'
 
 function mapSocialIcon(url) {
   if (url.includes('twitter')) {
@@ -29,53 +30,77 @@ function mapSocialIcon(url) {
   return <FaGlobeAmericas size={20} />
 }
 
+function claimedWebsite(website) {
+  if (!website) {
+    return false
+  }
+  return getWebsiteUrl(website.vanityPath, false, website.domain)
+}
+
 export default function LinksSection(props) {
   const [candidate] = usePublicCandidate()
   const { urls, email, claimed } = candidate
 
-  const { website } = claimed || {}
-
+  const { website, details } = claimed || {}
+  const { website: campaignWebsite } = details || {}
+  const websiteUrl = claimedWebsite(website)
+  const links = []
+  if (websiteUrl) {
+    links.push({
+      url: websiteUrl,
+      icon: <FaGlobeAmericas size={20} />,
+      text: websiteUrl,
+    })
+  }
+  if (campaignWebsite) {
+    links.push({
+      url: campaignWebsite,
+      icon: <FaGlobeAmericas size={20} />,
+      text: campaignWebsite,
+    })
+  }
+  if (email) {
+    links.push({
+      url: `mailto:${email}`,
+      icon: <MdEmail size={20} />,
+      text: email,
+    })
+  }
+  if (urls && urls.length > 0) {
+    links.push(
+      ...urls.map((url) => ({
+        url,
+        icon: mapSocialIcon(url),
+        text: url,
+      })),
+    )
+  }
   return (
     <div className="lg:w-[400px] pt-8 lg:mt-0">
       {((urls && urls.length > 0) || email) && (
         <Paper className="mb-8">
           <div className="">
             <H3 className="mb-4">Links</H3>
-            {website && (
-              <div className="">
-                <a href={website} rel="noopener noreferrer nofollow">
-                  <FaGlobeAmericas size={20} /> Website
-                </a>
-              </div>
-            )}
-            {email && (
-              <div className="">
-                <a
-                  href={`mailto:${email}`}
-                  rel="noopener noreferrer nofollow"
-                  className={`inline-block`}
-                >
-                  <MdEmail size={20} /> Email
-                </a>
-              </div>
-            )}
-            {urls &&
-              urls.map((url, index) => (
+
+            {links &&
+              links.map((link, index) => (
                 <div
                   className={`${
-                    index === urls.length - 1
+                    index === links.length - 1
                       ? 'mb-0 border-b-0'
                       : 'pb-4 mb-4 border-b border-gray-200'
                   }`}
-                  key={url}
+                  key={link.url}
                 >
                   <a
-                    href={url}
+                    href={link.url}
                     rel="noopener noreferrer nofollow"
                     className="flex items-center text-sm"
                   >
-                    <span>{mapSocialIcon(url)}</span>
-                    <span className="inline-block ml-2 text-blue">{url}</span>
+                    <span>{link.icon}</span>
+                    <span className="inline-block ml-2 text-blue">
+                      {link.text}
+                    </span>
                   </a>
                 </div>
               ))}
