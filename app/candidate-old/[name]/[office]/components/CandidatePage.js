@@ -10,7 +10,7 @@ export default function CandidatePage(props) {
         <CandidateCard {...props} />
 
         <ContentSection {...props} />
-        <div id="candidate-footer" className="mb-4"></div>
+        <div id="sticky-end" className="mb-4"></div>
         <div>&nbsp;</div>
       </div>
     </div>

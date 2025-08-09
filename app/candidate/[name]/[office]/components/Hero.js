@@ -6,7 +6,7 @@ import UnclaimedBanner from './UnclaimedBanner'
 import CandidateImage from './CandidatImage'
 
 export default function Hero() {
-  const { candidate } = usePublicCandidate()
+  const [candidate] = usePublicCandidate()
   const { firstName, lastName, positionName } = candidate
 
   return (
@@ -14,7 +14,7 @@ export default function Hero() {
       <MaxWidth>
         <UnclaimedBanner />
         <div className="lg:flex">
-          <div className="mb-4 lg:w-[500px] lg:mr-4 pt-12 md:pt-0 flex lg:justify-center lg:items-center">
+          <div className="mb-4 lg:w-[400px] flex-shrink-0 lg:mr-4 pt-12 md:pt-0 flex lg:justify-center lg:items-center">
             <CandidateImage />
           </div>
           <div className="w-full ">

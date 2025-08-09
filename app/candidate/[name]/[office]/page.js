@@ -14,12 +14,14 @@ export const fetchCandidate = async ({
   slug,
   raceSlug,
   includeStances = false,
+  includeRace = false,
 }) => {
   const api = electionApiRoutes.candidacies.find.path
   const payload = {
     ...(slug && { slug }),
     ...(raceSlug && { raceSlug }),
     includeStances,
+    includeRace,
   }
   const res = await unAuthElectionFetch(api, payload, 3600)
 
@@ -30,7 +32,7 @@ export const fetchCandidate = async ({
 }
 
 export async function generateMetadata({ params, searchParams }) {
-  const { name, office } = params
+  const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
   const candidate = await fetchCandidate({ slug })
   const { firstName, lastName, about, image } = candidate || {}
@@ -46,7 +48,11 @@ export async function generateMetadata({ params, searchParams }) {
 export default async function Page({ params, searchParams }) {
   const { name, office } = params
   const slug = `${slugify(name)}/${slugify(office)}`
-  const candidate = await fetchCandidate({ slug, includeStances: true })
+  const candidate = await fetchCandidate({
+    slug,
+    includeStances: true,
+    includeRace: true,
+  })
   if (!candidate) {
     permanentRedirect('/candidates')
   }

@@ -4,9 +4,11 @@ import H4 from '@shared/typography/H4'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
+import { useUser } from '@shared/hooks/useUser'
 
 export default function UnclaimedBanner() {
-  const { candidate } = usePublicCandidate()
+  const [candidate] = usePublicCandidate()
+  const [user] = useUser()
   const { claimed } = candidate
 
   if (claimed) return null
@@ -17,15 +19,17 @@ export default function UnclaimedBanner() {
         <H4>This profile is unclaimed</H4>
         <Body2>Enhance your profile by signing up.</Body2>
       </div>
-      <div className="mt-4 md:mt-0">
-        <Button
-          href="/sign-up"
-          variant="outlined"
-          style={{ borderRadius: '100px' }}
-        >
-          Join Today
-        </Button>
-      </div>
+      {!user && (
+        <div className="mt-4 md:mt-0">
+          <Button
+            href="/sign-up"
+            variant="outlined"
+            style={{ borderRadius: '100px' }}
+          >
+            Join Today
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

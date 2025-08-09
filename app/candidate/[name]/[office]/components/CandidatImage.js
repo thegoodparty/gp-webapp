@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { IoPersonSharp } from 'react-icons/io5'
 
 export default function CandidateImage() {
-  const { candidate } = usePublicCandidate()
+  const [candidate] = usePublicCandidate()
   const { firstName, lastName, image } = candidate
 
   return (

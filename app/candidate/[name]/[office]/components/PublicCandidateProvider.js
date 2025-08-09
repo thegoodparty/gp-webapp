@@ -16,7 +16,7 @@ export const PublicCandidateProvider = ({
   const [candidate] = useState(initCandidate)
 
   return (
-    <PublicCandidateContext.Provider value={{ candidate }}>
+    <PublicCandidateContext.Provider value={[candidate]}>
       {children}
     </PublicCandidateContext.Provider>
   )
