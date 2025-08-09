@@ -52,3 +52,20 @@ export function validateVanityPath(vanityPath) {
     vanityPath,
   })
 }
+
+export function combineIssues(issues = [], customIssues = []) {
+  const mappedIssues = issues.map((issue) => {
+    return {
+      title: issue.position?.name || '',
+      description: issue.description || '',
+    }
+  })
+  const customIssuesWithDescription = customIssues.map((issue) => {
+    return {
+      title: issue.title || '',
+      description: issue.position || '',
+    }
+  })
+  const parsedIssues = [...mappedIssues, ...customIssuesWithDescription]
+  return parsedIssues
+}
