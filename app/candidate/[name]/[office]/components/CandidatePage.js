@@ -2,6 +2,8 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Hero from './Hero'
 import OfficeCard from './OfficeCard'
 import ContentSection from './ContentSection'
+import PledgeSection from './PledgeSection'
+import BuildSection from './BuildSection'
 
 export default function CandidatePage(props) {
   return (
@@ -18,6 +20,8 @@ export default function CandidatePage(props) {
       <div id="sticky-end" className="h-4 bg-cream-500">
         &nbsp;
       </div>
+      <PledgeSection />
+      <BuildSection />
     </div>
   )
 }

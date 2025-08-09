@@ -36,7 +36,7 @@ export default function LinksSection(props) {
   const { website } = claimed || {}
 
   return (
-    <div className="lg:w-[400px]">
+    <div className="lg:w-[400px] pt-8 lg:mt-0">
       {((urls && urls.length > 0) || email) && (
         <Paper className="mb-8">
           <div className="">
