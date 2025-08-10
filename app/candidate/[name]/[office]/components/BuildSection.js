@@ -15,7 +15,7 @@ const sections = [
       'Discover how you can run for office and make a real impact in your community.',
     image: img1,
     buttonText: 'Start your campaign',
-    buttonLink: '/sing-up',
+    buttonLink: '/sign-up',
   },
   {
     title: 'GoodParty.org community',
