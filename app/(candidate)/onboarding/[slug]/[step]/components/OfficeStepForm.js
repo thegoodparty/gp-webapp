@@ -12,17 +12,26 @@ const fields = [
     label: 'Zip Code',
     type: 'number',
     required: true,
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'level',
     label: 'Office Level',
     type: 'select',
     options: ['Local/Township/City', 'County/Regional', 'State', 'Federal'],
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'fuzzyFilter',
     label: 'Office Name',
     type: 'text',
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
 ]
 
