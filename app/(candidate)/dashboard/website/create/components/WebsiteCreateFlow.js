@@ -15,6 +15,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6

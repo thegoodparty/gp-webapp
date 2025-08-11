@@ -172,7 +172,7 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  async function handleAddressChange(place) {
+  function handleAddressChange(place) {
     setUpdatedPlace(place)
     setWebsite((current) => ({
       ...current,
@@ -184,13 +184,6 @@ export default function WebsiteEditFlow() {
         },
       },
     }))
-
-    if (place.formatted_address && place.place_id) {
-      await updateCampaign([
-        { key: 'formattedAddress', value: place.formatted_address },
-        { key: 'placeId', value: place.place_id },
-      ])
-    }
   }
 
   function handleEmailChange(value) {
