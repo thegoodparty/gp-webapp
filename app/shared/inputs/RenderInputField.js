@@ -140,6 +140,9 @@ export default function RenderInputField({
             label={field.label}
             error={error}
             disabled={field.disabled}
+            inputProps={{
+              ...(field.dataAttributes || {}),
+            }}
           >
             <option value="">Select</option>
             {field.options.map((op) => (
