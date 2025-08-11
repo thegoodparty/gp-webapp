@@ -25,6 +25,7 @@ export default function WebsiteEditFlow() {
   const [saveLoading, setSaveLoading] = useState(false)
   const isLgUp = useMediaQuery('(min-width:1024px)')
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const [updatedPlace, setUpdatedPlace] = useState(null)
 
   useEffect(() => {
     if (isLgUp && editSection === null) {
@@ -39,7 +40,12 @@ export default function WebsiteEditFlow() {
       vanityPath: website.vanityPath,
       status: website.status,
     })
-
+    if (updatedPlace) {
+      await updateCampaign([
+        { key: 'formattedAddress', value: updatedPlace.formatted_address },
+        { key: 'placeId', value: updatedPlace.place_id },
+      ])
+    }
     setSaveLoading(false)
     if (resp.ok) {
       if (website.status === WEBSITE_STATUS.published) {
@@ -166,7 +172,8 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  async function handleAddressChange(place) {
+  function handleAddressChange(place) {
+    setUpdatedPlace(place)
     setWebsite((current) => ({
       ...current,
       content: {
@@ -177,17 +184,6 @@ export default function WebsiteEditFlow() {
         },
       },
     }))
-
-    if (place.formatted_address && place.place_id) {
-      try {
-        await updateCampaign([
-          { key: 'formattedAddress', value: place.formatted_address },
-          { key: 'placeId', value: place.place_id },
-        ])
-      } catch (error) {
-        console.error('Failed to save address to campaign:', error)
-      }
-    }
   }
 
   function handleEmailChange(value) {
