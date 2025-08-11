@@ -38,6 +38,9 @@ const fetchClaimedCandidate = async ({ raceId, firstName, lastName }) => {
     const api = apiRoutes.publicCampaign.find.path
     const payload = { raceId, firstName, lastName }
     const res = await unAuthFetch(api, payload, 3600)
+    if (res.statusCode === 404) {
+      return false
+    }
     return res
   } catch (error) {
     console.error(error)
