@@ -75,38 +75,39 @@ export default function LinksSection(props) {
       })),
     )
   }
+  if (links.length === 0) {
+    return null
+  }
   return (
     <div className="lg:w-[400px] pt-8 lg:mt-0">
-      {((urls && urls.length > 0) || email) && (
-        <Paper className="mb-8">
-          <div className="">
-            <H3 className="mb-4">Links</H3>
+      <Paper className="mb-8">
+        <div className="">
+          <H3 className="mb-4">Links</H3>
 
-            {links &&
-              links.map((link, index) => (
-                <div
-                  className={`${
-                    index === links.length - 1
-                      ? 'mb-0 border-b-0'
-                      : 'pb-4 mb-4 border-b border-gray-200'
-                  }`}
-                  key={link.url}
+          {links &&
+            links.map((link, index) => (
+              <div
+                className={`${
+                  index === links.length - 1
+                    ? 'mb-0 border-b-0'
+                    : 'pb-4 mb-4 border-b border-gray-200'
+                }`}
+                key={link.url}
+              >
+                <a
+                  href={link.url}
+                  rel="noopener noreferrer nofollow"
+                  className="flex items-center text-sm"
                 >
-                  <a
-                    href={link.url}
-                    rel="noopener noreferrer nofollow"
-                    className="flex items-center text-sm"
-                  >
-                    <span>{link.icon}</span>
-                    <span className="inline-block ml-2 text-blue">
-                      {link.text}
-                    </span>
-                  </a>
-                </div>
-              ))}
-          </div>
-        </Paper>
-      )}
+                  <span>{link.icon}</span>
+                  <span className="inline-block ml-2 text-blue">
+                    {link.text}
+                  </span>
+                </a>
+              </div>
+            ))}
+        </div>
+      </Paper>
     </div>
   )
 }

@@ -49,10 +49,16 @@ export async function generateMetadata({ params, searchParams }) {
   const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
   const candidate = await fetchCandidate({ slug })
-  const { firstName, lastName, about, image } = candidate || {}
+  const title = candidate
+    ? `${candidate.firstName} ${candidate.lastName} for ${candidate.positionName} | GoodParty.org`
+    : 'Candidate | GoodParty.org'
+  const description =
+    candidate?.about ||
+    'Learn more about independent candidates at GoodParty.org.'
+  const image = candidate?.image
   const meta = pageMetaData({
-    title: `${firstName} ${lastName} for ${candidate?.positionName} | GoodParty.org`,
-    description: about,
+    title,
+    description,
     image,
     slug: `/candidate/${slug}`,
   })
