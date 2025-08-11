@@ -9,7 +9,7 @@ import H3 from '@shared/typography/H3'
 import { getWebsiteUrl } from 'app/(candidate)/dashboard/website/util/website.util'
 
 function mapSocialIcon(url) {
-  if (url.includes('twitter')) {
+  if (url.includes('twitter') || url.includes('/x.com')) {
     return <FaXTwitter size={20} />
   }
   if (url.includes('facebook')) {

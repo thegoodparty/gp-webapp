@@ -10,13 +10,9 @@ import H3 from '@shared/typography/H3'
 
 export default function OfficeCard(props) {
   const [candidate] = usePublicCandidate()
-  const { party, positionDescription, electionFrequency, Race } = candidate
+  const { positionDescription, electionFrequency, Race } = candidate
 
   const { electionDate } = Race || {}
-  let partyName = ''
-  if (party === 'Independent') {
-    partyName = 'Non-Partisan Candidate'
-  }
 
   return (
     <section className="mb-4 lg:w-[400px] lg:mr-4 lg:mt-32 pt-12 md:pt-0 text-black">
