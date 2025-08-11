@@ -62,6 +62,7 @@ export default function RenderInputField({
                   min: new Date().toISOString().split('T')[0],
                 }
               : {}),
+            ...(field.dataAttributes || {}),
           }}
           helperText={field.helperText}
           disabled={field.disabled}
