@@ -27,6 +27,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
+  const [updatedPlace, setUpdatedPlace] = useState(null)
 
   useEffect(() => {
     if (
@@ -68,6 +69,12 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       vanityPath: website.vanityPath,
       createStep: publish ? COMPLETE_STEP : step,
     })
+    if (updatedPlace) {
+      await updateCampaign([
+        { key: 'formattedAddress', value: updatedPlace.formatted_address },
+        { key: 'placeId', value: updatedPlace.place_id },
+      ])
+    }
     setSaveLoading(false)
     if (resp.ok) {
       setWebsite(resp.data)
@@ -195,14 +202,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }))
 
     if (place.formatted_address && place.place_id) {
-      try {
-        await updateCampaign([
-          { key: 'formattedAddress', value: place.formatted_address },
-          { key: 'placeId', value: place.place_id },
-        ])
-      } catch (error) {
-        console.error('Failed to save address to campaign:', error)
-      }
+      setUpdatedPlace(place)
     }
   }
 

@@ -62,6 +62,7 @@ export default function RenderInputField({
                   min: new Date().toISOString().split('T')[0],
                 }
               : {}),
+            ...(field.dataAttributes || {}),
           }}
           helperText={field.helperText}
           disabled={field.disabled}
@@ -139,6 +140,9 @@ export default function RenderInputField({
             label={field.label}
             error={error}
             disabled={field.disabled}
+            inputProps={{
+              ...(field.dataAttributes || {}),
+            }}
           >
             <option value="">Select</option>
             {field.options.map((op) => (
