@@ -174,10 +174,22 @@ export default function AdminVictoryPathPage(props) {
 
     console.debug('saving key', key, 'value', val, 'typeof', typeof val)
 
-    setState({
+    const newState = {
       ...state,
       [key]: val,
-    })
+    }
+
+    // TODO: Move recalculation of these fields to the backend if projectedTurnout is updated on a campaign
+    if (key === 'projectedTurnout') {
+      const pt = val === '' ? 0 : parseFloat(val)
+      const winNumber = pt > 0 ? Math.floor(pt * 0.5) + 1 : 0
+      const voterContactGoal = pt > 0 ? pt * 5 : 0
+
+      newState.winNumber = winNumber
+      newState.voterContactGoal = voterContactGoal
+    }
+
+    setState(newState)
   }
 
   const save = async () => {
