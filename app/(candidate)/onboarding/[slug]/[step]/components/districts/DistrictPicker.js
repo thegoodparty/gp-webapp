@@ -10,18 +10,9 @@ export default function DistrictPicker({
   buttonText = 'Save',
   onSubmit = async () => Promise.resolve(),
   className = '',
-  /*
-   * Optional props used to pre-populate the picker when a campaign already has a
-   * district saved (e.g. in the admin Victory Path page). They should be the
-   * full option objects returned by the autocomplete endpoints when possible –
-   * at minimum they must contain `L2DistrictType` and `id` (for type) or
-   * `L2DistrictName` and `id` (for name).
-   */
   initialType = null,
   initialName = null,
 }) {
-  // Preserve the initial values if provided so the inputs are pre-filled when
-  // the component mounts.
   const [type, setType]   = useState(initialType)
   const [name, setName]   = useState(initialName)
   const [busy, setBusy]   = useState(false)

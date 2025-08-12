@@ -128,8 +128,6 @@ export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { pathToVictory: p2vObject, details } = campaign
   const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
-  console.log(campaign)
-  console.dir(campaign, { depth: 6 })
 
   const [state, setState] = useState({
     ...initialState,
@@ -142,9 +140,6 @@ export default function AdminVictoryPathPage(props) {
   )
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
-  // Removed local calculations for winNumber/averageTurnoutPercent – backend
-  // Path-to-Victory job now provides authoritative values.
-
   useEffect(() => {
     setState((prevState) => {
       return {
@@ -156,9 +151,6 @@ export default function AdminVictoryPathPage(props) {
   }, [pathToVictory, campaign.canDownloadFederal])
 
   const onChangeField = (key, value) => {
-    // No longer updating winNumber / averageTurnoutPercent on the client –
-    // these will refresh after the backend recalculates P2V.
-
     let val = value
     if (keyTypes[key] === 'number' && value !== '') {
       val = parseFloat(value)
@@ -169,10 +161,6 @@ export default function AdminVictoryPathPage(props) {
     } else {
       val = value
     }
-
-    // voterContactGoal now provided by backend – no local calculation.
-
-    console.debug('saving key', key, 'value', val, 'typeof', typeof val)
 
     const newState = {
       ...state,
