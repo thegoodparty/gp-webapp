@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import ButtonLoading from './ButtonLoading'
 import { forwardRef } from 'react'
+import clsx from 'clsx'
 
 export const COLOR_CLASSES = {
   primary:
@@ -132,9 +133,12 @@ const Button = (
   const colorClasses = variantClasses[color] || variantClasses.primary
   const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium
 
-  const compiledClassName = `${baseClasses} ${sizeClasses} ${colorClasses} ${
-    className || ''
-  }`
+  const compiledClassName = clsx(
+    baseClasses,
+    sizeClasses,
+    colorClasses,
+    className,
+  )
 
   // render a disabled button instead of link if disabled = true
   if (href && !disabled) {

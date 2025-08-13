@@ -2,12 +2,11 @@ import H3 from '@shared/typography/H3'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import { FaHandHoldingHeart, FaRegHeart, FaRegStar } from 'react-icons/fa'
 import { GrGroup } from 'react-icons/gr'
-import UnclaimedBanner from './UnclaimedBanner'
 const pledges = [
   {
     title: 'Independent',
     description:
-      'Candidates are running outside the two-party system as an independent, non-partisan, or third-party candidate',
+      'Candidates are running outside the two-party system as an Independent, nonpartisan, or third-party candidate.',
     icon: <FaRegHeart />,
     iconBgColor: '#D1E7FE',
   },
@@ -28,7 +27,7 @@ const pledges = [
   {
     title: 'Civility',
     description:
-      "Candidates pledge to run a clean campaign free of mudslinging and uphold a minimum standard of civility in their campaign's conduct",
+      "Candidates pledge to run a clean campaign free of mudslinging and uphold a minimum standard of civility in their campaign's conduct.",
     icon: <FaHandHoldingHeart />,
     iconBgColor: '#CCEADD',
   },
@@ -41,7 +40,7 @@ export default function PledgeSection() {
         <div className="text-center">
           <MarketingH2>The GoodParty.org Pledge</MarketingH2>
           <div className="mt-4 text-lg">
-            All GoodParty.org candidates agree to the following:
+            All candidates empowered by GoodParty.org agree to the following:
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8 lg:gap-8">
@@ -62,7 +61,6 @@ export default function PledgeSection() {
             </div>
           ))}
         </div>
-        <UnclaimedBanner className="mt-12" />
       </div>
     </section>
   )

@@ -26,6 +26,7 @@ export default function UnclaimedBanner({ className }) {
         <Button
           href="/sign-up"
           variant="outlined"
+          className="bg-yellow-600 text-black border-black hover:[&:not([disabled])]:bg-yellow-500"
           style={{ borderRadius: '100px' }}
         >
           Join Today

@@ -4,6 +4,7 @@ import OfficeCard from './OfficeCard'
 import ContentSection from './ContentSection'
 import PledgeSection from './PledgeSection'
 import BuildSection from './BuildSection'
+import CtaSection from './CtaSection'
 
 export default function CandidatePage(props) {
   return (
@@ -17,11 +18,13 @@ export default function CandidatePage(props) {
           </div>
         </MaxWidth>
       </div>
-      <div id="sticky-end" className="h-4 bg-cream-500">
+      <div id="sticky-end" className=" bg-cream-500">
         &nbsp;
       </div>
+      <div className="h-12 lg:h-16 bg-cream-500"></div>
       <PledgeSection />
       <BuildSection />
+      <CtaSection />
     </div>
   )
 }

@@ -88,6 +88,8 @@ export default async function Page({ params, searchParams }) {
 
   candidate.claimed = claimedCandidate || false
 
+  console.log(candidate)
+
   return (
     <PublicCandidateProvider candidate={candidate}>
       <CandidatePage />

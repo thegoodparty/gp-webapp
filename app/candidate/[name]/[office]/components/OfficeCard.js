@@ -20,8 +20,8 @@ export default function OfficeCard(props) {
 
       <StickyCard>
         <div className="mb-4 lg:w-[400px] lg:pb-4 ">
-          <Paper>
-            <H3>About The Office</H3>
+          <Paper className="border-none">
+            <H3>About the Office</H3>
             <Body1 className="mt-4 pb-4">{positionDescription}</Body1>
             <H4 className="mt-4 border-t border-gray-200 pt-4">Term Length</H4>
             <Body1 className="mt-1 pb-4 ">

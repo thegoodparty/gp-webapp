@@ -18,18 +18,18 @@ const sections = [
     buttonLink: '/sign-up',
   },
   {
-    title: 'GoodParty.org community',
+    title: 'GoodParty.org Community',
     description:
-      'Connect with other independents, and explore opportunities for volunteering and guest posting.',
+      'Connect with other Independents, and explore opportunities for volunteering and guest posting.',
     image: img2,
-    buttonText: 'Join Circle',
+    buttonText: 'Join the community',
     buttonLink: 'https://community.goodparty.org/',
     isExternal: true,
   },
   {
     title: 'Run Independent. Win local.',
     description:
-      'A step-by-step guide to running and winning as an independent. Free to download, built to help you win local.',
+      'A step-by-step guide to running and winning as an Independent. Free to download, built to help you win local.',
     image: img3,
     buttonText: 'Download the free e-book',
     buttonLink: 'https://lp.goodparty.org/e-book',
@@ -45,17 +45,17 @@ export default function BuildSection() {
           <MarketingH2>Build a better democracy with us.</MarketingH2>
           <div className="mt-4 text-lg max-w-[600px] mx-auto">
             Ready to join the movement? Support candidates, run for office or
-            join our Circle community of like-minded individuals.
+            join our online community of like-minded individuals.
           </div>
         </div>
         {sections.map((section, index) => (
-          <Paper key={section.title} className="mt-12 lg:mt-16">
+          <Paper key={section.title} className="mt-12 lg:mt-16 border-none">
             <div
               className={`lg:flex  items-center lg:justify-between ${
                 index === 1 ? 'lg:flex-row-reverse' : ''
               }`}
             >
-              <div className="text-center lg:text-left lg:ml-8">
+              <div className="text-center lg:text-left lg:ml-8 mb-8 lg:mb-0">
                 <MarketingH4 className="mt-4 lg:mt-0">
                   {section.title}
                 </MarketingH4>

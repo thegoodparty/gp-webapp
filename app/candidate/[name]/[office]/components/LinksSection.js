@@ -80,7 +80,7 @@ export default function LinksSection(props) {
   }
   return (
     <div className="lg:w-[400px] pt-8 lg:mt-0">
-      <Paper className="mb-8">
+      <Paper className="mb-8 border-none">
         <div className="">
           <H3 className="mb-4">Links</H3>
 
