@@ -82,7 +82,7 @@ export default function WhySection(props) {
 
   return (
     <section className="border-t pt-6 border-gray-600">
-      <H3>Your Why Statement</H3>
+      <H3>Your Past Experience</H3>
       <Body1 className="text-gray-600 mt-2  pb-6 mb-12">
         Tell potential voters about your prior experience. Any work or
         experiences that are relevant to the role you plan to run for will

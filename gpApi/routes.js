@@ -458,6 +458,12 @@ export const apiRoutes = {
     method: 'POST',
     nextApiRoute: true,
   },
+  publicCampaign: {
+    find: {
+      path: '/public-campaigns',
+      method: 'GET',
+    },
+  },
   ecanvasser: {
     list: {
       path: '/ecanvasser/list',
