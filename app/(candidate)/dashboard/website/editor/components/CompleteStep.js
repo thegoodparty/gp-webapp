@@ -1,5 +1,4 @@
 import Button from '@shared/buttons/Button'
-import { getWebsiteUrl } from '../../util/website.util'
 import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import ShareModal from '../../components/ShareModal'
 import { useState } from 'react'
@@ -11,7 +10,7 @@ import Image from 'next/image'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function CompleteStep({ vanityPath, domain }) {
-  const url = getWebsiteUrl(vanityPath, false)
+  const url = `${vanityPath}.com`
   const [shareModalOpen, setShareModalOpen] = useState(false)
   return (
     <div className="text-center flex flex-col items-center gap-4">
