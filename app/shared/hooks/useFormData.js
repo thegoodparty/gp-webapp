@@ -6,7 +6,10 @@ const FormDataContext = createContext({})
 export const FormDataProvider = ({
   children,
   initialState = {},
-  validator = () => true,
+  validator = () => ({
+    validations: {},
+    isValid: true,
+  }),
 }) => {
   const [formData, setFormData] = useState(initialState)
   const [isValid, setIsValid] = useState(validator(initialState))

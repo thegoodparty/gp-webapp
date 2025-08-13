@@ -6,21 +6,11 @@ import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 
-const initialFormState = {
-  electionFilingLink: '',
-  campaignCommitteeName: '',
-  localTribeName: '',
-  ein: '',
-  phone: '',
-  address: '',
-  website: '',
-  email: '',
-  verifyInfo: false,
-}
-
 export const validatePinForm = (data) => {
   const { pin } = data
-  return !isEmpty(pin) && pin.length === 6
+  return {
+    isValid: !isEmpty(pin) && pin.length === 6,
+  }
 }
 
 export const TextingComplianceSubmitPinForm = ({
@@ -30,6 +20,7 @@ export const TextingComplianceSubmitPinForm = ({
 }) => {
   const { formData, handleChange } = useFormData()
   const { pin } = formData
+  const { isValid } = validatePinForm(formData)
 
   const handleSubmit = () => onSubmit({ ...formData })
 
@@ -55,7 +46,7 @@ export const TextingComplianceSubmitPinForm = ({
           {...{
             onClick: handleSubmit,
             loading,
-            isValid: validatePinForm(formData),
+            isValid,
           }}
         />
       </TextingComplianceFooter>
