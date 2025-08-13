@@ -7,7 +7,6 @@ export const unAuthElectionFetch = async (
 ) => {
   const qs = Object.keys(data).length ? `?${new URLSearchParams(data)}` : ''
   const url = `${ELECTION_API_ROOT}/v1${path}${qs}`
-  console.log('url', url)
   const resp = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
