@@ -30,7 +30,7 @@ export const TextingComplianceSubmitPinForm = ({
   const { formData, handleChange } = useFormData()
   const { pin } = formData
 
-  const handleSubmit = () => onSubmit({ ...formData, pin: parseInt(pin) })
+  const handleSubmit = () => onSubmit({ ...formData })
 
   return (
     <>
