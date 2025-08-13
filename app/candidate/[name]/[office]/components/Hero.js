@@ -3,7 +3,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import UnclaimedBanner from './UnclaimedBanner'
-import CandidateImage from './CandidatImage'
+import CandidateImage from './CandidateImage'
 import Image from 'next/image'
 
 export default function Hero() {
