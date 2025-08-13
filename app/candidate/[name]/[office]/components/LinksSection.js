@@ -1,5 +1,4 @@
 'use client'
-import { FaTiktok } from 'react-icons/fa6'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import Paper from '@shared/utils/Paper'
 import H3 from '@shared/typography/H3'
@@ -12,6 +11,7 @@ import {
   LuMail,
   LuTwitter,
 } from 'react-icons/lu'
+import { PiTiktokLogoLight } from 'react-icons/pi'
 
 function mapSocialIcon(url) {
   if (url.includes('twitter') || url.includes('/x.com')) {
@@ -24,7 +24,7 @@ function mapSocialIcon(url) {
     return <LuInstagram size={20} />
   }
   if (url.includes('tiktok')) {
-    return <FaTiktok size={20} />
+    return <PiTiktokLogoLight size={20} />
   }
   if (url.includes('linkedin')) {
     return <LuLinkedin size={20} />
