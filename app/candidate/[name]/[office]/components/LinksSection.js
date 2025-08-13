@@ -1,33 +1,38 @@
 'use client'
-import { FaGlobeAmericas, FaInstagram } from 'react-icons/fa'
-import { FaFacebookF, FaTiktok, FaXTwitter } from 'react-icons/fa6'
-import { MdEmail } from 'react-icons/md'
-import { AiOutlineLinkedin } from 'react-icons/ai'
+import { FaTiktok } from 'react-icons/fa6'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import Paper from '@shared/utils/Paper'
 import H3 from '@shared/typography/H3'
 import { getWebsiteUrl } from 'app/(candidate)/dashboard/website/util/website.util'
+import {
+  LuFacebook,
+  LuGlobe,
+  LuInstagram,
+  LuLinkedin,
+  LuMail,
+  LuTwitter,
+} from 'react-icons/lu'
 
 function mapSocialIcon(url) {
   if (url.includes('twitter') || url.includes('/x.com')) {
-    return <FaXTwitter size={20} />
+    return <LuTwitter size={20} />
   }
   if (url.includes('facebook')) {
-    return <FaFacebookF size={20} />
+    return <LuFacebook size={20} />
   }
   if (url.includes('instagram')) {
-    return <FaInstagram size={20} />
+    return <LuInstagram size={20} />
   }
   if (url.includes('tiktok')) {
     return <FaTiktok size={20} />
   }
   if (url.includes('linkedin')) {
-    return <AiOutlineLinkedin size={20} />
+    return <LuLinkedin size={20} />
   }
   if (url.includes('website')) {
-    return <FaGlobeAmericas size={20} />
+    return <LuGlobe size={20} />
   }
-  return <FaGlobeAmericas size={20} />
+  return <LuGlobe size={20} />
 }
 
 function claimedWebsite(website) {
@@ -48,21 +53,21 @@ export default function LinksSection(props) {
   if (websiteUrl) {
     links.push({
       url: websiteUrl,
-      icon: <FaGlobeAmericas size={20} />,
+      icon: <LuGlobe size={20} />,
       text: websiteUrl,
     })
   }
   if (campaignWebsite) {
     links.push({
       url: campaignWebsite,
-      icon: <FaGlobeAmericas size={20} />,
+      icon: <LuGlobe size={20} />,
       text: campaignWebsite,
     })
   }
   if (email) {
     links.push({
       url: `mailto:${email}`,
-      icon: <MdEmail size={20} />,
+      icon: <LuMail size={20} />,
       text: email,
     })
   }

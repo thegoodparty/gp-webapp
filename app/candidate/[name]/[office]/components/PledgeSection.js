@@ -1,34 +1,38 @@
 import H3 from '@shared/typography/H3'
 import MarketingH2 from '@shared/typography/MarketingH2'
-import { FaHandHoldingHeart, FaRegHeart, FaRegStar } from 'react-icons/fa'
-import { GrGroup } from 'react-icons/gr'
+import {
+  PiHandHeartBold,
+  PiHeartStraightBold,
+  PiStarBold,
+  PiUsersThreeBold,
+} from 'react-icons/pi'
 const pledges = [
   {
     title: 'Independent',
     description:
       'Candidates are running outside the two-party system as an Independent, nonpartisan, or third-party candidate.',
-    icon: <FaRegHeart />,
+    icon: <PiHeartStraightBold />,
     iconBgColor: '#D1E7FE',
   },
   {
     title: 'People-Powered',
     description:
       'Candidates take the majority of their funds from grassroots donors and reject the influence of special interests and big money.',
-    icon: <GrGroup />,
+    icon: <PiUsersThreeBold />,
     iconBgColor: '#FFE291',
   },
   {
     title: 'Anti-Corruption',
     description:
       'Candidates pledge to be accountable and transparent with their policy agendas and report attempts to unduly influence them.',
-    icon: <FaRegStar />,
+    icon: <PiStarBold />,
     iconBgColor: '#EDDCFF',
   },
   {
     title: 'Civility',
     description:
       "Candidates pledge to run a clean campaign free of mudslinging and uphold a minimum standard of civility in their campaign's conduct.",
-    icon: <FaHandHoldingHeart />,
+    icon: <PiHandHeartBold />,
     iconBgColor: '#CCEADD',
   },
 ]
