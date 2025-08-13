@@ -1,18 +1,30 @@
-import HelpBanner from './HelpBanner'
-import CandidateCard from './CandidateCard'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Hero from './Hero'
+import OfficeCard from './OfficeCard'
 import ContentSection from './ContentSection'
+import PledgeSection from './PledgeSection'
+import BuildSection from './BuildSection'
+import CtaSection from './CtaSection'
 
 export default function CandidatePage(props) {
   return (
-    <div className="bg-black text-white">
-      <HelpBanner {...props} />
-      <div className="max-w-[1440px] mx-auto px-4 xl:p-0 pt-4 lg:flex">
-        <CandidateCard {...props} />
-
-        <ContentSection {...props} />
-        <div id="candidate-footer" className="mb-4"></div>
-        <div>&nbsp;</div>
+    <div className=" text-white">
+      <Hero />
+      <div className="bg-cream-500">
+        <MaxWidth>
+          <div className="lg:flex">
+            <OfficeCard />
+            <ContentSection />
+          </div>
+        </MaxWidth>
       </div>
+      <div id="sticky-end" className=" bg-cream-500">
+        &nbsp;
+      </div>
+      <div className="h-12 lg:h-16 bg-cream-500"></div>
+      <PledgeSection />
+      <BuildSection />
+      <CtaSection />
     </div>
   )
 }

@@ -15,10 +15,9 @@ export default function CandidateSchema({ candidate, slug }) {
     email,
   } = candidate
 
-  let sameAs = []
-  if (urls) {
-    sameAs = urls.map((url) => url.url)
-  }
+  const sameAs = Array.isArray(urls)
+    ? urls.map((u) => (typeof u === 'string' ? u : u?.url)).filter(Boolean)
+    : []
 
   const address = {
     '@type': 'PostalAddress',

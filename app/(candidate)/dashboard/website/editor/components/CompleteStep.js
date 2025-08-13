@@ -1,5 +1,4 @@
 import Button from '@shared/buttons/Button'
-import { getWebsiteUrl } from '../../util/website.util'
 import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import ShareModal from '../../components/ShareModal'
 import { useState } from 'react'
@@ -9,8 +8,10 @@ import Body1 from '@shared/typography/Body1'
 import MarketingH4 from '@shared/typography/MarketingH4'
 import Image from 'next/image'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { getWebsiteUrl } from '../../util/website.util'
 
 export default function CompleteStep({ vanityPath, domain }) {
+  const suggestedUrl = `${vanityPath}.com`
   const url = getWebsiteUrl(vanityPath, false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   return (
@@ -41,7 +42,7 @@ export default function CompleteStep({ vanityPath, domain }) {
           <div className="flex flex-col  gap-4 w-full  justify-evenly md:flex-row-reverse relative">
             <div className="text-left md:w-1/2">
               <MarketingH4>Unlock digital outreach with a domain</MarketingH4>
-              <Body2 className="text-gray-500 mt-2">({url})</Body2>
+              <Body2 className="text-gray-500 mt-2">({suggestedUrl})</Body2>
               <div className="mt-12">
                 <div className="flex items-center gap-2 mb-4">
                   <FaCheck />
