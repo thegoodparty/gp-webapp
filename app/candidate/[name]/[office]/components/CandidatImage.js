@@ -8,7 +8,6 @@ import ClaimedHeart from './ClaimedHeart'
 export default function CandidateImage() {
   const [candidate] = usePublicCandidate()
   const { firstName, lastName, image, claimed } = candidate
-  console.log('claimed', claimed)
 
   return (
     <div className="lg:-mb-40">
