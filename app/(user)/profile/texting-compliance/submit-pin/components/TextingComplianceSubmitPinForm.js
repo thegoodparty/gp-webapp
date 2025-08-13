@@ -26,6 +26,7 @@ export const validatePinForm = (data) => {
 export const TextingComplianceSubmitPinForm = ({
   onSubmit = (formData) => {},
   loading = false,
+  error = null,
 }) => {
   const { formData, handleChange } = useFormData()
   const { pin } = formData
@@ -44,6 +45,8 @@ export const TextingComplianceSubmitPinForm = ({
             required: true,
             fullWidth: true,
             onChange: (e) => handleChange({ pin: e.target.value }),
+            error: Boolean(error),
+            ...(error ? { helperText: error } : {}),
           }}
         />
       </TextingComplianceForm>
