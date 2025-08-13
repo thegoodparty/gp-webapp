@@ -4,10 +4,11 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import { usePublicCandidate } from './PublicCandidateProvider'
 import UnclaimedBanner from './UnclaimedBanner'
 import CandidateImage from './CandidatImage'
+import Image from 'next/image'
 
 export default function Hero() {
   const [candidate] = usePublicCandidate()
-  const { firstName, lastName, positionName } = candidate
+  const { firstName, lastName, positionName, claimed } = candidate
 
   return (
     <div className="bg-[linear-gradient(82deg,_#0B1529_65.55%,_#26498F_139.02%)] p-6 w-full text-white">
@@ -24,6 +25,20 @@ export default function Hero() {
             <h2 className="text-2xl lg:text-3xl font-medium ">
               {positionName}
             </h2>
+            {claimed && (
+              <div className="flex items-center gap-2 mt-4">
+                <Image
+                  src="/images/logo/heart.svg"
+                  alt="Empowered"
+                  width={28}
+                  height={24}
+                  priority
+                />
+                <h3 className="text-xl font-medium">
+                  Empowered by GoodParty.org
+                </h3>
+              </div>
+            )}
           </div>
         </div>
       </MaxWidth>

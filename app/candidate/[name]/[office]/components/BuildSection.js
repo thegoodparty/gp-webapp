@@ -20,7 +20,7 @@ const sections = [
   {
     title: 'GoodParty.org Community',
     description:
-      'Connect with other Independents, and explore opportunities for volunteering and guest posting.',
+      'Connect with other Independents, and explore opportunities for learning and volunteering.',
     image: img2,
     buttonText: 'Join the community',
     buttonLink: 'https://community.goodparty.org/',
