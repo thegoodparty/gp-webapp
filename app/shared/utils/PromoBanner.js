@@ -31,7 +31,9 @@ const PromoBanner = ({ initPathname }) => {
     false,
   )
   const pathname = usePathname()
-  const [showPromo, setShowPromo] = useState(showPromoAlert(initPathname))
+  const [showPromo, setShowPromo] = useState(
+    showPromoAlert(initPathname || pathname),
+  )
 
   useEffect(
     () => setShowPromo(!hidePromo && showPromoAlert(pathname)),

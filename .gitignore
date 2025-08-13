@@ -37,6 +37,7 @@ next-env.d.ts
 
 #service worker
 /public/sw.js
+/public/workbox-*
 /workbox-*
 
 /storybook-static

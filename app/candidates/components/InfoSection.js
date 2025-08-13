@@ -18,7 +18,7 @@ const cards = [
   {
     title: 'Independent',
     description:
-      'Candidates are running outside the two-party system as an independent, non-partisan, or third-party candidate.',
+      'Candidates are running outside the two-party system as an Independent, nonpartisan, or third-party candidate.',
     icon: <BiSolidHappy />,
     modalTitle: 'What does it mean to be an independent candidate?',
     modalDescription: (
