@@ -53,7 +53,7 @@ export default function WebsiteEditorPageStepper({
           size="large"
           onClick={onComplete}
           loading={completeLoading}
-          disabled={completeLoading}
+          disabled={completeLoading || nextDisabled}
         >
           {completeLabel}
         </Button>
