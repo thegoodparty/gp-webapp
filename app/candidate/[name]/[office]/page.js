@@ -35,6 +35,9 @@ export const fetchCandidate = async ({
 
 const fetchClaimedCandidate = async ({ raceId, firstName, lastName }) => {
   try {
+    if (!raceId) {
+      return false
+    }
     const api = apiRoutes.publicCampaign.find.path
     const payload = { raceId, firstName, lastName }
     const res = await unAuthFetch(api, payload, 3600)
@@ -81,7 +84,7 @@ export default async function Page({ params, searchParams }) {
   }
 
   const claimedCandidate = await fetchClaimedCandidate({
-    raceId: candidate.raceId,
+    raceId: candidate.Race?.brHashId,
     firstName: candidate.firstName,
     lastName: candidate.lastName,
   })
