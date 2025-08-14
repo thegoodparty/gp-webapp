@@ -27,6 +27,7 @@ export default function EditSection({
   onSave,
   onClose,
   saveLoading,
+  canSave,
 }) {
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
@@ -108,7 +109,7 @@ export default function EditSection({
           size="large"
           onClick={onSave}
           loading={saveLoading}
-          disabled={saveLoading}
+          disabled={saveLoading || !canSave}
         >
           Save
         </Button>

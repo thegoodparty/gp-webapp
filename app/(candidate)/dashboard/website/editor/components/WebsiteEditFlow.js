@@ -17,6 +17,8 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import EditSettingsMenu from './EditSettingsMenu'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { isValidEmail } from 'helpers/validations'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 
 export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
@@ -216,6 +218,13 @@ export default function WebsiteEditFlow() {
     }))
   }
 
+  const canSave =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != '' &&
+    website.content?.contact?.addressText != ''
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
@@ -259,6 +268,7 @@ export default function WebsiteEditFlow() {
               onPhoneChange={handlePhoneChange}
               onPreviewOpen={() => setPreviewOpen(true)}
               onSave={handleSaveAndPublish}
+              canSave={canSave}
               onClose={handleEditSectionClose}
               saveLoading={saveLoading}
             />
@@ -287,6 +297,7 @@ export default function WebsiteEditFlow() {
           onPhoneChange={handlePhoneChange}
           onPreviewOpen={() => setPreviewOpen(true)}
           onSave={handleSaveAndPublish}
+          canSave={canSave}
           onClose={handleEditSectionClose}
           saveLoading={saveLoading}
         />
