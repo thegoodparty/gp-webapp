@@ -265,6 +265,13 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     setIsValid(value)
   }
 
+  const canPublish =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != '' &&
+    website.content?.contact?.address != ''
+
   return (
     <>
       <div className="flex flex-col gap-4 h-full min-h-full">
@@ -371,6 +378,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLabel="Publish website"
             completeLoading={saveLoading}
             nextDisabled={!isValid}
+            canPublish={canPublish}
           />
         )}
       </div>
