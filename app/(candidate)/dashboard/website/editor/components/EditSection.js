@@ -74,7 +74,7 @@ export default function EditSection({
             address={website.content.contact?.address}
             email={website.content.contact?.email}
             phone={website.content.contact?.phone}
-            onAddressChange={onAddressChange}
+            onAddressSelect={onAddressChange}
             onEmailChange={onEmailChange}
             onPhoneChange={onPhoneChange}
             committee={website.content.about?.committee}
