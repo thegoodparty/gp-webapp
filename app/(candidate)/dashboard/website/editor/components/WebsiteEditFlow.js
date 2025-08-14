@@ -172,7 +172,7 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  function handleAddressChange(place) {
+  function handleAddressSelect(place) {
     setUpdatedPlace(place)
     setWebsite((current) => ({
       ...current,
@@ -182,6 +182,16 @@ export default function WebsiteEditFlow() {
           ...current.content.contact,
           address: place.formatted_address,
         },
+      },
+    }))
+  }
+
+  function handleAddressChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        contact: { ...current.content.contact, addressText: value },
       },
     }))
   }
@@ -243,6 +253,7 @@ export default function WebsiteEditFlow() {
               onBioChange={handleBioChange}
               onIssuesChange={handleIssuesChange}
               onCommitteeChange={handleCommitteeChange}
+              onAddressSelect={handleAddressSelect}
               onAddressChange={handleAddressChange}
               onEmailChange={handleEmailChange}
               onPhoneChange={handlePhoneChange}
@@ -270,6 +281,7 @@ export default function WebsiteEditFlow() {
           onBioChange={handleBioChange}
           onIssuesChange={handleIssuesChange}
           onCommitteeChange={handleCommitteeChange}
+          onAddressSelect={handleAddressSelect}
           onAddressChange={handleAddressChange}
           onEmailChange={handleEmailChange}
           onPhoneChange={handlePhoneChange}

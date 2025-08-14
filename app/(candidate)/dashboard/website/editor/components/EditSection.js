@@ -19,6 +19,7 @@ export default function EditSection({
   onBioChange,
   onIssuesChange,
   onCommitteeChange,
+  onAddressSelect,
   onAddressChange,
   onEmailChange,
   onPhoneChange,
@@ -29,7 +30,7 @@ export default function EditSection({
 }) {
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
-    [website?.id],
+    [website?.content?.about?.bio],
   )
   return (
     <div className="p-4 flex flex-col gap-4 h-full max-h-[80vh]">
@@ -74,7 +75,8 @@ export default function EditSection({
             address={website.content.contact?.address}
             email={website.content.contact?.email}
             phone={website.content.contact?.phone}
-            onAddressSelect={onAddressChange}
+            onAddressSelect={onAddressSelect}
+            onAddressChange={onAddressChange}
             onEmailChange={onEmailChange}
             onPhoneChange={onPhoneChange}
             committee={website.content.about?.committee}
