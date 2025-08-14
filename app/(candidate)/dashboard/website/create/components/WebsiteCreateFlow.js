@@ -280,7 +280,8 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != '' &&
-    website.content?.contact?.addressText != ''
+    (website.content?.contact?.address != '' ||
+      website.content?.contact?.addressText != '')
 
   return (
     <>
