@@ -12,6 +12,7 @@ export default function WebsiteEditorPageStepper({
   completeLabel = 'Complete',
   completeLoading = false,
   nextDisabled = false,
+  canPublish = false,
 }) {
   const hasNext = currentStep < totalSteps
   const hasPrev = currentStep > 1
@@ -53,7 +54,7 @@ export default function WebsiteEditorPageStepper({
           size="large"
           onClick={onComplete}
           loading={completeLoading}
-          disabled={completeLoading}
+          disabled={completeLoading || !canPublish}
         >
           {completeLabel}
         </Button>

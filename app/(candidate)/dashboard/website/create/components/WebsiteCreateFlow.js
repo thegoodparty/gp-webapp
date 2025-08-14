@@ -16,6 +16,8 @@ import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { isValidEmail } from 'helpers/validations'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
@@ -136,6 +138,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         main: { ...current.content.main, title: value },
       },
     }))
+    if (value.length > 0) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleTaglineChange(value) {
@@ -203,6 +210,9 @@ export default function WebsiteCreateFlow({ initialIssues }) {
 
     if (place.formatted_address && place.place_id) {
       setUpdatedPlace(place)
+      setIsValid(true)
+    } else {
+      setIsValid(false)
     }
   }
 
@@ -214,6 +224,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         contact: { ...current.content.contact, email: value },
       },
     }))
+    if (isValidEmail(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handlePhoneChange(value) {
@@ -224,6 +239,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         contact: { ...current.content.contact, phone: value },
       },
     }))
+    if (isValidPhone(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleCommitteeChange(value) {
@@ -244,6 +264,13 @@ export default function WebsiteCreateFlow({ initialIssues }) {
   function validateCallback(value) {
     setIsValid(value)
   }
+
+  const canPublish =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != '' &&
+    website.content?.contact?.address != ''
 
   return (
     <>
@@ -351,6 +378,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLabel="Publish website"
             completeLoading={saveLoading}
             nextDisabled={!isValid}
+            canPublish={canPublish}
           />
         )}
       </div>
