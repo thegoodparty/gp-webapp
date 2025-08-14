@@ -1,12 +1,15 @@
 'use client'
 import { createContext, useContext, useState } from 'react'
 
-const FormDataContext = createContext()
+const FormDataContext = createContext({})
 
 export const FormDataProvider = ({
   children,
   initialState = {},
-  validator = () => true,
+  validator = () => ({
+    validations: {},
+    isValid: true,
+  }),
 }) => {
   const [formData, setFormData] = useState(initialState)
   const [isValid, setIsValid] = useState(validator(initialState))

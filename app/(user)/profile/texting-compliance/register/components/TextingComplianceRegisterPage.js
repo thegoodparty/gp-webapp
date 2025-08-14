@@ -3,7 +3,8 @@ import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import Body2 from '@shared/typography/Body2'
 import NewInfoAlert from '@shared/alerts/NewInfoAlert'
-import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
+import TextingComplianceHeader
+  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
@@ -13,20 +14,9 @@ import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-
-// TODO: This is temporary initial form state data for UI development.
-const mockInitialFormState = {
-  electionFilingLink: 'https://elections.example.com/filing123',
-  campaignCommitteeName: 'Friends of Democracy',
-  localTribeName: 'Cherokee Nation',
-  ein: '12-3456789',
-  phone: '(805) 550-3465',
-  website: 'https://friendsofdemocracy.org',
-  email: 'contact@friendsofdemocracy.org',
-  verifyInfo: false,
-}
+import {
+  mapFormData
+} from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
 
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
@@ -42,7 +32,7 @@ const createTcrCompliance = async (formData) => {
 
 const reconcileInitialFormState = (user, campaign) => {
   const { email, phone } = user
-  const { details: campaignDetails, placeId } = campaign
+  const { details: campaignDetails } = campaign
   const { einNumber: ein, campaignCommittee, website } = campaignDetails || {}
 
   return {
@@ -52,20 +42,10 @@ const reconcileInitialFormState = (user, campaign) => {
     ein: ein || '',
     phone: phone || '',
     address: { formatted_address: '' },
-    placeId: placeId || '',
+    placeId: '',
     website: website || '',
     email: email || '',
     verifyInfo: false,
-    ...mockInitialFormState,
-  }
-}
-
-const handleAddressCampaignUpdate = async (address, campaign) => {
-  if (address.place_id && campaign.placeId !== address.place_id) {
-    await updateCampaign([
-      { key: 'placeId', value: address.place_id },
-      { key: 'formattedAddress', value: address.formatted_address },
-    ])
   }
 }
 
@@ -79,7 +59,6 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
     setLoading(true)
     try {
       await createTcrCompliance(formData)
-      await handleAddressCampaignUpdate(formData.address, campaign)
       successSnackbar('Successfully registered for compliance')
       router.push('/profile')
     } catch {

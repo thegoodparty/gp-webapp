@@ -44,20 +44,25 @@ export const validateRegistrationForm = (data) => {
     verifyInfo,
   } = data
 
-  return (
-    isURL(electionFilingLink) &&
-    isFilled(campaignCommitteeName) &&
-    isFilled(localTribeName) &&
-    isValidEIN(ein) &&
-    isMobilePhone(phone, 'en-US') &&
+  const validations = {
+    electionFilingLink: isURL(electionFilingLink),
+    campaignCommitteeName: isFilled(campaignCommitteeName),
+    localTribeName: isFilled(localTribeName),
+    ein: isValidEIN(ein),
+    phone: isMobilePhone(phone, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
-    validateAddress(address) &&
-    (isFQDN(website) || isURL(website)) &&
-    isEmail(email) &&
-    verifyInfo === true
-  )
+    address: validateAddress(address),
+    website: isFQDN(website) || isURL(website),
+    email: isEmail(email),
+    verifyInfo: verifyInfo === true,
+  }
+
+  return {
+    validations,
+    isValid: Object.values(validations).every(Boolean),
+  }
 }
 
 export default function TextingComplianceRegistrationForm({
@@ -76,6 +81,8 @@ export default function TextingComplianceRegistrationForm({
     email,
     verifyInfo,
   } = formData
+  const formValidation = validateRegistrationForm(formData)
+  const { isValid } = formValidation
 
   const [addressInputValue, setAddressInputValue] = useState(
     address.formatted_address || '',
@@ -172,7 +179,7 @@ export default function TextingComplianceRegistrationForm({
           {...{
             onClick: () => onSubmit(formData),
             loading,
-            isValid: validateRegistrationForm(formData),
+            isValid,
           }}
         />
       </TextingComplianceFooter>
