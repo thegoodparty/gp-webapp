@@ -9,6 +9,7 @@ export default function ContactStep({
   address,
   email,
   phone,
+  onAddressSelect,
   onAddressChange,
   onEmailChange,
   onPhoneChange,
@@ -19,12 +20,17 @@ export default function ContactStep({
   return (
     <div>
       {!noHeading && <H2 className="mb-6">How can voters contact you?</H2>}
-      <Label>Address</Label>
+      <Label>
+        Address <sup>*</sup>
+      </Label>
       <AddressAutocomplete
         value={address}
-        onSelect={(place) => onAddressChange(place)}
+        onSelect={(place) => onAddressSelect(place)}
+        onChange={(value) => onAddressChange(value)}
       />
-      <Label className="mt-4">Email</Label>
+      <Label className="mt-4">
+        Email <sup>*</sup>
+      </Label>
       <EmailInput
         useLabel={false}
         value={email}
@@ -32,7 +38,9 @@ export default function ContactStep({
         newCallbackSignature
         shrink
       />
-      <Label className="mt-4">Phone</Label>
+      <Label className="mt-4">
+        Phone <sup>*</sup>
+      </Label>
       <PhoneInput
         useLabel={false}
         value={phone}
