@@ -114,8 +114,7 @@ export default function AdminCandidatesTable({ campaigns }) {
   const [pageSize, setPageSize] = useState(25)
 
   const inputData = useMemo(() => {
-    const resultArray = []
-    campaigns?.map((campaign) => {
+    const resultArray = [](campaigns || []).map((campaign) => {
       const {
         data,
         user,
