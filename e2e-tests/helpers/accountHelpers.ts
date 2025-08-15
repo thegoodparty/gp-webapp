@@ -156,7 +156,7 @@ export async function ensureAdminSession() {
     }
 
     console.log('Waiting for Save button...');
-    const saveButton = page.getByRole('button', { name: 'Save' });
+    const saveButton = page.getByRole('button', { name: 'Save', exact: true }).first();
     await saveButton.waitFor({ state: 'visible', timeout: 60000 });
     await saveButton.click();
     await documentReady(page);
