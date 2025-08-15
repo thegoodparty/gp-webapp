@@ -18,7 +18,9 @@ export default function HeroStep({
       {!noHeading && (
         <H2 className="mb-6">Customize the content visitors will see first</H2>
       )}
-      <Label>Title</Label>
+      <Label>
+        Title <sup>*</sup>
+      </Label>
       <TextField
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}

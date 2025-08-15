@@ -1,6 +1,5 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { serialize } from 'object-to-formdata'
 import { isDomainActive } from './domain.util'
 import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
 
@@ -29,8 +28,7 @@ export function createWebsite() {
 
 export function updateWebsite(content) {
   try {
-    const formData = serialize(content, { indices: true })
-    return clientFetch(apiRoutes.website.update, formData)
+    return clientFetch(apiRoutes.website.update, content)
   } catch (e) {
     console.error('error', e)
     return false
@@ -53,4 +51,21 @@ export function validateVanityPath(vanityPath) {
   return clientFetch(apiRoutes.website.validateVanityPath, {
     vanityPath,
   })
+}
+
+export function combineIssues(issues = [], customIssues = []) {
+  const mappedIssues = issues.map((issue) => {
+    return {
+      title: issue.position?.name || '',
+      description: issue.description || '',
+    }
+  })
+  const customIssuesWithDescription = customIssues.map((issue) => {
+    return {
+      title: issue.title || '',
+      description: issue.position || '',
+    }
+  })
+  const parsedIssues = [...mappedIssues, ...customIssuesWithDescription]
+  return parsedIssues
 }

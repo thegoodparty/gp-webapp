@@ -43,6 +43,12 @@ const sections = [
         autocomplete: false,
       },
       {
+        key: 'canDownloadFederal',
+        label: 'Can Download Federal/State Voter File',
+        type: 'select',
+        options: ['true', 'false'],
+      },
+      {
         key: 'electionLocation',
         label: 'Election Location',
         type: 'text',
@@ -212,6 +218,7 @@ export default function AdminVictoryPathPage(props) {
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
+    canDownloadFederal: campaign.canDownloadFederal,
   })
 
   async function getVoterLocations(electionType, state) {
@@ -289,9 +296,10 @@ export default function AdminVictoryPathPage(props) {
       return {
         ...prevState,
         ...pathToVictory,
+        canDownloadFederal: campaign.canDownloadFederal,
       }
     })
-  }, [pathToVictory])
+  }, [pathToVictory, campaign.canDownloadFederal])
 
   const onChangeField = (key, value) => {
     let winNumber = Math.round(state.projectedTurnout * 0.51 || 0)
@@ -463,12 +471,23 @@ export default function AdminVictoryPathPage(props) {
       // send only the keys that changed
       let keysToUpdate = []
       if (pathToVictory) {
-        keysToUpdate = keys.filter((key) => state[key] != pathToVictory[key])
+        keysToUpdate = keys.filter((key) => {
+          if (key === 'canDownloadFederal') {
+            return state[key] != campaign.canDownloadFederal
+          }
+          return state[key] != pathToVictory[key]
+        })
       } else {
         keysToUpdate = keys
       }
 
       let attr = keysToUpdate.map((key) => {
+        if (key === 'canDownloadFederal') {
+          return {
+            key: key,
+            value: state[key],
+          }
+        }
         return {
           key: `pathToVictory.${key}`,
           value: state[key],

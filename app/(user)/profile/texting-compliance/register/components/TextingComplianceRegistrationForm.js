@@ -15,7 +15,6 @@ import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -45,20 +44,25 @@ export const validateRegistrationForm = (data) => {
     verifyInfo,
   } = data
 
-  return (
-    isURL(electionFilingLink) &&
-    isFilled(campaignCommitteeName) &&
-    isFilled(localTribeName) &&
-    isValidEIN(ein) &&
-    isMobilePhone(phone, 'en-US') &&
+  const validations = {
+    electionFilingLink: isURL(electionFilingLink),
+    campaignCommitteeName: isFilled(campaignCommitteeName),
+    localTribeName: isFilled(localTribeName),
+    ein: isValidEIN(ein),
+    phone: isMobilePhone(phone, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
-    validateAddress(address) &&
-    (isFQDN(website) || isURL(website)) &&
-    isEmail(email) &&
-    verifyInfo === true
-  )
+    address: validateAddress(address),
+    website: isFQDN(website) || isURL(website),
+    email: isEmail(email),
+    verifyInfo: verifyInfo === true,
+  }
+
+  return {
+    validations,
+    isValid: Object.values(validations).every(Boolean),
+  }
 }
 
 export default function TextingComplianceRegistrationForm({
@@ -77,6 +81,8 @@ export default function TextingComplianceRegistrationForm({
     email,
     verifyInfo,
   } = formData
+  const formValidation = validateRegistrationForm(formData)
+  const { isValid } = formValidation
 
   const [addressInputValue, setAddressInputValue] = useState(
     address.formatted_address || '',
@@ -141,20 +147,6 @@ export default function TextingComplianceRegistrationForm({
             onSelect: async (address) => {
               setAddressInputValue(address.formatted_address)
 
-              if (address.formatted_address && address.place_id) {
-                try {
-                  await updateCampaign([
-                    {
-                      key: 'formattedAddress',
-                      value: address.formatted_address,
-                    },
-                    { key: 'placeId', value: address.place_id },
-                  ])
-                } catch (error) {
-                  console.error('Failed to save address to campaign:', error)
-                }
-              }
-
               return handleChange({ address })
             },
           }}
@@ -187,7 +179,7 @@ export default function TextingComplianceRegistrationForm({
           {...{
             onClick: () => onSubmit(formData),
             loading,
-            isValid: validateRegistrationForm(formData),
+            isValid,
           }}
         />
       </TextingComplianceFooter>

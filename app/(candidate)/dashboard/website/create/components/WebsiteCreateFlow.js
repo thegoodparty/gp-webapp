@@ -16,17 +16,20 @@ import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { isValidEmail } from 'helpers/validations'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
-export default function WebsiteCreateFlow() {
+export default function WebsiteCreateFlow({ initialIssues }) {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
+  const [updatedPlace, setUpdatedPlace] = useState(null)
 
   useEffect(() => {
     if (
@@ -68,6 +71,12 @@ export default function WebsiteCreateFlow() {
       vanityPath: website.vanityPath,
       createStep: publish ? COMPLETE_STEP : step,
     })
+    if (updatedPlace) {
+      await updateCampaign([
+        { key: 'formattedAddress', value: updatedPlace.formatted_address },
+        { key: 'placeId', value: updatedPlace.place_id },
+      ])
+    }
     setSaveLoading(false)
     if (resp.ok) {
       setWebsite(resp.data)
@@ -129,6 +138,11 @@ export default function WebsiteCreateFlow() {
         main: { ...current.content.main, title: value },
       },
     }))
+    if (value.length > 0) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleTaglineChange(value) {
@@ -182,7 +196,7 @@ export default function WebsiteCreateFlow() {
     }))
   }
 
-  async function handleAddressChange(place) {
+  async function handleAddressSelect(place) {
     setWebsite((current) => ({
       ...current,
       content: {
@@ -195,15 +209,21 @@ export default function WebsiteCreateFlow() {
     }))
 
     if (place.formatted_address && place.place_id) {
-      try {
-        await updateCampaign([
-          { key: 'formattedAddress', value: place.formatted_address },
-          { key: 'placeId', value: place.place_id },
-        ])
-      } catch (error) {
-        console.error('Failed to save address to campaign:', error)
-      }
+      setUpdatedPlace(place)
+      setIsValid(true)
+    } else {
+      setIsValid(false)
     }
+  }
+
+  function handleAddressChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        contact: { ...current.content.contact, addressText: value },
+      },
+    }))
   }
 
   function handleEmailChange(value) {
@@ -214,6 +234,11 @@ export default function WebsiteCreateFlow() {
         contact: { ...current.content.contact, email: value },
       },
     }))
+    if (isValidEmail(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handlePhoneChange(value) {
@@ -224,6 +249,11 @@ export default function WebsiteCreateFlow() {
         contact: { ...current.content.contact, phone: value },
       },
     }))
+    if (isValidPhone(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleCommitteeChange(value) {
@@ -244,6 +274,14 @@ export default function WebsiteCreateFlow() {
   function validateCallback(value) {
     setIsValid(value)
   }
+
+  const canPublish =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != '' &&
+    (website.content?.contact?.address != '' ||
+      website.content?.contact?.addressText != '')
 
   return (
     <>
@@ -313,6 +351,7 @@ export default function WebsiteCreateFlow() {
                 issues={website.content.about?.issues}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
+                initialIssues={initialIssues}
               />
             )}
 
@@ -321,6 +360,7 @@ export default function WebsiteCreateFlow() {
                 address={website.content.contact?.address}
                 email={website.content.contact?.email}
                 phone={website.content.contact?.phone}
+                onAddressSelect={handleAddressSelect}
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
@@ -350,6 +390,7 @@ export default function WebsiteCreateFlow() {
             completeLabel="Publish website"
             completeLoading={saveLoading}
             nextDisabled={!isValid}
+            canPublish={canPublish}
           />
         )}
       </div>

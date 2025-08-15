@@ -3,7 +3,8 @@ import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import Body2 from '@shared/typography/Body2'
 import NewInfoAlert from '@shared/alerts/NewInfoAlert'
-import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
+import TextingComplianceHeader
+  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
@@ -13,19 +14,9 @@ import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
-
-// TODO: This is temporary initial form state data for UI development.
-const mockInitialFormState = {
-  electionFilingLink: 'https://elections.example.com/filing123',
-  campaignCommitteeName: 'Friends of Democracy',
-  localTribeName: 'Cherokee Nation',
-  ein: '12-3456789',
-  phone: '(805) 550-3465',
-  website: 'https://friendsofdemocracy.org',
-  email: 'contact@friendsofdemocracy.org',
-  verifyInfo: false,
-}
+import {
+  mapFormData
+} from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
 
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
@@ -35,6 +26,7 @@ const createTcrCompliance = async (formData) => {
   if (!response.ok) {
     throw new Error('Failed to create TCR compliance')
   }
+
   return response.data
 }
 
@@ -50,10 +42,10 @@ const reconcileInitialFormState = (user, campaign) => {
     ein: ein || '',
     phone: phone || '',
     address: { formatted_address: '' },
+    placeId: '',
     website: website || '',
     email: email || '',
     verifyInfo: false,
-    ...mockInitialFormState,
   }
 }
 

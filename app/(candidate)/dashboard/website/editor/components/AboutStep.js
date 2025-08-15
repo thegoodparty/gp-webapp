@@ -11,7 +11,7 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
 
 export default function AboutStep({
   initialBio,
-  bio,
+  initialIssues,
   issues,
   onBioChange,
   onIssuesChange,
@@ -29,7 +29,11 @@ export default function AboutStep({
         useOnChange
       />
 
-      <IssuesForm issues={issues} onChange={onIssuesChange} />
+      <IssuesForm
+        issues={issues}
+        onChange={onIssuesChange}
+        initialIssues={initialIssues}
+      />
     </div>
   )
 }
