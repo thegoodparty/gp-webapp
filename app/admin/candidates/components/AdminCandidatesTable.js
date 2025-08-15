@@ -114,7 +114,8 @@ export default function AdminCandidatesTable({ campaigns }) {
   const [pageSize, setPageSize] = useState(25)
 
   const inputData = useMemo(() => {
-    const resultArray = [](campaigns || []).map((campaign) => {
+    const resultArray = []
+    ;(campaigns || []).map((campaign) => {
       const {
         data,
         user,
@@ -269,6 +270,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       csvFields.createdAt = dateUsHelper(fields.createdAt)
       csvFields.updatedAt = dateUsHelper(fields.updatedAt)
       csvData.push(Object.values(csvFields))
+      return fields
     })
     return resultArray
   }, [campaigns])
