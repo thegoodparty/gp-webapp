@@ -51,7 +51,7 @@ export async function ensureSession() {
   const zipCode = "94066";
 
   try {
-    await createAccount(page, zipCode, role, password, emailAddress);
+    const successfulEmail = await createAccount(page, zipCode, role, password, emailAddress);
     
     // Create test-results directory if it doesn't exist
     const screenshotDir = path.resolve(__dirname, '../test-results');
@@ -64,13 +64,12 @@ export async function ensureSession() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     // Save the storage state (session)
-    console.log(`Saving new test account: ${testAccountFirstName} ${testAccountLastName} - ${emailAddress} - ${password + '1'}`);
+    console.log(`Saving new test account: ${testAccountFirstName} ${testAccountLastName} - ${successfulEmail} - ${password + '1'}`);
     await context.storageState({ path: SESSION_FILE });
     
-    // Save account details for cleanup - use the actual password that was used in the form
     fs.writeFileSync(
       path.resolve(__dirname, '../testAccount.json'),
-      JSON.stringify({ emailAddress, password: password + '1' })
+      JSON.stringify({ emailAddress: successfulEmail, password: password + '1' })
     );
 
     console.log('New session created and saved.');
@@ -354,50 +353,86 @@ export async function createAccount(
   lastName = testAccountLastName
 ) {
   const loginPageHeader = "Join GoodParty.org";
-  const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
+  const maxRetries = 3;
 
-  await page.goto(`${baseURL}/sign-up`, { waitUntil: "domcontentloaded" });
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Account creation attempt ${attempt}/${maxRetries}`);
+      
+      // Generate fresh credentials for each attempt to avoid duplicates
+      const attemptEmailAddress = attempt === 1 ? emailAddress : generateEmail();
+      const attemptPhoneNumber = generatePhone();
+      
+      await page.goto(`${baseURL}/sign-up`, { waitUntil: "domcontentloaded" });
 
-  // Accept cookie terms (if visible)
-  await acceptCookieTerms(page);
+      // Accept cookie terms (if visible)
+      await acceptCookieTerms(page);
 
-  // Verify user is on login page
-  await documentReady(page);
-  expect(page.getByText(loginPageHeader)).toBeVisible();
+      // Verify user is on login page
+      await documentReady(page);
+      expect(page.getByText(loginPageHeader)).toBeVisible();
 
-  // Fill in sign up page
-  await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
-  await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
-  await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
-  await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
-  await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
-  await page.getByRole("textbox", { name: "password" }).fill(password + "1");
-  await page.getByRole("button", { name: "Join" }).click();
+      // Fill in sign up page
+      await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
+      await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
+      await page.getByRole("textbox", { name: "email" }).fill(attemptEmailAddress);
+      await page.getByRole("textbox", { name: "phone" }).fill(attemptPhoneNumber);
+      await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
+      await page.getByRole("textbox", { name: "password" }).fill(password + "1");
+      await page.getByRole("button", { name: "Join" }).click();
 
-  await page.waitForLoadState('domcontentloaded', { timeout: 60000 });
-  await page.getByText('Make sure it matches your').isVisible();
-  await page.getByLabel('Office Name').waitFor({ state: 'visible', timeout: 60000 });
-  await page.getByLabel('Office Name').fill(role);
-  await page.getByRole("button", { name: role, timeout: 60000 }).first().click();
-  await page.getByRole("button", { name: "Next" }).click();
-  await page
-    .getByText("How will your campaign appear on the ballot?")
-    .isVisible();
-  await page.getByLabel("Other").fill("Test");
-  await page.getByRole("button", { name: "Next" }).click();
-  // Agree to GoodParty.org Terms
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole('button', { name: 'Agreed' }).isVisible();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole('button', { name: 'Agreed' }).nth(1).isVisible();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole('button', { name: 'Agreed' }).nth(2).isVisible();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
-  await page.getByRole("button", { name: "Submit" }).click();
-  await page.waitForLoadState('domcontentloaded');
-  await page.getByRole('button', { name: 'View Dashboard' }).click();
+      await page.waitForLoadState('domcontentloaded', { timeout: 60000 });
+      await page.getByText('Make sure it matches your').isVisible();
+      
+      // Wait for Office Name field
+      const officeNameField = page.getByLabel('Office Name');
+      await officeNameField.waitFor({ state: 'visible', timeout: 30000 });
+      
+      await officeNameField.fill(role);
+      await page.getByRole("button", { name: role, timeout: 60000 }).first().click();
+      await page.getByRole("button", { name: "Next" }).click();
+      await page
+        .getByText("How will your campaign appear on the ballot?")
+        .isVisible();
+      await page.getByLabel("Other").fill("Test");
+      await page.getByRole("button", { name: "Next" }).click();
+      // Agree to GoodParty.org Terms
+      await page.getByRole("button", { name: "I Agree" }).click();
+      await page.getByRole('button', { name: 'Agreed' }).isVisible();
+      await page.getByRole("button", { name: "I Agree" }).click();
+      await page.getByRole('button', { name: 'Agreed' }).nth(1).isVisible();
+      await page.getByRole("button", { name: "I Agree" }).click();
+      await page.getByRole('button', { name: 'Agreed' }).nth(2).isVisible();
+      await page.getByRole("button", { name: "I Agree" }).click();
+      await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
+      await page.getByRole("button", { name: "Submit" }).click();
+      await page.waitForLoadState('domcontentloaded');
+      await page.getByRole('button', { name: 'View Dashboard' }).click();
+      
+      console.log(`Account creation successful on attempt ${attempt}`);
+      return attemptEmailAddress;
+      
+    } catch (error) {
+      console.error(`Account creation attempt ${attempt} failed:`, error.message);
+      
+      if (attempt === maxRetries) {
+        throw new Error(`Account creation failed after ${maxRetries} attempts: ${error.message}`);
+      }
+      
+      // Clear any existing session/cookies before retry
+      console.log('Clearing session data before retry...');
+      try {
+        await page.context().clearCookies();
+      } catch (clearError) {
+        console.log('Error clearing session data:', clearError.message);
+      }
+      
+      // Wait before retrying
+      console.log(`Waiting 5 seconds before retry ${attempt + 1}...`);
+      await page.waitForTimeout(5000);
+    }
+  }
 }
 
 export async function upgradeToPro(page) {
