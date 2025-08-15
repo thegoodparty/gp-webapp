@@ -55,7 +55,9 @@ export default function VanityPathStep({
   return (
     <>
       <H2 className="mb-6">What do you want your custom link to be?</H2>
-      <Label className="mt-6">Custom Link</Label>
+      <Label className="mt-6">
+        Custom Link <sup>*</sup>
+      </Label>
       <TextField
         fullWidth
         required

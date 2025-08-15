@@ -17,6 +17,8 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import EditSettingsMenu from './EditSettingsMenu'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { isValidEmail } from 'helpers/validations'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 
 export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
@@ -172,7 +174,7 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  function handleAddressChange(place) {
+  function handleAddressSelect(place) {
     setUpdatedPlace(place)
     setWebsite((current) => ({
       ...current,
@@ -182,6 +184,16 @@ export default function WebsiteEditFlow() {
           ...current.content.contact,
           address: place.formatted_address,
         },
+      },
+    }))
+  }
+
+  function handleAddressChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        contact: { ...current.content.contact, addressText: value },
       },
     }))
   }
@@ -205,6 +217,13 @@ export default function WebsiteEditFlow() {
       },
     }))
   }
+
+  const canSave =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != '' &&
+    website.content?.contact?.addressText != ''
 
   return (
     <div className="h-full flex flex-col">
@@ -243,11 +262,13 @@ export default function WebsiteEditFlow() {
               onBioChange={handleBioChange}
               onIssuesChange={handleIssuesChange}
               onCommitteeChange={handleCommitteeChange}
+              onAddressSelect={handleAddressSelect}
               onAddressChange={handleAddressChange}
               onEmailChange={handleEmailChange}
               onPhoneChange={handlePhoneChange}
               onPreviewOpen={() => setPreviewOpen(true)}
               onSave={handleSaveAndPublish}
+              canSave={canSave}
               onClose={handleEditSectionClose}
               saveLoading={saveLoading}
             />
@@ -270,11 +291,13 @@ export default function WebsiteEditFlow() {
           onBioChange={handleBioChange}
           onIssuesChange={handleIssuesChange}
           onCommitteeChange={handleCommitteeChange}
+          onAddressSelect={handleAddressSelect}
           onAddressChange={handleAddressChange}
           onEmailChange={handleEmailChange}
           onPhoneChange={handlePhoneChange}
           onPreviewOpen={() => setPreviewOpen(true)}
           onSave={handleSaveAndPublish}
+          canSave={canSave}
           onClose={handleEditSectionClose}
           saveLoading={saveLoading}
         />
