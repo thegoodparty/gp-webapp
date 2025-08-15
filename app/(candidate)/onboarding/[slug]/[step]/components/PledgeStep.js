@@ -27,10 +27,11 @@ export default function PledgeStep({ campaign, step }) {
       return
     }
     setLoading(true)
+    setPledged(true)
     const currentStep = onboardingStep(campaign, step)
     const attr = [
       { key: 'data.currentStep', value: currentStep },
-      { key: 'details.pledged', value: pledged },
+      { key: 'details.pledged', value: true },
     ]
 
     await updateCampaign(attr)
@@ -71,12 +72,13 @@ export default function PledgeStep({ campaign, step }) {
         <div className="flex justify-center mt-8">
           <Button 
             onClick={() => {
-              setPledged(true)
               handleSave()
             }}
             size="large"
+            loading={loading}
+            disabled={loading}
           >
-            I Agree
+            {loading ? 'Processing...' : 'I Agree'}
           </Button>
         </div>
 
