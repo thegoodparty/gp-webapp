@@ -10,9 +10,11 @@ export default function DistrictPicker({
   buttonText = 'Save',
   onSubmit = async () => Promise.resolve(),
   className = '',
+  initialType = null,
+  initialName = null,
 }) {
-  const [type, setType]   = useState(null)
-  const [name, setName]   = useState(null)
+  const [type, setType]   = useState(initialType)
+  const [name, setName]   = useState(initialName)
   const [busy, setBusy]   = useState(false)
 
   const canSubmit = !!type && !!name && !busy

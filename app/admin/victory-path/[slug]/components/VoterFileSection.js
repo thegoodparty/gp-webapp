@@ -14,21 +14,7 @@ export default function VoterFileSection() {
           </div>
         ) : null}
 
-        {campaign.pathToVictory?.p2vStatus === 'Waiting' &&
-        campaign?.details?.raceId ? (
-          <div className="my-4">
-            Path To Victory is processing... Please wait a few minutes and
-            refresh the page.
-          </div>
-        ) : null}
-
-        {campaign.pathToVictory?.p2vStatus === 'Complete' &&
-        campaign?.details?.raceId ? (
-          <div className="my-4">
-            If you change the Election Type or Election Location you will need
-            to rerun the Path To Victory.
-          </div>
-        ) : null}
+        <strong>You can rerun path to victory, but this WILL override the district set above in the District Picker</strong>
         {campaign?.details?.raceId ? <RerunP2V /> : null}
       </div>
     </div>
