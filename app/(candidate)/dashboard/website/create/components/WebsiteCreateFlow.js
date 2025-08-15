@@ -196,7 +196,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }))
   }
 
-  async function handleAddressChange(place) {
+  async function handleAddressSelect(place) {
     setWebsite((current) => ({
       ...current,
       content: {
@@ -214,6 +214,16 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     } else {
       setIsValid(false)
     }
+  }
+
+  function handleAddressChange(value) {
+    setWebsite((current) => ({
+      ...current,
+      content: {
+        ...current.content,
+        contact: { ...current.content.contact, addressText: value },
+      },
+    }))
   }
 
   function handleEmailChange(value) {
@@ -270,7 +280,8 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != '' &&
-    website.content?.contact?.address != ''
+    (website.content?.contact?.address != '' ||
+      website.content?.contact?.addressText != '')
 
   return (
     <>
@@ -349,6 +360,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
                 address={website.content.contact?.address}
                 email={website.content.contact?.email}
                 phone={website.content.contact?.phone}
+                onAddressSelect={handleAddressSelect}
                 onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
