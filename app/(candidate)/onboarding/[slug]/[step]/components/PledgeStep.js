@@ -1,77 +1,25 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import {
   onboardingStep,
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
-import contentfulHelper from 'helpers/contentfulHelper'
 import H1 from '@shared/typography/H1'
-import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6'
-import { IoDocumentText } from 'react-icons/io5'
-import { FaChild } from 'react-icons/fa'
+import H4 from '@shared/typography/H4'
 import Body1 from '@shared/typography/Body1'
-import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion'
-import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements'
-import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations'
+import Body2 from '@shared/typography/Body2'
+import { MdPerson, MdGroups, MdFlag } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import {
-  buildTrackingAttrs,
   EVENTS,
   trackEvent,
 } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
-const steps = ['1', '2', '3', '4']
-const emoticons = [
-  <FaChild key="1" className="mr-2" />,
-  <FaPeopleGroup key="2" className="mr-2" />,
-  <FaFlagUsa key="3" className="mr-2" />,
-  <IoDocumentText key="4" className="mr-2" />,
-]
-
-export default function PledgeStep({ campaign, pledge, step }) {
-  let initialState = {
-    pledged1: campaign.details?.pledged1 || false,
-    pledged2: campaign.details?.pledged2 || false,
-    pledged3: campaign.details?.pledged3 || false,
-    pledged4: campaign.details?.pledged4 || false,
-  }
-
-  if (campaign?.details?.pledged) {
-    initialState = {
-      pledged: true,
-      pledged1: true,
-      pledged2: true,
-      pledged3: true,
-      pledged4: true,
-    }
-  }
-  const [state, setState] = useState(initialState)
+export default function PledgeStep({ campaign, step }) {
+  const [pledged, setPledged] = useState(campaign?.details?.pledged || false)
   const [loading, setLoading] = useState(false)
-  const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations()
   const router = useRouter()
-  const trackingAttrs = useMemo(
-    () => buildTrackingAttrs('Onboarding Next Button', { step }),
-    [step],
-  )
-
-  if (!pledge) {
-    return null
-  }
-
-  const pledgeContents = steps.map((step) =>
-    contentfulHelper(pledge[`content${step}`]),
-  )
-
-  const canSave = () => {
-    return (
-      !loading &&
-      state.pledged1 &&
-      state.pledged2 &&
-      state.pledged3 &&
-      state.pledged4
-    )
-  }
 
   const handleSave = async () => {
     trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
@@ -80,8 +28,6 @@ export default function PledgeStep({ campaign, pledge, step }) {
     }
     setLoading(true)
     const currentStep = onboardingStep(campaign, step)
-    const pledged =
-      state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4
     const attr = [
       { key: 'data.currentStep', value: currentStep },
       { key: 'details.pledged', value: pledged },
@@ -91,75 +37,63 @@ export default function PledgeStep({ campaign, pledge, step }) {
     router.push(`/onboarding/${campaign.slug}/${step + 1}`)
   }
 
-  const onChangeField = (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    })
-  }
-
-  const openChat = () => {
-    trackEvent(EVENTS.Onboarding.PledgeStep.ClickAskQuestion)
-    window.HubSpotConversations?.widget?.open()
-  }
-
   return (
     <div>
-      <H1 className="py-10 text-center">GoodParty.org User Agreement</H1>
-      <Body1 className="text-center mb-10">
-        In order to use GoodParty.org tools, you must accept each part of our user
-        agreement, confirming that you will run an Independent, people-powered,
-        anti-corruption campaign that adheres to our terms of service.
-      </Body1>
-      {steps.map((step, index) => (
-        <AcknowledgementQuestion
-          key={step}
-          {...{
-            title: pledge[`title${step}`],
-            body:
-              index !== 3 ? (
-                pledgeContents[index]
-              ) : (
-                <>
-                  {pledgeContents[index]}
-                  <LegalStatements />
-                </>
-              ),
-            show: step === '1' || state[`pledged${index}`],
-            acknowledged: state[`pledged${step}`],
-            onAcknowledge: (value) => {
-              onChangeField(`pledged${step}`, value)
-            },
-            buttonTexts: ['I Agree', 'Agreed'],
-            emoticon: emoticons[index],
-            disableScrollTo: !Boolean(index),
-          }}
-        />
-      ))}
-      <div className="flex justify-center pt-10 mb-4  border-t border-primary">
-        <Body1>I understand I am legally bound to this user agreement. </Body1>
-      </div>
-      <div className="flex justify-center mb-10">
-        {hubSpotWidgetLoaded && (
-          <Button
-            onClick={openChat}
-            className="mr-4"
+      <H1 className="py-10 text-center">User Agreement</H1>
+      
+      <div className="px-6 pb-10">
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-center mb-2">
+              <MdPerson className="mr-2" size={24} />
+              <H4>Independent</H4>
+            </div>
+            <Body1>I am on the ballot as a nonpartisan, independent, or third-party candidate. I don&apos;t serve on any boards or organizations affiliated with the Democratic or Republican parties. I am committed to serving the interests of the people regardless of partisan politics.</Body1>
+          </div>
+          
+          <div>
+            <div className="flex items-center mb-2">
+              <MdGroups className="mr-2" size={24} />
+              <H4>People-Powered</H4>
+            </div>
+            <Body1>I will focus on solving the problems facing my community, not serving myself or special interests. I will disclose donors and ensure that most of my funding comes from individual donors, not from corporations, unions or other special interests.</Body1>
+          </div>
+          
+          <div>
+            <div className="flex items-center mb-2">
+              <MdFlag className="mr-2" size={24} />
+              <H4>Anti-Corruption</H4>
+            </div>
+            <Body1>I will uphold the highest level of integrity by being open, transparent and accountable about my positions and progress on issues. This means staying connected to, informed by, and responsive to all my constituents using modern tools and data to inform decisions.</Body1>
+          </div>
+        </div>
+        
+        <div className="flex justify-center mt-8">
+          <Button 
+            onClick={() => {
+              setPledged(true)
+              handleSave()
+            }}
             size="large"
-            color="neutral"
           >
-            Ask a question
+            I Agree
           </Button>
-        )}
-        <Button
-          size="large"
-          onClick={handleSave}
-          disabled={!canSave()}
-          loading={loading}
-          {...trackingAttrs}
-        >
-          Submit
-        </Button>
+        </div>
+
+        <div className="flex justify-center text-center mt-4">
+        <Body2 className="text-gray-600">By continuing, you agree to run a civil campaign focused on listening to citizens, learning about important issues and demonstrating your ability to serve, not mudslinging with your opponents, and accept GoodParty.org’s       <a
+        className="underline cursor-pointer"
+        href="/terms-of-service"
+        target="_blank"
+      >
+        Terms of Service
+      </a> and <a className="underline" href="/privacy" target="_blank">
+        Privacy Policy
+      </a>.</Body2>
       </div>
+      </div>
+
+
     </div>
   )
 }
