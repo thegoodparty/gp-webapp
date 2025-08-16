@@ -399,15 +399,7 @@ export async function createAccount(
       await page.getByRole("button", { name: "Next" }).click();
       // Agree to GoodParty.org Terms
       await page.getByRole("button", { name: "I Agree" }).click();
-      await page.getByRole('button', { name: 'Agreed' }).isVisible();
-      await page.getByRole("button", { name: "I Agree" }).click();
-      await page.getByRole('button', { name: 'Agreed' }).nth(1).isVisible();
-      await page.getByRole("button", { name: "I Agree" }).click();
-      await page.getByRole('button', { name: 'Agreed' }).nth(2).isVisible();
-      await page.getByRole("button", { name: "I Agree" }).click();
-      await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
-      await page.getByRole("button", { name: "Submit" }).click();
-      await page.waitForLoadState('domcontentloaded');
+      await documentReady(page);
       await page.getByRole('button', { name: 'View Dashboard' }).click();
       
       console.log(`Account creation successful on attempt ${attempt}`);
