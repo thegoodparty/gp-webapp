@@ -58,7 +58,6 @@ export default function AddressAutocomplete({
   }, [])
 
   const handleInputChange = (e) => {
-    console.log('handleInputChange', e)
     const newValue = e.target.value
     setInputValue(newValue)
     onChange(newValue)
