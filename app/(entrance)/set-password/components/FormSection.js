@@ -73,9 +73,9 @@ export default function FormSection({ email, token }) {
         await saveToken(userToken)
         setUserCookie(user)
         setUser(user)
-        
+
         // Sales created-user
-        trackEvent(EVENTS.Password.PasswordResetCompleted)
+        trackEvent(EVENTS.Password.PasswordSetCompleted)
 
         window.location.href = '/dashboard'
       } else if (res.ok === false) {
