@@ -1,11 +1,16 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
 import Checkbox from '@shared/inputs/Checkbox'
-import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
+import {
+  FilingLinkInfoIcon
+} from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import { useState } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
-import TextingComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
-import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
+import TextingComplianceForm
+  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
+import {
+  EinCheckInput
+} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
 import isURL from 'validator/es/lib/isURL'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
@@ -13,8 +18,11 @@ import isFQDN from 'validator/es/lib/isFQDN'
 import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
-import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
-import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import TextingComplianceFooter
+  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
+import {
+  TextingComplianceSubmitButton
+} from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -29,7 +37,7 @@ const initialFormState = {
 }
 
 const validateAddress = (address) =>
-  Boolean(address.formatted_address && address.address_components)
+  Boolean(address.formatted_address)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -43,7 +51,6 @@ export const validateRegistrationForm = (data) => {
     email,
     verifyInfo,
   } = data
-
   const validations = {
     electionFilingLink: isURL(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
@@ -58,7 +65,6 @@ export const validateRegistrationForm = (data) => {
     email: isEmail(email),
     verifyInfo: verifyInfo === true,
   }
-
   return {
     validations,
     isValid: Object.values(validations).every(Boolean),
