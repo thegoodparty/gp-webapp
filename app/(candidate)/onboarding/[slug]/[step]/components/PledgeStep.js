@@ -84,7 +84,7 @@ export default function PledgeStep({ campaign, step }) {
         </div>
 
         <div className="flex justify-center text-center mt-4">
-        <Body2 className="text-gray-600">By continuing, you agree to run a civil campaign focused on listening to citizens, learning about important issues and demonstrating your ability to serve, not mudslinging with your opponents, and accept GoodParty.org's{' '}
+        <Body2 className="text-gray-600">By continuing, you agree to run a civil campaign focused on listening to citizens, learning about important issues and demonstrating your ability to serve, not mudslinging with your opponents, and accept GoodParty.org&apos;s{' '}
         <Link
           href="/terms-of-service"
           target="_blank"
