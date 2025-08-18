@@ -40,7 +40,7 @@ function mapStatus(status, isActive) {
   return 'No'
 }
 
-export default function AdminCandidatesTable({ campaigns }) {
+export default function AdminCandidatesTable({ campaigns = [] }) {
   // TODO: Build this array of keys w/ an Object.keys() of the `fields` object below
   //  so that we can just manage these keys/fields in one place instead of two.
   const csvData = [
@@ -115,7 +115,7 @@ export default function AdminCandidatesTable({ campaigns }) {
 
   const inputData = useMemo(() => {
     const resultArray = []
-    campaigns?.map((campaign) => {
+    campaigns.map((campaign) => {
       const {
         data,
         user,
@@ -270,6 +270,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       csvFields.createdAt = dateUsHelper(fields.createdAt)
       csvFields.updatedAt = dateUsHelper(fields.updatedAt)
       csvData.push(Object.values(csvFields))
+      return fields
     })
     return resultArray
   }, [campaigns])
