@@ -8,13 +8,14 @@ import H1 from '@shared/typography/H1'
 import H4 from '@shared/typography/H4'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
+import Link from 'next/link'
 import { MdPerson, MdGroups, MdFlag } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import {
   EVENTS,
   trackEvent,
 } from 'helpers/analyticsHelper'
-import Button from '@shared/buttons/Button'
 
 export default function PledgeStep({ campaign, step }) {
   const [pledged, setPledged] = useState(campaign?.details?.pledged || false)
@@ -83,15 +84,19 @@ export default function PledgeStep({ campaign, step }) {
         </div>
 
         <div className="flex justify-center text-center mt-4">
-        <Body2 className="text-gray-600">By continuing, you agree to run a civil campaign focused on listening to citizens, learning about important issues and demonstrating your ability to serve, not mudslinging with your opponents, and accept GoodParty.org’s       <a
-        className="underline cursor-pointer"
-        href="/terms-of-service"
-        target="_blank"
-      >
-        Terms of Service
-      </a> and <a className="underline" href="/privacy" target="_blank">
-        Privacy Policy
-      </a>.</Body2>
+        <Body2 className="text-gray-600">By continuing, you agree to run a civil campaign focused on listening to citizens, learning about important issues and demonstrating your ability to serve, not mudslinging with your opponents, and accept GoodParty.org's{' '}
+        <Link
+          href="/terms-of-service"
+          target="_blank"
+          className="underline"
+        >
+          Terms of Service
+        </Link>{' '}
+        and{' '}
+        <Link href="/privacy" target="_blank" className="underline">
+          Privacy Policy
+        </Link>.
+        </Body2>
       </div>
       </div>
 
