@@ -9,13 +9,13 @@
 export function isObjectEqual(x, y, deepCompare = false) {
   const ok = Object.keys,
     tx = typeof x,
-    ty = typeof y;
+    ty = typeof y
   return x && y && tx === 'object' && tx === ty
     ? ok(x).length === ok(y).length &&
         ok(x).every((key) =>
           deepCompare ? isObjectEqual(x[key], y[key], true) : x[key] === y[key],
         )
-    : x === y;
+    : x === y
 }
 
 /**
@@ -26,10 +26,10 @@ export function isObjectEqual(x, y, deepCompare = false) {
  */
 export function pick(obj, keys) {
   if (typeof obj !== 'object' || obj === null || !Array.isArray(keys)) {
-    throw new Error('invalid args');
+    throw new Error('invalid args')
   }
 
   return keys
     .filter((key) => key in obj)
-    .reduce((obj2, key) => ((obj2[key] = obj[key]), obj2), {});
+    .reduce((obj2, key) => ((obj2[key] = obj[key]), obj2), {})
 }

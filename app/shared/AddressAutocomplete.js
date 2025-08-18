@@ -24,12 +24,38 @@ export default function AddressAutocomplete({
     options: {
       types: ['address'],
       componentRestrictions: { country: 'us' },
+      strictBounds: false,
+      fields: ['formatted_address', 'geometry', 'place_id', 'name'],
     },
+    libraries: ['places'],
   })
 
   useEffect(() => {
     setInputValue(value || '')
   }, [value])
+
+  useEffect(() => {
+    const addMobileClassToAutocomplete = () => {
+      const pacContainers = document.querySelectorAll('.pac-container')
+      pacContainers.forEach((container) => {
+        container.classList.add('needsclick')
+        container.style.touchAction = 'manipulation'
+      })
+    }
+
+    const observer = new MutationObserver(() => {
+      addMobileClassToAutocomplete()
+    })
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+
+    addMobileClassToAutocomplete()
+
+    return () => observer.disconnect()
+  }, [])
 
   const handleInputChange = (e) => {
     const newValue = e.target.value

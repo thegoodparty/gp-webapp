@@ -36,7 +36,8 @@ export const maxDuration = 60
 export default async function Page({ searchParams = {} }) {
   await adminAccessOnly()
 
-  const initialParams = pick(searchParams, [
+  const resolvedSearchParams = await searchParams
+  const initialParams = pick(resolvedSearchParams, [
     'id',
     'state',
     'slug',
