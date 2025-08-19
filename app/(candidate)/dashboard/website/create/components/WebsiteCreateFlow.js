@@ -213,15 +213,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }
 
-  function handleAddressChange(value) {
-    setWebsite((current) => ({
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content.contact },
-      },
-    }))
-  }
+  
 
   function handleEmailChange(value) {
     setWebsite((current) => ({
@@ -356,7 +348,6 @@ export default function WebsiteCreateFlow({ initialIssues }) {
                 email={website.content.contact?.email}
                 phone={website.content.contact?.phone}
                 onAddressSelect={handleAddressSelect}
-                onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
                 committee={website.content.about?.committee}

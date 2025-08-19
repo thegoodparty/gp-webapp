@@ -188,15 +188,7 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  function handleAddressChange(value) {
-    setWebsite((current) => ({
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content.contact },
-      },
-    }))
-  }
+
 
   function handleEmailChange(value) {
     setWebsite((current) => ({
@@ -262,7 +254,6 @@ export default function WebsiteEditFlow() {
               onIssuesChange={handleIssuesChange}
               onCommitteeChange={handleCommitteeChange}
               onAddressSelect={handleAddressSelect}
-              onAddressChange={handleAddressChange}
               onEmailChange={handleEmailChange}
               onPhoneChange={handlePhoneChange}
               onPreviewOpen={() => setPreviewOpen(true)}
@@ -291,7 +282,6 @@ export default function WebsiteEditFlow() {
           onIssuesChange={handleIssuesChange}
           onCommitteeChange={handleCommitteeChange}
           onAddressSelect={handleAddressSelect}
-          onAddressChange={handleAddressChange}
           onEmailChange={handleEmailChange}
           onPhoneChange={handlePhoneChange}
           onPreviewOpen={() => setPreviewOpen(true)}

@@ -10,7 +10,6 @@ export default function ContactStep({
   email,
   phone,
   onAddressSelect,
-  onAddressChange,
   onEmailChange,
   onPhoneChange,
   noHeading = false,
@@ -24,7 +23,6 @@ export default function ContactStep({
       <AddressAutocomplete
         value={address}
         onSelect={(place) => onAddressSelect(place)}
-        onChange={(value) => onAddressChange(value)}
       />
       <Label className="mt-4">
         Email <sup>*</sup>
