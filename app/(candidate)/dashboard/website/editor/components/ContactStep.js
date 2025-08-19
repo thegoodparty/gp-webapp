@@ -20,9 +20,7 @@ export default function ContactStep({
   return (
     <div>
       {!noHeading && <H2 className="mb-6">How can voters contact you?</H2>}
-      <Label>
-        Address <sup>*</sup>
-      </Label>
+      <Label>Address</Label>
       <AddressAutocomplete
         value={address}
         onSelect={(place) => onAddressSelect(place)}

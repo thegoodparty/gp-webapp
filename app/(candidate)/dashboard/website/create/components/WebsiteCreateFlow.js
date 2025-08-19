@@ -210,9 +210,6 @@ export default function WebsiteCreateFlow({ initialIssues }) {
 
     if (place.formatted_address && place.place_id) {
       setUpdatedPlace(place)
-      setIsValid(true)
-    } else {
-      setIsValid(false)
     }
   }
 
@@ -221,7 +218,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       ...current,
       content: {
         ...current.content,
-        contact: { ...current.content.contact, addressText: value },
+        contact: { ...current.content.contact },
       },
     }))
   }
@@ -279,9 +276,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidEmail(website.content.contact?.email) &&
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
-    website.vanityPath != '' &&
-    (website.content?.contact?.address != '' ||
-      website.content?.contact?.addressText != '')
+    website.vanityPath != ''
 
   return (
     <>
