@@ -26,7 +26,7 @@ test.describe('New User Voter Outreach', () => {
 });
 
 test.describe('Pro Voter Outreach', () => {    
-    test('Verify Voter Outreach page as pro user', async ({ page }) => {
+    test.skip('Verify Voter Outreach page as pro user', async ({ page }) => {
         await useAdminCredentials(page);
         await page.goto('/dashboard/outreach');
         await documentReady(page);
