@@ -3,8 +3,7 @@ import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import Body2 from '@shared/typography/Body2'
 import NewInfoAlert from '@shared/alerts/NewInfoAlert'
-import TextingComplianceHeader
-  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
+import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
@@ -14,9 +13,7 @@ import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
-import {
-  mapFormData
-} from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
+import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
 
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
