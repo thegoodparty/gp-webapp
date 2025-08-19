@@ -23,6 +23,7 @@ export const EVENTS = {
   Password: {
     PasswordResetRequested: 'Account - Password Reset Requested',
     PasswordResetCompleted: 'Account - Password Reset Completed',
+    PasswordSetCompleted: 'Account - Password Set Completed',
   },
   SetPassword: {
     ClickSetPassword: 'Set Password: Click Set Password',

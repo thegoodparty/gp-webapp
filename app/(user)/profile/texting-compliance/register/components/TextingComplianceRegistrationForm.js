@@ -28,8 +28,7 @@ const initialFormState = {
   verifyInfo: false,
 }
 
-const validateAddress = (address) =>
-  Boolean(address.formatted_address && address.address_components)
+const validateAddress = (address) => Boolean(address.formatted_address)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -43,7 +42,6 @@ export const validateRegistrationForm = (data) => {
     email,
     verifyInfo,
   } = data
-
   const validations = {
     electionFilingLink: isURL(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
@@ -58,7 +56,6 @@ export const validateRegistrationForm = (data) => {
     email: isEmail(email),
     verifyInfo: verifyInfo === true,
   }
-
   return {
     validations,
     isValid: Object.values(validations).every(Boolean),
