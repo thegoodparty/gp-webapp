@@ -37,20 +37,22 @@ const PurchaseSuccessPage = () => {
         </Link>
       </Body2>
       <div className="w-full flex flex-col justify-center md:flex-row md:justify-between">
-        <Link
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
           className="block self-start mb-4 w-full md:w-auto md:mb-0"
           href="/dashboard"
         >
           <SecondaryButton className="w-full">
             Go Back to Dashboard
           </SecondaryButton>
-        </Link>
-        <Link
+        </a>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
           className="block self-start w-full md:w-auto"
           href="/dashboard/voter-records"
         >
           <PrimaryButton className="w-full">Go to Voter File</PrimaryButton>
-        </Link>
+        </a>
       </div>
     </FocusedExperienceWrapper>
   )
