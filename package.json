@@ -22,7 +22,7 @@
     "detect-circular-dependencies": "npx madge --circular --warning app"
   },
   "dependencies": {
-    "@amplitude/experiment-js-client": "^1.16.1",
+    "@amplitude/experiment-js-client": "^1.16.2",
     "@amplitude/session-replay-browser": "^1.27.0",
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
     "@contentful/rich-text-react-renderer": "^16.0.1",
