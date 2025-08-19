@@ -397,7 +397,7 @@ async function generateCandidateSitemap(state, index) {
  * Main function to generate all sitemaps
  */
 async function generateSitemaps(options = {}) {
-  const { validate = false, validationOptions = {}, mainOnly = false } = options
+  const { validate = false, validationOptions = {}, mainOnly = false, candidatesOnly = false } = options
   const startTime = Date.now()
   console.log('🚀 Starting sitemap generation...')
   console.log(`📁 Output directory: ${OUTPUT_DIR}`)
@@ -405,6 +405,12 @@ async function generateSitemaps(options = {}) {
   
   if (validate) {
     console.log('🔍 URL validation: ENABLED')
+  }
+  
+  if (candidatesOnly) {
+    console.log('🎯 CANDIDATES-ONLY mode: Generating only candidate sitemaps')
+  } else if (mainOnly) {
+    console.log('📝 MAIN-ONLY mode: Generating only main sitemap')
   }
   
   try {
@@ -420,59 +426,66 @@ async function generateSitemaps(options = {}) {
     let validationReport = null
     let mainValidationResults = null
     
-    // Generate main sitemap
-    console.log('\n📝 Generating main sitemap...')
-    let mainUrls = await generateMainSitemap()
+    // Generate main sitemap (skip if candidates-only mode)
+    let mainUrls = []
+    let filteredMainUrls = []
     
-    // Validate main sitemap URLs if validation is enabled
-    if (validate) {
-      console.log('\n🔍 Validating main sitemap URLs...')
-      mainValidationResults = await validateUrls(mainUrls, validationOptions)
-      validationReport = generateValidationReport(mainValidationResults)
+    if (!candidatesOnly) {
+      console.log('\n📝 Generating main sitemap...')
+      mainUrls = await generateMainSitemap()
+    
+      // Validate main sitemap URLs if validation is enabled
+      if (validate) {
+        console.log('\n🔍 Validating main sitemap URLs...')
+        mainValidationResults = await validateUrls(mainUrls, validationOptions)
+        validationReport = generateValidationReport(mainValidationResults)
+        
+        const invalidCount = mainValidationResults.summary.invalid
+        if (invalidCount > 0) {
+          console.log(`   ⚠️  Found ${invalidCount} invalid URLs in main sitemap`)
+          console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
+        } else {
+          console.log(`   ✅ All ${mainValidationResults.summary.valid} main sitemap URLs are valid`)
+        }
+      }
       
-      const invalidCount = mainValidationResults.summary.invalid
-      if (invalidCount > 0) {
-        console.log(`   ⚠️  Found ${invalidCount} invalid URLs in main sitemap`)
-        console.log(`   Note: Invalid URLs were kept in sitemaps for debugging. Use validation report to fix them.`)
-      } else {
-        console.log(`   ✅ All ${mainValidationResults.summary.valid} main sitemap URLs are valid`)
+      allUrls.push(...mainUrls)
+      
+      // Filter main URLs based on validation results if validation was performed
+      filteredMainUrls = mainUrls
+      if (validate && mainValidationResults) {
+        // Use the validation results to filter URLs (removes redirects, etc.)
+        filteredMainUrls = filterValidUrls(mainUrls, mainValidationResults)
+        const removedCount = mainUrls.length - filteredMainUrls.length
+        if (removedCount > 0) {
+          console.log(`   🗑️  Removed ${removedCount} URLs from sitemap based on validation results`)
+        }
       }
-    }
-    
-    allUrls.push(...mainUrls)
-    
-    // Filter main URLs based on validation results if validation was performed
-    let filteredMainUrls = mainUrls
-    if (validate && mainValidationResults) {
-      // Use the validation results to filter URLs (removes redirects, etc.)
-      filteredMainUrls = filterValidUrls(mainUrls, mainValidationResults)
-      const removedCount = mainUrls.length - filteredMainUrls.length
-      if (removedCount > 0) {
-        console.log(`   🗑️  Removed ${removedCount} URLs from sitemap based on validation results`)
-      }
-    }
 
-    // Write main sitemap with size limit handling
-    const mainSitemapEntries = await writeSplitSitemaps(
-      filteredMainUrls,
-      OUTPUT_DIR,
-      'sitemap',
-      convertToXML,
-      `${APP_BASE}/sitemaps`
-    )
-    sitemapIndex.push(...mainSitemapEntries)
-    
-    console.log(`✅ Main sitemap generated with ${filteredMainUrls.length} URLs`)
-    if (mainSitemapEntries.length > 1) {
-      console.log(`   📄 Split into ${mainSitemapEntries.length} files due to size limits`)
+      // Write main sitemap with size limit handling
+      const mainSitemapEntries = await writeSplitSitemaps(
+        filteredMainUrls,
+        OUTPUT_DIR,
+        'sitemap',
+        convertToXML,
+        `${APP_BASE}/sitemaps`
+      )
+      sitemapIndex.push(...mainSitemapEntries)
+      
+      console.log(`✅ Main sitemap generated with ${filteredMainUrls.length} URLs`)
+      if (mainSitemapEntries.length > 1) {
+        console.log(`   📄 Split into ${mainSitemapEntries.length} files due to size limits`)
+      }
+    } else {
+      console.log('\n⏭️  Skipping main sitemap (candidates-only mode)')
     }
     
-    // Generate state sitemaps (skip if main-only mode)
+    // Generate state sitemaps (skip if main-only or candidates-only mode)
     let stateCount = 0
     let stateUrlsTotal = 0
     const stateUrlsForValidation = []
     
-    if (!mainOnly) {
+    if (!mainOnly && !candidatesOnly) {
       console.log('\n📝 Generating state sitemaps...')
       
       for (let index = 0; index < flatStates.length; index++) {
@@ -543,7 +556,11 @@ async function generateSitemaps(options = {}) {
         }
       }
     } else {
-      console.log('\n⏭️  Skipping state sitemaps (main-only mode)')
+      if (mainOnly) {
+        console.log('\n⏭️  Skipping state sitemaps (main-only mode)')
+      } else if (candidatesOnly) {
+        console.log('\n⏭️  Skipping state sitemaps (candidates-only mode)')
+      }
     }
     
     // Generate candidate sitemaps (skip if main-only mode)
@@ -719,6 +736,13 @@ async function generateSitemaps(options = {}) {
 const args = process.argv.slice(2)
 const shouldValidate = args.includes('--validate')
 const mainOnly = args.includes('--main-only')
+const candidatesOnly = args.includes('--candidates-only')
+
+// Validate mutually exclusive flags
+if (mainOnly && candidatesOnly) {
+  console.error('❌ Error: --main-only and --candidates-only flags cannot be used together')
+  process.exit(1)
+}
 
 // Parse redirect handling options
 const redirectHandling = args.find(arg => arg.startsWith('--redirect-handling='))?.split('=')[1] || 'remove'
@@ -738,6 +762,7 @@ const cliValidationOptions = {
 generateSitemaps({ 
   validate: shouldValidate,
   mainOnly,
+  candidatesOnly,
   validationOptions: cliValidationOptions
 }).catch(error => {
   console.error('Unhandled error:', error)
