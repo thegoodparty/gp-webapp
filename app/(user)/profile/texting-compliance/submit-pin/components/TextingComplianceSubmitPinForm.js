@@ -25,7 +25,7 @@ export const TextingComplianceSubmitPinForm = ({
 
   const handleSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted)
-    return onSubmit(formData)
+    return onSubmit({ ...formData })
   }
 
   return (
