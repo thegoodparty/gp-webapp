@@ -185,7 +185,7 @@ export default function OfficeStep({
     }
 
     if (adminMode) {
-      await runPostOfficeStepUpdates(attr, campaign.slug)
+      runPostOfficeStepUpdates(attr, campaign.slug)
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -198,7 +198,7 @@ export default function OfficeStep({
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      await runPostOfficeStepUpdates(attr)
+      runPostOfficeStepUpdates(attr)
     }
 
     if (step) {
