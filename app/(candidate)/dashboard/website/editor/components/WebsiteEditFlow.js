@@ -188,15 +188,7 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-  function handleAddressChange(value) {
-    setWebsite((current) => ({
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content.contact, addressText: value },
-      },
-    }))
-  }
+
 
   function handleEmailChange(value) {
     setWebsite((current) => ({
@@ -222,8 +214,7 @@ export default function WebsiteEditFlow() {
     isValidEmail(website.content.contact?.email) &&
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
-    website.vanityPath != '' &&
-    website.content?.contact?.addressText != ''
+    website.vanityPath != ''
 
   return (
     <div className="h-full flex flex-col">
@@ -263,7 +254,6 @@ export default function WebsiteEditFlow() {
               onIssuesChange={handleIssuesChange}
               onCommitteeChange={handleCommitteeChange}
               onAddressSelect={handleAddressSelect}
-              onAddressChange={handleAddressChange}
               onEmailChange={handleEmailChange}
               onPhoneChange={handlePhoneChange}
               onPreviewOpen={() => setPreviewOpen(true)}
@@ -292,7 +282,6 @@ export default function WebsiteEditFlow() {
           onIssuesChange={handleIssuesChange}
           onCommitteeChange={handleCommitteeChange}
           onAddressSelect={handleAddressSelect}
-          onAddressChange={handleAddressChange}
           onEmailChange={handleEmailChange}
           onPhoneChange={handlePhoneChange}
           onPreviewOpen={() => setPreviewOpen(true)}
