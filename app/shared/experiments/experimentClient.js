@@ -9,7 +9,11 @@ let client
 
 export function getExperimentClient() {
   if (!client) {
-
+    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
+    if (!key) {
+      console.warn('Experiment disabled: missing key')
+      return
+    }
     client = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
       automaticExposureTracking: true,
       exposureTrackingProvider: {
