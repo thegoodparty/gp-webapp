@@ -20,6 +20,12 @@ export const FeatureFlagsProvider = ({ children }) => {
   const [rev, setRev] = useState(0)
 
   useEffect(() => {
+    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
+    if (!key) {
+      console.warn('Experiment disabled: missing key')
+      setReady(true)
+      return
+    }
     clientRef.current = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
       automaticExposureTracking: true,
       exposureTrackingProvider: {
