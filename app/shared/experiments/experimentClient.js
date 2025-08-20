@@ -33,29 +33,10 @@ export async function fetchVariantsWithSegmentIdentity() {
   let userId
   let deviceId
 
-  try {
-    const user =
-    typeof analytics.user === 'function'
-      ? analytics.user()
-      : null
-
-    let deviceId = null
-    if (user && typeof user.anonymousId === 'function') {
-      deviceId = user.anonymousId()
+    const user = typeof analytics.user === 'function' ? analytics.user() : null
+    if (user) {
+      if (typeof user.id === 'function') userId = user.id()
+      if (typeof user.anonymousId === 'function') deviceId = user.anonymousId()
     }
-
-    if (!deviceId) {
-      console.warn(
-        'Amplitude Experiment waiting for Segment anonymousId to be available. Device ID must match analytics events.',
-      )
-      return
-    }
-  } catch (error) {
-    console.warn('Failed to initialize Amplitude Experiment: ', error)
-  }
-
-  await getExperimentClient().fetch({
-    user_id: userId,
-    device_id, deviceId,
-  })
+    await getExperimentClient().fetch({ user_id: userId, device_id: deviceId })
 }

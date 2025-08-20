@@ -2,7 +2,7 @@
 
 import { Experiment } from "@amplitude/experiment-js-client"
 import { getReadyAnalytics } from "@shared/utils/analytics"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, createContext, useRef, useState, useMemo } from "react"
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from "appEnv"
 
 export const FeatureFlagsContext = createContext({
@@ -25,7 +25,7 @@ export const FeatureFlagsProvider = ({ children }) => {
       exposureTrackingProvider: {
         track: async (exposure) => {
           try {
-            const analytics = getReadyAnalytics()
+            const analytics = await getReadyAnalytics()
             if (analytics && typeof analytics.track === 'function') analytics.track('$exposure', exposure)
           } catch (error) {
             console.warn('Experiment exposure track failed: ', error)
@@ -34,7 +34,8 @@ export const FeatureFlagsProvider = ({ children }) => {
       }
     })
 
-    refresh.finally(() => setReady(tre))
+    refresh().finally(() => setReady(true))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const refresh = async () => {
@@ -48,7 +49,6 @@ export const FeatureFlagsProvider = ({ children }) => {
         if (typeof user.id === 'function') userId = user.id()
         if (typeof user.anonymousId === 'function') deviceId = user.anonymousId()
       }
-
       await clientRef.current?.fetch({ user_id: userId, device_id: deviceId })
       setRev((v) => v + 1)
     } catch (error) {
@@ -79,6 +79,6 @@ export const FeatureFlagsProvider = ({ children }) => {
 export const useFeatureFlags = () => useContext(FeatureFlagsContext)
 export const useFlagOn = (key) => {
   const { ready, variant } = useFeatureFlags()
-  const v = variant(key, { value: 'off'})
+  const v = variant(key, { value: 'off' })
   return { ready, on: ready && v?.value === 'on' }
 }
