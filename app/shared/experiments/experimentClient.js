@@ -1,7 +1,7 @@
 'use client'
 import { Experiment } from "@amplitude/experiment-js-client"
 import {
-  NEXT_PUBLIC_AMPLITUDE_EXPERIMENT_DEPLOYMENT_KEY,
+  NEXT_PUBLIC_AMPLITUDE_API_KEY,
 } from 'appEnv'
 import { getReadyAnalytics } from "@shared/utils/analytics"
 
@@ -9,9 +9,8 @@ let client
 
 export function getExperimentClient() {
   if (!client) {
-    const deploymentKey = NEXT_PUBLIC_AMPLITUDE_EXPERIMENT_DEPLOYMENT_KEY
 
-    client = Experiment.initialize(deploymentKey, {
+    client = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
       automaticExposureTracking: true,
       exposureTrackingProvider: {
         track: async (exposure) => {
