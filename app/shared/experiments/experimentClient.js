@@ -17,7 +17,7 @@ export function getExperimentClient() {
         track: async (exposure) => {
           try {
             const analytics = await getReadyAnalytics()
-            analytics.track('$exposure', exposure)
+            analytics?.track('$exposure', exposure)
           } catch (error) {
             console.warn('Exposure track failed', error)
           }
@@ -33,7 +33,7 @@ export async function fetchVariantsWithSegmentIdentity() {
   let userId
   let deviceId
 
-    const user = typeof analytics.user === 'function' ? analytics.user() : null
+    const user = typeof analytics?.user === 'function' ? analytics.user() : null
     if (user) {
       if (typeof user.id === 'function') userId = user.id()
       if (typeof user.anonymousId === 'function') deviceId = user.anonymousId()
