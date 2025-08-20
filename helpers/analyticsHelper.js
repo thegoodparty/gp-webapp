@@ -367,6 +367,11 @@ export const EVENTS = {
     },
   },
   Outreach: {
+    P2PCompliance: {
+      ComplianceFormSubmitted:
+        'Voter Outreach - 10DLC Compliance Form Submitted',
+      CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
+    },
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
     SocialMedia: {

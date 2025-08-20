@@ -15,6 +15,7 @@ import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import { trackEvent } from 'helpers/analyticsHelper'
 
 const initialFormState = {
   electionFilingLink: '',
@@ -91,6 +92,11 @@ export default function TextingComplianceRegistrationForm({
   const handleEINChange = (value) => {
     setValidEin(isValidEIN(value))
     handleChange({ ein: value })
+  }
+
+  const handleOnSubmit = () => {
+    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted)
+    return onSubmit(formData)
   }
 
   return (
@@ -174,7 +180,7 @@ export default function TextingComplianceRegistrationForm({
       <TextingComplianceFooter>
         <TextingComplianceSubmitButton
           {...{
-            onClick: () => onSubmit(formData),
+            onClick: handleOnSubmit,
             loading,
             isValid,
           }}
