@@ -213,8 +213,6 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }
 
-  
-
   function handleEmailChange(value) {
     setWebsite((current) => ({
       ...current,
@@ -269,6 +267,17 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != ''
+
+  let cantSaveReason = ''
+  if (!isValidEmail(website.content.contact?.email)) {
+    cantSaveReason = 'Invalid email'
+  } else if (!isValidPhone(website.content.contact?.phone)) {
+    cantSaveReason = 'Invalid phone'
+  } else if (website.content.main?.title == '') {
+    cantSaveReason = 'Missing title'
+  } else if (website.vanityPath == '') {
+    cantSaveReason = 'Missing vanity path'
+  }
 
   return (
     <>
@@ -377,6 +386,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLoading={saveLoading}
             nextDisabled={!isValid}
             canPublish={canPublish}
+            cantSaveReason={cantSaveReason}
           />
         )}
       </div>

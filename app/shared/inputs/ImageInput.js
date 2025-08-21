@@ -7,6 +7,7 @@ export default function ImageInput({
   imageUrl,
   imageLabel = 'Image',
   onChange,
+  maxSize = 1 * 1024 * 1024,
 }) {
   return (
     <div>
@@ -31,7 +32,11 @@ export default function ImageInput({
           </div>
         </div>
       ) : (
-        <FileDropZone label={`Upload ${imageLabel}`} onChange={onChange} />
+        <FileDropZone
+          label={`Upload ${imageLabel}`}
+          onChange={onChange}
+          maxSize={maxSize}
+        />
       )}
     </div>
   )

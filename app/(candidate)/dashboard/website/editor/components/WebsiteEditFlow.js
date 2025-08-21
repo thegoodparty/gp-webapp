@@ -188,8 +188,6 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-
-
   function handleEmailChange(value) {
     setWebsite((current) => ({
       ...current,
@@ -215,6 +213,17 @@ export default function WebsiteEditFlow() {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != ''
+
+  let cantSaveReason = ''
+  if (!isValidEmail(website.content.contact?.email)) {
+    cantSaveReason = 'Invalid email'
+  } else if (!isValidPhone(website.content.contact?.phone)) {
+    cantSaveReason = 'Invalid phone'
+  } else if (website.content.main?.title == '') {
+    cantSaveReason = 'Missing title'
+  } else if (website.vanityPath == '') {
+    cantSaveReason = 'Missing vanity path'
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -261,6 +270,7 @@ export default function WebsiteEditFlow() {
               canSave={canSave}
               onClose={handleEditSectionClose}
               saveLoading={saveLoading}
+              cantSaveReason={cantSaveReason}
             />
           </div>
         )}
@@ -289,6 +299,7 @@ export default function WebsiteEditFlow() {
           canSave={canSave}
           onClose={handleEditSectionClose}
           saveLoading={saveLoading}
+          cantSaveReason={cantSaveReason}
         />
       </ResponsiveModal>
       <ResponsiveModal

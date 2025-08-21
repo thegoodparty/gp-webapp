@@ -33,7 +33,11 @@ export default function HeroStep({
         fullWidth
       />
       <Label className="mt-4">Main Image</Label>
-      <ImageInput imageUrl={image} onChange={onImageChange} />
+      <ImageInput
+        imageUrl={image}
+        onChange={onImageChange}
+        maxSize={0.5 * 1024 * 1024}
+      />
       <Caption>Recommended size: 1280x640px. PNG or JPG format.</Caption>
     </div>
   )
