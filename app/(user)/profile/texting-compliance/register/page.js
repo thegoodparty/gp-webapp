@@ -4,6 +4,8 @@ import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import { getServerUser } from 'helpers/userServerHelper'
 
+export const dynamic = 'force-dynamic'
+
 const meta = pageMetaData({
   title: 'Register - Texting Compliance | GoodParty.org',
   description: 'Register for texting compliance.',
