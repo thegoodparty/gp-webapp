@@ -1,24 +1,24 @@
 import { FormControl, FormLabel } from '@mui/material'
 import Checkbox from '@shared/inputs/Checkbox'
 
-const MATCHING_COMPLIANCE_FIELDS_VALUE = {
+export const MATCHING_COMPLIANCE_FIELDS_VALUE = {
+  PHONE: 'phone',
   EMAIL: 'email',
   POSTAL_ADDRESS: 'postalAddress',
-  PHONE: 'phone',
 }
 
-const MATCHING_COMPLIANCE_CONTACT_FIELDS = [
+export const MATCHING_COMPLIANCE_CONTACT_FIELDS = [
   {
-    label: 'Address',
-    value: MATCHING_COMPLIANCE_FIELDS_VALUE.POSTAL_ADDRESS,
+    label: 'Phone',
+    value: MATCHING_COMPLIANCE_FIELDS_VALUE.PHONE,
   },
   {
     label: 'Email',
     value: MATCHING_COMPLIANCE_FIELDS_VALUE.EMAIL,
   },
   {
-    label: 'Phone',
-    value: MATCHING_COMPLIANCE_FIELDS_VALUE.PHONE,
+    label: 'Address',
+    value: MATCHING_COMPLIANCE_FIELDS_VALUE.POSTAL_ADDRESS,
   },
 ]
 

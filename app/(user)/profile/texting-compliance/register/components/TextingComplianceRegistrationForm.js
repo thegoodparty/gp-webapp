@@ -18,7 +18,6 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 
 const validateAddress = (address) => Boolean(address.formatted_address)
-const FILING_URL_PATTERN = new RegExp(/https?:\/\/(.+.)?fec.gov(.+)?/i)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -33,8 +32,7 @@ export const validateRegistrationForm = (data) => {
     matchingContactFields,
   } = data
   const validations = {
-    electionFilingLink:
-      isURL(electionFilingLink) && electionFilingLink.match(FILING_URL_PATTERN),
+    electionFilingLink: isURL(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
     localTribeName: isFilled(localTribeName),
     ein: isValidEIN(ein),
