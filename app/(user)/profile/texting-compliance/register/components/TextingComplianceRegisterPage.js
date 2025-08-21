@@ -76,7 +76,10 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
 
         <NewInfoAlert className="mb-6">
-          <Body2>This information must match your election filings</Body2>
+          <Body2>
+            Try to match this information with your election filing when
+            possible
+          </Body2>
         </NewInfoAlert>
 
         <FormDataProvider
