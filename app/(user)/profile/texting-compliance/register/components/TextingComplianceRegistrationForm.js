@@ -1,6 +1,5 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
-import Checkbox from '@shared/inputs/Checkbox'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import { useState } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
@@ -15,21 +14,11 @@ import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { trackEvent } from 'helpers/analyticsHelper'
-
-const initialFormState = {
-  electionFilingLink: '',
-  campaignCommitteeName: '',
-  localTribeName: '',
-  ein: '',
-  phone: '',
-  address: '',
-  website: '',
-  email: '',
-  verifyInfo: false,
-}
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 
 const validateAddress = (address) => Boolean(address.formatted_address)
+const FILING_URL_PATTERN = new RegExp(/https?:\/\/(.+.)?fec.gov(.+)?/i)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -41,10 +30,11 @@ export const validateRegistrationForm = (data) => {
     address,
     website,
     email,
-    verifyInfo,
+    matchingContactFields,
   } = data
   const validations = {
-    electionFilingLink: isURL(electionFilingLink),
+    electionFilingLink:
+      isURL(electionFilingLink) && electionFilingLink.match(FILING_URL_PATTERN),
     campaignCommitteeName: isFilled(campaignCommitteeName),
     localTribeName: isFilled(localTribeName),
     ein: isValidEIN(ein),
@@ -55,7 +45,7 @@ export const validateRegistrationForm = (data) => {
     address: validateAddress(address),
     website: isFQDN(website) || isURL(website),
     email: isEmail(email),
-    verifyInfo: verifyInfo === true,
+    matchingContactFields: matchingContactFields.length > 0,
   }
   return {
     validations,
@@ -77,7 +67,7 @@ export default function TextingComplianceRegistrationForm({
     address,
     website,
     email,
-    verifyInfo,
+    matchingContactFields,
   } = formData
   const formValidation = validateRegistrationForm(formData)
   const { isValid } = formValidation
@@ -170,11 +160,11 @@ export default function TextingComplianceRegistrationForm({
           value={email}
           onChange={(e) => handleChange({ email: e.target.value })}
         />
-        <Checkbox
-          label="I verify this information matches my election filing"
-          required
-          checked={verifyInfo}
-          onChange={(e) => handleChange({ verifyInfo: e.target.checked })}
+        <MatchingComplianceContactFields
+          {...{
+            value: matchingContactFields,
+            onChange: (value) => handleChange({ matchingContactFields: value }),
+          }}
         />
       </TextingComplianceForm>
       <TextingComplianceFooter>

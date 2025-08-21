@@ -42,7 +42,7 @@ const reconcileInitialFormState = (user, campaign) => {
     placeId: '',
     website: website || '',
     email: email || '',
-    verifyInfo: false,
+    matchingContactFields: [],
   }
 }
 
