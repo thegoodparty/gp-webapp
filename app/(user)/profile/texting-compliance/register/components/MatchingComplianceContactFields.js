@@ -50,9 +50,9 @@ export const MatchingComplianceContactFields = ({
       {MATCHING_COMPLIANCE_CONTACT_FIELDS.map(
         ({ label, value: fieldValue }, index) => (
           <Checkbox
+            key={fieldValue}
             {...{
               className: '!ml-3',
-              index,
               label,
               value: fieldValue,
               onChange: handleOnChange,
