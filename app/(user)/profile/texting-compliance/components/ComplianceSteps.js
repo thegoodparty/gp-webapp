@@ -100,9 +100,11 @@ const getSteps = (website, domainStatus, tcrCompliance) => {
     },
     {
       title: 'Enter PIN',
-      description: `To verify your identity you will receive a PIN via ${getCVPinDeliveryType(
-        matchingContactFields,
-      )} from "CampaignVerify".`,
+      description: `To verify your identity you will receive a PIN${
+        enterPinStepStatus === STEP_STATUS.ACTIVE
+          ? ` via ${getCVPinDeliveryType(matchingContactFields)} `
+          : ' '
+      }from "CampaignVerify".`,
       route: '/profile/texting-compliance/submit-pin',
       status: enterPinStepStatus,
     },
