@@ -42,6 +42,7 @@ export const mapFormData = ({
   electionFilingLink,
   email,
   phone,
+  matchingContactFields,
 }) => ({
   ein,
   placeId: place_id,
@@ -51,4 +52,5 @@ export const mapFormData = ({
   filingUrl: electionFilingLink,
   email,
   phone,
+  matchingContactFields,
 })
