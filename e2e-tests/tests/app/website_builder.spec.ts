@@ -5,11 +5,14 @@ import { documentReady } from 'helpers/domHelpers';
 import { authenticateWithTimeout } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
 import { IS_PROD } from 'constants/envConfig';
+import { generateWebsiteUrl } from 'helpers/dataHelpers';
 
 let campaignSlug: string;
 let candidateUrl: string;
 
 candidateUrl = process.env.CANDIDATE_URL || 'https://candidates-dev.goodparty.org/';
+
+const websiteUrl = generateWebsiteUrl();
 
 test.use({
     storageState: 'auth.json',
@@ -38,8 +41,8 @@ test.describe.serial('Website Builder Tests', () => {
 
     test('Generate New Website', async ({ page }) => {
         await page.getByRole('button', { name: /Create your website/ }).click();
-        await expect(page.getByText('What do you want your custom link to be?')).toBeVisible({ timeout: 30000 });    
-        campaignSlug = await page.getByRole('textbox').first().inputValue();
+        await expect(page.getByText('What do you want your custom link to be?')).toBeVisible({ timeout: 30000 });
+        await page.locator('[id="_r_0_"]').fill(websiteUrl);
         await page.getByRole('button', { name: /Next/ }).click();
         await expect(page.getByText('Upload your campaign logo if you have one')).toBeVisible();
         await page.getByRole('button', { name: /Next/ }).click();
@@ -58,8 +61,10 @@ test.describe.serial('Website Builder Tests', () => {
         await expect(page.getByText('Your campaign website')).toBeVisible();
         console.log('Website created successfully');
         await expect(page.getByText(/Your campaign website/)).toBeVisible();
-        await page.goto(`${candidateUrl}/${campaignSlug}`, { timeout: 60000 });
-        await documentReady(page);        
+        await page.goto(`${candidateUrl}/${websiteUrl}`, { timeout: 60000 });
+        await documentReady(page);
+        await expect(page.getByText(/Local Solutions, Not Party/)).toBeVisible();
+        
         // Fill out form
         await page.getByPlaceholder('John Doe').fill('John Doe');
         await page.getByPlaceholder('john@example.com').fill('john@example.com');
