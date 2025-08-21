@@ -23,6 +23,7 @@ export const EVENTS = {
   Password: {
     PasswordResetRequested: 'Account - Password Reset Requested',
     PasswordResetCompleted: 'Account - Password Reset Completed',
+    PasswordSetCompleted: 'Account - Password Set Completed',
   },
   SetPassword: {
     ClickSetPassword: 'Set Password: Click Set Password',
@@ -72,6 +73,7 @@ export const EVENTS = {
       ClickFreeResources: 'Navigation - Dashboard: Click Free Resources',
       ClickCommunity: 'Navigation - Dashboard: Click Community',
       ClickWebsite: 'Navigation - Dashboard: Click Website',
+      ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
     },
   },
   Dashboard: {
@@ -366,6 +368,11 @@ export const EVENTS = {
     },
   },
   Outreach: {
+    P2PCompliance: {
+      ComplianceFormSubmitted:
+        'Voter Outreach - 10DLC Compliance Form Submitted',
+      CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
+    },
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
     SocialMedia: {
@@ -477,30 +484,46 @@ export function persistClidsOnce() {
 }
 
 export function getPersistedUtms() {
+  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+    return {}
+  }
+
   const utms = {}
 
-  for (const key of UTM_KEYS) {
-    const first = sessionStorage.getItem(`${key}_first`)
-    const last = sessionStorage.getItem(`${key}_last`)
+  try {
+    for (const key of UTM_KEYS) {
+      const first = window.sessionStorage.getItem(`${key}_first`)
+      const last = window.sessionStorage.getItem(`${key}_last`)
 
-    if (first) utms[`${key}_first`] = first
-    if (last) utms[`${key}_last`] = last
+      if (first) utms[`${key}_first`] = first
+      if (last) utms[`${key}_last`] = last
+    }
+  } catch (_e) {
+    return {}
   }
 
   return utms
 }
 
 export function getPersistedClids() {
+  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+    return {}
+  }
+
   const clids = {}
 
-  for (let i = 0; i < sessionStorage.length; i++) {
-    const key = sessionStorage.key(i)
-    if (
-      key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
-      key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)
-    ) {
-      clids[key] = sessionStorage.getItem(key)
+  try {
+    for (let i = 0; i < window.sessionStorage.length; i++) {
+      const key = window.sessionStorage.key(i)
+      if (
+        key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
+        key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)
+      ) {
+        clids[key] = window.sessionStorage.getItem(key)
+      }
     }
+  } catch (_e) {
+    return {}
   }
   return clids
 }

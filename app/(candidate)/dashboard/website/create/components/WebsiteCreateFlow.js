@@ -16,6 +16,8 @@ import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { isValidEmail } from 'helpers/validations'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
@@ -27,6 +29,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
   const [step, setStep] = useState(1)
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
+  const [updatedPlace, setUpdatedPlace] = useState(null)
 
   useEffect(() => {
     if (
@@ -68,6 +71,12 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       vanityPath: website.vanityPath,
       createStep: publish ? COMPLETE_STEP : step,
     })
+    if (updatedPlace) {
+      await updateCampaign([
+        { key: 'formattedAddress', value: updatedPlace.formatted_address },
+        { key: 'placeId', value: updatedPlace.place_id },
+      ])
+    }
     setSaveLoading(false)
     if (resp.ok) {
       setWebsite(resp.data)
@@ -129,6 +138,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         main: { ...current.content.main, title: value },
       },
     }))
+    if (value.length > 0) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleTaglineChange(value) {
@@ -182,7 +196,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }))
   }
 
-  async function handleAddressChange(place) {
+  async function handleAddressSelect(place) {
     setWebsite((current) => ({
       ...current,
       content: {
@@ -195,16 +209,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }))
 
     if (place.formatted_address && place.place_id) {
-      try {
-        await updateCampaign([
-          { key: 'formattedAddress', value: place.formatted_address },
-          { key: 'placeId', value: place.place_id },
-        ])
-      } catch (error) {
-        console.error('Failed to save address to campaign:', error)
-      }
+      setUpdatedPlace(place)
     }
   }
+
+  
 
   function handleEmailChange(value) {
     setWebsite((current) => ({
@@ -214,6 +223,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         contact: { ...current.content.contact, email: value },
       },
     }))
+    if (isValidEmail(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handlePhoneChange(value) {
@@ -224,6 +238,11 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         contact: { ...current.content.contact, phone: value },
       },
     }))
+    if (isValidPhone(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   function handleCommitteeChange(value) {
@@ -244,6 +263,12 @@ export default function WebsiteCreateFlow({ initialIssues }) {
   function validateCallback(value) {
     setIsValid(value)
   }
+
+  const canPublish =
+    isValidEmail(website.content.contact?.email) &&
+    isValidPhone(website.content.contact?.phone) &&
+    website.content.main?.title != '' &&
+    website.vanityPath != ''
 
   return (
     <>
@@ -322,7 +347,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
                 address={website.content.contact?.address}
                 email={website.content.contact?.email}
                 phone={website.content.contact?.phone}
-                onAddressChange={handleAddressChange}
+                onAddressSelect={handleAddressSelect}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
                 committee={website.content.about?.committee}
@@ -351,6 +376,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLabel="Publish website"
             completeLoading={saveLoading}
             nextDisabled={!isValid}
+            canPublish={canPublish}
           />
         )}
       </div>

@@ -15,18 +15,6 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
 
-// TODO: This is temporary initial form state data for UI development.
-const mockInitialFormState = {
-  electionFilingLink: 'https://elections.example.com/filing123',
-  campaignCommitteeName: 'Friends of Democracy',
-  localTribeName: 'Cherokee Nation',
-  ein: '12-3456789',
-  phone: '(805) 550-3465',
-  website: 'https://friendsofdemocracy.org',
-  email: 'contact@friendsofdemocracy.org',
-  verifyInfo: false,
-}
-
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
   const response = await clientFetch(apiRoutes.campaign.tcrCompliance.create, {
@@ -35,6 +23,7 @@ const createTcrCompliance = async (formData) => {
   if (!response.ok) {
     throw new Error('Failed to create TCR compliance')
   }
+
   return response.data
 }
 
@@ -50,10 +39,10 @@ const reconcileInitialFormState = (user, campaign) => {
     ein: ein || '',
     phone: phone || '',
     address: { formatted_address: '' },
+    placeId: '',
     website: website || '',
     email: email || '',
-    verifyInfo: false,
-    ...mockInitialFormState,
+    matchingContactFields: [],
   }
 }
 
@@ -80,14 +69,17 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
   return (
     <div className="min-h-screen bg-white pt-2 md:pb-20 md:pt-0 md:min-h-0">
       <TextingComplianceHeader>
-        <H5 className="flex-1 text-center md:hidden">Register</H5>
+        <H5 className="flex-1 text-center md:hidden">Register your campaign</H5>
       </TextingComplianceHeader>
 
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
 
         <NewInfoAlert className="mb-6">
-          <Body2>This information must match your election filings</Body2>
+          <Body2>
+            Try to match this information with your election filing when
+            possible
+          </Body2>
         </NewInfoAlert>
 
         <FormDataProvider

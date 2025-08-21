@@ -20,6 +20,9 @@ const fields = [
     type: 'text',
     required: true,
     placeholder: 'Other',
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'state',
@@ -27,18 +30,27 @@ const fields = [
     type: 'select',
     options: flatStates,
     required: true,
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'city',
     label: 'City, Town Or County',
     type: 'text',
     required: true,
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'district',
     label: 'District (If Applicable)',
     type: 'text',
     placeholder: '2',
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'officeTermLength',
@@ -46,6 +58,9 @@ const fields = [
     type: 'select',
     required: true,
     options: ['Select', '2 years', '3 years', '4 years', '6 years'],
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
   {
     key: 'electionDate',
@@ -54,6 +69,9 @@ const fields = [
     required: true,
     noPastDates: true,
     placeholder: '10/28/2025',
+    dataAttributes: {
+      'data-amplitude-unmask': 'true'
+    },
   },
 ]
 

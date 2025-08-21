@@ -20,11 +20,7 @@ export default function StickyCard({ children }) {
   }, [])
 
   return (
-    <Sticky
-      top={72}
-      bottomBoundary="#candidate-footer"
-      enabled={winWidth > 1024}
-    >
+    <Sticky top={72} bottomBoundary="#sticky-end" enabled={winWidth > 1024}>
       {children}
     </Sticky>
   )

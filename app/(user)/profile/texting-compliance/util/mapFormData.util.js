@@ -36,18 +36,21 @@ const extractPostalAddress = (address) => {
 
 export const mapFormData = ({
   ein,
-  address,
+  address: { place_id, formatted_address },
   campaignCommitteeName,
   website,
   electionFilingLink,
   email,
   phone,
+  matchingContactFields,
 }) => ({
   ein,
-  postalAddress: extractPostalAddress(address),
+  placeId: place_id,
+  formattedAddress: formatted_address,
   committeeName: campaignCommitteeName,
   websiteDomain: website,
   filingUrl: electionFilingLink,
   email,
   phone,
+  matchingContactFields,
 })

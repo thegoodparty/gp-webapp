@@ -34,6 +34,7 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
   const [loading, setLoading] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
+  const [error, setError] = useState(null)
 
   const handleFormSubmit = async (formData) => {
     setLoading(true)
@@ -45,6 +46,7 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
       errorSnackbar(
         'Failed to submit Campaign Verify PIN. Please try again later.',
       )
+      setError('Failed to verify PIN')
     } finally {
       setLoading(false)
     }
@@ -67,6 +69,7 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
             {...{
               onSubmit: handleFormSubmit,
               loading,
+              error,
             }}
           />
         </FormDataProvider>
