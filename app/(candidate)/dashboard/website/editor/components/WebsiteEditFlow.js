@@ -19,6 +19,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
+import { cantSaveReasons } from '../../create/components/WebsiteCreateFlow'
 
 export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
@@ -214,16 +215,7 @@ export default function WebsiteEditFlow() {
     website.content.main?.title != '' &&
     website.vanityPath != ''
 
-  let cantSaveReason = ''
-  if (!isValidEmail(website.content.contact?.email)) {
-    cantSaveReason = 'Invalid email'
-  } else if (!isValidPhone(website.content.contact?.phone)) {
-    cantSaveReason = 'Invalid phone'
-  } else if (website.content.main?.title == '') {
-    cantSaveReason = 'Missing title'
-  } else if (website.vanityPath == '') {
-    cantSaveReason = 'Missing vanity path'
-  }
+  const cantSaveReason = cantSaveReasons(website)
 
   return (
     <div className="h-full flex flex-col">
