@@ -68,7 +68,7 @@ test.describe.serial('Website Builder Tests', () => {
         console.log('Website created successfully');
         await expect(page.getByText(/Your campaign website/)).toBeVisible();
         
-        const linkText = await page.getByRole('link', { name: /https:\/\/candidates-/ }).textContent();
+        const linkText = await page.locator('a[href^="https://candidates-"]').textContent();
         console.log('Candidate Link:', linkText);
         
         await page.goto(linkText);
