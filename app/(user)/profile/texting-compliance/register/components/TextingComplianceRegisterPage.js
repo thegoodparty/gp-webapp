@@ -69,7 +69,7 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
   return (
     <div className="min-h-screen bg-white pt-2 md:pb-20 md:pt-0 md:min-h-0">
       <TextingComplianceHeader>
-        <H5 className="flex-1 text-center md:hidden">Register</H5>
+        <H5 className="flex-1 text-center md:hidden">Register your campaign</H5>
       </TextingComplianceHeader>
 
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
