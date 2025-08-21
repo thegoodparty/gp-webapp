@@ -125,14 +125,13 @@ export default function TextingComplianceRegistrationForm({
           }}
         />
         <TextField
-          label="Phone"
-          placeholder="(555) 555-5555"
-          required
+          label="Website"
+          placeholder="janesmithcitycouncil.co"
           fullWidth
-          value={phone}
-          onChange={(e) => handleChange({ phone: e.target.value })}
+          required
+          value={website}
+          onChange={(e) => handleChange({ website: e.target.value })}
         />
-
         <AddressAutocomplete
           {...{
             value: addressInputValue,
@@ -145,20 +144,20 @@ export default function TextingComplianceRegistrationForm({
           }}
         />
         <TextField
-          label="Website"
-          placeholder="janesmithcitycouncil.co"
-          fullWidth
-          required
-          value={website}
-          onChange={(e) => handleChange({ website: e.target.value })}
-        />
-        <TextField
           label="Email"
           placeholder="jane@gmail.com"
           fullWidth
           required
           value={email}
           onChange={(e) => handleChange({ email: e.target.value })}
+        />
+        <TextField
+          label="Phone"
+          placeholder="(555) 555-5555"
+          required
+          fullWidth
+          value={phone}
+          onChange={(e) => handleChange({ phone: e.target.value })}
         />
         <MatchingComplianceContactFields
           {...{

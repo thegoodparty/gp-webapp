@@ -48,11 +48,11 @@ export const MatchingComplianceContactFields = ({
         Which of these match your election filing?
       </FormLabel>
       {MATCHING_COMPLIANCE_CONTACT_FIELDS.map(
-        ({ label, value: fieldValue }) => (
+        ({ label, value: fieldValue }, index) => (
           <Checkbox
             {...{
               className: '!ml-3',
-              index: label,
+              index,
               label,
               value: fieldValue,
               onChange: handleOnChange,
