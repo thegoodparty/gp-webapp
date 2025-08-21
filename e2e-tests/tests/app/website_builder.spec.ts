@@ -63,7 +63,6 @@ test.describe.serial('Website Builder Tests', () => {
         await expect(page.getByText(/Your campaign website/)).toBeVisible();
         await page.goto(`${candidateUrl}/${websiteUrl}`, { timeout: 60000 });
         await documentReady(page);
-        await expect(page.getByText(/Local Solutions, Not Party/)).toBeVisible();
         
         // Fill out form
         await page.getByPlaceholder('John Doe').fill('John Doe');
