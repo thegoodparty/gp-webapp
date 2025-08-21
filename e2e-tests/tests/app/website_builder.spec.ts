@@ -67,7 +67,12 @@ test.describe.serial('Website Builder Tests', () => {
         await expect(page.getByText('Your campaign website')).toBeVisible();
         console.log('Website created successfully');
         await expect(page.getByText(/Your campaign website/)).toBeVisible();
-        await page.goto(`${candidateUrl}/${websiteUrl}`, { timeout: 60000 });
+        
+        const linkText = await page.getByRole('link', { name: /https:\/\/candidates-/ }).textContent();
+        console.log('Candidate Link:', linkText);
+        
+        await page.goto(linkText);
+        
         await documentReady(page);
         
         // Fill out form
