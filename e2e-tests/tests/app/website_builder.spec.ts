@@ -4,13 +4,19 @@ import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import { authenticateWithTimeout } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
-import { IS_PROD } from 'constants/envConfig';
+import { IS_PROD, IS_QA } from 'constants/envConfig';
 import { generateWebsiteUrl } from 'helpers/dataHelpers';
 
-let campaignSlug: string;
 let candidateUrl: string;
 
-candidateUrl = process.env.CANDIDATE_URL || 'https://candidates-dev.goodparty.org/';
+// Set candidateUrl based on environment
+if (IS_QA) {
+    candidateUrl = 'https://candidates-qa.goodparty.org/';
+} else if (IS_PROD) {
+    candidateUrl = 'https://candidates.goodparty.org/';
+} else {
+    candidateUrl = 'https://candidates-dev.goodparty.org/';
+}
 
 const websiteUrl = generateWebsiteUrl();
 
