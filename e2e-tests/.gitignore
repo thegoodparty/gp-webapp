@@ -11,3 +11,4 @@ playwright-results.json
 /helpers/sample.pdf
 .env
 testRunId.txt
+reported-test-cases.json
