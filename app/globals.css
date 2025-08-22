@@ -78,38 +78,6 @@ ul li {
   color: #fff;
 }
 
-div.MuiAutocomplete-root:not(.office-autocomplete) div.MuiOutlinedInput-root {
-  /* Search bar when not in focus */
-  border-radius: 40px;
-}
-
-div.MuiAutocomplete-root:not(.office-autocomplete)
-  div.MuiOutlinedInput-root.Mui-focused {
-  /* Search bar when focused */
-  border-radius: 20px 20px 0px 0px !important;
-}
-
-div.MuiAutocomplete-root:not(.office-autocomplete) div.Mui-focused fieldset {
-  /* fieldset element is what controls the border color. Leaving only the bottom border when dropdown is visible */
-  border-width: 1px !important;
-  border-color: transparent transparent #d3d3d3 transparent !important;
-}
-
-.MuiAutocomplete-listbox {
-  /* To control the background color of the listbox, which is the dropdown */
-}
-
-div.MuiAutocomplete-popper div {
-  /* To get rid of the rounding applied by Mui-paper on the dropdown */
-  border-top-right-radius: 0px;
-  border-top-left-radius: 0px;
-}
-
-.location-selects {
-  legend {
-    width: 0;
-  }
-}
 
 @media all {
   .print-page-break {
@@ -140,4 +108,53 @@ div.MuiAutocomplete-popper div {
 @page {
   size: auto;
   margin: 20mm;
+}
+
+.pac-container {
+  z-index: 9999 !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.pac-item {
+  padding: 2px 4px !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background-color: #f9fafb !important;
+}
+
+.pac-item:last-child {
+  border-bottom: none !important;
+}
+
+.pac-matched {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .pac-container {
+    z-index: 10000 !important;
+    position: fixed !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+    border-radius: 8px;
+    margin-top: 4px;
+  }
+  
+  .pac-item {
+    padding: 8px !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
+  
+  .pac-item .pac-icon {
+    margin-right: 12px !important;
+  }
 }

@@ -210,21 +210,10 @@ export default function WebsiteCreateFlow({ initialIssues }) {
 
     if (place.formatted_address && place.place_id) {
       setUpdatedPlace(place)
-      setIsValid(true)
-    } else {
-      setIsValid(false)
     }
   }
 
-  function handleAddressChange(value) {
-    setWebsite((current) => ({
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content.contact, addressText: value },
-      },
-    }))
-  }
+  
 
   function handleEmailChange(value) {
     setWebsite((current) => ({
@@ -279,9 +268,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidEmail(website.content.contact?.email) &&
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
-    website.vanityPath != '' &&
-    (website.content?.contact?.address != '' ||
-      website.content?.contact?.addressText != '')
+    website.vanityPath != ''
 
   return (
     <>
@@ -361,7 +348,6 @@ export default function WebsiteCreateFlow({ initialIssues }) {
                 email={website.content.contact?.email}
                 phone={website.content.contact?.phone}
                 onAddressSelect={handleAddressSelect}
-                onAddressChange={handleAddressChange}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
                 committee={website.content.about?.committee}

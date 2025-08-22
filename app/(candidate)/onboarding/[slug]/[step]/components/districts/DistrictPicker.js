@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@shared/buttons/Button'
 import DistrictTypeAutocomplete from './DistrictTypeAutocomplete'
 import DistrictNameAutocomplete from './DistrictNameAutocomplete'
@@ -10,10 +10,20 @@ export default function DistrictPicker({
   buttonText = 'Save',
   onSubmit = async () => Promise.resolve(),
   className = '',
+  initialType = null,
+  initialName = null,
 }) {
-  const [type, setType]   = useState(null)
-  const [name, setName]   = useState(null)
+  const [type, setType]   = useState(initialType)
+  const [name, setName]   = useState(initialName)
   const [busy, setBusy]   = useState(false)
+
+  useEffect(() => {
+    setType(initialType || null)
+  }, [initialType])
+
+  useEffect(() => {
+    setName(initialName || null)
+  }, [initialName])
 
   const canSubmit = !!type && !!name && !busy
 
