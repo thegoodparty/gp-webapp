@@ -57,7 +57,7 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdMessage />,
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
   },
   {
     label: 'Website',

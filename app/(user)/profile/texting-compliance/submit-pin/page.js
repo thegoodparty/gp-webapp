@@ -5,6 +5,8 @@ import { apiRoutes } from 'gpApi/routes'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 import { redirect } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 const fetchTcrCompliance = async () => {
   const response = await serverFetch(apiRoutes.campaign.tcrCompliance.fetch)
   if (!response.ok) {

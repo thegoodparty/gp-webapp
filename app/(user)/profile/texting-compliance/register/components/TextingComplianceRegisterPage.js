@@ -3,8 +3,7 @@ import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import Body2 from '@shared/typography/Body2'
 import NewInfoAlert from '@shared/alerts/NewInfoAlert'
-import TextingComplianceHeader
-  from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
+import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
@@ -14,9 +13,7 @@ import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
-import {
-  mapFormData
-} from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
+import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
 
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
@@ -45,7 +42,7 @@ const reconcileInitialFormState = (user, campaign) => {
     placeId: '',
     website: website || '',
     email: email || '',
-    verifyInfo: false,
+    matchingContactFields: [],
   }
 }
 
@@ -72,14 +69,17 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
   return (
     <div className="min-h-screen bg-white pt-2 md:pb-20 md:pt-0 md:min-h-0">
       <TextingComplianceHeader>
-        <H5 className="flex-1 text-center md:hidden">Register</H5>
+        <H5 className="flex-1 text-center md:hidden">Register your campaign</H5>
       </TextingComplianceHeader>
 
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
 
         <NewInfoAlert className="mb-6">
-          <Body2>This information must match your election filings</Body2>
+          <Body2>
+            Try to match this information with your election filing when
+            possible
+          </Body2>
         </NewInfoAlert>
 
         <FormDataProvider
