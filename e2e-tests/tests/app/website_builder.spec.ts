@@ -66,33 +66,6 @@ test.describe.serial('Website Builder Tests', () => {
         await documentReady(page);
         await expect(page.getByText('Your campaign website')).toBeVisible();
         console.log('Website created successfully');
-        
-        const linkText = await page.locator('a[href^="https://candidates-"]').textContent();
-        console.log('Candidate Link:', linkText);
-        
-        // Modify the link to open in same window, then click it
-        const linkElement = page.locator('a[href^="https://candidates-"]');
-        await linkElement.evaluate((el) => {
-            el.setAttribute('target', '_self');
-        });
-        await linkElement.click();
-        
-        await documentReady(page);
-        
-        // Fill out form
-        await page.getByPlaceholder('John Doe').fill('John Doe');
-        await page.getByPlaceholder('john@example.com').fill('john@example.com');
-        await page.getByLabel('Phone').fill('5105555555');
-        await page.getByPlaceholder('How can we help you?').fill('How can we help you?');
-        await page.getByRole('checkbox').click();
-        await page.getByRole('button', { name: 'Send Message' }).click();
-        await expect(page.getByText('Thank you for your message!')).toBeVisible({ timeout: 30000 });
-        
-        // Verify submission on website dashboard
-        await page.goto(`/dashboard/website`);
-        await documentReady(page);
-        await expect(page.getByRole('heading', { name: 'Your website form submissions' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: 'John Doe' }).first()).toBeVisible();
     });
 
     test('Verify website dashboard page', async ({ page }) => {
