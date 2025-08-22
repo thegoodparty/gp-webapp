@@ -38,7 +38,10 @@ export default function HeroStep({
         onChange={onImageChange}
         maxSize={0.5 * 1024 * 1024}
       />
-      <Caption>Recommended size: 1280x640px. PNG or JPG format.</Caption>
+      <Caption>
+        Recommended size: 1280x640px. PNG or JPG format. File size must be less
+        than 500KB.
+      </Caption>
     </div>
   )
 }
