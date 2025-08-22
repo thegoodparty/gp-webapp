@@ -9,6 +9,7 @@ import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AmplitudeInit from '@shared/AmplitudeInit'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
+import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
@@ -82,7 +83,9 @@ const RootLayout = ({ children }) => (
       </Suspense>
       <AnalyticsSessionReplayMiddleware />
       <AmplitudeInit />
-      <PageWrapper>{children}</PageWrapper>
+      <FeatureFlagsProvider>
+        <PageWrapper>{children}</PageWrapper>
+      </FeatureFlagsProvider>
       <noscript>
         <iframe
           src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"

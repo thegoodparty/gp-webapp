@@ -19,6 +19,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
+import { cantSaveReasons } from '../../create/components/WebsiteCreateFlow'
 
 export default function WebsiteEditFlow() {
   const { website, setWebsite } = useWebsite()
@@ -188,8 +189,6 @@ export default function WebsiteEditFlow() {
     }))
   }
 
-
-
   function handleEmailChange(value) {
     setWebsite((current) => ({
       ...current,
@@ -215,6 +214,8 @@ export default function WebsiteEditFlow() {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != ''
+
+  const cantSaveReason = cantSaveReasons(website)
 
   return (
     <div className="h-full flex flex-col">
@@ -261,6 +262,7 @@ export default function WebsiteEditFlow() {
               canSave={canSave}
               onClose={handleEditSectionClose}
               saveLoading={saveLoading}
+              cantSaveReason={cantSaveReason}
             />
           </div>
         )}
@@ -289,6 +291,7 @@ export default function WebsiteEditFlow() {
           canSave={canSave}
           onClose={handleEditSectionClose}
           saveLoading={saveLoading}
+          cantSaveReason={cantSaveReason}
         />
       </ResponsiveModal>
       <ResponsiveModal

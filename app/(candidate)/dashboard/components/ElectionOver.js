@@ -19,7 +19,7 @@ export default function ElectionOver() {
         Contact us for a debrief about how the election went.
       </Body1>
       <ScheduleModal
-        calendar="https://meetings.hubspot.com/jared-alper/onboarding"
+        calendar="https://meetings.hubspot.com/kennedy-mason/candidate-debrief-interviews"
         btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
       />
     </section>

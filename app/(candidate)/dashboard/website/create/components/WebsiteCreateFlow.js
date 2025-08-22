@@ -22,6 +22,20 @@ import { isValidPhone } from '@shared/inputs/PhoneInput'
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
+export const cantSaveReasons = (website) => {
+  let cantSaveReason = ''
+  if (!isValidEmail(website.content.contact?.email)) {
+    cantSaveReason = 'Invalid email'
+  } else if (!isValidPhone(website.content.contact?.phone)) {
+    cantSaveReason = 'Invalid phone'
+  } else if (website.content.main?.title == '') {
+    cantSaveReason = 'Missing title'
+  } else if (website.vanityPath == '') {
+    cantSaveReason = 'Missing vanity path'
+  }
+  return cantSaveReason
+}
+
 export default function WebsiteCreateFlow({ initialIssues }) {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
@@ -213,8 +227,6 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }
 
-  
-
   function handleEmailChange(value) {
     setWebsite((current) => ({
       ...current,
@@ -269,6 +281,8 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     isValidPhone(website.content.contact?.phone) &&
     website.content.main?.title != '' &&
     website.vanityPath != ''
+
+  const cantSaveReason = cantSaveReasons(website)
 
   return (
     <>
@@ -377,6 +391,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLoading={saveLoading}
             nextDisabled={!isValid}
             canPublish={canPublish}
+            cantSaveReason={cantSaveReason}
           />
         )}
       </div>
