@@ -66,12 +66,16 @@ test.describe.serial('Website Builder Tests', () => {
         await documentReady(page);
         await expect(page.getByText('Your campaign website')).toBeVisible();
         console.log('Website created successfully');
-        await expect(page.getByText(/Your campaign website/)).toBeVisible();
         
         const linkText = await page.locator('a[href^="https://candidates-"]').textContent();
         console.log('Candidate Link:', linkText);
         
-        await page.goto(linkText);
+        // Modify the link to open in same window, then click it
+        const linkElement = page.locator('a[href^="https://candidates-"]');
+        await linkElement.evaluate((el) => {
+            el.setAttribute('target', '_self');
+        });
+        await linkElement.click();
         
         await documentReady(page);
         
