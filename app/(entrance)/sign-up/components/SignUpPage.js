@@ -84,7 +84,6 @@ async function register({
   zip,
   password,
   signUpMode,
-  allowTexts,
 }) {
   try {
     const resp = await clientFetch(apiRoutes.authentication.register, {
@@ -95,7 +94,6 @@ async function register({
       zip,
       password,
       signUpMode,
-      allowTexts,
     })
 
     if (resp.status === 409) {
@@ -117,7 +115,6 @@ export default function SignUpPage() {
     phone: '',
     zip: '',
     password: '',
-    allowTexts: false,
   })
 
   const [fields] = useState([...SIGN_UP_FIELDS])
@@ -126,16 +123,7 @@ export default function SignUpPage() {
   const [_, setUser] = useUser()
   const router = useRouter()
 
-  const {
-    firstName,
-    lastName,
-    signUpMode,
-    email,
-    phone,
-    zip,
-    password,
-    allowTexts,
-  } = state
+  const { firstName, lastName, signUpMode, email, phone, zip, password } = state
 
   const enableSubmit =
     firstName &&
@@ -158,7 +146,6 @@ export default function SignUpPage() {
         zip,
         password,
         signUpMode,
-        allowTexts,
       })
 
       if (!result || !result.user) {
