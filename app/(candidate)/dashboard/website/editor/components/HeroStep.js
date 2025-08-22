@@ -40,7 +40,7 @@ export default function HeroStep({
       />
       <Caption>
         Recommended size: 1280x640px. PNG or JPG format. File size must be less
-        than 500KB.
+        than 512KB.
       </Caption>
     </div>
   )

@@ -16,7 +16,7 @@ export default function LogoStep({ logo, onChange, noHeading = false }) {
         maxSize={0.5 * 1024 * 1024}
       />
       <Caption>
-        Recommended size: 200x80px. PNG or JPG format. Max size: 500KB.
+        Recommended size: 200x80px. PNG or JPG format. Max size: 512KB.
       </Caption>
     </div>
   )
