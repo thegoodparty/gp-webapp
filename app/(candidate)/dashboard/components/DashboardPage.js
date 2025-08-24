@@ -13,6 +13,7 @@ import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import TasksList from './tasks/TasksList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { TasksProvider } from './tasks/TasksProvider'
 
 export default function DashboardPage({
   pathname,
@@ -136,7 +137,9 @@ export default function DashboardPage({
                     {electionInPast || primaryLost ? (
                       <ElectionOver />
                     ) : (
-                      <TasksList campaign={campaign} tasks={tasks} />
+                      <TasksProvider tasks={tasks}>
+                        <TasksList campaign={campaign} />
+                      </TasksProvider>
                     )}
                   </>
                 ) : (

@@ -212,6 +212,10 @@ export const apiRoutes = {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
       },
+      uncomplete: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'DELETE',
+      },
       delete: {
         path: '/campaigns/tasks/:taskId',
         method: 'DELETE',
@@ -234,9 +238,9 @@ export const apiRoutes = {
     raceTargetDetails: {
       update: {
         path: '/campaigns/mine/race-target-details',
-        method: 'PUT'
-      }
-    }
+        method: 'PUT',
+      },
+    },
   },
   content: {
     getByType: {
@@ -427,13 +431,13 @@ export const apiRoutes = {
     districts: {
       types: {
         path: '/elections/districts/types',
-        method: 'GET'
+        method: 'GET',
       },
       names: {
         path: '/elections/districts/names',
         method: 'GET',
-      }
-    }
+      },
+    },
   },
   payments: {
     createCheckoutSession: {

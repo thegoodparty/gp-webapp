@@ -4,10 +4,17 @@ import {
   TaskAltRounded,
 } from '@mui/icons-material'
 
-export default function TaskCheck({ checked, onClick, trackingAttrs }) {
+export default function TaskCheck({
+  checked,
+  onClick,
+  trackingAttrs,
+  onUnCheck,
+}) {
   const handleClick = () => {
     if (!checked) {
       onClick()
+    } else {
+      onUnCheck()
     }
   }
 

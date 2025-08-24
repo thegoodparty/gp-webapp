@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import TaskItem from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
@@ -20,9 +20,10 @@ import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { useTasks } from './TasksProvider'
 
-export default function TasksList({ campaign, tasks: tasksProp = [] }) {
-  const [tasks, setTasks] = useState(tasksProp)
+export default function TasksList({ campaign }) {
+  const [tasks, setTasks, refreshTasks] = useTasks()
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
@@ -34,6 +35,18 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
   const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = differenceInDays(electionDate, new Date())
 
+  async function completeTask(taskId) {
+    await clientFetch(apiRoutes.campaign.tasks.complete, {
+      taskId,
+    })
+  }
+
+  async function deleteCompleteTask(taskId) {
+    await clientFetch(apiRoutes.campaign.tasks.uncomplete, {
+      taskId,
+    })
+  }
+
   async function handleCheckClick(task) {
     const { id: taskId, flowType: type } = task
 
@@ -43,6 +56,13 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
     } else {
       setCompleteModalTask(task)
     }
+    refreshTasks()
+  }
+
+  async function handleUnCheckClick(task) {
+    const { id: taskId } = task
+    deleteCompleteTask(taskId)
+    refreshTasks()
   }
 
   function handleCompleteSubmit(_count) {
@@ -81,27 +101,15 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
     }
   }
 
-  async function completeTask(taskId) {
-    const resp = await clientFetch(apiRoutes.campaign.tasks.complete, {
-      taskId,
-    })
-
-    if (resp.ok) {
-      const updatedTask = resp.data
-      setTasks((currentTasks) => {
-        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
-        if (taskIndex !== -1) {
-          currentTasks.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks]
-        } else {
-          // Shouldn't happen
-          console.error('Completed task not found')
-        }
-      })
-    } else {
-      errorSnackbar('Failed to complete task')
-    }
-  }
+  const handleFlowComplete = useCallback(
+    async (taskId) => {
+      if (taskId) {
+        await completeTask(taskId)
+      }
+      refreshTasks()
+    },
+    [refreshTasks],
+  )
 
   return (
     <>
@@ -122,6 +130,7 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
                 daysUntilElection={daysUntilElection}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
+                onUnCheck={handleUnCheckClick}
               />
             ))
           ) : (
@@ -162,6 +171,8 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
           defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
+          onComplete={handleFlowComplete}
+          taskId={flowModalTask?.id}
         />
       )}
     </>

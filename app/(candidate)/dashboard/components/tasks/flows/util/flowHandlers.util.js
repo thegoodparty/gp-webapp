@@ -36,6 +36,7 @@ export const handleCreateOutreach =
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
+    onComplete = () => {},
   }) =>
   async () => {
     const { audience_request: audienceRequest } = audience || {}
@@ -61,6 +62,7 @@ export const handleCreateOutreach =
     }
 
     setOutreaches([...outreaches, outreach])
+    onComplete?.()
     return outreach
   }
 

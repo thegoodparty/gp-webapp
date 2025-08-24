@@ -12,6 +12,7 @@ export default function TaskItem({
   isPro,
   onCheck,
   onAction,
+  onUnCheck,
 }) {
   const {
     id: taskId,
@@ -26,7 +27,7 @@ export default function TaskItem({
     completed,
   } = task
 
-  const isExternalLink = link !== undefined
+  const isExternalLink = link && link.startsWith('http')
   const isExpired = daysUntilElection < deadline
   const noLongerAvailable = isExpired && !completed
   const proLocked = proRequired && !isPro
@@ -76,6 +77,10 @@ export default function TaskItem({
     onCheck(task)
   }
 
+  const handleUnCheck = () => {
+    onUnCheck(task)
+  }
+
   return (
     <li className="flex flex-col sm:flex-row items-center p-4 mt-4 gap-x-4 bg-white rounded-lg border border-black/[0.12]">
       <div className="flex items-center gap-x-2 gap-y-4 w-full sm:w-auto">
@@ -84,6 +89,7 @@ export default function TaskItem({
             checked={completed}
             onClick={handleCheck}
             trackingAttrs={checkTrackingAttrs}
+            onUnCheck={handleUnCheck}
           />
         </div>
         <div className={`${completed ? 'text-indigo-400' : ''}`}>

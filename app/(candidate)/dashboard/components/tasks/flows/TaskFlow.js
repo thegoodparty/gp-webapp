@@ -52,6 +52,8 @@ export default function TaskFlow({
   isCustom,
   onClose,
   defaultAiTemplateId,
+  onComplete,
+  taskId,
 }) {
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -91,6 +93,7 @@ export default function TaskFlow({
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
       step: stepName,
     })
+
     setConfirmOpen(false)
     setOpen(false)
     handleReset()
@@ -150,18 +153,27 @@ export default function TaskFlow({
     resetCallback: handleReset,
   }
 
-  const onCreateOutreach = useMemo(
-    () =>
-      handleCreateOutreach({
-        type,
-        state,
-        campaignId: campaign.id,
-        outreaches,
-        setOutreaches,
-        errorSnackbar,
-      }),
-    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
-  )
+  const onCreateOutreach = useMemo(() => {
+    handleCreateOutreach({
+      type,
+      state,
+      campaignId: campaign.id,
+      outreaches,
+      setOutreaches,
+      errorSnackbar,
+      onComplete,
+    })
+    onComplete?.(taskId)
+  }, [
+    type,
+    state,
+    campaign,
+    outreaches,
+    setOutreaches,
+    errorSnackbar,
+    onComplete,
+    taskId,
+  ])
 
   const onCreateVoterFileFilter = useMemo(
     () =>
