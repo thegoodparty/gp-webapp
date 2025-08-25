@@ -23,7 +23,9 @@ export const getTcrComplianceStepCompletions = (
   tcrCompliance,
 ) => {
   const websiteComplete = website?.status === WEBSITE_STATUS.published
-  const domainComplete = domainStatus?.message === DOMAIN_STATUS.SUCCESSFUL
+  const domainComplete =
+    domainStatus?.message === DOMAIN_STATUS.SUCCESSFUL ||
+    domainStatus?.message === DOMAIN_STATUS.SUBMITTED
   const registrationComplete = [
     TCR_COMPLIANCE_STATUS.SUBMITTED,
     TCR_COMPLIANCE_STATUS.PENDING,
