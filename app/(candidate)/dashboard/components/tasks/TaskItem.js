@@ -28,7 +28,7 @@ export default function TaskItem({
     completed,
     date,
   } = task
-
+  const isExternalLink = link && link.startsWith('http')
   const isExpired = daysUntilElection < deadline
   const noLongerAvailable = isExpired && !completed
   const proLocked = proRequired && !isPro
@@ -116,7 +116,7 @@ export default function TaskItem({
       ) : (
         <Button
           href={link || undefined}
-          target="_blank"
+          target={isExternalLink ? '_blank' : undefined}
           onClick={link ? undefined : handleAction}
           size="medium"
           color={completed ? 'success' : 'secondary'}
