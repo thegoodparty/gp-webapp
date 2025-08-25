@@ -8,7 +8,6 @@ import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-c
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
 import isURL from 'validator/es/lib/isURL'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
-import isFQDN from 'validator/es/lib/isFQDN'
 import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
@@ -41,7 +40,7 @@ export const validateRegistrationForm = (data) => {
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
     address: validateAddress(address),
-    website: isFQDN(website) || isURL(website),
+    website: isURL(website),
     email: isEmail(email),
     matchingContactFields: matchingContactFields.length > 0,
   }
