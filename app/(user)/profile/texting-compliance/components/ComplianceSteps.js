@@ -1,6 +1,6 @@
 import ComplianceStep from 'app/(user)/profile/texting-compliance/components/ComplianceStep'
 import { WEBSITE_STATUS } from 'app/(candidate)/dashboard/website/util/website.util'
-import { DOMAIN_STATUS } from 'app/(candidate)/dashboard/website/util/domain.util'
+import { isDomainStatusActive } from 'app/(candidate)/dashboard/website/util/domain.util'
 import { MATCHING_COMPLIANCE_FIELDS_VALUE } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 
 export const STEP_STATUS = {
@@ -23,9 +23,8 @@ export const getTcrComplianceStepCompletions = (
   tcrCompliance,
 ) => {
   const websiteComplete = website?.status === WEBSITE_STATUS.published
-  const domainComplete =
-    domainStatus?.message === DOMAIN_STATUS.SUCCESSFUL ||
-    domainStatus?.message === DOMAIN_STATUS.SUBMITTED
+  const domainComplete = isDomainStatusActive(domainStatus?.message)
+
   const registrationComplete = [
     TCR_COMPLIANCE_STATUS.SUBMITTED,
     TCR_COMPLIANCE_STATUS.PENDING,
