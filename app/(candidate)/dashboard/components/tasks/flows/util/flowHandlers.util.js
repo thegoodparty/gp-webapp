@@ -1,4 +1,7 @@
-import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
+import {
+  createPhoneList,
+  scheduleVoterMessagingCampaign,
+} from 'helpers/scheduleVoterMessagingCampaign'
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -125,6 +128,10 @@ export const handleCreateVoterFileFilter =
       errorSnackbar('There was an error creating your voter file filter')
       return
     }
+
+    const phoneList = await createPhoneList(voterFileFilter)
+
+    console.log(`phoneList =>`, phoneList)
 
     return voterFileFilter
   }

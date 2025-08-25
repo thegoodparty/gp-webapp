@@ -234,9 +234,9 @@ export const apiRoutes = {
     raceTargetDetails: {
       update: {
         path: '/campaigns/mine/race-target-details',
-        method: 'PUT'
-      }
-    }
+        method: 'PUT',
+      },
+    },
   },
   content: {
     getByType: {
@@ -427,13 +427,13 @@ export const apiRoutes = {
     districts: {
       types: {
         path: '/elections/districts/types',
-        method: 'GET'
+        method: 'GET',
       },
       names: {
         path: '/elections/districts/names',
         method: 'GET',
-      }
-    }
+      },
+    },
   },
   payments: {
     createCheckoutSession: {
@@ -606,6 +606,12 @@ export const apiRoutes = {
     list: {
       path: '/outreach',
       method: 'GET',
+    },
+  },
+  p2p: {
+    createPhoneList: {
+      path: '/p2p/phone-list',
+      method: 'POST',
     },
   },
   website: {

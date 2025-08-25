@@ -1,10 +1,10 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-export async function scheduleVoterMessagingCampaign(
+export const scheduleVoterMessagingCampaign = async (
   outreachId,
   audienceRequest = '',
-) {
+) => {
   try {
     const resp = await clientFetch(apiRoutes.voters.voterFile.schedule, {
       outreachId,
@@ -15,6 +15,23 @@ export async function scheduleVoterMessagingCampaign(
         'Error scheduling voter messaging campaign:',
         resp.statusText,
       )
+      return false
+    }
+    return resp.data
+  } catch (e) {
+    console.error('error', e)
+    return false
+  }
+}
+
+export const createPhoneList = async (voterFileFilter) => {
+  try {
+    const resp = await clientFetch(apiRoutes.p2p.createPhoneList, {
+      ...voterFileFilter,
+      listName: voterFileFilter.name,
+    })
+    if (!resp.ok) {
+      console.error('Error creating phone list:', resp.statusText)
       return false
     }
     return resp.data
