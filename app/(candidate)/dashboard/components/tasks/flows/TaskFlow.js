@@ -154,16 +154,18 @@ export default function TaskFlow({
   }
 
   const onCreateOutreach = useMemo(() => {
-    handleCreateOutreach({
-      type,
-      state,
-      campaignId: campaign.id,
-      outreaches,
-      setOutreaches,
-      errorSnackbar,
-      onComplete,
-    })
-    onComplete?.(id)
+    return async () => {
+      await handleCreateOutreach({
+        type,
+        state,
+        campaignId: campaign.id,
+        outreaches,
+        setOutreaches,
+        errorSnackbar,
+        onComplete,
+      })()
+      onComplete?.(id)
+    }
   }, [
     type,
     state,

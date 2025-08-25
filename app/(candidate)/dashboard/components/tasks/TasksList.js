@@ -65,8 +65,8 @@ export default function TasksList({ campaign }) {
     refreshTasks()
   }
 
-  function handleCompleteSubmit(_count) {
-    completeTask(completeModalTask.id)
+  async function handleCompleteSubmit(_count) {
+    await completeTask(completeModalTask.id)
     setCompleteModalTask(null)
   }
 
