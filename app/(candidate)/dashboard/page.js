@@ -7,11 +7,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 
 const fetchTasks = async () => {
-  const currentDate = new Date().toISOString().split('T')[0]
-
-  const resp = await serverFetch(apiRoutes.campaign.tasks.list, {
-    date: currentDate,
-  })
+  const resp = await serverFetch(apiRoutes.campaign.tasks.list)
   return resp.data
 }
 
