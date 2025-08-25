@@ -8,7 +8,6 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { useSnackbar } from 'helpers/useSnackbar'
 import LogTaskModal from './LogTaskModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
@@ -21,6 +20,9 @@ import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useTasks } from './TasksProvider'
+import Button from '@shared/buttons/Button'
+
+const PREVIEW_TASK_COUNT = 5
 
 export default function TasksList({ campaign }) {
   const [tasks, setTasks, refreshTasks] = useTasks()
@@ -29,7 +31,7 @@ export default function TasksList({ campaign }) {
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
-  const { errorSnackbar } = useSnackbar()
+  const [showAllTasks, setShowAllTasks] = useState(false)
 
   const electionDate = campaign.details.electionDate
   const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
@@ -122,23 +124,30 @@ export default function TasksList({ campaign }) {
 
         <ul className="p-0 mt-4">
           {tasks.length > 0 ? (
-            tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                isPro={campaign.isPro}
-                daysUntilElection={daysUntilElection}
-                onCheck={handleCheckClick}
-                onAction={handleActionClick}
-                onUnCheck={handleUnCheckClick}
-              />
-            ))
+            tasks
+              .slice(0, showAllTasks ? undefined : PREVIEW_TASK_COUNT)
+              .map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  isPro={campaign.isPro}
+                  daysUntilElection={daysUntilElection}
+                  onCheck={handleCheckClick}
+                  onAction={handleActionClick}
+                  onUnCheck={handleUnCheckClick}
+                />
+              ))
           ) : (
             <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
               <H4 className="mt-1">No tasks available</H4>
             </li>
           )}
         </ul>
+        <div className="flex justify-center mt-8">
+          <Button onClick={() => setShowAllTasks(!showAllTasks)}>
+            {showAllTasks ? 'Show less tasks' : 'Show more tasks'}
+          </Button>
+        </div>
       </div>
       {completeModalTask && (
         <LogTaskModal
