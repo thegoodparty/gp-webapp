@@ -5,6 +5,7 @@ import { CheckRounded, LockRounded } from '@mui/icons-material'
 import TaskCheck from './TaskCheck'
 import H4 from '@shared/typography/H4'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function TaskItem({
   task,
@@ -15,7 +16,7 @@ export default function TaskItem({
   onUnCheck,
 }) {
   const {
-    id: taskId,
+    id,
     title,
     description,
     cta,
@@ -25,9 +26,9 @@ export default function TaskItem({
     deadline,
     link,
     completed,
+    date,
   } = task
 
-  const isExternalLink = link && link.startsWith('http')
   const isExpired = daysUntilElection < deadline
   const noLongerAvailable = isExpired && !completed
   const proLocked = proRequired && !isPro
@@ -35,19 +36,19 @@ export default function TaskItem({
   const checkTrackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Task Checkmark', {
-        id: taskId,
+        id,
         type: flowType,
         weekNumber: week,
         daysUntilElection: daysUntilElection,
         checked: completed,
       }),
-    [taskId, flowType, week, daysUntilElection, completed],
+    [id, flowType, week, daysUntilElection, completed],
   )
 
   const actionTrackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Task Button', {
-        id: taskId,
+        id,
         type: flowType,
         weekNumber: week,
         daysUntilElection: daysUntilElection,
@@ -60,7 +61,7 @@ export default function TaskItem({
           : 'Available',
       }),
     [
-      taskId,
+      id,
       flowType,
       week,
       daysUntilElection,
@@ -95,6 +96,11 @@ export default function TaskItem({
         <div className={`${completed ? 'text-indigo-400' : ''}`}>
           <H4 className="mb-1">{title}</H4>
           <Body2>{description}</Body2>
+          {date && (
+            <div className="flex gap-1 items-center">
+              <Body2>Due: {dateUsHelper(date)}</Body2>
+            </div>
+          )}
         </div>
       </div>
       {noLongerAvailable ? (
@@ -109,9 +115,9 @@ export default function TaskItem({
         </Button>
       ) : (
         <Button
-          href={isExternalLink ? link : undefined}
+          href={link || undefined}
           target="_blank"
-          onClick={isExternalLink ? undefined : handleAction}
+          onClick={link ? undefined : handleAction}
           size="medium"
           color={completed ? 'success' : 'secondary'}
           disabled={completed}

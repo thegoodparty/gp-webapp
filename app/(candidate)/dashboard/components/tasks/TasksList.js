@@ -35,24 +35,24 @@ export default function TasksList({ campaign }) {
   const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = differenceInDays(electionDate, new Date())
 
-  async function completeTask(taskId) {
+  async function completeTask(id) {
     await clientFetch(apiRoutes.campaign.tasks.complete, {
-      taskId,
+      id,
     })
   }
 
-  async function deleteCompleteTask(taskId) {
+  async function deleteCompleteTask(id) {
     await clientFetch(apiRoutes.campaign.tasks.uncomplete, {
-      taskId,
+      id,
     })
   }
 
   async function handleCheckClick(task) {
-    const { id: taskId, flowType: type } = task
+    const { id, flowType: type } = task
 
     // skip voter counts for education tasks
     if (type === TASK_TYPES.education) {
-      completeTask(taskId)
+      await completeTask(id)
     } else {
       setCompleteModalTask(task)
     }
@@ -60,8 +60,8 @@ export default function TasksList({ campaign }) {
   }
 
   async function handleUnCheckClick(task) {
-    const { id: taskId } = task
-    deleteCompleteTask(taskId)
+    const { id } = task
+    await deleteCompleteTask(id)
     refreshTasks()
   }
 
@@ -102,9 +102,9 @@ export default function TasksList({ campaign }) {
   }
 
   const handleFlowComplete = useCallback(
-    async (taskId) => {
-      if (taskId) {
-        await completeTask(taskId)
+    async (id) => {
+      if (id) {
+        await completeTask(id)
       }
       refreshTasks()
     },
@@ -115,7 +115,7 @@ export default function TasksList({ campaign }) {
     <>
       <DashboardHeader campaign={campaign} tasks={tasks} />
       <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
-        <H2>Tasks for this week</H2>
+        <H2>Tasks</H2>
         <Body2 className="!font-outfit mt-1">
           Election day: {dateUsHelper(electionDate)}
         </Body2>
@@ -135,7 +135,7 @@ export default function TasksList({ campaign }) {
             ))
           ) : (
             <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-              <H4 className="mt-1">No tasks for this week</H4>
+              <H4 className="mt-1">No tasks available</H4>
             </li>
           )}
         </ul>
@@ -172,7 +172,7 @@ export default function TasksList({ campaign }) {
           onClose={() => setFlowModalTask(null)}
           defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
           onComplete={handleFlowComplete}
-          taskId={flowModalTask?.id}
+          id={flowModalTask?.id}
         />
       )}
     </>

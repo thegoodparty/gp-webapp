@@ -53,14 +53,14 @@ export default function TaskFlow({
   onClose,
   defaultAiTemplateId,
   onComplete,
-  taskId,
+  id,
 }) {
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
-  const stepName = stepList[state.step]
-  const isLastStep = state.step >= stepList.length - 1
+  const stepList = useMemo(() => STEPS_BY_TYPE[type] || [], [type])
+  const stepName = stepList[state?.step]
+  const isLastStep = state?.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
 
@@ -163,7 +163,7 @@ export default function TaskFlow({
       errorSnackbar,
       onComplete,
     })
-    onComplete?.(taskId)
+    onComplete?.(id)
   }, [
     type,
     state,
@@ -172,7 +172,7 @@ export default function TaskFlow({
     setOutreaches,
     errorSnackbar,
     onComplete,
-    taskId,
+    id,
   ])
 
   const onCreateVoterFileFilter = useMemo(
@@ -184,6 +184,10 @@ export default function TaskFlow({
       }),
     [type, state, errorSnackbar],
   )
+
+  if (!STEPS_BY_TYPE[type]) {
+    return null
+  }
 
   return (
     <>
