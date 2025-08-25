@@ -49,7 +49,7 @@ async function runPostOfficeStepUpdates(attr, slug = undefined) {
   await updateCampaign(attr, slug)
   const campaign = await updateRaceTargetDetails(slug)
   if (!campaign?.pathToVictory?.data?.projectedTurnout) {
-    await runP2V(slug)
+    runP2V(slug)
   }
 }
 
