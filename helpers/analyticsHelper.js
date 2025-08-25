@@ -41,10 +41,12 @@ export const EVENTS = {
     },
     PartyStep: {
       ClickSubmit: 'Onboarding - Party Step: Click Submit',
+      Completed: 'Onboarding - Candidate Affiliation Completed',
     },
     PledgeStep: {
       ClickAskQuestion: 'Onboarding - Pledge Step: Click Ask a Question',
       ClickSubmit: 'Onboarding - Pledge Step: Click Submit',
+      Completed: 'Onboarding - Candidate Pledge Completed',
     },
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
@@ -96,6 +98,7 @@ export const EVENTS = {
     },
     VoterContact: {
       CampaignCompleted: 'Voter Outreach - Campaign Completed',
+      CampaignRequested: 'Voter Outreach - Campaign Requested',
       LogProgress: {
         Exit: 'Dashboard - Voter Contact - Log Progress: Exit Log Progress',
         ClickAdd:
@@ -189,6 +192,9 @@ export const EVENTS = {
       ClickMenu: 'Dashboard - Campaign Action History: Click Menu',
       ClickDelete: 'Dashboard - Campaign Action History: Click Delete',
     },
+  },
+  Account: {
+    ProSubscriptionCanceled: 'Account - Pro Subscription Canceled',
   },
   AIAssistant: {
     ClickNewChat: 'AI Assistant: Click new chat',
@@ -419,6 +425,7 @@ export function extractClids(searchParams) {
 export async function trackRegistrationCompleted({
   analytics,
   userId,
+  email,
   signUpMethod = 'email',
 }) {
   const signUpDate = new Date().toISOString()
@@ -432,6 +439,7 @@ export async function trackRegistrationCompleted({
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
+        ...(email ? { email } : {}),
       })
     }
   } catch (error) {
