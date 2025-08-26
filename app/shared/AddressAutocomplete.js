@@ -10,6 +10,7 @@ export default function AddressAutocomplete({
   value,
   onChange = (inputValue) => {},
   onSelect = (place) => {},
+  ...restProps
 }) {
   const [inputValue, setInputValue] = useState(value || '')
 
@@ -84,6 +85,7 @@ export default function AddressAutocomplete({
       InputLabelProps={{ shrink: true }}
       placeholder="Enter your address"
       inputRef={ref}
+      {...restProps}
     />
   )
 }
