@@ -1,10 +1,8 @@
-import {
-  createPhoneList,
-  scheduleVoterMessagingCampaign,
-} from 'helpers/scheduleVoterMessagingCampaign'
+import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { createP2pPhoneList } from 'helpers/createP2pPhoneList'
 
 export const handleScheduleOutreach =
   (
@@ -129,7 +127,7 @@ export const handleCreateVoterFileFilter =
       return
     }
 
-    const phoneList = await createPhoneList(voterFileFilter)
+    const phoneList = await createP2pPhoneList(voterFileFilter)
 
     console.log(`phoneList =>`, phoneList)
 
