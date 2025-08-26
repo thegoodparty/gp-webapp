@@ -16,7 +16,7 @@ import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compli
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 
-const validateAddress = (address) => Boolean(address.formatted_address)
+const validateAddress = (address) => Boolean(address?.formatted_address)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -70,7 +70,7 @@ export default function TextingComplianceRegistrationForm({
   const { isValid } = formValidation
 
   const [addressInputValue, setAddressInputValue] = useState(
-    address.formatted_address || '',
+    address?.formatted_address || '',
   )
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
@@ -84,6 +84,11 @@ export default function TextingComplianceRegistrationForm({
   const handleOnSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted)
     return onSubmit(formData)
+  }
+
+  const handleAddressOnChange = (value) => {
+    setAddressInputValue(value)
+    return !value && handleChange({ address: null })
   }
 
   return (
@@ -133,7 +138,7 @@ export default function TextingComplianceRegistrationForm({
         <AddressAutocomplete
           {...{
             value: addressInputValue,
-            onChange: (inputValue) => setAddressInputValue(inputValue),
+            onChange: handleAddressOnChange,
             onSelect: async (address) => {
               setAddressInputValue(address.formatted_address)
 
