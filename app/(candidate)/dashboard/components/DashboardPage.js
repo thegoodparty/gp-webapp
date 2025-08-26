@@ -72,8 +72,11 @@ export default function DashboardPage({
     }
   }
 
-  const generalModalOpen = !primaryElectionDate && weeksTill(electionDate).weeks < 0
   const [generalModalDismissed, setGeneralModalDismissed] = useState(false)
+  const generalModalOpen =
+    !primaryElectionDate &&
+    typeof details?.wonGeneral !== 'boolean' &&
+    weeksTill(electionDate).weeks < 0
 
   const weeksUntil = weeksTill(resolvedDate)
   const contactGoals = calculateContactGoals(resolvedContactGoal)
@@ -158,7 +161,18 @@ export default function DashboardPage({
               {!primaryElectionDate && generalModalOpen && !generalModalDismissed && (
                 <GeneralResultModal
                   open={true}
-                  onClose={(result) => setGeneralModalDismissed(true)}
+                  onClose={(result) => {
+                    setGeneralModalDismissed(true)
+                    if (typeof result === 'boolean') {
+                      setCampaign((campaign) => ({
+                        ...campaign,
+                        details: {
+                          ...campaign.details,
+                          wonGeneral: result,
+                        },
+                      }))
+                    }
+                  }}
                   electionDate={electionDate}
                   officeName={officeName}
                 />

@@ -26,12 +26,14 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
     e.preventDefault()
     setRequestState({ loading: true, error: false })
     try {
+      const wonGeneral = result === 'won'
+
       await updateCampaign([
-        { key: 'details.generalResult', value: result },
+        { key: 'details.wonGeneral', value: wonGeneral },
       ])
 
       trackEvent(EVENTS.Candidacy.CampaignCompleted, {
-        winner: result === 'won',
+        winner: wonGeneral,
         officeElectionDate: electionDate,
         primary: false,
       })
@@ -91,7 +93,7 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
         </form>
       ) : (
         <div className="text-center">
-          <Button onClick={() => onClose(result)} size="large" className="w-full mt-8">
+          <Button onClick={() => onClose(result === 'won')} size="large" className="w-full mt-8">
             Back to Dashboard
           </Button>
         </div>
