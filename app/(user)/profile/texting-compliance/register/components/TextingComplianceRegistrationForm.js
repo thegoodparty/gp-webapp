@@ -119,6 +119,7 @@ export default function TextingComplianceRegistrationForm({
             value: ein,
             onChange: handleEINChange,
             validated: validEin,
+            label: 'EIN *',
           }}
         />
         <TextField
@@ -138,6 +139,7 @@ export default function TextingComplianceRegistrationForm({
 
               return handleChange({ address })
             },
+            placeholder: 'Address *',
           }}
         />
         <TextField
