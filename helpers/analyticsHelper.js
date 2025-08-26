@@ -98,7 +98,6 @@ export const EVENTS = {
     },
     VoterContact: {
       CampaignCompleted: 'Voter Outreach - Campaign Completed',
-      CampaignRequested: 'Voter Outreach - Campaign Requested',
       LogProgress: {
         Exit: 'Dashboard - Voter Contact - Log Progress: Exit Log Progress',
         ClickAdd:
@@ -400,6 +399,9 @@ export const EVENTS = {
     StartedDomainSelection: 'Candidate Website - Started domain selection',
     SelectedDomain: 'Candidate Website - Selected domain',
     PurchasedDomain: 'Candidate Website - Purchased domain',
+  },
+  Candidacy: {
+    CampaignCompleted: 'Candidacy - Campaign Completed',
   },
 }
 

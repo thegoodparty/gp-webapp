@@ -8,6 +8,7 @@ import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
 import PrimaryResultModal from './PrimaryResultModal'
+import GeneralResultModal from './GeneralResultModal'
 import LoadingAnimation from '@shared/utils/LoadingAnimation'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
@@ -70,6 +71,9 @@ export default function DashboardPage({
       }))
     }
   }
+
+  const generalModalOpen = !primaryElectionDate && weeksTill(electionDate).weeks < 0
+  const [generalModalDismissed, setGeneralModalDismissed] = useState(false)
 
   const weeksUntil = weeksTill(resolvedDate)
   const contactGoals = calculateContactGoals(resolvedContactGoal)
@@ -147,6 +151,14 @@ export default function DashboardPage({
                 <PrimaryResultModal
                   open={primaryResultState.modalOpen}
                   onClose={primaryResultCloseCallback}
+                  electionDate={electionDate}
+                  officeName={officeName}
+                />
+              )}
+              {!primaryElectionDate && generalModalOpen && !generalModalDismissed && (
+                <GeneralResultModal
+                  open={true}
+                  onClose={(result) => setGeneralModalDismissed(true)}
                   electionDate={electionDate}
                   officeName={officeName}
                 />
