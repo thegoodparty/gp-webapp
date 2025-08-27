@@ -65,7 +65,6 @@ export const EVENTS = {
       ClickAIAssistant: 'Navigation - Dashboard: Click AI Assistant',
       ClickVoterData: 'Navigation - Dashboard: Click Voter Data',
       ClickDoorKnocking: 'Navigation - Dashboard: Click Door Knocking',
-      ClickTextMessaging: 'Navigation - Dashboard: Click Text Messaging',
       ClickIssues: 'Navigation - Dashboard: Click Issues',
       ClickContentBuilder: 'Navigation - Dashboard: Click Content Builder',
       ClickMyProfile: 'Navigation - Dashboard: Click My Profile',
@@ -484,7 +483,10 @@ export function persistClidsOnce() {
 }
 
 export function getPersistedUtms() {
-  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.sessionStorage === 'undefined'
+  ) {
     return {}
   }
 
@@ -506,7 +508,10 @@ export function getPersistedUtms() {
 }
 
 export function getPersistedClids() {
-  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.sessionStorage === 'undefined'
+  ) {
     return {}
   }
 
