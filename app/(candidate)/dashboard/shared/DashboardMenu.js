@@ -115,15 +115,6 @@ const ECANVASSER_MENU_ITEM = {
 }
 
 // admin user only
-const TEXTING_MENU_ITEM = {
-  id: 'text-messaging-dashboard',
-  label: 'Text Messaging',
-  link: '/dashboard/text-messaging',
-  icon: <MdMessage />,
-  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
-}
-
-// admin user only
 const ISSUES_MENU_ITEM = {
   id: 'issues-dashboard',
   label: 'Issues',
@@ -160,7 +151,6 @@ export default function DashboardMenu({
     }
   }, [campaign, ecanvasser])
   if (userIsAdmin(user)) {
-    menuItems.push(TEXTING_MENU_ITEM)
     menuItems.push(ISSUES_MENU_ITEM)
   }
 

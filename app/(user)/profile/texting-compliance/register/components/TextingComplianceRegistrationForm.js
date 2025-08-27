@@ -15,6 +15,7 @@ import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/share
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
+import { urlIncludesPath } from 'helpers/urlIncludesPath'
 
 const validateAddress = (address) => Boolean(address?.formatted_address)
 
@@ -31,7 +32,8 @@ export const validateRegistrationForm = (data) => {
     matchingContactFields,
   } = data
   const validations = {
-    electionFilingLink: isURL(electionFilingLink),
+    electionFilingLink:
+      isURL(electionFilingLink) && urlIncludesPath(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
     localTribeName: isFilled(localTribeName),
     ein: isValidEIN(ein),

@@ -26,6 +26,12 @@ export const FilingLinkInfoIcon = () => {
       >
         <H1 className="mb-4">Election filing link</H1>
         <Body2 className="mb-4">
+          This must be a url that includes a path to your election filing.
+          <br />
+          (e.g. <strong>https://www.example.com/election-filing</strong>, not
+          just <strong>https://www.example.com</strong>)
+          <br />
+          <br />
           You can usually find this website link by searching for your local
           Supervisor of Elections Office. Sometimes it can be your town, city or
           county. Search for the list of candidates running for office including
