@@ -18,6 +18,7 @@ import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachCo
 import { useSnackbar } from 'helpers/useSnackbar'
 import {
   handleCreateOutreach,
+  handleCreatePhoneList,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -36,6 +37,9 @@ const DEFAULT_STATE = {
   scriptText: '',
   image: undefined,
   voterCount: 0,
+  voterFileFilter: null,
+  phoneListToken: '',
+  phoneListId: null,
 }
 
 /**
@@ -80,11 +84,18 @@ export default function TaskFlow({
     [type],
   )
 
-  const handleChange = (key, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }))
+  const handleChange = (changeSetOrKey, value) => {
+    if (typeof changeSetOrKey === 'object') {
+      setState((prevState) => ({
+        ...prevState,
+        ...changeSetOrKey,
+      }))
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        [changeSetOrKey]: value,
+      }))
+    }
   }
 
   const handleClose = () => {
@@ -186,6 +197,11 @@ export default function TaskFlow({
     [type, state, errorSnackbar],
   )
 
+  const onCreatePhoneList = useMemo(
+    () => handleCreatePhoneList(errorSnackbar),
+    [errorSnackbar],
+  )
+
   const handlePurchaseComplete = async () => {
     await handleScheduleOutreach(
       type,
@@ -243,6 +259,7 @@ export default function TaskFlow({
             isCustom={isCustom}
             {...callbackProps}
             onCreateVoterFileFilter={onCreateVoterFileFilter}
+            onCreatePhoneList={onCreatePhoneList}
           />
         )}
         {stepName === STEPS.script && (
