@@ -49,7 +49,7 @@ export default function DashboardPage({
         setUser(updated)
       }
     }
-  }, [setUser])
+  }, [])
 
   const electionDate = details?.electionDate || goals?.electionDate
   const { voterContactGoal, voteGoal } = pathToVictory || {}
