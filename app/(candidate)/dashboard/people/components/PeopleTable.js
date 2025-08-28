@@ -1,61 +1,71 @@
 'use client'
 import Paper from '@shared/utils/Paper'
 import SimpleDataTable from '@shared/utils/SimpleDataTable'
-import { usePeople } from '../PeopleProvider'
+import TEMP_SAMPLE_PEOPLE from '../temp-sample-people'
 
 const columns = [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'Voters_FirstName',
+    header: 'First Name',
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'Voters_LastName',
+    header: 'Last Name',
   },
   {
-    accessorKey: 'phone',
+    accessorKey: 'Voters_Age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'Voters_Gender',
+    header: 'Gender',
+  },
+  {
+    accessorKey: 'Parties_Description',
+    header: 'Party',
+  },
+  {
+    accessorKey: 'Voters_VotingPerformanceEvenYearGeneral',
+    header: 'Voter Status',
+  },
+  {
+    accessorKey: 'VoterTelephones_CellPhoneFormatted',
     header: 'Phone',
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
-  },
-]
-
-const data = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '(555) 123-4567',
-    status: 'Active',
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    phone: '(555) 987-6543',
-    status: 'Inactive',
+    accessorKey: 'address',
+    header: 'Address',
   },
 ]
 
 export default function PeopleTable() {
-  const [people] = usePeople()
+  const data = TEMP_SAMPLE_PEOPLE.map((person) => {
+    const addressParts = [
+      person.Residence_Addresses_AddressLine,
+      person.Residence_Addresses_City,
+      person.Residence_Addresses_State,
+      person.Residence_Addresses_Zip,
+    ].filter(Boolean)
 
-  const data = people.map((person) => ({
-    id: person.id,
-    name: person.name,
-    email: person.email,
-    phone: person.phone,
-  }))
+    return {
+      ...person,
+      address: addressParts.join(', '),
+      VoterTelephones_CellPhoneFormatted:
+        person.VoterTelephones_CellPhoneFormatted ||
+        person.VoterTelephones_LandlineFormatted,
+    }
+  })
+
   return (
     <Paper>
-      <SimpleDataTable
-        columns={columns}
-        data={data}
-        searchKey="name"
-        searchPlaceholder="Search people..."
-      />
+      <div className="overflow-x-auto  w-[calc(100vw-70px)] lg:w-full">
+        <SimpleDataTable
+          columns={columns}
+          data={data}
+          searchKey="Voters_FirstName"
+          searchPlaceholder="Search people..."
+        />
+      </div>
     </Paper>
   )
 }
