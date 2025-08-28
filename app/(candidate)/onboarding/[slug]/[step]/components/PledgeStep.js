@@ -16,11 +16,14 @@ import {
   EVENTS,
   trackEvent,
 } from 'helpers/analyticsHelper'
+import { useUser } from '@shared/hooks/useUser'
+import { identifyUser } from '@shared/utils/analytics'
 
 export default function PledgeStep({ campaign, step }) {
   const [pledged, setPledged] = useState(campaign?.details?.pledged || false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [user] = useUser()
 
   const handleSave = async () => {
     trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
@@ -36,6 +39,10 @@ export default function PledgeStep({ campaign, step }) {
     ]
 
     await updateCampaign(attr)
+    trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
+    if (user?.id) {
+      await identifyUser(user.id, { pledgeCompleted: true })
+    }
     router.push(`/onboarding/${campaign.slug}/${step + 1}`)
   }
 

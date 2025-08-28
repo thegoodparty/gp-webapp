@@ -162,6 +162,7 @@ export default function SignUpPage() {
       await trackRegistrationCompleted({
         analytics,
         userId: user.id,
+        email: user.email || email,
       })
 
       try {

@@ -1,54 +1,16 @@
 import { useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-import { dateUsHelper } from 'helpers/dateHelper'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import RadioList from '@shared/inputs/RadioList'
 import Button from '@shared/buttons/Button'
-import PartyAnimation from '@shared/animations/PartyAnimation'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-function WonMessage({ electionDate }) {
-  return (
-    <>
-      <PartyAnimation loop={true} />
-      <H1 className="mb-4 mt-5">Congratulations!</H1>
-      <Body2>
-        We&apos;ve updated your campaign goals to the next election date:
-        <span className="font-bold">&nbsp;{dateUsHelper(electionDate)}</span>.
-        Let&apos;s prepare for the upcoming challenge!
-      </Body2>
-    </>
-  )
-}
-
-function LostMessage() {
-  return (
-    <>
-      <div className="text-8xl mb-6 mt-12">
-        <span role="img" aria-label="Frowning Face">
-          ☹️
-        </span>
-      </div>
-      <H1 className="mb-4">We&apos;re sorry.</H1>
-      <Body2>
-        We hope you consider running in a future election or supporting other
-        GoodParty.org candidates to continue making an impact.
-      </Body2>
-    </>
-  )
-}
-
-export default function PrimaryResultModal({
-  open,
-  officeName,
-  electionDate,
-  onClose,
-}) {
+export default function GeneralResultModal({ open, officeName, electionDate, onClose }) {
   const { errorSnackbar } = useSnackbar()
-  const [primaryResult, setPrimaryResult] = useState(null)
+  const [result, setResult] = useState(null)
   const [requestState, setRequestState] = useState({
     loading: false,
     error: false,
@@ -62,40 +24,31 @@ export default function PrimaryResultModal({
 
   async function handleSubmit(e) {
     e.preventDefault()
-
-    setRequestState({
-      loading: true,
-      error: false,
-    })
-
+    setRequestState({ loading: true, error: false })
     try {
+      const wonGeneral = result === 'won'
+
       await updateCampaign([
-        { key: 'details.primaryResult', value: primaryResult },
+        { key: 'details.wonGeneral', value: wonGeneral },
       ])
 
       trackEvent(EVENTS.Candidacy.CampaignCompleted, {
-        winner: primaryResult === 'won',
+        winner: wonGeneral,
         officeElectionDate: electionDate,
-        primary: true,
+        primary: false,
       })
 
       setFormSubmitted(true)
       setRequestState({ loading: false, error: false })
     } catch (e) {
-      console.error('Error submiting Primary Result:', e)
+      console.error('Error submitting General Result:', e)
       errorSnackbar('Failed to submit election result.')
       setRequestState({ loading: false, error: true })
     }
   }
 
   return (
-    <Modal
-      open={open}
-      boxClassName="p-16 pt-0"
-      preventEscClose
-      preventBackdropClose
-      hideClose
-    >
+    <Modal open={open} boxClassName="p-16 pt-0" preventEscClose preventBackdropClose hideClose>
       {!formSubmitted ? (
         <form onSubmit={handleSubmit} className="pt-16 max-w-[640px]">
           <H1 className="mb-4 text-center">
@@ -104,21 +57,15 @@ export default function PrimaryResultModal({
             {officeName}
           </H1>
           <Body2 className="mb-8 text-center">
-            It looks like your primary election date has passed. To keep your
-            campaign targets accurate, please confirm the outcome of your
-            primary election.
+            It looks like your general election date has passed. Please confirm
+            the outcome of your election.
           </Body2>
 
           {!requestState.error ? (
-            <RadioList
-              options={options}
-              selected={primaryResult}
-              selectCallback={setPrimaryResult}
-            />
+            <RadioList options={options} selected={result} selectCallback={setResult} />
           ) : (
             <Body2 className="text-red text-center">
-              An error occured when saving your Primary Election result, please
-              try again later.
+              An error occured when saving your election result, please try again later.
             </Body2>
           )}
 
@@ -134,9 +81,7 @@ export default function PrimaryResultModal({
               Cancel
             </Button>
             <Button
-              disabled={
-                !primaryResult || requestState.loading || requestState.error
-              }
+              disabled={!result || requestState.loading || requestState.error}
               loading={requestState.loading}
               type="submit"
               size="large"
@@ -148,16 +93,7 @@ export default function PrimaryResultModal({
         </form>
       ) : (
         <div className="text-center">
-          {primaryResult === 'won' ? (
-            <WonMessage electionDate={electionDate} />
-          ) : (
-            <LostMessage />
-          )}
-          <Button
-            onClick={() => onClose(primaryResult)}
-            size="large"
-            className="w-full mt-8"
-          >
+          <Button onClick={() => onClose(result === 'won')} size="large" className="w-full mt-8">
             Back to Dashboard
           </Button>
         </div>
@@ -165,3 +101,5 @@ export default function PrimaryResultModal({
     </Modal>
   )
 }
+
+
