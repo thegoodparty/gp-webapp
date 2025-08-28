@@ -10,6 +10,7 @@ export const PeopleContext = createContext({
 export const usePeople = () => useContext(PeopleContext)
 
 export const PeopleProvider = ({ children, people: initPeople }) => {
+  console.log('initPeople', initPeople)
   const [people, setPeople] = useState(initPeople)
 
   return (

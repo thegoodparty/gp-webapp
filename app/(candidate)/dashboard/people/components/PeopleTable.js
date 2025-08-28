@@ -1,7 +1,7 @@
 'use client'
 import Paper from '@shared/utils/Paper'
 import SimpleDataTable from '@shared/utils/SimpleDataTable'
-import TEMP_SAMPLE_PEOPLE from '../temp-sample-people'
+import { usePeople } from './PeopleProvider'
 
 const columns = [
   {
@@ -39,7 +39,8 @@ const columns = [
 ]
 
 export default function PeopleTable() {
-  const data = TEMP_SAMPLE_PEOPLE.map((person) => {
+  const [people] = usePeople()
+  const data = (people || []).map((person) => {
     const addressParts = [
       person.Residence_Addresses_AddressLine,
       person.Residence_Addresses_City,

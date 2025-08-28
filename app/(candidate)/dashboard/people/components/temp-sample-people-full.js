@@ -1,4 +1,4 @@
-export const TEMP_SAMPLE_PEOPLE_FULL = [
+export const TEMP_SAMPLE_PEOPLE_FULL_PAGE1 = [
   {
     LALVOTERID: 'LALCO717489644',
     Voters_Active: 'A',
@@ -8550,6 +8550,9 @@ export const TEMP_SAMPLE_PEOPLE_FULL = [
     Wastewater_District: null,
     'Weed_District\r': 'NULL\r',
   },
+]
+
+export const TEMP_SAMPLE_PEOPLE_FULL_PAGE2 = [
   {
     LALVOTERID: 'LALCO717489619',
     Voters_Active: 'A',
@@ -17101,5 +17104,3 @@ export const TEMP_SAMPLE_PEOPLE_FULL = [
     'Weed_District\r': 'NULL\r',
   },
 ]
-
-export default TEMP_SAMPLE_PEOPLE
