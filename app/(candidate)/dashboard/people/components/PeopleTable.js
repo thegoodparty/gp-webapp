@@ -1,46 +1,62 @@
 'use client'
-import Paper from '@shared/utils/Paper'
-import SimpleDataTable from '@shared/utils/SimpleDataTable'
+import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { usePeople } from './PeopleProvider'
+import ServerDataTable from './ServerDataTable'
 
 const columns = [
   {
     accessorKey: 'Voters_FirstName',
-    header: 'First Name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="First Name" />
+    ),
   },
   {
     accessorKey: 'Voters_LastName',
-    header: 'Last Name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last Name" />
+    ),
   },
   {
     accessorKey: 'Voters_Age',
-    header: 'Age',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Age" />
+    ),
   },
   {
     accessorKey: 'Voters_Gender',
-    header: 'Gender',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
   },
   {
     accessorKey: 'Parties_Description',
-    header: 'Party',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Party" />
+    ),
   },
   {
     accessorKey: 'Voters_VotingPerformanceEvenYearGeneral',
-    header: 'Voter Status',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Voter Status" />
+    ),
   },
   {
     accessorKey: 'VoterTelephones_CellPhoneFormatted',
-    header: 'Phone',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phone" />
+    ),
   },
   {
     accessorKey: 'address',
-    header: 'Address',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Address" />
+    ),
   },
 ]
 
 export default function PeopleTable() {
   const [people] = usePeople()
-  const data = (people || []).map((person) => {
+  const data = (people?.data || []).map((person) => {
     const addressParts = [
       person.Residence_Addresses_AddressLine,
       person.Residence_Addresses_City,
@@ -57,16 +73,23 @@ export default function PeopleTable() {
     }
   })
 
+  // Extract pagination info from people data
+  const pagination = {
+    totalPages: people?.pagination?.totalPages || 1,
+    totalItems: people?.pagination?.totalItems || 0,
+    hasNextPage: people?.pagination?.hasNextPage || false,
+    hasPreviousPage: people?.pagination?.hasPreviousPage || false,
+  }
+
   return (
-    <Paper>
-      <div className="overflow-x-auto  w-[calc(100vw-70px)] lg:w-full">
-        <SimpleDataTable
-          columns={columns}
-          data={data}
-          searchKey="Voters_FirstName"
-          searchPlaceholder="Search people..."
-        />
-      </div>
-    </Paper>
+    <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-full">
+      <ServerDataTable
+        columns={columns}
+        data={data}
+        searchKey="Voters_FirstName"
+        searchPlaceholder="Search people..."
+        pagination={pagination}
+      />
+    </div>
   )
 }

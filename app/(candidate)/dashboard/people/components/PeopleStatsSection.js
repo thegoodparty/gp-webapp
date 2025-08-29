@@ -9,6 +9,7 @@ const fetchPeopleStats = async () => {
     total: 15875,
     largestAgeGroup: '35-50',
     largestAgeGroupPercentage: 42,
+    largestCommunity: 'District 1',
     politicalMakeup: {
       republican: 42,
       democrat: 38,
@@ -32,6 +33,30 @@ export default async function PeopleStatsSection() {
       ),
     },
     {
+      key: 'politicalMakeup',
+      label: 'Political Makeup',
+      value: peopleStats.politicalMakeup
+        ? `${peopleStats.politicalMakeup.republican}% Republicans`
+        : 'N/A',
+      icon: (
+        <div className="text-2xl text-purple-600 bg-purple-100 rounded flex items-center justify-center h-10 w-10">
+          <LuVote />
+        </div>
+      ),
+    },
+    {
+      key: 'largestCommunity',
+      label: 'Largest Community',
+      value: peopleStats.largestCommunity
+        ? `${peopleStats.largestCommunity}`
+        : 'N/A',
+      icon: (
+        <div className="text-2xl text-blue-600 bg-blue-100 rounded flex items-center justify-center h-10 w-10">
+          <SlPeople />
+        </div>
+      ),
+    },
+    {
       key: 'largestAgeGroup',
       label: 'Largest Age Group',
       value: peopleStats.largestAgeGroup
@@ -43,22 +68,10 @@ export default async function PeopleStatsSection() {
         </div>
       ),
     },
-    {
-      key: 'politicalMakeup',
-      label: 'Political Makeup',
-      value: peopleStats.politicalMakeup
-        ? `${peopleStats.politicalMakeup.republican}% Republicans, ${peopleStats.politicalMakeup.democrat}% Democrats, ${peopleStats.politicalMakeup.independent}% Independents`
-        : 'N/A',
-      icon: (
-        <div className="text-2xl text-purple-600 bg-purple-100 rounded flex items-center justify-center h-10 w-10">
-          <LuVote />
-        </div>
-      ),
-    },
   ]
 
   return (
-    <section className="my-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <section className="mt-4 mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 ">
       {cards.map((card) => (
         <Paper key={card.key}>
           <div className="flex items-center gap-4">
