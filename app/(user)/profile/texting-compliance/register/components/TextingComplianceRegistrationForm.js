@@ -15,8 +15,9 @@ import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/share
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
+import { urlIncludesPath } from 'helpers/urlIncludesPath'
 
-const validateAddress = (address) => Boolean(address.formatted_address)
+const validateAddress = (address) => Boolean(address?.formatted_address)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -31,7 +32,8 @@ export const validateRegistrationForm = (data) => {
     matchingContactFields,
   } = data
   const validations = {
-    electionFilingLink: isURL(electionFilingLink),
+    electionFilingLink:
+      isURL(electionFilingLink) && urlIncludesPath(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
     localTribeName: isFilled(localTribeName),
     ein: isValidEIN(ein),
@@ -70,7 +72,7 @@ export default function TextingComplianceRegistrationForm({
   const { isValid } = formValidation
 
   const [addressInputValue, setAddressInputValue] = useState(
-    address.formatted_address || '',
+    address?.formatted_address || '',
   )
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
@@ -84,6 +86,11 @@ export default function TextingComplianceRegistrationForm({
   const handleOnSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted)
     return onSubmit(formData)
+  }
+
+  const handleAddressOnChange = (value) => {
+    setAddressInputValue(value)
+    return !value && handleChange({ address: null })
   }
 
   return (
@@ -133,7 +140,7 @@ export default function TextingComplianceRegistrationForm({
         <AddressAutocomplete
           {...{
             value: addressInputValue,
-            onChange: (inputValue) => setAddressInputValue(inputValue),
+            onChange: handleAddressOnChange,
             onSelect: async (address) => {
               setAddressInputValue(address.formatted_address)
 
