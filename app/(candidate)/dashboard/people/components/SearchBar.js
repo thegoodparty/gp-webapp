@@ -13,7 +13,7 @@ export default function SearchBar() {
 
   const searchPlaceholder = `Search ${people?.pagination?.totalItems} constituents by name, email or phone number`
   return (
-    <div className="-mb-12">
+    <div className="md:relative z-10 md:max-w-lg md:-mb-12">
       <Input
         placeholder={searchPlaceholder}
         value={value}
