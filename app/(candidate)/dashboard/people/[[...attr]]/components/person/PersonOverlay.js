@@ -14,13 +14,14 @@ export default function PersonOverlay() {
 
   const handleClose = (open) => {
     if (!open) {
+      setPerson(null)
       router.push('/dashboard/people')
     }
   }
 
   return (
     <Sheet open={!!person} onOpenChange={handleClose}>
-      <SheetContent>
+      <SheetContent className="w-[90vw] max-w-3xl sm:max-w-3xl">
         <SheetHeader>
           <SheetTitle>Person Details</SheetTitle>
         </SheetHeader>
