@@ -85,6 +85,29 @@ export const OutreachTable = ({ mockOutreaches }) => {
           <NotApplicableLabel />
         ),
     },
+    {
+      header: 'Status',
+      cell: ({ row }) => {
+        if (row.outreachType !== 'text') {
+          return <NotApplicableLabel />
+        }
+        
+        const statusLabels = {
+          pending: 'Draft',
+          approved: 'In review',
+          denied: 'In review',
+          paid: 'Scheduled',
+          in_progress: 'Scheduled',
+          completed: 'Sent'
+        }
+        
+        if (!row.status || !statusLabels[row.status]) {
+          return <NotApplicableLabel />
+        }
+        
+        return <span>{statusLabels[row.status]}</span>
+      },
+    },
   ]
 
   const convertedFilters = useMemo(
