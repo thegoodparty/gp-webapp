@@ -144,6 +144,7 @@ module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}', // Note the addition of the `app` directory.
     './components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/goodparty-styleguide/dist/**/*.{js,ts,jsx,tsx}',
   ],
   plugins: [require('@tailwindcss/typography')],
   theme: {
@@ -162,6 +163,32 @@ module.exports = {
       },
       colors: {
         ...defaultTheme.colors,
+        // Styleguide design tokens
+        border: 'hsl(var(--border, 214.3 31.8% 91.4%))',
+        input: 'hsl(var(--input, 214.3 31.8% 91.4%))',
+        ring: 'hsl(var(--ring, 222.2 84% 4.9%))',
+        background: 'hsl(var(--background, 0 0% 100%))',
+        foreground: 'hsl(var(--foreground, 222.2 84% 4.9%))',
+        muted: {
+          DEFAULT: 'hsl(var(--muted, 210 40% 98%))',
+          foreground: 'hsl(var(--muted-foreground, 215.4 16.3% 46.9%))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent, 210 40% 98%))',
+          foreground: 'hsl(var(--accent-foreground, 222.2 84% 4.9%))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card, 0 0% 100%))',
+          foreground: 'hsl(var(--card-foreground, 222.2 84% 4.9%))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover, 0 0% 100%))',
+          foreground: 'hsl(var(--popover-foreground, 222.2 84% 4.9%))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive, 0 84.2% 60.2%))',
+          foreground: 'hsl(var(--destructive-foreground, 210 40% 98%))',
+        },
         primary: {
           DEFAULT: COLORS.indigo[700],
           dark: COLORS.indigo[900],
@@ -274,6 +301,25 @@ module.exports = {
           ...COLORS.yellow,
           DEFAULT: COLORS.yellow[600],
         },
+      },
+      borderRadius: {
+        lg: 'var(--radius, 0.5rem)',
+        md: 'calc(var(--radius, 0.5rem) - 2px)',
+        sm: 'calc(var(--radius, 0.5rem) - 4px)',
+      },
+      keyframes: {
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
   },
