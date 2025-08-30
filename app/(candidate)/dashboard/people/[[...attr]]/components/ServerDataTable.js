@@ -18,6 +18,7 @@ export default function ServerDataTable({
   data,
   pagination = {},
   className,
+  onRowClick = () => {},
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -55,13 +56,14 @@ export default function ServerDataTable({
     updateURL({ pageSize, page: 1 })
   }
 
-  const handleSearchChange = (search) => {
-    updateURL({ search, page: 1 })
-  }
-
   return (
     <div className={`w-full ${className || ''}`}>
-      <DataTable columns={columns} data={data} pagination={false} />
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination={false}
+        onRowClick={onRowClick}
+      />
 
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">

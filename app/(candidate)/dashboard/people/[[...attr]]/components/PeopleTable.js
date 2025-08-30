@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { usePeople } from './PeopleProvider'
 import ServerDataTable from './ServerDataTable'
@@ -9,11 +10,27 @@ const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="First Name" />
     ),
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/people/${row.original.LALVOTERID}`}
+        className="text-blue-400 hover:text-blue-600 underline"
+      >
+        {row.getValue('Voters_FirstName')}
+      </Link>
+    ),
   },
   {
     accessorKey: 'Voters_LastName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Last Name" />
+    ),
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/people/${row.original.LALVOTERID}`}
+        className="text-blue-400 hover:text-blue-600 underline"
+      >
+        {row.getValue('Voters_LastName')}
+      </Link>
     ),
   },
   {

@@ -6,6 +6,7 @@ import {
   TEMP_SAMPLE_PEOPLE_FULL_PAGE1,
   TEMP_SAMPLE_PEOPLE_FULL_PAGE2,
 } from './components/temp-sample-people-full'
+import { PersonProvider } from './components/PersonProvider'
 
 const fetchPeople = async (page = 1, pageSize = 25) => {
   // Simulate API response with pagination metadata
@@ -33,6 +34,12 @@ const fetchPeople = async (page = 1, pageSize = 25) => {
   }
 }
 
+const fetchPerson = async (personId) => {
+  return TEMP_SAMPLE_PEOPLE_FULL_PAGE1.find(
+    (person) => person.LALVOTERID === personId,
+  )
+}
+
 const meta = pageMetaData({
   title: 'People | GoodParty.org',
   description: 'Manage your campaign people.',
@@ -41,18 +48,30 @@ const meta = pageMetaData({
 export const metadata = meta
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ searchParams }) {
+export default async function Page({ params, searchParams }) {
   await adminAccessOnly()
-  const params = await searchParams
+  let { page, pageSize } = await searchParams
+  let { attr } = await params
+  let personId = null
+  let person = null
 
-  const page = parseInt(params.page || '1')
-  const pageSize = parseInt(params.pageSize || '20')
+  if (attr && attr.length === 1) {
+    personId = attr[0]
+    person = await fetchPerson(personId)
+  }
+
+  console.log('person', person)
+
+  page = parseInt(page || '1')
+  pageSize = parseInt(pageSize || '20')
 
   const people = await fetchPeople(page, pageSize)
 
   return (
-    <PeopleProvider people={people}>
-      <PeoplePage />
+    <PeopleProvider people={people} person={person}>
+      <PersonProvider person={person}>
+        <PeoplePage />
+      </PersonProvider>
     </PeopleProvider>
   )
 }
