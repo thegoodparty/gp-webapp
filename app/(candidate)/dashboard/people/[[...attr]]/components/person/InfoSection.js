@@ -1,8 +1,8 @@
 'use client'
 
-import Overline from '@shared/typography/Overline'
 import { usePerson } from '../PersonProvider'
 import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
 
 export default function InfoSection({ section }) {
   const [person] = usePerson()
@@ -14,10 +14,10 @@ export default function InfoSection({ section }) {
         <>
           {field.key && person[field.key] && (
             <div key={field.key} className="mt-4">
-              <Overline>{field.label}</Overline>
+              <Body2 className="font-medium text-gray-600">{field.label}</Body2>
               <Body1>
                 {field.transform
-                  ? field.transform(person[field.key])
+                  ? field.transform(person[field.key], person)
                   : person[field.key]}
               </Body1>
             </div>

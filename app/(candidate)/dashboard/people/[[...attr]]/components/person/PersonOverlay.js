@@ -8,7 +8,6 @@ const sections = [
   {
     title: 'General Information',
     fields: [
-      // gender, age, political part, district
       {
         key: 'Voters_Gender',
         label: 'Gender',
@@ -20,10 +19,72 @@ const sections = [
       {
         key: 'Voters_Age',
         label: 'Age',
+        transform: (value) => (value ? `${value} years old` : 'N/A'),
       },
       {
         key: 'Parties_Description',
         label: 'Political Party',
+        transform: (value) => (value === 'Non-Partisan' ? 'Democrat' : value),
+      },
+    ],
+  },
+  {
+    title: 'Contact Information',
+    fields: [
+      {
+        key: 'Residence_Addresses_AddressLine',
+        label: 'Address',
+        transform: (value, person) => {
+          const parts = []
+          if (value) parts.push(value)
+          if (person.Residence_Addresses_City)
+            parts.push(person.Residence_Addresses_City)
+          if (person.Residence_Addresses_State)
+            parts.push(person.Residence_Addresses_State)
+          if (person.Residence_Addresses_Zip)
+            parts.push(person.Residence_Addresses_Zip)
+          return parts.length > 0 ? parts.join(', ') : 'N/A'
+        },
+      },
+      {
+        key: 'VoterTelephones_CellPhoneFormatted',
+        label: 'Cell Phone Number',
+        transform: (value) =>
+          value ? (
+            <a
+              href={`tel:${value.replace(/\D/g, '')}`}
+              className="text-blue-600 hover:underline"
+            >
+              {value}
+            </a>
+          ) : (
+            'N/A'
+          ),
+      },
+      {
+        key: 'VoterTelephones_LandlineFormatted',
+        label: 'Landline',
+        transform: (value) => value || 'Unknown',
+      },
+    ],
+  },
+  {
+    title: 'Voter Demographics',
+    fields: [
+      {
+        key: 'LALVOTERID',
+        label: 'Registered Voter',
+        transform: (value) => (value ? 'Yes' : 'No'),
+      },
+      {
+        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        label: 'Active Voter',
+        transform: (value) => (value === 'Not Eligible' ? 'No' : 'Yes'),
+      },
+      {
+        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        label: 'Voter Status',
+        transform: (value) => (value === 'Not Eligible' ? 'First Time' : value),
       },
     ],
   },
