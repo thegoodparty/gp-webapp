@@ -3,6 +3,7 @@ import { Sheet, SheetContent } from 'goodparty-styleguide'
 import { usePerson } from '../PersonProvider'
 import { useRouter } from 'next/navigation'
 import InfoSection from './InfoSection'
+import PersonMap from './PersonMap'
 
 const sections = [
   {
@@ -117,6 +118,7 @@ export default function PersonOverlay() {
             </div>
           )}
         </div>
+        <PersonMap />
       </SheetContent>
     </Sheet>
   )
