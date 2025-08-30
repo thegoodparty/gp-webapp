@@ -13,7 +13,8 @@ const INSTRUCTIONS_BY_TYPE = {
     'Develop your script',
     'Attach your image',
     'Schedule texting campaign',
-    'Our team will reach out with next steps',
+    'Pay for texts',
+    'Your Political Advisor will review and approve',
   ],
   [TASK_TYPES.phoneBanking]: [
     'Select target audience',
