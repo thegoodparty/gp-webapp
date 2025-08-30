@@ -16,7 +16,7 @@ import {
 } from '../../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
-const TEXT_PRICE = 0.03
+const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
 const CALL_W_VOICEMAIL_PRICE = 0.055
 
