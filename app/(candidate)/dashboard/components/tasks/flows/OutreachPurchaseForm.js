@@ -12,7 +12,7 @@ export const OutreachPurchaseForm = ({
   onError = () => {},
 }) => (
   <div className="min-h-max">
-    <H1>Complete Your Purchase</H1>
+    <H1>Complete your purchase</H1>
     <PurchaseHeader>
       <Body1>Texts: {contactCount}</Body1>
     </PurchaseHeader>
