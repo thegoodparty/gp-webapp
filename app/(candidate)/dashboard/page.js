@@ -27,12 +27,19 @@ export default async function Page() {
   await candidateAccess()
 
   const campaign = await fetchUserCampaign()
-  const tasks = await fetchTasks()
+  const [tasks, tcrComplianceResponse] = await Promise.all([
+    fetchTasks(),
+    serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
+  ])
+
+  const tcrCompliance = tcrComplianceResponse.ok
+    ? tcrComplianceResponse.data
+    : null
 
   return (
     <>
       <HubSpotChatWidgetScript />
-      <DashboardPage pathname="/dashboard" campaign={campaign} tasks={tasks} />
+      <DashboardPage pathname="/dashboard" campaign={campaign} tasks={tasks} tcrCompliance={tcrCompliance} />
     </>
   )
 }

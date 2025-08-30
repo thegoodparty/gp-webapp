@@ -16,15 +16,18 @@ import {
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
+import { ComplianceModal } from '../../shared/ComplianceModal'
+import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
-export default function TasksList({ campaign, tasks: tasksProp = [] }) {
+export default function TasksList({ campaign, tasks: tasksProp = [], tcrCompliance }) {
   const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
@@ -56,8 +59,25 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
 
   const handleActionClick = (task) => {
     const { flowType, proRequired, deadline } = task
+    const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    if (proRequired && !campaign.isPro) {
+    // Check for text messaging specific requirements
+    if (flowType === TASK_TYPES.text) {
+      if (!campaign.isPro) {
+        setShowProUpgradeModal(true)
+        setProUpgradeTrackingAttrs(
+          buildTrackingAttrs('Upgrade to Pro', {
+            viabilityScore,
+            type: flowType,
+          }),
+        )
+        return
+      }
+      if (!isTextCompliant) {
+        setShowComplianceModal(true)
+        return
+      }
+    } else if (proRequired && !campaign.isPro) {
       setShowProUpgradeModal(true)
       setProUpgradeTrackingAttrs(
         buildTrackingAttrs('Upgrade to Pro', {
@@ -154,6 +174,11 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
         }
         onClose={() => setShowProUpgradeModal(false)}
         trackingAttrs={proUpgradeTrackingAttrs}
+      />
+      <ComplianceModal
+        open={showComplianceModal}
+        tcrComplianceStatus={tcrCompliance?.status}
+        onClose={() => setShowComplianceModal(false)}
       />
       {flowModalTask && (
         <TaskFlow
