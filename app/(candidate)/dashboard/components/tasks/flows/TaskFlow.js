@@ -73,6 +73,7 @@ export default function TaskFlow({
   const purchaseMetaData = {
     contactCount: state.voterCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
+    outreachType: type,
   }
 
   const trackingAttrs = useMemo(
@@ -282,7 +283,7 @@ export default function TaskFlow({
         {stepName === STEPS.purchase && (
           <PurchaseIntentProvider
             {...{
-              type: type.toUpperCase(),
+              type: (type === 'p2p' ? 'text' : type).toUpperCase(),
               purchaseMetaData,
             }}
           >
