@@ -60,8 +60,6 @@ export default async function Page({ params, searchParams }) {
     person = await fetchPerson(personId)
   }
 
-  console.log('person', person)
-
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || '20')
 
