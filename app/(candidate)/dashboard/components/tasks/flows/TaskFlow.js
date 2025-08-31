@@ -290,6 +290,8 @@ export default function TaskFlow({
               {...{
                 onComplete: handlePurchaseComplete,
                 contactCount: purchaseMetaData?.contactCount,
+                type,
+                pricePerContact: purchaseMetaData?.pricePerContact,
               }}
             />
           </PurchaseIntentProvider>
