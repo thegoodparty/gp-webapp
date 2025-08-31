@@ -99,7 +99,7 @@ export default function PeopleTable() {
   }
 
   return (
-    <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-full">
+    <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">
       <ServerDataTable
         columns={columns}
         data={data}

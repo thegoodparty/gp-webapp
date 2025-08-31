@@ -5,6 +5,7 @@ import PeopleTable from './PeopleTable'
 import TitleSection from './TitleSection'
 import SearchBar from './SearchBar'
 import PersonOverlay from './person/PersonOverlay'
+import Filters from './Filters'
 
 export default function PeoplePage() {
   return (
@@ -13,7 +14,10 @@ export default function PeoplePage() {
         <TitleSection />
         <PeopleStatsSection />
         <SearchBar />
-        <PeopleTable />
+        <div className="relative">
+          <Filters />
+          <PeopleTable />
+        </div>
       </Paper>
       <PersonOverlay />
     </DashboardLayout>
