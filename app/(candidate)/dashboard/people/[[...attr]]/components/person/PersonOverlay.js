@@ -105,7 +105,7 @@ export default function PersonOverlay() {
 
   return (
     <Sheet open={!!person} onOpenChange={handleClose}>
-      <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl h-full overflow-y-auto">
+      <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl h-full overflow-y-auto z-[1301]">
         <div className="p-4">
           {person && (
             <div>

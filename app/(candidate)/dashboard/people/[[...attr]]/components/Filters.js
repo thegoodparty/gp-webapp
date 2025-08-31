@@ -206,23 +206,23 @@ const filterSections = [
 ]
 
 export default function Filters() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [filters, setFilters] = useState({})
 
   const handleCheckedChange = (checked, key) => {
-    console.log('checked', checked, 'key', key)
     setFilters({ ...filters, [key]: checked })
   }
-
-  console.log('filters', filters)
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   return (
     <>
-      <div className="md:absolute right-36 top-4">
+      <div className="absolute md:right-36 top-4">
         <Button onClick={() => setOpen(true)}>filters</Button>
       </div>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8">
+      <Sheet open={open} onOpenChange={setOpen} onClose={handleClose}>
+        <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
           <h2 className="text-3xl lg:text-4xl font-semibold">Add Filters</h2>
           <Body1 className="pb-6 border-b border-gray-200">
             Apply filters to refine your table

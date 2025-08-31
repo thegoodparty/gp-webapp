@@ -1,5 +1,5 @@
 import { numberFormatter } from 'helpers/numberHelper'
-import { LuVote } from 'react-icons/lu'
+import { LuDollarSign, LuVote } from 'react-icons/lu'
 import { SlPeople } from 'react-icons/sl'
 import Paper from '@shared/utils/Paper'
 import Body2 from '@shared/typography/Body2'
@@ -7,8 +7,7 @@ import Body2 from '@shared/typography/Body2'
 const fetchPeopleStats = async () => {
   return {
     total: 15875,
-    largestAgeGroup: '35-50',
-    largestAgeGroupPercentage: 42,
+    medianIncomeRange: '$50K - $75K',
     largestCommunity: 'District 1',
     politicalMakeup: {
       republican: 42,
@@ -57,14 +56,14 @@ export default async function PeopleStatsSection() {
       ),
     },
     {
-      key: 'largestAgeGroup',
-      label: 'Largest Age Group',
-      value: peopleStats.largestAgeGroup
-        ? `${peopleStats.largestAgeGroupPercentage}% are ${peopleStats.largestAgeGroup} years old`
+      key: 'medianIncomeRange',
+      label: 'Median Income Range',
+      value: peopleStats.medianIncomeRange
+        ? `${peopleStats.medianIncomeRange}`
         : 'N/A',
       icon: (
         <div className="text-lg text-slate-600 ">
-          <SlPeople />
+          <LuDollarSign />
         </div>
       ),
     },
