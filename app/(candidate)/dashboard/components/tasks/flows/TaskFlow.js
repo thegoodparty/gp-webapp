@@ -1,6 +1,6 @@
 'use client'
 import Modal from '@shared/utils/Modal'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
 import AudienceStep from './AudienceStep'
@@ -78,27 +78,6 @@ export default function TaskFlow({
   )
   const { phoneListToken, phoneListId, leadsLoaded } = state
   const [stopPolling, setStopPolling] = useState(false)
-  console.log(`stopPolling =>`, stopPolling)
-
-  useEffect(() => {
-    console.log(`TASK FLOW MOUNTED`)
-    return () => {
-      console.log(`TASK FLOW UNMOUNTED`)
-    }
-  }, [])
-
-  console.log(
-    `{
-      phoneListToken,
-      phoneListId,
-      leadsLoaded
-    } =>`,
-    {
-      phoneListToken,
-      phoneListId,
-      leadsLoaded,
-    },
-  )
 
   const purchaseMetaData = {
     contactCount: leadsLoaded,
