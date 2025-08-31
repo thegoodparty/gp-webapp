@@ -17,3 +17,19 @@ export const createP2pPhoneList = async (voterFileFilter) => {
     return false
   }
 }
+
+export const getP2pPhoneListStatus = async (phoneListToken) => {
+  try {
+    const resp = await clientFetch(apiRoutes.p2p.phoneListStatus, {
+      phoneListToken,
+    })
+    if (!resp.ok) {
+      console.error('Error fetching phone list status:', resp.statusText)
+      return false
+    }
+    return resp.data
+  } catch (e) {
+    console.error('error', e)
+    return false
+  }
+}

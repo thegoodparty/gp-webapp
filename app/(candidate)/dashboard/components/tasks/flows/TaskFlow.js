@@ -1,6 +1,6 @@
 'use client'
 import Modal from '@shared/utils/Modal'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
 import AudienceStep from './AudienceStep'
@@ -27,6 +27,8 @@ import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/compo
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 import { noop } from '@shared/utils/noop'
+import { LongPoll } from '@shared/utils/LongPoll'
+import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -40,6 +42,7 @@ const DEFAULT_STATE = {
   voterFileFilter: null,
   phoneListToken: '',
   phoneListId: null,
+  leadsLoaded: null,
 }
 
 /**
@@ -73,9 +76,32 @@ export default function TaskFlow({
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
+  const { phoneListToken, phoneListId, leadsLoaded } = state
+  const [stopPolling, setStopPolling] = useState(false)
+  console.log(`stopPolling =>`, stopPolling)
+
+  useEffect(() => {
+    console.log(`TASK FLOW MOUNTED`)
+    return () => {
+      console.log(`TASK FLOW UNMOUNTED`)
+    }
+  }, [])
+
+  console.log(
+    `{
+      phoneListToken,
+      phoneListId,
+      leadsLoaded
+    } =>`,
+    {
+      phoneListToken,
+      phoneListId,
+      leadsLoaded,
+    },
+  )
 
   const purchaseMetaData = {
-    contactCount: state.voterCount,
+    contactCount: leadsLoaded,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
   }
 
@@ -247,6 +273,24 @@ export default function TaskFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
+        {phoneListToken && (
+          <LongPoll
+            {...{
+              pollingMethod: async () => {
+                return await getP2pPhoneListStatus(phoneListToken)
+              },
+              onSuccess: (result) => {
+                const { phoneListId, leadsLoaded } = result || {}
+                handleChange({
+                  phoneListId,
+                  leadsLoaded,
+                })
+                setStopPolling(true)
+              },
+              stopPolling,
+            }}
+          />
+        )}
         {stepName === STEPS.intro && (
           <InstructionsStep type={type} {...callbackProps} />
         )}
@@ -306,6 +350,7 @@ export default function TaskFlow({
             <PurchaseStep
               {...{
                 onComplete: handlePurchaseComplete,
+                phoneListId,
                 contactCount: purchaseMetaData?.contactCount,
               }}
             />

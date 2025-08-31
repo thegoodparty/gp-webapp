@@ -5,7 +5,11 @@ import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 import { OutreachPurchaseForm } from 'app/(candidate)/dashboard/components/tasks/flows/OutreachPurchaseForm'
 
-export const PurchaseStep = ({ onComplete = () => {}, contactCount = 0 }) => {
+export const PurchaseStep = ({
+  onComplete = () => {},
+  contactCount = 0,
+  phoneListId,
+}) => {
   const { purchaseIntent, error, setError } = usePurchaseIntent()
   const { errorSnackbar } = useSnackbar()
 
@@ -18,7 +22,7 @@ export const PurchaseStep = ({ onComplete = () => {}, contactCount = 0 }) => {
     <div className="p-4 w-[80vw] max-w-xl">
       {error ? (
         <PurchaseError {...{}} />
-      ) : !purchaseIntent ? (
+      ) : !phoneListId || !purchaseIntent ? (
         <LoadingAnimation {...{}} />
       ) : (
         <OutreachPurchaseForm
