@@ -24,7 +24,7 @@ export const LongPoll = ({
     if (stopPolling || (limit && count >= limit)) {
       cleanupInterval()
     }
-  }, [intervalId, stopPolling])
+  }, [intervalId, stopPolling, count, limit])
 
   useEffect(() => {
     return () => {
@@ -43,7 +43,7 @@ export const LongPoll = ({
     } catch (error) {
       onError(error)
     }
-    setCount(count + 1)
+    setCount((prevCount) => prevCount + 1)
   }
 
   useSingleEffect(() => {
