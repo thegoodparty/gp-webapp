@@ -65,6 +65,7 @@ export default function TaskFlow({
   onClose,
   defaultAiTemplateId,
 }) {
+  console.log(`type =>`, type)
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
