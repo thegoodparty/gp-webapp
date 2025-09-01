@@ -19,14 +19,15 @@ export const DOMAIN_STATUS = {
 
 export function isDomainActive(domain = {}) {
   const status = domain?.status ? domain.status.toUpperCase() : null
+  return isDomainStatusActive(status)
+}
 
+export function isDomainStatusActive(status) {
   if (!status) {
     return false
   }
 
   return (
-    status === DOMAIN_STATUS.SUBMITTED ||
-    status === DOMAIN_STATUS.IN_PROGRESS ||
-    status === DOMAIN_STATUS.SUCCESSFUL
+    status === DOMAIN_STATUS.SUBMITTED || status === DOMAIN_STATUS.SUCCESSFUL
   )
 }
