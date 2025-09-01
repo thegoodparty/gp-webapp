@@ -16,6 +16,7 @@ import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import {
   handleCreateOutreach,
   handleCreateVoterFileFilter,
@@ -67,6 +68,7 @@ export default function TaskFlow({
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const [, updateVoterContacts] = useVoterContacts()
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
@@ -195,6 +197,12 @@ export default function TaskFlow({
       successSnackbar,
       state,
     )(await onCreateOutreach())
+
+    await updateVoterContacts((currentContacts) => ({
+      ...currentContacts,
+      text: (currentContacts.text || 0) + (state.voterCount || 0),
+    }))
+
     handleNext()
   }
 
