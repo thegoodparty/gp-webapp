@@ -613,6 +613,10 @@ export const apiRoutes = {
       path: '/p2p/phone-list',
       method: 'POST',
     },
+    phoneListStatus: {
+      path: '/p2p/phone-list/:phoneListToken/status',
+      method: 'GET',
+    },
   },
   website: {
     get: {
