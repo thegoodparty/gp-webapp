@@ -267,6 +267,7 @@ export default function TaskFlow({
                 setStopPolling(true)
               },
               stopPolling,
+              limit: 60,
             }}
           />
         )}
