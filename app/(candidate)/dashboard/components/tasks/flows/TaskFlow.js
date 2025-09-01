@@ -23,6 +23,7 @@ import {
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 import { noop } from '@shared/utils/noop'
@@ -283,7 +284,7 @@ export default function TaskFlow({
         {stepName === STEPS.purchase && (
           <PurchaseIntentProvider
             {...{
-              type: (type === 'p2p' ? 'text' : type).toUpperCase(),
+              type: PURCHASE_TYPES.TEXT,
               purchaseMetaData,
             }}
           >

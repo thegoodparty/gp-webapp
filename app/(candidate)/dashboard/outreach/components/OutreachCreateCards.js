@@ -18,13 +18,6 @@ export const OUTREACH_OPTIONS = [
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
     cost: 0.035,
-    type: OUTREACH_TYPES.text,
-    requiresPro: true,
-  },
-  {
-    title: 'P2P Text',
-    impact: IMPACTS_LEVELS.medium,
-    cost: 0.035,
     type: OUTREACH_TYPES.p2p,
     requiresPro: true,
   },
