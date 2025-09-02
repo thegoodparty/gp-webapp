@@ -16,7 +16,7 @@ import {
 } from '../../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
-const TEXT_PRICE = 0.03
+const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
 const CALL_W_VOICEMAIL_PRICE = 0.055
 
@@ -29,9 +29,10 @@ export default function AudienceStep({
   audience,
   isCustom,
   onCreateVoterFileFilter = async () => {},
+  onCreatePhoneList = async (voterFileFilter) => {},
 }) {
   const [count, setCount] = useState(0)
-  const [loadingCount, setLoadingCount] = useState(false)
+  const [loading, setLoading] = useState(false)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
@@ -48,7 +49,14 @@ export default function AudienceStep({
   )
 
   const handleOnNext = async () => {
-    onChangeCallback('voterFileFilter', await onCreateVoterFileFilter())
+    setLoading(true)
+    const voterFileFilter = await onCreateVoterFileFilter()
+    const phoneListToken = await onCreatePhoneList(voterFileFilter)
+    setLoading(false)
+    onChangeCallback({
+      voterFileFilter,
+      phoneListToken,
+    })
     nextCallback()
   }
 
@@ -56,7 +64,7 @@ export default function AudienceStep({
     if (!hasValues) return
 
     debounce(async () => {
-      setLoadingCount(true)
+      setLoading(true)
       const selectedAudience = Object.keys(audience).filter(
         (key) => audience[key] === true,
       )
@@ -66,7 +74,7 @@ export default function AudienceStep({
 
       setCount(res)
       onChangeCallback('voterCount', res)
-      setLoadingCount(false)
+      setLoading(false)
     }, 300)
   }, [audience, isCustom, type, hasValues])
 
@@ -92,7 +100,7 @@ export default function AudienceStep({
         <div className="p-4 text-sm">
           Voters selected:
           <span className="font-bold text-black ml-1">
-            {loadingCount ? (
+            {loading ? (
               <CircularProgress
                 size={14}
                 className="inline-block align-middle"
@@ -106,7 +114,7 @@ export default function AudienceStep({
               <span className="mx-3">|</span>
               Estimated cost:
               <span className="font-bold text-black ml-1">
-                {loadingCount ? (
+                {loading ? (
                   <CircularProgress
                     size={14}
                     className="inline-block align-middle"
@@ -142,8 +150,8 @@ export default function AudienceStep({
               size="large"
               color="secondary"
               onClick={handleOnNext}
-              disabled={!hasValues || loadingCount}
-              loading={loadingCount}
+              disabled={!hasValues || loading}
+              loading={loading}
               {...nextTrackingAttrs}
             >
               Next

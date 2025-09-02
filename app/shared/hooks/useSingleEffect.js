@@ -9,7 +9,7 @@ export const useSingleEffect = (callback = () => {}, deps = []) => {
   useEffect(() => {
     if (!hasRun.current) {
       hasRun.current = true
-      callback()
+      return callback()
     }
   }, [callback, ...deps])
 }

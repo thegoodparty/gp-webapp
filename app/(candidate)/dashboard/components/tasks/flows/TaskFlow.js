@@ -18,6 +18,7 @@ import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachCo
 import { useSnackbar } from 'helpers/useSnackbar'
 import {
   handleCreateOutreach,
+  handleCreatePhoneList,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -26,6 +27,8 @@ import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/compo
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 import { noop } from '@shared/utils/noop'
+import { LongPoll } from '@shared/utils/LongPoll'
+import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -36,6 +39,10 @@ const DEFAULT_STATE = {
   scriptText: '',
   image: undefined,
   voterCount: 0,
+  voterFileFilter: null,
+  phoneListToken: '',
+  phoneListId: null,
+  leadsLoaded: null,
 }
 
 /**
@@ -69,9 +76,11 @@ export default function TaskFlow({
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
+  const { phoneListToken, phoneListId, leadsLoaded } = state
+  const [stopPolling, setStopPolling] = useState(false)
 
   const purchaseMetaData = {
-    contactCount: state.voterCount,
+    contactCount: leadsLoaded,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
   }
 
@@ -80,11 +89,18 @@ export default function TaskFlow({
     [type],
   )
 
-  const handleChange = (key, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }))
+  const handleChange = (changeSetOrKey, value) => {
+    if (typeof changeSetOrKey === 'object') {
+      setState((prevState) => ({
+        ...prevState,
+        ...changeSetOrKey,
+      }))
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        [changeSetOrKey]: value,
+      }))
+    }
   }
 
   const handleClose = () => {
@@ -186,6 +202,11 @@ export default function TaskFlow({
     [type, state, errorSnackbar],
   )
 
+  const onCreatePhoneList = useMemo(
+    () => handleCreatePhoneList(errorSnackbar),
+    [errorSnackbar],
+  )
+
   const handlePurchaseComplete = async () => {
     await handleScheduleOutreach(
       type,
@@ -231,6 +252,25 @@ export default function TaskFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
+        {phoneListToken && (
+          <LongPoll
+            {...{
+              pollingMethod: async () => {
+                return await getP2pPhoneListStatus(phoneListToken)
+              },
+              onSuccess: (result) => {
+                const { phoneListId, leadsLoaded } = result || {}
+                handleChange({
+                  phoneListId,
+                  leadsLoaded,
+                })
+                setStopPolling(true)
+              },
+              stopPolling,
+              limit: 60,
+            }}
+          />
+        )}
         {stepName === STEPS.intro && (
           <InstructionsStep type={type} {...callbackProps} />
         )}
@@ -243,6 +283,7 @@ export default function TaskFlow({
             isCustom={isCustom}
             {...callbackProps}
             onCreateVoterFileFilter={onCreateVoterFileFilter}
+            onCreatePhoneList={onCreatePhoneList}
           />
         )}
         {stepName === STEPS.script && (
@@ -289,6 +330,7 @@ export default function TaskFlow({
             <PurchaseStep
               {...{
                 onComplete: handlePurchaseComplete,
+                phoneListId,
                 contactCount: purchaseMetaData?.contactCount,
               }}
             />
