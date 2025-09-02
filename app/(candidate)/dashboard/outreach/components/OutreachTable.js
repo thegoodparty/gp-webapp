@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import H4 from '@shared/typography/H4'
 import { GradientOverlay } from '@shared/GradientOverlay'
 import { StackedChips } from '@shared/utils/StackedChips'
+import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
 import { formatAudienceLabels } from 'app/(candidate)/dashboard/outreach/util/formatAudienceLabels.util'
 import { ActualViewAudienceFiltersModal } from 'app/(candidate)/dashboard/voter-records/components/ViewAudienceFiltersModal'
 import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outreach/util/convertAudienceFiltersForModal.util'
@@ -84,6 +85,29 @@ export const OutreachTable = ({ mockOutreaches }) => {
         ) : (
           <NotApplicableLabel />
         ),
+    },
+    {
+      header: 'Status',
+      cell: ({ row }) => {
+        if (row.outreachType !== OUTREACH_TYPES.p2p) {
+          return <NotApplicableLabel />
+        }
+        
+        const statusLabels = {
+          pending: 'Draft',
+          approved: 'In review',
+          denied: 'In review',
+          paid: 'Scheduled',
+          in_progress: 'Scheduled',
+          completed: 'Sent'
+        }
+        
+        if (!row.status || !statusLabels[row.status]) {
+          return <NotApplicableLabel />
+        }
+        
+        return <span>{statusLabels[row.status]}</span>
+      },
     },
   ]
 
