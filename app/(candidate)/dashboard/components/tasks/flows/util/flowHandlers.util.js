@@ -6,6 +6,8 @@ import { createP2pPhoneList } from 'helpers/createP2pPhoneList'
 import { noop } from '@shared/utils/noop'
 import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
 
+const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
+
 export const handleScheduleOutreach =
   (
     type = '',
@@ -48,8 +50,8 @@ export const handleCreateOutreach =
       {
         campaignId,
         outreachType: type === OUTREACH_TYPES.text ? OUTREACH_TYPES.p2p : type,
-        name,
         message,
+        title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
         ...(date ? { date } : {}),
         ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
