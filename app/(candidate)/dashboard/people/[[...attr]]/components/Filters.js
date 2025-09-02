@@ -1,8 +1,17 @@
 'use client'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
-import { Button, Checkbox, Sheet, SheetContent } from 'goodparty-styleguide'
+import {
+  Button,
+  Checkbox,
+  Sheet,
+  SheetContent,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from 'goodparty-styleguide'
 import { useState } from 'react'
+import { TbDownload } from 'react-icons/tb'
 
 const filterSections = [
   {
@@ -218,7 +227,18 @@ export default function Filters() {
 
   return (
     <>
-      <div className="absolute md:right-36 top-4">
+      <div className="absolute md:right-36 top-4 flex items-center gap-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline">
+              <TbDownload />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-white">Download .csv file</p>
+          </TooltipContent>
+        </Tooltip>
+
         <Button variant="outline" onClick={() => setOpen(true)}>
           filters
         </Button>
