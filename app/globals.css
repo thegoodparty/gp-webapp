@@ -1,8 +1,185 @@
-@import 'goodparty-styleguide/dist/index.css';
+@import 'goodparty-styleguide/dist/design-tokens.css';
+@import 'goodparty-styleguide/dist/tailwind-theme.css';
+@import 'goodparty-styleguide/dist/typography.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .button-primary {
+    background-color: var(--component-button-primary-background-default);
+    color: var(--component-button-primary-text-default);
+    border-color: var(--component-button-primary-border-default);
+    box-shadow: var(--component-button-primary-box-shadow-default);
+    opacity: var(--component-button-primary-opacity-default);
+  }
+  .button-primary:hover:not(:disabled) {
+    background-color: var(--component-button-primary-background-hover);
+    border-color: var(--component-button-primary-border-hover);
+    box-shadow: var(--component-button-primary-box-shadow-hover);
+  }
+  .button-primary:disabled {
+    background-color: var(--component-button-primary-background-disabled);
+    color: var(--component-button-primary-text-disabled);
+    border-color: var(--component-button-primary-border-disabled);
+    opacity: var(--component-button-primary-opacity-disabled);
+  }
+
+  .button-secondary {
+    background-color: var(--component-button-secondary-background-default);
+    color: var(--component-button-secondary-text-default);
+    border-color: var(--component-button-secondary-border-default);
+    box-shadow: var(--component-button-secondary-box-shadow-default);
+    opacity: var(--component-button-secondary-opacity-default);
+  }
+  .button-secondary:hover:not(:disabled) {
+    background-color: var(--component-button-secondary-background-hover);
+    border-color: var(--component-button-secondary-border-hover);
+  }
+  .button-secondary:disabled {
+    background-color: var(--component-button-secondary-background-disabled);
+    color: var(--component-button-secondary-text-disabled);
+    border-color: var(--component-button-secondary-border-disabled);
+    opacity: var(--component-button-secondary-opacity-disabled);
+  }
+
+  .button-destructive {
+    background-color: var(--component-button-destructive-background-default);
+    color: var(--component-button-destructive-text-default);
+    border-color: var(--component-button-destructive-border-default);
+    box-shadow: var(--component-button-destructive-box-shadow-default);
+    opacity: var(--component-button-destructive-opacity-default);
+  }
+  .button-destructive:hover:not(:disabled) {
+    background-color: var(--component-button-destructive-background-hover);
+    border-color: var(--component-button-destructive-border-hover);
+  }
+  .button-destructive:disabled {
+    background-color: var(--component-button-destructive-background-disabled);
+    color: var(--component-button-destructive-text-disabled);
+    border-color: var(--component-button-destructive-border-disabled);
+    opacity: var(--component-button-destructive-opacity-disabled);
+  }
+
+  .button-outline {
+    background-color: var(--component-button-outline-background-default);
+    color: var(--component-button-outline-text-default);
+    border-color: var(--component-button-outline-border-default);
+    box-shadow: var(--component-button-outline-box-shadow-default);
+    opacity: var(--component-button-outline-opacity-default);
+  }
+  .button-outline:hover:not(:disabled) {
+    background-color: var(--component-button-outline-background-hover);
+    border-color: var(--component-button-outline-border-hover);
+  }
+  .button-outline:disabled {
+    background-color: var(--component-button-outline-background-disabled);
+    color: var(--component-button-outline-text-disabled);
+    border-color: var(--component-button-outline-border-disabled);
+    opacity: var(--component-button-outline-opacity-disabled);
+  }
+
+  .button-ghost {
+    background-color: var(--component-button-ghost-background-default);
+    color: var(--component-button-ghost-text-default);
+    border-color: var(--component-button-ghost-border-default);
+    box-shadow: var(--component-button-ghost-box-shadow-default);
+    opacity: var(--component-button-ghost-opacity-default);
+  }
+  .button-ghost:hover:not(:disabled) {
+    background-color: var(--component-button-ghost-background-hover);
+    border-color: var(--component-button-ghost-border-hover);
+  }
+  .button-ghost:disabled {
+    background-color: var(--component-button-ghost-background-disabled);
+    color: var(--component-button-ghost-text-disabled);
+    border-color: var(--component-button-ghost-border-disabled);
+    opacity: var(--component-button-ghost-opacity-disabled);
+  }
+
+  .button-link {
+    background-color: var(--component-button-link-background-default);
+    color: var(--component-button-link-text-default);
+    border-color: var(--component-button-link-border-default);
+    box-shadow: var(--component-button-link-box-shadow-default);
+    opacity: var(--component-button-link-opacity-default);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .button-link:hover:not(:disabled) {
+    background-color: var(--component-button-link-background-hover);
+    color: var(--component-button-link-text-hover);
+    border-color: var(--component-button-link-border-hover);
+  }
+  .button-link:disabled {
+    background-color: var(--component-button-link-background-disabled);
+    color: var(--component-button-link-text-disabled);
+    border-color: var(--component-button-link-border-disabled);
+    opacity: var(--component-button-link-opacity-disabled);
+  }
+
+  /* Loading states preserve original colors */
+  .button-primary[data-loading='true'] {
+    color: var(--component-button-primary-text-loading);
+  }
+  .button-secondary[data-loading='true'] {
+    color: var(--component-button-secondary-text-loading);
+  }
+  .button-destructive[data-loading='true'] {
+    color: var(--component-button-destructive-text-loading);
+  }
+  .button-outline[data-loading='true'] {
+    color: var(--component-button-outline-text-loading);
+  }
+  .button-ghost[data-loading='true'] {
+    color: var(--component-button-ghost-text-loading);
+  }
+  .button-link[data-loading='true'] {
+    color: var(--component-button-link-text-loading);
+  }
+
+  /* White Button Variants */
+  .button-whiteGhost {
+    background-color: transparent !important;
+    color: var(--semantic-text-inverse) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 1;
+  }
+  .button-whiteGhost:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  .button-whiteGhost:disabled {
+    background-color: transparent !important;
+    color: var(--semantic-text-inverse) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 0.5;
+  }
+
+  .button-whiteOutline {
+    background-color: transparent;
+    color: var(--semantic-text-inverse);
+    border: 1px solid var(--semantic-text-inverse);
+    opacity: 1;
+  }
+  .button-whiteOutline:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--semantic-text-inverse);
+  }
+  .button-whiteOutline:disabled {
+    background-color: transparent;
+    color: var(--semantic-text-inverse);
+    border: 1px solid var(--semantic-text-inverse);
+    opacity: 0.5;
+  }
+}
 
 @layer utilities {
   .animate-in {

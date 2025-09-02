@@ -219,7 +219,9 @@ export default function Filters() {
   return (
     <>
       <div className="absolute md:right-36 top-4">
-        <Button onClick={() => setOpen(true)}>filters</Button>
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          filters
+        </Button>
       </div>
       <Sheet open={open} onOpenChange={setOpen} onClose={handleClose}>
         <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
@@ -227,7 +229,7 @@ export default function Filters() {
           <Body1 className="pb-6 border-b border-gray-200">
             Apply filters to refine your table
           </Body1>
-          {filterSections.map((section) => (
+          {filterSections.map((section, index) => (
             <div key={section.title} className="mt-4">
               <h3 className="text-xl lg:text-2xl font-semibold">
                 {section.title}
@@ -251,8 +253,17 @@ export default function Filters() {
                   ))}
                 </div>
               ))}
+              {index === filterSections.length - 1 && (
+                <div className="h-20 "></div>
+              )}
             </div>
           ))}
+          <div className="fixed bottom-0 bg-white shadow-sm p-4 flex justify-center gap-4 w-[90vw] max-w-xl sm:max-w-xl right-0 border-t border-gray-200">
+            <Button variant="outline" onClick={() => setFilters({})}>
+              Clear Filters
+            </Button>
+            <Button variant="default">Apply Filters</Button>
+          </div>
         </SheetContent>
       </Sheet>
     </>
