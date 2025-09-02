@@ -107,7 +107,7 @@ export default function ServerDataTable({
               variant="outline"
               className="h-8 w-8 p-0 cursor-pointer"
               onClick={() => handlePageChange(currentPage - 1)}
-              //   disabled={!hasPreviousPage}
+              disabled={!hasPreviousPage}
             >
               <span className="sr-only">Go to previous page</span>
               <ArrowLeftIcon className="h-4 w-4" />
