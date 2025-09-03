@@ -9,8 +9,8 @@ export default function PersonMap() {
   const places = []
 
   if (
-    person?.Residence_Addresses_Latitude &&
-    person?.Residence_Addresses_Longitude
+    person.Residence_Addresses_Latitude &&
+    person.Residence_Addresses_Longitude
   ) {
     places.push({
       lat: person.Residence_Addresses_Latitude,

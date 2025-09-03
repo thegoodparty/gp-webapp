@@ -37,7 +37,7 @@ export default function ServerDataTable({
     const params = new URLSearchParams(searchParams.toString())
 
     Object.entries(newParams).forEach(([key, value]) => {
-      if (value && value !== '') {
+      if (value) {
         params.set(key, value.toString())
       } else {
         params.delete(key)
