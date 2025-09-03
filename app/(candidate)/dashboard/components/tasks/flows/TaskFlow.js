@@ -16,7 +16,8 @@ import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { useVoterContacts, getVoterContactField } from '@shared/hooks/VoterContactsProvider'
+import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import {
   handleCreateOutreach,
   handleCreatePhoneList,
@@ -222,7 +223,8 @@ export default function TaskFlow({
     const contactField = getVoterContactField(type)
     await updateVoterContacts((currentContacts) => ({
       ...currentContacts,
-      [contactField]: (currentContacts[contactField] || 0) + (state.voterCount || 0),
+      [contactField]:
+        (currentContacts[contactField] || 0) + (state.voterCount || 0),
     }))
 
     handleNext()

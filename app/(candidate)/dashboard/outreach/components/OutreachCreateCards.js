@@ -18,7 +18,7 @@ export const OUTREACH_OPTIONS = [
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
     cost: 0.035,
-    type: OUTREACH_TYPES.p2p,
+    type: OUTREACH_TYPES.text,
     requiresPro: true,
   },
   {
@@ -67,14 +67,14 @@ export default function OutreachCreateCards() {
 
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
-    
+
     if (requiresPro && !isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
-        source: 'outreach_page'
+        source: 'outreach_page',
       })
       return openProUpgradeModal()
     }
-    
+
     return openTaskFlow(type)
   }
 
