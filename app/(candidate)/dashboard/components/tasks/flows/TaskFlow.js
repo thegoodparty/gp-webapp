@@ -343,6 +343,8 @@ export default function TaskFlow({
                 onComplete: handlePurchaseComplete,
                 phoneListId,
                 contactCount: purchaseMetaData?.contactCount,
+                type,
+                pricePerContact: purchaseMetaData?.pricePerContact,
               }}
             />
           </PurchaseIntentProvider>

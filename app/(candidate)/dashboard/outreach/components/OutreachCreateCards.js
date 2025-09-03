@@ -67,7 +67,15 @@ export default function OutreachCreateCards() {
 
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
-    return requiresPro && !isPro ? openProUpgradeModal() : openTaskFlow(type)
+    
+    if (requiresPro && !isPro) {
+      trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
+        source: 'outreach_page'
+      })
+      return openProUpgradeModal()
+    }
+    
+    return openTaskFlow(type)
   }
 
   return (
