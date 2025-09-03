@@ -2,6 +2,24 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
+export const getVoterContactField = (outreachType) => {
+  switch (outreachType) {
+    case 'text':
+    case 'p2p': 
+      return 'text'
+    case 'doorKnocking':
+      return 'doorKnocking'
+    case 'phoneBanking':
+      return 'phoneBanking'
+    case 'socialMedia':
+      return 'socialMedia'
+    case 'robocall':
+      return 'robocall'
+    default:
+      return 'text'
+  }
+}
+
 export const getFilteredListOfReportedVoterContacts = (reportedVoterGoals) => ({
   doorKnocking: reportedVoterGoals?.doorKnocking || 0,
   calls: reportedVoterGoals?.calls || 0,
