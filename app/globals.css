@@ -1,6 +1,339 @@
+@import 'goodparty-styleguide/dist/design-tokens.css';
+@import 'goodparty-styleguide/dist/tailwind-theme.css';
+@import 'goodparty-styleguide/dist/typography.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .button-primary {
+    background-color: var(--component-button-primary-background-default);
+    color: var(--component-button-primary-text-default);
+    border-color: var(--component-button-primary-border-default);
+    box-shadow: var(--component-button-primary-box-shadow-default);
+    opacity: var(--component-button-primary-opacity-default);
+  }
+  .button-primary:hover:not(:disabled) {
+    background-color: var(--component-button-primary-background-hover);
+    border-color: var(--component-button-primary-border-hover);
+    box-shadow: var(--component-button-primary-box-shadow-hover);
+  }
+  .button-primary:disabled {
+    background-color: var(--component-button-primary-background-disabled);
+    color: var(--component-button-primary-text-disabled);
+    border-color: var(--component-button-primary-border-disabled);
+    opacity: var(--component-button-primary-opacity-disabled);
+  }
+
+  .button-secondary {
+    background-color: var(--component-button-secondary-background-default);
+    color: var(--component-button-secondary-text-default);
+    border-color: var(--component-button-secondary-border-default);
+    box-shadow: var(--component-button-secondary-box-shadow-default);
+    opacity: var(--component-button-secondary-opacity-default);
+  }
+  .button-secondary:hover:not(:disabled) {
+    background-color: var(--component-button-secondary-background-hover);
+    border-color: var(--component-button-secondary-border-hover);
+  }
+  .button-secondary:disabled {
+    background-color: var(--component-button-secondary-background-disabled);
+    color: var(--component-button-secondary-text-disabled);
+    border-color: var(--component-button-secondary-border-disabled);
+    opacity: var(--component-button-secondary-opacity-disabled);
+  }
+
+  .button-destructive {
+    background-color: var(--component-button-destructive-background-default);
+    color: var(--component-button-destructive-text-default);
+    border-color: var(--component-button-destructive-border-default);
+    box-shadow: var(--component-button-destructive-box-shadow-default);
+    opacity: var(--component-button-destructive-opacity-default);
+  }
+  .button-destructive:hover:not(:disabled) {
+    background-color: var(--component-button-destructive-background-hover);
+    border-color: var(--component-button-destructive-border-hover);
+  }
+  .button-destructive:disabled {
+    background-color: var(--component-button-destructive-background-disabled);
+    color: var(--component-button-destructive-text-disabled);
+    border-color: var(--component-button-destructive-border-disabled);
+    opacity: var(--component-button-destructive-opacity-disabled);
+  }
+
+  .button-outline {
+    background-color: var(--component-button-outline-background-default);
+    color: var(--component-button-outline-text-default);
+    border-color: var(--component-button-outline-border-default);
+    box-shadow: var(--component-button-outline-box-shadow-default);
+    opacity: var(--component-button-outline-opacity-default);
+  }
+  .button-outline:hover:not(:disabled) {
+    background-color: var(--component-button-outline-background-hover);
+    border-color: var(--component-button-outline-border-hover);
+  }
+  .button-outline:disabled {
+    background-color: var(--component-button-outline-background-disabled);
+    color: var(--component-button-outline-text-disabled);
+    border-color: var(--component-button-outline-border-disabled);
+    opacity: var(--component-button-outline-opacity-disabled);
+  }
+
+  .button-ghost {
+    background-color: var(--component-button-ghost-background-default);
+    color: var(--component-button-ghost-text-default);
+    border-color: var(--component-button-ghost-border-default);
+    box-shadow: var(--component-button-ghost-box-shadow-default);
+    opacity: var(--component-button-ghost-opacity-default);
+  }
+  .button-ghost:hover:not(:disabled) {
+    background-color: var(--component-button-ghost-background-hover);
+    border-color: var(--component-button-ghost-border-hover);
+  }
+  .button-ghost:disabled {
+    background-color: var(--component-button-ghost-background-disabled);
+    color: var(--component-button-ghost-text-disabled);
+    border-color: var(--component-button-ghost-border-disabled);
+    opacity: var(--component-button-ghost-opacity-disabled);
+  }
+
+  .button-link {
+    background-color: var(--component-button-link-background-default);
+    color: var(--component-button-link-text-default);
+    border-color: var(--component-button-link-border-default);
+    box-shadow: var(--component-button-link-box-shadow-default);
+    opacity: var(--component-button-link-opacity-default);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .button-link:hover:not(:disabled) {
+    background-color: var(--component-button-link-background-hover);
+    color: var(--component-button-link-text-hover);
+    border-color: var(--component-button-link-border-hover);
+  }
+  .button-link:disabled {
+    background-color: var(--component-button-link-background-disabled);
+    color: var(--component-button-link-text-disabled);
+    border-color: var(--component-button-link-border-disabled);
+    opacity: var(--component-button-link-opacity-disabled);
+  }
+
+  /* Loading states preserve original colors */
+  .button-primary[data-loading='true'] {
+    color: var(--component-button-primary-text-loading);
+  }
+  .button-secondary[data-loading='true'] {
+    color: var(--component-button-secondary-text-loading);
+  }
+  .button-destructive[data-loading='true'] {
+    color: var(--component-button-destructive-text-loading);
+  }
+  .button-outline[data-loading='true'] {
+    color: var(--component-button-outline-text-loading);
+  }
+  .button-ghost[data-loading='true'] {
+    color: var(--component-button-ghost-text-loading);
+  }
+  .button-link[data-loading='true'] {
+    color: var(--component-button-link-text-loading);
+  }
+
+  /* White Button Variants */
+  .button-whiteGhost {
+    background-color: transparent !important;
+    color: var(--semantic-text-inverse) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 1;
+  }
+  .button-whiteGhost:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  .button-whiteGhost:disabled {
+    background-color: transparent !important;
+    color: var(--semantic-text-inverse) !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 0.5;
+  }
+
+  .button-whiteOutline {
+    background-color: transparent;
+    color: var(--semantic-text-inverse);
+    border: 1px solid var(--semantic-text-inverse);
+    opacity: 1;
+  }
+  .button-whiteOutline:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--semantic-text-inverse);
+  }
+  .button-whiteOutline:disabled {
+    background-color: transparent;
+    color: var(--semantic-text-inverse);
+    border: 1px solid var(--semantic-text-inverse);
+    opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  .animate-in {
+    animation-name: enter;
+    animation-duration: var(--tw-enter-duration, 150ms);
+    --tw-enter-opacity: initial;
+    --tw-enter-scale: initial;
+    --tw-enter-rotate: initial;
+    --tw-enter-translate-x: initial;
+    --tw-enter-translate-y: initial;
+  }
+
+  .animate-out {
+    animation-name: exit;
+    animation-duration: var(--tw-exit-duration, 150ms);
+    --tw-exit-opacity: initial;
+    --tw-exit-scale: initial;
+    --tw-exit-rotate: initial;
+    --tw-exit-translate-x: initial;
+    --tw-exit-translate-y: initial;
+  }
+
+  .fade-in-0 {
+    --tw-enter-opacity: 0;
+  }
+
+  .fade-out-0 {
+    --tw-exit-opacity: 0;
+  }
+
+  .slide-in-from-right {
+    --tw-enter-translate-x: 100%;
+  }
+
+  .slide-out-to-right {
+    --tw-exit-translate-x: 100%;
+  }
+
+  .slide-in-from-left {
+    --tw-enter-translate-x: -100%;
+  }
+
+  .slide-out-to-left {
+    --tw-exit-translate-x: -100%;
+  }
+
+  .slide-in-from-top {
+    --tw-enter-translate-y: -100%;
+  }
+
+  .slide-out-to-top {
+    --tw-exit-translate-y: -100%;
+  }
+
+  .slide-in-from-bottom {
+    --tw-enter-translate-y: 100%;
+  }
+
+  .slide-out-to-bottom {
+    --tw-exit-translate-y: 100%;
+  }
+
+  .duration-300 {
+    --tw-enter-duration: 300ms;
+    --tw-exit-duration: 300ms;
+  }
+
+  .duration-500 {
+    --tw-enter-duration: 500ms;
+    --tw-exit-duration: 500ms;
+  }
+
+  @keyframes enter {
+    from {
+      opacity: var(--tw-enter-opacity, 1);
+      transform: translate3d(
+        var(--tw-enter-translate-x, 0),
+        var(--tw-enter-translate-y, 0),
+        0
+      ) scale3d(
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1)
+      ) rotate(var(--tw-enter-rotate, 0));
+    }
+  }
+
+  @keyframes exit {
+    to {
+      opacity: var(--tw-exit-opacity, 1);
+      transform: translate3d(
+        var(--tw-exit-translate-x, 0),
+        var(--tw-exit-translate-y, 0),
+        0
+      ) scale3d(
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1)
+      ) rotate(var(--tw-exit-rotate, 0));
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+/* Fix for DataTableColumnHeader button border */
+.button-ghost {
+  border: none !important;
+}
 
 * {
   line-height: 1.3;
@@ -8,10 +341,15 @@
 }
 
 *:focus-visible {
-  outline: 3px solid color-mix(in srgb, currentColor 40%, transparent);
+  outline: none  !important;
+  box-shadow: none !important;
 }
 
-body {
+
+
+
+
+body { 
   width: 100%;
   height: 100%;
   font-family: var(--outfit-font);
