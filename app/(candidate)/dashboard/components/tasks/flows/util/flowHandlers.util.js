@@ -1,10 +1,12 @@
-import {
-  createPhoneList,
-  scheduleVoterMessagingCampaign,
-} from 'helpers/scheduleVoterMessagingCampaign'
+import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { createP2pPhoneList } from 'helpers/createP2pPhoneList'
+import { noop } from '@shared/utils/noop'
+import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+
+const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
 export const handleScheduleOutreach =
   (
@@ -34,7 +36,7 @@ export const handleScheduleOutreach =
 export const handleCreateOutreach =
   ({
     type = '',
-    state: { script, schedule, image, voterFileFilter, audience },
+    state: { script, schedule, image, voterFileFilter, audience, phoneListId },
     campaignId,
     outreaches = [],
     setOutreaches = () => {},
@@ -47,13 +49,14 @@ export const handleCreateOutreach =
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType: type,
-        name,
+        outreachType: type === OUTREACH_TYPES.text ? OUTREACH_TYPES.p2p : type,
         message,
+        title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
         ...(date ? { date } : {}),
         ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
         ...(audienceRequest ? { audienceRequest } : {}),
+        phoneListId,
       },
       image,
     )
@@ -113,8 +116,23 @@ export const mapAudienceForPersistence = ({
   )
 }
 
+export const handleCreatePhoneList =
+  (errorSnackbar = noop) =>
+  async (voterFileFilter) => {
+    const { token: phoneListToken } =
+      (await createP2pPhoneList(voterFileFilter)) || {}
+
+    if (!phoneListToken) {
+      errorSnackbar(
+        'There was an error generating a phone list. Please try again.',
+      )
+      return
+    }
+    return phoneListToken
+  }
+
 export const handleCreateVoterFileFilter =
-  ({ type = '', state: { audience, voterCount }, errorSnackbar = () => {} }) =>
+  ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }) =>
   async () => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 
@@ -128,10 +146,6 @@ export const handleCreateVoterFileFilter =
       errorSnackbar('There was an error creating your voter file filter')
       return
     }
-
-    const phoneList = await createPhoneList(voterFileFilter)
-
-    console.log(`phoneList =>`, phoneList)
 
     return voterFileFilter
   }
