@@ -6,6 +6,7 @@ import H5 from '@shared/typography/H5'
 import { OutreachImpact } from 'app/(candidate)/dashboard/outreach/components/OutreachImpact'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { MdLockOutline } from 'react-icons/md'
+import { OUTREACH_TYPES } from '../constants'
 
 const formatCost = (cost) =>
   cost === 0 ? 'Free' : `$${cost.toFixed(3).replace(/^0\./, '.')}\/msg`
@@ -20,7 +21,12 @@ export const OutreachCreateCard = ({
   requiresPro = false,
 }) => {
   const [campaign] = useCampaign()
-  const { isPro } = campaign || {}
+  const { isPro, hasFreeTextsOffer } = campaign || {}
+  
+  // Show free offer for text message campaigns if available
+  const isTextType = type === OUTREACH_TYPES.text || type === OUTREACH_TYPES.p2p
+  const showFreeOffer = isTextType && hasFreeTextsOffer
+  
   return (
     <Card
       onClick={() => onClick(type)}
@@ -42,7 +48,9 @@ export const OutreachCreateCard = ({
         </div>
         <div className="flex items-center justify-between">
           <OutreachImpact impact={impact} />
-          <span className="text-gray-700 text-xs">{formatCost(cost)}</span>
+          <span className="text-gray-700 text-xs">
+            {showFreeOffer ? '5,000 Free' : formatCost(cost)}
+          </span>
         </div>
       </CardContent>
     </Card>

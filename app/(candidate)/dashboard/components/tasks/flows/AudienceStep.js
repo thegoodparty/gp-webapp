@@ -14,7 +14,9 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 
 const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
@@ -31,6 +33,7 @@ export default function AudienceStep({
   onCreateVoterFileFilter = async () => {},
   onCreatePhoneList = async (voterFileFilter) => {},
 }) {
+  const [campaign] = useCampaign()
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const hasValues = useMemo(
@@ -50,6 +53,7 @@ export default function AudienceStep({
 
   const handleOnNext = async () => {
     setLoading(true)
+    
     const voterFileFilter = await onCreateVoterFileFilter()
     const phoneListToken = await onCreatePhoneList(voterFileFilter)
     setLoading(false)
@@ -93,10 +97,28 @@ export default function AudienceStep({
     price = TEXT_PRICE
   }
 
+  const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
+  const hasFreeTextsOffer = campaign?.hasFreeTextsOffer && isTextType
+  
+  const calculateCost = (textCount) => {
+    if (hasFreeTextsOffer && textCount > 0) {
+      const discountedCount = Math.max(0, textCount - FREE_TEXTS_OFFER.COUNT)
+      return discountedCount * price
+    }
+    return textCount * price
+  }
+
   return (
     <div className="p-4 w-[80vw] max-w-4xl">
       <div className="text-center">
         <H1>Select target audience</H1>
+        {hasFreeTextsOffer && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+            <span className="text-blue-800 font-medium">
+              Your first text gets up to 5,000 Free messages
+            </span>
+          </div>
+        )}
         <div className="p-4 text-sm">
           Voters selected:
           <span className="font-bold text-black ml-1">
@@ -120,7 +142,7 @@ export default function AudienceStep({
                     className="inline-block align-middle"
                   />
                 ) : (
-                  `$${numberFormatter(count * price, 2)}`
+                  `$${numberFormatter(calculateCost(count), 2)}`
                 )}
               </span>
             </>

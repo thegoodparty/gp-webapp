@@ -58,3 +58,7 @@ export const OUTREACH_ACTIONS_TYPES = {
   copyScript: 'copyScript',
   downloadAudience: 'downloadAudience',
 }
+
+export const FREE_TEXTS_OFFER = {
+  COUNT: 5000,
+}
