@@ -19,7 +19,7 @@ import {
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function TasksList({ campaign, tasks: tasksProp = [] }) {
   const [tasks, setTasks] = useState(tasksProp)
@@ -58,6 +58,9 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
     const { flowType, proRequired, deadline } = task
 
     if (proRequired && !campaign.isPro) {
+      trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
+        source: 'task_list'
+      })
       setShowProUpgradeModal(true)
       setProUpgradeTrackingAttrs(
         buildTrackingAttrs('Upgrade to Pro', {

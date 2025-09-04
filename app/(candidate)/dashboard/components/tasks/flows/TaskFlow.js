@@ -16,6 +16,8 @@ import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import {
   handleCreateOutreach,
   handleCreatePhoneList,
@@ -24,6 +26,7 @@ import {
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 import { noop } from '@shared/utils/noop'
@@ -73,6 +76,7 @@ export default function TaskFlow({
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const [, updateVoterContacts] = useVoterContacts()
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
@@ -82,6 +86,7 @@ export default function TaskFlow({
   const purchaseMetaData = {
     contactCount: leadsLoaded,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
+    outreachType: type,
   }
 
   const trackingAttrs = useMemo(
@@ -214,6 +219,14 @@ export default function TaskFlow({
       successSnackbar,
       state,
     )(await onCreateOutreach())
+
+    const contactField = getVoterContactField(type)
+    await updateVoterContacts((currentContacts) => ({
+      ...currentContacts,
+      [contactField]:
+        (currentContacts[contactField] || 0) + (state.voterCount || 0),
+    }))
+
     handleNext()
   }
 
@@ -323,7 +336,7 @@ export default function TaskFlow({
         {stepName === STEPS.purchase && (
           <PurchaseIntentProvider
             {...{
-              type: type.toUpperCase(),
+              type: PURCHASE_TYPES.TEXT,
               purchaseMetaData,
             }}
           >
@@ -332,6 +345,8 @@ export default function TaskFlow({
                 onComplete: handlePurchaseComplete,
                 phoneListId,
                 contactCount: purchaseMetaData?.contactCount,
+                type,
+                pricePerContact: purchaseMetaData?.pricePerContact,
               }}
             />
           </PurchaseIntentProvider>
