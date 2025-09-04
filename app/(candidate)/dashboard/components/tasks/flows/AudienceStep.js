@@ -14,7 +14,7 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 
