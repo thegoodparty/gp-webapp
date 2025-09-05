@@ -12,7 +12,7 @@ import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
+import { STEPS } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -32,6 +32,8 @@ import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/P
 import { noop } from '@shared/utils/noop'
 import { LongPoll } from '@shared/utils/LongPoll'
 import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
+import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -68,10 +70,14 @@ export default function TaskFlow({
   onClose,
   defaultAiTemplateId,
 }) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
+  const stepList = useMemo(getFlowStepsByType(type, p2pUxEnabled), [
+    type,
+    p2pUxEnabled,
+  ])
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
