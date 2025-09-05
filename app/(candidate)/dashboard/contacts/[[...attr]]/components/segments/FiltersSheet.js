@@ -10,16 +10,20 @@ import {
 import { useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
+import { saveCustomSegment } from '../ajacActions'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function Filters({
   open = false,
   handleClose = () => {},
-  handleSave = () => {},
+
   handleOpenChange = () => {},
 }) {
+  const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState({})
   const [edit, setEdit] = useState(false)
   const [segmentName, setSegmentName] = useState('Custom Segment 1')
+  const [saving, setSaving] = useState(false)
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
@@ -32,6 +36,21 @@ export default function Filters({
     })
 
     setFilters(updatedFilters)
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    const response = await saveCustomSegment({
+      name: segmentName,
+      ...filters,
+    })
+    if (response) {
+      successSnackbar('Segment created successfully')
+    } else {
+      errorSnackbar('Failed to create segment')
+    }
+    setSaving(false)
+    handleClose()
   }
 
   return (
@@ -97,7 +116,11 @@ export default function Filters({
           <Button variant="outline" onClick={() => setFilters({})}>
             Clear Filters
           </Button>
-          <Button variant="default" onClick={handleSave}>
+          <Button
+            variant="default"
+            onClick={handleSave}
+            disabled={saving || !segmentName}
+          >
             Create Segment
           </Button>
         </div>

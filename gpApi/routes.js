@@ -1,4 +1,14 @@
 export const apiRoutes = {
+  segments: {
+    create: {
+      path: '/contacts-segment',
+      method: 'POST',
+    },
+    list: {
+      path: '/contacts-segment',
+      method: 'GET',
+    },
+  },
   homepage: {
     subscribeEmail: {
       path: '/subscribe',
@@ -234,9 +244,9 @@ export const apiRoutes = {
     raceTargetDetails: {
       update: {
         path: '/campaigns/mine/race-target-details',
-        method: 'PUT'
-      }
-    }
+        method: 'PUT',
+      },
+    },
   },
   content: {
     getByType: {
@@ -427,13 +437,13 @@ export const apiRoutes = {
     districts: {
       types: {
         path: '/elections/districts/types',
-        method: 'GET'
+        method: 'GET',
       },
       names: {
         path: '/elections/districts/names',
         method: 'GET',
-      }
-    }
+      },
+    },
   },
   payments: {
     createCheckoutSession: {

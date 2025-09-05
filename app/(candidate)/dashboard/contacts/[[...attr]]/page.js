@@ -8,6 +8,9 @@ import {
 } from './components/temp/temp-sample-people-full'
 import { PersonProvider } from './providers/PersonProvider'
 import { SegmentProvider } from './providers/SegmentProvider'
+import { CustomSegmentsProvider } from './providers/CustomSegmentsProvider'
+import { apiRoutes } from 'gpApi/routes'
+import { serverFetch } from 'gpApi/serverFetch'
 
 const fetchContacts = async (page = 1, pageSize = 25) => {
   // Simulate API response with pagination metadata
@@ -41,6 +44,11 @@ const fetchPerson = async (personId) => {
   )
 }
 
+const fetchCustomSegments = async () => {
+  const response = await serverFetch(apiRoutes.segments.list)
+  return response.data || []
+}
+
 const meta = pageMetaData({
   title: 'Contacts  | GoodParty.org',
   description: 'Manage your campaign contacts.',
@@ -65,12 +73,15 @@ export default async function Page({ params, searchParams }) {
   pageSize = parseInt(pageSize || '20')
 
   const contacts = await fetchContacts(page, pageSize)
+  const initCustomSegments = await fetchCustomSegments()
 
   return (
     <ContactsProvider contacts={contacts}>
       <PersonProvider person={person}>
         <SegmentProvider>
-          <ContactsPage />
+          <CustomSegmentsProvider customSegments={initCustomSegments}>
+            <ContactsPage />
+          </CustomSegmentsProvider>
         </SegmentProvider>
       </PersonProvider>
     </ContactsProvider>
