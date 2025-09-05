@@ -1,6 +1,6 @@
 'use client'
 import { Sheet, SheetContent } from 'goodparty-styleguide'
-import { usePerson } from '../PersonProvider'
+import { usePerson } from '../../providers/PersonProvider'
 import { useRouter } from 'next/navigation'
 import InfoSection from './InfoSection'
 import PersonMap from './PersonMap'

@@ -4,19 +4,24 @@ import Body2 from '@shared/typography/Body2'
 import {
   Button,
   Checkbox,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
   Sheet,
   SheetContent,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
 } from 'goodparty-styleguide'
 import { useState } from 'react'
-import { TbDownload } from 'react-icons/tb'
 import filterSections from './filters.config'
+import { useSegment } from '../providers/SegmentProvider'
 
 export default function Filters() {
   const [open, setOpen] = useState(false)
   const [filters, setFilters] = useState({})
+  const [segment, setSegment] = useSegment()
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
@@ -27,20 +32,28 @@ export default function Filters() {
 
   return (
     <>
-      <div className="absolute md:right-36 top-4 flex items-center gap-4">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline">
-              <TbDownload />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="text-white">Download .csv file</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Button variant="outline" onClick={() => setOpen(true)}>
-          filters
+      <div className="absolute left-0 top-4 flex items-center gap-4">
+        <Select>
+          <SelectTrigger className="w-[280px]">
+            <SelectValue placeholder="All Contacts" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Frontend</SelectLabel>
+              <SelectItem value="react">React</SelectItem>
+              <SelectItem value="vue">Vue</SelectItem>
+              <SelectItem value="angular">Angular</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>Backend</SelectLabel>
+              <SelectItem value="node">Node.js</SelectItem>
+              <SelectItem value="django">Django</SelectItem>
+              <SelectItem value="rails">Ruby on Rails</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Button variant="secondary" onClick={() => setOpen(true)}>
+          Create a Segment
         </Button>
       </div>
       <Sheet open={open} onOpenChange={setOpen} onClose={handleClose}>

@@ -1,14 +1,15 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import { PeopleProvider } from './components/PeopleProvider'
-import PeoplePage from './components/PeoplePage'
+import { ContactsProvider } from './providers/ContactsProvider'
+import ContactsPage from './components/ContactsPage'
 import {
   TEMP_SAMPLE_PEOPLE_FULL_PAGE1,
   TEMP_SAMPLE_PEOPLE_FULL_PAGE2,
 } from './components/temp-sample-people-full'
-import { PersonProvider } from './components/PersonProvider'
+import { PersonProvider } from './providers/PersonProvider'
+import { SegmentProvider } from './providers/SegmentProvider'
 
-const fetchPeople = async (page = 1, pageSize = 25) => {
+const fetchContacts = async (page = 1, pageSize = 25) => {
   // Simulate API response with pagination metadata
   let data
   if (page === 1) {
@@ -63,13 +64,15 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || '20')
 
-  const people = await fetchPeople(page, pageSize)
+  const contacts = await fetchContacts(page, pageSize)
 
   return (
-    <PeopleProvider people={people} person={person}>
+    <ContactsProvider contacts={contacts}>
       <PersonProvider person={person}>
-        <PeoplePage />
+        <SegmentProvider>
+          <ContactsPage />
+        </SegmentProvider>
       </PersonProvider>
-    </PeopleProvider>
+    </ContactsProvider>
   )
 }
