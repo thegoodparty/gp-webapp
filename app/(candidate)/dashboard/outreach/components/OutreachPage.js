@@ -14,6 +14,7 @@ export const OutreachPage = ({
   campaign,
   outreaches = [],
   mockOutreaches = [],
+  tcrCompliance,
 }) => {
   useSingleEffect(() => {
     trackEvent(EVENTS.Outreach.ViewAccessed)
@@ -23,7 +24,7 @@ export const OutreachPage = ({
       <DashboardLayout pathname={pathname} campaign={campaign}>
         <OutreachHeader />
         <FreeTextsBanner />
-        <OutreachCreateCards />
+        <OutreachCreateCards tcrCompliance={tcrCompliance} />
         <OutreachTable
           {...{
             mockOutreaches,
