@@ -271,7 +271,7 @@ export default function TaskFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
-        {phoneListToken && (
+        {p2pUxEnabled && phoneListToken && (
           <LongPoll
             {...{
               pollingMethod: async () => {

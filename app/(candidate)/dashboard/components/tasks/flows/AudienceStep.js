@@ -15,6 +15,7 @@ import {
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
@@ -31,6 +32,7 @@ export default function AudienceStep({
   onCreateVoterFileFilter = async () => {},
   onCreatePhoneList = async (voterFileFilter) => {},
 }) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const hasValues = useMemo(
@@ -51,7 +53,9 @@ export default function AudienceStep({
   const handleOnNext = async () => {
     setLoading(true)
     const voterFileFilter = await onCreateVoterFileFilter()
-    const phoneListToken = await onCreatePhoneList(voterFileFilter)
+    const phoneListToken = p2pUxEnabled
+      ? await onCreatePhoneList(voterFileFilter)
+      : null
     setLoading(false)
     onChangeCallback({
       voterFileFilter,
