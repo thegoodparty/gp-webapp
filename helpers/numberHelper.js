@@ -66,23 +66,39 @@ export const kFormatter = (num) => {
 }
 
 export const formatPhoneNumber = (value) => {
+  if (!value) {
+    return ''
+  }
+  let noCountryCode = value
+  if (value.charAt(0) === '1') {
+    noCountryCode = value.substring(1)
+  }
+  const input = noCountryCode.replace(/\D/g, '').substring(0, 10) // First ten digits of input only
+  const areaCode = input.substring(0, 3)
+  const middle = input.substring(3, 6)
+  const last = input.substring(6, 10)
+
+  if (input.length > 6) {
+    return `(${areaCode}) ${middle}-${last}`
+  }
+  if (input.length > 3) {
+    return `(${areaCode}) ${middle}`
+  }
+  if (input.length > 0) {
+    return `(${areaCode}`
+  }
+}
+
+export const formatDisplayPhoneNumber = (value) => {
+  // For use in static displays, like the website contact inbox
+
   if (!value) return ''
 
-  // Strip all non-digits
-  const cleaned = value.replace(/\D/g, '')
+  // Strip all non-digits, then grab last 10
+  const digits = value.replace(/\D/g, '').slice(-10)
 
-  // If we don't have 10–11 digits (normal US phone numbers), bail out
-  if (cleaned.length < 10 || cleaned.length > 11) return ''
+  // Show nothing if not exactly 10 digits
+  if (digits.length !== 10) return ''
 
-  // Always take last 10 digits (handles +1 or 1 prefix)
-  const digits = cleaned.slice(-10)
-
-  const areaCode = digits.substring(0, 3)
-  const middle = digits.substring(3, 6)
-  const last = digits.substring(6, 10)
-
-  if (digits.length > 6) return `(${areaCode}) ${middle}-${last}`
-  if (digits.length > 3) return `(${areaCode}) ${middle}`
-  if (digits.length > 0) return `(${areaCode}`
-  return ''
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
 }
