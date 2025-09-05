@@ -22,8 +22,14 @@ import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
-export default function TasksList({ campaign, tasks: tasksProp = [], tcrCompliance }) {
+export default function TasksList({
+  campaign,
+  tasks: tasksProp = [],
+  tcrCompliance,
+}) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
@@ -59,7 +65,8 @@ export default function TasksList({ campaign, tasks: tasksProp = [], tcrComplian
 
   const handleActionClick = (task) => {
     const { flowType, proRequired, deadline } = task
-    const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+    const isTextCompliant =
+      tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
     // Check for text messaging specific requirements
     if (flowType === TASK_TYPES.text) {
@@ -73,13 +80,13 @@ export default function TasksList({ campaign, tasks: tasksProp = [], tcrComplian
         )
         return
       }
-      if (!isTextCompliant) {
+      if (p2pUxEnabled && !isTextCompliant) {
         setShowComplianceModal(true)
         return
       }
     } else if (proRequired && !campaign.isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
-        source: 'task_list'
+        source: 'task_list',
       })
       setShowProUpgradeModal(true)
       setProUpgradeTrackingAttrs(
@@ -178,11 +185,13 @@ export default function TasksList({ campaign, tasks: tasksProp = [], tcrComplian
         onClose={() => setShowProUpgradeModal(false)}
         trackingAttrs={proUpgradeTrackingAttrs}
       />
-      <ComplianceModal
-        open={showComplianceModal}
-        tcrComplianceStatus={tcrCompliance?.status}
-        onClose={() => setShowComplianceModal(false)}
-      />
+      {p2pUxEnabled && (
+        <ComplianceModal
+          open={showComplianceModal}
+          tcrComplianceStatus={tcrCompliance?.status}
+          onClose={() => setShowComplianceModal(false)}
+        />
+      )}
       {flowModalTask && (
         <TaskFlow
           forceOpen

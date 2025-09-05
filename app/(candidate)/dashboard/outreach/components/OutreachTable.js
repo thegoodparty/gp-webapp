@@ -14,10 +14,36 @@ import Popover from '@mui/material/Popover'
 import { OutreachActions } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const NotApplicableLabel = () => <span className="text-gray-500">n/a</span>
 
+const STATUS_COLUMN = {
+  header: 'Status',
+  cell: ({ row }) => {
+    if (row.outreachType !== OUTREACH_TYPES.p2p) {
+      return <NotApplicableLabel />
+    }
+
+    const statusLabels = {
+      pending: 'Draft',
+      approved: 'In review',
+      denied: 'In review',
+      paid: 'Scheduled',
+      in_progress: 'Scheduled',
+      completed: 'Sent',
+    }
+
+    if (!row.status || !statusLabels[row.status]) {
+      return <NotApplicableLabel />
+    }
+
+    return <span>{statusLabels[row.status]}</span>
+  },
+}
+
 export const OutreachTable = ({ mockOutreaches }) => {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [outreaches] = useOutreach()
   const useMockData = !outreaches?.length
   const tableData = useMockData ? mockOutreaches : outreaches
@@ -28,6 +54,7 @@ export const OutreachTable = ({ mockOutreaches }) => {
     left: 0,
   })
   const title = useMockData ? 'How your outreach could look' : 'Your campaigns'
+
   const columns = [
     {
       header: 'Date',
@@ -86,29 +113,7 @@ export const OutreachTable = ({ mockOutreaches }) => {
           <NotApplicableLabel />
         ),
     },
-    {
-      header: 'Status',
-      cell: ({ row }) => {
-        if (row.outreachType !== OUTREACH_TYPES.p2p) {
-          return <NotApplicableLabel />
-        }
-        
-        const statusLabels = {
-          pending: 'Draft',
-          approved: 'In review',
-          denied: 'In review',
-          paid: 'Scheduled',
-          in_progress: 'Scheduled',
-          completed: 'Sent'
-        }
-        
-        if (!row.status || !statusLabels[row.status]) {
-          return <NotApplicableLabel />
-        }
-        
-        return <span>{statusLabels[row.status]}</span>
-      },
-    },
+    ...(p2pUxEnabled ? [STATUS_COLUMN] : []),
   ]
 
   const convertedFilters = useMemo(

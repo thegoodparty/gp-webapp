@@ -1,6 +1,7 @@
 // NOTE: copied from CampaignTaskType enum in gp-api
 export const TASK_TYPES = {
   text: 'text',
+  p2pDisabledText: 'p2pDisabledText',
   robocall: 'robocall',
   doorKnocking: 'doorKnocking',
   phoneBanking: 'phoneBanking',
