@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { OUTREACH_TYPES } from '../constants'
 import TaskFlow from '../../components/tasks/flows/TaskFlow'

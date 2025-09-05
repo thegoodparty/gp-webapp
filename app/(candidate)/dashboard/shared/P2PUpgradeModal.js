@@ -6,7 +6,6 @@ import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import Image from 'next/image'
 import { useEffect } from 'react'
-import { FREE_TEXTS_OFFER } from '../outreach/constants'
 import { trackEvent } from 'helpers/analyticsHelper'
 
 export const P2P_MODAL_VARIANTS = {
