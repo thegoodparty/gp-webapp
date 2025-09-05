@@ -6,7 +6,10 @@ import {
 import Button from '@shared/buttons/Button'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
+// TODO: these should just be "instructions" properties on each task STEP, not a
+//  separate constant here.
 const INSTRUCTIONS_BY_TYPE = {
   [TASK_TYPES.text]: [
     'Select target audience',
@@ -15,6 +18,13 @@ const INSTRUCTIONS_BY_TYPE = {
     'Schedule texting campaign',
     'Pay for texts',
     'Your Political Advisor will review and approve',
+  ],
+  [TASK_TYPES.p2pDisabledText]: [
+    'Select target audience',
+    'Develop your script',
+    'Attach your image',
+    'Schedule texting campaign',
+    'Our team will reach out with next steps',
   ],
   [TASK_TYPES.phoneBanking]: [
     'Select target audience',
@@ -39,6 +49,11 @@ const INSTRUCTIONS_BY_TYPE = {
   ],
 }
 
+const getInstructions = (type, isP2pUxEnabled) =>
+  !isP2pUxEnabled && [TASK_TYPES.text, LEGACY_TASK_TYPES.sms].includes(type)
+    ? INSTRUCTIONS_BY_TYPE[TASK_TYPES.p2pDisabledText]
+    : INSTRUCTIONS_BY_TYPE[type] || []
+
 // TODO: remove these once we replace old dashboard view with new task flow
 // legacy type "sms" uses the same instructions as "texting"
 INSTRUCTIONS_BY_TYPE[LEGACY_TASK_TYPES.sms] =
@@ -52,7 +67,8 @@ export default function InstructionsStep({
   nextCallback,
   closeCallback,
 }) {
-  const instructions = INSTRUCTIONS_BY_TYPE[type] || []
+  const { p2pUxEnabled } = useP2pUxEnabled()
+  const instructions = getInstructions(type, p2pUxEnabled)
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Start Task', { type }),
