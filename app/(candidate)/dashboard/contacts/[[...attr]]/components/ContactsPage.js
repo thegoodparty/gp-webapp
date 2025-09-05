@@ -4,8 +4,8 @@ import ContactsStatsSection from './ContactsStatsSection'
 import ContactsTable from './ContactsTable'
 import TitleSection from './TitleSection'
 import PersonOverlay from './person/PersonOverlay'
-import Filters from './Filters'
 import Download from './Download'
+import SegmentSection from './segments/SegmentSection'
 
 export default function ContactsPage() {
   return (
@@ -14,7 +14,7 @@ export default function ContactsPage() {
         <TitleSection />
         <ContactsStatsSection />
         <div className="relative">
-          <Filters />
+          <SegmentSection />
           <Download />
           <ContactsTable />
         </div>

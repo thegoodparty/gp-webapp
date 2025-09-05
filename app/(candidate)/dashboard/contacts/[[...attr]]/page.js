@@ -5,7 +5,7 @@ import ContactsPage from './components/ContactsPage'
 import {
   TEMP_SAMPLE_PEOPLE_FULL_PAGE1,
   TEMP_SAMPLE_PEOPLE_FULL_PAGE2,
-} from './components/temp-sample-people-full'
+} from './components/temp/temp-sample-people-full'
 import { PersonProvider } from './providers/PersonProvider'
 import { SegmentProvider } from './providers/SegmentProvider'
 
@@ -42,9 +42,9 @@ const fetchPerson = async (personId) => {
 }
 
 const meta = pageMetaData({
-  title: 'People | GoodParty.org',
-  description: 'Manage your campaign people.',
-  slug: '/dashboard/people',
+  title: 'Contacts  | GoodParty.org',
+  description: 'Manage your campaign contacts.',
+  slug: '/dashboard/contacts',
 })
 export const metadata = meta
 export const dynamic = 'force-dynamic'
