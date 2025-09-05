@@ -24,7 +24,9 @@ export const TextingComplianceSubmitPinForm = ({
   const { isValid } = validatePinForm(formData)
 
   const handleSubmit = () => {
-    trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted)
+    trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted, {
+      source: 'compliance_flow'
+    })
     return onSubmit({ ...formData })
   }
 

@@ -76,7 +76,7 @@ export default function OutreachCreateCards({ tcrCompliance }) {
 
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
-    
+
     // Check for text messaging specific requirements
     if (type === OUTREACH_TYPES.text) {
       if (!isPro) {
@@ -86,9 +86,12 @@ export default function OutreachCreateCards({ tcrCompliance }) {
         return openComplianceModal()
       }
     } else if (requiresPro && !isPro) {
+      trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
+        source: 'outreach_page',
+      })
       return openProUpgradeModal()
     }
-    
+
     return openTaskFlow(type)
   }
 
