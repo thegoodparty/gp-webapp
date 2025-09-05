@@ -41,7 +41,7 @@ export function ComplianceModal({
       description =
         'To send text messages to voters, you need to complete 10DLC registration. This ensures compliance with carrier requirements and improves message delivery.'
       cta = 'Start Registration'
-      ctaHref = '/profile/texting-compliance'
+      ctaHref = '/profile#texting-compliance'
       break
   }
 
