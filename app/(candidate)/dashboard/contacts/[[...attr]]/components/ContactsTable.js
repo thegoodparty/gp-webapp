@@ -1,6 +1,6 @@
 'use client'
 import { DataTableColumnHeader } from 'goodparty-styleguide'
-import { usePeople } from './PeopleProvider'
+import { useContacts } from '../providers/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 
 const columns = [
@@ -54,31 +54,31 @@ const columns = [
   },
 ]
 
-export default function PeopleTable() {
-  const [people] = usePeople()
-  const data = (people?.data || []).map((person) => {
+export default function ContactsTable() {
+  const [contacts] = useContacts()
+  const data = (contacts?.data || []).map((contact) => {
     const addressParts = [
-      person.Residence_Addresses_AddressLine,
-      person.Residence_Addresses_City,
-      person.Residence_Addresses_State,
-      person.Residence_Addresses_Zip,
+      contact.Residence_Addresses_AddressLine,
+      contact.Residence_Addresses_City,
+      contact.Residence_Addresses_State,
+      contact.Residence_Addresses_Zip,
     ].filter(Boolean)
 
     return {
-      ...person,
+      ...contact,
       address: addressParts.join(', '),
       VoterTelephones_CellPhoneFormatted:
-        person.VoterTelephones_CellPhoneFormatted ||
-        person.VoterTelephones_LandlineFormatted,
+        contact.VoterTelephones_CellPhoneFormatted ||
+        contact.VoterTelephones_LandlineFormatted,
     }
   })
 
   // Extract pagination info from people data
   const pagination = {
-    totalPages: people?.pagination?.totalPages || 1,
-    totalItems: people?.pagination?.totalItems || 0,
-    hasNextPage: people?.pagination?.hasNextPage || false,
-    hasPreviousPage: people?.pagination?.hasPreviousPage || false,
+    totalPages: contacts?.pagination?.totalPages || 1,
+    totalItems: contacts?.pagination?.totalItems || 0,
+    hasNextPage: contacts?.pagination?.hasNextPage || false,
+    hasPreviousPage: contacts?.pagination?.hasPreviousPage || false,
   }
 
   return (
@@ -87,7 +87,7 @@ export default function PeopleTable() {
         columns={columns}
         data={data}
         searchKey="Voters_FirstName"
-        searchPlaceholder="Search people..."
+        searchPlaceholder="Search contacts..."
         pagination={pagination}
       />
     </div>
