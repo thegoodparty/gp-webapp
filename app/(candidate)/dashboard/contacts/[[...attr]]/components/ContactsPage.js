@@ -1,20 +1,22 @@
 import Paper from '@shared/utils/Paper'
 import DashboardLayout from '../../../shared/DashboardLayout'
-import PeopleStatsSection from './PeopleStatsSection'
-import PeopleTable from './PeopleTable'
+import ContactsStatsSection from './ContactsStatsSection'
+import ContactsTable from './ContactsTable'
 import TitleSection from './TitleSection'
 import PersonOverlay from './person/PersonOverlay'
-import Filters from './Filters'
+import Download from './Download'
+import SegmentSection from './segments/SegmentSection'
 
-export default function PeoplePage() {
+export default function ContactsPage() {
   return (
     <DashboardLayout>
       <Paper>
         <TitleSection />
-        <PeopleStatsSection />
+        <ContactsStatsSection />
         <div className="relative">
-          <Filters />
-          <PeopleTable />
+          <SegmentSection />
+          <Download />
+          <ContactsTable />
         </div>
       </Paper>
       <PersonOverlay />
