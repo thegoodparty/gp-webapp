@@ -11,6 +11,8 @@ import {
   ProUpgradeModal,
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
+import { ComplianceModal } from 'app/(candidate)/dashboard/shared/ComplianceModal'
+import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export const OUTREACH_OPTIONS = [
@@ -50,14 +52,19 @@ export const OUTREACH_OPTIONS = [
   },
 ]
 
-export default function OutreachCreateCards() {
+export default function OutreachCreateCards({ tcrCompliance }) {
   const [campaign] = useCampaign()
   const { isPro } = campaign || {}
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
 
   const openProUpgradeModal = () => {
     setShowProUpgradeModal(true)
+  }
+
+  const openComplianceModal = () => {
+    setShowComplianceModal(true)
   }
 
   const openTaskFlow = (type) =>
@@ -65,10 +72,20 @@ export default function OutreachCreateCards() {
       flowType: type,
     })
 
+  const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
 
-    if (requiresPro && !isPro) {
+    // Check for text messaging specific requirements
+    if (type === OUTREACH_TYPES.text) {
+      if (!isPro) {
+        return openProUpgradeModal()
+      }
+      if (!isTextCompliant) {
+        return openComplianceModal()
+      }
+    } else if (requiresPro && !isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
         source: 'outreach_page',
       })
@@ -116,6 +133,14 @@ export default function OutreachCreateCards() {
           variant: VARIANTS.Second_NonViable,
           open: showProUpgradeModal,
           onClose: () => setShowProUpgradeModal(false),
+        }}
+      />
+
+      <ComplianceModal
+        {...{
+          open: showComplianceModal,
+          tcrComplianceStatus: tcrCompliance?.status,
+          onClose: () => setShowComplianceModal(false),
         }}
       />
 

@@ -18,6 +18,7 @@ export default function DashboardPage({
   pathname,
   tasks,
   campaign: campaignProp,
+  tcrCompliance,
 }) {
   const [_, setUser] = useUser()
   const [campaign, setCampaign] = useState(campaignProp)
@@ -136,7 +137,7 @@ export default function DashboardPage({
                     {electionInPast || primaryLost ? (
                       <ElectionOver />
                     ) : (
-                      <TasksList campaign={campaign} tasks={tasks} />
+                      <TasksList campaign={campaign} tasks={tasks} tcrCompliance={tcrCompliance} />
                     )}
                   </>
                 ) : (
