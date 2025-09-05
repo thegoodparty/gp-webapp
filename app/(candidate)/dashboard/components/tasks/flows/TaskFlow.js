@@ -199,8 +199,17 @@ export default function TaskFlow({
         outreaches,
         setOutreaches,
         errorSnackbar,
+        p2pUxEnabled,
       }),
-    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
+    [
+      type,
+      state,
+      campaign,
+      outreaches,
+      setOutreaches,
+      errorSnackbar,
+      p2pUxEnabled,
+    ],
   )
 
   const onCreateVoterFileFilter = useMemo(
@@ -337,6 +346,7 @@ export default function TaskFlow({
                   )
                 : noop
             }
+            isLastStep
           />
         )}
         {stepName === STEPS.purchase && (

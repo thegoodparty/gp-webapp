@@ -41,6 +41,7 @@ export const handleCreateOutreach =
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
+    p2pUxEnabled = true,
   }) =>
   async () => {
     const { audience_request: audienceRequest } = audience || {}
@@ -49,14 +50,17 @@ export const handleCreateOutreach =
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType: type === OUTREACH_TYPES.text ? OUTREACH_TYPES.p2p : type,
+        outreachType:
+          p2pUxEnabled && type === OUTREACH_TYPES.text
+            ? OUTREACH_TYPES.p2p
+            : type,
         message,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
         ...(date ? { date } : {}),
         ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
         ...(audienceRequest ? { audienceRequest } : {}),
-        phoneListId,
+        ...(p2pUxEnabled ? { phoneListId } : {}),
       },
       image,
     )
