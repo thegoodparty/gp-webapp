@@ -23,7 +23,7 @@ export const OutreachPage = ({
     <OutreachProvider initValue={outreaches}>
       <DashboardLayout pathname={pathname} campaign={campaign}>
         <OutreachHeader />
-        <FreeTextsBanner />
+        <FreeTextsBanner tcrCompliance={tcrCompliance} />
         <OutreachCreateCards tcrCompliance={tcrCompliance} />
         <OutreachTable
           {...{

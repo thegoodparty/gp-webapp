@@ -4,22 +4,29 @@ import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { OUTREACH_TYPES } from '../constants'
 import TaskFlow from '../../components/tasks/flows/TaskFlow'
+import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 
-export const FreeTextsBanner = ({ className = '' }) => {
+export const FreeTextsBanner = ({ className = '', tcrCompliance }) => {
   const [campaign] = useCampaign()
-  const [showFlow, setShowFlow] = useState(false)
+  const [flowModalTask, setFlowModalTask] = useState(null)
 
-  // Don't show banner if campaign doesn't have free texts offer
   if (!campaign?.hasFreeTextsOffer) {
     return null
   }
 
+  const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+  if (!isTextCompliant) {
+    return null
+  }
+
   const handleSendClick = () => {
-    setShowFlow(true)
+    setFlowModalTask({
+      flowType: OUTREACH_TYPES.text,
+    })
   }
 
   const handleCloseFlow = () => {
-    setShowFlow(false)
+    setFlowModalTask(null)
   }
 
   return (
@@ -30,20 +37,20 @@ export const FreeTextsBanner = ({ className = '' }) => {
             Send your 5,000 free texts
           </span>
         </div>
-        <Button 
-          variant="primary" 
-          size="small"
+        <span 
+          className="font-bold text-blue-800 cursor-pointer hover:underline"
           onClick={handleSendClick}
         >
           Send
-        </Button>
+        </span>
       </div>
 
-      {showFlow && (
+      {flowModalTask && campaign && (
         <TaskFlow
-          type={OUTREACH_TYPES.text}
-          onComplete={handleCloseFlow}
-          onCancel={handleCloseFlow}
+          forceOpen
+          type={flowModalTask.flowType}
+          campaign={campaign}
+          onClose={handleCloseFlow}
         />
       )}
     </>

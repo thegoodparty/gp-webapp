@@ -11,6 +11,10 @@ import {
   ProUpgradeModal,
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
+import {
+  P2PUpgradeModal,
+  P2P_MODAL_VARIANTS,
+} from 'app/(candidate)/dashboard/shared/P2PUpgradeModal'
 import { ComplianceModal } from 'app/(candidate)/dashboard/shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -54,13 +58,18 @@ export const OUTREACH_OPTIONS = [
 
 export default function OutreachCreateCards({ tcrCompliance }) {
   const [campaign] = useCampaign()
-  const { isPro } = campaign || {}
+  const { isPro, hasFreeTextsOffer } = campaign || {}
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
 
   const openProUpgradeModal = () => {
     setShowProUpgradeModal(true)
+  }
+
+  const openP2PModal = () => {
+    setShowP2PModal(true)
   }
 
   const openComplianceModal = () => {
@@ -77,13 +86,16 @@ export default function OutreachCreateCards({ tcrCompliance }) {
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
 
-    // Check for text messaging specific requirements
     if (type === OUTREACH_TYPES.text) {
       if (!isPro) {
-        return openProUpgradeModal()
+        return openP2PModal()
       }
       if (!isTextCompliant) {
-        return openComplianceModal()
+        if (hasFreeTextsOffer) {
+          return openP2PModal()
+        } else {
+          return openComplianceModal()
+        }
       }
     } else if (requiresPro && !isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
@@ -133,6 +145,21 @@ export default function OutreachCreateCards({ tcrCompliance }) {
           variant: VARIANTS.Second_NonViable,
           open: showProUpgradeModal,
           onClose: () => setShowProUpgradeModal(false),
+        }}
+      />
+
+      <P2PUpgradeModal
+        {...{
+          variant: (() => {
+            if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
+            if (hasFreeTextsOffer && !isTextCompliant) {
+              return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
+            }
+            return P2P_MODAL_VARIANTS.NonProUpgrade
+          })(),
+          open: showP2PModal,
+          onClose: () => setShowP2PModal(false),
+          onUpgradeLinkClick: undefined,
         }}
       />
 
