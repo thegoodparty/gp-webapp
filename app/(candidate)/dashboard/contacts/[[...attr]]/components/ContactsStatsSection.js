@@ -17,7 +17,7 @@ const fetchPeopleStats = async () => {
   }
 }
 
-export default async function PeopleStatsSection() {
+export default async function ContactsStatsSection() {
   const peopleStats = await fetchPeopleStats()
 
   const cards = [

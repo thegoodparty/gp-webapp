@@ -1,6 +1,6 @@
 'use client'
 
-import { usePerson } from '../PersonProvider'
+import { usePerson } from '../../providers/PersonProvider'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 

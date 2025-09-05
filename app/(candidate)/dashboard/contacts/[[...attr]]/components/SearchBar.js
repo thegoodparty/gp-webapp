@@ -1,12 +1,12 @@
 'use client'
 import { Input } from 'goodparty-styleguide'
 import { useState } from 'react'
-import { usePeople } from './PeopleProvider'
+import { useContacts } from '../providers/ContactsProvider'
 import Button from '@shared/buttons/Button'
 
 export default function SearchBar() {
   const [value, setValue] = useState('')
-  const [people] = usePeople()
+  const [people] = useContacts()
 
   const handleSearchChange = (event) => {
     setValue(event.target.value)
