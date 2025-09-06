@@ -21,7 +21,7 @@ export const OutreachPurchaseForm = ({
   const hasFreeTextsOffer = campaign?.hasFreeTextsOffer
   const discount = hasFreeTextsOffer ? Math.min(contactCount, FREE_TEXTS_OFFER.COUNT) : 0
   const isFree = hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT
-  const totalCost = purchaseIntent?.amount ? purchaseIntent.amount / 100 : 0
+  const totalCost = isFree ? 0 : (purchaseIntent?.amount ? purchaseIntent.amount : 0)
 
   const handleFreeComplete = () => {
     onComplete()
@@ -67,17 +67,12 @@ export const OutreachPurchaseForm = ({
           Schedule text
         </Button>
       ) : (
-        <>
-          <PurchaseHeader>
-            <Body1>Texts: {contactCount}</Body1>
-          </PurchaseHeader>
-          <PurchasePayment
-            {...{
-              onPaymentSuccess: onComplete,
-              onPaymentError: onError,
-            }}
-          />
-        </>
+        <PurchasePayment
+          {...{
+            onPaymentSuccess: onComplete,
+            onPaymentError: onError,
+          }}
+        />
       )}
     </div>
   )

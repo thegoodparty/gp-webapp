@@ -41,6 +41,7 @@ export const handleCreateOutreach =
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
+    refreshCampaign = () => {},
   }) =>
   async () => {
     const { audience_request: audienceRequest } = audience || {}
@@ -67,6 +68,10 @@ export const handleCreateOutreach =
     }
 
     setOutreaches([...outreaches, outreach])
+    
+    // Refresh campaign data to update hasFreeTextsOffer after redemption
+    await refreshCampaign()
+    
     return outreach
   }
 

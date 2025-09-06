@@ -18,6 +18,7 @@ import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachCo
 import { useSnackbar } from 'helpers/useSnackbar'
 import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   handleCreateOutreach,
   handleCreatePhoneList,
@@ -77,6 +78,7 @@ export default function TaskFlow({
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [, updateVoterContacts] = useVoterContacts()
+  const [, , refreshCampaign] = useCampaign()
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
@@ -87,6 +89,7 @@ export default function TaskFlow({
     contactCount: leadsLoaded,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
     outreachType: type,
+    campaignId: campaign.id,
   }
 
   const trackingAttrs = useMemo(
@@ -193,8 +196,9 @@ export default function TaskFlow({
         outreaches,
         setOutreaches,
         errorSnackbar,
+        refreshCampaign,
       }),
-    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
+    [type, state, campaign, outreaches, setOutreaches, errorSnackbar, refreshCampaign],
   )
 
   const onCreateVoterFileFilter = useMemo(

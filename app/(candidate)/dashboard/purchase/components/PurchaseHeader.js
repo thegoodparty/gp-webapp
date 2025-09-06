@@ -12,7 +12,7 @@ export const PurchaseHeader = ({ label, description, children = null }) => {
         <Body1 className="text-gray-600 mt-2">{description}</Body1>
       )}
       {children}
-      <Body1 className="font-semibold mt-2">Amount: ${amount}</Body1>
+      <Body1 className="font-semibold mt-2">Amount: ${amount.toFixed(2)}</Body1>
     </div>
   )
 }
