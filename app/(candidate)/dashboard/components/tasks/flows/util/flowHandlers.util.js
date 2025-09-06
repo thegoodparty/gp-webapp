@@ -85,6 +85,7 @@ export const mapAudienceForPersistence = ({
   age_50_plus: age50Plus,
   gender_male: genderMale,
   gender_female: genderFemale,
+  gender_unknown: genderUnknown,
 } = {}) => {
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
   //  to match the API once we redo that component so that we don't have to do
@@ -105,6 +106,7 @@ export const mapAudienceForPersistence = ({
     age50Plus,
     genderMale,
     genderFemale,
+    genderUnknown,
   }
 
   return Object.keys(mappedAudience).reduce(
