@@ -28,3 +28,7 @@ export async function fetchCustomSegments() {
   const response = await clientFetch(apiRoutes.segments.list)
   return response.data || []
 }
+
+export async function deleteCustomSegment(id) {
+  return await clientFetch(apiRoutes.segments.delete, { id })
+}

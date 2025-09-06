@@ -12,6 +12,10 @@ export const apiRoutes = {
       path: '/contacts-segment/:id',
       method: 'PUT',
     },
+    delete: {
+      path: '/contacts-segment/:id',
+      method: 'DELETE',
+    },
   },
   homepage: {
     subscribeEmail: {

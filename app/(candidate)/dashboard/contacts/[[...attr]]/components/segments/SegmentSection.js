@@ -13,14 +13,17 @@ import { useState } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
+import { FiEdit } from 'react-icons/fi'
 
 export const SHEET_MODES = {
   CREATE: 'create',
   EDIT: 'edit',
 }
 
+const ALL_SEGMENTS = 'all'
+
 export default function SegmentSection() {
-  const [segment, setSegment] = useState('all')
+  const [segment, setSegment] = useState(ALL_SEGMENTS)
   const [customSegments] = useCustomSegments()
   const [sheetState, setSheetState] = useState({
     open: false,
@@ -65,10 +68,14 @@ export default function SegmentSection() {
     })
   }
 
+  const resetSelect = () => {
+    setSegment(ALL_SEGMENTS)
+  }
+
   return (
     <div className="md:absolute md:left-0 md:top-4 flex items-center gap-4">
       <Select value={segment} onValueChange={handleSelect}>
-        <SelectTrigger className="w-full md:w-[210px] lg:w-[240px]">
+        <SelectTrigger className="w-full md:w-[180px] lg:w-[240px]">
           <SelectValue placeholder="All Contacts" />
         </SelectTrigger>
         <SelectContent>
@@ -80,7 +87,7 @@ export default function SegmentSection() {
               </SelectItem>
             ))}
           </SelectGroup>
-          {customSegments.length > 0 && (
+          {customSegments && customSegments?.length > 0 && (
             <SelectGroup>
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
@@ -97,7 +104,7 @@ export default function SegmentSection() {
           onClick={handleEdit}
           className="cursor-pointer text-blue-500 underline"
         >
-          edit
+          <FiEdit />
         </div>
       )}
       <Button variant="secondary" onClick={handleCreateSegment}>
@@ -111,6 +118,7 @@ export default function SegmentSection() {
         }
         mode={sheetState.mode}
         editSegment={sheetState.editSegment}
+        resetSelect={resetSelect}
       />
     </div>
   )

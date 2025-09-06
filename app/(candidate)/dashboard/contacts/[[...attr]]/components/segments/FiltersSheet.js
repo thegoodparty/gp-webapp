@@ -14,6 +14,7 @@ import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { SHEET_MODES } from './SegmentSection'
+import DeleteSegment from './DeleteSegment'
 
 export default function Filters({
   open = false,
@@ -21,6 +22,7 @@ export default function Filters({
   mode = SHEET_MODES.CREATE,
   editSegment = null,
   handleOpenChange = () => {},
+  resetSelect = () => {},
 }) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState({})
@@ -93,6 +95,11 @@ export default function Filters({
     handleClose()
   }
 
+  const handleAfterDelete = () => {
+    handleClose()
+    resetSelect()
+  }
+
   return (
     <Sheet open={open} onOpenChange={handleOpenChange} onClose={handleClose}>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
@@ -154,21 +161,31 @@ export default function Filters({
                 ))}
               </div>
             ))}
+
             {index === filterSections.length - 1 && (
-              <div className="h-20 "></div>
+              <>
+                {mode === SHEET_MODES.EDIT && (
+                  <DeleteSegment
+                    segment={editSegment}
+                    afterDeleteCallback={handleAfterDelete}
+                  />
+                )}
+                <div className="h-20 "></div>
+              </>
             )}
           </div>
         ))}
+
         <div className="fixed bottom-0 bg-white shadow-sm p-4 flex justify-end gap-4 w-[90vw] max-w-xl sm:max-w-xl right-0 border-t border-gray-200">
           <Button variant="outline" onClick={() => setFilters({})}>
             Clear Filters
           </Button>
           <Button
             variant="default"
-            onClick={mode === 'edit' ? handleUpdate : handleSave}
+            onClick={mode === SHEET_MODES.EDIT ? handleUpdate : handleSave}
             disabled={saving || !segmentName}
           >
-            {mode === 'edit' ? 'Update Segment' : 'Create Segment'}
+            {mode === SHEET_MODES.EDIT ? 'Update Segment' : 'Create Segment'}
           </Button>
         </div>
       </SheetContent>
