@@ -1,8 +1,4 @@
 import H1 from '@shared/typography/H1'
-import {
-  PurchaseHeader
-} from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
-import Body1 from '@shared/typography/Body1'
 import PurchasePayment
   from 'app/(candidate)/dashboard/purchase/components/PurchasePayment'
 import Button from '@shared/buttons/Button'
