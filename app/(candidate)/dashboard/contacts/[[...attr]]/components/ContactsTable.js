@@ -1,6 +1,6 @@
 'use client'
 import { DataTableColumnHeader } from 'goodparty-styleguide'
-import { useContacts } from '../providers/ContactsProvider'
+import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 
 const columns = [

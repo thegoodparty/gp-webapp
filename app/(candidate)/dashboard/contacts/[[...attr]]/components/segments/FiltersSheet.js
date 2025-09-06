@@ -7,16 +7,17 @@ import {
   Sheet,
   SheetContent,
 } from 'goodparty-styleguide'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import { saveCustomSegment } from '../ajacActions'
+import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 
 export default function Filters({
   open = false,
   handleClose = () => {},
-
+  customSegment = false,
   handleOpenChange = () => {},
 }) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
@@ -24,6 +25,17 @@ export default function Filters({
   const [edit, setEdit] = useState(false)
   const [segmentName, setSegmentName] = useState('Custom Segment 1')
   const [saving, setSaving] = useState(false)
+  const [, , refreshCustomSegments] = useCustomSegments()
+
+  useEffect(() => {
+    if (customSegment) {
+      setFilters(customSegment)
+      setSegmentName(customSegment.name)
+    } else {
+      setFilters({})
+      setSegmentName('')
+    }
+  }, [customSegment])
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
@@ -49,7 +61,38 @@ export default function Filters({
     } else {
       errorSnackbar('Failed to create segment')
     }
+    await refreshCustomSegments()
+
     setSaving(false)
+    setEdit(false)
+    setFilters({})
+    setSegmentName('')
+    handleClose()
+  }
+
+  const handleUpdate = async () => {
+    setSaving(true)
+    const cleanFilters = { ...filters }
+    delete cleanFilters.id
+    delete cleanFilters.createdAt
+    delete cleanFilters.updatedAt
+    delete cleanFilters.name
+    delete cleanFilters.campaignId
+
+    const response = await updateCustomSegment(customSegment.id, {
+      name: segmentName,
+      ...cleanFilters,
+    })
+    if (response) {
+      successSnackbar('Segment updated successfully')
+    } else {
+      errorSnackbar('Failed to update segment')
+    }
+    await refreshCustomSegments()
+    setSaving(false)
+    setEdit(false)
+    setFilters({})
+    setSegmentName('')
     handleClose()
   }
 
@@ -118,10 +161,10 @@ export default function Filters({
           </Button>
           <Button
             variant="default"
-            onClick={handleSave}
+            onClick={customSegment ? handleUpdate : handleSave}
             disabled={saving || !segmentName}
           >
-            Create Segment
+            {customSegment ? 'Update Segment' : 'Create Segment'}
           </Button>
         </div>
       </SheetContent>

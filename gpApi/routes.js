@@ -8,6 +8,10 @@ export const apiRoutes = {
       path: '/contacts-segment',
       method: 'GET',
     },
+    update: {
+      path: '/contacts-segment/:id',
+      method: 'PUT',
+    },
   },
   homepage: {
     subscribeEmail: {

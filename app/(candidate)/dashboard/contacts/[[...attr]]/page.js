@@ -1,14 +1,14 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import { ContactsProvider } from './providers/ContactsProvider'
+import { ContactsProvider } from './hooks/ContactsProvider'
 import ContactsPage from './components/ContactsPage'
 import {
   TEMP_SAMPLE_PEOPLE_FULL_PAGE1,
   TEMP_SAMPLE_PEOPLE_FULL_PAGE2,
 } from './components/temp/temp-sample-people-full'
-import { PersonProvider } from './providers/PersonProvider'
-import { SegmentProvider } from './providers/SegmentProvider'
-import { CustomSegmentsProvider } from './providers/CustomSegmentsProvider'
+import { PersonProvider } from './hooks/PersonProvider'
+import { SegmentProvider } from './hooks/SegmentProvider'
+import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 

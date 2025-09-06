@@ -12,17 +12,47 @@ import {
 import { useState } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
-import { useCustomSegments } from '../../providers/CustomSegmentsProvider'
+import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 
 export default function SegmentSection() {
   const [open, setOpen] = useState(false)
   const [segment, setSegment] = useState('all')
+  const [edit, setEdit] = useState(false)
   const [customSegments] = useCustomSegments()
+  const [isCustom, setIsCustom] = useState(false)
+
+  const handleEdit = () => {
+    if (isCustom) {
+      const customSegment = customSegments.find(
+        (customSegment) => customSegment.id === segment,
+      )
+      setEdit(customSegment)
+      setOpen(true)
+    } else {
+      setEdit(false)
+    }
+  }
+
+  const handleSelect = (selectedSegment) => {
+    setSegment(selectedSegment)
+    const isCustomSelected = !defaultSegments.some(
+      (defaultSegment) => defaultSegment.value === selectedSegment,
+    )
+    setIsCustom(isCustomSelected)
+    if (!isCustomSelected) {
+      setEdit(false)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    setEdit(false)
+  }
 
   return (
     <div className="md:absolute md:left-0 md:top-4 flex items-center gap-4">
-      <Select value={segment} onValueChange={setSegment}>
-        <SelectTrigger className="w-full md:w-[240px]">
+      <Select value={segment} onValueChange={handleSelect}>
+        <SelectTrigger className="w-full md:w-[210px] lg:w-[240px]">
           <SelectValue placeholder="All Contacts" />
         </SelectTrigger>
         <SelectContent>
@@ -46,13 +76,22 @@ export default function SegmentSection() {
           )}
         </SelectContent>
       </Select>
+      {isCustom && (
+        <div
+          onClick={handleEdit}
+          className="cursor-pointer text-blue-500 underline"
+        >
+          edit
+        </div>
+      )}
       <Button variant="secondary" onClick={() => setOpen(true)}>
         Create a Segment
       </Button>
       <FiltersSheet
         open={open}
-        handleClose={() => setOpen(false)}
+        handleClose={handleClose}
         handleOpenChange={setOpen}
+        customSegment={edit}
       />
     </div>
   )
