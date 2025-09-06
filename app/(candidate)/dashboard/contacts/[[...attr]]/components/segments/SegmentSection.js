@@ -14,39 +14,55 @@ import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 
+export const SHEET_MODES = {
+  CREATE: 'create',
+  EDIT: 'edit',
+}
+
 export default function SegmentSection() {
-  const [open, setOpen] = useState(false)
   const [segment, setSegment] = useState('all')
-  const [edit, setEdit] = useState(false)
   const [customSegments] = useCustomSegments()
-  const [isCustom, setIsCustom] = useState(false)
+  const [sheetState, setSheetState] = useState({
+    open: false,
+    mode: SHEET_MODES.CREATE,
+    editSegment: null,
+  })
+
+  const isCustom = !defaultSegments.some(
+    (defaultSegment) => defaultSegment.value === segment,
+  )
 
   const handleEdit = () => {
     if (isCustom) {
       const customSegment = customSegments.find(
         (customSegment) => customSegment.id === segment,
       )
-      setEdit(customSegment)
-      setOpen(true)
-    } else {
-      setEdit(false)
+      setSheetState({
+        open: true,
+        mode: 'edit',
+        editSegment: customSegment,
+      })
     }
+  }
+
+  const handleCreateSegment = () => {
+    setSheetState({
+      open: true,
+      mode: SHEET_MODES.CREATE,
+      editSegment: null,
+    })
   }
 
   const handleSelect = (selectedSegment) => {
     setSegment(selectedSegment)
-    const isCustomSelected = !defaultSegments.some(
-      (defaultSegment) => defaultSegment.value === selectedSegment,
-    )
-    setIsCustom(isCustomSelected)
-    if (!isCustomSelected) {
-      setEdit(false)
-    }
   }
 
-  const handleClose = () => {
-    setOpen(false)
-    setEdit(false)
+  const handleSheetClose = () => {
+    setSheetState({
+      open: false,
+      mode: SHEET_MODES.CREATE,
+      editSegment: null,
+    })
   }
 
   return (
@@ -84,14 +100,17 @@ export default function SegmentSection() {
           edit
         </div>
       )}
-      <Button variant="secondary" onClick={() => setOpen(true)}>
+      <Button variant="secondary" onClick={handleCreateSegment}>
         Create a Segment
       </Button>
       <FiltersSheet
-        open={open}
-        handleClose={handleClose}
-        handleOpenChange={setOpen}
-        customSegment={edit}
+        open={sheetState.open}
+        handleClose={handleSheetClose}
+        handleOpenChange={(open) =>
+          setSheetState((prev) => ({ ...prev, open }))
+        }
+        mode={sheetState.mode}
+        editSegment={sheetState.editSegment}
       />
     </div>
   )

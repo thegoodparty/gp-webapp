@@ -13,29 +13,33 @@ import { FiEdit } from 'react-icons/fi'
 import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
+import { SHEET_MODES } from './SegmentSection'
 
 export default function Filters({
   open = false,
   handleClose = () => {},
-  customSegment = false,
+  mode = SHEET_MODES.CREATE,
+  editSegment = null,
   handleOpenChange = () => {},
 }) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState({})
-  const [edit, setEdit] = useState(false)
-  const [segmentName, setSegmentName] = useState('Custom Segment 1')
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
   const [, , refreshCustomSegments] = useCustomSegments()
 
   useEffect(() => {
-    if (customSegment) {
-      setFilters(customSegment)
-      setSegmentName(customSegment.name)
+    if (mode === SHEET_MODES.EDIT && editSegment) {
+      setFilters(editSegment)
+      setSegmentName(editSegment.name)
+      setIsEditingName(false)
     } else {
       setFilters({})
-      setSegmentName('')
+      setSegmentName('Custom Segment 1')
+      setIsEditingName(false)
     }
-  }, [customSegment])
+  }, [mode, editSegment, open])
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
@@ -62,11 +66,7 @@ export default function Filters({
       errorSnackbar('Failed to create segment')
     }
     await refreshCustomSegments()
-
     setSaving(false)
-    setEdit(false)
-    setFilters({})
-    setSegmentName('')
     handleClose()
   }
 
@@ -79,7 +79,7 @@ export default function Filters({
     delete cleanFilters.name
     delete cleanFilters.campaignId
 
-    const response = await updateCustomSegment(customSegment.id, {
+    const response = await updateCustomSegment(editSegment.id, {
       name: segmentName,
       ...cleanFilters,
     })
@@ -90,9 +90,6 @@ export default function Filters({
     }
     await refreshCustomSegments()
     setSaving(false)
-    setEdit(false)
-    setFilters({})
-    setSegmentName('')
     handleClose()
   }
 
@@ -100,10 +97,17 @@ export default function Filters({
     <Sheet open={open} onOpenChange={handleOpenChange} onClose={handleClose}>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
         <div className="flex items-center pb-6 border-b border-gray-200">
-          {edit ? (
+          {isEditingName ? (
             <Input
               value={segmentName}
               onChange={(e) => setSegmentName(e.target.value)}
+              onBlur={() => setIsEditingName(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setIsEditingName(false)
+                }
+              }}
+              autoFocus
             />
           ) : (
             <>
@@ -112,7 +116,7 @@ export default function Filters({
               </h2>
               <FiEdit
                 className="text-2xl ml-4 cursor-pointer"
-                onClick={() => setEdit(true)}
+                onClick={() => setIsEditingName(true)}
               />
             </>
           )}
@@ -161,10 +165,10 @@ export default function Filters({
           </Button>
           <Button
             variant="default"
-            onClick={customSegment ? handleUpdate : handleSave}
+            onClick={mode === 'edit' ? handleUpdate : handleSave}
             disabled={saving || !segmentName}
           >
-            {customSegment ? 'Update Segment' : 'Create Segment'}
+            {mode === 'edit' ? 'Update Segment' : 'Create Segment'}
           </Button>
         </div>
       </SheetContent>
