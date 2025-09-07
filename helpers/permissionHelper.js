@@ -30,7 +30,7 @@ export const adminAccessOnly = async () => {
   }
   const isAdmin = await checkIsAdmin()
   if (!isAdmin) {
-    redirect('/')
+    redirect('/logout')
   }
 }
 
