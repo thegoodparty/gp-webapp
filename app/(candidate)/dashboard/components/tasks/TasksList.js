@@ -85,20 +85,8 @@ export default function TasksList({
         )
         return
       }
-      if (!isTextCompliant) {
-        if (p2pUxEnabled) {
-          setShowComplianceModal(true)
-        } else if (campaign.hasFreeTextsOffer) {
-          setShowP2PModal(true)
-          setP2PTrackingAttrs(
-            buildTrackingAttrs('Complete Registration', {
-              viabilityScore,
-              type: flowType,
-            }),
-          )
-        } else {
-          setShowComplianceModal(true)
-        }
+      if (p2pUxEnabled && !isTextCompliant) {
+        setShowComplianceModal(true)
         return
       }
     } else if (proRequired && !campaign.isPro) {
@@ -207,7 +195,7 @@ export default function TasksList({
         variant={(() => {
           if (!campaign.isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
           const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
-          if (campaign.hasFreeTextsOffer && !isTextCompliant) {
+          if (p2pUxEnabled && campaign.hasFreeTextsOffer && !isTextCompliant) {
             return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
           }
           return P2P_MODAL_VARIANTS.NonProUpgrade
@@ -216,11 +204,13 @@ export default function TasksList({
         onUpgradeLinkClick={undefined}
         trackingAttrs={p2pTrackingAttrs}
       />
-      <ComplianceModal
-        open={showComplianceModal}
-        tcrComplianceStatus={tcrCompliance?.status}
-        onClose={() => setShowComplianceModal(false)}
-      />
+      {p2pUxEnabled && (
+        <ComplianceModal
+          open={showComplianceModal}
+          tcrComplianceStatus={tcrCompliance?.status}
+          onClose={() => setShowComplianceModal(false)}
+        />
+      )}
       {flowModalTask && (
         <TaskFlow
           forceOpen

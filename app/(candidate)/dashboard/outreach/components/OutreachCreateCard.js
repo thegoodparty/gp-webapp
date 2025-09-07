@@ -7,6 +7,7 @@ import { OutreachImpact } from 'app/(candidate)/dashboard/outreach/components/Ou
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { MdLockOutline } from 'react-icons/md'
 import { OUTREACH_TYPES } from '../constants'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const formatCost = (cost) =>
   cost === 0 ? 'Free' : `$${cost.toFixed(3).replace(/^0\./, '.')}\/msg`
@@ -21,11 +22,12 @@ export const OutreachCreateCard = ({
   requiresPro = false,
 }) => {
   const [campaign] = useCampaign()
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const { isPro, hasFreeTextsOffer } = campaign || {}
   
   // Show free offer for text message campaigns if available
   const isTextType = type === OUTREACH_TYPES.text || type === OUTREACH_TYPES.p2p
-  const showFreeOffer = isTextType && hasFreeTextsOffer
+  const showFreeOffer = p2pUxEnabled && isTextType && hasFreeTextsOffer
   
   return (
     <Card

@@ -93,14 +93,8 @@ export default function OutreachCreateCards({ tcrCompliance }) {
       if (!isPro) {
         return openP2PModal()
       }
-      if (!isTextCompliant) {
-        if (p2pUxEnabled) {
-          return openComplianceModal()
-        } else if (hasFreeTextsOffer) {
-          return openP2PModal()
-        } else {
-          return openComplianceModal()
-        }
+      if (p2pUxEnabled && !isTextCompliant) {
+        return openComplianceModal()
       }
     } else if (requiresPro && !isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
@@ -157,7 +151,7 @@ export default function OutreachCreateCards({ tcrCompliance }) {
         {...{
           variant: (() => {
             if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
-            if (hasFreeTextsOffer && !isTextCompliant) {
+            if (p2pUxEnabled && hasFreeTextsOffer && !isTextCompliant) {
               return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
             }
             return P2P_MODAL_VARIANTS.NonProUpgrade
@@ -168,13 +162,15 @@ export default function OutreachCreateCards({ tcrCompliance }) {
         }}
       />
 
-      <ComplianceModal
-        {...{
-          open: showComplianceModal,
-          tcrComplianceStatus: tcrCompliance?.status,
-          onClose: () => setShowComplianceModal(false),
-        }}
-      />
+      {p2pUxEnabled && (
+        <ComplianceModal
+          {...{
+            open: showComplianceModal,
+            tcrComplianceStatus: tcrCompliance?.status,
+            onClose: () => setShowComplianceModal(false),
+          }}
+        />
+      )}
 
       {flowModalTask && campaign && (
         <TaskFlow

@@ -102,7 +102,7 @@ export default function AudienceStep({
   }
 
   const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
-  const hasFreeTextsOffer = campaign?.hasFreeTextsOffer && isTextType
+  const hasFreeTextsOffer = p2pUxEnabled && campaign?.hasFreeTextsOffer && isTextType
   
   const calculateCost = (textCount) => {
     if (hasFreeTextsOffer && textCount > 0) {
