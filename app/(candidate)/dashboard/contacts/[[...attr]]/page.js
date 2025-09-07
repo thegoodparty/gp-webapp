@@ -10,20 +10,13 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { DEFAULT_PAGE_SIZE } from './components/constants'
 
 const fetchContacts = async ({
-  state,
-  districtType,
-  districtName,
   page = 1,
   resultsPerPage = DEFAULT_PAGE_SIZE,
 }) => {
   const payload = {
-    state,
-    districtType,
-    districtName,
     page,
     resultsPerPage,
   }
-  console.log('fetching contacts with payload', payload)
   const response = await serverFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
     return response.data
@@ -70,14 +63,8 @@ export default async function Page({ params, searchParams }) {
 
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
-  const state = 'NC'
-  const districtType = 'City'
-  const districtName = 'HENDERSONVILLE CITY'
 
   const contacts = await fetchContacts({
-    state,
-    districtType,
-    districtName,
     page,
     resultsPerPage: pageSize,
   })
