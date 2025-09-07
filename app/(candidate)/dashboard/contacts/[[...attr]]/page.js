@@ -2,19 +2,19 @@ import pageMetaData from 'helpers/metadataHelper'
 import { adminAccessOnly } from 'helpers/permissionHelper'
 import { ContactsProvider } from './hooks/ContactsProvider'
 import ContactsPage from './components/ContactsPage'
-import { TEMP_SAMPLE_PEOPLE_FULL_PAGE1 } from './components/temp/temp-sample-people-full'
 import { PersonProvider } from './hooks/PersonProvider'
 import { SegmentProvider } from './hooks/SegmentProvider'
 import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { DEFAULT_PAGE_SIZE } from './components/constants'
 
 const fetchContacts = async ({
   state,
   districtType,
   districtName,
   page = 1,
-  resultsPerPage = 50,
+  resultsPerPage = DEFAULT_PAGE_SIZE,
 }) => {
   const payload = {
     state,
@@ -23,6 +23,7 @@ const fetchContacts = async ({
     page,
     resultsPerPage,
   }
+  console.log('fetching contacts with payload', payload)
   const response = await serverFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
     return response.data
@@ -40,11 +41,7 @@ const fetchContacts = async ({
   }
 }
 
-const fetchPerson = async (personId) => {
-  return TEMP_SAMPLE_PEOPLE_FULL_PAGE1.find(
-    (person) => person.LALVOTERID === personId,
-  )
-}
+const fetchPerson = async (personId) => {}
 
 const fetchCustomSegments = async () => {
   const response = await serverFetch(apiRoutes.segments.list)
@@ -72,7 +69,7 @@ export default async function Page({ params, searchParams }) {
   }
 
   page = parseInt(page || '1')
-  pageSize = parseInt(pageSize || '50')
+  pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
   const state = 'NC'
   const districtType = 'City'
   const districtName = 'HENDERSONVILLE CITY'
@@ -82,7 +79,7 @@ export default async function Page({ params, searchParams }) {
     districtType,
     districtName,
     page,
-    pageSize,
+    resultsPerPage: pageSize,
   })
   const initCustomSegments = await fetchCustomSegments()
 

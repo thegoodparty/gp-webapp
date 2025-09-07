@@ -12,6 +12,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
 } from 'goodparty-styleguide'
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './constants'
 
 export default function ServerDataTable({
   columns,
@@ -29,7 +30,7 @@ export default function ServerDataTable({
     hasNextPage = false,
     hasPreviousPage = false,
     currentPage = 1,
-    pageSize = 50,
+    pageSize = DEFAULT_PAGE_SIZE,
   } = pagination
 
   const updateURL = (newParams) => {
@@ -80,7 +81,7 @@ export default function ServerDataTable({
                 <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 25, 50, 100].map((pageSize) => (
+                {PAGE_SIZES.map((pageSize) => (
                   <SelectItem key={pageSize} value={pageSize.toString()}>
                     {pageSize}
                   </SelectItem>

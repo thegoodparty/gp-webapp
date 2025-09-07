@@ -14,13 +14,7 @@ import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { FiEdit } from 'react-icons/fi'
-
-export const SHEET_MODES = {
-  CREATE: 'create',
-  EDIT: 'edit',
-}
-
-const ALL_SEGMENTS = 'all'
+import { ALL_SEGMENTS, SHEET_MODES } from '../constants'
 
 export default function SegmentSection() {
   const [segment, setSegment] = useState(ALL_SEGMENTS)
@@ -42,7 +36,7 @@ export default function SegmentSection() {
       )
       setSheetState({
         open: true,
-        mode: 'edit',
+        mode: SHEET_MODES.EDIT,
         editSegment: customSegment,
       })
     }

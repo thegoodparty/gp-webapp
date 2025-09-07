@@ -13,7 +13,7 @@ import { FiEdit } from 'react-icons/fi'
 import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
-import { SHEET_MODES } from './SegmentSection'
+import { SHEET_MODES } from '../constants'
 import DeleteSegment from './DeleteSegment'
 
 export default function Filters({
