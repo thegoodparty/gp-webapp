@@ -111,7 +111,6 @@ export function P2PUpgradeModal({
               )}
             </div>
 
-            {/* Image Section */}
             <div className="order-2 lg:order-2 relative">
               <div className="relative w-full aspect-[3/2] lg:aspect-[4/3] rounded-lg overflow-hidden">
                 <Image
@@ -126,7 +125,6 @@ export function P2PUpgradeModal({
             </div>
           </div>
           
-          {/* Button Section - Below both content and image */}
           <div className="flex justify-center pt-2">
             <Button
               href={content.href}

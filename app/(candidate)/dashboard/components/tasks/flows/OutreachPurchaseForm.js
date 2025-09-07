@@ -29,7 +29,6 @@ export const OutreachPurchaseForm = ({
     <div className="min-h-max">
       <H1>Review</H1>
       
-      {/* Review Details */}
       <div className="bg-gray-50 border rounded-lg p-4 mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-gray-700">Number of texts</span>

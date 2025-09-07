@@ -73,7 +73,6 @@ export const handleCreateOutreach =
 
     setOutreaches([...outreaches, outreach])
     
-    // Refresh campaign data to update hasFreeTextsOffer after redemption
     await refreshCampaign()
     
     return outreach

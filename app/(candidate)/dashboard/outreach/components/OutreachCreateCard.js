@@ -25,7 +25,6 @@ export const OutreachCreateCard = ({
   const { p2pUxEnabled } = useP2pUxEnabled()
   const { isPro, hasFreeTextsOffer } = campaign || {}
   
-  // Show free offer for text message campaigns if available
   const isTextType = type === OUTREACH_TYPES.text || type === OUTREACH_TYPES.p2p
   const showFreeOffer = p2pUxEnabled && isTextType && hasFreeTextsOffer
   
