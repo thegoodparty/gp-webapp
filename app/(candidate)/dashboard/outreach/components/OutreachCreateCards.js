@@ -18,6 +18,7 @@ import {
 import { ComplianceModal } from 'app/(candidate)/dashboard/shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 export const OUTREACH_OPTIONS = [
   {
@@ -57,6 +58,7 @@ export const OUTREACH_OPTIONS = [
 ]
 
 export default function OutreachCreateCards({ tcrCompliance }) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [campaign] = useCampaign()
   const { isPro, hasFreeTextsOffer } = campaign || {}
   const [flowModalTask, setFlowModalTask] = useState(null)
@@ -81,7 +83,8 @@ export default function OutreachCreateCards({ tcrCompliance }) {
       flowType: type,
     })
 
-  const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+  const isTextCompliant =
+    tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
@@ -91,7 +94,9 @@ export default function OutreachCreateCards({ tcrCompliance }) {
         return openP2PModal()
       }
       if (!isTextCompliant) {
-        if (hasFreeTextsOffer) {
+        if (p2pUxEnabled) {
+          return openComplianceModal()
+        } else if (hasFreeTextsOffer) {
           return openP2PModal()
         } else {
           return openComplianceModal()
