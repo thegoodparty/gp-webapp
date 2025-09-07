@@ -23,14 +23,13 @@ export default function ServerDataTable({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const currentPage = parseInt(searchParams.get('page') || '1')
-  const currentPageSize = parseInt(searchParams.get('pageSize') || '20')
-
   const {
     totalPages = 1,
-    totalItems = 0,
+    totalResults = 0,
     hasNextPage = false,
     hasPreviousPage = false,
+    currentPage = 1,
+    pageSize = 50,
   } = pagination
 
   const updateURL = (newParams) => {
@@ -67,21 +66,21 @@ export default function ServerDataTable({
 
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="hidden md:block flex-1 text-sm text-muted-foreground">
-          Showing {data.length} of {totalItems} row(s)
+          Showing {data.length} of {totalResults} rows
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
             <p className="text-sm font-medium">Rows per page</p>
             <Select
-              value={currentPageSize.toString()}
+              value={pageSize.toString()}
               onValueChange={handlePageSizeChange}
               className="bg-white"
             >
               <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={currentPageSize} />
+                <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {[10, 25, 50, 100].map((pageSize) => (
                   <SelectItem key={pageSize} value={pageSize.toString()}>
                     {pageSize}
                   </SelectItem>

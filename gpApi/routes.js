@@ -1,4 +1,10 @@
 export const apiRoutes = {
+  contacts: {
+    list: {
+      path: '/contacts/list',
+      method: 'GET',
+    },
+  },
   segments: {
     create: {
       path: '/contacts-segment',
