@@ -16,7 +16,7 @@ import { useState } from 'react'
 
 export default function DeleteSegment({ segment, afterDeleteCallback }) {
   const { id } = segment
-  const [_, refreshCustomSegments] = useCustomSegments()
+  const [, , refreshCustomSegments] = useCustomSegments()
 
   const [isDeleting, setIsDeleting] = useState(false)
 
