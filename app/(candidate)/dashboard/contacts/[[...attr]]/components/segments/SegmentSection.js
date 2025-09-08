@@ -9,21 +9,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { FiEdit } from 'react-icons/fi'
 import { ALL_SEGMENTS, SHEET_MODES } from '../constants'
+import { useRouter, useSearchParams } from 'next/navigation'
+import appendParam from '@shared/utils/appendParam'
 
 export default function SegmentSection() {
-  const [segment, setSegment] = useState(ALL_SEGMENTS)
-  const [customSegments] = useCustomSegments()
+  const [customSegments, , , querySegment] = useCustomSegments()
+  const [segment, setSegment] = useState(querySegment || ALL_SEGMENTS)
+
   const [sheetState, setSheetState] = useState({
     open: false,
     mode: SHEET_MODES.CREATE,
     editSegment: null,
   })
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Sync local state with URL parameter changes (e.g., browser back/forward)
+  useEffect(() => {
+    setSegment(querySegment || ALL_SEGMENTS)
+  }, [querySegment])
 
   const isCustom = !defaultSegments.some(
     (defaultSegment) => defaultSegment.value === segment,
@@ -52,6 +63,7 @@ export default function SegmentSection() {
 
   const handleSelect = (selectedSegment) => {
     setSegment(selectedSegment)
+    appendParam(router, searchParams, 'segment', selectedSegment)
   }
 
   const handleSheetClose = () => {
@@ -64,6 +76,7 @@ export default function SegmentSection() {
 
   const resetSelect = () => {
     setSegment(ALL_SEGMENTS)
+    appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
   }
 
   return (

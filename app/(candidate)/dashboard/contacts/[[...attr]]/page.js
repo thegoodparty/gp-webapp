@@ -3,7 +3,6 @@ import { adminAccessOnly } from 'helpers/permissionHelper'
 import { ContactsProvider } from './hooks/ContactsProvider'
 import ContactsPage from './components/ContactsPage'
 import { PersonProvider } from './hooks/PersonProvider'
-import { SegmentProvider } from './hooks/SegmentProvider'
 import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
@@ -12,10 +11,12 @@ import { DEFAULT_PAGE_SIZE } from './components/constants'
 const fetchContacts = async ({
   page = 1,
   resultsPerPage = DEFAULT_PAGE_SIZE,
+  segment,
 }) => {
   const payload = {
     page,
     resultsPerPage,
+    segment,
   }
   const response = await serverFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
@@ -51,7 +52,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
   await adminAccessOnly()
-  let { page, pageSize } = await searchParams
+  let { page, pageSize, segment } = await searchParams
   let { attr } = await params
   let personId = null
   let person = null
@@ -67,17 +68,19 @@ export default async function Page({ params, searchParams }) {
   const contacts = await fetchContacts({
     page,
     resultsPerPage: pageSize,
+    segment,
   })
   const initCustomSegments = await fetchCustomSegments()
 
   return (
     <ContactsProvider contacts={contacts}>
       <PersonProvider person={person}>
-        <SegmentProvider>
-          <CustomSegmentsProvider customSegments={initCustomSegments}>
-            <ContactsPage />
-          </CustomSegmentsProvider>
-        </SegmentProvider>
+        <CustomSegmentsProvider
+          customSegments={initCustomSegments}
+          querySegment={segment}
+        >
+          <ContactsPage />
+        </CustomSegmentsProvider>
       </PersonProvider>
     </ContactsProvider>
   )
