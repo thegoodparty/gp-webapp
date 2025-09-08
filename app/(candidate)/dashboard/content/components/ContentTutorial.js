@@ -71,7 +71,9 @@ export default function ContentTutorial({ newContentCallback }) {
   }
 
   const onComplete = () => {
-    document.getElementById('template-card-pressRelease').click()
+    if (typeof document !== 'undefined') {
+      document.getElementById('template-card-pressRelease')?.click()
+    }
   }
 
   const handleChange = (nextStepIndex) => {
@@ -82,15 +84,17 @@ export default function ContentTutorial({ newContentCallback }) {
   const onBeforeChange = (nextStepIndex) => {
     stepsRef.current.updateStepElement(nextStepIndex)
     setTimeout(() => {
-      if (nextStepIndex === 0) {
-        const backButton = document.querySelector('.introjs-prevbutton')
-        if (backButton) {
-          backButton.style.display = 'none'
-        }
-      } else {
-        const backButton = document.querySelector('.introjs-prevbutton')
-        if (backButton) {
-          backButton.style.display = 'inline-block'
+      if (typeof document !== 'undefined') {
+        if (nextStepIndex === 0) {
+          const backButton = document.querySelector('.introjs-prevbutton')
+          if (backButton) {
+            backButton.style.display = 'none'
+          }
+        } else {
+          const backButton = document.querySelector('.introjs-prevbutton')
+          if (backButton) {
+            backButton.style.display = 'inline-block'
+          }
         }
       }
     }, 1) // Short delay to ensure DOM elements are updated

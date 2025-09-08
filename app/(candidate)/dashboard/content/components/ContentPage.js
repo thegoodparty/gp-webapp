@@ -1,12 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import DashboardLayout from '../../shared/DashboardLayout'
 import TitleSection from '../../shared/TitleSection'
-import ContentTutorial from './ContentTutorial'
 import MyContent from './MyContent'
 import { getCookie } from 'helpers/cookieHelper'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
+
+const ContentTutorial = dynamic(() => import('./ContentTutorial'), {
+  ssr: false,
+})
 
 export default function ContentPage(props) {
   const [forceOpenModal, setForceOpenModal] = useState(false)
