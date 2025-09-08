@@ -74,8 +74,6 @@ export default function ContactsTable() {
     }
   })
 
-  console.log('pagination', pagination)
-
   return (
     <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">
       <ServerDataTable
