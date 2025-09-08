@@ -73,6 +73,7 @@ export const EVENTS = {
       ClickCommunity: 'Navigation - Dashboard: Click Community',
       ClickWebsite: 'Navigation - Dashboard: Click Website',
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
+      ClickContacts: 'Navigation - Dashboard: Click Contacts',
     },
   },
   Dashboard: {

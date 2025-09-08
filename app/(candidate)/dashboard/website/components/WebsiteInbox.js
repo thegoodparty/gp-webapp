@@ -8,7 +8,7 @@ import { LuInbox } from 'react-icons/lu'
 import { useWebsite } from './WebsiteProvider'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { formatPhoneNumber } from 'helpers/numberHelper'
+import { formatDisplayPhoneNumber } from 'helpers/numberHelper'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import H4 from '@shared/typography/H4'
 import PaginationButtons from '../../voter-records/components/PaginationButtons'
@@ -71,7 +71,7 @@ export default function WebsiteInbox({}) {
       {
         header: 'Phone',
         accessorKey: 'phone',
-        cell: ({ row }) => formatPhoneNumber(row.phone),
+        cell: ({ row }) => formatDisplayPhoneNumber(row.phone),
       },
       {
         header: 'Message',

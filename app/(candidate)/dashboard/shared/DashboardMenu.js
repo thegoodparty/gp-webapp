@@ -10,6 +10,7 @@ import {
   MdFolderShared,
   MdLibraryBooks,
   MdMessage,
+  MdPeople,
   MdSensorDoor,
   MdWeb,
 } from 'react-icons/md'
@@ -115,6 +116,15 @@ const ECANVASSER_MENU_ITEM = {
 }
 
 // admin user only
+const CONTACTS_MENU_ITEM = {
+  id: 'contacts-dashboard',
+  label: 'Contacts',
+  link: '/dashboard/contacts',
+  icon: <MdPeople />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContacts),
+}
+
+// admin user only
 const ISSUES_MENU_ITEM = {
   id: 'issues-dashboard',
   label: 'Issues',
@@ -152,6 +162,7 @@ export default function DashboardMenu({
   }, [campaign, ecanvasser])
   if (userIsAdmin(user)) {
     menuItems.push(ISSUES_MENU_ITEM)
+    menuItems.splice(2, 0, CONTACTS_MENU_ITEM)
   }
 
   const handleEnterPress = (e) => {

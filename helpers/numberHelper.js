@@ -88,3 +88,17 @@ export const formatPhoneNumber = (value) => {
     return `(${areaCode}`
   }
 }
+
+export const formatDisplayPhoneNumber = (value) => {
+  // For use in static displays, like the website contact inbox
+
+  if (!value) return ''
+
+  // Strip all non-digits, then grab last 10
+  const digits = value.replace(/\D/g, '').slice(-10)
+
+  // Show nothing if not exactly 10 digits
+  if (digits.length !== 10) return ''
+
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+}
