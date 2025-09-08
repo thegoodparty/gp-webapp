@@ -52,13 +52,15 @@ export default function TaskFlow({
   isCustom,
   onClose,
   defaultAiTemplateId,
+  onComplete,
+  id,
 }) {
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
-  const stepName = stepList[state.step]
-  const isLastStep = state.step >= stepList.length - 1
+  const stepList = useMemo(() => STEPS_BY_TYPE[type] || [], [type])
+  const stepName = stepList[state?.step]
+  const isLastStep = state?.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
 
@@ -91,6 +93,7 @@ export default function TaskFlow({
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
       step: stepName,
     })
+
     setConfirmOpen(false)
     setOpen(false)
     handleReset()
@@ -150,18 +153,29 @@ export default function TaskFlow({
     resetCallback: handleReset,
   }
 
-  const onCreateOutreach = useMemo(
-    () =>
-      handleCreateOutreach({
+  const onCreateOutreach = useMemo(() => {
+    return async () => {
+      await handleCreateOutreach({
         type,
         state,
         campaignId: campaign.id,
         outreaches,
         setOutreaches,
         errorSnackbar,
-      }),
-    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
-  )
+        onComplete,
+      })()
+      onComplete?.(id)
+    }
+  }, [
+    type,
+    state,
+    campaign,
+    outreaches,
+    setOutreaches,
+    errorSnackbar,
+    onComplete,
+    id,
+  ])
 
   const onCreateVoterFileFilter = useMemo(
     () =>
@@ -172,6 +186,10 @@ export default function TaskFlow({
       }),
     [type, state, errorSnackbar],
   )
+
+  if (!STEPS_BY_TYPE[type]) {
+    return null
+  }
 
   return (
     <>
