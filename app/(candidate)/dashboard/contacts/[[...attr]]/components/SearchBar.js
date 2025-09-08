@@ -1,7 +1,7 @@
 'use client'
 import { Input } from 'goodparty-styleguide'
 import { useState } from 'react'
-import { useContacts } from '../providers/ContactsProvider'
+import { useContacts } from '../hooks/ContactsProvider'
 import Button from '@shared/buttons/Button'
 
 export default function SearchBar() {

@@ -1,5 +1,5 @@
 'use client'
-import { usePerson } from '../../providers/PersonProvider'
+import { usePerson } from '../../hooks/PersonProvider'
 import Map from '@shared/utils/Map'
 
 export default function PersonMap() {
