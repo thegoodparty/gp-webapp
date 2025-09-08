@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
@@ -30,6 +30,11 @@ export default function SegmentSection() {
 
   const router = useRouter()
   const searchParams = useSearchParams()
+
+  // Sync local state with URL parameter changes (e.g., browser back/forward)
+  useEffect(() => {
+    setSegment(querySegment || ALL_SEGMENTS)
+  }, [querySegment])
 
   const isCustom = !defaultSegments.some(
     (defaultSegment) => defaultSegment.value === segment,
