@@ -13,6 +13,7 @@ export const useCustomSegments = () => useContext(CustomSegmentContext)
 export const CustomSegmentsProvider = ({
   children,
   customSegments: initCustomSegments,
+  querySegment,
 }) => {
   const [customSegments, setCustomSegments] = useState(initCustomSegments || [])
 
@@ -23,7 +24,12 @@ export const CustomSegmentsProvider = ({
 
   return (
     <CustomSegmentContext.Provider
-      value={[customSegments, setCustomSegments, refreshCustomSegments]}
+      value={[
+        customSegments,
+        setCustomSegments,
+        refreshCustomSegments,
+        querySegment,
+      ]}
     >
       {children}
     </CustomSegmentContext.Provider>
