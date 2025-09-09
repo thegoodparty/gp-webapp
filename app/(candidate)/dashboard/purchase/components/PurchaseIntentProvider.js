@@ -42,7 +42,7 @@ export const PurchaseIntentProvider = ({
     if (!purchaseIntent) {
       createNewPurchaseIntent()
     }
-  }, [purchaseIntent, type, purchaseMetaData])
+  }, [purchaseIntent, type, metaData])
 
   return (
     <PurchaseIntentContext.Provider
