@@ -48,6 +48,7 @@ export const AUDIENCE_LABELS_MAPPING = {
 // Based off the OutreachType in gp-api
 export const OUTREACH_TYPES = {
   text: 'text',
+  p2p: 'p2p',
   doorKnocking: 'doorKnocking',
   phoneBanking: 'phoneBanking',
   socialMedia: 'socialMedia',
@@ -56,4 +57,8 @@ export const OUTREACH_TYPES = {
 export const OUTREACH_ACTIONS_TYPES = {
   copyScript: 'copyScript',
   downloadAudience: 'downloadAudience',
+}
+
+export const FREE_TEXTS_OFFER = {
+  COUNT: 5000,
 }

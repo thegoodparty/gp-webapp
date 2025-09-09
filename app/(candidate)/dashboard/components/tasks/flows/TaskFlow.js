@@ -12,15 +12,29 @@ import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
+import { STEPS } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   handleCreateOutreach,
+  handleCreatePhoneList,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
+import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
+import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
+import { dollarsToCents } from 'helpers/numberHelper'
+import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
+import { noop } from '@shared/utils/noop'
+import { LongPoll } from '@shared/utils/LongPoll'
+import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
+import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -31,6 +45,10 @@ const DEFAULT_STATE = {
   scriptText: '',
   image: undefined,
   voterCount: 0,
+  voterFileFilter: null,
+  phoneListToken: '',
+  phoneListId: null,
+  leadsLoaded: null,
 }
 
 /**
@@ -53,25 +71,50 @@ export default function TaskFlow({
   onClose,
   defaultAiTemplateId,
 }) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
+  const stepList = useMemo(getFlowStepsByType(type, p2pUxEnabled), [
+    type,
+    p2pUxEnabled,
+  ])
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  const [, updateVoterContacts] = useVoterContacts()
+  const [, , refreshCampaign] = useCampaign()
+  const outreachOption = OUTREACH_OPTIONS.find(
+    (outreach) => outreach.type === type,
+  )
+  const { phoneListToken, phoneListId, leadsLoaded } = state
+  const [stopPolling, setStopPolling] = useState(false)
+
+  const purchaseMetaData = {
+    contactCount: leadsLoaded,
+    pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
+    outreachType: type,
+    campaignId: campaign.id,
+  }
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
   )
 
-  const handleChange = (key, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }))
+  const handleChange = (changeSetOrKey, value) => {
+    if (typeof changeSetOrKey === 'object') {
+      setState((prevState) => ({
+        ...prevState,
+        ...changeSetOrKey,
+      }))
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        [changeSetOrKey]: value,
+      }))
+    }
   }
 
   const handleClose = () => {
@@ -159,8 +202,19 @@ export default function TaskFlow({
         outreaches,
         setOutreaches,
         errorSnackbar,
+        refreshCampaign,
+        p2pUxEnabled,
       }),
-    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
+    [
+      type,
+      state,
+      campaign,
+      outreaches,
+      setOutreaches,
+      errorSnackbar,
+      refreshCampaign,
+      p2pUxEnabled,
+    ],
   )
 
   const onCreateVoterFileFilter = useMemo(
@@ -172,6 +226,29 @@ export default function TaskFlow({
       }),
     [type, state, errorSnackbar],
   )
+
+  const onCreatePhoneList = useMemo(
+    () => handleCreatePhoneList(errorSnackbar),
+    [errorSnackbar],
+  )
+
+  const handlePurchaseComplete = async () => {
+    await handleScheduleOutreach(
+      type,
+      errorSnackbar,
+      successSnackbar,
+      state,
+    )(await onCreateOutreach())
+
+    const contactField = getVoterContactField(type)
+    await updateVoterContacts((currentContacts) => ({
+      ...currentContacts,
+      [contactField]:
+        (currentContacts[contactField] || 0) + (state.voterCount || 0),
+    }))
+
+    handleNext()
+  }
 
   return (
     <>
@@ -208,6 +285,25 @@ export default function TaskFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
+        {p2pUxEnabled && phoneListToken && (
+          <LongPoll
+            {...{
+              pollingMethod: async () => {
+                return await getP2pPhoneListStatus(phoneListToken)
+              },
+              onSuccess: (result) => {
+                const { phoneListId, leadsLoaded } = result || {}
+                handleChange({
+                  phoneListId,
+                  leadsLoaded,
+                })
+                setStopPolling(true)
+              },
+              stopPolling,
+              limit: 60,
+            }}
+          />
+        )}
         {stepName === STEPS.intro && (
           <InstructionsStep type={type} {...callbackProps} />
         )}
@@ -220,15 +316,18 @@ export default function TaskFlow({
             isCustom={isCustom}
             {...callbackProps}
             onCreateVoterFileFilter={onCreateVoterFileFilter}
+            onCreatePhoneList={onCreatePhoneList}
           />
         )}
         {stepName === STEPS.script && (
           <AddScriptStep
-            type={type}
-            campaign={campaign}
-            onComplete={handleAddScriptOnComplete}
-            defaultAiTemplateId={defaultAiTemplateId}
-            {...callbackProps}
+            {...{
+              type,
+              campaign,
+              onComplete: handleAddScriptOnComplete,
+              defaultAiTemplateId,
+              ...callbackProps,
+            }}
           />
         )}
         {stepName === STEPS.image && (
@@ -239,23 +338,50 @@ export default function TaskFlow({
             schedule={state.schedule}
             type={type}
             {...callbackProps}
-            onCreateOutreach={onCreateOutreach}
-            onScheduleOutreach={handleScheduleOutreach(
-              type,
-              errorSnackbar,
-              successSnackbar,
-              state,
-            )}
+            // Only call onCreateOutreach if we're on the last step, otherwise
+            // we'll call it in the last step
+            onCreateOutreach={isLastStep ? onCreateOutreach : noop}
+            onScheduleOutreach={
+              isLastStep
+                ? handleScheduleOutreach(
+                    type,
+                    errorSnackbar,
+                    successSnackbar,
+                    state,
+                  )
+                : noop
+            }
+            isLastStep
           />
+        )}
+        {stepName === STEPS.purchase && (
+          <PurchaseIntentProvider
+            {...{
+              type: PURCHASE_TYPES.TEXT,
+              purchaseMetaData,
+            }}
+          >
+            <PurchaseStep
+              {...{
+                onComplete: handlePurchaseComplete,
+                phoneListId,
+                contactCount: purchaseMetaData?.contactCount,
+                type,
+                pricePerContact: purchaseMetaData?.pricePerContact,
+              }}
+            />
+          </PurchaseIntentProvider>
         )}
         {stepName === STEPS.download && (
           <DownloadStep
-            type={type}
-            scriptText={state.scriptText}
-            audience={state.audience}
-            {...callbackProps}
-            onCreateOutreach={onCreateOutreach}
-            voterCount={state.voterCount}
+            {...{
+              type,
+              scriptText: state.scriptText,
+              audience: state.audience,
+              ...callbackProps,
+              onCreateOutreach,
+              voterCount: state.voterCount,
+            }}
           />
         )}
         {stepName === STEPS.socialPost && (

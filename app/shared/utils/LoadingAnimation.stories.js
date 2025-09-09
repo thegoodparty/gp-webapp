@@ -1,8 +1,8 @@
-import LoadingAnimation from './LoadingAnimation'
+import LoadingAnimationModal from 'app/shared/utils/LoadingAnimationModal'
 
 export default {
   title: 'Utils/LoadingAnimation',
-  component: LoadingAnimation,
+  component: LoadingAnimationModal,
   tags: ['autodocs'],
   args: {},
 }

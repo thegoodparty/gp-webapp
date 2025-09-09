@@ -369,10 +369,12 @@ export const EVENTS = {
   },
   Outreach: {
     P2PCompliance: {
+      ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
       ComplianceFormSubmitted:
         'Voter Outreach - 10DLC Compliance Form Submitted',
       CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
     },
+    PaymentStarted: 'Voter Outreach - Payment Started',
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
     SocialMedia: {

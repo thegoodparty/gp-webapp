@@ -89,6 +89,9 @@ export const formatPhoneNumber = (value) => {
   }
 }
 
+export const dollarsToCents = (dollarsDecimal = 0) => dollarsDecimal * 100
+export const centsToDollars = (cents = 0) => cents / 100
+
 export const formatDisplayPhoneNumber = (value) => {
   // For use in static displays, like the website contact inbox
 
