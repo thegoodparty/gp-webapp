@@ -4,6 +4,7 @@ import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
+import { FREE_TEXTS_OFFER } from '../outreach/constants'
 
 export const VIABILITY_SCORE_THRESHOLD = 2
 export const VARIANTS = {
@@ -68,7 +69,7 @@ export function ProUpgradeModal({
       description = 'Join GoodParty.org Pro today to get:'
       items = [
         <>
-          5000 <span className="font-bold">free text messages</span>
+          {FREE_TEXTS_OFFER.COUNT.toLocaleString()} <span className="font-bold">free text messages</span>
         </>,
         <>One-on-one access to political analysts</>,
       ]

@@ -16,6 +16,10 @@ import {
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
+import {
+  P2PUpgradeModal,
+  P2P_MODAL_VARIANTS,
+} from '../../shared/P2PUpgradeModal'
 import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
@@ -33,7 +37,9 @@ export default function TasksList({
   const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
+  const [p2pTrackingAttrs, setP2PTrackingAttrs] = useState({})
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
@@ -68,11 +74,10 @@ export default function TasksList({
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    // Check for text messaging specific requirements
     if (flowType === TASK_TYPES.text) {
       if (!campaign.isPro) {
-        setShowProUpgradeModal(true)
-        setProUpgradeTrackingAttrs(
+        setShowP2PModal(true)
+        setP2PTrackingAttrs(
           buildTrackingAttrs('Upgrade to Pro', {
             viabilityScore,
             type: flowType,
@@ -184,6 +189,20 @@ export default function TasksList({
         }
         onClose={() => setShowProUpgradeModal(false)}
         trackingAttrs={proUpgradeTrackingAttrs}
+      />
+      <P2PUpgradeModal
+        open={showP2PModal}
+        variant={(() => {
+          if (!campaign.isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
+          const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+          if (p2pUxEnabled && campaign.hasFreeTextsOffer && !isTextCompliant) {
+            return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
+          }
+          return P2P_MODAL_VARIANTS.NonProUpgrade
+        })()}
+        onClose={() => setShowP2PModal(false)}
+        onUpgradeLinkClick={undefined}
+        trackingAttrs={p2pTrackingAttrs}
       />
       {p2pUxEnabled && (
         <ComplianceModal

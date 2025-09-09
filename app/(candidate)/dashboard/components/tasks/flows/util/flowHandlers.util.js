@@ -41,6 +41,7 @@ export const handleCreateOutreach =
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
+    refreshCampaign = () => {},
     p2pUxEnabled = true,
   }) =>
   async () => {
@@ -71,6 +72,9 @@ export const handleCreateOutreach =
     }
 
     setOutreaches([...outreaches, outreach])
+    
+    await refreshCampaign()
+    
     return outreach
   }
 
@@ -89,6 +93,7 @@ export const mapAudienceForPersistence = ({
   age_50_plus: age50Plus,
   gender_male: genderMale,
   gender_female: genderFemale,
+  gender_unknown: genderUnknown,
 } = {}) => {
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
   //  to match the API once we redo that component so that we don't have to do
@@ -109,6 +114,7 @@ export const mapAudienceForPersistence = ({
     age50Plus,
     genderMale,
     genderFemale,
+    genderUnknown,
   }
 
   return Object.keys(mappedAudience).reduce(
