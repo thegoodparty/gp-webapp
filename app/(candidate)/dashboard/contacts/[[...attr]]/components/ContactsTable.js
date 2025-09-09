@@ -1,6 +1,6 @@
 'use client'
 import { DataTableColumnHeader } from 'goodparty-styleguide'
-import { useContacts } from '../providers/ContactsProvider'
+import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 
 const columns = [
@@ -56,7 +56,8 @@ const columns = [
 
 export default function ContactsTable() {
   const [contacts] = useContacts()
-  const data = (contacts?.data || []).map((contact) => {
+  const { people, pagination } = contacts || {}
+  const data = (people || []).map((contact) => {
     const addressParts = [
       contact.Residence_Addresses_AddressLine,
       contact.Residence_Addresses_City,
@@ -72,14 +73,6 @@ export default function ContactsTable() {
         contact.VoterTelephones_LandlineFormatted,
     }
   })
-
-  // Extract pagination info from people data
-  const pagination = {
-    totalPages: contacts?.pagination?.totalPages || 1,
-    totalItems: contacts?.pagination?.totalItems || 0,
-    hasNextPage: contacts?.pagination?.hasNextPage || false,
-    hasPreviousPage: contacts?.pagination?.hasPreviousPage || false,
-  }
 
   return (
     <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">

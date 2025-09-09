@@ -1,12 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import DashboardLayout from '../../shared/DashboardLayout'
 import TitleSection from '../../shared/TitleSection'
-import ContentTutorial from './ContentTutorial'
 import MyContent from './MyContent'
 import { getCookie } from 'helpers/cookieHelper'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
+
+const ContentTutorial = dynamic(() => import('./ContentTutorial'), {
+  ssr: false,
+})
 
 export default function ContentPage(props) {
   const [forceOpenModal, setForceOpenModal] = useState(false)
@@ -20,6 +24,10 @@ export default function ContentPage(props) {
   }, [modalParam])
 
   const newContentCallback = () => {
+    setForceOpenModal(true)
+  }
+
+  const handleTutorialComplete = (templateKey) => {
     setForceOpenModal(true)
   }
   const cookie = getCookie('tutorial-content')
@@ -52,7 +60,10 @@ export default function ContentPage(props) {
       />
       <MyContent {...props} forceOpenModal={forceOpenModal} />
       {shouldShowTutorial && (
-        <ContentTutorial newContentCallback={newContentCallback} />
+        <ContentTutorial
+          newContentCallback={newContentCallback}
+          onCompleteCallback={handleTutorialComplete}
+        />
       )}
     </DashboardLayout>
   )

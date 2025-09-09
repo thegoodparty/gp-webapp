@@ -1,6 +1,5 @@
 import Paper from '@shared/utils/Paper'
 import DashboardLayout from '../../../shared/DashboardLayout'
-import ContactsStatsSection from './ContactsStatsSection'
 import ContactsTable from './ContactsTable'
 import TitleSection from './TitleSection'
 import PersonOverlay from './person/PersonOverlay'
@@ -10,9 +9,8 @@ import SegmentSection from './segments/SegmentSection'
 export default function ContactsPage() {
   return (
     <DashboardLayout>
-      <Paper>
+      <Paper className="h-full">
         <TitleSection />
-        <ContactsStatsSection />
         <div className="relative">
           <SegmentSection />
           <Download />
