@@ -199,7 +199,7 @@ export default function SignUpPage() {
                 <H1>Join GoodParty.org</H1>
                 <Body2 className="mt-3">
                   Join the movement of candidates who refuse to accept the
-                  status quo and are committed to breaking free from of the
+                  status quo and are committed to breaking free from the
                   two-party system.{' '}
                 </Body2>
                 <Body2 className="mt-3">

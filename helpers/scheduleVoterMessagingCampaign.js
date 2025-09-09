@@ -1,10 +1,10 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-export async function scheduleVoterMessagingCampaign(
+export const scheduleVoterMessagingCampaign = async (
   outreachId,
   audienceRequest = '',
-) {
+) => {
   try {
     const resp = await clientFetch(apiRoutes.voters.voterFile.schedule, {
       outreachId,

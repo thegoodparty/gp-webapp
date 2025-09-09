@@ -1,6 +1,7 @@
 // NOTE: copied from CampaignTaskType enum in gp-api
 export const TASK_TYPES = {
   text: 'text',
+  p2pDisabledText: 'p2pDisabledText',
   robocall: 'robocall',
   doorKnocking: 'doorKnocking',
   phoneBanking: 'phoneBanking',
@@ -26,6 +27,7 @@ export const STEPS = {
   complete: 'complete',
   download: 'download',
   socialPost: 'socialPost',
+  purchase: 'purchase',
 }
 
 export const STEPS_BY_TYPE = {
@@ -35,6 +37,7 @@ export const STEPS_BY_TYPE = {
     STEPS.script,
     STEPS.image,
     STEPS.schedule,
+    STEPS.purchase,
   ],
   [TASK_TYPES.robocall]: [
     STEPS.intro,

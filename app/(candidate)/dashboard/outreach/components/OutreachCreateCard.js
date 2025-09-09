@@ -6,6 +6,11 @@ import H5 from '@shared/typography/H5'
 import { OutreachImpact } from 'app/(candidate)/dashboard/outreach/components/OutreachImpact'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { MdLockOutline } from 'react-icons/md'
+import { OUTREACH_TYPES } from '../constants'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+
+const formatCost = (cost) =>
+  cost === 0 ? 'Free' : `$${cost.toFixed(3).replace(/^0\./, '.')}\/msg`
 
 export const OutreachCreateCard = ({
   type,
@@ -17,7 +22,12 @@ export const OutreachCreateCard = ({
   requiresPro = false,
 }) => {
   const [campaign] = useCampaign()
-  const { isPro } = campaign || {}
+  const { p2pUxEnabled } = useP2pUxEnabled()
+  const { isPro, hasFreeTextsOffer } = campaign || {}
+  
+  const isTextType = type === OUTREACH_TYPES.text || type === OUTREACH_TYPES.p2p
+  const showFreeOffer = p2pUxEnabled && isTextType && hasFreeTextsOffer
+  
   return (
     <Card
       onClick={() => onClick(type)}
@@ -39,7 +49,9 @@ export const OutreachCreateCard = ({
         </div>
         <div className="flex items-center justify-between">
           <OutreachImpact impact={impact} />
-          <span className="text-gray-700 text-xs">{cost}</span>
+          <span className="text-gray-700 text-xs">
+            {showFreeOffer ? '5,000 Free' : formatCost(cost)}
+          </span>
         </div>
       </CardContent>
     </Card>

@@ -33,8 +33,7 @@ export const APP_BASE = IS_LOCAL
         : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
     }`
 
-
-export const NEXT_PUBLIC_AMPLITUDE_API_KEY = 
+export const NEXT_PUBLIC_AMPLITUDE_API_KEY =
   process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY
 
 export const NEXT_PUBLIC_SEGMENT_WRITE_KEY =
@@ -51,3 +50,6 @@ export const NEXT_PUBLIC_GOOGLE_MAPS_KEY =
 export const NEXT_PUBLIC_CANDIDATES_SITE_BASE =
   process.env.NEXT_PUBLIC_CANDIDATES_SITE_BASE ||
   (IS_LOCAL ? 'http://localhost:4001' : 'https://candidates.goodparty.org')
+
+export const NEXT_PUBLIC_P2P_CUTOFF_DATETIME =
+  process.env.NEXT_PUBLIC_P2P_CUTOFF_DATETIME

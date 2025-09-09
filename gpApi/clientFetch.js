@@ -5,7 +5,7 @@ import { buildUrl } from '@shared/utils/buildUrl'
  * @typedef {Object} ApiEndpoint
  * @property {string} path - The request path, which may contain route parameters.
  * @property {string} method - The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE').
- * @property {boolean} nextApiRoute - Indicates if the endpoint is a Next.js API route (/api folder routes).
+ * @property {boolean?} nextApiRoute - Indicates if the endpoint is a Next.js API route (/api folder routes).
  */
 
 /**

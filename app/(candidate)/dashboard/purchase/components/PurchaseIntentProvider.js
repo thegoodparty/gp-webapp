@@ -1,13 +1,16 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { createPurchaseIntent } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
 export const PurchaseIntentContext = createContext({
   paymentIntent: null,
   setPaymentIntent: () => {},
   error: null,
   setError: () => {},
+  metaData: {},
+  setMetaData: () => {},
 })
 
 export const PurchaseIntentProvider = ({
@@ -17,15 +20,16 @@ export const PurchaseIntentProvider = ({
 }) => {
   const [purchaseIntent, setPurchaseIntent] = useState(null)
   const [error, setError] = useState(null)
+  const [metaData, setMetaData] = useState(purchaseMetaData)
 
-  useEffect(() => {
+  useSingleEffect(() => {
     const createNewPurchaseIntent = async () => {
       if (!type || !PURCHASE_TYPES[type]) {
         setError('Invalid purchase type')
         return
       }
 
-      const response = await createPurchaseIntent(type, purchaseMetaData)
+      const response = await createPurchaseIntent(type, metaData)
       if (response.ok) {
         setPurchaseIntent(response.data)
       } else {
@@ -38,11 +42,18 @@ export const PurchaseIntentProvider = ({
     if (!purchaseIntent) {
       createNewPurchaseIntent()
     }
-  }, [purchaseIntent, type, purchaseMetaData])
+  }, [purchaseIntent, type, metaData])
 
   return (
     <PurchaseIntentContext.Provider
-      value={{ purchaseIntent, setPurchaseIntent, error, setError }}
+      value={{
+        purchaseIntent,
+        setPurchaseIntent,
+        error,
+        setError,
+        metaData,
+        setMetaData,
+      }}
     >
       {children}
     </PurchaseIntentContext.Provider>

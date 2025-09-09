@@ -84,7 +84,9 @@ export default function TextingComplianceRegistrationForm({
   }
 
   const handleOnSubmit = () => {
-    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted)
+    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
+      source: 'compliance_flow'
+    })
     return onSubmit(formData)
   }
 
