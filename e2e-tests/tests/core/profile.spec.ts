@@ -46,9 +46,21 @@ test('Adjust Personal Information', async ({ page }) => {
 });
 
 test('Adjust Notification Settings', async ({ page }) => {
-    await page.getByRole('checkbox').first().waitFor({ state: 'visible', timeout: 60000 });
-    await page.getByRole('checkbox').first().click();
+    await page.getByRole('switch').first().waitFor({ state: 'visible', timeout: 60000 });
+    await page.getByRole('switch').first().click();
     await expect(page.locator('.MuiSwitch-switchBase').first()).toHaveClass(/Mui-checked/);
+    await page.waitForTimeout(500);
+    await page.getByRole('switch').nth(1).waitFor({ state: 'visible', timeout: 60000 });
+    await page.getByRole('switch').nth(1).click();
+    await expect(page.locator('.MuiSwitch-switchBase').nth(1)).toHaveClass(/Mui-checked/);
+    await page.waitForTimeout(500);
+    await page.getByRole('switch').nth(2).waitFor({ state: 'visible', timeout: 60000 });
+    await page.getByRole('switch').nth(2).click();
+    await expect(page.locator('.MuiSwitch-switchBase').nth(2)).toHaveClass(/Mui-checked/);
+    await page.waitForTimeout(500);
+    await page.getByRole('switch').nth(3).waitFor({ state: 'visible', timeout: 60000 });
+    await page.getByRole('switch').nth(3).click();
+    await expect(page.locator('.MuiSwitch-switchBase').nth(3)).toHaveClass(/Mui-checked/);
     await page.waitForTimeout(500);
 });
 
