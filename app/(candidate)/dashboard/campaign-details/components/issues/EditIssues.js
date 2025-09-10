@@ -9,7 +9,7 @@ import CandidateIssueSelector from './CandidateIssueSelector'
 import EditCandidatePosition from './EditCandidatePosition'
 import { combinePositions } from './IssuesList'
 import { Draggable } from 'react-drag-reorder'
-import LoadingAnimation from '@shared/utils/LoadingAnimation'
+import LoadingAnimationModal from '@shared/utils/LoadingAnimationModal'
 import SuggestedIssues from './SuggestedIssues'
 import {
   loadCandidatePosition,
@@ -164,7 +164,7 @@ export default function EditIssues(props) {
         suggestedCallback={handleSuggested}
       />
       {saving ? (
-        <LoadingAnimation
+        <LoadingAnimationModal
           title="Saving..."
           label="This make take a few seconds."
         />
