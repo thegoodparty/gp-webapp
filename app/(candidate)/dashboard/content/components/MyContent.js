@@ -167,7 +167,7 @@ export default function MyContent(props) {
       console.error('Failed to load campaign data')
       errorSnackbar('Failed to load campaign data. Please refresh the page.')
       setLoading(false)
-      setCampaign({}) // Set empty campaign to prevent infinite loading
+      setCampaign(null)
       setSections({})
     }
   }
