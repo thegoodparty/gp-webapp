@@ -5,6 +5,8 @@ import { documentReady } from 'helpers/domHelpers';
 import { prepareTest } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
 
+const SECOND = 1000;
+
 test.use({
     storageState: 'auth.json',
 });
@@ -20,15 +22,26 @@ setupMultiTestReporting(test, {
 test.skip('Generate content with Content Builder', async ({ page }) => {
     const testTemplate = /Voter Registration Drive Email/;
 
-    // Generate new content
-    await expect(page.getByRole('button', { name: /Generate/ })).toBeVisible({ timeout: 30000 });
+    await documentReady(page);
+    
+    try {
+        await page.waitForFunction(() => {
+            const loadingElements = document.querySelectorAll('[class*="loading"], [class*="Loading"], .MuiCircularProgress-root');
+            return loadingElements.length === 0;
+        }, { timeout: 30 * SECOND });
+    } catch (error) {
+        console.log('Loading state check timed out, continuing...');
+    }
+
+    await expect(page.getByRole('button', { name: /Generate/ })).toBeVisible({ timeout: 30 * SECOND });
+    
     await page.getByRole('button', { name: /Generate/ }).click();
     await page.getByRole('heading', { name: 'Select a Template' }).isVisible();
     await page.getByRole('button', { name: testTemplate }).click();
     await documentReady(page);
 
     // Verify new content
-    await expect(page.getByRole('link', { name: testTemplate}).first()).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('link', { name: testTemplate}).first()).toBeVisible({ timeout: 30 * SECOND });
     await page.getByRole('link', { name: testTemplate}).first().click();
     await expect(page.getByRole('cell', { name: testTemplate })).toBeVisible();
 });
