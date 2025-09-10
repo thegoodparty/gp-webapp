@@ -73,6 +73,7 @@ export const EVENTS = {
       ClickCommunity: 'Navigation - Dashboard: Click Community',
       ClickWebsite: 'Navigation - Dashboard: Click Website',
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
+      ClickContacts: 'Navigation - Dashboard: Click Contacts',
     },
   },
   Dashboard: {
@@ -368,10 +369,12 @@ export const EVENTS = {
   },
   Outreach: {
     P2PCompliance: {
+      ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
       ComplianceFormSubmitted:
         'Voter Outreach - 10DLC Compliance Form Submitted',
       CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
     },
+    PaymentStarted: 'Voter Outreach - Payment Started',
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
     SocialMedia: {

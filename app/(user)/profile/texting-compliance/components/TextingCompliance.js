@@ -33,7 +33,7 @@ export default function TextingCompliance({
   const complianceApproved = tcrComplianceStatus === TCR_COMPLIANCE.APPROVED
 
   return (
-    <Paper className="mt-6">
+    <Paper className="mt-6" id="texting-compliance">
       <H2 className="mb-6">Texting Compliance</H2>
       <div className="mt-1 mb-6">
         <H3 className="text-gray-900">

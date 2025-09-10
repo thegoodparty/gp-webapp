@@ -11,53 +11,71 @@ import {
   ProUpgradeModal,
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
+import {
+  P2PUpgradeModal,
+  P2P_MODAL_VARIANTS,
+} from 'app/(candidate)/dashboard/shared/P2PUpgradeModal'
+import { ComplianceModal } from 'app/(candidate)/dashboard/shared/ComplianceModal'
+import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
-const OUTREACH_OPTIONS = [
+export const OUTREACH_OPTIONS = [
   {
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
-    cost: '$.035/msg',
+    cost: 0.035,
     type: OUTREACH_TYPES.text,
     requiresPro: true,
   },
   {
     title: 'Robocall',
     impact: IMPACTS_LEVELS.medium,
-    cost: '$.045/msg',
+    cost: 0.045,
     type: OUTREACH_TYPES.robocall,
     requiresPro: true,
   },
   {
     title: 'Door knocking',
     impact: IMPACTS_LEVELS.high,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.doorKnocking,
     requiresPro: true,
   },
   {
     title: 'Phone banking',
     impact: IMPACTS_LEVELS.medium,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.phoneBanking,
     requiresPro: true,
   },
   {
     title: 'Social post',
     impact: IMPACTS_LEVELS.low,
-    cost: 'Free',
+    cost: 0,
     type: OUTREACH_TYPES.socialMedia,
   },
 ]
 
-export default function OutreachCreateCards() {
+export default function OutreachCreateCards({ tcrCompliance }) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [campaign] = useCampaign()
-  const { isPro } = campaign || {}
+  const { isPro, hasFreeTextsOffer } = campaign || {}
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showP2PModal, setShowP2PModal] = useState(false)
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
 
   const openProUpgradeModal = () => {
     setShowProUpgradeModal(true)
+  }
+
+  const openP2PModal = () => {
+    setShowP2PModal(true)
+  }
+
+  const openComplianceModal = () => {
+    setShowComplianceModal(true)
   }
 
   const openTaskFlow = (type) =>
@@ -65,9 +83,27 @@ export default function OutreachCreateCards() {
       flowType: type,
     })
 
+  const isTextCompliant =
+    tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
   const handleCreateClick = (requiresPro) => (type) => {
     trackEvent(EVENTS.Outreach.ClickCreate, { type })
-    return requiresPro && !isPro ? openProUpgradeModal() : openTaskFlow(type)
+
+    if (type === OUTREACH_TYPES.text) {
+      if (!isPro) {
+        return openP2PModal()
+      }
+      if (p2pUxEnabled && !isTextCompliant) {
+        return openComplianceModal()
+      }
+    } else if (requiresPro && !isPro) {
+      trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
+        source: 'outreach_page',
+      })
+      return openProUpgradeModal()
+    }
+
+    return openTaskFlow(type)
   }
 
   return (
@@ -110,6 +146,31 @@ export default function OutreachCreateCards() {
           onClose: () => setShowProUpgradeModal(false),
         }}
       />
+
+      <P2PUpgradeModal
+        {...{
+          variant: (() => {
+            if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
+            if (p2pUxEnabled && hasFreeTextsOffer && !isTextCompliant) {
+              return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
+            }
+            return P2P_MODAL_VARIANTS.NonProUpgrade
+          })(),
+          open: showP2PModal,
+          onClose: () => setShowP2PModal(false),
+          onUpgradeLinkClick: undefined,
+        }}
+      />
+
+      {p2pUxEnabled && (
+        <ComplianceModal
+          {...{
+            open: showComplianceModal,
+            tcrComplianceStatus: tcrCompliance?.status,
+            onClose: () => setShowComplianceModal(false),
+          }}
+        />
+      )}
 
       {flowModalTask && campaign && (
         <TaskFlow

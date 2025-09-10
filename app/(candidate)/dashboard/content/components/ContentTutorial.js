@@ -58,7 +58,10 @@ const steps = [
   },
 ]
 
-export default function ContentTutorial({ newContentCallback }) {
+export default function ContentTutorial({
+  newContentCallback,
+  onCompleteCallback,
+}) {
   const stepsRef = useRef(null)
   const [enabled, setEnabled] = useState(false)
 
@@ -71,7 +74,9 @@ export default function ContentTutorial({ newContentCallback }) {
   }
 
   const onComplete = () => {
-    document.getElementById('template-card-pressRelease').click()
+    if (onCompleteCallback) {
+      onCompleteCallback('pressRelease')
+    }
   }
 
   const handleChange = (nextStepIndex) => {
@@ -80,20 +85,20 @@ export default function ContentTutorial({ newContentCallback }) {
     }
   }
   const onBeforeChange = (nextStepIndex) => {
-    stepsRef.current.updateStepElement(nextStepIndex)
+    stepsRef.current?.updateStepElement(nextStepIndex)
     setTimeout(() => {
-      if (nextStepIndex === 0) {
-        const backButton = document.querySelector('.introjs-prevbutton')
+      // Use the intro.js instance to access buttons more safely
+      const intro = stepsRef.current?.introJs
+      if (intro && intro._targetElement) {
+        const backButton = intro._targetElement.querySelector(
+          '.introjs-prevbutton',
+        )
         if (backButton) {
-          backButton.style.display = 'none'
-        }
-      } else {
-        const backButton = document.querySelector('.introjs-prevbutton')
-        if (backButton) {
-          backButton.style.display = 'inline-block'
+          backButton.style.display =
+            nextStepIndex === 0 ? 'none' : 'inline-block'
         }
       }
-    }, 1) // Short delay to ensure DOM elements are updated
+    }, 1)
   }
 
   return (

@@ -16,15 +16,30 @@ import {
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
+import {
+  P2PUpgradeModal,
+  P2P_MODAL_VARIANTS,
+} from '../../shared/P2PUpgradeModal'
+import { ComplianceModal } from '../../shared/ComplianceModal'
+import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
-export default function TasksList({ campaign, tasks: tasksProp = [] }) {
+export default function TasksList({
+  campaign,
+  tasks: tasksProp = [],
+  tcrCompliance,
+}) {
+  const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [showP2PModal, setShowP2PModal] = useState(false)
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
+  const [p2pTrackingAttrs, setP2PTrackingAttrs] = useState({})
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
   const [flowModalTask, setFlowModalTask] = useState(null)
   const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
@@ -56,8 +71,28 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
 
   const handleActionClick = (task) => {
     const { flowType, proRequired, deadline } = task
+    const isTextCompliant =
+      tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    if (proRequired && !campaign.isPro) {
+    if (flowType === TASK_TYPES.text) {
+      if (!campaign.isPro) {
+        setShowP2PModal(true)
+        setP2PTrackingAttrs(
+          buildTrackingAttrs('Upgrade to Pro', {
+            viabilityScore,
+            type: flowType,
+          }),
+        )
+        return
+      }
+      if (p2pUxEnabled && !isTextCompliant) {
+        setShowComplianceModal(true)
+        return
+      }
+    } else if (proRequired && !campaign.isPro) {
+      trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
+        source: 'task_list',
+      })
       setShowProUpgradeModal(true)
       setProUpgradeTrackingAttrs(
         buildTrackingAttrs('Upgrade to Pro', {
@@ -155,6 +190,27 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
         onClose={() => setShowProUpgradeModal(false)}
         trackingAttrs={proUpgradeTrackingAttrs}
       />
+      <P2PUpgradeModal
+        open={showP2PModal}
+        variant={(() => {
+          if (!campaign.isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
+          const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+          if (p2pUxEnabled && campaign.hasFreeTextsOffer && !isTextCompliant) {
+            return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
+          }
+          return P2P_MODAL_VARIANTS.NonProUpgrade
+        })()}
+        onClose={() => setShowP2PModal(false)}
+        onUpgradeLinkClick={undefined}
+        trackingAttrs={p2pTrackingAttrs}
+      />
+      {p2pUxEnabled && (
+        <ComplianceModal
+          open={showComplianceModal}
+          tcrComplianceStatus={tcrCompliance?.status}
+          onClose={() => setShowComplianceModal(false)}
+        />
+      )}
       {flowModalTask && (
         <TaskFlow
           forceOpen
