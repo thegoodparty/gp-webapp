@@ -163,6 +163,12 @@ export default function MyContent(props) {
       if (jobsProcessing) {
         handleJobProcessing()
       }
+    } else {
+      console.error('Failed to load campaign data')
+      errorSnackbar('Failed to load campaign data. Please refresh the page.')
+      setLoading(false)
+      setCampaign(null)
+      setSections({})
     }
   }
 
