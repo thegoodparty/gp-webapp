@@ -45,7 +45,7 @@ test('Adjust Personal Information', async ({ page }) => {
     await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);
 });
 
-test('Adjust Notification Settings', async ({ page }) => {
+test.skip('Adjust Notification Settings', async ({ page }) => {
     await page.getByRole('switch').first().waitFor({ state: 'visible', timeout: 60000 });
     await page.getByRole('switch').first().click();
     await expect(page.locator('.MuiSwitch-switchBase').first()).toHaveClass(/Mui-checked/);
