@@ -1,5 +1,4 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { adminAccessOnly } from 'helpers/permissionHelper'
 import { ContactsProvider } from './hooks/ContactsProvider'
 import ContactsPage from './components/ContactsPage'
 import { PersonProvider } from './hooks/PersonProvider'
@@ -7,6 +6,7 @@ import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { DEFAULT_PAGE_SIZE } from './components/constants'
+import candidateAccess from '../../shared/candidateAccess'
 
 const fetchContacts = async ({
   page = 1,
@@ -51,7 +51,7 @@ export const metadata = meta
 export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
-  await adminAccessOnly()
+  await candidateAccess()
   let { page, pageSize, segment } = await searchParams
   let { attr } = await params
   let personId = null

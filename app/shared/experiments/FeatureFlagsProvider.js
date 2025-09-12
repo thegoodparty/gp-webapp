@@ -1,9 +1,16 @@
 'use client'
 
-import { Experiment } from "@amplitude/experiment-js-client"
-import { getReadyAnalytics } from "@shared/utils/analytics"
-import { useContext, useEffect, createContext, useRef, useState, useMemo } from "react"
-import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from "appEnv"
+import { Experiment } from '@amplitude/experiment-js-client'
+import { getReadyAnalytics } from '@shared/utils/analytics'
+import {
+  useContext,
+  useEffect,
+  createContext,
+  useRef,
+  useState,
+  useMemo,
+} from 'react'
+import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 
 export const FeatureFlagsContext = createContext({
   ready: false,
@@ -32,30 +39,60 @@ export const FeatureFlagsProvider = ({ children }) => {
         track: async (exposure) => {
           try {
             const analytics = await getReadyAnalytics()
-            if (analytics && typeof analytics.track === 'function') analytics.track('$exposure', exposure)
+            if (analytics && typeof analytics.track === 'function')
+              analytics.track('$exposure', exposure)
           } catch (error) {
             console.warn('Experiment exposure track failed: ', error)
           }
-        }
-      }
+        },
+      },
     })
 
     refresh().finally(() => setReady(true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const refresh = async () => {
+  const refresh = async (retryCount = 0) => {
     try {
       const analytics = await getReadyAnalytics()
       let userId
       let deviceId
+      let userProperties = {}
 
-      const user = typeof analytics?.user === 'function' ? analytics.user() : null
+      // If analytics is not ready and we haven't retried too many times, retry after a delay
+      if (!analytics && retryCount < 3) {
+        setTimeout(() => refresh(retryCount + 1), (retryCount + 1) * 1000)
+        return
+      }
+
+      const user =
+        typeof analytics?.user === 'function' ? analytics.user() : null
+
       if (user) {
         if (typeof user.id === 'function') userId = user.id()
-        if (typeof user.anonymousId === 'function') deviceId = user.anonymousId()
+        if (typeof user.anonymousId === 'function')
+          deviceId = user.anonymousId()
+        if (typeof user.traits === 'function') {
+          const traits = user.traits()
+          if (traits) {
+            userProperties = {
+              email: traits.email,
+              name: traits.name,
+              phone: traits.phone,
+              zip: traits.zip,
+              ...traits,
+            }
+          }
+        }
       }
-      await clientRef.current?.fetch({ user_id: userId, device_id: deviceId })
+
+      const fetchParams = {
+        user_id: userId,
+        device_id: deviceId,
+        user_properties: userProperties,
+      }
+
+      await clientRef.current?.fetch(fetchParams)
       setRev((v) => v + 1)
     } catch (error) {
       console.warn('Experiment fetch failed: ', error)
@@ -73,7 +110,7 @@ export const FeatureFlagsProvider = ({ children }) => {
       refresh,
       clear: () => client?.clear(),
     }
-  }, [ready, rev])
+  }, [ready, rev, refresh])
 
   return (
     <FeatureFlagsContext.Provider value={value}>
