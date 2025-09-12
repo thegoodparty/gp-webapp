@@ -11,7 +11,7 @@ import candidateAccess from '../../shared/candidateAccess'
 const fetchContacts = async ({
   page = 1,
   resultsPerPage = DEFAULT_PAGE_SIZE,
-  segment,
+  segment = 'all',
 }) => {
   const payload = {
     page,
@@ -22,7 +22,7 @@ const fetchContacts = async ({
   if (response.ok) {
     return response.data
   } else {
-    // console.error('Failed to fetch contacts', response)
+    console.warn('Failed to fetch contacts', response)
     return {
       people: [],
       pagination: {
