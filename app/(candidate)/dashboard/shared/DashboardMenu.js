@@ -159,26 +159,29 @@ export default function DashboardMenu({
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
-  const baseMenuItems = useMemo(() => {
-    if (!flagsReady) {
-      return getDashboardMenuItems(campaign, false)
+  const menuItems = useMemo(() => {
+    const baseItems = flagsReady
+      ? getDashboardMenuItems(campaign, serveAccessEnabled)
+      : getDashboardMenuItems(campaign, false)
+
+    const items = [...baseItems]
+
+    if (ecanvasser) {
+      items.push(ECANVASSER_MENU_ITEM)
     }
-    return getDashboardMenuItems(campaign, serveAccessEnabled)
-  }, [campaign, serveAccessEnabled, flagsReady])
 
-  let menuItems = [...baseMenuItems]
+    if (userIsAdmin(user)) {
+      items.push(ISSUES_MENU_ITEM)
+    }
 
-  if (ecanvasser) {
-    menuItems.push(ECANVASSER_MENU_ITEM)
-  }
+    return items
+  }, [campaign, serveAccessEnabled, flagsReady, ecanvasser, user])
+
   useEffect(() => {
     if (campaign && ecanvasser) {
       syncEcanvasser(campaign?.id)
     }
   }, [campaign, ecanvasser])
-  if (userIsAdmin(user)) {
-    menuItems.push(ISSUES_MENU_ITEM)
-  }
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e)

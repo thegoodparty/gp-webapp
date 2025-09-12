@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   useMemo,
+  useCallback,
 } from 'react'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 
@@ -25,43 +26,19 @@ export const FeatureFlagsProvider = ({ children }) => {
   const clientRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [rev, setRev] = useState(0)
+  const [retryCount, setRetryCount] = useState(0)
+  const [shouldRetry, setShouldRetry] = useState(false)
 
-  useEffect(() => {
-    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
-    if (!key) {
-      console.warn('Experiment disabled: missing key')
-      setReady(true)
-      return
-    }
-    clientRef.current = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
-      automaticExposureTracking: true,
-      exposureTrackingProvider: {
-        track: async (exposure) => {
-          try {
-            const analytics = await getReadyAnalytics()
-            if (analytics && typeof analytics.track === 'function')
-              analytics.track('$exposure', exposure)
-          } catch (error) {
-            console.warn('Experiment exposure track failed: ', error)
-          }
-        },
-      },
-    })
-
-    refresh().finally(() => setReady(true))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const refresh = async (retryCount = 0) => {
+  const refresh = useCallback(async () => {
     try {
       const analytics = await getReadyAnalytics()
       let userId
       let deviceId
       let userProperties = {}
 
-      // If analytics is not ready and we haven't retried too many times, retry after a delay
       if (!analytics && retryCount < 3) {
-        setTimeout(() => refresh(retryCount + 1), (retryCount + 1) * 1000)
+        setRetryCount((prev) => prev + 1)
+        setShouldRetry(true)
         return
       }
 
@@ -97,7 +74,44 @@ export const FeatureFlagsProvider = ({ children }) => {
     } catch (error) {
       console.warn('Experiment fetch failed: ', error)
     }
-  }
+  }, [retryCount])
+
+  useEffect(() => {
+    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
+    if (!key) {
+      console.warn('Experiment disabled: missing key')
+      setReady(true)
+      return
+    }
+    clientRef.current = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
+      automaticExposureTracking: true,
+      exposureTrackingProvider: {
+        track: async (exposure) => {
+          try {
+            const analytics = await getReadyAnalytics()
+            if (analytics && typeof analytics.track === 'function')
+              analytics.track('$exposure', exposure)
+          } catch (error) {
+            console.warn('Experiment exposure track failed: ', error)
+          }
+        },
+      },
+    })
+
+    refresh().finally(() => setReady(true))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!shouldRetry || retryCount >= 3) return
+
+    const timeoutId = setTimeout(() => {
+      setShouldRetry(false)
+      refresh()
+    }, retryCount * 1000)
+
+    return () => clearTimeout(timeoutId)
+  }, [shouldRetry, retryCount, refresh])
 
   const value = useMemo(() => {
     const client = clientRef.current
@@ -110,7 +124,7 @@ export const FeatureFlagsProvider = ({ children }) => {
       refresh,
       clear: () => client?.clear(),
     }
-  }, [ready, rev, refresh])
+  }, [ready, refresh])
 
   return (
     <FeatureFlagsContext.Provider value={value}>
