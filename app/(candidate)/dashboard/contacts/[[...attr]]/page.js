@@ -22,7 +22,7 @@ const fetchContacts = async ({
   if (response.ok) {
     return response.data
   } else {
-    console.error('Failed to fetch contacts', response)
+    // console.error('Failed to fetch contacts', response)
     return {
       people: [],
       pagination: {

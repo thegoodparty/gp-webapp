@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   useMemo,
+  useCallback,
 } from 'react'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 
@@ -27,43 +28,6 @@ export const FeatureFlagsProvider = ({ children }) => {
   const [rev, setRev] = useState(0)
   const [retryCount, setRetryCount] = useState(0)
   const [shouldRetry, setShouldRetry] = useState(false)
-
-  useEffect(() => {
-    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
-    if (!key) {
-      console.warn('Experiment disabled: missing key')
-      setReady(true)
-      return
-    }
-    clientRef.current = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
-      automaticExposureTracking: true,
-      exposureTrackingProvider: {
-        track: async (exposure) => {
-          try {
-            const analytics = await getReadyAnalytics()
-            if (analytics && typeof analytics.track === 'function')
-              analytics.track('$exposure', exposure)
-          } catch (error) {
-            console.warn('Experiment exposure track failed: ', error)
-          }
-        },
-      },
-    })
-
-    refresh().finally(() => setReady(true))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (!shouldRetry || retryCount >= 3) return
-
-    const timeoutId = setTimeout(() => {
-      setShouldRetry(false)
-      refresh()
-    }, retryCount * 1000)
-
-    return () => clearTimeout(timeoutId)
-  }, [shouldRetry, retryCount, refresh])
 
   const refresh = useCallback(async () => {
     try {
@@ -111,6 +75,43 @@ export const FeatureFlagsProvider = ({ children }) => {
       console.warn('Experiment fetch failed: ', error)
     }
   }, [retryCount])
+
+  useEffect(() => {
+    const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
+    if (!key) {
+      console.warn('Experiment disabled: missing key')
+      setReady(true)
+      return
+    }
+    clientRef.current = Experiment.initialize(NEXT_PUBLIC_AMPLITUDE_API_KEY, {
+      automaticExposureTracking: true,
+      exposureTrackingProvider: {
+        track: async (exposure) => {
+          try {
+            const analytics = await getReadyAnalytics()
+            if (analytics && typeof analytics.track === 'function')
+              analytics.track('$exposure', exposure)
+          } catch (error) {
+            console.warn('Experiment exposure track failed: ', error)
+          }
+        },
+      },
+    })
+
+    refresh().finally(() => setReady(true))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!shouldRetry || retryCount >= 3) return
+
+    const timeoutId = setTimeout(() => {
+      setShouldRetry(false)
+      refresh()
+    }, retryCount * 1000)
+
+    return () => clearTimeout(timeoutId)
+  }, [shouldRetry, retryCount, refresh])
 
   const value = useMemo(() => {
     const client = clientRef.current
