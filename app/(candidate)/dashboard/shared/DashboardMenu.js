@@ -23,6 +23,7 @@ import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { BiSolidUpvote } from 'react-icons/bi'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -152,17 +153,15 @@ export default function DashboardMenu({
   pathname,
   toggleCallback,
   mobileMode,
-  campaign,
 }) {
   const [user] = useUser()
+  const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
   const menuItems = useMemo(() => {
-    const baseItems = flagsReady
-      ? getDashboardMenuItems(campaign, serveAccessEnabled)
-      : getDashboardMenuItems(campaign, false)
+    const baseItems = getDashboardMenuItems(campaign, serveAccessEnabled)
 
     const items = [...baseItems]
 
@@ -175,7 +174,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, flagsReady, ecanvasser, user])
+  }, [campaign, serveAccessEnabled, ecanvasser, user])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
