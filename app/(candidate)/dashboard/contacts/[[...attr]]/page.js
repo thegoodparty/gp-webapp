@@ -65,12 +65,14 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
 
-  const contacts = await fetchContacts({
-    page,
-    resultsPerPage: pageSize,
-    segment,
-  })
-  const initCustomSegments = await fetchCustomSegments()
+  const [contacts, initCustomSegments] = await Promise.all([
+    fetchContacts({
+      page,
+      resultsPerPage: pageSize,
+      segment,
+    }),
+    fetchCustomSegments(),
+  ])
 
   return (
     <ContactsProvider contacts={contacts}>
