@@ -29,7 +29,7 @@ export default function Filters({
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
-  const [, , refreshCustomSegments] = useCustomSegments()
+  const [customSegments, , refreshCustomSegments] = useCustomSegments()
 
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
@@ -37,8 +37,11 @@ export default function Filters({
       setSegmentName(editSegment.name)
       setIsEditingName(false)
     } else {
-      setFilters({})
-      setSegmentName('Custom Segment 1')
+      const nextCustomSegmentName = `Custom Segment ${
+        customSegments.length + 1
+      }`
+      setFilters({ name: nextCustomSegmentName })
+      setSegmentName(nextCustomSegmentName)
       setIsEditingName(false)
     }
   }, [mode, editSegment, open])

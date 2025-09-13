@@ -74,6 +74,8 @@ export default async function Page({ params, searchParams }) {
     fetchCustomSegments(),
   ])
 
+  console.log('contacts', contacts)
+
   return (
     <ContactsProvider contacts={contacts}>
       <PersonProvider person={person}>
