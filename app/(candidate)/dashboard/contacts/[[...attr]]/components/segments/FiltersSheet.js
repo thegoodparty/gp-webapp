@@ -40,11 +40,11 @@ export default function Filters({
       const nextCustomSegmentName = `Custom Segment ${
         customSegments.length + 1
       }`
-      setFilters({ name: nextCustomSegmentName })
+      setFilters({})
       setSegmentName(nextCustomSegmentName)
       setIsEditingName(false)
     }
-  }, [mode, editSegment, open])
+  }, [mode, editSegment, open, customSegments])
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
