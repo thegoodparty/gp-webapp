@@ -1,11 +1,13 @@
 'use client'
 import { Button } from 'goodparty-styleguide'
 import { useCustomSegments } from '../hooks/CustomSegmentsProvider'
-import { fetchContactsCsv } from './ajaxActions'
+import { fetchContactsCsv } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { isCustomSegment, findCustomSegment } from './shared/segments.util'
 
 export default function Download() {
-  const [, , , querySegment] = useCustomSegments()
+  const [customSegments, , , querySegment] = useCustomSegments()
 
   const handleDownload = async () => {
     const res = await fetchContactsCsv(querySegment)
@@ -22,9 +24,36 @@ export default function Download() {
 
       window.URL.revokeObjectURL(url)
       document.body.removeChild(link)
+      const properties = generateProperties()
+
+      trackEvent(EVENTS.Contacts.Download, properties)
     } else {
       console.error('Failed to download contacts', res)
     }
+  }
+
+  const generateProperties = () => {
+    if (!isCustomSegment(customSegments, querySegment)) {
+      return {
+        filters: null,
+        isCustomSegment: false,
+        isDefaultSegment: true,
+        segment: querySegment,
+      }
+    }
+    return {
+      filters: filters(),
+      isCustomSegment: true,
+      isDefaultSegment: false,
+    }
+  }
+
+  const filters = () => {
+    if (!isCustomSegment(customSegments, querySegment)) {
+      return null
+    }
+    const allFilters = findCustomSegment(customSegments, querySegment)
+    return Object.keys(allFilters).filter((key) => allFilters[key] === true)
   }
 
   return (

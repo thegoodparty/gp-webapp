@@ -10,10 +10,10 @@ import {
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
+import { saveCustomSegment, updateCustomSegment } from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
-import { SHEET_MODES } from '../constants'
+import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
 
 export default function Filters({

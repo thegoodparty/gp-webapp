@@ -12,7 +12,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
 } from 'goodparty-styleguide'
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './constants'
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
 
 export default function ServerDataTable({
   columns,

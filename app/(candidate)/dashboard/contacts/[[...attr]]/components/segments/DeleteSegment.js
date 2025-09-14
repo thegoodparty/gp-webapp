@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
   Button,
 } from 'goodparty-styleguide'
-import { deleteCustomSegment } from '../ajaxActions'
+import { deleteCustomSegment } from '../shared/ajaxActions'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { useState } from 'react'
 
