@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
@@ -20,7 +20,8 @@ import appendParam from '@shared/utils/appendParam'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
-  const [segment, setSegment] = useState(querySegment || ALL_SEGMENTS)
+  const [segment, setSegment] = useState(ALL_SEGMENTS)
+  const isInitialLoad = useRef(true)
 
   const [sheetState, setSheetState] = useState({
     open: false,
@@ -31,6 +32,37 @@ export default function SegmentSection() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      if (querySegment) {
+        const isDefaultSegment = defaultSegments.some(
+          (defaultSegment) => defaultSegment.value === querySegment,
+        )
+
+        if (isDefaultSegment) {
+          setSegment(querySegment)
+          isInitialLoad.current = false
+        } else {
+          const isCustomSegment = customSegments.some(
+            (customSegment) => customSegment.id === parseInt(querySegment),
+          )
+
+          if (isCustomSegment) {
+            setSegment(querySegment)
+            isInitialLoad.current = false
+          } else if (customSegments.length > 0) {
+            setSegment(ALL_SEGMENTS)
+            appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
+            isInitialLoad.current = false
+          }
+        }
+      } else {
+        setSegment(ALL_SEGMENTS)
+        isInitialLoad.current = false
+      }
+    }
+  }, [querySegment, customSegments, router, searchParams])
+
   const isCustom = !defaultSegments.some(
     (defaultSegment) => defaultSegment.value === segment,
   )
@@ -38,7 +70,7 @@ export default function SegmentSection() {
   const handleEdit = () => {
     if (isCustom) {
       const customSegment = customSegments.find(
-        (customSegment) => customSegment.id === segment,
+        (customSegment) => customSegment.id === parseInt(segment),
       )
       setSheetState({
         open: true,
@@ -93,7 +125,7 @@ export default function SegmentSection() {
             <SelectGroup>
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
-                <SelectItem key={segment.id} value={segment.id}>
+                <SelectItem key={segment.id} value={segment.id.toString()}>
                   {segment.name}
                 </SelectItem>
               ))}
