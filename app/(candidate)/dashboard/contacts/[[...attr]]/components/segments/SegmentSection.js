@@ -22,6 +22,7 @@ import {
   isDefaultSegment,
   findCustomSegment,
 } from '../shared/segments.util'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
@@ -45,21 +46,39 @@ export default function SegmentSection() {
         if (isDefault) {
           setSegment(querySegment)
           isInitialLoad.current = false
+          trackEvent(EVENTS.Contacts.SegmentViewed, {
+            segment: querySegment,
+            type: 'default',
+          })
         } else {
           const isCustom = isCustomSegment(customSegments, querySegment)
 
           if (isCustom) {
             setSegment(querySegment)
             isInitialLoad.current = false
+            trackEvent(EVENTS.Contacts.SegmentViewed, {
+              segment:
+                findCustomSegment(customSegments, querySegment)?.name ||
+                querySegment,
+              type: 'custom',
+            })
           } else if (customSegments.length > 0) {
             setSegment(ALL_SEGMENTS)
             appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
             isInitialLoad.current = false
+            trackEvent(EVENTS.Contacts.SegmentViewed, {
+              segment: ALL_SEGMENTS,
+              type: 'default',
+            })
           }
         }
       } else {
         setSegment(ALL_SEGMENTS)
         isInitialLoad.current = false
+        trackEvent(EVENTS.Contacts.SegmentViewed, {
+          segment: ALL_SEGMENTS,
+          type: 'default',
+        })
       }
     }
   }, [querySegment, customSegments, router, searchParams])
