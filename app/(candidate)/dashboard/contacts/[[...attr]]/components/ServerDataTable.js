@@ -20,6 +20,7 @@ export default function ServerDataTable({
   pagination = {},
   className,
   onRowClick = () => {},
+  onColumnVisibilityChange = () => {},
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -63,6 +64,7 @@ export default function ServerDataTable({
         data={data}
         pagination={false}
         onRowClick={onRowClick}
+        onColumnVisibilityChange={onColumnVisibilityChange}
       />
 
       <div className="flex items-center justify-between space-x-2 py-4">
