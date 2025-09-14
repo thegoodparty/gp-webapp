@@ -245,10 +245,10 @@ export const EVENTS = {
     ClickGoToStripe: 'Pro Upgrade: Click Go to Stripe',
   },
   Contacts: {
-    Download: 'Contacts - Download',
-    SegmentCreated: 'Contacts - Segment Created',
-    SegmentDeleted: 'Contacts - Segment Deleted',
-    SegmentUpdated: 'Contacts - Segment Updated',
+    Download: 'Contacts - Download', // done
+    SegmentCreated: 'Contacts - Segment Created', // done
+    SegmentDeleted: 'Contacts - Segment Deleted', //done
+    SegmentUpdated: 'Contacts - Segment Updated', //done
     SegmentViewed: 'Contacts - Segment Viewed',
     ColumnEdited: 'Contacts - Column Edited',
   },

@@ -11,3 +11,7 @@ export const isDefaultSegment = (defaultSegments, querySegment) => {
 export const findCustomSegment = (customSegments, querySegment) => {
   return customSegments.find((segment) => segment.id === parseInt(querySegment))
 }
+
+export const filterOnlyTrueValues = (filters) => {
+  return Object.keys(filters).filter((key) => filters[key] === true)
+}

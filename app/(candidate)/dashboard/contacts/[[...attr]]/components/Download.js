@@ -53,7 +53,7 @@ export default function Download() {
       return null
     }
     const allFilters = findCustomSegment(customSegments, querySegment)
-    return Object.keys(allFilters).filter((key) => allFilters[key] === true)
+    return filterOnlyTrueValues(allFilters)
   }
 
   return (
