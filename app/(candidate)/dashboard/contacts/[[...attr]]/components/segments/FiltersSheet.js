@@ -10,11 +10,13 @@ import {
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
+import { saveCustomSegment, updateCustomSegment } from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
-import { SHEET_MODES } from '../constants'
+import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { filterOnlyTrueValues } from '../shared/segments.util'
 
 export default function Filters({
   open = false,
@@ -67,6 +69,9 @@ export default function Filters({
     })
     if (response) {
       successSnackbar('Segment created successfully')
+      trackEvent(EVENTS.Contacts.SegmentCreated, {
+        filters: filterOnlyTrueValues(filters),
+      })
     } else {
       errorSnackbar('Failed to create segment')
     }
@@ -90,6 +95,9 @@ export default function Filters({
     })
     if (response) {
       successSnackbar('Segment updated successfully')
+      trackEvent(EVENTS.Contacts.SegmentUpdated, {
+        filters: filterOnlyTrueValues(filters),
+      })
     } else {
       errorSnackbar('Failed to update segment')
     }
