@@ -145,7 +145,6 @@ export default function ContactsTable() {
     }
   })
   const onColumnVisibilityChange = (visibility) => {
-    console.log('visibility', visibility)
     trackEvent(EVENTS.Contacts.ColumnEdited, {
       visibility,
     })
