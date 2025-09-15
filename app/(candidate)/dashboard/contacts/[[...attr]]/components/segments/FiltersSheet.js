@@ -17,6 +17,7 @@ import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { filterOnlyTrueValues } from '../shared/segments.util'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function Filters({
   open = false,
@@ -25,6 +26,7 @@ export default function Filters({
   editSegment = null,
   handleOpenChange = () => {},
   resetSelect = () => {},
+  afterSave = () => {},
 }) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState({})
@@ -32,6 +34,8 @@ export default function Filters({
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
   const [customSegments, , refreshCustomSegments] = useCustomSegments()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
@@ -62,6 +66,10 @@ export default function Filters({
   }
 
   const handleSave = async () => {
+    if (!canSave()) {
+      errorSnackbar('Please select at least one filter')
+      return
+    }
     setSaving(true)
     const response = await saveCustomSegment({
       name: segmentName,
@@ -72,15 +80,21 @@ export default function Filters({
       trackEvent(EVENTS.Contacts.SegmentCreated, {
         filters: filterOnlyTrueValues(filters),
       })
+      await refreshCustomSegments()
+      afterSave(response.id)
     } else {
+      await refreshCustomSegments()
       errorSnackbar('Failed to create segment')
     }
-    await refreshCustomSegments()
     setSaving(false)
     handleClose()
   }
 
   const handleUpdate = async () => {
+    if (!canSave()) {
+      errorSnackbar('Please select at least one filter')
+      return
+    }
     setSaving(true)
     const cleanFilters = { ...filters }
     delete cleanFilters.id
@@ -109,6 +123,10 @@ export default function Filters({
   const handleAfterDelete = () => {
     handleClose()
     resetSelect()
+  }
+
+  const canSave = () => {
+    return segmentName && Object.values(filters).some((value) => value)
   }
 
   return (
@@ -194,7 +212,7 @@ export default function Filters({
           <Button
             variant="default"
             onClick={mode === SHEET_MODES.EDIT ? handleUpdate : handleSave}
-            disabled={saving || !segmentName}
+            disabled={saving || !canSave()}
           >
             {mode === SHEET_MODES.EDIT ? 'Update Segment' : 'Create Segment'}
           </Button>

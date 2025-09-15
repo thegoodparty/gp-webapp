@@ -38,48 +38,65 @@ export default function SegmentSection() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const setSegmentAndTrack = (segmentValue, type, shouldUpdateUrl = false) => {
+    setSegment(segmentValue)
+    isInitialLoad.current = false
+
+    if (shouldUpdateUrl) {
+      appendParam(router, searchParams, 'segment', segmentValue)
+    }
+
+    const segmentName =
+      type === 'custom'
+        ? findCustomSegment(customSegments, segmentValue)?.name || segmentValue
+        : segmentValue
+
+    trackEvent(EVENTS.Contacts.SegmentViewed, {
+      segment: segmentName,
+      type,
+    })
+  }
+
+  const handleDefaultSegment = () => {
+    setSegmentAndTrack(querySegment, 'default')
+  }
+
+  const handleCustomSegment = () => {
+    setSegmentAndTrack(querySegment, 'custom')
+  }
+
+  const handleInvalidSegment = () => {
+    if (customSegments.length > 0) {
+      setSegmentAndTrack(ALL_SEGMENTS, 'default', true)
+    }
+  }
+
+  const handleNoQuerySegment = () => {
+    setSegmentAndTrack(ALL_SEGMENTS, 'default')
+  }
+
+  const initializeSegment = () => {
+    if (!querySegment) {
+      handleNoQuerySegment()
+      return
+    }
+
+    if (isDefaultSegment(defaultSegments, querySegment)) {
+      handleDefaultSegment()
+      return
+    }
+
+    if (isCustomSegment(customSegments, querySegment)) {
+      handleCustomSegment()
+      return
+    }
+
+    handleInvalidSegment()
+  }
+
   useEffect(() => {
     if (isInitialLoad.current) {
-      if (querySegment) {
-        const isDefault = isDefaultSegment(defaultSegments, querySegment)
-
-        if (isDefault) {
-          setSegment(querySegment)
-          isInitialLoad.current = false
-          trackEvent(EVENTS.Contacts.SegmentViewed, {
-            segment: querySegment,
-            type: 'default',
-          })
-        } else {
-          const isCustom = isCustomSegment(customSegments, querySegment)
-
-          if (isCustom) {
-            setSegment(querySegment)
-            isInitialLoad.current = false
-            trackEvent(EVENTS.Contacts.SegmentViewed, {
-              segment:
-                findCustomSegment(customSegments, querySegment)?.name ||
-                querySegment,
-              type: 'custom',
-            })
-          } else if (customSegments.length > 0) {
-            setSegment(ALL_SEGMENTS)
-            appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
-            isInitialLoad.current = false
-            trackEvent(EVENTS.Contacts.SegmentViewed, {
-              segment: ALL_SEGMENTS,
-              type: 'default',
-            })
-          }
-        }
-      } else {
-        setSegment(ALL_SEGMENTS)
-        isInitialLoad.current = false
-        trackEvent(EVENTS.Contacts.SegmentViewed, {
-          segment: ALL_SEGMENTS,
-          type: 'default',
-        })
-      }
+      initializeSegment()
     }
   }, [querySegment, customSegments, router, searchParams])
 
@@ -120,6 +137,11 @@ export default function SegmentSection() {
   const resetSelect = () => {
     setSegment(ALL_SEGMENTS)
     appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
+  }
+
+  const handleAfterSave = (segmentId) => {
+    setSegment(segmentId.toString())
+    appendParam(router, searchParams, 'segment', segmentId.toString())
   }
 
   return (
@@ -169,6 +191,7 @@ export default function SegmentSection() {
         mode={sheetState.mode}
         editSegment={sheetState.editSegment}
         resetSelect={resetSelect}
+        afterSave={handleAfterSave}
       />
     </div>
   )
