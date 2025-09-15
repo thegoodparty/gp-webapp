@@ -32,3 +32,13 @@ export async function fetchCustomSegments() {
 export async function deleteCustomSegment(id) {
   return await clientFetch(apiRoutes.segments.delete, { id })
 }
+
+export async function fetchContactsCsv(segment) {
+  return await clientFetch(
+    apiRoutes.contacts.download,
+    { segment },
+    {
+      returnFullResponse: true,
+    },
+  )
+}

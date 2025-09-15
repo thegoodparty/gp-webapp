@@ -4,6 +4,10 @@ export const apiRoutes = {
       path: '/contacts/list',
       method: 'GET',
     },
+    download: {
+      path: '/contacts/download',
+      method: 'GET',
+    },
   },
   segments: {
     create: {

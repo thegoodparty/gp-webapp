@@ -5,7 +5,7 @@ import { PersonProvider } from './hooks/PersonProvider'
 import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-import { DEFAULT_PAGE_SIZE } from './components/constants'
+import { DEFAULT_PAGE_SIZE } from './components/shared/constants'
 import candidateAccess from '../../shared/candidateAccess'
 
 const fetchContacts = async ({

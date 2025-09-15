@@ -9,18 +9,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { FiEdit } from 'react-icons/fi'
-import { ALL_SEGMENTS, SHEET_MODES } from '../constants'
+import { ALL_SEGMENTS, SHEET_MODES } from '../shared/constants'
 import { useRouter, useSearchParams } from 'next/navigation'
 import appendParam from '@shared/utils/appendParam'
+import {
+  isCustomSegment,
+  isDefaultSegment,
+  findCustomSegment,
+} from '../shared/segments.util'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
-  const [segment, setSegment] = useState(querySegment || ALL_SEGMENTS)
+  const [segment, setSegment] = useState(ALL_SEGMENTS)
+  const isInitialLoad = useRef(true)
 
   const [sheetState, setSheetState] = useState({
     open: false,
@@ -31,15 +38,56 @@ export default function SegmentSection() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const isCustom = !defaultSegments.some(
-    (defaultSegment) => defaultSegment.value === segment,
-  )
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      if (querySegment) {
+        const isDefault = isDefaultSegment(defaultSegments, querySegment)
+
+        if (isDefault) {
+          setSegment(querySegment)
+          isInitialLoad.current = false
+          trackEvent(EVENTS.Contacts.SegmentViewed, {
+            segment: querySegment,
+            type: 'default',
+          })
+        } else {
+          const isCustom = isCustomSegment(customSegments, querySegment)
+
+          if (isCustom) {
+            setSegment(querySegment)
+            isInitialLoad.current = false
+            trackEvent(EVENTS.Contacts.SegmentViewed, {
+              segment:
+                findCustomSegment(customSegments, querySegment)?.name ||
+                querySegment,
+              type: 'custom',
+            })
+          } else if (customSegments.length > 0) {
+            setSegment(ALL_SEGMENTS)
+            appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
+            isInitialLoad.current = false
+            trackEvent(EVENTS.Contacts.SegmentViewed, {
+              segment: ALL_SEGMENTS,
+              type: 'default',
+            })
+          }
+        }
+      } else {
+        setSegment(ALL_SEGMENTS)
+        isInitialLoad.current = false
+        trackEvent(EVENTS.Contacts.SegmentViewed, {
+          segment: ALL_SEGMENTS,
+          type: 'default',
+        })
+      }
+    }
+  }, [querySegment, customSegments, router, searchParams])
+
+  const isCustom = !isDefaultSegment(defaultSegments, segment)
 
   const handleEdit = () => {
     if (isCustom) {
-      const customSegment = customSegments.find(
-        (customSegment) => customSegment.id === segment,
-      )
+      const customSegment = findCustomSegment(customSegments, segment)
       setSheetState({
         open: true,
         mode: SHEET_MODES.EDIT,
@@ -93,7 +141,7 @@ export default function SegmentSection() {
             <SelectGroup>
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
-                <SelectItem key={segment.id} value={segment.id}>
+                <SelectItem key={segment.id} value={segment.id.toString()}>
                   {segment.name}
                 </SelectItem>
               ))}
