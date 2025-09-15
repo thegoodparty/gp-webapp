@@ -10,7 +10,7 @@ const sections = [
     title: 'General Information',
     fields: [
       {
-        key: 'Voters_Gender',
+        key: 'Gender',
         label: 'Gender',
         transform: (value) => {
           if (!value) return 'N/A'
@@ -18,7 +18,7 @@ const sections = [
         },
       },
       {
-        key: 'Voters_Age',
+        key: 'Age',
         label: 'Age',
         transform: (value) => (value ? `${value} years old` : 'N/A'),
       },
@@ -78,12 +78,12 @@ const sections = [
         transform: (value) => (value ? 'Yes' : 'No'),
       },
       {
-        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        key: 'VotingPerformanceEvenYearGeneral',
         label: 'Active Voter',
         transform: (value) => (value === 'Not Eligible' ? 'No' : 'Yes'),
       },
       {
-        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        key: 'VotingPerformanceEvenYearGeneral',
         label: 'Voter Status',
         transform: (value) => (value === 'Not Eligible' ? 'First Time' : value),
       },
@@ -101,7 +101,7 @@ export default function PersonOverlay() {
       router.push('/dashboard/people')
     }
   }
-  const name = `${person?.Voters_FirstName} ${person?.Voters_LastName}`
+  const name = `${person?.FirstName} ${person?.LastName}`
 
   return (
     <Sheet open={!!person} onOpenChange={handleClose}>

@@ -16,9 +16,7 @@ export default function PersonMap() {
       lat: person.Residence_Addresses_Latitude,
       lng: person.Residence_Addresses_Longitude,
       title:
-        `${person.Voters_FirstName || ''} ${
-          person.Voters_LastName || ''
-        }`.trim() || 'Residence',
+        `${person.FirstName || ''} ${person.LastName || ''}`.trim() || 'Residence',
       description: person.Residence_Addresses_AddressLine
         ? `${person.Residence_Addresses_AddressLine}${
             person.Residence_Addresses_City

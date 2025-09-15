@@ -5,25 +5,25 @@ import ServerDataTable from './ServerDataTable'
 
 const columns = [
   {
-    accessorKey: 'Voters_FirstName',
+    accessorKey: 'FirstName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="First Name" />
     ),
   },
   {
-    accessorKey: 'Voters_LastName',
+    accessorKey: 'LastName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Last Name" />
     ),
   },
   {
-    accessorKey: 'Voters_Age',
+    accessorKey: 'Age',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Age" />
     ),
   },
   {
-    accessorKey: 'Voters_Gender',
+    accessorKey: 'Gender',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Gender" />
     ),
@@ -35,7 +35,7 @@ const columns = [
     ),
   },
   {
-    accessorKey: 'Voters_VotingPerformanceEvenYearGeneral',
+    accessorKey: 'VotingPerformanceEvenYearGeneral',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Voter Status" />
     ),
@@ -79,7 +79,7 @@ export default function ContactsTable() {
       <ServerDataTable
         columns={columns}
         data={data}
-        searchKey="Voters_FirstName"
+        searchKey="FirstName"
         searchPlaceholder="Search contacts..."
         pagination={pagination}
       />
