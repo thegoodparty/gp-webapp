@@ -10,7 +10,11 @@ import {
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import { saveCustomSegment, updateCustomSegment } from '../shared/ajaxActions'
+import {
+  fetchContacts,
+  saveCustomSegment,
+  updateCustomSegment,
+} from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { SHEET_MODES } from '../shared/constants'
@@ -18,6 +22,13 @@ import DeleteSegment from './DeleteSegment'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { filterOnlyTrueValues } from '../shared/segments.util'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useContacts } from '../../hooks/ContactsProvider'
+import appendParam from '@shared/utils/appendParam'
+
+const refetchContacts = async ({ page, resultsPerPage, segment }) => {
+  const response = await fetchContacts({ page, resultsPerPage, segment })
+  return response
+}
 
 export default function Filters({
   open = false,
@@ -36,6 +47,7 @@ export default function Filters({
   const [customSegments, , refreshCustomSegments] = useCustomSegments()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [_, setContacts] = useContacts()
 
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
@@ -112,6 +124,13 @@ export default function Filters({
       trackEvent(EVENTS.Contacts.SegmentUpdated, {
         filters: filterOnlyTrueValues(filters),
       })
+      const { people } = await refetchContacts({
+        page: 1,
+        resultsPerPage: searchParams.get('pageSize'),
+        segment: editSegment.id,
+      })
+      appendParam(router, searchParams, 'page', 1)
+      setContacts(people)
     } else {
       errorSnackbar('Failed to update segment')
     }
