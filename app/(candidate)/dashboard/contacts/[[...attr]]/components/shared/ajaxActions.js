@@ -42,3 +42,13 @@ export async function fetchContactsCsv(segment) {
     },
   )
 }
+
+export async function fetchContacts(payload) {
+  const response = await clientFetch(apiRoutes.contacts.list, payload)
+  if (response.ok) {
+    return response.data || []
+  } else {
+    console.error('Failed to fetch contacts', response)
+    return []
+  }
+}
