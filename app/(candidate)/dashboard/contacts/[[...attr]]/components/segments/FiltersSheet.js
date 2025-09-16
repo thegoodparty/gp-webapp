@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
 import {
-  fetchContactsCsv,
+  fetchContacts,
   saveCustomSegment,
   updateCustomSegment,
 } from '../shared/ajaxActions'
@@ -26,7 +26,7 @@ import { useContacts } from '../../hooks/ContactsProvider'
 import appendParam from '@shared/utils/appendParam'
 
 const refetchContacts = async ({ page, resultsPerPage, segment }) => {
-  const response = await fetchContactsCsv({ page, resultsPerPage, segment })
+  const response = await fetchContacts({ page, resultsPerPage, segment })
   return response
 }
 

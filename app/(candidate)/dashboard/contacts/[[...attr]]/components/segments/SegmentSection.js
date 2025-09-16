@@ -145,7 +145,7 @@ export default function SegmentSection() {
   }
 
   return (
-    <div className="md:absolute md:left-0 md:top-4 flex items-center gap-4">
+    <div className="md:absolute md:left-0 md:top-4 flex items-center">
       <Select value={segment} onValueChange={handleSelect}>
         <SelectTrigger className="w-full md:w-[180px] lg:w-[240px]">
           <SelectValue placeholder="All Contacts" />
@@ -174,12 +174,16 @@ export default function SegmentSection() {
       {isCustom && (
         <div
           onClick={handleEdit}
-          className="cursor-pointer text-blue-500 underline"
+          className="cursor-pointer w-10 h-10 flex items-center justify-center border-t border-b border-r border-gray-200 rounded-md -ml-1 hover:text-blue-500 :hover:text-white"
         >
           <FiEdit />
         </div>
       )}
-      <Button variant="secondary" onClick={handleCreateSegment}>
+      <Button
+        variant="secondary"
+        onClick={handleCreateSegment}
+        className="ml-4"
+      >
         Create a Segment
       </Button>
       <FiltersSheet
