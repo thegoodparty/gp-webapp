@@ -1,4 +1,14 @@
 export const apiRoutes = {
+  contacts: {
+    list: {
+      path: '/contacts/list',
+      method: 'GET',
+    },
+    download: {
+      path: '/contacts/download',
+      method: 'GET',
+    },
+  },
   homepage: {
     subscribeEmail: {
       path: '/subscribe',
@@ -234,9 +244,9 @@ export const apiRoutes = {
     raceTargetDetails: {
       update: {
         path: '/campaigns/mine/race-target-details',
-        method: 'PUT'
-      }
-    }
+        method: 'PUT',
+      },
+    },
   },
   content: {
     getByType: {
@@ -363,6 +373,18 @@ export const apiRoutes = {
       path: '/voters/voter-file/filter',
       method: 'POST',
     },
+    list: {
+      path: '/voters/voter-file/filters',
+      method: 'GET',
+    },
+    update: {
+      path: '/voters/voter-file/filter/:id',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/voters/voter-file/filter/:id',
+      method: 'DELETE',
+    },
   },
   admin: {
     bustCache: {
@@ -427,13 +449,13 @@ export const apiRoutes = {
     districts: {
       types: {
         path: '/elections/districts/types',
-        method: 'GET'
+        method: 'GET',
       },
       names: {
         path: '/elections/districts/names',
         method: 'GET',
-      }
-    }
+      },
+    },
   },
   payments: {
     createCheckoutSession: {
@@ -605,6 +627,16 @@ export const apiRoutes = {
     },
     list: {
       path: '/outreach',
+      method: 'GET',
+    },
+  },
+  p2p: {
+    createPhoneList: {
+      path: '/p2p/phone-list',
+      method: 'POST',
+    },
+    phoneListStatus: {
+      path: '/p2p/phone-list/:phoneListToken/status',
       method: 'GET',
     },
   },

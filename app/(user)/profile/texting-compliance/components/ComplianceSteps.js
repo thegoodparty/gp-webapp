@@ -1,6 +1,7 @@
 import ComplianceStep from 'app/(user)/profile/texting-compliance/components/ComplianceStep'
 import { WEBSITE_STATUS } from 'app/(candidate)/dashboard/website/util/website.util'
-import { DOMAIN_STATUS } from 'app/(candidate)/dashboard/website/util/domain.util'
+import { isDomainStatusActive } from 'app/(candidate)/dashboard/website/util/domain.util'
+import { MATCHING_COMPLIANCE_FIELDS_VALUE } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 
 export const STEP_STATUS = {
   DISABLED: 'disabled',
@@ -22,7 +23,8 @@ export const getTcrComplianceStepCompletions = (
   tcrCompliance,
 ) => {
   const websiteComplete = website?.status === WEBSITE_STATUS.published
-  const domainComplete = domainStatus?.message === DOMAIN_STATUS.SUCCESSFUL
+  const domainComplete = isDomainStatusActive(domainStatus?.message)
+
   const registrationComplete = [
     TCR_COMPLIANCE_STATUS.SUBMITTED,
     TCR_COMPLIANCE_STATUS.PENDING,
@@ -41,9 +43,17 @@ export const getTcrComplianceStepCompletions = (
   }
 }
 
+const getCVPinDeliveryType = (matchingContactFields = []) =>
+  matchingContactFields.includes(MATCHING_COMPLIANCE_FIELDS_VALUE.PHONE)
+    ? 'text'
+    : matchingContactFields.includes(MATCHING_COMPLIANCE_FIELDS_VALUE.EMAIL)
+    ? 'email'
+    : 'mail'
+
 const getSteps = (website, domainStatus, tcrCompliance) => {
   const { websiteComplete, domainComplete, registrationComplete, pinComplete } =
     getTcrComplianceStepCompletions(website, domainStatus, tcrCompliance)
+  const { matchingContactFields = [] } = tcrCompliance || {}
 
   const websiteStepStatus = websiteComplete
     ? STEP_STATUS.COMPLETED
@@ -91,8 +101,11 @@ const getSteps = (website, domainStatus, tcrCompliance) => {
     },
     {
       title: 'Enter PIN',
-      description:
-        'To verify your identity you will receive a PIN via email from "CampaignVerify".',
+      description: `To verify your identity you will receive a PIN${
+        enterPinStepStatus === STEP_STATUS.ACTIVE
+          ? ` via ${getCVPinDeliveryType(matchingContactFields)} `
+          : ' '
+      }from "CampaignVerify".`,
       route: '/profile/texting-compliance/submit-pin',
       status: enterPinStepStatus,
     },

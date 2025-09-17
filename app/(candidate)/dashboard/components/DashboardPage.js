@@ -9,7 +9,7 @@ import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
 import PrimaryResultModal from './PrimaryResultModal'
 import GeneralResultModal from './GeneralResultModal'
-import LoadingAnimation from '@shared/utils/LoadingAnimation'
+import LoadingAnimationModal from '@shared/utils/LoadingAnimationModal'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import TasksList from './tasks/TasksList'
@@ -19,6 +19,7 @@ export default function DashboardPage({
   pathname,
   tasks,
   campaign: campaignProp,
+  tcrCompliance,
 }) {
   const [_, setUser] = useUser()
   const [campaign, setCampaign] = useState(campaignProp)
@@ -161,7 +162,7 @@ export default function DashboardPage({
                     {electionInPast || primaryLost ? (
                       <ElectionOver />
                     ) : (
-                      <TasksList campaign={campaign} tasks={tasks} />
+                      <TasksList campaign={campaign} tasks={tasks} tcrCompliance={tcrCompliance} />
                     )}
                   </>
                 ) : (
@@ -186,7 +187,10 @@ export default function DashboardPage({
               )}
             </>
           ) : (
-            <LoadingAnimation title="Loading your dashboard" fullPage={false} />
+            <LoadingAnimationModal
+              title="Loading your dashboard"
+              fullPage={false}
+            />
           )}
         </DashboardLayout>
       </CampaignUpdateHistoryProvider>

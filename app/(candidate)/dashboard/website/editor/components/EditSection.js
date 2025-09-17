@@ -28,6 +28,7 @@ export default function EditSection({
   onClose,
   saveLoading,
   canSave,
+  cantSaveReason,
 }) {
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
@@ -94,6 +95,11 @@ export default function EditSection({
           Preview
         </Button>
       </div>
+      {cantSaveReason && (
+        <div className="text-red-500 text-sm flex justify-end">
+          {cantSaveReason}
+        </div>
+      )}
       <div className="mt-auto flex justify-between">
         <Button
           className="block lg:hidden"

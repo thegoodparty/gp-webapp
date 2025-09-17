@@ -2,6 +2,11 @@ import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCa
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { createP2pPhoneList } from 'helpers/createP2pPhoneList'
+import { noop } from '@shared/utils/noop'
+import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+
+const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
 export const handleScheduleOutreach =
   (
@@ -31,11 +36,13 @@ export const handleScheduleOutreach =
 export const handleCreateOutreach =
   ({
     type = '',
-    state: { script, schedule, image, voterFileFilter, audience },
+    state: { script, schedule, image, voterFileFilter, audience, phoneListId },
     campaignId,
     outreaches = [],
     setOutreaches = () => {},
     errorSnackbar = () => {},
+    refreshCampaign = () => {},
+    p2pUxEnabled = true,
   }) =>
   async () => {
     const { audience_request: audienceRequest } = audience || {}
@@ -44,13 +51,17 @@ export const handleCreateOutreach =
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType: type,
-        name,
+        outreachType:
+          p2pUxEnabled && type === OUTREACH_TYPES.text
+            ? OUTREACH_TYPES.p2p
+            : type,
         message,
+        title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
         ...(date ? { date } : {}),
         ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
         ...(audienceRequest ? { audienceRequest } : {}),
+        ...(p2pUxEnabled ? { phoneListId } : {}),
       },
       image,
     )
@@ -61,6 +72,9 @@ export const handleCreateOutreach =
     }
 
     setOutreaches([...outreaches, outreach])
+    
+    await refreshCampaign()
+    
     return outreach
   }
 
@@ -79,6 +93,7 @@ export const mapAudienceForPersistence = ({
   age_50_plus: age50Plus,
   gender_male: genderMale,
   gender_female: genderFemale,
+  gender_unknown: genderUnknown,
 } = {}) => {
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
   //  to match the API once we redo that component so that we don't have to do
@@ -99,6 +114,7 @@ export const mapAudienceForPersistence = ({
     age50Plus,
     genderMale,
     genderFemale,
+    genderUnknown,
   }
 
   return Object.keys(mappedAudience).reduce(
@@ -110,8 +126,23 @@ export const mapAudienceForPersistence = ({
   )
 }
 
+export const handleCreatePhoneList =
+  (errorSnackbar = noop) =>
+  async (voterFileFilter) => {
+    const { token: phoneListToken } =
+      (await createP2pPhoneList(voterFileFilter)) || {}
+
+    if (!phoneListToken) {
+      errorSnackbar(
+        'There was an error generating a phone list. Please try again.',
+      )
+      return
+    }
+    return phoneListToken
+  }
+
 export const handleCreateVoterFileFilter =
-  ({ type = '', state: { audience, voterCount }, errorSnackbar = () => {} }) =>
+  ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }) =>
   async () => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 

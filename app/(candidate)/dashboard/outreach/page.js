@@ -29,7 +29,15 @@ export const dynamic = 'force-dynamic'
 export default async function Page() {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
-  const outreaches = await fetchOutreaches()
+  const [outreaches, tcrComplianceResponse] = await Promise.all([
+    fetchOutreaches(),
+    serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
+  ])
+
+  const tcrCompliance = tcrComplianceResponse.ok
+    ? tcrComplianceResponse.data
+    : null
+
   const mockOutreaches = Array.from({ length: NUM_OF_MOCK_OUTREACHES }, () =>
     createOutreach(campaign.id),
   )
@@ -40,6 +48,7 @@ export default async function Page() {
         campaign,
         outreaches,
         mockOutreaches,
+        tcrCompliance,
       }}
     />
   )

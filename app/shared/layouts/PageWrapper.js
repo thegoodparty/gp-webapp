@@ -13,6 +13,7 @@ import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
+import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
 const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
@@ -23,27 +24,29 @@ const PageWrapper = async ({ children }) => {
       <ImpersonateUserProvider>
         <CampaignProvider initCampaign={campaign}>
           <CampaignStatusProvider>
-            <NavigationProvider>
-              <SnackbarProvider>
-                <div className="overflow-x-hidden">
-                  <JsonLdSchema />
-                  <Nav />
-                  <Suspense>
-                    <PromoBanner initPathname={pathname} />
-                  </Suspense>
-                  {children}
-                  <Suspense>
-                    <Footer initPathname={pathname} />
-                  </Suspense>
-                  <Suspense>
-                    <CookiesSnackbar />
-                  </Suspense>
-                  <Suspense>
-                    <SegmentIdentify />
-                  </Suspense>
-                </div>
-              </SnackbarProvider>
-            </NavigationProvider>
+            <P2pUxEnabledProvider>
+              <NavigationProvider>
+                <SnackbarProvider>
+                  <div className="overflow-x-hidden">
+                    <JsonLdSchema />
+                    <Nav />
+                    <Suspense>
+                      <PromoBanner initPathname={pathname} />
+                    </Suspense>
+                    {children}
+                    <Suspense>
+                      <Footer initPathname={pathname} />
+                    </Suspense>
+                    <Suspense>
+                      <CookiesSnackbar />
+                    </Suspense>
+                    <Suspense>
+                      <SegmentIdentify />
+                    </Suspense>
+                  </div>
+                </SnackbarProvider>
+              </NavigationProvider>
+            </P2pUxEnabledProvider>
           </CampaignStatusProvider>
         </CampaignProvider>
       </ImpersonateUserProvider>

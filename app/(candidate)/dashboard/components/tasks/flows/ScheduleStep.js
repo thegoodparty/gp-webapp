@@ -19,6 +19,7 @@ export default function ScheduleStep({
   onScheduleOutreach = async (outreach = {}) => {},
   type,
   schedule,
+  isLastStep,
 }) {
   const [state, setState] = useState(
     schedule || {
@@ -135,7 +136,7 @@ export default function ScheduleStep({
               disabled={!canSubmit() || isLoading}
               {...trackingAttrs}
             >
-              Schedule
+              {isLastStep ? 'Schedule' : 'Next'}
             </Button>
           </div>
         </div>

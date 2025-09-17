@@ -1,6 +1,5 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
-import Checkbox from '@shared/inputs/Checkbox'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import { useState } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
@@ -9,27 +8,16 @@ import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-c
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
 import isURL from 'validator/es/lib/isURL'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
-import isFQDN from 'validator/es/lib/isFQDN'
 import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
+import { urlIncludesPath } from 'helpers/urlIncludesPath'
 
-const initialFormState = {
-  electionFilingLink: '',
-  campaignCommitteeName: '',
-  localTribeName: '',
-  ein: '',
-  phone: '',
-  address: '',
-  website: '',
-  email: '',
-  verifyInfo: false,
-}
-
-const validateAddress = (address) => Boolean(address.formatted_address)
+const validateAddress = (address) => Boolean(address?.formatted_address)
 
 export const validateRegistrationForm = (data) => {
   const {
@@ -41,10 +29,11 @@ export const validateRegistrationForm = (data) => {
     address,
     website,
     email,
-    verifyInfo,
+    matchingContactFields,
   } = data
   const validations = {
-    electionFilingLink: isURL(electionFilingLink),
+    electionFilingLink:
+      isURL(electionFilingLink) && urlIncludesPath(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
     localTribeName: isFilled(localTribeName),
     ein: isValidEIN(ein),
@@ -53,9 +42,9 @@ export const validateRegistrationForm = (data) => {
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
     address: validateAddress(address),
-    website: isFQDN(website) || isURL(website),
+    website: isURL(website),
     email: isEmail(email),
-    verifyInfo: verifyInfo === true,
+    matchingContactFields: matchingContactFields.length > 0,
   }
   return {
     validations,
@@ -77,13 +66,13 @@ export default function TextingComplianceRegistrationForm({
     address,
     website,
     email,
-    verifyInfo,
+    matchingContactFields,
   } = formData
   const formValidation = validateRegistrationForm(formData)
   const { isValid } = formValidation
 
   const [addressInputValue, setAddressInputValue] = useState(
-    address.formatted_address || '',
+    address?.formatted_address || '',
   )
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
@@ -95,8 +84,15 @@ export default function TextingComplianceRegistrationForm({
   }
 
   const handleOnSubmit = () => {
-    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted)
+    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
+      source: 'compliance_flow'
+    })
     return onSubmit(formData)
+  }
+
+  const handleAddressOnChange = (value) => {
+    setAddressInputValue(value)
+    return !value && handleChange({ address: null })
   }
 
   return (
@@ -132,26 +128,7 @@ export default function TextingComplianceRegistrationForm({
             value: ein,
             onChange: handleEINChange,
             validated: validEin,
-          }}
-        />
-        <TextField
-          label="Phone"
-          placeholder="(555) 555-5555"
-          required
-          fullWidth
-          value={phone}
-          onChange={(e) => handleChange({ phone: e.target.value })}
-        />
-
-        <AddressAutocomplete
-          {...{
-            value: addressInputValue,
-            onChange: (inputValue) => setAddressInputValue(inputValue),
-            onSelect: async (address) => {
-              setAddressInputValue(address.formatted_address)
-
-              return handleChange({ address })
-            },
+            label: 'EIN *',
           }}
         />
         <TextField
@@ -162,6 +139,18 @@ export default function TextingComplianceRegistrationForm({
           value={website}
           onChange={(e) => handleChange({ website: e.target.value })}
         />
+        <AddressAutocomplete
+          {...{
+            value: addressInputValue,
+            onChange: handleAddressOnChange,
+            onSelect: async (address) => {
+              setAddressInputValue(address.formatted_address)
+
+              return handleChange({ address })
+            },
+            placeholder: 'Address *',
+          }}
+        />
         <TextField
           label="Email"
           placeholder="jane@gmail.com"
@@ -170,11 +159,19 @@ export default function TextingComplianceRegistrationForm({
           value={email}
           onChange={(e) => handleChange({ email: e.target.value })}
         />
-        <Checkbox
-          label="I verify this information matches my election filing"
+        <TextField
+          label="Phone"
+          placeholder="(555) 555-5555"
           required
-          checked={verifyInfo}
-          onChange={(e) => handleChange({ verifyInfo: e.target.checked })}
+          fullWidth
+          value={phone}
+          onChange={(e) => handleChange({ phone: e.target.value })}
+        />
+        <MatchingComplianceContactFields
+          {...{
+            value: matchingContactFields,
+            onChange: (value) => handleChange({ matchingContactFields: value }),
+          }}
         />
       </TextingComplianceForm>
       <TextingComplianceFooter>

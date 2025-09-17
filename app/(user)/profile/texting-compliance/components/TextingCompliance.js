@@ -7,6 +7,7 @@ import ComplianceSteps, {
   TCR_COMPLIANCE_STATUS as TCR_COMPLIANCE,
 } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { formatPhoneNumber } from 'helpers/numberHelper'
+import { HiOutlineCheckBadge } from 'react-icons/hi2'
 
 const TDlcNumber = ({ tdlcNumber }) => (
   <div className="bg-gray-50 border border-gray-300 rounded-lg p-6 flex justify-center items-center">
@@ -32,22 +33,26 @@ export default function TextingCompliance({
   const complianceApproved = tcrComplianceStatus === TCR_COMPLIANCE.APPROVED
 
   return (
-    <Paper className="mt-6">
+    <Paper className="mt-6" id="texting-compliance">
       <H2 className="mb-6">Texting Compliance</H2>
       <div className="mt-1 mb-6">
         <H3 className="text-gray-900">
-          {pendingCompliance
-            ? 'Your application is in review'
-            : complianceApproved
-            ? 'Your 10DLC number'
-            : '76% of candidates who use our full offering win'}
+          {pendingCompliance ? (
+            'Your application is in review'
+          ) : complianceApproved ? (
+            <span className="flex items-center gap-1">
+              <HiOutlineCheckBadge className="inline h-6 w-6" /> Your campaign
+              is compliant
+            </span>
+          ) : (
+            '76% of candidates who use our full offering win'
+          )}
         </H3>
         <Body2 className="text-gray-600 mt-1">
-          {pendingCompliance
-            ? 'This can take 3-7 business days. We will send you an email once your campaign is approved, so you can start sending text messages.'
-            : complianceApproved
-            ? 'Texts you send will come from this number.'
-            : 'Start sending 5,000 free targeted text messages by making your campaign compliant in 4 steps.'}
+          {!complianceApproved &&
+            (pendingCompliance
+              ? 'This can take 3-7 business days. We will send you an email once your campaign is approved, so you can start sending text messages.'
+              : 'Start sending 5,000 free targeted text messages by making your campaign compliant in 4 steps.')}
         </Body2>
       </div>
       {complianceApproved && tdlcNumber ? (

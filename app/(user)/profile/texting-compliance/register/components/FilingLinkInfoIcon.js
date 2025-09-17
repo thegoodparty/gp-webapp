@@ -1,18 +1,16 @@
 import { useState } from 'react'
 import { MdInfoOutline } from 'react-icons/md'
-import Popover from '@mui/material/Popover'
+import Modal from '@shared/utils/Modal'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
 
 export const FilingLinkInfoIcon = () => {
   const [open, setOpen] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const handleIconClick = (e) => {
-    setAnchorEl(e.currentTarget)
-    setOpen(true)
-  }
-  const closePopover = () => {
-    setAnchorEl(null)
-    setOpen(false)
-  }
+
+  const handleIconClick = () => setOpen(true)
+  const closeModal = () => setOpen(false)
+
   return (
     <>
       <MdInfoOutline
@@ -20,25 +18,40 @@ export const FilingLinkInfoIcon = () => {
         key="info"
         className="text-lg text-info h-6 w-6 cursor-pointer"
       />
-      <Popover
+      <Modal
         {...{
           open,
-          onClose: closePopover,
-          anchorEl,
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
+          closeCallback: closeModal,
         }}
       >
-        <p className="text-sm text-gray-600 max-w-36 p-4">
-          Find this on your local government election website
-        </p>
-      </Popover>
+        <H1 className="mb-4">Election filing link</H1>
+        <Body2 className="mb-4">
+          This must be a url that includes a path to your election filing.
+          <br />
+          (e.g. <strong>https://www.example.com/election-filing</strong>, not
+          just <strong>https://www.example.com</strong>)
+          <br />
+          <br />
+          You can usually find this website link by searching for your local
+          Supervisor of Elections Office. Sometimes it can be your town, city or
+          county. Search for the list of candidates running for office including
+          yourself and paste that link here.
+          <br />
+          <br />
+          Search term example: “Palm Bay, Florida Supervisor of Elections
+          Candidate List”
+        </Body2>
+        <Button
+          {...{
+            color: 'neutral',
+            size: 'large',
+            className: 'flex-1 md:flex-initial w-full',
+            onClick: closeModal,
+          }}
+        >
+          Close
+        </Button>
+      </Modal>
     </>
   )
 }

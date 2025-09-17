@@ -67,7 +67,6 @@ export const EVENTS = {
       ClickAIAssistant: 'Navigation - Dashboard: Click AI Assistant',
       ClickVoterData: 'Navigation - Dashboard: Click Voter Data',
       ClickDoorKnocking: 'Navigation - Dashboard: Click Door Knocking',
-      ClickTextMessaging: 'Navigation - Dashboard: Click Text Messaging',
       ClickIssues: 'Navigation - Dashboard: Click Issues',
       ClickContentBuilder: 'Navigation - Dashboard: Click Content Builder',
       ClickMyProfile: 'Navigation - Dashboard: Click My Profile',
@@ -75,6 +74,8 @@ export const EVENTS = {
       ClickFreeResources: 'Navigation - Dashboard: Click Free Resources',
       ClickCommunity: 'Navigation - Dashboard: Click Community',
       ClickWebsite: 'Navigation - Dashboard: Click Website',
+      ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
+      ClickContacts: 'Navigation - Dashboard: Click Contacts',
     },
   },
   Dashboard: {
@@ -248,6 +249,14 @@ export const EVENTS = {
     },
     ClickGoToStripe: 'Pro Upgrade: Click Go to Stripe',
   },
+  Contacts: {
+    Download: 'Contacts - Download',
+    SegmentCreated: 'Contacts - Segment Created',
+    SegmentDeleted: 'Contacts - Segment Deleted',
+    SegmentUpdated: 'Contacts - Segment Updated',
+    SegmentViewed: 'Contacts - Segment Viewed',
+    ColumnEdited: 'Contacts - Column Edited',
+  },
   VoterData: {
     ClickNeedHelp: 'Voter Data: Click Need Help',
     NeedHelp: {
@@ -373,10 +382,12 @@ export const EVENTS = {
   },
   Outreach: {
     P2PCompliance: {
+      ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
       ComplianceFormSubmitted:
         'Voter Outreach - 10DLC Compliance Form Submitted',
       CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
     },
+    PaymentStarted: 'Voter Outreach - Payment Started',
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
     SocialMedia: {
@@ -493,7 +504,10 @@ export function persistClidsOnce() {
 }
 
 export function getPersistedUtms() {
-  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.sessionStorage === 'undefined'
+  ) {
     return {}
   }
 
@@ -515,7 +529,10 @@ export function getPersistedUtms() {
 }
 
 export function getPersistedClids() {
-  if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.sessionStorage === 'undefined'
+  ) {
     return {}
   }
 

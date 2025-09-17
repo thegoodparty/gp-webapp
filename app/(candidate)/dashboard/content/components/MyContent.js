@@ -17,6 +17,7 @@ import {
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import SimpleTable from '@shared/utils/SimpleTable'
+import { CircularProgress } from '@mui/material'
 
 let aiTotalCount = 0
 const excludedKeys = [
@@ -56,7 +57,15 @@ export default function MyContent(props) {
     {
       header: 'Name',
       cell: ({ row }) => {
-        const isProcessing = !row.updatedAt || row.updatedAt === 'Invalid Date'
+        let updatedAt
+        if (row.updatedAt) {
+          updatedAt = dateWithTime(row.updatedAt)
+          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
+            const now = new Date()
+            updatedAt = dateWithTime(now)
+          }
+        }
+
         const content = (
           <div className="flex flex-row items-center font-semibold">
             <IoDocumentText className="ml-3 text-md shrink-0" />
@@ -64,14 +73,13 @@ export default function MyContent(props) {
           </div>
         )
 
-        if (isProcessing) {
+        if (!updatedAt) {
           return content
         }
 
         return (
           <Link
-            href="/dashboard/content/[slug]"
-            as={`/dashboard/content/${row.slug}`}
+            href={`/dashboard/content/${row.slug}`}
             onClick={() => {
               trackEvent(EVENTS.ContentBuilder.ClickContent, {
                 name: row.name,
@@ -96,6 +104,13 @@ export default function MyContent(props) {
             const now = new Date()
             updatedAt = dateWithTime(now)
           }
+        }
+        if (!updatedAt) {
+          return (
+            <div className="text-gray-500">
+              <CircularProgress size={16} />
+            </div>
+          )
         }
         return updatedAt
       },
@@ -148,6 +163,12 @@ export default function MyContent(props) {
       if (jobsProcessing) {
         handleJobProcessing()
       }
+    } else {
+      console.error('Failed to load campaign data')
+      errorSnackbar('Failed to load campaign data. Please refresh the page.')
+      setLoading(false)
+      setCampaign(null)
+      setSections({})
     }
   }
 
