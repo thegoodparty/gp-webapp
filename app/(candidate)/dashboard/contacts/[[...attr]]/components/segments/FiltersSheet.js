@@ -30,6 +30,8 @@ const refetchContacts = async ({ page, resultsPerPage, segment }) => {
   return response
 }
 
+const MAX_SEGMENT_NAME_LENGTH = 30
+
 export default function Filters({
   open = false,
   handleClose = () => {},
@@ -155,7 +157,9 @@ export default function Filters({
           {isEditingName ? (
             <Input
               value={segmentName}
-              onChange={(e) => setSegmentName(e.target.value)}
+              onChange={(e) =>
+                setSegmentName(e.target.value.slice(0, MAX_SEGMENT_NAME_LENGTH))
+              }
               onBlur={() => setIsEditingName(false)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -163,6 +167,7 @@ export default function Filters({
                 }
               }}
               autoFocus
+              maxLength={MAX_SEGMENT_NAME_LENGTH}
             />
           ) : (
             <>
