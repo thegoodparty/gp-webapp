@@ -1,22 +1,19 @@
-import { adminAccessOnly } from 'helpers/permissionHelper'
 import pageMetaData from 'helpers/metadataHelper'
 
 import ServePage from './components/ServePage'
+import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 
 const meta = pageMetaData({
-  title: 'Serve| GOOD PARTY',
-  description: 'Serve',
+  title: 'Welcome to GoodParty.org Serve',
+  description: 'Welcome to GoodParty.org Serve',
   slug: '/serve',
 })
 
 export const metadata = meta
 
 export default async function Page({ searchParams }) {
-  await adminAccessOnly()
-  const childProps = {
-    pathname: '/serve',
-    title: 'Serve dashboard',
-  }
+  await candidateAccess()
+  const childProps = {}
 
   return <ServePage {...childProps} />
 }
