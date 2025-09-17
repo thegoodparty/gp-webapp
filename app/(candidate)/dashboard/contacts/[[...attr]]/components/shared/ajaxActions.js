@@ -1,8 +1,10 @@
+import { DEFAULT_PAGE_SIZE } from './constants'
+
 const { clientFetch } = require('gpApi/clientFetch')
 const { apiRoutes } = require('gpApi/routes')
 
 export async function saveCustomSegment(payload) {
-  const response = await clientFetch(apiRoutes.segments.create, payload)
+  const response = await clientFetch(apiRoutes.voterFileFilter.create, payload)
   if (response.ok) {
     return response.data
   } else {
@@ -12,7 +14,7 @@ export async function saveCustomSegment(payload) {
 }
 
 export async function updateCustomSegment(id, payload) {
-  const response = await clientFetch(apiRoutes.segments.update, {
+  const response = await clientFetch(apiRoutes.voterFileFilter.update, {
     id,
     ...payload,
   })
@@ -25,12 +27,12 @@ export async function updateCustomSegment(id, payload) {
 }
 
 export async function fetchCustomSegments() {
-  const response = await clientFetch(apiRoutes.segments.list)
+  const response = await clientFetch(apiRoutes.voterFileFilter.list)
   return response.data || []
 }
 
 export async function deleteCustomSegment(id) {
-  return await clientFetch(apiRoutes.segments.delete, { id })
+  return await clientFetch(apiRoutes.voterFileFilter.delete, { id })
 }
 
 export async function fetchContactsCsv(segment) {
@@ -43,7 +45,12 @@ export async function fetchContactsCsv(segment) {
   )
 }
 
-export async function fetchContacts(payload) {
+export async function fetchContacts({ page, resultsPerPage, segment }) {
+  const payload = {
+    page: page || 1,
+    resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
+    segment: segment || ALL_SEGMENTS,
+  }
   const response = await clientFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
     return response.data || []

@@ -56,7 +56,7 @@ export default function Filters({
       setIsEditingName(false)
     } else {
       const nextCustomSegmentName = `Custom Segment ${
-        customSegments.length + 1
+        (customSegments.length || 0) + 1
       }`
       setFilters({})
       setSegmentName(nextCustomSegmentName)
