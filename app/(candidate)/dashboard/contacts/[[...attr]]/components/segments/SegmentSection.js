@@ -164,7 +164,7 @@ export default function SegmentSection() {
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
                 <SelectItem key={segment.id} value={segment.id.toString()}>
-                  {segment.name}
+                  {segment.name || 'Unnamed Segment'}
                 </SelectItem>
               ))}
             </SelectGroup>

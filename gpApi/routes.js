@@ -9,24 +9,6 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
-  segments: {
-    create: {
-      path: '/contacts-segment',
-      method: 'POST',
-    },
-    list: {
-      path: '/contacts-segment',
-      method: 'GET',
-    },
-    update: {
-      path: '/contacts-segment/:id',
-      method: 'PUT',
-    },
-    delete: {
-      path: '/contacts-segment/:id',
-      method: 'DELETE',
-    },
-  },
   homepage: {
     subscribeEmail: {
       path: '/subscribe',
@@ -390,6 +372,18 @@ export const apiRoutes = {
     create: {
       path: '/voters/voter-file/filter',
       method: 'POST',
+    },
+    list: {
+      path: '/voters/voter-file/filters',
+      method: 'GET',
+    },
+    update: {
+      path: '/voters/voter-file/filter/:id',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/voters/voter-file/filter/:id',
+      method: 'DELETE',
     },
   },
   admin: {
