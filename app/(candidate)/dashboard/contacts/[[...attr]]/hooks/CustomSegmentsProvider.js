@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useCallback, useContext, useState } from 'react'
-import { fetchCustomSegments } from '../components/ajaxActions'
+import { fetchCustomSegments } from '../components/shared/ajaxActions'
 
 export const CustomSegmentContext = createContext({
   customSegments: [],
