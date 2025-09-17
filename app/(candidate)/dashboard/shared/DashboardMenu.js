@@ -16,12 +16,14 @@ import {
 } from 'react-icons/md'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
 import { userIsAdmin } from 'helpers/userHelper'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { BiSolidUpvote } from 'react-icons/bi'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -133,11 +135,15 @@ const ISSUES_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickIssues),
 }
 
-const getDashboardMenuItems = (campaign) => {
+const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
   if (campaign?.isPro) {
     const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
-    menuItems[index] = VOTER_RECORDS_MENU_ITEM
+    if (serveAccessEnabled) {
+      menuItems[index] = CONTACTS_MENU_ITEM
+    } else {
+      menuItems[index] = VOTER_RECORDS_MENU_ITEM
+    }
   }
 
   return menuItems
@@ -147,23 +153,34 @@ export default function DashboardMenu({
   pathname,
   toggleCallback,
   mobileMode,
-  campaign,
 }) {
-  let menuItems = getDashboardMenuItems(campaign)
   const [user] = useUser()
+  const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
-  if (ecanvasser) {
-    menuItems.push(ECANVASSER_MENU_ITEM)
-  }
+  const { ready: flagsReady, on: serveAccessEnabled } =
+    useFlagOn('serve-access')
+
+  const menuItems = useMemo(() => {
+    const baseItems = getDashboardMenuItems(campaign, serveAccessEnabled)
+
+    const items = [...baseItems]
+
+    if (ecanvasser) {
+      items.push(ECANVASSER_MENU_ITEM)
+    }
+
+    if (userIsAdmin(user)) {
+      items.push(ISSUES_MENU_ITEM)
+    }
+
+    return items
+  }, [campaign, serveAccessEnabled, ecanvasser, user])
+
   useEffect(() => {
     if (campaign && ecanvasser) {
       syncEcanvasser(campaign?.id)
     }
   }, [campaign, ecanvasser])
-  if (userIsAdmin(user)) {
-    menuItems.push(ISSUES_MENU_ITEM)
-    menuItems.splice(2, 0, CONTACTS_MENU_ITEM)
-  }
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e)

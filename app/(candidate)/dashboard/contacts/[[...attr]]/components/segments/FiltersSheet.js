@@ -10,11 +10,27 @@ import {
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import { saveCustomSegment, updateCustomSegment } from '../ajaxActions'
+import {
+  fetchContacts,
+  saveCustomSegment,
+  updateCustomSegment,
+} from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
-import { SHEET_MODES } from '../constants'
+import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { filterOnlyTrueValues } from '../shared/segments.util'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useContacts } from '../../hooks/ContactsProvider'
+import appendParam from '@shared/utils/appendParam'
+
+const refetchContacts = async ({ page, resultsPerPage, segment }) => {
+  const response = await fetchContacts({ page, resultsPerPage, segment })
+  return response
+}
+
+const MAX_SEGMENT_NAME_LENGTH = 30
 
 export default function Filters({
   open = false,
@@ -23,13 +39,17 @@ export default function Filters({
   editSegment = null,
   handleOpenChange = () => {},
   resetSelect = () => {},
+  afterSave = () => {},
 }) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState({})
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
-  const [, , refreshCustomSegments] = useCustomSegments()
+  const [customSegments, , refreshCustomSegments] = useCustomSegments()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [_, setContacts] = useContacts()
 
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
@@ -37,11 +57,14 @@ export default function Filters({
       setSegmentName(editSegment.name)
       setIsEditingName(false)
     } else {
+      const nextCustomSegmentName = `Custom Segment ${
+        (customSegments.length || 0) + 1
+      }`
       setFilters({})
-      setSegmentName('Custom Segment 1')
+      setSegmentName(nextCustomSegmentName)
       setIsEditingName(false)
     }
-  }, [mode, editSegment, open])
+  }, [mode, editSegment, open, customSegments])
 
   const handleCheckedChange = (checked, key) => {
     setFilters({ ...filters, [key]: checked })
@@ -57,6 +80,10 @@ export default function Filters({
   }
 
   const handleSave = async () => {
+    if (!canSave()) {
+      errorSnackbar('Please select at least one filter')
+      return
+    }
     setSaving(true)
     const response = await saveCustomSegment({
       name: segmentName,
@@ -64,15 +91,24 @@ export default function Filters({
     })
     if (response) {
       successSnackbar('Segment created successfully')
+      trackEvent(EVENTS.Contacts.SegmentCreated, {
+        filters: filterOnlyTrueValues(filters),
+      })
+      await refreshCustomSegments()
+      afterSave(response.id)
     } else {
+      await refreshCustomSegments()
       errorSnackbar('Failed to create segment')
     }
-    await refreshCustomSegments()
     setSaving(false)
     handleClose()
   }
 
   const handleUpdate = async () => {
+    if (!canSave()) {
+      errorSnackbar('Please select at least one filter')
+      return
+    }
     setSaving(true)
     const cleanFilters = { ...filters }
     delete cleanFilters.id
@@ -87,6 +123,16 @@ export default function Filters({
     })
     if (response) {
       successSnackbar('Segment updated successfully')
+      trackEvent(EVENTS.Contacts.SegmentUpdated, {
+        filters: filterOnlyTrueValues(filters),
+      })
+      const { people } = await refetchContacts({
+        page: 1,
+        resultsPerPage: searchParams.get('pageSize'),
+        segment: editSegment.id,
+      })
+      appendParam(router, searchParams, 'page', 1)
+      setContacts(people)
     } else {
       errorSnackbar('Failed to update segment')
     }
@@ -100,6 +146,10 @@ export default function Filters({
     resetSelect()
   }
 
+  const canSave = () => {
+    return segmentName && Object.values(filters).some((value) => value)
+  }
+
   return (
     <Sheet open={open} onOpenChange={handleOpenChange} onClose={handleClose}>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
@@ -107,7 +157,9 @@ export default function Filters({
           {isEditingName ? (
             <Input
               value={segmentName}
-              onChange={(e) => setSegmentName(e.target.value)}
+              onChange={(e) =>
+                setSegmentName(e.target.value.slice(0, MAX_SEGMENT_NAME_LENGTH))
+              }
               onBlur={() => setIsEditingName(false)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -115,6 +167,7 @@ export default function Filters({
                 }
               }}
               autoFocus
+              maxLength={MAX_SEGMENT_NAME_LENGTH}
             />
           ) : (
             <>
@@ -183,7 +236,7 @@ export default function Filters({
           <Button
             variant="default"
             onClick={mode === SHEET_MODES.EDIT ? handleUpdate : handleSave}
-            disabled={saving || !segmentName}
+            disabled={saving || !canSave()}
           >
             {mode === SHEET_MODES.EDIT ? 'Update Segment' : 'Create Segment'}
           </Button>

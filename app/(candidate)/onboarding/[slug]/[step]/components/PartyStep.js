@@ -10,6 +10,8 @@ import { useState, useMemo } from 'react'
 import TextField from '@shared/inputs/TextField'
 import Modal from '@shared/utils/Modal'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { useUser } from '@shared/hooks/useUser'
+import { identifyUser } from '@shared/utils/analytics'
 import RadioList from '@shared/inputs/RadioList'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
@@ -129,6 +131,7 @@ const invalidOptions = [
 export default function PartyStep(props) {
   const { campaign, step } = props
   const router = useRouter()
+  const [user] = useUser()
   const [state, setState] = useState({
     party: campaign?.details?.party || '',
     otherParty: campaign?.details?.otherParty || '',
@@ -188,6 +191,13 @@ export default function PartyStep(props) {
       }
 
       await updateCampaign(attr)
+      const affiliation = state.otherParty === '' ? state.party : state.otherParty
+      trackEvent(EVENTS.Onboarding.PartyStep.Completed, {
+        affiliation,
+      })
+      if (user?.id) {
+        await identifyUser(user.id, { affiliation })
+      }
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     }
   }

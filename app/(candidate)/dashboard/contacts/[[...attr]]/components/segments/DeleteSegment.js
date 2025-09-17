@@ -10,9 +10,10 @@ import {
   AlertDialogTrigger,
   Button,
 } from 'goodparty-styleguide'
-import { deleteCustomSegment } from '../ajaxActions'
+import { deleteCustomSegment } from '../shared/ajaxActions'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { useState } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function DeleteSegment({ segment, afterDeleteCallback }) {
   const { id } = segment
@@ -26,6 +27,7 @@ export default function DeleteSegment({ segment, afterDeleteCallback }) {
       await deleteCustomSegment(id)
       refreshCustomSegments()
       afterDeleteCallback()
+      trackEvent(EVENTS.Contacts.SegmentDeleted)
     } catch (error) {
       console.log('Error deleting segment', error)
     } finally {

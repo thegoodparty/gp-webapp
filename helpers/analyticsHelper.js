@@ -41,10 +41,12 @@ export const EVENTS = {
     },
     PartyStep: {
       ClickSubmit: 'Onboarding - Party Step: Click Submit',
+      Completed: 'Onboarding - Candidate Affiliation Completed',
     },
     PledgeStep: {
       ClickAskQuestion: 'Onboarding - Pledge Step: Click Ask a Question',
       ClickSubmit: 'Onboarding - Pledge Step: Click Submit',
+      Completed: 'Onboarding - Candidate Pledge Completed',
     },
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
@@ -191,6 +193,9 @@ export const EVENTS = {
       ClickDelete: 'Dashboard - Campaign Action History: Click Delete',
     },
   },
+  Account: {
+    ProSubscriptionCanceled: 'Account - Pro Subscription Canceled',
+  },
   AIAssistant: {
     ClickNewChat: 'AI Assistant: Click new chat',
     ClickViewChatHistory: 'AI Assistant: Click view chat history',
@@ -243,6 +248,14 @@ export const EVENTS = {
       ClickFinish: 'Pro Upgrade - Service Agreement Page: Click finish',
     },
     ClickGoToStripe: 'Pro Upgrade: Click Go to Stripe',
+  },
+  Contacts: {
+    Download: 'Contacts - Download',
+    SegmentCreated: 'Contacts - Segment Created',
+    SegmentDeleted: 'Contacts - Segment Deleted',
+    SegmentUpdated: 'Contacts - Segment Updated',
+    SegmentViewed: 'Contacts - Segment Viewed',
+    ColumnEdited: 'Contacts - Column Edited',
   },
   VoterData: {
     ClickNeedHelp: 'Voter Data: Click Need Help',
@@ -398,6 +411,9 @@ export const EVENTS = {
     SelectedDomain: 'Candidate Website - Selected domain',
     PurchasedDomain: 'Candidate Website - Purchased domain',
   },
+  Candidacy: {
+    CampaignCompleted: 'Candidacy - Campaign Completed',
+  },
 }
 
 export const getStoredSessionId = () => {
@@ -422,6 +438,7 @@ export function extractClids(searchParams) {
 export async function trackRegistrationCompleted({
   analytics,
   userId,
+  email,
   signUpMethod = 'email',
 }) {
   const signUpDate = new Date().toISOString()
@@ -435,6 +452,7 @@ export async function trackRegistrationCompleted({
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
+        ...(email ? { email } : {}),
       })
     }
   } catch (error) {

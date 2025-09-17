@@ -10,6 +10,8 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSettingsButton'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { useEffect } from 'react'
+import { identifyUser } from '@shared/utils/analytics'
 
 export const AccountSettingsSection = () => {
   const [user = {}] = useUser()
@@ -24,6 +26,20 @@ export const AccountSettingsSection = () => {
     ? 'Demo'
     : 'Candidate FREE'
   const hideButtonForLimboProUsers = isPro && !Boolean(subscriptionId)
+
+  useEffect(() => {
+    if (user?.id) {
+      identifyUser(user.id, { isProSubscriber: Boolean(isPro) })
+    }
+  }, [user?.id, isPro])
+
+  useEffect(() => {
+    if (isPro && subscriptionCancelAt) {
+      trackEvent(EVENTS.Account.ProSubscriptionCanceled, {
+        cancellationDate: subscriptionCancelAt,
+      })
+    }
+  }, [isPro, subscriptionCancelAt])
 
   return (
     <Paper className="mt-4">

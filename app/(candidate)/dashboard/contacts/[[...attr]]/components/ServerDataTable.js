@@ -12,7 +12,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
 } from 'goodparty-styleguide'
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './constants'
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
 
 export default function ServerDataTable({
   columns,
@@ -20,6 +20,8 @@ export default function ServerDataTable({
   pagination = {},
   className,
   onRowClick = () => {},
+  onColumnVisibilityChange = () => {},
+  initialColumnVisibility = {},
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -63,6 +65,8 @@ export default function ServerDataTable({
         data={data}
         pagination={false}
         onRowClick={onRowClick}
+        onColumnVisibilityChange={onColumnVisibilityChange}
+        initialColumnVisibility={initialColumnVisibility}
       />
 
       <div className="flex items-center justify-between space-x-2 py-4">
