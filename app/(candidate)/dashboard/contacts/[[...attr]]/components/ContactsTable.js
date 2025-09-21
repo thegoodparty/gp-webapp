@@ -4,61 +4,106 @@ import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
+/*
+example:
+
+activeVoter
+: 
+"Unknown"
+address
+: 
+"525 4th Ave W, Hendersonville, 28739-4223"
+age
+: 
+40
+businessOwner
+: 
+"Unknown"
+cellPhone
+: 
+"(828) 338-9757"
+estimatedIncomeRange
+: 
+"Unknown"
+ethnicityGroup
+: 
+"European"
+firstName
+: 
+"Kendall"
+gender
+: 
+"Male"
+hasChildrenUnder18
+: 
+"Unknown"
+homeowner
+: 
+"Unknown"
+landline
+: 
+"Unknown"
+language
+: 
+"Unknown"
+lastName
+: 
+"Weaver"
+levelOfEducation
+: 
+"Unknown"
+maritalStatus
+: 
+"Unknown"
+politicalParty
+: 
+"Non-Partisan"
+registeredVoter
+: 
+"Unknown"
+veteranStatus
+: 
+"Unknown"
+voterStatus
+: 
+"Unknown"
+*/
+
 const columns = [
   {
-    accessorKey: 'FirstName',
+    accessorKey: 'firstName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="First Name" />
     ),
   },
   {
-    accessorKey: 'MiddleName',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Middle Name" />
-    ),
-  },
-  {
-    accessorKey: 'LastName',
+    accessorKey: 'lastName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Last Name" />
     ),
   },
-
   {
-    accessorKey: 'Age',
+    accessorKey: 'cellPhone',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Cell Phone" />
+    ),
+  },
+  {
+    accessorKey: 'landline',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Landline" />
+    ),
+  },
+  {
+    accessorKey: 'age',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Age" />
     ),
   },
   {
-    accessorKey: 'Gender',
+    accessorKey: 'gender',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Gender" />
-    ),
-  },
-  {
-    accessorKey: 'Parties_Description',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Party" />
-    ),
-  },
-  {
-    accessorKey: 'Precinct',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Precinct" />
-    ),
-  },
-  {
-    accessorKey: 'VoterTelephones_CellPhoneFormatted',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Cell Phone" />
-    ),
-  },
-
-  {
-    accessorKey: 'VoterTelephones_LandlineFormatted',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Landline" />
     ),
   },
   {
@@ -68,82 +113,105 @@ const columns = [
     ),
   },
   {
-    accessorKey: 'City',
+    accessorKey: 'politicalParty',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="City" />
+      <DataTableColumnHeader column={column} title="Political Party" />
+    ),
+  },
+
+  {
+    accessorKey: 'ethnicityGroup',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Ethnicity" />
     ),
   },
   {
-    accessorKey: 'County',
+    accessorKey: 'language',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="County" />
+      <DataTableColumnHeader column={column} title="Language" />
     ),
   },
   {
-    accessorKey: 'Residence_Addresses_ZipPlus4',
+    accessorKey: 'levelOfEducation',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ZIP+4" />
+      <DataTableColumnHeader column={column} title="Education Level" />
     ),
   },
   {
-    accessorKey: 'NameSuffix',
+    accessorKey: 'maritalStatus',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name Suffix" />
+      <DataTableColumnHeader column={column} title="Marital Status" />
     ),
   },
   {
-    accessorKey: 'State_House_District',
+    accessorKey: 'estimatedIncomeRange',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="State House District" />
+      <DataTableColumnHeader column={column} title="Income Range" />
     ),
   },
   {
-    accessorKey: 'State_Senate_District',
+    accessorKey: 'homeowner',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="State Senate District" />
+      <DataTableColumnHeader column={column} title="Homeowner" />
     ),
   },
   {
-    accessorKey: 'US_Congressional_District',
+    accessorKey: 'businessOwner',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="US Congressional District"
-      />
+      <DataTableColumnHeader column={column} title="Business Owner" />
+    ),
+  },
+  {
+    accessorKey: 'hasChildrenUnder18',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Children Under 18" />
+    ),
+  },
+  {
+    accessorKey: 'veteranStatus',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Veteran Status" />
+    ),
+  },
+  {
+    accessorKey: 'activeVoter',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Active Voter" />
+    ),
+  },
+  {
+    accessorKey: 'registeredVoter',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Registered Voter" />
+    ),
+  },
+  {
+    accessorKey: 'voterStatus',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Voter Status" />
     ),
   },
 ]
 
 const initialColumnVisibility = {
-  MiddleName: false,
-  City: false,
-  County: false,
-  Residence_Addresses_ZipPlus4: false,
-  NameSuffix: false,
-  State_House_District: false,
-  State_Senate_District: false,
-  US_Congressional_District: false,
+  ethnicityGroup: false,
+  language: false,
+  levelOfEducation: false,
+  maritalStatus: false,
+  estimatedIncomeRange: false,
+  homeowner: false,
+  businessOwner: false,
+  hasChildrenUnder18: false,
+  veteranStatus: false,
+  activeVoter: false,
+  registeredVoter: false,
+  voterStatus: false,
 }
 
 export default function ContactsTable() {
   const [contacts] = useContacts()
   const { people, pagination } = contacts || {}
-  const data = (people || []).map((contact) => {
-    const addressParts = [
-      contact.Residence_Addresses_AddressLine,
-      contact.Residence_Addresses_City,
-      contact.Residence_Addresses_State,
-      contact.Residence_Addresses_Zip,
-    ].filter(Boolean)
 
-    return {
-      ...contact,
-      address: addressParts.join(', '),
-      VoterTelephones_CellPhoneFormatted:
-        contact.VoterTelephones_CellPhoneFormatted ||
-        contact.VoterTelephones_LandlineFormatted,
-    }
-  })
   const onColumnVisibilityChange = (visibility) => {
     trackEvent(EVENTS.Contacts.ColumnEdited, {
       visibility,
@@ -154,7 +222,7 @@ export default function ContactsTable() {
     <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">
       <ServerDataTable
         columns={columns}
-        data={data}
+        data={people}
         searchKey="FirstName"
         searchPlaceholder="Search contacts..."
         pagination={pagination}
