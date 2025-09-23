@@ -8,6 +8,7 @@ import RadioList from '@shared/inputs/RadioList'
 import Button from '@shared/buttons/Button'
 import PartyAnimation from '@shared/animations/PartyAnimation'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 function WonMessage({ electionDate }) {
   return (
@@ -71,6 +72,12 @@ export default function PrimaryResultModal({
       await updateCampaign([
         { key: 'details.primaryResult', value: primaryResult },
       ])
+
+      trackEvent(EVENTS.Candidacy.CampaignCompleted, {
+        winner: primaryResult === 'won',
+        officeElectionDate: electionDate,
+        primary: true,
+      })
 
       setFormSubmitted(true)
       setRequestState({ loading: false, error: false })

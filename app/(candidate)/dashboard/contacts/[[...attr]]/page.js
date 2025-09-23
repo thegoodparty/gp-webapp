@@ -1,17 +1,17 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { adminAccessOnly } from 'helpers/permissionHelper'
 import { ContactsProvider } from './hooks/ContactsProvider'
 import ContactsPage from './components/ContactsPage'
 import { PersonProvider } from './hooks/PersonProvider'
 import { CustomSegmentsProvider } from './hooks/CustomSegmentsProvider'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-import { DEFAULT_PAGE_SIZE } from './components/constants'
+import { DEFAULT_PAGE_SIZE } from './components/shared/constants'
+import candidateAccess from '../../shared/candidateAccess'
 
 const fetchContacts = async ({
   page = 1,
   resultsPerPage = DEFAULT_PAGE_SIZE,
-  segment,
+  segment = 'all',
 }) => {
   const payload = {
     page,
@@ -22,7 +22,7 @@ const fetchContacts = async ({
   if (response.ok) {
     return response.data
   } else {
-    console.error('Failed to fetch contacts', response)
+    console.warn('Failed to fetch contacts', response)
     return {
       people: [],
       pagination: {
@@ -38,7 +38,7 @@ const fetchContacts = async ({
 const fetchPerson = async (personId) => {}
 
 const fetchCustomSegments = async () => {
-  const response = await serverFetch(apiRoutes.segments.list)
+  const response = await serverFetch(apiRoutes.voterFileFilter.list)
   return response.data || []
 }
 
@@ -51,7 +51,7 @@ export const metadata = meta
 export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
-  await adminAccessOnly()
+  await candidateAccess()
   let { page, pageSize, segment } = await searchParams
   let { attr } = await params
   let personId = null
@@ -65,12 +65,14 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
 
-  const contacts = await fetchContacts({
-    page,
-    resultsPerPage: pageSize,
-    segment,
-  })
-  const initCustomSegments = await fetchCustomSegments()
+  const [contacts, initCustomSegments] = await Promise.all([
+    fetchContacts({
+      page,
+      resultsPerPage: pageSize,
+      segment,
+    }),
+    fetchCustomSegments(),
+  ])
 
   return (
     <ContactsProvider contacts={contacts}>
