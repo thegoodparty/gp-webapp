@@ -108,8 +108,7 @@ export const FeatureFlagsProvider = ({ children }) => {
       refresh,
       clear: () => client?.clear(),
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, refresh, rev])
+  }, [ready, refresh])
 
   return (
     <FeatureFlagsContext.Provider value={value}>
