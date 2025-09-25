@@ -24,12 +24,21 @@ import {
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
+const MAX_SEGMENT_NAME_LENGTH = 20
+
 export const trimCustomSegmentName = (name) => {
-  if (name.length > 20) {
+  if (!name || typeof name !== 'string') {
+    return 'custom segment'
+  }
+
+  if (name.length > MAX_SEGMENT_NAME_LENGTH) {
     if (name.includes('Campaign')) {
-      return name.slice(0, name.indexOf('Campaign') + 8)
+      const campaignEndIndex = name.indexOf('Campaign') + 8
+      return campaignEndIndex <= MAX_SEGMENT_NAME_LENGTH
+        ? name.slice(0, campaignEndIndex)
+        : name.slice(0, MAX_SEGMENT_NAME_LENGTH) + '...'
     }
-    return name.slice(0, 20) + '...'
+    return name.slice(0, MAX_SEGMENT_NAME_LENGTH) + '...'
   }
   return name
 }
