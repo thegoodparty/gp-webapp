@@ -24,6 +24,7 @@ import { filterOnlyTrueValues } from '../shared/segments.util'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useContacts } from '../../hooks/ContactsProvider'
 import appendParam from '@shared/utils/appendParam'
+import { trimCustomSegmentName } from './SegmentSection'
 
 const refetchContacts = async ({ page, resultsPerPage, segment }) => {
   const response = await fetchContacts({ page, resultsPerPage, segment })
@@ -260,7 +261,7 @@ export default function Filters({
           ) : (
             <>
               <h2 className="text-3xl lg:text-4xl font-semibold ">
-                {segmentName}
+                {trimCustomSegmentName(segmentName)}
               </h2>
               <FiEdit
                 className="text-2xl ml-4 cursor-pointer"

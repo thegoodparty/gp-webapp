@@ -24,6 +24,16 @@ import {
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
+export const trimCustomSegmentName = (name) => {
+  if (name.length > 20) {
+    if (name.includes('Campaign')) {
+      return name.slice(0, name.indexOf('Campaign') + 8)
+    }
+    return name.slice(0, 20) + '...'
+  }
+  return name
+}
+
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
   const [segment, setSegment] = useState(ALL_SEGMENTS)
@@ -164,7 +174,7 @@ export default function SegmentSection() {
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
                 <SelectItem key={segment.id} value={segment.id.toString()}>
-                  {segment.name || 'Unnamed Segment'}
+                  {trimCustomSegmentName(segment.name) || 'Unnamed Segment'}
                 </SelectItem>
               ))}
             </SelectGroup>
