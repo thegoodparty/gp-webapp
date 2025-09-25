@@ -77,6 +77,7 @@ export const FeatureFlagsProvider = ({ children }) => {
     }
 
     clientRef.current = Experiment.initialize(key, {
+      automaticExposureTracking: true,
       exposureTrackingProvider: {
         track: async (exposure) => {
           try {
@@ -92,7 +93,8 @@ export const FeatureFlagsProvider = ({ children }) => {
     })
 
     refresh().finally(() => setReady(true))
-  }, [refresh])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const value = useMemo(() => {
     const client = clientRef.current
@@ -105,6 +107,7 @@ export const FeatureFlagsProvider = ({ children }) => {
       refresh,
       clear: () => client?.clear(),
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, refresh, rev])
 
   return (
