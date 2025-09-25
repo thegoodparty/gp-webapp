@@ -33,12 +33,14 @@ export const FeatureFlagsProvider = ({ children }) => {
     let deviceId
     let userProperties = {}
 
-    const user = typeof analytics?.user === 'function' ? analytics.user() : null
-    if (user) {
-      if (typeof user.id === 'function') userId = user.id()
-      if (typeof user.anonymousId === 'function') deviceId = user.anonymousId()
-      if (typeof user.traits === 'function') {
-        const traits = user.traits()
+    const amplitudeUser =
+      typeof analytics?.user === 'function' ? analytics.user() : null
+    if (amplitudeUser) {
+      if (typeof amplitudeUser.id === 'function') userId = amplitudeUser.id()
+      if (typeof amplitudeUser.anonymousId === 'function')
+        deviceId = amplitudeUser.anonymousId()
+      if (typeof amplitudeUser.traits === 'function') {
+        const traits = amplitudeUser.traits()
         if (traits) {
           userProperties = {
             email: traits.email,
@@ -60,8 +62,8 @@ export const FeatureFlagsProvider = ({ children }) => {
 
   const refresh = useCallback(async () => {
     try {
-      const user = await getUserContext()
-      await clientRef.current?.fetch(user)
+      const amplitudeUser = await getUserContext()
+      await clientRef.current?.fetch(amplitudeUser)
       setRev((v) => v + 1)
     } catch (error) {
       console.warn('Experiment fetch failed: ', error)
@@ -93,8 +95,7 @@ export const FeatureFlagsProvider = ({ children }) => {
     })
 
     refresh().finally(() => setReady(true))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [refresh])
 
   const value = useMemo(() => {
     const client = clientRef.current
