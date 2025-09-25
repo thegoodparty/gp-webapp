@@ -72,9 +72,9 @@ export const handleCreateOutreach =
     }
 
     setOutreaches([...outreaches, outreach])
-    
+
     await refreshCampaign()
-    
+
     return outreach
   }
 
@@ -147,7 +147,7 @@ export const handleCreateVoterFileFilter =
     const chosenAudiences = mapAudienceForPersistence(audience)
 
     const voterFileFilter = await createVoterFileFilter({
-      name: `${type} Campaign ${Object.keys(chosenAudiences).join(', ')}`,
+      name: `${type} Campaign`,
       ...chosenAudiences,
       voterCount,
     })
