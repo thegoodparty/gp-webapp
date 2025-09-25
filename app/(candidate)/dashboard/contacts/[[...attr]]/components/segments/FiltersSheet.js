@@ -20,11 +20,13 @@ import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { filterOnlyTrueValues } from '../shared/segments.util'
+import {
+  filterOnlyTrueValues,
+  trimCustomSegmentName,
+} from '../shared/segments.util'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useContacts } from '../../hooks/ContactsProvider'
 import appendParam from '@shared/utils/appendParam'
-import { trimCustomSegmentName } from './SegmentSection'
 
 const refetchContacts = async ({ page, resultsPerPage, segment }) => {
   const response = await fetchContacts({ page, resultsPerPage, segment })
