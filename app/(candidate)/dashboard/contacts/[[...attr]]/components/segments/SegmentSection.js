@@ -21,6 +21,7 @@ import {
   isCustomSegment,
   isDefaultSegment,
   findCustomSegment,
+  trimCustomSegmentName,
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
@@ -164,7 +165,7 @@ export default function SegmentSection() {
               <SelectLabel>Custom Segments</SelectLabel>
               {customSegments.map((segment) => (
                 <SelectItem key={segment.id} value={segment.id.toString()}>
-                  {segment.name || 'Unnamed Segment'}
+                  {trimCustomSegmentName(segment.name) || 'Unnamed Segment'}
                 </SelectItem>
               ))}
             </SelectGroup>
