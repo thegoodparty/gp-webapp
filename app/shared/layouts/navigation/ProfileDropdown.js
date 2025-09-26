@@ -6,7 +6,6 @@ import {
   FaTheaterMasks,
   FaToolbox,
   FaUserCircle,
-  FaUserTie,
 } from 'react-icons/fa'
 import { memo, useEffect } from 'react'
 import { RiLogoutBoxFill } from 'react-icons/ri'
@@ -14,7 +13,7 @@ import { HiOutlineStar } from 'react-icons/hi'
 import UserAvatar from '@shared/user/UserAvatar'
 import { handleLogOut } from '@shared/user/handleLogOut'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
-import { MdAdd, MdFactCheck } from 'react-icons/md'
+import { MdAdd } from 'react-icons/md'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
@@ -29,7 +28,7 @@ const links = [
   },
 ]
 
-function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
+function ProfileDropdown({ open, toggleCallback, user }) {
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -150,23 +149,6 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
                   <HiOutlineStar />
                   <div className="ml-3">Admin</div>
                 </Link>
-                {isServePath ? (
-                  <Link
-                    href="/dashboard"
-                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-                  >
-                    <MdFactCheck />
-                    <div className="ml-3">Win</div>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/serve"
-                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-                  >
-                    <FaUserTie />
-                    <div className="ml-3">Serve</div>
-                  </Link>
-                )}
               </>
             )}
             {impersonating && (

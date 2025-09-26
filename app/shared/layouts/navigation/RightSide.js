@@ -21,7 +21,6 @@ export default function RightSide() {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
   const isOnboardingPath = pathname?.startsWith('/onboarding')
-  const isServePath = pathname?.startsWith('/serve')
 
   const toggleProfile = () => {
     if (profileOpen) {
@@ -68,7 +67,6 @@ export default function RightSide() {
             open={profileOpen}
             toggleCallback={toggleProfile}
             user={user}
-            isServePath={isServePath}
           />
           {!userHasRole(user, USER_ROLES.SALES) &&
             (isDashboardPath ? (
@@ -81,7 +79,6 @@ export default function RightSide() {
               <DashboardOrContinue
                 isDashboardPath={isDashboardPath}
                 closeAll={closeAll}
-                isServePath={isServePath}
               />
             ))}
         </>

@@ -6,7 +6,7 @@ export const isProductRoute = (pathname) => {
     pathname?.startsWith('/product-tour')
 
   const isProfilePath = pathname?.startsWith('/profile')
-  const isServePath = pathname?.startsWith('/serve')
+  const isServePath = pathname?.startsWith('/polls')
 
   return Boolean(
     isOnboardingPath || isDashboardPath || isProfilePath || isServePath,
