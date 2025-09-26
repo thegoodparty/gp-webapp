@@ -57,7 +57,10 @@ export default function Filters({
   const transformFiltersFromBackend = (backendFilters) => {
     const transformed = { ...backendFilters }
 
-    // Transform languageCodes array to individual boolean fields
+    transformed.languageEnglish = false
+    transformed.languageSpanish = false
+    transformed.languageOther = false
+
     if (transformed.languageCodes && Array.isArray(transformed.languageCodes)) {
       transformed.languageEnglish = transformed.languageCodes.includes('en')
       transformed.languageSpanish = transformed.languageCodes.includes('es')
@@ -65,20 +68,23 @@ export default function Filters({
       delete transformed.languageCodes
     }
 
-    // Transform incomeRanges array to individual boolean fields
-    if (transformed.incomeRanges && Array.isArray(transformed.incomeRanges)) {
-      const incomeMapping = {
-        'Under $25k': 'incomeUnder25k',
-        '$25k - $35k': 'income25kTo35k',
-        '$35k - $50k': 'income35kTo50k',
-        '$50k - $75k': 'income50kTo75k',
-        '$75k - $100k': 'income75kTo100k',
-        '$100k - $125k': 'income100kTo125k',
-        '$125k - $150k': 'income125kTo150k',
-        '$150k - $200k': 'income150kTo200k',
-        '$200k+': 'income200kPlus',
-      }
+    const incomeMapping = {
+      'Under $25k': 'incomeUnder25k',
+      '$25k - $35k': 'income25kTo35k',
+      '$35k - $50k': 'income35kTo50k',
+      '$50k - $75k': 'income50kTo75k',
+      '$75k - $100k': 'income75kTo100k',
+      '$100k - $125k': 'income100kTo125k',
+      '$125k - $150k': 'income125kTo150k',
+      '$150k - $200k': 'income150kTo200k',
+      '$200k+': 'income200kPlus',
+    }
 
+    Object.values(incomeMapping).forEach((key) => {
+      transformed[key] = false
+    })
+
+    if (transformed.incomeRanges && Array.isArray(transformed.incomeRanges)) {
       transformed.incomeRanges.forEach((range) => {
         const key = incomeMapping[range]
         if (key) {
@@ -196,25 +202,21 @@ export default function Filters({
   const transformFiltersForBackend = (filters) => {
     const transformed = { ...filters }
 
-    // Transform language filters to languageCodes array
     const languageCodes = []
     if (transformed.languageEnglish) {
       languageCodes.push('en')
-      delete transformed.languageEnglish
     }
     if (transformed.languageSpanish) {
       languageCodes.push('es')
-      delete transformed.languageSpanish
     }
     if (transformed.languageOther) {
       languageCodes.push('other')
-      delete transformed.languageOther
     }
-    if (languageCodes.length > 0) {
-      transformed.languageCodes = languageCodes
-    }
+    delete transformed.languageEnglish
+    delete transformed.languageSpanish
+    delete transformed.languageOther
+    transformed.languageCodes = languageCodes
 
-    // Transform income filters to incomeRanges array
     const incomeRanges = []
     const incomeMapping = {
       incomeUnder25k: 'Under $25k',
@@ -231,12 +233,10 @@ export default function Filters({
     Object.entries(incomeMapping).forEach(([key, value]) => {
       if (transformed[key]) {
         incomeRanges.push(value)
-        delete transformed[key]
       }
+      delete transformed[key]
     })
-    if (incomeRanges.length > 0) {
-      transformed.incomeRanges = incomeRanges
-    }
+    transformed.incomeRanges = incomeRanges
 
     return transformed
   }

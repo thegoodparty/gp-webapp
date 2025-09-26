@@ -19,6 +19,7 @@ const filterSections = [
           { key: 'age25_35', label: '25-35' },
           { key: 'age35_50', label: '35-50' },
           { key: 'age50Plus', label: '50+' },
+          { key: 'ageUnknown', label: 'Unknown' },
         ],
       },
       {
@@ -28,6 +29,7 @@ const filterSections = [
           { key: 'partyDemocrat', label: 'Democrat' },
           { key: 'partyIndependent', label: 'Independent' },
           { key: 'partyRepublican', label: 'Republican' },
+          { key: 'partyUnknown', label: 'Unknown' },
         ],
       },
     ],
@@ -52,6 +54,7 @@ const filterSections = [
           { key: 'languageEnglish', label: 'English' },
           { key: 'languageSpanish', label: 'Spanish' },
           { key: 'languageOther', label: 'Other' },
+          { key: 'languageUnknown', label: 'Unknown' },
         ],
       },
     ],
@@ -68,6 +71,7 @@ const filterSections = [
           { key: 'audienceSuperVoters', label: 'Super' },
           { key: 'audienceUnreliableVoters', label: 'Unreliable' },
           { key: 'audienceUnlikelyVoters', label: 'Unlikely' },
+          { key: 'audienceUnknown', label: 'Unknown' },
         ],
       },
       {
@@ -76,6 +80,7 @@ const filterSections = [
         options: [
           { key: 'registeredVoterTrue', label: 'Yes' },
           { key: 'registeredVoterFalse', label: 'No' },
+          { key: 'registeredVoterUnknown', label: 'Unknown' },
         ],
       },
       {
@@ -155,6 +160,7 @@ const filterSections = [
           { key: 'income125kTo150k', label: '$125k - $150k' },
           { key: 'income150kTo200k', label: '$150k - $200k' },
           { key: 'income200kPlus', label: '$200k+' },
+          { key: 'incomeUnknown', label: 'Unknown' },
         ],
       },
       {
