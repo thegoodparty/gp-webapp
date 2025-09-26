@@ -60,7 +60,9 @@ export default function LoadingInsightsPage({ pathname }) {
             </p>
             <LoadingList items={loadingItems} onComplete={onComplete} />
           </div>
-          <LoadingFooter />
+          <div className="hidden md:block w-full">
+            <LoadingFooter />
+          </div>
         </section>
       </main>
       <div className="block md:hidden w-full pb-9">
