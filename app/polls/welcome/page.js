@@ -5,7 +5,7 @@ import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 const meta = pageMetaData({
   title: 'Welcome to GoodParty.org Serve',
   description: 'Welcome to GoodParty.org Serve',
-  slug: '/polls',
+  slug: '/polls/welcome',
 })
 
 export const metadata = meta
