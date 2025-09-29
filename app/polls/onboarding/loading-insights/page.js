@@ -14,5 +14,5 @@ export const metadata = meta
 export default async function Page({}) {
   await candidateAccess()
 
-  return <LoadingInsightsPage {...childProps} />
+  return <LoadingInsightsPage />
 }
