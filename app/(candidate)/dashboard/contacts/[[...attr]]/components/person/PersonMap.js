@@ -8,28 +8,14 @@ export default function PersonMap() {
 
   const places = []
 
-  if (
-    person.Residence_Addresses_Latitude &&
-    person.Residence_Addresses_Longitude
-  ) {
+  if (person.lat && person.lng) {
     places.push({
-      lat: person.Residence_Addresses_Latitude,
-      lng: person.Residence_Addresses_Longitude,
+      lat: person.lat,
+      lng: person.lng,
       title:
-        `${person.Voters_FirstName || ''} ${
-          person.Voters_LastName || ''
-        }`.trim() || 'Residence',
-      description: person.Residence_Addresses_AddressLine
-        ? `${person.Residence_Addresses_AddressLine}${
-            person.Residence_Addresses_City
-              ? `, ${person.Residence_Addresses_City}`
-              : ''
-          }${
-            person.Residence_Addresses_Zip
-              ? ` ${person.Residence_Addresses_Zip}`
-              : ''
-          }`
-        : 'Residence Address',
+        `${person.firstName || ''} ${person.lastName || ''}`.trim() ||
+        'Residence',
+      description: person.address ? person.address : '',
     })
   }
 

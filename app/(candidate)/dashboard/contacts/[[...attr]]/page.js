@@ -35,7 +35,10 @@ const fetchContacts = async ({
   }
 }
 
-const fetchPerson = async (personId) => {}
+const fetchPerson = async (personId) => {
+  const response = await serverFetch(apiRoutes.contacts.get, { id: personId })
+  return response.data
+}
 
 const fetchCustomSegments = async () => {
   const response = await serverFetch(apiRoutes.voterFileFilter.list)
