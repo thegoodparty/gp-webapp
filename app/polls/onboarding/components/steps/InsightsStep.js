@@ -1,12 +1,15 @@
 'use client'
 import { LuUsersRound } from 'react-icons/lu'
-import { TextInsight, NumberInsight, DataVisualizationInsight } from '../InsightDisplay'
+import { TextInsight } from '../TextInsight'
+import { NumberInsight } from '../NumberInsight'
+import { DataVisualizationInsight } from '../DataVisualizationInsight'
+
 export default function InsightsStep({ }) {
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
-  const tcrCompliant = true;
-  const isLoadingTcrCompliance = false;
+  const tcrCompliant = true
+  const isLoadingTcrCompliance = false
 
   const insights = [
     {
@@ -24,7 +27,7 @@ export default function InsightsStep({ }) {
   ]
 
   return (
-    <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto">
+    <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         These insights will help you maximize your impact as an elected official.
       </h1>

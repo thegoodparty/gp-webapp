@@ -1,40 +1,6 @@
-'use client'
 import { Card, CardContent } from 'goodparty-styleguide'
-import { LuLightbulb, LuChartLine } from 'react-icons/lu'
-import { numberFormatter } from 'helpers/numberHelper'
+import { LuChartLine } from 'react-icons/lu'
 import { InsightPieChart, InsightDonutChart, InsightHorizontalGaugeChart, InsightVerticalBarChart, InsightHorizontalBarChart } from '@shared/charts'
-
-export const TextInsight = ({ title, description }) => {
-    return (
-        <Card className="w-full">
-            <CardContent>
-                <div className="flex items-start justify-between">
-                    <p>{title}</p>
-                    <div className="mt-1 ml-2">
-                        <LuLightbulb className="text-xl font-bold" />
-                    </div>
-                </div>
-                <p className="text-xs font-normal text-muted-foreground border-t border-slate-200 pt-4 mt-4">{description}</p>
-            </CardContent>
-        </Card>
-    )
-}
-
-export const NumberInsight = ({ title, value, icon }) => {
-    return (
-        <Card className="w-full">
-            <CardContent>
-                <div className="flex items-center justify-between">
-                    <p>{title}</p>
-                    <div className="text-lg text-slate-600 ">
-                        {icon}
-                    </div>
-                </div>
-                <p className="text-2xl leading-normal font-bold mt-2">{numberFormatter(value)}</p>
-            </CardContent>
-        </Card>
-    )
-}
 
 export const DataVisualizationInsight = ({ title, data, insight, chartType, percentage }) => {
     return (
@@ -58,3 +24,5 @@ export const DataVisualizationInsight = ({ title, data, insight, chartType, perc
         </Card>
     )
 }
+
+
