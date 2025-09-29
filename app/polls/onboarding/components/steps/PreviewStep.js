@@ -2,16 +2,17 @@
 import { Button } from 'goodparty-styleguide'
 import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
+import Image from 'next/image'
 
 export default function PreviewStep({ demoText }) {
 
   return (
-    <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto mb-8">
+    <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         Review your SMS serve
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
-        This serve will be sent to a representative sample of your constituents for <b>FREE</b> and you'll be able to gather unbiased feedback in 3 days.
+        This serve will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
       </p>
 
       <div className="w-full items-center flex flex-col gap-4 mt-8">
@@ -28,7 +29,7 @@ export default function PreviewStep({ demoText }) {
               <div className="max-w-xs mx-auto">
                 <TextMessagePreview message={
                   <div className="flex flex-col gap-2">
-                    <img src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Grand Rapids City Council Member Farhad" />
+                    <Image src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Grand Rapids City Council Member Farhad" width={300} height={300} />
                     <p className="mt-1">{demoText}</p>
                   </div>
                 } />

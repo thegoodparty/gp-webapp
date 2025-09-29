@@ -27,14 +27,15 @@ const steps = [
       stepIndex: 2,
       backLabel: 'Back',
     },
-    {
-      name: 'Non-Compliant',
-      nextLabel: 'Get Compliant',
-      showFooter: true,
-      allowBack: true,
-      stepIndex: 2,
-      backLabel: 'Back',
-    },
+    // Commented this out for now to avoid confusion, as we are adding the non-compliant step in the future and are only focusing on the happy path for now.
+    // {
+    //   name: 'Non-Compliant',
+    //   nextLabel: 'Get Compliant',
+    //   showFooter: true,
+    //   allowBack: true,
+    //   stepIndex: 2,
+    //   backLabel: 'Back',
+    // },
     {
       name: 'Strategy',
       nextLabel: 'Add Image',
@@ -61,25 +62,23 @@ const steps = [
     },
   ]
 
-  const maxStepIndex = steps.map(step => step.stepIndex).reduce((a, b) => Math.max(a, b), 0);
+  const maxStepIndex = steps.map(step => step.stepIndex).reduce((a, b) => Math.max(a, b), 0)
 
 export default function OnboardingPage({ pathname }) {
 
   const [campaign] = useCampaign()
   const [user] = useUser()
   
-  const campaignOffice = campaign?.details?.otherOffice || campaign?.details?.office;
-  const userName = user?.name;
+  const campaignOffice = campaign?.details?.otherOffice || campaign?.details?.office
+  const userName = user?.name
 
   const demoMessageText = DemoMessageText({ name: userName, office: campaignOffice, constituentName: 'Bill' })
 
-  console.log(user)
-
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
-  const tcrCompliant = true;
-  const isLoadingTcrCompliance = false;
-  const isNextDisabled = false;
+  const tcrCompliant = true
+  const isLoadingTcrCompliance = false
+  const isNextDisabled = false
 
   const [currentStepIndex, setCurrentStepIndex] = useState(1)
 
@@ -96,12 +95,12 @@ export default function OnboardingPage({ pathname }) {
     }
   }
 
-  const currentStep = steps.find(step => step.stepIndex === currentStepIndex);
+  const currentStep = steps.find(step => step.stepIndex === currentStepIndex)
 
   return (
-    <div className="fixed inset-x-0 bottom-0 top-14 flex flex-col bg-muted">
+    <div className="flex flex-col">
      
-     <main className="flex-1 overflow-y-auto">
+     <main className="flex-1 pb-140 md:pb-0">
         <section className="max-w-screen-md mx-auto bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12 xs:pt-4 md:mb-16">
           <div className="p-4 sm:p-8 lg:p-16 lg:pb-4">
             {currentStep.name === 'Insights' && (
@@ -126,7 +125,7 @@ export default function OnboardingPage({ pathname }) {
            </div>
         </section>
       </main>
-      <div className="block md:hidden bg-white w-full px-4 sm:px-8">
+      <div className="block md:hidden w-full fixed bottom-0 inset-x-0 bg-white z-10 px-4 sm:px-8">
         {currentStep.showFooter && (
           <StepFooter numberOfSteps={5} currentStep={currentStep.stepIndex} onBack={currentStep.allowBack ? handleBack : null} onBackText={currentStep.backLabel} disabledNext={isNextDisabled} onNext={handleNext} onNextText={currentStep.nextLabel} />
         )}

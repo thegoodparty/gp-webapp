@@ -7,7 +7,7 @@ export default function OutreachStep({  }) {
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         Use polling to prioritize issues and remove bias.
       </h1>
-      <p className="text-left mt-4 text-lg font-normal text-muted-foreground">
+      <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
         Understanding your community’s priorities will help you:
       </p>
       <div className="grid grid-cols-1 gap-4 mt-6 ">

@@ -1,10 +1,10 @@
 import { MessageCard } from '../MessageCard'
-import { LuCircleDollarSign, LuListChecks, LuScrollText, LuUsersRound } from "react-icons/lu";
+import { LuCircleDollarSign, LuListChecks, LuScrollText, LuUsersRound } from "react-icons/lu"
 
 export default function StrategyStep({ demoText }) {
 
   return (
-    <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto mb-8">
+    <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         FREE introductory poll.
       </h1>

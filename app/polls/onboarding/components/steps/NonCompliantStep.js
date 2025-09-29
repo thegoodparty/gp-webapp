@@ -1,6 +1,6 @@
 import { PiHandHeart } from 'react-icons/pi'
 
-export default function NonCompliantPage({ pathname }) {
+export default function NonCompliantPage({}) {
 
   return (
     <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto">
