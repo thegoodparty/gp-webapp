@@ -1,6 +1,6 @@
-import { LuUsersRound } from "react-icons/lu";
-import { LuMessagesSquare } from "react-icons/lu";
-import { LuFileChartColumnIncreasing } from "react-icons/lu";
+import { LuUsersRound } from "react-icons/lu"
+import { LuMessagesSquare } from "react-icons/lu"
+import { LuFileChartColumnIncreasing } from "react-icons/lu"
 
 import GetStartedButton from './GetStartedButton'
 

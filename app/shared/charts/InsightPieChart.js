@@ -3,7 +3,7 @@ import { PieChart, Pie, Legend, ResponsiveContainer, Cell } from 'recharts'
 import { numberFormatter } from 'helpers/numberHelper'
 import { COLORS } from './constants'
 
-export const InsightPieChart = ({ data, percentage }) => {
+export const InsightPieChart = ({ data = [], percentage = false }) => {
 
     const renderLegend = () => {
         return (

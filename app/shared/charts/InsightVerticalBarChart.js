@@ -4,7 +4,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { useTailwindBreakpoints } from '../hooks/useTailwindBreakpoints'
 import { COLORS } from './constants'
 
-export const InsightVerticalBarChart = ({ data, percentage }) => {
+export const InsightVerticalBarChart = ({ data = [], percentage = false }) => {
 
     const tailwindBreakpoint = useTailwindBreakpoints();
     const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs';

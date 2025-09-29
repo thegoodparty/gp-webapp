@@ -4,16 +4,21 @@ import { FaRegHourglass } from 'react-icons/fa'
 import { FaCheck } from 'react-icons/fa6'
 import { LuLoaderCircle } from 'react-icons/lu'
 
+const STATUS_PENDING = 'pending'
+const STATUS_LOADING = 'loading'
+const STATUS_COMPLETE = 'complete'
+const LOADING_DELAY = 2000
+
 // items: [{ label: string, status: string }]
 // onComplete: () => void
 export default function LoadingList({ items, onComplete }) {
   
-  const [loadingItems, setLoadingItems] = useState(items);
+  const [loadingItems, setLoadingItems] = useState(items)
 
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingItems(prevItems => {
-        const currentLoadingIndex = prevItems.findIndex(item => item.status === 'loading')
+        const currentLoadingIndex = prevItems.findIndex(item => item.status === STATUS_LOADING)
 
         if (currentLoadingIndex === -1) {
           // No loading item found, clear the timer
@@ -26,20 +31,20 @@ export default function LoadingList({ items, onComplete }) {
         // Mark current loading item as complete
         newItems[currentLoadingIndex] = {
           ...newItems[currentLoadingIndex],
-          status: 'complete'
+          status: STATUS_COMPLETE
         }
 
         // Start loading the next item if there is one
         if (currentLoadingIndex + 1 < newItems.length) {
           newItems[currentLoadingIndex + 1] = {
             ...newItems[currentLoadingIndex + 1],
-            status: 'loading'
+            status: STATUS_LOADING
           }
         }
 
         return newItems
       })
-    }, 2000) // 2 seconds delay
+    }, LOADING_DELAY) // 2 seconds delay
 
     // Cleanup timer on component unmount
     return () => clearInterval(timer)
@@ -47,7 +52,7 @@ export default function LoadingList({ items, onComplete }) {
 
   // Call onComplete when all steps are complete
   useEffect(() => {
-    if (loadingItems.length > 0 && loadingItems.every(item => item.status === 'complete')) {
+    if (loadingItems.length > 0 && loadingItems.every(item => item.status === STATUS_COMPLETE)) {
       onComplete()
     }
   }, [loadingItems, onComplete])
@@ -57,13 +62,13 @@ export default function LoadingList({ items, onComplete }) {
       {loadingItems.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           <div className="w-4 h-4 flex items-center justify-center">
-            {item.status === 'pending' && (
+            {item.status === STATUS_PENDING && (
               <FaRegHourglass className="text-gray-400 text-sm" />
             )}
-            {item.status === 'loading' && (
-              <LuLoaderCircle className="text-blue-500 animate-spin text-xl" />
+            {item.status === STATUS_LOADING && (
+              <LuLoaderCircle aria-label="Loading" className="text-blue-500 animate-spin text-xl" />
             )}
-            {item.status === 'complete' && (
+            {item.status === STATUS_COMPLETE && (
               <FaCheck className="text-success" />
             )}
           </div>

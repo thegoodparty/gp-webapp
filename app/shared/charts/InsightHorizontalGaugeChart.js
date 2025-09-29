@@ -2,7 +2,7 @@
 import { numberFormatter } from 'helpers/numberHelper'
 import { COLORS } from './constants'
 
-export const InsightHorizontalGaugeChart = ({ data, percentage }) => {
+export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) => {
     const maxValue = Math.max(...(data?.map((d) => d.value) ?? [0]), 0) || 1;
 
     return (
