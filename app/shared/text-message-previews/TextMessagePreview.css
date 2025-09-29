@@ -1,9 +1,4 @@
-@font-face {
-    font-family: "SanFrancisco";
-    src:
-      url("https://cdn.rawgit.com/AllThingsSmitty/fonts/25983b71/SanFrancisco/sanfranciscodisplay-regular-webfont.woff2") format("woff2"),
-      url("https://cdn.rawgit.com/AllThingsSmitty/fonts/25983b71/SanFrancisco/sanfranciscodisplay-regular-webfont.woff") format("woff");
-  }
+
 
 .imessage {
     margin: 0.5rem 0;
@@ -16,9 +11,6 @@
     padding: 12px;
     position: relative;
     word-wrap: break-word;
-}
-.imessage p {
-    font-family: "SanFrancisco";
 }
 
 .imessage::before,

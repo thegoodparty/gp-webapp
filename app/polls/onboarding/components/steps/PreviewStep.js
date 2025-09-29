@@ -30,7 +30,7 @@ export default function PreviewStep({ demoText }) {
                 <TextMessagePreview message={
                   <div className="flex flex-col gap-2">
                     <Image src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Grand Rapids City Council Member Farhad" width={300} height={300} />
-                    <p className="mt-1">{demoText}</p>
+                    <p className="mt-1 font-normal">{demoText}</p>
                   </div>
                 } />
               </div>
