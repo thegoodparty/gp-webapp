@@ -11,16 +11,33 @@ export default function InfoSection({ section }) {
   if (!person) return null
 
   const isUnknown = (field) => {
-    if (!field.transform) {
-      return person[field.key].toLowerCase() === 'unknown'
+    const rawValue = person[field.key]
+    if (typeof rawValue === 'string' && rawValue.toLowerCase() === 'unknown') {
+      return true
     }
 
-    const value = field.transform(person[field.key], person)
-    if (typeof value === 'string') {
-      return value.toLowerCase() === 'unknown'
+    if (field.transform) {
+      const transformedValue = field.transform(rawValue, person)
+      if (typeof transformedValue === 'string') {
+        return transformedValue.toLowerCase() === 'unknown'
+      }
+      return transformedValue === null
     }
-    return value === null
+
+    return false
   }
+
+  const getCopyText = (field) => {
+    if (!field.transform) {
+      return person[field.key]
+    }
+
+    const transformedValue = field.transform(person[field.key], person)
+    return typeof transformedValue === 'string'
+      ? transformedValue
+      : person[field.key]
+  }
+
   return (
     <section className="mt-8">
       <h3 className="text-2xl font-semibold">{section.title}</h3>
@@ -37,7 +54,7 @@ export default function InfoSection({ section }) {
                 </Body1>
                 {field.allowCopy && !isUnknown(field) && (
                   <CopyToClipboardButton
-                    copyText={person[field.key]}
+                    copyText={getCopyText(field)}
                     size="small"
                     color="neutral"
                     variant="text"
