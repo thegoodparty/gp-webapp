@@ -45,7 +45,7 @@ export default function LoadingInsightsPage({}) {
 
   // Navigate to insights when all steps are complete
   const onComplete = () => {
-    // router.replace('/polls/onboarding')
+    router.replace('/polls/onboarding')
   }
 
   return (
