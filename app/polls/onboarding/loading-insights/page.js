@@ -11,9 +11,8 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page({ searchParams }) {
+export default async function Page({}) {
   await candidateAccess()
-  const childProps = {}
 
-  return <LoadingInsightsPage {...childProps} />
+  return <LoadingInsightsPage />
 }

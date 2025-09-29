@@ -20,7 +20,10 @@ import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { filterOnlyTrueValues } from '../shared/segments.util'
+import {
+  filterOnlyTrueValues,
+  trimCustomSegmentName,
+} from '../shared/segments.util'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useContacts } from '../../hooks/ContactsProvider'
 import appendParam from '@shared/utils/appendParam'
@@ -29,6 +32,8 @@ const refetchContacts = async ({ page, resultsPerPage, segment }) => {
   const response = await fetchContacts({ page, resultsPerPage, segment })
   return response
 }
+
+const MAX_SEGMENT_NAME_LENGTH = 30
 
 export default function Filters({
   open = false,
@@ -49,9 +54,53 @@ export default function Filters({
   const searchParams = useSearchParams()
   const [_, setContacts] = useContacts()
 
+  const transformFiltersFromBackend = (backendFilters) => {
+    const transformed = { ...backendFilters }
+
+    transformed.languageEnglish = false
+    transformed.languageSpanish = false
+    transformed.languageOther = false
+
+    if (transformed.languageCodes && Array.isArray(transformed.languageCodes)) {
+      transformed.languageEnglish = transformed.languageCodes.includes('en')
+      transformed.languageSpanish = transformed.languageCodes.includes('es')
+      transformed.languageOther = transformed.languageCodes.includes('other')
+      delete transformed.languageCodes
+    }
+
+    const incomeMapping = {
+      'Under $25k': 'incomeUnder25k',
+      '$25k - $35k': 'income25kTo35k',
+      '$35k - $50k': 'income35kTo50k',
+      '$50k - $75k': 'income50kTo75k',
+      '$75k - $100k': 'income75kTo100k',
+      '$100k - $125k': 'income100kTo125k',
+      '$125k - $150k': 'income125kTo150k',
+      '$150k - $200k': 'income150kTo200k',
+      '$200k+': 'income200kPlus',
+    }
+
+    Object.values(incomeMapping).forEach((key) => {
+      transformed[key] = false
+    })
+
+    if (transformed.incomeRanges && Array.isArray(transformed.incomeRanges)) {
+      transformed.incomeRanges.forEach((range) => {
+        const key = incomeMapping[range]
+        if (key) {
+          transformed[key] = true
+        }
+      })
+      delete transformed.incomeRanges
+    }
+
+    return transformed
+  }
+
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
-      setFilters(editSegment)
+      const transformedSegment = transformFiltersFromBackend(editSegment)
+      setFilters(transformedSegment)
       setSegmentName(editSegment.name)
       setIsEditingName(false)
     } else {
@@ -83,9 +132,10 @@ export default function Filters({
       return
     }
     setSaving(true)
+    const transformedFilters = transformFiltersForBackend(filters)
     const response = await saveCustomSegment({
       name: segmentName,
-      ...filters,
+      ...transformedFilters,
     })
     if (response) {
       successSnackbar('Segment created successfully')
@@ -115,9 +165,10 @@ export default function Filters({
     delete cleanFilters.name
     delete cleanFilters.campaignId
 
+    const transformedFilters = transformFiltersForBackend(cleanFilters)
     const response = await updateCustomSegment(editSegment.id, {
       name: segmentName,
-      ...cleanFilters,
+      ...transformedFilters,
     })
     if (response) {
       successSnackbar('Segment updated successfully')
@@ -148,6 +199,48 @@ export default function Filters({
     return segmentName && Object.values(filters).some((value) => value)
   }
 
+  const transformFiltersForBackend = (filters) => {
+    const transformed = { ...filters }
+
+    const languageCodes = []
+    if (transformed.languageEnglish) {
+      languageCodes.push('en')
+    }
+    if (transformed.languageSpanish) {
+      languageCodes.push('es')
+    }
+    if (transformed.languageOther) {
+      languageCodes.push('other')
+    }
+    delete transformed.languageEnglish
+    delete transformed.languageSpanish
+    delete transformed.languageOther
+    transformed.languageCodes = languageCodes
+
+    const incomeRanges = []
+    const incomeMapping = {
+      incomeUnder25k: 'Under $25k',
+      income25kTo35k: '$25k - $35k',
+      income35kTo50k: '$35k - $50k',
+      income50kTo75k: '$50k - $75k',
+      income75kTo100k: '$75k - $100k',
+      income100kTo125k: '$100k - $125k',
+      income125kTo150k: '$125k - $150k',
+      income150kTo200k: '$150k - $200k',
+      income200kPlus: '$200k+',
+    }
+
+    Object.entries(incomeMapping).forEach(([key, value]) => {
+      if (transformed[key]) {
+        incomeRanges.push(value)
+      }
+      delete transformed[key]
+    })
+    transformed.incomeRanges = incomeRanges
+
+    return transformed
+  }
+
   return (
     <Sheet open={open} onOpenChange={handleOpenChange} onClose={handleClose}>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
@@ -155,7 +248,9 @@ export default function Filters({
           {isEditingName ? (
             <Input
               value={segmentName}
-              onChange={(e) => setSegmentName(e.target.value)}
+              onChange={(e) =>
+                setSegmentName(e.target.value.slice(0, MAX_SEGMENT_NAME_LENGTH))
+              }
               onBlur={() => setIsEditingName(false)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -163,11 +258,12 @@ export default function Filters({
                 }
               }}
               autoFocus
+              maxLength={MAX_SEGMENT_NAME_LENGTH}
             />
           ) : (
             <>
               <h2 className="text-3xl lg:text-4xl font-semibold ">
-                {segmentName}
+                {trimCustomSegmentName(segmentName)}
               </h2>
               <FiEdit
                 className="text-2xl ml-4 cursor-pointer"

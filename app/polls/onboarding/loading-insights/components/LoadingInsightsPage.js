@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation'
 import LoadingFooter from '../../components/LoadingFooter'
 import LoadingList from '../../components/LoadingList'
 
-export default function LoadingInsightsPage({ pathname }) {
+
+export default function LoadingInsightsPage({}) {
 
   const router = useRouter()
   const [loadingItems, setLoadingItems] = useState([
@@ -44,14 +45,14 @@ export default function LoadingInsightsPage({ pathname }) {
 
   // Navigate to insights when all steps are complete
   const onComplete = () => {
-    router.replace('/polls/onboarding')
+    // router.replace('/polls/onboarding')
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 top-14 flex flex-col bg-white md:bg-muted">
-      <main className="flex-1 overflow-y-auto">
-        <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12 xs:mt-4">
-          <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto">
+    <div className="flex flex-col">
+      <main className="flex-1 pb-24 md:pb-0">
+        <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12">
+          <div className="flex flex-col items-center md:justify-center">
             <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
               Meet your constituents and see what issues matter to them.
             </h1>
@@ -60,10 +61,12 @@ export default function LoadingInsightsPage({ pathname }) {
             </p>
             <LoadingList items={loadingItems} onComplete={onComplete} />
           </div>
-          <LoadingFooter />
+          <div className="hidden md:block w-full">
+            <LoadingFooter />
+          </div>
         </section>
       </main>
-      <div className="block md:hidden w-full pb-9">
+      <div className="block md:hidden w-full fixed bottom-0 inset-x-0 bg-white z-10 pb-10">
         <LoadingFooter />
       </div>
     </div>
