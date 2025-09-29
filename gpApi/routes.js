@@ -1,7 +1,11 @@
 export const apiRoutes = {
   contacts: {
     list: {
-      path: '/contacts/list',
+      path: '/contacts',
+      method: 'GET',
+    },
+    get: {
+      path: '/contacts/:id',
       method: 'GET',
     },
     download: {

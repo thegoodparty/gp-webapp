@@ -18,7 +18,11 @@ const fetchContacts = async ({
     resultsPerPage,
     segment,
   }
-  const response = await serverFetch(apiRoutes.contacts.list, payload)
+  const response = await serverFetch(apiRoutes.contacts.list, payload, {
+    next: {
+      revalidate: 3600,
+    },
+  })
   if (response.ok) {
     return response.data
   } else {
@@ -35,7 +39,23 @@ const fetchContacts = async ({
   }
 }
 
-const fetchPerson = async (personId) => {}
+const fetchPerson = async (personId) => {
+  const response = await serverFetch(
+    apiRoutes.contacts.get,
+    { id: personId },
+    {
+      next: {
+        revalidate: 3600,
+      },
+    },
+  )
+  if (response.ok) {
+    return response.data
+  } else {
+    console.warn('Failed to fetch person', response)
+    return null
+  }
+}
 
 const fetchCustomSegments = async () => {
   const response = await serverFetch(apiRoutes.voterFileFilter.list)
