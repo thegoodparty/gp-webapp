@@ -80,12 +80,13 @@ const columns = [
       <DataTableColumnHeader column={column} title="Marital Status" />
     ),
   },
-  {
-    accessorKey: 'estimatedIncomeRange',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Income Range" />
-    ),
-  },
+  // uncomment when the data is done loading
+  // {
+  //   accessorKey: 'estimatedIncomeRange',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Income Range" />
+  //   ),
+  // },
   {
     accessorKey: 'homeowner',
     header: ({ column }) => (

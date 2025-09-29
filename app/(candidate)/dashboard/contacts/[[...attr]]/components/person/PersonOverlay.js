@@ -130,11 +130,12 @@ const sections = [
         label: 'Language',
         transform: (value) => value || 'Unknown',
       },
-      {
-        key: 'estimatedIncomeRange',
-        label: 'Estimated Income Range',
-        transform: (value) => value || 'Unknown',
-      },
+      // uncomment when the data is done loading
+      // {
+      //   key: 'estimatedIncomeRange',
+      //   label: 'Estimated Income Range',
+      //   transform: (value) => value || 'Unknown',
+      // },
     ],
   },
 ]
