@@ -37,7 +37,12 @@ const fetchContacts = async ({
 
 const fetchPerson = async (personId) => {
   const response = await serverFetch(apiRoutes.contacts.get, { id: personId })
-  return response.data
+  if (response.ok) {
+    return response.data
+  } else {
+    console.warn('Failed to fetch person', response)
+    return null
+  }
 }
 
 const fetchCustomSegments = async () => {
