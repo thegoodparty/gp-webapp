@@ -44,6 +44,7 @@ const sections = [
         key: 'address',
         label: 'Address',
         transform: (value) => value || 'N/A',
+        allowCopy: true,
       },
       {
         key: 'cellPhone',
@@ -59,6 +60,7 @@ const sections = [
           ) : (
             'Unknown'
           ),
+        allowCopy: true,
       },
       {
         key: 'landline',
@@ -74,6 +76,7 @@ const sections = [
           ) : (
             'Unknown'
           ),
+        allowCopy: true,
       },
     ],
   },
