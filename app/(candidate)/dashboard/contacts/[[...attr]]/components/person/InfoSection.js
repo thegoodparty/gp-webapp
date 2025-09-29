@@ -4,6 +4,7 @@ import { usePerson } from '../../hooks/PersonProvider'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import CopyToClipboardButton from '@shared/utils/CopyToClipboardButton'
+import { Fragment } from 'react'
 
 export default function InfoSection({ section }) {
   const [person] = usePerson()
@@ -24,7 +25,7 @@ export default function InfoSection({ section }) {
     <section className="mt-8">
       <h3 className="text-2xl font-semibold">{section.title}</h3>
       {section.fields.map((field) => (
-        <>
+        <Fragment key={field.key}>
           {field.key && person[field.key] && (
             <div key={field.key} className="mt-4">
               <Body2 className="font-medium text-gray-600">{field.label}</Body2>
@@ -46,7 +47,7 @@ export default function InfoSection({ section }) {
               </div>
             </div>
           )}
-        </>
+        </Fragment>
       ))}
     </section>
   )
