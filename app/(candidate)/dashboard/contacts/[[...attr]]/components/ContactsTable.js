@@ -3,6 +3,8 @@ import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 const columns = [
   {
@@ -78,12 +80,13 @@ const columns = [
       <DataTableColumnHeader column={column} title="Marital Status" />
     ),
   },
-  {
-    accessorKey: 'estimatedIncomeRange',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Income Range" />
-    ),
-  },
+  // uncomment when the data is done loading
+  // {
+  //   accessorKey: 'estimatedIncomeRange',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Income Range" />
+  //   ),
+  // },
   {
     accessorKey: 'homeowner',
     header: ({ column }) => (
@@ -146,11 +149,17 @@ const initialColumnVisibility = {
 export default function ContactsTable() {
   const [contacts] = useContacts()
   const { people, pagination } = contacts || {}
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const onColumnVisibilityChange = (visibility) => {
     trackEvent(EVENTS.Contacts.ColumnEdited, {
       visibility,
     })
+  }
+
+  const onRowClick = (row) => {
+    router.push(`/dashboard/contacts/${row.id}?${searchParams.toString()}`)
   }
 
   return (
@@ -163,6 +172,7 @@ export default function ContactsTable() {
         pagination={pagination}
         onColumnVisibilityChange={onColumnVisibilityChange}
         initialColumnVisibility={initialColumnVisibility}
+        onRowClick={onRowClick}
       />
     </div>
   )

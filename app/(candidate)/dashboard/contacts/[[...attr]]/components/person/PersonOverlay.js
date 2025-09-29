@@ -4,28 +4,36 @@ import { usePerson } from '../../hooks/PersonProvider'
 import { useRouter } from 'next/navigation'
 import InfoSection from './InfoSection'
 import PersonMap from './PersonMap'
+import { useSearchParams } from 'next/navigation'
 
 const sections = [
   {
     title: 'General Information',
     fields: [
       {
-        key: 'Voters_Gender',
+        key: 'gender',
         label: 'Gender',
-        transform: (value) => {
-          if (!value) return 'N/A'
-          return value === 'M' ? 'Male' : 'Female'
-        },
+        transform: (value) => value || 'N/A',
       },
       {
-        key: 'Voters_Age',
+        key: 'age',
         label: 'Age',
         transform: (value) => (value ? `${value} years old` : 'N/A'),
       },
       {
-        key: 'Parties_Description',
+        key: 'politicalParty',
         label: 'Political Party',
-        transform: (value) => (value === 'Non-Partisan' ? 'Democrat' : value),
+        transform: (value) => value || 'N/A',
+      },
+      {
+        key: 'maritalStatus',
+        label: 'Marital Status',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'ethnicityGroup',
+        label: 'Ethnicity',
+        transform: (value) => value || 'Unknown',
       },
     ],
   },
@@ -33,25 +41,15 @@ const sections = [
     title: 'Contact Information',
     fields: [
       {
-        key: 'Residence_Addresses_AddressLine',
+        key: 'address',
         label: 'Address',
-        transform: (value, person) => {
-          const parts = []
-          if (value) parts.push(value)
-          if (person.Residence_Addresses_City)
-            parts.push(person.Residence_Addresses_City)
-          if (person.Residence_Addresses_State)
-            parts.push(person.Residence_Addresses_State)
-          if (person.Residence_Addresses_Zip)
-            parts.push(person.Residence_Addresses_Zip)
-          return parts.length > 0 ? parts.join(', ') : 'N/A'
-        },
+        transform: (value) => value || 'N/A',
       },
       {
-        key: 'VoterTelephones_CellPhoneFormatted',
+        key: 'cellPhone',
         label: 'Cell Phone Number',
         transform: (value) =>
-          value ? (
+          value && value !== 'Unknown' ? (
             <a
               href={`tel:${value.replace(/\D/g, '')}`}
               className="text-blue-600 hover:underline"
@@ -59,13 +57,23 @@ const sections = [
               {value}
             </a>
           ) : (
-            'N/A'
+            'Unknown'
           ),
       },
       {
-        key: 'VoterTelephones_LandlineFormatted',
+        key: 'landline',
         label: 'Landline',
-        transform: (value) => value || 'Unknown',
+        transform: (value) =>
+          value && value !== 'Unknown' ? (
+            <a
+              href={`tel:${value.replace(/\D/g, '')}`}
+              className="text-blue-600 hover:underline"
+            >
+              {value}
+            </a>
+          ) : (
+            'Unknown'
+          ),
       },
     ],
   },
@@ -73,20 +81,61 @@ const sections = [
     title: 'Voter Demographics',
     fields: [
       {
-        key: 'LALVOTERID',
+        key: 'registeredVoter',
         label: 'Registered Voter',
-        transform: (value) => (value ? 'Yes' : 'No'),
+        transform: (value) => value || 'Unknown',
       },
       {
-        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        key: 'activeVoter',
         label: 'Active Voter',
-        transform: (value) => (value === 'Not Eligible' ? 'No' : 'Yes'),
+        transform: (value) => value || 'Unknown',
       },
       {
-        key: 'Voters_VotingPerformanceEvenYearGeneral',
+        key: 'voterStatus',
         label: 'Voter Status',
-        transform: (value) => (value === 'Not Eligible' ? 'First Time' : value),
+        transform: (value) => value || 'Unknown',
       },
+    ],
+  },
+  {
+    title: 'Additional Information',
+    fields: [
+      {
+        key: 'hasChildrenUnder18',
+        label: 'Has Children Under 18',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'veteranStatus',
+        label: 'Veteran Status',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'homeowner',
+        label: 'Homeowner',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'businessOwner',
+        label: 'Business Owner',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'levelOfEducation',
+        label: 'Education Level',
+        transform: (value) => value || 'Unknown',
+      },
+      {
+        key: 'language',
+        label: 'Language',
+        transform: (value) => value || 'Unknown',
+      },
+      // uncomment when the data is done loading
+      // {
+      //   key: 'estimatedIncomeRange',
+      //   label: 'Estimated Income Range',
+      //   transform: (value) => value || 'Unknown',
+      // },
     ],
   },
 ]
@@ -94,14 +143,16 @@ const sections = [
 export default function PersonOverlay() {
   const [person, setPerson] = usePerson()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const handleClose = (open) => {
     if (!open) {
       setPerson(null)
-      router.push('/dashboard/people')
+      const queryString = searchParams.toString()
+      router.push(`/dashboard/contacts${queryString ? `?${queryString}` : ''}`)
     }
   }
-  const name = `${person?.Voters_FirstName} ${person?.Voters_LastName}`
+  const name = `${person?.firstName} ${person?.lastName}`
 
   return (
     <Sheet open={!!person} onOpenChange={handleClose}>
