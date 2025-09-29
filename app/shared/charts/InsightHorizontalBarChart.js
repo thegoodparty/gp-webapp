@@ -6,26 +6,26 @@ import { COLORS } from './constants'
 
 export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => {
 
-    const tailwindBreakpoint = useTailwindBreakpoints();
-    const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs';
+    const tailwindBreakpoint = useTailwindBreakpoints()
+    const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs'
 
     const renderCustomBar = (props) => {
-        const { fill, x, y, width, height } = props;
-        const radius = 6;
+        const { fill, x, y, width, height } = props
+        const radius = 6
         const path = `M ${x} ${y} 
                      L ${x + width - radius} ${y} 
                      Q ${x + width} ${y} ${x + width} ${y + radius} 
                      L ${x + width} ${y + height - radius} 
                      Q ${x + width} ${y + height} ${x + width - radius} ${y + height} 
-                     L ${x} ${y + height} Z`;
+                     L ${x} ${y + height} Z`
         
         return (
             <path
                 d={path}
                 fill={fill}
             />
-        );
-    };
+        )
+    }
 
     const renderLegend = () => {
         return (
@@ -42,8 +42,8 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
                     ))}
                 </div>
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <div className="w-full">
@@ -100,5 +100,5 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
             </ResponsiveContainer>
             {isMobile && renderLegend()}
         </div>
-    );
+    )
 }

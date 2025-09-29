@@ -6,26 +6,26 @@ import { COLORS } from './constants'
 
 export const InsightVerticalBarChart = ({ data = [], percentage = false }) => {
 
-    const tailwindBreakpoint = useTailwindBreakpoints();
-    const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs';
+    const tailwindBreakpoint = useTailwindBreakpoints()
+    const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs'
 
     const renderCustomBar = (props) => {
-        const { fill, x, y, width, height } = props;
-        const radius = 8;
+        const { fill, x, y, width, height } = props
+        const radius = 8
         const path = `M ${x} ${y + height} 
                      L ${x} ${y + radius} 
                      Q ${x} ${y} ${x + radius} ${y} 
                      L ${x + width - radius} ${y} 
                      Q ${x + width} ${y} ${x + width} ${y + radius} 
-                     L ${x + width} ${y + height} Z`;
+                     L ${x + width} ${y + height} Z`
         
         return (
             <path
                 d={path}
                 fill={fill}
             />
-        );
-    };
+        )
+    }
 
     const renderLegend = () => {
         return (
@@ -42,8 +42,8 @@ export const InsightVerticalBarChart = ({ data = [], percentage = false }) => {
                     ))}
                 </div>
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <div className="w-full">
@@ -97,5 +97,5 @@ export const InsightVerticalBarChart = ({ data = [], percentage = false }) => {
         </ResponsiveContainer>
         {isMobile && renderLegend()}
         </div>
-    );
+    )
 }
