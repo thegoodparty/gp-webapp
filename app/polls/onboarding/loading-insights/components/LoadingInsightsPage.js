@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation'
 import LoadingFooter from '../../components/LoadingFooter'
 import LoadingList from '../../components/LoadingList'
 
-export default function LoadingInsightsPage({ pathname }) {
+
+export default function LoadingInsightsPage({}) {
 
   const router = useRouter()
   const [loadingItems, setLoadingItems] = useState([
