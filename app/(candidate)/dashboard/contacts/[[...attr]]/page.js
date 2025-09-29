@@ -18,7 +18,11 @@ const fetchContacts = async ({
     resultsPerPage,
     segment,
   }
-  const response = await serverFetch(apiRoutes.contacts.list, payload)
+  const response = await serverFetch(apiRoutes.contacts.list, payload, {
+    next: {
+      revalidate: 3600,
+    },
+  })
   if (response.ok) {
     return response.data
   } else {
@@ -36,7 +40,15 @@ const fetchContacts = async ({
 }
 
 const fetchPerson = async (personId) => {
-  const response = await serverFetch(apiRoutes.contacts.get, { id: personId })
+  const response = await serverFetch(
+    apiRoutes.contacts.get,
+    { id: personId },
+    {
+      next: {
+        revalidate: 3600,
+      },
+    },
+  )
   if (response.ok) {
     return response.data
   } else {

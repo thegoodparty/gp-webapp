@@ -8,10 +8,12 @@ export default function PersonMap() {
 
   const places = []
 
-  if (person.lat && person.lng) {
+  const lat = parseFloat(person.lat)
+  const lng = parseFloat(person.lng)
+  if (!isNaN(lat) && !isNaN(lng)) {
     places.push({
-      lat: person.lat,
-      lng: person.lng,
+      lat,
+      lng,
       title:
         `${person.firstName || ''} ${person.lastName || ''}`.trim() ||
         'Residence',
