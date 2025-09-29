@@ -3,13 +3,13 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { COLORS } from './constants'
 
 export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) => {
-    const maxValue = Math.max(...(data?.map((d) => d.value) ?? [0]), 0) || 1;
+    const maxValue = Math.max(...(data?.map((d) => d.value) ?? [0]), 0) || 1
 
     return (
         <div className="w-full h-full flex flex-col gap-2 pt-4">
             {data.map((item, index) => {
-                const valuePercent = Math.min(100, Math.round((item.value / (percentage ? 100 : maxValue)) * 100));
-                const barWidthPercent = `${valuePercent}%`;
+                const valuePercent = Math.min(100, Math.round((item.value / (percentage ? 100 : maxValue)) * 100))
+                const barWidthPercent = `${valuePercent}%`
 
                 return (
                     <div key={`gauge-row-${item.name}`} className="w-full mb-3">
@@ -24,8 +24,8 @@ export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) =
                             />
                         </div>
                     </div>
-                );
+                )
             })}
         </div>
-    );
+    )
 }

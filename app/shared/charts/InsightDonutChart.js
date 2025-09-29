@@ -21,8 +21,8 @@ export const InsightDonutChart = ({ data = [], percentage = false }) => {
                     </div>
                 ))}
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <ResponsiveContainer width="100%" height={350}>
@@ -47,5 +47,5 @@ export const InsightDonutChart = ({ data = [], percentage = false }) => {
                 <Legend width="100%" verticalAlign="bottom" align="center" layout="vertical" content={renderLegend} />
             </PieChart>
         </ResponsiveContainer>
-    );
+    )
 }
