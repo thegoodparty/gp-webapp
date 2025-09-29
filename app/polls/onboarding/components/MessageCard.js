@@ -1,4 +1,3 @@
-'use client'
 import { Card, CardContent } from 'goodparty-styleguide'
 import { LuInbox } from "react-icons/lu"
 
@@ -7,7 +6,7 @@ export const MessageCard = ({ title, description, icon, note }) => {
         <Card className="w-full">
             <CardContent>
                 <div className="flex items-center">
-                    <div className="mr-2 text-xl" style={{ width: '20px', height: '20px' }}>
+                    <div className="mr-2 text-xl w-5 h-5">
                         {icon ?? <LuInbox/>}
                     </div>
                     <p className="font-semibold">{title}</p>
