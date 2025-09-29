@@ -1,43 +1,47 @@
+'use client'
+import { useState, useEffect } from 'react'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../../tailwind.config.js'
 
-import { useState, useEffect } from 'react';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../tailwind.config.js';
-
-const fullConfig = resolveConfig(tailwindConfig);
-const breakpoints = fullConfig.theme.screens;
+const fullConfig = resolveConfig(tailwindConfig)
+const breakpoints = fullConfig.theme.screens
 
 export const useTailwindBreakpoints = () => {
-  const [currentBreakpoint, setCurrentBreakpoint] = useState('sm');
+  const [currentBreakpoint, setCurrentBreakpoint] = useState('sm')
 
   useEffect(() => {
     const getCurrentBreakpoint = () => {
-      const width = window.innerWidth;
+      if (typeof window === 'undefined') {
+        return 'sm'
+      }
+
+      const width = window.innerWidth
       
       // Check breakpoints from largest to smallest
       if (width >= parseInt(breakpoints['2xl'])) {
-        setCurrentBreakpoint('2xl');
+        setCurrentBreakpoint('2xl')
       } else if (width >= parseInt(breakpoints.xl)) {
-        setCurrentBreakpoint('xl');
+        setCurrentBreakpoint('xl')
       } else if (width >= parseInt(breakpoints.lg)) {
-        setCurrentBreakpoint('lg');
+        setCurrentBreakpoint('lg')
       } else if (width >= parseInt(breakpoints.md)) {
-        setCurrentBreakpoint('md');
+        setCurrentBreakpoint('md')
       } else if (width >= parseInt(breakpoints.sm)) {
-        setCurrentBreakpoint('sm');
+        setCurrentBreakpoint('sm')
       } else {
-        setCurrentBreakpoint('xs');
+        setCurrentBreakpoint('xs')
       }
-    };
+    }
 
     // Set initial breakpoint
-    getCurrentBreakpoint();
+    getCurrentBreakpoint()
 
     // Listen for resize events
-    window.addEventListener('resize', getCurrentBreakpoint);
+    window.addEventListener('resize', getCurrentBreakpoint)
 
     // Cleanup
-    return () => window.removeEventListener('resize', getCurrentBreakpoint);
-  }, []);
+    return () => window.removeEventListener('resize', getCurrentBreakpoint)
+  }, [])
 
-  return currentBreakpoint;
-};
+  return currentBreakpoint
+}
