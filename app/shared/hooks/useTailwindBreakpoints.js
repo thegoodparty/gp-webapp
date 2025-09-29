@@ -11,7 +11,7 @@ export const useTailwindBreakpoints = () => {
 
   useEffect(() => {
     const getCurrentBreakpoint = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window === 'undefined') {
         return 'sm'
       }
 
