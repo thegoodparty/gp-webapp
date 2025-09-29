@@ -62,7 +62,7 @@ export default function ServerDataTable({
     <div className={`w-full ${className || ''}`}>
       <DataTable
         columns={columns}
-        data={data}
+        data={data || []}
         pagination={false}
         onRowClick={onRowClick}
         onColumnVisibilityChange={onColumnVisibilityChange}
@@ -71,7 +71,7 @@ export default function ServerDataTable({
 
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="hidden md:block flex-1 text-sm text-muted-foreground">
-          Showing {data.length} of {totalResults} rows
+          Showing {data?.length || 0} of {totalResults} rows
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
