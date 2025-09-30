@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import NavButton from './NavButton'
 
 // list of paths to hide marketing nav
-const HIDE_NAV_PATHS = ['/onboarding', '/dashboard', '/profile', '/serve']
+const HIDE_NAV_PATHS = ['/onboarding', '/dashboard', '/profile', '/polls']
 
 export default function LeftSide() {
   const pathname = usePathname()

@@ -44,36 +44,19 @@ const sections = [
         key: 'address',
         label: 'Address',
         transform: (value) => value || 'N/A',
+        allowCopy: true,
       },
       {
         key: 'cellPhone',
         label: 'Cell Phone Number',
-        transform: (value) =>
-          value && value !== 'Unknown' ? (
-            <a
-              href={`tel:${value.replace(/\D/g, '')}`}
-              className="text-blue-600 hover:underline"
-            >
-              {value}
-            </a>
-          ) : (
-            'Unknown'
-          ),
+        transform: (value) => value || 'Unknown',
+        allowCopy: true,
       },
       {
         key: 'landline',
         label: 'Landline',
-        transform: (value) =>
-          value && value !== 'Unknown' ? (
-            <a
-              href={`tel:${value.replace(/\D/g, '')}`}
-              className="text-blue-600 hover:underline"
-            >
-              {value}
-            </a>
-          ) : (
-            'Unknown'
-          ),
+        transform: (value) => value || 'Unknown',
+        allowCopy: true,
       },
     ],
   },

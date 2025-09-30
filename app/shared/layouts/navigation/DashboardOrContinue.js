@@ -2,7 +2,7 @@
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import Button from '@shared/buttons/Button'
 
-export default function DashboardOrContinue({ closeAll, isServePath }) {
+export default function DashboardOrContinue({ closeAll }) {
   const [campaignStatus] = useCampaignStatus()
   const { status, slug, step } = campaignStatus || {}
 
@@ -24,7 +24,7 @@ export default function DashboardOrContinue({ closeAll, isServePath }) {
     <div className="ml-4">
       {['candidate'].includes(status) ? (
         <Button
-          href={isServePath ? '/serve' : '/dashboard'}
+          href="/dashboard"
           onClick={closeAll}
           id={'nav-dashboard'}
           className="font-medium !text-base !py-2 border-none"
