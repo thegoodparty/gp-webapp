@@ -55,6 +55,7 @@ export const validateRegistrationForm = (data) => {
 export default function TextingComplianceRegistrationForm({
   onSubmit = (formData) => {},
   loading = false,
+  hasSubmissionError = false,
 }) {
   const { formData, handleChange } = useFormData()
   const {
@@ -180,6 +181,7 @@ export default function TextingComplianceRegistrationForm({
             onClick: handleOnSubmit,
             loading,
             isValid,
+            hasSubmissionError,
           }}
         />
       </TextingComplianceFooter>

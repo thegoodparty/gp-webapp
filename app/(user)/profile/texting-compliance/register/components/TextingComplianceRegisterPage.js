@@ -49,6 +49,7 @@ const reconcileInitialFormState = (user, campaign) => {
 export default function TextingComplianceRegisterPage({ user, campaign }) {
   const initialFormState = reconcileInitialFormState(user, campaign)
   const [loading, setLoading] = useState(false)
+  const [hasSubmissionError, setHasSubmissionError] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
 
@@ -59,6 +60,7 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       successSnackbar('Successfully registered for compliance')
       router.push('/profile')
     } catch {
+      setHasSubmissionError(true)
       errorSnackbar(
         'Failed to register for compliance. Please try again later.',
       )
@@ -75,24 +77,35 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
 
-        <NewInfoAlert className="mb-6">
-          <Body2>
-            Try to match this information with your election filing when
-            possible
-          </Body2>
-        </NewInfoAlert>
+        {hasSubmissionError ? (
+          <div className="text-center py-8">
+            <Body2 className="text-gray-600">
+              Form submission failed. Contact your Political Assistant to complete this process or report the issue.
+            </Body2>
+          </div>
+        ) : (
+          <>
+            <NewInfoAlert className="mb-6">
+              <Body2>
+                Try to match this information with your election filing when
+                possible
+              </Body2>
+            </NewInfoAlert>
 
-        <FormDataProvider
-          initialState={initialFormState}
-          validator={validateRegistrationForm}
-        >
-          <TextingComplianceRegistrationForm
-            {...{
-              onSubmit: handleFormSubmit,
-              loading,
-            }}
-          />
-        </FormDataProvider>
+            <FormDataProvider
+              initialState={initialFormState}
+              validator={validateRegistrationForm}
+            >
+              <TextingComplianceRegistrationForm
+                {...{
+                  onSubmit: handleFormSubmit,
+                  loading,
+                  hasSubmissionError,
+                }}
+              />
+            </FormDataProvider>
+          </>
+        )}
       </div>
     </div>
   )
