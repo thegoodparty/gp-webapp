@@ -8,13 +8,13 @@ import SegmentSection from './segments/SegmentSection'
 import ContactsPageGuard from './ContactsPageGuard'
 import ContactsStatsSection from './ContactsStatsSection'
 
-export default function ContactsPage() {
+export default function ContactsPage({ peopleStats }) {
   return (
     <ContactsPageGuard>
       <DashboardLayout>
         <Paper className="h-full">
           <TitleSection />
-          <ContactsStatsSection />
+          <ContactsStatsSection peopleStats={peopleStats} />
           <div className="relative">
             <SegmentSection />
             <Download />
