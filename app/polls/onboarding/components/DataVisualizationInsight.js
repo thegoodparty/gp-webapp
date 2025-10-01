@@ -1,34 +1,17 @@
 import { Card, CardContent } from 'goodparty-styleguide'
 import { LuChartLine } from 'react-icons/lu'
-import { InsightPieChart, InsightDonutChart, InsightHorizontalGaugeChart, InsightVerticalBarChart, InsightHorizontalBarChart } from '@shared/charts'
+import { InsightPieChart, InsightDonutChart, InsightHorizontalGaugeChart, InsightVerticalBarChart, InsightHorizontalBarChart, ChartSkeleton } from '@shared/charts'
+
+const MessageFallback = ({ message }) => (
+    <div className="w-full">
+        <div className="h-48 w-full rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-sm text-muted-foreground">
+            {message}
+        </div>
+    </div>
+)
 
 export const DataVisualizationInsight = ({ title, data, insight, chartType, percentage, isLoading, error }) => {
     const hasData = Array.isArray(data) && data.length > 0
-
-    const LoadingSkeleton = () => {
-        
-            return (
-                <div className="w-full h-60 rounded-md bg-slate-50 border border-slate-200 px-4 py-3 flex items-center justify-center">
-                    <div className="h-full flex items-end gap-2">
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '30%' }} />
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '55%' }} />
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '80%' }} />
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '45%' }} />
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '65%' }} />
-                        <div className="w-6 bg-slate-200 animate-pulse rounded" style={{ height: '35%' }} />
-                    </div>
-                </div>
-            )
-       
-    }
-
-    const MessagePlaceholder = ({ message }) => (
-        <div className="w-full">
-            <div className="h-48 w-full rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-sm text-muted-foreground">
-                {message}
-            </div>
-        </div>
-    )
 
     return (
         <Card className="w-full">
@@ -40,12 +23,12 @@ export const DataVisualizationInsight = ({ title, data, insight, chartType, perc
                     </div>
                 </div>
                 <div className="w-full h-auto">
-                    {isLoading && <LoadingSkeleton />}
+                    {isLoading && <ChartSkeleton />}
                     {!isLoading && error && (
-                        <MessagePlaceholder message={`Unable to load chart data${error ? `: ${error}` : ''}`} />
+                        <MessageFallback message={`Unable to load chart data${error ? `: ${error}` : ''}`} />
                     )}
                     {!isLoading && !error && !hasData && (
-                        <MessagePlaceholder message="No data available for this chart" />
+                        <MessageFallback message="No data available for this chart" />
                     )}
                     {!isLoading && !error && hasData && (
                         <>

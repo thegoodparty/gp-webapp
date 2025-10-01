@@ -13,9 +13,6 @@ export default function InsightsStep({ }) {
   // Map the API data to chart format
   const chartData = mapContactsStatsToCharts(contactsStats)
 
-  console.log('Raw contacts stats:', contactsStats)
-  console.log('Mapped chart data:', chartData)
-
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
   const tcrCompliant = true
