@@ -3,8 +3,18 @@ import { LuUsersRound } from 'react-icons/lu'
 import { TextInsight } from '../TextInsight'
 import { NumberInsight } from '../NumberInsight'
 import { DataVisualizationInsight } from '../DataVisualizationInsight'
+import { useContactsStats } from 'app/polls/hooks/useContactsStats'
+import { mapContactsStatsToCharts } from 'app/polls/utils/mapContactsStatsToCharts'
 
 export default function InsightsStep({ }) {
+
+  const { contactsStats, isLoading, error } = useContactsStats()
+  
+  // Map the API data to chart format
+  const chartData = mapContactsStatsToCharts(contactsStats)
+
+  console.log('Raw contacts stats:', contactsStats)
+  console.log('Mapped chart data:', chartData)
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
@@ -35,17 +45,73 @@ export default function InsightsStep({ }) {
         You will be able to access this information on your constituency profile at anytime.
       </p>
       <div className="w-full items-center flex flex-col gap-8 mt-8">
-        <NumberInsight title="Total Constituents" value={15384} icon={<LuUsersRound />} />
+        <NumberInsight 
+          title="Total Constituents" 
+          value={chartData.totalConstituents || 0} 
+          icon={<LuUsersRound />} 
+          isLoading={isLoading}
+          error={error}
+        />
         {insights.map((insight, index) => (
           <div key={index} className="col-span-1 flex justify-center w-full">
-            <TextInsight title={insight.title} description={insight.description} />
+            <TextInsight title={insight.title} description={insight.description} isLoading={isLoading} error={error} />
           </div>
         ))}
-        <DataVisualizationInsight chartType="horizontalGauge" percentage={true} title="Age Distribution" insight="This data is based on your voter file and may not be 100% accurate." data={[{ name: '18 - 25', value: 15}, { name: '26 - 35', value: 25}, { name: '35 - 50', value: 42}, { name: '50+', value: 15}]} />
-        <DataVisualizationInsight chartType="pie" percentage={true} title="Has Children Under 18" insight="This data is based on your voter file and may not be 100% accurate." data={[{ name: 'Yes', value: 62 }, { name: 'No', value: 25}, { name: 'Unknown', value: 13 }]} />
-        <DataVisualizationInsight chartType="donut" percentage={true} title="Homeowner" insight="This data is based on your voter file and may not be 100% accurate." data={[{name: 'Yes', value: 42}, {name: 'Likely', value: 18}, {name: 'No', value: 21}, {name: 'Unknown', value: 19}]} />
-        <DataVisualizationInsight chartType="verticalBar" percentage={true} title="Estimated Income Range" insight="This data is based on your voter file and may not be 100% accurate." data={[{ name: 'Under $50K', value: 20 }, { name: '$50K - $75K', value: 47 }, { name: '$75K - $100K', value: 31 }, { name: '$100K - $150K', value: 40 }, { name: '$150K+', value: 20 }, { name: 'Unknown', value: 4 }]} />
-        <DataVisualizationInsight chartType="horizontalBar" percentage={true} title="Education" insight="This data is based on your voter file and may not be 100% accurate." data={[{name: "None", value: 12}, {name: "High School Diploma", value: 32}, {name: "Technical School", value: 18}, {name: "Some College", value: 25}, {name: "College Degree", value: 14}, {name: "Gradiuate Degree", value: 3}, {name: "Unknown", value: 20}]} />
+        
+        {/* Age Distribution Chart */}
+        <DataVisualizationInsight 
+          chartType="horizontalGauge" 
+          percentage={true} 
+          title="Age Distribution" 
+          insight="This data is based on your voter file and may not be 100% accurate." 
+          data={chartData.ageDistribution} 
+          isLoading={isLoading}
+          error={error}
+        />
+        
+        {/* Presence of Children Chart */}
+        <DataVisualizationInsight 
+          chartType="pie" 
+          percentage={true} 
+          title="Has Children Under 18" 
+          insight="This data is based on your voter file and may not be 100% accurate." 
+          data={chartData.presenceOfChildren} 
+          isLoading={isLoading}
+          error={error}
+        />
+        
+        {/* Homeowner Chart */}
+        <DataVisualizationInsight 
+          chartType="donut" 
+          percentage={true} 
+          title="Homeowner" 
+          insight="This data is based on your voter file and may not be 100% accurate." 
+          data={chartData.homeowner} 
+          isLoading={isLoading}
+          error={error}
+        />
+        
+        {/* Estimated Income Range Chart */}
+        <DataVisualizationInsight 
+          chartType="verticalBar" 
+          percentage={true} 
+          title="Estimated Income Range" 
+          insight="This data is based on your voter file and may not be 100% accurate." 
+          data={chartData.estimatedIncomeRange} 
+          isLoading={isLoading}
+          error={error}
+        />
+        
+        {/* Education Chart */}
+        <DataVisualizationInsight 
+          chartType="horizontalBar" 
+          percentage={true} 
+          title="Education" 
+          insight="This data is based on your voter file and may not be 100% accurate." 
+          data={chartData.education} 
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
     </div>
   )
