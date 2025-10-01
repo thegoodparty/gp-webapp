@@ -13,6 +13,11 @@ const MessageFallback = ({ message }) => (
 export const DataVisualizationInsight = ({ title, data, insight, chartType, percentage, isLoading, error }) => {
     const hasData = Array.isArray(data) && data.length > 0
 
+    const showSkeleton = Boolean(isLoading)
+    const showError = !isLoading && Boolean(error)
+    const showEmpty = !isLoading && !error && !hasData
+    const showChart = !isLoading && !error && hasData
+
     return (
         <Card className="w-full">
             <CardContent>
@@ -23,14 +28,10 @@ export const DataVisualizationInsight = ({ title, data, insight, chartType, perc
                     </div>
                 </div>
                 <div className="w-full h-auto">
-                    {isLoading && <ChartSkeleton />}
-                    {!isLoading && error && (
-                        <MessageFallback message={`Unable to load chart data${error ? `: ${error}` : ''}`} />
-                    )}
-                    {!isLoading && !error && !hasData && (
-                        <MessageFallback message="No data available for this chart" />
-                    )}
-                    {!isLoading && !error && hasData && (
+                    {showSkeleton && <ChartSkeleton />}
+                    {showError && <MessageFallback message="Unable to load chart data" />}
+                    {showEmpty && <MessageFallback message="No data available for this chart" />}
+                    {showChart && (
                         <>
                             {chartType === 'pie' && <InsightPieChart data={data} percentage={percentage} />}
                             {chartType === 'donut' && <InsightDonutChart data={data} percentage={percentage} />}
@@ -41,7 +42,7 @@ export const DataVisualizationInsight = ({ title, data, insight, chartType, perc
                     )}
                 </div>
                 {insight && (
-                    isLoading ? (
+                    showSkeleton ? (
                         <div className="border-t border-slate-200 pt-4 mt-4 space-y-2">
                             <div className="h-3 w-5/6 rounded bg-slate-100 animate-pulse" />
                         </div>
