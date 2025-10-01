@@ -8,7 +8,7 @@ export const TextingComplianceSubmitButton = ({
 }) => {
   if (hasSubmissionError) {
     return (
-      <div className="text-center py-4 bg-red-50 border border-red-200 rounded-lg">
+      <div className="py-4 px-4 bg-red-50 border border-red-200 rounded-lg">
         <p className="text-red-600">
           Form submission failed. Contact your Political Assistant to complete this process or report the issue.
         </p>
