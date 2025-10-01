@@ -6,6 +6,7 @@ import PersonOverlay from './person/PersonOverlay'
 import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
 import ContactsPageGuard from './ContactsPageGuard'
+import ContactsStatsSection from './ContactsStatsSection'
 
 export default function ContactsPage() {
   return (
@@ -13,6 +14,7 @@ export default function ContactsPage() {
       <DashboardLayout>
         <Paper className="h-full">
           <TitleSection />
+          <ContactsStatsSection />
           <div className="relative">
             <SegmentSection />
             <Download />
