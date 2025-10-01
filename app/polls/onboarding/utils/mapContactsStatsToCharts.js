@@ -39,14 +39,14 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     const buckets = categories.age.buckets
     const consolidated = {
       '18 - 25': 0,
-      '26 - 35': 0,
+      '25 - 35': 0,
       '35 - 50': 0,
       '50+': 0
     }
     
     buckets.forEach(bucket => {
       if (bucket.label === '18-25') consolidated['18 - 25'] += bucket.percent
-      else if (bucket.label === '26-35') consolidated['26 - 35'] += bucket.percent
+      else if (bucket.label === '26-35') consolidated['25 - 35'] += bucket.percent
       else if (bucket.label === '36-50') consolidated['35 - 50'] += bucket.percent
       else if (bucket.label === '51-200') consolidated['50+'] += bucket.percent
     })
