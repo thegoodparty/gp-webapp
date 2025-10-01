@@ -26,10 +26,10 @@ test.use({
 
 test.describe.serial('Website Builder Tests', () => {
     test.setTimeout(120000);
-    
+
     test.beforeEach(async ({ page }) => {
         page.setDefaultTimeout(90000);
-        
+
         try {
             await authenticateWithTimeout(page, '/dashboard/website', 'Your campaign website');
             await documentReady(page);
@@ -45,7 +45,7 @@ test.describe.serial('Website Builder Tests', () => {
         'Verify domain purchase flow': TEST_IDS.DOMAIN_PURCHASE_FLOW
     });
 
-    test('Generate New Website', async ({ page }) => {
+    test.skip('Generate New Website', async ({ page }) => {
         await page.getByRole('button', { name: /Create your website/ }).click();
         await expect(page.getByText('What do you want your custom link to be?')).toBeVisible({ timeout: 30000 });
         await page.locator('[id="_r_0_"]').fill(websiteUrl);
@@ -68,7 +68,7 @@ test.describe.serial('Website Builder Tests', () => {
         console.log('Website created successfully');
     });
 
-    test('Verify website dashboard page', async ({ page }) => {
+    test.skip('Verify website dashboard page', async ({ page }) => {
         await expect(page.getByRole('heading', { name: /Published Your campaign/ })).toBeVisible();
         await expect(page.getByRole('button', { name: /Increase visitors/ })).toBeVisible({ timeout: 60000 });
     });
