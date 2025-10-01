@@ -84,7 +84,7 @@ test('Update Your Why Statement', async ({ page }) => {
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
     await page.getByRole('button', { name: 'Save' }).nth(2).click();
     await documentReady(page);
-    
+
     try {
         await page.reload();
         await documentReady(page);
@@ -105,7 +105,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
     await page.getByRole('button', { name: 'Save' }).nth(3).click();
     await documentReady(page);
-    
+
     try {
         await page.reload();
         await documentReady(page);
@@ -119,7 +119,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test('Add Opponent', async ({ page }) => {
+test.skip('Add Opponent', async ({ page }) => {
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
 

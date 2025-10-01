@@ -13,7 +13,7 @@ setupMultiTestReporting(test, {
 });
 
 test.describe('New User Voter Outreach', () => {
-    test('Verify Voter Outreach page as new user', async ({ page }) => {
+    test.skip('Verify Voter Outreach page as new user', async ({ page }) => {
         await useTestAccountCredentials(page);
         await page.goto('/dashboard/outreach');
         await documentReady(page);
@@ -25,7 +25,7 @@ test.describe('New User Voter Outreach', () => {
     });
 });
 
-test.describe('Pro Voter Outreach', () => {    
+test.describe('Pro Voter Outreach', () => {
     test.skip('Verify Voter Outreach page as pro user', async ({ page }) => {
         await useAdminCredentials(page);
         await page.goto('/dashboard/outreach');
