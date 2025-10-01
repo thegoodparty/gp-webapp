@@ -184,6 +184,7 @@ export default function TextingComplianceRegistrationForm({
             hasSubmissionError,
           }}
         />
+        
       </TextingComplianceFooter>
     </>
   )
