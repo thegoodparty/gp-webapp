@@ -5,13 +5,14 @@ import { NumberInsight } from '../NumberInsight'
 import { DataVisualizationInsight } from '../DataVisualizationInsight'
 import { useContactsStats } from '../../../hooks/useContactsStats'
 import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
+import { useMemo } from 'react'
 
 export default function InsightsStep({ }) {
 
   const { contactsStats, isLoading, error } = useContactsStats()
   
   // Map the API data to chart format
-  const chartData = mapContactsStatsToCharts(contactsStats)
+  const chartData = useMemo(() => mapContactsStatsToCharts(contactsStats), [contactsStats])
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
