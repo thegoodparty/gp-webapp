@@ -77,35 +77,33 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
 
-        {hasSubmissionError ? (
-          <div className="text-center py-8">
-            <Body2 className="text-gray-600">
+        {hasSubmissionError && (
+          <div className="text-center py-4 mb-6 bg-red-50 border border-red-200 rounded-lg">
+            <Body2 className="text-red-600">
               Form submission failed. Contact your Political Assistant to complete this process or report the issue.
             </Body2>
           </div>
-        ) : (
-          <>
-            <NewInfoAlert className="mb-6">
-              <Body2>
-                Try to match this information with your election filing when
-                possible
-              </Body2>
-            </NewInfoAlert>
-
-            <FormDataProvider
-              initialState={initialFormState}
-              validator={validateRegistrationForm}
-            >
-              <TextingComplianceRegistrationForm
-                {...{
-                  onSubmit: handleFormSubmit,
-                  loading,
-                  hasSubmissionError,
-                }}
-              />
-            </FormDataProvider>
-          </>
         )}
+
+        <NewInfoAlert className="mb-6">
+          <Body2>
+            Try to match this information with your election filing when
+            possible
+          </Body2>
+        </NewInfoAlert>
+
+        <FormDataProvider
+          initialState={initialFormState}
+          validator={validateRegistrationForm}
+        >
+          <TextingComplianceRegistrationForm
+            {...{
+              onSubmit: handleFormSubmit,
+              loading,
+              hasSubmissionError,
+            }}
+          />
+        </FormDataProvider>
       </div>
     </div>
   )
