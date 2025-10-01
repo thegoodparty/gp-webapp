@@ -1,5 +1,6 @@
 'use client'
 import { numberFormatter } from 'helpers/numberHelper'
+import { formatPercentLabel } from './utils'
 import { COLORS } from './constants'
 
 export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) => {
@@ -15,7 +16,7 @@ export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) =
                     <div key={`gauge-row-${item.name}`} className="w-full mb-3">
                         <div className="flex items-center justify-between w-full mb-1.5">
                             <span className="truncate text-xs text-muted-foreground font-normal">{item.name}</span>
-                            <span className="text-xs font-semibold ml-4">{numberFormatter(item.value)}{percentage ? '%' : ''}</span>
+                            <span className="text-xs font-semibold ml-4">{percentage ? `${formatPercentLabel(item.value)}%` : numberFormatter(item.value)}</span>
                         </div>
                         <div className="w-full h-4 bg-muted rounded-lg">
                             <div

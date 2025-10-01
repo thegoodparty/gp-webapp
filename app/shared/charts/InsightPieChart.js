@@ -1,6 +1,7 @@
 'use client'
 import { PieChart, Pie, Legend, ResponsiveContainer, Cell } from 'recharts'
 import { numberFormatter } from 'helpers/numberHelper'
+import { formatPercentLabel } from './utils'
 import { COLORS } from './constants'
 
 export const InsightPieChart = ({ data = [], percentage = false }) => {
@@ -17,7 +18,7 @@ export const InsightPieChart = ({ data = [], percentage = false }) => {
                             />
                             <span className="truncate text-xs text-muted-foreground font-normal">{item.name}</span>
                         </div>
-                        <span className="text-xs font-semibold ml-4">{numberFormatter(item.value)}{percentage ? '%' : ''}</span>
+                        <span className="text-xs font-semibold ml-4">{percentage ? `${formatPercentLabel(item.value)}%` : numberFormatter(item.value)}</span>
                     </div>
                 ))}
             </div>

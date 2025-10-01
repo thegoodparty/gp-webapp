@@ -1,7 +1,11 @@
 import { Card, CardContent } from 'goodparty-styleguide'
 import { numberFormatter } from 'helpers/numberHelper'
 
-export const NumberInsight = ({ title, value, icon }) => {
+export const NumberInsight = ({ title, value, icon, isLoading = false, error }) => {
+    const showSkeleton = Boolean(isLoading)
+    const showError = !isLoading && Boolean(error)
+    const showValue = !isLoading && !error
+
     return (
         <Card className="w-full">
             <CardContent>
@@ -11,7 +15,15 @@ export const NumberInsight = ({ title, value, icon }) => {
                         {icon}
                     </div>
                 </div>
-                <p className="text-2xl leading-normal font-bold mt-2">{numberFormatter(value)}</p>
+                {showSkeleton && (
+                    <div className="mt-3 h-8 w-40 rounded bg-slate-100 animate-pulse" />
+                )}
+                {showError && (
+                    <p className="text-sm text-muted-foreground mt-2">Unable to load value</p>
+                )}
+                {showValue && (
+                    <p className="text-2xl leading-normal font-bold mt-2">{numberFormatter(value)}</p>
+                )}
             </CardContent>
         </Card>
     )
