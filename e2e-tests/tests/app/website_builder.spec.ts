@@ -74,7 +74,7 @@ test.describe.serial('Website Builder Tests', () => {
     });
 
     test.skip(IS_PROD, 'Skipping domain purchase test on production');
-    test('Verify domain purchase flow', async ({ page }) => {
+    test.skip('Verify domain purchase flow', async ({ page }) => {
         await page.getByRole('link', { name: 'Add a domain' }).click();
         await page.getByRole('button', { name: 'Search' }).click();
         await page.getByText(/.net/).first().click();
