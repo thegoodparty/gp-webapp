@@ -1,4 +1,3 @@
-'use client'
 import { numberFormatter } from 'helpers/numberHelper'
 
 export const formatPercentLabel = (value) => {
