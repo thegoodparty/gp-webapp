@@ -3,7 +3,7 @@ import { LuUsersRound } from 'react-icons/lu'
 import { TextInsight } from '../TextInsight'
 import { NumberInsight } from '../NumberInsight'
 import { DataVisualizationInsight } from '../DataVisualizationInsight'
-import { useContactsStats } from '../../../hooks/useContactsStats'
+import { useContactsStats } from '../../../contexts/ContactsStatsContext'
 import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
 import { useMemo } from 'react'
 

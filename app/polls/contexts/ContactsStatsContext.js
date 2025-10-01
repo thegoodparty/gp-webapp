@@ -23,7 +23,11 @@ export const ContactsStatsProvider = ({ children }) => {
       setIsLoading(true)
       setError(null)
       
-      const response = await clientFetch(apiRoutes.contacts.stats)
+      const response = await clientFetch(apiRoutes.contacts.stats, null, {
+        next: {
+          revalidate: 3600,
+        },
+      })
       
       if (!response.ok) {
         throw new Error('Failed to fetch contacts stats')
