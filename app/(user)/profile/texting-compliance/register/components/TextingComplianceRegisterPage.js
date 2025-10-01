@@ -49,6 +49,7 @@ const reconcileInitialFormState = (user, campaign) => {
 export default function TextingComplianceRegisterPage({ user, campaign }) {
   const initialFormState = reconcileInitialFormState(user, campaign)
   const [loading, setLoading] = useState(false)
+  const [hasSubmissionError, setHasSubmissionError] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
 
@@ -59,6 +60,7 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       successSnackbar('Successfully registered for compliance')
       router.push('/profile')
     } catch {
+      setHasSubmissionError(true)
       errorSnackbar(
         'Failed to register for compliance. Please try again later.',
       )
@@ -90,6 +92,7 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
             {...{
               onSubmit: handleFormSubmit,
               loading,
+              hasSubmissionError,
             }}
           />
         </FormDataProvider>
