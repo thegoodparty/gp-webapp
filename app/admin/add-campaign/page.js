@@ -4,7 +4,7 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper'
 import { CreateCampaignForm } from '@shared/CreateCampaignForm'
 
 const meta = pageMetaData({
-  title: 'Add Campaign| GOOD PARTY',
+  title: 'Add Campaign | GOOD PARTY',
   description: 'Admin Add a new Campaign',
   slug: '/admin/add-campaign',
 })
