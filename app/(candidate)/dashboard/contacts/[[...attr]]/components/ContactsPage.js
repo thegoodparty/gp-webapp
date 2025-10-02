@@ -7,13 +7,17 @@ import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
 import ContactsPageGuard from './ContactsPageGuard'
 import ContactsStatsSection from './ContactsStatsSection'
+import { ContactSearch } from './ContactSearch'
 
 export default function ContactsPage({ peopleStats }) {
   return (
     <ContactsPageGuard>
       <DashboardLayout>
         <Paper className="h-full">
-          <TitleSection />
+          <div className="flex flex-row justify-between items-end">
+            <TitleSection />
+            <ContactSearch />
+          </div>
           <ContactsStatsSection peopleStats={peopleStats} />
           <div className="relative">
             <SegmentSection />
