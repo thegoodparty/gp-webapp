@@ -5,11 +5,19 @@ import { fetchContactsCsv } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isCustomSegment, findCustomSegment } from './shared/segments.util'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useShowContactProModal } from '../hooks/ContactProModal'
 
 export default function Download() {
+  const [campaign] = useCampaign()
+  const showProUpgradeModal = useShowContactProModal()
   const [customSegments, , , querySegment] = useCustomSegments()
 
   const handleDownload = async () => {
+    if (!campaign.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
     const res = await fetchContactsCsv(querySegment)
 
     if (res.ok) {
