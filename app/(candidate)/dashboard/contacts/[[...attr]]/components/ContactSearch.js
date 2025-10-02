@@ -7,7 +7,6 @@ export const ContactSearch = () => {
   const [searchText, setSearchText] = useState('')
 
   // TODO in follow-up:
-  // - add a search icon
   // - hook up to API
   return (
     <SearchInput
