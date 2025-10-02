@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  InputAdornment,
-  TextField as MuiTextField,
-} from '@mui/material'
+import { InputAdornment, TextField as MuiTextField } from '@mui/material'
 import { ErrorOutlineRounded } from '@mui/icons-material'
 
 const ADORNMENTS = {
@@ -30,17 +27,21 @@ export default function TextField({ endAdornments, ...restProps }) {
   return (
     <MuiTextField
       variant="outlined"
-      InputProps={{
-        endAdornment: endAdornments?.length > 0 && (
-          <InputAdornment position="end">
-            {endAdornments.map(
-              (adornment) => ADORNMENTS[adornment] ?? adornment,
-            )}
-          </InputAdornment>
-        ),
-        ...restProps?.InputProps, // ensure adornment shorthand doesn't override any other InputProps
-      }}
       {...restProps}
+      slotProps={{
+        ...restProps.slotProps,
+        input: {
+          sx: { fontFamily: 'var(--outfit-font)' },
+          endAdornment: endAdornments?.length > 0 && (
+            <InputAdornment position="end">
+              {endAdornments.map(
+                (adornment) => ADORNMENTS[adornment] ?? adornment,
+              )}
+            </InputAdornment>
+          ),
+          ...restProps.slotProps?.input,
+        },
+      }}
     />
   )
 }
