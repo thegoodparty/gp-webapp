@@ -1,6 +1,6 @@
 'use client'
 
-import { Input } from 'goodparty-styleguide'
+import SearchInput from 'app/(candidate)/dashboard/issues/components/search/SearchInput'
 import { useState } from 'react'
 
 export const ContactSearch = () => {
@@ -10,7 +10,9 @@ export const ContactSearch = () => {
   // - add a search icon
   // - hook up to API
   return (
-    <Input
+    <SearchInput
+      fullWidth
+      variant="standard"
       className="max-w-md"
       placeholder="Search contacts by name or phone number"
       value={searchText}
