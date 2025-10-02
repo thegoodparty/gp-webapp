@@ -5,6 +5,8 @@ import ServerDataTable from './ServerDataTable'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useShowContactProModal } from '../hooks/ContactProModal'
 
 const columns = [
   {
@@ -148,6 +150,8 @@ const initialColumnVisibility = {
 
 export default function ContactsTable() {
   const [contacts] = useContacts()
+  const [campaign] = useCampaign()
+  const showProUpgradeModal = useShowContactProModal()
   const { people, pagination } = contacts || {}
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -159,6 +163,10 @@ export default function ContactsTable() {
   }
 
   const onRowClick = (row) => {
+    if (!campaign.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
     router.push(`/dashboard/contacts/${row.id}?${searchParams.toString()}`)
   }
 
