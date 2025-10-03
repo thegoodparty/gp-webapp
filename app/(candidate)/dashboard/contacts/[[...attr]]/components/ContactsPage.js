@@ -7,6 +7,7 @@ import PersonOverlay from './person/PersonOverlay'
 import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
 import ContactsStatsSection from './ContactsStatsSection'
+import { ContactSearch } from './ContactSearch'
 import { ContactProModalProvider } from '../hooks/ContactProModal'
 import { useState } from 'react'
 import {
@@ -20,7 +21,10 @@ export default function ContactsPage({ peopleStats }) {
     <ContactProModalProvider value={setShowProModal}>
       <DashboardLayout>
         <Paper className="h-full">
-          <TitleSection />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-end">
+            <TitleSection />
+            <ContactSearch />
+          </div>
           <ContactsStatsSection peopleStats={peopleStats} />
           <div className="relative">
             <SegmentSection />
