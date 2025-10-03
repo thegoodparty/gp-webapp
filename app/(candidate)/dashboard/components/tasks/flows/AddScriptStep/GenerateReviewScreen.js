@@ -24,6 +24,7 @@ export const GenerateReviewScreen = ({
 }) => {
   const { errorSnackbar } = useSnackbar()
   const [aiContent, setAiContent] = useState({})
+  const [scriptContent, setScriptContent] = useState('')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -49,10 +50,10 @@ export const GenerateReviewScreen = ({
       await updateCampaign([
         {
           key: `aiContent.${aiScriptKey}`,
-          value: aiContent,
+          value: { ...aiContent, content: scriptContent },
         },
       ])
-      onNext(aiScriptKey, aiContent.content)
+      onNext(aiScriptKey, scriptContent)
     } catch (e) {
       console.error('Error updating campaign with AI content => ', e)
       errorSnackbar('Error saving AI-generated content')
@@ -71,9 +72,9 @@ export const GenerateReviewScreen = ({
       </header>
       <section>
         <RichEditor
-          initialText={aiContent?.content}
+          initialText={aiContent.content}
           onChangeCallback={(content) => {
-            setAiContent({ ...aiContent, content })
+            setScriptContent(content)
           }}
           useOnChange
         />
