@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { VARIANTS, ProUpgradeModal } from './ProUpgradeModal'
 import { VIABILITY_SCORE_THRESHOLD } from './ProUpgradeModal'
 
@@ -58,11 +57,6 @@ export function ProUpgradePrompt({ campaign, user }) {
     }
 
     function handleOpen(variant) {
-      trackEvent(EVENTS.ProUpgrade.Modal.Shown, {
-        sessionCount,
-        viablityScore,
-        variant,
-      })
       setModalState({
         isOpen: true,
         variant: variant,
@@ -73,24 +67,6 @@ export function ProUpgradePrompt({ campaign, user }) {
   // Don't want to show modal if campaign is already pro
   if (isPro) return null
 
-  function handleClose() {
-    trackEvent(EVENTS.ProUpgrade.Modal.Exit, {
-      sessionCount,
-      viablityScore,
-      variant: modalState.variant,
-    })
-    closeModal()
-  }
-
-  function handleUpgradeLinkClick() {
-    trackEvent(EVENTS.ProUpgrade.Modal.ClickButton, {
-      sessionCount,
-      viablityScore,
-      variant: modalState.variant,
-    })
-    closeModal()
-  }
-
   function closeModal() {
     localStorage.setItem(LOCAL_STORAGE_KEY, sessionCount)
     setModalState((current) => ({ ...current, isOpen: false }))
@@ -100,8 +76,9 @@ export function ProUpgradePrompt({ campaign, user }) {
     <ProUpgradeModal
       open={modalState.isOpen}
       variant={modalState.variant}
-      onClose={handleClose}
-      onUpgradeLinkClick={handleUpgradeLinkClick}
+      onClose={closeModal}
+      onUpgradeLinkClick={closeModal}
+      defaultTrackingEnabled
     />
   )
 }

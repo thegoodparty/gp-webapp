@@ -2,7 +2,7 @@ import Paper from '@shared/utils/Paper'
 import Body2 from '@shared/typography/Body2'
 import { generateCards } from './shared/stats.util'
 
-export default async function ContactsStatsSection({ peopleStats }) {
+export default function ContactsStatsSection({ peopleStats }) {
   const cards = generateCards(peopleStats)
 
   return (
