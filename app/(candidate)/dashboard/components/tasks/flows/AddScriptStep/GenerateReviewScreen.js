@@ -36,6 +36,7 @@ export const GenerateReviewScreen = ({
           throw new Error(`No aiScriptKey AI content found => ${aiScriptKey}`)
         }
         setAiContent(aiContent[aiScriptKey])
+        setScriptContent(aiContent[aiScriptKey]?.content || '')
       } catch (e) {
         console.error('error fetching aiContent for review => ', e)
         errorSnackbar('Error fetching AI-generated content')
@@ -82,7 +83,7 @@ export const GenerateReviewScreen = ({
       <ModalFooter
         onBack={onBack}
         onNext={handleOnNext}
-        disabled={!aiContent?.content || saving}
+        disabled={!scriptContent || saving}
         nextText="Save"
         nextButtonProps={{
           loading: saving,
