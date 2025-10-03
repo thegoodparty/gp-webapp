@@ -12,7 +12,7 @@ export default function PreviewStep() {
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
-        Review your SMS serve
+        Review your SMS poll
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
         This serve will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
