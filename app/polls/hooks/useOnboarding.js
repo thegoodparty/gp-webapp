@@ -4,7 +4,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { DemoMessageText } from '../onboarding/components/DemoMessageText'
+import { DemoMessageText, MessageText } from '../onboarding/components/DemoMessageText'
 
 export const useOnboarding = () => {
   const [campaign] = useCampaign()
@@ -26,20 +26,26 @@ export const useOnboarding = () => {
   
   const userName = useMemo(() => user?.name, [user])
   
+  // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
   const demoMessageText = useMemo(() => 
     DemoMessageText({ name: userName, office: campaignOffice, constituentName: 'Bill' }),
+    [userName, campaignOffice]
+  )
+  // Real Message text that is sent to the API
+  const messageText = useMemo(() => 
+    MessageText({ name: userName, office: campaignOffice }),
     [userName, campaignOffice]
   )
 
   // Automatically set the text message when demo text is available
   useEffect(() => {
-    if (demoMessageText) {
+    if (messageText) {
       setFormData(prev => ({
         ...prev,
-        textMessage: demoMessageText
+        textMessage: messageText
       }))
     }
-  }, [demoMessageText])
+  }, [messageText])
 
   const updateFormData = useCallback((updates) => {
     setFormData(prev => ({
