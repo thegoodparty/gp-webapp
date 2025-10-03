@@ -3,8 +3,11 @@ import { Button } from 'goodparty-styleguide'
 import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
+import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 
-export default function PreviewStep({ demoText }) {
+export default function PreviewStep() {
+  const { demoMessageText, formData } = useOnboardingContext()
+  const { imageUrl } = formData
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
@@ -29,8 +32,12 @@ export default function PreviewStep({ demoText }) {
               <div className="max-w-xs mx-auto">
                 <TextMessagePreview message={
                   <div className="flex flex-col gap-2">
-                    <Image src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Grand Rapids City Council Member Farhad" width={300} height={300} />
-                    <p className="mt-1 font-normal">{demoText}</p>
+                    {imageUrl ? (
+                      <Image src={imageUrl} alt="Campaign image" width={300} height={300} className="object-cover rounded" />
+                    ) : (
+                      <Image src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" alt="Grand Rapids City Council Member Farhad" width={300} height={300} />
+                    )}
+                    <p className="mt-1 font-normal">{demoMessageText}</p>
                   </div>
                 } />
               </div>

@@ -6,9 +6,7 @@ import OutreachStep from './steps/OutreachStep'
 import StrategyStep from './steps/StrategyStep'
 import AddImageStep from './steps/AddImageStep'
 import PreviewStep from './steps/PreviewStep'
-import { useCampaign } from '@shared/hooks/useCampaign'
-import { useUser } from '@shared/hooks/useUser'
-import { DemoMessageText } from './DemoMessageText'
+import { useOnboardingContext } from '../../contexts/OnboardingContext'
 
 const steps = [
     {
@@ -66,13 +64,7 @@ const steps = [
 
 export default function OnboardingPage({ pathname }) {
 
-  const [campaign] = useCampaign()
-  const [user] = useUser()
-  
-  const campaignOffice = campaign?.details?.otherOffice || campaign?.details?.office
-  const userName = user?.name
-
-  const demoMessageText = DemoMessageText({ name: userName, office: campaignOffice, constituentName: 'Bill' })
+  const { submitOnboarding, isSubmitting } = useOnboardingContext()
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
@@ -82,10 +74,22 @@ export default function OnboardingPage({ pathname }) {
 
   const [currentStepIndex, setCurrentStepIndex] = useState(1)
 
-  const handleNext = () => {
-    // tcrCompliant ? outreach : non-compliant
-    if(currentStepIndex < maxStepIndex) {
-      setCurrentStepIndex(currentStepIndex + 1)
+  const handleNext = async () => {
+    // If this is the final step (Preview), submit the onboarding data
+    if (currentStepIndex === maxStepIndex) {
+      try {
+        await submitOnboarding()
+        // Handle success - maybe redirect or show success message
+        console.log('Onboarding submitted successfully!')
+      } catch (error) {
+        console.error('Failed to submit onboarding:', error)
+        // Error is already handled in the context
+      }
+    } else {
+      // tcrCompliant ? outreach : non-compliant
+      if(currentStepIndex < maxStepIndex) {
+        setCurrentStepIndex(currentStepIndex + 1)
+      }
     }
   }
 
@@ -110,24 +114,40 @@ export default function OnboardingPage({ pathname }) {
               <OutreachStep />
             )}
             {currentStep.name === 'Strategy' && (
-              <StrategyStep demoText={demoMessageText} />
+              <StrategyStep/>
             )}
             {currentStep.name === 'Add Image' && (
               <AddImageStep />
             )}
             {currentStep.name === 'Preview' && (
-              <PreviewStep demoText={demoMessageText} />
+              <PreviewStep/>
             )}
           </div>
          
            <div className="hidden md:block w-full border-t border-slate-200 pt-4 pb-4 px-8 lg:px-16">
-            <StepFooter numberOfSteps={5} currentStep={currentStep.stepIndex} onBack={currentStep.allowBack ? handleBack : null} onBackText={currentStep.backLabel} disabledNext={isNextDisabled} onNext={handleNext} onNextText={currentStep.nextLabel} />
+            <StepFooter 
+              numberOfSteps={5} 
+              currentStep={currentStep.stepIndex} 
+              onBack={currentStep.allowBack ? handleBack : null} 
+              onBackText={currentStep.backLabel} 
+              disabledNext={isNextDisabled || isSubmitting} 
+              onNext={handleNext} 
+              onNextText={isSubmitting ? 'Sending...' : currentStep.nextLabel} 
+            />
            </div>
         </section>
       </main>
       <div className="block md:hidden w-full fixed bottom-0 inset-x-0 bg-white z-10 px-4 sm:px-8">
         {currentStep.showFooter && (
-          <StepFooter numberOfSteps={5} currentStep={currentStep.stepIndex} onBack={currentStep.allowBack ? handleBack : null} onBackText={currentStep.backLabel} disabledNext={isNextDisabled} onNext={handleNext} onNextText={currentStep.nextLabel} />
+          <StepFooter 
+            numberOfSteps={5} 
+            currentStep={currentStep.stepIndex} 
+            onBack={currentStep.allowBack ? handleBack : null} 
+            onBackText={currentStep.backLabel} 
+            disabledNext={isNextDisabled || isSubmitting} 
+            onNext={handleNext} 
+            onNextText={isSubmitting ? 'Sending...' : currentStep.nextLabel} 
+          />
         )}
       </div>
     </div>
