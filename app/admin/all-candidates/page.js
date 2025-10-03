@@ -13,7 +13,7 @@ const meta = pageMetaData({
 export const metadata = meta
 export const maxDuration = 60
 
-export const fetchCandidates = async () => {
+const fetchCandidates = async () => {
   const api = gpApi.admin.candidates
   const token = await getServerToken()
   return await gpFetch(api, false, false, token)

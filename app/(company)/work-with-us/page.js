@@ -26,7 +26,7 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export const fetchJobs = async () => {
+const fetchJobs = async () => {
   const resp = await serverFetch(apiRoutes.jobs.list, undefined, {
     revalidate: 3600,
   })
