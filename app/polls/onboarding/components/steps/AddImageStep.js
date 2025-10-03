@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { LuCloudUpload } from "react-icons/lu"
 import { CircularProgress } from '@mui/material'
@@ -65,18 +65,33 @@ export default function AddImageStep({}) {
   const [errorMessage, setErrorMessage] = useState('')
   const [previewUrl, setPreviewUrl] = useState(null)
 
+  // Cleanup blob URL on component unmount
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    }
+  }, [previewUrl])
+
   const onFileBrowseClick = () => {
     fileInputRef.current.click()
   }
 
   const handleFileChoose = async (fileData, file) => {
     setErrorMessage('')
-    setPreviewUrl(null)
+    
+    // Revoke previous blob URL to prevent memory leak
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
     
     const fileSizeMb = file?.size / 1e6
     if (fileSizeMb > FILE_LIMIT_MB) {
       const error = `File size of ${fileSizeMb.toFixed(2)}MB is larger than ${FILE_LIMIT_MB}MB limit`
       setErrorMessage(error)
+      onUploadError(new Error(error))
       return
     }
 
@@ -85,6 +100,15 @@ export default function AddImageStep({}) {
     if (!ACCEPTED_FORMATS.includes(fileExtension)) {
       const error = `File format not supported. Please use ${ACCEPTED_FORMATS.join(', ')}`
       setErrorMessage(error)
+      onUploadError(new Error(error))
+      return
+    }
+
+    // Validate campaign data before proceeding
+    if (!campaignId || !campaignSlug) {
+      const error = 'Campaign information is missing. Please refresh the page and try again.'
+      setErrorMessage(error)
+      onUploadError(new Error(error))
       return
     }
 
@@ -109,6 +133,9 @@ export default function AddImageStep({}) {
       } catch (e) {
         console.error(e)
         setErrorMessage('Failed to upload image')
+        // Revoke blob URL on error
+        URL.revokeObjectURL(imagePreviewUrl)
+        setPreviewUrl(null)
       } finally {
         setLoadingFileUpload(false)
       }
