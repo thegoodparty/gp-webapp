@@ -1,4 +1,4 @@
-import { LuMailWarning } from "react-icons/lu";
+import { LuMailWarning } from "react-icons/lu"
 
 export const ErrorMessage = ({ 
   title = "Error", 
