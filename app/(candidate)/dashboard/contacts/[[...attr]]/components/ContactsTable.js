@@ -8,6 +8,19 @@ import { useSearchParams } from 'next/navigation'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 
+const MaybeBlurredContent = ({ children }) => {
+  const [campaign] = useCampaign()
+  if (campaign?.isPro) {
+    return children
+  }
+  return <span className="blur-[6px]">{children}</span>
+}
+
+const blurredCell = ({ row, column }) => {
+  const value = row.getValue(column.id)
+  return <MaybeBlurredContent>{value}</MaybeBlurredContent>
+}
+
 const columns = [
   {
     accessorKey: 'firstName',
@@ -26,12 +39,14 @@ const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Cell Phone" />
     ),
+    cell: blurredCell,
   },
   {
     accessorKey: 'landline',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Landline" />
     ),
+    cell: blurredCell,
   },
   {
     accessorKey: 'age',
@@ -50,6 +65,7 @@ const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Address" />
     ),
+    cell: blurredCell,
   },
   {
     accessorKey: 'politicalParty',
