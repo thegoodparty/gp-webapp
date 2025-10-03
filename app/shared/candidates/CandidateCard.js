@@ -4,7 +4,7 @@ import {
   candidateColor,
   candidateRoute,
   partyRace,
-} from '/helpers/candidateHelper'
+} from 'helpers/candidateHelper'
 import BlackButton from '../buttons/BlackButton'
 import CandidateAvatar from './CandidateAvatar'
 import CandidateProgressBar from './CandidateProgressBar'

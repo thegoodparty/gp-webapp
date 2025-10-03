@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import { IoIosCheckmark } from 'react-icons/io'
 
-import { numberFormatter } from '/helpers/numberHelper'
-import { candidateColor } from '/helpers/candidateHelper'
-import { daysTill } from '/helpers/dateHelper'
+import { numberFormatter } from 'helpers/numberHelper'
+import { candidateColor } from 'helpers/candidateHelper'
+import { daysTill } from 'helpers/dateHelper'
 // import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
 
 const CandidateProgressBar = ({
@@ -100,9 +100,7 @@ const CandidateProgressBar = ({
       </span>
     )
     const resultPerc =
-      votesNeeded && votesNeeded !== 0
-        ? (votesReceived * 100) / votesNeeded
-        : 0
+      votesNeeded && votesNeeded !== 0 ? (votesReceived * 100) / votesNeeded : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}
@@ -117,9 +115,7 @@ const CandidateProgressBar = ({
       </span>
     )
     const resultPerc =
-      votesNeeded && votesNeeded !== 0
-        ? (votesReceived * 100) / votesNeeded
-        : 0
+      votesNeeded && votesNeeded !== 0 ? (votesReceived * 100) / votesNeeded : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}

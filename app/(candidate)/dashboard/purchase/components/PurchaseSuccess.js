@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { PURCHASE_TYPE_LABELS } from '/helpers/purchaseTypes'
+import { PURCHASE_TYPE_LABELS } from 'helpers/purchaseTypes'
 import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import { useEffect } from 'react'
