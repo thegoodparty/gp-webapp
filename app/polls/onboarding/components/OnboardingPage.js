@@ -1,11 +1,13 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { StepFooter } from '@shared/stepper'
 import InsightsStep from './steps/InsightsStep'
 import OutreachStep from './steps/OutreachStep'
 import StrategyStep from './steps/StrategyStep'
 import AddImageStep from './steps/AddImageStep'
 import PreviewStep from './steps/PreviewStep'
+import { ErrorMessage } from './ErrorMessage'
 import { useOnboardingContext } from '../../contexts/OnboardingContext'
 
 const steps = [
@@ -63,8 +65,8 @@ const steps = [
   const maxStepIndex = steps.map(step => step.stepIndex).reduce((a, b) => Math.max(a, b), 0)
 
 export default function OnboardingPage({ pathname }) {
-
-  const { submitOnboarding, isSubmitting } = useOnboardingContext()
+  const router = useRouter()
+  const { submitOnboarding, isSubmitting, submitError } = useOnboardingContext()
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
@@ -73,17 +75,19 @@ export default function OnboardingPage({ pathname }) {
   const isNextDisabled = false
 
   const [currentStepIndex, setCurrentStepIndex] = useState(1)
+  const [showError, setShowError] = useState(false)
 
   const handleNext = async () => {
     // If this is the final step (Preview), submit the onboarding data
     if (currentStepIndex === maxStepIndex) {
       try {
+        setShowError(false) // Clear any previous errors
         await submitOnboarding()
-        // Handle success - maybe redirect or show success message
-        console.log('Onboarding submitted successfully!')
+        // Navigate to dashboard on success
+        router.push('/dashboard')
       } catch (error) {
         console.error('Failed to submit onboarding:', error)
-        // Error is already handled in the context
+        setShowError(true) // Show error message to user
       }
     } else {
       // tcrCompliant ? outreach : non-compliant
@@ -122,6 +126,14 @@ export default function OnboardingPage({ pathname }) {
             {currentStep.name === 'Preview' && (
               <PreviewStep/>
             )}
+            
+            {/* Error message for failed submission */}
+            <ErrorMessage
+              title="Failed to send SMS poll"
+              message={submitError}
+              show={showError}
+              onDismiss={() => setShowError(false)}
+            />
           </div>
          
            <div className="hidden md:block w-full border-t border-slate-200 pt-4 pb-4 px-8 lg:px-16">
