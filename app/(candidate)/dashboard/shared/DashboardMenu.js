@@ -137,13 +137,12 @@ const ISSUES_MENU_ITEM = {
 
 const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
-  if (campaign?.isPro) {
-    const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
-    if (serveAccessEnabled) {
-      menuItems[index] = CONTACTS_MENU_ITEM
-    } else {
-      menuItems[index] = VOTER_RECORDS_MENU_ITEM
-    }
+
+  const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
+  if (serveAccessEnabled) {
+    menuItems[index] = CONTACTS_MENU_ITEM
+  } else if (campaign?.isPro) {
+    menuItems[index] = VOTER_RECORDS_MENU_ITEM
   }
 
   return menuItems

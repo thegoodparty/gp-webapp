@@ -1,6 +1,7 @@
 'use client'
 import { BarChart, XAxis, YAxis, Bar, ResponsiveContainer, Cell, LabelList, CartesianGrid } from 'recharts'
 import { numberFormatter } from 'helpers/numberHelper'
+import { formatPercentLabel } from './utils'
 import { useTailwindBreakpoints } from '../hooks/useTailwindBreakpoints'
 import { COLORS } from './constants'
 
@@ -92,7 +93,7 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
                             dataKey="value" 
                             position="right" 
                             dx={4}
-                            formatter={(value) => (numberFormatter(value) + (percentage ? '%' : ''))}
+                            formatter={(value) => (percentage ? `${formatPercentLabel(value)}%` : numberFormatter(value))}
                             style={{ fontSize: 12, fill: '#374151' }}
                         />
                     </Bar>

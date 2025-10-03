@@ -59,7 +59,30 @@ const fetchPerson = async (personId) => {
 
 const fetchCustomSegments = async () => {
   const response = await serverFetch(apiRoutes.voterFileFilter.list)
-  return response.data || []
+  if (response.ok) {
+    return response.data || []
+  } else {
+    console.warn('Failed to fetch custom segments', response)
+    return []
+  }
+}
+
+const fetchPeopleStats = async () => {
+  const response = await serverFetch(
+    apiRoutes.contacts.stats,
+    {},
+    {
+      next: {
+        revalidate: 3600,
+      },
+    },
+  )
+  if (response.ok) {
+    return response.data || {}
+  } else {
+    console.warn('Failed to fetch people stats', response)
+    return {}
+  }
 }
 
 const meta = pageMetaData({
@@ -85,13 +108,14 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
 
-  const [contacts, initCustomSegments] = await Promise.all([
+  const [contacts, initCustomSegments, peopleStats] = await Promise.all([
     fetchContacts({
       page,
       resultsPerPage: pageSize,
       segment,
     }),
     fetchCustomSegments(),
+    fetchPeopleStats(),
   ])
 
   return (
@@ -101,7 +125,7 @@ export default async function Page({ params, searchParams }) {
           customSegments={initCustomSegments}
           querySegment={segment}
         >
-          <ContactsPage />
+          <ContactsPage peopleStats={peopleStats} />
         </CustomSegmentsProvider>
       </PersonProvider>
     </ContactsProvider>

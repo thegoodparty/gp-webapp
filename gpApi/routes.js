@@ -12,6 +12,10 @@ export const apiRoutes = {
       path: '/contacts/download',
       method: 'GET',
     },
+    stats: {
+      path: '/contacts/stats',
+      method: 'GET',
+    },
   },
   homepage: {
     subscribeEmail: {
