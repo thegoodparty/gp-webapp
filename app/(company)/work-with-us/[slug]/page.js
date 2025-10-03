@@ -4,7 +4,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import JobPage from '../components/JobPage'
 import pageMetaData from 'helpers/metadataHelper'
 
-export const fetchJob = async (slug) => {
+const fetchJob = async (slug) => {
   try {
     const payload = {
       id: slug,

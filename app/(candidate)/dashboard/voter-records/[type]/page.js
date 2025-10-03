@@ -4,11 +4,11 @@ import candidateAccess from '../../shared/candidateAccess'
 import { getServerUser } from 'helpers/userServerHelper'
 import { redirect } from 'next/navigation'
 import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/components/VoterFileDetailPage'
-import { fetchCanDownload } from '../page'
 import { fetchContentByType } from 'helpers/fetchHelper'
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates'
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
+import { fetchCanDownload } from '../utils'
 const meta = pageMetaData({
   title: 'Voter Data detailed view | GoodParty.org',
   description: 'Voter Data detailed view',

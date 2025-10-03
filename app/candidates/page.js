@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import CandidatesPage from './components/CandidatesPage'
 import { numberFormatter } from 'helpers/numberHelper'
 
-export const WINNER_COUNT = 3444
+const WINNER_COUNT = 3444
 
 // const fetchCount = async (onlyWinners = false) => {
 //   const api = gpApi.campaign.mapCount;

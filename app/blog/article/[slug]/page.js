@@ -3,17 +3,10 @@ import BlogArticlePage from './components/BlogArticlePage'
 import pageMetaData from 'helpers/metadataHelper'
 import { redirect, notFound, permanentRedirect } from 'next/navigation'
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles'
-import { apiRoutes } from 'gpApi/routes'
-import { unAuthFetch } from 'gpApi/unAuthFetch'
+import { fetchArticle } from './utils'
 import redirectList from './redirectList'
 export const revalidate = 3600
 export const dynamic = 'force-static'
-
-export const fetchArticle = async (slug) => {
-  return await unAuthFetch(`${apiRoutes.content.blogArticle.getBySlug.path}`, {
-    slug,
-  })
-}
 
 export async function generateMetadata({ params }) {
   const { slug } = params
