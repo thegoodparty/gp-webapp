@@ -2,13 +2,13 @@ import pageMetaData from 'helpers/metadataHelper'
 import { shortToLongState } from 'helpers/statesHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
-import { fetchArticle } from 'app/blog/article/[slug]/page'
+import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import fetchPlace from '../../shared/fetchPlace'
 import PlaceSchema from '../../shared/PlaceSchema'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
-export const fetchCounty = async (state, county) => {
+const fetchCounty = async (state, county) => {
   const place = await fetchPlace({
     slug: `${state}/${county}`,
     includeChildren: true,

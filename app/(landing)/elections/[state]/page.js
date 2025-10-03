@@ -2,27 +2,11 @@ import pageMetaData from 'helpers/metadataHelper'
 import ElectionsStatePage from './components/ElectionsStatePage'
 import { shortToLongState } from 'helpers/statesHelper'
 import { notFound } from 'next/navigation'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
-import { fetchArticle } from 'app/blog/article/[slug]/page'
+import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import fetchPlace from '../shared/fetchPlace'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
-
-export const fetchState = async (state) => {
-  const api = gpApi.elections.places
-  const payload = {
-    slug: state,
-    includeChildren: true,
-    raceColumns: 'slug,normalizedPositionName',
-  }
-  const res = await gpFetch(api, payload, 3600)
-  if (Array.isArray(res)) {
-    return res[0]
-  }
-  return {}
-}
 
 const year = new Date().getFullYear()
 
@@ -44,7 +28,13 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { counties, districts, others, children, Races: races } = await fetchPlace({ slug: state, categorizeChildren: true })
+  const {
+    counties,
+    districts,
+    others,
+    children,
+    Races: races,
+  } = await fetchPlace({ slug: state, categorizeChildren: true })
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
@@ -59,7 +49,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     state,
-    categorizedChildren: {counties, districts, others},
+    categorizedChildren: { counties, districts, others },
     children,
     races,
     articles,
