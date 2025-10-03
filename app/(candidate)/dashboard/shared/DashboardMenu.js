@@ -141,7 +141,7 @@ const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
   const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
   if (serveAccessEnabled) {
     menuItems[index] = CONTACTS_MENU_ITEM
-  } else if (campaign.isPro) {
+  } else if (campaign?.isPro) {
     menuItems[index] = VOTER_RECORDS_MENU_ITEM
   }
 
