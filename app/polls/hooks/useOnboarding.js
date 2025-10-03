@@ -74,12 +74,13 @@ export const useOnboarding = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to submit onboarding data')
+        throw new Error('Failed to submit onboarding data', response.statusText, response.data)
       }
 
       return response.data
     } catch (error) {
-      setSubmitError(error.message)
+      console.error(error)
+      setSubmitError("Try again in a few minutes or contact us if the issue persists")
       throw error
     } finally {
       setIsSubmitting(false)
