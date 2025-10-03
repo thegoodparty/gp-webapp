@@ -7,7 +7,7 @@ import { dateWithTime } from 'helpers/dateHelper'
 import Link from 'next/link'
 import { IoDocumentText } from 'react-icons/io5'
 import LoadingList from '@shared/utils/LoadingList'
-import { debounce } from '/helpers/debounceHelper'
+import { debounce } from 'helpers/debounceHelper'
 import NewContentFlow from './NewContentFlow'
 import { generateAIContent } from 'helpers/generateAIContent'
 import {

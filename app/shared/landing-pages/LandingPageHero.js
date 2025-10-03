@@ -1,7 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import Image from 'next/image'
 
-import bgImg from '/public/images/landing-pages/hero-bg.png'
+import bgImg from 'public/images/landing-pages/hero-bg.png'
 
 export default function LandingPageHero({ children, wideBg, ...props }) {
   return (

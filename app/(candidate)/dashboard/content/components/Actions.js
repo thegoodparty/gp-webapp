@@ -7,7 +7,7 @@ import DeleteAction from './DeleteAction'
 // import DuplicateAction from './DuplicateAction';
 import RenameAction from './RenameAction'
 import TranslateAction from './TranslateAction'
-import { kebabToCamel } from '/helpers/stringHelper'
+import { kebabToCamel } from 'helpers/stringHelper'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import CircularProgress from '@mui/material/CircularProgress'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
