@@ -26,6 +26,7 @@ import {
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../../hooks/ContactProModal'
+import { Lock } from '@mui/icons-material'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
@@ -196,6 +197,7 @@ export default function SegmentSection() {
         onClick={handleCreateSegment}
         className="ml-4"
       >
+        {!campaign?.isPro && <Lock />}
         Create a Segment
       </Button>
       <FiltersSheet

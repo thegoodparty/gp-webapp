@@ -7,7 +7,6 @@ import PersonOverlay from './person/PersonOverlay'
 import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
 import ContactsStatsSection from './ContactsStatsSection'
-import { ContactSearch } from './ContactSearch'
 import { ContactProModalProvider } from '../hooks/ContactProModal'
 import { useState } from 'react'
 import {
@@ -21,10 +20,7 @@ export default function ContactsPage({ peopleStats }) {
     <ContactProModalProvider value={setShowProModal}>
       <DashboardLayout>
         <Paper className="h-full">
-          <div className="flex flex-row justify-between items-end">
-            <TitleSection />
-            <ContactSearch />
-          </div>
+          <TitleSection />
           <ContactsStatsSection peopleStats={peopleStats} />
           <div className="relative">
             <SegmentSection />
@@ -39,6 +35,7 @@ export default function ContactsPage({ peopleStats }) {
         open={showProModal}
         onClose={() => setShowProModal(false)}
         onUpgradeLinkClick={() => setShowProModal(false)}
+        defaultTrackingEnabled
       />
     </ContactProModalProvider>
   )

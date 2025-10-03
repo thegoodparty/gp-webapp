@@ -5,6 +5,10 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { FREE_TEXTS_OFFER } from '../outreach/constants'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useEffect } from 'react'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useUser } from '@shared/hooks/useUser'
 
 export const VIABILITY_SCORE_THRESHOLD = 2
 export const VARIANTS = {
@@ -19,8 +23,14 @@ export function ProUpgradeModal({
   variant,
   onClose,
   onUpgradeLinkClick,
+  defaultTrackingEnabled = false,
   trackingAttrs = {},
 }) {
+  const [user] = useUser()
+  const [campaign] = useCampaign()
+  const sessionCount = user?.metaData?.sessionCount || 0
+  const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
+
   let title, description, items, highlight, cta
 
   switch (variant) {
@@ -69,7 +79,8 @@ export function ProUpgradeModal({
       description = 'Join GoodParty.org Pro today to get:'
       items = [
         <>
-          {FREE_TEXTS_OFFER.COUNT.toLocaleString()} <span className="font-bold">free text messages</span>
+          {FREE_TEXTS_OFFER.COUNT.toLocaleString()}{' '}
+          <span className="font-bold">free text messages</span>
         </>,
         <>One-on-one access to political analysts</>,
       ]
@@ -97,10 +108,52 @@ export function ProUpgradeModal({
       break
   }
 
+  useEffect(() => {
+    if (open) {
+      trackEvent(EVENTS.ProUpgrade.Modal.Shown, {
+        sessionCount,
+        viablityScore,
+        variant,
+        path: window.location.pathname,
+      })
+    }
+  }, [open])
+
+  const handleClose = () => {
+    if (defaultTrackingEnabled) {
+      trackEvent(EVENTS.ProUpgrade.Modal.Exit, {
+        sessionCount,
+        viablityScore,
+        variant,
+        path: window.location.pathname,
+      })
+    }
+    if (onClose) {
+      onClose()
+    }
+  }
+
+  const handleUpgradeLinkClick = () => {
+    if (defaultTrackingEnabled) {
+      trackEvent(EVENTS.ProUpgrade.Modal.ClickButton, {
+        sessionCount,
+        viablityScore,
+        variant,
+        path: window.location.pathname,
+      })
+    }
+
+    if (onUpgradeLinkClick) {
+      onUpgradeLinkClick()
+    } else if (onClose) {
+      onClose()
+    }
+  }
+
   return (
     <Modal
       open={open}
-      closeCallback={onClose}
+      closeCallback={handleClose}
       preventBackdropClose
       preventEscClose
     >
@@ -122,7 +175,7 @@ export function ProUpgradeModal({
           size="large"
           color="secondary"
           className="mt-8"
-          onClick={onUpgradeLinkClick ? onUpgradeLinkClick : onClose}
+          onClick={handleUpgradeLinkClick}
           {...trackingAttrs}
         >
           {cta}
