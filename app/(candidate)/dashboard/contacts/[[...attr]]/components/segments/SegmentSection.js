@@ -24,12 +24,16 @@ import {
   trimCustomSegmentName,
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useShowContactProModal } from '../../hooks/ContactProModal'
+import { Lock } from '@mui/icons-material'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
   const [segment, setSegment] = useState(ALL_SEGMENTS)
   const isInitialLoad = useRef(true)
-
+  const [campaign] = useCampaign()
+  const showProUpgradeModal = useShowContactProModal()
   const [sheetState, setSheetState] = useState({
     open: false,
     mode: SHEET_MODES.CREATE,
@@ -115,6 +119,10 @@ export default function SegmentSection() {
   }
 
   const handleCreateSegment = () => {
+    if (!campaign.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
     setSheetState({
       open: true,
       mode: SHEET_MODES.CREATE,
@@ -123,6 +131,10 @@ export default function SegmentSection() {
   }
 
   const handleSelect = (selectedSegment) => {
+    if (!campaign.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
     setSegment(selectedSegment)
     appendParam(router, searchParams, 'segment', selectedSegment)
   }
@@ -185,6 +197,7 @@ export default function SegmentSection() {
         onClick={handleCreateSegment}
         className="ml-4"
       >
+        {!campaign?.isPro && <Lock />}
         Create a Segment
       </Button>
       <FiltersSheet

@@ -36,9 +36,10 @@ export default function SearchContainer() {
   return (
     <Paper className="mt-6">
       <SearchInput
+        fullWidth
         value={filters.search}
+        placeholder={`Search ${totalIssueCount} issues`}
         onChange={handleSearchChange}
-        totalCount={totalIssueCount}
       />
       <div className="flex justify-between mt-6">
         <StatusFilter value={filters.status} onChange={handleStatusChange} />
