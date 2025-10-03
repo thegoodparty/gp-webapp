@@ -12,7 +12,7 @@ import CandidateSchema from './components/CandidateSchema'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
-export const fetchCandidate = async ({
+const fetchCandidate = async ({
   slug,
   raceSlug,
   includeStances = false,

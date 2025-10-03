@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
-import { fetchArticle } from 'app/blog/article/[slug]/page'
+import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import { PositionLevel } from '../../shared/PositionLevel'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { electionApiRoutes } from 'gpApi/routes'
@@ -24,7 +24,7 @@ const fetchRace = async (raceSlug) => {
 const fetchCandidates = async (raceSlug) => {
   const api = electionApiRoutes.candidacies.find.path
   const payload = {
-    raceSlug
+    raceSlug,
   }
 
   const res = await unAuthElectionFetch(api, payload, 3600)
@@ -117,7 +117,7 @@ export default async function Page({ params }) {
     state,
     county,
     city,
-    candidates
+    candidates,
   }
   return (
     <>
