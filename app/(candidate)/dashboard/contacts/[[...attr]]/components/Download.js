@@ -14,7 +14,7 @@ export default function Download() {
   const [customSegments, , , querySegment] = useCustomSegments()
 
   const handleDownload = async () => {
-    if (!campaign.isPro) {
+    if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
     }

@@ -163,7 +163,7 @@ export default function ContactsTable() {
   }
 
   const onRowClick = (row) => {
-    if (!campaign.isPro) {
+    if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
     }
