@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ImpersonateAction from '/app/admin/shared/ImpersonateAction'
+import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 
 export default function Actions({ launched, slug, email, id }) {
   const [showMenu, setShowMenu] = useState(false)

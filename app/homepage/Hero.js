@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import bgImg from '/public/images/homepage/home-hero.png'
+import bgImg from 'public/images/homepage/home-hero.png'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'

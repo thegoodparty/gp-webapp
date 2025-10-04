@@ -3,7 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import contentfulHelper from 'helpers/contentfulHelper'
 import TermsByLetter from '../../components/TermsByLetter'
-import Banner from '/app/blog/article/[slug]/components/Banner'
+import Banner from 'app/blog/article/[slug]/components/Banner'
 import Button from '@shared/buttons/Button'
 
 export default function TermsItemPage({ item, items, activeLetter }) {
