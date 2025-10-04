@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Carousel from '@shared/inputs/Carousel'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import dialogImg from '/public/images/homepage/dialog.png'
+import dialogImg from 'public/images/homepage/dialog.png'
 import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 

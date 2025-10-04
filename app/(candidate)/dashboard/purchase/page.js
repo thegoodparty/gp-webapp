@@ -1,7 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import PurchasePage from './components/PurchasePage'
 import candidateAccess from '../shared/candidateAccess'
-import { PURCHASE_TYPES } from '/helpers/purchaseTypes'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 
 const meta = pageMetaData({

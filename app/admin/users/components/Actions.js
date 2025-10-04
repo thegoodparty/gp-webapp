@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ImpersonateAction from '/app/admin/shared/ImpersonateAction'
+import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import ResendPasswordEmailAction from './ResendPasswordEmailAction'
 
 export default function Actions({ user }) {

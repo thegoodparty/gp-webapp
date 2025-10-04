@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import voterDataImg from '/public/images/homepage/voter-data.png'
-import voterDatabaseImg from '/public/images/homepage/voter-database.png'
-import voterOutreachImg from '/public/images/homepage/voter-outreach.png'
+import voterDataImg from 'public/images/homepage/voter-data.png'
+import voterDatabaseImg from 'public/images/homepage/voter-database.png'
+import voterOutreachImg from 'public/images/homepage/voter-outreach.png'
 import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 
