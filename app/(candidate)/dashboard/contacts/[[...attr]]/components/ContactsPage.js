@@ -15,7 +15,7 @@ import {
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
 
-export default function ContactsPage({ peopleStats }) {
+export default function ContactsPage() {
   const [showProModal, setShowProModal] = useState(false)
   return (
     <ContactProModalProvider value={setShowProModal}>
@@ -25,7 +25,7 @@ export default function ContactsPage({ peopleStats }) {
             <TitleSection />
             <ContactSearch />
           </div>
-          <ContactsStatsSection peopleStats={peopleStats} />
+          <ContactsStatsSection />
           <div className="relative">
             <SegmentSection />
             <Download />

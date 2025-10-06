@@ -104,24 +104,6 @@ const fetchCustomSegments = async () => {
   }
 }
 
-const fetchPeopleStats = async () => {
-  const response = await serverFetch(
-    apiRoutes.contacts.stats,
-    {},
-    {
-      next: {
-        revalidate: 3600,
-      },
-    },
-  )
-  if (response.ok) {
-    return response.data || {}
-  } else {
-    console.warn('Failed to fetch people stats', response)
-    return {}
-  }
-}
-
 const meta = pageMetaData({
   title: 'Contacts  | GoodParty.org',
   description: 'Manage your campaign contacts.',
@@ -145,7 +127,7 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
 
-  const [contacts, initCustomSegments, peopleStats] = await Promise.all([
+  const [contacts, initCustomSegments] = await Promise.all([
     query
       ? fetchSearchedContacts({
           page,
@@ -158,7 +140,6 @@ export default async function Page({ params, searchParams }) {
           segment,
         }),
     fetchCustomSegments(),
-    fetchPeopleStats(),
   ])
 
   return (
@@ -168,7 +149,7 @@ export default async function Page({ params, searchParams }) {
           customSegments={initCustomSegments}
           querySegment={segment}
         >
-          <ContactsPage peopleStats={peopleStats} />
+          <ContactsPage />
         </CustomSegmentsProvider>
       </PersonProvider>
     </ContactsProvider>
