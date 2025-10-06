@@ -1,7 +1,9 @@
 import { MessageCard } from '../MessageCard'
+import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { LuCircleDollarSign, LuListChecks, LuScrollText, LuUsersRound } from "react-icons/lu"
 
-export default function StrategyStep({ demoText }) {
+export default function StrategyStep() {
+  const { demoMessageText } = useOnboardingContext()
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
@@ -16,8 +18,8 @@ export default function StrategyStep({ demoText }) {
         <MessageCard
           icon={<LuScrollText />}
           title="Message"
-          description={<p className="mt-3 leading-normal medium text-sm">{demoText}</p>}
-          note="This message is open ended for the most authentic responses. It’s been optimized for clarity and low bias. "
+          description={<p className="mt-3 leading-normal medium text-sm">{demoMessageText}</p>}
+          note="This message is open ended for the most authentic responses. It's been optimized for clarity and low bias. "
         />
         <MessageCard
           icon={<LuUsersRound />}
