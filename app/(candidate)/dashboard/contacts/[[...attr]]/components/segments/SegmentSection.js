@@ -153,7 +153,7 @@ export default function SegmentSection() {
   }
 
   useEffect(() => {
-    if (params.get('query')) {
+    if (searchParams.get('query')) {
       resetSelect()
     }
   }, [searchParams.get('query')])
