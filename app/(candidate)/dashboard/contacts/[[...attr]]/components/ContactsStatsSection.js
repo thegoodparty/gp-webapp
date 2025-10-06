@@ -7,7 +7,10 @@ import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
 
 const fetchPeopleStats = async () => {
-  const response = await clientFetch(apiRoutes.contacts.stats)
+  const response = await clientFetch(apiRoutes.contacts.stats, null, {
+    revalidate: 3600,
+  })
+
   if (response.ok) {
     return response.data || {}
   }
