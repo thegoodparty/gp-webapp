@@ -5,11 +5,10 @@ import { generateCards } from './shared/stats.util'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
+import React from 'react'
 
 const fetchPeopleStats = async () => {
-  const response = await clientFetch(apiRoutes.contacts.stats, null, {
-    revalidate: 3600,
-  })
+  const response = await clientFetch(apiRoutes.contacts.stats)
 
   if (response.ok) {
     return response.data || {}
