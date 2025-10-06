@@ -1,4 +1,3 @@
-import { IS_LOCAL } from 'appEnv'
 import { buildUrl } from '@shared/utils/buildUrl'
 
 /**
@@ -22,14 +21,13 @@ import { buildUrl } from '@shared/utils/buildUrl'
  * @param {Record<string, any>|FormData} [data] - The payload data for the request. This data may be used to replace URL route parameters
  *   or be sent as query parameters/request body. If the payload is not a FormData instance, it is sent as JSON.
  * @param {Object} [options] - Additional options for the fetch request.
- * @param {number} [options.revalidate] - Specifies the revalidation time (in seconds) for caching purposes.
  * @param {string} [options.serverToken] - A token to be used in the request, when sending from server (see serverFetch)
  *
  * @returns {Promise<ApiResponse>} The response object containing the status and parsed data.
  */
 export async function clientFetch(endpoint, data, options = {}) {
   const { method } = endpoint
-  const { revalidate, serverToken, returnFullResponse } = options
+  const { cache, serverToken, returnFullResponse } = options
 
   const url = buildUrl(endpoint, data)
 
@@ -49,15 +47,13 @@ export async function clientFetch(endpoint, data, options = {}) {
     body = JSON.stringify(data ?? {}) // to avoid sending empty object
   }
 
-  const shouldCache = revalidate && !IS_LOCAL
-
   const res = await fetch(url, {
     headers,
     method,
     credentials: 'include',
     mode: 'cors',
     body: method === 'GET' ? undefined : body,
-    ...(shouldCache ? { next: { revalidate } } : { cache: 'no-store' }),
+    cache,
   })
 
   if (returnFullResponse) {
