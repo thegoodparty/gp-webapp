@@ -12,6 +12,8 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS } from 'helpers/analyticsHelper'
 
 const initialFormState = {
   pin: '',
@@ -40,6 +42,12 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
     setLoading(true)
     try {
       await submitCvPin(tcrCompliance.id, formData)
+      
+      // Track 10 DLC compliance status change to Yes
+      trackEvent(EVENTS.Outreach.DlcCompliance.PinVerificationCompleted, {
+        dlcComplianceStatus: 'Yes',
+      })
+      
       successSnackbar('Successfully submitted Campaign Verify PIN')
       router.push('/profile')
     } catch {
