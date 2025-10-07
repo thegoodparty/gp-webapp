@@ -91,7 +91,6 @@ export default function AddImageStep({}) {
     if (fileSizeMb > FILE_LIMIT_MB) {
       const error = `File size of ${fileSizeMb.toFixed(2)}MB is larger than ${FILE_LIMIT_MB}MB limit`
       setErrorMessage(error)
-      onUploadError(new Error(error))
       return
     }
 
@@ -100,7 +99,6 @@ export default function AddImageStep({}) {
     if (!ACCEPTED_FORMATS.includes(fileExtension)) {
       const error = `File format not supported. Please use ${ACCEPTED_FORMATS.join(', ')}`
       setErrorMessage(error)
-      onUploadError(new Error(error))
       return
     }
 
@@ -108,7 +106,6 @@ export default function AddImageStep({}) {
     if (!campaignId || !campaignSlug) {
       const error = 'Campaign information is missing. Please refresh the page and try again.'
       setErrorMessage(error)
-      onUploadError(new Error(error))
       return
     }
 
