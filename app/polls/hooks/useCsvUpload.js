@@ -11,7 +11,11 @@ export const useCsvUpload = (contactsSample, campaign, csvUrl, setCsvUrl) => {
 
     const uploadCsv = async () => {
       // Early returns for conditions that don't require upload
-      if (!contactsSample || !Array.isArray(contactsSample) || contactsSample.length === 0) return
+      if (!contactsSample || !Array.isArray(contactsSample)) return
+      if (contactsSample.length === 0){
+        setError('No contacts sample available')
+        return
+      }
       if (!campaign?.id || !campaign?.slug) return
       if (csvUrl) return // already uploaded
 

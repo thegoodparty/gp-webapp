@@ -24,7 +24,6 @@ export const useContactsSample = () => {
         
         if (isMounted) {
           setContactsSample(response.data)
-          console.log('contactsSample', response.data)
         }
       } catch (error) {
         console.error(error)

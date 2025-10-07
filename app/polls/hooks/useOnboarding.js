@@ -81,9 +81,23 @@ export const useOnboarding = () => {
 
   const submitOnboarding = useCallback(async () => {
     try {
-      if (csvSampleError) {
-        throw new Error(csvSampleError)
+      // Check if contacts sample is still loading
+      if (isLoadingContactsSample) {
+        throw new Error('Contact data is still loading.')
       }
+      if (isUploadingCsvSample) {
+        throw new Error('Contact data is still being prepared.')
+      }
+      if (contactsSampleError) {
+        throw new Error('Failed to load contact data.')
+      }
+      if (csvSampleError) {
+        throw new Error('Failed to prepare contact data.')
+      }
+      if (!formData.csvUrl) {
+        throw new Error('Contact data is not ready.')
+      }
+      
       setIsSubmitting(true)
       setSubmitError(null)
 
@@ -105,7 +119,7 @@ export const useOnboarding = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [formData, csvSampleError])
+  }, [formData, csvSampleError, isLoadingContactsSample, isUploadingCsvSample, contactsSampleError])
 
   const resetFormData = useCallback(() => {
     setFormData({ imageUrl: null, csvUrl: null, textMessage: null })
