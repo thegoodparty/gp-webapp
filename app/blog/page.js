@@ -11,7 +11,7 @@ export const revalidate = 3600
 export const dynamic = 'force-static'
 const SECTION_ARTICLES_LIMIT = 4
 
-export const fetchTopTags = async () => {
+const fetchTopTags = async () => {
   return await fetchContentByType('blogHome')
 }
 

@@ -7,6 +7,7 @@ import PersonOverlay from './person/PersonOverlay'
 import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
 import ContactsStatsSection from './ContactsStatsSection'
+import { ContactSearch } from './ContactSearch'
 import { ContactProModalProvider } from '../hooks/ContactProModal'
 import { useState } from 'react'
 import {
@@ -14,14 +15,17 @@ import {
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
 
-export default function ContactsPage({ peopleStats }) {
+export default function ContactsPage() {
   const [showProModal, setShowProModal] = useState(false)
   return (
     <ContactProModalProvider value={setShowProModal}>
       <DashboardLayout>
         <Paper className="h-full">
-          <TitleSection />
-          <ContactsStatsSection peopleStats={peopleStats} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-end">
+            <TitleSection />
+            <ContactSearch />
+          </div>
+          <ContactsStatsSection />
           <div className="relative">
             <SegmentSection />
             <Download />

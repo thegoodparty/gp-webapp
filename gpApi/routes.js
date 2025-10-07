@@ -4,6 +4,10 @@ export const apiRoutes = {
       path: '/contacts',
       method: 'GET',
     },
+    search: {
+      path: '/contacts/search',
+      method: 'GET',
+    },
     get: {
       path: '/contacts/:id',
       method: 'GET',
@@ -15,6 +19,10 @@ export const apiRoutes = {
     stats: {
       path: '/contacts/stats',
       method: 'GET',
+    },
+    tevynApi: {
+      path: '/contacts/tevyn-api',
+      method: 'POST',
     },
   },
   homepage: {

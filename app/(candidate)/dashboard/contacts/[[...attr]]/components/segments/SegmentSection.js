@@ -152,6 +152,12 @@ export default function SegmentSection() {
     appendParam(router, searchParams, 'segment', ALL_SEGMENTS)
   }
 
+  useEffect(() => {
+    if (searchParams.get('query')) {
+      resetSelect()
+    }
+  }, [searchParams.get('query')])
+
   const handleAfterSave = (segmentId) => {
     setSegment(segmentId.toString())
     appendParam(router, searchParams, 'segment', segmentId.toString())

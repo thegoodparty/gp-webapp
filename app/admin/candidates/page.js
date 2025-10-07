@@ -12,7 +12,7 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export const maxDuration = 60
-export const fetchCampaigns = async () => {
+const fetchCampaigns = async () => {
   const resp = await serverFetch(apiRoutes.campaign.list)
   return resp.data
 }
