@@ -22,25 +22,27 @@ export default function TextField<Variant extends TextFieldVariants>({
   endAdornments,
   ...restProps
 }: TextFieldProps<Variant>) {
+  const mergedEndAdornment = endAdornments?.length ? (
+    <InputAdornment position="end">
+      {endAdornments.map(
+        (adornment) =>
+          // @ts-expect-error
+          ADORNMENTS[adornment] ?? adornment,
+      )}
+    </InputAdornment>
+  ) : undefined
+
   return (
     <MuiTextField
       variant="outlined"
       {...restProps}
-      slotProps={{
-        ...restProps.slotProps,
-        input: {
-          sx: { fontFamily: 'var(--outfit-font)' },
-          endAdornment: endAdornments?.length && (
-            <InputAdornment position="end">
-              {endAdornments.map(
-                (adornment) =>
-                  // @ts-expect-error
-                  ADORNMENTS[adornment] ?? adornment,
-              )}
-            </InputAdornment>
-          ),
-          ...restProps.slotProps?.input,
-        },
+      InputProps={{
+        ...restProps.InputProps,
+        // Preserve any existing endAdornment from callers (e.g., Autocomplete)
+        endAdornment: mergedEndAdornment ?? restProps.InputProps?.endAdornment,
+        // Ensure font family styling is applied while preserving caller styles
+        sx: { fontFamily: 'var(--outfit-font)', ...(restProps.InputProps as any)?.sx },
+        style: restProps.InputProps?.style,
       }}
     />
   )
