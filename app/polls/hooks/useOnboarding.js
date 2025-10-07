@@ -5,10 +5,13 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { DemoMessageText, MessageText } from '../onboarding/components/DemoMessageText'
+import { useContactsSample } from './useContactsSample'
+import { useCsvUpload } from './useCsvUpload'
 
 export const useOnboarding = () => {
   const [campaign] = useCampaign()
   const [user] = useUser()
+  const { contactsSample, isLoadingContactsSample, contactsSampleError } = useContactsSample()
   
   const [formData, setFormData] = useState({
     imageUrl: null,
@@ -62,6 +65,14 @@ export const useOnboarding = () => {
     updateFormData({csvUrl})
   }, [updateFormData])
 
+  // Handle CSV upload when contacts sample is available
+  const { isUploadingCsvSample, csvSampleError } = useCsvUpload(
+    contactsSample, 
+    campaign, 
+    formData.csvUrl, 
+    setCsvUrl
+  )
+
   const setTextMessage = useCallback((textMessage) => {
     updateFormData({
       textMessage
@@ -70,6 +81,9 @@ export const useOnboarding = () => {
 
   const submitOnboarding = useCallback(async () => {
     try {
+      if (csvSampleError) {
+        throw new Error(csvSampleError)
+      }
       setIsSubmitting(true)
       setSubmitError(null)
 
@@ -91,14 +105,10 @@ export const useOnboarding = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [formData])
+  }, [formData, csvSampleError])
 
   const resetFormData = useCallback(() => {
-    setFormData({
-      imageUrl: null,
-      csvUrl: null,
-      textMessage: null,
-    })
+    setFormData({ imageUrl: null, csvUrl: null, textMessage: null })
     setSubmitError(null)
   }, [])
 
@@ -113,6 +123,13 @@ export const useOnboarding = () => {
     setTextMessage,
     submitOnboarding,
     resetFormData,
+    
+    // Contacts sample
+    contactsSample,
+    isLoadingContactsSample,
+    contactsSampleError,
+    isUploadingCsvSample,
+    csvSampleError,
     
     // Campaign and user data
     campaign,
