@@ -8,7 +8,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { DEFAULT_PAGE_SIZE } from './components/shared/constants'
 import candidateAccess from '../../shared/candidateAccess'
 
-const fetchContacts = async ({
+const fetchFilteredContacts = async ({
   page = 1,
   resultsPerPage = DEFAULT_PAGE_SIZE,
   segment = 'all',
@@ -27,6 +27,43 @@ const fetchContacts = async ({
     return response.data
   } else {
     console.warn('Failed to fetch contacts', response)
+    return {
+      people: [],
+      pagination: {
+        currentPage: page,
+        pageSize: resultsPerPage,
+        totalPages: 0,
+        totalItems: 0,
+      },
+    }
+  }
+}
+const fetchSearchedContacts = async ({
+  page = 1,
+  resultsPerPage = DEFAULT_PAGE_SIZE,
+  query = '',
+}) => {
+  const payload = {
+    page,
+    resultsPerPage,
+  }
+
+  const isNumeric = /^\d+$/.test(query.trim())
+  if (isNumeric) {
+    payload.phone = query.trim()
+  } else {
+    payload.name = query.trim()
+  }
+
+  const response = await serverFetch(apiRoutes.contacts.search, payload, {
+    next: {
+      revalidate: 3600,
+    },
+  })
+  if (response.ok) {
+    return response.data
+  } else {
+    console.warn('Failed to search contacts', response)
     return {
       people: [],
       pagination: {
@@ -67,24 +104,6 @@ const fetchCustomSegments = async () => {
   }
 }
 
-const fetchPeopleStats = async () => {
-  const response = await serverFetch(
-    apiRoutes.contacts.stats,
-    {},
-    {
-      next: {
-        revalidate: 3600,
-      },
-    },
-  )
-  if (response.ok) {
-    return response.data || {}
-  } else {
-    console.warn('Failed to fetch people stats', response)
-    return {}
-  }
-}
-
 const meta = pageMetaData({
   title: 'Contacts  | GoodParty.org',
   description: 'Manage your campaign contacts.',
@@ -95,7 +114,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
   await candidateAccess()
-  let { page, pageSize, segment } = await searchParams
+  let { page, pageSize, segment, query } = await searchParams
   let { attr } = await params
   let personId = null
   let person = null
@@ -108,14 +127,19 @@ export default async function Page({ params, searchParams }) {
   page = parseInt(page || '1')
   pageSize = parseInt(pageSize || DEFAULT_PAGE_SIZE)
 
-  const [contacts, initCustomSegments, peopleStats] = await Promise.all([
-    fetchContacts({
-      page,
-      resultsPerPage: pageSize,
-      segment,
-    }),
+  const [contacts, initCustomSegments] = await Promise.all([
+    query
+      ? fetchSearchedContacts({
+          page,
+          resultsPerPage: pageSize,
+          query,
+        })
+      : fetchFilteredContacts({
+          page,
+          resultsPerPage: pageSize,
+          segment,
+        }),
     fetchCustomSegments(),
-    fetchPeopleStats(),
   ])
 
   return (
@@ -125,7 +149,7 @@ export default async function Page({ params, searchParams }) {
           customSegments={initCustomSegments}
           querySegment={segment}
         >
-          <ContactsPage peopleStats={peopleStats} />
+          <ContactsPage />
         </CustomSegmentsProvider>
       </PersonProvider>
     </ContactsProvider>
