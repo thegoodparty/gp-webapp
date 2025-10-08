@@ -10,6 +10,7 @@ import PreviewStep from './steps/PreviewStep'
 import { ErrorMessage } from './ErrorMessage'
 import { useOnboardingContext } from '../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { identifyUser } from '@shared/utils/analytics'
 
 const steps = [
     {
@@ -67,7 +68,7 @@ const steps = [
 
 export default function OnboardingPage({ pathname }) {
   const router = useRouter()
-  const { submitOnboarding, isSubmitting, submitError } = useOnboardingContext()
+  const { submitOnboarding, isSubmitting, submitError, user } = useOnboardingContext()
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
@@ -92,9 +93,11 @@ export default function OnboardingPage({ pathname }) {
     if (currentStepIndex === maxStepIndex) {
       try {
         setShowError(false) // Clear any previous errors
-        // Track send click
+        
         trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         await submitOnboarding()
+        // Identify user with Serve activation
+        await identifyUser(user?.id, { 'Serve Activated': true })
         // Navigate to dashboard on success
         router.push('/dashboard')
       } catch (error) {
