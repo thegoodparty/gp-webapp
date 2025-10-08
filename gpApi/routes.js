@@ -24,6 +24,10 @@ export const apiRoutes = {
       path: '/contacts/tevyn-api',
       method: 'POST',
     },
+    sample: {
+      path: '/contacts/sample',
+      method: 'GET',
+    },
   },
   homepage: {
     subscribeEmail: {

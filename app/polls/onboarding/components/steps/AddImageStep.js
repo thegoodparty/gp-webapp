@@ -6,53 +6,12 @@ import { CircularProgress } from '@mui/material'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
-import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
-import { IS_LOCAL, IS_PROD } from 'appEnv'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { uploadFileToS3 } from '@shared/utils/s3Upload'
+import { getPollSubFolderName, FOLDER_NAME } from '../../../utils/s3utils'
 
 const FILE_LIMIT_MB = 5
 const ACCEPTED_FORMATS = ['.png', '.jpg', '.jpeg']
-const FOLDER_NAME = 'poll-text-images'
-
-const getBucketName = () => {
-  if (IS_LOCAL) return 'assets-dev.goodparty.org'
-  if (IS_PROD) return 'assets.goodparty.org'
-  return 'assets-qa.goodparty.org' // fallback for preview/development
-}
-
-const getPollImageFolderName = (id, slug) =>
-  `${id}-${slug}`
-
-const uploadImageToS3 = async (file, bucket) => {
-  const { name: fileName, type: fileType } = file
-
-  const resp = await clientFetch(apiRoutes.user.files.generateSignedUploadUrl, {
-    fileType,
-    fileName,
-    bucket
-  })
-
-  if (!resp.ok) {
-    throw new Error(`Failed to get signed URL: ${resp.status} ${resp.statusText}`)
-  }
-
-  const { signedUploadUrl } = resp.data
-  
-  const uploadResult = await fetch(signedUploadUrl, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': fileType,
-    },
-    body: file,
-  })
-
-  if (!uploadResult.ok) {
-    throw new Error(`S3 upload failed: ${uploadResult.status} ${uploadResult.statusText}`)
-  }
-
-  return uploadResult
-}
 
 export default function AddImageStep({}) {
   const [authenticatedCampaign = {}] = useCampaign()
@@ -121,12 +80,9 @@ export default function AddImageStep({}) {
 
       try {
         // THis is a little strange, but it is called bucket on our backend, but it's actually a folder inside of the main assets bucket
-        const campaignFolderName = getPollImageFolderName(campaignId, campaignSlug)
+        const campaignFolderName = getPollSubFolderName(campaignId, campaignSlug)
         const folder = `${FOLDER_NAME}/${campaignFolderName}`
-        await uploadImageToS3(file, folder)
-        
-        const bucketName = getBucketName()
-        const imageUrl = `https://${bucketName}/${folder}/${file.name}`
+        const imageUrl = await uploadFileToS3(file, folder)
         
         // Store in onboarding context
         setImageUrl(imageUrl)

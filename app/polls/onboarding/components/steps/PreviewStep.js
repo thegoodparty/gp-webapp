@@ -1,5 +1,4 @@
 'use client'
-import { Button } from 'goodparty-styleguide'
 import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
@@ -47,7 +46,8 @@ export default function PreviewStep() {
                   </div>
                 } />
               </div>
-              <Button size="small" variant="ghost" className="text-blue-500 my-2">Send yourself a test</Button>
+              {/* TODO: Add send yourself a test button. We will do that once we have the real text message API */}
+              {/* <Button size="small" variant="ghost" className="text-blue-500 my-2">Send yourself a test</Button> */}
             </div>
           }
           note="You can add more recipients after launch."
