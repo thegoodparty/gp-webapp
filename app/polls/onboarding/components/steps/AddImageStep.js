@@ -25,10 +25,13 @@ export default function AddImageStep({}) {
   const [errorMessage, setErrorMessage] = useState('')
   const [previewUrl, setPreviewUrl] = useState(null)
 
-  // Cleanup blob URL on component unmount
+  // Fire view event once on mount
   useEffect(() => {
-    // View event
     trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
+  }, [])
+
+  // Cleanup blob URL on component unmount or preview changes
+  useEffect(() => {
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl)

@@ -93,10 +93,9 @@ export default function OnboardingPage({ pathname }) {
     if (currentStepIndex === maxStepIndex) {
       try {
         setShowError(false) // Clear any previous errors
-        
-        trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         await submitOnboarding()
         await identifyUser(user?.id, { 'Serve Activated': true })
+        trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         // Navigate to dashboard on success
         router.push('/dashboard')
       } catch (error) {
