@@ -1,5 +1,4 @@
 'use client'
-import { Button } from 'goodparty-styleguide'
 import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'

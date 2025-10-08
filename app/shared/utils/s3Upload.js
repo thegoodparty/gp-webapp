@@ -10,10 +10,18 @@ export const getBucketName = () => {
 }
 
 export const uploadBlobToS3 = async ({ blobOrFile, fileType, fileName, folder }) => {
+
+  if(!blobOrFile || !fileType || !fileName || !folder) {
+    throw new Error('Missing required parameters')
+  }
+  
+  const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
+  const sanitizedFolder = folder.replace(/[^a-zA-Z0-9/_-]/g, '_')
+
   const resp = await clientFetch(apiRoutes.user.files.generateSignedUploadUrl, {
     fileType,
-    fileName,
-    bucket: folder,
+    fileName: sanitizedFileName,
+    bucket: sanitizedFolder,
   })
 
   if (!resp.ok) {
@@ -35,7 +43,7 @@ export const uploadBlobToS3 = async ({ blobOrFile, fileType, fileName, folder })
   }
 
   const bucketName = getBucketName()
-  const publicUrl = `https://${bucketName}/${folder}/${fileName}`
+  const publicUrl = `https://${bucketName}/${sanitizedFolder}/${sanitizedFileName}`
   return publicUrl
 }
 
