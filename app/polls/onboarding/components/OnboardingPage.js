@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepFooter } from '@shared/stepper'
 import InsightsStep from './steps/InsightsStep'
@@ -9,6 +9,7 @@ import AddImageStep from './steps/AddImageStep'
 import PreviewStep from './steps/PreviewStep'
 import { ErrorMessage } from './ErrorMessage'
 import { useOnboardingContext } from '../../contexts/OnboardingContext'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const steps = [
     {
@@ -77,11 +78,22 @@ export default function OnboardingPage({ pathname }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(1)
   const [showError, setShowError] = useState(false)
 
+
+  const hasFiredGettingStartedRef = useRef(false)
+  useEffect(() => {
+    if (currentStepIndex === 1 && !hasFiredGettingStartedRef.current) {
+      trackEvent(EVENTS.ServeOnboarding.GettingStartedViewed)
+      hasFiredGettingStartedRef.current = true
+    }
+  }, [currentStepIndex])
+
   const handleNext = async () => {
     // If this is the final step (Preview), submit the onboarding data
     if (currentStepIndex === maxStepIndex) {
       try {
         setShowError(false) // Clear any previous errors
+        // Track send click
+        trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         await submitOnboarding()
         // Navigate to dashboard on success
         router.push('/dashboard')

@@ -9,6 +9,7 @@ import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { IS_LOCAL, IS_PROD } from 'appEnv'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const FILE_LIMIT_MB = 5
 const ACCEPTED_FORMATS = ['.png', '.jpg', '.jpeg']
@@ -67,6 +68,8 @@ export default function AddImageStep({}) {
 
   // Cleanup blob URL on component unmount
   useEffect(() => {
+    // View event
+    trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl)
@@ -127,6 +130,8 @@ export default function AddImageStep({}) {
         
         // Store in onboarding context
         setImageUrl(imageUrl)
+
+        trackEvent(EVENTS.ServeOnboarding.PollImageUploaded)
       } catch (e) {
         console.error(e)
         setErrorMessage('Failed to upload image')

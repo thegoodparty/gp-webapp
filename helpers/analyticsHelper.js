@@ -52,6 +52,17 @@ export const EVENTS = {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
   },
+  ServeOnboarding: {
+    GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',
+    MeetYourConstituentsViewed: 'Serve Onboarding - Meet Your Constituents Viewed',
+    ConstituencyProfileViewed: 'Serve Onboarding - Constituency Profile Viewed',
+    PollValuePropsViewed: 'Serve Onboarding - Poll Value Props Viewed',
+    PollStrategyViewed: 'Serve Onboarding - Poll Strategy Viewed',
+    AddImageViewed: 'Serve Onboarding - Add Image Viewed',
+    PollImageUploaded: 'Serve Onboarding - Poll Image Uploaded',
+    PollPreviewViewed: 'Serve Onboarding - Poll Preview Viewed',
+    SmsPollSent: 'Serve Onboarding - SMS Poll Sent',
+  },
   Navigation: {
     Top: {
       ClickLogo: 'Navigation - Top: Click Logo',
