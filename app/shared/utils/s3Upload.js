@@ -1,11 +1,12 @@
 'use client'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { IS_LOCAL, IS_PROD } from 'appEnv'
+import { IS_LOCAL, IS_PROD, IS_DEV } from 'appEnv'
 
 export const getBucketName = () => {
-  if (IS_LOCAL) return 'assets-dev.goodparty.org'
+  if (IS_LOCAL || IS_DEV) return 'assets-dev.goodparty.org'
   if (IS_PROD) return 'assets.goodparty.org'
+  // We don't have a QA check, QA bucket is the fallback
   return 'assets-qa.goodparty.org'
 }
 
