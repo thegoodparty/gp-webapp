@@ -30,7 +30,6 @@ export default function AddImageStep({}) {
     trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
   }, [])
 
-  // Cleanup blob URL on component unmount or preview changes
   useEffect(() => {
     return () => {
       if (previewUrl) {
