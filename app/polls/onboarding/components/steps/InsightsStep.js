@@ -19,20 +19,8 @@ export default function InsightsStep({ }) {
   const tcrCompliant = true
   const isLoadingTcrCompliance = false
 
-  const insights = [
-    {
-      title: 'Expect education, safety, and youth services to dominate your agenda.',
-      description: '62% of you community is families with school aged children. Most districts are 30-40%.',
-    },
-    {
-      title: 'Expect tension on development, services, and tax priorities.',
-      description: 'Your wealth gap is wider than 87% of districts. Most see only 3-4x difference between top and bottom halves.',
-    },
-    {
-      title: 'Expect complaints about truck traffic, road damage, and noise - especially near new rail hubs.',
-      description: 'Your industrial growth rate is 5x faster than regional average where most see 8% over two years.',
-    },
-  ]
+  // temporary placeholder for insights. Constituent insights are coming soon.
+  const insights = []
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
