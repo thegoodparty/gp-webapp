@@ -96,7 +96,6 @@ export default function OnboardingPage({ pathname }) {
         
         trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         await submitOnboarding()
-        // Identify user with Serve activation
         await identifyUser(user?.id, { 'Serve Activated': true })
         // Navigate to dashboard on success
         router.push('/dashboard')
