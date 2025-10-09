@@ -7,6 +7,7 @@ import PollHeader from './PollHeader'
 import StatusAlert from './StatusAlert'
 import PollMessage from './PollMessage'
 import PollAudience from './PollAudience'
+import PollDetails from './PollDetails'
 
 export default function PollsDetailPage({ pathname }) {
   const [campaign] = useCampaign()
@@ -20,6 +21,7 @@ export default function PollsDetailPage({ pathname }) {
           <div className="flex items-center flex-col gap-4 p-3 md:p-4 bg-gray-100 rounded-lg border border-gray-200">
             <PollMessage />
             <PollAudience />
+            <PollDetails />
           </div>
         </Paper>
       </PollsPageGuard>

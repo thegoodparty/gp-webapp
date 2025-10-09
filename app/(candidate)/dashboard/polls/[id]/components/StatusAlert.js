@@ -7,7 +7,7 @@ import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function StatusAlert() {
   const [poll] = usePoll()
-  const { status, startDate } = poll
+  const { status, scheduledDate } = poll
   if (status === 'done') {
     return null
   }
@@ -35,7 +35,7 @@ export default function StatusAlert() {
           <div className="flex items-center gap-2 text-green-500">
             <IoIosCheckmarkCircleOutline />
             <span>
-              This poll is scheduled to send on {dateUsHelper(startDate)}
+              This poll is scheduled to send on {dateUsHelper(scheduledDate)}
             </span>
           </div>
         )}
