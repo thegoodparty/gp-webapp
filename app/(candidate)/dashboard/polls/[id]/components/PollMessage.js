@@ -8,7 +8,7 @@ import Body2 from '@shared/typography/Body2'
 
 export default function PollMessage() {
   const [poll] = usePoll()
-  const { messageContent, imageUrl } = poll
+  const { messageContent, imageUrl } = poll || {}
   return (
     <div className="w-full max-w-[600px] bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex gap-2 items-center mb-4">

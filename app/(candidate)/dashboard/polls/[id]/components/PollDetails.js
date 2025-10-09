@@ -9,7 +9,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 export default function PollDetails() {
   const [poll] = usePoll()
-  const { scheduledDate, completedDate, cost } = poll
+  const { scheduledDate, completedDate, cost } = poll || {}
   return (
     <div className="w-full max-w-[600px] bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex gap-2 items-center mb-4">
@@ -32,7 +32,7 @@ export default function PollDetails() {
           </li>
           <li>
             <span className="font-medium">Cost:</span>{' '}
-            <span className="font-light">${numberFormatter(cost)}</span>
+            <span className="font-light">${numberFormatter(cost, 2)}</span>
           </li>
         </ul>
       </Body2>

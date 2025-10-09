@@ -8,7 +8,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 export default function PollAudience() {
   const [poll] = usePoll()
-  const { audienceSize } = poll
+  const { audienceSize } = poll || {}
   return (
     <div className="w-full max-w-[600px] bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex gap-2 items-center mb-4">
