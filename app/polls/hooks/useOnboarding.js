@@ -29,7 +29,7 @@ export const useOnboarding = () => {
   
   const userName = useMemo(() => {
     if (user?.firstName && user?.lastName) {
-      return `${user?.firstName} ${user?.lastName}`
+      return `${user.firstName} ${user.lastName}`
     }
     // Extra fallback. This should not happen.
     return user?.name || `n/a`
