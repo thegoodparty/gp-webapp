@@ -8,6 +8,7 @@ import {
 } from 'goodparty-styleguide'
 import Link from 'next/link'
 import StatusBadge from './StatusBadge'
+import { polls } from '../tempData'
 
 const columns = [
   {
@@ -32,28 +33,6 @@ const columns = [
   },
 ]
 
-const samplePolls = [
-  {
-    id: 1,
-    name: 'Top community issues 1',
-    status: 'In progress',
-    sends: 1200,
-  },
-  {
-    id: 2,
-    name: 'Top community issues 2',
-    status: 'Scheduled',
-  },
-  {
-    id: 3,
-    name: 'Top community issues 3',
-    status: 'Done',
-    responses: 100,
-    sends: 100,
-    actions: 'Gather more feedback',
-  },
-]
-
 export default function PollsTable() {
   return (
     <div className="border border-gray-200 rounded-md w-[calc(100vw-48px)] md:w-full overflow-x-auto">
@@ -67,7 +46,7 @@ export default function PollsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {samplePolls.map((poll) => (
+            {polls.map((poll) => (
               <TableRow key={poll.id}>
                 <TableCell>
                   <Link

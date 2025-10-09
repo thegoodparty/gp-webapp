@@ -1,14 +1,21 @@
 import clsx from 'clsx'
+
+const statusLabels = {
+  in_progress: 'In Progress',
+  scheduled: 'Scheduled',
+  done: 'Done',
+}
+
 export default function StatusBadge({ status }) {
   let colorClass = 'bg-gray-500'
   switch (status) {
-    case 'In progress':
+    case 'in_progress':
       colorClass = 'bg-blue-500'
       break
-    case 'Scheduled':
+    case 'scheduled':
       colorClass = 'bg-black'
       break
-    case 'Done':
+    case 'done':
       colorClass = 'bg-green-500'
       break
   }
@@ -19,7 +26,7 @@ export default function StatusBadge({ status }) {
         colorClass,
       )}
     >
-      {status}
+      {statusLabels[status]}
     </div>
   )
 }
