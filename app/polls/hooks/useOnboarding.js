@@ -27,7 +27,7 @@ export const useOnboarding = () => {
     [campaign]
   )
   
-  const userName = useMemo(() => user?.name, [user])
+  const userName = useMemo(() => user?.firstName + ' ' + user?.lastName, [user])
   
   // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
   const demoMessageText = useMemo(() => 
