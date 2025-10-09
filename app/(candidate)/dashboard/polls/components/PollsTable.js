@@ -60,9 +60,11 @@ export default function PollsTable() {
       <div className="min-w-[600px]">
         <Table>
           <TableHeader>
-            {columns.map((column) => (
-              <TableHead key={column.accessorKey}>{column.header}</TableHead>
-            ))}
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.accessorKey}>{column.header}</TableHead>
+              ))}
+            </TableRow>
           </TableHeader>
           <TableBody>
             {samplePolls.map((poll) => (
