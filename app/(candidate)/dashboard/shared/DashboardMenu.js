@@ -133,7 +133,11 @@ const POLLS_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
 }
 
-const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
+const getDashboardMenuItems = (
+  campaign,
+  serveAccessEnabled,
+  pollsAccessEnabled,
+) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
   const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
@@ -142,10 +146,10 @@ const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  // TODO: check serve access
-  // insert polls menu item after contacts menu item
-  const pollsIndex = menuItems.indexOf(CONTACTS_MENU_ITEM)
-  menuItems.splice(pollsIndex + 1, 0, POLLS_MENU_ITEM)
+  if (pollsAccessEnabled) {
+    const pollsIndex = menuItems.indexOf(CONTACTS_MENU_ITEM)
+    menuItems.splice(pollsIndex + 1, 0, POLLS_MENU_ITEM)
+  }
 
   return menuItems
 }
@@ -161,8 +165,15 @@ export default function DashboardMenu({
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
+  const { ready: pollFagsReady, on: pollsAccessEnabled } =
+    useFlagOn('serve-polls-v1')
+
   const menuItems = useMemo(() => {
-    const baseItems = getDashboardMenuItems(campaign, serveAccessEnabled)
+    const baseItems = getDashboardMenuItems(
+      campaign,
+      serveAccessEnabled,
+      pollsAccessEnabled,
+    )
 
     const items = [...baseItems]
 
@@ -171,7 +182,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, user])
+  }, [campaign, serveAccessEnabled, ecanvasser, user, pollsAccessEnabled])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
