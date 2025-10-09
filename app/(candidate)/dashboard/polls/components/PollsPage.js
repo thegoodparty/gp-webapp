@@ -7,7 +7,7 @@ import Paper from '@shared/utils/Paper'
 import PollsTable from './PollsTable'
 import PollsPageGuard from './PollsPageGuard'
 
-export default function WebsitePage({ pathname }) {
+export default function PollsPage({ pathname }) {
   const [campaign] = useCampaign()
 
   return (
