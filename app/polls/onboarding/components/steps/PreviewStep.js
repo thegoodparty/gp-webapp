@@ -14,7 +14,7 @@ export default function PreviewStep() {
         Review your SMS poll
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
-        This serve will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
+        This poll will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
       </p>
 
       <div className="w-full items-center flex flex-col gap-4 mt-8">
