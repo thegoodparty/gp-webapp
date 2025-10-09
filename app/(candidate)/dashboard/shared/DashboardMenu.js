@@ -165,7 +165,7 @@ export default function DashboardMenu({
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
-  const { ready: pollFagsReady, on: pollsAccessEnabled } =
+  const { ready: pollFlagsReady, on: pollsAccessEnabled } =
     useFlagOn('serve-polls-v1')
 
   const menuItems = useMemo(() => {

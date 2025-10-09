@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 export default function StatusBadge({ status }) {
-  let colorClass = 'bg-blue-500'
+  let colorClass = 'bg-gray-500'
   switch (status) {
     case 'In progress':
       colorClass = 'bg-blue-500'

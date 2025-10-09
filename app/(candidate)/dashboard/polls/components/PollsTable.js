@@ -73,6 +73,7 @@ export default function PollsTable() {
                   <Link
                     href={`/dashboard/polls/${poll.id}`}
                     className="block py-2 text-blue-500"
+                    aria-label={`View poll: ${poll.name}`}
                   >
                     {poll.name}
                   </Link>
@@ -80,8 +81,8 @@ export default function PollsTable() {
                 <TableCell>
                   <StatusBadge status={poll.status} />
                 </TableCell>
-                <TableCell>{poll.sends || '-'}</TableCell>
                 <TableCell>{poll.responses || '-'}</TableCell>
+                <TableCell>{poll.sends || '-'}</TableCell>
                 <TableCell>{poll.actions || ''}</TableCell>
               </TableRow>
             ))}
