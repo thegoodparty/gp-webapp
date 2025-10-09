@@ -13,7 +13,7 @@ export default function StatusAlert() {
   }
   let variant = 'default'
   switch (status) {
-    case 'inProgress':
+    case 'in_progress':
       variant = 'destructive'
       break
     case 'scheduled':
@@ -23,7 +23,7 @@ export default function StatusAlert() {
   return (
     <Alert variant={variant} className="mb-4">
       <AlertTitle>
-        {status === 'inProgress' && (
+        {status === 'in_progress' && (
           <div className="flex items-center gap-2 text-red-500">
             <MdLock />
             <span>

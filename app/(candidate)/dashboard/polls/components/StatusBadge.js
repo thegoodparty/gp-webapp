@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 const statusLabels = {
-  inProgress: 'In Progress',
+  in_progress: 'In Progress',
   scheduled: 'Scheduled',
   done: 'Done',
 }
@@ -9,7 +9,7 @@ const statusLabels = {
 export default function StatusBadge({ status }) {
   let colorClass = 'bg-gray-500'
   switch (status) {
-    case 'inProgress':
+    case 'in_progress':
       colorClass = 'bg-blue-500'
       break
     case 'scheduled':

@@ -2,7 +2,7 @@ export const polls = [
   {
     id: 1,
     name: 'Top community issues 1',
-    status: 'inProgress',
+    status: 'in_progress',
     imageUrl: 'https://assets.goodparty.org/candidates/ali--dieng-29ottg.jpeg',
     scheduledDate: '2025-01-01',
     completedDate: '2025-01-01',
