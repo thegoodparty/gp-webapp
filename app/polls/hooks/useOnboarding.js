@@ -27,7 +27,13 @@ export const useOnboarding = () => {
     [campaign]
   )
   
-  const userName = useMemo(() => user?.name, [user])
+  const userName = useMemo(() => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName} ${user.lastName}`
+    }
+    // Extra fallback. This should not happen.
+    return user?.name || `n/a`
+  }, [user])
   
   // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
   const demoMessageText = useMemo(() => 
