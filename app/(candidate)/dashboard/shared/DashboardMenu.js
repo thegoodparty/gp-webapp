@@ -147,8 +147,7 @@ const getDashboardMenuItems = (
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (pollsAccessEnabled) {
-    const pollsIndex = menuItems.indexOf(CONTACTS_MENU_ITEM)
-    menuItems.splice(pollsIndex + 1, 0, POLLS_MENU_ITEM)
+    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
