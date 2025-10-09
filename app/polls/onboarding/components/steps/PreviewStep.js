@@ -3,10 +3,16 @@ import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function PreviewStep() {
   const { demoMessageText, formData } = useOnboardingContext()
   const { imageUrl } = formData
+
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.PollPreviewViewed)
+  }, [])
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">

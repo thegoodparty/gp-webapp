@@ -1,7 +1,11 @@
 import { LuHandHeart , LuSmile , LuHeartHandshake  } from 'react-icons/lu'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function OutreachStep({  }) {
-
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.PollValuePropsViewed)
+  }, [])
   return (
     <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto mb-16">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">

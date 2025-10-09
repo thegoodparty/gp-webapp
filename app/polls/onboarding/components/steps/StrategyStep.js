@@ -1,9 +1,15 @@
 import { MessageCard } from '../MessageCard'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { LuCircleDollarSign, LuListChecks, LuScrollText, LuUsersRound } from "react-icons/lu"
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function StrategyStep() {
   const { demoMessageText } = useOnboardingContext()
+
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.PollStrategyViewed)
+  }, [])
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
