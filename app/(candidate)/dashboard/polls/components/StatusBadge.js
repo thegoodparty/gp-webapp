@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { POLL_STATUS } from '../shared/constants'
+import { POLL_STATUS, POLL_STATUS_LABELS } from '../shared/constants'
 
 export default function StatusBadge({ status }) {
   let colorClass = 'bg-gray-500'
@@ -21,7 +21,7 @@ export default function StatusBadge({ status }) {
         colorClass,
       )}
     >
-      {statusLabels[status]}
+      {POLL_STATUS_LABELS[status]}
     </div>
   )
 }
