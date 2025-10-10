@@ -10,7 +10,7 @@ import { POLL_STATUS } from '../../shared/constants'
 export default function PollsContent() {
   const [poll] = usePoll()
   const { status } = poll || {}
-  return status !== POLL_STATUS.DONE ? (
+  return status !== POLL_STATUS.COMPLETED ? (
     <>
       <StatusAlert />
       <div className="flex items-center flex-col gap-4 p-3 md:p-4 bg-gray-100 rounded-lg border border-gray-200">

@@ -10,7 +10,7 @@ export default function StatusBadge({ status }) {
     case POLL_STATUS.SCHEDULED:
       colorClass = 'bg-black'
       break
-    case POLL_STATUS.DONE:
+    case POLL_STATUS.COMPLETED:
       colorClass = 'bg-green-500'
       break
   }

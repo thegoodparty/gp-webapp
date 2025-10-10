@@ -9,7 +9,7 @@ import { POLL_STATUS } from '../../shared/constants'
 export default function StatusAlert() {
   const [poll] = usePoll()
   const { status, scheduledDate } = poll
-  if (status === POLL_STATUS.DONE) {
+  if (status === POLL_STATUS.COMPLETED) {
     return null
   }
   let variant = 'default'
