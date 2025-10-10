@@ -7,8 +7,10 @@ import { apiRoutes } from 'gpApi/routes'
 import { DemoMessageText, MessageText } from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const useOnboarding = () => {
+  const { on: pollsAccessEnabled } = useFlagOn('serve-polls-v1')
   const [campaign] = useCampaign()
   const [user] = useUser()
   const { contactsSample, isLoadingContactsSample, contactsSampleError } = useContactsSample()
@@ -111,6 +113,7 @@ export const useOnboarding = () => {
         message: formData.textMessage,
         csvFileUrl: formData.csvUrl,
         imageUrl: formData.imageUrl,
+        createPoll: pollsAccessEnabled,
       })
 
       if (!response.ok) {
@@ -125,7 +128,7 @@ export const useOnboarding = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [formData, csvSampleError, isLoadingContactsSample, isUploadingCsvSample, contactsSampleError])
+  }, [formData, csvSampleError, isLoadingContactsSample, isUploadingCsvSample, contactsSampleError, pollsAccessEnabled])
 
   const resetFormData = useCallback(() => {
     setFormData({ imageUrl: null, csvUrl: null, textMessage: null })
