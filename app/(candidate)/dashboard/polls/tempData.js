@@ -32,7 +32,7 @@ export const polls = [
     imageUrl: 'https://assets.goodparty.org/candidates/ali--dieng-29ottg.jpeg',
     scheduledDate: '2025-01-01',
     completedDate: '2025-01-01',
-    lowConfidence: false,
+    lowConfidence: true,
     audienceSize: 100,
     actions: 'Gather more feedback',
     responses: 100,
