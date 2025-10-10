@@ -5,10 +5,12 @@ import Image from 'next/image'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { LuCalendar } from 'react-icons/lu'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function PreviewStep() {
   const { demoMessageText, formData } = useOnboardingContext()
-  const { imageUrl } = formData
+  const { imageUrl, estimatedCompletionDate } = formData
 
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.PollPreviewViewed)
@@ -51,6 +53,17 @@ export default function PreviewStep() {
             </div>
           }
           note="You can add more recipients after launch."
+        />
+        <MessageCard
+          title="Schedule"
+          icon={<LuCalendar />}
+          description={
+            <div className="flex flex-col gap-1">
+              <p className="mt-3 font-normal text-sm">Estimated Completion Date:</p>
+              <p className="leading-normal medium text-sm">{dateUsHelper(estimatedCompletionDate, "long")}</p>
+            </div>
+          }
+          note=""
         />
 
       </div>
