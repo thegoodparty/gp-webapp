@@ -4,26 +4,27 @@ import { usePoll } from '../hooks/PollProvider'
 import { Alert, AlertTitle } from 'goodparty-styleguide'
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import { dateUsHelper } from 'helpers/dateHelper'
+import { POLL_STATUS } from '../../shared/constants'
 
 export default function StatusAlert() {
   const [poll] = usePoll()
   const { status, scheduledDate } = poll
-  if (status === 'done') {
+  if (status === POLL_STATUS.COMPLETED) {
     return null
   }
   let variant = 'default'
   switch (status) {
-    case 'in_progress':
+    case POLL_STATUS.IN_PROGRESS:
       variant = 'destructive'
       break
-    case 'scheduled':
+    case POLL_STATUS.SCHEDULED:
       variant = 'success'
       break
   }
   return (
     <Alert variant={variant} className="mb-4">
       <AlertTitle>
-        {status === 'in_progress' && (
+        {status === POLL_STATUS.IN_PROGRESS && (
           <div className="flex items-center gap-2 text-red-500">
             <MdLock />
             <span>
@@ -31,7 +32,7 @@ export default function StatusAlert() {
             </span>
           </div>
         )}
-        {status === 'scheduled' && (
+        {status === POLL_STATUS.SCHEDULED && (
           <div className="flex items-center gap-2 text-green-500">
             <IoIosCheckmarkCircleOutline />
             <span>
