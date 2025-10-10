@@ -8,7 +8,22 @@ export default function ConfidenceAlert() {
   const [poll] = usePoll()
   const { lowConfidence } = poll || {}
   if (!lowConfidence) {
-    return null
+    return (
+      <Alert variant="success">
+        <AlertTitle>
+          <div className="flex  gap-2 text-green-500">
+            <BsExclamationCircle className="mt-0.5" />
+            <div>
+              <div className="font-medium">Poll Confidence: High</div>
+              <Body2>
+                The results of your poll are statistically reliable enough that
+                you can act on them with confidence.
+              </Body2>
+            </div>
+          </div>
+        </AlertTitle>
+      </Alert>
+    )
   }
   return (
     <Alert variant="destructive">
