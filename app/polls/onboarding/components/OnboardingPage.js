@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepFooter } from '@shared/stepper'
 import InsightsStep from './steps/InsightsStep'
@@ -9,6 +9,8 @@ import AddImageStep from './steps/AddImageStep'
 import PreviewStep from './steps/PreviewStep'
 import { ErrorMessage } from './ErrorMessage'
 import { useOnboardingContext } from '../../contexts/OnboardingContext'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { identifyUser } from '@shared/utils/analytics'
 
 const steps = [
     {
@@ -66,7 +68,7 @@ const steps = [
 
 export default function OnboardingPage({ pathname }) {
   const router = useRouter()
-  const { submitOnboarding, isSubmitting, submitError } = useOnboardingContext()
+  const { submitOnboarding, isSubmitting, submitError, user } = useOnboardingContext()
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
@@ -77,12 +79,23 @@ export default function OnboardingPage({ pathname }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(1)
   const [showError, setShowError] = useState(false)
 
+
+  const hasFiredGettingStartedRef = useRef(false)
+  useEffect(() => {
+    if (currentStepIndex === 1 && !hasFiredGettingStartedRef.current) {
+      trackEvent(EVENTS.ServeOnboarding.GettingStartedViewed)
+      hasFiredGettingStartedRef.current = true
+    }
+  }, [currentStepIndex])
+
   const handleNext = async () => {
     // If this is the final step (Preview), submit the onboarding data
     if (currentStepIndex === maxStepIndex) {
       try {
         setShowError(false) // Clear any previous errors
         await submitOnboarding()
+        await identifyUser(user?.id, { 'Serve Activated': true })
+        trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
         // Navigate to dashboard on success
         router.push('/dashboard')
       } catch (error) {

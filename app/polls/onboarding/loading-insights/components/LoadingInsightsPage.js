@@ -1,8 +1,9 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import LoadingFooter from '../../components/LoadingFooter'
 import LoadingList from '../../components/LoadingList'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 
 export default function LoadingInsightsPage({}) {
@@ -42,6 +43,10 @@ export default function LoadingInsightsPage({}) {
       status: 'pending',
     },
   ])
+
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.MeetYourConstituentsViewed)
+  }, [])
 
   // Navigate to insights when all steps are complete
   const onComplete = () => {

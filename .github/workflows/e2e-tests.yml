@@ -11,70 +11,36 @@ on:
   - cron: '0 8 * * *'
     
 jobs:
-  start-runner:
-    name: Start EC2 Runner
-    runs-on: ubuntu-latest
-    outputs:
-      label: ${{ steps.start-ec2-runner.outputs.label }}
-      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          
-      - name: Start EC2 runner
-        id: start-ec2-runner
-        uses: machulav/ec2-github-runner@v2
-        with:
-          mode: start
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: c6gd.xlarge
-          subnet-id: ${{ secrets.SUBNET_ID }}
-          security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
-          aws-resource-tags: >
-            [
-              {"Key": "Name", "Value": "github-runner"}
-            ]
-
-      - name: Setup NVMe storage
-        run: |
-          # List available NVMe devices
-          lsblk
-          
-          # Create mount point
-          sudo mkdir -p /mnt/nvme
-          
-          # Format and mount the NVMe drive (adjust device name as needed)
-          sudo mkfs -t xfs /dev/nvme1n1 || true
-          sudo mount /dev/nvme1n1 /mnt/nvme || true
-          
-          # Set permissions
-          sudo chown -R $USER:$USER /mnt/nvme
-          
-          # Move working directory to NVMe storage
-          mkdir -p /mnt/nvme/workspace
-          echo "RUNNER_TEMP=/mnt/nvme/workspace" >> $GITHUB_ENV
-          echo "RUNNER_WORKSPACE=/mnt/nvme/workspace" >> $GITHUB_ENV
-
-  run-e2e-tests:
-    needs: start-runner
-    runs-on: ${{ needs.start-runner.outputs.label }}
+  e2e-tests:
+    name: Run E2E Tests on Staging
+    runs-on: ubuntu-22.04
     if: github.event.deployment_status.state == 'success'
+    # Explicit permissions for accessing workflow artifacts
+    permissions:
+      actions: read
+      contents: read
+    services:
+      browser:
+        image: ghcr.io/browserless/chromium
+        ports:
+          - 3000:3000
+        env:
+          # Increase browserless.io timeout to 5 minutes (300 seconds)
+          MAX_CONCURRENT_SESSIONS: 1
+          MAX_QUEUE_LENGTH: 10
+          TIMEOUT: 300000
+          CONNECTION_TIMEOUT: 300000
+          KEEP_ALIVE: true
+          # Disable rate limiting for E2E tests
+          ENABLE_DEBUGGER: true
+          ENABLE_DEBUGGER_VIEWER: true
+          # Additional settings for better E2E test stability
+          PREBOOT_CHROME: true
+          CHROME_REFRESH_TIME: 0
+          MAX_MEMORY_PERCENT: 90
+          MAX_CPU_PERCENT: 90
+          ENABLE_CORS: true
     steps:
-      - name: Free up disk space
-        run: |
-          sudo apt-get clean
-          sudo apt-get autoremove -y
-          sudo rm -rf /var/lib/apt/lists/*
-          df -h
-
-      - name: Disk usage before installation
-        run: df -h
-
       - name: Print Workflow Trigger Event
         env:
           GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
@@ -103,7 +69,6 @@ jobs:
         run: |
           # Get the Vercel preview URL directly from the deployment status
           DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
-          
           echo "Using deployment URL: $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
@@ -124,9 +89,10 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test
+          npx playwright test --workers=1
         env:
           BASE_URL: ${{ env.BASE_URL }}
+          PLAYWRIGHT_WS_ENDPOINT: ws://localhost:3000
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -169,26 +135,3 @@ jobs:
               }
             ]
           }' $SLACK_WORKFLOW_WEBHOOK
-
-  stop-runner:
-    name: Stop self-hosted EC2 runner
-    needs:
-      - start-runner
-      - run-e2e-tests
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Stop EC2 runner
-        uses: machulav/ec2-github-runner@v2
-        with:
-          mode: stop
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          label: ${{ needs.start-runner.outputs.label }}
-          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
