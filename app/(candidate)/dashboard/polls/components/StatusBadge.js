@@ -1,21 +1,16 @@
 import clsx from 'clsx'
-
-const statusLabels = {
-  in_progress: 'In Progress',
-  scheduled: 'Scheduled',
-  done: 'Done',
-}
+import { POLL_STATUS } from '../shared/constants'
 
 export default function StatusBadge({ status }) {
   let colorClass = 'bg-gray-500'
   switch (status) {
-    case 'in_progress':
+    case POLL_STATUS.IN_PROGRESS:
       colorClass = 'bg-blue-500'
       break
-    case 'scheduled':
+    case POLL_STATUS.SCHEDULED:
       colorClass = 'bg-black'
       break
-    case 'done':
+    case POLL_STATUS.DONE:
       colorClass = 'bg-green-500'
       break
   }

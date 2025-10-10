@@ -11,7 +11,7 @@ export default function ConfidenceAlert() {
     return (
       <Alert variant="success">
         <AlertTitle>
-          <div className="flex  gap-2 text-green-500">
+          <div className="flex gap-2 text-green-500">
             <BsExclamationCircle className="mt-0.5" />
             <div>
               <div className="font-medium">Poll Confidence: High</div>
@@ -28,7 +28,7 @@ export default function ConfidenceAlert() {
   return (
     <Alert variant="destructive">
       <AlertTitle>
-        <div className="flex  gap-2 text-red-500">
+        <div className="flex gap-2 text-red-500">
           <BsExclamationCircle className="mt-0.5" />
           <div>
             <div className="font-medium">Poll Confidence: Low</div>

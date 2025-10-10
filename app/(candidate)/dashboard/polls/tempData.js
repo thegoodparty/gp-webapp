@@ -54,7 +54,6 @@ pollId: string
   */
 export const pollIssues = [
   {
-    pollId: 1,
     id: 1,
     summary: 'Traffic Congestion and Safety',
     details:
@@ -63,7 +62,6 @@ export const pollIssues = [
     representativeComments: [{ comment: 'Comment 1', name: 'Name 1' }],
   },
   {
-    pollId: 1,
     id: 2,
     summary: 'Public Safety & Crime',
     details:
@@ -72,7 +70,6 @@ export const pollIssues = [
     representativeComments: [{ comment: 'Comment 2', name: 'Name 2' }],
   },
   {
-    pollId: 1,
     id: 3,
     summary: 'Tax Burden & Affordability',
     details:
