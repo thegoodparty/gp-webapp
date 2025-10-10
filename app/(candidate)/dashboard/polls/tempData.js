@@ -41,17 +41,6 @@ export const polls = [
   },
 ]
 
-/*
-
-pollId: string
-  summary: string
-  details: string
-  mentionCount: number
-  representativeComments: Array<{
-    comment: string; name: string
-  }>
-
-  */
 export const pollIssues = [
   {
     id: 1,
