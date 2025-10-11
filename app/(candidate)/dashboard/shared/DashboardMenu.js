@@ -11,6 +11,7 @@ import {
   MdLibraryBooks,
   MdMessage,
   MdPeople,
+  MdPoll,
   MdSensorDoor,
   MdWeb,
 } from 'react-icons/md'
@@ -18,10 +19,8 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
 import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
-import { userIsAdmin } from 'helpers/userHelper'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
-import { BiSolidUpvote } from 'react-icons/bi'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
 
@@ -41,27 +40,13 @@ const DEFAULT_MENU_ITEMS = [
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
   },
   {
-    label: 'AI Assistant',
-    icon: <MdAutoAwesome />,
-    link: '/dashboard/campaign-assistant',
-    id: 'campaign-assistant-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
-  },
-  VOTER_DATA_UPGRADE_ITEM,
-  {
-    label: 'Content Builder',
-    icon: <MdFileOpen />,
-    link: '/dashboard/content',
-    id: 'my-content-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
-  },
-  {
     label: 'Voter Outreach',
     icon: <MdMessage />,
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
   },
+  VOTER_DATA_UPGRADE_ITEM,
   {
     label: 'Website',
     icon: <MdWeb />,
@@ -76,6 +61,21 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-details-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
   },
+  {
+    label: 'AI Assistant',
+    icon: <MdAutoAwesome />,
+    link: '/dashboard/campaign-assistant',
+    id: 'campaign-assistant-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
+  },
+  {
+    label: 'Content Builder',
+    icon: <MdFileOpen />,
+    link: '/dashboard/content',
+    id: 'my-content-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
+  },
+
   {
     label: 'Free Resources',
     icon: <MdLibraryBooks />,
@@ -117,7 +117,6 @@ const ECANVASSER_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
 }
 
-// admin user only
 const CONTACTS_MENU_ITEM = {
   id: 'contacts-dashboard',
   label: 'Contacts',
@@ -126,23 +125,29 @@ const CONTACTS_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContacts),
 }
 
-// admin user only
-const ISSUES_MENU_ITEM = {
-  id: 'issues-dashboard',
-  label: 'Issues',
-  link: '/dashboard/issues',
-  icon: <BiSolidUpvote />,
-  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickIssues),
+const POLLS_MENU_ITEM = {
+  id: 'polls-dashboard',
+  label: 'Polls',
+  link: '/dashboard/polls',
+  icon: <MdPoll />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
 }
 
-const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
+const getDashboardMenuItems = (
+  campaign,
+  serveAccessEnabled,
+  pollsAccessEnabled,
+) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
-  const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
+  const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
   if (serveAccessEnabled) {
-    menuItems[index] = CONTACTS_MENU_ITEM
+    menuItems[voterDataIndex] = CONTACTS_MENU_ITEM
   } else if (campaign?.isPro) {
-    menuItems[index] = VOTER_RECORDS_MENU_ITEM
+    menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
+  }
+  if (pollsAccessEnabled) {
+    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
@@ -159,8 +164,15 @@ export default function DashboardMenu({
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
+  const { ready: pollFlagsReady, on: pollsAccessEnabled } =
+    useFlagOn('serve-polls-v1')
+
   const menuItems = useMemo(() => {
-    const baseItems = getDashboardMenuItems(campaign, serveAccessEnabled)
+    const baseItems = getDashboardMenuItems(
+      campaign,
+      serveAccessEnabled,
+      pollsAccessEnabled,
+    )
 
     const items = [...baseItems]
 
@@ -168,12 +180,8 @@ export default function DashboardMenu({
       items.push(ECANVASSER_MENU_ITEM)
     }
 
-    if (userIsAdmin(user)) {
-      items.push(ISSUES_MENU_ITEM)
-    }
-
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, user])
+  }, [campaign, serveAccessEnabled, ecanvasser, user, pollsAccessEnabled])
 
   useEffect(() => {
     if (campaign && ecanvasser) {

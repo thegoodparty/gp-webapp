@@ -5,7 +5,8 @@ import { NumberInsight } from '../NumberInsight'
 import { DataVisualizationInsight } from '../DataVisualizationInsight'
 import { useContactsStats } from '../../../contexts/ContactsStatsContext'
 import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function InsightsStep({ }) {
 
@@ -13,6 +14,10 @@ export default function InsightsStep({ }) {
   
   // Map the API data to chart format
   const chartData = useMemo(() => mapContactsStatsToCharts(contactsStats), [contactsStats])
+
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.ConstituencyProfileViewed)
+  }, [])
 
   // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
   // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()

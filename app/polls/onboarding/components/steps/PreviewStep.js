@@ -3,10 +3,18 @@ import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { LuCalendar } from 'react-icons/lu'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function PreviewStep() {
   const { demoMessageText, formData } = useOnboardingContext()
-  const { imageUrl } = formData
+  const { imageUrl, estimatedCompletionDate } = formData
+
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.PollPreviewViewed)
+  }, [])
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
@@ -14,7 +22,7 @@ export default function PreviewStep() {
         Review your SMS poll
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
-        This serve will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
+        This poll will be sent to a representative sample of your constituents for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3 days.
       </p>
 
       <div className="w-full items-center flex flex-col gap-4 mt-8">
@@ -45,6 +53,17 @@ export default function PreviewStep() {
             </div>
           }
           note="You can add more recipients after launch."
+        />
+        <MessageCard
+          title="Schedule"
+          icon={<LuCalendar />}
+          description={
+            <div className="flex flex-col gap-1">
+              <p className="mt-3 font-normal text-sm">Estimated Completion Date:</p>
+              <p className="leading-normal medium text-sm">{dateUsHelper(estimatedCompletionDate, "long")}</p>
+            </div>
+          }
+          note=""
         />
 
       </div>

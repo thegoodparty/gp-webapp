@@ -6,6 +6,7 @@ import { CircularProgress } from '@mui/material'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { uploadFileToS3 } from '@shared/utils/s3Upload'
 import { getPollSubFolderName, FOLDER_NAME } from '../../../utils/s3utils'
 
@@ -24,7 +25,11 @@ export default function AddImageStep({}) {
   const [errorMessage, setErrorMessage] = useState('')
   const [previewUrl, setPreviewUrl] = useState(null)
 
-  // Cleanup blob URL on component unmount
+  // Fire view event once on mount
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
+  }, [])
+
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -83,6 +88,8 @@ export default function AddImageStep({}) {
         
         // Store in onboarding context
         setImageUrl(imageUrl)
+
+        trackEvent(EVENTS.ServeOnboarding.PollImageUploaded)
       } catch (e) {
         console.error(e)
         setErrorMessage('Failed to upload image')
