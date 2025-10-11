@@ -1,4 +1,4 @@
-import ConfidenceAlert from './ConfidenceAlert'
+import ConfidenceAlert from '../../shared/ConfidenceAlert'
 import PollsIssues from './PollsIssues'
 
 export default function CompletedPoll() {
