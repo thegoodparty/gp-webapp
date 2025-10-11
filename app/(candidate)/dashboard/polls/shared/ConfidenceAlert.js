@@ -1,9 +1,9 @@
 'use client'
 
 import { BsExclamationCircle } from 'react-icons/bs'
-import { usePoll } from '../hooks/PollProvider'
 import { Alert, AlertTitle } from 'goodparty-styleguide'
 import Body2 from '@shared/typography/Body2'
+import { usePoll } from '../[id]/hooks/PollProvider'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
