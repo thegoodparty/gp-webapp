@@ -27,7 +27,7 @@ export default function RepComments() {
             <i>{comment.comment}</i>
           </div>
         ))}
-        {representativeComments.length === 0 && (
+        {representativeComments && representativeComments.length === 0 && (
           <Body1 className="mt-4">No representative comments found</Body1>
         )}
       </Body1>
