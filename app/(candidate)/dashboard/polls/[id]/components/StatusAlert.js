@@ -1,6 +1,6 @@
 'use client'
 import { MdLock } from 'react-icons/md'
-import { usePoll } from '../hooks/PollProvider'
+import { usePoll } from '../../shared/hooks/PollProvider'
 import { Alert, AlertTitle } from 'goodparty-styleguide'
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import { dateUsHelper } from 'helpers/dateHelper'

@@ -1,7 +1,7 @@
 'use client'
 
-import { useIssue } from '../[id]/issue/[issueId]/hooks/IssueProvider'
-import { usePoll } from '../[id]/hooks/PollProvider'
+import { useIssue } from './hooks/IssueProvider'
+import { usePoll } from './hooks/PollProvider'
 import {
   Breadcrumb,
   BreadcrumbItem,

@@ -1,8 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper'
 import PollsDetailPage from './components/PollsDetailPage'
 import serveAccess from '../../shared/serveAccess'
-import { polls } from '../tempData'
-import { PollProvider } from './hooks/PollProvider'
+import { PollProvider } from '../shared/hooks/PollProvider'
+import { getPoll, getPollTopIssues } from '../shared/serverApiCalls'
+import { IssuesProvider } from '@shared/hooks/IssuesProvider'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -15,12 +16,15 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params }) {
   await serveAccess()
-  const { id } = params
-  const poll = polls.find((poll) => poll.id === parseInt(id))
+  const { id } = await params
+  const poll = await getPoll(id)
+  const issues = (await getPollTopIssues(id)) || []
 
   return (
     <PollProvider poll={poll}>
-      <PollsDetailPage pathname="/dashboard/polls" />
+      <IssuesProvider issues={issues}>
+        <PollsDetailPage pathname="/dashboard/polls" />
+      </IssuesProvider>
     </PollProvider>
   )
 }

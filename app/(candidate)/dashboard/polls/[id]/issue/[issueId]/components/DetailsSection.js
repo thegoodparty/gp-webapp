@@ -1,7 +1,7 @@
 import H4 from '@shared/typography/H4'
 import { Card, CardContent } from 'goodparty-styleguide'
 import { LuClipboardList } from 'react-icons/lu'
-import { useIssue } from '../hooks/IssueProvider'
+import { useIssue } from '../../../../shared/hooks/IssueProvider'
 import Body1 from '@shared/typography/Body1'
 import RepComments from './RepComments'
 
