@@ -81,7 +81,7 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdLibraryBooks />,
     link: '/dashboard/resources',
     id: 'resources-library',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickFreeResources),
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickResources),
   },
   {
     label: 'Community',
