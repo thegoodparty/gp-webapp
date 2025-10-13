@@ -90,6 +90,9 @@ export const EVENTS = {
       ClickPolls: 'Navigation - Dashboard: Click Polls',
     },
   },
+  Resources: {
+    ResourceClicked: 'Resources - Resource Clicked',
+  },
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
     PathToVictory: {
