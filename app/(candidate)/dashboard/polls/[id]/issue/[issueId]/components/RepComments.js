@@ -1,6 +1,6 @@
 import H4 from '@shared/typography/H4'
 import { LuMessagesSquare } from 'react-icons/lu'
-import { useIssue } from '../hooks/IssueProvider'
+import { useIssue } from '../../../../shared/hooks/IssueProvider'
 import Body1 from '@shared/typography/Body1'
 
 export default function RepComments() {

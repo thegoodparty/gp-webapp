@@ -3,7 +3,7 @@
 import { BsExclamationCircle } from 'react-icons/bs'
 import { Alert, AlertTitle } from 'goodparty-styleguide'
 import Body2 from '@shared/typography/Body2'
-import { usePoll } from '../[id]/hooks/PollProvider'
+import { usePoll } from './hooks/PollProvider'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()

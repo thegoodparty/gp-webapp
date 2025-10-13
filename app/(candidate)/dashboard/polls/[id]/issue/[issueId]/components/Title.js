@@ -1,8 +1,8 @@
 import H1 from '@shared/typography/H1'
-import { useIssue } from '../hooks/IssueProvider'
+import { useIssue } from '../../../../shared/hooks/IssueProvider'
 import Link from 'next/link'
 import { IoArrowBack } from 'react-icons/io5'
-import { usePoll } from '../../../hooks/PollProvider'
+import { usePoll } from '../../../../shared/hooks/PollProvider'
 import Body1 from '@shared/typography/Body1'
 
 export default function Title() {

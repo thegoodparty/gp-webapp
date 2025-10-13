@@ -2,7 +2,7 @@
 import { Button, Card } from 'goodparty-styleguide'
 import { MdArrowRightAlt } from 'react-icons/md'
 import Link from 'next/link'
-import { usePoll } from '../hooks/PollProvider'
+import { usePoll } from '../../shared/hooks/PollProvider'
 
 export default function PollsIssueCard({ issue, index }) {
   const [poll] = usePoll()
