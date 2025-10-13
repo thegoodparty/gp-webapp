@@ -25,6 +25,8 @@ const STATUS_COLUMN = {
       return <NotApplicableLabel />
     }
 
+    const { p2pJob } = row
+
     const statusLabels = {
       pending: 'Draft',
       approved: 'In review',
@@ -34,17 +36,36 @@ const STATUS_COLUMN = {
       completed: 'Sent',
     }
 
-    if (!row.status || !statusLabels[row.status]) {
+    if (!p2pJob?.status || !row.status || !statusLabels[row.status]) {
       return <NotApplicableLabel />
     }
 
-    return <span>{statusLabels[row.status]}</span>
+    console.log(`p2pJob?.status =>`, p2pJob?.status)
+    console.log(`p2pJob.leads_remaining =>`, p2pJob.leads_remaining)
+    // TODO: Figure out how the heck we're supposed to determine if a job's
+    //  status should be displayed to the user as "Sent"!
+    //  Slack discussion:
+    //  https://goodpartyorg.slack.com/archives/C09H3K02LLV/p1760137495253819?thread_ts=1759357208.032249&cid=C09H3K02LLV
+    const jobComplete =
+      p2pJob?.status &&
+      p2pJob?.status === 'active' &&
+      p2pJob.leads_remaining <= 0
+    console.log(`jobComplete =>`, jobComplete)
+
+    return (
+      <span className="capitalize">
+        {p2pJob && jobComplete
+          ? statusLabels.completed
+          : statusLabels[row.status]}
+      </span>
+    )
   },
 }
 
 export const OutreachTable = ({ mockOutreaches }) => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [outreaches] = useOutreach()
+  console.log(`outreaches =>`, outreaches)
   const useMockData = !outreaches?.length
   const tableData = useMockData ? mockOutreaches : outreaches
   const [viewFilters, setViewFilters] = useState(null)
