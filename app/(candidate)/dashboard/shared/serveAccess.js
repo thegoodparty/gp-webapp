@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
+import { serveAccessCriteria } from './serveAccessCriteria'
 
 export async function fetchCampaignStatus() {
   try {
@@ -17,11 +18,9 @@ export async function fetchCampaignStatus() {
 }
 
 export default async function serveAccess() {
-  // don't remove this call. It prevents the build process to try to cache this page which should be dynamic
-  // https://nextjs.org/docs/messages/dynamic-server-error
   const campaign = await fetchUserCampaign()
 
-  if (!campaign?.details?.wonGeneral) {
+  if (!serveAccessCriteria(campaign)) {
     return redirect('/dashboard')
   }
 }

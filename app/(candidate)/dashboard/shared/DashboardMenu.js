@@ -23,6 +23,7 @@ import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import { serveAccessCriteria } from './serveAccessCriteria'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -146,7 +147,7 @@ const getDashboardMenuItems = (
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  if (pollsAccessEnabled) {
+  if (pollsAccessEnabled && serveAccessCriteria(campaign)) {
     menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
