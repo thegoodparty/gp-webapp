@@ -15,7 +15,7 @@ import { Fragment } from 'react'
 export default function Crumbs() {
   const [issue] = useIssue()
   const [poll] = usePoll()
-  const { title } = issue
+  const { title } = issue || {}
 
   const breadcrumbsLinks = [
     { href: `/dashboard/polls`, label: 'Polls' },

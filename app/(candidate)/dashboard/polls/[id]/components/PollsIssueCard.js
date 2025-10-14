@@ -4,9 +4,9 @@ import { MdArrowRightAlt } from 'react-icons/md'
 import Link from 'next/link'
 import { usePoll } from '../../shared/hooks/PollProvider'
 
-export default function PollsIssueCard({ issue, index }) {
+export default function PollsIssueCard({ issue = {}, index }) {
   const [poll] = usePoll()
-  const { title, summary, mentionCount, id } = issue
+  const { title, summary, mentionCount } = issue
   return (
     <Card className="p-4 md:p-8">
       <div className="flex flex-col justify-between h-full">
@@ -24,7 +24,7 @@ export default function PollsIssueCard({ issue, index }) {
         </div>
         <div className="mt-4">{summary}</div>
         <Link
-          href={`/dashboard/polls/${poll.id}/issue/${id}`}
+          href={`/dashboard/polls/${poll.id}/issue/${index}`}
           className="mt-12"
         >
           <Button variant="outline" className="w-full">
