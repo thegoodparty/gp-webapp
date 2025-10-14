@@ -36,10 +36,11 @@ const ResourcesPage = (props) => {
                   gap-6
                 "
               >
-                {categoryResources.map(({ title, url, imageUrl }) => (
+                {categoryResources.map(({ id, title, url, imageUrl }) => (
                   <ResourceCard
-                    key={title}
+                    key={id}
                     {...{
+                      id,
                       title,
                       url,
                       category,

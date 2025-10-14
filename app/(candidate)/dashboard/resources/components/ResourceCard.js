@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-const ResourceCard = ({ title, url, category, imageUrl }) => {
+const ResourceCard = ({ id, title, url, category, imageUrl }) => {
   const handleClick = () => {
     trackEvent(EVENTS.Resources.ResourceClicked, {
       resourceName: title,
@@ -26,7 +26,7 @@ const ResourceCard = ({ title, url, category, imageUrl }) => {
         w-full
         md:w-[180px]
       "
-      id={`resource-${title.toLowerCase().replace(/\s+/g, '-')}`}
+      id={id}
     >
       {imageUrl && (
         <div
