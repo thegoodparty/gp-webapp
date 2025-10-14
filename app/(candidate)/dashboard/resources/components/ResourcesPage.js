@@ -36,20 +36,17 @@ const ResourcesPage = (props) => {
                   gap-6
                 "
               >
-                {categoryResources.map((resource) => {
-                  const { title, url, imageUrl } = resource
-                  return (
-                    <ResourceCard
-                      key={title}
-                      {...{
-                        title,
-                        url,
-                        category,
-                        imageUrl,
-                      }}
-                    />
-                  )
-                })}
+                {categoryResources.map(({ title, url, imageUrl }) => (
+                  <ResourceCard
+                    key={title}
+                    {...{
+                      title,
+                      url,
+                      category,
+                      imageUrl,
+                    }}
+                  />
+                ))}
               </div>
             </div>
           ) : null
