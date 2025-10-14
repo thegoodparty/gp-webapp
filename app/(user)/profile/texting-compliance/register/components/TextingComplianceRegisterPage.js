@@ -62,6 +62,7 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
       
       // Track 10 DLC compliance status change to Pending
       trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {
+        email: user.email,
         dlcComplianceStatus: 'Pending',
       })
       

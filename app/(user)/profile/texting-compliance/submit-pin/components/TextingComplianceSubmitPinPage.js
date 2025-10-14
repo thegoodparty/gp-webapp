@@ -14,6 +14,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent } from 'helpers/analyticsHelper'
 import { EVENTS } from 'helpers/analyticsHelper'
+import { useUser } from '@shared/hooks/useUser'
 
 const initialFormState = {
   pin: '',
@@ -37,6 +38,7 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
   const [error, setError] = useState(null)
+  const [user] = useUser()
 
   const handleFormSubmit = async (formData) => {
     setLoading(true)
@@ -45,6 +47,7 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }) => {
       
       // Track 10 DLC compliance status change to Yes
       trackEvent(EVENTS.Outreach.DlcCompliance.PinVerificationCompleted, {
+        email: user.email,
         dlcComplianceStatus: 'Yes',
       })
       
