@@ -5,7 +5,7 @@ import { useIssues } from '../../shared/hooks/IssuesProvider'
 
 export default function PollsIssues() {
   const [issues] = useIssues()
-  if (issues?.length === 0) {
+  if (!issues?.length) {
     return (
       <div className="mt-4 text-center text-2xl font-medium">
         No issues found
