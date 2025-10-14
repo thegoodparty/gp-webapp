@@ -3,7 +3,7 @@ export const RESOURCES_DATA = [
     id: 'resource-campaign-playbook',
     category: 'Guides',
     title: '2025 Campaign Playbook',
-    url: 'https://lp.goodparty.org/e-book/',
+    url: 'https://app-na1.hubspotdocuments.com/documents/21589597/view/1047657728?accessId=1d3221',
     imageUrl: '/images/resources/campaign-playbook.png',
   },
   {
@@ -24,7 +24,7 @@ export const RESOURCES_DATA = [
     id: 'resource-social-media',
     category: 'Templates',
     title: 'Social Media',
-    url: 'https://lp.goodparty.org/template-library/',
+    url: 'https://drive.google.com/file/d/14XBfJ_nBRgFLUXBR3-In4LlHCOuYybR1/view?usp=sharing',
     imageUrl: '/images/resources/social-media.png',
   },
   {
@@ -38,7 +38,7 @@ export const RESOURCES_DATA = [
     id: 'resource-yard-signs',
     category: 'Templates',
     title: 'Yard Signs',
-    url: 'https://lp.goodparty.org/yard-signs/',
+    url: 'https://drive.google.com/file/d/1-RRkuCo8BUWeFHo_TIWeLcqOPB_uNrOc/view?usp=sharing',
     imageUrl: '/images/resources/yard-signs.png',
   },
   {
@@ -58,9 +58,9 @@ export const RESOURCES_DATA = [
   {
     id: 'resource-gotv-strategies',
     category: 'Tactics',
-    title: 'Get-Out-the-Vote Strategies: 7 Tactics for Local Political Campaigns',
+    title:
+      'Get-Out-the-Vote Strategies: 7 Tactics for Local Political Campaigns',
     url: 'https://goodparty.org/blog/article/get-out-the-vote',
     imageUrl: '/images/resources/gotv-strategies.png',
   },
 ]
-

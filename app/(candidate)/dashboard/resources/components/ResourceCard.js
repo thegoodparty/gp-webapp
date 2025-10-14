@@ -76,4 +76,3 @@ const ResourceCard = ({ id, title, url, category, imageUrl }) => {
 }
 
 export default ResourceCard
-
