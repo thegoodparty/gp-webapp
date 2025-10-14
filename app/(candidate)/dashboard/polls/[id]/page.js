@@ -3,7 +3,7 @@ import PollsDetailPage from './components/PollsDetailPage'
 import serveAccess from '../../shared/serveAccess'
 import { PollProvider } from '../shared/hooks/PollProvider'
 import { getPoll, getPollTopIssues } from '../shared/serverApiCalls'
-import { IssuesProvider } from '@shared/hooks/IssuesProvider'
+import { IssuesProvider } from '../shared/hooks/IssuesProvider'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -18,7 +18,7 @@ export default async function Page({ params }) {
   await serveAccess()
   const { id } = await params
   const poll = await getPoll(id)
-  const issues = (await getPollTopIssues(id)) || []
+  const issues = (await getPollTopIssues(id))?.results || []
 
   return (
     <PollProvider poll={poll}>
