@@ -4,7 +4,10 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { DemoMessageText, MessageText } from '../onboarding/components/DemoMessageText'
+import {
+  DemoMessageText,
+  MessageText,
+} from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
@@ -13,22 +16,25 @@ export const useOnboarding = () => {
   const { on: pollsAccessEnabled } = useFlagOn('serve-polls-v1')
   const [campaign] = useCampaign()
   const [user] = useUser()
-  const { contactsSample, isLoadingContactsSample, contactsSampleError } = useContactsSample()
-  
+  const { contactsSample, isLoadingContactsSample, contactsSampleError } =
+    useContactsSample()
+
   const [formData, setFormData] = useState({
     imageUrl: null,
     csvUrl: null,
     textMessage: null,
+    scheduledDate: null,
+    estimatedCompletionDate: null,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
 
   // Memoize campaign and user data
-  const campaignOffice = useMemo(() => 
-    campaign?.details?.otherOffice || campaign?.details?.office, 
-    [campaign]
+  const campaignOffice = useMemo(
+    () => campaign?.details?.otherOffice || campaign?.details?.office,
+    [campaign],
   )
-  
+
   const userName = useMemo(() => {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName} ${user.lastName}`
@@ -36,56 +42,87 @@ export const useOnboarding = () => {
     // Extra fallback. This should not happen.
     return user?.name || `n/a`
   }, [user])
-  
+
   // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
-  const demoMessageText = useMemo(() => 
-    DemoMessageText({ name: userName, office: campaignOffice, constituentName: 'Bill' }),
-    [userName, campaignOffice]
+  const demoMessageText = useMemo(
+    () =>
+      DemoMessageText({
+        name: userName,
+        office: campaignOffice,
+        constituentName: 'Bill',
+      }),
+    [userName, campaignOffice],
   )
   // Real Message text that is sent to the API
-  const messageText = useMemo(() => 
-    MessageText({ name: userName, office: campaignOffice }),
-    [userName, campaignOffice]
+  const messageText = useMemo(
+    () => MessageText({ name: userName, office: campaignOffice }),
+    [userName, campaignOffice],
   )
 
   // Automatically set the text message when demo text is available
   useEffect(() => {
     if (messageText) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        textMessage: messageText
+        textMessage: messageText,
       }))
     }
   }, [messageText])
 
-  const updateFormData = useCallback((updates) => {
-    setFormData(prev => ({
+  // Calculate and set the scheduled and completion dates
+  useEffect(() => {
+    const now = new Date()
+    // These are placeholder values, will be expanded upon in the future. We are forcing 7 days for tevyn in interim.
+    const scheduledDate = new Date(now)
+    scheduledDate.setDate(now.getDate() + 4) // 4 days from now
+
+    const estimatedCompletionDate = new Date(now)
+    estimatedCompletionDate.setDate(now.getDate() + 7) // 7 days from now (4 + 3), 3 day processing time
+
+    setFormData((prev) => ({
       ...prev,
-      ...updates
+      scheduledDate,
+      estimatedCompletionDate,
     }))
   }, [])
 
-  const setImageUrl = useCallback((imageUrl) => {
-    updateFormData({imageUrl})
-  }, [updateFormData])
+  const updateFormData = useCallback((updates) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...updates,
+    }))
+  }, [])
 
-  const setCsvUrl = useCallback((csvUrl) => {
-    updateFormData({csvUrl})
-  }, [updateFormData])
+  const setImageUrl = useCallback(
+    (imageUrl) => {
+      updateFormData({ imageUrl })
+    },
+    [updateFormData],
+  )
+
+  const setCsvUrl = useCallback(
+    (csvUrl) => {
+      updateFormData({ csvUrl })
+    },
+    [updateFormData],
+  )
 
   // Handle CSV upload when contacts sample is available
   const { isUploadingCsvSample, csvSampleError } = useCsvUpload(
-    contactsSample, 
-    campaign, 
-    formData.csvUrl, 
-    setCsvUrl
+    contactsSample,
+    campaign,
+    formData.csvUrl,
+    setCsvUrl,
   )
 
-  const setTextMessage = useCallback((textMessage) => {
-    updateFormData({
-      textMessage
-    })
-  }, [updateFormData])
+  const setTextMessage = useCallback(
+    (textMessage) => {
+      updateFormData({
+        textMessage,
+      })
+    },
+    [updateFormData],
+  )
 
   const submitOnboarding = useCallback(async () => {
     try {
@@ -105,7 +142,7 @@ export const useOnboarding = () => {
       if (!formData.csvUrl) {
         throw new Error('Contact data is not ready.')
       }
-      
+
       setIsSubmitting(true)
       setSubmitError(null)
 
@@ -117,21 +154,40 @@ export const useOnboarding = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to submit onboarding data', response.statusText, response.data)
+        throw new Error(
+          'Failed to submit onboarding data',
+          response.statusText,
+          response.data,
+        )
       }
 
       return response.data
     } catch (error) {
       console.error(error)
-      setSubmitError("Try again in a few minutes or contact us if the issue persists")
+      setSubmitError(
+        'Try again in a few minutes or contact us if the issue persists',
+      )
       throw error
     } finally {
       setIsSubmitting(false)
     }
-  }, [formData, csvSampleError, isLoadingContactsSample, isUploadingCsvSample, contactsSampleError, pollsAccessEnabled])
+  }, [
+    formData,
+    csvSampleError,
+    isLoadingContactsSample,
+    isUploadingCsvSample,
+    contactsSampleError,
+    pollsAccessEnabled,
+  ])
 
   const resetFormData = useCallback(() => {
-    setFormData({ imageUrl: null, csvUrl: null, textMessage: null })
+    setFormData({
+      imageUrl: null,
+      csvUrl: null,
+      textMessage: null,
+      scheduledDate: null,
+      estimatedCompletionDate: null,
+    })
     setSubmitError(null)
   }, [])
 
@@ -146,19 +202,19 @@ export const useOnboarding = () => {
     setTextMessage,
     submitOnboarding,
     resetFormData,
-    
+
     // Contacts sample
     contactsSample,
     isLoadingContactsSample,
     contactsSampleError,
     isUploadingCsvSample,
     csvSampleError,
-    
+
     // Campaign and user data
     campaign,
     user,
     campaignOffice,
     userName,
-    demoMessageText
+    demoMessageText,
   }
 }

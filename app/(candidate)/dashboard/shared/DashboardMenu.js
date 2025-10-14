@@ -77,11 +77,11 @@ const DEFAULT_MENU_ITEMS = [
   },
 
   {
-    label: 'Free Resources',
+    label: 'Resources',
     icon: <MdLibraryBooks />,
-    link: '/blog/section/for-candidates',
+    link: '/dashboard/resources',
     id: 'resources-library',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickFreeResources),
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickResources),
   },
   {
     label: 'Community',

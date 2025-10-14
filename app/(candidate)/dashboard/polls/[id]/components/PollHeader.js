@@ -1,6 +1,6 @@
 'use client'
 
-import { usePoll } from '../hooks/PollProvider'
+import { usePoll } from '../../shared/hooks/PollProvider'
 import H1 from '@shared/typography/H1'
 export default function PollHeader() {
   const [poll] = usePoll()

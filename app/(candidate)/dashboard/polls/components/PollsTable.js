@@ -1,3 +1,4 @@
+'use client'
 import {
   Table,
   TableBody,
@@ -8,7 +9,7 @@ import {
 } from 'goodparty-styleguide'
 import Link from 'next/link'
 import StatusBadge from './StatusBadge'
-import { polls } from '../tempData'
+import { usePolls } from '../shared/hooks/PollsProvider'
 
 const columns = [
   {
@@ -34,6 +35,15 @@ const columns = [
 ]
 
 export default function PollsTable() {
+  const [polls] = usePolls()
+
+  if (polls?.results?.length === 0) {
+    return (
+      <div className="mt-4 text-center text-2xl font-medium">
+        No polls found
+      </div>
+    )
+  }
   return (
     <div className="border border-gray-200 rounded-md w-[calc(100vw-48px)] md:w-full overflow-x-auto">
       <div className="min-w-[600px]">
@@ -46,7 +56,7 @@ export default function PollsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {polls.map((poll) => (
+            {(polls?.results || []).map((poll) => (
               <TableRow key={poll.id}>
                 <TableCell>
                   <Link

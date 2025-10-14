@@ -1,13 +1,11 @@
 'use client'
-import { pollIssues } from '../../tempData'
 import H2 from '@shared/typography/H2'
-import { usePoll } from '../hooks/PollProvider'
 import PollsIssueCard from './PollsIssueCard'
+import { useIssues } from '../../shared/hooks/IssuesProvider'
 
 export default function PollsIssues() {
-  const [poll] = usePoll()
-  const issues = pollIssues || []
-  if (issues.length === 0) {
+  const [issues] = useIssues()
+  if (!issues?.length) {
     return (
       <div className="mt-4 text-center text-2xl font-medium">
         No issues found
