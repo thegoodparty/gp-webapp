@@ -1,13 +1,11 @@
 'use client'
 import H2 from '@shared/typography/H2'
-import { usePoll } from '../../shared/hooks/PollProvider'
 import PollsIssueCard from './PollsIssueCard'
-import { useIssues } from '@shared/hooks/useIssues'
+import { useIssues } from '../../shared/hooks/IssuesProvider'
 
 export default function PollsIssues() {
-  const [poll] = usePoll()
   const [issues] = useIssues()
-  if (issues.length === 0) {
+  if (!issues?.length) {
     return (
       <div className="mt-4 text-center text-2xl font-medium">
         No issues found
