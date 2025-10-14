@@ -8,7 +8,7 @@ import Body1 from '@shared/typography/Body1'
 export default function Title() {
   const [issue] = useIssue()
   const [poll] = usePoll()
-  const { title, summary } = issue
+  const { title, summary } = issue || {}
   return (
     <div className="my-4">
       <div className="flex items-center gap-3 mb-2">
