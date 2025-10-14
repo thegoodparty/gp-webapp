@@ -64,3 +64,4 @@ export const RESOURCES_DATA = [
     imageUrl: '/images/resources/gotv-strategies.png',
   },
 ]
+
