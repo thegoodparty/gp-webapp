@@ -3,7 +3,7 @@ import serveAccess from 'app/(candidate)/dashboard/shared/serveAccess'
 import PollIssueDetailPage from './components/PollIssueDetailPage'
 import { IssueProvider } from '../../../shared/hooks/IssueProvider'
 import { PollProvider } from '../../../shared/hooks/PollProvider'
-import { getPoll } from '../../../shared/serverApiCalls'
+import { getPoll, getPollTopIssues } from '../../../shared/serverApiCalls'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
