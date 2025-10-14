@@ -18,7 +18,7 @@ export default async function Page({ params }) {
   await serveAccess()
   const { id, issueId } = await params
   const poll = await getPoll(id)
-  const issues = await getPollTopIssues(id)
+  const issues = (await getPollTopIssues(id))?.results || []
   const issue = issues.find((issue) => issue.id == issueId)
   const pathname = `/dashboard/polls/${id}/issue/${issueId}`
 
