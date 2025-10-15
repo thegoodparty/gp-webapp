@@ -6,9 +6,12 @@ import Body1 from '@shared/typography/Body1'
 import Paper from '@shared/utils/Paper'
 import PollsTable from './PollsTable'
 import PollsPageGuard from './PollsPageGuard'
+import { usePolls } from '../shared/hooks/PollsProvider'
+import PollWelcomePage from 'app/polls/welcome/components/PollWelcomePage'
 
 export default function PollsPage({ pathname }) {
   const [campaign] = useCampaign()
+  const [polls] = usePolls()
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
@@ -18,7 +21,11 @@ export default function PollsPage({ pathname }) {
           <Body1 className="text-gray-500 mb-4">
             Manage your constituent engagement
           </Body1>
-          <PollsTable />
+          {polls?.results?.length > 0 ? (
+            <PollsTable />
+          ) : (
+            <PollWelcomePage fullPageMode={false} />
+          )}
         </Paper>
       </PollsPageGuard>
     </DashboardLayout>
