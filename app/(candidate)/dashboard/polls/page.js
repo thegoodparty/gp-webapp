@@ -18,7 +18,7 @@ export default async function Page() {
   await serveAccess()
   const polls = await getPolls()
   const pollsCount = polls?.results?.length || 0
-  // TODO: remove this after we restore the list view
+
   if (pollsCount === 1) {
     return redirect(`/dashboard/polls/${polls?.results?.[0]?.id}`)
   }

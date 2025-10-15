@@ -4,6 +4,7 @@ import PollIssueDetailPage from './components/PollIssueDetailPage'
 import { IssueProvider } from '../../../shared/hooks/IssueProvider'
 import { PollProvider } from '../../../shared/hooks/PollProvider'
 import { getPoll, getPollTopIssues } from '../../../shared/serverApiCalls'
+import { notFound } from 'next/navigation'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -16,11 +17,20 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params }) {
   await serveAccess()
-  const { id, issueId } = await params
+  const { id, issueIndex } = await params
   const poll = await getPoll(id)
-  const issues = await getPollTopIssues(id)
-  const issue = issues.find((issue) => issue.id == issueId)
-  const pathname = `/dashboard/polls/${id}/issue/${issueId}`
+  const issues = (await getPollTopIssues(id))?.results || []
+
+  const issueIndexNum = parseInt(issueIndex, 10)
+  if (
+    isNaN(issueIndexNum) ||
+    issueIndexNum < 0 ||
+    issueIndexNum >= issues.length
+  ) {
+    notFound()
+  }
+  const issue = issues[issueIndexNum]
+  const pathname = `/dashboard/polls/${id}/issue/${issueIndex}`
 
   return (
     <IssueProvider issue={issue}>
