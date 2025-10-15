@@ -7,7 +7,7 @@ import PollHeader from './PollHeader'
 import PollsContent from './PollsContent'
 
 export default function PollsDetailPage({ pathname }) {
-  const { campaign } = useCampaign()
+  const [campaign] = useCampaign()
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>

@@ -9,7 +9,7 @@ import ConfidenceAlert from 'app/(candidate)/dashboard/polls/shared/ConfidenceAl
 import DetailsSection from './DetailsSection'
 
 export default function PollIssueDetailPage({ pathname }) {
-  const { campaign } = useCampaign()
+  const [campaign] = useCampaign()
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
