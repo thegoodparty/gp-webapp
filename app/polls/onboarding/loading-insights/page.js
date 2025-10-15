@@ -12,7 +12,7 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page({}) {
-  await requireAuth('/polls/onboarding/loading-insights')
+  await requireAuth()
   await candidateAccess()
 
   return <LoadingInsightsPage />

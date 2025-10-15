@@ -12,7 +12,7 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page({ searchParams }) {
-  await requireAuth('/polls/welcome')
+  await requireAuth()
   await candidateAccess()
 
   const childProps = {}
