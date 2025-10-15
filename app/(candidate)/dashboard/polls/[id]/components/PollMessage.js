@@ -1,7 +1,7 @@
 'use client'
 
 import { LuScrollText } from 'react-icons/lu'
-import { usePoll } from '../hooks/PollProvider'
+import { usePoll } from '../../shared/hooks/PollProvider'
 import H3 from '@shared/typography/H3'
 import Image from 'next/image'
 import Body2 from '@shared/typography/Body2'
