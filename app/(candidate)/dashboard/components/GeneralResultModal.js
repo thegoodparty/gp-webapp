@@ -7,8 +7,17 @@ import RadioList from '@shared/inputs/RadioList'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
-export default function GeneralResultModal({ open, officeName, electionDate, onClose }) {
+export default function GeneralResultModal({
+  open,
+  officeName,
+  electionDate,
+  onClose,
+}) {
+  const { refreshElectedOffice } = useElectedOffice()
   const { errorSnackbar } = useSnackbar()
   const [result, setResult] = useState(null)
   const [requestState, setRequestState] = useState({
@@ -22,15 +31,40 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
     { key: 'lost', label: 'I did not win my race' },
   ]
 
+  const createElectedOffice = async () => {
+    if (!electionDate) {
+      throw new Error('Invalid election date')
+    }
+
+    const response = await clientFetch(apiRoutes.electedOffice.create, {
+      electedDate: new Date(electionDate).toISOString().split('T')[0],
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to create elected office')
+    }
+    refreshElectedOffice()
+    return response.data
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setRequestState({ loading: true, error: false })
     try {
       const wonGeneral = result === 'won'
 
-      await updateCampaign([
-        { key: 'details.wonGeneral', value: wonGeneral },
-      ])
+      await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
+
+      // Create ElectedOffice if the user won the election
+      if (wonGeneral) {
+        try {
+          await createElectedOffice()
+        } catch (electedOfficeError) {
+          console.error('Error creating elected office:', electedOfficeError)
+          // Don't fail the entire submission if elected office creation fails
+          // Just log the error and continue
+        }
+      }
 
       trackEvent(EVENTS.Candidacy.CampaignCompleted, {
         winner: wonGeneral,
@@ -48,7 +82,13 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
   }
 
   return (
-    <Modal open={open} boxClassName="p-16 pt-0" preventEscClose preventBackdropClose hideClose>
+    <Modal
+      open={open}
+      boxClassName="p-16 pt-0"
+      preventEscClose
+      preventBackdropClose
+      hideClose
+    >
       {!formSubmitted ? (
         <form onSubmit={handleSubmit} className="pt-16 max-w-[640px]">
           <H1 className="mb-4 text-center">
@@ -62,10 +102,15 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
           </Body2>
 
           {!requestState.error ? (
-            <RadioList options={options} selected={result} selectCallback={setResult} />
+            <RadioList
+              options={options}
+              selected={result}
+              selectCallback={setResult}
+            />
           ) : (
             <Body2 className="text-red text-center">
-              An error occured when saving your election result, please try again later.
+              An error occured when saving your election result, please try
+              again later.
             </Body2>
           )}
 
@@ -93,7 +138,11 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
         </form>
       ) : (
         <div className="text-center">
-          <Button onClick={() => onClose(result === 'won')} size="large" className="w-full mt-8">
+          <Button
+            onClick={() => onClose(result === 'won')}
+            size="large"
+            className="w-full mt-8"
+          >
             Back to Dashboard
           </Button>
         </div>
@@ -101,5 +150,3 @@ export default function GeneralResultModal({ open, officeName, electionDate, onC
     </Modal>
   )
 }
-
-

@@ -1,7 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
-
 import OnboardingPage from './components/OnboardingPage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import { requireAuth } from 'helpers/authHelper'
 
 const meta = pageMetaData({
   title: 'Welcome to GoodParty.org Serve Onboarding',
@@ -12,7 +12,8 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page({}) {
+  await requireAuth()
   await candidateAccess()
 
-  return <OnboardingPage/>
+  return <OnboardingPage />
 }
