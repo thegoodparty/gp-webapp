@@ -1,6 +1,7 @@
 'use client'
 import H1 from '@shared/typography/H1'
 import DashboardLayout from '../../shared/DashboardLayout'
+import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import Paper from '@shared/utils/Paper'
 import PollsTable from './PollsTable'
