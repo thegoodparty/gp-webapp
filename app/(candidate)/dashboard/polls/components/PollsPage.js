@@ -1,17 +1,17 @@
 'use client'
 import H1 from '@shared/typography/H1'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useCampaign } from '@shared/hooks/useCampaign'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import Body1 from '@shared/typography/Body1'
 import Paper from '@shared/utils/Paper'
 import PollsTable from './PollsTable'
 import PollsPageGuard from './PollsPageGuard'
 
 export default function PollsPage({ pathname }) {
-  const [campaign] = useCampaign()
+  const { electedOffice } = useElectedOffice()
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} campaign={electedOffice} showAlert={false}>
       <PollsPageGuard>
         <Paper className="min-h-full">
           <H1>Polls</H1>

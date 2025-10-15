@@ -146,11 +146,10 @@ export const useOnboarding = () => {
       setIsSubmitting(true)
       setSubmitError(null)
 
-      const response = await clientFetch(apiRoutes.contacts.tevynApi, {
+      const response = await clientFetch(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
         csvFileUrl: formData.csvUrl,
         imageUrl: formData.imageUrl,
-        createPoll: pollsAccessEnabled,
       })
 
       if (!response.ok) {
