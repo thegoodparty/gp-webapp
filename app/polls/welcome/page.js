@@ -1,6 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import PollWelcomePage from './components/PollWelcomePage'
-import serveAccess from 'app/(candidate)/dashboard/shared/serveAccess'
+import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import { requireAuth } from 'helpers/authHelper'
 
 const meta = pageMetaData({
   title: 'Welcome to GoodParty.org Serve',
@@ -11,7 +12,9 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page({ searchParams }) {
-  await serveAccess()
+  await requireAuth('/polls/welcome')
+  await candidateAccess()
+
   const childProps = {}
 
   return <PollWelcomePage {...childProps} />
