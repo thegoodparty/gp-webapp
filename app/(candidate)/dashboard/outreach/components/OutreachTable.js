@@ -40,21 +40,11 @@ const STATUS_COLUMN = {
       return <NotApplicableLabel />
     }
 
-    console.log(`p2pJob?.status =>`, p2pJob?.status)
-    console.log(`p2pJob.leads_remaining =>`, p2pJob.leads_remaining)
-    // TODO: Figure out how the heck we're supposed to determine if a job's
-    //  status should be displayed to the user as "Sent"!
-    //  Slack discussion:
-    //  https://goodpartyorg.slack.com/archives/C09H3K02LLV/p1760137495253819?thread_ts=1759357208.032249&cid=C09H3K02LLV
-    const jobComplete =
-      p2pJob?.status &&
-      p2pJob?.status === 'active' &&
-      p2pJob.leads_remaining <= 0
-    console.log(`jobComplete =>`, jobComplete)
+    const showActiveStatus = p2pJob?.status === 'active'
 
     return (
       <span className="capitalize">
-        {p2pJob && jobComplete
+        {p2pJob && showActiveStatus
           ? statusLabels.completed
           : statusLabels[row.status]}
       </span>
