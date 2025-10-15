@@ -32,16 +32,13 @@ export default function GeneralResultModal({
   ]
 
   const createElectedOffice = async () => {
-    const electedOfficeData = {
-      electedDate: electionDate
-        ? new Date(electionDate).toISOString().split('T')[0]
-        : null,
+    if (!electionDate) {
+      throw new Error('Invalid election date')
     }
 
-    const response = await clientFetch(
-      apiRoutes.electedOffice.create,
-      electedOfficeData,
-    )
+    const response = await clientFetch(apiRoutes.electedOffice.create, {
+      electedDate: new Date(electionDate).toISOString().split('T')[0],
+    })
 
     if (!response.ok) {
       throw new Error('Failed to create elected office')

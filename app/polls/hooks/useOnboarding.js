@@ -10,10 +10,8 @@ import {
 } from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const useOnboarding = () => {
-  const { on: pollsAccessEnabled } = useFlagOn('serve-polls-v1')
   const [campaign] = useCampaign()
   const [user] = useUser()
   const { contactsSample, isLoadingContactsSample, contactsSampleError } =
@@ -176,7 +174,6 @@ export const useOnboarding = () => {
     isLoadingContactsSample,
     isUploadingCsvSample,
     contactsSampleError,
-    pollsAccessEnabled,
   ])
 
   const resetFormData = useCallback(() => {
