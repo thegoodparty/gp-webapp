@@ -55,7 +55,6 @@ const STATUS_COLUMN = {
 export const OutreachTable = ({ mockOutreaches }) => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [outreaches] = useOutreach()
-  console.log(`outreaches =>`, outreaches)
   const useMockData = !outreaches?.length
   const tableData = useMockData ? mockOutreaches : outreaches
   const [viewFilters, setViewFilters] = useState(null)
