@@ -402,6 +402,10 @@ export const EVENTS = {
         'Voter Outreach - 10DLC Compliance Form Submitted',
       CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
     },
+    DlcCompliance: {
+      RegistrationSubmitted: '10 DLC Compliance - Registration Submitted',
+      PinVerificationCompleted: '10 DLC Compliance - PIN Verification Completed',
+    },
     PaymentStarted: 'Voter Outreach - Payment Started',
     ViewAccessed: 'Outreach - View Accessed',
     ClickCreate: 'Outreach - Click Create',
