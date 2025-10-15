@@ -14,6 +14,8 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { mapFormData } from 'app/(user)/profile/texting-compliance/util/mapFormData.util'
+import { trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS } from 'helpers/analyticsHelper'
 
 const createTcrCompliance = async (formData) => {
   const mappedData = mapFormData(formData)
@@ -57,6 +59,13 @@ export default function TextingComplianceRegisterPage({ user, campaign }) {
     setLoading(true)
     try {
       await createTcrCompliance(formData)
+      
+      // Track 10 DLC compliance status change to Pending
+      trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {
+        email: user.email,
+        dlcComplianceStatus: 'Pending',
+      })
+      
       successSnackbar('Successfully registered for compliance')
       router.push('/profile')
     } catch {

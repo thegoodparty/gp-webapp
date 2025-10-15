@@ -1,8 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper'
 import PollsPage from './components/PollsPage'
 import serveAccess from '../shared/serveAccess'
-import { polls } from './tempData'
 import { redirect } from 'next/navigation'
+import { getPolls } from './shared/serverApiCalls'
+import { PollsProvider } from './shared/hooks/PollsProvider'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -15,11 +16,16 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   await serveAccess()
-  const pollsCount = polls.length
-  // TODO: remove this after we restore the list view
+  const polls = await getPolls()
+  const pollsCount = polls?.results?.length || 0
+
   if (pollsCount === 1) {
-    return redirect(`/dashboard/polls/${polls[0].id}`)
+    return redirect(`/dashboard/polls/${polls?.results?.[0]?.id}`)
   }
 
-  return <PollsPage pathname="/dashboard/polls" />
+  return (
+    <PollsProvider polls={polls}>
+      <PollsPage pathname="/dashboard/polls" />
+    </PollsProvider>
+  )
 }

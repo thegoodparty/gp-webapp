@@ -29,6 +29,34 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  polls: {
+    list: {
+      path: '/polls',
+      method: 'GET',
+    },
+    get: {
+      path: '/polls/:pollId',
+      method: 'GET',
+    },
+    topIssues: {
+      path: '/polls/:pollId/top-issues',
+      method: 'GET',
+    },
+    initialPoll: {
+      path: '/polls/initial-poll',
+      method: 'POST',
+    },
+  },
+  electedOffice: {
+    current: {
+      path: '/elected-office/current',
+      method: 'GET',
+    },
+    create: {
+      path: '/elected-office',
+      method: 'POST',
+    },
+  },
   homepage: {
     subscribeEmail: {
       path: '/subscribe',

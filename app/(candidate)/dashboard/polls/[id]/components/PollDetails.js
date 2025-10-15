@@ -1,7 +1,7 @@
 'use client'
 
 import Body2 from '@shared/typography/Body2'
-import { usePoll } from '../hooks/PollProvider'
+import { usePoll } from '../../shared/hooks/PollProvider'
 import H4 from '@shared/typography/H4'
 import { LuUsersRound } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
