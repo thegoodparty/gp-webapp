@@ -17,12 +17,13 @@ import {
 } from 'react-icons/md'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import serveAccessClient from './serveAccessClient'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -137,6 +138,7 @@ const getDashboardMenuItems = (
   campaign,
   serveAccessEnabled,
   pollsAccessEnabled,
+  serveAccessAllowed,
 ) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -146,7 +148,7 @@ const getDashboardMenuItems = (
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  if (pollsAccessEnabled) {
+  if (serveAccessAllowed && pollsAccessEnabled) {
     menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
@@ -167,21 +169,29 @@ export default function DashboardMenu({
   const { ready: pollFlagsReady, on: pollsAccessEnabled } =
     useFlagOn('serve-polls-v1')
 
-  const menuItems = useMemo(() => {
-    const baseItems = getDashboardMenuItems(
-      campaign,
-      serveAccessEnabled,
-      pollsAccessEnabled,
-    )
+  const [menuItems, setMenuItems] = useState([])
 
-    const items = [...baseItems]
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      const serveAccessAllowed = await serveAccessClient()
+      const baseItems = getDashboardMenuItems(
+        campaign,
+        serveAccessEnabled,
+        pollsAccessEnabled,
+        serveAccessAllowed,
+      )
 
-    if (ecanvasser) {
-      items.push(ECANVASSER_MENU_ITEM)
+      const items = [...baseItems]
+
+      if (ecanvasser) {
+        items.push(ECANVASSER_MENU_ITEM)
+      }
+
+      setMenuItems(items)
     }
 
-    return items
-  }, [campaign, serveAccessEnabled, ecanvasser, user, pollsAccessEnabled])
+    fetchMenuItems()
+  }, [campaign, serveAccessEnabled, ecanvasser, pollsAccessEnabled])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
