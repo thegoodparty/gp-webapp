@@ -17,13 +17,13 @@ import {
 } from 'react-icons/md'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import serveAccessClient from './serveAccessClient'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -138,7 +138,7 @@ const getDashboardMenuItems = (
   campaign,
   serveAccessEnabled,
   pollsAccessEnabled,
-  serveAccessAllowed,
+  electedOffice,
 ) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -148,7 +148,7 @@ const getDashboardMenuItems = (
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  if (serveAccessAllowed && pollsAccessEnabled) {
+  if (electedOffice && pollsAccessEnabled) {
     menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
@@ -163,35 +163,35 @@ export default function DashboardMenu({
   const [user] = useUser()
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
+  const { electedOffice } = useElectedOffice()
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
   const { ready: pollFlagsReady, on: pollsAccessEnabled } =
     useFlagOn('serve-polls-v1')
 
-  const [menuItems, setMenuItems] = useState([])
+  const menuItems = useMemo(() => {
+    const baseItems = getDashboardMenuItems(
+      campaign,
+      serveAccessEnabled,
+      pollsAccessEnabled,
+      electedOffice,
+    )
 
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      const serveAccessAllowed = await serveAccessClient()
-      const baseItems = getDashboardMenuItems(
-        campaign,
-        serveAccessEnabled,
-        pollsAccessEnabled,
-        serveAccessAllowed,
-      )
+    const items = [...baseItems]
 
-      const items = [...baseItems]
-
-      if (ecanvasser) {
-        items.push(ECANVASSER_MENU_ITEM)
-      }
-
-      setMenuItems(items)
+    if (ecanvasser) {
+      items.push(ECANVASSER_MENU_ITEM)
     }
 
-    fetchMenuItems()
-  }, [campaign, serveAccessEnabled, ecanvasser, pollsAccessEnabled])
+    return items
+  }, [
+    campaign,
+    serveAccessEnabled,
+    ecanvasser,
+    pollsAccessEnabled,
+    electedOffice,
+  ])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
