@@ -23,6 +23,7 @@ import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -137,6 +138,7 @@ const getDashboardMenuItems = (
   campaign,
   serveAccessEnabled,
   pollsAccessEnabled,
+  electedOffice,
 ) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -146,7 +148,7 @@ const getDashboardMenuItems = (
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  if (pollsAccessEnabled) {
+  if (electedOffice && pollsAccessEnabled) {
     menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
@@ -161,6 +163,7 @@ export default function DashboardMenu({
   const [user] = useUser()
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
+  const { electedOffice } = useElectedOffice()
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
@@ -172,6 +175,7 @@ export default function DashboardMenu({
       campaign,
       serveAccessEnabled,
       pollsAccessEnabled,
+      electedOffice,
     )
 
     const items = [...baseItems]
@@ -181,7 +185,13 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, user, pollsAccessEnabled])
+  }, [
+    campaign,
+    serveAccessEnabled,
+    ecanvasser,
+    pollsAccessEnabled,
+    electedOffice,
+  ])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
