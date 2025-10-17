@@ -114,7 +114,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
   await candidateAccess()
-  let { page, pageSize, segment, query } = await searchParams
+  let { page, pageSize, segment = 'all', query } = await searchParams
   let { attr } = await params
   let personId = null
   let person = null

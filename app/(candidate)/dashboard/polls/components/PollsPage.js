@@ -21,11 +21,7 @@ export default function PollsPage({ pathname }) {
           <Body1 className="text-gray-500 mb-4">
             Manage your constituent engagement
           </Body1>
-          {polls?.results?.length > 0 ? (
-            <PollsTable />
-          ) : (
-            <PollWelcomePage fullPageMode={false} />
-          )}
+          {polls?.results?.length > 0 ? <PollsTable /> : <PollWelcomePage />}
         </Paper>
       </PollsPageGuard>
     </DashboardLayout>
