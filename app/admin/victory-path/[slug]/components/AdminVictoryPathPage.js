@@ -293,7 +293,7 @@ export default function AdminVictoryPathPage(props) {
                 color="error"
               />
               <div>
-                excludeInvalid override - only check this if you aren&apos;t seeing districts, and/or you&apos;re confident you can select the correct one without safeguards for validity
+                excludeInvalid override - only check this if you aren&apos;t seeing districts, and/or you&apos;re confident you can select the correct one without safeguards for validity. Any districts you see exclusively with this override we do not have a projected turnout for.
               </div>
             </div>
             <DistrictPicker
