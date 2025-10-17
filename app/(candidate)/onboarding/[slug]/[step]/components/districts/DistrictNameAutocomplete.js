@@ -5,11 +5,11 @@ import TextField from '@shared/inputs/TextField'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-async function fetchDistrictNames(districtType, state, electionYear) {
+async function fetchDistrictNames(districtType, state, electionYear, excludeInvalidOverride) {
   try {
     const { data = [] } = await clientFetch(
       apiRoutes.elections.districts.names,
-      { L2DistrictType: districtType, state, electionYear },
+      { L2DistrictType: districtType, state, electionYear, ...(excludeInvalidOverride ? { excludeInvalid: false } : {}) },
     )
     return data
   } catch (e) {
@@ -25,6 +25,7 @@ export default function DistrictNameAutocomplete({
   state,
   electionYear,
   disabled = false,
+  excludeInvalidOverride = false,
 }) {
   const [options, setOptions] = useState([])
   const [loading, setLoading] = useState(false)
@@ -39,7 +40,7 @@ export default function DistrictNameAutocomplete({
     setLoading(true)
 
     async function load() {
-      const data = await fetchDistrictNames(districtType, state, electionYear)
+      const data = await fetchDistrictNames(districtType, state, electionYear, excludeInvalidOverride)
       setOptions(data)
       setLoading(false)
     }
@@ -47,7 +48,7 @@ export default function DistrictNameAutocomplete({
     load()
     return () => {
     }
-  }, [districtType, state, electionYear])
+  }, [districtType, state, electionYear, excludeInvalidOverride])
 
   return (
     <Autocomplete
