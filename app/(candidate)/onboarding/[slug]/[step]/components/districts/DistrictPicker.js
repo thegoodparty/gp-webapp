@@ -12,6 +12,7 @@ export default function DistrictPicker({
   className = '',
   initialType = null,
   initialName = null,
+  excludeInvalidOverride = false,
 }) {
   const [type, setType]   = useState(initialType)
   const [name, setName]   = useState(initialName)
@@ -44,6 +45,7 @@ export default function DistrictPicker({
         }}
         state={state}
         electionYear={electionYear}
+        excludeInvalidOverride={excludeInvalidOverride}
       />
 
       <DistrictNameAutocomplete
@@ -53,6 +55,7 @@ export default function DistrictPicker({
         state={state}
         electionYear={electionYear}
         disabled={!type}
+        excludeInvalidOverride={excludeInvalidOverride}
       />
 
       <div className="flex justify-end lg:col-span-2">
