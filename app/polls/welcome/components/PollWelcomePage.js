@@ -4,10 +4,10 @@ import { LuFileChartColumnIncreasing } from 'react-icons/lu'
 
 import GetStartedButton from './GetStartedButton'
 
-export default function PollWelcomePage({ fullPageMode = true }) {
+export default function PollWelcomePage() {
   return (
-    <div className={fullPageMode ? 'fixed h-screen w-full bg-muted' : ''}>
-      <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 h-full md:h-auto bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12">
+    <div className="pt-12">
+      <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 h-full md:h-auto bg-white md:border md:border-slate-200 md:rounded-xl ">
         <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto  xs:mt-4">
           <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl">
             Represent your community like a Civic Hero.
