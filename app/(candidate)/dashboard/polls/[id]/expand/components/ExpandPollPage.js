@@ -1,13 +1,14 @@
 'use client'
 
-import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import Paper from '@shared/utils/Paper'
-import PollsPageGuard from 'app/(candidate)/dashboard/polls/components/PollsPageGuard'
 import Crumbs from '../../../shared/Crumbs'
 import { usePoll } from '../../../shared/hooks/PollProvider'
+import PollsPageGuard from '../../../components/PollsPageGuard'
+import Paper from '@shared/utils/Paper'
+import TitleSection from './TitleSection'
+import SelectSection from './SelectSection'
 
-export default function PollIssueDetailPage({ pathname }) {
+export default function PollIssueDetailPage() {
   const [campaign] = useCampaign()
   const [poll] = usePoll()
 
@@ -23,13 +24,15 @@ export default function PollIssueDetailPage({ pathname }) {
   ]
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <div className="bg-indigo-100 min-h-screen p-4 md:p-8">
       <PollsPageGuard>
-        <Paper className="min-h-full">
-          <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
-          expand poll page
+        <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
+
+        <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16">
+          <TitleSection />
+          <SelectSection />
         </Paper>
       </PollsPageGuard>
-    </DashboardLayout>
+    </div>
   )
 }

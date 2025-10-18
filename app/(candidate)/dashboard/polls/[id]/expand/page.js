@@ -18,11 +18,9 @@ export default async function Page({ params }) {
   const { id } = await params
   const poll = await getPoll(id)
 
-  const pathname = `/dashboard/polls/${id}/expand`
-
   return (
     <PollProvider poll={poll}>
-      <ExpandPollPage pathname={pathname} />
+      <ExpandPollPage />
     </PollProvider>
   )
 }
