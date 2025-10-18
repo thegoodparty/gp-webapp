@@ -32,7 +32,7 @@ export default async function Page({ params }) {
 }
 
 const tempPoll = {
-  id: 'poll-123',
+  id: '0199ed0c-bf2f-7931-8bb5-e262dee52d80',
   status: 'completed',
   name: 'District 5 Community Survey',
   createdAt: '2025-10-01T10:00:00.000Z',

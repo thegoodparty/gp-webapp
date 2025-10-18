@@ -4,6 +4,7 @@ import { BsExclamationCircle } from 'react-icons/bs'
 import { Alert, AlertTitle, Button } from 'goodparty-styleguide'
 import Body2 from '@shared/typography/Body2'
 import { usePoll } from './hooks/PollProvider'
+import Link from 'next/link'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
@@ -23,7 +24,9 @@ export default function ConfidenceAlert() {
                 </Body2>
               </div>
             </div>
-            <Button variant="destructive">Gather more feedback</Button>
+            <Link href={`/dashboard/polls/${poll.id}/expand`}>
+              <Button variant="destructive">Gather more feedback</Button>
+            </Link>
           </div>
         </AlertTitle>
       </Alert>
