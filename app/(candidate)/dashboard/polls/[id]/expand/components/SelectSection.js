@@ -16,7 +16,6 @@ import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 
-const recommended = 101
 const costPerMessage = 0.03
 const fetchContactsStats = async () => {
   const response = await clientFetch(apiRoutes.contacts.stats, null, {
@@ -27,11 +26,12 @@ const fetchContactsStats = async () => {
   return response.data
 }
 
-export default function SelectSection() {
+export default function SelectSection({ countCallback, recommended }) {
   const [contactsStats, setContactsStats] = useState(null)
   const [selectedOption, setSelectedOption] = useState(recommended)
   const handleSelect = (value) => {
     setSelectedOption(value)
+    countCallback(value)
   }
   useEffect(() => {
     fetchContactsStats().then(setContactsStats)
