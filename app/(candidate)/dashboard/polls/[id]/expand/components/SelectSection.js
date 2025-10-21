@@ -15,8 +15,8 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
+import { PRICE_PER_MESSAGE } from '../../../shared/constants'
 
-const costPerMessage = 0.03
 const fetchContactsStats = async () => {
   const response = await clientFetch(apiRoutes.contacts.stats, null, {
     next: {
@@ -69,7 +69,7 @@ export default function SelectSection({ countCallback, recommended }) {
           </div>
           <Body1>{numberFormatter(recommended)} Constituents</Body1>
           <Body1>
-            Cost: ${numberFormatter(costPerMessage * recommended, 2)}
+            Cost: ${numberFormatter(PRICE_PER_MESSAGE * recommended, 2)}
           </Body1>
         </div>
       </Card>
@@ -98,7 +98,7 @@ export default function SelectSection({ countCallback, recommended }) {
             {numberFormatter(selectedOption)} Constituents
           </Body1>
           <Body1>
-            Cost: ${numberFormatter(costPerMessage * selectedOption, 2)}
+            Cost: ${numberFormatter(PRICE_PER_MESSAGE * selectedOption, 2)}
           </Body1>
         </div>
       </Card>
