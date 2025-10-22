@@ -8,6 +8,13 @@ import Link from 'next/link'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
+  const { ready: flagsReady, on: expandAccessEnabled } = useFlagOn(
+    'serve-polls-expansion',
+  )
+  if (!flagsReady || !expandAccessEnabled) {
+    return null
+  }
+
   const { lowConfidence } = poll || {}
   if (lowConfidence) {
     return (
