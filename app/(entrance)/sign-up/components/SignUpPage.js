@@ -139,8 +139,8 @@ export default function SignUpPage() {
 
     if (enableSubmit) {
       const result = await register({
-        firstName,
-        lastName,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         email,
         phone: phone === '' ? undefined : phone,
         zip,
