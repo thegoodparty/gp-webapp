@@ -5,6 +5,7 @@ import { Alert, AlertTitle, Button } from 'goodparty-styleguide'
 import Body2 from '@shared/typography/Body2'
 import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
