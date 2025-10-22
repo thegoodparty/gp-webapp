@@ -7,9 +7,7 @@ import Paper from '@shared/utils/Paper'
 import { StepFooter } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
 import H1 from '@shared/typography/H1'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
-import { PurchaseStep } from './PurchaseStep'
+const recommended = 101
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
@@ -30,11 +28,8 @@ export default function ExpandPaymentPage({ count }) {
     router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 
-  const handlePurchaseComplete = () => {
-    router.push(
-      `/dashboard/polls/${poll.id}/expand-payment-success?count=${count}`,
-    )
-  }
+  const { messageContent, imageUrl, estimatedCompletionDate } = poll
+  const nextWeek = new Date().getTime() + 7 * 24 * 60 * 60 * 1000
 
   return (
     <div className="bg-indigo-100 min-h-screen p-4 md:p-8">
@@ -42,16 +37,8 @@ export default function ExpandPaymentPage({ count }) {
         <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
 
         <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12">
-          <H1 className="text-center">SMS Poll Payment</H1>
-          <PurchaseIntentProvider
-            type={PURCHASE_TYPES.POLL}
-            purchaseMetaData={{
-              count,
-              pollId: poll.id,
-            }}
-          >
-            <PurchaseStep onComplete={handlePurchaseComplete} />
-          </PurchaseIntentProvider>
+          <H1 className="text-center">Review your SMS poll.</H1>
+          payment form here
           <div className="mt-8 pb-2 border-t border-slate-200" />
           <StepFooter
             numberOfSteps={3}
