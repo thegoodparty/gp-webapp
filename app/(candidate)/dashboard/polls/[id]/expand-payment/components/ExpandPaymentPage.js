@@ -7,13 +7,9 @@ import Paper from '@shared/utils/Paper'
 import { StepFooter } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
 import H1 from '@shared/typography/H1'
-import PreviewCard from 'app/polls/onboarding/components/steps/PreviewCard'
-import { PRICE_PER_MESSAGE } from '../../../shared/constants'
-import { numberFormatter } from 'helpers/numberHelper'
-import { dateUsHelper } from 'helpers/dateHelper'
 const recommended = 101
 
-export default function ExpandReviewPage({ count }) {
+export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
 
@@ -28,11 +24,8 @@ export default function ExpandReviewPage({ count }) {
     },
   ]
 
-  const handleNext = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand-payment?count=${count}`)
-  }
   const handleBack = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand`)
+    router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 
   const { messageContent, imageUrl, estimatedCompletionDate } = poll
@@ -45,23 +38,15 @@ export default function ExpandReviewPage({ count }) {
 
         <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12">
           <H1 className="text-center">Review your SMS poll.</H1>
-          <PreviewCard
-            demoMessageText={messageContent}
-            imageUrl={imageUrl}
-            estimatedCompletionDate={dateUsHelper(nextWeek, 'long')}
-            count={count}
-            timeline="1 week"
-            cost={`$${numberFormatter(PRICE_PER_MESSAGE * count, 2)}`}
-          />
+          payment form here
           <div className="mt-8 pb-2 border-t border-slate-200" />
           <StepFooter
             numberOfSteps={3}
-            currentStep={2}
+            currentStep={3}
             onBack={handleBack}
             onBackText="Back"
-            disabledNext={false}
-            onNext={handleNext}
-            onNextText="Go to payment"
+            disabledNext
+            onNextText="Complete payment"
           />
         </Paper>
       </PollsPageGuard>

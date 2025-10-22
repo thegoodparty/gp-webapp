@@ -76,8 +76,13 @@ export default function PreviewCard({
             <p className="mt-3 font-normal text-sm">
               Estimated Completion Date:
             </p>
-            <p className="leading-normal medium text-sm">
-              {dateUsHelper(estimatedCompletionDate, 'long')}
+            <p className="leading-normal font-semibold medium text-sm">
+              {dateUsHelper(estimatedCompletionDate, 'long')} 11:00 AM
+            </p>
+            <div className="mt-2 pt-2 border-t border-muted-background" />
+            <p className="leading-normal text-muted-foreground text-xs font-normal">
+              Polls scheduled midweek before lunch perform best. The selected
+              day and time will yield the most responses.
             </p>
           </div>
         }

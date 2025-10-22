@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from 'goodparty-styleguide'
 import { numberFormatter } from 'helpers/numberHelper'
-import { LuAward, LuPercent } from 'react-icons/lu'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
@@ -26,9 +25,9 @@ const fetchContactsStats = async () => {
   return response.data
 }
 
-export default function SelectSection({ countCallback, recommended }) {
+export default function SelectSection({ countCallback }) {
   const [contactsStats, setContactsStats] = useState(null)
-  const [selectedOption, setSelectedOption] = useState(recommended)
+  const [selectedOption, setSelectedOption] = useState('')
   const handleSelect = (value) => {
     setSelectedOption(value)
     countCallback(value)
@@ -40,51 +39,31 @@ export default function SelectSection({ countCallback, recommended }) {
 
   const selectOptions = [
     {
-      label: `Recommended: ${numberFormatter(recommended)} Constituents`,
-      value: recommended,
-    },
-    {
-      label: '25%',
+      label: `${numberFormatter(totalConstituents * 0.25)} Constituents (25%)`,
       value: totalConstituents * 0.25,
     },
     {
-      label: '50%',
+      label: `${numberFormatter(totalConstituents * 0.5)} Constituents (50%)`,
       value: totalConstituents * 0.5,
     },
     {
-      label: '75%',
+      label: `${numberFormatter(totalConstituents * 0.75)} Constituents (75%)`,
       value: totalConstituents * 0.75,
     },
   ]
 
   return (
     <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
-      <Card className="w-full bg-blue-50 p-4 md:p-6">
-        <div>
-          <div className="flex items-center gap-2 text-lg mb-4">
-            <LuAward />
-            <Body1 className="font-semibold">
-              Recommendation for higher confidence
-            </Body1>
-          </div>
-          <Body1>{numberFormatter(recommended)} Constituents</Body1>
-          <Body1>
-            Cost: ${numberFormatter(PRICE_PER_MESSAGE * recommended, 2)}
-          </Body1>
-        </div>
-      </Card>
       <Card className="w-full p-4 md:p-6">
         <div>
-          <div className="flex items-center gap-2 text-lg mb-4">
-            <LuPercent />
-            <Body1 className="font-semibold">Portion of constituent list</Body1>
-          </div>
+          <Body1 className="font-semibold">Make your selection</Body1>
+
           <Body2 className="text-muted-foreground mb-4">
             You can text up to {numberFormatter(totalConstituents)} constituents
           </Body2>
           <Select value={selectedOption} onValueChange={handleSelect}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select an option" />
+              <SelectValue placeholder="Recommendation for higher confidence" />
             </SelectTrigger>
             <SelectContent>
               {selectOptions.map((option) => (

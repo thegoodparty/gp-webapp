@@ -9,12 +9,11 @@ import SelectSection from './SelectSection'
 import { StepFooter } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-const recommended = 101
 
-export default function PollIssueDetailPage() {
+export default function ExpandPollPage() {
   const [poll] = usePoll()
   const router = useRouter()
-  const [count, setCount] = useState(recommended)
+  const [count, setCount] = useState(null)
 
   const breadcrumbsLinks = [
     { href: `/dashboard/polls`, label: 'Polls' },
@@ -27,8 +26,13 @@ export default function PollIssueDetailPage() {
     },
   ]
 
+  const handleBack = () => {
+    router.push(`/dashboard/polls/${poll.id}`)
+  }
+
   const handleNext = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count} `)
+    if (!count) return
+    router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 
   return (
@@ -38,14 +42,14 @@ export default function PollIssueDetailPage() {
 
         <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12">
           <TitleSection />
-          <SelectSection countCallback={setCount} recommended={recommended} />
+          <SelectSection countCallback={setCount} />
           <div className="mt-8 pb-2 border-t border-slate-200" />
           <StepFooter
             numberOfSteps={3}
             currentStep={1}
-            onBack={null}
+            onBack={handleBack}
             onBackText="Back"
-            disabledNext={false}
+            disabledNext={!count}
             onNext={handleNext}
             onNextText="Review"
           />
