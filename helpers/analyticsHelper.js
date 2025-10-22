@@ -13,6 +13,13 @@ const UTM_KEYS = [
 const CLID_SUFFIX = 'clid'
 
 export const EVENTS = {
+  expandPolls: {
+    selectedCount: 'Expand Polls - Selected Count',
+    review: 'Expand Polls - Poll Review Viewed',
+    payment: 'Expand Polls - Payment Started',
+    paymentSuccess: 'Expand Polls - Payment Completed',
+  },
+
   SignUp: {
     ClickLogin: 'Sign Up: Click Login',
   },
@@ -54,7 +61,8 @@ export const EVENTS = {
   },
   ServeOnboarding: {
     GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',
-    MeetYourConstituentsViewed: 'Serve Onboarding - Meet Your Constituents Viewed',
+    MeetYourConstituentsViewed:
+      'Serve Onboarding - Meet Your Constituents Viewed',
     ConstituencyProfileViewed: 'Serve Onboarding - Constituency Profile Viewed',
     PollValuePropsViewed: 'Serve Onboarding - Poll Value Props Viewed',
     PollStrategyViewed: 'Serve Onboarding - Poll Strategy Viewed',
@@ -404,7 +412,8 @@ export const EVENTS = {
     },
     DlcCompliance: {
       RegistrationSubmitted: '10 DLC Compliance - Registration Submitted',
-      PinVerificationCompleted: '10 DLC Compliance - PIN Verification Completed',
+      PinVerificationCompleted:
+        '10 DLC Compliance - PIN Verification Completed',
     },
     PaymentStarted: 'Voter Outreach - Payment Started',
     ViewAccessed: 'Outreach - View Accessed',
