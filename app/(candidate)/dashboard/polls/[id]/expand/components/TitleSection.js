@@ -1,5 +1,3 @@
-'use client'
-
 import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 
