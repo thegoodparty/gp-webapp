@@ -6,7 +6,7 @@ export const PURCHASE_TYPES = {
 
 export const PURCHASE_TYPE_LABELS = {
   [PURCHASE_TYPES.DOMAIN_REGISTRATION]: 'Domain Registration',
-  [PURCHASE_TYPES.POLL_EXPANSION]: 'SMS Poll Payment',
+  [PURCHASE_TYPES.POLL]: 'SMS Poll Payment',
 }
 
 export const PURCHASE_TYPE_DESCRIPTIONS = {
