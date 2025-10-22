@@ -9,6 +9,7 @@ import ConfidenceAlert from 'app/(candidate)/dashboard/polls/shared/ConfidenceAl
 import DetailsSection from './DetailsSection'
 import PollsPageGuard from 'app/(candidate)/dashboard/polls/components/PollsPageGuard'
 import { useIssue } from 'app/(candidate)/dashboard/polls/shared/hooks/IssueProvider'
+import { usePoll } from 'app/(candidate)/dashboard/polls/shared/hooks/PollProvider'
 
 export default function PollIssueDetailPage({ pathname }) {
   const [campaign] = useCampaign()
