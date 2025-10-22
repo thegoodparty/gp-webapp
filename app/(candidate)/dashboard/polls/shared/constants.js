@@ -9,3 +9,5 @@ export const POLL_STATUS_LABELS = {
   [POLL_STATUS.IN_PROGRESS]: 'In Progress',
   [POLL_STATUS.SCHEDULED]: 'Scheduled',
 }
+
+export const PRICE_PER_MESSAGE = 0.03

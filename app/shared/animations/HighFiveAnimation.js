@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import * as data from './highFive.json'
+import data from './highFive.json'
 
 export default function HighFiveAnimation({
   loop = false,
