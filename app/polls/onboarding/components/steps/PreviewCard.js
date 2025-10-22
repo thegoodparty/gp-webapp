@@ -2,8 +2,6 @@
 import { MessageCard } from '../MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
-import { useEffect } from 'react'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { LuCalendar } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
@@ -16,10 +14,6 @@ export default function PreviewCard({
   timeline,
   cost,
 }) {
-  useEffect(() => {
-    trackEvent(EVENTS.ServeOnboarding.PollPreviewViewed)
-  }, [])
-
   return (
     <div className="w-full items-center flex flex-col gap-4 mt-8">
       <MessageCard

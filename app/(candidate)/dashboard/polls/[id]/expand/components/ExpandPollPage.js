@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ExpandPollLayout from '../shared/ExpandPollLayout'
 import ExpandStepFooter from '../shared/ExpandStepFooter'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ExpandPollPage() {
   const [poll] = usePoll()
@@ -19,6 +20,7 @@ export default function ExpandPollPage() {
 
   const handleNext = () => {
     if (!count) return
+    trackEvent(EVENTS.expandPolls.selectedCount, { count })
     router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 

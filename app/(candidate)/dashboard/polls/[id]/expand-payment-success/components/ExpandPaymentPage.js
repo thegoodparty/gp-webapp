@@ -11,6 +11,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const REDIRECT_URL = '/dashboard/polls'
 const REDIRECT_DELAY = 4 * 1000
@@ -23,6 +24,9 @@ export default function ExpandPaymentSuccessPage({ count }) {
     }, REDIRECT_DELAY)
     return () => clearTimeout(timeout)
   }, [router])
+  useEffect(() => {
+    trackEvent(EVENTS.expandPolls.paymentSuccess)
+  }, [])
 
   return (
     <ExpandPollLayout showBreadcrumbs={false}>

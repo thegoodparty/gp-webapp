@@ -8,10 +8,16 @@ import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { PurchaseStep } from './PurchaseStep'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
+
+  useEffect(() => {
+    trackEvent(EVENTS.expandPolls.payment)
+  }, [])
 
   const handleBack = () => {
     router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)

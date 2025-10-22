@@ -9,10 +9,16 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { dateUsHelper } from 'helpers/dateHelper'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ExpandReviewPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
+
+  useEffect(() => {
+    trackEvent(EVENTS.expandPolls.review)
+  }, [])
 
   const handleNext = () => {
     router.push(`/dashboard/polls/${poll.id}/expand-payment?count=${count}`)
