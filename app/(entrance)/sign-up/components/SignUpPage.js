@@ -143,7 +143,7 @@ export default function SignUpPage() {
         lastName: lastName.trim(),
         email,
         phone: phone === '' ? undefined : phone,
-        zip,
+        zip: zip.trim(),
         password,
         signUpMode,
       })
