@@ -12,13 +12,18 @@ export default function LottieAnimation({
 
   useEffect(() => {
     const loadPlayer = async () => {
+      console.log('Loading Lottie player')
       try {
         const { Player: LottiePlayer, PlayerEvent: LottiePlayerEvent } =
           await import('@lottiefiles/react-lottie-player')
+        console.log('Lottie player loaded')
+        console.log('Lottie player event loaded')
         setPlayer(() => LottiePlayer)
         setPlayerEvent(LottiePlayerEvent)
+        console.log('Player and PlayerEvent set')
       } catch (error) {
         console.warn('Failed to load Lottie player:', error)
+        console.log('Error:', error)
       }
     }
 

@@ -1,9 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import serveAccess from 'app/(candidate)/dashboard/shared/serveAccess'
-import ExpandPaymentPage from './components/ExpandPaymentPage'
-import { PollProvider } from '../../shared/hooks/PollProvider'
-import { getPoll } from '../../shared/serverApiCalls'
 import { redirect } from 'next/navigation'
+import ExpandPaymentSuccessPage from './components/ExpandPaymentPage'
 
 const meta = pageMetaData({
   title: 'Expand Poll | GoodParty.org',
@@ -17,7 +15,6 @@ export const dynamic = 'force-dynamic'
 export default async function Page({ params, searchParams }) {
   await serveAccess()
   const { id } = await params
-  const poll = await getPoll(id)
   const { count } = await searchParams
   if (!count) {
     redirect(`/dashboard/polls/${id}/expand`)
@@ -25,9 +22,5 @@ export default async function Page({ params, searchParams }) {
 
   const childProps = { count }
 
-  return (
-    <PollProvider poll={poll}>
-      <ExpandPaymentPage {...childProps} />
-    </PollProvider>
-  )
+  return <ExpandPaymentSuccessPage {...childProps} />
 }
