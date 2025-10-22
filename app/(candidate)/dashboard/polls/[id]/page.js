@@ -2,7 +2,6 @@ import pageMetaData from 'helpers/metadataHelper'
 import PollsDetailPage from './components/PollsDetailPage'
 import serveAccess from '../../shared/serveAccess'
 import { PollProvider } from '../shared/hooks/PollProvider'
-// import { getPoll, getPollTopIssues } from '../shared/serverApiCalls'
 import { IssuesProvider } from '../shared/hooks/IssuesProvider'
 import { getPoll, getPollTopIssues } from '../shared/serverApiCalls'
 
