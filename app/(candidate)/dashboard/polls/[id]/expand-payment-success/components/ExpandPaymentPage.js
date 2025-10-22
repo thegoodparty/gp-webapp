@@ -28,6 +28,9 @@ export default function ExpandPaymentSuccessPage({ count }) {
     trackEvent(EVENTS.expandPolls.paymentSuccess)
   }, [])
 
+  const nextWeekDate = new Date()
+  nextWeekDate.setDate(nextWeekDate.getDate() + 7)
+
   return (
     <ExpandPollLayout showBreadcrumbs={false}>
       <div className="relative h-40 w-40 mx-auto">
@@ -43,7 +46,7 @@ export default function ExpandPaymentSuccessPage({ count }) {
             <div>
               <Body1 className="font-semibold">Text message campaign</Body1>
               <Body1 className="text-gray-700">
-                Send date: {dateUsHelper(new Date())} at 11:00 AM
+                Send date: {dateUsHelper(nextWeekDate)} at 11:00 AM
               </Body1>
             </div>
           </div>
