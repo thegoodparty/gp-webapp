@@ -1,7 +1,5 @@
 'use client'
 
-import { useIssue } from './hooks/IssueProvider'
-import { usePoll } from './hooks/PollProvider'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,22 +10,7 @@ import {
 } from 'goodparty-styleguide'
 import { Fragment } from 'react'
 
-export default function Crumbs() {
-  const [issue] = useIssue()
-  const [poll] = usePoll()
-  const { title } = issue || {}
-
-  const breadcrumbsLinks = [
-    { href: `/dashboard/polls`, label: 'Polls' },
-    {
-      label: `${poll.name}`,
-      href: `/dashboard/polls/${poll.id}`,
-    },
-    {
-      label: `${title}`,
-    },
-  ]
-
+export default function Crumbs({ breadcrumbsLinks }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
