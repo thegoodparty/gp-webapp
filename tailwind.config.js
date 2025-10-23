@@ -141,13 +141,13 @@ const COLORS = {
 }
 
 module.exports = {
-    darkMode: ['class'],
-    content: [
+  darkMode: ['class'],
+  content: [
     './app/**/*.{js,ts,jsx,tsx}', // Note the addition of the `app` directory.
     './components/**/*.{js,ts,jsx,tsx}',
     './node_modules/goodparty-styleguide/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  plugins: [require('@tailwindcss/typography'), require("tailwindcss-animate")],
+  plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],
   theme: {
     screens: {
       xs: '400px',
@@ -197,6 +197,7 @@ module.exports = {
           light: COLORS.indigo[500],
           background: COLORS.indigo[50],
           contrast: COLORS.white,
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
           DEFAULT: COLORS.yellow[600],
@@ -205,6 +206,7 @@ module.exports = {
           light: COLORS.yellow[300],
           background: COLORS.yellow[50],
           contrast: COLORS.black,
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         tertiary: {
           DEFAULT: COLORS.purple[500],
@@ -301,6 +303,13 @@ module.exports = {
         yellow: {
           ...COLORS.yellow,
           DEFAULT: COLORS.yellow[600],
+        },
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
         },
       },
       borderRadius: {
