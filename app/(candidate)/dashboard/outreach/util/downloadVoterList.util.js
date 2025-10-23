@@ -8,10 +8,14 @@ export const downloadVoterList = async (
   setLoading(true)
   
   // Filter for keys that have true values
-  // voterFileFilter already has the correct underscore-based keys
-  // (e.g., audience_superVoters, party_independent)
+  // Only include valid filter keys (audience_, party_, age_, gender_)
   const selectedAudience = Object.keys(voterFileFilter).filter(
-    (key) => voterFileFilter[key] === true,
+    (key) => 
+      voterFileFilter[key] === true && 
+      (key.startsWith('audience_') || 
+       key.startsWith('party_') || 
+       key.startsWith('age_') || 
+       key.startsWith('gender_'))
   )
 
   try {
