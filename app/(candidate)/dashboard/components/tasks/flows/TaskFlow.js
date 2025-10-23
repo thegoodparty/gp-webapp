@@ -28,7 +28,6 @@ import {
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
-import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
 import { noop } from '@shared/utils/noop'
 import { LongPoll } from '@shared/utils/LongPoll'
@@ -93,7 +92,7 @@ export default function TaskFlow({
 
   const purchaseMetaData = {
     contactCount: leadsLoaded,
-    pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
+    pricePerContact: outreachOption?.cost || 0,
     outreachType: type,
     campaignId: campaign.id,
   }
