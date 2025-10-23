@@ -141,12 +141,13 @@ const COLORS = {
 }
 
 module.exports = {
-  content: [
+    darkMode: ['class'],
+    content: [
     './app/**/*.{js,ts,jsx,tsx}', // Note the addition of the `app` directory.
     './components/**/*.{js,ts,jsx,tsx}',
     './node_modules/goodparty-styleguide/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'), require("tailwindcss-animate")],
   theme: {
     screens: {
       xs: '400px',
