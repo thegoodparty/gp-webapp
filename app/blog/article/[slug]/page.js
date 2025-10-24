@@ -61,5 +61,5 @@ export async function generateStaticParams({ params }) {
     return {
       slug: article?.slug,
     }
-  })  
+  })
 }

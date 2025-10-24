@@ -15,6 +15,5 @@ export const unAuthFetch = async (url, data, revalidate = 3600) => {
     },
     next: { revalidate },
   })
-  
   return await resp.json()
 }
