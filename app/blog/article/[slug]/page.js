@@ -57,13 +57,9 @@ export default async function Page({ params }) {
 export async function generateStaticParams({ params }) {
   const articles = await fetchArticlesTitles()
 
-  if (!articles || !Array.isArray(articles)) {
-    return []
-  }
-
-  return articles.map((article) => {
+  return articles?.map((article) => {
     return {
       slug: article?.slug,
     }
-  })
+  })  
 }
