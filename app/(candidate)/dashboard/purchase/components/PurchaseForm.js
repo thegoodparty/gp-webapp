@@ -11,6 +11,7 @@ export default function PurchaseForm({ onSuccess, onError }) {
   const { errorSnackbar } = useSnackbar()
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -43,12 +44,13 @@ export default function PurchaseForm({ onSuccess, onError }) {
           options={{
             layout: 'tabs',
           }}
+          onReady={() => setIsPaymentElementReady(true)}
         />
       </div>
 
       <Button
         type="submit"
-        disabled={!stripe || isLoading}
+        disabled={!stripe || !isPaymentElementReady || isLoading}
         loading={isLoading}
         className="w-full"
         size="large"

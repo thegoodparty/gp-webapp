@@ -45,7 +45,7 @@ export default function RenderInputField({
           value={value}
           placeholder={field.placeholder || ''}
           onChange={(e) =>
-            onChangeCallback(field.key, field.type === 'text' ? e.target.value.trim(): e.target.value, field.invalidOptions)
+            onChangeCallback(field.key, e.target.value, field.invalidOptions)
           }
           multiline={!!field.rows}
           rows={field.rows || 1}

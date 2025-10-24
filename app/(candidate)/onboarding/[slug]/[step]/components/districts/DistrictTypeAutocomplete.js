@@ -5,11 +5,11 @@ import TextField from '@shared/inputs/TextField'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-async function fetchDistrictTypes(state, electionYear) {
+async function fetchDistrictTypes(state, electionYear, excludeInvalidOverride) {
   try {
     const { data = [] } = await clientFetch(
       apiRoutes.elections.districts.types,
-      { state, electionYear },
+      { state, electionYear, ...(excludeInvalidOverride ? { excludeInvalid: false } : {}) },
     )
     return data
   } catch (e) {
@@ -23,6 +23,7 @@ export default function DistrictTypeAutocomplete({
   onChange,
   state,
   electionYear,
+  excludeInvalidOverride = false,
 }) {
   const [options, setOptions] = useState([])
   const [loading, setLoading] = useState(false)
@@ -32,7 +33,7 @@ export default function DistrictTypeAutocomplete({
     setLoading(true)
 
     async function load() {
-      const data = await fetchDistrictTypes(state, electionYear)
+      const data = await fetchDistrictTypes(state, electionYear, excludeInvalidOverride)
       setOptions(
         data.map((d) => ({
           ...d,
@@ -45,7 +46,7 @@ export default function DistrictTypeAutocomplete({
     load()
     return () => {
     }
-  }, [state, electionYear])
+  }, [state, electionYear, excludeInvalidOverride])
 
   return (
     <Autocomplete

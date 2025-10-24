@@ -8,6 +8,7 @@ import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvide
 import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
+import { ElectedOfficeProvider } from '@shared/hooks/ElectedOfficeProvider'
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
@@ -23,7 +24,8 @@ const PageWrapper = async ({ children }) => {
     <UserProvider>
       <ImpersonateUserProvider>
         <CampaignProvider initCampaign={campaign}>
-          <CampaignStatusProvider>
+          <ElectedOfficeProvider>
+            <CampaignStatusProvider>
             <P2pUxEnabledProvider>
               <NavigationProvider>
                 <SnackbarProvider>
@@ -47,7 +49,8 @@ const PageWrapper = async ({ children }) => {
                 </SnackbarProvider>
               </NavigationProvider>
             </P2pUxEnabledProvider>
-          </CampaignStatusProvider>
+            </CampaignStatusProvider>
+          </ElectedOfficeProvider>
         </CampaignProvider>
       </ImpersonateUserProvider>
     </UserProvider>

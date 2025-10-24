@@ -138,6 +138,7 @@ export default function AdminVictoryPathPage(props) {
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
   )
+  const [excludeInvalidOverride, setExcludeInvalidOverride] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
   useEffect(() => {
@@ -285,12 +286,23 @@ export default function AdminVictoryPathPage(props) {
           </H4>
           <div className="my-12">
             <h2 className="font-black text-2xl mb-8">District Picker</h2>
+            <div className="mb-6 flex items-center gap-3">
+              <Checkbox
+                defaultChecked={excludeInvalidOverride}
+                onChange={(e) => setExcludeInvalidOverride(e.target.checked)}
+                color="error"
+              />
+              <div>
+                excludeInvalid override - only check this if you aren&apos;t seeing districts, and/or you&apos;re confident you can select the correct one without safeguards for validity. Any districts you see exclusively with this override we do not have a projected turnout for.
+              </div>
+            </div>
             <DistrictPicker
               state={details?.state}
               electionYear={new Date(details?.electionDate).getFullYear()}
               className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
               buttonText="Save District"
               onSubmit={handleDistrictSubmit}
+              excludeInvalidOverride={excludeInvalidOverride}
               initialType={pathToVictory?.electionType ? { id: pathToVictory.electionType, L2DistrictType: pathToVictory.electionType, label: pathToVictory.electionType.replace(/_/g, ' ') } : null}
               initialName={pathToVictory?.electionLocation ? { id: pathToVictory.electionLocation, L2DistrictName: pathToVictory.electionLocation } : null}
             />

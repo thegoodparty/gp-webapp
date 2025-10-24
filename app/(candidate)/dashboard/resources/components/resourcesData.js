@@ -38,7 +38,7 @@ export const RESOURCES_DATA = [
     id: 'resource-yard-signs',
     category: 'Templates',
     title: 'Yard Signs',
-    url: 'https://drive.google.com/file/d/1-RRkuCo8BUWeFHo_TIWeLcqOPB_uNrOc/view?usp=sharing',
+    url: 'https://drive.google.com/file/d/1z-D__MiXcW08Cz34S5TKCe5XNLoLyKG1/view?usp=sharing',
     imageUrl: '/images/resources/yard-signs.png',
   },
   {

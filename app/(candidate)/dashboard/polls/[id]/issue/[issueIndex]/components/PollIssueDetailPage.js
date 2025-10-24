@@ -7,18 +7,37 @@ import Crumbs from '../../../../shared/Crumbs'
 import Title from './Title'
 import ConfidenceAlert from 'app/(candidate)/dashboard/polls/shared/ConfidenceAlert'
 import DetailsSection from './DetailsSection'
+import PollsPageGuard from 'app/(candidate)/dashboard/polls/components/PollsPageGuard'
+import { useIssue } from 'app/(candidate)/dashboard/polls/shared/hooks/IssueProvider'
+import { usePoll } from 'app/(candidate)/dashboard/polls/shared/hooks/PollProvider'
 
 export default function PollIssueDetailPage({ pathname }) {
   const [campaign] = useCampaign()
+  const [issue] = useIssue()
+  const [poll] = usePoll()
+  const { title } = issue || {}
+
+  const breadcrumbsLinks = [
+    { href: `/dashboard/polls`, label: 'Polls' },
+    {
+      label: `${poll.name}`,
+      href: `/dashboard/polls/${poll.id}`,
+    },
+    {
+      label: `${title}`,
+    },
+  ]
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <Paper className="min-h-full">
-        <Crumbs />
-        <Title />
-        <ConfidenceAlert />
-        <DetailsSection />
-      </Paper>
+      <PollsPageGuard>
+        <Paper className="min-h-full">
+          <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
+          <Title />
+          <ConfidenceAlert />
+          <DetailsSection />
+        </Paper>
+      </PollsPageGuard>
     </DashboardLayout>
   )
 }

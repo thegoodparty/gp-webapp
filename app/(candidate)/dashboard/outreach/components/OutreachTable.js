@@ -25,6 +25,8 @@ const STATUS_COLUMN = {
       return <NotApplicableLabel />
     }
 
+    const { p2pJob } = row
+
     const statusLabels = {
       pending: 'Draft',
       approved: 'In review',
@@ -34,11 +36,19 @@ const STATUS_COLUMN = {
       completed: 'Sent',
     }
 
-    if (!row.status || !statusLabels[row.status]) {
+    if (!p2pJob?.status || !row.status || !statusLabels[row.status]) {
       return <NotApplicableLabel />
     }
 
-    return <span>{statusLabels[row.status]}</span>
+    const showActiveStatus = p2pJob?.status === 'active'
+
+    return (
+      <span className="capitalize">
+        {p2pJob && showActiveStatus
+          ? statusLabels.completed
+          : statusLabels[row.status]}
+      </span>
+    )
   },
 }
 
