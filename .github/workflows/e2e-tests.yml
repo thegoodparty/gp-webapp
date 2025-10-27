@@ -17,29 +17,8 @@ jobs:
     if: github.event.deployment_status.state == 'success'
     # Explicit permissions for accessing workflow artifacts
     permissions:
-      actions: read
+      actions: write
       contents: read
-    services:
-      browser:
-        image: ghcr.io/browserless/chromium
-        ports:
-          - 3000:3000
-        env:
-          # Increase browserless.io timeout to 5 minutes (300 seconds)
-          MAX_CONCURRENT_SESSIONS: 1
-          MAX_QUEUE_LENGTH: 10
-          TIMEOUT: 300000
-          CONNECTION_TIMEOUT: 300000
-          KEEP_ALIVE: true
-          # Disable rate limiting for E2E tests
-          ENABLE_DEBUGGER: true
-          ENABLE_DEBUGGER_VIEWER: true
-          # Additional settings for better E2E test stability
-          PREBOOT_CHROME: true
-          CHROME_REFRESH_TIME: 0
-          MAX_MEMORY_PERCENT: 90
-          MAX_CPU_PERCENT: 90
-          ENABLE_CORS: true
     steps:
       - name: Print Workflow Trigger Event
         env:
@@ -92,7 +71,6 @@ jobs:
           npx playwright test --workers=1
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          PLAYWRIGHT_WS_ENDPOINT: ws://localhost:3000
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
@@ -102,6 +80,22 @@ jobs:
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: test-automation/playwright-report
+          retention-days: 7
+
+      - name: Upload Playwright traces and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-automation/test-results
+          retention-days: 7
 
       - name: Notify Slack Workflow
         if: always()
