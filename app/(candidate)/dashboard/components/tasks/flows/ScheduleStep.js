@@ -6,7 +6,6 @@ import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import {
-  LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
@@ -72,24 +71,34 @@ export default function ScheduleStep({
   const dateTextFieldValue = state?.date
     ? format(state?.date, 'yyyy-MM-dd')
     : ''
-  const isTel =
-    type === LEGACY_TASK_TYPES.telemarketing || type === TASK_TYPES.robocall
+  const isRobocall = type === TASK_TYPES.robocall // Check specifically for robocall type
+  const isTextMessage = type === TASK_TYPES.text // Check specifically for text message type
   const today = new Date()
   const minDate = addDays(today, 3).toISOString().split('T')[0]
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
-        <H1>Schedule {isTel ? 'robocall' : 'text message'}</H1>
-        <Body1 className="mt-4 mb-8">
-          Use the from below to schedule your campaign.
-          <br />
-          <strong>Requires 3 days to process.</strong>
+        <H1>{isRobocall ? 'Request robocall' : isTextMessage ? 'Schedule text message' : 'Schedule campaign'}</H1> {/* Dynamic header: "Request" for robocall, "Schedule text message" for text, "Schedule campaign" for others */}
+        <Body1 className="mt-4 mb-8"> {/* Description text with margin spacing */}
+          {isRobocall ? (
+            <>
+              Your Political Assistant will need an audio recording. Look out for an email with detailed instructions. This is required. {/* Robocall-specific messaging */}
+              <br />
+              <strong>Requires 3 days to process.</strong> {/* Processing time requirement */}
+            </>
+          ) : (
+            <>
+              Use the form below to schedule your campaign. {/* Default messaging for non-robocall types */}
+              <br />
+              <strong>Requires 3 days to process.</strong> {/* Processing time requirement */}
+            </>
+          )}
         </Body1>
 
         <div className="mt-4">
           <TextField
             fullWidth
-            label="Send date"
+            label={isRobocall ? "Call date" : "Send date"} // Dynamic label: "Call date" for robocall, "Send date" for others
             type="date"
             required
             value={dateTextFieldValue}
@@ -136,7 +145,7 @@ export default function ScheduleStep({
               disabled={!canSubmit() || isLoading}
               {...trackingAttrs}
             >
-              {isLastStep ? 'Schedule' : 'Next'}
+              {isLastStep ? (isRobocall ? 'Send' : 'Schedule') : 'Next'} {/* Dynamic button text: Request for robocall, Schedule for others, Next for non-last steps */}
             </Button>
           </div>
         </div>

@@ -136,12 +136,6 @@ const columns = [
     ),
   },
   {
-    accessorKey: 'registeredVoter',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Registered Voter" />
-    ),
-  },
-  {
     accessorKey: 'voterStatus',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Voter Status" />
@@ -160,7 +154,6 @@ const initialColumnVisibility = {
   hasChildrenUnder18: false,
   veteranStatus: false,
   activeVoter: false,
-  registeredVoter: false,
   voterStatus: false,
 }
 
