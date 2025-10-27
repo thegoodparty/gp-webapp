@@ -64,11 +64,6 @@ const sections = [
     title: 'Voter Demographics',
     fields: [
       {
-        key: 'registeredVoter',
-        label: 'Registered Voter',
-        transform: (value) => value || 'Unknown',
-      },
-      {
         key: 'activeVoter',
         label: 'Active Voter',
         transform: (value) => value || 'Unknown',
