@@ -2,6 +2,7 @@
 import DashboardLayout from '../shared/DashboardLayout'
 import { weeksTill } from 'helpers/dateHelper'
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { calculateContactGoals } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
 import EmptyState from './EmptyState'
@@ -23,6 +24,7 @@ export default function DashboardPage({
 }) {
   const [_, setUser] = useUser()
   const [campaign, setCampaign] = useState(campaignProp)
+  const router = useRouter()
   const { pathToVictory: p2vObject, goals, details } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
   const { primaryElectionDate } = details || {}
@@ -114,18 +116,25 @@ export default function DashboardPage({
     }
   }, [])
 
-  const generalResultCloseCallback = useCallback((result) => {
-    setGeneralModalOpen(false)
-    if (typeof result === 'boolean') {
-      setCampaign((campaign) => ({
-        ...campaign,
-        details: {
-          ...campaign.details,
-          wonGeneral: result,
-        },
-      }))
-    }
-  }, [])
+  const generalResultCloseCallback = useCallback(
+    (result) => {
+      setGeneralModalOpen(false)
+      if (typeof result === 'boolean') {
+        setCampaign((campaign) => ({
+          ...campaign,
+          details: {
+            ...campaign.details,
+            wonGeneral: result,
+          },
+        }))
+
+        if (result === true) {
+          router.push('/dashboard/polls')
+        }
+      }
+    },
+    [router],
+  )
 
   trackEvent(EVENTS.Dashboard.Viewed, {
     p2vCompleted: `${
@@ -162,7 +171,11 @@ export default function DashboardPage({
                     {electionInPast || primaryLost ? (
                       <ElectionOver />
                     ) : (
-                      <TasksList campaign={campaign} tasks={tasks} tcrCompliance={tcrCompliance} />
+                      <TasksList
+                        campaign={campaign}
+                        tasks={tasks}
+                        tcrCompliance={tcrCompliance}
+                      />
                     )}
                   </>
                 ) : (
