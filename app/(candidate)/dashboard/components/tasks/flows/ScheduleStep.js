@@ -6,7 +6,6 @@ import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import {
-  LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
