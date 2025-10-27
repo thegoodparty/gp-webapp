@@ -584,24 +584,22 @@ export function getPersistedClids() {
 }
 
 const getUserProperties = () => {
-  if (
-    typeof window === 'undefined' ||
-    typeof window.sessionStorage === 'undefined'
-  ) {
-    return {}
-  }
-
   const userCookie = getUserCookie(true)
   if (!userCookie) {
     return {}
   }
 
-  return {
-    userEmail: userCookie.email,
-    firstName: userCookie.firstName,
-    lastName: userCookie.lastName,
+  const properties = {
+    email: userCookie.email,
     hubspotId: userCookie.metaData?.hubspotId,
   }
+
+  return Object.entries(properties).reduce((acc, [key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      acc[key] = value
+    }
+    return acc
+  }, {})
 }
 
 export const trackEvent = (name, properties) => {
