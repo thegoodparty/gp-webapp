@@ -1,6 +1,7 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
+import { getUserCookie } from './cookieHelper'
 
 const UTM_KEYS = [
   'utm_source',
@@ -582,10 +583,32 @@ export function getPersistedClids() {
   return clids
 }
 
+const getUserProperties = () => {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.sessionStorage === 'undefined'
+  ) {
+    return {}
+  }
+
+  const userCookie = getUserCookie(true)
+  if (!userCookie) {
+    return {}
+  }
+
+  return {
+    userEmail: userCookie.email,
+    firstName: userCookie.firstName,
+    lastName: userCookie.lastName,
+    hubspotId: userCookie.metaData?.hubspotId,
+  }
+}
+
 export const trackEvent = (name, properties) => {
   try {
     const commonProperties = {
       ...getPersistedUtms(),
+      ...getUserProperties(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)
