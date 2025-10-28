@@ -107,15 +107,13 @@ export default function OnboardingPage() {
   const isStepValid = useMemo(() => {
     return currentStepValidation === undefined || currentStepValidation === true
   }, [currentStepValidation])
+
   const nextStepIndex = useMemo(() => {
     const nextStep = currentStep.nextStep
     if (!nextStep) {
       return -1
     }
     const idx = steps.findIndex((step) => step.name === nextStep)
-    if (idx === -1) {
-      return idx
-    }
     return idx
   }, [currentStep])
 
@@ -125,9 +123,6 @@ export default function OnboardingPage() {
       return -1
     }
     const idx = steps.findIndex((step) => step.name === backStep)
-    if (idx === -1) {
-      return idx
-    }
     return idx
   }, [currentStep])
 
