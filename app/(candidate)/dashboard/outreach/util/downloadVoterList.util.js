@@ -12,12 +12,6 @@ export const downloadVoterList = async (
     (key) => audience[key] === true,
   )
 
-  // Debug logging
-  console.log('🔍 DEBUG - voterFileFilter input:', voterFileFilter)
-  console.log('🔍 DEBUG - audience object:', audience)
-  console.log('🔍 DEBUG - selectedAudience:', selectedAudience)
-  console.log('🔍 DEBUG - outreachType:', outreachType)
-
   try {
     await voterFileDownload(outreachType, { filters: selectedAudience })
   } catch (error) {

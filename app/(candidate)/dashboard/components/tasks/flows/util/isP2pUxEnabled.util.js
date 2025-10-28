@@ -9,8 +9,7 @@ if (NEXT_PUBLIC_P2P_CUTOFF_DATETIME && isInvalidDateObject(p2pCutoffDatetime)) {
 }
 
 export const isP2pUxEnabled = (proUpdatedAtDate, tcrCompliant) =>
-  tcrCompliant 
-// ||
-  // !NEXT_PUBLIC_P2P_CUTOFF_DATETIME ||
-  // (!isInvalidDateObject(proUpdatedAtDate) &&
-  //   isAfter(proUpdatedAtDate, p2pCutoffDatetime))
+  tcrCompliant ||
+  !NEXT_PUBLIC_P2P_CUTOFF_DATETIME ||
+  (!isInvalidDateObject(proUpdatedAtDate) &&
+    isAfter(proUpdatedAtDate, p2pCutoffDatetime))
