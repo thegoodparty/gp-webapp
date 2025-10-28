@@ -7,10 +7,13 @@ import { apiRoutes } from 'gpApi/routes'
 import {
   DemoMessageText,
   MessageText,
+  PersonElectDemoMessageText,
+  PersonElectMessageText,
 } from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { isBefore } from 'date-fns'
 
 export const useOnboarding = () => {
   const { on: pollsAccessEnabled } = useFlagOn('serve-polls-v1')
@@ -25,16 +28,30 @@ export const useOnboarding = () => {
     textMessage: null,
     scheduledDate: null,
     estimatedCompletionDate: null,
+    swornInDate: null,
+    swornIn: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+
+  const [stepValidation, setStepValidation] = useState({
+    'Sworn In': false,
+  })
+
+  // In useOnboarding hook
+  const swornInDate = formData.swornInDate
+  useEffect(() => {
+    setStepValidation((prev) => ({
+      ...prev,
+      'Sworn In': !!swornInDate,
+    }))
+  }, [swornInDate])
 
   // Memoize campaign and user data
   const campaignOffice = useMemo(
     () => campaign?.details?.otherOffice || campaign?.details?.office,
     [campaign],
   )
-
   const userName = useMemo(() => {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName} ${user.lastName}`
@@ -43,20 +60,28 @@ export const useOnboarding = () => {
     return user?.name || `n/a`
   }, [user])
 
+  const isSwornIn = formData.swornIn
   // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
   const demoMessageText = useMemo(
     () =>
-      DemoMessageText({
-        name: userName,
-        office: campaignOffice,
-        constituentName: 'Bill',
-      }),
-    [userName, campaignOffice],
+      !isSwornIn
+        ? PersonElectDemoMessageText({
+            name: userName,
+            office: campaignOffice,
+          })
+        : DemoMessageText({
+            name: userName,
+            office: campaignOffice,
+          }),
+    [userName, campaignOffice, isSwornIn],
   )
   // Real Message text that is sent to the API
   const messageText = useMemo(
-    () => MessageText({ name: userName, office: campaignOffice }),
-    [userName, campaignOffice],
+    () =>
+      !isSwornIn
+        ? PersonElectMessageText({ name: userName, office: campaignOffice })
+        : MessageText({ name: userName, office: campaignOffice }),
+    [userName, campaignOffice, isSwornIn],
   )
 
   // Automatically set the text message when demo text is available
@@ -107,6 +132,16 @@ export const useOnboarding = () => {
     [updateFormData],
   )
 
+  const setSwornInDate = useCallback(
+    (swornInDate) => {
+      updateFormData({
+        swornInDate,
+        swornIn: isBefore(new Date(), swornInDate) ? false : true,
+      })
+    },
+    [updateFormData],
+  )
+
   // Handle CSV upload when contacts sample is available
   const { isUploadingCsvSample, csvSampleError } = useCsvUpload(
     contactsSample,
@@ -150,6 +185,7 @@ export const useOnboarding = () => {
         message: formData.textMessage,
         csvFileUrl: formData.csvUrl,
         imageUrl: formData.imageUrl,
+        swornInDate: formData.swornInDate,
         createPoll: pollsAccessEnabled,
       })
 
@@ -187,6 +223,7 @@ export const useOnboarding = () => {
       textMessage: null,
       scheduledDate: null,
       estimatedCompletionDate: null,
+      swornInDate: null,
     })
     setSubmitError(null)
   }, [])
@@ -200,6 +237,7 @@ export const useOnboarding = () => {
     setImageUrl,
     setCsvUrl,
     setTextMessage,
+    setSwornInDate,
     submitOnboarding,
     resetFormData,
 
@@ -216,5 +254,9 @@ export const useOnboarding = () => {
     campaignOffice,
     userName,
     demoMessageText,
+
+    // Step validation
+    stepValidation,
+    setStepValidation,
   }
 }

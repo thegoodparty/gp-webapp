@@ -3,7 +3,7 @@
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
 import H1 from '@shared/typography/H1'
-import PreviewCard from 'app/polls/onboarding/components/steps/PreviewCard'
+import PreviewCard from 'app/polls/onboarding/components/PreviewCard'
 import { PRICE_PER_MESSAGE } from '../../../shared/constants'
 import { numberFormatter } from 'helpers/numberHelper'
 import { dateUsHelper } from 'helpers/dateHelper'
