@@ -113,8 +113,8 @@ jobs:
             } else {
               core.summary.addHeading('Artifacts');
               for (const artifact of data.artifacts) {
-                const uiUrl = `https://github.com/${owner}/${repo}/actions/runs/${runId}/artifacts/${artifact.id}`;
-                core.summary.addRaw(`- [${artifact.name}](${uiUrl}) (${artifact.size_in_bytes} bytes)\n`);
+                const uiPath = `/${owner}/${repo}/actions/runs/${runId}/artifacts/${artifact.id}`; // relative URL avoids masking
+                core.summary.addRaw(`- [${artifact.name}](${uiPath}) (${artifact.size_in_bytes} bytes)\n`);
               }
               await core.summary.write();
             }
