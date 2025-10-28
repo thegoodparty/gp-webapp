@@ -15,7 +15,14 @@ export const DownloadAudienceActionOption = ({
   const isDisabled = disabled || loading
 
   const handleClick = async () => {
-    await downloadVoterList(outreach, setLoading, errorSnackbar)
+    await downloadVoterList(
+      { 
+        voterFileFilter: outreach.voterFileFilter || {}, 
+        outreachType: outreach.outreachType || '' 
+      }, 
+      setLoading, 
+      errorSnackbar
+    )
     onClick()
   }
 
