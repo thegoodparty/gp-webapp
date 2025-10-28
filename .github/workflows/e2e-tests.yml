@@ -97,6 +97,28 @@ jobs:
           path: test-automation/test-results
           retention-days: 7
 
+      - name: Add artifact links to summary
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.runId;
+            const { owner, repo } = context.repo;
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({ owner, repo, run_id: runId });
+            if (!data.artifacts || data.artifacts.length === 0) {
+              await core.summary
+                .addHeading('Artifacts')
+                .addRaw('No artifacts found for this run.')
+                .write();
+            } else {
+              core.summary.addHeading('Artifacts');
+              for (const artifact of data.artifacts) {
+                const uiUrl = `https://github.com/${owner}/${repo}/actions/runs/${runId}/artifacts/${artifact.id}`;
+                core.summary.addRaw(`- [${artifact.name}](${uiUrl}) (${artifact.size_in_bytes} bytes)\n`);
+              }
+              await core.summary.write();
+            }
+
       - name: Notify Slack Workflow
         if: always()
         env:
