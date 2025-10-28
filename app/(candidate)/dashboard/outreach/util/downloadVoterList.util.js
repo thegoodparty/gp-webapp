@@ -6,7 +6,6 @@ export const downloadVoterList = async (
   errorSnackbar = () => {},
 ) => {
   setLoading(true)
-
   const {
     audienceSuperVoters,
     audienceLikelyVoters,
