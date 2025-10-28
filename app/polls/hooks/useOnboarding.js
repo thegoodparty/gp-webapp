@@ -38,7 +38,7 @@ export const useOnboarding = () => {
     'Sworn In': false,
   })
 
-  // In useOnboarding hook
+  // validation for sworn in step
   const swornInDate = formData.swornInDate
   useEffect(() => {
     setStepValidation((prev) => ({
