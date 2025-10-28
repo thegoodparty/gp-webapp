@@ -6,7 +6,7 @@ export const downloadVoterList = async (
   errorSnackbar = () => {},
 ) => {
   setLoading(true)
-  // The voterFileFilter is already in the new format, so we can use it directly
+
   const {
     audienceSuperVoters,
     audienceLikelyVoters,
