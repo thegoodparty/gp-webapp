@@ -6,16 +6,43 @@ export const downloadVoterList = async (
   errorSnackbar = () => {},
 ) => {
   setLoading(true)
-  
-  // Filter for keys that have true values
-  // Only include valid filter keys (audience_, party_, age_, gender_)
-  const selectedAudience = Object.keys(voterFileFilter).filter(
-    (key) => 
-      voterFileFilter[key] === true && 
-      (key.startsWith('audience_') || 
-       key.startsWith('party_') || 
-       key.startsWith('age_') || 
-       key.startsWith('gender_'))
+  const {
+    audienceSuperVoters,
+    audienceLikelyVoters,
+    audienceUnreliableVoters,
+    audienceUnlikelyVoters,
+    audienceFirstTimeVoters,
+    partyIndependent,
+    partyDemocrat,
+    partyRepublican,
+    age18_25,
+    age25_35,
+    age35_50,
+    age50Plus,
+    genderMale,
+    genderFemale,
+  } = voterFileFilter
+
+  // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
+  //  https://goodparty.atlassian.net/browse/WEB-4277
+  const audience = {
+    audience_superVoters: audienceSuperVoters,
+    audience_likelyVoters: audienceLikelyVoters,
+    audience_unreliableVoters: audienceUnreliableVoters,
+    audience_unlikelyVoters: audienceUnlikelyVoters,
+    audience_firstTimeVoters: audienceFirstTimeVoters,
+    party_independent: partyIndependent,
+    party_democrat: partyDemocrat,
+    party_republican: partyRepublican,
+    age_18_25: age18_25,
+    age_25_35: age25_35,
+    age_35_50: age35_50,
+    age_50_plus: age50Plus,
+    gender_male: genderMale,
+    gender_female: genderFemale,
+  }
+  const selectedAudience = Object.keys(audience).filter(
+    (key) => audience[key] === true,
   )
 
   try {
