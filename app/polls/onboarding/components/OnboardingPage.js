@@ -147,7 +147,6 @@ export default function OnboardingPage() {
     if (currentStepIndex === maxStepIndex - 1) {
       await submit()
     } else {
-      // tcrCompliant ? outreach : non-compliant
       if (nextStepIndex !== -1 && currentStepIndex < maxStepIndex) {
         setCurrentStepIndex(nextStepIndex)
       }
