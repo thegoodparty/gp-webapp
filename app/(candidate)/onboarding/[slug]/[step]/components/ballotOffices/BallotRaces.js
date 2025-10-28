@@ -119,7 +119,7 @@ export default function BallotRaces({
         throw new Error(`Couldn't fetch races for zip ${zip}`)
       }
       const sortedRaces = initRaces.sort((a, b) =>
-        a.election.electionDay.localeCompare(b.election.electionDay),
+        a.position.name.localeCompare(b.position.name),
       )
       setRaces(sortedRaces)
       setFilteredRaces(sortedRaces)
