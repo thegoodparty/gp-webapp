@@ -69,18 +69,8 @@ const filterSections = [
           { key: 'audienceFirstTimeVoters', label: 'First Time' },
           { key: 'audienceLikelyVoters', label: 'Likely' },
           { key: 'audienceSuperVoters', label: 'Super' },
-          { key: 'audienceUnreliableVoters', label: 'Unreliable' },
           { key: 'audienceUnlikelyVoters', label: 'Unlikely' },
           { key: 'audienceUnknown', label: 'Unknown' },
-        ],
-      },
-      {
-        key: 'registered_voter',
-        label: 'Registered Voter',
-        options: [
-          { key: 'registeredVoterTrue', label: 'Yes' },
-          { key: 'registeredVoterFalse', label: 'No' },
-          { key: 'registeredVoterUnknown', label: 'Unknown' },
         ],
       },
       {

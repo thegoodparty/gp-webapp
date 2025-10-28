@@ -141,7 +141,7 @@ export default function GeneralResultModal({
           <Button
             onClick={() => onClose(result === 'won')}
             size="large"
-            className="w-full mt-8"
+            className="w-full"
           >
             Back to Dashboard
           </Button>

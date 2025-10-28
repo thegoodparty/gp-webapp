@@ -44,8 +44,8 @@ const INSTRUCTIONS_BY_TYPE = {
   [TASK_TYPES.robocall]: [
     'Select target audience',
     'Develop your script',
-    'Schedule robocall',
-    'Our team will reach out with next steps',
+    'Send your request',
+    'Our team will email you detailed instructions on how to record your robocall',
   ],
 }
 
