@@ -13,7 +13,7 @@ export default function LossPage({}) {
       <main className="flex-1 pb-24 md:pb-0">
         <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12">
           <div className="flex flex-col items-center md:justify-center">
-            <h1 className="text-center font-semibold text-2xl md:text-4xl w-full">
+            <h1 className="text-center font-semibold text-2xl md:text-4xl w-full mt-4 md:mt-0">
               Not every campaign wins, but every campaign matters.
             </h1>
             <p className="text-center mt-8 text-lg font-normal text-muted-foreground w-full">

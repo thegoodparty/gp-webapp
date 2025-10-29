@@ -119,13 +119,13 @@ export default function ElectionResultPage({}) {
               <div className="pt-4 md:pt-16 pb-8 max-w-[450px] mx-auto">
                 <h1
                   id="election-results-heading"
-                  className="text-center font-semibold text-2xl md:text-4xl w-full"
+                  className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full"
                 >
                   Election Results:
                   <br />
                   {officeName}
                 </h1>
-                <p className="text-center mt-4 text-lg font-normal text-muted-foreground w-full">
+                <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
                   It looks like your general election date has passed. Please
                   confirm the outcome of your election.
                 </p>
