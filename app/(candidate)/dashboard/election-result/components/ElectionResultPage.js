@@ -66,18 +66,19 @@ export default function ElectionResultPage({}) {
 
       await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
 
+      setCampaign((campaign) => ({
+        ...campaign,
+        details: {
+          ...campaign.details,
+          wonGeneral: wonGeneral,
+        },
+      }))
+
       trackEvent(EVENTS.Candidacy.DidYouWinModalCompleted, {
         status: selection,
       })
       // Create ElectedOffice if the user won the election
       if (wonGeneral) {
-        setCampaign((campaign) => ({
-          ...campaign,
-          details: {
-            ...campaign.details,
-            wonGeneral: wonGeneral,
-          },
-        }))
         await createElectedOffice()
         router.push('/polls/welcome')
       } else {
