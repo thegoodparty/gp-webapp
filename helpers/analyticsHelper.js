@@ -65,6 +65,7 @@ export const EVENTS = {
     MeetYourConstituentsViewed:
       'Serve Onboarding - Meet Your Constituents Viewed',
     SwornInViewed: 'Serve Onboarding - Sworn In Viewed',
+    SwornInCompleted: 'Serve Onboarding - Sworn In Completed',
     ConstituencyProfileViewed: 'Serve Onboarding - Constituency Profile Viewed',
     PollValuePropsViewed: 'Serve Onboarding - Poll Value Props Viewed',
     PollStrategyViewed: 'Serve Onboarding - Poll Strategy Viewed',
@@ -443,6 +444,8 @@ export const EVENTS = {
     PurchasedDomain: 'Candidate Website - Purchased domain',
   },
   Candidacy: {
+    DidYouWinModalViewed: 'Candidacy - Did You Win Modal Viewed',
+    DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
 }
