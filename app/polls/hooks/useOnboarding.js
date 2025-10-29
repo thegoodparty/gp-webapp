@@ -227,6 +227,7 @@ export const useOnboarding = () => {
       scheduledDate: null,
       estimatedCompletionDate: null,
       swornInDate: null,
+      swornIn: false,
     })
     setSubmitError(null)
   }, [])
