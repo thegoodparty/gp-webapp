@@ -5,10 +5,8 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import {
-  DemoMessageText,
-  MessageText,
-  PersonElectDemoMessageText,
-  PersonElectMessageText,
+  personElectDemoMessageText,
+  personElectMessageText,
 } from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
@@ -65,11 +63,11 @@ export const useOnboarding = () => {
   const demoMessageText = useMemo(
     () =>
       !isSwornIn
-        ? PersonElectDemoMessageText({
+        ? personElectDemoMessageText({
             name: userName,
             office: campaignOffice,
           })
-        : DemoMessageText({
+        : demoMessageText({
             name: userName,
             office: campaignOffice,
           }),
@@ -79,8 +77,8 @@ export const useOnboarding = () => {
   const messageText = useMemo(
     () =>
       !isSwornIn
-        ? PersonElectMessageText({ name: userName, office: campaignOffice })
-        : MessageText({ name: userName, office: campaignOffice }),
+        ? personElectMessageText({ name: userName, office: campaignOffice })
+        : messageText({ name: userName, office: campaignOffice }),
     [userName, campaignOffice, isSwornIn],
   )
 
