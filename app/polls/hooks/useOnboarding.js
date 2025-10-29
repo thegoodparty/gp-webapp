@@ -5,8 +5,10 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import {
-  personElectDemoMessageText,
-  personElectMessageText,
+  personElectDemoMessageText as personElectDemoMessageTextPolls,
+  personElectMessageText as personElectMessageTextPolls,
+  demoMessageText as demoMessageTextPolls,
+  messageText as messageTextPolls,
 } from '../onboarding/components/DemoMessageText'
 import { useContactsSample } from './useContactsSample'
 import { useCsvUpload } from './useCsvUpload'
@@ -63,11 +65,11 @@ export const useOnboarding = () => {
   const demoMessageText = useMemo(
     () =>
       !isSwornIn
-        ? personElectDemoMessageText({
+        ? personElectDemoMessageTextPolls({
             name: userName,
             office: campaignOffice,
           })
-        : demoMessageText({
+        : demoMessageTextPolls({
             name: userName,
             office: campaignOffice,
           }),
@@ -77,8 +79,11 @@ export const useOnboarding = () => {
   const messageText = useMemo(
     () =>
       !isSwornIn
-        ? personElectMessageText({ name: userName, office: campaignOffice })
-        : messageText({ name: userName, office: campaignOffice }),
+        ? personElectMessageTextPolls({
+            name: userName,
+            office: campaignOffice,
+          })
+        : messageTextPolls({ name: userName, office: campaignOffice }),
     [userName, campaignOffice, isSwornIn],
   )
 
