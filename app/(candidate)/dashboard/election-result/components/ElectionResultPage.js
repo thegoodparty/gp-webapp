@@ -127,40 +127,39 @@ export default function LoadingInsightsPage({}) {
                 confirm the outcome of your election.
               </p>
 
-              {!requestState.error ? (
-                <div
-                  className="flex flex-col gap-4 mt-8"
-                  role="radiogroup"
-                  aria-labelledby="election-results-heading"
-                >
-                  {options.map((option) => (
-                    <button
-                      key={option.key}
-                      type="button"
-                      className="flex items-center gap-4 cursor-pointer p-6 rounded-xl border border-base hover:bg-gray-50 text-left w-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                      onClick={() => setResult(option.key)}
-                      aria-pressed={result === option.key}
-                      aria-label={option.label}
-                    >
-                      <div className="flex items-center gap-5 pointer-events-none">
-                        {option.icon}
-                        <span className="font-bold text-foreground">
-                          {option.label}
-                        </span>
-                      </div>
-                      <LuArrowRight
-                        className="ml-auto pointer-events-none"
-                        size={20}
-                      />
-                    </button>
-                  ))}
-                </div>
-              ) : (
+              <div
+                className="flex flex-col gap-4 mt-8"
+                role="radiogroup"
+                aria-labelledby="election-results-heading"
+              >
+                {options.map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    className="flex items-center gap-4 cursor-pointer p-6 rounded-xl border border-base hover:bg-gray-50 text-left w-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    onClick={() => setResult(option.key)}
+                    aria-pressed={result === option.key}
+                    aria-label={option.label}
+                  >
+                    <div className="flex items-center gap-5 pointer-events-none">
+                      {option.icon}
+                      <span className="font-bold text-foreground">
+                        {option.label}
+                      </span>
+                    </div>
+                    <LuArrowRight
+                      className="ml-auto pointer-events-none"
+                      size={20}
+                    />
+                  </button>
+                ))}
+              </div>
+              {requestState.error ? (
                 <p className="text-red text-center">
                   An error occured when saving your election result, please try
                   again later.
                 </p>
-              )}
+              ) : null}
             </form>
           </div>
         </section>
