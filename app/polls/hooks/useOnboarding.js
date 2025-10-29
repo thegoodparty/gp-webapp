@@ -5,24 +5,19 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import {
-  personElectDemoMessageText,
-  personElectMessageText,
+  personElectDemoMessageText as personElectDemoMessageTextPolls,
+  personElectMessageText as personElectMessageTextPolls,
+  demoMessageText as demoMessageTextPolls,
+  messageText as messageTextPolls,
 } from '../onboarding/components/DemoMessageText'
-import { useContactsSample } from './useContactsSample'
-import { useCsvUpload } from './useCsvUpload'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { isBefore } from 'date-fns'
 
 export const useOnboarding = () => {
-  const { on: pollsAccessEnabled } = useFlagOn('serve-polls-v1')
   const [campaign] = useCampaign()
   const [user] = useUser()
-  const { contactsSample, isLoadingContactsSample, contactsSampleError } =
-    useContactsSample()
 
   const [formData, setFormData] = useState({
     imageUrl: null,
-    csvUrl: null,
     textMessage: null,
     scheduledDate: null,
     estimatedCompletionDate: null,
@@ -63,11 +58,11 @@ export const useOnboarding = () => {
   const demoMessageText = useMemo(
     () =>
       !isSwornIn
-        ? personElectDemoMessageText({
+        ? personElectDemoMessageTextPolls({
             name: userName,
             office: campaignOffice,
           })
-        : demoMessageText({
+        : demoMessageTextPolls({
             name: userName,
             office: campaignOffice,
           }),
@@ -77,8 +72,11 @@ export const useOnboarding = () => {
   const messageText = useMemo(
     () =>
       !isSwornIn
-        ? personElectMessageText({ name: userName, office: campaignOffice })
-        : messageText({ name: userName, office: campaignOffice }),
+        ? personElectMessageTextPolls({
+            name: userName,
+            office: campaignOffice,
+          })
+        : messageTextPolls({ name: userName, office: campaignOffice }),
     [userName, campaignOffice, isSwornIn],
   )
 
@@ -123,13 +121,6 @@ export const useOnboarding = () => {
     [updateFormData],
   )
 
-  const setCsvUrl = useCallback(
-    (csvUrl) => {
-      updateFormData({ csvUrl })
-    },
-    [updateFormData],
-  )
-
   const setSwornInDate = useCallback(
     (swornInDate) => {
       updateFormData({
@@ -138,14 +129,6 @@ export const useOnboarding = () => {
       })
     },
     [updateFormData],
-  )
-
-  // Handle CSV upload when contacts sample is available
-  const { isUploadingCsvSample, csvSampleError } = useCsvUpload(
-    contactsSample,
-    campaign,
-    formData.csvUrl,
-    setCsvUrl,
   )
 
   const setTextMessage = useCallback(
@@ -159,32 +142,13 @@ export const useOnboarding = () => {
 
   const submitOnboarding = useCallback(async () => {
     try {
-      // Check if contacts sample is still loading
-      if (isLoadingContactsSample) {
-        throw new Error('Contact data is still loading.')
-      }
-      if (isUploadingCsvSample) {
-        throw new Error('Contact data is still being prepared.')
-      }
-      if (contactsSampleError) {
-        throw new Error('Failed to load contact data.')
-      }
-      if (csvSampleError) {
-        throw new Error('Failed to prepare contact data.')
-      }
-      if (!formData.csvUrl) {
-        throw new Error('Contact data is not ready.')
-      }
-
       setIsSubmitting(true)
       setSubmitError(null)
 
       const response = await clientFetch(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
-        csvFileUrl: formData.csvUrl,
         imageUrl: formData.imageUrl,
         swornInDate: formData.swornInDate,
-        createPoll: pollsAccessEnabled,
       })
 
       if (!response.ok) {
@@ -205,23 +169,16 @@ export const useOnboarding = () => {
     } finally {
       setIsSubmitting(false)
     }
-  }, [
-    formData,
-    csvSampleError,
-    isLoadingContactsSample,
-    isUploadingCsvSample,
-    contactsSampleError,
-    pollsAccessEnabled,
-  ])
+  }, [formData])
 
   const resetFormData = useCallback(() => {
     setFormData({
       imageUrl: null,
-      csvUrl: null,
       textMessage: null,
       scheduledDate: null,
       estimatedCompletionDate: null,
       swornInDate: null,
+      swornIn: false,
     })
     setSubmitError(null)
   }, [])
@@ -233,18 +190,10 @@ export const useOnboarding = () => {
     submitError,
     updateFormData,
     setImageUrl,
-    setCsvUrl,
     setTextMessage,
     setSwornInDate,
     submitOnboarding,
     resetFormData,
-
-    // Contacts sample
-    contactsSample,
-    isLoadingContactsSample,
-    contactsSampleError,
-    isUploadingCsvSample,
-    csvSampleError,
 
     // Campaign and user data
     campaign,
