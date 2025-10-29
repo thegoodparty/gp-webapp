@@ -2,7 +2,7 @@
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import PreviewCard from './PreviewCard'
+import PreviewCard from '../PreviewCard'
 
 export default function PreviewStep() {
   const { demoMessageText, formData } = useOnboardingContext()

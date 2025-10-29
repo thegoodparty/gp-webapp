@@ -5,9 +5,12 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import {
-  DemoMessageText,
-  MessageText,
+  personElectDemoMessageText as personElectDemoMessageTextPolls,
+  personElectMessageText as personElectMessageTextPolls,
+  demoMessageText as demoMessageTextPolls,
+  messageText as messageTextPolls,
 } from '../onboarding/components/DemoMessageText'
+import { isBefore } from 'date-fns'
 
 export const useOnboarding = () => {
   const [campaign] = useCampaign()
@@ -18,16 +21,30 @@ export const useOnboarding = () => {
     textMessage: null,
     scheduledDate: null,
     estimatedCompletionDate: null,
+    swornInDate: null,
+    swornIn: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+
+  const [stepValidation, setStepValidation] = useState({
+    'Sworn In': false,
+  })
+
+  // validation for sworn in step
+  const swornInDate = formData.swornInDate
+  useEffect(() => {
+    setStepValidation((prev) => ({
+      ...prev,
+      'Sworn In': !!swornInDate,
+    }))
+  }, [swornInDate])
 
   // Memoize campaign and user data
   const campaignOffice = useMemo(
     () => campaign?.details?.otherOffice || campaign?.details?.office,
     [campaign],
   )
-
   const userName = useMemo(() => {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName} ${user.lastName}`
@@ -36,20 +53,31 @@ export const useOnboarding = () => {
     return user?.name || `n/a`
   }, [user])
 
+  const isSwornIn = formData.swornIn
   // Demo message text is used for the preview step and strategy step (It includes a constituency name for demo purposes)
   const demoMessageText = useMemo(
     () =>
-      DemoMessageText({
-        name: userName,
-        office: campaignOffice,
-        constituentName: 'Bill',
-      }),
-    [userName, campaignOffice],
+      !isSwornIn
+        ? personElectDemoMessageTextPolls({
+            name: userName,
+            office: campaignOffice,
+          })
+        : demoMessageTextPolls({
+            name: userName,
+            office: campaignOffice,
+          }),
+    [userName, campaignOffice, isSwornIn],
   )
   // Real Message text that is sent to the API
   const messageText = useMemo(
-    () => MessageText({ name: userName, office: campaignOffice }),
-    [userName, campaignOffice],
+    () =>
+      !isSwornIn
+        ? personElectMessageTextPolls({
+            name: userName,
+            office: campaignOffice,
+          })
+        : messageTextPolls({ name: userName, office: campaignOffice }),
+    [userName, campaignOffice, isSwornIn],
   )
 
   // Automatically set the text message when demo text is available
@@ -93,6 +121,16 @@ export const useOnboarding = () => {
     [updateFormData],
   )
 
+  const setSwornInDate = useCallback(
+    (swornInDate) => {
+      updateFormData({
+        swornInDate,
+        swornIn: isBefore(new Date(), swornInDate) ? false : true,
+      })
+    },
+    [updateFormData],
+  )
+
   const setTextMessage = useCallback(
     (textMessage) => {
       updateFormData({
@@ -110,6 +148,7 @@ export const useOnboarding = () => {
       const response = await clientFetch(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
+        swornInDate: formData.swornInDate,
       })
 
       if (!response.ok) {
@@ -138,6 +177,8 @@ export const useOnboarding = () => {
       textMessage: null,
       scheduledDate: null,
       estimatedCompletionDate: null,
+      swornInDate: null,
+      swornIn: false,
     })
     setSubmitError(null)
   }, [])
@@ -150,6 +191,7 @@ export const useOnboarding = () => {
     updateFormData,
     setImageUrl,
     setTextMessage,
+    setSwornInDate,
     submitOnboarding,
     resetFormData,
 
@@ -159,5 +201,9 @@ export const useOnboarding = () => {
     campaignOffice,
     userName,
     demoMessageText,
+
+    // Step validation
+    stepValidation,
+    setStepValidation,
   }
 }

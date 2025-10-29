@@ -9,7 +9,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 export default function PollDetails() {
   const [poll] = usePoll()
-  const { scheduledDate, completedDate, cost } = poll || {}
+  const { scheduledDate, estimatedCompletionDate, cost } = poll || {}
   return (
     <div className="w-full max-w-[600px] bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex gap-2 items-center mb-4">
@@ -27,8 +27,10 @@ export default function PollDetails() {
             <span className="font-light">{dateUsHelper(scheduledDate)}</span>
           </li>
           <li>
-            <span className="font-medium">Completed Date:</span>{' '}
-            <span className="font-light">{dateUsHelper(completedDate)}</span>
+            <span className="font-medium">Completion Date:</span>{' '}
+            <span className="font-light">
+              {dateUsHelper(estimatedCompletionDate)}
+            </span>
           </li>
           <li>
             <span className="font-medium">Cost:</span>{' '}
