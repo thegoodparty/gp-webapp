@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Modal from '@shared/utils/Modal'
-import H1 from '@shared/typography/H1'
-import Body2 from '@shared/typography/Body2'
-import RadioList from '@shared/inputs/RadioList'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
+import { LuTrophy, LuMeh, LuFrown, LuArrowRight } from 'react-icons/lu'
 
 export default function GeneralResultModal({
   open,
@@ -27,9 +25,22 @@ export default function GeneralResultModal({
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const options = [
-    { key: 'won', label: 'I won my race' },
-    { key: 'lost', label: 'I did not win my race' },
+    { key: 'won', label: 'I won my race', icon: <LuTrophy size={24} /> },
+    {
+      key: 'lost',
+      label: 'I lost my race',
+      icon: <LuFrown size={24} />,
+    },
+    {
+      key: 'neither',
+      label: 'Neither, I am in a run-off election',
+      icon: <LuMeh size={24} />,
+    },
   ]
+
+  const onSelectResult = (result) => {
+    setResult(result)
+  }
 
   const createElectedOffice = async () => {
     if (!electionDate) {
@@ -84,36 +95,64 @@ export default function GeneralResultModal({
   return (
     <Modal
       open={open}
-      boxClassName="p-16 pt-0"
+      boxClassName="p-16 pt-0 w-[320px] md:w-[700px]"
       preventEscClose
       preventBackdropClose
       hideClose
     >
       {!formSubmitted ? (
-        <form onSubmit={handleSubmit} className="pt-16 max-w-[640px]">
-          <H1 className="mb-4 text-center">
+        <form
+          onSubmit={handleSubmit}
+          className="pt-4 md:pt-16 pb-8 max-w-[450px] mx-auto"
+        >
+          <h1
+            id="election-results-heading"
+            className="text-center font-semibold text-2xl md:text-4xl w-full"
+          >
             Election Results:
             <br />
             {officeName}
-          </H1>
-          <Body2 className="mb-8 text-center">
+          </h1>
+          <p className="text-center mt-4 text-lg font-normal text-muted-foreground w-full">
             It looks like your general election date has passed. Please confirm
             the outcome of your election.
-          </Body2>
+          </p>
 
           {!requestState.error ? (
-            <RadioList
-              options={options}
-              selected={result}
-              selectCallback={setResult}
-            />
+            <div
+              className="flex flex-col gap-4 mt-8"
+              role="radiogroup"
+              aria-labelledby="election-results-heading"
+            >
+              {options.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  className="flex items-center gap-4 cursor-pointer p-6 rounded-xl border border-base hover:bg-gray-50 text-left w-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  onClick={() => setResult(option.key)}
+                  aria-pressed={result === option.key}
+                  aria-label={option.label}
+                >
+                  <div className="flex items-center gap-5 pointer-events-none">
+                    {option.icon}
+                    <span className="font-bold text-foreground">
+                      {option.label}
+                    </span>
+                  </div>
+                  <LuArrowRight
+                    className="ml-auto pointer-events-none"
+                    size={20}
+                  />
+                </button>
+              ))}
+            </div>
           ) : (
-            <Body2 className="text-red text-center">
+            <p className="text-red text-center">
               An error occured when saving your election result, please try
               again later.
-            </Body2>
+            </p>
           )}
-
+          {/* 
           <div className="mt-12 flex gap-4 justify-center">
             <Button
               disabled={requestState.loading}
@@ -134,7 +173,7 @@ export default function GeneralResultModal({
             >
               Submit
             </Button>
-          </div>
+          </div> */}
         </form>
       ) : (
         <div className="text-center">
