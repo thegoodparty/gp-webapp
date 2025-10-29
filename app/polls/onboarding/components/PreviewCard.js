@@ -1,5 +1,5 @@
 'use client'
-import { MessageCard } from '../MessageCard'
+import { MessageCard } from './MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { LuCalendar } from 'react-icons/lu'
