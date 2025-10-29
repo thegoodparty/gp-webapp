@@ -57,7 +57,6 @@ export default function ElectionResultPage({}) {
     refreshElectedOffice()
     return response.data
   }
-  console.log('render')
 
   async function handleSelection(selection) {
     setSelectedOption(selection)
