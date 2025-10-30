@@ -11,6 +11,7 @@ import {
   messageText as messageTextPolls,
 } from '../onboarding/components/DemoMessageText'
 import { isBefore } from 'date-fns'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export const useOnboarding = () => {
   const [campaign] = useCampaign()
@@ -123,9 +124,14 @@ export const useOnboarding = () => {
 
   const setSwornInDate = useCallback(
     (swornInDate) => {
+      const isSwornIn = isBefore(new Date(), swornInDate) ? false : true
       updateFormData({
         swornInDate,
-        swornIn: isBefore(new Date(), swornInDate) ? false : true,
+        swornIn: isSwornIn,
+      })
+      trackEvent(EVENTS.ServeOnboarding.SwornInCompleted, {
+        swornInDate: swornInDate,
+        isSwornIn: isSwornIn,
       })
     },
     [updateFormData],
