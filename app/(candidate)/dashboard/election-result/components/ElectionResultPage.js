@@ -11,10 +11,13 @@ import { LuTrophy, LuFrown } from 'react-icons/lu'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ResultOptionButton from './ResultOptionButton'
 
+const RESULT_WON = 'won'
+const RESULT_LOST = 'lost'
+
 const options = [
-  { key: 'won', label: 'I won my race', icon: <LuTrophy size={24} /> },
+  { key: RESULT_WON, label: 'I won my race', icon: <LuTrophy size={24} /> },
   {
-    key: 'lost',
+    key: RESULT_LOST,
     label: 'I lost my race',
     icon: <LuFrown size={24} />,
   },
@@ -63,7 +66,7 @@ export default function ElectionResultPage({}) {
     setSelectedOption(selection)
     setRequestState({ submitting: true, error: false })
     try {
-      const wonGeneral = selection === 'won'
+      const wonGeneral = selection === RESULT_WON
 
       await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
 
@@ -81,9 +84,9 @@ export default function ElectionResultPage({}) {
       // Create ElectedOffice if the user won the election
       if (wonGeneral) {
         await createElectedOffice()
-        router.push('/polls/welcome')
+        router.replace('/polls/welcome')
       } else {
-        router.push('/dashboard/election-result/loss')
+        router.replace('/dashboard/election-result/loss')
       }
     } catch (e) {
       console.error('Error submitting General Result:', e)
@@ -148,7 +151,7 @@ export default function ElectionResultPage({}) {
                 </div>
                 {requestState.error ? (
                   <p className="text-red text-center mt-4">
-                    An error occured when saving your election result, please
+                    An error occurred when saving your election result, please
                     try again later.
                   </p>
                 ) : null}
