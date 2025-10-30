@@ -7,8 +7,9 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
-import { LuTrophy, LuFrown, LuArrowRight, LuLoaderCircle } from 'react-icons/lu'
+import { LuTrophy, LuFrown } from 'react-icons/lu'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import ResultOptionButton from './ResultOptionButton'
 
 const options = [
   { key: 'won', label: 'I won my race', icon: <LuTrophy size={24} /> },
@@ -136,37 +137,13 @@ export default function ElectionResultPage({}) {
                   aria-labelledby="election-results-heading"
                 >
                   {options.map((option) => (
-                    <button
+                    <ResultOptionButton
                       key={option.key}
-                      type="button"
-                      className={`flex items-center gap-4 cursor-pointer p-6 rounded-xl border border-base hover:bg-gray-50 text-left w-full transition-colors focus:border-gray-300 focus:outline-none ${
-                        selectedOption === option.key
-                          ? '!bg-gray-900 text-white'
-                          : 'bg-white text-black'
-                      }
-                      `}
-                      disabled={requestState.submitting}
-                      onClick={() => handleSelection(option.key)}
-                      aria-pressed={selectedOption === option.key}
-                      aria-label={option.label}
-                    >
-                      <div className="flex items-center gap-5 pointer-events-none">
-                        {option.icon}
-                        <span className="font-bold">{option.label}</span>
-                      </div>
-                      {requestState.submitting &&
-                      selectedOption === option.key ? (
-                        <LuLoaderCircle
-                          className="ml-auto animate-spin"
-                          size={20}
-                        />
-                      ) : (
-                        <LuArrowRight
-                          className="ml-auto pointer-events-none"
-                          size={20}
-                        />
-                      )}
-                    </button>
+                      option={option}
+                      selected={selectedOption === option.key}
+                      submitting={requestState.submitting}
+                      onSelect={handleSelection}
+                    />
                   ))}
                 </div>
                 {requestState.error ? (
