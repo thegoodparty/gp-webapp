@@ -64,6 +64,7 @@ export const EVENTS = {
     GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',
     MeetYourConstituentsViewed:
       'Serve Onboarding - Meet Your Constituents Viewed',
+    SwornInViewed: 'Serve Onboarding - Sworn In Viewed',
     ConstituencyProfileViewed: 'Serve Onboarding - Constituency Profile Viewed',
     PollValuePropsViewed: 'Serve Onboarding - Poll Value Props Viewed',
     PollStrategyViewed: 'Serve Onboarding - Poll Strategy Viewed',
@@ -71,6 +72,7 @@ export const EVENTS = {
     PollImageUploaded: 'Serve Onboarding - Poll Image Uploaded',
     PollPreviewViewed: 'Serve Onboarding - Poll Preview Viewed',
     SmsPollSent: 'Serve Onboarding - SMS Poll Sent',
+    SuccessPageViewed: 'Serve Onboarding - Success Page Viewed',
   },
   Navigation: {
     Top: {

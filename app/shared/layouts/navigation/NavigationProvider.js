@@ -19,6 +19,7 @@ import {
   LuSquarePlay,
   LuContactRound,
   LuHeart,
+  LuMessageCircle,
 } from 'react-icons/lu'
 
 import { usePathname } from 'next/navigation'
@@ -61,6 +62,14 @@ export const PRODUCT_LINKS = [
     icon: <LuSignpost />,
     id: 'nav-yard-signs',
     dataTestId: 'nav-yard-signs',
+    external: true,
+  },
+  {
+    label: 'Serve',
+    href: 'https://lp.goodparty.org/serve/',
+    icon: <LuMessageCircle />,
+    id: 'nav-serve',
+    dataTestId: 'nav-serve',
     external: true,
   },
   {
