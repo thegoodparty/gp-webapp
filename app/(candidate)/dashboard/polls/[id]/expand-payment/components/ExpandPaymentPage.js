@@ -35,7 +35,7 @@ export default function ExpandPaymentPage({ count }) {
       <PurchaseIntentProvider
         type={PURCHASE_TYPES.POLL}
         purchaseMetaData={{
-          count,
+          count: parseInt(count, 10),
           pollId: poll.id,
         }}
       >
