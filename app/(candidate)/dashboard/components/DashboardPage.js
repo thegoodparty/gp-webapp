@@ -9,7 +9,6 @@ import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
 import PrimaryResultModal from './PrimaryResultModal'
-import GeneralResultModal from './GeneralResultModal'
 import LoadingAnimationModal from '@shared/utils/LoadingAnimationModal'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
@@ -75,16 +74,16 @@ export default function DashboardPage({
     }
   }
 
-  const [generalModalOpen, setGeneralModalOpen] = useState(false)
-
   useEffect(() => {
     const shouldOpen =
       !primaryElectionDate &&
       typeof details?.wonGeneral !== 'boolean' &&
       weeksTill(electionDate).weeks < 0
 
-    setGeneralModalOpen(!!shouldOpen)
-  }, [primaryElectionDate, details?.wonGeneral, electionDate])
+    if (shouldOpen) {
+      router.push('/dashboard/election-result')
+    }
+  }, [primaryElectionDate, details?.wonGeneral, electionDate, router])
 
   const weeksUntil = weeksTill(resolvedDate)
   const contactGoals = calculateContactGoals(resolvedContactGoal)
@@ -115,26 +114,6 @@ export default function DashboardPage({
       })
     }
   }, [])
-
-  const generalResultCloseCallback = useCallback(
-    (result) => {
-      setGeneralModalOpen(false)
-      if (typeof result === 'boolean') {
-        setCampaign((campaign) => ({
-          ...campaign,
-          details: {
-            ...campaign.details,
-            wonGeneral: result,
-          },
-        }))
-
-        if (result === true) {
-          router.push('/dashboard/polls')
-        }
-      }
-    },
-    [router],
-  )
 
   trackEvent(EVENTS.Dashboard.Viewed, {
     p2vCompleted: `${
@@ -186,14 +165,6 @@ export default function DashboardPage({
                 <PrimaryResultModal
                   open={primaryResultState.modalOpen}
                   onClose={primaryResultCloseCallback}
-                  electionDate={electionDate}
-                  officeName={officeName}
-                />
-              )}
-              {!primaryElectionDate && generalModalOpen && (
-                <GeneralResultModal
-                  open={generalModalOpen}
-                  onClose={generalResultCloseCallback}
                   electionDate={electionDate}
                   officeName={officeName}
                 />
