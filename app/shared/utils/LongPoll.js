@@ -13,16 +13,18 @@ export const LongPoll = ({
   const timeoutIdRef = useRef(null)
   const countRef = useRef(0)
   const stopPollingRef = useRef(stopPolling)
+  const pollingDelayRef = useRef(pollingDelay)
   const pollingMethodRef = useRef(pollingMethod)
   const onSuccessRef = useRef(onSuccess)
   const onErrorRef = useRef(onError)
 
   useEffect(() => {
     stopPollingRef.current = stopPolling
+    pollingDelayRef.current = pollingDelay
     pollingMethodRef.current = pollingMethod
     onSuccessRef.current = onSuccess
     onErrorRef.current = onError
-  }, [stopPolling, pollingMethod, onSuccess, onError])
+  }, [stopPolling, pollingDelay, pollingMethod, onSuccess, onError])
 
   useEffect(() => {
     if (stopPolling || (limit && countRef.current >= limit)) {
@@ -58,7 +60,7 @@ export const LongPoll = ({
       countRef.current += 1
 
       if (!stopPollingRef.current && (!limit || countRef.current < limit)) {
-        timeoutIdRef.current = setTimeout(poll, pollingDelay)
+        timeoutIdRef.current = setTimeout(poll, pollingDelayRef.current)
       }
     }
 
