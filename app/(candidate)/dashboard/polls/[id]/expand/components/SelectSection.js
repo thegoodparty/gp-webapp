@@ -40,15 +40,15 @@ export default function SelectSection({ countCallback }) {
   const selectOptions = [
     {
       label: `${numberFormatter(totalConstituents * 0.25)} Constituents (25%)`,
-      value: totalConstituents * 0.25,
+      value: Math.ceil(totalConstituents * 0.25),
     },
     {
       label: `${numberFormatter(totalConstituents * 0.5)} Constituents (50%)`,
-      value: totalConstituents * 0.5,
+      value: Math.ceil(totalConstituents * 0.5),
     },
     {
       label: `${numberFormatter(totalConstituents * 0.75)} Constituents (75%)`,
-      value: totalConstituents * 0.75,
+      value: Math.ceil(totalConstituents * 0.75),
     },
   ]
 
