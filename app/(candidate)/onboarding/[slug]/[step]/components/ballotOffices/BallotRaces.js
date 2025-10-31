@@ -118,9 +118,11 @@ export default function BallotRaces({
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`)
       }
-      const sortedRaces = initRaces.sort((a, b) =>
-        a.election.electionDay.localeCompare(b.election.electionDay),
-      )
+      const sortedRaces = initRaces.sort((a, b) => {
+        const nameA = a?.position?.name || ''
+        const nameB = b?.position?.name || ''
+        return nameA.localeCompare(nameB)
+      })
       setRaces(sortedRaces)
       setFilteredRaces(sortedRaces)
       setLoading(false)
@@ -239,7 +241,7 @@ export default function BallotRaces({
                   ...race,
                   position: {
                     ...race.position,
-                    name: getHighlightedText(race.position.name, fuzzyFilter),
+                    name: getHighlightedText(race?.position?.name || '', fuzzyFilter),
                   },
                 }}
                 selected={race?.id === selected?.id}
