@@ -10,6 +10,7 @@ import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
@@ -23,7 +24,8 @@ export default function ExpandPaymentPage({ count }) {
     router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 
-  const handlePurchaseComplete = () => {
+  const handlePurchaseComplete = async (paymentIntent) => {
+    await completePurchase(paymentIntent.id)
     router.push(
       `/dashboard/polls/${poll.id}/expand-payment-success?count=${count}`,
     )
