@@ -18,7 +18,7 @@ export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
 
-  const cost = (count * PRICE_PER_TEXT) / 100
+  const cost = count * PRICE_PER_TEXT
 
   useEffect(() => {
     trackEvent(EVENTS.expandPolls.paymentViewed, {
