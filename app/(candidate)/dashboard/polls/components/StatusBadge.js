@@ -5,6 +5,7 @@ export default function StatusBadge({ status }) {
   let colorClass = 'bg-gray-500'
   switch (status) {
     case POLL_STATUS.IN_PROGRESS:
+    case POLL_STATUS.EXPANDING:
       colorClass = 'bg-blue-500'
       break
     case POLL_STATUS.SCHEDULED:
