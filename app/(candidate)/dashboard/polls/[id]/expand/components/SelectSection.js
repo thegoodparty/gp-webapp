@@ -15,6 +15,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import { PRICE_PER_MESSAGE } from '../../../shared/constants'
+import { usePoll } from '../../../shared/hooks/PollProvider'
 
 const fetchContactsStats = async () => {
   const response = await clientFetch(apiRoutes.contacts.stats, null, {
@@ -26,31 +27,67 @@ const fetchContactsStats = async () => {
 }
 
 export default function SelectSection({ countCallback }) {
+  const [poll] = usePoll()
   const [contactsStats, setContactsStats] = useState(null)
   const [selectedOption, setSelectedOption] = useState('')
-  const handleSelect = (value) => {
-    setSelectedOption(value)
-    countCallback(value)
-  }
   useEffect(() => {
     fetchContactsStats().then(setContactsStats)
   }, [])
-  const totalConstituents = contactsStats?.meta?.totalConstituents || 0
+
+  const totalRemainingConstituents =
+    (contactsStats?.meta?.totalConstituents || 0) - poll.audienceSize
+
+  const existingResponseRate = poll.responseCount / poll.audienceSize
+
+  // originally designed here: https://goodparty.clickup.com/t/90132012119/ENG-4825
+  let recommendedIncrease = (83 - poll.responseCount) / existingResponseRate
+
+  if (recommendedIncrease > totalRemainingConstituents) {
+    recommendedIncrease = totalRemainingConstituents
+  }
 
   const selectOptions = [
     {
-      label: `${numberFormatter(totalConstituents * 0.25)} Constituents (25%)`,
-      value: Math.ceil(totalConstituents * 0.25),
+      label: `${numberFormatter(
+        totalRemainingConstituents * 0.25,
+      )} Constituents (25%)`,
+      value: Math.ceil(totalRemainingConstituents * 0.25),
     },
     {
-      label: `${numberFormatter(totalConstituents * 0.5)} Constituents (50%)`,
-      value: Math.ceil(totalConstituents * 0.5),
+      label: `${numberFormatter(
+        totalRemainingConstituents * 0.5,
+      )} Constituents (50%)`,
+      value: Math.ceil(totalRemainingConstituents * 0.5),
     },
     {
-      label: `${numberFormatter(totalConstituents * 0.75)} Constituents (75%)`,
-      value: Math.ceil(totalConstituents * 0.75),
+      label: `${numberFormatter(
+        totalRemainingConstituents * 0.75,
+      )} Constituents (75%)`,
+      value: Math.ceil(totalRemainingConstituents * 0.75),
+    },
+    {
+      label: `${numberFormatter(
+        totalRemainingConstituents,
+      )} Constituents (100%)`,
+      value: totalRemainingConstituents,
+    },
+    {
+      label: `${numberFormatter(
+        recommendedIncrease,
+      )} Constituents (${Math.round(
+        (recommendedIncrease / totalRemainingConstituents) * 100,
+      )}%)`,
+      value: recommendedIncrease,
     },
   ]
+
+  const handleSelect = (value) => {
+    setSelectedOption(value)
+    countCallback({
+      count: value,
+      isRecommended: recommendedIncrease === value,
+    })
+  }
 
   return (
     <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
@@ -59,7 +96,8 @@ export default function SelectSection({ countCallback }) {
           <Body1 className="font-semibold">Make your selection</Body1>
 
           <Body2 className="text-muted-foreground mb-4">
-            You can text up to {numberFormatter(totalConstituents)} constituents
+            You can text up to {numberFormatter(totalRemainingConstituents)}{' '}
+            more constituents
           </Body2>
           <Select value={selectedOption} onValueChange={handleSelect}>
             <SelectTrigger className="w-full">

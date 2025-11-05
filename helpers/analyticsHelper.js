@@ -15,10 +15,11 @@ const CLID_SUFFIX = 'clid'
 
 export const EVENTS = {
   expandPolls: {
-    selectedCount: 'Expand Polls - Selected Count',
-    review: 'Expand Polls - Poll Review Viewed',
-    payment: 'Expand Polls - Payment Started',
-    paymentSuccess: 'Expand Polls - Payment Completed',
+    recommendationsViewed: 'Polls - Expand Poll Recommendations Viewed',
+    recommendationsCompleted: 'Polls - Expand Poll Recommendations Completed',
+    reviewViewed: 'Polls - Expand Poll Review Viewed',
+    paymentViewed: 'Payment - Review and Pay Screen Viewed',
+    paymentCompleted: 'Payment - Completed',
   },
 
   SignUp: {
