@@ -17,7 +17,7 @@ export default function ExpandReviewPage({ count }) {
   const router = useRouter()
 
   useEffect(() => {
-    trackEvent(EVENTS.expandPolls.review)
+    trackEvent(EVENTS.expandPolls.reviewViewed, { count })
   }, [])
 
   const handleNext = () => {

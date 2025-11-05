@@ -1,5 +1,5 @@
 import { noop } from '@shared/utils/noop'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
 export const LongPoll = ({
@@ -10,43 +10,60 @@ export const LongPoll = ({
   limit = 0,
   stopPolling = false,
 }) => {
-  const [intervalId, setIntervalId] = useState(null)
-  const [count, setCount] = useState(0)
-
-  const cleanupInterval = () => {
-    if (intervalId) {
-      clearInterval(intervalId)
-      setIntervalId(null)
-    }
-  }
+  const timeoutIdRef = useRef(null)
+  const countRef = useRef(0)
+  const stopPollingRef = useRef(stopPolling)
+  const pollingDelayRef = useRef(pollingDelay)
+  const pollingMethodRef = useRef(pollingMethod)
+  const onSuccessRef = useRef(onSuccess)
+  const onErrorRef = useRef(onError)
 
   useEffect(() => {
-    if (stopPolling || (limit && count >= limit)) {
-      cleanupInterval()
+    stopPollingRef.current = stopPolling
+    pollingDelayRef.current = pollingDelay
+    pollingMethodRef.current = pollingMethod
+    onSuccessRef.current = onSuccess
+    onErrorRef.current = onError
+  }, [stopPolling, pollingDelay, pollingMethod, onSuccess, onError])
+
+  useEffect(() => {
+    if (stopPolling || (limit && countRef.current >= limit)) {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current)
+        timeoutIdRef.current = null
+      }
     }
-  }, [intervalId, stopPolling, count, limit])
+  }, [stopPolling, limit])
 
   useEffect(() => {
     return () => {
-      cleanupInterval()
-    }
-  }, [intervalId])
-
-  const poll = async () => {
-    try {
-      const result = await pollingMethod()
-      if (result) {
-        onSuccess(result)
-      } else {
-        onError(result)
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current)
+        timeoutIdRef.current = null
       }
-    } catch (error) {
-      onError(error)
     }
-    setCount((prevCount) => prevCount + 1)
-  }
+  }, [])
 
   useSingleEffect(() => {
-    setIntervalId(setInterval(poll, pollingDelay))
+    const poll = async () => {
+      try {
+        const result = await pollingMethodRef.current()
+        if (result) {
+          onSuccessRef.current(result)
+        } else {
+          onErrorRef.current(result)
+        }
+      } catch (error) {
+        onErrorRef.current(error)
+      }
+
+      countRef.current += 1
+
+      if (!stopPollingRef.current && (!limit || countRef.current < limit)) {
+        timeoutIdRef.current = setTimeout(poll, pollingDelayRef.current)
+      }
+    }
+
+    poll()
   }, [])
 }

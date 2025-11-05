@@ -10,20 +10,35 @@ import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+
+const PRICE_PER_TEXT = 0.03
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
 
+  const cost = count * PRICE_PER_TEXT
+
   useEffect(() => {
-    trackEvent(EVENTS.expandPolls.payment)
+    trackEvent(EVENTS.expandPolls.paymentViewed, {
+      type: 'Serve Poll Expansion',
+      count,
+      cost,
+    })
   }, [])
 
   const handleBack = () => {
     router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
   }
 
-  const handlePurchaseComplete = () => {
+  const handlePurchaseComplete = async (paymentIntent) => {
+    await completePurchase(paymentIntent.id)
+    trackEvent(EVENTS.expandPolls.paymentCompleted, {
+      type: 'Serve Poll Expansion',
+      cost,
+      count,
+    })
     router.push(
       `/dashboard/polls/${poll.id}/expand-payment-success?count=${count}`,
     )
