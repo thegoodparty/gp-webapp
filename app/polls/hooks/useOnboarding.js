@@ -12,6 +12,7 @@ import {
 } from '../onboarding/components/DemoMessageText'
 import { isBefore } from 'date-fns'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
 
 export const useOnboarding = () => {
   const [campaign] = useCampaign()
@@ -43,7 +44,10 @@ export const useOnboarding = () => {
 
   // Memoize campaign and user data
   const campaignOffice = useMemo(
-    () => campaign?.details?.otherOffice || campaign?.details?.office,
+    () =>
+      grammarizeOfficeName(
+        campaign?.details?.otherOffice || campaign?.details?.office,
+      ),
     [campaign],
   )
   const userName = useMemo(() => {
