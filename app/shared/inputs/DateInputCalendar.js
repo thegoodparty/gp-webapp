@@ -53,8 +53,6 @@ export default function DateInputCalendar({
   className = '',
   inputClassName = '',
   calendarClassName = 'rounded-lg border shadow-sm',
-  startMonth,
-  endMonth,
   ...calendarProps
 }) {
   const [inputValue, setInputValue] = useState(
@@ -118,8 +116,6 @@ export default function DateInputCalendar({
         onMonthChange={setMonth}
         captionLayout={captionLayout}
         className={calendarClassName}
-        startMonth={startMonth}
-        endMonth={endMonth}
         {...calendarProps}
       />
     </div>
