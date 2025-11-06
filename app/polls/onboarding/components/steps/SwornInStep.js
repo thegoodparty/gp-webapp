@@ -1,24 +1,17 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import DateInputCalendar from '@shared/inputs/DateInputCalendar'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
+
+const DEFAULT_START_MONTH = new Date(new Date().getFullYear() - 6, 0, 1)
+const DEFAULT_END_MONTH = new Date(new Date().getFullYear() + 1, 11, 31)
 
 export default function SwornInStep() {
   const { setSwornInDate, formData } = useOnboardingContext()
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.SwornInViewed)
-  }, [])
-
-  const defaultStartMonth = useMemo(() => {
-    const date = new Date()
-    return new Date(date.getFullYear() - 6, 0, 1)
-  }, [])
-
-  const defaultEndMonth = useMemo(() => {
-    const date = new Date()
-    return new Date(date.getFullYear() + 1, 11, 31)
   }, [])
 
   return (
@@ -34,8 +27,8 @@ export default function SwornInStep() {
           label="Select Date"
           placeholder="mm/dd/yyyy"
           captionLayout="dropdown"
-          startMonth={defaultStartMonth}
-          endMonth={defaultEndMonth}
+          startMonth={DEFAULT_START_MONTH}
+          endMonth={DEFAULT_END_MONTH}
         />
       </div>
     </div>
