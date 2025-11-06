@@ -45,8 +45,24 @@ export default function SelectSection({ countCallback }) {
   if (recommendedIncrease > totalRemainingConstituents) {
     recommendedIncrease = totalRemainingConstituents
   }
+  recommendedIncrease = Math.ceil(recommendedIncrease)
+
+  useEffect(() => {
+    if (contactsStats) {
+      setSelectedOption(recommendedIncrease)
+    }
+  }, [contactsStats, recommendedIncrease])
 
   const selectOptions = [
+    {
+      label: `${numberFormatter(
+        recommendedIncrease,
+      )} Constituents (${Math.round(
+        (recommendedIncrease / totalRemainingConstituents) * 100,
+      )}%)`,
+      value: recommendedIncrease,
+      chip: 'Recommended',
+    },
     {
       label: `${numberFormatter(
         totalRemainingConstituents * 0.25,
@@ -70,14 +86,6 @@ export default function SelectSection({ countCallback }) {
         totalRemainingConstituents,
       )} Constituents (100%)`,
       value: totalRemainingConstituents,
-    },
-    {
-      label: `${numberFormatter(
-        recommendedIncrease,
-      )} Constituents (${Math.round(
-        (recommendedIncrease / totalRemainingConstituents) * 100,
-      )}%)`,
-      value: recommendedIncrease,
     },
   ]
 
@@ -107,6 +115,11 @@ export default function SelectSection({ countCallback }) {
               {selectOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
+                  {option.chip && (
+                    <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white text-xs font-medium">
+                      {option.chip}
+                    </span>
+                  )}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -6,6 +6,8 @@ import Body2 from '@shared/typography/Body2'
 import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { POLL_STATUS } from './constants'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
@@ -17,6 +19,28 @@ export default function ConfidenceAlert() {
   }
 
   const { lowConfidence } = poll || {}
+
+  if (poll.status === POLL_STATUS.EXPANDING) {
+    return (
+      <Alert variant="info">
+        <AlertTitle>
+          <div className="flex flex-col gap-4 md:flex-row justify-between">
+            <div className="flex gap-2 text-blue-500">
+              <BsExclamationCircle className="mt-0.5" />
+              <div>
+                <div className="font-medium">Gathering Feedback</div>
+                <Body2>
+                  We are currently gathering more feedback on this poll. Results
+                  are expected {dateUsHelper(poll.estimatedCompletionDate)} at
+                  11:00 AM.
+                </Body2>
+              </div>
+            </div>
+          </div>
+        </AlertTitle>
+      </Alert>
+    )
+  }
   if (lowConfidence) {
     return (
       <Alert variant="destructive">

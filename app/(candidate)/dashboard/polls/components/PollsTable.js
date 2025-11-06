@@ -28,10 +28,6 @@ const columns = [
     header: 'Sends',
     accessorKey: 'sends',
   },
-  {
-    header: 'Actions',
-    accessorKey: 'actions',
-  },
 ]
 
 export default function PollsTable() {
@@ -70,9 +66,8 @@ export default function PollsTable() {
                 <TableCell>
                   <StatusBadge status={poll.status} />
                 </TableCell>
-                <TableCell>{poll.responses || '-'}</TableCell>
-                <TableCell>{poll.sends || '-'}</TableCell>
-                <TableCell>{poll.actions || ''}</TableCell>
+                <TableCell>{poll.responseCount || '-'}</TableCell>
+                <TableCell>{poll.audienceSize || '-'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
