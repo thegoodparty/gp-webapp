@@ -47,12 +47,6 @@ export default function SelectSection({ countCallback }) {
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
 
-  useEffect(() => {
-    if (contactsStats) {
-      setSelectedOption(recommendedIncrease)
-    }
-  }, [contactsStats, recommendedIncrease])
-
   const selectOptions = [
     {
       label: `${numberFormatter(
@@ -96,6 +90,12 @@ export default function SelectSection({ countCallback }) {
       isRecommended: recommendedIncrease === value,
     })
   }
+
+  useEffect(() => {
+    if (contactsStats) {
+      handleSelect(recommendedIncrease)
+    }
+  }, [contactsStats, recommendedIncrease])
 
   return (
     <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
