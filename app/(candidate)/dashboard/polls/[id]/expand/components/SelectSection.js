@@ -16,8 +16,6 @@ import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import { PRICE_PER_MESSAGE } from '../../../shared/constants'
 import { usePoll } from '../../../shared/hooks/PollProvider'
-import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
-import { LinearProgress } from '@mui/material'
 import { LuLoaderCircle } from 'react-icons/lu'
 
 const Content = ({ children }) => (
@@ -37,14 +35,7 @@ const fetchContactsStats = async () => {
   return response.data
 }
 
-export default function SelectSection({ countCallback }) {
-  const [poll] = usePoll()
-  const [contactsStats, setContactsStats] = useState(null)
-  const [selectedOption, setSelectedOption] = useState('')
-  useEffect(() => {
-    fetchContactsStats().then(setContactsStats)
-  }, [])
-
+const calculateRecommendedIncrease = (poll, contactsStats) => {
   const totalRemainingConstituents =
     (contactsStats?.meta?.totalConstituents || 0) - poll.audienceSize
 
@@ -58,11 +49,38 @@ export default function SelectSection({ countCallback }) {
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
 
+  return { recommendedIncrease, totalRemainingConstituents }
+}
+
+export default function SelectSection({ countCallback }) {
+  const [poll] = usePoll()
+  const [contactsStats, setContactsStats] = useState(null)
+  const [selectedOption, setSelectedOption] = useState('')
+
+  const handleSelect = (value) => {
+    setSelectedOption(value)
+    countCallback({
+      count: value,
+      isRecommended: recommendedIncrease === value,
+    })
+  }
+
+  useEffect(() => {
+    fetchContactsStats().then((stats) => {
+      setContactsStats(stats)
+      handleSelect(
+        calculateRecommendedIncrease(poll, stats).recommendedIncrease,
+      )
+    })
+  }, [])
+
+  const { recommendedIncrease, totalRemainingConstituents } =
+    calculateRecommendedIncrease(poll, contactsStats)
+
   console.log({
-    selectedOption,
     recommendedIncrease,
     totalRemainingConstituents,
-    responseCount: poll.responseCount,
+    selectedOption,
   })
 
   const selectOptions = [
@@ -100,20 +118,6 @@ export default function SelectSection({ countCallback }) {
       value: totalRemainingConstituents,
     },
   ]
-
-  const handleSelect = (value) => {
-    setSelectedOption(value)
-    countCallback({
-      count: value,
-      isRecommended: recommendedIncrease === value,
-    })
-  }
-
-  useEffect(() => {
-    if (contactsStats) {
-      handleSelect(recommendedIncrease)
-    }
-  }, [contactsStats, recommendedIncrease])
 
   if (!contactsStats) {
     return (
