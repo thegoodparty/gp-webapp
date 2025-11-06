@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Input, Calendar } from 'goodparty-styleguide'
 import { parse, format, isValid } from 'date-fns'
 
@@ -62,18 +62,6 @@ export default function DateInputCalendar({
   )
   const [month, setMonth] = useState(value || new Date())
 
-  const defaultStartMonth = useMemo(() => {
-    if (startMonth) return startMonth
-    const date = new Date()
-    return new Date(date.getFullYear() - 6, 0, 1)
-  }, [startMonth])
-
-  const defaultEndMonth = useMemo(() => {
-    if (endMonth) return endMonth
-    const date = new Date()
-    return new Date(date.getFullYear() + 1, 11, 31)
-  }, [endMonth])
-
   const handleInputChange = (e) => {
     const formatted = formatDateInput(e.target.value)
     setInputValue(formatted)
@@ -130,8 +118,8 @@ export default function DateInputCalendar({
         onMonthChange={setMonth}
         captionLayout={captionLayout}
         className={calendarClassName}
-        startMonth={defaultStartMonth}
-        endMonth={defaultEndMonth}
+        startMonth={startMonth}
+        endMonth={endMonth}
         {...calendarProps}
       />
     </div>
