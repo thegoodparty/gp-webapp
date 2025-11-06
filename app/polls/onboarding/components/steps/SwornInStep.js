@@ -14,12 +14,12 @@ export default function SwornInStep() {
   const defaultStartMonth = useMemo(() => {
     const date = new Date()
     return new Date(date.getFullYear() - 6, 0, 1)
-  }, [startMonth])
+  }, [])
 
   const defaultEndMonth = useMemo(() => {
     const date = new Date()
     return new Date(date.getFullYear() + 1, 11, 31)
-  }, [endMonth])
+  }, [])
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
