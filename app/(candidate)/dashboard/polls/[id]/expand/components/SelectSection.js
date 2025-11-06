@@ -16,6 +16,17 @@ import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import { PRICE_PER_MESSAGE } from '../../../shared/constants'
 import { usePoll } from '../../../shared/hooks/PollProvider'
+import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
+import { LinearProgress } from '@mui/material'
+import { LuLoaderCircle } from 'react-icons/lu'
+
+const Content = ({ children }) => (
+  <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
+    <Card className="w-full p-4 md:p-6">
+      <div>{children}</div>
+    </Card>
+  </section>
+)
 
 const fetchContactsStats = async () => {
   const response = await clientFetch(apiRoutes.contacts.stats, null, {
@@ -46,6 +57,13 @@ export default function SelectSection({ countCallback }) {
     recommendedIncrease = totalRemainingConstituents
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
+
+  console.log({
+    selectedOption,
+    recommendedIncrease,
+    totalRemainingConstituents,
+    responseCount: poll.responseCount,
+  })
 
   const selectOptions = [
     {
@@ -97,41 +115,48 @@ export default function SelectSection({ countCallback }) {
     }
   }, [contactsStats, recommendedIncrease])
 
-  return (
-    <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
-      <Card className="w-full p-4 md:p-6">
-        <div>
-          <Body1 className="font-semibold">Make your selection</Body1>
+  if (!contactsStats) {
+    return (
+      <Content>
+        <LuLoaderCircle
+          className="animate-spin text-blue-500 mx-auto"
+          size={60}
+        />
+      </Content>
+    )
+  }
 
-          <Body2 className="text-muted-foreground mb-4">
-            You can text up to {numberFormatter(totalRemainingConstituents)}{' '}
-            more constituents
-          </Body2>
-          <Select value={selectedOption} onValueChange={handleSelect}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Recommendation for higher confidence" />
-            </SelectTrigger>
-            <SelectContent>
-              {selectOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                  {option.chip && (
-                    <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white text-xs font-medium">
-                      {option.chip}
-                    </span>
-                  )}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Body1 className="mt-4  ">
-            {numberFormatter(selectedOption)} Constituents
-          </Body1>
-          <Body1>
-            Cost: ${numberFormatter(PRICE_PER_MESSAGE * selectedOption, 2)}
-          </Body1>
-        </div>
-      </Card>
-    </section>
+  return (
+    <Content>
+      <Body1 className="font-semibold">Make your selection</Body1>
+
+      <Body2 className="text-muted-foreground mb-4">
+        You can text up to {numberFormatter(totalRemainingConstituents)} more
+        constituents
+      </Body2>
+      <Select value={selectedOption} onValueChange={handleSelect}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Recommendation for higher confidence" />
+        </SelectTrigger>
+        <SelectContent>
+          {selectOptions.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+              {option.chip && (
+                <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white text-xs font-medium">
+                  {option.chip}
+                </span>
+              )}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Body1 className="mt-4  ">
+        {numberFormatter(selectedOption)} Constituents
+      </Body1>
+      <Body1>
+        Cost: ${numberFormatter(PRICE_PER_MESSAGE * selectedOption, 2)}
+      </Body1>
+    </Content>
   )
 }
