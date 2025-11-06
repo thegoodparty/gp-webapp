@@ -7,7 +7,7 @@ import { LuLoaderCircle } from 'react-icons/lu'
 const STATUS_PENDING = 'pending'
 const STATUS_LOADING = 'loading'
 const STATUS_COMPLETE = 'complete'
-const LOADING_DELAY = 2000
+const LOADING_DELAY = 1250
 
 // items: [{ label: string, status: string }]
 // onComplete: () => void
