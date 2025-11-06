@@ -47,9 +47,6 @@ export const dateWithTime = (orgDate) => {
     minute: 'numeric',
     hour12: true,
   })
-  return `${date.getHours()}:${
-    date.getMinutes() < 10 ? '0' : ''
-  }${date.getMinutes()}`
 }
 
 export const daysTill = (date) => {

@@ -15,6 +15,7 @@ export default function StatusAlert() {
   let variant = 'default'
   switch (status) {
     case POLL_STATUS.IN_PROGRESS:
+    case POLL_STATUS.EXPANDING:
       variant = 'destructive'
       break
     case POLL_STATUS.SCHEDULED:
@@ -24,7 +25,7 @@ export default function StatusAlert() {
   return (
     <Alert variant={variant} className="mb-4">
       <AlertTitle>
-        {status === POLL_STATUS.IN_PROGRESS && (
+        {[POLL_STATUS.IN_PROGRESS, POLL_STATUS.EXPANDING].includes(status) && (
           <div className="flex items-center gap-2 text-red-500">
             <MdLock />
             <span>
