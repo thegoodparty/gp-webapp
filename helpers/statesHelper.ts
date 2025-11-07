@@ -50,9 +50,16 @@ export const flatStates = [
   'WI',
   'WV',
   'WY',
-];
+] as const
 
-export const states = [
+export type StateAbbreviation = typeof flatStates[number]
+
+interface State {
+  name: string
+  abbreviation: StateAbbreviation
+}
+
+export const states: State[] = [
   {
     name: 'Alabama',
     abbreviation: 'AL',
@@ -97,10 +104,6 @@ export const states = [
     name: 'Georgia',
     abbreviation: 'GA',
   },
-  // {
-  //   name: 'Guam',
-  //   abbreviation: 'GU',
-  // },
   {
     name: 'Hawaii',
     abbreviation: 'HI',
@@ -209,18 +212,10 @@ export const states = [
     name: 'Oregon',
     abbreviation: 'OR',
   },
-  // {
-  //   name: 'Palau',
-  //   abbreviation: 'PW',
-  // },
   {
     name: 'Pennsylvania',
     abbreviation: 'PA',
   },
-  // {
-  //   name: 'Puerto Rico',
-  //   abbreviation: 'PR',
-  // },
   {
     name: 'Rhode Island',
     abbreviation: 'RI',
@@ -249,10 +244,6 @@ export const states = [
     name: 'Vermont',
     abbreviation: 'VT',
   },
-  // {
-  //   name: 'Virgin Islands',
-  //   abbreviation: 'VI',
-  // },
   {
     name: 'Virginia',
     abbreviation: 'VA',
@@ -273,9 +264,9 @@ export const states = [
     name: 'Wyoming',
     abbreviation: 'WY',
   },
-];
+]
 
-export const shortToLongState = {
+export const shortToLongState: Record<StateAbbreviation, string> = {
   AL: 'Alabama',
   AK: 'Alaska',
   AZ: 'Arizona',
@@ -285,10 +276,8 @@ export const shortToLongState = {
   CT: 'Connecticut',
   DE: 'Delaware',
   DC: 'District Of Columbia',
-  // FM: 'Federated States Of Micronesia',
   FL: 'Florida',
   GA: 'Georgia',
-  // GU: 'Guam',
   HI: 'Hawaii',
   ID: 'Idaho',
   IL: 'Illinois',
@@ -313,13 +302,10 @@ export const shortToLongState = {
   NY: 'New York',
   NC: 'North Carolina',
   ND: 'North Dakota',
-  // MP: 'Northern Mariana Islands',
   OH: 'Ohio',
   OK: 'Oklahoma',
   OR: 'Oregon',
-  // PW: 'Palau',
   PA: 'Pennsylvania',
-  // PR: 'Puerto Rico',
   RI: 'Rhode Island',
   SC: 'South Carolina',
   SD: 'South Dakota',
@@ -327,10 +313,10 @@ export const shortToLongState = {
   TX: 'Texas',
   UT: 'Utah',
   VT: 'Vermont',
-  // VI: 'Virgin Islands',
   VA: 'Virginia',
   WA: 'Washington',
   WV: 'West Virginia',
   WI: 'Wisconsin',
   WY: 'Wyoming',
-};
+}
+

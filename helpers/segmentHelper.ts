@@ -1,6 +1,6 @@
 import { getReadyAnalytics } from 'app/shared/utils/analytics'
 
-export const segmentTrackEvent = async (eventName, properties) => {
+export const segmentTrackEvent = async (eventName: string, properties: Record<string, string | number | boolean | null | undefined>): Promise<void> => {
   try {
     const analyticsInstance = await getReadyAnalytics()
     if (!analyticsInstance || typeof analyticsInstance.track !== 'function') {
@@ -11,3 +11,4 @@ export const segmentTrackEvent = async (eventName, properties) => {
     console.error('Error tracking Segment event:', error)
   }
 }
+
