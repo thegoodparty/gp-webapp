@@ -96,7 +96,7 @@ export const dateFromNonStandardUSFormatString = (dateStr: string | null | undef
   if (invalidDateFormat(dateStr)) {
     return dateStr ?? ''
   }
-  const [year, month, day] = (dateStr as string).split('-').map(Number)
+  const [year = 0, month = 1, day = 1] = (dateStr as string).split('-').map(Number)
   return new Date(year, month - 1, day)
 }
 

@@ -1,16 +1,13 @@
-interface ApiRoute {
+export interface ApiRoute {
   path: string
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
   nextApiRoute?: boolean
+  withAuth?: boolean
+  returnFullResponse?: boolean
+  additionalRequestOptions?: RequestInit
 }
 
-interface ApiRoutes {
-  [category: string]: {
-    [key: string]: ApiRoute | ApiRoutes
-  }
-}
-
-export const apiRoutes: ApiRoutes = {
+export const apiRoutes = {
   contacts: {
     list: {
       path: '/contacts',
@@ -764,9 +761,9 @@ export const apiRoutes: ApiRoutes = {
       method: 'GET',
     },
   },
-}
+} as const
 
-export const electionApiRoutes: ApiRoutes = {
+export const electionApiRoutes = {
   places: {
     find: {
       path: '/places',
@@ -789,5 +786,5 @@ export const electionApiRoutes: ApiRoutes = {
       method: 'GET',
     },
   },
-}
+} as const
 

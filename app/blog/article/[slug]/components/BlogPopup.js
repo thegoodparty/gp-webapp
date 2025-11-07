@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import SignupForm from '@shared/inputs/SignupForm'
 import Image from 'next/image'
-import { setCookie, getCookie } from 'helpers/cookieHelper.js'
+import { setCookie, getCookie } from 'helpers/cookieHelper'
 import Modal from '@shared/utils/Modal'
 
 const POPUP_DELAY = 20000

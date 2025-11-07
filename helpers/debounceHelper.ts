@@ -1,35 +1,32 @@
-type DebounceFunction = (...args: Parameters<typeof func>) => void
-
 declare global {
   interface Window {
     timer?: ReturnType<typeof setTimeout>
   }
 }
 
-export const debounce = <T extends (...args: Parameters<T>) => ReturnType<T>>(
-  func: T,
+export const debounce = <TArgs extends unknown[]>(
+  func: (...args: TArgs) => void,
   timeout: number = 600,
-  ...args: Parameters<T>
+  ...args: TArgs
 ): void => {
   clearTimeout(window.timer)
   window.timer = setTimeout(() => {
-    func(...(args.length ? args : ([] as Parameters<T>)))
+    func(...args)
   }, timeout)
 }
 
-export const debounce2 = <T extends (...args: Parameters<T>) => ReturnType<T>>(
-  func: T,
+export const debounce2 = <TArgs extends unknown[]>(
+  func: (...args: TArgs) => void,
   delay: number
-): ((...args: Parameters<T>) => void) => {
+): ((...args: TArgs) => void) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
-  return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
-    const context = this
+  return (...args: TArgs): void => {
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
     timeoutId = setTimeout(() => {
       timeoutId = null
-      func.apply(context, args)
+      func(...args)
     }, delay)
   }
 }

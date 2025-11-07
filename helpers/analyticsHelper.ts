@@ -675,6 +675,7 @@ export const buildTrackingAttrs = (name: string, properties?: Record<string, Pro
           value = initialValue.toISOString()
           break
         }
+        return
       default:
         return
     }

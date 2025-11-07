@@ -30,7 +30,7 @@ export const kebabToCamel = (kebabCase: string | null | undefined): string => {
   if (!kebabCase || kebabCase === '') {
     return ''
   }
-  return kebabCase.replace(/-([a-z])/g, (match: string, letter: string) => letter.toUpperCase())
+  return kebabCase.replace(/-([a-z])/g, (_match: string, letter: string) => letter.toUpperCase())
 }
 
 export const camelToKebab = (camelCase: string | null | undefined): string => {
