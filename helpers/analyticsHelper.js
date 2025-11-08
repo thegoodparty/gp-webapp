@@ -15,10 +15,11 @@ const CLID_SUFFIX = 'clid'
 
 export const EVENTS = {
   expandPolls: {
-    selectedCount: 'Expand Polls - Selected Count',
-    review: 'Expand Polls - Poll Review Viewed',
-    payment: 'Expand Polls - Payment Started',
-    paymentSuccess: 'Expand Polls - Payment Completed',
+    recommendationsViewed: 'Polls - Expand Poll Recommendations Viewed',
+    recommendationsCompleted: 'Polls - Expand Poll Recommendations Completed',
+    reviewViewed: 'Polls - Expand Poll Review Viewed',
+    paymentViewed: 'Payment - Review and Pay Screen Viewed',
+    paymentCompleted: 'Payment - Completed',
   },
 
   SignUp: {
@@ -64,6 +65,8 @@ export const EVENTS = {
     GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',
     MeetYourConstituentsViewed:
       'Serve Onboarding - Meet Your Constituents Viewed',
+    SwornInViewed: 'Serve Onboarding - Sworn In Viewed',
+    SwornInCompleted: 'Serve Onboarding - Sworn In Completed',
     ConstituencyProfileViewed: 'Serve Onboarding - Constituency Profile Viewed',
     PollValuePropsViewed: 'Serve Onboarding - Poll Value Props Viewed',
     PollStrategyViewed: 'Serve Onboarding - Poll Strategy Viewed',
@@ -71,6 +74,7 @@ export const EVENTS = {
     PollImageUploaded: 'Serve Onboarding - Poll Image Uploaded',
     PollPreviewViewed: 'Serve Onboarding - Poll Preview Viewed',
     SmsPollSent: 'Serve Onboarding - SMS Poll Sent',
+    SuccessPageViewed: 'Serve Onboarding - Success Page Viewed',
   },
   Navigation: {
     Top: {
@@ -441,6 +445,8 @@ export const EVENTS = {
     PurchasedDomain: 'Candidate Website - Purchased domain',
   },
   Candidacy: {
+    DidYouWinModalViewed: 'Candidacy - Did You Win Modal Viewed',
+    DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
 }

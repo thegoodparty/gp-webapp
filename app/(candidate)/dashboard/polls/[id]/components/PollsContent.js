@@ -10,7 +10,7 @@ import { POLL_STATUS } from '../../shared/constants'
 export default function PollsContent() {
   const [poll] = usePoll()
   const { status } = poll || {}
-  if (status === POLL_STATUS.COMPLETED) {
+  if ([POLL_STATUS.COMPLETED, POLL_STATUS.EXPANDING].includes(status)) {
     return <CompletedPoll />
   }
   return (
