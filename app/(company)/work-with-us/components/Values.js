@@ -7,33 +7,33 @@ import styles from './Values.module.scss'
 
 const cards = [
   {
-    title: 'We Are',
-    front: 'Honest, Open and Mission-driven',
-    back: 'We are good people on a noble mission. We are a home for all who share our vision and passion to disrupt the corruption in our political system.',
+    title: 'People First',
+    front: '',
+    back: 'Our priority is to make systems serve people, not the other way around. We center on our shared humanity and integrate diverse perspectives in pursuit of the greater good.',
     color: '#5C11C2',
   },
   {
-    title: 'We Believe',
-    front: 'People are Good',
-    back: 'Embracing diverse perspectives and identities is our strength. When people come together to focus on our shared humanity, we can transform the system that is pulling us apart.',
+    title: 'Direct, Open and Honest',
+    front: '',
+    back: 'Anti-political in all the right ways: we operate with integrity, engage in direct civil discourse and openly give and receive honest feedback.',
     color: '#FE0F6E',
   },
   {
-    title: 'We Create',
-    front: 'Results that inspire and grow our movement',
-    back: 'Creativity and iterative growth are the backbone of our mission. Our ultimate measure of success is a more hopeful society, achieved by mobilizing our movement through a credible plan and actions towards change.',
+    title: 'Empowered Ownership',
+    front: '',
+    back: 'We are high-agency problem solvers – independent thinkers, empowered with freedom to act, and responsibility to deliver results that advance our mission.',
     color: '#093D74',
   },
   {
-    title: 'We Love',
-    front: 'Freedom and owning responsibility for all that we do',
-    back: 'Self-sovereignty, independent thinking and accountability are necessary for creating something good. Our movement is built by free-thinkers who challenge the status quo to make a positive impact.',
+    title: 'Iterate for Impact',
+    front: '',
+    back: 'We work with urgency and purpose. We rapidly ideate, test, learn and improve everything we do to maximize positive impact.',
     color: '#62BB47',
   },
   {
-    title: 'We Party',
-    front: 'Together with a purpose',
-    back: 'Fun and joy is what makes life worth living. We celebrate each other, take pride in ourselves and what we are building, and commit to spreading GoodParty.org every which way possible.',
+    title: 'Fun Is Fuel',
+    front: '',
+    back: "Our work is hard. That's why having fun, celebrating each other and our successes is important. It fuels our humanity, keeping us optimistic and connected. Besides, everybody loves a good party!",
     color: '#F8593F',
   },
 ]
