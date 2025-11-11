@@ -47,7 +47,7 @@ export default function ContactsStatsSection() {
                 <div>{card.icon}</div>
               </div>
 
-              <h4 className="font-bold mt-1 text-2xl">{card.value}</h4>
+              <h4 className="font-bold mt-1 text-2xl" data-testid={`${card.key}-value`}>{card.value}</h4>
             </Paper>
           ))}
     </section>
