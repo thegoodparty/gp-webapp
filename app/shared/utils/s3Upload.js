@@ -37,7 +37,6 @@ export const uploadBlobToS3 = async ({
   })
 
   if (!uploadResult.ok) {
-    console.error(signedUrl)
     throw new Error(
       `S3 upload failed: ${uploadResult.status} ${uploadResult.statusText}`,
     )
