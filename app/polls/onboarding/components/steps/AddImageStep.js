@@ -70,14 +70,6 @@ export default function AddImageStep({}) {
       return
     }
 
-    // Validate campaign data before proceeding
-    if (!campaignId || !campaignSlug) {
-      const error =
-        'Campaign information is missing. Please refresh the page and try again.'
-      setErrorMessage(error)
-      return
-    }
-
     setLoadingFileUpload(true)
     setFileInfo(file)
 
