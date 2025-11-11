@@ -3,16 +3,7 @@ import { redirect } from 'next/navigation'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-
-interface User {
-  id: string
-  email: string
-  [key: string]: unknown
-}
-
-interface UserResponse {
-  data: User
-}
+import { UserResponse } from './types'
 
 const checkIsAdmin = async (): Promise<boolean> => {
   try {

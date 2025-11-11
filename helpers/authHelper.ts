@@ -1,11 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getServerUser } from './userServerHelper'
-
-interface User {
-  id: string
-  email: string
-  [key: string]: unknown
-}
+import { User } from './types'
 
 export const requireAuth = async (): Promise<User> => {
   const user = await getServerUser()
