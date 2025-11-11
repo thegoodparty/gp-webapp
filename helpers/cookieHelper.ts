@@ -1,14 +1,19 @@
-export const getCookie = (name) => {
+export const getCookie = (name: string): string | false => {
   if (typeof window === 'undefined') {
     return false
   }
   const value = `; ${document.cookie}`
   const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) return decodeURI(parts.pop().split(';').shift())
+  if (parts.length === 2) {
+    const part = parts.pop()
+    if (part) {
+      return decodeURI(part.split(';').shift() ?? '')
+    }
+  }
   return false
 }
 
-export const setCookie = (name, value, days = 120) => {
+export const setCookie = (name: string, value: string, days: number = 120): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -23,7 +28,7 @@ export const setCookie = (name, value, days = 120) => {
   }${expires}; path=/; SameSite=Lax`
 }
 
-export const deleteCookies = () => {
+export const deleteCookies = (): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -34,13 +39,13 @@ export const deleteCookies = () => {
   })
 }
 
-export const deleteUserCookies = () => {
+export const deleteUserCookies = (): void => {
   deleteCookie('user')
   deleteCookie('impersonateUser')
   deleteCookie('signupRedirect')
 }
 
-export const deleteCookie = (name) => {
+export const deleteCookie = (name: string): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -48,7 +53,7 @@ export const deleteCookie = (name) => {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
 
-export const setUserCookie = (value) => {
+export const setUserCookie = (value: string | object): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -56,7 +61,9 @@ export const setUserCookie = (value) => {
   setCookie(getCookie('impersonateUser') ? 'impersonateUser' : 'user', val)
 }
 
-export const getUserCookie = (withParse = false) => {
+export function getUserCookie(withParse: false): string | false
+export function getUserCookie(withParse: true): object | false
+export function getUserCookie(withParse: boolean = false): string | object | false {
   if (typeof window === 'undefined') {
     return false
   }
@@ -70,7 +77,7 @@ export const getUserCookie = (withParse = false) => {
     }
   }
 
-  let userCookieName = 'user'
+  const userCookieName = 'user'
 
   const user = getCookie(userCookieName)
   if (user && withParse) {
@@ -88,3 +95,4 @@ export const getUserCookie = (withParse = false) => {
     return false
   }
 }
+

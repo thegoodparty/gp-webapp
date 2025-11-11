@@ -9,7 +9,7 @@ const UTM_KEYS = [
   'utm_campaign',
   'utm_content',
   'utm_term',
-]
+] as const
 
 const CLID_SUFFIX = 'clid'
 
@@ -262,14 +262,14 @@ export const EVENTS = {
       ClickBack: 'Pro Upgrade - Committee Check Page: Click back',
       ClickNext: 'Pro Upgrade - Committee Check Page: Click next',
       HoverNameHelp:
-        'Pro Upgrade - Committee Check Page: Hover “Name of Campaign Committee” help',
+        'Pro Upgrade - Committee Check Page: Hover "Name of Campaign Committee" help',
       ToggleRequired:
         'Pro Upgrade - Committee Check Page: Toggle EIN requirement',
       HoverEinHelp:
-        'Pro Upgrade - Committee Check Page: Hover “EIN number” help',
+        'Pro Upgrade - Committee Check Page: Hover "EIN number" help',
       ClickUpload: 'Pro Upgrade - Committee Check Page: Click Upload ',
       HoverUploadHelp:
-        'Pro Upgrade - Committee Check Page: Hover “Upload” help',
+        'Pro Upgrade - Committee Check Page: Hover "Upload" help',
     },
     ServiceAgreement: {
       ClickBack: 'Pro Upgrade - Service Agreement Page: Click back',
@@ -449,18 +449,31 @@ export const EVENTS = {
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
+} as const
+
+interface UserCookie {
+  email?: string
+  metaData?: {
+    hubspotId?: string
+  }
 }
 
-export const getStoredSessionId = () => {
+interface AnalyticsInstance {
+  identify?: (userId: string, traits: Record<string, string | number | boolean | null | undefined>) => void
+  track?: (eventName: string, properties: Record<string, string | number | boolean | null | undefined>) => void
+  ready?: () => Promise<void>
+}
+
+export const getStoredSessionId = (): number => {
   return Number(cookie.get('analytics_session_id') ?? 0)
 }
 
-export const storeSessionId = (id) => {
+export const storeSessionId = (id: number): void => {
   cookie.set('analytics_session_id', String(id))
 }
 
-export function extractClids(searchParams) {
-  const clids = {}
+export const extractClids = (searchParams: URLSearchParams): Record<string, string> => {
+  const clids: Record<string, string> = {}
 
   for (const [key, value] of searchParams.entries()) {
     if (key.toLowerCase().endsWith('clid')) {
@@ -470,12 +483,19 @@ export function extractClids(searchParams) {
   return clids
 }
 
-export async function trackRegistrationCompleted({
+interface TrackRegistrationParams {
+  analytics: Promise<AnalyticsInstance | null>
+  userId: string
+  email?: string
+  signUpMethod?: string
+}
+
+export const trackRegistrationCompleted = async ({
   analytics,
   userId,
   email,
   signUpMethod = 'email',
-}) {
+}: TrackRegistrationParams): Promise<void> => {
   const signUpDate = new Date().toISOString()
 
   try {
@@ -500,7 +520,7 @@ export async function trackRegistrationCompleted({
   })
 }
 
-export function persistUtmsOnce() {
+export const persistUtmsOnce = (): void => {
   if (typeof window === 'undefined' || !window.location.search) return
 
   const params = new URLSearchParams(window.location.search)
@@ -520,7 +540,7 @@ export function persistUtmsOnce() {
   }
 }
 
-export function persistClidsOnce() {
+export const persistClidsOnce = (): void => {
   if (typeof window === 'undefined' || !window.location.search) return
 
   const params = new URLSearchParams(window.location.search)
@@ -532,13 +552,13 @@ export function persistClidsOnce() {
     const lastKey = `${key}_last`
 
     if (!sessionStorage.getItem(firstKey)) {
-      sessionStorage.setItem(firstKey, value) // write-once
+      sessionStorage.setItem(firstKey, value)
     }
-    sessionStorage.setItem(lastKey, value) // always update
+    sessionStorage.setItem(lastKey, value)
   }
 }
 
-export function getPersistedUtms() {
+export const getPersistedUtms = (): Record<string, string> => {
   if (
     typeof window === 'undefined' ||
     typeof window.sessionStorage === 'undefined'
@@ -546,7 +566,7 @@ export function getPersistedUtms() {
     return {}
   }
 
-  const utms = {}
+  const utms: Record<string, string> = {}
 
   try {
     for (const key of UTM_KEYS) {
@@ -563,7 +583,7 @@ export function getPersistedUtms() {
   return utms
 }
 
-export function getPersistedClids() {
+export const getPersistedClids = (): Record<string, string | null> => {
   if (
     typeof window === 'undefined' ||
     typeof window.sessionStorage === 'undefined'
@@ -571,14 +591,15 @@ export function getPersistedClids() {
     return {}
   }
 
-  const clids = {}
+  const clids: Record<string, string | null> = {}
 
   try {
     for (let i = 0; i < window.sessionStorage.length; i++) {
       const key = window.sessionStorage.key(i)
       if (
-        key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
-        key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)
+        key &&
+        (key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
+        key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`))
       ) {
         clids[key] = window.sessionStorage.getItem(key)
       }
@@ -589,13 +610,13 @@ export function getPersistedClids() {
   return clids
 }
 
-const getUserProperties = () => {
-  const userCookie = getUserCookie(true)
+const getUserProperties = (): Record<string, string> => {
+  const userCookie = getUserCookie(true) as UserCookie | false
   if (!userCookie) {
     return {}
   }
 
-  const properties = {
+  const properties: Record<string, string | undefined> = {
     email: userCookie.email,
     hubspotId: userCookie.metaData?.hubspotId,
   }
@@ -605,10 +626,10 @@ const getUserProperties = () => {
       acc[key] = value
     }
     return acc
-  }, {})
+  }, {} as Record<string, string>)
 }
 
-export const trackEvent = (name, properties) => {
+export const trackEvent = (name: string, properties?: Record<string, string | number | boolean | null | undefined>): void => {
   try {
     const commonProperties = {
       ...getPersistedUtms(),
@@ -621,35 +642,22 @@ export const trackEvent = (name, properties) => {
   }
 }
 
-/**
- * Helper function to simplify setting tracking attributes for an Element
- * @param {string} name Unique name for this element
- * @param {Object.<string, string | boolean | number | Date>} properties Object defining specific Element properties
- * @returns {Object}
- * @example
- *   const trackingAttrs = buildTrackingAttrs('Some Button', {
- *     size: 23 ,
- *     owner: 'Bob',
- *     isCool: false,
- *   })
- *
- *   // spread onto element to be tracked
- *   <Button {...trackingAttrs}>Sign Up</Button>
- */
-export const buildTrackingAttrs = (name, properties) => {
+type PropertyValue = string | boolean | number | Date
+
+export const buildTrackingAttrs = (name: string, properties?: Record<string, PropertyValue>): Record<string, string> => {
   if (!properties) {
     return {
       'data-fs-element': name,
     }
   }
 
-  const attributes = {}
-  const propSchema = {}
+  const attributes: Record<string, string | number | boolean> = {}
+  const propSchema: Record<string, string> = {}
 
   Object.entries(properties).forEach(([key, initialValue]) => {
     const prefixedKey = `data-${kebabCase(key)}`
-    let value = initialValue
-    let propType
+    let value: string | number | boolean = initialValue as string | number | boolean
+    let propType: string
 
     switch (typeof initialValue) {
       case 'string':
@@ -667,8 +675,8 @@ export const buildTrackingAttrs = (name, properties) => {
           value = initialValue.toISOString()
           break
         }
+        return
       default:
-        // ignore property if not one of the above types
         return
     }
 
@@ -680,5 +688,6 @@ export const buildTrackingAttrs = (name, properties) => {
     'data-fs-element': name,
     'data-fs-properties-schema': JSON.stringify(propSchema),
     ...attributes,
-  }
+  } as Record<string, string>
 }
+
