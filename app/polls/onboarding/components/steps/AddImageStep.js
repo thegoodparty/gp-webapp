@@ -80,7 +80,6 @@ export default function AddImageStep({}) {
     try {
       const imageUrl = await uploadFileToS3(
         file,
-        undefined,
         apiRoutes.polls.imageUploadUrl,
       )
 

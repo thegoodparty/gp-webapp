@@ -5,7 +5,6 @@ export const uploadBlobToS3 = async ({
   blobOrFile,
   fileType,
   fileName,
-  folderPath,
   signedUrlRoute,
 }) => {
   if (!blobOrFile || !fileType || !fileName || !signedUrlRoute) {
@@ -17,11 +16,6 @@ export const uploadBlobToS3 = async ({
   const requestBody = {
     fileName: sanitizedFileName,
     contentType: fileType,
-  }
-
-  if (folderPath) {
-    const sanitizedFolderPath = folderPath.replace(/[^a-zA-Z0-9/_-]/g, '_')
-    requestBody.folderPath = sanitizedFolderPath
   }
 
   const resp = await clientFetch(signedUrlRoute, requestBody)
@@ -52,13 +46,12 @@ export const uploadBlobToS3 = async ({
   return publicUrl || signedUrl
 }
 
-export const uploadFileToS3 = async (file, folderPath, signedUrlRoute) => {
+export const uploadFileToS3 = async (file, signedUrlRoute) => {
   const { name: fileName, type: fileType } = file
   return uploadBlobToS3({
     blobOrFile: file,
     fileType,
     fileName,
-    folderPath,
     signedUrlRoute,
   })
 }
