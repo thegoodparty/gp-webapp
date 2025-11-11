@@ -43,7 +43,7 @@ export const uploadBlobToS3 = async ({
     )
   }
 
-  return publicUrl || signedUrl
+  return publicUrl
 }
 
 export const uploadFileToS3 = async (file, signedUrlRoute) => {
