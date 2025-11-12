@@ -43,7 +43,7 @@ export const P2VProSection = () => {
   return (
     <P2VSection title="Pro Plan Information">
       <div className="flex items-center mb-2">
-        <Checkbox checked={isPro} disabled={isPro} onChange={onChangeIsPro} />
+        <Checkbox checked={isPro} disabled={isPro} onChange={onChangeIsPro} data-testid="is-pro-checkbox"/>
         <div className="ml-2">Is Pro</div>
       </div>
       <div className="mb-2">

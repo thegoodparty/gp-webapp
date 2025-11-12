@@ -1,3 +1,12 @@
+export interface ApiRoute {
+  path: string
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  nextApiRoute?: boolean
+  withAuth?: boolean
+  returnFullResponse?: boolean
+  additionalRequestOptions?: RequestInit
+}
+
 export const apiRoutes = {
   contacts: {
     list: {
@@ -81,7 +90,7 @@ export const apiRoutes = {
     logout: {
       path: '/logout',
       method: 'DELETE',
-      nextApiRoute: true, // identifies next /api folder route handlers
+      nextApiRoute: true,
     },
     forgotPassword: {
       path: '/authentication/send-recover-password-email',
@@ -752,7 +761,7 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
-}
+} as const
 
 export const electionApiRoutes = {
   places: {
@@ -777,4 +786,5 @@ export const electionApiRoutes = {
       method: 'GET',
     },
   },
-}
+} as const
+

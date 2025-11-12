@@ -1,7 +1,7 @@
 'use client'
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js'
 import PasswordInput from '@shared/inputs/PasswordInput.js'
-import { setUserCookie } from 'helpers/cookieHelper.js'
+import { setUserCookie } from 'helpers/cookieHelper'
 import Link from 'next/link.js'
 import { Suspense, useState } from 'react'
 import H1 from '@shared/typography/H1'
