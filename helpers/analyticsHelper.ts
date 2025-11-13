@@ -14,6 +14,10 @@ const UTM_KEYS = [
 const CLID_SUFFIX = 'clid'
 
 export const EVENTS = {
+  polls: {
+    resultsViewed: 'Polls - Poll Results Overview Viewed',
+    issueDetailsViewed: 'Polls - Poll Results Issue Details Viewed',
+  },
   expandPolls: {
     recommendationsViewed: 'Polls - Expand Poll Recommendations Viewed',
     recommendationsCompleted: 'Polls - Expand Poll Recommendations Completed',
