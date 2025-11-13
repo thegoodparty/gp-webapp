@@ -1,8 +1,26 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
+enum GenerationStatus {
+  processing = 'processing',
+  completed = 'completed',
+}
+
+type AiContentInputValues = Record<
+  string,
+  string | boolean | number | undefined
+>
+
+type AiContentData = {
+  name: string
+  content: string
+  updatedAt: number
+  inputValues?: AiContentInputValues
+}
+
 interface GenerateAIContentResponse {
-  [key: string]: unknown
+  status: GenerationStatus
+  chatResponse: AiContentData
 }
 
 export const generateAIContent = async (
@@ -11,15 +29,17 @@ export const generateAIContent = async (
   inputValues: Record<string, unknown> = {},
 ): Promise<GenerateAIContentResponse | false> => {
   try {
-    const resp = await clientFetch<GenerateAIContentResponse>(apiRoutes.campaign.ai.create, {
-      key,
-      chat,
-      inputValues,
-    })
+    const resp = await clientFetch<GenerateAIContentResponse>(
+      apiRoutes.campaign.ai.create,
+      {
+        key,
+        chat,
+        inputValues,
+      },
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
-
