@@ -174,18 +174,3 @@ export interface Campaign {
   completedTaskIds: string[]
   hasFreeTextsOffer: boolean
 }
-
-// ===== API Response Types =====
-
-export interface ApiResponse<T = unknown> {
-  data: T
-  ok?: boolean
-  error?: string
-}
-
-// ===== Common Utility Types =====
-
-export type Nullable<T> = T | null
-export type Optional<T> = T | undefined
-export type Maybe<T> = T | null | undefined
-
