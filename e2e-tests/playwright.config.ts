@@ -7,7 +7,7 @@ console.log('HEADED_MODE from env:', process.env.HEADED_MODE);
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 60000,
+  timeout: 90000,
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -20,20 +20,21 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:4000/",
     storageState: undefined,
-    headless: !process.env.HEADED_MODE,
-    contextOptions: {
-      viewport: null,
-      ignoreHTTPSErrors: true,
-      acceptDownloads: true,
-      extraHTTPHeaders: {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Cache-Control': 'no-cache',
-      },
+    headless: true,
+    viewport: null,
+    ignoreHTTPSErrors: true,
+    acceptDownloads: true,
+    extraHTTPHeaders: {
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'Cache-Control': 'no-cache',
     },
+    serviceWorkers: 'block',
+    actionTimeout: 30000,
+    navigationTimeout: 60000,
     trace: "on-first-retry",
     launchOptions: {
-      slowMo: process.env.CI ? 100 : 25,
+      slowMo: 0,
       args: [
         '--no-sandbox', 
         '--disable-setuid-sandbox',

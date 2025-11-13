@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { appNav } from '@helpers';
 import { prepareTest } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
@@ -11,14 +11,13 @@ test.describe('Mobile viewport tests - App pages', () => {
         viewport: { width: 375, height: 667 }
     });
 
-    setupTestReporting(test, TEST_IDS.MOBILE_VIEW);
+    setupMultiTestReporting(test, { 'Verify app pages in mobile view': TEST_IDS.MOBILE_VIEW });
 
     test.skip('Verify app pages in mobile view', async ({ page }) => {
         await prepareTest('user', '/dashboard', 'Campaign progress', page);
 
         const verifyPage = async (navItem: string, expectedHeading: string) => {
             await appNav(page, navItem, true);
-            await page.waitForLoadState('networkidle');
             await expect(page.getByRole('heading', { name: expectedHeading }))
                 .toBeVisible({ timeout: 10000 });
         };

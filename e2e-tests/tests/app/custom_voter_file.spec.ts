@@ -7,7 +7,16 @@ import { prepareTest } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
 
 test.use({
-    storageState: 'admin-auth.json',
+    storageState: 'auth.json',
+});
+
+const voterFileName = 'Door Knocking (Default)';
+test.beforeEach(async ({ page }) => {
+    await documentReady(page);
+    await prepareTest('user', '/dashboard/voter-records/', voterFileName, page);
+    if(await page.getByRole('heading', { name: 'Win with GoodParty.org Pro!' }).isVisible()) {
+        await page.getByRole('img').first().click();
+    }
 });
 
 setupMultiTestReporting(test, {
@@ -16,34 +25,34 @@ setupMultiTestReporting(test, {
 });
 
 test.skip('Download default voter file', async ({ page }) => {
-    const voterFileName = 'Door Knocking (Default)';
-    await prepareTest('admin', '/dashboard/voter-records/doorknocking', voterFileName, page);
+    await page.getByRole('link', { name: 'Voter file (All Fields)' }).first().click();
     await documentReady(page);
 
-    const heading = page.getByRole('heading', { name: voterFileName });
-    await heading.waitFor({ state: 'visible', timeout: 30000 });
+    // Wait for the voter record to be visible and contain a number
+    const articleTitle = page.getByTestId('articleTitle');
+    await articleTitle.waitFor({ state: 'visible', timeout: 30000 });
+    await expect(page.getByText(/Error counting/)).not.toBeVisible();
 
     const downloadButton = page.getByRole('button', { name: 'Download CSV' });
     await downloadButton.waitFor({ state: 'visible', timeout: 30000 });
     await expect(downloadButton).toBeEnabled({ timeout: 30000 });
 
-    // Wait for and handle the download
-    const downloadPromise = page.waitForEvent('download');
+    // Click the button first to trigger the download
     await downloadButton.click();
-    const download = await downloadPromise;
+    // Then wait for the download event
+    const download = await page.waitForEvent('download');
 
     // Save the file to a temporary location and check its size
     const tempFilePath0 = 'temp-download0.csv';
     await download.saveAs(tempFilePath0);
     const stats = fs.statSync(tempFilePath0);
-    expect(stats.size).toBeGreaterThan(100);
+    expect(stats.size).toBeGreaterThan(150);
 
     // Clean up the temporary file
     fs.unlinkSync(tempFilePath0);
 });
 
 test.skip('Generate custom voter file', async ({ page }) => {
-    await prepareTest('admin', '/dashboard/voter-records', 'Voter File', page);
     
     // Wait for and click create custom voter file button
     const createButton = page.getByRole('button', { name: /Create a custom voter file/i }).first();
@@ -103,10 +112,10 @@ test.skip('Generate custom voter file', async ({ page }) => {
     await downloadButton.waitFor({ state: 'visible', timeout: 30000 });
     await expect(downloadButton).toBeEnabled({ timeout: 30000 });
 
-    // Wait for and handle the download
-    const downloadPromise = page.waitForEvent('download');
+    // Click the button first to trigger the download
     await downloadButton.click();
-    const download = await downloadPromise;
+    // Then wait for the download event
+    const download = await page.waitForEvent('download');
 
     // Save the file to a temporary location and check its size
     const tempFilePath1 = 'temp-download1.csv';

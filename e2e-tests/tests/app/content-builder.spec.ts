@@ -19,29 +19,51 @@ setupMultiTestReporting(test, {
     'Generate content with Content Builder': TEST_IDS.GENERATE_CAMPAIGN_ASSETS
 });
 
-test.skip('Generate content with Content Builder', async ({ page }) => {
-    const testTemplate = /Voter Registration Drive Email/;
-
-    await documentReady(page);
-    
+test('Generate content with Content Builder', async ({ page }) => {
     try {
-        await page.waitForFunction(() => {
-            const loadingElements = document.querySelectorAll('[class*="loading"], [class*="Loading"], .MuiCircularProgress-root');
-            return loadingElements.length === 0;
-        }, { timeout: 30 * SECOND });
-    } catch (error) {
-        console.log('Loading state check timed out, continuing...');
-    }
+        const testTemplate1 = /Voter Registration Drive Email/;
+        const testTemplate2 = /General Interview Prep/;
+        await documentReady(page);
 
-    await expect(page.getByRole('button', { name: /Generate/ })).toBeVisible({ timeout: 30 * SECOND });
+        try {
+            await page.waitForFunction(() => {
+                const loadingElements = document.querySelectorAll('[class*="loading"], [class*="Loading"], .MuiCircularProgress-root');
+                return loadingElements.length === 0;
+            }, { timeout: 30 * SECOND });
+        } catch (error) {
+            console.log('Loading state check timed out, continuing...');
+        }
     
-    await page.getByRole('button', { name: /Generate/ }).click();
-    await page.getByRole('heading', { name: 'Select a Template' }).isVisible();
-    await page.getByRole('button', { name: testTemplate }).click();
-    await documentReady(page);
-
-    // Verify new content
-    await expect(page.getByRole('link', { name: testTemplate}).first()).toBeVisible({ timeout: 30 * SECOND });
-    await page.getByRole('link', { name: testTemplate}).first().click();
-    await expect(page.getByRole('cell', { name: testTemplate })).toBeVisible();
+        await expect(page.getByRole('button', { name: /Generate/ })).toBeVisible({ timeout: 30 * SECOND });
+        await page.getByRole('button', { name: /Generate/ }).click();
+        await expect(page.getByRole('heading', { name: 'Select a Template' })).toBeVisible();
+        await expect(page.getByRole('button', { name: testTemplate1 })).toBeVisible();
+        await page.getByRole('button', { name: testTemplate1 }).click();
+        await documentReady(page);
+        await expect(page.getByText(testTemplate1)).toBeVisible({ timeout: 30 * SECOND });
+        await page.getByRole('button', { name: /Generate/ }).click();
+        await expect(page.getByRole('heading', { name: 'Select a Template' })).toBeVisible();
+        await expect(page.getByRole('button', { name: testTemplate2 })).toBeVisible();
+        await page.getByRole('button', { name: testTemplate2 }).click();
+        await documentReady(page);
+        await expect(page.getByText(testTemplate2)).toBeVisible({ timeout: 30 * SECOND });
+    } catch (error) {
+        // Log current page state before re-throwing
+        try {
+            const headings = await page.locator('h1, h2, h3, h4, h5, h6').allTextContents();
+            console.log('=== TEST ERROR - CURRENT PAGE HEADINGS ===');
+            console.log('Page URL:', page.url());
+            if (headings.length > 0) {
+                headings.forEach((heading, index) => {
+                    console.log(`Heading ${index + 1}: "${heading}"`);
+                });
+            } else {
+                console.log('No headings found on page');
+            }
+            console.log('==========================================');
+        } catch (headingError) {
+            console.log('Failed to capture headings during error:', headingError);
+        }
+        throw error;
+    }
 });

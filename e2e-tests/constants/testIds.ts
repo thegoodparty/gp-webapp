@@ -61,6 +61,10 @@ export const TEST_IDS = {
     // Content Builder Tests
     GENERATE_CAMPAIGN_ASSETS: 40,
 
+    // Contacts Tests
+    GENERATE_SEGMENT: 103,
+    CONTACTS_PAGE_STATISTICS: 104,
+
     // Voter Data Tests
     UPGRADE_TO_PRO_PROMPT: 41,
     UPGRADE_TO_PRO_FLOW: 42,
@@ -72,7 +76,7 @@ export const TEST_IDS = {
 
     // Voter Outreach tests
     VOTER_OUTREACH: 96,
-    NEW_VOTER_OUTREACH: 97,
+    SCHEDULE_CAMPAIGN: 97,
 
     // Website Builder tests
     GENERATE_NEW_WEBSITE: 98,

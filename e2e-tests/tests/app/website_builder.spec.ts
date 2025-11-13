@@ -4,19 +4,8 @@ import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import { authenticateWithTimeout } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
-import { IS_PROD, IS_QA } from 'constants/envConfig';
+import { IS_PROD } from 'constants/envConfig';
 import { generateWebsiteUrl } from 'helpers/dataHelpers';
-
-let candidateUrl: string;
-
-// Set candidateUrl based on environment
-if (IS_QA) {
-    candidateUrl = 'https://candidates-qa.goodparty.org/';
-} else if (IS_PROD) {
-    candidateUrl = 'https://candidates.goodparty.org/';
-} else {
-    candidateUrl = 'https://candidates-dev.goodparty.org/';
-}
 
 const websiteUrl = generateWebsiteUrl();
 
@@ -25,11 +14,7 @@ test.use({
 });
 
 test.describe.serial('Website Builder Tests', () => {
-    test.setTimeout(120000);
-
     test.beforeEach(async ({ page }) => {
-        page.setDefaultTimeout(90000);
-
         try {
             await authenticateWithTimeout(page, '/dashboard/website', 'Your campaign website');
             await documentReady(page);
@@ -45,8 +30,13 @@ test.describe.serial('Website Builder Tests', () => {
         'Verify domain purchase flow': TEST_IDS.DOMAIN_PURCHASE_FLOW
     });
 
-    test.skip('Generate New Website', async ({ page }) => {
-        await page.getByRole('button', { name: /Create your website/ }).click();
+    test('Generate New Website', async ({ page }) => {
+        if(await page.getByText(/Complete and publish/).isVisible()) {
+            await page.getByText(/Complete and publish/).click();
+        } else {
+            await page.getByText(/Create your website/).click();
+        }
+
         await expect(page.getByText('What do you want your custom link to be?')).toBeVisible({ timeout: 30000 });
         await page.locator('[id="_r_0_"]').fill(websiteUrl);
         await page.getByRole('button', { name: /Next/ }).click();
@@ -68,14 +58,15 @@ test.describe.serial('Website Builder Tests', () => {
         console.log('Website created successfully');
     });
 
-    test.skip('Verify website dashboard page', async ({ page }) => {
+    test('Verify website dashboard page', async ({ page }) => {
         await expect(page.getByRole('heading', { name: /Published Your campaign/ })).toBeVisible();
         await expect(page.getByRole('button', { name: /Increase visitors/ })).toBeVisible({ timeout: 60000 });
     });
 
     test.skip(IS_PROD, 'Skipping domain purchase test on production');
+    // Affected by 500 server error issue
     test.skip('Verify domain purchase flow', async ({ page }) => {
-        await page.getByRole('link', { name: 'Add a domain' }).click();
+        await page.getByText(/Add a domain/).click();
         await page.getByRole('button', { name: 'Search' }).click();
         await page.getByText(/.net/).first().click();
         await page.getByRole('button', { name: 'Checkout' }).click();

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { setupTestReporting } from 'helpers/testrailHelper';
+import { setupMultiTestReporting } from 'helpers/testrailHelper';
 import { prepareTest } from 'helpers/accountHelpers';
 import { TEST_IDS } from 'constants/testIds';
 
@@ -8,7 +8,7 @@ test.use({
     storageState: 'admin-auth.json',
 });
 
-setupTestReporting(test, TEST_IDS.ADMIN_DASHBOARD);
+setupMultiTestReporting(test, { 'Verify admin user can access admin dashboard': TEST_IDS.ADMIN_DASHBOARD });
 
 test('Verify admin user can access admin dashboard', async ({ page }) => {
     await prepareTest('admin', '/admin', 'Admin Dashboard', page);
