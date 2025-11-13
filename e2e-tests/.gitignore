@@ -12,3 +12,4 @@ playwright-results.json
 .env
 testRunId.txt
 reported-test-cases.json
+admin-session-error.png

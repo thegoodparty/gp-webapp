@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
-import { prepareTest, testAccountLastName } from 'helpers/accountHelpers';
+import { prepareTest } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
 import { TEST_IDS } from 'constants/testIds';
@@ -42,7 +42,7 @@ setupTestReporting(test, TEST_IDS.ADD_CAMPAIGN_AS_ADMIN);
 
 test.skip('Verify admin user can add/delete campaigns', async ({ page }) => {
     const testFirstName = faker.person.firstName();
-    const testLastName = testAccountLastName;
+    const testLastName = 'test';
     const testEmail = generateEmail();
     const testPhone = `5105${generateTimeStamp().slice(-6)}`;
     const testZipCode = '94066';

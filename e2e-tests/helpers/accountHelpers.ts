@@ -1,15 +1,13 @@
 import "dotenv/config";
 import { expect, chromium } from "@playwright/test";
 import { userData, generateEmail, generatePhone, generateTimeStamp } from "helpers/dataHelpers";
-import { acceptCookieTerms, documentReady } from "helpers/domHelpers";
+import { acceptCookieTerms, dismissOverlays, documentReady } from "helpers/domHelpers";
 import * as path from 'path';
 import * as fs from 'fs';
 
-export const testAccountLastName = 'test';
-export const testAccountFirstName = generateTimeStamp();
 export const baseUrl = process.env.BASE_URL;
 
-export async function ensureSession() {
+export async function ensureSession(testAccountFirstName = generateTimeStamp(), testAccountLastName = 'test') {
   const SESSION_FILE = path.resolve(__dirname, '../auth.json');
 
   if (fs.existsSync(SESSION_FILE)) {
@@ -47,11 +45,11 @@ export async function ensureSession() {
   const { context, page } = await createStableBrowserContext(browser);
   const password = userData.password + '1';
   const emailAddress = generateEmail();
-  const role = "South San Francisco City Clerk";
-  const zipCode = "94066";
+  const role = "Green River City Council - Ward 1";
+  const zipCode = "82901";
 
   try {
-    const successfulEmail = await createAccount(page, zipCode, role, password, emailAddress);
+    const successfulEmail = await createAccount(page, zipCode, role, password, emailAddress, testAccountFirstName, testAccountLastName);
     
     // Create test-results directory if it doesn't exist
     const screenshotDir = path.resolve(__dirname, '../test-results');
@@ -72,7 +70,7 @@ export async function ensureSession() {
       JSON.stringify({ emailAddress: successfulEmail, password: password + '1' })
     );
 
-    console.log('New session created and saved.');
+    return { testAccountFirstName, testAccountLastName };
   } catch (error) {
     console.error('Error during session creation:', error);
     throw error;
@@ -81,7 +79,7 @@ export async function ensureSession() {
   }
 }
 
-export async function ensureAdminSession() {
+export async function ensureAdminSession(testAccountFirstName, testAccountLastName) {
   const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
 
   if (fs.existsSync(ADMIN_SESSION_FILE)) {
@@ -124,40 +122,18 @@ export async function ensureAdminSession() {
     console.log(`Marking ${testAccountFirstName} ${testAccountLastName} test account as verified...`);
 
     console.log(`Navigating to: ${victoryPathUrl}`);
-    await page.goto(victoryPathUrl, { waitUntil: "domcontentloaded" });
+    await page.goto(victoryPathUrl);
     await documentReady(page);
 
-    console.log('Waiting for dropdown button...');
-    const dropdownButton = page.locator('.MuiSelect-select').first();
-    await dropdownButton.waitFor({ state: 'visible', timeout: 60000 });
-
-    // Retry logic for dropdown and Yes option
-    let maxRetries = 3;
-    let retryCount = 0;
-    let success = false;
-
-    while (retryCount < maxRetries && !success) {
-      try {
-        console.log(`Attempt ${retryCount + 1} to click dropdown and select Yes...`);
-        await dropdownButton.click();
-        await page.waitForTimeout(5000);
-        const yesOption = page.getByRole('option', { name: 'Yes' });
-        await yesOption.waitFor({ state: 'visible', timeout: 5000 });
-        await yesOption.click();
-        success = true;
-      } catch (error) {
-        console.log(`Attempt ${retryCount + 1} failed:`, error.message);
-        retryCount++;
-        if (retryCount === maxRetries) {
-          throw new Error(`Failed to select Yes option after ${maxRetries} attempts`);
-        }
-      }
-    }
+    // Marking test account as pro
+    await page.getByRole('checkbox').nth(2).waitFor({ state: 'visible', timeout: 30000 });
+    await page.getByRole('checkbox').nth(2).check();
 
     console.log('Waiting for Save button...');
     const saveButton = page.getByRole('button', { name: 'Save', exact: true }).first();
-    await saveButton.waitFor({ state: 'visible', timeout: 60000 });
+    await saveButton.waitFor({ state: 'visible'});
     await saveButton.click();
+    await page.waitForTimeout(10000);
     await documentReady(page);
 
     // Save the admin storage state (session)
@@ -345,12 +321,12 @@ export async function validateLoginPage(page, maxRetries = 2) {
 
 export async function createAccount(
   page,
-  zipCode = "94066",
-  role = "South San Francisco City Clerk",
+  zipCode = "82901",
+  role = "Green River City Council - Ward 1",
   password = userData.password,
   emailAddress = generateEmail(),
-  firstName = testAccountFirstName,
-  lastName = testAccountLastName
+  firstName = generateTimeStamp(),
+  lastName = "test"
 ) {
   const loginPageHeader = "Join GoodParty.org";
   const baseURL = process.env.BASE_URL || '';
@@ -745,6 +721,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
             await safePageNavigation(page, url);
             console.log('Successfully navigated with recent admin session');
             await page.waitForTimeout(10000);
+            await dismissOverlays(page);
             return page;
           } catch (error) {
             console.log('Recent admin session failed, trying with validation...');
@@ -761,6 +738,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
             
             if (isValidSession) {
               console.log('Successfully logged in with admin session');
+              await dismissOverlays(page);
               return page;
             } else {
               console.log('Admin session appears to be invalid, falling back to manual login...');
@@ -777,9 +755,14 @@ export async function prepareTest(type, url, text, page, browser = null) {
           throw new Error('Page was closed during admin login process');
         }
         
-        const currentUrl = page.url();
-        if (!currentUrl.includes(url)) {
-          await safePageNavigation(page, url);
+        await safePageNavigation(page, url);
+        
+        // Save the new admin session after successful manual login
+        try {
+          await page.context().storageState({ path: adminSessionFile });
+          console.log('New admin session saved successfully');
+        } catch (saveError) {
+          console.log('Warning: Could not save admin session:', saveError.message);
         }
       }
       
@@ -789,6 +772,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
             console.log('Using recent user session, skipping validation...');
             await safePageNavigation(page, url);
             console.log('Successfully navigated with recent user session');
+            await dismissOverlays(page);
             return page;
           } catch (error) {
             console.log('Recent user session failed, trying with validation...');
@@ -805,6 +789,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
             
             if (isValidSession) {
               console.log('Successfully logged in with session');
+              await dismissOverlays(page);
               return page;
             } else {
               console.log('Session appears to be invalid, falling back to manual login...');
@@ -821,13 +806,19 @@ export async function prepareTest(type, url, text, page, browser = null) {
           throw new Error('Page was closed during user login process');
         }
         
-        const currentUrl = page.url();
-        if (!currentUrl.includes(url)) {
-          await safePageNavigation(page, url);
+        await safePageNavigation(page, url);
+        
+        // Save the new user session after successful manual login
+        try {
+          await page.context().storageState({ path: sessionFile });
+          console.log('New user session saved successfully');
+        } catch (saveError) {
+          console.log('Warning: Could not save user session:', saveError.message);
         }
       }
       
       console.log(`Authentication successful on attempt ${attempt}`);
+      await dismissOverlays(page);
       return page;
       
     } catch (error) {

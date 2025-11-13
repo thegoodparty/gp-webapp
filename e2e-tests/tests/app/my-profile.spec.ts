@@ -44,9 +44,8 @@ test('Update Campaign Details', async ({ page }) => {
     await expect(page.getByRole('combobox')).toHaveValue(newParty);
 });
 
-test.skip('Update Office Details', async ({ page }) => {
-    const electionRole = 'California Controller';
-
+test('Update Office Details', async ({ page }) => {
+    const electionRole = 'Rock Springs City Mayor';
     // Select new office location
     await page.getByRole('button', { name: 'Edit Office Details' }).scrollIntoViewIfNeeded();
     await page.getByRole('button', { name: 'Edit Office Details' }).waitFor({ state: 'visible', timeout: 45000 });
@@ -55,6 +54,9 @@ test.skip('Update Office Details', async ({ page }) => {
     await page.getByText('To pull accurate results,').isVisible();
 
     // Select first local office listing
+    const officeNameField = page.getByLabel('Office Name');
+    await officeNameField.waitFor({ state: 'visible', timeout: 30000 });
+    await officeNameField.fill(electionRole);
     await page.getByRole('button', { name: electionRole }).first().click();
     await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
     await page.getByRole('button', { name: 'Save' }).click();
@@ -84,7 +86,7 @@ test('Update Your Why Statement', async ({ page }) => {
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
     await page.getByRole('button', { name: 'Save' }).nth(2).click();
     await documentReady(page);
-
+    
     try {
         await page.reload();
         await documentReady(page);
@@ -98,14 +100,14 @@ test('Update Your Why Statement', async ({ page }) => {
     }
 });
 
-test.skip('Update Fun Facts about Yourself', async ({ page }) => {
+test('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
     await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
     await page.getByRole('button', { name: 'Save' }).nth(3).click();
     await documentReady(page);
-
+    
     try {
         await page.reload();
         await documentReady(page);
@@ -119,7 +121,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test.skip('Add Opponent', async ({ page }) => {
+test('Add Opponent', async ({ page }) => {
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
 

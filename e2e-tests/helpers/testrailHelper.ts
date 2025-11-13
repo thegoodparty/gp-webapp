@@ -161,6 +161,23 @@ export async function handleTestFailure(page: Page, runId: string, caseId: numbe
                 console.error('Failed to get current URL:', urlError);
             }
 
+            // Log headings on the current page to aid debugging
+            try {
+                const headings = await page.locator('h1, h2, h3, h4, h5, h6').allTextContents();
+                console.log('=== TEST FAILED - ALL HEADINGS ON PAGE ===');
+                console.log('Page URL:', currentUrl);
+                if (headings.length > 0) {
+                    headings.forEach((heading, index) => {
+                        console.log(`Heading ${index + 1}: "${heading}"`);
+                    });
+                } else {
+                    console.log('No headings found on page');
+                }
+                console.log('==========================================');
+            } catch (headingError) {
+                console.error('Failed to capture headings:', headingError);
+            }
+
             // Report test results
             const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
             const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
@@ -210,7 +227,8 @@ export async function setupTestReporting(test: any, caseId: number) {
                 await addTestResult(runId, caseId, 4, 'Test was skipped');
             } else if (testInfo.status === TestStatus.TIMED_OUT) {
                 console.log(`Marking case ${caseId} as FAILED (timeout)`);
-                await addTestResult(runId, caseId, 5, `Test timed out after ${testInfo.timeout}ms`);
+                // Use the same failure handler to capture screenshot and headings
+                await handleTestFailure(page, runId, caseId, testInfo.error || new Error(`Test timed out after ${testInfo.timeout}ms`));
             } else {
                 console.log(`Marking case ${caseId} as FAILED (unknown status: ${testInfo.status})`);
                 await addTestResult(runId, caseId, 5, `Test failed with unknown status: ${testInfo.status}`);
@@ -269,7 +287,8 @@ export async function setupMultiTestReporting(test: any, caseIdMap: { [testTitle
                 await addTestResult(runId, caseId, 4, 'Test was skipped');
             } else if (testInfo.status === TestStatus.TIMED_OUT) {
                 console.log(`Marking case ${caseId} as FAILED (timeout)`);
-                await addTestResult(runId, caseId, 5, `Test timed out after ${testInfo.timeout}ms`);
+                // Use the same failure handler to capture screenshot and headings
+                await handleTestFailure(page, runId, caseId, testInfo.error || new Error(`Test timed out after ${testInfo.timeout}ms`));
             } else {
                 console.log(`Marking case ${caseId} as FAILED (unknown status: ${testInfo.status})`);
                 await addTestResult(runId, caseId, 5, `Test failed with unknown status: ${testInfo.status}`);

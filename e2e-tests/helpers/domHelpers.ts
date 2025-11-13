@@ -58,7 +58,7 @@ export async function getNavatticPlayerFrame(page, popUp = false) {
     }
 }
 
-export async function documentReady(page) {
+export async function documentReady(page, readySelector = null) {
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
     
     try {
@@ -76,4 +76,25 @@ export async function documentReady(page) {
     } catch (error) {
         console.log('Page ready state check timeout, continuing anyway...');
     }
+
+    if (readySelector) {
+        try {
+            await page.locator(readySelector).first().waitFor({ state: 'visible', timeout: 30000 });
+        } catch (error) {
+            console.log(`Ready selector not visible within timeout: ${readySelector}`);
+        }
+    }
+}
+
+export async function dismissOverlays(page) {
+    try {
+        if (await page.getByTestId('cookie-snackbar').isVisible()) {
+          await page.getByRole('button', { name: 'Close' }).click();
+        }
+      } catch {}
+      try {
+        if (await page.getByRole('heading', { name: 'Win with GoodParty.org Pro!' }).isVisible()) {
+          await page.getByRole('img').click();
+        }
+      } catch {}
 }
