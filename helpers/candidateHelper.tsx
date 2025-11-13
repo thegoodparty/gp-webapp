@@ -14,10 +14,12 @@ interface Candidate {
   hashtag?: string
   firstName?: string
   lastName?: string
-  [key: string]: unknown
 }
 
-export const partyResolver = (partyLetter: string | undefined, otherParty?: string): string => {
+export const partyResolver = (
+  partyLetter: string | undefined,
+  otherParty?: string,
+): string => {
   if (!partyLetter) {
     return ''
   }
@@ -63,22 +65,21 @@ export const partyResolver = (partyLetter: string | undefined, otherParty?: stri
   return partyLetter
 }
 
-export const candidateRoute = (candidate: Candidate | null | undefined): string => {
-  if (!candidate) {
-    return '/'
-  }
-  const { slug } = candidate
-  return `/candidate/${slug}`
-}
+export const candidateRoute = (
+  candidateSlug: string | null | undefined,
+): string => (candidateSlug ? `/candidate/${candidateSlug}` : '/')
 
 export const partyRace = (candidate: Candidate): React.ReactNode => {
-  const { party, otherParty, race, office, state, district, counties } = candidate
+  const { party, otherParty, race, office, state, district, counties } =
+    candidate
   let resolvedRace = ''
 
   if (office) {
-    resolvedRace = `${office} ${state ? `(${shortToLongState[state as keyof typeof shortToLongState]})` : ''}  ${
-      district ? `| District ${district}` : ''
-    }`
+    resolvedRace = `${office} ${
+      state
+        ? `(${shortToLongState[state as keyof typeof shortToLongState]})`
+        : ''
+    }  ${district ? `| District ${district}` : ''}`
   } else {
     resolvedRace = race || ''
   }
@@ -101,6 +102,3 @@ export const candidateColor = (candidate: Candidate): string => {
   }
   return '#000'
 }
-
-
-
