@@ -15,11 +15,23 @@ interface FetchOptions {
   revalidate?: number
 }
 
-export const clientFetch = async <T = unknown>(
+export async function clientFetch<T = unknown>(
+  endpoint: ApiRoute,
+  data: Record<string, unknown> | FormData | undefined,
+  options: FetchOptions & { returnFullResponse: true }
+): Promise<Response>
+
+export async function clientFetch<T = unknown>(
+  endpoint: ApiRoute,
+  data?: Record<string, unknown> | FormData,
+  options?: Omit<FetchOptions, 'returnFullResponse'> & { returnFullResponse?: false }
+): Promise<ApiResponse<T>>
+
+export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
   data?: Record<string, unknown> | FormData,
   options: FetchOptions = {},
-): Promise<ApiResponse<T>> => {
+): Promise<ApiResponse<T> | Response> {
   const { method } = endpoint
   const { cache, serverToken, returnFullResponse } = options
 
@@ -53,7 +65,7 @@ export const clientFetch = async <T = unknown>(
   })
 
   if (returnFullResponse) {
-    return res as unknown as ApiResponse<T>
+    return res
   }
 
   const isJsonResponse = res.headers

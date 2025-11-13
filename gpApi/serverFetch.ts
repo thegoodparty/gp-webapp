@@ -8,14 +8,37 @@ interface ServerFetchOptions {
   returnFullResponse?: boolean
 }
 
-export const serverFetch = async <T = unknown>(
+export async function serverFetch<T = unknown>(
+  endpoint: ApiRoute,
+  data: Record<string, unknown> | FormData | undefined,
+  options: ServerFetchOptions & { returnFullResponse: true }
+): Promise<Response>
+
+export async function serverFetch<T = unknown>(
+  endpoint: ApiRoute,
+  data?: Record<string, unknown> | FormData,
+  options?: Omit<ServerFetchOptions, 'returnFullResponse'> & { returnFullResponse?: false }
+): Promise<ApiResponse<T>>
+
+export async function serverFetch<T = unknown>(
   endpoint: ApiRoute,
   data?: Record<string, unknown> | FormData,
   options: ServerFetchOptions = {},
-): Promise<ApiResponse<T>> => {
+): Promise<ApiResponse<T> | Response> {
   const token = await getServerToken()
+  
+  if (options.returnFullResponse) {
+    return clientFetch<T>(endpoint, data, {
+      cache: options.cache,
+      revalidate: options.revalidate,
+      serverToken: token || undefined,
+      returnFullResponse: true,
+    })
+  }
+  
+  const { returnFullResponse: _, ...restOptions } = options
   return clientFetch<T>(endpoint, data, {
-    ...options,
+    ...restOptions,
     serverToken: token || undefined,
   })
 }

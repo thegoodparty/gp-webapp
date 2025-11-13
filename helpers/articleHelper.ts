@@ -1,6 +1,9 @@
 import slugger from 'slugify'
 
-export const slugify = (text: string | undefined, lowercase?: boolean): string => {
+export const slugify = (
+  text: string | undefined,
+  lowercase?: boolean,
+): string => {
   if (!text) {
     return ''
   }
@@ -10,16 +13,12 @@ export const slugify = (text: string | undefined, lowercase?: boolean): string =
   return slugger(text)
 }
 
-interface Article {
-  title?: string
-  [key: string]: unknown
-}
-
-export const faqArticleRoute = (article: Article | null | undefined): string => {
-  if (!article?.title) {
+export const faqArticleRoute = (
+  articleTitle: string | null | undefined,
+): string => {
+  if (!articleTitle) {
     return '/'
   }
-  const slug = slugify(article.title, true)
+  const slug = slugify(articleTitle, true)
   return `/faqs/${slug}`.toLowerCase()
 }
-

@@ -38,7 +38,7 @@ export default async function ArticleFaqs() {
         {faqs.map((article) => (
           <li key={article.id}>
             <Link
-              href={faqArticleRoute(article)}
+              href={faqArticleRoute(article.title)}
               className="group font-sfpro flex items-center justify-between border-b-[1px] border-gray-200 py-2"
             >
               {article.title}
