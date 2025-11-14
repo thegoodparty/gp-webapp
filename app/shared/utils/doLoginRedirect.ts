@@ -13,18 +13,18 @@ export const doLoginRedirect = async (
   const returnCookie = getCookie('returnUrl')
   const status = await fetchCampaignStatus()
 
-  const redirectRoute = userHasRole(user, USER_ROLES.SALES)
+  const redirectRoute: string | false | void | undefined = userHasRole(user, USER_ROLES.SALES)
     ? '/sales/add-campaign'
     : campaign
     ? await doPostAuthRedirect(campaign)
     : returnCookie
-    ? returnCookie
+    ? router.push(returnCookie)
     : status?.status === 'candidate'
     ? '/dashboard'
     : status?.status === 'volunteer'
     ? '/volunteer-dashboard'
     : '/'
 
-  router.push(typeof redirectRoute === 'string' ? redirectRoute : '/')
+  router.push(redirectRoute as string)
 }
 
