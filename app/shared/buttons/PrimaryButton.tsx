@@ -1,9 +1,14 @@
 'use client'
+import React, { ReactNode, CSSProperties, MouseEvent, HTMLAttributes } from 'react'
 import ButtonLoading from './ButtonLoading'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
 
-export function setSize(baseClass, size, variant) {
+export const setSize = (
+  baseClass: Record<string, boolean>,
+  size: 'large' | 'medium' | 'small',
+  variant: 'contained' | 'outlined' | 'text',
+): void => {
   if (size === 'large') {
     baseClass['text-lg'] = true
     baseClass['py-3'] = true
@@ -23,7 +28,21 @@ export function setSize(baseClass, size, variant) {
   }
 }
 
-export default function PrimaryButton({
+interface PrimaryButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+  children?: ReactNode
+  className?: Record<string, boolean> | string
+  variant?: 'contained' | 'outlined' | 'text'
+  style?: CSSProperties
+  size?: 'large' | 'medium' | 'small'
+  disabled?: boolean
+  loading?: boolean
+  fullWidth?: boolean
+  type?: 'button' | 'submit' | 'reset'
+  ariaLabel?: string
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}
+
+const PrimaryButton = ({
   children,
   className = {},
   variant = 'contained',
@@ -36,8 +55,8 @@ export default function PrimaryButton({
   ariaLabel,
   onClick,
   ...restProps
-}) {
-  let baseClass = {
+}: PrimaryButtonProps) => {
+  const baseClass: Record<string, boolean> = {
     'rounded-lg': true,
     'font-medium': true,
     '[&>svg]:inline': true,
@@ -121,3 +140,6 @@ export default function PrimaryButton({
     </button>
   )
 }
+
+export default PrimaryButton
+

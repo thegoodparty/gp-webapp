@@ -62,19 +62,11 @@ const TogglePanel = ({
         </div>
         <div className="flex items-center">
           {open ? (
-            <PrimaryButton
-              size="medium"
-              ariaLabel="collapse"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
+            <PrimaryButton size="medium" ariaLabel="collapse">
               <FiChevronUp />
             </PrimaryButton>
           ) : (
-            <SecondaryButton
-              size="medium"
-              ariaLabel="expand"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
+            <SecondaryButton size="medium" ariaLabel="expand">
               <FiChevronDown />
             </SecondaryButton>
           )}

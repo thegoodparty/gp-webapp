@@ -61,7 +61,7 @@ const SecondaryButton = ({
     baseClass['hover:bg-lime-400'] = true
     baseClass['active:bg-lime-400'] = true
   }
-  setSize(baseClass, size)
+  setSize(baseClass, size, variant)
   if (disabled) {
     baseClass['cursor-not-allowed'] = true
     if (variant === 'contained') {
