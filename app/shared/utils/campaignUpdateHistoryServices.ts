@@ -34,6 +34,11 @@ interface CampaignUpdateHistoryWithUser extends CampaignUpdateHistory {
   }
 }
 
+interface CreateCampaignUpdateHistoryPayload extends Record<string, unknown> {
+  type: CampaignUpdateHistoryType
+  quantity: number
+}
+
 export const deleteUpdateHistory = async (id: number): Promise<CampaignUpdateHistory> => {
   const resp = await clientFetch<CampaignUpdateHistory>(apiRoutes.campaign.updateHistory.delete, {
     id,
@@ -42,7 +47,7 @@ export const deleteUpdateHistory = async (id: number): Promise<CampaignUpdateHis
 }
 
 export const createUpdateHistory = async (
-  payload: Record<string, unknown>,
+  payload: CreateCampaignUpdateHistoryPayload,
 ): Promise<CampaignUpdateHistory> => {
   const resp = await clientFetch<CampaignUpdateHistory>(
     apiRoutes.campaign.updateHistory.create,

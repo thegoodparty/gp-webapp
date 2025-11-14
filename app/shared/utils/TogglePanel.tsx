@@ -4,16 +4,15 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import H4 from '@shared/typography/H4'
 import Image from 'next/image'
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, HTMLAttributes } from 'react'
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi'
 
-interface TogglePanelProps {
+interface TogglePanelProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   icon?: string | ReactNode
   label?: string
   forceExpand?: boolean
   children?: ReactNode
   openCallback?: (isOpen: boolean) => void
-  [key: string]: unknown
 }
 
 const TogglePanel = ({

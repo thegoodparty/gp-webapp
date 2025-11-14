@@ -1,5 +1,5 @@
 declare module 'hamburger-react/dist-esm/Burger' {
-  import { CSSProperties, ReactNode } from 'react'
+  import { CSSProperties, ReactNode, HTMLAttributes } from 'react'
 
   interface RenderOptions {
     label: string
@@ -17,9 +17,21 @@ declare module 'hamburger-react/dist-esm/Burger' {
     margin: number
   }
 
-  interface BurgerProps {
+  interface BurgerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onToggle'> {
+    size?: number
+    color?: string
+    direction?: 'left' | 'right'
+    duration?: number
+    easing?: string
+    label?: string
+    toggled?: boolean
+    toggle?: (toggled: boolean) => void
+    distance?: 'sm' | 'md' | 'lg'
+    hideOutline?: boolean
+    onToggle?: (toggled: boolean) => void
+    rounded?: boolean
+    disabled?: boolean
     render?: (options: RenderOptions) => ReactNode
-    [key: string]: unknown
   }
 
   export const Burger: (props: BurgerProps) => JSX.Element

@@ -1,15 +1,14 @@
-import TextField from '@shared/inputs/TextField'
+import TextField, { TextFieldProps } from '@shared/inputs/TextField'
 import React from 'react'
 
 const digitsOnlyRegex = /^\d+$/
 const getDigitsOnlyWithMaxLengthRegex = (maxLength: number): RegExp =>
   new RegExp(`^\\d{1,${maxLength}}$`)
 
-interface NumbersOnlyTextFieldProps {
+type NumbersOnlyTextFieldProps = Omit<TextFieldProps<'standard'>, 'value' | 'onChange'> & {
   value: string
   onChange: (e: { target: { value: string } }) => void
   maxLength?: number
-  [key: string]: unknown
 }
 
 export const NumbersOnlyTextField = ({

@@ -1,15 +1,14 @@
 'use client'
 
 import H4 from '@shared/typography/H4'
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, HTMLAttributes } from 'react'
 import { FaChevronRight } from 'react-icons/fa'
 
-interface ListItemProps {
+interface ListItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   variant?: 'list' | string
   title: string
   number?: number
   children?: ReactNode
-  [key: string]: unknown
 }
 
 const ListItem = ({

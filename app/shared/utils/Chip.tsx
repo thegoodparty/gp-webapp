@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, HTMLAttributes } from 'react'
 
-interface ChipProps {
+interface ChipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
   children?: ReactNode
   icon?: ReactNode
   label?: string
   className?: string
-  [key: string]: unknown
 }
 
 const Chip = ({ children, icon, label, className = '', ...rest }: ChipProps) => (

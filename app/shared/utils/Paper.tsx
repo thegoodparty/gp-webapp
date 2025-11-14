@@ -1,10 +1,9 @@
 import clsx from 'clsx'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, HTMLAttributes } from 'react'
 
-interface PaperProps {
+interface PaperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
   children?: ReactNode
   className?: string
-  [key: string]: unknown
 }
 
 const Paper = ({ children, className, ...rest }: PaperProps) => (

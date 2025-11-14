@@ -1,9 +1,8 @@
-import { Burger } from 'hamburger-react/dist-esm/Burger'
+import { Burger, BurgerProps } from 'hamburger-react/dist-esm/Burger'
 import { CSSProperties } from 'react'
 
-interface HamburgerProps {
-  disabled?: boolean
-  [key: string]: unknown
+interface HamburgerProps extends BurgerProps {
+  // All BurgerProps are inherited
 }
 
 interface RenderOptions {

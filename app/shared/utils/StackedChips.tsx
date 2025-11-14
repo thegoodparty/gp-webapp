@@ -1,11 +1,10 @@
 import Chip from '@shared/utils/Chip'
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 
-interface StackedChipsProps {
+interface StackedChipsProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'className'> {
   labels: string[]
   className?: string
   onClick?: (labels: string[], e: React.MouseEvent) => void
-  [key: string]: unknown
 }
 
 export const StackedChips = ({
