@@ -55,6 +55,10 @@ export const apiRoutes = {
       path: '/polls/initial-poll',
       method: 'POST',
     },
+    imageUploadUrl: {
+      path: '/polls/image-upload-url',
+      method: 'POST',
+    },
   },
   electedOffice: {
     current: {
