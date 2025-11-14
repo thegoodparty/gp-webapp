@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import ButtonLoading from './ButtonLoading'
-import { forwardRef, ReactNode, Ref } from 'react'
+import { forwardRef, ReactNode, Ref, ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react'
 import clsx from 'clsx'
 
 export const COLOR_CLASSES = {
@@ -79,10 +79,7 @@ export type ButtonColor = keyof typeof COLOR_CLASSES
 export type ButtonVariant = keyof typeof VARIANT_CLASSES
 export type ButtonSize = keyof typeof SIZE_CLASSES
 
-export interface ButtonProps {
-  href?: string
-  target?: string
-  nativeLink?: boolean
+type BaseButtonProps = {
   size?: ButtonSize
   variant?: ButtonVariant
   color?: ButtonColor
@@ -90,8 +87,21 @@ export interface ButtonProps {
   className?: string
   loading?: boolean
   disabled?: boolean
-  [key: string]: unknown
 }
+
+type ButtonAsLink = BaseButtonProps & {
+  href: string
+  target?: string
+  nativeLink?: boolean
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseButtonProps | 'href' | 'target'>
+
+type ButtonAsButton = BaseButtonProps & {
+  href?: never
+  target?: never
+  nativeLink?: never
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>
+
+export type ButtonProps = ButtonAsLink | ButtonAsButton
 
 const Button = (
   {
@@ -129,6 +139,7 @@ const Button = (
   )
 
   if (href && !disabled) {
+    const anchorProps = restProps as AnchorHTMLAttributes<HTMLAnchorElement>
     if (nativeLink) {
       return (
         <a
@@ -136,7 +147,7 @@ const Button = (
           target={target}
           className={compiledClassName}
           ref={ref as Ref<HTMLAnchorElement>}
-          {...restProps}
+          {...anchorProps}
         >
           {children}
         </a>
@@ -148,20 +159,21 @@ const Button = (
         target={target}
         className={compiledClassName}
         ref={ref as Ref<HTMLAnchorElement>}
-        {...restProps}
+        {...anchorProps}
       >
         {children}
       </Link>
     )
   }
 
+  const buttonProps = restProps as ButtonHTMLAttributes<HTMLButtonElement>
   return (
     <button
       type="button"
       className={compiledClassName}
       disabled={disabled}
       ref={ref as Ref<HTMLButtonElement>}
-      {...restProps}
+      {...buttonProps}
     >
       {loading === true && (
         <ButtonLoading size={size} className="align-text-bottom" />
