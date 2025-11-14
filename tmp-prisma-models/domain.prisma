@@ -1,0 +1,23 @@
+enum DomainStatus {
+  pending
+  submitted
+  registered
+  active
+  inactive
+}
+
+model Domain {
+  id                      Int          @id @default(autoincrement())
+  createdAt               DateTime     @default(now()) @map("created_at")
+  updatedAt               DateTime     @updatedAt @map("updated_at")
+  name                    String       @unique
+  websiteId               Int          @unique @map("website_id")
+  website                 Website      @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  status                  DomainStatus @default(pending)
+  operationId             String?      @map("operation_id")
+  price                   Decimal?
+  paymentId               String?      @map("payment_id")
+  emailForwardingDomainId String?      @map("email_forwarding_domain_id")
+
+  @@map("domain")
+}

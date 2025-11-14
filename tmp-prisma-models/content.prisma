@@ -1,0 +1,37 @@
+enum ContentType {
+  aiChatPrompt
+  aiContentCategories
+  aiContentTemplate
+  articleCategory
+  blogArticle
+  blogHome
+  blogSection
+  candidateTestimonial
+  candidateContentPrompts
+  contentPromptsQuestions
+  election
+  faqArticle
+  faqOrder
+  glossaryItem
+  goodPartyTeamMembers
+  onboardingPrompts
+  pledge
+  privacyPage
+  promptInputFields
+  redirects
+  teamMember
+  teamMilestone
+  termsOfService
+}
+
+model Content {
+  createdAt       DateTime?         @default(now()) @map("created_at")
+  updatedAt       DateTime?         @updatedAt @map("updated_at")
+  id              String            @id
+  type            ContentType
+  data            Json              @db.JsonB
+  BlogArticleMeta BlogArticleMeta[]
+
+  @@index([type])
+  @@map("content")
+}

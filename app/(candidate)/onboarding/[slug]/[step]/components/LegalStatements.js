@@ -6,10 +6,7 @@ export const LegalStatements = () => (
       I will abide by a{' '}
       <a
         className="underline"
-        href={`${faqArticleRoute({
-          title: 'what-is-good-partys-minimum-standard-of-civility',
-          id: '66i4vRRLkX1yf8MnCQvYSb',
-        })}`}
+        href={`${faqArticleRoute('what-is-good-partys-minimum-standard-of-civility')}`}
         target="_blank"
       >
         minimum standard of civility

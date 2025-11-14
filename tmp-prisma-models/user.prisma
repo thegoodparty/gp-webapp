@@ -1,0 +1,32 @@
+enum UserRole {
+  admin
+  sales
+  candidate
+  campaignManager
+  demo
+}
+
+model User {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime                @default(now()) @map("created_at")
+  updatedAt             DateTime                @updatedAt @map("updated_at")
+  firstName             String?                 @default("") @map("first_name")
+  lastName              String?                 @default("") @map("last_name")
+  name                  String?
+  avatar                String?
+  password              String?
+  hasPassword           Boolean                 @default(false) @map("has_password")
+  email                 String                  @unique
+  phone                 String?
+  zip                   String?
+  roles                 UserRole[]              @default([])
+  /// [UserMetaData]
+  metaData              Json?                   @map("meta_data") @db.JsonB
+  campaignUpdateHistory CampaignUpdateHistory[]
+  campaigns             Campaign[] //TODO: Pretty sure this is supposed to be a 1-to-1 relation here
+  passwordResetToken    String?                 @map("password_reset_token")
+  aiChats               AiChat[]
+  electedOffices       ElectedOffice[]
+
+  @@map("user")
+}
