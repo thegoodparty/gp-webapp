@@ -12,7 +12,7 @@ interface TabsProps {
   centered?: boolean
   activeTab?: number | false
   color?: string
-  size?: string
+  size?: 'large' | 'medium' | 'small'
   changeCallback?: (newValue: number) => void
 }
 
@@ -68,7 +68,6 @@ const Tabs = ({
                 <SecondaryButton
                   variant="text"
                   size={size}
-                  onClick={() => {}}
                   ariaLabel={label}
                 >
                   <span

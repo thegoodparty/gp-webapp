@@ -1,10 +1,24 @@
 'use client'
+import React, { ReactNode, CSSProperties, MouseEvent, HTMLAttributes } from 'react'
 import ButtonLoading from './ButtonLoading'
 import { setSize } from './PrimaryButton'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
 
-export default function SecondaryButton({
+interface SecondaryButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+  children?: ReactNode
+  className?: Record<string, boolean> | string
+  variant?: 'contained' | 'outlined' | 'text'
+  style?: CSSProperties
+  size?: 'large' | 'medium' | 'small'
+  disabled?: boolean
+  loading?: boolean
+  fullWidth?: boolean
+  ariaLabel?: string
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}
+
+const SecondaryButton = ({
   children,
   className = {},
   variant = 'contained',
@@ -16,11 +30,10 @@ export default function SecondaryButton({
   ariaLabel,
   onClick,
   ...restProps
-}) {
-  let baseClass = {
+}: SecondaryButtonProps) => {
+  const baseClass: Record<string, boolean> = {
     'rounded-lg': true,
     'font-medium': true,
-
     'transition-colors': true,
   }
 
@@ -103,3 +116,6 @@ export default function SecondaryButton({
     </button>
   )
 }
+
+export default SecondaryButton
+
