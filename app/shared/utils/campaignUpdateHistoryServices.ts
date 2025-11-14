@@ -34,7 +34,7 @@ interface CampaignUpdateHistoryWithUser extends CampaignUpdateHistory {
   }
 }
 
-interface CreateCampaignUpdateHistoryPayload extends Record<string, unknown> {
+type CreateCampaignUpdateHistoryPayload = {
   type: CampaignUpdateHistoryType
   quantity: number
 }
