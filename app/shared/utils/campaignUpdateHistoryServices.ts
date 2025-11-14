@@ -16,8 +16,8 @@ interface HistoryItemWithUser extends HistoryItem {
   }
 }
 
-export const deleteUpdateHistory = async (id: number): Promise<unknown> => {
-  const resp = await clientFetch(apiRoutes.campaign.updateHistory.delete, {
+export const deleteUpdateHistory = async (id: number): Promise<HistoryItem> => {
+  const resp = await clientFetch<HistoryItem>(apiRoutes.campaign.updateHistory.delete, {
     id,
   })
   return resp.data
@@ -25,8 +25,8 @@ export const deleteUpdateHistory = async (id: number): Promise<unknown> => {
 
 export const createUpdateHistory = async (
   payload: Record<string, unknown>,
-): Promise<unknown> => {
-  const resp = await clientFetch(
+): Promise<HistoryItem> => {
+  const resp = await clientFetch<HistoryItem>(
     apiRoutes.campaign.updateHistory.create,
     payload,
   )
