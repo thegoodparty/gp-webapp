@@ -1,6 +1,32 @@
 import { AnalyticsBrowser, Analytics } from '@segment/analytics-next'
 import { NEXT_PUBLIC_SEGMENT_WRITE_KEY } from 'appEnv'
 
+interface UserTraits {
+  // Core user info
+  email?: string
+  firstName?: string
+  lastName?: string
+  name?: string
+  phone?: string
+  zip?: string
+  // Candidate onboarding
+  affiliation?: string
+  pledgeCompleted?: boolean
+  officeState?: string
+  officeMunicipality?: string
+  officeName?: string
+  officeElectionDate?: string
+  // Subscription & activation
+  isProSubscriber?: boolean
+  'Serve Activated'?: boolean
+  // Voter outreach tracking
+  voterContacts?: number
+  // UTM parameters (e.g., utm_source, utm_medium, utm_campaign, etc.)
+  // CLID parameters (e.g., gclid, fbclid, etc.)
+  // Allow additional string properties for UTMs and CLIDs
+  [key: string]: string | number | boolean | undefined
+}
+
 export const analytics: Promise<Analytics | null> =
   typeof window !== 'undefined' && NEXT_PUBLIC_SEGMENT_WRITE_KEY
     ? AnalyticsBrowser.load({
@@ -32,8 +58,8 @@ export const getReadyAnalytics = async (): Promise<Analytics | null> => {
 }
 
 export const identifyUser = async (
-  userId?: string | number,
-  traits: Record<string, unknown> = {},
+  userId?: string | number | null,
+  traits: UserTraits = {},
 ): Promise<boolean> => {
   try {
     const analyticsInstance = await getReadyAnalytics()
@@ -56,9 +82,13 @@ export const identifyUser = async (
   }
 }
 
+interface PageProperties {
+  [key: string]: string | number | boolean | undefined
+}
+
 export const trackPage = async (
   name?: string,
-  properties: Record<string, unknown> = {},
+  properties: PageProperties = {},
 ): Promise<boolean> => {
   try {
     const analyticsInstance = await getReadyAnalytics()
