@@ -5,7 +5,7 @@ import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 import { TestDataManager, TestUser } from "../../../src/utils/test-data-manager";
 
-test.describe.skip("Mobile Navigation", () => {
+test.describe("Mobile Navigation", () => {
   let testUser: TestUser;
 
   // Configure mobile viewport
@@ -14,8 +14,8 @@ test.describe.skip("Mobile Navigation", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Create a test account for authenticated tests
-    testUser = await AccountHelper.createTestAccount(page);
+    // Use global test user (with completed onboarding) or create new account
+    testUser = await AccountHelper.useGlobalTestUser(page);
     
     // Navigate to dashboard
     await NavigationHelper.navigateToPage(page, "/dashboard");
