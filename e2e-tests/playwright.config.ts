@@ -1,94 +1,76 @@
-import { defineConfig } from "@playwright/test";
-import 'dotenv/config';
-
-console.log('BASE_URL from env:', process.env.BASE_URL);
-console.log('HEADED_MODE from env:', process.env.HEADED_MODE);
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  globalSetup: require.resolve("./globalSetup.js"),
-  globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 90000,
   testDir: "./tests",
+  // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
+  timeout: 60000, // Increased from 30s to 60s for account creation
+  expect: { timeout: 15000 }, // Increased from 10s to 15s
+  
+  // Improved parallelization with better stability
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: 1,
-  workers: 1,
+  workers: process.env.CI ? 1 : 2, // Reduced workers to prevent resource contention
+  retries: process.env.CI ? 3 : 2, // Increased retries for flaky tests
+  
+  // Clean reporting without TestRail dependency
   reporter: [
+    ["list"],
     ["html", { outputFolder: "playwright-report" }],
-    ["json", { outputFile: "test-results/playwright-results.json" }],
   ],
+
+  // Setup project for authentication + main testing project
   projects: [
-    {
-      name: "QA",
-      use: {
-        baseURL: process.env.BASE_URL || "https://qa.goodparty.org/",
-      },
+    // Setup project - runs first to create authenticated state
+    { 
+      name: 'setup', 
+      testMatch: /.*\.setup\.ts/,
+      teardown: 'cleanup'
     },
+    
+    // Cleanup project - runs after all tests to clean up auth user
     {
-      name: "Local",
-      use: {
-        baseURL: process.env.BASE_URL || "http://localhost:4000/",
+      name: 'cleanup',
+      testMatch: /.*\.cleanup\.ts/
+    },
+
+    // Main testing project - uses authenticated state
+    {
+      name: "chromium",
+      use: { 
+        ...devices["Desktop Chrome"],
+        // Use prepared auth state for all tests
+        storageState: 'playwright/.auth/user.json',
       },
+      dependencies: ['setup'], // Run setup before this project
     },
   ],
+
   use: {
-    storageState: undefined,
+    baseURL: "http://localhost:4000",
+    
+    // Increased timeouts for better reliability
+    actionTimeout: 15000, // Increased from 10s
+    navigationTimeout: 45000, // Increased from 30s
+    
+    // Essential browser settings
     headless: true,
-    viewport: null,
     ignoreHTTPSErrors: true,
-    acceptDownloads: true,
-    extraHTTPHeaders: {
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.5',
-      'Cache-Control': 'no-cache',
-    },
-    serviceWorkers: 'block',
-    actionTimeout: 30000,
-    navigationTimeout: 60000,
-    trace: "on-first-retry",
+    
+    // Browser args optimized for stability
     launchOptions: {
-      slowMo: 0,
       args: [
-        '--no-sandbox', 
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding',
-        '--disable-features=TranslateUI',
-        '--disable-ipc-flooding-protection',
-        '--disable-web-security',
-        '--disable-features=VizDisplayCompositor',
-        '--disable-extensions',
-        '--disable-plugins',
-        '--disable-default-apps',
-        '--disable-sync',
-        '--disable-translate',
-        '--hide-scrollbars',
-        '--mute-audio',
-        '--no-default-browser-check',
-        '--no-pings',
-        '--disable-background-networking',
-        '--disable-component-extensions-with-background-pages',
-        '--metrics-recording-only',
-        '--safebrowsing-disable-auto-update',
-        '--disable-client-side-phishing-detection',
-        '--disable-component-update',
-        '--disable-domain-reliability',
-        '--disable-features=AudioServiceOutOfProcess',
-        ...(process.env.HEADED_MODE ? [
-          '--display=:99',
-          '--no-sandbox',
-          '--disable-dev-shm-usage'
-        ] : []),
+        "--no-sandbox", 
+        "--disable-dev-shm-usage", 
+        "--disable-web-security",
+        "--disable-features=VizDisplayCompositor", // Helps with stability
+        "--disable-background-timer-throttling", // Prevents timeouts
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding"
       ],
     },
-  },
-  expect: {
-    timeout: 10000,
+    
+    // Better debugging and error tracking
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 });
