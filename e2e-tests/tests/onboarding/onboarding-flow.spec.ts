@@ -3,6 +3,9 @@ import { TestDataHelper } from "../../src/helpers/data.helper";
 import { NavigationHelper } from "../../src/helpers/navigation.helper";
 import { TestUser } from "../../src/utils/test-data-manager";
 
+// Reset storage state for onboarding tests since they create their own users
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe("Onboarding Flow", () => {
   let testUser: TestUser;
 

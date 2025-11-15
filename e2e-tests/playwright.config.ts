@@ -2,8 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
-  globalSetup: require.resolve("./globalSetup.js"),
-  globalTeardown: require.resolve("./globalTeardown.js"),
+  // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
   timeout: 60000, // Increased from 30s to 60s for account creation
   expect: { timeout: 15000 }, // Increased from 10s to 15s
   
@@ -18,11 +17,30 @@ export default defineConfig({
     ["html", { outputFolder: "playwright-report" }],
   ],
 
-  // Single project for now
+  // Setup project for authentication + main testing project
   projects: [
+    // Setup project - runs first to create authenticated state
+    { 
+      name: 'setup', 
+      testMatch: /.*\.setup\.ts/,
+      teardown: 'cleanup'
+    },
+    
+    // Cleanup project - runs after all tests to clean up auth user
+    {
+      name: 'cleanup',
+      testMatch: /.*\.cleanup\.ts/
+    },
+
+    // Main testing project - uses authenticated state
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        // Use prepared auth state for all tests
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'], // Run setup before this project
     },
   ],
 

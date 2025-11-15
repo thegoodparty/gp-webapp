@@ -4,6 +4,9 @@ import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
+// Reset storage state for auth tests to avoid being pre-authenticated
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe("Registration Functionality", () => {
   test.beforeEach(async ({ page }) => {
     await NavigationHelper.navigateToPage(page, "/sign-up");

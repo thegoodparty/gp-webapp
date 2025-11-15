@@ -1,32 +1,75 @@
 import { test, expect } from "@playwright/test";
-import { OnboardedUserHelper } from "../../../src/helpers/onboarded-user.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
-import { TestUser } from "../../../src/utils/test-data-manager";
 
 test.describe("AI Assistant", () => {
-  let testUser: TestUser;
-
   test.beforeEach(async ({ page }) => {
-    // Use a pre-onboarded user from global setup, or create one
-    const globalUserEmail = process.env.GLOBAL_TEST_USER_EMAIL;
-    const globalUserPassword = process.env.GLOBAL_TEST_USER_PASSWORD;
+    // Page is already authenticated via storageState from auth.setup.ts
+    // Navigate to dashboard, but handle onboarding if needed
+    await page.goto('/dashboard');
+    await page.waitForLoadState('domcontentloaded');
     
-    if (globalUserEmail && globalUserPassword) {
-      testUser = {
-        email: globalUserEmail,
-        password: globalUserPassword,
-        firstName: process.env.GLOBAL_TEST_USER_FIRST_NAME || 'Global',
-        lastName: process.env.GLOBAL_TEST_USER_LAST_NAME || 'User',
-        phone: '5105551234',
-        zipCode: '28739'
-      };
+    // If we're redirected to onboarding, complete it using our working test logic
+    if (page.url().includes('/onboarding/')) {
+      console.log('🚀 Completing onboarding to reach dashboard...');
       
-      console.log(`🌍 Using global onboarded user: ${testUser.email}`);
-      await OnboardedUserHelper.loginWithOnboardedUser(page, testUser);
-    } else {
-      console.log("⚠️ No global user available, creating onboarded user...");
-      testUser = await OnboardedUserHelper.createOnboardedUser(page);
+      // Use the exact working logic from our successful onboarding test
+      // Step 1: Office Selection
+      if (page.url().includes('/1')) {
+        const zipField = page.getByLabel("Zip Code");
+        await zipField.fill("28739");
+        
+        const levelSelect = page.getByLabel("Office Level");
+        if (await levelSelect.isVisible({ timeout: 3000 })) {
+          await levelSelect.selectOption({ index: 1 });
+          await page.waitForLoadState('networkidle', { timeout: 15000 });
+          
+          await page.waitForFunction(() => {
+            const text = document.body.textContent || '';
+            return text.includes('offices found') || text.includes('office found');
+          }, { timeout: 20000 });
+          
+          const officeButtons = page.getByRole("button").filter({ 
+            hasText: /Council|Mayor|Board|Commission|Village|County|Flat Rock|Henderson/ 
+          });
+          
+          if (await officeButtons.count() > 0) {
+            await officeButtons.first().click();
+            await page.waitForTimeout(2000);
+            
+            const nextButton = page.getByRole("button", { name: "Next" }).first();
+            await nextButton.click();
+            await page.waitForURL(url => url.toString().includes('/2'), { timeout: 15000 });
+          }
+        }
+      }
+      
+      // Step 2: Party Selection
+      if (page.url().includes('/2')) {
+        const otherLabel = page.getByLabel("Other");
+        if (await otherLabel.isVisible({ timeout: 3000 })) {
+          await otherLabel.fill("Independent");
+          await page.waitForTimeout(2000);
+          
+          const nextButton = page.getByRole("button", { name: "Next" }).first();
+          await nextButton.click({ force: true });
+          await page.waitForURL(url => url.toString().includes('/3'), { timeout: 15000 });
+        }
+      }
+      
+      // Step 3: Pledge Agreement
+      if (page.url().includes('/3')) {
+        const agreeButton = page.getByRole("button", { name: "I Agree" });
+        await agreeButton.click();
+        await page.waitForURL(url => url.toString().includes('/4'), { timeout: 15000 });
+      }
+      
+      // Step 4: Complete Onboarding
+      if (page.url().includes('/4')) {
+        const viewDashboardButton = page.getByRole("button", { name: "View Dashboard" });
+        await viewDashboardButton.click();
+        await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+      }
     }
     
     // Dismiss any overlays
@@ -34,7 +77,7 @@ test.describe("AI Assistant", () => {
   });
 
   test("should access AI Assistant with authenticated user", async ({ page }) => {
-    console.log(`🧪 Testing AI Assistant with: ${testUser.email}`);
+    console.log(`🧪 Testing AI Assistant with authenticated user`);
       
       // Navigate to AI Assistant
       await page.goto('/dashboard/campaign-assistant');
@@ -51,20 +94,5 @@ test.describe("AI Assistant", () => {
         console.log(`✅ AI Assistant working - ${buttonCount} topics available`);
       }
       
-  });
-
-  test.afterEach(async ({ page }) => {
-    // Only cleanup if we created a new user (not the global user)
-    const isGlobalUser = testUser.email === process.env.GLOBAL_TEST_USER_EMAIL;
-    if (!isGlobalUser) {
-      console.log("🗑️ Cleaning up onboarded test user...");
-      try {
-        await OnboardedUserHelper.deleteOnboardedUser(page);
-      } catch (error) {
-        console.warn("⚠️ Failed to cleanup test user:", error.message);
-      }
-    } else {
-      console.log("🌍 Preserving global onboarded user for other tests");
-    }
   });
 });
