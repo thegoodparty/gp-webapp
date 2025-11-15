@@ -1,23 +1,23 @@
 import { test, expect } from "@playwright/test";
-import { SharedTestUserManager } from "../../../src/utils/shared-test-user.js";
+import { AccountHelper } from "../../../src/helpers/account.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
+import { TestUser } from "../../../src/utils/test-data-manager";
 
 test.describe("Profile Management", () => {
+  let testUser: TestUser;
+
   test.beforeEach(async ({ page }) => {
-    // Skip if no shared test user available
-    if (!SharedTestUserManager.hasValidSharedUser()) {
-      test.skip(true, "No shared test user available - run global setup first");
-    }
-    
-    // Login with shared test user
-    await SharedTestUserManager.loginWithSharedUser(page);
+    // Create a properly configured test account with full onboarding
+    testUser = await AccountHelper.createTestAccount(page);
     await NavigationHelper.dismissOverlays(page);
   });
 
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+    await CleanupHelper.clearBrowserData(page);
+    await CleanupHelper.cleanupTestData(page);
   });
 
   test("should access profile page", async ({ page }) => {
