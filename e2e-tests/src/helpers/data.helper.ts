@@ -1,15 +1,34 @@
+import { TestDataManager } from "../utils/test-data-manager";
+
 export class TestDataHelper {
+  /**
+   * Generate test user data (does NOT create actual user)
+   * Use this for form validation tests that don't submit
+   */
+  static generateTestUser() {
+    return TestDataManager.generateTestUserData();
+  }
+
+  /**
+   * Generate safe test email that won't conflict
+   */
   static generateTestEmail(): string {
     const timestamp = Date.now();
     const env = process.env.NODE_ENV || "local";
     return `test-${timestamp}@${env}.example.com`;
   }
 
+  /**
+   * Generate test phone number
+   */
   static generateTestPhone(): string {
     const timestamp = Date.now().toString().slice(-6);
     return `5105${timestamp}`;
   }
 
+  /**
+   * Generate timestamp string
+   */
   static generateTimestamp(): string {
     const now = new Date();
     const month = `${now.getMonth() + 1}`.padStart(2, "0");
@@ -20,17 +39,9 @@ export class TestDataHelper {
     return `${month}${day}${hours}${minutes}${seconds}`;
   }
 
-  static generateTestUser() {
-    return {
-      firstName: `Test${this.generateTimestamp()}`,
-      lastName: "User",
-      email: this.generateTestEmail(),
-      phone: this.generateTestPhone(),
-      password: "TestPassword123!",
-      zipCode: "82901",
-    };
-  }
-
+  /**
+   * Generate website URL for testing
+   */
   static generateWebsiteUrl(): string {
     const timestamp = this.generateTimestamp();
     return `test-website-${timestamp}`;
