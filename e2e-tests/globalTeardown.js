@@ -1,31 +1,18 @@
-import * as fs from 'fs';
-import path from 'path';
-import "dotenv/config";
-import { checkForTestFailures, reportSkippedTests } from './helpers/testrailHelper';
-import { cleanupSession } from "./helpers/accountHelpers";
+import { chromium } from "@playwright/test";
+import { TestDataManager } from "./src/utils/test-data-manager";
 
-
-const filePath = path.join(__dirname, 'testRunId.txt');
-
-module.exports = async () => {
-    try {
-        await cleanupSession();
-        
-        console.log('Reporting skipped tests...');
-        await reportSkippedTests();
-        
-        console.log('Running checkForTestFailures...');
-        await checkForTestFailures();
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-            console.log('Deleted existing testRunId.txt file.');
-        }
-
-        fs.writeFileSync(filePath, '', 'utf8');
-        console.log('Created an empty testRunId.txt file for the next test run.');
-    } catch (error) {
-        console.error('Error during global teardown:', error.message);
-        process.exit(1);
-    }
-};
+export default async function globalTeardown() {
+  console.log("🧹 Starting test suite cleanup...");
+  
+  // Create a browser context for cleanup operations
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  try {
+    await TestDataManager.cleanup(page);
+  } finally {
+    await browser.close();
+  }
+  
+  console.log("✅ Global teardown completed successfully");
+}
