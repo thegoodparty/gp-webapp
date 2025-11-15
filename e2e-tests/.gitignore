@@ -13,4 +13,4 @@ playwright-results.json
 testRunId.txt
 reported-test-cases.json
 admin-session-error.png
-docs/playwright/.auth
+playwright/.auth
