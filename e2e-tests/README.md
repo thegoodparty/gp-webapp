@@ -32,7 +32,7 @@ npx playwright install
 ```bash
 npm test                # Run all tests (includes setup/cleanup)
 npm run test:core       # Core functionality tests
-npm run test:app        # Application feature tests  
+npm run test:app        # Application feature tests
 npm run test:system     # System tests (sitemaps)
 
 # Test specific areas
@@ -68,28 +68,6 @@ test-automation/
 │   └── utils/                    # Test data management
 └── docs/                         # Documentation
 ```
-
-## 🧪 Test Categories
-
-### Authentication & Setup
-- **`auth.setup.ts`** - Creates authenticated user and saves browser state
-- **`auth.cleanup.ts`** - Cleans up authentication user after all tests
-
-### Onboarding Tests (2 tests)
-- **Full Onboarding Flow** - Complete 4-step onboarding process
-- **Office Selection Validation** - Step 1 form validation testing
-
-### Core Tests (~40 tests)
-- **Authentication** - Login/signup form validation (no auth required)
-- **Navigation** - Dropdown menus, page navigation (public pages)
-- **Resource Pages** - Homepage, blog, campaign tools, volunteer, elections
-- **System Tests** - Sitemap accessibility and validation
-
-### App Tests (~8 tests) - Pre-authenticated
-- **AI Assistant** - Conversation interface testing
-- **Content Builder** - Content generation tools
-- **Profile Management** - User profile functionality
-- **Mobile Navigation** - Mobile-responsive dashboard navigation
 
 ## 🎯 Modern Patterns & Best Practices
 
@@ -141,6 +119,7 @@ test.afterEach(async ({ page }, testInfo) => {
 Tests automatically adapt to different environments:
 
 - **Local**: `http://localhost:4000`
+- **DEV**: `https://dev.goodparty.org`
 - **QA**: `https://qa.goodparty.org`
 - **Production**: `https://goodparty.org`
 
@@ -160,10 +139,10 @@ Following [Playwright's authentication recommendations](https://playwright.dev/d
 
 ```typescript
 // Setup project creates authenticated state once
-setup('authenticate with onboarded user', async ({ page }) => {
+setup("authenticate with onboarded user", async ({ page }) => {
   // Create user and complete onboarding
   const user = await createUserWithOnboarding(page);
-  
+
   // Save authenticated browser state
   await page.context().storageState({ path: authFile });
 });
@@ -193,7 +172,7 @@ test.describe("AI Assistant", () => {
 // 🌐 No authentication tests (public pages)
 test.use({ storageState: { cookies: [], origins: [] } });
 test.describe("Login Functionality", () => {
-  // Resets auth state - starts unauthenticated  
+  // Resets auth state - starts unauthenticated
 });
 
 // 🚀 Custom authentication tests (onboarding)
@@ -201,31 +180,6 @@ test.describe("Onboarding Flow", () => {
   // Creates own users to test the onboarding process
 });
 ```
-
-## 📊 Performance & Reliability
-
-### Execution Times (After Optimization)
-
-- **Setup Project**: ~4 seconds (one-time authentication)
-- **Individual App Test**: 4-8 seconds (pre-authenticated)
-- **Individual Core Test**: 2-3 seconds (no authentication)
-- **Full Suite**: ~4 minutes for 65+ tests with comprehensive coverage
-
-### Reliability Improvements
-
-- **✅ 57 Passed Tests** (up from ~49)
-- **❌ 1 Failed Test** (down from 3)
-- **⚠️ 1 Flaky Test** (down from 3)  
-- **⏭️ 6 Skipped Tests** (down from 11)
-- **🚀 Onboarding Flow**: 100% working (was completely broken)
-
-### Key Achievements
-
-- **Fixed "browser context closed" errors** ✅
-- **Eliminated form validation timeouts** ✅
-- **Resolved module import issues** ✅
-- **Implemented proper onboarding flow** ✅
-- **Following Playwright authentication best practices** ✅
 
 ## 🚨 Anti-Patterns Avoided
 
@@ -261,34 +215,12 @@ await expect(element).toBeVisible();
 await page.getByLabel("Email").fill("test@example.com");
 ```
 
-## 🚀 Onboarding Flow Testing
-
-### Dedicated Onboarding Tests
-
-The onboarding flow is now properly tested as a separate feature:
-
-```typescript
-// tests/onboarding/onboarding-flow.spec.ts
-test("should complete full onboarding flow from signup to dashboard", async ({ page }) => {
-  // Step 1: Office Selection - Tests zip code, office level, and office selection
-  // Step 2: Party Selection - Tests party affiliation input
-  // Step 3: Pledge Agreement - Tests pledge acceptance
-  // Step 4: Complete Onboarding - Tests final dashboard redirect
-});
-```
-
-### Onboarding Requirements
-
-- **Office Selection**: Must select an office to proceed (validates business requirement)
-- **Party Affiliation**: Must fill "Other" field with party (e.g., "Independent")
-- **Pledge Agreement**: Must accept pledge to continue
-- **Dashboard Access**: Only available after completing all onboarding steps
-
 ## 🔍 Debugging
 
 ### Screenshots & Videos
 
 Failed tests automatically capture:
+
 - Screenshots in `test-results/` directory
 - Videos for visual debugging
 - Traces for detailed step-by-step analysis
@@ -323,6 +255,7 @@ ls -la playwright/.auth/
 ### Common Issues
 
 **"Tests are failing with authentication errors"**
+
 ```bash
 # Delete auth state and let setup recreate it
 rm -rf playwright/.auth/
@@ -330,34 +263,21 @@ npm test
 ```
 
 **"Onboarding tests are stuck"**
+
 - Ensure your local server is running on `localhost:4000`
 - Check that zip code `28739` has office data in your test environment
 - Verify the "Office Level" dropdown has selectable options
 
 **"Tests are slow"**
+
 - Pre-authenticated tests should be 4-8 seconds
 - If slower, check if onboarding completion is running unnecessarily
 - Use `--reporter=list` for faster feedback
 
 **"Browser context closed errors"**
+
 - These should be eliminated with the new architecture
 - If they occur, check server stability and network connectivity
-
-## 🚀 CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-- name: Run Tests
-  run: npm test
-
-- name: Upload Test Results
-  uses: actions/upload-artifact@v3
-  if: always()
-  with:
-    name: test-results
-    path: test-results/
-```
 
 ### Performance Optimizations
 
@@ -365,36 +285,20 @@ npm test
 - **Browser optimization** - Install only needed browsers
 - **Trace on failures** - Detailed debugging without performance cost
 
-## 📚 Documentation
-
-- **[Cursor Rules](.cursor/rules)** - Development guidelines and patterns
-- **[Test Plan](docs/TEST_REFACTORING_PLAN.md)** - Migration strategy and implementation
-- **[Review](docs/TEST_AUTOMATION_REVIEW.md)** - Original issues and solutions
-- **[Final Summary](docs/FINAL_SUMMARY.md)** - Complete transformation results
-
-## 🎯 Key Features
-
-- **🔥 Fast** - Sub-minute execution for comprehensive testing
-- **🛡️ Reliable** - 100% pass rate, no flaky tests
-- **🧹 Clean** - Modern architecture, no anti-patterns
-- **🔧 Maintainable** - Easy to understand and extend
-- **🚀 Scalable** - Ready for team collaboration and CI/CD
-- **🌐 Cross-browser** - Works across all major browsers
-- **📱 Mobile-ready** - Responsive design testing included
-
 ## 🤝 Contributing
 
 When adding new tests:
 
 ### For Dashboard/App Features (Pre-authenticated)
+
 ```typescript
 test.describe("New Feature", () => {
   test.beforeEach(async ({ page }) => {
     // Page starts authenticated via storageState
-    await page.goto('/dashboard');
+    await page.goto("/dashboard");
     // Complete onboarding if redirected (rare)
   });
-  
+
   test("should test feature", async ({ page }) => {
     // Test your feature - user is already logged in
   });
@@ -402,6 +306,7 @@ test.describe("New Feature", () => {
 ```
 
 ### For Public Pages (No Authentication)
+
 ```typescript
 // Reset storage state to start unauthenticated
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -414,6 +319,7 @@ test.describe("Public Feature", () => {
 ```
 
 ### For Onboarding/Registration (Custom Auth)
+
 ```typescript
 // Reset storage state and create own users
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -432,7 +338,3 @@ test.describe("Registration Flow", () => {
 3. **Never use hardcoded waits** (`waitForTimeout`)
 4. **Test user behavior**, not implementation details
 5. **Follow authentication patterns** based on test type
-
-## 📞 Support
-
-For questions about test patterns, debugging, or extending the test suite, refer to the comprehensive documentation in the `docs/` directory or check the Cursor rules for development guidelines.
