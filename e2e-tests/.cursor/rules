@@ -586,6 +586,29 @@ test.describe("User Authentication", () => {
 
 ---
 
+### Visibility Checks with Timeout
+
+// ❌ BAD: isVisible() does not accept timeout parameter
+if (await locator.isVisible({ timeout: 3000 })) {
+// This timeout is silently ignored!
+}
+
+// ✅ GOOD: Use waitFor with try-catch for conditional logic
+try {
+await locator.waitFor({ state: "visible", timeout: 3000 });
+await locator.fill("value");
+} catch (error) {
+// Handle when element isn't visible
+}
+
+// ✅ GOOD: Use expect with timeout for assertions
+await expect(locator).toBeVisible({ timeout: 5000 });
+
+// ✅ GOOD: For simple existence checks without timeout
+if (await locator.isVisible()) {
+// No timeout needed - immediate check
+}
+
 ## 🎯 Remember
 
 **The goal is reliable, maintainable tests that provide fast feedback and catch real issues. Every pattern in this document serves that purpose. When in doubt, choose simplicity over complexity, and state-based waiting over hardcoded delays.**
