@@ -1,23 +1,19 @@
 import { test, expect } from "@playwright/test";
-import { AccountHelper } from "../../../src/helpers/account.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
-import { TestUser } from "../../../src/utils/test-data-manager";
 
 test.describe("Profile Management", () => {
-  let testUser: TestUser;
-
   test.beforeEach(async ({ page }) => {
-    // Use global test user (with completed onboarding) or create new account
-    testUser = await AccountHelper.useGlobalTestUser(page);
+    // Page is already authenticated via storageState from auth.setup.ts
+    await page.goto('/dashboard');
+    await page.waitForLoadState('domcontentloaded');
     await NavigationHelper.dismissOverlays(page);
   });
 
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
     await CleanupHelper.clearBrowserData(page);
-    await CleanupHelper.cleanupTestData(page);
   });
 
   test("should access profile page", async ({ page }) => {

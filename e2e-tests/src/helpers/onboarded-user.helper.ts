@@ -109,23 +109,30 @@ export class OnboardedUserHelper {
           return text.includes('offices found') || text.includes('office found');
         }, { timeout: 20000 });
         
-        // Select first office
+        // Select first office using the working approach from globalSetup
+        console.log("🔍 Looking for office selection elements...");
+        
+        // Method 1: Radio buttons (most likely based on screenshots)
         const officeRadios = page.locator('input[type="radio"]');
         const radioCount = await officeRadios.count();
-        
+        console.log(`📻 Found ${radioCount} radio buttons`);
+
         if (radioCount > 0) {
           await officeRadios.first().click();
-          console.log("✅ Selected office via radio button");
+          console.log("✅ Selected first office via radio button");
+          await page.waitForTimeout(2000);
         } else {
-          // Fallback to office buttons
-          const officeButtons = page.getByRole("button").filter({ 
-            hasText: /Council|Mayor|Board|Commission|Village|County|Flat Rock|Henderson/ 
-          });
+          // Method 2: Look for office buttons (this is what's working)
+          const officeButtons = page
+            .getByRole("button")
+            .filter({ hasText: /Council|Mayor|Board|Commission|Village|County|Flat Rock|Henderson/ });
           const buttonCount = await officeButtons.count();
-          
+          console.log(`🔘 Found ${buttonCount} office buttons`);
+
           if (buttonCount > 0) {
             await officeButtons.first().click();
             console.log("✅ Selected office via button");
+            await page.waitForTimeout(2000);
           } else {
             throw new Error("No office selection elements found");
           }
@@ -151,28 +158,35 @@ export class OnboardedUserHelper {
   }
   
   private static async completePartySelection(page: Page): Promise<void> {
+    console.log("🎭 Step 2: Party Selection");
+
+    // Use the working approach from globalSetup
     let partySelected = false;
     
-    // Method 1: Look for "Other" input field
+    // Method 1: Look for "Other" input field (this is working)
     const otherLabel = page.getByLabel("Other");
     if (await otherLabel.isVisible({ timeout: 3000 })) {
       await otherLabel.fill("Independent");
       partySelected = true;
-      console.log("✅ Filled 'Other' party field");
-    } else {
-      // Method 2: Look for any text input
-      const textInputs = page.locator('input[type="text"]');
-      const inputCount = await textInputs.count();
+      console.log("✅ Filled 'Other' party field with 'Independent'");
+    }
+    
+    if (!partySelected) {
+      // Method 2: Look for any text input field
+      const allInputs = page.locator('input[type="text"]');
+      const inputCount = await allInputs.count();
+      console.log(`🔍 Found ${inputCount} text input fields`);
       
       for (let i = 0; i < inputCount; i++) {
         try {
-          const input = textInputs.nth(i);
+          const input = allInputs.nth(i);
           await input.fill("Independent");
+          await page.waitForTimeout(500);
           
           const value = await input.inputValue();
           if (value === "Independent") {
             partySelected = true;
-            console.log(`✅ Filled party input field ${i}`);
+            console.log(`✅ Successfully filled input field ${i} with party affiliation`);
             break;
           }
         } catch (error) {
@@ -192,10 +206,15 @@ export class OnboardedUserHelper {
     const nextButton = page.getByRole("button", { name: "Next" }).first();
     await nextButton.waitFor({ state: "visible", timeout: 5000 });
     
-    // Force click if disabled (sometimes the validation is slow)
-    try {
+    // Check if button is enabled
+    const isEnabled = await nextButton.isEnabled();
+    console.log(`➡️ Next button enabled: ${isEnabled}`);
+    
+    if (isEnabled) {
       await nextButton.click();
-    } catch (error) {
+      console.log("✅ Clicked Next button for Step 2");
+    } else {
+      console.warn("⚠️ Next button is disabled, trying force click");
       await nextButton.click({ force: true });
     }
     
