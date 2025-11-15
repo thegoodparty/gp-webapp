@@ -6,7 +6,7 @@
   "scripts": {
     "test:local": "npx playwright test --project=Local",
     "test:qa": "npx playwright test --project=QA",
-    "test": "npx playwright test tests/ --config=playwright.config.simple.ts"
+    "test": "npx playwright test tests/ --reporter=list"
   },
   "keywords": [],
   "author": "",
