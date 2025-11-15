@@ -90,11 +90,21 @@ export class TestDataManager {
                 await officeButtons.first().click();
                 console.log("✅ Selected first available office");
               } else {
-                // Try any button that might be an office selection
-                const anyOfficeButton = page.locator('button').filter({ hasText: /Town|City|County/ });
-                if (await anyOfficeButton.count() > 0) {
-                  await anyOfficeButton.first().click();
-                  console.log("✅ Selected office option");
+                // Look for radio button inputs for office selection
+                const officeRadios = page.locator('input[type="radio"]');
+                const radioCount = await officeRadios.count();
+
+                if (radioCount > 0) {
+                  await officeRadios.first().click();
+                  console.log("✅ Selected first office via radio button");
+                  await page.waitForTimeout(1000);
+                } else {
+                  // Try any button that might be an office selection
+                  const anyOfficeButton = page.locator('button').filter({ hasText: /Town|City|County|Village|Council/ });
+                  if (await anyOfficeButton.count() > 0) {
+                    await anyOfficeButton.first().click();
+                    console.log("✅ Selected office option");
+                  }
                 }
               }
             }
@@ -299,45 +309,80 @@ export class TestDataManager {
     
     console.log(`📝 Creating and tracking test user: ${userData.email}`);
     
-    // Navigate to signup and create account
-    await page.goto("/sign-up");
-    await page.waitForLoadState("domcontentloaded");
-    
-    // Fill registration form
-    await page.getByRole("textbox", { name: "First Name" }).fill(userData.firstName);
-    await page.getByRole("textbox", { name: "Last Name" }).fill(userData.lastName);
-    await page.getByRole("textbox", { name: "email" }).fill(userData.email);
-    await page.getByRole("textbox", { name: "phone" }).fill(userData.phone);
-    await page.getByRole("textbox", { name: "Zip Code" }).fill(userData.zipCode);
-    await page.getByPlaceholder("Please don't use your dog's name").fill(userData.password);
-    
-    // Submit form
-    const joinButton = page.getByRole("button", { name: "Join" });
-    await joinButton.waitFor({ state: "visible", timeout: 10000 });
-    await joinButton.click();
-    
-    // Wait for successful registration - could go to onboarding flow
     try {
-      // First, wait for any navigation away from sign-up
-      await page.waitForURL(url => !url.toString().includes('/sign-up'), { timeout: 30000 });
+      // Navigate to signup and create account
+      await page.goto("/sign-up", { waitUntil: 'domcontentloaded' });
       
-      // If we're in onboarding, bypass it by going directly to dashboard
-      if (page.url().includes('/onboarding/')) {
-        console.log("🚀 Bypassing onboarding, navigating directly to dashboard...");
-        await page.goto('/dashboard');
-        await page.waitForLoadState('domcontentloaded');
+      // Fill registration form with better error handling
+      await page.getByRole("textbox", { name: "First Name" }).fill(userData.firstName);
+      await page.getByRole("textbox", { name: "Last Name" }).fill(userData.lastName);
+      await page.getByRole("textbox", { name: "email" }).fill(userData.email);
+      await page.getByRole("textbox", { name: "phone" }).fill(userData.phone);
+      await page.getByRole("textbox", { name: "Zip Code" }).fill(userData.zipCode);
+      await page.getByPlaceholder("Please don't use your dog's name").fill(userData.password);
+      
+      // Submit form with better waiting
+      const joinButton = page.getByRole("button", { name: "Join" });
+      await joinButton.waitFor({ state: "visible", timeout: 15000 });
+      
+      // Wait for form validation to complete (with fallback)
+      try {
+        await page.waitForFunction(() => {
+          const button = document.querySelector('button[type="submit"]') as HTMLButtonElement;
+          return button && !button.disabled;
+        }, { timeout: 5000 });
+      } catch (error) {
+        console.warn("⚠️ Form validation wait timed out, proceeding anyway");
       }
       
-      // Ensure we end up at dashboard
-      if (!page.url().includes('/dashboard')) {
-        await page.goto('/dashboard');
-        await page.waitForLoadState('domcontentloaded');
+      await joinButton.click();
+      
+      // Wait for successful registration with better error handling
+      await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
+        timeout: 45000,
+        waitUntil: 'domcontentloaded'
+      });
+      
+      // Handle post-registration navigation more reliably
+      const currentUrl = page.url();
+      
+      if (currentUrl.includes('/onboarding/')) {
+        console.log("🚀 Detected onboarding flow, completing it...");
+        await this.completeOnboarding(page);
+      } else if (!currentUrl.includes('/dashboard')) {
+        console.log("🏠 Navigating to dashboard...");
+        await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
       }
+      
+      // Verify we're successfully logged in
+      await page.waitForSelector('[data-testid="dashboard"], .dashboard, h1', { timeout: 15000 });
+      
     } catch (error) {
-      console.warn("Registration flow issue:", error.message);
-      // Try to navigate to dashboard directly
-      await page.goto('/dashboard');
-      await page.waitForLoadState('domcontentloaded');
+      console.error(`❌ Account creation failed for ${userData.email}:`, error.message);
+      
+      // Check for common error conditions
+      if (error.message.includes('Target page, context or browser has been closed')) {
+        throw new Error('Browser context was closed during account creation. This may indicate a server error or network issue.');
+      }
+      
+      if (error.message.includes('Timeout')) {
+        // Try to get more context about what went wrong
+        const currentUrl = page.url();
+        console.error(`Current URL when timeout occurred: ${currentUrl}`);
+        
+        // Check for error messages on the page
+        try {
+          const errorMessages = await page.locator('[role="alert"], .error, .invalid').count();
+          if (errorMessages > 0) {
+            const errorText = await page.locator('[role="alert"], .error, .invalid').first().textContent();
+            throw new Error(`Account creation failed with error: ${errorText}`);
+          }
+        } catch (e) {
+          // Ignore errors when checking for error messages
+        }
+      }
+      
+      throw error;
     }
     
     return userData;

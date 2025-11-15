@@ -9,8 +9,8 @@ test.describe("Content Builder", () => {
   let testUser: TestUser;
 
   test.beforeEach(async ({ page }) => {
-    // Create a properly configured test account with full onboarding
-    testUser = await AccountHelper.createTestAccount(page);
+    // Use global test user (with completed onboarding) or create new account
+    testUser = await AccountHelper.useGlobalTestUser(page);
     await NavigationHelper.dismissOverlays(page);
   });
 
