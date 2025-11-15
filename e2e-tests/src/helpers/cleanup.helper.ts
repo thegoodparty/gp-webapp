@@ -12,10 +12,9 @@ export class CleanupHelper {
     }
   }
 
-  static async cleanupTestData(): Promise<void> {
-    // Placeholder for test data cleanup
-    // This would typically clean up any test data created during the test
-    console.log("Cleaning up test data...");
+  static async cleanupTestData(page?: Page): Promise<void> {
+    const { TestDataManager } = await import("../utils/test-data-manager");
+    await TestDataManager.cleanup(page);
   }
 
   static async clearBrowserData(page: Page): Promise<void> {

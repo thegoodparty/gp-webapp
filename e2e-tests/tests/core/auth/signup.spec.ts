@@ -3,6 +3,7 @@ import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
+import { TestDataManager } from "../../../src/utils/test-data-manager";
 
 test.describe("Registration Functionality", () => {
   test.beforeEach(async ({ page }) => {
@@ -13,6 +14,7 @@ test.describe("Registration Functionality", () => {
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
     await CleanupHelper.clearBrowserData(page);
+    await CleanupHelper.cleanupTestData(page); // Pass page for account deletion
   });
 
   test("should display registration form elements", async ({ page }) => {
