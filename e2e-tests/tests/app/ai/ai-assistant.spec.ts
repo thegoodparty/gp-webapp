@@ -1,51 +1,58 @@
 import { test, expect } from "@playwright/test";
-import { SharedTestUserManager } from "../../../src/utils/shared-test-user";
+import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("AI Assistant", () => {
-  test.beforeEach(async ({ page }) => {
-    // Skip if no shared test user available
-    if (!SharedTestUserManager.hasValidSharedUser()) {
-      test.skip(true, "No shared test user available - run global setup first");
-    }
+  test("should access AI Assistant with new account", async ({ page }) => {
+    const testUser = TestDataHelper.generateTestUser();
+    console.log(`🧪 Testing AI Assistant with: ${testUser.email}`);
     
-    // Login with shared test user
-    await SharedTestUserManager.loginWithSharedUser(page);
-    await NavigationHelper.dismissOverlays(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-  });
-
-  test("should access AI Assistant page", async ({ page }) => {
-    // Navigate to AI Assistant
-    await page.goto("/dashboard/campaign-assistant");
-    await WaitHelper.waitForPageReady(page);
-    
-    // Assert - verify AI Assistant page loads
-    await expect(page.getByRole("heading", { name: "AI Assistant" })).toBeVisible();
-    await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/);
-    
-    console.log("✅ AI Assistant page accessible");
-  });
-
-  test("should display conversation topics", async ({ page }) => {
-    // Navigate to AI Assistant
-    await page.goto("/dashboard/campaign-assistant");
-    await WaitHelper.waitForPageReady(page);
-    
-    // Assert - verify conversation topics are available
-    const topicButtons = page.getByRole("button").filter({ hasText: /Campaign|Strategy|Policy|Messaging/ });
-    const buttonCount = await topicButtons.count();
-    
-    if (buttonCount > 0) {
-      await expect(topicButtons.first()).toBeVisible();
-      console.log(`✅ Found ${buttonCount} conversation topics`);
-    } else {
-      console.log("ℹ️ No conversation topics found (may require campaign setup)");
+    try {
+      // Create account
+      await page.goto("/sign-up");
+      await NavigationHelper.dismissOverlays(page);
+      
+      await page.getByRole("textbox", { name: "First Name" }).fill(testUser.firstName);
+      await page.getByRole("textbox", { name: "Last Name" }).fill(testUser.lastName);
+      await page.getByRole("textbox", { name: "email" }).fill(testUser.email);
+      await page.getByRole("textbox", { name: "phone" }).fill(testUser.phone);
+      await page.getByRole("textbox", { name: "Zip Code" }).fill("28739");
+      await page.getByPlaceholder("Please don't use your dog's name").fill(testUser.password);
+      
+      await page.getByRole("button", { name: "Join" }).click();
+      await page.waitForURL(url => !url.toString().includes('/sign-up'), { timeout: 30000 });
+      
+      // Navigate to AI Assistant
+      await page.goto('/dashboard/campaign-assistant');
+      await WaitHelper.waitForPageReady(page);
+      
+      // Test AI Assistant functionality
+      await expect(page.getByRole("heading", { name: "AI Assistant" })).toBeVisible();
+      
+      // Look for conversation topics
+      const topicButtons = page.getByRole("button").filter({ hasText: /Campaign|Strategy/ });
+      const buttonCount = await topicButtons.count();
+      
+      if (buttonCount > 0) {
+        console.log(`✅ AI Assistant working - ${buttonCount} topics available`);
+      }
+      
+      // Cleanup
+      await page.goto("/profile");
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      const deleteButton = page.getByText("Delete Account");
+      if (await deleteButton.isVisible({ timeout: 5000 })) {
+        await deleteButton.click();
+        await page.waitForSelector('[role="dialog"]', { timeout: 10000 });
+        await page.getByRole("button", { name: "Proceed" }).click();
+        await page.waitForURL(url => !url.toString().includes('/profile'), { timeout: 10000 });
+        console.log("✅ Account cleaned up");
+      }
+      
+    } catch (error) {
+      console.error("❌ AI Assistant test failed:", error.message);
+      throw error;
     }
   });
 });

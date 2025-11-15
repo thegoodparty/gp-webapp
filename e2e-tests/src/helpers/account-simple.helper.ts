@@ -111,8 +111,11 @@ export class SimpleAccountHelper {
               await firstOffice.click();
               console.log("✅ Office selected");
               
-              // Wait for selection to register
-              await page.waitForTimeout(2000);
+              // Wait for selection to register (state-based)
+              await page.waitForFunction(() => {
+                const nextButton = document.querySelector('button[type="submit"][data-step="1"]');
+                return nextButton && !nextButton.disabled;
+              }, { timeout: 10000 });
             } else {
               console.log("⚠️ No office options found");
             }

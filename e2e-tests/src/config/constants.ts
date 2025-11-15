@@ -12,7 +12,7 @@ export const BROWSER_ARGS = [
 ] as const;
 
 export const TEST_DATA = {
-  DEFAULT_PASSWORD: "TestPassword123!",
+  DEFAULT_PASSWORD: process.env.TEST_DEFAULT_PASSWORD || "TestPassword123!",
   TEST_ZIP_CODE: "82901",
   DEFAULT_ROLE: "Green River City Council - Ward 1",
 } as const;
