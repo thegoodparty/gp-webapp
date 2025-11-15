@@ -68,8 +68,8 @@ test.describe("Navigation Bar", () => {
     
     // Assert
     await expect(page).toHaveURL(/\/run-for-office$/);
-    // Check for the actual heading text on the page
-    await expect(page.getByText(/Supercharge your local campaign/)).toBeVisible();
+    // Check for the actual heading text on the page (use testId to avoid duplicates)
+    await expect(page.getByTestId("articleTitle")).toHaveText(/Supercharge your local campaign/);
   });
 
   test("should navigate to blog page", async ({ page }) => {
