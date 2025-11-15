@@ -1,6 +1,5 @@
 import { chromium } from "@playwright/test";
 import { TestDataManager } from "./src/utils/test-data-manager";
-import { SharedTestUserManager } from "./src/utils/shared-test-user.js";
 
 export default async function globalTeardown() {
   console.log("🧹 Starting test suite cleanup...");
@@ -15,9 +14,6 @@ export default async function globalTeardown() {
   try {
     // Clean up any remaining individual test data
     await TestDataManager.cleanup(page);
-
-    // Clean up shared test user
-    await SharedTestUserManager.deleteSharedTestUser(page);
   } finally {
     await browser.close();
   }

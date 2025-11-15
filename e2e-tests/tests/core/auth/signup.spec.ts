@@ -3,7 +3,6 @@ import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
-import { TestDataManager } from "../../../src/utils/test-data-manager";
 
 test.describe("Registration Functionality", () => {
   test.beforeEach(async ({ page }) => {

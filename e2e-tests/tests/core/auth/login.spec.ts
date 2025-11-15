@@ -2,8 +2,6 @@ import { test, expect } from "@playwright/test";
 import { AuthHelper } from "../../../src/helpers/auth.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
-import { TestDataHelper } from "../../../src/helpers/data.helper";
-import { TestDataManager } from "../../../src/utils/test-data-manager";
 
 test.describe("Login Functionality", () => {
   test.beforeEach(async ({ page }) => {

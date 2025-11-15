@@ -29,35 +29,11 @@ export default async function globalSetup() {
     fs.mkdirSync(screenshotsDir, { recursive: true });
   }
 
-  // Create shared test user for app tests (optional - if this fails, app tests will be skipped)
-  try {
-    console.log("👤 Creating shared test user for app functionality tests...");
-
-    const { SharedTestUserManager } = await import(
-      "./src/utils/shared-test-user.js"
-    );
-    const { SimpleAccountHelper } = await import(
-      "./src/helpers/account-simple.helper"
-    );
-    const { chromium } = await import("@playwright/test");
-
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
-
-    try {
-      const sharedUser = await SharedTestUserManager.createSharedTestUser();
-
-      // Actually create the account through registration + onboarding
-      await SimpleAccountHelper.createAccountAndGetToDashboard(page);
-
-      console.log("✅ Shared test user created and ready for app tests");
-    } finally {
-      await browser.close();
-    }
-  } catch (error) {
-    console.warn("⚠️ Failed to create shared test user:", error.message);
-    console.warn("App tests will be skipped");
-  }
+  // Note: Each test will create its own properly configured account
+  // This ensures all accounts have complete onboarding and full functionality
+  console.log(
+    "ℹ️ Tests will create individual accounts with proper onboarding"
+  );
 
   console.log("✅ Global setup completed successfully");
 }
