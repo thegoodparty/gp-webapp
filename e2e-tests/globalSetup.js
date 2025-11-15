@@ -34,7 +34,7 @@ export default async function globalSetup() {
     console.log("👤 Creating shared test user for app functionality tests...");
 
     const { SharedTestUserManager } = await import(
-      "./src/utils/shared-test-user"
+      "./src/utils/shared-test-user.js"
     );
     const { SimpleAccountHelper } = await import(
       "./src/helpers/account-simple.helper"

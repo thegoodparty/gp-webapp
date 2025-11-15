@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import { TestDataManager } from "./src/utils/test-data-manager";
-import { SharedTestUserManager } from "./src/utils/shared-test-user";
+import { SharedTestUserManager } from "./src/utils/shared-test-user.js";
 
 export default async function globalTeardown() {
   console.log("🧹 Starting test suite cleanup...");

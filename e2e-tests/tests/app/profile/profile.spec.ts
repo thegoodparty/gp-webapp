@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { SharedTestUserManager } from "../../../src/utils/shared-test-user";
+import { SharedTestUserManager } from "../../../src/utils/shared-test-user.js";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";

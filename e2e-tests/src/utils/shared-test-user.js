@@ -5,16 +5,16 @@ const fs = require("fs");
 const path = require("path");
 
 class SharedTestUserManager {
-  private static readonly USER_FILE = path.resolve(__dirname, "../../shared-test-user.json");
+  static USER_FILE = path.resolve(__dirname, "../../shared-test-user.json");
 
   /**
    * Create a shared test user that will be used across all app tests
    */
-  static async createSharedTestUser(): Promise<SharedTestUser> {
+  static async createSharedTestUser() {
     console.log("🧪 Creating shared test user for app tests...");
     
     const testUser = TestDataManager.generateTestUserData();
-    const sharedUser: SharedTestUser = {
+    const sharedUser = {
       email: testUser.email,
       password: testUser.password,
       firstName: testUser.firstName,
@@ -31,7 +31,7 @@ class SharedTestUserManager {
   /**
    * Get the existing shared test user
    */
-  static getSharedTestUser(): SharedTestUser | null {
+  static getSharedTestUser() {
     try {
       if (fs.existsSync(this.USER_FILE)) {
         const userData = JSON.parse(fs.readFileSync(this.USER_FILE, 'utf-8'));
@@ -46,7 +46,7 @@ class SharedTestUserManager {
   /**
    * Login with the shared test user
    */
-  static async loginWithSharedUser(page: Page): Promise<void> {
+  static async loginWithSharedUser(page) {
     const user = this.getSharedTestUser();
     if (!user) {
       throw new Error("No shared test user available. Run global setup first.");
@@ -73,7 +73,7 @@ class SharedTestUserManager {
   /**
    * Delete the shared test user
    */
-  static async deleteSharedTestUser(page: Page): Promise<void> {
+  static async deleteSharedTestUser(page) {
     const user = this.getSharedTestUser();
     if (!user) {
       console.log("ℹ️ No shared test user to delete");
@@ -120,7 +120,7 @@ class SharedTestUserManager {
   /**
    * Check if shared test user exists and is valid
    */
-  static hasValidSharedUser(): boolean {
+  static hasValidSharedUser() {
     return fs.existsSync(this.USER_FILE);
   }
 }
