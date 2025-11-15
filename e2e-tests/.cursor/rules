@@ -1,0 +1,591 @@
+# Cursor Rules for Test Automation Project
+
+## Overview
+
+These rules guide the refactoring of the test automation suite from a flaky, over-engineered codebase to a reliable, maintainable testing framework using modern Playwright patterns.
+
+---
+
+## 🎯 Core Principles
+
+### 1. Simplicity Over Complexity
+
+- **Prefer direct Playwright APIs** over custom abstractions
+- **Avoid helper functions** unless they provide clear value
+- **No nested retry mechanisms** - handle retries at framework level
+- **Single responsibility** - each function does one thing well
+
+### 2. State-Based Waiting (Critical)
+
+- **NEVER use `waitForTimeout`** - always use state-based waits
+- **Use `waitForSelector`, `waitForLoadState`, `waitForFunction`** instead
+- **Maximum wait time: 30 seconds** for any operation
+- **Fail fast** - don't mask timing issues with long waits
+
+### 3. Modern Playwright Patterns
+
+- **Use locators directly** - no Page Object Models
+- **Leverage Playwright's built-in retry mechanisms**
+- **Use test fixtures** for setup/teardown, not complex helper functions
+- **Prefer user-facing attributes**: `getByRole`, `getByLabel`, `getByText` over CSS selectors
+- **Use web-first assertions** - `toBeVisible()`, `toHaveText()` with auto-waiting
+- **Test user-visible behavior** - avoid implementation details
+
+---
+
+## ✅ DO: Best Practices
+
+### Test Structure
+
+```typescript
+// ✅ GOOD: Clear, focused test structure
+test("should login with valid credentials", async ({ page }) => {
+  // Arrange
+  await page.goto("/login");
+
+  // Act
+  await page.getByLabel("Email").fill("user@example.com");
+  await page.getByLabel("Password").fill("password123");
+  await page.getByRole("button", { name: "Login" }).click();
+
+  // Assert
+  await expect(page.getByText("Welcome")).toBeVisible();
+});
+```
+
+### Authentication
+
+```typescript
+// ✅ GOOD: Simple, direct authentication
+export async function loginAsUser(page: Page, credentials: UserCredentials) {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(credentials.email);
+  await page.getByLabel("Password").fill(credentials.password);
+  await page.getByRole("button", { name: "Login" }).click();
+  await expect(page.getByText("Dashboard")).toBeVisible();
+}
+```
+
+### Wait Conditions
+
+```typescript
+// ✅ GOOD: State-based waiting
+await page.waitForLoadState("networkidle");
+await page.waitForSelector("[data-testid='dashboard']");
+await page.waitForFunction(() => document.readyState === "complete");
+
+// ✅ GOOD: Custom wait condition
+await page.waitForFunction(() => {
+  const element = document.querySelector("[data-loading]");
+  return !element || element.getAttribute("data-loading") === "false";
+});
+```
+
+### Error Handling
+
+```typescript
+// ✅ GOOD: Meaningful error messages with context
+test("should handle login error", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill("invalid@email.com");
+  await page.getByLabel("Password").fill("wrongpassword");
+  await page.getByRole("button", { name: "Login" }).click();
+
+  await expect(page.getByText("Invalid credentials")).toBeVisible({
+    timeout: 10000,
+  });
+});
+```
+
+### Test Data Management
+
+```typescript
+// ✅ GOOD: Environment-aware test data
+export function generateTestEmail(): string {
+  const timestamp = Date.now();
+  const env = process.env.NODE_ENV || "local";
+  return `test-${timestamp}@${env}.example.com`;
+}
+```
+
+### Resource Cleanup
+
+```typescript
+// ✅ GOOD: Proper cleanup in test hooks
+test.afterEach(async ({ page }) => {
+  // Clean up any created data
+  await cleanupTestData();
+
+  // Take screenshot on failure
+  if (test.info().status === "failed") {
+    await page.screenshot({
+      path: `screenshots/${test.info().title}.png`,
+      fullPage: true,
+    });
+  }
+});
+```
+
+### Mock External Dependencies
+
+```typescript
+// ✅ GOOD: Mock third-party services instead of testing them
+await page.route("**/api/external-service/**", (route) =>
+  route.fulfill({
+    status: 200,
+    body: JSON.stringify({ success: true, data: mockData }),
+    headers: { "content-type": "application/json" },
+  })
+);
+
+// ❌ BAD: Testing external services you don't control
+await page.goto("https://external-api.com/data");
+await expect(page.getByText("External Data")).toBeVisible();
+```
+
+### Locator Best Practices
+
+```typescript
+// ✅ GOOD: User-facing locators (prioritized by Playwright)
+await page.getByRole("button", { name: "Submit" });
+await page.getByLabel("Email address");
+await page.getByText("Welcome back");
+await page.getByTestId("user-profile"); // When semantic locators aren't available
+
+// ✅ GOOD: Chaining and filtering
+await page
+  .getByRole("listitem")
+  .filter({ hasText: "Product 2" })
+  .getByRole("button", { name: "Add to cart" })
+  .click();
+
+// ❌ BAD: CSS selectors that depend on implementation
+await page.locator(".btn-primary.submit-button");
+await page.locator("#user-form > div:nth-child(2)");
+```
+
+---
+
+## ❌ DON'T: Anti-Patterns to Avoid
+
+### Hardcoded Waits
+
+```typescript
+// ❌ BAD: Never use hardcoded waits
+await page.waitForTimeout(5000);
+await page.waitForTimeout(15000); // Especially long ones!
+
+// ❌ BAD: Multiple reload attempts with delays
+for (let attempt = 0; attempt < 3; attempt++) {
+  await page.waitForTimeout(15000);
+  if (!(await element.isVisible())) break;
+  await page.reload();
+}
+```
+
+### Complex Helper Functions
+
+```typescript
+// ❌ BAD: God function that does too many things
+async function prepareTest(type, url, text, page, browser = null) {
+  const maxRetries = 2;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    // 50+ lines of complex retry logic
+    // Authentication, navigation, validation all mixed together
+  }
+}
+```
+
+### Page Object Models
+
+```typescript
+// ❌ BAD: Unnecessary abstraction (Playwright discourages POMs)
+class LoginPage {
+  constructor(page) {
+    this.page = page;
+  }
+  async login(email, password) {
+    await this.page.getByLabel("Email").fill(email);
+    // More abstraction layers...
+  }
+}
+
+// ✅ GOOD: Direct Playwright usage with user-facing locators
+await page.getByLabel("Email").fill(email);
+await page.getByLabel("Password").fill(password);
+await page.getByRole("button", { name: "Sign in" }).click();
+
+// ✅ GOOD: Use chaining and filtering when needed
+await page
+  .getByRole("listitem")
+  .filter({ hasText: "Product 2" })
+  .getByRole("button", { name: "Add to cart" })
+  .click();
+```
+
+### Silent Failures
+
+```typescript
+// ❌ BAD: Silent failure handling
+try {
+  await page.getByRole("button", { name: "Close" }).click();
+} catch (error) {
+  console.log("Cookie banner not found"); // Silent failure
+}
+```
+
+### Nested Try-Catch Blocks
+
+```typescript
+// ❌ BAD: Complex error handling that masks issues
+try {
+  // 50+ lines of test logic
+} catch (error) {
+  try {
+    const headings = await page.locator("h1, h2, h3").allTextContents();
+    console.log("=== ERROR CONTEXT ===");
+    // More nested error handling...
+  } catch (headingError) {
+    console.log("Failed to capture context");
+  }
+  throw error;
+}
+```
+
+### Test Skipping Without Reason
+
+```typescript
+// ❌ BAD: Skipping tests without clear reason or plan to fix
+test.skip("Verify user can create campaign", async ({ page }) => {
+  // Test implementation that should work but is skipped
+});
+```
+
+### External System Coupling
+
+```typescript
+// ❌ BAD: TestRail coupling in test files
+import { setupTestReporting } from "helpers/testrailHelper";
+
+setupTestReporting(test, TEST_IDS.LOGIN_FLOW);
+
+test("should login", async ({ page }) => {
+  // Test logic mixed with reporting concerns
+});
+
+// ✅ GOOD: Clean test without external dependencies
+test("should login successfully with valid credentials", async ({ page }) => {
+  // Pure test logic, reporting handled separately
+});
+```
+
+---
+
+## 🏗️ Architecture Guidelines
+
+### Project Structure
+
+```
+test-automation/
+├── tests/                        # New refactored tests
+│   ├── core/                     # Core functionality (auth, navigation)
+│   ├── admin/                    # Admin panel tests
+│   ├── app/                      # Application feature tests
+│   └── fixtures/                 # Test fixtures and data
+├── src/                          # Source code
+│   ├── config/                   # Configuration management
+│   ├── helpers/                  # Simple, focused helper functions
+│   ├── fixtures/                 # Test fixtures and components
+│   ├── utils/                    # Utility functions
+│   └── types/                    # TypeScript type definitions
+```
+
+### Configuration Management
+
+```typescript
+// ✅ GOOD: Environment-aware configuration
+export const environments = {
+  local: { baseURL: "http://localhost:4000", timeout: 30000 },
+  qa: { baseURL: "https://qa.goodparty.org", timeout: 45000 },
+  prod: { baseURL: "https://goodparty.org", timeout: 60000 },
+};
+
+export const getConfig = () => {
+  const env = process.env.NODE_ENV || "local";
+  return environments[env];
+};
+```
+
+### Helper Function Guidelines
+
+```typescript
+// ✅ GOOD: Simple, focused helper
+export async function fillLoginForm(
+  page: Page,
+  email: string,
+  password: string
+) {
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+}
+
+// ❌ BAD: Helper that does too much
+export async function handleCompleteLoginFlow(
+  page,
+  email,
+  password,
+  shouldRemember,
+  redirectUrl
+) {
+  // Complex logic mixing concerns
+}
+```
+
+---
+
+## 🧪 Testing Standards
+
+### Test Naming
+
+```typescript
+// ✅ GOOD: Descriptive test names
+test("should display error message when login fails with invalid credentials");
+test("should redirect to dashboard after successful login");
+test("should preserve form data when validation fails");
+
+// ❌ BAD: Vague test names
+test("login test");
+test("test user flow");
+```
+
+### Assertions
+
+```typescript
+// ✅ GOOD: Web-first assertions with auto-waiting
+await expect(page.getByText("Welcome, John Doe")).toBeVisible();
+await expect(page.getByRole("button", { name: "Logout" })).toBeEnabled();
+await expect(page).toHaveURL(/\/dashboard$/);
+await expect(page.getByText("Success")).toHaveText("Success");
+
+// ✅ GOOD: Soft assertions for multiple checks
+await expect.soft(page.getByTestId("status")).toHaveText("Success");
+await expect.soft(page.getByText("Welcome")).toBeVisible();
+
+// ❌ BAD: Non-web-first assertions
+expect(await page.getByText("Welcome").isVisible()).toBe(true);
+
+// ❌ BAD: Vague or missing assertions
+await expect(page.locator("div")).toBeVisible(); // Too generic
+// Missing assertions - test only performs actions
+```
+
+### Test Independence
+
+```typescript
+// ✅ GOOD: Each test is independent
+test.beforeEach(async ({ page }) => {
+  await page.goto("/login");
+  // Fresh state for each test
+});
+
+// ❌ BAD: Tests depend on each other
+test.describe.serial("User flow", () => {
+  // Tests that must run in order
+});
+```
+
+---
+
+## 🔧 Playwright Configuration
+
+### Minimal Browser Configuration
+
+```typescript
+// ✅ GOOD: Only essential browser flags
+export default defineConfig({
+  use: {
+    launchOptions: {
+      args: [
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-web-security",
+      ],
+    },
+  },
+});
+
+// ❌ BAD: Excessive browser flags (30+ flags)
+args: [
+  "--no-sandbox",
+  "--disable-setuid-sandbox",
+  "--disable-dev-shm-usage",
+  "--disable-accelerated-2d-canvas",
+  "--no-first-run",
+  "--no-zygote",
+  // ... 25+ more flags
+];
+```
+
+### Timeout Configuration
+
+```typescript
+// ✅ GOOD: Consistent, reasonable timeouts
+export default defineConfig({
+  timeout: 30000,
+  expect: { timeout: 10000 },
+  use: {
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
+  },
+});
+```
+
+### Cross-Browser Testing
+
+```typescript
+// ✅ GOOD: Test across all browsers
+export default defineConfig({
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+  ],
+});
+```
+
+### CI/CD Optimization
+
+```typescript
+// ✅ GOOD: Optimize browser downloads on CI
+// Install only needed browsers
+npx playwright install chromium --with-deps
+
+// ✅ GOOD: Use parallelism and sharding
+npx playwright test --shard=1/3
+
+// ✅ GOOD: Configure traces for CI failures only
+export default defineConfig({
+  use: {
+    trace: 'on-first-retry', // Not 'on' - too performance heavy
+  },
+});
+```
+
+---
+
+## 🔍 Code Review Guidelines
+
+### When Reviewing Test Code, Check For:
+
+1. **No `waitForTimeout` usage** - flag immediately
+2. **Proper state-based waiting** - verify wait conditions make sense
+3. **Simple, focused functions** - no god functions
+4. **Meaningful test names and assertions**
+5. **Proper error handling** - no silent failures
+6. **Resource cleanup** - afterEach hooks present
+7. **Test independence** - no shared state between tests
+
+### Red Flags in Code Review
+
+- Any use of `waitForTimeout`
+- Complex helper functions (>20 lines)
+- Nested try-catch blocks
+- Silent error handling (`catch { console.log(...) }`)
+- Test skipping without clear reason
+- Page Object Model patterns (Playwright discourages these)
+- CSS selectors instead of user-facing locators
+- Non-web-first assertions (`expect(await element.isVisible()).toBe(true)`)
+- Testing implementation details instead of user behavior
+- Hardcoded test data without environment awareness
+- External test management system coupling (TestRail, etc.)
+- Test reporting logic mixed with test execution
+
+---
+
+## 🎯 Quality Standards
+
+### Code Quality Requirements
+
+- **Zero hardcoded waits** (`waitForTimeout` usage)
+- **Maximum 30 seconds** wait time for any operation
+- **Meaningful test names** that describe expected behavior
+- **Proper error handling** with descriptive messages
+- **Resource cleanup** in afterEach hooks
+- **Test independence** - no shared state between tests
+
+### Performance Standards
+
+- **Fast feedback** - tests should fail quickly when issues occur
+- **Efficient resource usage** - proper cleanup prevents memory leaks
+- **Reliable execution** - consistent pass rates across environments
+
+---
+
+## 📚 Reference Examples
+
+### Complete Test Example
+
+```typescript
+import { test, expect } from "@playwright/test";
+
+test.describe("User Authentication", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/login");
+  });
+
+  test("should login successfully with valid credentials", async ({ page }) => {
+    // Arrange
+    const email = "test@example.com";
+    const password = "validPassword123";
+
+    // Act
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Password").fill(password);
+    await page.getByRole("button", { name: "Login" }).click();
+
+    // Assert
+    await expect(page.getByText("Welcome")).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard$/);
+  });
+
+  test("should show error for invalid credentials", async ({ page }) => {
+    // Arrange
+    const email = "invalid@example.com";
+    const password = "wrongPassword";
+
+    // Act
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Password").fill(password);
+    await page.getByRole("button", { name: "Login" }).click();
+
+    // Assert
+    await expect(page.getByText("Invalid credentials")).toBeVisible();
+    await expect(page).toHaveURL(/\/login$/);
+  });
+
+  test.afterEach(async ({ page }) => {
+    // Cleanup any test data if needed
+    if (test.info().status === "failed") {
+      await page.screenshot({
+        path: `screenshots/auth-${Date.now()}.png`,
+        fullPage: true,
+      });
+    }
+  });
+});
+```
+
+---
+
+## 🎯 Remember
+
+**The goal is reliable, maintainable tests that provide fast feedback and catch real issues. Every pattern in this document serves that purpose. When in doubt, choose simplicity over complexity, and state-based waiting over hardcoded delays.**
