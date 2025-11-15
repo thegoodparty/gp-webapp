@@ -17,8 +17,21 @@ export default defineConfig({
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],
   ],
+  projects: [
+    {
+      name: "QA",
+      use: {
+        baseURL: process.env.BASE_URL || "https://qa.goodparty.org/",
+      },
+    },
+    {
+      name: "Local",
+      use: {
+        baseURL: process.env.BASE_URL || "http://localhost:4000/",
+      },
+    },
+  ],
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:4000/",
     storageState: undefined,
     headless: true,
     viewport: null,
