@@ -5,9 +5,12 @@ import { SharedTestUserManager } from "./src/utils/shared-test-user";
 export default async function globalTeardown() {
   console.log("🧹 Starting test suite cleanup...");
 
-  // Create a browser context for cleanup operations
+  // Create a browser context for cleanup operations with proper baseURL
   const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const context = await browser.newContext({
+    baseURL: process.env.BASE_URL || "http://localhost:4000",
+  });
+  const page = await context.newPage();
 
   try {
     // Clean up any remaining individual test data

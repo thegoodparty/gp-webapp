@@ -105,7 +105,7 @@ export class TestDataManager {
           if (await nextButton.isVisible({ timeout: 5000 })) {
             // Wait for button to be enabled (form validation)
             await page.waitForFunction(() => {
-              const button = document.querySelector('button[type="submit"][data-step="1"]');
+              const button = document.querySelector('button[type="submit"][data-step="1"]') as HTMLButtonElement;
               return button && !button.disabled;
             }, { timeout: 15000 });
             
@@ -213,7 +213,7 @@ export class TestDataManager {
       await proceedButton.click();
       
       // Wait for redirect to home page (account deletion redirects to /)
-      await page.waitForURL(/^\/$/, { timeout: 15000 });
+      await page.waitForURL(url => new URL(url).pathname === '/', { timeout: 15000 });
       
       console.log("✅ Test account deleted successfully");
     } catch (error) {
@@ -251,7 +251,7 @@ export class TestDataManager {
             // Wait for button to be enabled
             try {
               await page.waitForFunction(() => {
-                const button = document.querySelector('[data-testid="login-submit-button"]');
+                const button = document.querySelector('[data-testid="login-submit-button"]') as HTMLButtonElement;
                 return button && !button.disabled;
               }, { timeout: 10000 });
             } catch {
