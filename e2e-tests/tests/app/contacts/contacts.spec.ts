@@ -22,14 +22,6 @@ test.describe.skip("Contacts Page", () => {
 
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-    
-    // Clean up the test account
-    try {
-      await TestDataManager.deleteAccount(page);
-    } catch (error) {
-      console.warn("Failed to delete test account in afterEach:", error.message);
-    }
-    
     await CleanupHelper.clearBrowserData(page);
     await CleanupHelper.cleanupTestData(page);
   });

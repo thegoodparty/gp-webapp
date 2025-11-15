@@ -14,7 +14,7 @@ test.describe("Login Functionality", () => {
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
     await CleanupHelper.clearBrowserData(page);
-    await CleanupHelper.cleanupTestData(page); // Pass page for account deletion
+    await CleanupHelper.cleanupTestData(page);
   });
 
   test("should display login form elements", async ({ page }) => {
