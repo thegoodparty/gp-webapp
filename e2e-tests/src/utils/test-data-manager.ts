@@ -37,7 +37,7 @@ export class TestDataManager {
       lastName: "User",
       email: `test-${timestamp}@${env}.example.com`,
       phone: `5105${timestamp.toString().slice(-6)}`,
-      password: "TestPassword123!",
+      password: process.env.TEST_DEFAULT_PASSWORD || "TestPassword123!",
       zipCode: "82901",
     };
   }

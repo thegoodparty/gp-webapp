@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
   timeout: 30000,
   expect: { timeout: 10000 },

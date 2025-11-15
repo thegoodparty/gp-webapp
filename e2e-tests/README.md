@@ -9,6 +9,17 @@ A modern, reliable test automation framework for GoodParty.org built with Playwr
 - Node.js 16+
 - GoodParty.org webapp running on `localhost:4000`
 
+### Environment Variables (Optional)
+
+```bash
+# Set custom test password (recommended for security)
+export TEST_DEFAULT_PASSWORD="YourSecureTestPassword123!"
+
+# Admin credentials for admin tests (if available)
+export TEST_USER_ADMIN="admin@example.com"
+export TEST_USER_ADMIN_PASSWORD="AdminPassword123!"
+```
+
 ### Installation
 
 ```bash
