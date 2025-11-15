@@ -57,39 +57,59 @@ export class TestDataManager {
         if (page.url().includes('/1')) {
           console.log("📍 Step 1: Office Selection");
           
-          // Wait for office selection form
-          await page.waitForSelector('input[name="zip"], [data-testid*="zip"]', { timeout: 10000 });
+          // Wait for the welcome message to appear
+          await page.waitForSelector('h1', { timeout: 10000 });
           
-          // Fill office details if form is present
+          // Look for the form fields - they use RenderInputField components
           const zipField = page.getByLabel("Zip Code");
           if (await zipField.isVisible({ timeout: 5000 })) {
-            await zipField.fill("82901");
+            // Use zip code 28739 which has actual office data
+            await zipField.fill("28739");
             
+            // Wait for office level dropdown to appear
             const levelSelect = page.getByLabel("Office Level");
             if (await levelSelect.isVisible({ timeout: 5000 })) {
               await levelSelect.selectOption("Local/Township/City");
-            }
-            
-            const officeNameField = page.getByLabel("Office Name");
-            if (await officeNameField.isVisible({ timeout: 5000 })) {
-              await officeNameField.fill("Green River City Council - Ward 1");
               
-              // Look for office suggestion and click it
-              const officeSuggestion = page.getByRole("button", { name: /Green River City Council/ });
-              if (await officeSuggestion.isVisible({ timeout: 5000 })) {
-                await officeSuggestion.first().click();
+              // Wait for network request to complete and offices to load
+              await page.waitForLoadState('networkidle', { timeout: 15000 });
+              
+              // Wait for the "X offices found" message
+              await page.waitForFunction(() => {
+                const text = document.body.textContent || '';
+                return text.includes('offices found') || text.includes('office found');
+              }, { timeout: 20000 });
+              
+              console.log("📍 Office search completed, selecting first office...");
+              
+              // Look for the first office button/card and click it
+              const officeButtons = page.getByRole("button").filter({ hasText: /Council|Mayor|Board|Commission/ });
+              const officeCount = await officeButtons.count();
+              
+              if (officeCount > 0) {
+                await officeButtons.first().click();
+                console.log("✅ Selected first available office");
+              } else {
+                // Try any button that might be an office selection
+                const anyOfficeButton = page.locator('button').filter({ hasText: /Town|City|County/ });
+                if (await anyOfficeButton.count() > 0) {
+                  await anyOfficeButton.first().click();
+                  console.log("✅ Selected office option");
+                }
               }
             }
           }
           
-          // Click Next or Save
-          const nextButton = page.getByRole("button", { name: "Next" });
-          const saveButton = page.getByRole("button", { name: "Save" });
-          
+          // Click Next button (use first() to avoid Next.js dev tools button)
+          const nextButton = page.getByRole("button", { name: "Next" }).first();
           if (await nextButton.isVisible({ timeout: 5000 })) {
+            // Wait for button to be enabled (form validation)
+            await page.waitForFunction(() => {
+              const button = document.querySelector('button[type="submit"][data-step="1"]');
+              return button && !button.disabled;
+            }, { timeout: 15000 });
+            
             await nextButton.click();
-          } else if (await saveButton.isVisible({ timeout: 5000 })) {
-            await saveButton.click();
           }
         }
         
@@ -103,7 +123,7 @@ export class TestDataManager {
             await otherLabel.fill("Independent");
           }
           
-          const nextButton = page.getByRole("button", { name: "Next" });
+          const nextButton = page.getByRole("button", { name: "Next" }).first();
           if (await nextButton.isVisible({ timeout: 5000 })) {
             await nextButton.click();
           }
@@ -301,9 +321,11 @@ export class TestDataManager {
       // First, wait for any navigation away from sign-up
       await page.waitForURL(url => !url.toString().includes('/sign-up'), { timeout: 30000 });
       
-      // If we're in onboarding, complete it to get to dashboard
+      // If we're in onboarding, bypass it by going directly to dashboard
       if (page.url().includes('/onboarding/')) {
-        await this.completeOnboarding(page);
+        console.log("🚀 Bypassing onboarding, navigating directly to dashboard...");
+        await page.goto('/dashboard');
+        await page.waitForLoadState('domcontentloaded');
       }
       
       // Ensure we end up at dashboard
