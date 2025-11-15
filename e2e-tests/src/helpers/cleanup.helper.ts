@@ -18,11 +18,23 @@ export class CleanupHelper {
   }
 
   static async clearBrowserData(page: Page): Promise<void> {
-    // Clear cookies, local storage, session storage
-    await page.context().clearCookies();
-    await page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
+    try {
+      // Clear cookies
+      await page.context().clearCookies();
+      
+      // Clear storage (with error handling for security restrictions)
+      await page.evaluate(() => {
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+        } catch (error) {
+          // Ignore security errors - some pages restrict storage access
+          console.log("Storage clear skipped due to security restrictions");
+        }
+      });
+    } catch (error) {
+      // Don't fail tests due to cleanup issues
+      console.warn("Browser data cleanup failed:", error.message);
+    }
   }
 }
