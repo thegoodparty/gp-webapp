@@ -1,79 +1,99 @@
 import { test, expect } from "@playwright/test";
-import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Dashboard Functionality", () => {
-  test("should create account and access dashboard", async ({ page }) => {
-    const testUser = TestDataHelper.generateTestUser();
-    console.log(`🧪 Testing dashboard with: ${testUser.email}`);
+  test.beforeEach(async ({ page }) => {
+    // Page is already authenticated via storageState from auth.setup.ts
+    await page.goto('/dashboard');
+    await page.waitForLoadState('domcontentloaded');
     
-    try {
-      // Step 1: Register account
-      await page.goto("/sign-up");
-      await page.waitForLoadState("domcontentloaded");
-      await NavigationHelper.dismissOverlays(page);
+    // Complete onboarding if needed (using working logic)
+    if (page.url().includes('/onboarding/')) {
+      console.log('🚀 Completing onboarding to reach dashboard...');
       
-      // Fill registration form with zip 28739 (has office data)
-      await page.getByRole("textbox", { name: "First Name" }).fill(testUser.firstName);
-      await page.getByRole("textbox", { name: "Last Name" }).fill(testUser.lastName);
-      await page.getByRole("textbox", { name: "email" }).fill(testUser.email);
-      await page.getByRole("textbox", { name: "phone" }).fill(testUser.phone);
-      await page.getByRole("textbox", { name: "Zip Code" }).fill("28739");
-      await page.getByPlaceholder("Please don't use your dog's name").fill(testUser.password);
-      
-      // Submit registration
-      const joinButton = page.getByRole("button", { name: "Join" });
-      await joinButton.click();
-      
-      // Step 2: Wait for onboarding and navigate to dashboard
-      await page.waitForURL(url => !url.toString().includes('/sign-up'), { timeout: 30000 });
-      
-      // Navigate directly to dashboard (bypass onboarding complexity)
-      await page.goto('/dashboard');
-      await page.waitForLoadState('domcontentloaded');
-      
-      // Step 3: Test dashboard functionality
-      await expect(page).toHaveURL(/\/dashboard$/);
-      
-      // Look for dashboard content
-      const dashboardContent = page.locator('h1, h2, h3, main');
-      await expect(dashboardContent.first()).toBeVisible();
-      
-      console.log("✅ Dashboard accessible");
-      
-      // Step 4: Test navigation to other app pages
-      await page.goto("/dashboard/campaign-assistant");
-      await expect(page.getByRole("heading", { name: "AI Assistant" })).toBeVisible();
-      console.log("✅ AI Assistant accessible");
-      
-      await page.goto("/profile");
-      await expect(page.getByRole("heading", { name: "Personal Information" }).first()).toBeVisible();
-      console.log("✅ Profile accessible");
-      
-      // Step 5: Clean up - delete account
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      const deleteButton = page.getByText("Delete Account");
-      if (await deleteButton.isVisible({ timeout: 5000 })) {
-        await deleteButton.click();
+      // Step 1: Office Selection
+      if (page.url().includes('/1')) {
+        const zipField = page.getByLabel("Zip Code");
+        await zipField.fill("28739");
         
-        await page.waitForSelector('[role="dialog"]', { timeout: 10000 });
-        const proceedButton = page.getByRole("button", { name: "Proceed" });
-        await proceedButton.click();
-        
-        // Wait for redirect (flexible)
-        await page.waitForURL(url => !url.toString().includes('/profile'), { timeout: 10000 });
-        console.log("✅ Test account cleaned up");
+        const levelSelect = page.getByLabel("Office Level");
+        if (await levelSelect.isVisible({ timeout: 3000 })) {
+          await levelSelect.selectOption({ index: 1 });
+          await page.waitForLoadState('networkidle', { timeout: 15000 });
+          
+          await page.waitForFunction(() => {
+            const text = document.body.textContent || '';
+            return text.includes('offices found') || text.includes('office found');
+          }, { timeout: 20000 });
+          
+          const officeButtons = page.getByRole("button").filter({ 
+            hasText: /Council|Mayor|Board|Commission|Village|County|Flat Rock|Henderson/ 
+          });
+          
+          if (await officeButtons.count() > 0) {
+            await officeButtons.first().click();
+            await page.waitForTimeout(2000);
+            
+            const nextButton = page.getByRole("button", { name: "Next" }).first();
+            await nextButton.click();
+            await page.waitForURL(url => url.toString().includes('/2'), { timeout: 15000 });
+          }
+        }
       }
       
-    } catch (error) {
-      console.error("❌ Dashboard test failed:", error.message);
-      await page.screenshot({ 
-        path: `screenshots/dashboard-error-${Date.now()}.png`,
-        fullPage: true 
-      });
-      throw error;
+      // Step 2: Party Selection
+      if (page.url().includes('/2')) {
+        const otherLabel = page.getByLabel("Other");
+        if (await otherLabel.isVisible({ timeout: 3000 })) {
+          await otherLabel.fill("Independent");
+          await page.waitForTimeout(2000);
+          
+          const nextButton = page.getByRole("button", { name: "Next" }).first();
+          await nextButton.click({ force: true });
+          await page.waitForURL(url => url.toString().includes('/3'), { timeout: 15000 });
+        }
+      }
+      
+      // Step 3: Pledge Agreement
+      if (page.url().includes('/3')) {
+        const agreeButton = page.getByRole("button", { name: "I Agree" });
+        await agreeButton.click();
+        await page.waitForURL(url => url.toString().includes('/4'), { timeout: 15000 });
+      }
+      
+      // Step 4: Complete Onboarding
+      if (page.url().includes('/4')) {
+        const viewDashboardButton = page.getByRole("button", { name: "View Dashboard" });
+        await viewDashboardButton.click();
+        await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+      }
     }
+    
+    await NavigationHelper.dismissOverlays(page);
+  });
+
+  test("should access dashboard and navigate to app features", async ({ page }) => {
+    console.log(`🧪 Testing dashboard functionality with pre-authenticated user`);
+    
+    // Test dashboard accessibility
+    await expect(page).toHaveURL(/\/dashboard$/);
+    
+    // Look for dashboard content
+    const dashboardContent = page.locator('h1, h2, h3, main');
+    await expect(dashboardContent.first()).toBeVisible();
+    console.log("✅ Dashboard accessible");
+    
+    // Test navigation to AI Assistant
+    await page.goto("/dashboard/campaign-assistant");
+    await WaitHelper.waitForPageReady(page);
+    await expect(page.getByRole("heading", { name: "AI Assistant" })).toBeVisible();
+    console.log("✅ AI Assistant accessible");
+    
+    // Test navigation to Profile
+    await page.goto("/profile");
+    await WaitHelper.waitForPageReady(page);
+    await expect(page.getByRole("heading", { name: "Personal Information" }).first()).toBeVisible();
+    console.log("✅ Profile accessible");
   });
 });
