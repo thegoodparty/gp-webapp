@@ -1,18 +1,28 @@
 import { test, expect } from "@playwright/test";
 import axios from "axios";
 import { parseStringPromise } from "xml2js";
-import { getCurrentEnvironment } from "../../../src/config/environments";
 
 test.describe("Sitemap Tests", () => {
-  const config = getCurrentEnvironment();
-  const BASE_URL = config.baseURL;
+  // Use BASE_URL from environment (set by CI) or fall back to Playwright config
+  const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
 
   test("should have accessible main sitemap", async () => {
     // Arrange
     const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
+    console.log(`🔍 Testing sitemap at: ${mainSitemapUrl}`);
     
     // Act
-    const response = await axios.get(mainSitemapUrl, { timeout: 30000 });
+    let response;
+    try {
+      response = await axios.get(mainSitemapUrl, { 
+        timeout: 30000,
+        validateStatus: () => true // Don't throw on non-2xx status
+      });
+    } catch (error: any) {
+      console.error(`❌ Failed to fetch sitemap: ${error.message}`);
+      if (error.code) console.error(`Error code: ${error.code}`);
+      throw error;
+    }
     
     // Assert
     expect(response.status).toBe(200);
@@ -32,7 +42,16 @@ test.describe("Sitemap Tests", () => {
     const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
     
     // Act
-    const response = await axios.get(mainSitemapUrl, { timeout: 30000 });
+    let response;
+    try {
+      response = await axios.get(mainSitemapUrl, { 
+        timeout: 30000,
+        validateStatus: () => true 
+      });
+    } catch (error: any) {
+      console.error(`❌ Failed to fetch sitemap: ${error.message}`);
+      throw error;
+    }
     const data = await parseStringPromise(response.data);
     
     // Assert
@@ -57,7 +76,16 @@ test.describe("Sitemap Tests", () => {
     const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
     
     // Act
-    const response = await axios.get(mainSitemapUrl, { timeout: 30000 });
+    let response;
+    try {
+      response = await axios.get(mainSitemapUrl, { 
+        timeout: 30000,
+        validateStatus: () => true 
+      });
+    } catch (error: any) {
+      console.error(`❌ Failed to fetch sitemap: ${error.message}`);
+      throw error;
+    }
     const data = await parseStringPromise(response.data);
     
     // Assert
@@ -74,7 +102,16 @@ test.describe("Sitemap Tests", () => {
     const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
     
     // Act
-    const response = await axios.get(mainSitemapUrl, { timeout: 30000 });
+    let response;
+    try {
+      response = await axios.get(mainSitemapUrl, { 
+        timeout: 30000,
+        validateStatus: () => true 
+      });
+    } catch (error: any) {
+      console.error(`❌ Failed to fetch sitemap: ${error.message}`);
+      throw error;
+    }
     const data = await parseStringPromise(response.data);
     
     // Assert - check lastmod dates are valid
@@ -101,7 +138,16 @@ test.describe("Sitemap Tests", () => {
     const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
     
     // Act
-    const response = await axios.get(mainSitemapUrl, { timeout: 30000 });
+    let response;
+    try {
+      response = await axios.get(mainSitemapUrl, { 
+        timeout: 30000,
+        validateStatus: () => true 
+      });
+    } catch (error: any) {
+      console.error(`❌ Failed to fetch sitemap: ${error.message}`);
+      throw error;
+    }
     const data = await parseStringPromise(response.data);
     
     // Test a sample of sitemap URLs (not all - that would be too slow)
