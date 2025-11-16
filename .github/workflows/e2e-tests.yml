@@ -119,6 +119,21 @@ jobs:
             const testStatus = failed_count > 0 ? '❌' : '✅';
             const deploymentUrl = '${{ env.BASE_URL }}';
             
+            // Find PR associated with this deployment
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment_status.deployment.sha
+            });
+            
+            if (prs.length === 0) {
+              console.log('No PR found for this deployment, skipping comment');
+              return;
+            }
+            
+            const prNumber = prs[0].number;
+            console.log(`Found PR #${prNumber} for deployment`);
+            
             let body = `## ${testStatus} E2E Test Results\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
             body += `**Results:**\n`;
@@ -132,8 +147,8 @@ jobs:
             
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
