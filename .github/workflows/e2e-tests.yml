@@ -153,3 +153,35 @@ jobs:
               repo: context.repo.repo,
               body: body
             });
+
+      - name: Notify Slack on Test Success
+        if: steps.run-tests.outcome == 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: '✅ E2E Tests Passed',
+              attachments: [{
+                color: 'good',
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Test Failure
+        if: steps.run-tests.outcome == 'failure' || failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "⚠️ E2E Tests Failed",
+              "attachments": [{
+                "color": "warning",
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
