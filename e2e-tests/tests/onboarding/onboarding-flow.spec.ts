@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
+import type { TestUser } from "../../src/utils/test-data-manager";
 import { TestDataHelper } from "../../src/helpers/data.helper";
 import { NavigationHelper } from "../../src/helpers/navigation.helper";
-import { TestUser } from "../../src/utils/test-data-manager";
 
 // Reset storage state for onboarding tests since they create their own users
 test.use({ storageState: { cookies: [], origins: [] } });

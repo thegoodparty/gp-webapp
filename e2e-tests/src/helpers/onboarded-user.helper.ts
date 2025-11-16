@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
+import type { TestUser } from "../utils/test-data-manager";
 import { TestDataHelper } from "./data.helper";
-import { TestUser } from "../utils/test-data-manager";
 
 export class OnboardedUserHelper {
   /**
