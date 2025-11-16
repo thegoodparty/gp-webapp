@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import type { TestUser } from "../../../src/utils/test-data-manager";
 import { AccountHelper } from "../../../src/helpers/account.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
-import { TestDataManager, TestUser } from "../../../src/utils/test-data-manager";
+import { TestDataManager } from "../../../src/utils/test-data-manager";
 
 test.describe.skip("Contacts Page", () => {
   let testUser: TestUser;
