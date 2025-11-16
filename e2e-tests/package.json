@@ -2,6 +2,7 @@
   "name": "test-automation",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test:old": "npx playwright test tests-old/ --project=Local",

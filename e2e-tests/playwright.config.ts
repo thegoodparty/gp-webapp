@@ -15,6 +15,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-report" }],
+    ["json", { outputFile: "test-results/results.json" }],
   ],
 
   // Setup project for authentication + main testing project

@@ -1,4 +1,4 @@
-import { Page, TestInfo } from "@playwright/test";
+import type { Page, TestInfo } from "@playwright/test";
 
 export class CleanupHelper {
   static async takeScreenshotOnFailure(page: Page, testInfo: TestInfo): Promise<void> {

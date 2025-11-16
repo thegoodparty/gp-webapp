@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export class WaitHelper {
   static async waitForPageReady(page: Page): Promise<void> {
