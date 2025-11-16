@@ -123,7 +123,7 @@ jobs:
             const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              commit_sha: context.payload.deployment_status.deployment.sha
+              commit_sha: context.payload.deployment.sha
             });
             
             if (prs.length === 0) {
