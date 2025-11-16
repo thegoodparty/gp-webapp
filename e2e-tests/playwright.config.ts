@@ -8,7 +8,7 @@ export default defineConfig({
   
   // Improved parallelization with better stability
   fullyParallel: true,
-  workers: process.env.CI ? 1 : 2, // Reduced workers to prevent resource contention
+  workers: process.env.CI ? 4 : 2, // Use 4 workers in CI for faster execution
   retries: process.env.CI ? 3 : 2, // Increased retries for flaky tests
   
   // Clean reporting without TestRail dependency
