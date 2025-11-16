@@ -67,14 +67,11 @@ test.describe("Onboarding Flow", () => {
         }
       }
       
-      // Wait for offices to load
-      await page.waitForLoadState('networkidle', { timeout: 15000 });
-      
-      // Wait for offices to appear
+      // Wait for offices to appear (more reliable than waiting for networkidle)
       await page.waitForFunction(() => {
         const text = document.body.textContent || '';
         return text.includes('offices found') || text.includes('office found');
-      }, { timeout: 20000 });
+      }, { timeout: 30000 });
       
       // Select an office - try multiple approaches
       let officeSelected = false;
@@ -272,7 +269,12 @@ test.describe("Onboarding Flow", () => {
     const levelSelect = page.getByLabel("Office Level");
     if (await levelSelect.isVisible({ timeout: 3000 })) {
       await levelSelect.selectOption({ index: 1 });
-      await page.waitForLoadState('networkidle', { timeout: 15000 });
+      
+      // Wait for offices to load
+      await page.waitForFunction(() => {
+        const text = document.body.textContent || '';
+        return text.includes('offices found') || text.includes('office found');
+      }, { timeout: 30000 });
       
       // Select an office
       const officeRadios = page.locator('input[type="radio"]');
