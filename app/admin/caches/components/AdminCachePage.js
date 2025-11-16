@@ -1,9 +1,9 @@
 'use client'
 import PortalPanel from '@shared/layouts/PortalPanel'
 import AdminWrapper from 'app/admin/shared/AdminWrapper'
-import Table from '@shared/utils/Table'
 import { useMemo } from 'react'
 import BustCacheButton from './BustCacheButton'
+import SimpleTable from '@shared/utils/SimpleTable'
 
 export default function AdminUsersPage(props) {
   const inputData = [
@@ -68,7 +68,7 @@ export default function AdminUsersPage(props) {
         header: 'Actions',
         collapse: true,
         cell: ({ row }) => {
-          return <BustCacheButton {...row.original} />
+          return <BustCacheButton {...row} />
         },
       },
     ],
@@ -78,7 +78,7 @@ export default function AdminUsersPage(props) {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
-        <Table
+        <SimpleTable
           data={data}
           columns={columns}
           defaultPageSize={25}
