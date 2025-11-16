@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { TestDataHelper } from "./data.helper";
 import { TestUser } from "../utils/test-data-manager";
 
