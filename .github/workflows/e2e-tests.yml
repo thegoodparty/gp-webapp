@@ -1,69 +1,27 @@
 name: E2E Tests
 
 on:
-  pull_request:
-    branches: ['develop', 'qa', 'master']
-  
   deployment_status:
-    environments:
-      - 'Preview - gp-ui'
-      - 'Production - gp-ui'
-      
-  schedule:
-    # Run at midnight PST (8 AM UTC)
-    - cron: '0 8 * * *'
     
 jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Run on PR, successful deployments, or scheduled runs
     if: |
-      github.event_name == 'pull_request' ||
-      github.event_name == 'schedule' ||
-      github.event.deployment_status.state == 'success'
-    # Only fail workflow for PR tests (blocking), not for monitoring
-    continue-on-error: ${{ github.event_name != 'pull_request' }}
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment_status.environment == 'Preview - gp-ui'
     permissions:
       actions: read
       contents: read
       pull-requests: write
     steps:
-      - name: Determine test context
-        id: context
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "type=pr" >> $GITHUB_OUTPUT
-            echo "environment=preview" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "type=scheduled" >> $GITHUB_OUTPUT
-            echo "environment=production" >> $GITHUB_OUTPUT
-          else
-            echo "type=post-deploy" >> $GITHUB_OUTPUT
-            echo "environment=${{ github.event.deployment_status.environment }}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Wait for Vercel Preview (PR only)
-        if: github.event_name == 'pull_request'
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
-        id: vercel-preview
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300
-          check_interval: 10
-
       - name: Set deployment URL
         id: deployment
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "BASE_URL=${{ steps.vercel-preview.outputs.url }}" >> "$GITHUB_ENV"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
-          else
-            echo "BASE_URL=${{ github.event.deployment_status.target_url }}" >> "$GITHUB_ENV"
-          fi
-          echo "Deployment URL: ${{ env.BASE_URL }}"
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
@@ -94,7 +52,7 @@ jobs:
         run: npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: "E2E Tests - ${{ steps.context.outputs.environment }} - ${{ github.event_name }}"
+          TEST_RUN_NAME: "E2E Tests - PR Preview"
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
@@ -135,14 +93,8 @@ jobs:
               echo "failed_tests<<EOF" >> $GITHUB_OUTPUT
               echo "$FAILED_TESTS" >> $GITHUB_OUTPUT
               echo "EOF" >> $GITHUB_OUTPUT
-              echo "tests_ran=true" >> $GITHUB_OUTPUT
             else
               echo "failed_tests=" >> $GITHUB_OUTPUT
-              if [ "$TOTAL_TESTS" -gt 0 ]; then
-                echo "tests_ran=true" >> $GITHUB_OUTPUT
-              else
-                echo "tests_ran=false" >> $GITHUB_OUTPUT
-              fi
             fi
           else
             echo "⚠️  results.json file not found - tests may not have run"
@@ -150,12 +102,10 @@ jobs:
             echo "failed_count=0" >> $GITHUB_OUTPUT
             echo "passed_count=0" >> $GITHUB_OUTPUT
             echo "total_tests=0" >> $GITHUB_OUTPUT
-            echo "tests_ran=false" >> $GITHUB_OUTPUT
           fi
 
-      # PR Comment - Only on pull requests
       - name: Comment PR with test results
-        if: github.event_name == 'pull_request' && always()
+        if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -183,36 +133,3 @@ jobs:
               repo: context.repo.repo,
               body: body
             });
-
-      # Slack Notifications - Only for non-PR events (post-deploy & scheduled)
-      - name: Notify Slack on Test Success
-        if: github.event_name != 'pull_request' && steps.run-tests.outcome == 'success'
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              text: '✅ E2E Tests Passed',
-              attachments: [{
-                color: 'good',
-                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nEnvironment: ${{ steps.context.outputs.environment }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Slack on Test Failure
-        if: github.event_name != 'pull_request' && (steps.run-tests.outcome == 'failure' || failure())
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              "text": "⚠️ E2E Tests Failed",
-              "attachments": [{
-                "color": "warning",
-                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nEnvironment: ${{ steps.context.outputs.environment }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
