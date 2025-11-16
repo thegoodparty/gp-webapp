@@ -7,39 +7,19 @@ on:
       - 'Production - gp-ui'
       
   schedule:
-  # Run at midnight PST (8 AM UTC)
-  - cron: '0 8 * * *'
+    # Run at midnight PST (8 AM UTC)
+    - cron: '0 8 * * *'
     
 jobs:
   e2e-tests:
-    name: Run E2E Tests on Staging
-    runs-on: ubuntu-22.04
-    if: github.event.deployment_status.state == 'success'
-    # Explicit permissions for accessing workflow artifacts
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # Only run on successful deployments OR scheduled runs
+    if: github.event_name == 'schedule' || github.event.deployment_status.state == 'success'
     permissions:
       actions: read
       contents: read
-    services:
-      browser:
-        image: ghcr.io/browserless/chromium
-        ports:
-          - 3000:3000
-        env:
-          # Increase browserless.io timeout to 5 minutes (300 seconds)
-          MAX_CONCURRENT_SESSIONS: 1
-          MAX_QUEUE_LENGTH: 10
-          TIMEOUT: 300000
-          CONNECTION_TIMEOUT: 300000
-          KEEP_ALIVE: true
-          # Disable rate limiting for E2E tests
-          ENABLE_DEBUGGER: true
-          ENABLE_DEBUGGER_VIEWER: true
-          # Additional settings for better E2E test stability
-          PREBOOT_CHROME: true
-          CHROME_REFRESH_TIME: 0
-          MAX_MEMORY_PERCENT: 90
-          MAX_CPU_PERCENT: 90
-          ENABLE_CORS: true
     steps:
       - name: Print Workflow Trigger Event
         env:
@@ -47,30 +27,20 @@ jobs:
         run: |
           echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
 
-      - name: Check out the repository to the runner
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: Install Dependencies for gp-webapp
-        run: npm install
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel
-
-      - name: Link Vercel Project
+      - name: Determine Deployment URL
+        id: deployment
         run: |
-          vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
-
-      - name: Capture Deployment URL
-        run: |
-          # Get the Vercel preview URL directly from the deployment status
-          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
-          echo "Using deployment URL: $DEPLOYMENT_URL"
-          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # For scheduled runs, test production
+            echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
+            echo "environment=production" >> "$GITHUB_OUTPUT"
+          else
+            # For deployment events, use the deployment URL
+            DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+            echo "Using deployment URL: $DEPLOYMENT_URL"
+            echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+            echo "environment=${{ github.event.deployment_status.environment }}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
@@ -80,58 +50,114 @@ jobs:
           path: test-automation
           ref: develop
 
-      - name: Install Playwright Dependencies in test-automation Repo
-        run: |
-          cd test-automation
-          npm install
-          npx playwright install --with-deps
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: test-automation/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: test-automation
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        working-directory: test-automation
+        run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: |
-          cd test-automation
-          npx playwright test --workers=1
+        id: run-tests
+        working-directory: test-automation
+        run: npx playwright test --workers=1
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          PLAYWRIGHT_WS_ENDPOINT: ws://localhost:3000
-          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
-          NODE_PATH: ${{ secrets.NODE_PATH }}
-          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
-          TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
-          TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TEST_RUN_NAME: "E2E Tests - ${{ steps.deployment.outputs.environment }} - ${{ github.event_name }}"
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
-      - name: Notify Slack Workflow
+      - name: Upload test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-automation/playwright-report
+            test-automation/test-results
+          retention-days: 30
+
+      - name: Parse test results
         if: always()
-        env:
-          SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
+        id: test-results
+        shell: bash
+        working-directory: test-automation
         run: |
-          # Set STATUS and COLOR based on job status
-          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
-          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
-          
-          # Send the Slack notification
-          curl -X POST -H "Content-type: application/json" \
-          --data '{
-            "text": "Playwright Test Results ('"${STATUS}"')",
-            "attachments": [
-              {
-                "color": "'"${COLOR}"'",
-                "fields": [
-                  { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
-                  { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
-                  { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
-                ],
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "View Test Runs",
-                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
-                    "style": "primary"
-                  }
-                ]
-              }
-            ]
-          }' $SLACK_WORKFLOW_WEBHOOK
+          if [ -f "test-results/results.json" ]; then
+            echo "Found results.json, parsing test results..."
+            
+            TOTAL_TESTS=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[]] | length' 2>/dev/null || echo "0")
+            FAILED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == false)] | length' 2>/dev/null || echo "0")
+            PASSED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == true)] | length' 2>/dev/null || echo "0")
+            
+            echo "Parsed: Total=$TOTAL_TESTS, Failed=$FAILED_COUNT, Passed=$PASSED_COUNT"
+            
+            echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+            echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+            echo "passed_count=$PASSED_COUNT" >> $GITHUB_OUTPUT
+            
+            if [ "$FAILED_COUNT" -gt 0 ]; then
+              FAILED_TESTS=$(cat test-results/results.json | jq -r '[.. | .specs? // empty | .[] | select(.ok == false) | .title] | .[:10] | .[]' 2>/dev/null | sed 's/^/• /' || echo "• Failed to parse test names")
+              if [ -z "$FAILED_TESTS" ]; then
+                FAILED_TESTS="• $FAILED_COUNT test(s) failed but names could not be parsed"
+              fi
+              echo "failed_tests<<EOF" >> $GITHUB_OUTPUT
+              echo "$FAILED_TESTS" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+              echo "tests_ran=true" >> $GITHUB_OUTPUT
+            else
+              echo "failed_tests=" >> $GITHUB_OUTPUT
+              if [ "$TOTAL_TESTS" -gt 0 ]; then
+                echo "tests_ran=true" >> $GITHUB_OUTPUT
+              else
+                echo "tests_ran=false" >> $GITHUB_OUTPUT
+              fi
+            fi
+          else
+            echo "⚠️  results.json file not found - tests may not have run"
+            echo "failed_tests=• Test results file not found (tests may not have started)" >> $GITHUB_OUTPUT
+            echo "failed_count=0" >> $GITHUB_OUTPUT
+            echo "passed_count=0" >> $GITHUB_OUTPUT
+            echo "total_tests=0" >> $GITHUB_OUTPUT
+            echo "tests_ran=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack on Test Success
+        if: steps.run-tests.outcome == 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: '✅ E2E Tests Passed',
+              attachments: [{
+                color: 'good',
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nEnvironment: ${{ steps.deployment.outputs.environment }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Test Failure
+        if: steps.run-tests.outcome == 'failure' || failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "${{ steps.test-results.outputs.tests_ran == 'true' && '⚠️ E2E Tests Failed' || '❌ Test Environment Not Ready' }}",
+              "attachments": [{
+                "color": "${{ steps.test-results.outputs.tests_ran == 'true' && 'warning' || 'danger' }}",
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nEnvironment: ${{ steps.deployment.outputs.environment }}\nURL: ${{ env.BASE_URL }}\n\n${{ steps.test-results.outputs.tests_ran == 'true' && format('❌ {0}/{1} tests failed\n✅ {2}/{1} tests passed\n\nFailed Tests:\n{3}', steps.test-results.outputs.failed_count, steps.test-results.outputs.total_tests, steps.test-results.outputs.passed_count, steps.test-results.outputs.failed_tests) || '❌ Tests did not run - test setup error or environment not ready.' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
