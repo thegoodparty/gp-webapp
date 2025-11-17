@@ -2,6 +2,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis'
 
+interface GTMEvent {
+  event: string
+  formId?: string
+  'hs-form-guid'?: string
+  'hs-form-name'?: string
+}
+
 declare global {
   interface Window {
     hbspt?: {
@@ -16,7 +23,7 @@ declare global {
         }) => void
       }
     }
-    dataLayer?: Array<Record<string, string>>
+    dataLayer?: GTMEvent[]
   }
 }
 
