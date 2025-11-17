@@ -132,6 +132,7 @@ const POLLS_MENU_ITEM = {
   link: '/dashboard/polls',
   icon: <MdPoll />,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
+  isNew: true,
 }
 
 const getDashboardMenuItems = (
@@ -211,7 +212,7 @@ export default function DashboardMenu({
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
-        const { id, link, icon, label, target } = item
+        const { id, link, icon, label, target, isNew } = item
         return (
           <DashboardMenuItem
             key={label}
@@ -221,6 +222,7 @@ export default function DashboardMenu({
             onClick={() => handleMenuItemClick(item)}
             pathname={pathname}
             target={target}
+            isNew={isNew}
           >
             {label}
           </DashboardMenuItem>
