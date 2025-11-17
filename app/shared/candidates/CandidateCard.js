@@ -37,7 +37,7 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
     }
     return (
       <Link
-        href={candidateRoute(candidate)}
+        href={candidateRoute(candidate?.slug)}
         passHref
         style={{ height: '100%' }}
         className="no-underline candidate-card"
