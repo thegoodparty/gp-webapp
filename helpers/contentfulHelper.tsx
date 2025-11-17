@@ -25,7 +25,8 @@ const dtrOptions: Options = {
   },
 }
 
-const contentfulHelper = (rawRichTextField: string | Document): React.ReactNode => {
+const contentfulHelper = (rawRichTextField: string | Document | undefined): React.ReactNode => {
+  if (!rawRichTextField) return null
   try {
     let doc: Document = rawRichTextField as Document
     if (typeof rawRichTextField === 'string') {
