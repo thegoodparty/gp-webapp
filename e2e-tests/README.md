@@ -287,54 +287,236 @@ npm test
 
 ## 🤝 Contributing
 
-When adding new tests:
+When adding new tests, follow these patterns based on whether the page requires authentication.
 
-### For Dashboard/App Features (Pre-authenticated)
+### For Guest/Public Pages (No Authentication)
+
+Place tests in `tests/core/pages/` for public-facing pages that don't require authentication.
+
+**Example: Public Blog Page**
 
 ```typescript
-test.describe("New Feature", () => {
+import { test, expect } from "@playwright/test";
+import { NavigationHelper } from "../../../src/helpers/navigation.helper";
+import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
+import { WaitHelper } from "../../../src/helpers/wait.helper";
+
+test.describe("Blog Page", () => {
   test.beforeEach(async ({ page }) => {
-    // Page starts authenticated via storageState
-    await page.goto("/dashboard");
-    // Complete onboarding if redirected (rare)
+    // Navigate to the public page
+    await NavigationHelper.navigateToPage(page, "/blog");
+    // Dismiss any overlays (cookie banners, modals, etc.)
+    await NavigationHelper.dismissOverlays(page);
   });
 
-  test("should test feature", async ({ page }) => {
-    // Test your feature - user is already logged in
+  test.afterEach(async ({ page }, testInfo) => {
+    // Automatically capture screenshot on test failure
+    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+  });
+
+  test("should display page elements", async ({ page }) => {
+    // Assert - verify page content using user-facing locators
+    await expect(page.getByRole("heading", { name: "Blog" })).toBeVisible();
+    await expect(page.getByText(/Insights into politics/)).toBeVisible();
+  });
+
+  test("should navigate to content", async ({ page }) => {
+    // Wait for dynamic content to load
+    await WaitHelper.waitForPageReady(page);
+
+    // Act - interact with page elements
+    await page.getByRole("button", { name: "Read More" }).first().click();
+
+    // Assert - verify navigation occurred
+    await expect(page).toHaveURL(/.*\/article/);
   });
 });
 ```
 
-### For Public Pages (No Authentication)
+**Key Points for Guest Pages:**
+
+- No `storageState` configuration needed (tests run unauthenticated by default in `tests/core/`)
+- Use `NavigationHelper.navigateToPage()` for initial navigation
+- Use `NavigationHelper.dismissOverlays()` to clear cookie banners/modals
+- Use `CleanupHelper.takeScreenshotOnFailure()` in `afterEach` for debugging
+- Use `WaitHelper.waitForPageReady()` when waiting for dynamic content
+
+### For Authenticated Pages (Dashboard/App Features)
+
+Place tests in `tests/app/` for features that require authentication. Tests automatically start pre-authenticated via `storageState`.
+
+**Example: Authenticated Dashboard Feature**
 
 ```typescript
-// Reset storage state to start unauthenticated
-test.use({ storageState: { cookies: [], origins: [] } });
+import { test, expect } from "@playwright/test";
+import { NavigationHelper } from "../../../src/helpers/navigation.helper";
+import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
+import { WaitHelper } from "../../../src/helpers/wait.helper";
 
-test.describe("Public Feature", () => {
-  test("should test public feature", async ({ page }) => {
-    // Test public pages - no authentication
+test.describe("Content Builder", () => {
+  test.beforeEach(async ({ page }) => {
+    // Page is already authenticated via storageState from auth.setup.ts
+    await page.goto("/dashboard");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Dismiss any overlays
+    await NavigationHelper.dismissOverlays(page);
+  });
+
+  test.afterEach(async ({ page }, testInfo) => {
+    // Screenshot on failure and clear browser data
+    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+    await CleanupHelper.clearBrowserData(page);
+  });
+
+  test("should access feature page", async ({ page }) => {
+    // Navigate to authenticated feature
+    await page.goto("/dashboard/content");
+    await WaitHelper.waitForPageReady(page);
+    await WaitHelper.waitForLoadingToComplete(page);
+
+    // Assert - verify page loads correctly
+    await expect(
+      page.getByRole("heading", { name: "Content Builder" })
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard\/content$/);
+  });
+
+  test("should interact with feature", async ({ page }) => {
+    await page.goto("/dashboard/content");
+    await WaitHelper.waitForLoadingToComplete(page);
+
+    // Test feature-specific functionality
+    await page.getByRole("button", { name: "Create New" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
   });
 });
 ```
+
+**Key Points for Authenticated Pages:**
+
+- Tests automatically start authenticated (via `storageState` from `auth.setup.ts`)
+- Navigate directly to `/dashboard` or feature routes
+- Use `page.goto()` directly (no need for `NavigationHelper.navigateToPage()`)
+- Use `CleanupHelper.clearBrowserData()` in `afterEach` to reset state between tests
+- Use `WaitHelper.waitForLoadingToComplete()` for loading spinners
 
 ### For Onboarding/Registration (Custom Auth)
 
+Place tests in `tests/onboarding/` or `tests/core/auth/` for flows that create new users.
+
+**Example: User Registration Flow**
+
 ```typescript
-// Reset storage state and create own users
+import { test, expect } from "@playwright/test";
+import { AccountHelper } from "../../../src/helpers/account.helper";
+import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
+
+// Reset storage state to start unauthenticated
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Registration Flow", () => {
-  test("should test registration", async ({ page }) => {
-    // Create and test new user registration
+  test.afterEach(async ({ page }, testInfo) => {
+    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+  });
+
+  test("should create new account", async ({ page }) => {
+    // Create a test account (automatically tracked for cleanup)
+    const testUser = await AccountHelper.createTestAccount(page);
+
+    // Assert - verify account creation succeeded
+    await expect(page).toHaveURL(/\/onboarding/);
+    console.log(`✅ Test account created: ${testUser.email}`);
   });
 });
+```
+
+**Key Points for Registration Tests:**
+
+- Use `test.use({ storageState: { cookies: [], origins: [] } })` to reset auth state
+- Use `AccountHelper.createTestAccount()` for automatic cleanup
+- Test accounts are automatically deleted by `auth.cleanup.ts`
+
+### Common Helpers Reference
+
+**NavigationHelper** - Page navigation and overlay management
+
+```typescript
+import { NavigationHelper } from "../../../src/helpers/navigation.helper";
+
+// Navigate to a page (handles base URL automatically)
+await NavigationHelper.navigateToPage(page, "/blog");
+
+// Dismiss cookie banners, modals, and overlays
+await NavigationHelper.dismissOverlays(page);
+```
+
+**WaitHelper** - Smart waiting for dynamic content
+
+```typescript
+import { WaitHelper } from "../../../src/helpers/wait.helper";
+
+// Wait for page to be fully ready
+await WaitHelper.waitForPageReady(page);
+
+// Wait for loading spinners to disappear
+await WaitHelper.waitForLoadingToComplete(page);
+```
+
+**CleanupHelper** - Test cleanup and debugging
+
+```typescript
+import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
+
+// Take screenshot on test failure (use in afterEach)
+await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+
+// Clear browser data between tests (for authenticated tests)
+await CleanupHelper.clearBrowserData(page);
+```
+
+**AccountHelper** - User account management
+
+```typescript
+import { AccountHelper } from "../../../src/helpers/account.helper";
+
+// Create test account (auto-cleanup)
+const testUser = await AccountHelper.createTestAccount(page);
+
+// Login with test credentials
+await AccountHelper.loginWithTestAccount(page, testUser);
+
+// Use global test user (created in globalSetup)
+const globalUser = await AccountHelper.useGlobalTestUser(page);
+```
+
+**AuthHelper** - Authentication operations
+
+```typescript
+import { AuthHelper } from "../../../src/helpers/auth.helper";
+
+// Login as a specific user
+await AuthHelper.loginAsUser(page, {
+  email: "test@example.com",
+  password: "password",
+});
+
+// Login as admin (requires env vars)
+await AuthHelper.loginAsAdmin(page);
+
+// Logout current user
+await AuthHelper.logout(page);
 ```
 
 ### General Guidelines
 
-1. **Use user-facing locators** (`getByRole`, `getByLabel`, `getByText`)
-2. **Implement web-first assertions** with auto-waiting
-3. **Never use hardcoded waits** (`waitForTimeout`)
+1. **Use user-facing locators** - `getByRole`, `getByLabel`, `getByText`, `getByPlaceholder`
+2. **Implement web-first assertions** - `toBeVisible()`, `toBeEnabled()`, `toHaveURL()`
+3. **Never use hardcoded waits** - Use `WaitHelper` or state-based waiting instead of `waitForTimeout`
 4. **Test user behavior**, not implementation details
-5. **Follow authentication patterns** based on test type
+5. **Follow authentication patterns** based on test type:
+   - Guest pages → `tests/core/pages/`
+   - Authenticated pages → `tests/app/`
+   - Registration flows → `tests/onboarding/` or `tests/core/auth/`
+6. **Import helpers from `src/helpers/`** - Use established patterns for consistency
+7. **Always include cleanup** - Use `afterEach` with `CleanupHelper.takeScreenshotOnFailure()`
