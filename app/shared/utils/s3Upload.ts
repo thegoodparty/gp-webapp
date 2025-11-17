@@ -1,46 +1,30 @@
 'use client'
 import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-import { IS_LOCAL, IS_PROD, IS_DEV } from 'appEnv'
-
-export const getBucketName = (): string => {
-  if (IS_LOCAL || IS_DEV) return 'assets-dev.goodparty.org'
-  if (IS_PROD) return 'assets.goodparty.org'
-  return 'assets-qa.goodparty.org'
-}
-
-interface UploadBlobParams {
-  blobOrFile: Blob | File
-  fileType: string
-  fileName: string
-  folder: string
-}
-
-interface SignedUploadUrlResponse {
-  signedUploadUrl: string
-}
+import { ApiRoute } from 'gpApi/routes'
 
 export const uploadBlobToS3 = async ({
   blobOrFile,
   fileType,
   fileName,
-  folder,
-}: UploadBlobParams): Promise<string> => {
-  if (!blobOrFile || !fileType || !fileName || !folder) {
+  signedUrlRoute,
+}: {
+  blobOrFile: Blob | File
+  fileType: string
+  fileName: string
+  signedUrlRoute: ApiRoute
+}) => {
+  if (!blobOrFile || !fileType || !fileName || !signedUrlRoute) {
     throw new Error('Missing required parameters')
   }
 
   const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
-  const sanitizedFolder = folder.replace(/[^a-zA-Z0-9/_-]/g, '_')
 
-  const resp = await clientFetch<SignedUploadUrlResponse>(
-    apiRoutes.user.files.generateSignedUploadUrl,
-    {
-      fileType,
-      fileName: sanitizedFileName,
-      bucket: sanitizedFolder,
-    },
-  )
+  const requestBody = {
+    fileName: sanitizedFileName,
+    contentType: fileType,
+  }
+
+  const resp = await clientFetch(signedUrlRoute, requestBody)
 
   if (!resp.ok) {
     throw new Error(
@@ -48,9 +32,12 @@ export const uploadBlobToS3 = async ({
     )
   }
 
-  const { signedUploadUrl } = resp.data
+  const { signedUrl, publicUrl } = resp.data as {
+    signedUrl: string
+    publicUrl: string
+  }
 
-  const uploadResult = await fetch(signedUploadUrl, {
+  const uploadResult = await fetch(signedUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': fileType,
@@ -64,16 +51,15 @@ export const uploadBlobToS3 = async ({
     )
   }
 
-  const bucketName = getBucketName()
-  const publicUrl = `https://${bucketName}/${sanitizedFolder}/${sanitizedFileName}`
   return publicUrl
 }
 
-export const uploadFileToS3 = async (
-  file: File,
-  folder: string,
-): Promise<string> => {
+export const uploadFileToS3 = async (file: File, signedUrlRoute: ApiRoute) => {
   const { name: fileName, type: fileType } = file
-  return uploadBlobToS3({ blobOrFile: file, fileType, fileName, folder })
+  return uploadBlobToS3({
+    blobOrFile: file,
+    fileType,
+    fileName,
+    signedUrlRoute,
+  })
 }
-
