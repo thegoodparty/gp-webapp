@@ -106,7 +106,6 @@
   },
   "devDependencies": {
     "@storybook/addon-essentials": "8.6.12",
-    "@storybook/addon-interactions": "^8.6.12",
     "@storybook/addon-links": "8.6.12",
     "@storybook/blocks": "8.6.12",
     "@storybook/nextjs": "8.6.12",
