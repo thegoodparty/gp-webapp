@@ -1,4 +1,10 @@
-export const OFFICE_INPUT_FIELDS = [
+interface OfficeInputField {
+  key: string
+  label: string
+  type: 'text' | 'date'
+}
+
+export const OFFICE_INPUT_FIELDS: OfficeInputField[] = [
   {
     key: 'office',
     label: 'Office',
@@ -26,17 +32,28 @@ export const OFFICE_INPUT_FIELDS = [
     label: 'Term Length',
     type: 'text',
   },
-];
+]
 
-export const campaignOfficeFields = (campaignDetails = {}) => {
+interface CampaignDetails {
+  office?: string
+  otherOffice?: string
+  state?: string
+  electionDate?: string
+  primaryElectionDate?: string
+  officeTermLength?: string
+  [key: string]: string | undefined
+}
+
+export const campaignOfficeFields = (campaignDetails: CampaignDetails = {}): Record<string, string> => {
   const fieldsAsMap = OFFICE_INPUT_FIELDS.reduce(
     (accumulator, field) => ({
       ...accumulator,
       [field.key]: campaignDetails[field.key] || '',
     }),
-    {},
-  );
+    {} as Record<string, string>,
+  )
   fieldsAsMap.office =
-    campaignDetails.otherOffice || campaignDetails.office || '';
-  return fieldsAsMap;
-};
+    campaignDetails.otherOffice || campaignDetails.office || ''
+  return fieldsAsMap
+}
+
