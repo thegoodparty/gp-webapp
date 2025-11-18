@@ -16,9 +16,10 @@ test.describe("Sign Up Functionality", () => {
     // Create a test account (automatically tracked for cleanup)
     const testUser = await AccountHelper.createTestAccount(page);
 
-    // Assert - verify account creation succeeded and redirected to onboarding
-    await expect(page).toHaveURL(/\/onboarding/);
-    console.log(`✅ Test account created: ${testUser.email}`);
+    // Assert - verify account creation succeeded and user is logged in
+    // The account helper completes onboarding, so user should be at dashboard
+    await expect(page).toHaveURL(/\/dashboard/);
+    console.log(`✅ Test account created and onboarded: ${testUser.email}`);
   });
 
   test("should display sign up form elements", async ({ page }) => {

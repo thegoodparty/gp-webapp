@@ -138,35 +138,52 @@ Optimized for performance and reliability:
 Following [Playwright's authentication recommendations](https://playwright.dev/docs/auth):
 
 ```typescript
-// Setup project creates authenticated state once
+// Setup project creates fully onboarded user once
 setup("authenticate with onboarded user", async ({ page }) => {
-  // Create user and complete onboarding
-  const user = await createUserWithOnboarding(page);
+  // Create account
+  const testUser = TestDataHelper.generateTestUser();
+  await page.goto("/sign-up");
+  // ... fill signup form ...
+  
+  // Complete full 4-step onboarding flow
+  await completeOnboardingFlow(page);
+  // Step 1: Office Selection (Henderson County, NC - zip 28739)
+  // Step 2: Party Selection (Independent)
+  // Step 3: Pledge Agreement
+  // Step 4: Dashboard Access
 
-  // Save authenticated browser state
+  // Save fully onboarded browser state
   await page.context().storageState({ path: authFile });
 });
 ```
 
 ### Test Execution Flow
 
-1. **Setup Project** (`auth.setup.ts`) - Creates authenticated user, saves browser state
-2. **Main Tests** - Start pre-authenticated using `storageState`
+1. **Setup Project** (`auth.setup.ts`) - Creates **fully onboarded user**, saves browser state
+2. **Main Tests** - Start pre-authenticated **at dashboard** using `storageState`
 3. **Cleanup Project** (`auth.cleanup.ts`) - Removes authentication user
 
 ### Benefits
 
-- **⚡ Fast Tests** - No per-test authentication (4-8 seconds vs 30+ seconds)
-- **🔒 Reliable** - Consistent authenticated state across all tests
+- **⚡ Fast Tests** - App tests start immediately at dashboard (8 seconds vs 30+ seconds)
+- **🔒 Reliable** - Consistent fully onboarded state across all tests
 - **🧹 Clean** - Single user creation/cleanup vs dozens per run
 - **📏 Scalable** - Follows Playwright best practices for team environments
+- **🎯 No Duplication** - Onboarding logic exists only in setup, not in every test
 
 ### Test Categories by Authentication
 
 ```typescript
-// 🔐 Pre-authenticated tests (app features)
+// 🔐 Pre-authenticated tests (app features) - START AT DASHBOARD
 test.describe("AI Assistant", () => {
-  // Uses storageState - starts authenticated
+  test.beforeEach(async ({ page }) => {
+    // User is already fully onboarded via storageState
+    await page.goto('/dashboard');
+    // Verify we're at dashboard (should be immediate)
+    if (!page.url().includes('/dashboard')) {
+      throw new Error(`Expected dashboard but got: ${page.url()}`);
+    }
+  });
 });
 
 // 🌐 No authentication tests (public pages)
@@ -176,6 +193,7 @@ test.describe("Login Functionality", () => {
 });
 
 // 🚀 Custom authentication tests (onboarding)
+test.use({ storageState: { cookies: [], origins: [] } });
 test.describe("Onboarding Flow", () => {
   // Creates own users to test the onboarding process
 });
@@ -262,17 +280,25 @@ rm -rf playwright/.auth/
 npm test
 ```
 
-**"Onboarding tests are stuck"**
+**"Auth setup is stuck on onboarding"**
 
 - Ensure your local server is running on `localhost:4000`
 - Check that zip code `28739` has office data in your test environment
 - Verify the "Office Level" dropdown has selectable options
+- Check the trace file: `npx playwright show-trace test-results/auth.setup.ts-*/trace.zip`
 
-**"Tests are slow"**
+**"App tests are slow"**
 
-- Pre-authenticated tests should be 4-8 seconds
-- If slower, check if onboarding completion is running unnecessarily
+- App tests should be ~8 seconds (they start at dashboard)
+- Auth setup takes ~16 seconds (creates fully onboarded user)
+- If app tests are slower, they may be running onboarding unnecessarily
 - Use `--reporter=list` for faster feedback
+
+**"App tests fail with 'Expected dashboard but got onboarding'"**
+
+- This means auth setup didn't complete onboarding properly
+- Delete auth state: `rm -rf playwright/.auth/`
+- Run setup manually: `npx playwright test tests/auth.setup.ts --project=setup`
 
 **"Browser context closed errors"**
 
@@ -343,7 +369,7 @@ test.describe("Blog Page", () => {
 
 ### For Authenticated Pages (Dashboard/App Features)
 
-Place tests in `tests/app/` for features that require authentication. Tests automatically start pre-authenticated via `storageState`.
+Place tests in `tests/app/` for features that require authentication. Tests automatically start **fully onboarded** and **pre-authenticated** via `storageState`.
 
 **Example: Authenticated Dashboard Feature**
 
@@ -355,11 +381,15 @@ import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Content Builder", () => {
   test.beforeEach(async ({ page }) => {
-    // Page is already authenticated via storageState from auth.setup.ts
-    await page.goto("/dashboard");
-    await page.waitForLoadState("domcontentloaded");
-
-    // Dismiss any overlays
+    // Page is already authenticated and fully onboarded via storageState from auth.setup.ts
+    await page.goto('/dashboard');
+    await page.waitForLoadState('domcontentloaded');
+    
+    // Verify we're at dashboard (should be immediate since user is fully onboarded)
+    if (!page.url().includes('/dashboard')) {
+      throw new Error(`Expected dashboard but got: ${page.url()}`);
+    }
+    
     await NavigationHelper.dismissOverlays(page);
   });
 
@@ -395,9 +425,10 @@ test.describe("Content Builder", () => {
 
 **Key Points for Authenticated Pages:**
 
-- Tests automatically start authenticated (via `storageState` from `auth.setup.ts`)
+- Tests automatically start **fully onboarded** at dashboard (via `storageState` from `auth.setup.ts`)
+- **No onboarding needed** - user has already completed all 4 steps during setup
 - Navigate directly to `/dashboard` or feature routes
-- Use `page.goto()` directly (no need for `NavigationHelper.navigateToPage()`)
+- **Verify dashboard access** - throw error if redirected to onboarding (indicates setup failure)
 - Use `CleanupHelper.clearBrowserData()` in `afterEach` to reset state between tests
 - Use `WaitHelper.waitForLoadingToComplete()` for loading spinners
 
