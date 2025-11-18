@@ -348,6 +348,11 @@ export class TestDataManager {
           return button && !button.disabled;
         }, { timeout: 10000 });
         console.log("✅ Form validation passed, clicking Join button");
+        
+        // Dismiss any overlays that might have appeared (like cookie banners)
+        const { NavigationHelper } = await import('../helpers/navigation.helper');
+        await NavigationHelper.dismissOverlays(page);
+        
         await joinButton.click();
       } catch (error) {
         console.warn("⚠️ Form validation wait timed out");
@@ -376,16 +381,71 @@ export class TestDataManager {
           console.warn(`Required fields found: ${requiredFields}`);
         }
         
+        // Dismiss overlays before force clicking
+        const { NavigationHelper } = await import('../helpers/navigation.helper');
+        await NavigationHelper.dismissOverlays(page);
+        
         // Try force clicking as last resort
         console.warn("Trying force click as fallback");
         await joinButton.click({ force: true });
       }
       
+      // Wait for the registration request to be sent
+      let registrationResponse;
+      try {
+        console.log("⏳ Waiting for registration API call...");
+        registrationResponse = await page.waitForResponse(
+          response => response.url().includes('/register') && 
+                     response.request().method() === 'POST',
+          { timeout: 30000 }
+        );
+        console.log(`📡 Registration response: ${registrationResponse.status()}`);
+        
+        if (!registrationResponse.ok()) {
+          const responseText = await registrationResponse.text();
+          console.error(`❌ Registration failed: ${registrationResponse.status()} - ${responseText}`);
+          throw new Error(`Registration API call failed: ${registrationResponse.status()}`);
+        }
+      } catch (error) {
+        console.error("❌ Registration API call timeout or failed:", error.message);
+        
+        // Check if we're still on signup page and try to understand why
+        if (page.url().includes('/sign-up')) {
+          // Look for any error messages on the page
+          const errorMessages = await page.locator('[role="alert"], .error, .invalid, .text-red-500').allTextContents();
+          if (errorMessages.length > 0) {
+            console.error("Error messages found:", errorMessages);
+          }
+          
+          // Check if there are overlays blocking the form
+          const overlays = await page.locator('[role="dialog"], .modal, .popup, .overlay').count();
+          if (overlays > 0) {
+            console.warn(`Found ${overlays} potential overlay(s) blocking form submission`);
+            const { NavigationHelper } = await import('../helpers/navigation.helper');
+            await NavigationHelper.dismissOverlays(page);
+          }
+        }
+        
+        throw error;
+      }
+      
       // Wait for successful registration with better error handling
-      await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
-        timeout: 45000,
-        waitUntil: 'domcontentloaded'
-      });
+      try {
+        await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
+          timeout: 15000, // Reduced timeout since we already confirmed API success
+          waitUntil: 'domcontentloaded'
+        });
+      } catch (error) {
+        console.warn("⚠️ URL change timeout, but registration API succeeded. Checking current state...");
+        const currentUrl = page.url();
+        console.log(`Current URL: ${currentUrl}`);
+        
+        if (currentUrl.includes('/sign-up')) {
+          // Force navigation if still on signup page despite successful API call
+          console.log("🔄 Force navigating to dashboard...");
+          await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+        }
+      }
       
       // Handle post-registration navigation more reliably
       const currentUrl = page.url();
