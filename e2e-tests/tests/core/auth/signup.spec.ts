@@ -13,20 +13,14 @@ test.describe("Sign Up Functionality", () => {
   });
 
   test("should create new account successfully", async ({ page }) => {
-    // Create a test account (automatically tracked for cleanup)
     const testUser = await AccountHelper.createTestAccount(page);
-
-    // Assert - verify account creation succeeded and redirected to onboarding
-    await expect(page).toHaveURL(/\/onboarding/);
-    console.log(`✅ Test account created: ${testUser.email}`);
+    await expect(page).toHaveURL(/\/dashboard/);
+    console.log(`✅ Test account created and onboarded: ${testUser.email}`);
   });
 
   test("should display sign up form elements", async ({ page }) => {
-    // Arrange & Act
     await NavigationHelper.navigateToPage(page, "/sign-up");
     await NavigationHelper.dismissOverlays(page);
-    
-    // Assert - verify form elements are visible
     await expect(page.getByRole('heading', { name: 'Join GoodParty.org' })).toBeVisible();
     await expect(page.getByRole("textbox", { name: "First Name" })).toBeVisible();
     await expect(page.getByRole("textbox", { name: "Last Name" })).toBeVisible();
@@ -38,15 +32,12 @@ test.describe("Sign Up Functionality", () => {
   });
 
   test("should validate and process form data correctly", async ({ page }) => {
-    // Arrange
     await NavigationHelper.navigateToPage(page, "/sign-up");
     await NavigationHelper.dismissOverlays(page);
     
     const testZip = '94066';
     const testEmail = TestDataHelper.generateTestEmail();
     const testPhone = TestDataHelper.generateTestPhone();
-    
-    // Act - Fill form with intentional leading spaces to test trimming
     await page.getByRole("textbox", { name: "First Name" }).fill(' firstName');
     await page.getByRole("textbox", { name: "Last Name" }).fill(' lastName');
     await page.getByRole("textbox", { name: "email" }).fill(testEmail);
@@ -54,8 +45,6 @@ test.describe("Sign Up Functionality", () => {
     await page.getByRole("textbox", { name: "Zip Code" }).fill(testZip);
     await page.getByRole("textbox", { name: "password" }).fill("TestPassword123!");
     await page.getByRole("button", { name: "Join" }).click();
-
-    // Wait for the register request
     const registerResponse = await page.waitForResponse(resp => {
         return resp.url().includes("/register") &&
                resp.request().method() === "POST" &&
@@ -68,27 +57,17 @@ test.describe("Sign Up Functionality", () => {
     const email     = body.user.email as string;
     const zip       = body.user.zip as string;
     const phone     = body.user.phone as string;
-    
-    // Assert - Verify leading/trailing whitespace is removed
     expect(firstName).toBe(firstName.trim());
     expect(lastName).toBe(lastName.trim());
-    
-    // Assert - Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     expect(email.trim()).toBe(email);
     expect(emailRegex.test(email)).toBeTruthy();
-
-    // Assert - ZIP validation (US 5-digit or 5+4)
     const zipRegex = /^\d{5}(?:-\d{4})?$/;
     expect(zip.trim()).toBe(zip);
     expect(zipRegex.test(zip)).toBeTruthy();
-
-    // Assert - Phone validation (US 10-digit, numbers only)
     const phoneRegex = /^\d{10}$/;
     expect(phone.trim()).toBe(phone);
     expect(phoneRegex.test(phone)).toBeTruthy();
-    
-    // Assert - Verify successful registration (redirect to onboarding)
     await expect(page).toHaveURL(/\/onboarding/);
   });
 });
