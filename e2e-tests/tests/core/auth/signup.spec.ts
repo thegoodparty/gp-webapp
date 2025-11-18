@@ -60,7 +60,7 @@ test.describe("Sign Up Functionality", () => {
         return resp.url().includes("/register") &&
                resp.request().method() === "POST" &&
                resp.headers()["content-type"]?.includes("application/json");
-      });
+  });
 
     const body = await registerResponse.json();
     const firstName = body.user.firstName as string;
@@ -68,11 +68,11 @@ test.describe("Sign Up Functionality", () => {
     const email     = body.user.email as string;
     const zip       = body.user.zip as string;
     const phone     = body.user.phone as string;
-
+    
     // Assert - Verify leading/trailing whitespace is removed
     expect(firstName).toBe(firstName.trim());
     expect(lastName).toBe(lastName.trim());
-
+    
     // Assert - Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     expect(email.trim()).toBe(email);
@@ -87,7 +87,7 @@ test.describe("Sign Up Functionality", () => {
     const phoneRegex = /^\d{10}$/;
     expect(phone.trim()).toBe(phone);
     expect(phoneRegex.test(phone)).toBeTruthy();
-
+    
     // Assert - Verify successful registration (redirect to onboarding)
     await expect(page).toHaveURL(/\/onboarding/);
   });
