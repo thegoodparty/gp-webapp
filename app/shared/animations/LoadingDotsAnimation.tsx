@@ -9,5 +9,5 @@ interface LoadingDotsAnimationProps extends Omit<IPlayerProps, 'src'> {
 }
 
 export default function LoadingDotsAnimation(props: LoadingDotsAnimationProps): React.JSX.Element {
-  return <LottieAnimation animationData={data} {...props} />
+  return <LottieAnimation animationData={data} loop {...props} />
 }

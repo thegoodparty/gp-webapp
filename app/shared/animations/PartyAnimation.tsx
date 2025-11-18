@@ -9,5 +9,5 @@ interface PartyAnimationProps extends Omit<IPlayerProps, 'src'> {
 }
 
 export default function PartyAnimation(props: PartyAnimationProps): React.JSX.Element {
-  return <LottieAnimation animationData={data} {...props} />
+  return <LottieAnimation animationData={data} loop {...props} />
 }
