@@ -1,38 +1,58 @@
 import { test, expect } from "@playwright/test";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
-import { generateEmail, generatePhone, userData } from "helpers/dataHelpers";
+import { AccountHelper } from "../../../src/helpers/account.helper";
+import { TestDataHelper } from "../../../src/helpers/data.helper";
 
 // Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Sign Up Functionality", () => {
-  test.beforeEach(async ({ page }) => {
-    await NavigationHelper.navigateToPage(page, "/sign-up");
-    await NavigationHelper.dismissOverlays(page);
-  });
-
   test.afterEach(async ({ page }, testInfo) => {
     await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-    await CleanupHelper.clearBrowserData(page);
-    await CleanupHelper.cleanupTestData(page);
   });
 
-  test("should validate sign up form data processing", async ({ page }) => {
-    // Arrange
-    const testZip = '94066';
-    
-    // Verify page loaded correctly
-    const signUpPageHeader = page.getByRole('heading', { name: 'Join GoodParty.org' });
-    await expect(signUpPageHeader).toBeVisible();
+  test("should create new account successfully", async ({ page }) => {
+    // Create a test account (automatically tracked for cleanup)
+    const testUser = await AccountHelper.createTestAccount(page);
 
+    // Assert - verify account creation succeeded and redirected to onboarding
+    await expect(page).toHaveURL(/\/onboarding/);
+    console.log(`✅ Test account created: ${testUser.email}`);
+  });
+
+  test("should display sign up form elements", async ({ page }) => {
+    // Arrange & Act
+    await NavigationHelper.navigateToPage(page, "/sign-up");
+    await NavigationHelper.dismissOverlays(page);
+    
+    // Assert - verify form elements are visible
+    await expect(page.getByRole('heading', { name: 'Join GoodParty.org' })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "First Name" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Last Name" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "email" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "phone" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Zip Code" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "password" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Join" })).toBeVisible();
+  });
+
+  test("should validate and process form data correctly", async ({ page }) => {
+    // Arrange
+    await NavigationHelper.navigateToPage(page, "/sign-up");
+    await NavigationHelper.dismissOverlays(page);
+    
+    const testZip = '94066';
+    const testEmail = TestDataHelper.generateTestEmail();
+    const testPhone = TestDataHelper.generateTestPhone();
+    
     // Act - Fill form with intentional leading spaces to test trimming
     await page.getByRole("textbox", { name: "First Name" }).fill(' firstName');
     await page.getByRole("textbox", { name: "Last Name" }).fill(' lastName');
-    await page.getByRole("textbox", { name: "email" }).fill(generateEmail());
-    await page.getByRole("textbox", { name: "phone" }).fill(generatePhone());
+    await page.getByRole("textbox", { name: "email" }).fill(testEmail);
+    await page.getByRole("textbox", { name: "phone" }).fill(testPhone);
     await page.getByRole("textbox", { name: "Zip Code" }).fill(testZip);
-    await page.getByRole("textbox", { name: "password" }).fill(userData.password + "1");
+    await page.getByRole("textbox", { name: "password" }).fill("TestPassword123!");
     await page.getByRole("button", { name: "Join" }).click();
 
     // Wait for the register request
@@ -67,5 +87,8 @@ test.describe("Sign Up Functionality", () => {
     const phoneRegex = /^\d{10}$/;
     expect(phone.trim()).toBe(phone);
     expect(phoneRegex.test(phone)).toBeTruthy();
+
+    // Assert - Verify successful registration (redirect to onboarding)
+    await expect(page).toHaveURL(/\/onboarding/);
   });
 });
