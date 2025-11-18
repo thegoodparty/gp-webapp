@@ -5,9 +5,15 @@ import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Content Builder", () => {
   test.beforeEach(async ({ page }) => {
-    // Page is already authenticated via storageState from auth.setup.ts
+    // Page is already authenticated and fully onboarded via storageState from auth.setup.ts
     await page.goto('/dashboard');
     await page.waitForLoadState('domcontentloaded');
+    
+    // Verify we're at dashboard (should be immediate since user is fully onboarded)
+    if (!page.url().includes('/dashboard')) {
+      throw new Error(`Expected dashboard but got: ${page.url()}`);
+    }
+    
     await NavigationHelper.dismissOverlays(page);
   });
 

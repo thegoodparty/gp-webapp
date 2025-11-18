@@ -39,7 +39,7 @@ export class TestDataManager {
       email: `test-${timestamp}@${env}.example.com`,
       phone: `5105${timestamp.toString().slice(-6)}`,
       password: process.env.TEST_DEFAULT_PASSWORD || "TestPassword123!",
-      zipCode: "82901",
+      zipCode: "28739",
     };
   }
 
@@ -314,6 +314,10 @@ export class TestDataManager {
       // Navigate to signup and create account
       await page.goto("/sign-up", { waitUntil: 'domcontentloaded' });
       
+      // Dismiss any overlays that might interfere with form interaction
+      const { NavigationHelper } = await import('../helpers/navigation.helper');
+      await NavigationHelper.dismissOverlays(page);
+      
       // Fill registration form with better error handling
       await page.getByRole("textbox", { name: "First Name" }).fill(userData.firstName);
       await page.getByRole("textbox", { name: "Last Name" }).fill(userData.lastName);
@@ -322,21 +326,60 @@ export class TestDataManager {
       await page.getByRole("textbox", { name: "Zip Code" }).fill(userData.zipCode);
       await page.getByPlaceholder("Please don't use your dog's name").fill(userData.password);
       
+      // Wait for form to be fully filled and validated
+      await page.waitForTimeout(1000);
+      
       // Submit form with better waiting
       const joinButton = page.getByRole("button", { name: "Join" });
       await joinButton.waitFor({ state: "visible", timeout: 15000 });
+      
+      // Check for form validation errors first
+      const validationErrors = await page.locator('[role="alert"], .error, .invalid').count();
+      if (validationErrors > 0) {
+        console.warn(`⚠️ Found ${validationErrors} validation errors on form`);
+        const errorTexts = await page.locator('[role="alert"], .error, .invalid').allTextContents();
+        console.warn("Validation errors:", errorTexts);
+      }
       
       // Wait for form validation to complete (with fallback)
       try {
         await page.waitForFunction(() => {
           const button = document.querySelector('button[type="submit"]') as HTMLButtonElement;
           return button && !button.disabled;
-        }, { timeout: 5000 });
+        }, { timeout: 10000 });
+        console.log("✅ Form validation passed, clicking Join button");
+        await joinButton.click();
       } catch (error) {
-        console.warn("⚠️ Form validation wait timed out, proceeding anyway");
+        console.warn("⚠️ Form validation wait timed out");
+        
+        // Check if button is still disabled and why
+        const isDisabled = await joinButton.isDisabled();
+        console.warn(`Button disabled: ${isDisabled}`);
+        
+        if (isDisabled) {
+          // Log form state for debugging
+          const formData = await page.evaluate(() => {
+            const form = document.querySelector('form');
+            if (!form) return "No form found";
+            
+            const formData = new FormData(form);
+            const data: any = {};
+            for (const [key, value] of formData.entries()) {
+              data[key] = value;
+            }
+            return data;
+          });
+          console.warn("Form data:", formData);
+          
+          // Try to find what's preventing submission
+          const requiredFields = await page.locator('input[required]').count();
+          console.warn(`Required fields found: ${requiredFields}`);
+        }
+        
+        // Try force clicking as last resort
+        console.warn("Trying force click as fallback");
+        await joinButton.click({ force: true });
       }
-      
-      await joinButton.click();
       
       // Wait for successful registration with better error handling
       await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
@@ -355,8 +398,12 @@ export class TestDataManager {
         await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
       }
       
-      // Verify we're successfully logged in
-      await page.waitForSelector('[data-testid="dashboard"], .dashboard, h1', { timeout: 15000 });
+      // Verify we're successfully logged in and at dashboard
+      await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+      
+      // Look for any dashboard content to confirm we're logged in
+      const dashboardContent = page.locator('h1, h2, h3, main, [data-testid*="dashboard"]');
+      await dashboardContent.first().waitFor({ state: 'visible', timeout: 10000 });
       
     } catch (error) {
       console.error(`❌ Account creation failed for ${userData.email}:`, error.message);
