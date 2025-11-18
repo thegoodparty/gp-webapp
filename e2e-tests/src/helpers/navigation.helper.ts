@@ -10,10 +10,28 @@ export class NavigationHelper {
 
   static async dismissCookieBanner(page: Page): Promise<void> {
     try {
-      // Use user-facing locator instead of generic selector
-      const closeButton = page.getByRole("button", { name: "Close" });
-      if (await closeButton.isVisible({ timeout: 5000 })) {
-        await closeButton.click();
+      // Try multiple common cookie banner patterns
+      const cookieSelectors = [
+        page.getByRole("button", { name: "Close" }),
+        page.getByRole("button", { name: /accept/i }),
+        page.getByRole("button", { name: /agree/i }),
+        page.getByRole("button", { name: /ok/i }),
+        page.getByRole("button", { name: /dismiss/i }),
+        page.locator('[data-testid*="cookie"] button, [class*="cookie"] button, [id*="cookie"] button'),
+        page.locator('button:has-text("×"), button:has-text("✕")')
+      ];
+      
+      for (const selector of cookieSelectors) {
+        try {
+          if (await selector.first().isVisible({ timeout: 2000 })) {
+            console.log("🍪 Dismissing cookie banner");
+            await selector.first().click();
+            await page.waitForTimeout(500); // Brief wait for banner to disappear
+            return;
+          }
+        } catch {
+          // Try next selector
+        }
       }
     } catch {
       // Cookie banner not present - continue silently
