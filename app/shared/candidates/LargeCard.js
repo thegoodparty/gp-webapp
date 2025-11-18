@@ -54,7 +54,7 @@ export default function LargeCard({ candidate, priority = false }) {
 
   return (
     <Link
-      href={candidateRoute(candidate)}
+      href={candidateRoute(candidate?.slug)}
       style={{ height: '100%' }}
       className="no-underline candidate-card"
       data-cy="candidate-link"

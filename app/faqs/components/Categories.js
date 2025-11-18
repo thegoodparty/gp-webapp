@@ -22,7 +22,7 @@ export default function Categories({ content }) {
               category.articles.map((article) => (
                 <div data-cy="faq-article" key={article.id}>
                   <Link
-                    href={faqArticleRoute(article)}
+                    href={faqArticleRoute(article.title)}
                     data-cy="faq-article-link"
                     className="block"
                   >

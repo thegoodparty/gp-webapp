@@ -8,6 +8,7 @@ export const DashboardMenuItem = ({
   onClick,
   pathname,
   target,
+  isNew,
 }) => {
   return (
     <>
@@ -21,8 +22,13 @@ export const DashboardMenuItem = ({
         target={target}
       >
         {icon || null}
-        <div className="relative">
+        <div className="relative flex items-center flex-1">
           <div className="ml-2">{children}</div>
+          {isNew && (
+            <span className="ml-2 px-2 py-0.5 text-xs font-semibold text-white bg-blue-500 rounded">
+              NEW
+            </span>
+          )}
         </div>
       </Link>
     </>

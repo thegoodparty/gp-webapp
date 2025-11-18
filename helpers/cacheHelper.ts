@@ -6,7 +6,7 @@ interface RevalidateResponse {
 }
 
 export const revalidatePage = async (path: string): Promise<RevalidateResponse> => {
-  const resp = await clientFetch(apiRoutes.admin.bustCache, { path })
+  const resp = await clientFetch<RevalidateResponse>(apiRoutes.admin.bustCache, { path })
   return resp.data
 }
 

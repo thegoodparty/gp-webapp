@@ -1,0 +1,50 @@
+enum CampaignTier {
+  WIN
+  LOSE
+  TOSSUP
+}
+
+model Campaign {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime                @default(now()) @map("created_at")
+  updatedAt             DateTime                @updatedAt @map("updated_at")
+  slug                  String                  @unique
+  isActive              Boolean                 @default(false) @map("is_active")
+  isVerified            Boolean?                @map("is_verified")
+  isPro                 Boolean?                @default(false) @map("is_pro")
+  isDemo                Boolean                 @default(false) @map("is_demo")
+  didWin                Boolean?                @map("did_win")
+  dateVerified          DateTime?               @map("date_verified")
+  tier                  CampaignTier?
+  formattedAddress      String?                 @map("formatted_address")
+  placeId               String?                 @map("place_id")
+  /// [CampaignData]
+  data                  Json                    @default("{}") @db.JsonB
+  /// [CampaignDetails]
+  details               Json                    @default("{}") @db.JsonB
+  /// [CampaignAiContent]
+  aiContent             Json                    @default("{}") @map("ai_content") @db.JsonB
+  vendorTsData          Json                    @default("{}") @map("vendor_ts_data") @db.JsonB
+  pathToVictory         PathToVictory?
+  campaignUpdateHistory CampaignUpdateHistory[]
+  user                  User?                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int                     @map("user_id")
+  canDownloadFederal    Boolean                 @default(false) @map("can_download_federal")
+  topIssues             TopIssue[]
+  campaignPositions     CampaignPosition[]
+  campaignPlanVersion   CampaignPlanVersion?
+  aiChats               AiChat[]
+  ecanvasser            Ecanvasser?
+  completedTaskIds      String[]                @default([]) @map("completed_task_ids")
+  hasFreeTextsOffer     Boolean                 @default(false) @map("has_free_texts_offer")
+  ScheduledMessage      ScheduledMessage[]
+  tcrCompliance         TcrCompliance?
+  voterFileFilters      VoterFileFilter[]
+  website               Website?
+  outreach              Outreach[]
+  communityIssue        CommunityIssue[]
+  electedOffices        ElectedOffice[]
+
+  @@index([slug])
+  @@map("campaign")
+}

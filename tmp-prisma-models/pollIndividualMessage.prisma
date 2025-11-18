@@ -1,0 +1,9 @@
+model PollIndividualMessage {
+  id       String   @id
+  poll     Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollId   String   @map("poll_id")
+  personId String   @map("person_id")
+  sentAt   DateTime @map("sent_at")
+
+  @@map("poll_individual_message")
+}
