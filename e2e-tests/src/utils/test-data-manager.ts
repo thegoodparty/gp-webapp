@@ -39,7 +39,7 @@ export class TestDataManager {
       email: `test-${timestamp}@${env}.example.com`,
       phone: `5105${timestamp.toString().slice(-6)}`,
       password: process.env.TEST_DEFAULT_PASSWORD || "TestPassword123!",
-      zipCode: "82901",
+      zipCode: "28739",
     };
   }
 
@@ -314,6 +314,10 @@ export class TestDataManager {
       // Navigate to signup and create account
       await page.goto("/sign-up", { waitUntil: 'domcontentloaded' });
       
+      // Dismiss any overlays that might interfere with form interaction
+      const { NavigationHelper } = await import('../helpers/navigation.helper');
+      await NavigationHelper.dismissOverlays(page);
+      
       // Fill registration form with better error handling
       await page.getByRole("textbox", { name: "First Name" }).fill(userData.firstName);
       await page.getByRole("textbox", { name: "Last Name" }).fill(userData.lastName);
@@ -322,27 +326,126 @@ export class TestDataManager {
       await page.getByRole("textbox", { name: "Zip Code" }).fill(userData.zipCode);
       await page.getByPlaceholder("Please don't use your dog's name").fill(userData.password);
       
+      // Wait for form to be fully filled and validated
+      await page.waitForTimeout(1000);
+      
       // Submit form with better waiting
       const joinButton = page.getByRole("button", { name: "Join" });
       await joinButton.waitFor({ state: "visible", timeout: 15000 });
+      
+      // Check for form validation errors first
+      const validationErrors = await page.locator('[role="alert"], .error, .invalid').count();
+      if (validationErrors > 0) {
+        console.warn(`⚠️ Found ${validationErrors} validation errors on form`);
+        const errorTexts = await page.locator('[role="alert"], .error, .invalid').allTextContents();
+        console.warn("Validation errors:", errorTexts);
+      }
       
       // Wait for form validation to complete (with fallback)
       try {
         await page.waitForFunction(() => {
           const button = document.querySelector('button[type="submit"]') as HTMLButtonElement;
           return button && !button.disabled;
-        }, { timeout: 5000 });
+        }, { timeout: 10000 });
+        console.log("✅ Form validation passed, clicking Join button");
+        
+        // Dismiss any overlays that might have appeared (like cookie banners)
+        const { NavigationHelper } = await import('../helpers/navigation.helper');
+        await NavigationHelper.dismissOverlays(page);
+        
+        await joinButton.click();
       } catch (error) {
-        console.warn("⚠️ Form validation wait timed out, proceeding anyway");
+        console.warn("⚠️ Form validation wait timed out");
+        
+        // Check if button is still disabled and why
+        const isDisabled = await joinButton.isDisabled();
+        console.warn(`Button disabled: ${isDisabled}`);
+        
+        if (isDisabled) {
+          // Log form state for debugging
+          const formData = await page.evaluate(() => {
+            const form = document.querySelector('form');
+            if (!form) return "No form found";
+            
+            const formData = new FormData(form);
+            const data: any = {};
+            for (const [key, value] of formData.entries()) {
+              data[key] = value;
+            }
+            return data;
+          });
+          console.warn("Form data:", formData);
+          
+          // Try to find what's preventing submission
+          const requiredFields = await page.locator('input[required]').count();
+          console.warn(`Required fields found: ${requiredFields}`);
+        }
+        
+        // Dismiss overlays before force clicking
+        const { NavigationHelper } = await import('../helpers/navigation.helper');
+        await NavigationHelper.dismissOverlays(page);
+        
+        // Try force clicking as last resort
+        console.warn("Trying force click as fallback");
+        await joinButton.click({ force: true });
       }
       
-      await joinButton.click();
+      // Wait for the registration request to be sent
+      let registrationResponse;
+      try {
+        console.log("⏳ Waiting for registration API call...");
+        registrationResponse = await page.waitForResponse(
+          response => response.url().includes('/register') && 
+                     response.request().method() === 'POST',
+          { timeout: 30000 }
+        );
+        console.log(`📡 Registration response: ${registrationResponse.status()}`);
+        
+        if (!registrationResponse.ok()) {
+          const responseText = await registrationResponse.text();
+          console.error(`❌ Registration failed: ${registrationResponse.status()} - ${responseText}`);
+          throw new Error(`Registration API call failed: ${registrationResponse.status()}`);
+        }
+      } catch (error) {
+        console.error("❌ Registration API call timeout or failed:", error.message);
+        
+        // Check if we're still on signup page and try to understand why
+        if (page.url().includes('/sign-up')) {
+          // Look for any error messages on the page
+          const errorMessages = await page.locator('[role="alert"], .error, .invalid, .text-red-500').allTextContents();
+          if (errorMessages.length > 0) {
+            console.error("Error messages found:", errorMessages);
+          }
+          
+          // Check if there are overlays blocking the form
+          const overlays = await page.locator('[role="dialog"], .modal, .popup, .overlay').count();
+          if (overlays > 0) {
+            console.warn(`Found ${overlays} potential overlay(s) blocking form submission`);
+            const { NavigationHelper } = await import('../helpers/navigation.helper');
+            await NavigationHelper.dismissOverlays(page);
+          }
+        }
+        
+        throw error;
+      }
       
       // Wait for successful registration with better error handling
-      await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
-        timeout: 45000,
-        waitUntil: 'domcontentloaded'
-      });
+      try {
+        await page.waitForURL(url => !url.toString().includes('/sign-up'), { 
+          timeout: 15000, // Reduced timeout since we already confirmed API success
+          waitUntil: 'domcontentloaded'
+        });
+      } catch (error) {
+        console.warn("⚠️ URL change timeout, but registration API succeeded. Checking current state...");
+        const currentUrl = page.url();
+        console.log(`Current URL: ${currentUrl}`);
+        
+        if (currentUrl.includes('/sign-up')) {
+          // Force navigation if still on signup page despite successful API call
+          console.log("🔄 Force navigating to dashboard...");
+          await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+        }
+      }
       
       // Handle post-registration navigation more reliably
       const currentUrl = page.url();
@@ -355,8 +458,12 @@ export class TestDataManager {
         await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
       }
       
-      // Verify we're successfully logged in
-      await page.waitForSelector('[data-testid="dashboard"], .dashboard, h1', { timeout: 15000 });
+      // Verify we're successfully logged in and at dashboard
+      await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+      
+      // Look for any dashboard content to confirm we're logged in
+      const dashboardContent = page.locator('h1, h2, h3, main, [data-testid*="dashboard"]');
+      await dashboardContent.first().waitFor({ state: 'visible', timeout: 10000 });
       
     } catch (error) {
       console.error(`❌ Account creation failed for ${userData.email}:`, error.message);

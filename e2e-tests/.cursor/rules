@@ -670,6 +670,77 @@ console.log(`✅ Test account created: ${testUser.email}`);
 - Should use `AccountHelper.createTestAccount()` for account creation
 - Test accounts are automatically tracked and cleaned up by `auth.cleanup.ts`
 
+# Test Comment Guidelines
+
+## Rule: Avoid Unnecessary Descriptive Comments
+
+**Avoid descriptive comments that simply state what the code is about to do. Comments should explain _why_ something is done, not _what_ is being done.**
+
+### ❌ Avoid These Comment Patterns
+
+// Act - click the login button
+await page.click('#login-button');
+
+// Assert - verify the user is redirected
+await expect(page).toHaveURL('/dashboard');
+
+// Arrange - fill out the form
+await page.fill('#email', 'test@example.com');
+
+// Wait for the page to load
+await page.waitForLoadState('networkidle');
+
+// Navigate to the profile page
+await page.goto('/profile');
+
+// Check if the element is visible
+await expect(element).toBeVisible();
+
+// Test dashboard functionality
+await expect(page.getByText("Dashboard")).toBeVisible();
+
+// Verify form elements are present
+await expect(page.getByLabel("Email")).toBeVisible();### ✅ Keep These Comment Types
+
+// Reset storage state for auth tests to avoid being pre-authenticated
+test.use({ storageState: { cookies: [], origins: [] } });
+
+// Use BASE_URL from environment (set by CI) or fall back to Playwright config
+const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
+
+// More specific password field locator to avoid ambiguity
+await expect(page.getByPlaceholder("Please don't use your dog's")).toBeVisible();
+
+// Skip if admin credentials not available
+if (!process.env.TEST_USER_ADMIN) {
+test.skip(true, "Admin credentials not available");
+}
+
+// Office level select not available, skip this step
+console.log('Office level select not available, continuing...');### Comment Categories
+
+#### Remove Comments That Describe Actions:
+
+- "Act", "Assert", "Arrange"
+- "Wait for", "Navigate to", "Click", "Fill", "Submit"
+- "Check", "Verify", "Should", "Test", "Look for"
+- "Ensure", "Make sure", "Confirm"
+
+#### Keep Comments That Explain Context:
+
+- Configuration and environment setup
+- Technical constraints or browser-specific behavior
+- Business logic or domain-specific rules
+- Workarounds for known issues
+- Non-obvious implementation details
+- Reasoning behind specific selectors or approaches
+
+### Summary
+
+- **Remove comments that explain _what_** - the code should be self-explanatory
+- **Keep comments that explain _why_** - provide valuable context and reasoning
+- **Focus on intent over action** - explain the purpose, not the mechanics
+
 ## 🎯 Remember
 
 **The goal is reliable, maintainable tests that provide fast feedback and catch real issues. Every pattern in this document serves that purpose. When in doubt, choose simplicity over complexity, and state-based waiting over hardcoded delays.**
