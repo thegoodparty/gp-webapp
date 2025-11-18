@@ -1,5 +1,5 @@
-import React, { MouseEvent } from 'react'
-import Button from '@shared/buttons/Button'
+import React, { MouseEvent, ButtonHTMLAttributes } from 'react'
+import Button, { ButtonSize, ButtonVariant, ButtonColor } from '@shared/buttons/Button'
 
 interface ModalFooterProps {
   onBack?: (e: MouseEvent<HTMLButtonElement>) => void
@@ -7,8 +7,18 @@ interface ModalFooterProps {
   disabled?: boolean
   nextText?: string
   backText?: string
-  nextButtonProps?: Record<string, unknown>
-  backButtonProps?: Record<string, unknown>
+  nextButtonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'onClick' | 'disabled' | 'children'> & {
+    size?: ButtonSize
+    variant?: ButtonVariant
+    color?: ButtonColor
+    loading?: boolean
+  }
+  backButtonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'onClick' | 'children'> & {
+    size?: ButtonSize
+    variant?: ButtonVariant
+    color?: ButtonColor
+    loading?: boolean
+  }
 }
 
 export const ModalFooter = ({

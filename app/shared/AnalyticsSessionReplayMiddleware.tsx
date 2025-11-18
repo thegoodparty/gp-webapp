@@ -4,6 +4,11 @@ import * as sessionReplay from '@amplitude/session-replay-browser'
 import { getReadyAnalytics } from './utils/analytics'
 import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
 
+interface AmplitudeIntegration {
+  session_id?: number
+  device_id?: string
+}
+
 declare global {
   interface Window {
     sessionReplayInitialized?: boolean
@@ -33,7 +38,7 @@ export default function AnalyticsSessionReplayMiddleware(): null {
               const amplitudeIntegration = payload.obj.integrations?.['Actions Amplitude']
               const nextSessionId =
                 (amplitudeIntegration && typeof amplitudeIntegration === 'object' && 'session_id' in amplitudeIntegration
-                  ? (amplitudeIntegration as { session_id?: number }).session_id
+                  ? (amplitudeIntegration as AmplitudeIntegration).session_id
                   : undefined) || 0
 
               if (nextSessionId > 0 && storedSessionId < nextSessionId) {
@@ -87,13 +92,13 @@ export default function AnalyticsSessionReplayMiddleware(): null {
                       if (!payload.obj.integrations) {
                         payload.obj.integrations = {}
                       }
-                      const amplitudeIntegration = payload.obj.integrations['Actions Amplitude']
-                      if (!amplitudeIntegration || typeof amplitudeIntegration !== 'object') {
-                        payload.obj.integrations['Actions Amplitude'] = {}
-                      }
-                      const integration = payload.obj.integrations['Actions Amplitude']
-                      if (integration && typeof integration === 'object') {
-                        (integration as Record<string, unknown>).device_id = anonymousId
+                      if (!payload.obj.integrations['Actions Amplitude'] || typeof payload.obj.integrations['Actions Amplitude'] !== 'object') {
+                        payload.obj.integrations['Actions Amplitude'] = { device_id: anonymousId }
+                      } else {
+                        payload.obj.integrations['Actions Amplitude'] = {
+                          ...(payload.obj.integrations['Actions Amplitude'] as AmplitudeIntegration),
+                          device_id: anonymousId,
+                        }
                       }
                     }
                   }

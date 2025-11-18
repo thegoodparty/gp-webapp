@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState, ChangeEvent } from 'react'
-import TextField from '@shared/inputs/TextField'
+import TextField, { TextFieldProps } from '@shared/inputs/TextField'
 import { usePlacesWidget } from 'react-google-autocomplete'
 import { NEXT_PUBLIC_GOOGLE_MAPS_KEY } from 'appEnv'
 
@@ -13,11 +13,10 @@ interface GooglePlace {
   name?: string
 }
 
-interface AddressAutocompleteProps {
+interface AddressAutocompleteProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onSelect'> {
   value?: string
   onChange?: (inputValue: string) => void
   onSelect?: (place: GooglePlace) => void
-  [key: string]: unknown
 }
 
 export default function AddressAutocomplete({
