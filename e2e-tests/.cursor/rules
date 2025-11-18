@@ -609,6 +609,67 @@ if (await locator.isVisible()) {
 // No timeout needed - immediate check
 }
 
+## additional rules for account creation
+
+### Proper Account Lifecycle Management
+
+```typescript
+// ❌ OLD: Manual form filling without cleanup tracking
+await page.getByRole("textbox", { name: "email" }).fill(generateEmail());
+
+// ✅ NEW: Proper account creation with automatic cleanup
+const testUser = await AccountHelper.createTestAccount(page);
+```
+
+### Use Established Helper Patterns
+
+```typescript
+// ❌ OLD: Direct import from old helpers
+import { generateEmail, generatePhone, userData } from "helpers/dataHelpers";
+
+// ✅ NEW: Use established helper patterns
+import { TestDataHelper } from "../../../src/helpers/data.helper";
+const testEmail = TestDataHelper.generateTestEmail();
+```
+
+### Single Responsibility Tests
+
+```typescript
+// ❌ OLD: One test doing multiple things (UI + validation + registration)
+test("should validate sign up forms", async ({ page }) => {
+  // Mixed concerns: UI testing + data validation + registration flow
+});
+
+// ✅ NEW: Separate focused tests
+test("should create new account successfully", async ({ page }) => {
+  /* Registration flow */
+});
+test("should display sign up form elements", async ({ page }) => {
+  /* UI testing */
+});
+test("should validate and process form data correctly", async ({ page }) => {
+  /* Data validation */
+});
+```
+
+### Proper Test Data Management
+
+```typescript
+// ❌ OLD: Manual cleanup responsibility
+await CleanupHelper.cleanupTestData(page);
+
+// ✅ NEW: Automatic cleanup via AccountHelper
+// Test accounts are automatically deleted by auth.cleanup.ts
+console.log(`✅ Test account created: ${testUser.email}`);
+```
+
+### Follow README Test Categories
+
+- Registration tests should be in `tests/core/auth/`
+- Should use `test.use({ storageState: { cookies: [], origins: [] } })`
+- Should use `AccountHelper.createTestAccount()` for account creation
+- Test accounts are automatically tracked and cleaned up by `auth.cleanup.ts`
+
 ## 🎯 Remember
 
 **The goal is reliable, maintainable tests that provide fast feedback and catch real issues. Every pattern in this document serves that purpose. When in doubt, choose simplicity over complexity, and state-based waiting over hardcoded delays.**
