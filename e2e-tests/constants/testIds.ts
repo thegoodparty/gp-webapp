@@ -40,6 +40,7 @@ export const TEST_IDS = {
     LOGIN_FLOW: 19,
     INVALID_LOGIN_ERROR_MESSAGE: 22,
     REGISTRATION_FLOW: 18,
+    VALIDATE_SIGN_UP: 105,
 
     // App Tests
     MOBILE_VIEW: 75,
