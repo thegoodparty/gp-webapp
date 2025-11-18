@@ -2,9 +2,10 @@
 import React from 'react'
 import LottieAnimation from './LottieAnimation'
 import animationData from 'app/shared/animations/gears.json'
+import type { IPlayerProps } from '@lottiefiles/react-lottie-player'
 
-interface GearsAnimationProps {
-  [key: string]: unknown
+interface GearsAnimationProps extends Omit<IPlayerProps, 'src'> {
+  callback?: () => void
 }
 
 export default function GearsAnimation(props: GearsAnimationProps): React.JSX.Element {
@@ -19,4 +20,3 @@ export default function GearsAnimation(props: GearsAnimationProps): React.JSX.El
     />
   )
 }
-

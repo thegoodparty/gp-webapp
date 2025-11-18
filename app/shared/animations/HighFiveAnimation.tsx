@@ -1,13 +1,11 @@
 'use client'
-import React, { useState, useEffect, CSSProperties, ComponentType } from 'react'
+import { useState, useEffect } from 'react'
+import type { ComponentType } from 'react'
 import data from './highFive.json'
+import type { IPlayerProps, PlayerEvent as PlayerEventType } from '@lottiefiles/react-lottie-player'
 
-interface HighFiveAnimationProps {
-  loop?: boolean
-  style?: CSSProperties
-  className?: string
+interface HighFiveAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
-  [key: string]: unknown
 }
 
 export default function HighFiveAnimation({
@@ -20,8 +18,8 @@ export default function HighFiveAnimation({
   const [animationKey, setAnimationKey] = useState<number>(0)
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isMounted, setIsMounted] = useState<boolean>(false)
-  const [Player, setPlayer] = useState<ComponentType<any> | null>(null)
-  const [PlayerEvent, setPlayerEvent] = useState<any>(null)
+  const [Player, setPlayer] = useState<ComponentType<IPlayerProps> | null>(null)
+  const [PlayerEvent, setPlayerEvent] = useState<typeof PlayerEventType | null>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -30,7 +28,7 @@ export default function HighFiveAnimation({
       try {
         const { Player: LottiePlayer, PlayerEvent: LottiePlayerEvent } =
           await import('@lottiefiles/react-lottie-player')
-        setPlayer(() => LottiePlayer)
+        setPlayer(() => LottiePlayer as ComponentType<IPlayerProps>)
         setPlayerEvent(LottiePlayerEvent)
       } catch (error) {
         console.warn('Failed to load Lottie player:', error)
@@ -40,7 +38,7 @@ export default function HighFiveAnimation({
     loadPlayer()
   }, [])
 
-  const handleEvent = (event: any): void => {
+  const handleEvent = (event: PlayerEventType): void => {
     if (PlayerEvent && event === PlayerEvent.Complete) {
       callback()
     }
@@ -83,4 +81,3 @@ export default function HighFiveAnimation({
     </div>
   )
 }
-
