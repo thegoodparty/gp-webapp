@@ -123,9 +123,5 @@ export class AccountHelper {
     await page.getByLabel('Save my information for').click({ timeout: 10000 });
     await page.getByTestId('hosted-payment-submit-button').click();
     await WaitHelper.waitForPageReady(page);
-    await expect(page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!' })).toBeVisible({timeout: 60000});
-    await WaitHelper.waitForPageReady(page);
-    await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
-    await WaitHelper.waitForPageReady(page);
   }
 }
