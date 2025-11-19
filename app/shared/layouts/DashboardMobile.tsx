@@ -7,16 +7,16 @@ interface DashboardMobileProps {
   pathname: string
 }
 
-const DashboardMobile = ({ user, pathname }: DashboardMobileProps): React.JSX.Element => {
-  return (
-    <div className="w-[270px] bg-primary-dark text-white h-screen overflow-auto px-4 pt-24">
-      <H3 className="mb-8">
-        {user.firstName} {user.lastName}
-      </H3>
-      <DashboardMenu pathname={pathname} mobileMode toggleCallback={undefined} />
-    </div>
-  )
-}
+const DashboardMobile: React.FC<DashboardMobileProps> = ({
+  user,
+  pathname,
+}) => (
+  <div className="w-[270px] bg-primary-dark text-white h-screen overflow-auto px-4 pt-24">
+    <H3 className="mb-8">
+      {user.firstName} {user.lastName}
+    </H3>
+    <DashboardMenu pathname={pathname} mobileMode toggleCallback={undefined} />
+  </div>
+)
 
 export default DashboardMobile
-

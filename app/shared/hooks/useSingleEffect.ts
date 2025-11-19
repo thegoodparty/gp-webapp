@@ -1,6 +1,9 @@
 import { useEffect, useRef, DependencyList } from 'react'
 
-export const useSingleEffect = (callback: () => void | (() => void), deps: DependencyList = []): void => {
+export const useSingleEffect = (
+  callback: () => void,
+  deps: DependencyList = [],
+): void => {
   const hasRun = useRef(false)
 
   useEffect(() => {
@@ -10,4 +13,3 @@ export const useSingleEffect = (callback: () => void | (() => void), deps: Depen
     }
   }, [callback, ...deps])
 }
-
