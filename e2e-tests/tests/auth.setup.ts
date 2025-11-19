@@ -4,9 +4,14 @@ import { TestDataHelper } from '../src/helpers/data.helper';
 import { NavigationHelper } from '../src/helpers/navigation.helper';
 
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
+const authFileUser2 = path.join(__dirname, '../playwright/.auth/user2.json');
 
-setup('authenticate with onboarded user', async ({ page }) => {
-  console.log('🔐 Setting up fully onboarded user...');
+setup('authenticate with onboarded user', async ({ page, browser }) => {
+  console.log('🔐 Setting up authenticated user...');
+  
+  // Since onboarding is complex, let's use a simpler approach:
+  // Create a user and save the authenticated state even if still in onboarding
+  // The individual tests can handle completing onboarding if needed
   
   const testUser = TestDataHelper.generateTestUser();
   
@@ -41,7 +46,51 @@ setup('authenticate with onboarded user', async ({ page }) => {
   
   await page.context().storageState({ path: authFile });
   
-  console.log('💾 Saved fully onboarded user state to:', authFile);
+  console.log('💾 Saved authenticated browser state to:', authFile);
+  console.log('ℹ️ Tests will complete onboarding if needed');
+
+  // Create a second authenticated test user and save a separate storage state
+  console.log('🔐 Setting up second authenticated user...');
+  const testUser2 = TestDataHelper.generateTestUser();
+
+  const context2 = await browser.newContext();
+  const page2 = await context2.newPage();
+
+  await page2.goto("/sign-up");
+  await NavigationHelper.dismissOverlays(page2);
+
+  await page2.getByRole("textbox", { name: "First Name" }).fill(testUser2.firstName);
+  await page2.getByRole("textbox", { name: "Last Name" }).fill(testUser2.lastName);
+  await page2.getByRole("textbox", { name: "email" }).fill(testUser2.email);
+  await page2.getByRole("textbox", { name: "phone" }).fill(testUser2.phone);
+  await page2.getByRole("textbox", { name: "Zip Code" }).fill(testUser2.zipCode);
+  await page2.getByPlaceholder("Please don't use your dog's name").fill(testUser2.password);
+
+  const joinButton2 = page2.getByRole("button", { name: "Join" });
+  await joinButton2.waitFor({ state: "visible", timeout: 15000 });
+  await joinButton2.click();
+
+  await page2.waitForURL(url => url.toString().includes('/onboarding/'), { timeout: 45000 });
+  console.log('📝 Second user created, now completing onboarding...');
+
+  await completeOnboardingFlow(page2);
+
+  if (!page2.url().includes('/dashboard')) {
+    throw new Error(`Second user onboarding failed - ended at: ${page2.url()}`);
+  }
+
+  console.log(`✅ Second user fully onboarded: ${testUser2.email}`);
+  console.log(`📍 Second user final URL: ${page2.url()}`);
+
+  // Store second user credentials for cleanup and tests
+  process.env.AUTH_SETUP_USER2_EMAIL = testUser2.email;
+  process.env.AUTH_SETUP_USER2_PASSWORD = testUser2.password;
+
+  // Save second user's authenticated browser state
+  await context2.storageState({ path: authFileUser2 });
+  await context2.close();
+
+  console.log('💾 Saved second authenticated browser state to:', authFileUser2);
 });
 
 async function completeOnboardingFlow(page: any): Promise<void> {

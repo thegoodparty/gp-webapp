@@ -33,15 +33,25 @@ export default defineConfig({
       testMatch: /.*\.cleanup\.ts/
     },
 
-    // Main testing project - uses authenticated state
+    // Main testing project - uses primary authenticated state
     {
       name: "chromium",
       use: { 
         ...devices["Desktop Chrome"],
-        // Use prepared auth state for all tests
         storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'], // Run setup before this project
+      dependencies: ['setup'],
+    },
+    
+    // Second user project for upgrade tests
+    {
+      name: "chromium-user2",
+      use: { 
+        ...devices["Desktop Chrome"],
+        storageState: 'playwright/.auth/user2.json',
+      },
+      dependencies: ['setup'],
+      testMatch: '**/upgrade-pro/**',
     },
   ],
 

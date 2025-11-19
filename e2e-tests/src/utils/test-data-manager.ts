@@ -11,9 +11,29 @@ export interface TestUser {
   zipCode: string;
 }
 
+export interface TestCardInfo {
+  cardNumber: string;
+  expirationDate: string;
+  zipCode: string;
+  cvc: string;
+}
+
 export class TestDataManager {
   private static createdUsers: TestUser[] = [];
   private static createdCampaigns: any[] = [];
+  private static readonly testCardInfo: TestCardInfo = {
+    cardNumber: "4242424242424242",
+    expirationDate: "12/28",
+    zipCode: "90210",
+    cvc: "123",
+  };
+
+  /**
+   * Return canonical test credit card details for use in tests.
+   */
+  static getTestCardInfo(): TestCardInfo {
+    return { ...this.testCardInfo };
+  }
 
   /**
    * Create a test user and track it for cleanup
