@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { AccountHelper } from 'src/helpers/account.helper';
 import { NavigationHelper } from 'src/helpers/navigation.helper';
 import { CleanupHelper } from 'src/helpers/cleanup.helper';
+import { WaitHelper } from 'src/helpers/wait.helper';
 
 test.describe('Upgrade Pro Candidate Test Account', () => {
     test.use({ storageState: 'playwright/.auth/user2.json' });
@@ -19,6 +20,8 @@ test.describe('Upgrade Pro Candidate Test Account', () => {
   
     test('Should upgrade pro candidate test account', async ({ page }) => {
       await AccountHelper.upgradeToPro(page);
+      await page.goto('/dashboard');
+      await WaitHelper.waitForPageReady(page);
       // Header should display "GoodParty.org PRO" logo
       await expect(page.getByRole('link', { name: 'GoodParty.org PRO' })).toBeVisible({timeout: 30000});
   });
