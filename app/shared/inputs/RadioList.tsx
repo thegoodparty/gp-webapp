@@ -3,10 +3,19 @@
 import { Fragment } from 'react'
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md'
 
-// options: [{ key: string, label: string }]
+interface RadioOption {
+  key: string
+  label: string
+}
 
-export default function RadioList({ options, selected, selectCallback }) {
-  function handleKeyPress(e, option) {
+interface RadioListProps {
+  options: RadioOption[]
+  selected: string
+  selectCallback: (key: string) => void
+}
+
+const RadioList = ({ options, selected, selectCallback }: RadioListProps): React.JSX.Element => {
+  const handleKeyPress = (e: React.KeyboardEvent, option: RadioOption): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       selectCallback(option.key)
     }
@@ -46,3 +55,6 @@ export default function RadioList({ options, selected, selectCallback }) {
     </>
   )
 }
+
+export default RadioList
+

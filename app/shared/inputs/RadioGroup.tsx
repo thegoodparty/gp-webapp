@@ -1,10 +1,10 @@
 'use client'
 
 import { ThemeProvider } from '@mui/material'
-import MuiRadioGroup from '@mui/material/RadioGroup'
+import MuiRadioGroup, { RadioGroupProps } from '@mui/material/RadioGroup'
 import materialTheme from '@shared/materialTheme'
 
-const RadioGroup = (props) => {
+const RadioGroup = (props: RadioGroupProps): React.JSX.Element => {
   return (
     <ThemeProvider theme={materialTheme}>
       <MuiRadioGroup {...props} />
@@ -13,3 +13,4 @@ const RadioGroup = (props) => {
 }
 
 export default RadioGroup
+

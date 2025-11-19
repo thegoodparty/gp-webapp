@@ -1,11 +1,23 @@
 'use client'
 
-import { useState } from 'react'
-import TextField from './TextField'
+import React, { useState, ChangeEvent, FocusEvent } from 'react'
+import TextField, { TextFieldProps } from './TextField'
 import { isValidEmail } from 'helpers/validations'
 
-// NOTE: leaving export here for now to not break existing imports
 export { isValidEmail }
+
+interface EmailInputProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onBlur' | 'error' | 'label' | 'name'> {
+  value: string
+  onChangeCallback: ((value: string, isValid: boolean) => void) | ((e: ChangeEvent<HTMLInputElement>) => void)
+  onBlurCallback?: (e: FocusEvent<HTMLInputElement>) => void
+  shrink?: boolean
+  className?: string
+  placeholder?: string
+  useLabel?: boolean
+  required?: boolean
+  newCallbackSignature?: boolean
+  'data-testid'?: string
+}
 
 export default function EmailInput({
   value,
@@ -18,19 +30,19 @@ export default function EmailInput({
   required,
   newCallbackSignature = false,
   ...restProps
-}) {
+}: EmailInputProps): React.JSX.Element {
   const [isValid, setIsValid] = useState(true)
 
-  function handleChange(e) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const newValue = e.target.value
     const emailValid = isValidEmail(newValue)
 
     setIsValid(emailValid)
 
     if (newCallbackSignature) {
-      onChangeCallback(newValue, emailValid)
+      (onChangeCallback as (value: string, isValid: boolean) => void)(newValue, emailValid)
     } else {
-      onChangeCallback(e)
+      (onChangeCallback as (e: ChangeEvent<HTMLInputElement>) => void)(e)
     }
   }
 
@@ -61,3 +73,4 @@ export default function EmailInput({
     />
   )
 }
+

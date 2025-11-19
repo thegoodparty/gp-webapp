@@ -1,19 +1,14 @@
 'use client'
-/**
- *
- * PhoneInput
- *
- */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent, FocusEvent } from 'react'
 import { AsYouType } from 'libphonenumber-js'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import PhoneIcon from '@mui/icons-material/Phone'
-import TextField from '@shared/inputs/TextField'
+import TextField, { TextFieldProps } from '@shared/inputs/TextField'
 import styles from './PhoneInput.module.scss'
 
-export const isValidPhone = (phone) => {
+export const isValidPhone = (phone: string): boolean => {
   if (!phone) {
     return false
   }
@@ -24,7 +19,19 @@ export const isValidPhone = (phone) => {
   )
 }
 
-function PhoneInput({
+interface PhoneInputProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onBlur' | 'label' | 'name' | 'variant' | 'error'> {
+  value: string
+  onChangeCallback: (value: string, isValid: boolean) => void
+  onBlurCallback?: (value: string) => void
+  hideIcon?: boolean
+  shrink?: boolean
+  required?: boolean
+  className?: string
+  placeholder?: string
+  useLabel?: boolean
+}
+
+const PhoneInput = ({
   value,
   onChangeCallback,
   onBlurCallback = () => {},
@@ -35,7 +42,7 @@ function PhoneInput({
   placeholder,
   useLabel = true,
   ...restProps
-}) {
+}: PhoneInputProps): React.JSX.Element => {
   const [displayValue, setDisplayValue] = useState('')
   const [validPhone, setValidPhone] = useState(false)
 
@@ -45,7 +52,7 @@ function PhoneInput({
     setValidPhone(isValid)
   }, [value])
 
-  const onChangeValue = async (event) => {
+  const onChangeValue = (event: ChangeEvent<HTMLInputElement>): void => {
     if (event) {
       const val = event.target.value
       const isValid = isValidPhone(val)
@@ -54,13 +61,12 @@ function PhoneInput({
     }
   }
 
-  const formatDisplay = (val) => {
+  const formatDisplay = (val: string): string => {
     if (!val) {
       setDisplayValue('')
       return ''
     }
     const formatted = new AsYouType('US').input(val)
-    // issue that we can't delete (XXX)
     if (
       val.length === 4 &&
       formatted.length === 5 &&
@@ -70,9 +76,10 @@ function PhoneInput({
     } else {
       setDisplayValue(formatted)
     }
+    return formatted
   }
 
-  const onBlurChange = async (event) => {
+  const onBlurChange = (event: FocusEvent<HTMLInputElement>): void => {
     if (event) {
       const val = event.target.value
       onBlurCallback(val.replace(/\D/g, ''))
@@ -119,3 +126,4 @@ function PhoneInput({
 }
 
 export default PhoneInput
+

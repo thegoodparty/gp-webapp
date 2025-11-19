@@ -1,7 +1,15 @@
 import React from 'react'
 import { MdPerson } from 'react-icons/md'
+import { User } from '../../../helpers/types'
 
-function UserAvatar({ user, size = 'small', ...restProps }) {
+type UserAvatarSize = 'small' | 'large' | 'smaller'
+
+interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  user?: User | null
+  size?: UserAvatarSize
+}
+
+const UserAvatar = ({ user, size = 'small', ...restProps }: UserAvatarProps): React.JSX.Element => {
   const className = restProps?.className || ''
   if (!user) {
     return <></>
@@ -39,3 +47,4 @@ function UserAvatar({ user, size = 'small', ...restProps }) {
 }
 
 export default UserAvatar
+

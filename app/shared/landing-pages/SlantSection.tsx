@@ -5,11 +5,18 @@ export const DEFAULT_SLANT_SECTION_COLORS = [
   theme.extend.colors.primary.dark,
   'rgba(0,0,0,0)',
 ]
+
+interface SlantSectionProps {
+  colors?: string[]
+  children: React.ReactNode
+  reverseDirection?: boolean
+}
+
 export const SlantSection = ({
   colors = DEFAULT_SLANT_SECTION_COLORS,
   children,
   reverseDirection = false,
-}) => {
+}: SlantSectionProps): React.JSX.Element => {
   if (colors.length !== 3) {
     throw new Error('SlantSection must be implemented w/ exactly 3 colors')
   }
@@ -36,3 +43,4 @@ export const SlantSection = ({
     </section>
   )
 }
+

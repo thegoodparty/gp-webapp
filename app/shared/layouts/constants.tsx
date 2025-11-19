@@ -1,7 +1,29 @@
+import React from 'react'
 import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from 'react-icons/fa'
 import { HiUserGroup } from 'react-icons/hi'
 
-export const FOOTER_COLUMNS = [
+interface FooterLink {
+  label: string
+  link: string
+  id: string
+  buttonStyle?: 'tertiary' | 'secondary'
+  useNativeLink?: boolean
+  isExternal?: boolean
+}
+
+interface FooterColumn {
+  title: string
+  links: FooterLink[]
+}
+
+interface SocialLink {
+  label: string
+  link: string
+  isExternal: boolean
+  icon: React.JSX.Element
+}
+
+export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: 'Our Org',
     links: [
@@ -83,7 +105,7 @@ export const FOOTER_COLUMNS = [
   },
 ]
 
-export const SOCIAL_LINKS = [
+export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'TikTok',
     link: 'https://www.tiktok.com/@goodparty',
@@ -115,3 +137,4 @@ export const SOCIAL_LINKS = [
     icon: <HiUserGroup />,
   },
 ]
+

@@ -1,6 +1,6 @@
 import { JsonLd } from 'react-schemaorg'
 
-export default function JsonLdSchema() {
+const JsonLdSchema = (): React.JSX.Element => {
   return (
     <JsonLd
       item={{
@@ -32,3 +32,6 @@ export default function JsonLdSchema() {
     />
   )
 }
+
+export default JsonLdSchema
+

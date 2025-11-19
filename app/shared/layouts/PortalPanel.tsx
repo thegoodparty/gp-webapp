@@ -1,4 +1,10 @@
-export default function PortalPanel({ children, color, smWhite, ...props }) {
+interface PortalPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode
+  color?: string
+  smWhite?: boolean
+}
+
+const PortalPanel = ({ children, color, smWhite, ...props }: PortalPanelProps): React.JSX.Element => {
   return (
     <div
       className={`bg-white w-full relative mb-3 ${
@@ -20,3 +26,6 @@ export default function PortalPanel({ children, color, smWhite, ...props }) {
     </div>
   )
 }
+
+export default PortalPanel
+

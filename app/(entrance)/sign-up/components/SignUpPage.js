@@ -1,6 +1,6 @@
 'use client'
-import { isValidEmail } from '@shared/inputs/EmailInput.js'
-import { isValidPhone } from '@shared/inputs/PhoneInput.js'
+import { isValidEmail } from '@shared/inputs/EmailInput.tsx'
+import { isValidPhone } from '@shared/inputs/PhoneInput.tsx'
 import PasswordInput from '@shared/inputs/PasswordInput.js'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { Fragment, useState } from 'react'

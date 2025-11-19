@@ -1,6 +1,6 @@
 import { numberFormatter } from 'helpers/numberHelper'
 
-export const formatPercentLabel = (value) => {
+export const formatPercentLabel = (value: number | string | null | undefined): string => {
   if (value === null || value === undefined) return '0'
   let num = value
   if (typeof num !== 'number') {
@@ -10,5 +10,4 @@ export const formatPercentLabel = (value) => {
   if (num < 1) return '<1'
   return numberFormatter(num)
 }
-
 
