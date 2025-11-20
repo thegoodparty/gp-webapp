@@ -9,7 +9,7 @@ import PollsPageGuard from './PollsPageGuard'
 import { usePolls } from '../shared/hooks/PollsProvider'
 import PollWelcomePage from 'app/polls/welcome/components/PollWelcomePage'
 import Button from '@shared/buttons/Button'
-import { FaPlus } from 'react-icons/fa6'
+import { LuPlus } from 'react-icons/lu'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export default function PollsPage({ pathname }) {
@@ -35,7 +35,7 @@ export default function PollsPage({ pathname }) {
                 color="info"
               >
                 <span className="flex items-center gap-2">
-                  <FaPlus /> Create Poll
+                  <LuPlus /> Create Poll
                 </span>
               </Button>
             )}
