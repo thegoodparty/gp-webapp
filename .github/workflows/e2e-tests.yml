@@ -233,18 +233,6 @@ jobs:
         working-directory: test-automation
         run: npx playwright install --with-deps
 
-      - name: Debug available projects
-        working-directory: test-automation
-        run: |
-          echo "Playwright config file contents:"
-          cat playwright.config.ts | grep -A 50 "projects:"
-          echo ""
-          echo "Testing if experimental project exists:"
-          npx playwright test --project=experimental --dry-run || echo "Experimental project not found"
-          echo ""
-          echo "Available projects (from help):"
-          npx playwright test --help | grep -A 10 "project" || true
-
       - name: Run Experimental Playwright Tests
         id: run-experimental-tests
         working-directory: test-automation
