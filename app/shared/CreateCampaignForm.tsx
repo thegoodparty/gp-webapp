@@ -140,7 +140,7 @@ export const CreateCampaignForm = (): React.JSX.Element => {
   const disableCreate =
     Boolean(newCampaign) ||
     isLoading ||
-    (values.party === 'Other' && values.otherParty === '') ||
+    (values.party === 'Other' && (!values.otherParty || values.otherParty === '')) ||
     !fields.every((field) => values[field.key as keyof FormValues])
 
   const handleCreateCampaign = async () => {

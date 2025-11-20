@@ -97,7 +97,7 @@ const CandidateProgressBar = ({
       setBarWidth(progress)
     }
     setIsRendered(true)
-  }, [votesNeeded])
+  }, [votesNeeded, progress, withAnimation, isRendered])
 
   let achievementIcon: React.ReactNode = (
     <img
