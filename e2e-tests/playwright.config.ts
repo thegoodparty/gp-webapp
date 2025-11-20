@@ -53,6 +53,28 @@ export default defineConfig({
       dependencies: ['setup'],
       testMatch: '**/upgrade-pro/**',
     },
+
+    // Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
+    {
+      name: "stable",
+      use: { 
+        ...devices["Desktop Chrome"],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+      grep: /^(?!.*@experimental).*$/,  // Negative lookahead: exclude @experimental
+    },
+
+    // Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
+    {
+      name: "experimental",
+      use: { 
+        ...devices["Desktop Chrome"],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+      grep: /@experimental/,
+    },
   ],
 
   use: {
