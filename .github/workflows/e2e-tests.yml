@@ -170,6 +170,22 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+      - name: Notify Slack on Stable Test Failure
+        if: steps.run-stable-tests.outcome == 'failure' || failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "⚠️ Stable E2E Tests Failed",
+              "attachments": [{
+                "color": "warning",
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   experimental-tests:
     name: Experimental E2E Tests (Non-blocking)
     runs-on: ubuntu-latest
@@ -323,17 +339,17 @@ jobs:
               body: body
             });
 
-      - name: Notify Slack on Stable Test Failure
-        if: steps.run-stable-tests.outcome == 'failure' || failure()
+      - name: Notify Slack on Experimental Test Failure
+        if: steps.run-experimental-tests.outcome == 'failure' || failure()
         uses: 8398a7/action-slack@v3
         with:
           status: custom
           custom_payload: |
             {
-              "text": "⚠️ Stable E2E Tests Failed",
+              "text": "⚠️ Experimental E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.experimental-test-results.outputs.failed_count }} failed\n✅ ${{ steps.experimental-test-results.outputs.passed_count }} passed\n📊 ${{ steps.experimental-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.experimental-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:
