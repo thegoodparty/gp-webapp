@@ -18,7 +18,7 @@ test.describe('Upgrade Pro Candidate Test Account', () => {
         await CleanupHelper.cleanupTestData(page);
       });
   
-    test.skip('Should upgrade pro candidate test account', async ({ page }) => {
+    test('Should upgrade pro candidate test account @experimental', async ({ page }) => {
       await AccountHelper.upgradeToPro(page);
       await page.goto('/dashboard');
       await WaitHelper.waitForPageReady(page);
