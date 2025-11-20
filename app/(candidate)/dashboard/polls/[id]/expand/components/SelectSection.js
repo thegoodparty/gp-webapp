@@ -61,7 +61,7 @@ export default function SelectSection({ countCallback }) {
     setSelectedOption(value)
     countCallback({
       count: value,
-      isRecommended: recommendedIncrease === value,
+      isRecommended: recommendedIncrease === parseInt(value),
     })
   }
 
@@ -77,47 +77,54 @@ export default function SelectSection({ countCallback }) {
   const { recommendedIncrease, totalRemainingConstituents } =
     calculateRecommendedIncrease(poll, contactsStats)
 
-  console.log({
-    recommendedIncrease,
-    totalRemainingConstituents,
-    selectedOption,
-  })
-
   const selectOptions = [
-    {
-      label: `${numberFormatter(
-        recommendedIncrease,
-      )} Constituents (${Math.round(
-        (recommendedIncrease / totalRemainingConstituents) * 100,
-      )}%)`,
-      value: recommendedIncrease,
-      chip: 'Recommended',
-    },
     {
       label: `${numberFormatter(
         totalRemainingConstituents * 0.25,
       )} Constituents (25%)`,
       value: Math.ceil(totalRemainingConstituents * 0.25),
+      isRecommended: false,
     },
     {
       label: `${numberFormatter(
         totalRemainingConstituents * 0.5,
       )} Constituents (50%)`,
       value: Math.ceil(totalRemainingConstituents * 0.5),
+      isRecommended: false,
     },
     {
       label: `${numberFormatter(
         totalRemainingConstituents * 0.75,
       )} Constituents (75%)`,
       value: Math.ceil(totalRemainingConstituents * 0.75),
+      isRecommended: false,
     },
     {
       label: `${numberFormatter(
         totalRemainingConstituents,
       )} Constituents (100%)`,
       value: totalRemainingConstituents,
+      isRecommended: false,
     },
   ]
+
+  const recommendedOption = selectOptions.find(
+    (option) => option.value === recommendedIncrease,
+  )
+
+  if (recommendedOption) {
+    recommendedOption.isRecommended = true
+  } else {
+    selectOptions.unshift({
+      label: `${numberFormatter(
+        recommendedIncrease,
+      )} Constituents (${Math.round(
+        (recommendedIncrease / totalRemainingConstituents) * 100,
+      )}%)`,
+      value: recommendedIncrease,
+      isRecommended: true,
+    })
+  }
 
   if (!contactsStats) {
     return (
@@ -146,9 +153,9 @@ export default function SelectSection({ countCallback }) {
           {selectOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
-              {option.chip && (
+              {option.isRecommended && (
                 <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white text-xs font-medium">
-                  {option.chip}
+                  Recommended
                 </span>
               )}
             </SelectItem>
