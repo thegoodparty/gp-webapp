@@ -16,6 +16,7 @@ import {
   SelectValue,
   Textarea,
 } from 'goodparty-styleguide'
+import clsx from 'clsx'
 
 type Details = {
   title: string
@@ -153,13 +154,17 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
           {...register('title', {
             required: 'Title is required',
             minLength: {
-              value: 3,
-              message: 'Title must be at least 3 characters',
+              value: 5,
+              message: 'Title must be at least 5 characters',
             },
           })}
+          className={errors.title ? 'border-red-500' : ''}
           id="title"
           placeholder="What would you like to name your poll? "
         />
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>
+        )}
         <label className="block mb-2 mt-4">Poll Introduction</label>
         <Controller
           name="introduction"
@@ -167,7 +172,12 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
           rules={{ required: 'Introduction is required' }}
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger
+                className={clsx(
+                  'w-full',
+                  errors.introduction ? 'border-red-500' : '',
+                )}
+              >
                 <SelectValue placeholder="Select your introduction" />
               </SelectTrigger>
               <SelectContent>
@@ -193,9 +203,13 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
               message: 'Question must be at least 25 characters',
             },
           })}
+          className={errors.question ? 'border-red-500' : ''}
           placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
           rows={6}
         />
+        {errors.question && (
+          <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+        )}
         <p className="mt-1.5 text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize
           message.
