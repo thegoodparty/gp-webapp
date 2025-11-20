@@ -9,7 +9,6 @@ export interface ApiResponse<T = unknown> {
 }
 
 interface FetchOptions {
-  cache?: RequestCache
   serverToken?: string
   returnFullResponse?: boolean
   revalidate?: number
@@ -18,13 +17,15 @@ interface FetchOptions {
 export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
   data: Record<string, unknown> | FormData | undefined,
-  options: FetchOptions & { returnFullResponse: true }
+  options: FetchOptions & { returnFullResponse: true },
 ): Promise<Response>
 
 export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
   data?: Record<string, unknown> | FormData,
-  options?: Omit<FetchOptions, 'returnFullResponse'> & { returnFullResponse?: false }
+  options?: Omit<FetchOptions, 'returnFullResponse'> & {
+    returnFullResponse?: false
+  },
 ): Promise<ApiResponse<T>>
 
 export async function clientFetch<T = unknown>(
@@ -33,7 +34,7 @@ export async function clientFetch<T = unknown>(
   options: FetchOptions = {},
 ): Promise<ApiResponse<T> | Response> {
   const { method } = endpoint
-  const { cache, serverToken, returnFullResponse } = options
+  const { revalidate, serverToken, returnFullResponse } = options
 
   const url = buildUrl(endpoint, data)
 
@@ -61,7 +62,7 @@ export async function clientFetch<T = unknown>(
     credentials: 'include',
     mode: 'cors',
     body: method === 'GET' ? undefined : body,
-    cache,
+    ...(!!revalidate ? { next: { revalidate } } : { cache: 'no-store' }),
   })
 
   if (returnFullResponse) {
@@ -81,4 +82,3 @@ export async function clientFetch<T = unknown>(
 
   return response
 }
-

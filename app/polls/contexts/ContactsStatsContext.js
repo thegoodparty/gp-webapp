@@ -8,7 +8,9 @@ const ContactsStatsContext = createContext()
 export const useContactsStats = () => {
   const context = useContext(ContactsStatsContext)
   if (!context) {
-    throw new Error('useContactsStats must be used within a ContactsStatsProvider')
+    throw new Error(
+      'useContactsStats must be used within a ContactsStatsProvider',
+    )
   }
   return context
 }
@@ -22,17 +24,15 @@ export const ContactsStatsProvider = ({ children }) => {
     try {
       setIsLoading(true)
       setError(null)
-      
+
       const response = await clientFetch(apiRoutes.contacts.stats, null, {
-        next: {
-          revalidate: 3600,
-        },
+        revalidate: 3600,
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch contacts stats')
       }
-      
+
       setContactsStats(response.data)
     } catch (err) {
       setError(err.message)
@@ -55,7 +55,7 @@ export const ContactsStatsProvider = ({ children }) => {
     isLoading,
     error,
     refreshContactsStats,
-    fetchContactsStats
+    fetchContactsStats,
   }
 
   return (
