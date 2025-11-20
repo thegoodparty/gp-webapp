@@ -62,7 +62,9 @@ export async function clientFetch<T = unknown>(
     credentials: 'include',
     mode: 'cors',
     body: method === 'GET' ? undefined : body,
-    ...(!!revalidate ? { next: { revalidate } } : { cache: 'no-store' }),
+    ...(typeof revalidate === 'number'
+      ? { next: { revalidate } }
+      : { cache: 'no-store' }),
   })
 
   if (returnFullResponse) {
