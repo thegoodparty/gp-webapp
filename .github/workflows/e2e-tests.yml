@@ -233,6 +233,15 @@ jobs:
         working-directory: test-automation
         run: npx playwright install --with-deps
 
+      - name: Debug available projects
+        working-directory: test-automation
+        run: |
+          echo "Available Playwright projects:"
+          npx playwright test --list-projects
+          echo ""
+          echo "Playwright config file contents:"
+          cat playwright.config.ts | grep -A 50 "projects:"
+
       - name: Run Experimental Playwright Tests
         id: run-experimental-tests
         working-directory: test-automation
