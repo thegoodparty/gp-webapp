@@ -61,7 +61,7 @@ export default function SelectSection({ countCallback }) {
     setSelectedOption(value)
     countCallback({
       count: value,
-      isRecommended: recommendedIncrease === value,
+      isRecommended: recommendedIncrease === parseInt(value),
     })
   }
 
