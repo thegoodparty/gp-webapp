@@ -1,9 +1,4 @@
 'use client'
-/**
- *
- * ImageUploadWrapper
- *
- */
 
 import React, { useState } from 'react'
 import { RiImageAddFill } from 'react-icons/ri'
@@ -11,10 +6,14 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-async function fileSelectCallback(image, uploadCallback) {
+interface UploadAvatarResponse {
+  avatar?: string
+}
+
+const fileSelectCallback = async (image: File, uploadCallback: (result: string | false) => void): Promise<void> => {
   const formData = new FormData()
   formData.append('file', image, image.name)
-  const resp = await clientFetch(apiRoutes.user.uploadAvatar, formData, {
+  const resp = await clientFetch<UploadAvatarResponse>(apiRoutes.user.uploadAvatar, formData, {
     revalidate: 3600,
   })
   if (resp.data?.avatar) {
@@ -24,19 +23,26 @@ async function fileSelectCallback(image, uploadCallback) {
   }
 }
 
-function ImageUploadWrapper({
+interface ImageUploadWrapperProps {
+  uploadCallback: (result: string | false) => void
+  maxFileSize: number
+  customElement?: React.ReactNode
+  loadingStatusCallback?: (loading: boolean) => void
+}
+
+const ImageUploadWrapper = ({
   uploadCallback,
   maxFileSize,
   customElement,
   loadingStatusCallback = () => {},
-}) {
+}: ImageUploadWrapperProps): React.JSX.Element => {
   const [fileSizeError, setFileSizeError] = useState(false)
 
-  const handleUploadImage = async (img) => {
+  const handleUploadImage = async (): Promise<void> => {
     loadingStatusCallback(true)
     setFileSizeError(false)
-    const node = document.getElementById('file-uploader')
-    const file = node.files ? node.files[0] : false
+    const node = document.getElementById('file-uploader') as HTMLInputElement | null
+    const file = node?.files?.[0]
     if (file) {
       if (file.size > maxFileSize) {
         setFileSizeError(true)
@@ -83,3 +89,4 @@ function ImageUploadWrapper({
 }
 
 export default ImageUploadWrapper
+

@@ -4,12 +4,10 @@ import React, { useState } from 'react'
 import { Input, Calendar } from 'goodparty-styleguide'
 import { parse, format, isValid } from 'date-fns'
 
-const formatDateInput = (value) => {
+const formatDateInput = (value: string): string => {
   if (!value) return ''
-  // Remove all non-digits
   const digits = value.replace(/\D/g, '')
 
-  // Apply mm/dd/yyyy format
   if (digits.length >= 5) {
     return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`
   } else if (digits.length >= 3) {
@@ -20,14 +18,12 @@ const formatDateInput = (value) => {
   return digits
 }
 
-const parseDateFromString = (dateString) => {
+const parseDateFromString = (dateString: string): Date | undefined => {
   if (!dateString || dateString.length !== 10) return undefined
 
   try {
-    // Parse mm/dd/yyyy format using date-fns
     const parsedDate = parse(dateString, 'MM/dd/yyyy', new Date())
 
-    // Check if the parsed date is valid
     if (isValid(parsedDate)) {
       return parsedDate
     }
@@ -38,13 +34,24 @@ const parseDateFromString = (dateString) => {
   return undefined
 }
 
-const formatDateToString = (date) => {
+const formatDateToString = (date: Date | undefined): string => {
   if (!date || !isValid(date)) return ''
 
   return format(date, 'MM/dd/yyyy')
 }
 
-export default function DateInputCalendar({
+interface DateInputCalendarProps {
+  value?: Date
+  onChange?: (date: Date | undefined) => void
+  placeholder?: string
+  label?: string
+  captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'
+  className?: string
+  inputClassName?: string
+  calendarClassName?: string
+}
+
+const DateInputCalendar = ({
   value,
   onChange,
   placeholder = 'mm/dd/yyyy',
@@ -54,25 +61,24 @@ export default function DateInputCalendar({
   inputClassName = '',
   calendarClassName = 'rounded-lg border shadow-sm',
   ...calendarProps
-}) {
+}: DateInputCalendarProps): React.JSX.Element => {
   const [inputValue, setInputValue] = useState(
     value ? formatDateToString(value) : '',
   )
   const [month, setMonth] = useState(value || new Date())
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatDateInput(e.target.value)
     setInputValue(formatted)
 
-    // Try to parse the date and set it if valid
     const parsedDate = parseDateFromString(formatted)
     if (parsedDate) {
-      setMonth(parsedDate) // Navigate to the month of the typed date
+      setMonth(parsedDate)
       onChange?.(parsedDate)
     }
   }
 
-  const handleCalendarSelect = (selectedDate) => {
+  const handleCalendarSelect = (selectedDate: Date | undefined) => {
     onChange?.(selectedDate)
     if (selectedDate) {
       setInputValue(formatDateToString(selectedDate))
@@ -81,7 +87,6 @@ export default function DateInputCalendar({
     }
   }
 
-  // Update input value when external value changes
   React.useEffect(() => {
     if (value) {
       setInputValue(formatDateToString(value))
@@ -121,3 +126,6 @@ export default function DateInputCalendar({
     </div>
   )
 }
+
+export default DateInputCalendar
+

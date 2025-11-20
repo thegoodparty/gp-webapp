@@ -1,9 +1,3 @@
-/**
- *
- * LargeCard
- *
- */
-
 import React from 'react'
 import Link from 'next/link'
 
@@ -19,7 +13,47 @@ import CandidateAvatar from './CandidateAvatar'
 
 const MAX_POSITIONS = 6
 
-export default function LargeCard({ candidate, priority = false }) {
+interface Position {
+  id: string
+  name: string
+}
+
+interface Followers {
+  thisWeek: number
+}
+
+interface Support {
+  thisWeek: number
+}
+
+interface Candidate {
+  firstName: string
+  lastName: string
+  slug?: string
+  positions?: Position[]
+  whyRunning?: string
+  whyIndependent?: string
+  experience?: string
+  hometown?: string
+  occupation?: string
+  funFact?: string
+  didWin?: string
+  followers?: Followers
+  support?: Support
+  image?: string
+  raceDate?: string
+  votesNeeded?: number
+  overrideFollowers?: boolean
+  likelyVoters?: number
+  votesReceived?: number
+}
+
+interface LargeCardProps {
+  candidate: Candidate
+  priority?: boolean
+}
+
+const LargeCard = ({ candidate, priority = false }: LargeCardProps): React.JSX.Element => {
   if (!candidate) {
     return <></>
   }
@@ -108,7 +142,6 @@ export default function LargeCard({ candidate, priority = false }) {
               />
               <div className="mt-8">
                 <BlackButton
-                  className="view-button-card"
                   style={{
                     backgroundColor: brightColor,
                     borderColor: brightColor,
@@ -172,3 +205,6 @@ export default function LargeCard({ candidate, priority = false }) {
     </Link>
   )
 }
+
+export default LargeCard
+

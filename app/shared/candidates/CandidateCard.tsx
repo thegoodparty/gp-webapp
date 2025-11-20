@@ -11,11 +11,37 @@ import CandidateProgressBar from './CandidateProgressBar'
 
 const MAX_POSITIONS = 6
 
-export default function CandidateCard({ candidate, withFollowButton = false }) {
+interface Position {
+  id: string
+  name: string
+}
+
+interface Candidate {
+  firstName: string
+  lastName: string
+  slug?: string
+  positions?: Position[]
+  followers?: number
+  support?: number
+  image?: string
+  raceDate?: string
+  votesNeeded?: number
+  overrideFollowers?: boolean
+  likelyVoters?: number
+  didWin?: string
+  votesReceived?: number
+}
+
+interface CandidateCardProps {
+  candidate: Candidate
+  withFollowButton?: boolean
+}
+
+const CandidateCard = ({ candidate, withFollowButton = false }: CandidateCardProps): React.JSX.Element => {
   if (!candidate) {
     return <></>
   }
-  const { firstName, lastName, positions, followers, support } = candidate
+  const { firstName, lastName, positions } = candidate
 
   const brightColor = candidateColor(candidate)
   let topPositions = positions
@@ -24,7 +50,7 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
     topPositions = positions.slice(0, MAX_POSITIONS)
   }
 
-  const WrapperElement = ({ children }) => {
+  const WrapperElement = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
     if (withFollowButton) {
       return (
         <div
@@ -53,7 +79,7 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
     <WrapperElement>
       <div className="rounded-2xl py-6 px-6 border-2 border-solid border-gray-200 h-full relative bg-white">
         <div className="flex justify-center">
-          <CandidateAvatar candidate={candidate} small />
+          <CandidateAvatar candidate={candidate} />
         </div>
         <h3 className="text-xl font-bold mb-2 mt-6">
           {firstName} {lastName}
@@ -86,12 +112,9 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
           style={{ width: 'calc(100% - 48px)' }}
         >
           {withFollowButton ? (
-            // <div>Follow container here</div>
             <div></div>
           ) : (
             <BlackButton
-              fullWidth
-              className="view-button-card"
               style={{
                 backgroundColor: brightColor,
                 borderColor: brightColor,
@@ -107,3 +130,6 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
     </WrapperElement>
   )
 }
+
+export default CandidateCard
+

@@ -5,7 +5,20 @@ import TextField from './TextField'
 import { RemoveRedEyeRounded, VisibilityOffRounded } from '@mui/icons-material'
 import { isValidPassword } from './IsValidPassword'
 
-export default function PasswordInput({
+interface PasswordInputProps {
+  onChangeCallback: (password: string, isValid: boolean) => void
+  label?: string
+  helperText?: string
+  autoFocus?: boolean
+  className?: string
+  InputLabelProps?: Record<string, never>
+  placeholder?: string
+  value?: string
+  error?: boolean
+  'data-testid'?: string
+}
+
+const PasswordInput = ({
   onChangeCallback,
   label = 'Password',
   helperText = 'Please ensure your password has at least 8 characters, including at least one letter and one number.',
@@ -16,7 +29,7 @@ export default function PasswordInput({
   value = '',
   error,
   ...restProps
-}) {
+}: PasswordInputProps): React.JSX.Element => {
   const [showPassword, setShowPassword] = useState(false)
   const [isValid, setIsValid] = useState(true)
 
@@ -24,7 +37,7 @@ export default function PasswordInput({
     setShowPassword(!showPassword)
   }
 
-  const handleChangePassword = (event) => {
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const pwd = event.target.value
     const pwdValid = isValidPassword(pwd)
 
@@ -58,7 +71,7 @@ export default function PasswordInput({
         >
           {showPassword ? <VisibilityOffRounded /> : <RemoveRedEyeRounded />}
         </IconButton>,
-        error && 'error',
+        ...(error ? ['error' as const] : []),
       ]}
       inputProps={{
         'data-testid': restProps['data-testid'],
@@ -67,3 +80,6 @@ export default function PasswordInput({
     />
   )
 }
+
+export default PasswordInput
+

@@ -1,10 +1,23 @@
 import React from 'react'
 
-export default function SimpleTable({
+interface Column<T> {
+  id?: string
+  header: string
+  accessorKey?: keyof T
+  cell?: (context: { row: T }) => React.ReactNode
+}
+
+interface SimpleTableProps<T> {
+  columns?: Column<T>[]
+  data?: T[]
+  onRowClick?: ((row: T, e: React.MouseEvent<HTMLTableRowElement>) => void) | null
+}
+
+const SimpleTable = <T extends Record<string, never>>({
   columns = [],
   data = [],
   onRowClick = null,
-}) {
+}: SimpleTableProps<T>): React.JSX.Element => {
   const enableRowClick = typeof onRowClick === 'function'
   return (
     <table
@@ -76,7 +89,7 @@ export default function SimpleTable({
                   last:rounded-br-xl
                 "
               >
-                {column.cell ? column.cell({ row }) : row[column.accessorKey]}
+                {column.cell ? column.cell({ row }) : (column.accessorKey ? row[column.accessorKey] : null)}
               </td>
             ))}
           </tr>
@@ -85,3 +98,6 @@ export default function SimpleTable({
     </table>
   )
 }
+
+export default SimpleTable
+

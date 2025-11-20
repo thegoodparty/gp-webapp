@@ -9,18 +9,53 @@ import RadioGroup from '@shared/inputs/RadioGroup'
 import Checkbox from '@shared/inputs/Checkbox'
 import { ClearRounded } from '@mui/icons-material'
 
-export default function RenderInputField({
+interface RadioOption {
+  key: string
+  label: string
+  value: string
+}
+
+interface FieldConfig {
+  key: string
+  label?: string
+  type: string
+  cols?: number
+  rows?: number
+  placeholder?: string
+  required?: boolean
+  maxLength?: number
+  noPastDates?: boolean
+  dataAttributes?: Record<string, string>
+  helperText?: string
+  disabled?: boolean
+  showResetButton?: boolean
+  noBottomMargin?: boolean
+  invalidOptions?: string[]
+  defaultValue?: string
+  options?: RadioOption[] | string[]
+  alignLeft?: boolean
+  groupLabel?: string
+}
+
+interface RenderInputFieldProps {
+  field: FieldConfig
+  value: string | boolean
+  onChangeCallback: (key: string, value: string | boolean, invalidOptions?: string[]) => void
+  error?: boolean
+}
+
+const RenderInputField = ({
   field,
   value,
   onChangeCallback,
   error,
-}) {
-  let endAdornments = []
+}: RenderInputFieldProps): React.JSX.Element => {
+  const endAdornments: (React.ReactElement | 'error')[] = []
   if (field.showResetButton && value) {
     endAdornments.push(
       <ClearRounded
         key="clear"
-        title="Clear input"
+        titleAccess="Clear input"
         className="cursor-pointer hover:text-black"
         onClick={() => onChangeCallback(field.key, '')}
       />,
@@ -42,7 +77,7 @@ export default function RenderInputField({
           label={field.label}
           name={field.label}
           fullWidth
-          value={value}
+          value={value as string}
           placeholder={field.placeholder || ''}
           onChange={(e) =>
             onChangeCallback(field.key, e.target.value, field.invalidOptions)
@@ -70,8 +105,9 @@ export default function RenderInputField({
       )}
       {field.type === 'email' && (
         <EmailInput
-          value={value}
-          onChangeCallback={(e) => onChangeCallback(field.key, e.target.value)}
+          value={value as string}
+          onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) => onChangeCallback(field.key, e.target.value)}
+          variant="outlined"
           shrink
           disabled={field.disabled}
           placeholder={field.placeholder || ''}
@@ -80,7 +116,7 @@ export default function RenderInputField({
       )}
       {field.type === 'phone' && (
         <PhoneInput
-          value={value}
+          value={value as string}
           required={field.required}
           onChangeCallback={(phone) => {
             onChangeCallback(field.key, phone)
@@ -101,16 +137,13 @@ export default function RenderInputField({
           <RadioGroup
             className="flex flex-col justify-start"
             name={field.label}
-            label={field.label}
             defaultValue={field.defaultValue}
             onChange={(e) => {
               onChangeCallback(field.key, e.target.value)
             }}
-            error={error}
-            disabled={field.disabled}
           >
             {field.options &&
-              field.options.map(({ key, label, value }) => (
+              (field.options as RadioOption[]).map(({ key, label, value }) => (
                 <FormControlLabel
                   key={key}
                   {...{
@@ -145,7 +178,7 @@ export default function RenderInputField({
             }}
           >
             <option value="">Select</option>
-            {field.options.map((op) => (
+            {(field.options as string[]).map((op) => (
               <option value={op} key={op}>
                 {op}
               </option>
@@ -160,7 +193,7 @@ export default function RenderInputField({
           )}
           <div className="flex items-center">
             <Checkbox
-              value={value}
+              value={value as boolean}
               onChange={(e) => onChangeCallback(field.key, e.target.checked)}
               disabled={field.disabled}
             />
@@ -171,3 +204,6 @@ export default function RenderInputField({
     </div>
   )
 }
+
+export default RenderInputField
+

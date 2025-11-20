@@ -5,14 +5,31 @@ import { IoIosCheckmark } from 'react-icons/io'
 import { numberFormatter } from 'helpers/numberHelper'
 import { candidateColor } from 'helpers/candidateHelper'
 import { daysTill } from 'helpers/dateHelper'
-// import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
+
+interface Candidate {
+  firstName: string
+  lastName: string
+  raceDate?: string
+  votesNeeded?: number
+  overrideFollowers?: boolean
+  likelyVoters?: number
+  didWin?: string
+  votesReceived?: number
+}
+
+interface CandidateProgressBarProps {
+  candidate: Candidate
+  peopleSoFar?: number
+  withAchievement?: boolean
+  withAnimation?: boolean
+}
 
 const CandidateProgressBar = ({
   candidate,
   peopleSoFar,
   withAchievement,
   withAnimation = true,
-}) => {
+}: CandidateProgressBarProps): React.JSX.Element => {
   const {
     raceDate,
     votesNeeded,
@@ -25,10 +42,11 @@ const CandidateProgressBar = ({
   } = candidate
   const offsetFollow = 0
 
-  let people = overrideFollowers ? likelyVoters : peopleSoFar
+  let people = overrideFollowers ? likelyVoters || 0 : peopleSoFar || 0
   people += offsetFollow
   const color = candidateColor(candidate)
-  const days = daysTill(raceDate)
+  const daysResult = daysTill(raceDate)
+  const days = typeof daysResult === 'string' ? parseInt(daysResult) || 0 : daysResult
 
   const [barWidth, setBarWidth] = useState(0)
   const [isRendered, setIsRendered] = useState(false)
@@ -49,7 +67,8 @@ const CandidateProgressBar = ({
     progress = 50
   }
 
-  const daysTillElection = daysTill(raceDate)
+  const daysTillElectionResult = daysTill(raceDate)
+  const daysTillElection = typeof daysTillElectionResult === 'string' ? parseInt(daysTillElectionResult) || 0 : daysTillElectionResult
 
   let raceDone = false
   if (raceDate) {
@@ -58,7 +77,7 @@ const CandidateProgressBar = ({
     }
   }
 
-  if (raceDone && votesReceived && votesNeeded !== 0) {
+  if (raceDone && votesReceived && votesNeeded && votesNeeded !== 0) {
     progress = (votesReceived * 100) / votesNeeded
     if (progress > 100) {
       progress = 100
@@ -80,14 +99,14 @@ const CandidateProgressBar = ({
     setIsRendered(true)
   }, [votesNeeded])
 
-  let achievementIcon = (
+  let achievementIcon: React.ReactNode = (
     <img
       className="w-8 h-8 mr-2"
       src="/images/icons/achievement.svg"
       alt="achievement"
     />
   )
-  let achievementText = (
+  let achievementText: React.ReactNode = (
     <div>
       {firstName} {lastName} has <strong>{numberFormatter(realPerc)}%</strong>{' '}
       of the votes needed to win this race
@@ -100,7 +119,7 @@ const CandidateProgressBar = ({
       </span>
     )
     const resultPerc =
-      votesNeeded && votesNeeded !== 0 ? (votesReceived * 100) / votesNeeded : 0
+      votesNeeded && votesNeeded !== 0 ? (votesReceived || 0) * 100 / votesNeeded : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}
@@ -115,7 +134,7 @@ const CandidateProgressBar = ({
       </span>
     )
     const resultPerc =
-      votesNeeded && votesNeeded !== 0 ? (votesReceived * 100) / votesNeeded : 0
+      votesNeeded && votesNeeded !== 0 ? (votesReceived || 0) * 100 / votesNeeded : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}
@@ -138,7 +157,7 @@ const CandidateProgressBar = ({
           {raceDone && (didWin === 'Yes' || didWin === 'No') ? (
             <>
               <div className="text-lg font-black">
-                {numberFormatter(votesReceived)}
+                {numberFormatter(votesReceived || 0)}
               </div>
               <div className="text-sm">votes received</div>
             </>
@@ -211,7 +230,7 @@ const CandidateProgressBar = ({
         </div>
         <div className="text-right">
           <div className="text-lg font-black">
-            {numberFormatter(votesNeeded)}
+            {numberFormatter(votesNeeded || 0)}
           </div>
           <div className="text-sm">votes needed</div>
         </div>
@@ -251,3 +270,4 @@ const CandidateProgressBar = ({
 }
 
 export default CandidateProgressBar
+
