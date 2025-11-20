@@ -16,6 +16,7 @@ import {
   SelectValue,
   Textarea,
 } from 'goodparty-styleguide'
+import PollTextBiasInput from '../shared/components/poll-text-bias/PollTextBiasInput'
 
 type Details = {
   title: string
@@ -118,6 +119,8 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
     },
   })
 
+  const [questionValue, setQuestionValue] = useState('')
+
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
     await new Promise((resolve) => setTimeout(resolve, 500))
@@ -195,6 +198,11 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
           })}
           placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
           rows={6}
+        />
+        <PollTextBiasInput
+          value={questionValue}
+          onChange={setQuestionValue}
+          placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
         />
         <p className="mt-1.5 text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize

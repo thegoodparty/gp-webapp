@@ -39,25 +39,28 @@ export function usePollBiasAnalysis(
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [isOptimizing, setIsOptimizing] = useState(false)
   const [contentAtAnalysis, setContentAtAnalysis] = useState<string>('')
+  const [errors, setErrors] = useState<string[]>([])
 
-  const error = useMemo(() => {
-    let errorsArr: string[] = []
+  const errorString = useMemo(() => {
+    let spanErrors: string[] = []
     if (biasAnalysis?.bias_spans.length) {
-      errorsArr.push('Biased Language detected.')
+      spanErrors.push('Biased Language detected.')
     }
     if (biasAnalysis?.grammar_spans.length) {
-      errorsArr.push('Grammar issues found.')
+      spanErrors.push('Grammar issues found.')
     }
-    if (errorsArr.length > 0) {
-      errorsArr.push(
-        'This will compromise data accuracy. Use “Optimize message” to correct it.',
+
+    if (spanErrors.length > 0) {
+      spanErrors.push(
+        'This will compromise data accuracy. Use "Optimize message" to correct it.',
       )
     }
-    return errorsArr.join(' ')
-  }, [biasAnalysis])
+    return errors.concat(spanErrors).join(' ')
+  }, [biasAnalysis, errors])
 
   const analyzeBias = useCallback(
     async (pollText: string) => {
+      setErrors([])
       if (!pollText || pollText.trim().length === 0) {
         setBiasAnalysis(null)
         return
@@ -74,9 +77,12 @@ export function usePollBiasAnalysis(
           setBiasAnalysis(response.data)
           setContentAtAnalysis(pollText)
           onAnalyze?.(response.data)
+        } else {
+          throw new Error(response.statusText)
         }
       } catch (error) {
         console.error('Error analyzing bias:', error)
+        setErrors(['Unable to check for bias, please try again later'])
       } finally {
         setIsAnalyzing(false)
       }
@@ -89,41 +95,43 @@ export function usePollBiasAnalysis(
       if (!biasAnalysis) return null
 
       const contentChanged = pollText !== contentAtAnalysis
+      const useCachedResult = !contentChanged && biasAnalysis.rewritten_text
 
-      if (!contentChanged && biasAnalysis.rewritten_text) {
-        setIsOptimizing(true)
+      setIsOptimizing(true)
+
+      try {
+        const rewrittenText = useCachedResult
+          ? biasAnalysis.rewritten_text
+          : await (async () => {
+              const response = await clientFetch<BiasAnalysisResponse>(
+                apiRoutes.polls.analyzeBias,
+                { pollText },
+              )
+              if (!response.ok) {
+                setErrors(['Unable to check for bias, please try again later'])
+                return null
+              }
+              return response.ok && response.data
+                ? response.data.rewritten_text
+                : null
+            })()
+
+        if (!rewrittenText) {
+          setIsOptimizing(false)
+          return null
+        }
+
         return new Promise((resolve) => {
           setTimeout(() => {
             setIsOptimizing(false)
             setBiasAnalysis(null)
             setContentAtAnalysis('')
-            resolve(biasAnalysis.rewritten_text)
+            resolve(rewrittenText)
           }, 2000)
         })
-      }
-
-      setIsOptimizing(true)
-      try {
-        const response = await clientFetch<BiasAnalysisResponse>(
-          apiRoutes.polls.analyzeBias,
-          { pollText },
-        )
-
-        if (response.ok && response.data) {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              setIsOptimizing(false)
-              setBiasAnalysis(null)
-              setContentAtAnalysis('')
-              resolve(response.data.rewritten_text)
-            }, 2000)
-          })
-        } else {
-          setIsOptimizing(false)
-          return null
-        }
       } catch (error) {
         console.error('Error optimizing text:', error)
+        setErrors(['Unable to check for bias, please try again later'])
         setIsOptimizing(false)
         return null
       }
@@ -134,13 +142,14 @@ export function usePollBiasAnalysis(
   const clearAnalysis = useCallback(() => {
     setBiasAnalysis(null)
     setContentAtAnalysis('')
+    setErrors([])
   }, [])
 
   return {
     biasAnalysis,
     isAnalyzing,
     isOptimizing,
-    error,
+    error: errorString,
     analyzeBias,
     optimizeText,
     clearAnalysis,

@@ -1,15 +1,15 @@
 'use client'
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Button } from 'goodparty-styleguide'
 import { MdAutoAwesome, MdRotateLeft } from 'react-icons/md'
-import { usePollBiasAnalysis } from '../hooks/usePollBiasAnalysis'
+import { usePollBiasAnalysis } from './hooks/usePollBiasAnalysis'
+import { useTextStreaming } from './hooks/useTextStreaming'
 import PollTextInput from './PollTextInput'
 import LoadingDots from './LoadingDots'
 
 interface PollTextBiasInputProps {
   value: string
   onChange: (value: string) => void
-  label?: string
   placeholder?: string
   className?: string
 }
@@ -17,14 +17,10 @@ interface PollTextBiasInputProps {
 export default function PollTextBiasInput({
   value,
   onChange,
-  label = 'Poll Text',
-  placeholder = 'Enter your poll question...',
+  placeholder = '',
   className = '',
 }: PollTextBiasInputProps) {
   const [isFocused, setIsFocused] = useState(false)
-  const [isStreaming, setIsStreaming] = useState(false)
-  const [streamingText, setStreamingText] = useState('')
-  const streamingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const {
     biasAnalysis,
     isAnalyzing,
@@ -34,17 +30,18 @@ export default function PollTextBiasInput({
     optimizeText,
     clearAnalysis,
   } = usePollBiasAnalysis({})
+  const { isStreaming, streamingText, streamText } = useTextStreaming()
 
-  const showHighlights =
+  const hasIssues =
     biasAnalysis &&
     (biasAnalysis.bias_spans.length > 0 ||
       biasAnalysis.grammar_spans.length > 0)
-  const showOptimizeButton =
-    value.trim().length > 0 &&
-    !!biasAnalysis &&
-    !isAnalyzing &&
-    !isOptimizing &&
-    !isStreaming
+
+  const isProcessing = isAnalyzing || isOptimizing || isStreaming
+  const canOptimize = value.trim().length > 0 && !!biasAnalysis && !isProcessing
+
+  const displayValue =
+    isOptimizing && !isStreaming ? '' : isStreaming ? streamingText : value
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -56,85 +53,52 @@ export default function PollTextBiasInput({
   }, [analyzeBias, value])
 
   const handleContentChange = useCallback(() => {
-    if (showHighlights) {
+    if (hasIssues) {
       clearAnalysis()
     }
-  }, [showHighlights, clearAnalysis])
+  }, [hasIssues, clearAnalysis])
 
   const handleOptimize = useCallback(async () => {
     const optimizedText = await optimizeText(value)
     if (!optimizedText) return
 
-    setIsStreaming(true)
-    setStreamingText('')
-    let currentIndex = 0
-
-    const streamCharacter = () => {
-      if (currentIndex < optimizedText.length) {
-        setStreamingText(optimizedText.substring(0, currentIndex + 1))
-        currentIndex++
-        streamingTimeoutRef.current = setTimeout(streamCharacter, 30)
-      } else {
-        setIsStreaming(false)
-        onChange(optimizedText)
-        setStreamingText('')
-        clearAnalysis()
-      }
-    }
-
-    streamCharacter()
-  }, [optimizeText, value, onChange, clearAnalysis])
-
-  useEffect(() => {
-    return () => {
-      if (streamingTimeoutRef.current) {
-        clearTimeout(streamingTimeoutRef.current)
-      }
-    }
-  }, [])
+    streamText(optimizedText, (finalText) => {
+      onChange(finalText)
+      clearAnalysis()
+    })
+  }, [optimizeText, value, onChange, clearAnalysis, streamText])
 
   return (
     <div className={className}>
       <div className="relative">
-        <div className="mb-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {label}
-          </label>
-        </div>
         <div className="relative">
           <PollTextInput
-            value={
-              isOptimizing && !isStreaming
-                ? ''
-                : isStreaming
-                ? streamingText
-                : value
-            }
-            onChange={isStreaming || isOptimizing ? () => {} : onChange}
+            value={displayValue}
+            onChange={isProcessing ? () => {} : onChange}
             placeholder={placeholder}
             biasSpans={biasAnalysis?.bias_spans || []}
             grammarSpans={biasAnalysis?.grammar_spans || []}
-            isFocused={isFocused && !isStreaming && !isOptimizing}
+            isFocused={isFocused && !isProcessing}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            showHighlights={!!showHighlights && !isStreaming && !isOptimizing}
+            showHighlights={!!hasIssues && !isProcessing}
             onContentChange={handleContentChange}
             showLoadingDots={isOptimizing && !isStreaming}
-            isReadOnly={isStreaming || isOptimizing}
-            hidePlaceholder={isOptimizing || isStreaming}
-            isOptimizing={isOptimizing || isStreaming}
+            isReadOnly={isProcessing}
+            hidePlaceholder={isProcessing}
+            isOptimizing={isProcessing}
           />
           <div className="absolute bottom-3 right-3 z-10">
             <Button
               variant="secondary"
               className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 font-normal ${
-                showHighlights
-                  ? 'text-red-500 bg-red-100 hover:bg-red-100'
-                  : 'text-blue-500 bg-blue-100 hover:bg-blue-100'
+                hasIssues
+                  ? 'text-red-500 bg-red-50 hover:!bg-red-100 active:!bg-red-50'
+                  : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
               }`}
               size="small"
               onClick={handleOptimize}
-              disabled={isOptimizing || !showOptimizeButton || isStreaming}
+              disabled={!canOptimize}
             >
               {isOptimizing ? (
                 <>
