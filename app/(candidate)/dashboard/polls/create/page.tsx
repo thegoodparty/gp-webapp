@@ -5,7 +5,7 @@ import { CreatePoll } from './CreatePoll'
 export const metadata = pageMetaData({
   title: 'Create Poll | GoodParty.org',
   description: 'Create Poll',
-  slug: '/dashboard/polls',
+  slug: '/dashboard/polls/create',
 })
 
 export default async function Page() {
