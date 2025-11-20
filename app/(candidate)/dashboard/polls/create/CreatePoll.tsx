@@ -259,7 +259,7 @@ const AudienceSelectionForm: React.FC<{
 
   if (query.status !== 'success') {
     return (
-      <FormStep step="details" onBack={goBack} nextButton={<></>}>
+      <FormStep step="audience-selection" onBack={goBack} nextButton={<></>}>
         <LuLoaderCircle
           className="animate-spin text-blue-500 mx-auto"
           size={60}
