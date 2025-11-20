@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useEffect, useState } from 'react'
 import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
+import { queryClient } from '@shared/query-client'
 
 export const UserContext = createContext([null, (updated) => {}])
 
@@ -15,6 +16,7 @@ export const UserProvider = ({ children }) => {
   }, [])
 
   const setUser = (updated) => {
+    queryClient.clear()
     setUserCookie(updated)
     setUserState(updated)
   }
