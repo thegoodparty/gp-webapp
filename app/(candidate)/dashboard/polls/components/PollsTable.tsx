@@ -8,8 +8,9 @@ import {
   TableRow,
 } from 'goodparty-styleguide'
 import Link from 'next/link'
-import StatusBadge from './StatusBadge'
-import { usePolls } from '../shared/hooks/PollsProvider'
+import { StatusBadge } from './StatusBadge'
+import React from 'react'
+import { Poll } from '../shared/serverApiCalls'
 
 const columns = [
   {
@@ -30,10 +31,8 @@ const columns = [
   },
 ]
 
-export default function PollsTable() {
-  const [polls] = usePolls()
-
-  if (polls?.results?.length === 0) {
+export const PollsTable: React.FC<{ polls: Poll[] }> = ({ polls }) => {
+  if (polls.length === 0) {
     return (
       <div className="mt-4 text-center text-2xl font-medium">
         No polls found
@@ -52,7 +51,7 @@ export default function PollsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(polls?.results || []).map((poll) => (
+            {polls.map((poll) => (
               <TableRow key={poll.id}>
                 <TableCell>
                   <Link
