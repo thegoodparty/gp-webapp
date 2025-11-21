@@ -60,6 +60,17 @@ jobs:
           echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "Deployment successful: $DEPLOYMENT_URL"
           
+          # Wait for deployment to be ready
+          echo "Waiting for deployment to be accessible..."
+          for i in {1..30}; do
+            if curl -s -o /dev/null -w "%{http_code}" "$DEPLOYMENT_URL" | grep -q "200\|301\|302"; then
+              echo "Deployment is ready!"
+              break
+            fi
+            echo "Attempt $i: Deployment not ready yet, waiting 10 seconds..."
+            sleep 10
+          done
+          
       - name: Comment PR with deployment info
         uses: actions/github-script@v7
         with:
@@ -118,6 +129,18 @@ jobs:
         working-directory: test-automation
         run: npx playwright install --with-deps
 
+      - name: Debug test environment
+        working-directory: test-automation
+        run: |
+          echo "BASE_URL: ${{ needs.deploy-preview.outputs.preview-url }}"
+          echo "Testing URL accessibility..."
+          curl -I "${{ needs.deploy-preview.outputs.preview-url }}" || echo "URL not accessible"
+          echo "Testing sign-up page..."
+          curl -I "${{ needs.deploy-preview.outputs.preview-url }}/sign-up" || echo "Sign-up page not accessible"
+          echo "Environment variables:"
+          echo "TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}"
+          echo "TEST_USER_ADMIN_PASSWORD: [REDACTED]"
+          
       - name: Run Stable Playwright Tests
         id: run-stable-tests
         working-directory: test-automation
