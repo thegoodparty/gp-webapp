@@ -93,6 +93,9 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout main repository (for .nvmrc)
+        uses: actions/checkout@v4
+        
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
         with:
@@ -103,7 +106,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ../.nvmrc
+          node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: test-automation/package-lock.json
 
@@ -245,6 +248,9 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout main repository (for .nvmrc)
+        uses: actions/checkout@v4
+        
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
         with:
@@ -255,7 +261,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: test-automation/package-lock.json
 
