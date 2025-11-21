@@ -36,6 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: checks
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
     outputs:
       preview-url: ${{ steps.deploy.outputs.preview-url }}
       deployment-id: ${{ steps.deploy.outputs.deployment-id }}
@@ -368,12 +371,120 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+  stable-tests-develop:
+    name: Stable E2E Tests (Production Gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: checks
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          path: test-automation
+          ref: develop
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: test-automation/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: test-automation
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        working-directory: test-automation
+        run: npx playwright install --with-deps
+
+      - name: Run Stable Playwright Tests
+        id: run-stable-tests
+        working-directory: test-automation
+        run: npx playwright test --project=stable
+        env:
+          BASE_URL: https://goodparty.org  # Production URL for develop branch tests
+          TEST_RUN_NAME: "Stable E2E Tests - Production Gate"
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload stable test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: stable-playwright-report-production-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-automation/playwright-report
+            test-automation/test-results
+          retention-days: 30
+
+      - name: Parse stable test results
+        if: always()
+        id: stable-test-results
+        shell: bash
+        working-directory: test-automation
+        run: |
+          if [ -f "test-results/results.json" ]; then
+            echo "Found results.json, parsing stable test results..."
+            
+            TOTAL_TESTS=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[]] | length' 2>/dev/null || echo "0")
+            FAILED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == false)] | length' 2>/dev/null || echo "0")
+            PASSED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == true)] | length' 2>/dev/null || echo "0")
+            
+            echo "Parsed: Total=$TOTAL_TESTS, Failed=$FAILED_COUNT, Passed=$PASSED_COUNT"
+            
+            echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+            echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+            echo "passed_count=$PASSED_COUNT" >> $GITHUB_OUTPUT
+            
+            if [ "$FAILED_COUNT" -gt 0 ]; then
+              FAILED_TESTS=$(cat test-results/results.json | jq -r '[.. | .specs? // empty | .[] | select(.ok == false) | .title] | .[:10] | .[]' 2>/dev/null | sed 's/^/• /' || echo "• Failed to parse test names")
+              if [ -z "$FAILED_TESTS" ]; then
+                FAILED_TESTS="• $FAILED_COUNT test(s) failed but names could not be parsed"
+              fi
+              echo "failed_tests<<EOF" >> $GITHUB_OUTPUT
+              echo "$FAILED_TESTS" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              echo "failed_tests=" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️  results.json file not found - stable tests may not have run"
+            echo "failed_tests=• Stable test results file not found (tests may not have started)" >> $GITHUB_OUTPUT
+            echo "failed_count=0" >> $GITHUB_OUTPUT
+            echo "passed_count=0" >> $GITHUB_OUTPUT
+            echo "total_tests=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack on Production Gate Test Failure
+        if: steps.run-stable-tests.outcome == 'failure' || failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🚨 Production Deployment Blocked - Stable Tests Failed",
+              "attachments": [{
+                "color": "danger",
+                "text": "${{ github.repository }} - develop branch\nCommit: ${{ github.sha }}\nBy: ${{ github.actor }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [checks, stable-tests]
+    needs: [checks, stable-tests-develop]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment: production  # Requires manual approval if configured
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
