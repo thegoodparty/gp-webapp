@@ -42,4 +42,3 @@ export const CampaignProvider = ({ children, campaign: initCampaign }: CampaignP
     </CampaignContext.Provider>
   )
 }
-

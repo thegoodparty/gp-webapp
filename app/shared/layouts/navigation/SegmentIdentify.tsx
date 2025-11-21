@@ -35,7 +35,7 @@ const identify = async (user: User | null, searchParams: ReturnType<typeof useSe
 }
 
 const SegmentIdentify = (): null => {
-  const [user] = useUser() as [User | null]
+  const [user] = useUser()
   const searchParams = useSearchParams()
   const { refresh } = useFeatureFlags()
 
