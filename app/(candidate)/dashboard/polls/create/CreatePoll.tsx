@@ -1,7 +1,7 @@
 'use client'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { StepIndicator } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
@@ -15,7 +15,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
-import PollTextBiasInput from '../shared/components/poll-text-bias/PollTextBiasInput'
+import PollTextBiasInput, {
+  BiasAnalysisState,
+} from '../shared/components/poll-text-bias/PollTextBiasInput'
 
 type Details = {
   title: string
@@ -104,13 +106,17 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
   onChange,
 }) => {
   const router = useRouter()
+  const [biasAnalysisState, setBiasAnalysisState] =
+    useState<BiasAnalysisState | null>(null)
+  const biasAnalysisStateRef = useRef<BiasAnalysisState | null>(null)
 
   const {
     register,
     handleSubmit,
     control,
-    setError,
-    clearErrors,
+    trigger,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: {
@@ -120,6 +126,15 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
     },
   })
 
+  useEffect(() => {
+    biasAnalysisStateRef.current = biasAnalysisState
+    const currentValue = getValues('question')
+    if (biasAnalysisState !== null && currentValue.trim().length > 0) {
+      setValue('question', currentValue, { shouldTouch: true })
+      trigger('question')
+    }
+  }, [biasAnalysisState, trigger, setValue, getValues])
+
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
     await new Promise((resolve) => setTimeout(resolve, 500))
@@ -127,7 +142,7 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
     // If validation passes, call onChange
     onChange(data)
   }
-
+  console.log('biasAnalysisState', biasAnalysisState)
   return (
     <FormStep
       step="details"
@@ -181,7 +196,7 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
           )}
         />
         {errors.introduction && (
-          <p className="mt-1 text-sm text-red-500">
+          <p className="mt-1 font-normal text-sm text-red-500">
             {errors.introduction.message}
           </p>
         )}
@@ -196,27 +211,41 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
               value: 25,
               message: 'Question must be at least 25 characters',
             },
+            validate: () => {
+              const state = biasAnalysisStateRef.current
+              if (!state || !state.hasBeenChecked) {
+                return 'Please check your message for bias before submitting.'
+              }
+              if (state.hasServerError) {
+                return 'Unable to analyze for bias, please try again later.'
+              }
+              if (state.hasBias && state.hasGrammar) {
+                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasBias) {
+                return 'Biased language detected. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasGrammar) {
+                return 'Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              return true
+            },
           }}
           render={({ field }) => (
             <PollTextBiasInput
               value={field.value}
               onChange={field.onChange}
               placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
-              setError={
-                setError as (
-                  name: string,
-                  error: { type: string; message: string },
-                ) => void
-              }
-              clearErrors={clearErrors as (name?: string) => void}
-              fieldName="question"
+              onBiasAnalysisChange={setBiasAnalysisState}
             />
           )}
         />
         {errors.question && (
-          <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+          <p className="mt-1 font-normal text-sm text-red-500">
+            {errors.question.message}
+          </p>
         )}
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize
           message.
         </p>

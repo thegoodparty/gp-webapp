@@ -117,6 +117,14 @@ export default function SpanTextArea({
           className={`text-sm font-normal w-full bg-white px-4 py-3 border rounded-lg cursor-text ${borderClasses.border}`}
           style={{ ...commonStyles, minHeight }}
           onClick={onFocus}
+          // onMouseDown={(e) => {
+          //   e.preventDefault()
+          //   onFocus()
+          // }}
+          // onTouchStart={(e) => {
+          //   e.preventDefault()
+          //   onFocus()
+          // }}
         >
           {renderHighlightedText({ value, spans })}
         </div>
