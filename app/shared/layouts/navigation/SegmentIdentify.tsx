@@ -10,12 +10,12 @@ import { identifyUser } from '@shared/utils/analytics'
 import { useFeatureFlags } from '@shared/experiments/FeatureFlagsProvider'
 import { User } from 'helpers/types'
 
-const identify = async (user: User | null, searchParams: ReturnType<typeof useSearchParams> | null, refreshFeatureFlags?: () => void) => {
+const identify = async (user: User | null, searchParams: ReturnType<typeof useSearchParams>, refreshFeatureFlags?: () => void) => {
   persistUtmsOnce()
 
   const traits = {
     ...getPersistedUtms(),
-    ...(searchParams ? extractClids(searchParams) : {}),
+    ...extractClids(searchParams as URLSearchParams),
   }
 
   if (user?.id) {
@@ -40,9 +40,7 @@ const SegmentIdentify = (): null => {
   const { refresh } = useFeatureFlags()
 
   useEffect(() => {
-    if (searchParams) {
-      identify(user, searchParams, refresh)
-    }
+    identify(user, searchParams, refresh)
   }, [user, searchParams, refresh])
 
   return null

@@ -18,8 +18,8 @@ const deregisterHubspotWidgetLoaded = (registerdCallback: () => void) => () => {
 export const useHubSpotConversations = () => {
   const [widgetLoaded, setWidgetLoaded] = useState(false)
 
-  const widgetLoadedCallback = registerWidgetLoadedCallback(setWidgetLoaded)
   useEffect(() => {
+    const widgetLoadedCallback = registerWidgetLoadedCallback(setWidgetLoaded)
     const hubspot = (window as { HubSpotConversations?: { resetAndReloadWidget: () => void } }).HubSpotConversations
     if (!hubspot) {
       const w = window as { hsConversationsOnReady?: (() => void)[] }
@@ -33,7 +33,7 @@ export const useHubSpotConversations = () => {
       widgetLoadedCallback()
     }
     return deregisterHubspotWidgetLoaded(widgetLoadedCallback)
-  }, [widgetLoadedCallback])
+  }, [])
 
   return { widgetLoaded, setWidgetLoaded }
 }
