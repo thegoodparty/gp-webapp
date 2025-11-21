@@ -116,15 +116,14 @@ export default function SpanTextArea({
           key="highlighted-view"
           className={`text-sm font-normal w-full bg-white px-4 py-3 border rounded-lg cursor-text ${borderClasses.border}`}
           style={{ ...commonStyles, minHeight }}
-          onClick={onFocus}
-          // onMouseDown={(e) => {
-          //   e.preventDefault()
-          //   onFocus()
-          // }}
-          // onTouchStart={(e) => {
-          //   e.preventDefault()
-          //   onFocus()
-          // }}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            onFocus()
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault()
+            onFocus()
+          }}
         >
           {renderHighlightedText({ value, spans })}
         </div>
@@ -133,7 +132,7 @@ export default function SpanTextArea({
           <div
             key="editable-view"
             ref={editorRef}
-            contentEditable={!isReadOnly}
+            contentEditable={!isReadOnly ? 'plaintext-only' : 'false'}
             onInput={handleInput}
             onBlur={onBlur}
             onFocus={onFocus}
