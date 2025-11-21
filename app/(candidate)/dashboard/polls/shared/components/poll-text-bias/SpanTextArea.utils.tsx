@@ -1,31 +1,32 @@
 import React from 'react'
 import Tooltip from '@mui/material/Tooltip'
-import { Span } from './hooks/usePollBiasAnalysis'
+
+export interface TextSpan {
+  start: number
+  end: number
+  tooltipContent: React.ReactNode
+  underlineClassName?: string
+}
 
 interface RenderHighlightedTextOptions {
   value: string
-  biasSpans: Span[]
-  grammarSpans: Span[]
+  spans: TextSpan[]
 }
 
 export function renderHighlightedText({
   value,
-  biasSpans,
-  grammarSpans,
+  spans,
 }: RenderHighlightedTextOptions): React.ReactNode {
-  if (biasSpans.length === 0 && grammarSpans.length === 0) {
+  if (spans.length === 0) {
     return value
   }
 
-  const allSpans: Array<Span & { type: 'bias' | 'grammar' }> = [
-    ...biasSpans.map((span) => ({ ...span, type: 'bias' as const })),
-    ...grammarSpans.map((span) => ({ ...span, type: 'grammar' as const })),
-  ].sort((a, b) => a.start - b.start)
+  const sortedSpans = [...spans].sort((a, b) => a.start - b.start)
 
   const parts: React.ReactNode[] = []
   let lastIndex = 0
 
-  allSpans.forEach((span, index) => {
+  sortedSpans.forEach((span, index) => {
     if (span.start > lastIndex) {
       const textBefore = value.substring(lastIndex, span.start)
       if (textBefore) {
@@ -38,27 +39,11 @@ export function renderHighlightedText({
     }
 
     const spanText = value.substring(span.start, span.end)
-    const isBias = span.type === 'bias'
 
     parts.push(
       <Tooltip
-        key={`${span.type}-${index}`}
-        title={
-          <div className="flex-col space-y-2">
-            <p className="text-xs text-muted-foreground font-normal">
-              {isBias ? 'Bias detected' : 'Grammar issue'}
-            </p>
-            <p className="text-xs font-normal italic">{span.reason}</p>
-            {(isBias || span.suggestion) && (
-              <p className="text-xs font-normal">
-                <b>Suggested:</b>{' '}
-                {isBias
-                  ? 'Remove this language or use optimize message to rewrite message.'
-                  : span.suggestion}
-              </p>
-            )}
-          </div>
-        }
+        key={`span-${index}`}
+        title={span.tooltipContent}
         placement="top"
         arrow={false}
         slotProps={{
@@ -76,7 +61,12 @@ export function renderHighlightedText({
           },
         }}
       >
-        <span className="underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error">
+        <span
+          className={
+            span.underlineClassName ||
+            'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error'
+          }
+        >
           {spanText}
         </span>
       </Tooltip>,
@@ -94,3 +84,4 @@ export function renderHighlightedText({
 
   return <>{parts}</>
 }
+

@@ -14,7 +14,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
 } from 'goodparty-styleguide'
 import PollTextBiasInput from '../shared/components/poll-text-bias/PollTextBiasInput'
 
@@ -110,6 +109,8 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
     register,
     handleSubmit,
     control,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: {
@@ -118,8 +119,6 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
       question: '',
     },
   })
-
-  const [questionValue, setQuestionValue] = useState('')
 
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
@@ -188,22 +187,35 @@ const DetailsForm: React.FC<{ onChange: (details: Details) => void }> = ({
         )}
 
         <label className="block mb-2 mt-4">Poll Question</label>
-        <Textarea
-          {...register('question', {
+        <Controller
+          name="question"
+          control={control}
+          rules={{
             required: 'Question is required',
             minLength: {
               value: 25,
               message: 'Question must be at least 25 characters',
             },
-          })}
-          placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
-          rows={6}
+          }}
+          render={({ field }) => (
+            <PollTextBiasInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
+              setError={
+                setError as (
+                  name: string,
+                  error: { type: string; message: string },
+                ) => void
+              }
+              clearErrors={clearErrors as (name?: string) => void}
+              fieldName="question"
+            />
+          )}
         />
-        <PollTextBiasInput
-          value={questionValue}
-          onChange={setQuestionValue}
-          placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
-        />
+        {errors.question && (
+          <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+        )}
         <p className="mt-1.5 text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize
           message.

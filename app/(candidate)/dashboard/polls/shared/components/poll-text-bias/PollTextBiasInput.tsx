@@ -5,13 +5,16 @@ import { MdAutoAwesome, MdRotateLeft } from 'react-icons/md'
 import { usePollBiasAnalysis } from './hooks/usePollBiasAnalysis'
 import { useTextStreaming } from './hooks/useTextStreaming'
 import PollTextInput from './PollTextInput'
-import LoadingDots from './LoadingDots'
 
 interface PollTextBiasInputProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
   className?: string
+  setError?: (name: string, error: { type: string; message: string }) => void
+  clearErrors?: (name?: string) => void
+  fieldName?: string
+  analysisLengthThreshold?: number
 }
 
 export default function PollTextBiasInput({
@@ -19,6 +22,10 @@ export default function PollTextBiasInput({
   onChange,
   placeholder = '',
   className = '',
+  setError,
+  clearErrors,
+  fieldName,
+  analysisLengthThreshold = 20,
 }: PollTextBiasInputProps) {
   const [isFocused, setIsFocused] = useState(false)
   const {
@@ -29,7 +36,11 @@ export default function PollTextBiasInput({
     analyzeBias,
     optimizeText,
     clearAnalysis,
-  } = usePollBiasAnalysis({})
+  } = usePollBiasAnalysis({
+    setError,
+    clearErrors,
+    fieldName,
+  })
   const { isStreaming, streamingText, streamText } = useTextStreaming()
 
   const hasIssues =
@@ -38,7 +49,10 @@ export default function PollTextBiasInput({
       biasAnalysis.grammar_spans.length > 0)
 
   const isProcessing = isAnalyzing || isOptimizing || isStreaming
-  const canOptimize = value.trim().length > 0 && !!biasAnalysis && !isProcessing
+  const canOptimize =
+    value.trim().length > analysisLengthThreshold &&
+    !!biasAnalysis &&
+    !isProcessing
 
   const displayValue =
     isOptimizing && !isStreaming ? '' : isStreaming ? streamingText : value
@@ -86,7 +100,6 @@ export default function PollTextBiasInput({
             showLoadingDots={isOptimizing && !isStreaming}
             isReadOnly={isProcessing}
             hidePlaceholder={isProcessing}
-            isOptimizing={isProcessing}
           />
           <div className="absolute bottom-3 right-3 z-10">
             <Button
@@ -113,11 +126,6 @@ export default function PollTextBiasInput({
               )}
             </Button>
           </div>
-          {isAnalyzing && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 pointer-events-none z-20 rounded-md">
-              <LoadingDots dotColor="bg-blue-500" />
-            </div>
-          )}
         </div>
         {error && (
           <div className="mt-1">

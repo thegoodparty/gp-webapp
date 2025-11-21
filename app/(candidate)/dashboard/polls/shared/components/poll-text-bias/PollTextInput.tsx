@@ -1,8 +1,9 @@
 'use client'
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { Span } from './hooks/usePollBiasAnalysis'
 import LoadingDots from './LoadingDots'
-import { renderHighlightedText } from './PollTextInput.utils'
+import SpanTextArea from './SpanTextArea'
+import { TextSpan } from './SpanTextArea.utils'
 
 interface PollTextInputProps {
   value: string
@@ -18,7 +19,6 @@ interface PollTextInputProps {
   showLoadingDots?: boolean
   isReadOnly?: boolean
   hidePlaceholder?: boolean
-  isOptimizing?: boolean
 }
 
 export default function PollTextInput({
@@ -35,127 +35,76 @@ export default function PollTextInput({
   showLoadingDots = false,
   isReadOnly = false,
   hidePlaceholder = false,
-  isOptimizing = false,
 }: PollTextInputProps) {
-  const editorRef = useRef<HTMLDivElement>(null)
+  const hasError = biasSpans.length > 0 || grammarSpans.length > 0
 
-  useEffect(() => {
-    if (!editorRef.current) return
+  const spans: TextSpan[] = useMemo(() => {
+    const allSpans: TextSpan[] = []
 
-    if (!isFocused && showHighlights) {
-      editorRef.current.textContent = ''
-      return
-    }
+    biasSpans.forEach((span) => {
+      allSpans.push({
+        start: span.start,
+        end: span.end,
+        tooltipContent: (
+          <div className="flex-col space-y-2">
+            <p className="text-xs text-muted-foreground font-normal">
+              Bias detected
+            </p>
+            <p className="text-xs font-normal italic">{span.reason}</p>
+            <p className="text-xs font-normal">
+              <b>Suggested:</b> Remove this language or use optimize message to
+              rewrite message.
+            </p>
+          </div>
+        ),
+        underlineClassName:
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error',
+      })
+    })
 
-    const currentText = editorRef.current.textContent || ''
-    if (currentText === value) return
+    grammarSpans.forEach((span) => {
+      allSpans.push({
+        start: span.start,
+        end: span.end,
+        tooltipContent: (
+          <div className="flex-col space-y-2">
+            <p className="text-xs text-muted-foreground font-normal">
+              Grammar issue
+            </p>
+            <p className="text-xs font-normal italic">{span.reason}</p>
+            {span.suggestion && (
+              <p className="text-xs font-normal">
+                <b>Suggested:</b> {span.suggestion}
+              </p>
+            )}
+          </div>
+        ),
+        underlineClassName:
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error',
+      })
+    })
 
-    editorRef.current.textContent = value || ''
-
-    if (isFocused) {
-      const range = document.createRange()
-      const selection = window.getSelection()
-      range.selectNodeContents(editorRef.current)
-      range.collapse(false)
-      selection?.removeAllRanges()
-      selection?.addRange(range)
-    }
-  }, [value, isFocused, showHighlights])
-
-  const handleInput = useCallback(
-    (e: React.FormEvent<HTMLDivElement>) => {
-      const newValue = e.currentTarget.textContent || ''
-      onChange(newValue)
-      onContentChange?.()
-    },
-    [onChange, onContentChange],
-  )
-
-  const hasIssues = biasSpans.length > 0 || grammarSpans.length > 0
-
-  const getBorderClasses = () => {
-    if (isOptimizing) {
-      return {
-        border: 'border-gray-200',
-        focusRing: 'focus:ring-2 focus:ring-gray-300',
-      }
-    }
-    if (hasIssues) {
-      return {
-        border: 'border-red-300',
-        focusRing: 'focus:ring-2 focus:ring-red-300',
-      }
-    }
-    if (isFocused) {
-      return {
-        border: 'border-blue-300',
-        focusRing: 'focus:ring-2 focus:ring-blue-300',
-      }
-    }
-    return {
-      border: 'border-gray-200',
-      focusRing: 'focus:ring-2 focus:ring-primary',
-    }
-  }
-
-  const borderClasses = getBorderClasses()
-  const commonStyles = {
-    overflowY: 'auto' as const,
-    maxHeight: '400px',
-    whiteSpace: 'pre-wrap' as const,
-    wordBreak: 'break-word' as const,
-    overflowWrap: 'break-word' as const,
-  }
-
-  const showHighlightedView = !isFocused && showHighlights
+    return allSpans
+  }, [biasSpans, grammarSpans])
 
   return (
-    <div className="relative">
-      {showHighlightedView ? (
-        <div
-          key="highlighted-view"
-          className={`text-sm font-normal w-full min-h-[150px] bg-white px-4 py-3 border rounded-lg cursor-text ${borderClasses.border}`}
-          style={commonStyles}
-          onClick={onFocus}
-        >
-          {renderHighlightedText({ value, biasSpans, grammarSpans })}
-        </div>
-      ) : (
-        <div className="relative">
-          <div
-            key="editable-view"
-            ref={editorRef}
-            contentEditable={!isReadOnly}
-            onInput={handleInput}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            suppressContentEditableWarning
-            className={`text-sm font-normal bg-white w-full min-h-[150px] px-4 py-3 border rounded-md focus:outline-none ${
-              borderClasses.border
-            } ${borderClasses.focusRing} ${
-              isReadOnly ? 'cursor-default' : 'cursor-text'
-            }`}
-            style={commonStyles}
-          />
-          {showLoadingDots && (
-            <div className="absolute top-5 left-5 pointer-events-none">
-              <LoadingDots dotColor="bg-blue-500" />
-            </div>
-          )}
-          {!value && !showLoadingDots && !hidePlaceholder && (
-            <div
-              className="text-sm font-normal absolute top-3 left-4 pointer-events-none text-gray-400 pr-2"
-              style={{
-                fontFamily: 'var(--outfit-font)',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-              }}
-            >
-              {placeholder}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    <SpanTextArea
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      spans={spans}
+      isFocused={isFocused}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      showHighlights={showHighlights}
+      onContentChange={onContentChange}
+      showLoadingDots={showLoadingDots}
+      isReadOnly={isReadOnly}
+      hidePlaceholder={hidePlaceholder}
+      hasError={hasError}
+      loadingDots={
+        showLoadingDots ? <LoadingDots dotColor="bg-blue-500" /> : undefined
+      }
+    />
   )
 }

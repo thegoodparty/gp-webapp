@@ -17,6 +17,9 @@ export interface BiasAnalysisResponse {
 
 export interface UsePollBiasAnalysisOptions {
   onAnalyze?: (response: BiasAnalysisResponse) => void
+  setError?: (name: string, error: { type: string; message: string }) => void
+  clearErrors?: (name?: string) => void
+  fieldName?: string
 }
 
 export interface UsePollBiasAnalysisReturn {
@@ -32,7 +35,7 @@ export interface UsePollBiasAnalysisReturn {
 export function usePollBiasAnalysis(
   options: UsePollBiasAnalysisOptions = {},
 ): UsePollBiasAnalysisReturn {
-  const { onAnalyze } = options
+  const { onAnalyze, setError, clearErrors, fieldName } = options
   const [biasAnalysis, setBiasAnalysis] = useState<BiasAnalysisResponse | null>(
     null,
   )
@@ -82,12 +85,19 @@ export function usePollBiasAnalysis(
         }
       } catch (error) {
         console.error('Error analyzing bias:', error)
-        setErrors(['Unable to check for bias, please try again later'])
+        const errorMessage = 'Unable to check for bias, please try again later'
+        setErrors([errorMessage])
+        if (setError && fieldName) {
+          setError(fieldName as never, {
+            type: 'server',
+            message: errorMessage,
+          })
+        }
       } finally {
         setIsAnalyzing(false)
       }
     },
-    [onAnalyze],
+    [onAnalyze, setError, fieldName],
   )
 
   const optimizeText = useCallback(
@@ -108,7 +118,15 @@ export function usePollBiasAnalysis(
                 { pollText },
               )
               if (!response.ok) {
-                setErrors(['Unable to check for bias, please try again later'])
+                const errorMessage =
+                  'Unable to check for bias, please try again later'
+                setErrors([errorMessage])
+                if (setError && fieldName) {
+                  setError(fieldName as never, {
+                    type: 'server',
+                    message: errorMessage,
+                  })
+                }
                 return null
               }
               return response.ok && response.data
@@ -131,19 +149,29 @@ export function usePollBiasAnalysis(
         })
       } catch (error) {
         console.error('Error optimizing text:', error)
-        setErrors(['Unable to check for bias, please try again later'])
+        const errorMessage = 'Unable to check for bias, please try again later'
+        setErrors([errorMessage])
+        if (setError && fieldName) {
+          setError(fieldName as never, {
+            type: 'server',
+            message: errorMessage,
+          })
+        }
         setIsOptimizing(false)
         return null
       }
     },
-    [biasAnalysis, contentAtAnalysis],
+    [biasAnalysis, contentAtAnalysis, setError, fieldName],
   )
 
   const clearAnalysis = useCallback(() => {
     setBiasAnalysis(null)
     setContentAtAnalysis('')
     setErrors([])
-  }, [])
+    if (clearErrors && fieldName) {
+      clearErrors(fieldName as never)
+    }
+  }, [clearErrors, fieldName])
 
   return {
     biasAnalysis,
