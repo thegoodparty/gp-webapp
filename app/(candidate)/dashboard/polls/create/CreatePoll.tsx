@@ -236,7 +236,12 @@ const DetailsForm: React.FC<{
               value: 25,
               message: 'Question must be at least 25 characters',
             },
-            validate: () => {
+            validate: (value: string) => {
+              const trimmedValue = value.trim()
+              if (trimmedValue.length === 0) {
+                return true
+              }
+
               const state = biasAnalysisStateRef.current
               if (!state || !state.hasBeenChecked) {
                 return 'Please check your message for bias before submitting.'

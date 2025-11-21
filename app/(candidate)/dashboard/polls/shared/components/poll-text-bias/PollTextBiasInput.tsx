@@ -135,6 +135,21 @@ export default function PollTextBiasInput({
   ])
 
   const handleContentChange = useCallback(() => {
+    if (trimmedValue.length === 0) {
+      clearAnalysis()
+      setLastOptimizedText(null)
+      setLastAnalyzedText(null)
+      if (onBiasAnalysisChange) {
+        onBiasAnalysisChange({
+          hasBias: false,
+          hasGrammar: false,
+          hasServerError: false,
+          hasBeenChecked: false,
+        })
+      }
+      return
+    }
+
     if (hasIssues) {
       clearAnalysis()
     }
@@ -153,6 +168,7 @@ export default function PollTextBiasInput({
       })
     }
   }, [
+    trimmedValue,
     hasIssues,
     clearAnalysis,
     textChangedFromOptimized,
