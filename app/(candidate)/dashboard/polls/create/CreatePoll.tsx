@@ -26,6 +26,7 @@ import { calculateRecommendedPollSize } from '../shared/audience-selection'
 import { orderBy } from 'es-toolkit'
 import DateInputCalendar from '@shared/inputs/DateInputCalendar'
 import { addDays, startOfDay } from 'date-fns'
+import { PollImageUpload } from '../components/PollImageUpload'
 
 const TEXT_PRICE = 0.035
 
@@ -64,7 +65,6 @@ type State =
       targetAudienceSize: number
       scheduledDate: Date
       imageUrl: string
-      pollId: string
     }
   | {
       step: 'payment'
@@ -268,7 +268,7 @@ const DateSelectionForm: React.FC<{
             onChange(scheduledDate)
           }}
         >
-          Select Audience
+          Next
         </Button>
       }
     >
@@ -384,7 +384,7 @@ const AudienceSelectionForm: React.FC<{
             onChange(selectedAudienceSize)
           }}
         >
-          Select Audience
+          Next
         </Button>
       }
     >
@@ -443,6 +443,47 @@ const AudienceSelectionForm: React.FC<{
   )
 }
 
+const IamgeSelectionForm: React.FC<{
+  goBack: () => void
+  onChange: (imageUrl: string) => void
+  imageUrl?: string
+}> = ({ goBack, onChange, imageUrl: initialImageUrl }) => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>(initialImageUrl)
+
+  return (
+    <FormStep
+      step="add-image"
+      onBack={goBack}
+      nextButton={
+        <Button
+          type="submit"
+          variant="secondary"
+          disabled={!imageUrl}
+          onClick={() => {
+            if (!imageUrl) {
+              return
+            }
+            onChange(imageUrl)
+          }}
+        >
+          Next
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">Would you like to add an image?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        Text messages perform better with an image. Add your campaign headshot,
+        logo or a community photo for credibility.
+      </p>
+
+      <PollImageUpload
+        imageUrl={imageUrl}
+        onUploaded={(imageUrl) => setImageUrl(imageUrl)}
+      />
+    </FormStep>
+  )
+}
+
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
 
@@ -493,6 +534,29 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
               scheduledDate,
             })
           }
+        />
+      )}
+
+      {state.step === 'add-image' && (
+        <IamgeSelectionForm
+          goBack={() =>
+            setState({
+              step: 'date-selection',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+            })
+          }
+          onChange={(imageUrl) =>
+            setState({
+              step: 'review',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl,
+            })
+          }
+          imageUrl={state.imageUrl}
         />
       )}
 
