@@ -1,113 +1,91 @@
-name: CI/CD Pipeline
+name: E2E Tests
 
-
-on: pull_request
-
+on:
+  deployment_status:
+    
 jobs:
-  checks:
-    name: Type Check & Lint
-    permissions:
-      contents: read
+  check-pr-status:
+    name: Check if PR is open
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Type check
-        run: npx tsc --noEmit
-      
-      - name: Lint
-        run: npm run lint --if-present
-
-  deploy-preview:
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    needs: checks
-    permissions:
-      contents: read
-      pull-requests: write
+    if: github.event.deployment_status.state == 'success'
     outputs:
-      preview-url: ${{ steps.deploy.outputs.preview-url }}
-      deployment-id: ${{ steps.deploy.outputs.deployment-id }}
+      pr-open: ${{ steps.pr-check.outputs.pr-open }}
+      pr-number: ${{ steps.pr-check.outputs.pr-number }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-       
-      - name: Deploy to Vercel
-        id: deploy
-        run: |
-          # Try deploying with public flag and scope
-          echo "Deploying with public access..."
-          DEPLOY_OUTPUT=$(npx vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --confirm --public --scope good-party 2>&1)
-          echo "$DEPLOY_OUTPUT"
-          
-          # Extract the preview URL from the output
-          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -o 'https://[^[:space:]]*\.vercel\.app' | head -n 1)
-          
-          if [ -z "$DEPLOYMENT_URL" ]; then
-            echo "Failed to extract deployment URL"
-            exit 1
-          fi
-          
-          echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
-          echo "Deployment successful: $DEPLOYMENT_URL"
-          
-      - name: Comment PR with deployment info
+      - name: Check PR status
+        id: pr-check
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
-            
-            const body = `## 🚀 Preview Deployment Ready
-            
-            **Preview URL:** ${deploymentUrl}
-            
-            E2E tests will run automatically against this deployment.
-            
-            ---
-            *Deployment ID: ${{ steps.deploy.outputs.deployment-id }}*`;
-
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+            try {
+              // Find PR associated with this deployment
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: context.payload.deployment.sha
+              });
+              
+              if (prs.length === 0) {
+                console.log('No PR found for this deployment');
+                core.setOutput('pr-open', 'false');
+                core.setOutput('pr-number', '');
+                return;
+              }
+              
+              const pr = prs[0];
+              const isOpen = pr.state === 'open';
+              
+              console.log(`Found PR #${pr.number}, state: ${pr.state}`);
+              core.setOutput('pr-open', isOpen.toString());
+              core.setOutput('pr-number', pr.number.toString());
+              
+              if (!isOpen) {
+                console.log(`Skipping tests - PR #${pr.number} is ${pr.state}`);
+              }
+            } catch (error) {
+              console.error('Error checking PR status:', error);
+              core.setOutput('pr-open', 'false');
+              core.setOutput('pr-number', '');
+            }
 
   stable-tests:
     name: Stable E2E Tests (Blocking)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: deploy-preview
+    needs: check-pr-status
+    if: needs.check-pr-status.outputs.pr-open == 'true'
     permissions:
       actions: read
       contents: read
       pull-requests: write
     steps:
-      - name: Checkout main repository (for .nvmrc)
-        uses: actions/checkout@v4
-        
+      - name: Debug deployment info
+        run: |
+          echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
+          echo "Deployment state: ${{ github.event.deployment_status.state }}"
+          echo "Deployment URL: ${{ github.event.deployment_status.target_url }}"
+          echo "Event name: ${{ github.event_name }}"
+
+      - name: Set deployment URL
+        id: deployment
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
           ref: develop
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 'lts/*'
           cache: 'npm'
           cache-dependency-path: test-automation/package-lock.json
 
@@ -119,24 +97,12 @@ jobs:
         working-directory: test-automation
         run: npx playwright install --with-deps
 
-      - name: Debug test environment
-        working-directory: test-automation
-        run: |
-          echo "BASE_URL: ${{ needs.deploy-preview.outputs.preview-url }}"
-          echo "Testing URL accessibility..."
-          curl -I "${{ needs.deploy-preview.outputs.preview-url }}" || echo "URL not accessible"
-          echo "Testing sign-up page..."
-          curl -I "${{ needs.deploy-preview.outputs.preview-url }}/sign-up" || echo "Sign-up page not accessible"
-          echo "Environment variables:"
-          echo "TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}"
-          echo "TEST_USER_ADMIN_PASSWORD: [REDACTED]"
-          
       - name: Run Stable Playwright Tests
         id: run-stable-tests
         working-directory: test-automation
         run: npx playwright test --project=stable
         env:
-          BASE_URL: ${{ needs.deploy-preview.outputs.preview-url }}
+          BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Stable E2E Tests - PR Preview"
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
@@ -197,7 +163,22 @@ jobs:
           script: |
             const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.stable-test-results.outputs) }};
             const testStatus = failed_count > 0 ? '❌' : '✅';
-            const deploymentUrl = '${{ needs.deploy-preview.outputs.preview-url }}';
+            const deploymentUrl = '${{ env.BASE_URL }}';
+            
+            // Find PR associated with this deployment
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment.sha
+            });
+            
+            if (prs.length === 0) {
+              console.log('No PR found for this deployment, skipping comment');
+              return;
+            }
+            
+            const prNumber = prs[0].number;
+            console.log(`Found PR #${prNumber} for deployment`);
             
             let body = `## ${testStatus} Stable E2E Test Results (Blocking)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
@@ -213,7 +194,7 @@ jobs:
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
@@ -229,7 +210,7 @@ jobs:
               text: '✅ Stable E2E Tests Passed',
               attachments: [{
                 color: 'good',
-                text: `${{ github.repository }} - PR #${{ github.event.number }} by ${{ github.actor }}\nURL: ${{ needs.deploy-preview.outputs.preview-url }}\n✅ ${{ steps.stable-test-results.outputs.passed_count }}/${{ steps.stable-test-results.outputs.total_tests }} stable tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.stable-test-results.outputs.passed_count }}/${{ steps.stable-test-results.outputs.total_tests }} stable tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
               }]
             }
         env:
@@ -245,7 +226,7 @@ jobs:
               "text": "⚠️ Stable E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - PR #${{ github.event.number }} by ${{ github.actor }}\nURL: ${{ needs.deploy-preview.outputs.preview-url }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:
@@ -255,26 +236,39 @@ jobs:
     name: Experimental E2E Tests (Non-blocking)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: deploy-preview
+    needs: check-pr-status
+    if: needs.check-pr-status.outputs.pr-open == 'true'
     permissions:
       actions: read
       contents: read
       pull-requests: write
     steps:
-      - name: Checkout main repository (for .nvmrc)
-        uses: actions/checkout@v4
-        
+      - name: Debug deployment info
+        run: |
+          echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
+          echo "Deployment state: ${{ github.event.deployment_status.state }}"
+          echo "Deployment URL: ${{ github.event.deployment_status.target_url }}"
+          echo "Event name: ${{ github.event_name }}"
+
+      - name: Set deployment URL
+        id: deployment
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
           ref: develop
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 'lts/*'
           cache: 'npm'
           cache-dependency-path: test-automation/package-lock.json
 
@@ -292,7 +286,7 @@ jobs:
         run: npx playwright test --project=experimental
         continue-on-error: true  # Don't fail the workflow if experimental tests fail
         env:
-          BASE_URL: ${{ needs.deploy-preview.outputs.preview-url }}
+          BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Experimental E2E Tests - PR Preview"
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
@@ -353,7 +347,22 @@ jobs:
           script: |
             const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.experimental-test-results.outputs) }};
             const testStatus = failed_count > 0 ? '⚠️' : '✅';
-            const deploymentUrl = '${{ needs.deploy-preview.outputs.preview-url }}';
+            const deploymentUrl = '${{ env.BASE_URL }}';
+            
+            // Find PR associated with this deployment
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment.sha
+            });
+            
+            if (prs.length === 0) {
+              console.log('No PR found for this deployment, skipping comment');
+              return;
+            }
+            
+            const prNumber = prs[0].number;
+            console.log(`Found PR #${prNumber} for deployment`);
             
             let body = `## ${testStatus} Experimental E2E Test Results (Non-blocking)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
@@ -371,7 +380,7 @@ jobs:
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
@@ -387,9 +396,8 @@ jobs:
               "text": "⚠️ Experimental E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - PR #${{ github.event.number }} by ${{ github.actor }}\nURL: ${{ needs.deploy-preview.outputs.preview-url }}\n\n❌ ${{ steps.experimental-test-results.outputs.failed_count }} failed\n✅ ${{ steps.experimental-test-results.outputs.passed_count }} passed\n📊 ${{ steps.experimental-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.experimental-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.experimental-test-results.outputs.failed_count }} failed\n✅ ${{ steps.experimental-test-results.outputs.passed_count }} passed\n📊 ${{ steps.experimental-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.experimental-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
