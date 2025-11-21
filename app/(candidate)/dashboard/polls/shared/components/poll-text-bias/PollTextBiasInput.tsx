@@ -200,7 +200,7 @@ export default function PollTextBiasInput({
           <div className="absolute bottom-3 right-3 z-10">
             <Button
               variant="secondary"
-              className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 font-normal ${
+              className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 disabled:opacity-100 font-normal ${
                 hasIssues
                   ? 'text-red-500 bg-red-50 hover:!bg-red-100 active:!bg-red-50'
                   : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
