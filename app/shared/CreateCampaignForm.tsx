@@ -13,7 +13,24 @@ import { getUserCookie } from 'helpers/cookieHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-const createCampaign = async (payload) => {
+interface CreateCampaignPayload extends Record<string, string | undefined> {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  zip: string
+  party: string
+  otherParty?: string
+  adminUserEmail?: string
+}
+
+interface CampaignResponse {
+  userId: string
+  id: string
+  slug: string
+}
+
+const createCampaign = async (payload: CreateCampaignPayload) => {
   try {
     const user = getUserCookie(true)
     if (!user || !user.email) {
@@ -29,7 +46,16 @@ const createCampaign = async (payload) => {
   }
 }
 
-const fields = [
+interface FieldConfig {
+  key: string
+  label: string
+  type: string
+  cols: number
+  required: boolean
+  options?: string[]
+}
+
+const fields: FieldConfig[] = [
   {
     key: 'firstName',
     label: 'First Name',
@@ -69,23 +95,34 @@ const fields = [
     ],
   },
 ]
-export const initialValues = fields.reduce((acc, field) => {
-  acc[field.key] = ''
-  return acc
-}, {})
 
-export const CreateCampaignForm = ({}) => {
-  const [values, setValues] = useState(initialValues)
+interface FormValues extends Record<string, string | undefined> {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  zip: string
+  party: string
+  otherParty?: string
+}
+
+export const initialValues: FormValues = fields.reduce((acc, field) => {
+  acc[field.key as keyof FormValues] = ''
+  return acc
+}, {} as FormValues)
+
+export const CreateCampaignForm = (): React.JSX.Element => {
+  const [values, setValues] = useState<FormValues>(initialValues)
   const [showOfficeSelectionModal, setShowOfficeSelectionModal] =
     useState(false)
-  const [newCampaign, setNewCampaign] = useState(null)
+  const [newCampaign, setNewCampaign] = useState<CampaignResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
-  const onChangeField = (key, value) => {
+  const onChangeField = (key: string, value: string | boolean) => {
     setValues({
       ...values,
-      [key]: value,
+      [key]: typeof value === 'boolean' ? String(value) : value,
     })
   }
 
@@ -101,22 +138,22 @@ export const CreateCampaignForm = ({}) => {
   }
 
   const disableCreate =
-    newCampaign ||
+    Boolean(newCampaign) ||
     isLoading ||
-    (values.party === 'Other' && values.otherParty === '') ||
-    !fields.every((field) => values[field.key])
+    (values.party === 'Other' && (!values.otherParty || values.otherParty === '')) ||
+    !fields.every((field) => values[field.key as keyof FormValues])
 
   const handleCreateCampaign = async () => {
     setIsLoading(true)
     const campaignResponse = await createCampaign(values)
-    if (campaignResponse.ok) {
-      setNewCampaign(campaignResponse.data)
+    if (campaignResponse && typeof campaignResponse === 'object' && 'ok' in campaignResponse && campaignResponse.ok) {
+      setNewCampaign(campaignResponse.data as CampaignResponse)
       successSnackbar('Created!')
-
     } else {
-      const errorData = campaignResponse.data
+      const errorData = campaignResponse && typeof campaignResponse === 'object' && 'data' in campaignResponse ? campaignResponse.data : null
       console.error('Campaign creation error', errorData)
-      errorSnackbar(`Creation failed: ${errorData?.message}`)
+      const errorMessage = errorData && typeof errorData === 'object' && 'message' in errorData ? errorData.message : 'Unknown error'
+      errorSnackbar(`Creation failed: ${errorMessage}`)
     }
     setIsLoading(false)
   }
@@ -129,7 +166,7 @@ export const CreateCampaignForm = ({}) => {
         {fields.map((field) => (
           <RenderInputField
             field={field}
-            value={values[field.key]}
+            value={values[field.key as keyof FormValues] || ''}
             onChangeCallback={onChangeField}
             key={field.key}
           />
@@ -188,8 +225,8 @@ export const CreateCampaignForm = ({}) => {
       </div>
       {newCampaign && (
         <CampaignOfficeSelectionModal
-          campaign={newCampaign}
-          show={newCampaign && showOfficeSelectionModal}
+          campaign={{ ...newCampaign, details: {} }}
+          show={showOfficeSelectionModal}
           onClose={() => setShowOfficeSelectionModal(false)}
           onSelect={handleChooseOfficeComplete}
           adminMode
@@ -198,3 +235,4 @@ export const CreateCampaignForm = ({}) => {
     </PortalPanel>
   )
 }
+

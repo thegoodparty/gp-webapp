@@ -18,21 +18,30 @@ const style = {
   maxHeight: '90vh',
   minWidth: 280,
   overflowY: 'auto',
+} as const
+
+interface ModalProps {
+  open: boolean
+  closeCallback: () => void
+  children: React.ReactNode
+  boxClassName?: string
+  boxStyle?: React.CSSProperties
+  preventBackdropClose?: boolean
+  preventEscClose?: boolean
+  hideClose?: boolean
 }
 
-export default function Modal({
+const Modal = ({
   open,
   closeCallback,
   children,
-  // TODO: Choose ONE way to style modals, that does so responsively.
-  //  Not 3 ("boxStyle", "style", and now "boxClassName").
   boxClassName = '',
   boxStyle = {},
   preventBackdropClose = false,
   preventEscClose = false,
   hideClose = false,
-}) {
-  const handleClose = (e, reason) => {
+}: ModalProps): React.JSX.Element => {
+  const handleClose = (_e: React.SyntheticEvent, reason: string) => {
     if (
       (reason === 'backdropClick' && preventBackdropClose) ||
       (reason === 'escapeKeyDown' && preventEscClose)
@@ -61,3 +70,6 @@ export default function Modal({
     </MuiModal>
   )
 }
+
+export default Modal
+

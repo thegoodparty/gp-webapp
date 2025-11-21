@@ -28,9 +28,7 @@ const Content = ({ children }) => (
 
 const fetchContactsStats = async () => {
   const response = await clientFetch(apiRoutes.contacts.stats, null, {
-    next: {
-      revalidate: 3600,
-    },
+    revalidate: 3600,
   })
   return response.data
 }

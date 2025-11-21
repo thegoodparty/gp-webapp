@@ -7,7 +7,14 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-export async function subscribeEmail(payload) {
+interface SubscribeEmailPayload extends Record<string, string> {
+  email: string
+  uri: string
+  formId: string
+  pageName: string
+}
+
+export const subscribeEmail = async (payload: SubscribeEmailPayload): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
     return true
@@ -17,16 +24,24 @@ export async function subscribeEmail(payload) {
   }
 }
 
-export default function EmailForm({
+interface EmailFormProps {
+  formId: string
+  pageName: string
+  label?: string
+  labelId?: string
+  submitButtonId?: string
+}
+
+const EmailForm = ({
   formId,
   pageName,
   label = 'Get Started',
   labelId,
   submitButtonId,
-}) {
+}: EmailFormProps): React.JSX.Element => {
   const [email, setEmail] = useState('')
   const [success, setSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState<string | false>(false)
 
   const canSubmit = () => isValidEmail(email)
 
@@ -39,7 +54,7 @@ export default function EmailForm({
         pageName,
       })
 
-      if (window.dataLayer) {
+      if (window.dataLayer && labelId) {
         window.dataLayer.push({
           event: labelId,
           'hs-form-guid': formId,
@@ -91,7 +106,6 @@ export default function EmailForm({
 
             <div
               className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0"
-              type="submit"
             >
               <PrimaryButton
                 id={submitButtonId || 'submit-email'}
@@ -112,3 +126,6 @@ export default function EmailForm({
     </form>
   )
 }
+
+export default EmailForm
+

@@ -2,9 +2,19 @@ import React from 'react'
 import Image from 'next/image'
 import { RxPerson } from 'react-icons/rx'
 
-export default function CandidateAvatar({ candidate, priority = false }) {
+interface Candidate {
+  firstName: string
+  lastName: string
+  image?: string
+}
+
+interface CandidateAvatarProps {
+  candidate: Candidate
+  priority?: boolean
+}
+
+const CandidateAvatar = ({ candidate, priority = false }: CandidateAvatarProps): React.JSX.Element => {
   const { firstName, lastName, image } = candidate
-  // const brightColor = candidateColor(candidate);
 
   return (
     <div className="relative ">
@@ -15,7 +25,6 @@ export default function CandidateAvatar({ candidate, priority = false }) {
             fill
             alt={`${firstName} ${lastName}`}
             data-cy="candidate-img"
-            // style={{ borderColor: brightColor }}
             priority={priority}
             className="object-cover object-top rounded-full"
           />
@@ -26,3 +35,6 @@ export default function CandidateAvatar({ candidate, priority = false }) {
     </div>
   )
 }
+
+export default CandidateAvatar
+

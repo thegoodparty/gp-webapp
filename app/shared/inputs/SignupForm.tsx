@@ -10,7 +10,17 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-export async function subscribeEmail(payload) {
+interface SubscribeEmailPayload extends Record<string, string> {
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+  uri: string
+  formId: string
+  pageName: string
+}
+
+export const subscribeEmail = async (payload: SubscribeEmailPayload): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
     return true
@@ -20,7 +30,24 @@ export async function subscribeEmail(payload) {
   }
 }
 
-export default function SignupForm({
+interface FieldConfig {
+  label: string
+  key: string
+  field: React.ReactNode
+  required: boolean
+}
+
+interface SignupFormProps {
+  formId: string
+  pageName: string
+  label?: string
+  labelId?: string
+  horizontal?: boolean
+  phoneField?: boolean
+  onSuccessCallback?: () => void
+}
+
+const SignupForm = ({
   formId,
   pageName,
   label = 'Get Started',
@@ -28,17 +55,17 @@ export default function SignupForm({
   horizontal = true,
   phoneField = true,
   onSuccessCallback = () => {},
-}) {
+}: SignupFormProps): React.JSX.Element | null => {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState<string | false>(false)
   const [phone, setPhone] = useState('')
   const [showForm, setShowForm] = useState(true)
   const canSubmit = () => isValidEmail(email)
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
-  const fields = [
+  const fields: FieldConfig[] = [
     {
       label: 'First Name',
       key: 'firstName',
@@ -79,13 +106,13 @@ export default function SignupForm({
       key: 'email',
       field: (
         <EmailInput
-          name="email"
-          onChangeCallback={(e) => {
+          onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) => {
             setEmail(e.target.value)
           }}
           value={email}
           placeholder="jane.doe@email.com"
           useLabel={false}
+          variant="outlined"
           className="rounded-lg w-full bg-indigo-50 border border-indigo-200 text-black"
         />
       ),
@@ -99,7 +126,8 @@ export default function SignupForm({
       key: 'phone',
       field: (
         <PhoneInput
-          onChangeCallback={(phone, isValid) => {
+          value={phone}
+          onChangeCallback={(phone) => {
             setPhone(phone)
           }}
           useLabel={false}
@@ -126,7 +154,7 @@ export default function SignupForm({
       })
       if (success) {
         successSnackbar('Check your email to learn more', {
-          autoHideDuration: null,
+          autoHideDuration: undefined,
         })
         onSuccessCallback()
         setShowForm(false)
@@ -137,8 +165,7 @@ export default function SignupForm({
       setShowError('Please enter a valid email')
     }
   }
-  return (
-    showForm && (
+  return showForm ? (
       <form
         noValidate
         onSubmit={(e) => e.preventDefault()}
@@ -151,25 +178,23 @@ export default function SignupForm({
               horizontal ? 'md:grid-cols-10' : ''
             }  w-full mb-1 mt-1`}
           >
-            {fields.map((field) => {
-              return (
-                <Fragment key={field.key}>
-                  <div
-                    className={`col-span-12 ${
-                      horizontal ? 'lg:col-span-2' : 'lg:col-span-12'
-                    } w-full`}
-                  >
-                    <div className="mt-5 lg:ml-5 max-w-sm">
-                      <span className="text-sm">{field.label}</span>
-                      {field.required && (
-                        <span className="text-sm text-red-600 ml-1">*</span>
-                      )}
-                      {field.field}
-                    </div>
+            {fields.map((field) => (
+              <Fragment key={field.key}>
+                <div
+                  className={`col-span-12 ${
+                    horizontal ? 'lg:col-span-2' : 'lg:col-span-12'
+                  } w-full`}
+                >
+                  <div className="mt-5 lg:ml-5 max-w-sm">
+                    <span className="text-sm">{field.label}</span>
+                    {field.required && (
+                      <span className="text-sm text-red-600 ml-1">*</span>
+                    )}
+                    {field.field}
                   </div>
-                </Fragment>
-              )
-            })}
+                </div>
+              </Fragment>
+            ))}
 
             <div className="col-span-12 w-full">
               <div
@@ -194,6 +219,8 @@ export default function SignupForm({
           </div>
         </>
       </form>
-    )
-  )
+  ) : null
 }
+
+export default SignupForm
+

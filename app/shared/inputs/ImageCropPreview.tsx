@@ -2,16 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react'
 import ReactCrop from 'react-image-crop'
+import type { Crop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import Button from '@shared/buttons/Button'
 import { DeleteRounded, CropRounded } from '@mui/icons-material'
 
-export default function ImageCropPreview({ file, onCrop, onClear }) {
-  const imgRef = useRef(null)
-  const [imgUrl, setImgUrl] = useState()
+interface ImageCropPreviewProps {
+  file: File
+  onCrop: (file: File) => void
+  onClear: () => void
+}
+
+const ImageCropPreview = ({ file, onCrop, onClear }: ImageCropPreviewProps): React.JSX.Element => {
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [imgUrl, setImgUrl] = useState<string>()
   const [loading, setLoading] = useState(true)
   const [showCrop, setShowCrop] = useState(false)
-  const [crop, setCrop] = useState({
+  const [crop, setCrop] = useState<Crop>({
     unit: '%',
     x: 25,
     y: 25,
@@ -25,14 +32,14 @@ export default function ImageCropPreview({ file, onCrop, onClear }) {
       const reader = new FileReader()
 
       reader.addEventListener('load', () => {
-        setImgUrl(reader.result)
+        setImgUrl(reader.result as string)
         setLoading(false)
       })
       reader.readAsDataURL(file)
     }
   }, [file])
 
-  async function handleCropComplete() {
+  const handleCropComplete = async () => {
     const image = imgRef.current
 
     if (crop && image) {
@@ -92,7 +99,7 @@ export default function ImageCropPreview({ file, onCrop, onClear }) {
               />
             </ReactCrop>
           </div>
-          <div class="flex justfify-left gap-2">
+          <div className="flex justfify-left gap-2">
             <Button onClick={() => setShowCrop(false)} size="small">
               Cancel
             </Button>
@@ -129,3 +136,6 @@ export default function ImageCropPreview({ file, onCrop, onClear }) {
     </>
   )
 }
+
+export default ImageCropPreview
+
