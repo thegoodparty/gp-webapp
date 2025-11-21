@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Input, Calendar } from 'goodparty-styleguide'
+import { DayPickerProps } from 'react-day-picker'
 import { parse, format, isValid } from 'date-fns'
 
 const formatDateInput = (value: string): string => {
@@ -40,7 +41,7 @@ const formatDateToString = (date: Date | undefined): string => {
   return format(date, 'MM/dd/yyyy')
 }
 
-interface DateInputCalendarProps {
+type DateInputCalendarProps = DayPickerProps & {
   value?: Date
   onChange?: (date: Date | undefined) => void
   placeholder?: string
@@ -49,6 +50,7 @@ interface DateInputCalendarProps {
   className?: string
   inputClassName?: string
   calendarClassName?: string
+  showTextInput?: boolean
 }
 
 const DateInputCalendar = ({
@@ -60,6 +62,7 @@ const DateInputCalendar = ({
   className = '',
   inputClassName = '',
   calendarClassName = 'rounded-lg border shadow-sm',
+  showTextInput,
   ...calendarProps
 }: DateInputCalendarProps): React.JSX.Element => {
   const [inputValue, setInputValue] = useState(
@@ -100,19 +103,21 @@ const DateInputCalendar = ({
     <div
       className={`flex flex-col items-center justify-center gap-2 ${className}`}
     >
-      <div className="flex flex-col gap-1 w-full">
-        <label htmlFor="date-input" className="text-sm font-normal">
-          {label}
-        </label>
-        <Input
-          type="text"
-          placeholder={placeholder}
-          id="date-input"
-          value={inputValue}
-          onChange={handleInputChange}
-          className={inputClassName}
-        />
-      </div>
+      {showTextInput && (
+        <div className="flex flex-col gap-1 w-full">
+          <label htmlFor="date-input" className="text-sm font-normal">
+            {label}
+          </label>
+          <Input
+            type="text"
+            placeholder={placeholder}
+            id="date-input"
+            value={inputValue}
+            onChange={handleInputChange}
+            className={inputClassName}
+          />
+        </div>
+      )}
       <Calendar
         mode="single"
         month={month}
@@ -128,4 +133,3 @@ const DateInputCalendar = ({
 }
 
 export default DateInputCalendar
-
