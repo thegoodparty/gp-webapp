@@ -163,7 +163,7 @@ const DetailsForm: React.FC<{
     // If validation passes, call onChange
     onChange(data)
   }
-  console.log('biasAnalysisState', biasAnalysisState)
+
   return (
     <FormStep
       step="details"
