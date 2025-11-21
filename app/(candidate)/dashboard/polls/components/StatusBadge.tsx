@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { POLL_STATUS, POLL_STATUS_LABELS } from '../shared/constants'
 
-export default function StatusBadge({ status }) {
+export const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   let colorClass = 'bg-gray-500'
   switch (status) {
     case POLL_STATUS.IN_PROGRESS:
