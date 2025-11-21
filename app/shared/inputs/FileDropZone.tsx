@@ -5,48 +5,42 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import Overline from '@shared/typography/Overline'
 import { LuCloudUpload } from 'react-icons/lu'
 
-// TODO: add more file types
 const ACCEPTED_FILE_TYPES = {
   image: ['image/png', 'image/jpeg', 'image/gif'],
 }
 
-/**
- * @typedef {Object} FileDropZoneProps
- * @property {string[]} fileTypes Types of files to accept
- * @property {(selected: File) => void} onChange Callback to send newly selected file
- * @property {string} className css classes to add
- */
+interface FileDropZoneProps {
+  label?: string
+  fileTypes?: string[]
+  maxSize?: number
+  onChange: (file: File | null) => void
+  className?: string
+}
 
-/**
- * Input element for drag + dropping file
- * Currently only for images
- * @param {FileDropZoneProps} props
- * @returns
- */
-export default function FileDropZone({
+const FileDropZone = ({
   label = 'Add a Photo',
   fileTypes = ACCEPTED_FILE_TYPES.image,
   maxSize = 5000000,
   onChange,
   className = '',
-}) {
+}: FileDropZoneProps): React.JSX.Element => {
   const { errorSnackbar } = useSnackbar()
   const [{ isDragging, cannotDrop }, setState] = useState({
     isDragging: false,
     cannotDrop: false,
   })
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  function handleDrop(e) {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const [item] = e.dataTransfer.items
+    const item = e.dataTransfer.items?.[0]
 
-    if (!cannotDrop) {
+    if (!cannotDrop && item) {
       const file = item.getAsFile()
 
-      if (file.size <= maxSize) {
+      if (file && file.size <= maxSize) {
         onChange(file)
       } else {
         notifyError('File size too large')
@@ -61,36 +55,35 @@ export default function FileDropZone({
     })
   }
 
-  function handleFileInput(e) {
-    const [file] = e.target.files
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
 
-    if (file.size <= maxSize) {
-      onChange(file)
-    } else {
-      notifyError('File size too large')
-      return false
+    if (file) {
+      if (file.size <= maxSize) {
+        onChange(file)
+      } else {
+        notifyError('File size too large')
+      }
     }
   }
 
-  function handleDragOver(e) {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
   }
 
-  function handleDragEnter(e) {
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const [item] = e.dataTransfer.items
+    const item = e.dataTransfer.items?.[0]
 
-    if (item.kind === 'file' && fileTypes.includes(item.type)) {
-      // acceptable file
+    if (item && item.kind === 'file' && fileTypes.includes(item.type)) {
       setState({
         isDragging: true,
         cannotDrop: false,
       })
     } else {
-      // Invalid item or file type
       setState({
         isDragging: false,
         cannotDrop: true,
@@ -98,17 +91,17 @@ export default function FileDropZone({
     }
   }
 
-  function handleDragLeave(e) {
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setState({ isDragging: false, cannotDrop: false })
   }
 
-  function handleClick(e) {
-    inputRef.current.click()
+  const handleClick = () => {
+    inputRef.current?.click()
   }
 
-  function notifyError(msg) {
+  const notifyError = (msg: string) => {
     errorSnackbar(msg)
   }
 
@@ -128,7 +121,7 @@ export default function FileDropZone({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onClick={handleClick}
-      onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
     >
       <div className="pointer-events-none text-center">
         <LuCloudUpload size={24} className="inline" />
@@ -138,9 +131,12 @@ export default function FileDropZone({
         ref={inputRef}
         hidden
         type="file"
-        accept={fileTypes}
+        accept={fileTypes.join(',')}
         onChange={handleFileInput}
       />
     </div>
   )
 }
+
+export default FileDropZone
+

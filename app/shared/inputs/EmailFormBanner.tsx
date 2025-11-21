@@ -5,10 +5,15 @@ import { useState } from 'react'
 import { FaArrowRight, FaCheck } from 'react-icons/fa'
 import { subscribeEmail } from './EmailForm'
 
-export default function EmailFormBanner({ pageName, formId }) {
+interface EmailFormBannerProps {
+  pageName: string
+  formId: string
+}
+
+const EmailFormBanner = ({ pageName, formId }: EmailFormBannerProps): React.JSX.Element => {
   const [email, setEmail] = useState('')
   const [success, setSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState<string | false>(false)
 
   const canSubmit = () => isValidEmail(email)
 
@@ -56,8 +61,6 @@ export default function EmailFormBanner({ pageName, formId }) {
             />
             <div
               onClick={submitForm}
-              type="submit"
-              value="→"
               className="bg-purple-800 absolute rounded-full right-2 top-2 p-3 text-white  font-bold cursor-pointer"
             >
               <FaArrowRight />
@@ -74,3 +77,6 @@ export default function EmailFormBanner({ pageName, formId }) {
     </>
   )
 }
+
+export default EmailFormBanner
+

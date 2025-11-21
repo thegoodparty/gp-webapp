@@ -1,10 +1,16 @@
 import AlertDialog from '@shared/utils/AlertDialog'
 
+interface DemoAccountDeleteDialogProps {
+  open: boolean
+  handleClose?: () => void
+  handleProceed?: () => void
+}
+
 export const DemoAccountDeleteDialog = ({
   open,
   handleClose = () => {},
   handleProceed = () => {},
-}) => (
+}: DemoAccountDeleteDialogProps): React.JSX.Element => (
   <AlertDialog
     open={open}
     handleClose={handleClose}
@@ -14,3 +20,4 @@ export const DemoAccountDeleteDialog = ({
     handleProceed={handleProceed}
   />
 )
+

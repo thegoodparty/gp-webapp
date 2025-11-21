@@ -1,16 +1,26 @@
 import { useState } from 'react'
 import { MdMoreVert } from 'react-icons/md'
-import { Menu, MenuItem } from '@mui/material'
+import { Menu, MenuItem, MenuItemProps } from '@mui/material'
 
-export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
-  const [menuAnchor, setMenuAnchor] = useState(null)
+interface MoreMenuItem extends Omit<MenuItemProps, 'onClick'> {
+  label: string
+  onClick?: () => void
+}
+
+interface MoreMenuProps {
+  onClose?: (menuItem?: MoreMenuItem) => void
+  menuItems?: MoreMenuItem[]
+}
+
+export const MoreMenu = ({ onClose = () => {}, menuItems = [] }: MoreMenuProps): React.JSX.Element => {
+  const [menuAnchor, setMenuAnchor] = useState<Element | null>(null)
   const showMenu = Boolean(menuAnchor)
 
-  const handleMenuAnchorClick = ({ currentTarget }) => {
+  const handleMenuAnchorClick = ({ currentTarget }: React.MouseEvent<SVGElement> | React.KeyboardEvent<SVGElement>) => {
     setMenuAnchor(currentTarget)
   }
 
-  const handleMenuClose = (menuItem) => {
+  const handleMenuClose = (menuItem?: MoreMenuItem) => {
     setMenuAnchor(null)
     onClose(menuItem)
   }
@@ -31,7 +41,7 @@ export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
           anchorEl: menuAnchor,
           open: showMenu,
           autoFocus: false,
-          onClose: handleMenuClose,
+          onClose: () => handleMenuClose(),
           anchorOrigin: {
             vertical: 'bottom',
             horizontal: 'left',
@@ -61,3 +71,4 @@ export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
     </>
   )
 }
+

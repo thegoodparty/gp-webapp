@@ -6,7 +6,7 @@ import { MdClose } from 'react-icons/md'
 import Button from '../buttons/Button'
 import Body2 from '@shared/typography/Body2'
 
-export default function CookiesSnackbar() {
+const CookiesSnackbar = (): React.JSX.Element | null => {
   const [showBanner, setShowBanner] = useState(false)
   useEffect(() => {
     const cookie = getCookie('cookiesAccepted')
@@ -36,7 +36,7 @@ export default function CookiesSnackbar() {
           color="white"
           onClick={handleAccept}
           size="medium"
-          dataTestId={'cookie-accept-btn'}
+          data-testid="cookie-accept-btn"
         >
           Close
           <MdClose className="ml-2 text-xl" />
@@ -45,3 +45,6 @@ export default function CookiesSnackbar() {
     </div>
   )
 }
+
+export default CookiesSnackbar
+
