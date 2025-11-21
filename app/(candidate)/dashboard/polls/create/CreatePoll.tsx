@@ -28,6 +28,7 @@ import { calculateRecommendedPollSize } from '../shared/audience-selection'
 import { orderBy } from 'es-toolkit'
 
 const TEXT_PRICE = 0.035
+const MIN_QUESTION_LENGTH = 25
 
 type Details = {
   title: string
@@ -145,7 +146,11 @@ const DetailsForm: React.FC<{
   useEffect(() => {
     biasAnalysisStateRef.current = biasAnalysisState
     const currentValue = getValues('question')
-    if (biasAnalysisState !== null && currentValue.trim().length > 0) {
+    if (
+      biasAnalysisState !== null &&
+      currentValue.trim().length > 0 &&
+      currentValue.trim().length >= MIN_QUESTION_LENGTH
+    ) {
       setValue('question', currentValue, { shouldTouch: true })
       trigger('question')
     }
@@ -232,14 +237,13 @@ const DetailsForm: React.FC<{
           control={control}
           rules={{
             required: 'Question is required',
-            minLength: {
-              value: 25,
-              message: 'Question must be at least 25 characters',
-            },
             validate: (value: string) => {
               const trimmedValue = value.trim()
               if (trimmedValue.length === 0) {
                 return true
+              }
+              if (trimmedValue.length < MIN_QUESTION_LENGTH) {
+                return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
               }
 
               const state = biasAnalysisStateRef.current
