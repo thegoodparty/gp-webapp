@@ -43,18 +43,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Debug Vercel Configuration
-        run: |
-          echo "Vercel Team ID: ${{ secrets.VERCEL_TEAM_ID }}"
-          echo "Vercel Project ID: ${{ secrets.VERCEL_PROJECT_ID }}"
-          echo "Token exists: ${{ secrets.VERCEL_TOKEN != '' }}"
-      
+       
       - name: Deploy to Vercel
         id: deploy
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_TEAM_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           github-comment: false  # We'll handle comments ourselves
           working-directory: ./
