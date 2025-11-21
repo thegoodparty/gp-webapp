@@ -46,13 +46,21 @@ jobs:
        
       - name: Deploy to Vercel
         id: deploy
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_TEAM_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          github-comment: false  # We'll handle comments ourselves
-          working-directory: ./
+        run: |
+          # Deploy and capture the URL from output
+          DEPLOY_OUTPUT=$(npx vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --confirm 2>&1)
+          echo "$DEPLOY_OUTPUT"
+          
+          # Extract the preview URL from the output
+          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -o 'https://[^[:space:]]*\.vercel\.app' | head -n 1)
+          
+          if [ -z "$DEPLOYMENT_URL" ]; then
+            echo "Failed to extract deployment URL"
+            exit 1
+          fi
+          
+          echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployment successful: $DEPLOYMENT_URL"
           
       - name: Comment PR with deployment info
         uses: actions/github-script@v7
