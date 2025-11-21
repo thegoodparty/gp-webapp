@@ -11,9 +11,10 @@ import NavButton from './NavButton'
 import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { User } from 'helpers/types'
 
 const RightSide = (): React.JSX.Element => {
-  const [user] = useUser() as [never]
+  const [user] = useUser() as [User | null, (user: User | null) => void]
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -66,7 +67,7 @@ const RightSide = (): React.JSX.Element => {
           <ProfileDropdown
             open={profileOpen}
             toggleCallback={toggleProfile}
-            user={user as never}
+            user={user as User}
           />
           {!userHasRole(user, USER_ROLES.SALES) &&
             (isDashboardPath ? (

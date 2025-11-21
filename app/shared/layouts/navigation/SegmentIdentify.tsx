@@ -8,7 +8,7 @@ import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
 import { useFeatureFlags } from '@shared/experiments/FeatureFlagsProvider'
-import { User } from '../../../../helpers/types'
+import { User } from 'helpers/types'
 
 const identify = async (user: User | null, searchParams: ReturnType<typeof useSearchParams> | null, refreshFeatureFlags?: () => void) => {
   persistUtmsOnce()

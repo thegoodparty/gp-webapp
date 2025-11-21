@@ -1,6 +1,7 @@
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { Campaign } from 'helpers/types'
 
 export const getVoterContactField = (outreachType: string): string => {
   switch (outreachType) {
@@ -88,8 +89,8 @@ interface VoterContactsProviderProps {
 
 export const VoterContactsProvider = ({ children }: VoterContactsProviderProps): React.JSX.Element => {
   const [campaign] = useCampaign()
-  const { data: campaignData } = (campaign as never) || {}
-  const { reportedVoterGoals } = (campaignData as never) || {}
+  const { data: campaignData } = (campaign as Campaign | null) || {}
+  const { reportedVoterGoals } = campaignData || {}
   const [state, setState] = useState(INITIAL_VOTER_CONTACTS_STATE)
 
   useEffect(() => {

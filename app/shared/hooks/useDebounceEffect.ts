@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
-export const useDebounceEffect = (fn: (...args: never[]) => void, waitTime: number, deps: never[] = []) => {
+export const useDebounceEffect = (fn: () => void, waitTime: number, deps: (string | number | boolean | null | undefined)[]) => {
   useEffect(() => {
     const t = setTimeout(() => {
-      fn.apply(undefined, deps)
+      fn()
     }, waitTime)
 
     return () => {

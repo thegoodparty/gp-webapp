@@ -9,7 +9,7 @@ interface DashboardOrContinueProps {
 
 const DashboardOrContinue = ({ closeAll }: DashboardOrContinueProps): React.JSX.Element => {
   const [campaignStatus] = useCampaignStatus()
-  const { status, slug, step } = (campaignStatus as never) || {}
+  const { status, slug, step } = (campaignStatus as { status?: boolean | string; slug?: string; step?: string | number }) || {}
 
   if (!status) {
     return (
@@ -27,7 +27,7 @@ const DashboardOrContinue = ({ closeAll }: DashboardOrContinueProps): React.JSX.
 
   return (
     <div className="ml-4">
-      {['candidate'].includes(status) ? (
+      {['candidate'].includes(String(status)) ? (
         <Button
           href="/dashboard"
           onClick={closeAll}

@@ -2,10 +2,11 @@
 import { createContext, useEffect, useState, useCallback } from 'react'
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
 import { useUser } from '@shared/hooks/useUser'
+import { Campaign } from 'helpers/types'
 
 type CampaignContextValue = [
-  campaign: never | null,
-  setCampaign: (campaign: never | null) => void,
+  campaign: Campaign | null,
+  setCampaign: (campaign: Campaign | null) => void,
   refreshCampaign: () => Promise<void>
 ]
 
@@ -13,19 +14,20 @@ export const CampaignContext = createContext<CampaignContextValue>([null, () => 
 
 interface CampaignProviderProps {
   children: React.ReactNode
-  campaign: never
+  campaign: Campaign | null
 }
 
 export const CampaignProvider = ({ children, campaign: initCampaign }: CampaignProviderProps): React.JSX.Element => {
-  const [campaign, setCampaign] = useState<never | null>(initCampaign)
+  const [campaign, setCampaign] = useState<Campaign | null>(initCampaign)
   const [user] = useUser()
 
   const refreshCampaign = useCallback(async () => {
     const resp = await fetchUserClientCampaign()
-    const respObj = resp as never
-    const okValue = (respObj as { ok?: boolean }).ok
-    const dataValue = (respObj as { data?: never }).data
-    setCampaign(respObj && okValue === false ? null : (dataValue || null))
+    if (resp && typeof resp === 'object' && 'ok' in resp) {
+      setCampaign(resp.ok === false ? null : (resp.data as Campaign))
+    } else {
+      setCampaign(null)
+    }
   }, [])
 
   useEffect(() => {

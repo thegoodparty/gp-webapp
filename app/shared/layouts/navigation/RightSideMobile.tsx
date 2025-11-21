@@ -17,6 +17,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import Button from '@shared/buttons/Button'
+import { User } from 'helpers/types'
 
 interface NavLink {
   href: string
@@ -39,9 +40,9 @@ const sections: NavSection[] = [
 
 const RightSideMobile = (): React.JSX.Element => {
   const [isOpen, setOpen] = useState(false)
-  const [user] = useUser() as [never]
+  const [user] = useUser() as [User | null, (user: User | null) => void]
   const [campaignStatus] = useCampaignStatus()
-  const { status, step, slug } = (campaignStatus as never) || {}
+  const { status, slug, step } = (campaignStatus as { status?: boolean | string; slug?: string; step?: string | number }) || {}
   const pathname = usePathname()
   const isDashboardPath =
     pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile')
@@ -81,7 +82,7 @@ const RightSideMobile = (): React.JSX.Element => {
         >
           {user && isDashboardPath ? (
             <DashboardMobile
-              user={user as never}
+              user={user as User}
               pathname={pathname || ''}
             />
           ) : (
@@ -93,7 +94,7 @@ const RightSideMobile = (): React.JSX.Element => {
               >
                 {user && (
                   <H3 className="mb-8">
-                    {(user as { firstName: string }).firstName} {(user as { lastName: string }).lastName}
+                    {(user as User).firstName} {(user as User).lastName}
                   </H3>
                 )}
                 {sections.map((section) => (

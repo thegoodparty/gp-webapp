@@ -4,9 +4,23 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useUser } from '@shared/hooks/useUser'
 
+interface ElectedOffice {
+  id: string
+  electedDate?: Date | string | null
+  swornInDate?: Date | string | null
+  termStartDate?: Date | string | null
+  termLengthDays?: number | null
+  termEndDate?: Date | string | null
+  isActive: boolean
+  userId: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+}
+
 type ElectedOfficeContextValue = [
-  electedOffice: never | null,
-  setElectedOffice: (office: never | null) => void,
+  electedOffice: ElectedOffice | null,
+  setElectedOffice: (office: ElectedOffice | null) => void,
   refreshElectedOffice: () => Promise<void>
 ]
 
@@ -14,21 +28,21 @@ export const ElectedOfficeContext = createContext<ElectedOfficeContextValue>([nu
 
 interface ElectedOfficeProviderProps {
   children: React.ReactNode
-  electedOffice?: never
+  electedOffice?: ElectedOffice | null
 }
 
 export const ElectedOfficeProvider = ({
   children,
   electedOffice: initElectedOffice,
 }: ElectedOfficeProviderProps): React.JSX.Element => {
-  const [electedOffice, setElectedOffice] = useState<never | null>(initElectedOffice || null)
+  const [electedOffice, setElectedOffice] = useState<ElectedOffice | null>(initElectedOffice || null)
   const [user] = useUser()
 
   const fetchUserElectedOffice = useCallback(async () => {
     try {
-      const response = await clientFetch(apiRoutes.electedOffice.current)
+      const response = await clientFetch<ElectedOffice>(apiRoutes.electedOffice.current)
       if (response.ok && response.data) {
-        setElectedOffice(response.data as never)
+        setElectedOffice(response.data)
       } else {
         setElectedOffice(null)
       }

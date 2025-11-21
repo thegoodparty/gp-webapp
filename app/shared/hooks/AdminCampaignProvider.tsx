@@ -2,30 +2,31 @@
 import { createContext, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { Campaign } from 'helpers/types'
 
 type AdminCampaignContextValue = [
-  campaign: never,
-  setCampaign: (campaign: never) => void,
+  campaign: Campaign,
+  setCampaign: (campaign: Campaign) => void,
   refreshCampaign: () => Promise<void>
 ]
 
-export const AdminCampaignContext = createContext<AdminCampaignContextValue>([{} as never, () => {}, async () => {}])
+export const AdminCampaignContext = createContext<AdminCampaignContextValue>([{} as Campaign, () => {}, async () => {}])
 
 interface AdminCampaignProviderProps {
   children: React.ReactNode
-  campaign: never
+  campaign: Campaign
 }
 
 export const AdminCampaignProvider = ({ children, campaign: initCampaign }: AdminCampaignProviderProps): React.JSX.Element => {
-  const [campaign, setCampaign] = useState<never>(initCampaign)
+  const [campaign, setCampaign] = useState<Campaign>(initCampaign)
   const refreshCampaign = async () => {
-    const { data: refreshedCampaign } = await clientFetch(
+    const { data: refreshedCampaign } = await clientFetch<Campaign>(
       apiRoutes.campaign.findBySlug,
       {
-        slug: ((campaign as never) as { slug: string }).slug,
+        slug: campaign.slug,
       },
     )
-    setCampaign(refreshedCampaign as never)
+    setCampaign(refreshedCampaign)
   }
 
   return (

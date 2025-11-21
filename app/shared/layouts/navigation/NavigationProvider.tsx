@@ -183,7 +183,7 @@ export const ABOUT_US_LINKS: NavLink[] = [
   },
 ]
 
-interface Dropdown {
+export interface Dropdown {
   id: string
   label: string
   dataTestId: string

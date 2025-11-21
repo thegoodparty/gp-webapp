@@ -5,6 +5,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePathname } from 'next/navigation'
+import { Campaign } from 'helpers/types'
 
 const ProBadge = (): React.JSX.Element => (
   <div
@@ -30,8 +31,8 @@ export const HeaderLogo = (): React.JSX.Element => {
   const [campaignStatus] = useCampaignStatus()
   const pathname = usePathname()
 
-  const { isPro } = (campaign as never) || {}
-  const { status } = (campaignStatus as never) || {}
+  const { isPro } = (campaign as Campaign | null) || {}
+  const { status } = (campaignStatus as { status?: boolean | string }) || {}
   const link = status && campaign ? '/dashboard' : '/'
   return (
     <>

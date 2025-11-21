@@ -2,11 +2,16 @@ import { createContext, useCallback, useEffect, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-const INITIAL_UPDATE_HISTORY_STATE: never[] = []
+interface CampaignUpdateHistory {
+  id: string
+  timestamp: string
+}
+
+const INITIAL_UPDATE_HISTORY_STATE: CampaignUpdateHistory[] = []
 
 type CampaignUpdateHistoryContextValue = [
-  state: never[],
-  updateState: (next: never[] | ((prev: never[]) => never[])) => void
+  state: CampaignUpdateHistory[],
+  updateState: (next: CampaignUpdateHistory[] | ((prev: CampaignUpdateHistory[]) => CampaignUpdateHistory[])) => void
 ]
 
 export const CampaignUpdateHistoryContext = createContext<CampaignUpdateHistoryContextValue>([
@@ -19,16 +24,16 @@ interface CampaignUpdateHistoryProviderProps {
 }
 
 export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistoryProviderProps): React.JSX.Element => {
-  const [state, setState] = useState<never[]>(INITIAL_UPDATE_HISTORY_STATE)
+  const [state, setState] = useState<CampaignUpdateHistory[]>(INITIAL_UPDATE_HISTORY_STATE)
 
   const loadHistory = async () => {
     try {
-      const resp = await clientFetch(
+      const resp = await clientFetch<CampaignUpdateHistory[]>(
         apiRoutes.campaign.updateHistory.list,
         undefined,
         { revalidate: 3 },
       )
-      setState((resp.data as never[]) || [])
+      setState(resp.data || [])
     } catch (e) {
       console.log('error at fetchUpdateHistory', e)
       setState([])
@@ -40,7 +45,7 @@ export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistor
   }, [])
 
   const updateState = useCallback(
-    (next: never[] | ((prev: never[]) => never[])) => {
+    (next: CampaignUpdateHistory[] | ((prev: CampaignUpdateHistory[]) => CampaignUpdateHistory[])) => {
       const newValues = typeof next === 'function' ? next(state) : next
       setState(newValues)
     },

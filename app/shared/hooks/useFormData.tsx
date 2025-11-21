@@ -2,7 +2,7 @@
 import { createContext, useContext, useState } from 'react'
 
 interface ValidationResult {
-  validations: Record<string, never>
+  validations: Record<string, string>
   isValid: boolean
 }
 
@@ -12,15 +12,19 @@ interface FormDataContextValue<T> {
   isValid: ValidationResult
 }
 
-const FormDataContext = createContext<FormDataContextValue<never> | null>(null)
-
 interface FormDataProviderProps<T> {
   children: React.ReactNode
   initialState?: T
   validator?: (data: T) => ValidationResult
 }
 
-export const FormDataProvider = <T extends Record<string, never>>({
+const FormDataContext = createContext<{
+  formData: Record<string, string | number | boolean>
+  handleChange: (change: Record<string, string | number | boolean>) => void
+  isValid: ValidationResult
+} | null>(null)
+
+export const FormDataProvider = <T extends Record<string, string | number | boolean>>({
   children,
   initialState = {} as T,
   validator = () => ({
@@ -39,17 +43,21 @@ export const FormDataProvider = <T extends Record<string, never>>({
   }
 
   return (
-    <FormDataContext.Provider value={{ formData, handleChange, isValid } as never}>
+    <FormDataContext.Provider value={{ formData: formData as Record<string, string | number | boolean>, handleChange: handleChange as (change: Record<string, string | number | boolean>) => void, isValid }}>
       {children}
     </FormDataContext.Provider>
   )
 }
 
-export const useFormData = <T extends Record<string, never>>(): FormDataContextValue<T> => {
+export const useFormData = <T extends Record<string, string | number | boolean>>(): FormDataContextValue<T> => {
   const context = useContext(FormDataContext)
   if (!context) {
     throw new Error('useFormData must be used within a FormDataProvider')
   }
-  return context as never
+  return {
+    formData: context.formData as T,
+    handleChange: context.handleChange as (change: Partial<T>) => void,
+    isValid: context.isValid,
+  }
 }
 

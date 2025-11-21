@@ -1,9 +1,12 @@
 'use client'
 import { createContext, useState } from 'react'
 
+interface SearchFilters {
+}
+
 type SearchFiltersContextValue = [
-  filters: Record<string, never>,
-  setFilters: (filters: Record<string, never>) => void
+  filters: SearchFilters,
+  setFilters: (filters: SearchFilters) => void
 ]
 
 export const SearchFiltersContext = createContext<SearchFiltersContextValue>([
@@ -13,11 +16,11 @@ export const SearchFiltersContext = createContext<SearchFiltersContextValue>([
 
 interface SearchFiltersProviderProps {
   children: React.ReactNode
-  initFilters?: Record<string, never>
+  initFilters?: SearchFilters
 }
 
 export const SearchFiltersProvider = ({ children, initFilters = {} }: SearchFiltersProviderProps): React.JSX.Element => {
-  const [filters, setFilters] = useState<Record<string, never>>(initFilters)
+  const [filters, setFilters] = useState<SearchFilters>(initFilters)
 
   const contextValue: SearchFiltersContextValue = [filters, setFilters]
 

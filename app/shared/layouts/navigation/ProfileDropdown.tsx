@@ -16,7 +16,7 @@ import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { MdAdd } from 'react-icons/md'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { User } from '../../../../helpers/types'
+import { User } from 'helpers/types'
 
 interface NavLink {
   id: string
@@ -59,16 +59,18 @@ const ProfileDropdown = ({ open, toggleCallback, user }: ProfileDropdownProps): 
   }, [user])
 
   const hubspotIntegration = (user: User) => {
-    const w = window as { _hsq?: never[] }
-    const _hsq: never[] = (w._hsq = w._hsq || [])
-    const item: never = [
+    interface HubSpotWindow {
+      _hsq?: (string | Record<string, string>)[][]
+    }
+    const w = window as HubSpotWindow
+    const _hsq: (string | Record<string, string>)[][] = (w._hsq = w._hsq || [])
+    _hsq.push([
       'identify',
       {
         email: user.email,
         name: `${user.name} ${user.lastName}`,
       },
-    ] as never
-    _hsq.push(item)
+    ])
   }
 
   const handleEnterPress = (e: React.KeyboardEvent, cb: () => void) => {
@@ -188,7 +190,14 @@ const ProfileDropdown = ({ open, toggleCallback, user }: ProfileDropdownProps): 
               data-cy="header-link"
               className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
               onClick={handleLogOutClick}
-              onKeyDown={(e) => handleEnterPress(e, () => handleLogOutClick(e as never))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleLogOutClick({ 
+                    preventDefault: e.preventDefault.bind(e),
+                    currentTarget: e.currentTarget as HTMLElement 
+                  } as React.MouseEvent<HTMLElement>)
+                }
+              }}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />

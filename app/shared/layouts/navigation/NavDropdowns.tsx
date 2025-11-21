@@ -1,5 +1,6 @@
 import NavDropdown from '@shared/layouts/navigation/NavDropdown'
 import { useNav } from '@shared/layouts/navigation/useNav'
+import { Dropdown } from '@shared/layouts/navigation/NavigationProvider'
 
 interface NavDropdownsProps {
   dropdownIndices?: number[] | null
@@ -16,9 +17,9 @@ export const NavDropdowns = ({ dropdownIndices = null }: NavDropdownsProps): Rea
     dropdownIndices ? dropdownIndices[filteredIndex] : filteredIndex
   )
 
-  return filteredDropdowns.map((dropdown, filteredIndex: number) => {
+  return filteredDropdowns.map((dropdown: Dropdown, filteredIndex: number) => {
     const originalIndex = getOriginalIndex(filteredIndex)
-    const { id, label, links, dataTestId = '' } = dropdown as { id: string; label: string; links: never[]; dataTestId?: string }
+    const { id, label, links, dataTestId = '' } = dropdown
     
     return (
       <NavDropdown

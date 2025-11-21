@@ -23,10 +23,11 @@ export const useHubSpotConversations = () => {
     const hubspot = (window as { HubSpotConversations?: { resetAndReloadWidget: () => void } }).HubSpotConversations
     if (!hubspot) {
       const w = window as { hsConversationsOnReady?: (() => void)[] }
+      const callback = widgetLoadedCallback as () => void
       w.hsConversationsOnReady = [
         ...(w.hsConversationsOnReady || []),
-        widgetLoadedCallback as never,
-      ] as (() => void)[]
+        callback,
+      ]
     } else {
       hubspot.resetAndReloadWidget()
       widgetLoadedCallback()
