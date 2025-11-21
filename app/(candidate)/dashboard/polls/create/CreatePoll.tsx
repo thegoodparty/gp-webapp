@@ -24,6 +24,8 @@ import { LuLoaderCircle } from 'react-icons/lu'
 import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
 import { calculateRecommendedPollSize } from '../shared/audience-selection'
 import { orderBy } from 'es-toolkit'
+import DateInputCalendar from '@shared/inputs/DateInputCalendar'
+import { addDays, startOfDay } from 'date-fns'
 
 const TEXT_PRICE = 0.035
 
@@ -47,20 +49,20 @@ type State =
       step: 'date-selection'
       details: Details
       targetAudienceSize: number
-      scheduledDate?: string
+      scheduledDate?: Date
     }
   | {
       step: 'add-image'
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl?: string
     }
   | {
       step: 'review'
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl: string
       pollId: string
     }
@@ -68,7 +70,7 @@ type State =
       step: 'payment'
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl: string
     }
   | {
@@ -241,13 +243,66 @@ const DetailsForm: React.FC<{
   )
 }
 
+const DateSelectionForm: React.FC<{
+  goBack: () => void
+  onChange: (scheduledDate: Date) => void
+  scheduledDate?: Date
+}> = ({ goBack, onChange, scheduledDate: initialScheduledDate }) => {
+  const [scheduledDate, setScheduledDate] = useState<Date | undefined>(
+    initialScheduledDate,
+  )
+
+  return (
+    <FormStep
+      step="date-selection"
+      onBack={goBack}
+      nextButton={
+        <Button
+          type="submit"
+          variant="secondary"
+          disabled={!scheduledDate}
+          onClick={() => {
+            if (!scheduledDate) {
+              return
+            }
+            onChange(scheduledDate)
+          }}
+        >
+          Select Audience
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">When should we send your poll?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        You can schedule polls up to 30 days in advance. GoodParty.org sends all
+        polls at 11am local time to maximize responses.
+      </p>
+
+      <DateInputCalendar
+        value={scheduledDate}
+        onChange={setScheduledDate}
+        // Give ourselves 2 days to schedule their poll
+        disabled={(date) =>
+          date <= addDays(startOfDay(new Date()), 2) ||
+          date > addDays(startOfDay(new Date()), 30)
+        }
+      />
+
+      <p className="mt-4 text-sm text-muted-foreground text-center">
+        * Messages sent on Tuesdays or Thursdays receive the highest engagement.
+      </p>
+    </FormStep>
+  )
+}
+
 const AudienceSelectionForm: React.FC<{
+  targetAudienceSize?: number
   goBack: () => void
   onChange: (targetAudienceSize: number) => void
-}> = ({ goBack, onChange }) => {
+}> = ({ targetAudienceSize, goBack, onChange }) => {
   const [selectedAudienceSize, setSelectedAudienceSize] = useState<
     number | undefined
-  >(undefined)
+  >(targetAudienceSize)
 
   const query = useQuery({
     queryKey: ['total-constituents'],
@@ -408,12 +463,34 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
 
       {state.step === 'audience-selection' && (
         <AudienceSelectionForm
+          targetAudienceSize={state.targetAudienceSize}
           goBack={() => setState({ step: 'details', details: state.details })}
           onChange={(targetAudienceSize) =>
             setState({
               step: 'date-selection',
               details: state.details,
               targetAudienceSize,
+            })
+          }
+        />
+      )}
+
+      {state.step === 'date-selection' && (
+        <DateSelectionForm
+          scheduledDate={state.scheduledDate}
+          goBack={() =>
+            setState({
+              step: 'audience-selection',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+            })
+          }
+          onChange={(scheduledDate) =>
+            setState({
+              step: 'add-image',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate,
             })
           }
         />
