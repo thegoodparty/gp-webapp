@@ -45,8 +45,8 @@ jobs:
       - name: Deploy to Vercel
         id: deploy
         run: |
-          # Deploy and capture the URL from output
-          DEPLOY_OUTPUT=$(npx vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --confirm 2>&1)
+          # Deploy with public access for E2E testing
+          DEPLOY_OUTPUT=$(npx vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --confirm --public 2>&1)
           echo "$DEPLOY_OUTPUT"
           
           # Extract the preview URL from the output
