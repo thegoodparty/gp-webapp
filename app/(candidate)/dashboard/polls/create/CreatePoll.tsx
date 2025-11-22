@@ -442,7 +442,7 @@ const AudienceSelectionForm: React.FC<{
   )
 }
 
-const IamgeSelectionForm: React.FC<{
+const ImageSelectionForm: React.FC<{
   goBack: () => void
   onChange: (imageUrl: string) => void
   imageUrl?: string
@@ -479,6 +479,29 @@ const IamgeSelectionForm: React.FC<{
         imageUrl={imageUrl}
         onUploaded={(imageUrl) => setImageUrl(imageUrl)}
       />
+    </FormStep>
+  )
+}
+
+const ReviewStep: React.FC<{
+  goBack: () => void
+  onNext: () => void
+}> = ({ goBack, onNext }) => {
+  return (
+    <FormStep
+      step="review"
+      onBack={goBack}
+      nextButton={
+        <Button type="submit" variant="secondary" onClick={onNext}>
+          Yes, Checkout
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">Does everything look good?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        Text messages perform better with an image. Add your campaign headshot,
+        logo or a community photo for credibility.
+      </p>
     </FormStep>
   )
 }
@@ -536,7 +559,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
       )}
 
       {state.step === 'add-image' && (
-        <IamgeSelectionForm
+        <ImageSelectionForm
           goBack={() =>
             setState({
               step: 'date-selection',
@@ -555,6 +578,29 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             })
           }
           imageUrl={state.imageUrl}
+        />
+      )}
+
+      {state.step === 'review' && (
+        <ReviewStep
+          goBack={() =>
+            setState({
+              step: 'add-image',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onNext={() =>
+            setState({
+              step: 'payment',
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
         />
       )}
 
