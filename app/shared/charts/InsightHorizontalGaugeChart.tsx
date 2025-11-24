@@ -3,7 +3,17 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { formatPercentLabel } from './utils'
 import { COLORS } from './constants'
 
-export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) => {
+interface DataItem {
+    name: string
+    value: number
+}
+
+interface InsightHorizontalGaugeChartProps {
+    data?: DataItem[]
+    percentage?: boolean
+}
+
+export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }: InsightHorizontalGaugeChartProps): React.JSX.Element => {
     const maxValue = Math.max(...(data?.map((d) => d.value) ?? [0]), 0) || 1
 
     return (
@@ -30,3 +40,4 @@ export const InsightHorizontalGaugeChart = ({ data = [], percentage = false }) =
         </div>
     )
 }
+

@@ -1,22 +1,24 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useQuill } from 'react-quilljs'
 import 'quill/dist/quill.bubble.css'
 
-export default function RichEditor({
+interface RichEditorProps {
+  initialText?: string
+  onChangeCallback?: (value: string, flag?: number) => void
+}
+
+const RichEditor = ({
   initialText = '',
   onChangeCallback = () => {},
-}) {
-  const [content, setContent] = useState('')
+}: RichEditorProps): React.JSX.Element => {
   const { quill, quillRef } = useQuill({
     theme: 'bubble',
   })
 
-  // Set initial content when editor is ready
   useEffect(() => {
     if (quill && initialText) {
       quill.clipboard.dangerouslyPasteHTML(initialText)
-      setContent(initialText)
     }
   }, [quill, initialText])
 
@@ -25,7 +27,6 @@ export default function RichEditor({
       const textChangeHandler = () => {
         const value = quill.root.innerHTML
         if (value) {
-          setContent(value)
           onChangeCallback(value)
         }
       }
@@ -33,7 +34,6 @@ export default function RichEditor({
       const blurHandler = () => {
         const value = quill.root.innerHTML
         if (value) {
-          setContent(value)
           onChangeCallback(value, 1)
         }
       }
@@ -46,6 +46,7 @@ export default function RichEditor({
         quill.off('blur', blurHandler)
       }
     }
+    return undefined
   }, [quill, onChangeCallback])
 
   return (
@@ -54,3 +55,6 @@ export default function RichEditor({
     </div>
   )
 }
+
+export default RichEditor
+

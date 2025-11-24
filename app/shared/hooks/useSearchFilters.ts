@@ -2,6 +2,17 @@
 import { useContext, useMemo } from 'react'
 import { SearchFiltersContext } from './SearchFiltersProvider'
 
+interface FilterableItem {
+  title?: string
+  description?: string
+  status?: string
+}
+
+interface FiltersWithSearchAndStatus {
+  search?: string
+  status?: string
+}
+
 export const useSearchFilters = () => {
   const context = useContext(SearchFiltersContext)
   if (!context) {
@@ -11,26 +22,31 @@ export const useSearchFilters = () => {
   }
 
   const [filters, setFilters] = context
+  const typedFilters = filters as FiltersWithSearchAndStatus
 
   const filterItems = useMemo(() => {
-    return (items = []) => {
+    return (items: FilterableItem[] = []) => {
       return (
         items?.filter((item) => {
           const matchesSearch =
-            filters.search === '' ||
-            item.title?.toLowerCase().includes(filters.search.toLowerCase()) ||
+            !typedFilters.search ||
+            typedFilters.search === '' ||
+            item.title?.toLowerCase().includes(typedFilters.search.toLowerCase()) ||
             item.description
               ?.toLowerCase()
-              .includes(filters.search.toLowerCase())
+              .includes(typedFilters.search.toLowerCase())
 
           const matchesStatus =
-            filters.status === 'all' || item.status === filters.status
+            !typedFilters.status ||
+            typedFilters.status === 'all' ||
+            item.status === typedFilters.status
 
           return matchesSearch && matchesStatus
         }) || []
       )
     }
-  }, [filters])
+  }, [typedFilters])
 
   return [filters, setFilters, filterItems]
 }
+

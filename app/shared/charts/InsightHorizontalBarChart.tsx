@@ -5,20 +5,38 @@ import { formatPercentLabel } from './utils'
 import { useTailwindBreakpoints } from '../hooks/useTailwindBreakpoints'
 import { COLORS } from './constants'
 
-export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => {
+interface DataItem {
+    name: string
+    value: number
+}
+
+interface InsightHorizontalBarChartProps {
+    data?: DataItem[]
+    percentage?: boolean
+}
+
+interface CustomBarProps {
+    fill?: string
+    x?: number
+    y?: number
+    width?: number
+    height?: number
+}
+
+export const InsightHorizontalBarChart = ({ data = [], percentage = false }: InsightHorizontalBarChartProps): React.JSX.Element => {
 
     const tailwindBreakpoint = useTailwindBreakpoints()
     const isMobile = tailwindBreakpoint === 'sm' || tailwindBreakpoint === 'xs'
 
-    const renderCustomBar = (props) => {
+    const renderCustomBar = (props: CustomBarProps) => {
         const { fill, x, y, width, height } = props
         const radius = 6
         const path = `M ${x} ${y} 
-                     L ${x + width - radius} ${y} 
-                     Q ${x + width} ${y} ${x + width} ${y + radius} 
-                     L ${x + width} ${y + height - radius} 
-                     Q ${x + width} ${y + height} ${x + width - radius} ${y + height} 
-                     L ${x} ${y + height} Z`
+                     L ${x! + width! - radius} ${y} 
+                     Q ${x! + width!} ${y} ${x! + width!} ${y! + radius} 
+                     L ${x! + width!} ${y! + height! - radius} 
+                     Q ${x! + width!} ${y! + height!} ${x! + width! - radius} ${y! + height!} 
+                     L ${x} ${y! + height!} Z`
         
         return (
             <path
@@ -62,7 +80,7 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
                         axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 0, fill: 'transparent' }}
-                        domain={[0, (dataMax) => Math.ceil(dataMax * 1.1)]}
+                        domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]}
                         tickCount={5}
                         width={0}
                         type="number"
@@ -77,7 +95,6 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
                         type="category"
                         scale="band"
                         width={isMobile ? 0 : 150}
-                        padding={{ left: 0, right: 0 }}
                     />
                     <CartesianGrid stroke="#e5e7eb" horizontal={false} vertical={true} />
                     <Bar 
@@ -86,14 +103,14 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
                         shape={renderCustomBar}
                         maxBarSize={105}
                     >
-                        {data.map((entry, index) => (
+                        {data.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                         <LabelList 
                             dataKey="value" 
                             position="right" 
                             dx={4}
-                            formatter={(value) => (percentage ? `${formatPercentLabel(value)}%` : numberFormatter(value))}
+                            formatter={(value: number) => (percentage ? `${formatPercentLabel(value)}%` : numberFormatter(value))}
                             style={{ fontSize: 12, fill: '#374151' }}
                         />
                     </Bar>
@@ -103,3 +120,4 @@ export const InsightHorizontalBarChart = ({ data = [], percentage = false }) => 
         </div>
     )
 }
+

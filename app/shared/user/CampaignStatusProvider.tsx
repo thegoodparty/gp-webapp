@@ -4,17 +4,25 @@ import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 
-export const CampaignStatusContext = createContext([null, () => {}])
+type CampaignStatusContextValue = [
+  campaignStatus: Record<string, unknown> | null,
+  setCampaignStatus: (status: Record<string, unknown> | null) => void
+]
 
-export const CampaignStatusProvider = ({ children }) => {
-  const [campaignStatus, setCampaignStatus] = useState(null)
+export const CampaignStatusContext = createContext<CampaignStatusContextValue>([null, () => {}])
+
+interface CampaignStatusProviderProps {
+  children: React.ReactNode
+}
+
+export const CampaignStatusProvider = ({ children }: CampaignStatusProviderProps): React.JSX.Element => {
+  const [campaignStatus, setCampaignStatus] = useState<Record<string, unknown> | null>(null)
   const [campaign] = useCampaign()
   const [user] = useUser()
 
   useEffect(() => {
     const getStatus = async () => {
       const status = await fetchCampaignStatus()
-      // status.ok is a boolean on the 401 Response object sent back from gpFetch if the data fetch fails
       setCampaignStatus(status.ok === false ? null : status)
     }
     if (user) {
@@ -28,3 +36,4 @@ export const CampaignStatusProvider = ({ children }) => {
     </CampaignStatusContext.Provider>
   )
 }
+

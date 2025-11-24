@@ -12,7 +12,11 @@ import { useEffect, useState } from 'react'
 
 const year = new Date().getFullYear()
 
-export const Footer = ({ initPathname }) => {
+interface FooterProps {
+  initPathname: string
+}
+
+export const Footer = ({ initPathname }: FooterProps): React.JSX.Element | null => {
   const pathname = usePathname()
   const [show, setShow] = useState(!isProductRoute(initPathname))
 
@@ -20,8 +24,11 @@ export const Footer = ({ initPathname }) => {
     setShow(!isProductRoute(pathname))
   }, [pathname])
 
+  if (!show) {
+    return null
+  }
+
   return (
-    show && (
       <footer className="bg-primary-dark px-8 py-6 border-solid border-t border-zinc-200 pt-10">
         <MaxWidth>
           <div className="grid grid-cols-12">
@@ -38,11 +45,11 @@ export const Footer = ({ initPathname }) => {
                   {column.title}
                 </div>
                 {column.links.map((link, linkKey) => (
-                  <FooterLinkWrapper link={link} key={linkKey}>
+                  <FooterLinkWrapper key={linkKey}>
                     {link.isExternal ? (
                       <FooterExternalLink {...link} />
                     ) : link.buttonStyle ? (
-                      <FooterButtonLink {...link} />
+                      <FooterButtonLink {...link} buttonStyle={link.buttonStyle as 'tertiary' | 'secondary'} />
                     ) : link.useNativeLink ? (
                       <a
                         id={link.id}
@@ -141,8 +148,8 @@ export const Footer = ({ initPathname }) => {
           </div>
         </MaxWidth>
       </footer>
-    )
   )
 }
 
 export default Footer
+

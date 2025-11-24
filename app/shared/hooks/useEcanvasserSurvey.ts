@@ -7,3 +7,4 @@ export const useEcanvasserSurvey = () => {
 
   return [survey, refreshSurvey]
 }
+

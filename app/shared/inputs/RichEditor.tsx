@@ -3,10 +3,15 @@ import React, { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.bubble.css'
 
-export default function RichEditor({
+interface RichEditorProps {
+  initialText?: string
+  onChangeCallback?: (value: string, flag?: number) => void
+}
+
+const RichEditor = ({
   initialText = '',
   onChangeCallback = () => {},
-}) {
+}: RichEditorProps): React.JSX.Element => {
   const [content, setContent] = useState('')
   useEffect(() => {
     if (content !== initialText && initialText !== null) {
@@ -14,14 +19,14 @@ export default function RichEditor({
     }
   }, [initialText])
 
-  const handleChange = (value) => {
+  const handleChange = (value: string) => {
     if (value) {
       setContent(value)
       onChangeCallback(value)
     }
   }
 
-  const handleBlur = (previousRange, source, editor) => {
+  const handleBlur = (_previousRange: unknown, _source: unknown, editor: { getHTML: () => string }) => {
     const value = editor.getHTML()
     if (value) {
       setContent(value)
@@ -40,3 +45,6 @@ export default function RichEditor({
     </div>
   )
 }
+
+export default RichEditor
+

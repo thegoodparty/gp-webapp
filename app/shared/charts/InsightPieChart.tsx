@@ -4,7 +4,17 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { formatPercentLabel } from './utils'
 import { COLORS } from './constants'
 
-export const InsightDonutChart = ({ data = [], percentage = false }) => {
+interface DataItem {
+    name: string
+    value: number
+}
+
+interface InsightPieChartProps {
+    data?: DataItem[]
+    percentage?: boolean
+}
+
+export const InsightPieChart = ({ data = [], percentage = false }: InsightPieChartProps): React.JSX.Element => {
 
     const renderLegend = () => {
         return (
@@ -33,20 +43,20 @@ export const InsightDonutChart = ({ data = [], percentage = false }) => {
                     cx="50%"
                     cy="45%"
                     labelLine={false}
-                    label={null}
-                    innerRadius={60}
+                    label={false}
                     outerRadius={100}
                     fill="#8884d8"
-                    stroke="#F5F5F5"
-                    strokeWidth={4}
+                    stroke="none"
+                    strokeWidth={0}
                     dataKey="value"
                 >
                     {data.map((entry, index) => (
                         <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
-                <Legend width="100%" verticalAlign="bottom" align="center" layout="vertical" content={renderLegend} />
+                <Legend wrapperStyle={{ width: '100%' }} verticalAlign="bottom" align="center" layout="vertical" content={renderLegend} />
             </PieChart>
         </ResponsiveContainer>
     )
 }
+

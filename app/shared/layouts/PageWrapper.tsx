@@ -15,15 +15,21 @@ import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { Campaign } from 'helpers/types'
 
-const PageWrapper = async ({ children }) => {
+interface PageWrapperProps {
+  children: React.ReactNode
+}
+
+const PageWrapper = async ({ children }: PageWrapperProps): Promise<React.JSX.Element> => {
   const pathname = await getReqPathname()
-  const campaign = await fetchUserCampaign()
+  const fetchedCampaign = await fetchUserCampaign()
+  const campaign = (fetchedCampaign === false ? null : fetchedCampaign) as Campaign | null
 
   return (
     <UserProvider>
       <ImpersonateUserProvider>
-        <CampaignProvider initCampaign={campaign}>
+        <CampaignProvider campaign={campaign}>
           <ElectedOfficeProvider>
             <CampaignStatusProvider>
             <P2pUxEnabledProvider>
@@ -33,11 +39,11 @@ const PageWrapper = async ({ children }) => {
                     <JsonLdSchema />
                     <Nav />
                     <Suspense>
-                      <PromoBanner initPathname={pathname} />
+                      <PromoBanner initPathname={pathname || ''} />
                     </Suspense>
                     {children}
                     <Suspense>
-                      <Footer initPathname={pathname} />
+                      <Footer initPathname={pathname || ''} />
                     </Suspense>
                     <Suspense>
                       <CookiesSnackbar />
@@ -58,3 +64,4 @@ const PageWrapper = async ({ children }) => {
 }
 
 export default PageWrapper
+

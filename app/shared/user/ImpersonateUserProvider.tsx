@@ -4,16 +4,32 @@ import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-export const ImpersonateUserContext = createContext({
+interface ImpersonateUser {
+  id: string
+  email: string
+}
+
+interface ImpersonateUserContextValue {
+  user: ImpersonateUser | null
+  token: string | null
+  impersonate: (email: string) => Promise<boolean>
+  clear: () => void
+}
+
+export const ImpersonateUserContext = createContext<ImpersonateUserContextValue>({
   user: null,
   token: null,
-  impersonate: () => {},
+  impersonate: () => Promise.resolve(false),
   clear: () => {},
 })
 
-export const ImpersonateUserProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
+interface ImpersonateUserProviderProps {
+  children: React.ReactNode
+}
+
+export const ImpersonateUserProvider = ({ children }: ImpersonateUserProviderProps): React.JSX.Element => {
+  const [user, setUser] = useState<ImpersonateUser | null>(null)
+  const [token, setToken] = useState<string | null>(null)
 
   useEffect(() => {
     const token = getCookie('impersonateToken')
@@ -32,7 +48,7 @@ export const ImpersonateUserProvider = ({ children }) => {
     deleteCookie('impersonateUser')
   }
 
-  const set = (token, user) => {
+  const set = (token: string, user: ImpersonateUser) => {
     if (!token || !user) {
       console.error('Invalid token or user')
       return
@@ -43,12 +59,13 @@ export const ImpersonateUserProvider = ({ children }) => {
     setCookie('impersonateUser', JSON.stringify(user))
   }
 
-  const impersonate = async (email) => {
+  const impersonate = async (email: string) => {
     try {
       const resp = await clientFetch(apiRoutes.admin.user.impersonate, {
         email,
       })
-      const { token, user } = resp.data || {}
+      const data = resp.data as { token?: string; user?: ImpersonateUser } | undefined
+      const { token, user } = data || {}
       if (token && user) {
         set(token, user)
         return true
@@ -67,3 +84,4 @@ export const ImpersonateUserProvider = ({ children }) => {
     </ImpersonateUserContext.Provider>
   )
 }
+

@@ -5,3 +5,4 @@ export { InsightVerticalBarChart } from './InsightVerticalBarChart'
 export { InsightHorizontalGaugeChart } from './InsightHorizontalGaugeChart'
 export { ChartSkeleton } from './ChartSkeleton'
 export { COLORS } from './constants'
+
