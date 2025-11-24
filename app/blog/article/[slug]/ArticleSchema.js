@@ -12,6 +12,7 @@ export default function ArticleSchema({ article }) {
     body,
     mainImage,
     publishDate,
+    updateDate,
     title,
     slug,
     summary,
@@ -45,6 +46,7 @@ export default function ArticleSchema({ article }) {
         name: title || '',
         url: `https://goodparty.org/blog/article/${slug}`,
         datePublished: publishDate || new Date().toISOString(),
+        ...(updateDate && { dateModified: updateDate }),
         description: summary || '',
       }}
     />

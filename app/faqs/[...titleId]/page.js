@@ -23,6 +23,6 @@ export default async function Page({ params }) {
   }
 
   // Always redirect old URL format to new clean URL format
-  const newRoute = faqArticleRoute(content)
+  const newRoute = faqArticleRoute(content.title)
   permanentRedirect(newRoute)
 }

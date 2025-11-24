@@ -1,0 +1,13 @@
+model County {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  slug           String         @unique
+  name           String
+  state          String         @db.Char(2)
+  /// [CountyData]
+  data           Json?          @default("{}") @db.JsonB
+  municipalities Municipality[]
+
+  @@map("county")
+}
