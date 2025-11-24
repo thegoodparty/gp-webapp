@@ -24,6 +24,8 @@ import { LuLoaderCircle } from 'react-icons/lu'
 import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
 import { calculateRecommendedPollSize } from '../shared/audience-selection'
 import { orderBy } from 'es-toolkit'
+import DateInputCalendar from '@shared/inputs/DateInputCalendar'
+import { addDays, startOfDay } from 'date-fns'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
 import { useUser } from '@shared/hooks/useUser'
 
@@ -35,61 +37,71 @@ type Details = {
   question: string
 }
 
+enum Step {
+  details,
+  audienceSelection,
+  dateSelection,
+  addImage,
+  review,
+  payment,
+  paymentConfirmed,
+}
+
 type State =
   | {
-      step: 'details'
+      step: Step.details
       details?: Details
     }
   | {
-      step: 'audience-selection'
+      step: Step.audienceSelection
       details: Details
       targetAudienceSize?: number
     }
   | {
-      step: 'date-selection'
+      step: Step.dateSelection
       details: Details
       targetAudienceSize: number
-      scheduledDate?: string
+      scheduledDate?: Date
     }
   | {
-      step: 'add-image'
+      step: Step.addImage
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl?: string
     }
   | {
-      step: 'review'
+      step: Step.review
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl: string
       pollId: string
     }
   | {
-      step: 'payment'
+      step: Step.payment
       details: Details
       targetAudienceSize: number
-      scheduledDate: string
+      scheduledDate: Date
       imageUrl: string
     }
   | {
-      step: 'payment-confirmed'
+      step: Step.paymentConfirmed
       pollId: string
     }
 
-const order: Array<State['step']> = [
-  'details',
-  'audience-selection',
-  'date-selection',
-  'add-image',
-  'review',
-  'payment',
-  'payment-confirmed',
+const order: Array<Step> = [
+  Step.details,
+  Step.audienceSelection,
+  Step.dateSelection,
+  Step.addImage,
+  Step.review,
+  Step.payment,
+  Step.paymentConfirmed,
 ]
 
 const FormStep: React.FC<{
-  step: State['step']
+  step: Step
   onBack: () => void
   nextButton: React.ReactNode
   children: React.ReactNode
@@ -170,7 +182,7 @@ const DetailsForm: React.FC<{
 
   return (
     <FormStep
-      step="details"
+      step={Step.details}
       onBack={() => router.push('/dashboard/polls')}
       nextButton={
         <Button
@@ -269,13 +281,66 @@ const DetailsForm: React.FC<{
   )
 }
 
+const DateSelectionForm: React.FC<{
+  goBack: () => void
+  onChange: (scheduledDate: Date) => void
+  scheduledDate?: Date
+}> = ({ goBack, onChange, scheduledDate: initialScheduledDate }) => {
+  const [scheduledDate, setScheduledDate] = useState<Date | undefined>(
+    initialScheduledDate,
+  )
+
+  return (
+    <FormStep
+      step={Step.dateSelection}
+      onBack={goBack}
+      nextButton={
+        <Button
+          type="submit"
+          variant="secondary"
+          disabled={!scheduledDate}
+          onClick={() => {
+            if (!scheduledDate) {
+              return
+            }
+            onChange(scheduledDate)
+          }}
+        >
+          Select Audience
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">When should we send your poll?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        You can schedule polls up to 30 days in advance. GoodParty.org sends all
+        polls at 11am local time to maximize responses.
+      </p>
+
+      <DateInputCalendar
+        value={scheduledDate}
+        onChange={setScheduledDate}
+        // Give ourselves 2 days to schedule their poll
+        disabled={(date) =>
+          date <= addDays(startOfDay(new Date()), 2) ||
+          date > addDays(startOfDay(new Date()), 30)
+        }
+      />
+
+      <p className="mt-4 text-sm text-muted-foreground text-center">
+        * Messages sent on Tuesdays or Thursdays receive the highest engagement.
+      </p>
+    </FormStep>
+  )
+}
+
 const AudienceSelectionForm: React.FC<{
+  targetAudienceSize?: number
   goBack: () => void
   onChange: (targetAudienceSize: number) => void
-}> = ({ goBack, onChange }) => {
+}> = ({ targetAudienceSize, goBack, onChange }) => {
   const [selectedAudienceSize, setSelectedAudienceSize] = useState<
     number | undefined
-  >(undefined)
+  >(targetAudienceSize)
 
   const query = useQuery({
     queryKey: ['total-constituents'],
@@ -287,7 +352,11 @@ const AudienceSelectionForm: React.FC<{
 
   if (query.status !== 'success') {
     return (
-      <FormStep step="audience-selection" onBack={goBack} nextButton={<></>}>
+      <FormStep
+        step={Step.audienceSelection}
+        onBack={goBack}
+        nextButton={<></>}
+      >
         <LuLoaderCircle
           className="animate-spin text-blue-500 mx-auto"
           size={60}
@@ -342,7 +411,7 @@ const AudienceSelectionForm: React.FC<{
 
   return (
     <FormStep
-      step="audience-selection"
+      step={Step.audienceSelection}
       onBack={goBack}
       nextButton={
         <Button
@@ -420,28 +489,52 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
 
   const [state, setState] = useState<State>({
-    step: 'details',
+    step: Step.details,
   })
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      {state.step === 'details' && (
+      {state.step === Step.details && (
         <DetailsForm
           details={state.details}
           onChange={(details) =>
-            setState({ step: 'audience-selection', details })
+            setState({ step: Step.audienceSelection, details })
           }
         />
       )}
 
-      {state.step === 'audience-selection' && (
+      {state.step === Step.audienceSelection && (
         <AudienceSelectionForm
-          goBack={() => setState({ step: 'details', details: state.details })}
+          targetAudienceSize={state.targetAudienceSize}
+          goBack={() =>
+            setState({ step: Step.details, details: state.details })
+          }
           onChange={(targetAudienceSize) =>
             setState({
-              step: 'date-selection',
+              step: Step.dateSelection,
               details: state.details,
               targetAudienceSize,
+            })
+          }
+        />
+      )}
+
+      {state.step === Step.dateSelection && (
+        <DateSelectionForm
+          scheduledDate={state.scheduledDate}
+          goBack={() =>
+            setState({
+              step: Step.audienceSelection,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+            })
+          }
+          onChange={(scheduledDate) =>
+            setState({
+              step: Step.addImage,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate,
             })
           }
         />

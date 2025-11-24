@@ -29,6 +29,7 @@ export default function SwornInStep() {
           captionLayout="dropdown"
           startMonth={DEFAULT_START_MONTH}
           endMonth={DEFAULT_END_MONTH}
+          showTextInput
         />
       </div>
     </div>
