@@ -27,6 +27,8 @@ import { orderBy } from 'es-toolkit'
 import DateInputCalendar from '@shared/inputs/DateInputCalendar'
 import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
+import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
+import { useUser } from '@shared/hooks/useUser'
 
 const TEXT_PRICE = 0.035
 
@@ -36,60 +38,70 @@ type Details = {
   question: string
 }
 
+enum Step {
+  details,
+  audienceSelection,
+  dateSelection,
+  addImage,
+  review,
+  payment,
+  paymentConfirmed,
+}
+
 type State =
   | {
-      step: 'details'
+      step: Step.details
       details?: Details
     }
   | {
-      step: 'audience-selection'
+      step: Step.audienceSelection
       details: Details
       targetAudienceSize?: number
     }
   | {
-      step: 'date-selection'
+      step: Step.dateSelection
       details: Details
       targetAudienceSize: number
       scheduledDate?: Date
     }
   | {
-      step: 'add-image'
+      step: Step.addImage
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
       imageUrl?: string
     }
   | {
-      step: 'review'
+      step: Step.review
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
       imageUrl: string
     }
   | {
-      step: 'payment'
+      step: Step.payment
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
       imageUrl: string
     }
   | {
-      step: 'payment-confirmed'
+      step: Step.paymentConfirmed
       pollId: string
     }
 
-const order: Array<State['step']> = [
-  'details',
-  'audience-selection',
-  'date-selection',
-  'add-image',
-  'review',
-  'payment',
-  'payment-confirmed',
+const order: Array<Step> = [
+  Step.details,
+  Step.audienceSelection,
+  Step.dateSelection,
+  Step.addImage,
+  Step.review,
+  Step.payment,
+  Step.paymentConfirmed,
 ]
 
 const FormStep: React.FC<{
-  step: State['step']
+  step: Step
   onBack: () => void
   nextButton: React.ReactNode
   children: React.ReactNode
@@ -117,11 +129,35 @@ const FormStep: React.FC<{
   )
 }
 
+const introOptions = (params: {
+  eoName: string
+  city: string
+  office: string
+}) => [
+  `Hi [Name]. I’m ${params.eoName}, your ${params.city} ${params.office}.`,
+  `Hello [Name], I am your ${params.city} ${params.office}, ${params.eoName}.`,
+  `${params.city} ${params.office} ${params.eoName} wants to hear from you, [Name].`,
+  `${params.city} ${params.office} ${params.eoName} needs your input, [Name].`,
+]
+
 const DetailsForm: React.FC<{
   details?: Details
   onChange: (details: Details) => void
 }> = ({ details, onChange }) => {
   const router = useRouter()
+  const [user] = useUser()
+  const [campaign] = useCampaign()
+  const office = grammarizeOfficeName(
+    campaign?.details?.otherOffice || campaign?.details?.office,
+  )
+
+  const introductionOptions = introOptions({
+    eoName: `${user?.firstName?.trim() || ''} ${
+      user?.lastName?.trim() || ''
+    }`.trim(),
+    city: campaign?.details?.city || '',
+    office: office || '',
+  })
 
   const {
     register,
@@ -146,7 +182,7 @@ const DetailsForm: React.FC<{
 
   return (
     <FormStep
-      step="details"
+      step={Step.details}
       onBack={() => router.push('/dashboard/polls')}
       nextButton={
         <Button
@@ -198,9 +234,11 @@ const DetailsForm: React.FC<{
                 <SelectValue placeholder="Select your introduction" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="option1">Option 1</SelectItem>
-                <SelectItem value="option2">Option 2</SelectItem>
-                <SelectItem value="option3">Option 3</SelectItem>
+                {introductionOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           )}
@@ -254,7 +292,7 @@ const DateSelectionForm: React.FC<{
 
   return (
     <FormStep
-      step="date-selection"
+      step={Step.dateSelection}
       onBack={goBack}
       nextButton={
         <Button
@@ -314,7 +352,11 @@ const AudienceSelectionForm: React.FC<{
 
   if (query.status !== 'success') {
     return (
-      <FormStep step="audience-selection" onBack={goBack} nextButton={<></>}>
+      <FormStep
+        step={Step.audienceSelection}
+        onBack={goBack}
+        nextButton={<></>}
+      >
         <LuLoaderCircle
           className="animate-spin text-blue-500 mx-auto"
           size={60}
@@ -369,7 +411,7 @@ const AudienceSelectionForm: React.FC<{
 
   return (
     <FormStep
-      step="audience-selection"
+      step={Step.audienceSelection}
       onBack={goBack}
       nextButton={
         <Button
@@ -488,27 +530,29 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
 
   const [state, setState] = useState<State>({
-    step: 'details',
+    step: Step.details,
   })
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      {state.step === 'details' && (
+      {state.step === Step.details && (
         <DetailsForm
           details={state.details}
           onChange={(details) =>
-            setState({ step: 'audience-selection', details })
+            setState({ step: Step.audienceSelection, details })
           }
         />
       )}
 
-      {state.step === 'audience-selection' && (
+      {state.step === Step.audienceSelection && (
         <AudienceSelectionForm
           targetAudienceSize={state.targetAudienceSize}
-          goBack={() => setState({ step: 'details', details: state.details })}
+          goBack={() =>
+            setState({ step: Step.details, details: state.details })
+          }
           onChange={(targetAudienceSize) =>
             setState({
-              step: 'date-selection',
+              step: Step.dateSelection,
               details: state.details,
               targetAudienceSize,
             })
@@ -516,12 +560,12 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
         />
       )}
 
-      {state.step === 'date-selection' && (
+      {state.step === Step.dateSelection && (
         <DateSelectionForm
           scheduledDate={state.scheduledDate}
           goBack={() =>
             setState({
-              step: 'audience-selection',
+              step: Step.audienceSelection,
               details: state.details,
               targetAudienceSize: state.targetAudienceSize,
             })
