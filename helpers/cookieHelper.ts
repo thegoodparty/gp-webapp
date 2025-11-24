@@ -1,3 +1,5 @@
+import { User } from './types'
+
 export const getCookie = (name: string): string | false => {
   if (typeof window === 'undefined') {
     return false
@@ -62,8 +64,8 @@ export const setUserCookie = (value: string | object): void => {
 }
 
 export function getUserCookie(withParse: false): string | false
-export function getUserCookie(withParse: true): object | false
-export function getUserCookie(withParse: boolean = false): string | object | false {
+export function getUserCookie(withParse: true): User | false
+export function getUserCookie(withParse: boolean = false): string | User | false {
   if (typeof window === 'undefined') {
     return false
   }
