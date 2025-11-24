@@ -26,6 +26,8 @@ import { calculateRecommendedPollSize } from '../shared/audience-selection'
 import { orderBy } from 'es-toolkit'
 import DateInputCalendar from '@shared/inputs/DateInputCalendar'
 import { addDays, startOfDay } from 'date-fns'
+import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
+import { useUser } from '@shared/hooks/useUser'
 
 const TEXT_PRICE = 0.035
 
@@ -117,11 +119,35 @@ const FormStep: React.FC<{
   )
 }
 
+const introOptions = (params: {
+  eoName: string
+  city: string
+  office: string
+}) => [
+  `Hi [Name]. I’m ${params.eoName}, your ${params.city} ${params.office}.`,
+  `Hello [Name], I am your ${params.city} ${params.office}, ${params.eoName}.`,
+  `${params.city} ${params.office} ${params.eoName} wants to hear from you, [Name].`,
+  `${params.city} ${params.office} ${params.eoName} needs your input, [Name].`,
+]
+
 const DetailsForm: React.FC<{
   details?: Details
   onChange: (details: Details) => void
 }> = ({ details, onChange }) => {
   const router = useRouter()
+  const [user] = useUser()
+  const [campaign] = useCampaign()
+  const office = grammarizeOfficeName(
+    campaign?.details?.otherOffice || campaign?.details?.office,
+  )
+
+  const introductionOptions = introOptions({
+    eoName: `${user?.firstName?.trim() || ''} ${
+      user?.lastName?.trim() || ''
+    }`.trim(),
+    city: campaign?.details?.city || '',
+    office: office || '',
+  })
 
   const {
     register,
@@ -198,9 +224,11 @@ const DetailsForm: React.FC<{
                 <SelectValue placeholder="Select your introduction" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="option1">Option 1</SelectItem>
-                <SelectItem value="option2">Option 2</SelectItem>
-                <SelectItem value="option3">Option 3</SelectItem>
+                {introductionOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           )}
