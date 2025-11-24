@@ -494,7 +494,7 @@ const IamgeSelectionForm: React.FC<{
 
   return (
     <FormStep
-      step="add-image"
+      step={Step.addImage}
       onBack={goBack}
       nextButton={
         <Button
@@ -572,7 +572,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
           }
           onChange={(scheduledDate) =>
             setState({
-              step: 'add-image',
+              step: Step.addImage,
               details: state.details,
               targetAudienceSize: state.targetAudienceSize,
               scheduledDate,
@@ -581,11 +581,11 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
         />
       )}
 
-      {state.step === 'add-image' && (
+      {state.step === Step.addImage && (
         <IamgeSelectionForm
           goBack={() =>
             setState({
-              step: 'date-selection',
+              step: Step.dateSelection,
               details: state.details,
               targetAudienceSize: state.targetAudienceSize,
               scheduledDate: state.scheduledDate,
@@ -593,7 +593,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
           }
           onChange={(imageUrl) =>
             setState({
-              step: 'review',
+              step: Step.review,
               details: state.details,
               targetAudienceSize: state.targetAudienceSize,
               scheduledDate: state.scheduledDate,
