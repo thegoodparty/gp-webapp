@@ -531,7 +531,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
           }
           onChange={(scheduledDate) =>
             setState({
-              step: 'add-image',
+              step: Step.addImage,
               details: state.details,
               targetAudienceSize: state.targetAudienceSize,
               scheduledDate,
