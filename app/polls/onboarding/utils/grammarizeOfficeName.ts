@@ -1,4 +1,4 @@
-export function grammarizeOfficeName(officeName) {
+export function grammarizeOfficeName(officeName: string | null | undefined) {
   if (!officeName) {
     return officeName
   }
