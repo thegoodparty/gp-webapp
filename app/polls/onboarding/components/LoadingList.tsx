@@ -9,9 +9,17 @@ const STATUS_LOADING = 'loading'
 const STATUS_COMPLETE = 'complete'
 const LOADING_DELAY = 1250
 
-// items: [{ label: string, status: string }]
-// onComplete: () => void
-export default function LoadingList({ items, onComplete }) {
+interface LoadingItem {
+  label?: string
+  status: string
+}
+
+interface LoadingListProps {
+  items: LoadingItem[]
+  onComplete: () => void
+}
+
+export default function LoadingList({ items, onComplete }: LoadingListProps): React.JSX.Element {
   
   const [loadingItems, setLoadingItems] = useState(items)
 
@@ -21,20 +29,17 @@ export default function LoadingList({ items, onComplete }) {
         const currentLoadingIndex = prevItems.findIndex(item => item.status === STATUS_LOADING)
 
         if (currentLoadingIndex === -1) {
-          // No loading item found, clear the timer
           clearInterval(timer)
           return prevItems
         }
 
         const newItems = [...prevItems]
 
-        // Mark current loading item as complete
         newItems[currentLoadingIndex] = {
           ...newItems[currentLoadingIndex],
           status: STATUS_COMPLETE
         }
 
-        // Start loading the next item if there is one
         if (currentLoadingIndex + 1 < newItems.length) {
           newItems[currentLoadingIndex + 1] = {
             ...newItems[currentLoadingIndex + 1],
@@ -44,13 +49,11 @@ export default function LoadingList({ items, onComplete }) {
 
         return newItems
       })
-    }, LOADING_DELAY) // 2 seconds delay
+    }, LOADING_DELAY)
 
-    // Cleanup timer on component unmount
     return () => clearInterval(timer)
   }, [])
 
-  // Call onComplete when all steps are complete
   useEffect(() => {
     if (loadingItems.length > 0 && loadingItems.every(item => item.status === STATUS_COMPLETE)) {
       onComplete()
@@ -78,3 +81,4 @@ export default function LoadingList({ items, onComplete }) {
     </div>
   )
 }
+

@@ -7,32 +7,57 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   flexRender,
+  ColumnDef,
+  FilterFn,
+  ColumnFiltersState,
+  SortingState,
 } from '@tanstack/react-table'
 import styles from './Table.module.scss'
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { matchSorter } from 'match-sorter'
 
-function DefaultColumnFilter({ column }) {
+interface DefaultColumnFilterProps {
+  column: {
+    getFilterValue: () => unknown
+    setFilterValue: (value: unknown) => void
+    getFacetedRowModel?: () => { rows?: unknown[] }
+  }
+}
+
+const DefaultColumnFilter = ({ column }: DefaultColumnFilterProps): React.JSX.Element => {
   const count = column.getFacetedRowModel?.()?.rows?.length ?? 0
   return (
     <input
-      value={column.getFilterValue() ?? ''}
+      value={(column.getFilterValue() as string) ?? ''}
       onChange={(e) => column.setFilterValue(e.target.value || undefined)}
       placeholder={`Search ${count} records...`}
     />
   )
 }
 
-function fuzzyTextFilterFn(row, columnId, filterValue) {
+const fuzzyTextFilterFn: FilterFn<unknown> = (row, columnId, filterValue) => {
   return (
     matchSorter([row], filterValue, { keys: [(row) => row.getValue(columnId)] })
       .length > 0
   )
 }
 
-fuzzyTextFilterFn.autoRemove = (val) => !val
+interface TableProps<T> {
+  columns: ColumnDef<T, unknown>[]
+  data: T[]
+  filterColumns?: boolean
+  initialSortById?: string
+  defaultFilters?: ColumnFiltersState
+  defaultPageSize?: number
+  showPagination?: boolean
+  pageIndex?: number
+  onPageIndexChange?: (index: number) => void
+  pageCount?: number
+  pageSize?: number
+  onPageSizeChange?: (size: number) => void
+}
 
-export default function Table({
+const Table = <T extends Record<string, unknown>>({
   columns,
   data,
   filterColumns = true,
@@ -45,7 +70,7 @@ export default function Table({
   pageCount: controlledPageCount,
   pageSize: controlledPageSize,
   onPageSizeChange,
-}) {
+}: TableProps<T>): React.JSX.Element => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: defaultPageSize,
@@ -59,44 +84,43 @@ export default function Table({
         pageIndex: 0,
       }))
     }
-  }, [defaultPageSize])
+  }, [defaultPageSize, showPagination])
 
   const pageIndex = controlledPageIndex ?? pagination.pageIndex
   const pageSize = controlledPageSize ?? pagination.pageSize
   const pageCount = controlledPageCount
   const setPageIndex =
     onPageIndexChange ??
-    ((idx) => setPagination((prev) => ({ ...prev, pageIndex: idx })))
+    ((idx: number) => setPagination((prev) => ({ ...prev, pageIndex: idx })))
   const setPageSize =
     onPageSizeChange ??
-    ((size) =>
+    ((size: number) =>
       setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 })))
 
-  const filterTypes = useMemo(
-    () => ({
-      fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
-      text: (row, columnId, filterValue) => {
+  const filterTypes = useMemo(() => {
+    const types: Record<string, FilterFn<unknown>> = {
+      text: ((row, columnId, filterValue) => {
         const rowValue = row.getValue(columnId)
         return rowValue !== undefined
           ? String(rowValue)
               .toLowerCase()
               .startsWith(String(filterValue).toLowerCase())
           : true
-      },
-    }),
-    [filterColumns],
-  )
+      }) as FilterFn<unknown>,
+    }
+    if (filterColumns) {
+      types.fuzzyText = fuzzyTextFilterFn
+    }
+    return types
+  }, [filterColumns])
 
-  const defaultColumn = useMemo(
-    () => ({
-      Filter: filterColumns ? DefaultColumnFilter : undefined,
-    }),
-    [filterColumns],
-  )
+  const defaultColumn = useMemo(() => {
+    return filterColumns ? { Filter: DefaultColumnFilter as React.ComponentType<DefaultColumnFilterProps> } : undefined
+  }, [filterColumns])
 
   const initialState = useMemo(
     () => ({
-      sorting: initialSortById ? [{ id: initialSortById, desc: true }] : [],
+      sorting: (initialSortById ? [{ id: initialSortById, desc: true }] : []) as SortingState,
       filters: defaultFilters,
     }),
     [initialSortById, defaultFilters],
@@ -109,16 +133,19 @@ export default function Table({
       ...initialState,
       pagination: { pageIndex, pageSize },
     },
-    onPaginationChange: ({ pageIndex, pageSize }) => {
-      setPageIndex(pageIndex)
-      setPageSize(pageSize)
+    onPaginationChange: (updater) => {
+      const newPagination = typeof updater === 'function'
+        ? updater({ pageIndex, pageSize })
+        : updater
+      setPageIndex(newPagination.pageIndex)
+      setPageSize(newPagination.pageSize)
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    defaultColumn,
-    filterTypes,
+    defaultColumn: defaultColumn as  Partial<ColumnDef<T, unknown>>,
+    filterFns: filterTypes,
     manualPagination: !!controlledPageCount,
     pageCount: controlledPageCount,
   })
@@ -131,7 +158,7 @@ export default function Table({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(
                 (header) =>
-                  Boolean(!header.column.columnDef.hide) && (
+                  Boolean(!(header.column.columnDef as { hide?: boolean }).hide) && (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
@@ -153,11 +180,11 @@ export default function Table({
                           desc: (
                             <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
                           ),
-                        }[header.column.getIsSorted()] ?? null}
+                        }[header.column.getIsSorted() as string] ?? null}
                       </div>
                       {header.column.getCanFilter() && filterColumns
                         ? flexRender(
-                            header.column.columnDef.Filter,
+                            (header.column.columnDef as { Filter?: React.ComponentType<DefaultColumnFilterProps> }).Filter as React.ComponentType<DefaultColumnFilterProps>,
                             header.getContext(),
                           )
                         : null}
@@ -174,7 +201,7 @@ export default function Table({
                 .getVisibleCells()
                 .map(
                   (cell) =>
-                    Boolean(!cell.column.columnDef.hide) && (
+                    Boolean(!(cell.column.columnDef as { hide?: boolean }).hide) && (
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -257,3 +284,5 @@ export default function Table({
     </div>
   )
 }
+
+export default Table

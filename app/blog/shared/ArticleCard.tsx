@@ -4,6 +4,17 @@ import MarketingH5 from '@shared/typography/MarketingH5'
 import Body1 from '@shared/typography/Body1'
 import { MdArrowForward } from 'react-icons/md'
 
+interface ArticleCardProps {
+  title: string
+  summary: string
+  imageUrl: string
+  imageAlt?: string
+  linkUrl: string
+  linkTarget?: string
+  showReadMoreButton?: boolean
+  imageObjectPosition?: string
+}
+
 export default function ArticleCard({
   title,
   summary,
@@ -13,7 +24,7 @@ export default function ArticleCard({
   linkTarget,
   showReadMoreButton,
   imageObjectPosition,
-}) {
+}: ArticleCardProps): React.JSX.Element {
   return (
     <Link
       href={linkUrl}

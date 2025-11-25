@@ -4,7 +4,13 @@ import {
   TaskAltRounded,
 } from '@mui/icons-material'
 
-export default function TaskCheck({ checked, onClick, trackingAttrs }) {
+interface TaskCheckProps {
+  checked: boolean
+  onClick: () => void
+  trackingAttrs?: Record<string, string>
+}
+
+export default function TaskCheck({ checked, onClick, trackingAttrs }: TaskCheckProps): React.JSX.Element {
   const handleClick = () => {
     if (!checked) {
       onClick()

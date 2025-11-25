@@ -2,7 +2,7 @@ import Body1 from '@shared/typography/Body1'
 import MarketingH3 from '@shared/typography/MarketingH3'
 import Overline from '@shared/typography/Overline'
 
-export default function WhyUse() {
+export default function WhyUse(): React.JSX.Element {
   const vanityMetrics = [
     {
       title: 'Simple',
@@ -49,3 +49,4 @@ export default function WhyUse() {
     </section>
   )
 }
+

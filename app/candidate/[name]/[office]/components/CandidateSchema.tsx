@@ -2,7 +2,28 @@ import React from 'react'
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
 
-export default function CandidateSchema({ candidate, slug }) {
+interface CandidateUrl {
+  url: string
+}
+
+interface CandidateData {
+  firstName: string
+  lastName: string
+  party: string
+  positionName: string
+  placeName?: string
+  state: string
+  image: string
+  urls?: (string | CandidateUrl)[]
+  email?: string
+}
+
+interface CandidateSchemaProps {
+  candidate: CandidateData
+  slug: string
+}
+
+export default function CandidateSchema({ candidate, slug }: CandidateSchemaProps): React.JSX.Element {
   const {
     firstName,
     lastName,
@@ -19,7 +40,7 @@ export default function CandidateSchema({ candidate, slug }) {
     ? urls.map((u) => (typeof u === 'string' ? u : u?.url)).filter(Boolean)
     : []
 
-  const address = {
+  const address: { '@type': 'PostalAddress'; addressRegion: string; addressLocality?: string } = {
     '@type': 'PostalAddress',
     addressRegion: state,
   }

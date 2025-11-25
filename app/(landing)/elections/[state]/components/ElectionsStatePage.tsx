@@ -6,34 +6,47 @@ import RacesSection from '../../shared/RacesSection'
 import LearnToRun from '../../shared/LearnToRun'
 import Guides from '../../shared/Guides'
 
-export default function ElectionsStatePage(props) {
+interface Place {
+  slug: string
+}
+
+export default function ElectionsStatePage(props: Record<string, unknown>): React.JSX.Element {
   const {
     state,
-    categorizedChildren: { counties = [], districts = [], others = [] },
+    categorizedChildren = {},
     children = [],
     races,
     articles,
-  } = props
+  } = props as {
+    state: string
+    categorizedChildren: {
+      counties?: Place[]
+      districts?: Place[]
+      others?: Place[]
+    }
+    children: Place[]
+    races: unknown[]
+    articles: unknown[]
+  }
 
-  const stateName = shortToLongState[state.toUpperCase()]
+  const { counties = [], districts = [], others = [] } = categorizedChildren
 
-  const placeLink = (place) => `/elections/${place.slug}`
+  const stateName = (shortToLongState as Record<string, string>)[state.toUpperCase()]
+
+  const placeLink = (place: Place) => `/elections/${place.slug}`
 
     return (
       <div className="bg-indigo-50 pb-20">
-        <Hero {...props} color1="#3EE996" color2="#31D3C8" level="state" />
+        <Hero state={state} county={null} color1="#3EE996" color2="#31D3C8" level="state" municipality={null} parent={null} />
   
-        {/* races */}
         <MaxWidth>
           <RacesSection races={races} />
         </MaxWidth>
   
-        {/* one dark band → one white card with all three link lists */}
         <div className="bg-primary-dark pt-1 pb-20 mt-10">
           <div className="max-w-screen-xl mx-auto mt-20">
             <div className="rounded-2xl bg-white px-8 py-10 space-y-16">
 
-              {/* TODO: Remove when election-api is updated*/}
               {children.length > 0 && (
                 <LinksSection
                   entities={children}
@@ -42,7 +55,6 @@ export default function ElectionsStatePage(props) {
                 />
               )}
 
-              {/* counties */}
               {counties.length > 0 && (
                 <LinksSection
                   entities={counties}
@@ -51,7 +63,6 @@ export default function ElectionsStatePage(props) {
                 />
               )}
   
-              {/* districts */}
               {districts.length > 0 && (
                 <LinksSection
                   entities={districts}
@@ -60,7 +71,6 @@ export default function ElectionsStatePage(props) {
                 />
               )}
   
-              {/* others */}
               {others.length > 0 && (
                 <LinksSection
                   entities={others}

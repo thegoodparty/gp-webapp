@@ -4,7 +4,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-async function deleteContent(key) {
+const deleteContent = async (key: string) => {
   try {
     const payload = {
       key,
@@ -17,14 +17,20 @@ async function deleteContent(key) {
   }
 }
 
+interface DeleteActionProps {
+  documentKey: string
+  showDelete: boolean
+  setShowDelete: (show: boolean) => void
+}
+
 export default function DeleteAction({
   documentKey,
   showDelete,
   setShowDelete,
-}) {
+}: DeleteActionProps): React.JSX.Element {
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
-  const handleDelete = async (documentKey) => {
+  const handleDelete = async (documentKey: string) => {
     const deleteResp = await deleteContent(documentKey)
     if (deleteResp) {
       successSnackbar('Deleted')

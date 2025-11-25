@@ -4,12 +4,19 @@ import { useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
 
+interface DeleteActionProps {
+  id: string
+  setShowMenu: (value: number) => void
+  deleteHistoryCallBack: (id: string) => Promise<void>
+  description: string
+}
+
 export default function DeleteAction({
   id,
   setShowMenu,
   deleteHistoryCallBack,
   description,
-}) {
+}: DeleteActionProps): React.JSX.Element {
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
 

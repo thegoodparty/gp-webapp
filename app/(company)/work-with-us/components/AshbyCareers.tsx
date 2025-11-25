@@ -4,7 +4,19 @@ import styles from './AshbyCareers.module.scss'
 import Link from 'next/link'
 import H2 from '@shared/typography/H2'
 
-function AshbyCareers({ jobs }) {
+interface Job {
+  id: string
+  title: string
+  departmentName: string
+  locationName: string
+  employmentType: string
+}
+
+interface AshbyCareersProps {
+  jobs: Job[]
+}
+
+const AshbyCareers = ({ jobs }: AshbyCareersProps): React.JSX.Element => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const queryParams = new URLSearchParams(window.location.search)
@@ -46,6 +58,5 @@ function AshbyCareers({ jobs }) {
   )
 }
 
-AshbyCareers.propTypes = {}
-
 export default AshbyCareers
+

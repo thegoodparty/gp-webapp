@@ -6,7 +6,7 @@ import Body1 from '@shared/typography/Body1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal'
 
-export default function VolunteerSection() {
+export default function VolunteerSection(): React.JSX.Element {
   return (
     <section className="bg-secondary-light pt-12 text-primary">
       <MaxWidth>
@@ -48,3 +48,4 @@ export default function VolunteerSection() {
     </section>
   )
 }
+

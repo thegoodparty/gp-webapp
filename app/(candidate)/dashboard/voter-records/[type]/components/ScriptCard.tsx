@@ -8,7 +8,11 @@ import Link from 'next/link'
 import { IoArrowForward } from 'react-icons/io5'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-export default function ScriptCard({ type }) {
+interface ScriptCardProps {
+  type: string
+}
+
+export default function ScriptCard({ type }: ScriptCardProps): React.JSX.Element {
   let typeText = ''
   if (type === 'sms') {
     typeText = 'text'
@@ -51,3 +55,4 @@ export default function ScriptCard({ type }) {
     </Paper>
   )
 }
+

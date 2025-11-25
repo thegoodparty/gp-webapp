@@ -31,8 +31,25 @@ const mapOptions = {
   minZoom: 3,
 }
 
+interface Place {
+  lat: string | number
+  lng: string | number
+  title?: string
+  description?: string
+}
+
+interface MapProps {
+  places?: Place[]
+  isLoaded?: boolean
+  onMarkerClick?: (place: Place) => void
+  height?: string
+  showInfoWindows?: boolean
+  markerIcon?: unknown
+  fitBounds?: boolean
+}
+
 const Map = memo(
-  forwardRef(
+  forwardRef<HTMLDivElement, MapProps>(
     (
       {
         places = [],
@@ -43,11 +60,11 @@ const Map = memo(
         markerIcon,
         fitBounds = true,
       },
-      ref,
+      _ref,
     ) => {
-      const mapContainerRef = useRef(null)
-      const mapRef = useRef(null)
-      const markersRef = useRef([])
+      const mapContainerRef = useRef<HTMLDivElement>(null)
+      const mapRef = useRef<google.maps.Map | null>(null)
+      const markersRef = useRef<google.maps.Marker[]>([])
       const [internalIsLoaded, setInternalIsLoaded] = useState(false)
 
       const isLoaded =
@@ -92,19 +109,15 @@ const Map = memo(
           .filter((place) => place.lat && place.lng)
           .map((place) => {
             const position = {
-              lat: parseFloat(place.lat),
-              lng: parseFloat(place.lng),
+              lat: parseFloat(place.lat.toString()),
+              lng: parseFloat(place.lng.toString()),
             }
 
             const marker = new window.google.maps.Marker({
               optimized: true,
               position,
-              map: mapRef.current,
+              map: mapRef.current!,
               title: place.title || 'Location',
-              //   icon: markerIcon || {
-              //     url: 'https://assets.goodparty.org/gp-marker-single.png',
-              //     scaledSize: new window.google.maps.Size(50, 50),
-              //   },
             })
 
             if (onMarkerClick) {
@@ -127,7 +140,7 @@ const Map = memo(
               marker.addListener('mouseover', () => {
                 infowindow.open({
                   anchor: marker,
-                  map: mapRef.current,
+                  map: mapRef.current!,
                 })
               })
 
@@ -143,10 +156,10 @@ const Map = memo(
           })
 
         if (fitBounds && hasValidPlaces && places.length > 0) {
-          if (places.length === 1) {
+          if (places.length === 1 && places[0]) {
             mapRef.current.setCenter({
-              lat: parseFloat(places[0].lat),
-              lng: parseFloat(places[0].lng),
+              lat: parseFloat(places[0].lat.toString()),
+              lng: parseFloat(places[0].lng.toString()),
             })
             mapRef.current.setZoom(ZOOMED_IN)
           } else {
@@ -188,7 +201,6 @@ const Map = memo(
           )}
           <div className="relative" style={{ height }}>
             <div ref={mapContainerRef} style={containerStyle}>
-              {/* Map will be rendered here */}
             </div>
           </div>
         </>

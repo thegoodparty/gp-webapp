@@ -15,11 +15,12 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
+export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
   await restrictDemoAccess()
 
-  const campaign = await fetchUserCampaign()
+  const fetchedCampaign = await fetchUserCampaign()
+  const campaign = (fetchedCampaign === false ? {} : fetchedCampaign) as { isPro?: boolean }
 
   const childProps = {
     campaign,

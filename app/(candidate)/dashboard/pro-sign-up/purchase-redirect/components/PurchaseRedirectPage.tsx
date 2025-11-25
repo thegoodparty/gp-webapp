@@ -11,11 +11,13 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-const doRedirect = async (currentTimeoutId) => {
-  clearTimeout(currentTimeoutId)
+const doRedirect = async (currentTimeoutId: NodeJS.Timeout | null) => {
+  if (currentTimeoutId) {
+    clearTimeout(currentTimeoutId)
+  }
   try {
     const resp = await clientFetch(apiRoutes.payments.createCheckoutSession)
-    const { redirectUrl } = resp.data || {}
+    const { redirectUrl } = (resp.data as { redirectUrl?: string }) || {}
     await updateUser()
     if (redirectUrl) {
       window.location.href = redirectUrl
@@ -27,15 +29,22 @@ const doRedirect = async (currentTimeoutId) => {
   }
 }
 
-const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
-  const [countdown, setCountdown] = useState(redirectDelaySecs)
-  const [currentTimeoutId, setCurrentTimeoutId] = useState(null)
+interface PurchaseRedirectPageProps {
+  campaign: { isPro?: boolean }
+  redirectDelaySecs: string | number
+}
+
+const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }: PurchaseRedirectPageProps): React.JSX.Element => {
+  const [countdown, setCountdown] = useState(Number(redirectDelaySecs))
+  const [currentTimeoutId, setCurrentTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (countdown === 0) {
       doRedirect(currentTimeoutId)
     } else {
-      clearTimeout(currentTimeoutId)
+      if (currentTimeoutId) {
+        clearTimeout(currentTimeoutId)
+      }
       setCurrentTimeoutId(setTimeout(() => setCountdown(countdown - 1), 1000))
     }
   }, [countdown])
@@ -79,3 +88,4 @@ const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
 }
 
 export default PurchaseRedirectPage
+

@@ -5,8 +5,22 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import H5 from '@shared/typography/H5'
 
-export default function ProgressTimeline({ issue, statusHistory }) {
-  const timelineItems = []
+interface Issue {
+  createdAt: string
+}
+
+interface StatusChange {
+  toStatus: string
+  createdAt: string
+}
+
+interface ProgressTimelineProps {
+  issue: Issue
+  statusHistory: StatusChange[]
+}
+
+export default function ProgressTimeline({ issue, statusHistory }: ProgressTimelineProps): React.JSX.Element {
+  const timelineItems: Array<{ status: string; date: string; title: string; description: string }> = []
 
   timelineItems.push({
     status: 'submitted',
@@ -15,7 +29,7 @@ export default function ProgressTimeline({ issue, statusHistory }) {
   })
 
   statusHistory.forEach((change) => {
-    const statusInfo = STATUS_DISPLAY_MAP[change.toStatus]
+    const statusInfo = STATUS_DISPLAY_MAP[change.toStatus as keyof typeof STATUS_DISPLAY_MAP]
     if (statusInfo) {
       timelineItems.push({
         status: change.toStatus,

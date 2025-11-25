@@ -3,6 +3,16 @@ import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import PasswordInput from '@shared/inputs/PasswordInput'
 
+interface ResetPasswordFormProps {
+  password: string
+  confirmPassword: string
+  isValid: boolean
+  isMatch: boolean
+  onPasswordChange: (value: string) => void
+  onConfirmPasswordChange: (value: string) => void
+  onSubmit: (e: React.FormEvent) => void
+}
+
 export default function ResetPasswordForm({
   password,
   confirmPassword,
@@ -11,7 +21,7 @@ export default function ResetPasswordForm({
   onPasswordChange,
   onConfirmPasswordChange,
   onSubmit,
-}) {
+}: ResetPasswordFormProps): React.JSX.Element {
   const showConfirmError = confirmPassword !== '' && !isMatch
 
   return (
@@ -35,7 +45,7 @@ export default function ResetPasswordForm({
         label="Confirm New Password"
         onChangeCallback={onConfirmPasswordChange}
         error={showConfirmError}
-        helperText={showConfirmError && 'Passwords do not match'}
+        helperText={showConfirmError ? 'Passwords do not match' : undefined}
       />
       <Button
         className="w-full mt-8"

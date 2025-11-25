@@ -3,7 +3,30 @@ import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import H5 from '@shared/typography/H5'
 
-export default function RaceCard({ race, selected, selectCallback }) {
+interface Position {
+  name: string
+  normalizedPosition?: {
+    name: string
+  }
+}
+
+interface Election {
+  electionDay: string
+  primaryElectionDate?: string
+}
+
+interface Race {
+  position: Position
+  election: Election
+}
+
+interface RaceCardProps {
+  race: Race
+  selected: boolean
+  selectCallback: (race: Race) => void
+}
+
+export default function RaceCard({ race, selected, selectCallback }: RaceCardProps): React.JSX.Element | null {
   const { position, election } = race
   if (!position) {
     return null
@@ -11,7 +34,7 @@ export default function RaceCard({ race, selected, selectCallback }) {
   const { name, normalizedPosition } = position
   const { electionDay, primaryElectionDate } = election
 
-  const handleKeyDown = (e, race) => {
+  const handleKeyDown = (e: React.KeyboardEvent, race: Race) => {
     if (e.key === 'Enter') {
       selectCallback(race)
     }
@@ -51,3 +74,4 @@ export default function RaceCard({ race, selected, selectCallback }) {
     </div>
   )
 }
+
