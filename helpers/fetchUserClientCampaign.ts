@@ -10,4 +10,3 @@ export const fetchUserClientCampaign = async (): Promise<ApiResponse<Campaign> |
     return false
   }
 }
-

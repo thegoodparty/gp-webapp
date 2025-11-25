@@ -4,11 +4,57 @@ on:
   deployment_status:
     
 jobs:
-  e2e-tests:
-    name: E2E Tests
+  check-pr-status:
+    name: Check if PR is open
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
+    outputs:
+      pr-open: ${{ steps.pr-check.outputs.pr-open }}
+      pr-number: ${{ steps.pr-check.outputs.pr-number }}
+    steps:
+      - name: Check PR status
+        id: pr-check
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              // Find PR associated with this deployment
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: context.payload.deployment.sha
+              });
+              
+              if (prs.length === 0) {
+                console.log('No PR found for this deployment');
+                core.setOutput('pr-open', 'false');
+                core.setOutput('pr-number', '');
+                return;
+              }
+              
+              const pr = prs[0];
+              const isOpen = pr.state === 'open';
+              
+              console.log(`Found PR #${pr.number}, state: ${pr.state}`);
+              core.setOutput('pr-open', isOpen.toString());
+              core.setOutput('pr-number', pr.number.toString());
+              
+              if (!isOpen) {
+                console.log(`Skipping tests - PR #${pr.number} is ${pr.state}`);
+              }
+            } catch (error) {
+              console.error('Error checking PR status:', error);
+              core.setOutput('pr-open', 'false');
+              core.setOutput('pr-number', '');
+            }
+
+  stable-tests:
+    name: Stable E2E Tests (Blocking)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: github.event.deployment_status.state == 'success'
+    needs: check-pr-status
+    if: needs.check-pr-status.outputs.pr-open == 'true'
     permissions:
       actions: read
       contents: read
@@ -51,34 +97,34 @@ jobs:
         working-directory: test-automation
         run: npx playwright install --with-deps
 
-      - name: Run Playwright Tests
-        id: run-tests
+      - name: Run Stable Playwright Tests
+        id: run-stable-tests
         working-directory: test-automation
-        run: npx playwright test
+        run: npx playwright test --project=stable
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: "E2E Tests - PR Preview"
+          TEST_RUN_NAME: "Stable E2E Tests - PR Preview"
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
-      - name: Upload test reports
+      - name: Upload stable test reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
+          name: stable-playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             test-automation/playwright-report
             test-automation/test-results
           retention-days: 30
 
-      - name: Parse test results
+      - name: Parse stable test results
         if: always()
-        id: test-results
+        id: stable-test-results
         shell: bash
         working-directory: test-automation
         run: |
           if [ -f "test-results/results.json" ]; then
-            echo "Found results.json, parsing test results..."
+            echo "Found results.json, parsing stable test results..."
             
             TOTAL_TESTS=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[]] | length' 2>/dev/null || echo "0")
             FAILED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == false)] | length' 2>/dev/null || echo "0")
@@ -102,20 +148,20 @@ jobs:
               echo "failed_tests=" >> $GITHUB_OUTPUT
             fi
           else
-            echo "⚠️  results.json file not found - tests may not have run"
-            echo "failed_tests=• Test results file not found (tests may not have started)" >> $GITHUB_OUTPUT
+            echo "⚠️  results.json file not found - stable tests may not have run"
+            echo "failed_tests=• Stable test results file not found (tests may not have started)" >> $GITHUB_OUTPUT
             echo "failed_count=0" >> $GITHUB_OUTPUT
             echo "passed_count=0" >> $GITHUB_OUTPUT
             echo "total_tests=0" >> $GITHUB_OUTPUT
           fi
 
-      - name: Comment PR with test results
+      - name: Comment PR with stable test results
         if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.test-results.outputs) }};
+            const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.stable-test-results.outputs) }};
             const testStatus = failed_count > 0 ? '❌' : '✅';
             const deploymentUrl = '${{ env.BASE_URL }}';
             
@@ -134,15 +180,15 @@ jobs:
             const prNumber = prs[0].number;
             console.log(`Found PR #${prNumber} for deployment`);
             
-            let body = `## ${testStatus} E2E Test Results\n\n`;
+            let body = `## ${testStatus} Stable E2E Test Results (Blocking)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
-            body += `**Results:**\n`;
+            body += `**Stable Test Results:**\n`;
             body += `- ✅ Passed: ${passed_count}\n`;
             body += `- ❌ Failed: ${failed_count}\n`;
             body += `- 📊 Total: ${total_tests}\n\n`;
             
             if (failed_count > 0 && failed_tests) {
-              body += `**Failed Tests:**\n${failed_tests}\n\n`;
+              body += `**Failed Stable Tests:**\n${failed_tests}\n\n`;
             }
             
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
@@ -154,33 +200,203 @@ jobs:
               body: body
             });
 
-      - name: Notify Slack on Test Success
-        if: steps.run-tests.outcome == 'success'
+      - name: Notify Slack on Stable Test Success
+        if: steps.run-stable-tests.outcome == 'success'
         uses: 8398a7/action-slack@v3
         with:
           status: custom
           custom_payload: |
             {
-              text: '✅ E2E Tests Passed',
+              text: '✅ Stable E2E Tests Passed',
               attachments: [{
                 color: 'good',
-                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.stable-test-results.outputs.passed_count }}/${{ steps.stable-test-results.outputs.total_tests }} stable tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
               }]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notify Slack on Test Failure
-        if: steps.run-tests.outcome == 'failure' || failure()
+      - name: Notify Slack on Stable Test Failure
+        if: steps.run-stable-tests.outcome == 'failure' || failure()
         uses: 8398a7/action-slack@v3
         with:
           status: custom
           custom_payload: |
             {
-              "text": "⚠️ E2E Tests Failed",
+              "text": "⚠️ Stable E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.stable-test-results.outputs.failed_count }} failed\n✅ ${{ steps.stable-test-results.outputs.passed_count }} passed\n📊 ${{ steps.stable-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.stable-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  experimental-tests:
+    name: Experimental E2E Tests (Non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: check-pr-status
+    if: needs.check-pr-status.outputs.pr-open == 'true'
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Debug deployment info
+        run: |
+          echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
+          echo "Deployment state: ${{ github.event.deployment_status.state }}"
+          echo "Deployment URL: ${{ github.event.deployment_status.target_url }}"
+          echo "Event name: ${{ github.event_name }}"
+
+      - name: Set deployment URL
+        id: deployment
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
+          path: test-automation
+          ref: develop
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: test-automation/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: test-automation
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        working-directory: test-automation
+        run: npx playwright install --with-deps
+
+      - name: Run Experimental Playwright Tests
+        id: run-experimental-tests
+        working-directory: test-automation
+        run: npx playwright test --project=experimental
+        continue-on-error: true  # Don't fail the workflow if experimental tests fail
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          TEST_RUN_NAME: "Experimental E2E Tests - PR Preview"
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload experimental test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: experimental-playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-automation/playwright-report
+            test-automation/test-results
+          retention-days: 30
+
+      - name: Parse experimental test results
+        if: always()
+        id: experimental-test-results
+        shell: bash
+        working-directory: test-automation
+        run: |
+          if [ -f "test-results/results.json" ]; then
+            echo "Found results.json, parsing experimental test results..."
+            
+            TOTAL_TESTS=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[]] | length' 2>/dev/null || echo "0")
+            FAILED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == false)] | length' 2>/dev/null || echo "0")
+            PASSED_COUNT=$(cat test-results/results.json | jq '[.. | .specs? // empty | .[] | select(.ok == true)] | length' 2>/dev/null || echo "0")
+            
+            echo "Parsed: Total=$TOTAL_TESTS, Failed=$FAILED_COUNT, Passed=$PASSED_COUNT"
+            
+            echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+            echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+            echo "passed_count=$PASSED_COUNT" >> $GITHUB_OUTPUT
+            
+            if [ "$FAILED_COUNT" -gt 0 ]; then
+              FAILED_TESTS=$(cat test-results/results.json | jq -r '[.. | .specs? // empty | .[] | select(.ok == false) | .title] | .[:10] | .[]' 2>/dev/null | sed 's/^/• /' || echo "• Failed to parse test names")
+              if [ -z "$FAILED_TESTS" ]; then
+                FAILED_TESTS="• $FAILED_COUNT test(s) failed but names could not be parsed"
+              fi
+              echo "failed_tests<<EOF" >> $GITHUB_OUTPUT
+              echo "$FAILED_TESTS" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              echo "failed_tests=" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️  results.json file not found - experimental tests may not have run"
+            echo "failed_tests=• Experimental test results file not found (tests may not have started)" >> $GITHUB_OUTPUT
+            echo "failed_count=0" >> $GITHUB_OUTPUT
+            echo "passed_count=0" >> $GITHUB_OUTPUT
+            echo "total_tests=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR with experimental test results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.experimental-test-results.outputs) }};
+            const testStatus = failed_count > 0 ? '⚠️' : '✅';
+            const deploymentUrl = '${{ env.BASE_URL }}';
+            
+            // Find PR associated with this deployment
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment.sha
+            });
+            
+            if (prs.length === 0) {
+              console.log('No PR found for this deployment, skipping comment');
+              return;
+            }
+            
+            const prNumber = prs[0].number;
+            console.log(`Found PR #${prNumber} for deployment`);
+            
+            let body = `## ${testStatus} Experimental E2E Test Results (Non-blocking)\n\n`;
+            body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
+            body += `**Experimental Test Results:**\n`;
+            body += `- ✅ Passed: ${passed_count}\n`;
+            body += `- ⚠️ Failed: ${failed_count}\n`;
+            body += `- 📊 Total: ${total_tests}\n\n`;
+            
+            if (total_tests === 0) {
+              body += `*No experimental tests found - all tests are currently stable.*\n\n`;
+            } else if (failed_count > 0 && failed_tests) {
+              body += `**Failed Experimental Tests (non-blocking):**\n${failed_tests}\n\n`;
+            }
+            
+            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Notify Slack on Experimental Test Failure
+        if: steps.run-experimental-tests.outcome == 'failure' || failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "⚠️ Experimental E2E Tests Failed",
+              "attachments": [{
+                "color": "warning",
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.experimental-test-results.outputs.failed_count }} failed\n✅ ${{ steps.experimental-test-results.outputs.passed_count }} passed\n📊 ${{ steps.experimental-test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.experimental-test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:

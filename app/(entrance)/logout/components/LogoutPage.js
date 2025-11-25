@@ -3,6 +3,7 @@ import { deleteUserCookies } from 'helpers/cookieHelper'
 import { useEffect } from 'react'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { queryClient } from '@shared/query-client'
 
 async function fetchLogout() {
   // clear cookies set by server.
@@ -17,6 +18,7 @@ async function fetchLogout() {
 export default function LogoutPage() {
   useEffect(() => {
     async function logout() {
+      queryClient.clear()
       deleteUserCookies()
       await fetchLogout()
       window.location.replace('/')

@@ -1,6 +1,6 @@
 'use client'
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js'
-import PasswordInput from '@shared/inputs/PasswordInput.js'
+import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.tsx'
+import PasswordInput from '@shared/inputs/PasswordInput'
 import { setUserCookie } from 'helpers/cookieHelper'
 import Link from 'next/link.js'
 import { Suspense, useState } from 'react'

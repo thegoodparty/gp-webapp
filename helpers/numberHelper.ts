@@ -48,6 +48,8 @@ export const numberFormatter = (num: number | string, fixed: number = 0): string
     )}`
 }
 
+export const formatCurrency = (dollars: number) => `${numberFormatter(dollars, 2)}`
+
 export const toPrecision = (num: number | null | undefined): number | null | undefined => {
   if (!num) {
     return num
