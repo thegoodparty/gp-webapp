@@ -6,7 +6,6 @@
   ],
   "extends": [
     "next/core-web-vitals",
-    "plugin:storybook/recommended",
     "plugin:mdx/recommended"
     // "plugin:jsx-a11y/recommended" TODO: turn on when ready to enforce a11y rules
   ],
