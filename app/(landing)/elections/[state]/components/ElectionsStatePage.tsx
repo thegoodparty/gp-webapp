@@ -10,24 +10,34 @@ interface Place {
   slug: string
 }
 
-export default function ElectionsStatePage(props: Record<string, unknown>): React.JSX.Element {
+interface Article {
+  [key: string]: string | number | boolean | null | undefined | object
+}
+
+interface Race {
+  [key: string]: string | number | boolean | null | undefined | object
+}
+
+interface ElectionsStatePageProps {
+  state: string
+  categorizedChildren: {
+    counties?: Place[]
+    districts?: Place[]
+    others?: Place[]
+  }
+  children: Place[]
+  races: Race[]
+  articles: Article[]
+}
+
+export default function ElectionsStatePage(props: ElectionsStatePageProps): React.JSX.Element {
   const {
     state,
     categorizedChildren = {},
     children = [],
     races,
     articles,
-  } = props as {
-    state: string
-    categorizedChildren: {
-      counties?: Place[]
-      districts?: Place[]
-      others?: Place[]
-    }
-    children: Place[]
-    races: unknown[]
-    articles: unknown[]
-  }
+  } = props
 
   const { counties = [], districts = [], others = [] } = categorizedChildren
 

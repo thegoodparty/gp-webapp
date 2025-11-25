@@ -11,20 +11,18 @@ import {
   FilterFn,
   ColumnFiltersState,
   SortingState,
+  Column,
+  Row,
 } from '@tanstack/react-table'
 import styles from './Table.module.scss'
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { matchSorter } from 'match-sorter'
 
-interface DefaultColumnFilterProps {
-  column: {
-    getFilterValue: () => unknown
-    setFilterValue: (value: unknown) => void
-    getFacetedRowModel?: () => { rows?: unknown[] }
-  }
+interface DefaultColumnFilterProps<T> {
+  column: Column<T, string>
 }
 
-const DefaultColumnFilter = ({ column }: DefaultColumnFilterProps): React.JSX.Element => {
+const DefaultColumnFilter = <T,>({ column }: DefaultColumnFilterProps<T>): React.JSX.Element => {
   const count = column.getFacetedRowModel?.()?.rows?.length ?? 0
   return (
     <input
@@ -35,7 +33,7 @@ const DefaultColumnFilter = ({ column }: DefaultColumnFilterProps): React.JSX.El
   )
 }
 
-const fuzzyTextFilterFn: FilterFn<unknown> = (row, columnId, filterValue) => {
+const fuzzyTextFilterFn = <T,>(row: Row<T>, columnId: string, filterValue: string): boolean => {
   return (
     matchSorter([row], filterValue, { keys: [(row) => row.getValue(columnId)] })
       .length > 0
@@ -43,7 +41,7 @@ const fuzzyTextFilterFn: FilterFn<unknown> = (row, columnId, filterValue) => {
 }
 
 interface TableProps<T> {
-  columns: ColumnDef<T, unknown>[]
+  columns: ColumnDef<T>[]
   data: T[]
   filterColumns?: boolean
   initialSortById?: string
@@ -57,7 +55,7 @@ interface TableProps<T> {
   onPageSizeChange?: (size: number) => void
 }
 
-const Table = <T extends Record<string, unknown>>({
+const Table = <T,>({
   columns,
   data,
   filterColumns = true,
@@ -98,7 +96,7 @@ const Table = <T extends Record<string, unknown>>({
       setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 })))
 
   const filterTypes = useMemo(() => {
-    const types: Record<string, FilterFn<unknown>> = {
+    const types: Record<string, FilterFn<T>> = {
       text: ((row, columnId, filterValue) => {
         const rowValue = row.getValue(columnId)
         return rowValue !== undefined
@@ -106,16 +104,16 @@ const Table = <T extends Record<string, unknown>>({
               .toLowerCase()
               .startsWith(String(filterValue).toLowerCase())
           : true
-      }) as FilterFn<unknown>,
+      }) as FilterFn<T>,
     }
     if (filterColumns) {
-      types.fuzzyText = fuzzyTextFilterFn
+      types.fuzzyText = fuzzyTextFilterFn as FilterFn<T>
     }
     return types
   }, [filterColumns])
 
   const defaultColumn = useMemo(() => {
-    return filterColumns ? { Filter: DefaultColumnFilter as React.ComponentType<DefaultColumnFilterProps> } : undefined
+    return filterColumns ? { Filter: DefaultColumnFilter } : undefined
   }, [filterColumns])
 
   const initialState = useMemo(
@@ -144,7 +142,7 @@ const Table = <T extends Record<string, unknown>>({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    defaultColumn: defaultColumn as  Partial<ColumnDef<T, unknown>>,
+    defaultColumn: defaultColumn as Partial<ColumnDef<T>>,
     filterFns: filterTypes,
     manualPagination: !!controlledPageCount,
     pageCount: controlledPageCount,
@@ -184,7 +182,7 @@ const Table = <T extends Record<string, unknown>>({
                       </div>
                       {header.column.getCanFilter() && filterColumns
                         ? flexRender(
-                            (header.column.columnDef as { Filter?: React.ComponentType<DefaultColumnFilterProps> }).Filter as React.ComponentType<DefaultColumnFilterProps>,
+                            (header.column.columnDef as { Filter?: React.ComponentType }).Filter,
                             header.getContext(),
                           )
                         : null}

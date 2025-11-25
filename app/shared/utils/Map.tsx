@@ -38,13 +38,18 @@ interface Place {
   description?: string
 }
 
+interface MarkerIcon {
+  url: string
+  scaledSize: google.maps.Size
+}
+
 interface MapProps {
   places?: Place[]
   isLoaded?: boolean
   onMarkerClick?: (place: Place) => void
   height?: string
   showInfoWindows?: boolean
-  markerIcon?: unknown
+  markerIcon?: MarkerIcon
   fitBounds?: boolean
 }
 

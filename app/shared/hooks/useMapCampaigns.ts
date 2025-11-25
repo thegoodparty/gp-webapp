@@ -2,10 +2,21 @@
 import { useEffect, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { Campaign } from 'helpers/types'
 
-const fetchCampaigns = async (filters: Record<string, unknown> | null) => {
+interface CampaignFilters {
+  party?: string
+  state?: string
+  level?: string
+  results?: boolean
+  office?: string
+  name?: string
+  [key: string]: string | boolean | undefined
+}
+
+const fetchCampaigns = async (filters: CampaignFilters | null) => {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.map.list, filters || undefined, {
+    const resp = await clientFetch<Campaign[]>(apiRoutes.campaign.map.list, filters || undefined, {
       revalidate: 3600,
     })
 
@@ -17,13 +28,13 @@ const fetchCampaigns = async (filters: Record<string, unknown> | null) => {
 }
 
 interface UseMapCampaignsReturn {
-  campaigns: unknown[]
+  campaigns: Campaign[]
   isCampaignsLoading: boolean
   setIsCampaignsLoading: (loading: boolean) => void
 }
 
-export const useMapCampaigns = (filters: Record<string, unknown>): UseMapCampaignsReturn => {
-  const [campaigns, setCampaigns] = useState<unknown[]>([])
+export const useMapCampaigns = (filters: CampaignFilters): UseMapCampaignsReturn => {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false)
 
   useEffect(() => {
@@ -33,9 +44,9 @@ export const useMapCampaigns = (filters: Record<string, unknown>): UseMapCampaig
     loadCampaigns(isFilterEmpty ? null : filters)
   }, [filters])
 
-  async function loadCampaigns(filters: Record<string, unknown> | null) {
+  async function loadCampaigns(filters: CampaignFilters | null) {
     const campaigns = await fetchCampaigns(filters)
-    setCampaigns((campaigns || []) as unknown[])
+    setCampaigns(campaigns || [])
     setIsCampaignsLoading(false)
   }
 
