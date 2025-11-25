@@ -34,19 +34,29 @@ interface PurchaseRedirectPageProps {
   redirectDelaySecs: string | number
 }
 
-const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }: PurchaseRedirectPageProps): React.JSX.Element => {
+const PurchaseRedirectPage = ({
+  campaign,
+  redirectDelaySecs,
+}: PurchaseRedirectPageProps): React.JSX.Element => {
   const [countdown, setCountdown] = useState(Number(redirectDelaySecs))
-  const [currentTimeoutId, setCurrentTimeoutId] = useState<NodeJS.Timeout | null>(null)
+  const [currentTimeoutId, setCurrentTimeoutId] =
+    useState<NodeJS.Timeout | null>(null)
+
+  const killTimeout = () => {
+    if (currentTimeoutId) {
+      clearTimeout(currentTimeoutId)
+    }
+  }
 
   useEffect(() => {
     if (countdown === 0) {
       doRedirect(currentTimeoutId)
     } else {
-      if (currentTimeoutId) {
-        clearTimeout(currentTimeoutId)
-      }
+      killTimeout()
       setCurrentTimeoutId(setTimeout(() => setCountdown(countdown - 1), 1000))
     }
+
+    return () => killTimeout()
   }, [countdown])
 
   return (
@@ -88,4 +98,3 @@ const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }: PurchaseRedirectP
 }
 
 export default PurchaseRedirectPage
-
