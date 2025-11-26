@@ -148,11 +148,9 @@ const DetailsForm: React.FC<{
   onChange: (details: Details) => void
 }> = ({ details, onChange }) => {
   const router = useRouter()
-<<<<<<< HEAD
   const [biasAnalysisState, setBiasAnalysisState] =
     useState<BiasAnalysisState | null>(null)
   const biasAnalysisStateRef = useRef<BiasAnalysisState | null>(null)
-=======
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
@@ -166,7 +164,6 @@ const DetailsForm: React.FC<{
     city: campaign?.details?.city || '',
     office: office || '',
   })
->>>>>>> develop
 
   const {
     register,
