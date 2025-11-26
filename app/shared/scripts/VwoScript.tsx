@@ -1,12 +1,11 @@
 import React from 'react'
-import Script from 'next/script'
 
 export default function VwoScript(): React.JSX.Element {
   return (
-    <Script
-      strategy="beforeInteractive"
+    <script
       type="text/javascript"
       id="vwoCode"
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{
         __html: `
         window._vwo_code || (function() {
