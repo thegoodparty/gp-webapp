@@ -5,6 +5,7 @@ import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
+import { redirect } from 'next/navigation'
 
 const fetchTasks = async () => {
   const currentDate = new Date().toISOString().split('T')[0]
@@ -26,8 +27,13 @@ export const dynamic = 'force-dynamic'
 export default async function Page() {
   await candidateAccess()
 
-  const campaign = await fetchUserCampaign()
-  const [tasks, tcrComplianceResponse] = await Promise.all([
+  const electedOfficeResp = await serverFetch(apiRoutes.electedOffice.current)
+  if (electedOfficeResp?.ok && electedOfficeResp?.data) {
+    return redirect('/dashboard/polls')
+  }
+
+  const [campaign, tasks, tcrComplianceResponse] = await Promise.all([
+    fetchUserCampaign(),
     fetchTasks(),
     serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
   ])
