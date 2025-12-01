@@ -1,7 +1,7 @@
 'use client'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { StepIndicator } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
@@ -14,8 +14,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
 } from 'goodparty-styleguide'
+import PollTextBiasInput, {
+  BiasAnalysisState,
+} from '../shared/components/poll-text-bias/PollTextBiasInput'
 import clsx from 'clsx'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -31,6 +33,7 @@ import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOffic
 import { useUser } from '@shared/hooks/useUser'
 
 const TEXT_PRICE = 0.035
+const MIN_QUESTION_LENGTH = 25
 
 type Details = {
   title: string
@@ -145,6 +148,9 @@ const DetailsForm: React.FC<{
   onChange: (details: Details) => void
 }> = ({ details, onChange }) => {
   const router = useRouter()
+  const [biasAnalysisState, setBiasAnalysisState] =
+    useState<BiasAnalysisState | null>(null)
+  const biasAnalysisStateRef = useRef<BiasAnalysisState | null>(null)
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
@@ -163,6 +169,9 @@ const DetailsForm: React.FC<{
     register,
     handleSubmit,
     control,
+    trigger,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: details ?? {
@@ -171,6 +180,19 @@ const DetailsForm: React.FC<{
       question: '',
     },
   })
+
+  useEffect(() => {
+    biasAnalysisStateRef.current = biasAnalysisState
+    const currentValue = getValues('question')
+    if (
+      biasAnalysisState !== null &&
+      currentValue.trim().length > 0 &&
+      currentValue.trim().length >= MIN_QUESTION_LENGTH
+    ) {
+      setValue('question', currentValue, { shouldTouch: true })
+      trigger('question')
+    }
+  }, [biasAnalysisState, trigger, setValue, getValues])
 
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
@@ -244,28 +266,60 @@ const DetailsForm: React.FC<{
           )}
         />
         {errors.introduction && (
-          <p className="mt-1 text-sm text-red-500">
+          <p className="mt-1 font-normal text-sm text-red-500">
             {errors.introduction.message}
           </p>
         )}
 
         <label className="block mb-2 mt-4">Poll Question</label>
-        <Textarea
-          {...register('question', {
+        <Controller
+          name="question"
+          control={control}
+          rules={{
             required: 'Question is required',
-            minLength: {
-              value: 25,
-              message: 'Question must be at least 25 characters',
+            validate: (value: string) => {
+              const trimmedValue = value.trim()
+              if (trimmedValue.length === 0) {
+                return true
+              }
+              if (trimmedValue.length < MIN_QUESTION_LENGTH) {
+                return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
+              }
+
+              const state = biasAnalysisStateRef.current
+              if (!state || !state.hasBeenChecked) {
+                return 'Please check your message for bias before submitting.'
+              }
+              if (state.hasServerError) {
+                return 'Unable to analyze for bias, please try again later.'
+              }
+              if (state.hasBias && state.hasGrammar) {
+                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasBias) {
+                return 'Biased language detected. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasGrammar) {
+                return 'Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              return true
             },
-          })}
-          className={errors.question ? 'border-red-500' : ''}
-          placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
-          rows={6}
+          }}
+          render={({ field }) => (
+            <PollTextBiasInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
+              onBiasAnalysisChange={setBiasAnalysisState}
+            />
+          )}
         />
         {errors.question && (
-          <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+          <p className="mt-1 font-normal text-sm text-red-500">
+            {errors.question.message}
+          </p>
         )}
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize
           message.
         </p>
