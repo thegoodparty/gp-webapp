@@ -271,7 +271,7 @@ jobs:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
-          ref: develop
+          ref: e2e_website_tests
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
