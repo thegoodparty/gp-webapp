@@ -1,5 +1,4 @@
 import type { Page } from "@playwright/test";
-import { expect } from "@playwright/test";
 import { WaitHelper } from "./wait.helper";
 
 export class NavigationHelper {
@@ -26,7 +25,7 @@ export class NavigationHelper {
           if (await selector.first().isVisible({ timeout: 2000 })) {
             console.log("🍪 Dismissing cookie banner");
             await selector.first().click();
-            await page.waitForTimeout(500); // Brief wait for banner to disappear
+            await selector.first().waitFor({ state: 'hidden', timeout: 5000 });
             return;
           }
         } catch {
