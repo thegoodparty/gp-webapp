@@ -26,16 +26,24 @@ declare global {
   }
 }
 
-export function waitForUsersnap(): Promise<UsersnapApi> {
+export function waitForUsersnap(timeoutMs = 10000): Promise<UsersnapApi> {
   if (window.Usersnap?.api) {
     return Promise.resolve(window.Usersnap.api)
   }
   if (window.__usersnapReady) {
     return window.__usersnapReady
   }
-  window.__usersnapReady = new Promise<UsersnapApi>((resolve) => {
+  const loadingPromise = new Promise<UsersnapApi>((resolve) => {
     window.__usersnapResolve = resolve
   })
+  const timeoutPromise = new Promise<UsersnapApi>((_, reject) => {
+    setTimeout(() => {
+      window.__usersnapReady = undefined
+      window.__usersnapResolve = undefined
+      reject(new Error('Usersnap failed to load within timeout period'))
+    }, timeoutMs)
+  })
+  window.__usersnapReady = Promise.race([loadingPromise, timeoutPromise])
   return window.__usersnapReady
 }
 
