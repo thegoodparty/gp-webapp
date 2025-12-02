@@ -31,6 +31,9 @@ import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
 import { useUser } from '@shared/hooks/useUser'
+import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
+import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
+import Image from 'next/image'
 
 const TEXT_PRICE = 0.035
 const MIN_QUESTION_LENGTH = 25
@@ -79,14 +82,14 @@ type State =
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
-      imageUrl: string
+      imageUrl?: string
     }
   | {
       step: Step.payment
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
-      imageUrl: string
+      imageUrl?: string
     }
   | {
       step: Step.paymentConfirmed
@@ -541,7 +544,7 @@ const AudienceSelectionForm: React.FC<{
 
 const IamgeSelectionForm: React.FC<{
   goBack: () => void
-  onChange: (imageUrl: string) => void
+  onChange: (imageUrl?: string) => void
   imageUrl?: string
 }> = ({ goBack, onChange, imageUrl: initialImageUrl }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(initialImageUrl)
@@ -554,11 +557,7 @@ const IamgeSelectionForm: React.FC<{
         <Button
           type="submit"
           variant="secondary"
-          disabled={!imageUrl}
           onClick={() => {
-            if (!imageUrl) {
-              return
-            }
             onChange(imageUrl)
           }}
         >
@@ -575,6 +574,99 @@ const IamgeSelectionForm: React.FC<{
       <PollImageUpload
         imageUrl={imageUrl}
         onUploaded={(imageUrl) => setImageUrl(imageUrl)}
+      />
+    </FormStep>
+  )
+}
+
+const ReviewForm: React.FC<{
+  goBack: () => void
+  onSubmit: () => void
+  details: Details
+  targetAudienceSize: number
+  scheduledDate: Date
+  imageUrl?: string
+}> = ({
+  goBack,
+  onSubmit,
+  details,
+  targetAudienceSize,
+  scheduledDate,
+  imageUrl,
+}) => {
+  const message = [
+    details.introduction,
+    details.question,
+    'Text STOP to opt out.',
+  ].join('\n\n')
+  return (
+    <FormStep
+      step={Step.review}
+      onBack={goBack}
+      nextButton={
+        <Button type="submit" variant="secondary" onClick={onSubmit}>
+          Yes, Checkout
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">Does everything look good?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        Take a moment to review your poll details.
+      </p>
+
+      <MessageCard
+        className="mb-6"
+        title="Outreach Summary"
+        description={
+          <div className="flex flex-col gap-1 mt-2">
+            <p>
+              Audience: <b>{numberFormatter(targetAudienceSize)}</b>
+            </p>
+            <p>
+              Send Date: <b>{scheduledDate.toDateString()} at 11:00am</b>
+            </p>
+            <p>
+              Estimated Completion:{' '}
+              <b>{addDays(scheduledDate, 3).toDateString()}</b>
+            </p>
+            <p>
+              Cost: <b>${formatCurrency(TEXT_PRICE * targetAudienceSize)}</b>
+            </p>
+          </div>
+        }
+      />
+
+      <MessageCard
+        title="Preview"
+        description={
+          <div className="flex flex-col gap-1">
+            <div className="max-w-xs mx-auto">
+              <TextMessagePreview
+                message={
+                  <div className="flex flex-col gap-2">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt="Campaign image"
+                        width={300}
+                        height={300}
+                        className="object-cover rounded"
+                      />
+                    ) : (
+                      <Image
+                        src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+                        alt=""
+                        width={300}
+                        height={300}
+                      />
+                    )}
+                    <p className="mt-1 font-normal">{message}</p>
+                  </div>
+                }
+              />
+            </div>
+          </div>
+        }
       />
     </FormStep>
   )
@@ -654,6 +746,33 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
               imageUrl,
             })
           }
+          imageUrl={state.imageUrl}
+        />
+      )}
+
+      {state.step === Step.review && (
+        <ReviewForm
+          goBack={() =>
+            setState({
+              step: Step.addImage,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onSubmit={() =>
+            setState({
+              step: Step.payment,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          details={state.details}
+          targetAudienceSize={state.targetAudienceSize}
+          scheduledDate={state.scheduledDate}
           imageUrl={state.imageUrl}
         />
       )}
