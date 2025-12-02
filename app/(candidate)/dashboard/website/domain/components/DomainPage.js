@@ -23,6 +23,7 @@ export default function DomainPage({ pathname }) {
   useEffect(() => {
     if (
       website?.id &&
+      domain?.name &&
       paymentStatus === PAYMENT_STATUS.SUCCEEDED &&
       message === DOMAIN_STATUS.INACTIVE
     ) {
