@@ -18,8 +18,6 @@ export default function DomainPage({ pathname }) {
   const { status } = useDomainStatus()
   const { website } = useWebsite()
   const { domain } = website
-  console.log(`domain =>`, domain)
-
   const { message, paymentStatus } = status || {}
 
   useEffect(() => {
@@ -35,8 +33,6 @@ export default function DomainPage({ pathname }) {
       })
     }
   }, [website, paymentStatus, message])
-
-  console.log(`{ message, paymentStatus } =>`, { message, paymentStatus })
 
   const showDomainSelection = message === DOMAIN_STATUS.NO_DOMAIN && !domain
   const showError =
