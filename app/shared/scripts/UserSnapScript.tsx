@@ -12,18 +12,44 @@ interface UsersnapApi {
     }
   }) => void
   on: (event: string, callback: () => void) => void
+  logEvent: (eventName: string) => void
 }
 
 declare global {
   interface Window {
     onUsersnapLoad?: (api: UsersnapApi) => void
+    Usersnap?: {
+      api: UsersnapApi
+    }
+    __usersnapReady?: Promise<UsersnapApi>
+    __usersnapResolve?: (api: UsersnapApi) => void
   }
+}
+
+export function waitForUsersnap(): Promise<UsersnapApi> {
+  if (window.Usersnap?.api) {
+    return Promise.resolve(window.Usersnap.api)
+  }
+  if (window.__usersnapReady) {
+    return window.__usersnapReady
+  }
+  window.__usersnapReady = new Promise<UsersnapApi>((resolve) => {
+    window.__usersnapResolve = resolve
+  })
+  return window.__usersnapReady
 }
 
 export default function UserSnapScript(): React.JSX.Element {
   useEffect(() => {
     window.onUsersnapLoad = (api: UsersnapApi) => {
       const user = getUserCookie(true)
+
+      window.Usersnap = { api }
+
+      if (window.__usersnapResolve) {
+        window.__usersnapResolve(api)
+        window.__usersnapResolve = undefined
+      }
 
       api.init({
         custom: {
