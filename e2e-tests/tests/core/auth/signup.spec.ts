@@ -36,10 +36,11 @@ test.describe("Sign Up Functionality", () => {
     await NavigationHelper.dismissOverlays(page);
     
     const testZip = '94066';
+    const unique  = TestDataHelper.generateTimestamp();
     const testEmail = TestDataHelper.generateTestEmail();
     const testPhone = TestDataHelper.generateTestPhone();
-    await page.getByRole("textbox", { name: "First Name" }).fill(' firstName');
-    await page.getByRole("textbox", { name: "Last Name" }).fill(' lastName');
+    await page.getByRole("textbox", { name: "First Name" }).fill(` firstName-${unique}`);
+    await page.getByRole("textbox", { name: "Last Name" }).fill(` lastName-${unique}`);
     await page.getByRole("textbox", { name: "email" }).fill(testEmail);
     await page.getByRole("textbox", { name: "phone" }).fill(testPhone);
     await page.getByRole("textbox", { name: "Zip Code" }).fill(testZip);
@@ -52,11 +53,14 @@ test.describe("Sign Up Functionality", () => {
   });
 
     const body = await registerResponse.json();
-    const firstName = body.user.firstName as string;
-    const lastName  = body.user.lastName as string;
-    const email     = body.user.email as string;
-    const zip       = body.user.zip as string;
-    const phone     = body.user.phone as string;
+    // Handle possible response shapes: { user: {...} } or { data: { user: {...} } }
+    const user = (body?.user ?? body?.data?.user) as any;
+    expect(user, `Unexpected registration response shape: ${JSON.stringify(body)}`).toBeTruthy();
+    const firstName = user.firstName as string;
+    const lastName  = user.lastName as string;
+    const email     = user.email as string;
+    const zip       = user.zip as string;
+    const phone     = user.phone as string;
     expect(firstName).toBe(firstName.trim());
     expect(lastName).toBe(lastName.trim());
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
