@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PurchasePayment from './PurchasePayment'
 import {
   PURCHASE_STATE,
@@ -52,6 +52,15 @@ export default function PurchasePage({ type, domain, returnUrl }) {
     setError(error.message)
     setPurchaseState(PURCHASE_STATE.ERROR)
   }
+
+  useEffect(() => {
+    if (
+      purchaseIntent?.status === 'succeeded' &&
+      purchaseState === PURCHASE_STATE.PAYMENT
+    ) {
+      handlePaymentSuccess(purchaseIntent)
+    }
+  }, [purchaseIntent])
 
   return (
     <DashboardLayout hideMenu showAlert={false}>

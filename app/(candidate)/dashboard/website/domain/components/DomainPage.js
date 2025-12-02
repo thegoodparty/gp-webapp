@@ -2,18 +2,41 @@
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import SelectDomain from './SelectDomain'
 import { useDomainStatus } from './DomainStatusProvider'
-import { DOMAIN_STATUS, PAYMENT_STATUS } from '../../util/domain.util'
+import {
+  DOMAIN_STATUS,
+  PAYMENT_STATUS,
+  sendToPurchaseDomainFlow,
+} from '../../util/domain.util'
 import { useWebsite } from '../../components/WebsiteProvider'
 import DomainError from './DomainError'
 import DomainPurchaseSuccess from './DomainPurchaseSuccess'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function DomainPage({ pathname }) {
-  const handleSuccess = () => setSuccess(true)
+  const router = useRouter()
   const { status } = useDomainStatus()
   const { website } = useWebsite()
   const { domain } = website
+  console.log(`domain =>`, domain)
 
   const { message, paymentStatus } = status || {}
+
+  useEffect(() => {
+    if (
+      website?.id &&
+      paymentStatus === PAYMENT_STATUS.SUCCEEDED &&
+      message === DOMAIN_STATUS.INACTIVE
+    ) {
+      sendToPurchaseDomainFlow({
+        websiteId: website.id,
+        domainName: domain.name,
+        router,
+      })
+    }
+  }, [website, paymentStatus, message])
+
+  console.log(`{ message, paymentStatus } =>`, { message, paymentStatus })
 
   const showDomainSelection = message === DOMAIN_STATUS.NO_DOMAIN && !domain
   const showError =
@@ -24,15 +47,15 @@ export default function DomainPage({ pathname }) {
 
   const isSuccessfulPurchase =
     paymentStatus === PAYMENT_STATUS.SUCCEEDED &&
-    (message === DOMAIN_STATUS.IN_PROGRESS ||
-      message === DOMAIN_STATUS.SUBMITTED ||
-      message === DOMAIN_STATUS.SUCCESSFUL)
+    [
+      DOMAIN_STATUS.IN_PROGRESS,
+      DOMAIN_STATUS.SUBMITTED,
+      DOMAIN_STATUS.SUCCESSFUL,
+    ].includes(message)
 
   return (
     <DashboardLayout pathname={pathname} showAlert={false} hideMenu>
-      {showDomainSelection && (
-        <SelectDomain onRegisterSuccess={handleSuccess} />
-      )}
+      {showDomainSelection && <SelectDomain />}
       {showError && <DomainError />}
       {isSuccessfulPurchase && <DomainPurchaseSuccess />}
     </DashboardLayout>
