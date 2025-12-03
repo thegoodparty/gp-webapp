@@ -1,15 +1,19 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
+import { Poll } from '../serverApiCalls'
 
-export const PollContext = createContext({
-  poll: {},
-  setPoll: () => {},
-})
+export const PollContext = createContext<[Poll, (poll: Poll) => void]>([
+  {} as Poll,
+  () => {},
+])
 
 export const usePoll = () => useContext(PollContext)
 
-export const PollProvider = ({ children, poll: initPoll }) => {
+export const PollProvider: React.FC<{
+  children: React.ReactNode
+  poll: Poll
+}> = ({ children, poll: initPoll }) => {
   const [poll, setPoll] = useState(initPoll)
 
   useEffect(() => {
