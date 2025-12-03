@@ -12,4 +12,5 @@ export const POLL_STATUS_LABELS = {
   [POLL_STATUS.SCHEDULED]: 'Scheduled',
 }
 
-export const PRICE_PER_MESSAGE = 0.03
+/** In dollars */
+export const PRICE_PER_POLL_TEXT = 0.035

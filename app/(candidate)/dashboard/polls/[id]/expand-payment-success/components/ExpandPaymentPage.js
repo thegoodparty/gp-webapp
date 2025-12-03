@@ -6,7 +6,7 @@ import CongratulationsAnimation from '@shared/animations/CongratulationsAnimatio
 import { LuSmartphone } from 'react-icons/lu'
 import Body1 from '@shared/typography/Body1'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { PRICE_PER_MESSAGE } from '../../../shared/constants'
+import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -50,7 +50,7 @@ export default function ExpandPaymentSuccessPage({ count }) {
           <div className="flex items-center justify-between">
             <Body1 className="font-semibold  text-xl">Total</Body1>
             <Body1 className="font-semibold text-xl">
-              ${numberFormatter(PRICE_PER_MESSAGE * count, 2)}
+              ${numberFormatter(PRICE_PER_POLL_TEXT * count, 2)}
             </Body1>
           </div>
         </CardContent>

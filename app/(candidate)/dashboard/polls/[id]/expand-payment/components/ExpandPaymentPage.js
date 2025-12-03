@@ -11,14 +11,13 @@ import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
-
-const PRICE_PER_TEXT = 0.03
+import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
   const router = useRouter()
 
-  const cost = count * PRICE_PER_TEXT
+  const cost = count * PRICE_PER_POLL_TEXT
 
   useEffect(() => {
     trackEvent(EVENTS.expandPolls.paymentViewed, {

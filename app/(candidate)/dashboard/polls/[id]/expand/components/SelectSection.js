@@ -14,7 +14,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
-import { PRICE_PER_MESSAGE } from '../../../shared/constants'
+import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { LuLoaderCircle } from 'react-icons/lu'
 
@@ -164,7 +164,7 @@ export default function SelectSection({ countCallback }) {
         {numberFormatter(selectedOption)} Constituents
       </Body1>
       <Body1>
-        Cost: ${numberFormatter(PRICE_PER_MESSAGE * selectedOption, 2)}
+        Cost: ${numberFormatter(PRICE_PER_POLL_TEXT * selectedOption, 2)}
       </Body1>
     </Content>
   )
