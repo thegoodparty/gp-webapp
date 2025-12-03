@@ -9,13 +9,13 @@ import Button from '@shared/buttons/Button'
 import { searchDomains } from '../../util/domainFetch.util'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import DomainResult from './DomainResult'
-import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { useWebsite } from '../../components/WebsiteProvider'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isValidUrl } from 'helpers/linkhelper'
 import Body2 from '@shared/typography/Body2'
+import { sendToPurchaseDomainFlow } from 'app/(candidate)/dashboard/website/util/domain.util'
 
-export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
+export default function DomainSearch({ prefillSearch }) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(prefillSearch || '')
   const [searchResults, setSearchResults] = useState(null)
@@ -95,14 +95,11 @@ export default function DomainSearch({ prefillSearch, onRegisterSuccess }) {
       return
     }
 
-    const purchaseUrl = `/dashboard/purchase?type=${
-      PURCHASE_TYPES.DOMAIN_REGISTRATION
-    }&domain=${encodeURIComponent(
-      selectedDomain.toLowerCase(),
-    )}&websiteId=${websiteId}&returnUrl=${encodeURIComponent(
-      '/dashboard/website/domain',
-    )}`
-    router.push(purchaseUrl)
+    sendToPurchaseDomainFlow({
+      websiteId,
+      domainName: selectedDomain.toLowerCase(),
+      router,
+    })
     setCheckoutLoading(false)
   }
 

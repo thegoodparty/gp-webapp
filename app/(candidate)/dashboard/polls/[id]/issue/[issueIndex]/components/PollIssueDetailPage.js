@@ -7,7 +7,6 @@ import Crumbs from '../../../../shared/Crumbs'
 import Title from './Title'
 import ConfidenceAlert from 'app/(candidate)/dashboard/polls/shared/ConfidenceAlert'
 import DetailsSection from './DetailsSection'
-import PollsPageGuard from 'app/(candidate)/dashboard/polls/components/PollsPageGuard'
 import { useIssue } from 'app/(candidate)/dashboard/polls/shared/hooks/IssueProvider'
 import { usePoll } from 'app/(candidate)/dashboard/polls/shared/hooks/PollProvider'
 import { useEffect } from 'react'
@@ -36,14 +35,12 @@ export default function PollIssueDetailPage({ pathname }) {
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <PollsPageGuard>
-        <Paper className="min-h-full">
-          <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
-          <Title />
-          <ConfidenceAlert />
-          <DetailsSection />
-        </Paper>
-      </PollsPageGuard>
+      <Paper className="min-h-full">
+        <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
+        <Title />
+        <ConfidenceAlert />
+        <DetailsSection />
+      </Paper>
     </DashboardLayout>
   )
 }

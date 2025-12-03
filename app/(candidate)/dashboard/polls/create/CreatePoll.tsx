@@ -1,7 +1,7 @@
 'use client'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { StepIndicator } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
@@ -14,8 +14,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
 } from 'goodparty-styleguide'
+import PollTextBiasInput, {
+  BiasAnalysisState,
+} from '../shared/components/poll-text-bias/PollTextBiasInput'
 import clsx from 'clsx'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -29,8 +31,12 @@ import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
 import { useUser } from '@shared/hooks/useUser'
+import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
+import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
+import Image from 'next/image'
 
 const TEXT_PRICE = 0.035
+const MIN_QUESTION_LENGTH = 25
 
 type Details = {
   title: string
@@ -76,14 +82,14 @@ type State =
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
-      imageUrl: string
+      imageUrl?: string
     }
   | {
       step: Step.payment
       details: Details
       targetAudienceSize: number
       scheduledDate: Date
-      imageUrl: string
+      imageUrl?: string
     }
   | {
       step: Step.paymentConfirmed
@@ -145,6 +151,9 @@ const DetailsForm: React.FC<{
   onChange: (details: Details) => void
 }> = ({ details, onChange }) => {
   const router = useRouter()
+  const [biasAnalysisState, setBiasAnalysisState] =
+    useState<BiasAnalysisState | null>(null)
+  const biasAnalysisStateRef = useRef<BiasAnalysisState | null>(null)
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
@@ -163,6 +172,9 @@ const DetailsForm: React.FC<{
     register,
     handleSubmit,
     control,
+    trigger,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: details ?? {
@@ -171,6 +183,19 @@ const DetailsForm: React.FC<{
       question: '',
     },
   })
+
+  useEffect(() => {
+    biasAnalysisStateRef.current = biasAnalysisState
+    const currentValue = getValues('question')
+    if (
+      biasAnalysisState !== null &&
+      currentValue.trim().length > 0 &&
+      currentValue.trim().length >= MIN_QUESTION_LENGTH
+    ) {
+      setValue('question', currentValue, { shouldTouch: true })
+      trigger('question')
+    }
+  }, [biasAnalysisState, trigger, setValue, getValues])
 
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
@@ -244,28 +269,60 @@ const DetailsForm: React.FC<{
           )}
         />
         {errors.introduction && (
-          <p className="mt-1 text-sm text-red-500">
+          <p className="mt-1 font-normal text-sm text-red-500">
             {errors.introduction.message}
           </p>
         )}
 
         <label className="block mb-2 mt-4">Poll Question</label>
-        <Textarea
-          {...register('question', {
+        <Controller
+          name="question"
+          control={control}
+          rules={{
             required: 'Question is required',
-            minLength: {
-              value: 25,
-              message: 'Question must be at least 25 characters',
+            validate: (value: string) => {
+              const trimmedValue = value.trim()
+              if (trimmedValue.length === 0) {
+                return true
+              }
+              if (trimmedValue.length < MIN_QUESTION_LENGTH) {
+                return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
+              }
+
+              const state = biasAnalysisStateRef.current
+              if (!state || !state.hasBeenChecked) {
+                return 'Please check your message for bias before submitting.'
+              }
+              if (state.hasServerError) {
+                return 'Unable to analyze for bias, please try again later.'
+              }
+              if (state.hasBias && state.hasGrammar) {
+                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasBias) {
+                return 'Biased language detected. Please use "Optimize message" to correct it.'
+              }
+              if (state.hasGrammar) {
+                return 'Grammar issues found. Please use "Optimize message" to correct it.'
+              }
+              return true
             },
-          })}
-          className={errors.question ? 'border-red-500' : ''}
-          placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
-          rows={6}
+          }}
+          render={({ field }) => (
+            <PollTextBiasInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="What local issues matter most to you? I'd genuinely value your input. Reply to share."
+              onBiasAnalysisChange={setBiasAnalysisState}
+            />
+          )}
         />
         {errors.question && (
-          <p className="mt-1 text-sm text-red-500">{errors.question.message}</p>
+          <p className="mt-1 font-normal text-sm text-red-500">
+            {errors.question.message}
+          </p>
         )}
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
           We recommend checking your message for clarity and bias using optimize
           message.
         </p>
@@ -487,7 +544,7 @@ const AudienceSelectionForm: React.FC<{
 
 const IamgeSelectionForm: React.FC<{
   goBack: () => void
-  onChange: (imageUrl: string) => void
+  onChange: (imageUrl?: string) => void
   imageUrl?: string
 }> = ({ goBack, onChange, imageUrl: initialImageUrl }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(initialImageUrl)
@@ -500,11 +557,7 @@ const IamgeSelectionForm: React.FC<{
         <Button
           type="submit"
           variant="secondary"
-          disabled={!imageUrl}
           onClick={() => {
-            if (!imageUrl) {
-              return
-            }
             onChange(imageUrl)
           }}
         >
@@ -521,6 +574,99 @@ const IamgeSelectionForm: React.FC<{
       <PollImageUpload
         imageUrl={imageUrl}
         onUploaded={(imageUrl) => setImageUrl(imageUrl)}
+      />
+    </FormStep>
+  )
+}
+
+const ReviewForm: React.FC<{
+  goBack: () => void
+  onSubmit: () => void
+  details: Details
+  targetAudienceSize: number
+  scheduledDate: Date
+  imageUrl?: string
+}> = ({
+  goBack,
+  onSubmit,
+  details,
+  targetAudienceSize,
+  scheduledDate,
+  imageUrl,
+}) => {
+  const message = [
+    details.introduction,
+    details.question,
+    'Text STOP to opt out.',
+  ].join('\n\n')
+  return (
+    <FormStep
+      step={Step.review}
+      onBack={goBack}
+      nextButton={
+        <Button type="submit" variant="secondary" onClick={onSubmit}>
+          Yes, Checkout
+        </Button>
+      }
+    >
+      <H1 className="md:text-center">Does everything look good?</H1>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        Take a moment to review your poll details.
+      </p>
+
+      <MessageCard
+        className="mb-6"
+        title="Outreach Summary"
+        description={
+          <div className="flex flex-col gap-1 mt-2">
+            <p>
+              Audience: <b>{numberFormatter(targetAudienceSize)}</b>
+            </p>
+            <p>
+              Send Date: <b>{scheduledDate.toDateString()} at 11:00am</b>
+            </p>
+            <p>
+              Estimated Completion:{' '}
+              <b>{addDays(scheduledDate, 3).toDateString()}</b>
+            </p>
+            <p>
+              Cost: <b>${formatCurrency(TEXT_PRICE * targetAudienceSize)}</b>
+            </p>
+          </div>
+        }
+      />
+
+      <MessageCard
+        title="Preview"
+        description={
+          <div className="flex flex-col gap-1">
+            <div className="max-w-xs mx-auto">
+              <TextMessagePreview
+                message={
+                  <div className="flex flex-col gap-2">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt="Campaign image"
+                        width={300}
+                        height={300}
+                        className="object-cover rounded"
+                      />
+                    ) : (
+                      <Image
+                        src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+                        alt=""
+                        width={300}
+                        height={300}
+                      />
+                    )}
+                    <p className="mt-1 font-normal">{message}</p>
+                  </div>
+                }
+              />
+            </div>
+          </div>
+        }
       />
     </FormStep>
   )
@@ -600,6 +746,33 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
               imageUrl,
             })
           }
+          imageUrl={state.imageUrl}
+        />
+      )}
+
+      {state.step === Step.review && (
+        <ReviewForm
+          goBack={() =>
+            setState({
+              step: Step.addImage,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onSubmit={() =>
+            setState({
+              step: Step.payment,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          details={state.details}
+          targetAudienceSize={state.targetAudienceSize}
+          scheduledDate={state.scheduledDate}
           imageUrl={state.imageUrl}
         />
       )}
