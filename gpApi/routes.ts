@@ -59,6 +59,10 @@ export const apiRoutes = {
       path: '/polls/image-upload-url',
       method: 'POST',
     },
+    analyzeBias: {
+      path: '/polls/analyze-bias',
+      method: 'POST',
+    },
   },
   electedOffice: {
     current: {

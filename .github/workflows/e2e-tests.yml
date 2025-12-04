@@ -19,7 +19,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             try {
-              // Find PR associated with this deployment
               const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -35,13 +34,22 @@ jobs:
               
               const pr = prs[0];
               const isOpen = pr.state === 'open';
+              const isPromotionPR = pr.base && (pr.base.ref === 'qa' || pr.base.ref === 'prod' || pr.base.ref === 'main');
               
-              console.log(`Found PR #${pr.number}, state: ${pr.state}`);
-              core.setOutput('pr-open', isOpen.toString());
-              core.setOutput('pr-number', pr.number.toString());
+              console.log(`Found PR #${pr.number}, state: ${pr.state}, base: ${pr.base?.ref || 'unknown'}`);
               
-              if (!isOpen) {
-                console.log(`Skipping tests - PR #${pr.number} is ${pr.state}`);
+              if (isPromotionPR) {
+                console.log(`This is a promotion PR to ${pr.base.ref} - running tests regardless of PR state`);
+                core.setOutput('pr-open', 'true');
+                core.setOutput('pr-number', pr.number.toString());
+              } else if (isOpen) {
+                console.log(`PR is open - running tests`);
+                core.setOutput('pr-open', 'true');
+                core.setOutput('pr-number', pr.number.toString());
+              } else {
+                console.log(`Skipping tests - PR #${pr.number} is ${pr.state} and not a promotion PR`);
+                core.setOutput('pr-open', 'false');
+                core.setOutput('pr-number', pr.number.toString());
               }
             } catch (error) {
               console.error('Error checking PR status:', error);

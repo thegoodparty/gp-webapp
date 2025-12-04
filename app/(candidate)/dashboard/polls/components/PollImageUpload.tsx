@@ -6,18 +6,35 @@ import { CircularProgress } from '@mui/material'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { uploadFileToS3 } from '@shared/utils/s3Upload'
 import { apiRoutes } from 'gpApi/routes'
+import { useMutation } from '@tanstack/react-query'
+import imageCompression from 'browser-image-compression'
 
-const FILE_LIMIT_MB = 5
 const ACCEPTED_FORMATS = ['.png', '.jpg', '.jpeg']
+const MAX_SIZE_KB = 500
 
 export const PollImageUpload: React.FC<{
   imageUrl?: string
   onUploaded: (imageUrl: string) => void
 }> = ({ imageUrl, onUploaded }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [fileInfo, setFileInfo] = useState<File | null>(null)
-  const [loadingFileUpload, setLoadingFileUpload] = useState(false)
+
   const [errorMessage, setErrorMessage] = useState('')
+
+  const mutation = useMutation({
+    mutationFn: async (file: File) => {
+      const downsized = await imageCompression(file, {
+        maxSizeMB: MAX_SIZE_KB / 1024,
+        useWebWorker: true,
+      })
+      return uploadFileToS3(downsized, apiRoutes.polls.imageUploadUrl)
+    },
+    onSuccess: onUploaded,
+    onError: () => {
+      setErrorMessage('Failed to upload image')
+    },
+  })
+
+  const selectedFile = mutation.variables
 
   const onFileBrowseClick = () => {
     fileInputRef.current?.click()
@@ -25,16 +42,6 @@ export const PollImageUpload: React.FC<{
 
   const handleFileChoose = async (file: File) => {
     setErrorMessage('')
-
-    const fileSizeMb = file?.size / 1e6
-    if (fileSizeMb > FILE_LIMIT_MB) {
-      setErrorMessage(
-        `File size of ${fileSizeMb.toFixed(
-          2,
-        )}MB is larger than ${FILE_LIMIT_MB}MB limit`,
-      )
-      return
-    }
 
     // Check file format
     const fileExtension = '.' + file.name?.split('.').pop()?.toLowerCase() || ''
@@ -46,22 +53,7 @@ export const PollImageUpload: React.FC<{
       return
     }
 
-    setLoadingFileUpload(true)
-    setFileInfo(file)
-
-    try {
-      const imageUrl = await uploadFileToS3(
-        file,
-        apiRoutes.polls.imageUploadUrl,
-      )
-
-      onUploaded(imageUrl)
-    } catch (e) {
-      console.error(e)
-      setErrorMessage('Failed to upload image')
-    } finally {
-      setLoadingFileUpload(false)
-    }
+    mutation.mutate(file)
   }
 
   return (
@@ -86,7 +78,7 @@ export const PollImageUpload: React.FC<{
           e.preventDefault()
         }}
       >
-        {loadingFileUpload ? (
+        {mutation.isPending ? (
           <div className="flex flex-col items-center">
             <CircularProgress size={24} />
             <p className="leading-normal text-sm font-normal mt-2">
@@ -102,9 +94,9 @@ export const PollImageUpload: React.FC<{
               height={80}
               className="object-cover rounded"
             />
-            {fileInfo?.name && (
+            {selectedFile && (
               <p className="leading-normal text-sm font-normal mt-2 text-green-600">
-                {fileInfo.name}
+                {selectedFile.name}
               </p>
             )}
           </div>
@@ -121,7 +113,7 @@ export const PollImageUpload: React.FC<{
           <p className="text-xs font-normal text-red-600">{errorMessage}</p>
         ) : (
           <p className="text-xs font-normal text-muted-foreground">
-            Recommended PNG or JPG format. Max {FILE_LIMIT_MB}MB.
+            Recommended PNG or JPG format.
           </p>
         )}
       </div>
