@@ -35,13 +35,25 @@ export type GetPollIssuesResponse = {
   results: PollIssue[]
 }
 
+export type HasPollsResponse = {
+  hasPolls: boolean
+}
+
+export const hasPolls = async () => {
+  const res = await serverFetch<HasPollsResponse>(
+    apiRoutes.polls.hasPolls,
+    undefined,
+  )
+  if (res.ok) {
+    return res.data
+  }
+  return null
+}
+
 export const getPolls = async () => {
   const res = await serverFetch<GetPollsResponse>(
     apiRoutes.polls.list,
     undefined,
-    {
-      revalidate: 60,
-    },
   )
   if (res.ok) {
     return res.data
