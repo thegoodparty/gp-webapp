@@ -2,7 +2,7 @@ import UserSnapScript from '@shared/scripts/UserSnapScript'
 import { ContactsStatsProvider } from './contexts/ContactsStatsContext'
 import { OnboardingProvider } from './contexts/OnboardingContext'
 
-export default async function PollsLayout({ children }) {
+export default function PollsLayout({ children }) {
   return (
     <ContactsStatsProvider>
       <OnboardingProvider>
