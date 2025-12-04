@@ -23,7 +23,6 @@ import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -48,6 +47,14 @@ const DEFAULT_MENU_ITEMS = [
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
   },
   VOTER_DATA_UPGRADE_ITEM,
+  {
+    id: 'polls-dashboard',
+    label: 'Polls',
+    link: '/dashboard/polls',
+    icon: <MdPoll />,
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
+    isNew: true,
+  },
   {
     label: 'Website',
     icon: <MdWeb />,
@@ -126,16 +133,7 @@ const CONTACTS_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContacts),
 }
 
-const POLLS_MENU_ITEM = {
-  id: 'polls-dashboard',
-  label: 'Polls',
-  link: '/dashboard/polls',
-  icon: <MdPoll />,
-  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
-  isNew: true,
-}
-
-const getDashboardMenuItems = (campaign, serveAccessEnabled, electedOffice) => {
+const getDashboardMenuItems = (campaign, serveAccessEnabled) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
   const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
@@ -143,9 +141,6 @@ const getDashboardMenuItems = (campaign, serveAccessEnabled, electedOffice) => {
     menuItems[voterDataIndex] = CONTACTS_MENU_ITEM
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
-  }
-  if (electedOffice) {
-    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
@@ -159,16 +154,11 @@ export default function DashboardMenu({
   const [user] = useUser()
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
-  const { electedOffice } = useElectedOffice()
   const { ready: flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
   const menuItems = useMemo(() => {
-    const baseItems = getDashboardMenuItems(
-      campaign,
-      serveAccessEnabled,
-      electedOffice,
-    )
+    const baseItems = getDashboardMenuItems(campaign, serveAccessEnabled)
 
     const items = [...baseItems]
 
@@ -177,7 +167,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice])
+  }, [campaign, serveAccessEnabled, ecanvasser])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
