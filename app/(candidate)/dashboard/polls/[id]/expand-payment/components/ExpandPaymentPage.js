@@ -2,16 +2,12 @@
 
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
-import H1 from '@shared/typography/H1'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
-import { PurchaseStep } from './PurchaseStep'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
+import { PollPayment } from '../../../shared/components/PollPayment'
 
 export default function ExpandPaymentPage({ count }) {
   const [poll] = usePoll()
@@ -32,7 +28,6 @@ export default function ExpandPaymentPage({ count }) {
   }
 
   const handlePurchaseComplete = async (paymentIntent) => {
-    await completePurchase(paymentIntent.id)
     trackEvent(EVENTS.expandPolls.paymentCompleted, {
       type: 'Serve Poll Expansion',
       cost,
@@ -45,16 +40,14 @@ export default function ExpandPaymentPage({ count }) {
 
   return (
     <ExpandPollLayout>
-      <H1 className="text-center">SMS Poll Payment</H1>
-      <PurchaseIntentProvider
-        type={PURCHASE_TYPES.POLL}
-        purchaseMetaData={{
+      <PollPayment
+        metadata={{
+          type: 'expansion',
           count: parseInt(count, 10),
           pollId: poll.id,
         }}
-      >
-        <PurchaseStep onComplete={handlePurchaseComplete} />
-      </PurchaseIntentProvider>
+        onConfirmed={handlePurchaseComplete}
+      />
       <ExpandStepFooter
         currentStep={3}
         onBack={handleBack}
