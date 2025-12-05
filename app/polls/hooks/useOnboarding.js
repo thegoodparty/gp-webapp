@@ -10,7 +10,7 @@ import {
   demoMessageText as demoMessageTextPolls,
   messageText as messageTextPolls,
 } from '../onboarding/components/DemoMessageText'
-import { isBefore } from 'date-fns'
+import { format, isBefore } from 'date-fns'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
 
@@ -158,7 +158,7 @@ export const useOnboarding = () => {
       const response = await clientFetch(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
-        swornInDate: formData.swornInDate,
+        swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
       })
 
       if (!response.ok) {

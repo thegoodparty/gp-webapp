@@ -400,10 +400,11 @@ const AudienceSelectionForm: React.FC<{
   >(targetAudienceSize)
 
   const query = useQuery({
-    queryKey: ['total-constituents'],
+    queryKey: ['total-constituents-with-cell-phone'],
     queryFn: () =>
       clientFetch<{ meta: { totalConstituents: number } }>(
         apiRoutes.contacts.stats,
+        { hasCellPhone: 'true' },
       ).then((res) => ({ totalConstituents: res.data.meta.totalConstituents })),
   })
 
