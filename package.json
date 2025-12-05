@@ -65,7 +65,7 @@
     "libphonenumber-js": "^1.10.14",
     "marked": "^14.1.2",
     "match-sorter": "^6.3.1",
-    "next": "^15.3.6",
+    "next": "^15.5.7",
     "next-pwa": "^5.6.0",
     "object-to-formdata": "^4.5.1",
     "path-to-regexp": "^8.2.0",
