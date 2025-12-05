@@ -34,9 +34,11 @@ import { useUser } from '@shared/hooks/useUser'
 import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
-import { MAX_CONSTITUENTS_PER_RUN } from '../shared/constants'
+import {
+  PRICE_PER_POLL_TEXT,
+  MAX_CONSTITUENTS_PER_RUN,
+} from '../shared/constants'
 
-const TEXT_PRICE = 0.035
 const MIN_QUESTION_LENGTH = 25
 
 type Details = {
@@ -562,14 +564,14 @@ const AudienceSelectionForm: React.FC<{
                 Recommended
               </span>
             )}
-            <p>${formatCurrency(TEXT_PRICE * option.count)}</p>
+            <p>${formatCurrency(PRICE_PER_POLL_TEXT * option.count)}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-4">
         <p className="text-sm text-muted-foreground text-center">
-          Each message costs ${TEXT_PRICE}.
+          Each message costs ${PRICE_PER_POLL_TEXT}.
         </p>
 
         {isTotalConstituentsCapped && (
@@ -675,7 +677,8 @@ const ReviewForm: React.FC<{
               <b>{addDays(scheduledDate, 3).toDateString()}</b>
             </p>
             <p>
-              Cost: <b>${formatCurrency(TEXT_PRICE * targetAudienceSize)}</b>
+              Cost:{' '}
+              <b>${formatCurrency(PRICE_PER_POLL_TEXT * targetAudienceSize)}</b>
             </p>
           </div>
         }
