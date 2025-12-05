@@ -56,7 +56,6 @@ const calculateRecommendedIncrease = (poll, contactsStats) => {
     recommendedIncrease = cappedTotalRemainingConstituents
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
-  recommendedIncrease = Math.min(recommendedIncrease, MAX_CONSTITUENTS_PER_RUN)
 
   return {
     recommendedIncrease,
