@@ -34,6 +34,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
+import { PollPayment } from '../shared/components/PollPayment'
 
 const TEXT_PRICE = 0.035
 const MIN_QUESTION_LENGTH = 25
@@ -673,6 +674,33 @@ const ReviewForm: React.FC<{
   )
 }
 
+const PaymentForm: React.FC<{
+  goBack: () => void
+  onSubmit: () => void
+  details: Details
+  targetAudienceSize: number
+  scheduledDate: Date
+  imageUrl?: string
+}> = ({ goBack, onSubmit }) => {
+  const router = useRouter()
+
+  return (
+    <FormStep step={Step.payment} onBack={goBack} nextButton={<></>}>
+      <PollPayment
+        metadata={{
+          pollId: poll.id,
+
+          count: parseInt(count, 10),
+          pollId: poll.id,
+        }}
+        onConfirmed={() => {
+          router.push(`/dashboard/polls/${poll.id}`)
+        }}
+      />
+    </FormStep>
+  )
+}
+
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
 
@@ -778,7 +806,26 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
         />
       )}
 
-      {/* TODO: fill out remaining steps */}
+      {state.step === Step.payment && (
+        <PaymentForm
+          goBack={() =>
+            setState({
+              step: Step.review,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onSubmit={() =>
+            setState({ step: Step.paymentConfirmed, pollId: '123' })
+          }
+        />
+      )}
+
+      {state.step === Step.paymentConfirmed && (
+        <>{/* TODO: add payment confirmation step */}</>
+      )}
     </DashboardLayout>
   )
 }
