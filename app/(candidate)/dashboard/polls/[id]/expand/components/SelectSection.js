@@ -54,7 +54,7 @@ const calculateRecommendedIncrease = (poll, contactsStats) => {
   let recommendedIncrease = (83 - poll.responseCount) / existingResponseRate
 
   if (recommendedIncrease > cappedTotalRemainingConstituents) {
-    recommendedIncrease = totalRemainingConstituents
+    recommendedIncrease = cappedTotalRemainingConstituents
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
   recommendedIncrease = Math.min(recommendedIncrease, MAX_CONSTITUENTS_PER_RUN)
