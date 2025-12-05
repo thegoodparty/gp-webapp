@@ -325,17 +325,10 @@ const DetailsForm: React.FC<{
             {errors.question.message}
           </p>
         )}
-        {!errors.question &&
-          (biasAnalysisState?.hasBeenChecked ? (
-            <p className="mt-1.5 font-normal text-sm text-muted-foreground">
-              Your message has been checked for clarity and bias.
-            </p>
-          ) : (
-            <p className="mt-1.5 font-normal text-sm text-muted-foreground">
-              We recommend checking your message for clarity and bias using
-              optimize message.
-            </p>
-          ))}
+        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
+          We recommend checking your message for clarity and bias using optimize
+          message.
+        </p>
 
         <label className="block mb-2 mt-4">Poll Closing</label>
         <Input
