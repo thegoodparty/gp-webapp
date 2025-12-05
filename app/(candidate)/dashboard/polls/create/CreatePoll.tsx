@@ -37,6 +37,7 @@ import Image from 'next/image'
 
 const TEXT_PRICE = 0.035
 const MIN_QUESTION_LENGTH = 25
+const MAX_CONSTITUENTS_PER_RUN = 10000
 
 type Details = {
   title: string
@@ -423,11 +424,19 @@ const AudienceSelectionForm: React.FC<{
     )
   }
 
+  const rawTotalConstituents = query.data.totalConstituents
+  const usableTotalConstituents = Math.min(
+    rawTotalConstituents,
+    MAX_CONSTITUENTS_PER_RUN,
+  )
+  const isTotalConstituentsCapped =
+    rawTotalConstituents !== usableTotalConstituents
+
   const { recommendedSendCount } = calculateRecommendedPollSize({
     alreadySent: 0,
     expectedResponseRate: 0.03,
     responsesAlreadyReceived: 0,
-    totalConstituents: query.data.totalConstituents,
+    totalConstituents: usableTotalConstituents,
   })
 
   const recommendedMessage =
@@ -439,7 +448,7 @@ const AudienceSelectionForm: React.FC<{
     { pct: 0.75, message: 'High impact.' },
     { pct: 1, message: "You can't do any better than this!" },
   ].map(({ pct, message }) => {
-    const count = Math.ceil(query.data.totalConstituents * pct)
+    const count = Math.ceil(usableTotalConstituents * pct)
     const isRecommended = count === recommendedSendCount
     return {
       count,
@@ -456,7 +465,7 @@ const AudienceSelectionForm: React.FC<{
         {
           count: recommendedSendCount,
           percentage: `${Math.round(
-            (recommendedSendCount / query.data.totalConstituents) * 100,
+            (recommendedSendCount / usableTotalConstituents) * 100,
           )}%`,
           isRecommended: true,
           message: recommendedMessage,
@@ -491,10 +500,18 @@ const AudienceSelectionForm: React.FC<{
       <H1 className="md:text-center">
         How many constituents do you want to message?
       </H1>
-      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
-        There are {numberFormatter(query.data.totalConstituents)} constituents
-        with cell phone numbers in your community.
-      </p>
+      <div className="flex flex-col mt-4 mb-8">
+        <p className="text-left md:text-center text-lg font-normal text-muted-foreground">
+          There are {numberFormatter(rawTotalConstituents)} constituents with
+          cell phone numbers in your community.
+        </p>
+        {isTotalConstituentsCapped && (
+          <p className="text-left md:text-center text-lg font-normal text-muted-foreground">
+            You can only send to {numberFormatter(MAX_CONSTITUENTS_PER_RUN)}{' '}
+            constituents at a time.
+          </p>
+        )}
+      </div>
 
       <div className="w-full flex flex-col gap-2">
         {options.map((option) => (
