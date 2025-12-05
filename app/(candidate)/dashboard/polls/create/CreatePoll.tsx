@@ -431,13 +431,13 @@ const AudienceSelectionForm: React.FC<{
     )
   }
 
-  const rawTotalConstituents = query.data.totalConstituents
+  const totalConstituents = query.data.totalConstituents
   const usableTotalConstituents = Math.min(
-    rawTotalConstituents,
+    totalConstituents,
     MAX_CONSTITUENTS_PER_RUN,
   )
   const isTotalConstituentsCapped =
-    rawTotalConstituents !== usableTotalConstituents
+    totalConstituents !== usableTotalConstituents
 
   const { recommendedSendCount } = calculateRecommendedPollSize({
     alreadySent: 0,
