@@ -151,12 +151,13 @@ export default function SelectSection({ countCallback }) {
   if (recommendedOption) {
     recommendedOption.isRecommended = true
   } else {
+    const percentage = Math.round(
+      (recommendedIncrease / totalRemainingConstituents) * 100,
+    )
     cappedSelectOptions.unshift({
-      label: `${numberFormatter(
-        recommendedIncrease,
-      )} Constituents (${Math.round(
-        (recommendedIncrease / totalRemainingConstituents) * 100,
-      )}%)`,
+      label: `${numberFormatter(recommendedIncrease)} Constituents (${
+        percentage < 1 ? '<1%' : `${percentage}%`
+      })`,
       value: recommendedIncrease,
       isRecommended: true,
     })
