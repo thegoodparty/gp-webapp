@@ -63,6 +63,10 @@ export const apiRoutes = {
       path: '/polls/analyze-bias',
       method: 'POST',
     },
+    hasPolls: {
+      path: '/polls/has-polls',
+      method: 'GET',
+    },
   },
   electedOffice: {
     current: {
