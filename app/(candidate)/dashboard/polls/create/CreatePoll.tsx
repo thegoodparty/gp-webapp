@@ -34,10 +34,10 @@ import { useUser } from '@shared/hooks/useUser'
 import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
+import { MAX_CONSTITUENTS_PER_RUN } from '../shared/constants'
 
 const TEXT_PRICE = 0.035
 const MIN_QUESTION_LENGTH = 25
-const MAX_CONSTITUENTS_PER_RUN = 10000
 
 type Details = {
   title: string
@@ -323,10 +323,17 @@ const DetailsForm: React.FC<{
             {errors.question.message}
           </p>
         )}
-        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
-          We recommend checking your message for clarity and bias using optimize
-          message.
-        </p>
+        {!errors.question &&
+          (biasAnalysisState?.hasBeenChecked ? (
+            <p className="mt-1.5 font-normal text-sm text-muted-foreground">
+              Your message has been checked for clarity and bias.
+            </p>
+          ) : (
+            <p className="mt-1.5 font-normal text-sm text-muted-foreground">
+              We recommend checking your message for clarity and bias using
+              optimize message.
+            </p>
+          ))}
 
         <label className="block mb-2 mt-4">Poll Closing</label>
         <Input
@@ -448,7 +455,7 @@ const AudienceSelectionForm: React.FC<{
     { pct: 0.75, message: 'High impact.' },
     { pct: 1, message: "You can't do any better than this!" },
   ].map(({ pct, message }) => {
-    const count = Math.ceil(usableTotalConstituents * pct)
+    const count = Math.ceil(totalConstituents * pct)
     const isRecommended = count === recommendedSendCount
     return {
       count,
@@ -458,15 +465,37 @@ const AudienceSelectionForm: React.FC<{
     }
   })
 
+  // cap options at MAX_CONSTITUENTS_PER_RUN
+  let hasCapped = false
+  options = options
+    .map((option) => {
+      const count = Math.min(option.count, MAX_CONSTITUENTS_PER_RUN)
+      if (hasCapped) {
+        return null
+      }
+      if (count !== option.count) {
+        hasCapped = true
+      }
+      const percentage = Math.round((count / totalConstituents) * 100)
+      return {
+        ...option,
+        count,
+        percentage: percentage < 1 ? '<1%' : `${percentage}%`,
+      }
+    })
+    .filter((option) => option !== null)
+
   if (!options.some((option) => option.isRecommended)) {
+    const recommendedPercentage = Math.round(
+      (recommendedSendCount / totalConstituents) * 100,
+    )
     options = orderBy(
       [
         ...options,
         {
           count: recommendedSendCount,
-          percentage: `${Math.round(
-            (recommendedSendCount / usableTotalConstituents) * 100,
-          )}%`,
+          percentage:
+            recommendedPercentage < 1 ? '<1%' : `${recommendedPercentage}%`,
           isRecommended: true,
           message: recommendedMessage,
         },
@@ -502,15 +531,9 @@ const AudienceSelectionForm: React.FC<{
       </H1>
       <div className="flex flex-col mt-4 mb-8">
         <p className="text-left md:text-center text-lg font-normal text-muted-foreground">
-          There are {numberFormatter(rawTotalConstituents)} constituents with
-          cell phone numbers in your community.
+          There are {numberFormatter(totalConstituents)} constituents with cell
+          phone numbers in your community.
         </p>
-        {isTotalConstituentsCapped && (
-          <p className="text-left md:text-center text-lg font-normal text-muted-foreground">
-            You can only send to {numberFormatter(MAX_CONSTITUENTS_PER_RUN)}{' '}
-            constituents at a time.
-          </p>
-        )}
       </div>
 
       <div className="w-full flex flex-col gap-2">
@@ -548,9 +571,13 @@ const AudienceSelectionForm: React.FC<{
         <p className="text-sm text-muted-foreground text-center">
           Each message costs ${TEXT_PRICE}.
         </p>
-        <p className="text-sm text-muted-foreground text-center">
-          You can only send to 10,000 constituents at a time.
-        </p>
+
+        {isTotalConstituentsCapped && (
+          <p className="text-sm text-muted-foreground text-center">
+            You can only send to {numberFormatter(MAX_CONSTITUENTS_PER_RUN)}{' '}
+            constituents at a time.
+          </p>
+        )}
         <p className="text-sm text-muted-foreground text-center">
           Once your poll results are in, you can expand your poll to send to
           more people.

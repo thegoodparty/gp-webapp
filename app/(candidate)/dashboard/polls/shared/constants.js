@@ -13,3 +13,5 @@ export const POLL_STATUS_LABELS = {
 }
 
 export const PRICE_PER_MESSAGE = 0.03
+
+export const MAX_CONSTITUENTS_PER_RUN = 10000

@@ -17,8 +17,7 @@ import Body2 from '@shared/typography/Body2'
 import { PRICE_PER_MESSAGE } from '../../../shared/constants'
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { LuLoaderCircle } from 'react-icons/lu'
-
-const MAX_CONSTITUENTS_PER_RUN = 10000
+import { MAX_CONSTITUENTS_PER_RUN } from '../../../shared/constants'
 
 const Content = ({ children }) => (
   <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
@@ -100,46 +99,66 @@ export default function SelectSection({ countCallback }) {
   const selectOptions = [
     {
       label: `${numberFormatter(
-        usableRemainingConstituents * 0.25,
+        totalRemainingConstituents * 0.25,
       )} Constituents (25%)`,
-      value: Math.ceil(usableRemainingConstituents * 0.25),
+      value: Math.ceil(totalRemainingConstituents * 0.25),
       isRecommended: false,
     },
     {
       label: `${numberFormatter(
-        usableRemainingConstituents * 0.5,
+        totalRemainingConstituents * 0.5,
       )} Constituents (50%)`,
-      value: Math.ceil(usableRemainingConstituents * 0.5),
+      value: Math.ceil(totalRemainingConstituents * 0.5),
       isRecommended: false,
     },
     {
       label: `${numberFormatter(
-        usableRemainingConstituents * 0.75,
+        totalRemainingConstituents * 0.75,
       )} Constituents (75%)`,
-      value: Math.ceil(usableRemainingConstituents * 0.75),
+      value: Math.ceil(totalRemainingConstituents * 0.75),
       isRecommended: false,
     },
     {
       label: `${numberFormatter(
-        usableRemainingConstituents,
+        totalRemainingConstituents,
       )} Constituents (100%)`,
-      value: usableRemainingConstituents,
+      value: totalRemainingConstituents,
       isRecommended: false,
     },
   ]
 
-  const recommendedOption = selectOptions.find(
+  let hasCapped = false
+  const cappedSelectOptions = selectOptions
+    .map((option) => {
+      const value = Math.min(option.value, MAX_CONSTITUENTS_PER_RUN)
+      if (hasCapped) {
+        return null
+      }
+      if (value !== option.value) {
+        hasCapped = true
+      }
+      return {
+        ...option,
+        value,
+        label: `${numberFormatter(value)} Constituents (${Math.round(
+          (value / totalRemainingConstituents) * 100,
+        )}%)`,
+      }
+    })
+    .filter((option) => option !== null)
+
+  const recommendedOption = cappedSelectOptions.find(
     (option) => option.value === recommendedIncrease,
   )
 
   if (recommendedOption) {
     recommendedOption.isRecommended = true
   } else {
-    selectOptions.unshift({
+    cappedSelectOptions.unshift({
       label: `${numberFormatter(
         recommendedIncrease,
       )} Constituents (${Math.round(
-        (recommendedIncrease / usableRemainingConstituents) * 100,
+        (recommendedIncrease / totalRemainingConstituents) * 100,
       )}%)`,
       value: recommendedIncrease,
       isRecommended: true,
@@ -164,7 +183,7 @@ export default function SelectSection({ countCallback }) {
       <div className="flex flex-col mb-4">
         <Body2 className="text-muted-foreground">
           You can text up to {numberFormatter(totalRemainingConstituents)} more
-          more constituents.
+          constituents.
         </Body2>
         {isConstituentCountCapped && (
           <Body2 className="text-muted-foreground">
@@ -178,7 +197,7 @@ export default function SelectSection({ countCallback }) {
           <SelectValue placeholder="Recommendation for higher confidence" />
         </SelectTrigger>
         <SelectContent>
-          {selectOptions.map((option) => (
+          {cappedSelectOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
               {option.isRecommended && (
