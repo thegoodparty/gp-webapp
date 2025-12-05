@@ -7,7 +7,6 @@ import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { POLL_STATUS } from './constants'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
@@ -20,7 +19,8 @@ export default function ConfidenceAlert() {
 
   const { lowConfidence } = poll || {}
 
-  if (poll.status === POLL_STATUS.EXPANDING) {
+  const isExpanding = poll.status !== 'completed' && !!poll.responseCount
+  if (isExpanding) {
     return (
       <Alert variant="info">
         <AlertTitle>

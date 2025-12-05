@@ -5,14 +5,15 @@ import PollAudience from './PollAudience'
 import PollDetails from './PollDetails'
 import { usePoll } from '../../shared/hooks/PollProvider'
 import CompletedPoll from './CompletedPoll'
-import { POLL_STATUS } from '../../shared/constants'
 
 export default function PollsContent() {
   const [poll] = usePoll()
-  const { status } = poll || {}
-  if ([POLL_STATUS.COMPLETED, POLL_STATUS.EXPANDING].includes(status)) {
+
+  // If a poll has responses, then show the issues
+  if (!!poll?.responseCount) {
     return <CompletedPoll />
   }
+
   return (
     <>
       <StatusAlert />
