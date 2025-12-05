@@ -6,7 +6,18 @@ import { FaMapMarkerAlt, FaRegClock } from 'react-icons/fa'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import StatusPill from '../../shared/StatusPill'
 
-export default function IssueDetailsHeader({ issue }) {
+interface Issue {
+  title: string
+  location?: string
+  status: string
+  createdAt: string
+}
+
+interface IssueDetailsHeaderProps {
+  issue: Issue
+}
+
+export default function IssueDetailsHeader({ issue }: IssueDetailsHeaderProps): React.JSX.Element {
   const { title, location, status, createdAt } = issue
 
   return (
@@ -38,3 +49,4 @@ export default function IssueDetailsHeader({ issue }) {
     </>
   )
 }
+

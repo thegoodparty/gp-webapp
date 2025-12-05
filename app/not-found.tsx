@@ -4,7 +4,7 @@ import H1 from '@shared/typography/H1'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function NotFound() {
+export default function NotFound(): React.JSX.Element {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">
@@ -38,3 +38,4 @@ export default function NotFound() {
     </div>
   )
 }
+

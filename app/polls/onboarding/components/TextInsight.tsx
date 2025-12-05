@@ -1,7 +1,14 @@
 import { Card, CardContent } from 'goodparty-styleguide'
 import { LuLightbulb } from 'react-icons/lu'
 
-export const TextInsight = ({ title, description, isLoading = false, error }) => {
+interface TextInsightProps {
+  title: string
+  description: string
+  isLoading?: boolean
+  error?: string | boolean
+}
+
+export const TextInsight = ({ title, description, isLoading = false, error }: TextInsightProps): React.JSX.Element => {
     const showSkeleton = Boolean(isLoading)
     const showError = !isLoading && Boolean(error)
     const showContent = !isLoading && !error
@@ -36,5 +43,4 @@ export const TextInsight = ({ title, description, isLoading = false, error }) =>
         </Card>
     )
 }
-
 

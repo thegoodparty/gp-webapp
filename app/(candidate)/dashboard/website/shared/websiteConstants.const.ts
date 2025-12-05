@@ -1,6 +1,16 @@
 import Config from 'tailwind.config.js'
 
-export const WEBSITE_THEMES = {
+interface ThemeConfig {
+  bg: string
+  text: string
+  accent: string
+  accentText: string
+  secondary: string
+  border: string
+  muiColor: string
+}
+
+export const WEBSITE_THEMES: Record<string, ThemeConfig> = {
   light: {
     bg: 'bg-white',
     text: 'text-gray-800',
@@ -38,3 +48,4 @@ export const WEBSITE_THEMES = {
     muiColor: Config.theme.extend.colors.gray[800],
   },
 }
+

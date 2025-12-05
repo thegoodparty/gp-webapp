@@ -21,7 +21,7 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const Page = async () => {
+const Page = async (): Promise<React.JSX.Element> => {
   await candidateAccess()
   let tcrCompliance
   try {
@@ -38,3 +38,4 @@ const Page = async () => {
 }
 
 export default Page
+

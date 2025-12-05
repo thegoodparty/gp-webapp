@@ -2,13 +2,13 @@ import { setCookie } from 'helpers/cookieHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-export async function handleImpersonateUser(email) {
+export const handleImpersonateUser = async (email: string): Promise<boolean> => {
   try {
     const payload = {
       email,
     }
     const resp = await clientFetch(apiRoutes.admin.user.impersonate, payload)
-    const token = resp.data?.token
+    const token = (resp.data as { token?: string })?.token
     if (token) {
       setCookie('impersonateToken', token)
       return true
@@ -18,3 +18,4 @@ export async function handleImpersonateUser(email) {
   }
   return false
 }
+

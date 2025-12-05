@@ -4,14 +4,20 @@ import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
 
+interface CopyScriptButtonProps {
+  scriptText: string
+  trackingAttrs?: Record<string, string>
+  onCopy?: (text: string, result: boolean) => void
+}
+
 export default function CopyScriptButton({
   scriptText,
   trackingAttrs = {},
   onCopy = () => {},
-}) {
+}: CopyScriptButtonProps): React.JSX.Element {
   const [copied, setCopied] = useState(false)
 
-  async function handleOnCopy(text, result) {
+  async function handleOnCopy(text: string, result: boolean) {
     if (result) {
       setCopied(true)
     }
@@ -38,3 +44,4 @@ export default function CopyScriptButton({
     </CopyToClipboard>
   )
 }
+

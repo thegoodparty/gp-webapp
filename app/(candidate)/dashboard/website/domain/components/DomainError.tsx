@@ -4,10 +4,10 @@ import { DOMAIN_STATUS, PAYMENT_STATUS } from '../../util/domain.util'
 import { useDomainStatus } from './DomainStatusProvider'
 import DeleteDomain from './DeleteDomain'
 
-export default function DomainError() {
+export default function DomainError(): React.JSX.Element {
   const { status } = useDomainStatus()
 
-  const { message, paymentStatus } = status || {}
+  const { message, paymentStatus } = (status || {}) as { message?: string; paymentStatus?: string }
 
   return (
     <div className="max-w-2xl mx-auto mt-8 text-center">
@@ -32,9 +32,10 @@ export default function DomainError() {
           </>
         )}
       {message === DOMAIN_STATUS.NO_DOMAIN &&
-        paymentStatus === PAYMENT_STATUS.PENDING && (
-          <Body1 className="mt-4">Your payment is pending.</Body1>
+        paymentStatus === PAYMENT_STATUS.PROCESSING && (
+          <Body1 className="mt-4">Your payment is processing.</Body1>
         )}
     </div>
   )
 }
+
