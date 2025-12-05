@@ -61,7 +61,6 @@ const calculateRecommendedIncrease = (poll, contactsStats) => {
   return {
     recommendedIncrease,
     totalRemainingConstituents,
-    usableRemainingConstituents: cappedTotalRemainingConstituents,
     isConstituentCountCapped:
       cappedTotalRemainingConstituents !== totalRemainingConstituents,
   }
@@ -92,7 +91,6 @@ export default function SelectSection({ countCallback }) {
   const {
     recommendedIncrease,
     totalRemainingConstituents,
-    usableRemainingConstituents,
     isConstituentCountCapped,
   } = calculateRecommendedIncrease(poll, contactsStats)
 
