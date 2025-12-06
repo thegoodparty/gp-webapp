@@ -2,7 +2,6 @@
 import DashboardLayout from '../shared/DashboardLayout'
 import { weeksTill } from 'helpers/dateHelper'
 import { useCallback, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { calculateContactGoals } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
 import EmptyState from './EmptyState'
@@ -23,7 +22,6 @@ export default function DashboardPage({
 }) {
   const [_, setUser] = useUser()
   const [campaign, setCampaign] = useState(campaignProp)
-  const router = useRouter()
   const { pathToVictory: p2vObject, goals, details } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
   const { primaryElectionDate } = details || {}
@@ -73,17 +71,6 @@ export default function DashboardPage({
       }))
     }
   }
-
-  useEffect(() => {
-    const shouldOpen =
-      !primaryElectionDate &&
-      typeof details?.wonGeneral !== 'boolean' &&
-      weeksTill(electionDate).weeks < 0
-
-    if (shouldOpen) {
-      router.push('/dashboard/election-result')
-    }
-  }, [primaryElectionDate, details?.wonGeneral, electionDate, router])
 
   const weeksUntil = weeksTill(resolvedDate)
   const contactGoals = calculateContactGoals(resolvedContactGoal)
