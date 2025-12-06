@@ -61,11 +61,7 @@ export const getPolls = async () => {
   return null
 }
 export const getPoll = async (pollId: string) => {
-  const res = await serverFetch<Poll>(
-    apiRoutes.polls.get,
-    { pollId },
-    { revalidate: 60 },
-  )
+  const res = await serverFetch<Poll>(apiRoutes.polls.get, { pollId })
   if (res.ok) {
     return res.data
   }

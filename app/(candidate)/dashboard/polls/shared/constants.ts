@@ -12,3 +12,5 @@ export const POLL_STATUS_LABELS = {
 
 /** In dollars */
 export const PRICE_PER_POLL_TEXT = 0.035
+
+export const MAX_CONSTITUENTS_PER_RUN = 10000
