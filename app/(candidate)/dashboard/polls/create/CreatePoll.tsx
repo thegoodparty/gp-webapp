@@ -35,6 +35,8 @@ import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
+import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
+import { uuidv7 } from 'uuidv7'
 
 const MIN_QUESTION_LENGTH = 25
 
@@ -674,8 +676,45 @@ const ReviewForm: React.FC<{
   )
 }
 
+const PaymentForm: React.FC<{
+  goBack: () => void
+  onComplete: () => void
+  pollId: string
+  details: Details
+  targetAudienceSize: number
+  scheduledDate: Date
+  imageUrl?: string
+}> = ({
+  goBack,
+  onComplete,
+  pollId,
+  details,
+  targetAudienceSize,
+  scheduledDate,
+  imageUrl,
+}) => {
+  return (
+    <FormStep step={Step.payment} onBack={goBack} nextButton={<></>}>
+      <PollPayment
+        purchaseMetaData={{
+          type: PollPurchaseType.new,
+          pollId,
+          name: details.title,
+          message: details.question,
+          imageUrl: imageUrl,
+          audienceSize: targetAudienceSize,
+          scheduledDate: scheduledDate.toISOString(),
+        }}
+        onConfirmed={onComplete}
+      />
+    </FormStep>
+  )
+}
+
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
+
+  const [pollId] = useState(() => uuidv7())
 
   const [state, setState] = useState<State>({
     step: Step.details,
@@ -772,6 +811,26 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
               imageUrl: state.imageUrl,
             })
           }
+          details={state.details}
+          targetAudienceSize={state.targetAudienceSize}
+          scheduledDate={state.scheduledDate}
+          imageUrl={state.imageUrl}
+        />
+      )}
+
+      {state.step === Step.payment && (
+        <PaymentForm
+          goBack={() =>
+            setState({
+              step: Step.review,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onComplete={() => setState({ step: Step.paymentConfirmed, pollId })}
+          pollId={pollId}
           details={state.details}
           targetAudienceSize={state.targetAudienceSize}
           scheduledDate={state.scheduledDate}
