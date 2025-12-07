@@ -1,0 +1,11 @@
+import { reverseObject } from './reverseObject.util'
+
+export const CANDIDATE_TIERS: Record<string, string | null> = {
+  Review: null,
+  'Likely to Win': 'WIN',
+  'Hard to Call': 'TOSSUP',
+  'Likely to Lose': 'LOSE',
+}
+export const CANDIDATE_TIERS_REVERSED = reverseObject(CANDIDATE_TIERS as Record<string, string>)
+
+
