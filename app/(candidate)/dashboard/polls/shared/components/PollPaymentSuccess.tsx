@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from 'react'
 import CongratulationsAnimation from '@shared/animations/CongratulationsAnimation'
 import H1 from '@shared/typography/H1'
