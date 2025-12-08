@@ -19,13 +19,12 @@ import PollTextBiasInput, {
   BiasAnalysisState,
 } from '../shared/components/poll-text-bias/PollTextBiasInput'
 import clsx from 'clsx'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-import { useQuery } from '@tanstack/react-query'
 import { LuLoaderCircle } from 'react-icons/lu'
 import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
-import { calculateRecommendedPollSize } from '../shared/audience-selection'
-import { orderBy } from 'es-toolkit'
+import {
+  PollAudienceSelector,
+  useTotalConstituentsWithCellPhone,
+} from '../shared/audience-selection'
 import DateInputCalendar from '@shared/inputs/DateInputCalendar'
 import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
@@ -34,10 +33,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
-import {
-  PRICE_PER_POLL_TEXT,
-  MAX_CONSTITUENTS_PER_RUN,
-} from '../shared/constants'
+import { PRICE_PER_POLL_TEXT } from '../shared/constants'
 
 const MIN_QUESTION_LENGTH = 25
 
@@ -402,14 +398,7 @@ const AudienceSelectionForm: React.FC<{
     number | undefined
   >(targetAudienceSize)
 
-  const query = useQuery({
-    queryKey: ['total-constituents-with-cell-phone'],
-    queryFn: () =>
-      clientFetch<{ meta: { totalConstituents: number } }>(
-        apiRoutes.contacts.stats,
-        { hasCellPhone: 'true' },
-      ).then((res) => ({ totalConstituents: res.data.meta.totalConstituents })),
-  })
+  const query = useTotalConstituentsWithCellPhone()
 
   if (query.status !== 'success') {
     return (
@@ -423,80 +412,6 @@ const AudienceSelectionForm: React.FC<{
           size={60}
         />
       </FormStep>
-    )
-  }
-
-  const totalConstituents = query.data.totalConstituents
-  const usableTotalConstituents = Math.min(
-    totalConstituents,
-    MAX_CONSTITUENTS_PER_RUN,
-  )
-  const isTotalConstituentsCapped =
-    totalConstituents !== usableTotalConstituents
-
-  const { recommendedSendCount } = calculateRecommendedPollSize({
-    alreadySent: 0,
-    expectedResponseRate: 0.03,
-    responsesAlreadyReceived: 0,
-    totalConstituents: usableTotalConstituents,
-  })
-
-  const recommendedMessage =
-    'The smallest group for statistically reliable results.'
-
-  let options = [
-    { pct: 0.25, message: 'Low impact.' },
-    { pct: 0.5, message: 'Medium impact.' },
-    { pct: 0.75, message: 'High impact.' },
-    { pct: 1, message: "You can't do any better than this!" },
-  ].map(({ pct, message }) => {
-    const count = Math.ceil(totalConstituents * pct)
-    const isRecommended = count === recommendedSendCount
-    return {
-      count,
-      percentage: `${pct * 100}%`,
-      isRecommended: count === recommendedSendCount,
-      message: isRecommended ? recommendedMessage : message,
-    }
-  })
-
-  // cap options at MAX_CONSTITUENTS_PER_RUN
-  let hasCapped = false
-  options = options
-    .map((option) => {
-      const count = Math.min(option.count, MAX_CONSTITUENTS_PER_RUN)
-      if (hasCapped) {
-        return null
-      }
-      if (count !== option.count) {
-        hasCapped = true
-      }
-      const percentage = Math.round((count / totalConstituents) * 100)
-      return {
-        ...option,
-        count,
-        percentage: percentage < 1 ? '<1%' : `${percentage}%`,
-      }
-    })
-    .filter((option) => option !== null)
-
-  if (!options.some((option) => option.isRecommended)) {
-    const recommendedPercentage = Math.round(
-      (recommendedSendCount / totalConstituents) * 100,
-    )
-    options = orderBy(
-      [
-        ...options,
-        {
-          count: recommendedSendCount,
-          percentage:
-            recommendedPercentage < 1 ? '<1%' : `${recommendedPercentage}%`,
-          isRecommended: true,
-          message: recommendedMessage,
-        },
-      ],
-      [(o) => o.count],
-      ['asc'],
     )
   }
 
@@ -524,60 +439,18 @@ const AudienceSelectionForm: React.FC<{
       <H1 className="md:text-center">
         How many constituents do you want to message?
       </H1>
-      <div className="flex flex-col mt-4 mb-8">
-        <p className="text-left md:text-center text-lg font-normal text-muted-foreground">
-          There are {numberFormatter(totalConstituents)} constituents with cell
-          phone numbers in your community.
-        </p>
-      </div>
+      <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
+        There are {numberFormatter(query.data.totalConstituents)} constituents
+        with cell phone numbers in your community.
+      </p>
 
-      <div className="w-full flex flex-col gap-2">
-        {options.map((option) => (
-          <div
-            key={`audience-option-${option.count}`}
-            className={clsx(
-              // hover
-              'flex items-center justify-between flex-row border-2 rounded-lg p-4 gap-4 hover:border-blue-400 cursor-pointer',
-              // thicker blue border when selected
-              selectedAudienceSize === option.count
-                ? 'border-blue-500'
-                : 'border-slate-200',
-            )}
-            onClick={() => setSelectedAudienceSize(option.count)}
-          >
-            <div className="flex-1">
-              <p>
-                {numberFormatter(option.count)} constituents (
-                {option.percentage})
-              </p>
-              <p className="text-sm text-muted-foreground">{option.message}</p>
-            </div>
-            {option.isRecommended && (
-              <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white">
-                Recommended
-              </span>
-            )}
-            <p>${formatCurrency(PRICE_PER_POLL_TEXT * option.count)}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4">
-        <p className="text-sm text-muted-foreground text-center">
-          Each message costs ${PRICE_PER_POLL_TEXT}.
-        </p>
-
-        {isTotalConstituentsCapped && (
-          <p className="text-sm text-muted-foreground text-center">
-            You can only send to {numberFormatter(MAX_CONSTITUENTS_PER_RUN)}{' '}
-            constituents at a time.
-          </p>
-        )}
-        <p className="text-sm text-muted-foreground text-center">
-          Once your poll results are in, you can expand your poll to send to
-          more people.
-        </p>
-      </div>
+      <PollAudienceSelector
+        expectedResponseRate={0.03}
+        totalConstituentsWithCellPhone={query.data.totalConstituents}
+        alreadySent={0}
+        responsesAlreadyReceived={0}
+        onSelect={({ count }) => setSelectedAudienceSize(count)}
+      />
     </FormStep>
   )
 }
@@ -667,7 +540,7 @@ const ReviewForm: React.FC<{
             </p>
             <p>
               Estimated Completion:{' '}
-              <b>{addDays(scheduledDate, 3).toDateString()}</b>
+              <b>{addDays(scheduledDate, 3).toDateString()} at 11:00am</b>
             </p>
             <p>
               Cost:{' '}

@@ -10,6 +10,7 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import { isPollExpanding } from './poll-utils'
 import { PollStatus } from './poll-types'
 import { LuCircleCheck } from 'react-icons/lu'
+import clsx from 'clsx'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
@@ -23,12 +24,12 @@ export default function ConfidenceAlert() {
   const { lowConfidence } = poll || {}
 
   if (isPollExpanding(poll)) {
-    const props =
+    const alertData =
       poll.status === PollStatus.SCHEDULED
         ? {
             variant: 'success' as const,
             icon: <LuCircleCheck className="mt-0.5" />,
-            color: 'green',
+            color: 'text-green-500',
             message: `This poll is scheduled to gather more feedback on ${dateUsHelper(
               poll.scheduledDate,
             )} at 11:00 AM`,
@@ -36,18 +37,18 @@ export default function ConfidenceAlert() {
         : {
             variant: 'info' as const,
             icon: <BsExclamationCircle className="mt-0.5" />,
-            color: 'blue',
+            color: 'text-blue-500',
             message: `Poll expansion is currently in progress. New results are expected on ${dateUsHelper(
               poll.estimatedCompletionDate,
             )} at 11:00 AM`,
           }
     return (
-      <Alert variant={props.variant}>
+      <Alert variant={alertData.variant}>
         <AlertTitle>
           <div className="flex flex-col gap-4 md:flex-row justify-between">
-            <div className={`flex gap-2 text-${props.color}-500`}>
-              {props.icon}
-              <div className="font-medium">{props.message}</div>
+            <div className={clsx('flex gap-2', alertData.color)}>
+              {alertData.icon}
+              <div className="font-medium">{alertData.message}</div>
             </div>
           </div>
         </AlertTitle>
