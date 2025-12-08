@@ -22,9 +22,9 @@ export const useOnboarding = () => {
     imageUrl: null,
     textMessage: null,
     scheduledDate: null,
-    estimatedCompletionDate: null,
     swornInDate: null,
     swornIn: false,
+    scheduledDate: null,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
@@ -102,13 +102,9 @@ export const useOnboarding = () => {
     const scheduledDate = new Date(now)
     scheduledDate.setDate(now.getDate() + 4) // 4 days from now
 
-    const estimatedCompletionDate = new Date(now)
-    estimatedCompletionDate.setDate(now.getDate() + 7) // 7 days from now (4 + 3), 3 day processing time
-
     setFormData((prev) => ({
       ...prev,
       scheduledDate,
-      estimatedCompletionDate,
     }))
   }, [])
 
@@ -159,6 +155,7 @@ export const useOnboarding = () => {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
+        scheduledDate: formData.scheduledDate,
       })
 
       if (!response.ok) {
@@ -186,7 +183,6 @@ export const useOnboarding = () => {
       imageUrl: null,
       textMessage: null,
       scheduledDate: null,
-      estimatedCompletionDate: null,
       swornInDate: null,
       swornIn: false,
     })

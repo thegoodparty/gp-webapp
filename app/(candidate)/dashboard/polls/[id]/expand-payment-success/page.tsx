@@ -1,9 +1,10 @@
 import pageMetaData from 'helpers/metadataHelper'
 import serveAccess from 'app/(candidate)/dashboard/shared/serveAccess'
 import { redirect } from 'next/navigation'
-import ExpandPaymentSuccessPage from './components/ExpandPaymentPage'
 import { PollProvider } from '../../shared/hooks/PollProvider'
 import { getPoll } from '../../shared/serverApiCalls'
+import ExpandPollLayout from '../expand/shared/ExpandPollLayout'
+import { PollPaymentSuccess } from '../../shared/components/PollPaymentSuccess'
 
 export const metadata = pageMetaData({
   title: 'Expand Poll | GoodParty.org',
@@ -31,16 +32,23 @@ export default async function Page({ params, searchParams }: PageProps<any>) {
   if (!poll) {
     return redirect('/dashboard/polls')
   }
-  const { count: countParam } = await searchParams
+  const { count: countParam, scheduledDate } = await searchParams
 
   const count = parseIntQueryParam(countParam)
-  if (!count) {
+  if (!count || typeof scheduledDate !== 'string') {
     redirect(`/dashboard/polls/${id}/expand`)
   }
 
   return (
     <PollProvider poll={poll}>
-      <ExpandPaymentSuccessPage count={count} />
+      <ExpandPollLayout showBreadcrumbs={false}>
+        <PollPaymentSuccess
+          className="flex flex-col items-center justify-center"
+          scheduledDate={new Date(scheduledDate)}
+          textsPaidFor={count}
+          redirectTo={'/dashboard/polls'}
+        />
+      </ExpandPollLayout>
     </PollProvider>
   )
 }
