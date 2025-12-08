@@ -9,6 +9,7 @@ import {
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { formatCurrency } from 'helpers/numberHelper'
+import { PRICE_PER_POLL_TEXT } from 'app/(candidate)/dashboard/polls/shared/constants'
 
 export default function StrategyStep() {
   const { demoMessageText } = useOnboardingContext()
