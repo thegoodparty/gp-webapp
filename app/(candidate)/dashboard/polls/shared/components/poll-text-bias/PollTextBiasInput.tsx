@@ -34,6 +34,7 @@ export default function PollTextBiasInput({
   const [lastOptimizedText, setLastOptimizedText] = useState<string | null>(
     null,
   )
+  const [lastAnalyzedText, setLastAnalyzedText] = useState<string | null>(null)
   const [isCheckingForBias, setIsCheckingForBias] = useState(false)
   const [isWaitingToOptimize, setIsWaitingToOptimize] = useState(false)
   const {
@@ -78,6 +79,7 @@ export default function PollTextBiasInput({
         streamText(rewrittenText, (finalText) => {
           onChange(finalText)
           setLastOptimizedText(finalText)
+          setLastAnalyzedText(finalText.trim())
           clearAnalysis()
           resetStates()
         })
@@ -89,6 +91,7 @@ export default function PollTextBiasInput({
       !isWaitingToOptimize
     ) {
       setIsCheckingForBias(false)
+      setLastAnalyzedText(trimmedValue)
     }
   }, [
     isAnalyzing,
@@ -96,6 +99,7 @@ export default function PollTextBiasInput({
     isCheckingForBias,
     biasAnalysis,
     value,
+    trimmedValue,
     optimizeText,
     streamText,
     onChange,
@@ -144,12 +148,17 @@ export default function PollTextBiasInput({
 
   const handleBlur = useCallback(() => {
     setIsFocused(false)
+    const textChangedFromAnalyzed =
+      lastAnalyzedText !== null && trimmedValue !== lastAnalyzedText
     if (
       trimmedValue.length > 0 &&
       meetsLengthThreshold &&
       !matchesLastOptimized &&
-      !biasAnalysis
+      (!biasAnalysis || textChangedFromAnalyzed)
     ) {
+      if (textChangedFromAnalyzed && biasAnalysis) {
+        clearAnalysis()
+      }
       setIsCheckingForBias(true)
       if (shouldOptimizeAfterAnalysisRef.current) {
         setIsWaitingToOptimize(true)
@@ -164,6 +173,8 @@ export default function PollTextBiasInput({
     matchesLastOptimized,
     meetsLengthThreshold,
     biasAnalysis,
+    lastAnalyzedText,
+    clearAnalysis,
   ])
 
   const resetBiasState = useCallback(() => {
@@ -179,13 +190,22 @@ export default function PollTextBiasInput({
     if (trimmedValue.length === 0) {
       clearAnalysis()
       setLastOptimizedText(null)
+      setLastAnalyzedText(null)
       resetStates()
       resetBiasState()
       return
     }
 
-    if (textChangedFromOptimized) {
-      setLastOptimizedText(null)
+    const textChangedFromAnalyzed =
+      lastAnalyzedText !== null && trimmedValue !== lastAnalyzedText
+
+    if (textChangedFromOptimized || textChangedFromAnalyzed) {
+      if (textChangedFromOptimized) {
+        setLastOptimizedText(null)
+      }
+      if (textChangedFromAnalyzed) {
+        setLastAnalyzedText(null)
+      }
       clearAnalysis()
       resetStates()
       resetBiasState()
@@ -194,6 +214,7 @@ export default function PollTextBiasInput({
     trimmedValue,
     clearAnalysis,
     textChangedFromOptimized,
+    lastAnalyzedText,
     resetStates,
     resetBiasState,
   ])
@@ -205,6 +226,7 @@ export default function PollTextBiasInput({
       streamText(rewrittenText, (finalText) => {
         onChange(finalText)
         setLastOptimizedText(finalText)
+        setLastAnalyzedText(finalText.trim())
         clearAnalysis()
         resetStates()
       })
