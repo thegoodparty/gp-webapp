@@ -48,61 +48,41 @@ export default function PollTextBiasInput({
   const { isStreaming, streamingText, streamText } = useTextStreaming()
 
   const trimmedValue = value.trim()
-  const hasBias = biasAnalysis ? biasAnalysis.bias_spans.length > 0 : false
-  const hasGrammar = biasAnalysis
-    ? biasAnalysis.grammar_spans.length > 0
-    : false
+  const hasBias = (biasAnalysis?.bias_spans.length ?? 0) > 0
+  const hasGrammar = (biasAnalysis?.grammar_spans.length ?? 0) > 0
   const hasIssues = hasBias || hasGrammar
   const matchesLastOptimized =
     lastOptimizedText !== null && trimmedValue === lastOptimizedText.trim()
   const textChangedFromOptimized =
     lastOptimizedText !== null && trimmedValue !== lastOptimizedText.trim()
   const meetsLengthThreshold = trimmedValue.length > analysisLengthThreshold
-
   const hasBeenChecked =
     matchesLastOptimized ||
     (!!biasAnalysis && !isAnalyzing && !isCheckingForBias)
 
   const biasStateRef = React.useRef<BiasAnalysisState | null>(null)
-  const optimizeTextRef = React.useRef(optimizeText)
-  const streamTextRef = React.useRef(streamText)
-  const onChangeRef = React.useRef(onChange)
-  const clearAnalysisRef = React.useRef(clearAnalysis)
   const shouldOptimizeAfterAnalysisRef = React.useRef(false)
 
-  useEffect(() => {
-    optimizeTextRef.current = optimizeText
-    streamTextRef.current = streamText
-    onChangeRef.current = onChange
-    clearAnalysisRef.current = clearAnalysis
-  }, [optimizeText, streamText, onChange, clearAnalysis])
+  const resetStates = useCallback(() => {
+    setIsCheckingForBias(false)
+    setIsWaitingToOptimize(false)
+    shouldOptimizeAfterAnalysisRef.current = false
+  }, [])
 
   useEffect(() => {
-    if (isAnalyzing && isWaitingToOptimize) {
-      return
-    }
-
     if (!isAnalyzing && isWaitingToOptimize && biasAnalysis) {
       setIsWaitingToOptimize(false)
       shouldOptimizeAfterAnalysisRef.current = false
-      const performOptimize = async () => {
-        const rewrittenText = await optimizeTextRef.current(value, true)
+      optimizeText(value, true).then((rewrittenText) => {
         if (!rewrittenText) return
-
-        streamTextRef.current(rewrittenText, (finalText) => {
-          onChangeRef.current(finalText)
+        streamText(rewrittenText, (finalText) => {
+          onChange(finalText)
           setLastOptimizedText(finalText)
-          clearAnalysisRef.current()
-          setIsCheckingForBias(false)
-          setIsWaitingToOptimize(false)
+          clearAnalysis()
+          resetStates()
         })
-      }
-      performOptimize()
-    }
-  }, [isAnalyzing, isWaitingToOptimize, biasAnalysis, value])
-
-  useEffect(() => {
-    if (
+      })
+    } else if (
       !isAnalyzing &&
       isCheckingForBias &&
       biasAnalysis &&
@@ -110,7 +90,18 @@ export default function PollTextBiasInput({
     ) {
       setIsCheckingForBias(false)
     }
-  }, [isAnalyzing, isCheckingForBias, biasAnalysis, isWaitingToOptimize])
+  }, [
+    isAnalyzing,
+    isWaitingToOptimize,
+    isCheckingForBias,
+    biasAnalysis,
+    value,
+    optimizeText,
+    streamText,
+    onChange,
+    clearAnalysis,
+    resetStates,
+  ])
 
   React.useEffect(() => {
     const currentState: BiasAnalysisState = {
@@ -141,20 +132,15 @@ export default function PollTextBiasInput({
   const isProcessing = isAnalyzing || isOptimizing || isStreaming
   const canOptimize =
     meetsLengthThreshold && !isProcessing && !matchesLastOptimized
-
-  const displayValue =
+  const showLoadingState =
     (isOptimizing && !isStreaming) || (isWaitingToOptimize && isAnalyzing)
-      ? ''
-      : isStreaming
-      ? streamingText
-      : value
-
+  const displayValue = showLoadingState
+    ? ''
+    : isStreaming
+    ? streamingText
+    : value
   const shouldShowHighlights =
     !!biasAnalysis && hasIssues && !isProcessing && !isWaitingToOptimize
-
-  const handleFocus = useCallback(() => {
-    setIsFocused(true)
-  }, [])
 
   const handleBlur = useCallback(() => {
     setIsFocused(false)
@@ -180,58 +166,47 @@ export default function PollTextBiasInput({
     biasAnalysis,
   ])
 
+  const resetBiasState = useCallback(() => {
+    onBiasAnalysisChange?.({
+      hasBias: false,
+      hasGrammar: false,
+      hasServerError: false,
+      hasBeenChecked: false,
+    })
+  }, [onBiasAnalysisChange])
+
   const handleContentChange = useCallback(() => {
     if (trimmedValue.length === 0) {
       clearAnalysis()
       setLastOptimizedText(null)
-      setIsCheckingForBias(false)
-      setIsWaitingToOptimize(false)
-      shouldOptimizeAfterAnalysisRef.current = false
-      if (onBiasAnalysisChange) {
-        onBiasAnalysisChange({
-          hasBias: false,
-          hasGrammar: false,
-          hasServerError: false,
-          hasBeenChecked: false,
-        })
-      }
+      resetStates()
+      resetBiasState()
       return
     }
 
     if (textChangedFromOptimized) {
       setLastOptimizedText(null)
       clearAnalysis()
-      setIsCheckingForBias(false)
-      setIsWaitingToOptimize(false)
-      shouldOptimizeAfterAnalysisRef.current = false
-      if (onBiasAnalysisChange) {
-        onBiasAnalysisChange({
-          hasBias: false,
-          hasGrammar: false,
-          hasServerError: false,
-          hasBeenChecked: false,
-        })
-      }
+      resetStates()
+      resetBiasState()
     }
   }, [
     trimmedValue,
     clearAnalysis,
     textChangedFromOptimized,
-    onBiasAnalysisChange,
+    resetStates,
+    resetBiasState,
   ])
 
   const handleOptimize = useCallback(async () => {
     if (biasAnalysis) {
       const rewrittenText = await optimizeText(value)
       if (!rewrittenText) return
-
       streamText(rewrittenText, (finalText) => {
         onChange(finalText)
         setLastOptimizedText(finalText)
         clearAnalysis()
-        setIsCheckingForBias(false)
-        setIsWaitingToOptimize(false)
-        shouldOptimizeAfterAnalysisRef.current = false
+        resetStates()
       })
     } else if (meetsLengthThreshold) {
       if (isAnalyzing || isCheckingForBias) {
@@ -255,6 +230,7 @@ export default function PollTextBiasInput({
     streamText,
     onChange,
     clearAnalysis,
+    resetStates,
   ])
 
   return (
@@ -268,14 +244,11 @@ export default function PollTextBiasInput({
             biasSpans={biasAnalysis?.bias_spans || []}
             grammarSpans={biasAnalysis?.grammar_spans || []}
             isFocused={isFocused && !isProcessing}
-            onFocus={handleFocus}
+            onFocus={() => setIsFocused(true)}
             onBlur={handleBlur}
             showHighlights={shouldShowHighlights}
             onContentChange={handleContentChange}
-            showLoadingDots={
-              (isOptimizing && !isStreaming) ||
-              (isWaitingToOptimize && isAnalyzing)
-            }
+            showLoadingDots={showLoadingState}
             isReadOnly={isProcessing}
             hidePlaceholder={isProcessing}
           />
