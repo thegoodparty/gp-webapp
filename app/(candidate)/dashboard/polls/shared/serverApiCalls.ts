@@ -1,34 +1,10 @@
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-
-export type Poll = {
-  id: string
-  name: string
-  status: 'in_progress' | 'expanding' | 'completed'
-  messageContent: string
-  imageUrl?: string
-  scheduledDate: string
-  estimatedCompletionDate: string
-  completedDate?: string
-  audienceSize: number
-  responseCount?: number
-  lowConfidence?: boolean
-}
+import { Poll, PollIssue } from './poll-types'
 
 export type GetPollsResponse = {
   results: Poll[]
   pagination: { nextCursor: string | undefined }
-}
-
-export type PollIssue = {
-  pollId: string
-  title: string
-  summary: string
-  details: string
-  mentionCount: number
-  representativeComments: Array<{
-    comment: string
-  }>
 }
 
 export type GetPollIssuesResponse = {
