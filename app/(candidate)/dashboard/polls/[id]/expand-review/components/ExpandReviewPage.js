@@ -4,7 +4,7 @@ import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
 import H1 from '@shared/typography/H1'
 import PreviewCard from 'app/polls/onboarding/components/PreviewCard'
-import { PRICE_PER_MESSAGE } from '../../../shared/constants'
+import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
 import { numberFormatter } from 'helpers/numberHelper'
 import { dateUsHelper } from 'helpers/dateHelper'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
@@ -39,7 +39,7 @@ export default function ExpandReviewPage({ count }) {
         estimatedCompletionDate={dateUsHelper(nextWeek, 'long')}
         count={count}
         timeline="1 week"
-        cost={`$${numberFormatter(PRICE_PER_MESSAGE * count, 2)}`}
+        cost={`$${numberFormatter(PRICE_PER_POLL_TEXT * count, 2)}`}
       />
       <ExpandStepFooter
         currentStep={2}
