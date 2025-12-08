@@ -241,7 +241,9 @@ const DetailsForm: React.FC<{
           placeholder="What would you like to name your poll? "
         />
         {errors.title && (
-          <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>
+          <p className="mt-1 text-sm font-normal text-red-500">
+            {errors.title.message}
+          </p>
         )}
         <label className="block mb-2 mt-4">Poll Introduction</label>
         <Controller
@@ -290,8 +292,8 @@ const DetailsForm: React.FC<{
               }
 
               const state = biasAnalysisStateRef.current
-              if (!state || !state.hasBeenChecked) {
-                return 'Please check your message for bias before submitting.'
+              if (!state) {
+                return true
               }
               if (state.hasServerError) {
                 return 'Unable to analyze for bias, please try again later.'
@@ -317,15 +319,16 @@ const DetailsForm: React.FC<{
             />
           )}
         />
-        {errors.question && (
+        {errors.question ? (
           <p className="mt-1 font-normal text-sm text-red-500">
             {errors.question.message}
           </p>
+        ) : (
+          <p className="mt-1.5 font-normal text-sm text-muted-foreground">
+            We recommend checking your message for clarity and bias using
+            optimize message.
+          </p>
         )}
-        <p className="mt-1.5 font-normal text-sm text-muted-foreground">
-          We recommend checking your message for clarity and bias using optimize
-          message.
-        </p>
 
         <label className="block mb-2 mt-4">Poll Closing</label>
         <Input
