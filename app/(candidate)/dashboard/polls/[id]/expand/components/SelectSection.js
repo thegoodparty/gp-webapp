@@ -17,6 +17,7 @@ import Body2 from '@shared/typography/Body2'
 import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { LuLoaderCircle } from 'react-icons/lu'
+import { MAX_CONSTITUENTS_PER_RUN } from '../../../shared/constants'
 
 const Content = ({ children }) => (
   <section className="mt-8 flex flex-col gap-4 md:gap-6 items-center">
@@ -41,17 +42,27 @@ const calculateRecommendedIncrease = (poll, contactsStats) => {
   const totalRemainingConstituents =
     (contactsStats?.meta?.totalConstituents || 0) - poll.audienceSize
 
+  const cappedTotalRemainingConstituents = Math.min(
+    MAX_CONSTITUENTS_PER_RUN,
+    totalRemainingConstituents,
+  )
+
   const existingResponseRate = poll.responseCount / poll.audienceSize
 
   // originally designed here: https://goodparty.clickup.com/t/90132012119/ENG-4825
   let recommendedIncrease = (83 - poll.responseCount) / existingResponseRate
 
-  if (recommendedIncrease > totalRemainingConstituents) {
-    recommendedIncrease = totalRemainingConstituents
+  if (recommendedIncrease > cappedTotalRemainingConstituents) {
+    recommendedIncrease = cappedTotalRemainingConstituents
   }
   recommendedIncrease = Math.ceil(recommendedIncrease)
 
-  return { recommendedIncrease, totalRemainingConstituents }
+  return {
+    recommendedIncrease,
+    totalRemainingConstituents,
+    isConstituentCountCapped:
+      cappedTotalRemainingConstituents !== totalRemainingConstituents,
+  }
 }
 
 export default function SelectSection({ countCallback }) {
@@ -76,8 +87,11 @@ export default function SelectSection({ countCallback }) {
     })
   }, [])
 
-  const { recommendedIncrease, totalRemainingConstituents } =
-    calculateRecommendedIncrease(poll, contactsStats)
+  const {
+    recommendedIncrease,
+    totalRemainingConstituents,
+    isConstituentCountCapped,
+  } = calculateRecommendedIncrease(poll, contactsStats)
 
   const selectOptions = [
     {
@@ -110,19 +124,40 @@ export default function SelectSection({ countCallback }) {
     },
   ]
 
-  const recommendedOption = selectOptions.find(
+  let hasCapped = false
+  const cappedSelectOptions = selectOptions
+    .map((option) => {
+      const value = Math.min(option.value, MAX_CONSTITUENTS_PER_RUN)
+      if (hasCapped) {
+        return null
+      }
+      if (value !== option.value) {
+        hasCapped = true
+      }
+      return {
+        ...option,
+        value,
+        label: `${numberFormatter(value)} Constituents (${Math.round(
+          (value / totalRemainingConstituents) * 100,
+        )}%)`,
+      }
+    })
+    .filter((option) => option !== null)
+
+  const recommendedOption = cappedSelectOptions.find(
     (option) => option.value === recommendedIncrease,
   )
 
   if (recommendedOption) {
     recommendedOption.isRecommended = true
   } else {
-    selectOptions.unshift({
-      label: `${numberFormatter(
-        recommendedIncrease,
-      )} Constituents (${Math.round(
-        (recommendedIncrease / totalRemainingConstituents) * 100,
-      )}%)`,
+    const percentage = Math.round(
+      (recommendedIncrease / totalRemainingConstituents) * 100,
+    )
+    cappedSelectOptions.unshift({
+      label: `${numberFormatter(recommendedIncrease)} Constituents (${
+        percentage < 1 ? '<1%' : `${percentage}%`
+      })`,
       value: recommendedIncrease,
       isRecommended: true,
     })
@@ -143,16 +178,24 @@ export default function SelectSection({ countCallback }) {
     <Content>
       <Body1 className="font-semibold">Make your selection</Body1>
 
-      <Body2 className="text-muted-foreground mb-4">
-        You can text up to {numberFormatter(totalRemainingConstituents)} more
-        constituents
-      </Body2>
+      <div className="flex flex-col mb-4">
+        <Body2 className="text-muted-foreground">
+          You can text up to {numberFormatter(totalRemainingConstituents)} more
+          constituents.
+        </Body2>
+        {isConstituentCountCapped && (
+          <Body2 className="text-muted-foreground">
+            You can only send to {numberFormatter(MAX_CONSTITUENTS_PER_RUN)}{' '}
+            constituents at a time.
+          </Body2>
+        )}
+      </div>
       <Select value={selectedOption} onValueChange={handleSelect}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Recommendation for higher confidence" />
         </SelectTrigger>
         <SelectContent>
-          {selectOptions.map((option) => (
+          {cappedSelectOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
               {option.isRecommended && (
