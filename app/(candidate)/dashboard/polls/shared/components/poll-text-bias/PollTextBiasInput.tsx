@@ -186,38 +186,41 @@ export default function PollTextBiasInput({
     })
   }, [onBiasAnalysisChange])
 
-  const handleContentChange = useCallback(() => {
-    if (trimmedValue.length === 0) {
-      clearAnalysis()
-      setLastOptimizedText(null)
-      setLastAnalyzedText(null)
-      resetStates()
-      resetBiasState()
-      return
-    }
-
-    const textChangedFromAnalyzed =
-      lastAnalyzedText !== null && trimmedValue !== lastAnalyzedText
-
-    if (textChangedFromOptimized || textChangedFromAnalyzed) {
-      if (textChangedFromOptimized) {
+  const handleContentChange = useCallback(
+    (newValue: string) => {
+      const trimmedNewValue = newValue.trim()
+      if (trimmedNewValue.length === 0) {
+        clearAnalysis()
         setLastOptimizedText(null)
-      }
-      if (textChangedFromAnalyzed) {
         setLastAnalyzedText(null)
+        resetStates()
+        resetBiasState()
+        return
       }
-      clearAnalysis()
-      resetStates()
-      resetBiasState()
-    }
-  }, [
-    trimmedValue,
-    clearAnalysis,
-    textChangedFromOptimized,
-    lastAnalyzedText,
-    resetStates,
-    resetBiasState,
-  ])
+
+      const textChangedFromAnalyzed =
+        lastAnalyzedText !== null && trimmedNewValue !== lastAnalyzedText
+
+      if (textChangedFromOptimized || textChangedFromAnalyzed) {
+        if (textChangedFromOptimized) {
+          setLastOptimizedText(null)
+        }
+        if (textChangedFromAnalyzed) {
+          setLastAnalyzedText(null)
+        }
+        clearAnalysis()
+        resetStates()
+        resetBiasState()
+      }
+    },
+    [
+      clearAnalysis,
+      textChangedFromOptimized,
+      lastAnalyzedText,
+      resetStates,
+      resetBiasState,
+    ],
+  )
 
   const handleOptimize = useCallback(async () => {
     if (biasAnalysis) {
