@@ -155,7 +155,7 @@ export default function SelectSection({ countCallback }) {
           {selectOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
-              {option.isRecommended && (
+              {poll.lowConfidence && option.isRecommended && (
                 <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white text-xs font-medium">
                   Recommended
                 </span>
