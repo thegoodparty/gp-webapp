@@ -2,11 +2,11 @@
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import PreviewCard from '../PreviewCard'
+import { PollPreview } from 'app/(candidate)/dashboard/polls/components/PollPreview'
 
 export default function PreviewStep() {
   const { demoMessageText, formData } = useOnboardingContext()
-  const { imageUrl, estimatedCompletionDate } = formData
+  const { imageUrl, scheduledDate } = formData
 
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.PollPreviewViewed)
@@ -22,13 +22,12 @@ export default function PreviewStep() {
         for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3
         days.
       </p>
-      <PreviewCard
-        count={500}
-        timeline="3 Days"
-        cost="FREE"
-        demoMessageText={demoMessageText}
+      <PollPreview
+        scheduledDate={scheduledDate}
+        targetAudienceSize={500}
         imageUrl={imageUrl}
-        estimatedCompletionDate={estimatedCompletionDate}
+        message={demoMessageText}
+        isFree={true}
       />
     </div>
   )

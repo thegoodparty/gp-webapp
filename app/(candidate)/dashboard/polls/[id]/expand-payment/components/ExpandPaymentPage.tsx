@@ -2,18 +2,25 @@
 
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
-import H1 from '@shared/typography/H1'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
-import { PurchaseStep } from './PurchaseStep'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
+import {
+  PollPurchaseType,
+  PollPayment,
+} from '../../../shared/components/PollPayment'
 
-export default function ExpandPaymentPage({ count }) {
+export type ExpandPaymentPageProps = {
+  count: number
+  scheduledDate: string
+}
+
+export default function ExpandPaymentPage({
+  count,
+  scheduledDate,
+}: ExpandPaymentPageProps) {
   const [poll] = usePoll()
   const router = useRouter()
 
@@ -27,36 +34,36 @@ export default function ExpandPaymentPage({ count }) {
     })
   }, [])
 
+  const params = `count=${count}&scheduledDate=${encodeURIComponent(
+    scheduledDate,
+  )}`
+
   const handleBack = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand-review?count=${count}`)
+    router.push(`/dashboard/polls/${poll.id}/expand-review?${params}`)
   }
 
-  const handlePurchaseComplete = async (paymentIntent) => {
-    await completePurchase(paymentIntent.id)
+  const handlePurchaseComplete = () => {
     trackEvent(EVENTS.expandPolls.paymentCompleted, {
       type: 'Serve Poll Expansion',
       cost,
       count,
     })
-    router.push(
-      `/dashboard/polls/${poll.id}/expand-payment-success?count=${count}`,
-    )
+    router.push(`/dashboard/polls/${poll.id}/expand-payment-success?${params}`)
   }
 
   return (
     <ExpandPollLayout>
-      <H1 className="text-center">SMS Poll Payment</H1>
-      <PurchaseIntentProvider
-        type={PURCHASE_TYPES.POLL}
+      <PollPayment
         purchaseMetaData={{
-          count: parseInt(count, 10),
+          pollPurchaseType: PollPurchaseType.expansion,
+          count,
           pollId: poll.id,
+          scheduledDate,
         }}
-      >
-        <PurchaseStep onComplete={handlePurchaseComplete} />
-      </PurchaseIntentProvider>
+        onConfirmed={handlePurchaseComplete}
+      />
       <ExpandStepFooter
-        currentStep={3}
+        currentStep={4}
         onBack={handleBack}
         hideNext
         hideBack

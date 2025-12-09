@@ -18,7 +18,6 @@ interface FormData {
   imageUrl: string | null
   textMessage: string | null
   scheduledDate: Date | null
-  estimatedCompletionDate: Date | null
   swornInDate: Date | null
   swornIn: boolean
 }
@@ -48,7 +47,6 @@ export const useOnboarding = (): UseOnboardingReturn => {
     imageUrl: null,
     textMessage: null,
     scheduledDate: null,
-    estimatedCompletionDate: null,
     swornInDate: null,
     swornIn: false,
   })
@@ -120,13 +118,9 @@ export const useOnboarding = (): UseOnboardingReturn => {
     const scheduledDate = new Date(now)
     scheduledDate.setDate(now.getDate() + 4)
 
-    const estimatedCompletionDate = new Date(now)
-    estimatedCompletionDate.setDate(now.getDate() + 7)
-
     setFormData((prev) => ({
       ...prev,
       scheduledDate,
-      estimatedCompletionDate,
     }))
   }, [])
 
@@ -178,6 +172,7 @@ export const useOnboarding = (): UseOnboardingReturn => {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
+        scheduledDate: formData.scheduledDate,
       })
 
       if (!response.ok) {
@@ -201,7 +196,6 @@ export const useOnboarding = (): UseOnboardingReturn => {
       imageUrl: null,
       textMessage: null,
       scheduledDate: null,
-      estimatedCompletionDate: null,
       swornInDate: null,
       swornIn: false,
     })

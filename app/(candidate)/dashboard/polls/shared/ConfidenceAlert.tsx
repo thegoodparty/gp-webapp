@@ -7,6 +7,10 @@ import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { dateUsHelper } from 'helpers/dateHelper'
+import { isPollExpanding } from './poll-utils'
+import { PollStatus } from './poll-types'
+import { LuCircleCheck } from 'react-icons/lu'
+import clsx from 'clsx'
 
 export default function ConfidenceAlert() {
   const [poll] = usePoll()
@@ -19,22 +23,32 @@ export default function ConfidenceAlert() {
 
   const { lowConfidence } = poll || {}
 
-  const isExpanding = poll.status !== 'completed' && !!poll.responseCount
-  if (isExpanding) {
+  if (isPollExpanding(poll)) {
+    const alertData =
+      poll.status === PollStatus.SCHEDULED
+        ? {
+            variant: 'success' as const,
+            icon: <LuCircleCheck className="mt-0.5" />,
+            color: 'text-green-500',
+            message: `This poll is scheduled to gather more feedback on ${dateUsHelper(
+              poll.scheduledDate,
+            )} at 11:00 AM`,
+          }
+        : {
+            variant: 'info' as const,
+            icon: <BsExclamationCircle className="mt-0.5" />,
+            color: 'text-blue-500',
+            message: `Poll expansion is currently in progress. New results are expected on ${dateUsHelper(
+              poll.estimatedCompletionDate,
+            )} at 11:00 AM`,
+          }
     return (
-      <Alert variant="info">
+      <Alert variant={alertData.variant}>
         <AlertTitle>
           <div className="flex flex-col gap-4 md:flex-row justify-between">
-            <div className="flex gap-2 text-blue-500">
-              <BsExclamationCircle className="mt-0.5" />
-              <div>
-                <div className="font-medium">Gathering Feedback</div>
-                <Body2>
-                  We are currently gathering more feedback on this poll. Results
-                  are expected {dateUsHelper(poll.estimatedCompletionDate)} at
-                  11:00 AM.
-                </Body2>
-              </div>
+            <div className={clsx('flex gap-2', alertData.color)}>
+              {alertData.icon}
+              <div className="font-medium">{alertData.message}</div>
             </div>
           </div>
         </AlertTitle>

@@ -12,6 +12,7 @@ import { ErrorMessage } from './ErrorMessage'
 import { useOnboardingContext } from '../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
+import { PickSendDateStep } from './steps/PickSendDateStep'
 
 interface Step {
   name: string
@@ -53,12 +54,21 @@ const steps: Step[] = [
   },
   {
     name: 'Strategy',
-    nextLabel: 'Add Image',
-    nextStep: 'Add Image',
+    nextLabel: 'Pick Send Date',
+    nextStep: 'Pick Send Date',
     allowBack: true,
     backLabel: 'Back',
     backStep: 'Outreach Prelude',
     stepperStepIndex: 4,
+  },
+  {
+    name: 'Pick Send Date',
+    nextLabel: 'Add Image',
+    nextStep: 'Add Image',
+    allowBack: true,
+    backLabel: 'Back',
+    backStep: 'Strategy',
+    stepperStepIndex: 5,
   },
   {
     name: 'Add Image',
@@ -66,8 +76,8 @@ const steps: Step[] = [
     nextStep: 'Preview',
     allowBack: true,
     backLabel: 'Back',
-    backStep: 'Strategy',
-    stepperStepIndex: 5,
+    backStep: 'Pick Send Date',
+    stepperStepIndex: 6,
   },
   {
     name: 'Preview',
@@ -76,7 +86,7 @@ const steps: Step[] = [
     allowBack: true,
     backLabel: 'Back',
     backStep: 'Add Image',
-    stepperStepIndex: 6,
+    stepperStepIndex: 7,
   },
 ]
 
@@ -171,6 +181,7 @@ export default function OnboardingPage() {
             {currentStep.name === 'Sworn In' && <SwornInStep />}
             {currentStep.name === 'Outreach Prelude' && <OutreachStep />}
             {currentStep.name === 'Strategy' && <StrategyStep />}
+            {currentStep.name === 'Pick Send Date' && <PickSendDateStep />}
             {currentStep.name === 'Add Image' && <AddImageStep />}
             {currentStep.name === 'Preview' && <PreviewStep />}
 
