@@ -1,8 +1,4 @@
-export function grammarizeOfficeName(officeName: string | null | undefined) {
-  if (!officeName) {
-    return officeName
-  }
-
+export function grammarizeOfficeName(officeName: string): string {
   let result = officeName
 
   const dashIndex = result.indexOf(' - ')

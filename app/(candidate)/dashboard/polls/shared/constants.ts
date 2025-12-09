@@ -1,14 +1,12 @@
-export const POLL_STATUS = {
-  COMPLETED: 'completed',
-  IN_PROGRESS: 'in_progress',
-  SCHEDULED: 'scheduled',
-}
+import { PollStatus } from './poll-types'
 
-export const POLL_STATUS_LABELS = {
-  [POLL_STATUS.COMPLETED]: 'Completed',
-  [POLL_STATUS.IN_PROGRESS]: 'In Progress',
-  [POLL_STATUS.SCHEDULED]: 'Scheduled',
+export const POLL_STATUS_LABELS: Record<PollStatus, string> = {
+  [PollStatus.COMPLETED]: 'Completed',
+  [PollStatus.IN_PROGRESS]: 'In Progress',
+  [PollStatus.SCHEDULED]: 'Scheduled',
 }
 
 /** In dollars */
 export const PRICE_PER_POLL_TEXT = 0.035
+
+export const MAX_CONSTITUENTS_PER_RUN = 10000

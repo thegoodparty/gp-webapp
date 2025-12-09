@@ -4,39 +4,38 @@ import { usePoll } from '../../shared/hooks/PollProvider'
 import { Alert, AlertTitle } from 'goodparty-styleguide'
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { POLL_STATUS } from '../../shared/constants'
+import { PollStatus } from '../../shared/poll-types'
 
 export default function StatusAlert() {
   const [poll] = usePoll()
   const { status, scheduledDate } = poll
-  if (status === POLL_STATUS.COMPLETED) {
+  if (status === PollStatus.COMPLETED) {
     return null
   }
   let variant: 'default' | 'destructive' | 'success' = 'default'
   switch (status) {
-    case POLL_STATUS.IN_PROGRESS:
+    case PollStatus.IN_PROGRESS:
       variant = 'destructive'
       break
-    case POLL_STATUS.SCHEDULED:
+    case PollStatus.SCHEDULED:
       variant = 'success'
       break
   }
   return (
     <Alert variant={variant} className="mb-4">
       <AlertTitle>
-        {status == POLL_STATUS.IN_PROGRESS && (
+        {status == PollStatus.IN_PROGRESS && (
           <div className="flex items-center gap-2 text-red-500">
             <MdLock />
-            <span>
-              This poll is currently in progress and cannot be edited.
-            </span>
+            <span>This poll is currently in progress.</span>
           </div>
         )}
-        {status === POLL_STATUS.SCHEDULED && (
+        {status === PollStatus.SCHEDULED && (
           <div className="flex items-center gap-2 text-green-500">
             <IoIosCheckmarkCircleOutline />
             <span>
-              This poll is scheduled to send on {dateUsHelper(scheduledDate)}
+              This poll is scheduled to send on {dateUsHelper(scheduledDate)} at
+              11:00 AM.
             </span>
           </div>
         )}
