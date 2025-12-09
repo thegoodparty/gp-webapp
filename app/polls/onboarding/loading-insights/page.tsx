@@ -19,6 +19,7 @@ export default async function Page(): Promise<ReactNode> {
   await candidateAccess()
   const hasPollsResponse = await hasPolls()
 
+  // If the user has polls, disallow onboarding and redirect to the dashboard polls page
   if (hasPollsResponse?.hasPolls) {
     return redirect('/dashboard/polls')
   }
