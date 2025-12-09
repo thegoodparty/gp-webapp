@@ -3,11 +3,17 @@
 import { trackEvent } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 
-export default function TrackCantDownload({ campaign }) {
+interface TrackCantDownloadProps {
+  campaign: {
+    slug: string
+  }
+}
+
+export default function TrackCantDownload({ campaign }: TrackCantDownloadProps): null {
   useEffect(() => {
     trackEvent('Pro user can not download voter file page', {
       slug: campaign.slug,
     })
-  }, [])
+  }, [campaign.slug])
   return null
 }

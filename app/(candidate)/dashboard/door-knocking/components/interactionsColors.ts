@@ -1,4 +1,4 @@
-const interactionsColors = {
+const interactionsColors: { [key: string]: string } = {
   answered: '#2563EB',
   'call-back': '#16A34A',
   refused: '#DC2626',

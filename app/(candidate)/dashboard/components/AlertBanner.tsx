@@ -1,7 +1,19 @@
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
-import Button from '@shared/buttons/Button'
+import Button, { ButtonColor } from '@shared/buttons/Button'
+
+type AlertSeverity = 'error' | 'info' | 'warning' | 'success'
+
+interface AlertBannerProps {
+  title?: string
+  message: string
+  actionHref?: string
+  actionText?: string
+  severity?: AlertSeverity
+  actionOnClick?: () => void
+  [key: string]: string | boolean | number | (() => void) | undefined
+}
 
 export const AlertBanner = ({
   title,
@@ -11,7 +23,7 @@ export const AlertBanner = ({
   severity = 'info',
   actionOnClick,
   ...restProps
-}) => (
+}: AlertBannerProps): React.JSX.Element => (
   <StyledAlert
     className="mb-4"
     variant="outlined"
@@ -28,7 +40,7 @@ export const AlertBanner = ({
           href={actionHref ? actionHref : undefined}
           className="!text-base lg:self-center lg:mr-2"
           onClick={actionOnClick}
-          color={severity}
+          color={severity as ButtonColor}
         >
           {actionText}
         </Button>

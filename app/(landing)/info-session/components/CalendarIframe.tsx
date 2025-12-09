@@ -1,4 +1,4 @@
-export default function CalendarIframe() {
+export default function CalendarIframe(): React.JSX.Element {
   return (
     <iframe
       src="https://meetings.hubspot.com/katrina-vassallo/vol-1-1?embed=true"

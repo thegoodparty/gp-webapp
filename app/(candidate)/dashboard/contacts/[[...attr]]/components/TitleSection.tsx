@@ -1,6 +1,6 @@
 import Body1 from '@shared/typography/Body1'
 
-export default function TitleSection() {
+export default function TitleSection(): React.JSX.Element {
   return (
     <section>
       <h1 className="text-2xl font-semibold">Contacts</h1>
