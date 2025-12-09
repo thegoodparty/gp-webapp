@@ -1,8 +1,18 @@
+import { ReactNode } from 'react'
 import { Card, CardContent } from 'goodparty-styleguide'
 import { LuChartLine } from 'react-icons/lu'
 import { InsightPieChart, InsightDonutChart, InsightHorizontalGaugeChart, InsightVerticalBarChart, InsightHorizontalBarChart, ChartSkeleton } from '@shared/charts'
 
-const MessageFallback = ({ message }) => (
+interface ChartDataPoint {
+  name: string
+  value: number
+}
+
+interface MessageFallbackProps {
+  message: string
+}
+
+const MessageFallback = ({ message }: MessageFallbackProps) => (
     <div className="w-full">
         <div className="h-48 w-full rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-sm text-muted-foreground">
             {message}
@@ -10,7 +20,17 @@ const MessageFallback = ({ message }) => (
     </div>
 )
 
-export const DataVisualizationInsight = ({ title, data, insight, chartType, percentage, isLoading, error }) => {
+interface DataVisualizationInsightProps {
+  title: string
+  data: ChartDataPoint[]
+  insight?: string | null
+  chartType: 'pie' | 'donut' | 'horizontalGauge' | 'verticalBar' | 'horizontalBar'
+  percentage?: boolean
+  isLoading?: boolean
+  error?: string | null
+}
+
+export const DataVisualizationInsight = ({ title, data, insight, chartType, percentage, isLoading, error }: DataVisualizationInsightProps) => {
     const hasData = Array.isArray(data) && data.length > 0
 
     const showSkeleton = Boolean(isLoading)
@@ -54,5 +74,4 @@ export const DataVisualizationInsight = ({ title, data, insight, chartType, perc
         </Card>
     )
 }
-
 

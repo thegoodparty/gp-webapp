@@ -13,7 +13,17 @@ import { useOnboardingContext } from '../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 
-const steps = [
+interface Step {
+  name: string
+  nextLabel: string
+  nextStep: string | null
+  allowBack: boolean
+  backLabel: string
+  backStep: string | null
+  stepperStepIndex: number
+}
+
+const steps: Step[] = [
   {
     name: 'Insights',
     nextLabel: 'Gather Feedback',
@@ -102,7 +112,6 @@ export default function OnboardingPage() {
     return steps[currentStepIndex]
   }, [currentStepIndex])
 
-  // Step validation
   const currentStepValidation = stepValidation[currentStep.name]
   const isStepValid = useMemo(() => {
     return currentStepValidation === undefined || currentStepValidation === true
@@ -171,7 +180,6 @@ export default function OnboardingPage() {
             {currentStep.name === 'Add Image' && <AddImageStep />}
             {currentStep.name === 'Preview' && <PreviewStep />}
 
-            {/* Error message for failed submission */}
             <ErrorMessage
               title="Failed to send SMS poll"
               message={submitError}
@@ -207,3 +215,4 @@ export default function OnboardingPage() {
     </div>
   )
 }
+

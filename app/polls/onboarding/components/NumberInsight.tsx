@@ -1,7 +1,16 @@
+import { ReactNode } from 'react'
 import { Card, CardContent } from 'goodparty-styleguide'
 import { numberFormatter } from 'helpers/numberHelper'
 
-export const NumberInsight = ({ title, value, icon, isLoading = false, error }) => {
+interface NumberInsightProps {
+  title: string
+  value: number
+  icon: ReactNode
+  isLoading?: boolean
+  error?: string | null
+}
+
+export const NumberInsight = ({ title, value, icon, isLoading = false, error }: NumberInsightProps) => {
     const showSkeleton = Boolean(isLoading)
     const showError = !isLoading && Boolean(error)
     const showValue = !isLoading && !error
@@ -28,5 +37,4 @@ export const NumberInsight = ({ title, value, icon, isLoading = false, error }) 
         </Card>
     )
 }
-
 

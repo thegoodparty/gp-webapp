@@ -4,17 +4,21 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 
-export const useTcrComplianceCheck = () => {
+interface TcrComplianceResponse {
+  status?: string
+}
+
+export const useTcrComplianceCheck = (): [boolean, boolean, string | null, () => Promise<void>] => {
   const [tcrCompliant, setTcrCompliant] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchTcrCompliance = async () => {
     try {
       setIsLoading(true)
       setError(null)
       
-      const response = await clientFetch(apiRoutes.campaign.tcrCompliance.fetch)
+      const response = await clientFetch<TcrComplianceResponse>(apiRoutes.campaign.tcrCompliance.fetch)
       
       if (!response.ok) {
         throw new Error('Failed to fetch TCR Compliance data')
@@ -25,7 +29,8 @@ export const useTcrComplianceCheck = () => {
       
       setTcrCompliant(isCompliant)
     } catch (err) {
-      setError(err.message)
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      setError(errorMessage)
       setTcrCompliant(false)
     } finally {
       setIsLoading(false)
@@ -38,3 +43,4 @@ export const useTcrComplianceCheck = () => {
 
   return [tcrCompliant, isLoading, error, fetchTcrCompliance]
 }
+

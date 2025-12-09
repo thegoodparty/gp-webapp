@@ -1,9 +1,44 @@
-/**
- * Maps contacts stats API data to chart format
- * @param {Object} contactsStats - The contacts stats data from the API
- * @returns {Object} Mapped data for charts
- */
-export const mapContactsStatsToCharts = (contactsStats) => {
+interface ContactsStatsBucket {
+  label: string
+  percent: number
+}
+
+interface ContactsStatsCategory {
+  buckets?: ContactsStatsBucket[]
+}
+
+interface ContactsStatsCategories {
+  age?: ContactsStatsCategory
+  presenceOfChildren?: ContactsStatsCategory
+  homeowner?: ContactsStatsCategory
+  estimatedIncomeRange?: ContactsStatsCategory
+  education?: ContactsStatsCategory
+}
+
+interface ContactsStatsMeta {
+  totalConstituents?: number
+}
+
+interface ContactsStats {
+  categories?: ContactsStatsCategories
+  meta?: ContactsStatsMeta
+}
+
+interface ChartDataPoint {
+  name: string
+  value: number
+}
+
+interface ChartData {
+  totalConstituents: number
+  ageDistribution: ChartDataPoint[]
+  presenceOfChildren: ChartDataPoint[]
+  homeowner: ChartDataPoint[]
+  estimatedIncomeRange: ChartDataPoint[]
+  education: ChartDataPoint[]
+}
+
+export const mapContactsStatsToCharts = (contactsStats: ContactsStats | null): ChartData => {
   if (!contactsStats || !contactsStats.categories) {
     return {
       totalConstituents: 0,
@@ -17,27 +52,23 @@ export const mapContactsStatsToCharts = (contactsStats) => {
 
   const { categories, meta } = contactsStats
 
-  // Helpers to scale decimal fractions (0–1) to whole-number percentages (0–100)
-  const toPercent = (value) => {
+  const toPercent = (value: number): number => {
     if (typeof value !== 'number' || Number.isNaN(value)) return 0
     if (value <= 0) return 0
-    // Preserve small non-zero values (e.g., 0.004 => 0.4%)
     return Number((value * 100).toFixed(1))
   }
 
-  const finalizeBuckets = (consolidated) => {
+  const finalizeBuckets = (consolidated: Record<string, number>): ChartDataPoint[] => {
     return Object.entries(consolidated)
-      // Filter using raw value to ensure we keep small non-zero buckets
       .filter(([, raw]) => typeof raw === 'number' && raw > 0)
       .map(([name, raw]) => ({ name, value: toPercent(raw) }))
   }
 
-  // Map age distribution - consolidate into 4 buckets like original
-  const mapAgeDistribution = () => {
+  const mapAgeDistribution = (): ChartDataPoint[] => {
     if (!categories.age?.buckets) return []
     
     const buckets = categories.age.buckets
-    const consolidated = {
+    const consolidated: Record<string, number> = {
       '18 - 25': 0,
       '25 - 35': 0,
       '35 - 50': 0,
@@ -54,12 +85,11 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     return finalizeBuckets(consolidated)
   }
 
-  // Map presence of children - keep same format as original
-  const mapPresenceOfChildren = () => {
+  const mapPresenceOfChildren = (): ChartDataPoint[] => {
     if (!categories.presenceOfChildren?.buckets) return []
     
     const buckets = categories.presenceOfChildren.buckets
-    const consolidated = {
+    const consolidated: Record<string, number> = {
       'Yes': 0,
       'No': 0,
       'Unknown': 0
@@ -74,12 +104,11 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     return finalizeBuckets(consolidated)
   }
 
-  // Map homeowner status - consolidate into 4 buckets like original
-  const mapHomeowner = () => {
+  const mapHomeowner = (): ChartDataPoint[] => {
     if (!categories.homeowner?.buckets) return []
     
     const buckets = categories.homeowner.buckets
-    const consolidated = {
+    const consolidated: Record<string, number> = {
       'Yes': 0,
       'Likely': 0,
       'No': 0,
@@ -96,12 +125,11 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     return finalizeBuckets(consolidated)
   }
 
-  // Map estimated income range - consolidate into 6 buckets like original
-  const mapEstimatedIncomeRange = () => {
+  const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
     if (!categories.estimatedIncomeRange?.buckets) return []
     
     const buckets = categories.estimatedIncomeRange.buckets
-    const consolidated = {
+    const consolidated: Record<string, number> = {
       'Under $50K': 0,
       '$50K - $75K': 0,
       '$75K - $100K': 0,
@@ -129,12 +157,11 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     return finalizeBuckets(consolidated)
   }
 
-  // Map education - consolidate into 7 buckets like original
-  const mapEducation = () => {
+  const mapEducation = (): ChartDataPoint[] => {
     if (!categories.education?.buckets) return []
     
     const buckets = categories.education.buckets
-    const consolidated = {
+    const consolidated: Record<string, number> = {
       'None': 0,
       'High School Diploma': 0,
       'Technical School': 0,
@@ -166,3 +193,4 @@ export const mapContactsStatsToCharts = (contactsStats) => {
     education: mapEducation()
   }
 }
+

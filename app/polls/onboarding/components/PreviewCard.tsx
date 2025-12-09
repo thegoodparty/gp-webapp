@@ -1,10 +1,20 @@
 'use client'
+import { ReactNode } from 'react'
 import { MessageCard } from './MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { LuCalendar } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
+
+interface PreviewCardProps {
+  demoMessageText: string
+  imageUrl: string | null
+  estimatedCompletionDate: Date | null
+  count: number
+  timeline: string
+  cost: string
+}
 
 export default function PreviewCard({
   demoMessageText,
@@ -13,7 +23,7 @@ export default function PreviewCard({
   count,
   timeline,
   cost,
-}) {
+}: PreviewCardProps) {
   return (
     <div className="w-full items-center flex flex-col gap-4 mt-8">
       <MessageCard
@@ -56,8 +66,6 @@ export default function PreviewCard({
                 }
               />
             </div>
-            {/* TODO: Add send yourself a test button. We will do that once we have the real text message API */}
-            {/* <Button size="small" variant="ghost" className="text-blue-500 my-2">Send yourself a test</Button> */}
           </div>
         }
         note="You can add more recipients after launch."
@@ -71,7 +79,7 @@ export default function PreviewCard({
               Estimated Completion Date:
             </p>
             <p className="leading-normal font-semibold medium text-sm">
-              {dateUsHelper(estimatedCompletionDate, 'long')} 11:00 AM
+              {estimatedCompletionDate ? `${dateUsHelper(estimatedCompletionDate, 'long')} 11:00 AM` : 'N/A'}
             </p>
             <div className="mt-2 pt-2 border-t border-muted-background" />
             <p className="leading-normal text-muted-foreground text-xs font-normal">
@@ -85,3 +93,4 @@ export default function PreviewCard({
     </div>
   )
 }
+

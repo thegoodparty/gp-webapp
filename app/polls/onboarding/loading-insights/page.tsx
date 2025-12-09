@@ -1,3 +1,4 @@
+import { React } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import LoadingInsightsPage from './components/LoadingInsightsPage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
@@ -13,15 +14,15 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page({}) {
+export default async function Page(): Promise<React.JSX.Element> {
   await requireAuth()
   await candidateAccess()
   const hasPollsResponse = await hasPolls()
 
-  // If the user has polls, disallow onboarding and redirect to the dashboard polls page
   if (hasPollsResponse?.hasPolls) {
     return redirect('/dashboard/polls')
   }
 
   return <LoadingInsightsPage />
 }
+

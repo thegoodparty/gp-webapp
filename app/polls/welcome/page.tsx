@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import PollWelcomePage from './components/PollWelcomePage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
@@ -13,13 +14,12 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page() {
+export default async function Page(): Promise<ReactNode> {
   await requireAuth()
   await candidateAccess()
 
   const hasPollsResponse = await hasPolls()
 
-  // If the user has polls, disallow onboarding and redirect to the dashboard polls page
   if (hasPollsResponse?.hasPolls) {
     return redirect('/dashboard/polls')
   }

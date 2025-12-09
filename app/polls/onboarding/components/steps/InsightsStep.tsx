@@ -8,24 +8,19 @@ import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
 import { useEffect, useMemo } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export default function InsightsStep({ }) {
-
+export default function InsightsStep() {
   const { contactsStats, isLoading, error } = useContactsStats()
   
-  // Map the API data to chart format
   const chartData = useMemo(() => mapContactsStatsToCharts(contactsStats), [contactsStats])
 
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.ConstituencyProfileViewed)
   }, [])
 
-  // TODO: Remove this once the TCR compliance check is ready. Do happy path for now.
-  // const [tcrCompliant, isLoadingTcrCompliance, error] = useTcrComplianceCheck()
   const tcrCompliant = true
   const isLoadingTcrCompliance = false
 
-  // temporary placeholder for insights. Constituent insights are coming soon.
-  const insights = []
+  const insights: Array<{ title: string; description: string }> = []
 
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
@@ -49,7 +44,6 @@ export default function InsightsStep({ }) {
           </div>
         ))}
         
-        {/* Age Distribution Chart */}
         <DataVisualizationInsight 
           chartType="horizontalGauge" 
           percentage={true} 
@@ -60,7 +54,6 @@ export default function InsightsStep({ }) {
           error={error}
         />
         
-        {/* Presence of Children Chart */}
         <DataVisualizationInsight 
           chartType="pie" 
           percentage={true} 
@@ -71,7 +64,6 @@ export default function InsightsStep({ }) {
           error={error}
         />
         
-        {/* Homeowner Chart */}
         <DataVisualizationInsight 
           chartType="donut" 
           percentage={true} 
@@ -82,7 +74,6 @@ export default function InsightsStep({ }) {
           error={error}
         />
         
-        {/* Estimated Income Range Chart */}
         <DataVisualizationInsight 
           chartType="verticalBar" 
           percentage={true} 
@@ -93,7 +84,6 @@ export default function InsightsStep({ }) {
           error={error}
         />
         
-        {/* Education Chart */}
         <DataVisualizationInsight 
           chartType="horizontalBar" 
           percentage={true} 
@@ -107,3 +97,4 @@ export default function InsightsStep({ }) {
     </div>
   )
 }
+

@@ -1,11 +1,18 @@
 import { LuMailWarning } from "react-icons/lu"
 
+interface ErrorMessageProps {
+  title?: string
+  message: string | null
+  onDismiss?: () => void
+  show?: boolean
+}
+
 export const ErrorMessage = ({ 
   title = "Error", 
   message, 
   onDismiss, 
   show = false 
-}) => {
+}: ErrorMessageProps) => {
   if (!show || !message) return null
 
   return (
@@ -39,3 +46,4 @@ export const ErrorMessage = ({
     </div>
   )
 }
+

@@ -4,19 +4,17 @@ import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { PollImageUpload } from 'app/(candidate)/dashboard/polls/components/PollImageUpload'
 
-export default function AddImageStep({}) {
+export default function AddImageStep() {
   const { setImageUrl } = useOnboardingContext()
 
-  const [localImageUrl, setLocalImageUrl] = useState(null)
+  const [localImageUrl, setLocalImageUrl] = useState<string | null>(null)
 
-  // Fire view event once on mount
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
   }, [])
 
-  const handleUpload = async (imageUrl) => {
+  const handleUpload = async (imageUrl: string) => {
     setLocalImageUrl(imageUrl)
-    // Store in onboarding context
     setImageUrl(imageUrl)
 
     trackEvent(EVENTS.ServeOnboarding.PollImageUploaded)
@@ -35,3 +33,4 @@ export default function AddImageStep({}) {
     </div>
   )
 }
+

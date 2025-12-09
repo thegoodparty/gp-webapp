@@ -5,11 +5,14 @@ import LoadingFooter from '../../components/LoadingFooter'
 import LoadingList from '../../components/LoadingList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
+interface LoadingItem {
+  label: string
+  status: 'loading' | 'pending' | 'complete'
+}
 
-export default function LoadingInsightsPage({}) {
-
+export default function LoadingInsightsPage() {
   const router = useRouter()
-  const [loadingItems, setLoadingItems] = useState([
+  const [loadingItems, setLoadingItems] = useState<LoadingItem[]>([
     {
       label: 'Gathering your constituents',
       status: 'loading',
@@ -48,7 +51,6 @@ export default function LoadingInsightsPage({}) {
     trackEvent(EVENTS.ServeOnboarding.MeetYourConstituentsViewed)
   }, [])
 
-  // Navigate to insights when all steps are complete
   const onComplete = () => {
     router.replace('/polls/onboarding')
   }
@@ -77,3 +79,4 @@ export default function LoadingInsightsPage({}) {
     </div>
   )
 }
+

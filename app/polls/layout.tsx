@@ -1,8 +1,13 @@
+import { ReactNode } from 'react'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import { ContactsStatsProvider } from './contexts/ContactsStatsContext'
 import { OnboardingProvider } from './contexts/OnboardingContext'
 
-export default function PollsLayout({ children }) {
+interface PollsLayoutProps {
+  children: ReactNode
+}
+
+export default function PollsLayout({ children }: PollsLayoutProps) {
   return (
     <ContactsStatsProvider>
       <OnboardingProvider>
@@ -14,3 +19,4 @@ export default function PollsLayout({ children }) {
     </ContactsStatsProvider>
   )
 }
+
