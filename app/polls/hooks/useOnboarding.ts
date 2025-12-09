@@ -60,12 +60,14 @@ export const useOnboarding = (): UseOnboardingReturn => {
   })
 
   const swornInDate = formData.swornInDate
+  const scheduledDate = formData.scheduledDate
   useEffect(() => {
     setStepValidation((prev) => ({
       ...prev,
       'Sworn In': !!swornInDate,
+      'Pick Send Date': !!scheduledDate,
     }))
-  }, [swornInDate])
+  }, [swornInDate, scheduledDate])
 
   const campaignOffice = useMemo(
     () =>
