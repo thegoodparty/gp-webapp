@@ -20,23 +20,19 @@ import PollTextBiasInput, {
 } from '../shared/components/poll-text-bias/PollTextBiasInput'
 import clsx from 'clsx'
 import { LuLoaderCircle } from 'react-icons/lu'
-import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
+import { numberFormatter } from 'helpers/numberHelper'
 import {
   PollAudienceSelector,
   useTotalConstituentsWithCellPhone,
 } from '../shared/audience-selection'
-import DateInputCalendar from '@shared/inputs/DateInputCalendar'
-import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
 import { useUser } from '@shared/hooks/useUser'
-import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
-import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
-import Image from 'next/image'
-import { PRICE_PER_POLL_TEXT } from '../shared/constants'
 import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
 import { uuidv7 } from 'uuidv7'
 import { PollPaymentSuccess } from '../shared/components/PollPaymentSuccess'
+import { PollScheduledDateSelector } from '../components/PollScheduledDateSelector'
+import { PollPreview } from '../components/PollPreview'
 
 const MIN_QUESTION_LENGTH = 25
 
@@ -396,19 +392,10 @@ const DateSelectionForm: React.FC<{
         polls at 11am local time to maximize responses.
       </p>
 
-      <DateInputCalendar
-        value={scheduledDate}
+      <PollScheduledDateSelector
+        scheduledDate={scheduledDate}
         onChange={setScheduledDate}
-        // Give ourselves 2 days to schedule their poll
-        disabled={(date) =>
-          date <= addDays(startOfDay(new Date()), 2) ||
-          date > addDays(startOfDay(new Date()), 30)
-        }
       />
-
-      <p className="mt-4 text-sm text-muted-foreground text-center">
-        * Messages sent on Tuesdays or Thursdays receive the highest engagement.
-      </p>
     </FormStep>
   )
 }
@@ -464,8 +451,9 @@ const AudienceSelectionForm: React.FC<{
         How many constituents do you want to message?
       </H1>
       <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
-        There are {numberFormatter(query.data.totalConstituents)} constituents
-        with cell phone numbers in your community.
+        You can text up to {numberFormatter(query.data.totalConstituents)} more
+        constituents. We won&apos;t send text messages to constituents
+        you&apos;ve already messaged.
       </p>
 
       <PollAudienceSelector
@@ -551,60 +539,12 @@ const ReviewForm: React.FC<{
         Take a moment to review your poll details.
       </p>
 
-      <MessageCard
-        className="mb-6"
-        title="Outreach Summary"
-        description={
-          <div className="flex flex-col gap-1 mt-2">
-            <p>
-              Audience: <b>{numberFormatter(targetAudienceSize)}</b>
-            </p>
-            <p>
-              Send Date: <b>{scheduledDate.toDateString()} at 11:00am</b>
-            </p>
-            <p>
-              Estimated Completion:{' '}
-              <b>{addDays(scheduledDate, 3).toDateString()} at 11:00am</b>
-            </p>
-            <p>
-              Cost:{' '}
-              <b>${formatCurrency(PRICE_PER_POLL_TEXT * targetAudienceSize)}</b>
-            </p>
-          </div>
-        }
-      />
-
-      <MessageCard
-        title="Preview"
-        description={
-          <div className="flex flex-col gap-1">
-            <div className="max-w-xs mx-auto">
-              <TextMessagePreview
-                message={
-                  <div className="flex flex-col gap-2">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt="Campaign image"
-                        width={300}
-                        height={300}
-                        className="object-cover rounded"
-                      />
-                    ) : (
-                      <Image
-                        src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
-                        alt=""
-                        width={300}
-                        height={300}
-                      />
-                    )}
-                    <p className="mt-1 font-normal">{message}</p>
-                  </div>
-                }
-              />
-            </div>
-          </div>
-        }
+      <PollPreview
+        scheduledDate={scheduledDate}
+        targetAudienceSize={targetAudienceSize}
+        imageUrl={imageUrl}
+        message={message}
+        isFree={false}
       />
     </FormStep>
   )

@@ -3,16 +3,19 @@
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
 import H1 from '@shared/typography/H1'
-import PreviewCard from 'app/polls/onboarding/components/PreviewCard'
-import { PRICE_PER_POLL_TEXT } from '../../../shared/constants'
-import { numberFormatter } from 'helpers/numberHelper'
-import { dateUsHelper } from 'helpers/dateHelper'
 import ExpandPollLayout from '../../expand/shared/ExpandPollLayout'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { PollPreview } from '../../../components/PollPreview'
 
-export default function ExpandReviewPage({ count }) {
+export default function ExpandReviewPage({
+  count,
+  scheduledDate,
+}: {
+  count: number
+  scheduledDate: Date
+}) {
   const [poll] = usePoll()
   const router = useRouter()
 
@@ -20,29 +23,31 @@ export default function ExpandReviewPage({ count }) {
     trackEvent(EVENTS.expandPolls.reviewViewed, { count })
   }, [])
 
+  const params = `count=${count}&scheduledDate=${encodeURIComponent(
+    scheduledDate.toISOString(),
+  )}`
+
   const handleNext = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand-payment?count=${count}`)
+    router.push(`/dashboard/polls/${poll.id}/expand-payment?${params}`)
   }
   const handleBack = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand`)
+    router.push(`/dashboard/polls/${poll.id}/expand?${params}`)
   }
 
   const { messageContent, imageUrl } = poll
-  const nextWeek = new Date().getTime() + 7 * 24 * 60 * 60 * 1000
 
   return (
     <ExpandPollLayout>
       <H1 className="text-center">Review your SMS poll.</H1>
-      <PreviewCard
-        demoMessageText={messageContent}
+      <PollPreview
+        scheduledDate={scheduledDate}
+        targetAudienceSize={count}
         imageUrl={imageUrl}
-        estimatedCompletionDate={dateUsHelper(nextWeek, 'long')}
-        count={count}
-        timeline="1 week"
-        cost={`$${numberFormatter(PRICE_PER_POLL_TEXT * count, 2)}`}
+        message={messageContent}
+        isFree={false}
       />
       <ExpandStepFooter
-        currentStep={2}
+        currentStep={3}
         onBack={handleBack}
         onNext={handleNext}
         onNextText="Go to payment"

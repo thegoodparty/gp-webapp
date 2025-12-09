@@ -63,6 +63,7 @@ export type PollPaymentMetadata =
       pollPurchaseType: PollPurchaseType.expansion
       pollId: string
       count: number
+      scheduledDate: string
     }
 
 export type PollPaymentProps = {
