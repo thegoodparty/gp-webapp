@@ -13,6 +13,17 @@ export const metadata = pageMetaData({
 
 export const dynamic = 'force-dynamic'
 
+export const parseIntQueryParam = (param: string | string[] | undefined) => {
+  if (typeof param !== 'string') {
+    return undefined
+  }
+  const res = parseInt(param, 10)
+  if (isNaN(res)) {
+    return undefined
+  }
+  return res
+}
+
 export default async function Page({ params, searchParams }: PageProps<any>) {
   await serveAccess()
   const { id } = await params
@@ -20,14 +31,16 @@ export default async function Page({ params, searchParams }: PageProps<any>) {
   if (!poll) {
     return redirect('/dashboard/polls')
   }
-  const { count } = await searchParams
-  if (typeof count !== 'string') {
+  const { count: countParam } = await searchParams
+
+  const count = parseIntQueryParam(countParam)
+  if (!count) {
     redirect(`/dashboard/polls/${id}/expand`)
   }
 
   return (
     <PollProvider poll={poll}>
-      <ExpandPaymentSuccessPage count={parseInt(count, 10)} />
+      <ExpandPaymentSuccessPage count={count} />
     </PollProvider>
   )
 }
