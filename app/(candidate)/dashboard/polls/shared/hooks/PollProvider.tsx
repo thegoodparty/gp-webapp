@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
-import { Poll } from '../serverApiCalls'
+import { Poll } from '../poll-types'
 
 export const PollContext = createContext<[Poll, (poll: Poll) => void]>([
   {} as Poll,
