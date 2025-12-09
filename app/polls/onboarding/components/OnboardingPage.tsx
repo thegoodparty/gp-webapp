@@ -88,14 +88,8 @@ const maxStepperStepIndex = steps.reduce(
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const {
-    submitOnboarding,
-    isSubmitting,
-    submitError,
-    user,
-    formData,
-    stepValidation,
-  } = useOnboardingContext()
+  const { submitOnboarding, isSubmitting, submitError, user, stepValidation } =
+    useOnboardingContext()
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [showError, setShowError] = useState(false)
@@ -109,10 +103,10 @@ export default function OnboardingPage() {
   }, [currentStepIndex])
 
   const currentStep = useMemo(() => {
-    return steps[currentStepIndex]
+    return steps[currentStepIndex]!
   }, [currentStepIndex])
 
-  const currentStepValidation = stepValidation[currentStep.name]
+  const currentStepValidation = stepValidation[currentStep?.name || '']
   const isStepValid = useMemo(() => {
     return currentStepValidation === undefined || currentStepValidation === true
   }, [currentStepValidation])
@@ -215,4 +209,3 @@ export default function OnboardingPage() {
     </div>
   )
 }
-

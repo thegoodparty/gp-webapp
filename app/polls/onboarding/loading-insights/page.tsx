@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import LoadingInsightsPage from './components/LoadingInsightsPage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
@@ -14,7 +14,7 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page(): Promise<React.JSX.Element> {
+export default async function Page(): Promise<ReactNode> {
   await requireAuth()
   await candidateAccess()
   const hasPollsResponse = await hasPolls()
@@ -25,4 +25,3 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   return <LoadingInsightsPage />
 }
-

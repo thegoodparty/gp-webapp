@@ -2,12 +2,16 @@
 import { createContext, useContext, ReactNode } from 'react'
 import { useOnboarding, UseOnboardingReturn } from '../hooks/useOnboarding'
 
-const OnboardingContext = createContext<UseOnboardingReturn | undefined>(undefined)
+const OnboardingContext = createContext<UseOnboardingReturn | undefined>(
+  undefined,
+)
 
 export const useOnboardingContext = (): UseOnboardingReturn => {
   const context = useContext(OnboardingContext)
   if (!context) {
-    throw new Error('useOnboardingContext must be used within an OnboardingProvider')
+    throw new Error(
+      'useOnboardingContext must be used within an OnboardingProvider',
+    )
   }
   return context
 }
@@ -25,4 +29,3 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
     </OnboardingContext.Provider>
   )
 }
-

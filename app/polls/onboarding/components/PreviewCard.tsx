@@ -1,5 +1,4 @@
 'use client'
-import { ReactNode } from 'react'
 import { MessageCard } from './MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
@@ -79,7 +78,9 @@ export default function PreviewCard({
               Estimated Completion Date:
             </p>
             <p className="leading-normal font-semibold medium text-sm">
-              {estimatedCompletionDate ? `${dateUsHelper(estimatedCompletionDate, 'long')} 11:00 AM` : 'N/A'}
+              {estimatedCompletionDate
+                ? `${dateUsHelper(estimatedCompletionDate, 'long')} 11:00 AM`
+                : 'N/A'}
             </p>
             <div className="mt-2 pt-2 border-t border-muted-background" />
             <p className="leading-normal text-muted-foreground text-xs font-normal">
@@ -93,4 +94,3 @@ export default function PreviewCard({
     </div>
   )
 }
-

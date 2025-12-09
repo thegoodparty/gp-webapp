@@ -1,5 +1,11 @@
 'use client'
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -37,7 +43,9 @@ interface ContactsStatsContextValue {
   fetchContactsStats: () => Promise<void>
 }
 
-const ContactsStatsContext = createContext<ContactsStatsContextValue | undefined>(undefined)
+const ContactsStatsContext = createContext<
+  ContactsStatsContextValue | undefined
+>(undefined)
 
 export const useContactsStats = (): ContactsStatsContextValue => {
   const context = useContext(ContactsStatsContext)
@@ -53,7 +61,9 @@ interface ContactsStatsProviderProps {
   children: ReactNode
 }
 
-export const ContactsStatsProvider = ({ children }: ContactsStatsProviderProps) => {
+export const ContactsStatsProvider = ({
+  children,
+}: ContactsStatsProviderProps) => {
   const [contactsStats, setContactsStats] = useState<ContactsStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -63,9 +73,13 @@ export const ContactsStatsProvider = ({ children }: ContactsStatsProviderProps) 
       setIsLoading(true)
       setError(null)
 
-      const response = await clientFetch<ContactsStats>(apiRoutes.contacts.stats, null, {
-        revalidate: 3600,
-      })
+      const response = await clientFetch<ContactsStats>(
+        apiRoutes.contacts.stats,
+        undefined,
+        {
+          revalidate: 3600,
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to fetch contacts stats')
@@ -103,4 +117,3 @@ export const ContactsStatsProvider = ({ children }: ContactsStatsProviderProps) 
     </ContactsStatsContext.Provider>
   )
 }
-

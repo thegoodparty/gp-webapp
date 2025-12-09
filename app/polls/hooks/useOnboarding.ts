@@ -31,17 +31,12 @@ export interface UseOnboardingReturn {
   formData: FormData
   isSubmitting: boolean
   submitError: string | null
-  updateFormData: (updates: Partial<FormData>) => void
   setImageUrl: (imageUrl: string | null) => void
-  setTextMessage: (textMessage: string) => void
-  setSwornInDate: (swornInDate: Date) => void
+  setSwornInDate: (swornInDate: Date | undefined) => void
   submitOnboarding: () => Promise<unknown>
   resetFormData: () => void
-  campaign: ReturnType<typeof useCampaign>[0]
-  user: ReturnType<typeof useUser>[0]
-  campaignOffice: string | null | undefined
-  userName: string
   demoMessageText: string
+  user: ReturnType<typeof useUser>[0]
   stepValidation: StepValidation
 }
 
@@ -150,25 +145,22 @@ export const useOnboarding = (): UseOnboardingReturn => {
   )
 
   const setSwornInDate = useCallback(
-    (swornInDate: Date) => {
-      const isSwornIn = isBefore(new Date(), swornInDate) ? false : true
+    (swornInDate: Date | undefined) => {
+      const isSwornIn = !swornInDate
+        ? false
+        : isBefore(new Date(), swornInDate)
+        ? false
+        : true
       updateFormData({
         swornInDate,
         swornIn: isSwornIn,
       })
-      trackEvent(EVENTS.ServeOnboarding.SwornInCompleted, {
-        swornInDate: swornInDate.toISOString(),
-        isSwornIn: isSwornIn,
-      })
-    },
-    [updateFormData],
-  )
-
-  const setTextMessage = useCallback(
-    (textMessage: string) => {
-      updateFormData({
-        textMessage,
-      })
+      if (swornInDate) {
+        trackEvent(EVENTS.ServeOnboarding.SwornInCompleted, {
+          swornInDate: swornInDate.toISOString(),
+          isSwornIn: isSwornIn,
+        })
+      }
     },
     [updateFormData],
   )
@@ -220,17 +212,12 @@ export const useOnboarding = (): UseOnboardingReturn => {
     formData,
     isSubmitting,
     submitError,
-    updateFormData,
     setImageUrl,
-    setTextMessage,
     setSwornInDate,
     submitOnboarding,
     resetFormData,
-    campaign,
-    user,
-    campaignOffice,
-    userName,
     demoMessageText,
+    user,
     stepValidation,
   }
 }

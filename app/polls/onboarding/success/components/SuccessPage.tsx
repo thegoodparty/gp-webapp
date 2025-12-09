@@ -30,8 +30,8 @@ export default function SuccessPage() {
               Your first poll has been scheduled
             </h1>
             <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground mb-2">
-              You've taken your first step toward shaping the future of your
-              community — <br /> and that's something to be proud of.
+              You&apos;ve taken your first step toward shaping the future of
+              your community — <br /> and that&apos;s something to be proud of.
             </p>
             <p className="text-left md:text-center mt-4 font-normal text-blue">
               You will be taken to your poll momentarily...
@@ -42,4 +42,3 @@ export default function SuccessPage() {
     </div>
   )
 }
-

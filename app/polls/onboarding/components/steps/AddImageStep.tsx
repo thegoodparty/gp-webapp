@@ -7,7 +7,7 @@ import { PollImageUpload } from 'app/(candidate)/dashboard/polls/components/Poll
 export default function AddImageStep() {
   const { setImageUrl } = useOnboardingContext()
 
-  const [localImageUrl, setLocalImageUrl] = useState<string | null>(null)
+  const [localImageUrl, setLocalImageUrl] = useState<string | undefined>()
 
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.AddImageViewed)
@@ -33,4 +33,3 @@ export default function AddImageStep() {
     </div>
   )
 }
-

@@ -5,7 +5,7 @@ import {
   isP2pUxEnabled,
   p2pCutoffDatetime,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/isP2pUxEnabled.util'
-import { useTcrComplianceCheck } from 'app/polls/onboarding/hooks/useTcrComplianceCheck'
+import { useTcrComplianceCheck } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/useTcrComplianceCheck'
 
 export const P2pUxEnabledContext = createContext({
   p2pCutoffDatetime: null,

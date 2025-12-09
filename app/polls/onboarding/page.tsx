@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import OnboardingPage from './components/OnboardingPage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
@@ -12,10 +12,9 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page(): Promise<React.JSX.Element> {
+export default async function Page(): Promise<ReactNode> {
   await requireAuth()
   await candidateAccess()
 
   return <OnboardingPage />
 }
-

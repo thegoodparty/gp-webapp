@@ -22,8 +22,8 @@ export default function SwornInStep() {
 
       <div className="mt-8 mb-2">
         <DateInputCalendar
-          value={formData.swornInDate}
-          onChange={setSwornInDate}
+          value={formData.swornInDate || undefined}
+          onChange={(date) => setSwornInDate(date)}
           label="Select Date"
           placeholder="mm/dd/yyyy"
           captionLayout="dropdown"
@@ -35,4 +35,3 @@ export default function SwornInStep() {
     </div>
   )
 }
-

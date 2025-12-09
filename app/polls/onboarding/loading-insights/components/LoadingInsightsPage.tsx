@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import LoadingFooter from '../../components/LoadingFooter'
 import LoadingList from '../../components/LoadingList'
@@ -10,42 +10,43 @@ interface LoadingItem {
   status: 'loading' | 'pending' | 'complete'
 }
 
+const loadingItems: LoadingItem[] = [
+  {
+    label: 'Gathering your constituents',
+    status: 'loading',
+  },
+  {
+    label: 'Establishing community age groups',
+    status: 'pending',
+  },
+  {
+    label: 'Identifying homeowner vs. renter ratios',
+    status: 'pending',
+  },
+  {
+    label: 'Looking for families with children under 18',
+    status: 'pending',
+  },
+  {
+    label: 'Analyzing education levels',
+    status: 'pending',
+  },
+  {
+    label: 'Mapping income brackets',
+    status: 'pending',
+  },
+  {
+    label: 'Capturing community diversity',
+    status: 'pending',
+  },
+  {
+    label: 'Generating constituency profile',
+    status: 'pending',
+  },
+]
+
 export default function LoadingInsightsPage() {
   const router = useRouter()
-  const [loadingItems, setLoadingItems] = useState<LoadingItem[]>([
-    {
-      label: 'Gathering your constituents',
-      status: 'loading',
-    },
-    {
-      label: 'Establishing community age groups',
-      status: 'pending',
-    },
-    {
-      label: 'Identifying homeowner vs. renter ratios',
-      status: 'pending',
-    },
-    {
-      label: 'Looking for families with children under 18',
-      status: 'pending',
-    },
-    {
-      label: 'Analyzing education levels',
-      status: 'pending',
-    },
-    {
-      label: 'Mapping income brackets',
-      status: 'pending',
-    },
-    {
-      label: 'Capturing community diversity',
-      status: 'pending',
-    },
-    {
-      label: 'Generating constituency profile',
-      status: 'pending',
-    },
-  ])
 
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.MeetYourConstituentsViewed)
@@ -79,4 +80,3 @@ export default function LoadingInsightsPage() {
     </div>
   )
 }
-
