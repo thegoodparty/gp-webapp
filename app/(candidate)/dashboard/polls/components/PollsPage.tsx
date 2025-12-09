@@ -21,7 +21,7 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
   const { on: pollCreationEnabled } = useFlagOn('serve-poll-creation')
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} campaign={campaign ?? undefined} showAlert={false}>
       <Paper className="min-h-full">
         <div className="flex justify-between items-center">
           <div>

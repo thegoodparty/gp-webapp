@@ -12,7 +12,9 @@ import DraftState from './DraftState'
 import PublishedState from './PublishedState'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-export default function WebsitePage({ pathname }) {
+type WebsitePageProps = { pathname?: string }
+
+export default function WebsitePage({ pathname }: WebsitePageProps): React.JSX.Element {
   const router = useRouter()
   const [campaign] = useCampaign()
   const { website, setWebsite } = useWebsite()
@@ -33,7 +35,7 @@ export default function WebsitePage({ pathname }) {
   }
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} campaign={campaign ?? undefined} showAlert={false}>
       {website ? (
         website.status === WEBSITE_STATUS.unpublished ? (
           <DraftState />
@@ -41,10 +43,7 @@ export default function WebsitePage({ pathname }) {
           <PublishedState />
         )
       ) : (
-        <EmptyState
-          onClickCreate={handleCreate}
-          createLoading={createLoading}
-        />
+        <EmptyState onClickCreate={handleCreate} createLoading={createLoading} />
       )}
     </DashboardLayout>
   )

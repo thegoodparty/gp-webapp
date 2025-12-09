@@ -1,12 +1,18 @@
 import Link from 'next/link'
 import { Fragment } from 'react'
 
-export default function Stepper(props) {
+interface StepperProps {
+  step: number
+  totalSteps: number
+  campaign: { slug: string }
+}
+
+export default function Stepper(props: StepperProps): React.JSX.Element {
   const { step, totalSteps, campaign } = props
 
   return (
     <div className="flex items-center justify-center py-8 lg:py-0 lg:fixed lg:top-5 lg:w-[calc(100vw-300px)] lg:left-[150px] lg:z-50">
-      {[...Array(totalSteps)].map((e, i) => (
+      {[...Array(totalSteps)].map((_e, i) => (
         <Fragment key={i}>
           <Link
             href={step > i + 1 ? `/onboarding/${campaign.slug}/${i + 1}` : '#'}
@@ -33,3 +39,4 @@ export default function Stepper(props) {
     </div>
   )
 }
+

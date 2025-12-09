@@ -1,37 +1,47 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 import H6 from '@shared/typography/H6'
 import Paper from '@shared/utils/Paper'
 import { LuInbox } from 'react-icons/lu'
-import { useWebsite } from './WebsiteProvider'
+import { useWebsite, Contact } from './WebsiteProvider'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { formatDisplayPhoneNumber } from 'helpers/numberHelper'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import H4 from '@shared/typography/H4'
 import PaginationButtons from '../../voter-records/components/PaginationButtons'
-import { clientFetch } from 'gpApi/clientFetch'
+import { clientFetch, ApiResponse } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyToClipboardButton from '@shared/utils/CopyToClipboardButton'
 
-const fetchContacts = async (pageNum = 1) => {
-  return await clientFetch(apiRoutes.website.getContacts, {
-    page: pageNum,
-    sortBy: 'createdAt',
-  })
+interface WebsiteContactsResponse {
+  contacts: Contact[]
+  totalPages: number
 }
 
-export default function WebsiteInbox({}) {
+const fetchContacts = async (
+  pageNum: number = 1,
+): Promise<ApiResponse<WebsiteContactsResponse>> => {
+  return await clientFetch<WebsiteContactsResponse>(
+    apiRoutes.website.getContacts,
+    {
+      page: pageNum,
+      sortBy: 'createdAt',
+    },
+  )
+}
+
+export default function WebsiteInbox(): React.JSX.Element {
   const { contacts, setContacts } = useWebsite()
-  const [{ page, totalPages }, setPagination] = useState({
+  const [{ page, totalPages }, setPagination] = useState<{ page: number; totalPages: number | null }>({
     page: 1,
     totalPages: null,
   })
-  const [loading, setLoading] = useState(false)
-  const [modalContact, setModalContact] = useState(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [modalContact, setModalContact] = useState<Contact | null>(null)
   const { errorSnackbar } = useSnackbar()
 
   useEffect(() => {
@@ -41,43 +51,46 @@ export default function WebsiteInbox({}) {
       setLoading(true)
       const resp = await fetchContacts(page)
       if (resp.ok) {
-        setContacts(resp.data.contacts)
+        const data = resp.data
+        setContacts(data.contacts)
         setPagination({
           page,
-          totalPages: resp.data.totalPages,
+          totalPages: data.totalPages,
         })
       } else {
         errorSnackbar('Failed to load contacts')
       }
       setLoading(false)
     }
-  }, [page])
+  }, [page, setContacts, errorSnackbar])
 
   const columns = useMemo(
     () => [
       {
         header: 'Date',
-        accessorKey: 'createdAt',
-        cell: ({ row }) => dateUsHelper(row.createdAt, 'long'),
+        accessorKey: 'createdAt' as const,
+        cell: ({ row }: { row: Contact }) =>
+          dateUsHelper((row.createdAt as string | number) ?? '', 'long'),
       },
       {
         header: 'Name',
-        accessorKey: 'name',
+        accessorKey: 'name' as const,
       },
       {
         header: 'Email',
-        accessorKey: 'email',
+        accessorKey: 'email' as const,
       },
       {
         header: 'Phone',
-        accessorKey: 'phone',
-        cell: ({ row }) => formatDisplayPhoneNumber(row.phone),
+        accessorKey: 'phone' as const,
+        cell: ({ row }: { row: Contact }) =>
+          formatDisplayPhoneNumber(String(row.phone ?? '')),
       },
       {
         header: 'Message',
-        accessorKey: 'message',
-        cell: ({ row }) => (
-          <span title={row.message} className="truncate block max-w-[200px]">
+        accessorKey: 'message' as const,
+        cell: ({ row }: { row: Contact }) => (
+          <span title={row.message || ''} className="truncate block max-w-[200px]">
             {row.message}
           </span>
         ),
@@ -86,18 +99,18 @@ export default function WebsiteInbox({}) {
     [],
   )
 
-  function handlePageChange(page) {
+  function handlePageChange(nextPage: number) {
     setPagination((current) => ({
       ...current,
-      page,
+      page: nextPage,
     }))
   }
 
-  function handleRowClick(row) {
+  function handleRowClick(row: Contact) {
     setModalContact(row)
   }
 
-  if (!contacts || contacts.length === 0) {
+  if (!contacts || (Array.isArray(contacts) && contacts.length === 0)) {
     return (
       <Paper className="border-dashed text-center !p-6">
         <LuInbox className="inline mb-1" size={24} />
@@ -109,48 +122,53 @@ export default function WebsiteInbox({}) {
     )
   }
 
+  const tableData = Array.isArray(contacts) ? contacts : ([] as Contact[])
+
   return (
     <div>
       <div className="flex flex-row justify-between items-start mb-2">
         <H4 className="m-0">Your website form submissions</H4>
         <PaginationButtons
           currentPage={page}
-          totalPages={totalPages}
+          totalPages={totalPages ?? 1}
           onPageChange={handlePageChange}
           loading={loading}
         />
       </div>
-      {contacts?.length > 0 && (
-        <SimpleTable
+      {tableData.length > 0 && (
+        <SimpleTable<Contact>
           columns={columns}
-          data={contacts}
-          onRowClick={handleRowClick}
+          data={tableData}
+          onRowClick={(row) => handleRowClick(row)}
         />
       )}
-      <ContactModal
-        contact={modalContact}
-        onClose={() => setModalContact(null)}
-      />
+      <ContactModal contact={modalContact} onClose={() => setModalContact(null)} />
     </div>
   )
 }
 
-function ContactModal({ contact, onClose }) {
+function ContactModal({
+  contact,
+  onClose,
+}: {
+  contact: Contact | null
+  onClose: () => void
+}): React.JSX.Element {
   return (
     <ResponsiveModal open={!!contact} onClose={onClose}>
       {contact && (
         <div className="p-8 [&>*]:!font-outfit">
           <ContactInfo
             label="Date"
-            value={dateUsHelper(contact.createdAt)}
+            value={dateUsHelper(String(contact.createdAt ?? ''))}
             copyButton={false}
           />
-          <ContactInfo label="Name" value={contact.name} />
-          <ContactInfo label="Email Address" value={contact.email} />
-          <ContactInfo label="Phone Number" value={contact.phone || 'N/A'} />
+          <ContactInfo label="Name" value={String(contact.name ?? '')} />
+          <ContactInfo label="Email Address" value={String(contact.email ?? '')} />
+          <ContactInfo label="Phone Number" value={String(contact.phone ?? 'N/A')} />
           <ContactInfo
             label="Message"
-            value={contact.message}
+            value={String(contact.message ?? '')}
             divider={false}
           />
         </div>
@@ -159,14 +177,22 @@ function ContactModal({ contact, onClose }) {
   )
 }
 
-function ContactInfo({ label, value, copyButton = true, divider = true }) {
+function ContactInfo({
+  label,
+  value,
+  copyButton = true,
+  divider = true,
+}: {
+  label: string
+  value: string
+  copyButton?: boolean
+  divider?: boolean
+}): React.JSX.Element {
   return (
     <>
       <div className="flex justify-between gap-2">
         <div>
-          <label className="text-xs font-medium text-gray-500 mb-1">
-            {label}
-          </label>
+          <label className="text-xs font-medium text-gray-500 mb-1">{label}</label>
           <Body2>{value}</Body2>
         </div>
         {copyButton && (

@@ -1,19 +1,21 @@
 import React from 'react'
 
-interface Column<T> {
+type FlexibleObject = { [key: string]: string | number | boolean | object | null | undefined }
+
+interface Column<T extends FlexibleObject> {
   id?: string
   header: string
   accessorKey?: keyof T
   cell?: (context: { row: T }) => React.ReactNode
 }
 
-interface SimpleTableProps<T> {
+interface SimpleTableProps<T extends FlexibleObject> {
   columns?: Column<T>[]
   data?: T[]
   onRowClick?: ((row: T, e: React.MouseEvent<HTMLTableRowElement>) => void) | null
 }
 
-const SimpleTable = <T extends Record<string, never>>({
+const SimpleTable = <T extends FlexibleObject>({
   columns = [],
   data = [],
   onRowClick = null,
@@ -89,7 +91,11 @@ const SimpleTable = <T extends Record<string, never>>({
                   last:rounded-br-xl
                 "
               >
-                {column.cell ? column.cell({ row }) : (column.accessorKey ? row[column.accessorKey] : null)}
+                {column.cell
+                  ? column.cell({ row })
+                  : column.accessorKey
+                  ? (row[column.accessorKey] as React.ReactNode)
+                  : null}
               </td>
             ))}
           </tr>

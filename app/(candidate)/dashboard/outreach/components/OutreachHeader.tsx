@@ -4,8 +4,8 @@ import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachCo
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 
-export const OutreachHeader = ({ outreaches: initOutreaches }) => {
-  const [outreaches] = useOutreach(initOutreaches)
+export const OutreachHeader = (): React.JSX.Element => {
+  const [outreaches] = useOutreach()
   return !outreaches?.length ? (
     <header className="w-full flex flex-col lg:items-center lg:justify-center pt-16 pb-8 px-4">
       <H1 className="lg:text-center mb-4">Create your first campaign</H1>
@@ -21,3 +21,5 @@ export const OutreachHeader = ({ outreaches: initOutreaches }) => {
     </header>
   )
 }
+
+export default OutreachHeader

@@ -16,12 +16,17 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ params, searchParams }) {
+interface PageProps {
+  params: Record<string, string>
+  searchParams: { generate?: string }
+}
+
+export default async function Page({ searchParams }: PageProps): Promise<React.JSX.Element> {
   await candidateAccess()
   const { generate } = searchParams
 
   const campaign = await fetchUserCampaign()
-  const candidatePositions = await serverLoadCandidatePosition(campaign.id)
+  const candidatePositions = await serverLoadCandidatePosition((campaign as { id: string }).id)
   const topIssues = await serverFetchIssues()
 
   const childProps = {
@@ -33,3 +38,4 @@ export default async function Page({ params, searchParams }) {
 
   return <QuestionsPage {...childProps} />
 }
+

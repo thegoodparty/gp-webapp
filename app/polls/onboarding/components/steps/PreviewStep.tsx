@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import PreviewCard from '../PreviewCard'
 
-export default function PreviewStep() {
+export default function PreviewStep(): React.JSX.Element {
   const { demoMessageText, formData } = useOnboardingContext()
   const { imageUrl, estimatedCompletionDate } = formData
 
@@ -33,3 +33,5 @@ export default function PreviewStep() {
     </div>
   )
 }
+
+

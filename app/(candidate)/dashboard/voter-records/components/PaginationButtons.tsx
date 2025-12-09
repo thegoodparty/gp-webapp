@@ -1,13 +1,21 @@
 import { CircularProgress } from '@mui/material'
 import Button from '@shared/buttons/Button'
 
+interface PaginationButtonsProps {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  loading?: boolean
+  className?: string
+}
+
 export default function PaginationButtons({
   currentPage,
   totalPages,
   onPageChange,
   loading = false,
   className = '',
-}) {
+}: PaginationButtonsProps): React.JSX.Element {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {loading && <CircularProgress size={20} />}
@@ -33,3 +41,5 @@ export default function PaginationButtons({
     </div>
   )
 }
+
+

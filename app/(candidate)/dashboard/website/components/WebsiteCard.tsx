@@ -14,13 +14,17 @@ import Body1 from '@shared/typography/Body1'
 import { isDomainActive } from '../util/domain.util'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-function WebsiteCard({ className = '' }) {
+type WebsiteCardProps = {
+  className?: string
+}
+
+function WebsiteCard({ className = '' }: WebsiteCardProps): React.JSX.Element {
   const { website } = useWebsite()
 
-  const { vanityPath, status, domain } = website
+  const { vanityPath, status, domain } = website || {}
 
   const url = getWebsiteUrl(
-    vanityPath,
+    String(vanityPath || ''),
     status === WEBSITE_STATUS.unpublished,
     domain,
   )
@@ -32,7 +36,7 @@ function WebsiteCard({ className = '' }) {
         <div className="md:flex gap-4 justify-between">
           <div>
             <H5>
-              <StatusChip status={website.status} />
+              <StatusChip status={website?.status} />
               <span className="block mt-1">Your campaign website</span>
             </H5>
 
@@ -61,7 +65,7 @@ function WebsiteCard({ className = '' }) {
             </Button>
           </div>
         </div>
-        {!isDomainActive(domain) && (
+        {!isDomainActive(domain || undefined) && (
           <Button
             className="mt-4 gap-2 w-full flex justify-center items-center"
             color="neutral"

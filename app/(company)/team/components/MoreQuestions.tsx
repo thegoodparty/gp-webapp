@@ -4,7 +4,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Link from 'next/link'
 import MaxWidth from '@shared/layouts/MaxWidth'
 
-const MoreQuestions = () => (
+const MoreQuestions = (): React.JSX.Element => (
   <MaxWidth>
     <section className="mx-auto mt-4 mb-16 max-w-[616px]">
       <Image
@@ -33,3 +33,5 @@ const MoreQuestions = () => (
 )
 
 export default MoreQuestions
+
+

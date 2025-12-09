@@ -1,5 +1,16 @@
 import Link from 'next/link'
 
+interface DashboardMenuItemProps {
+  id?: string
+  link: string
+  icon?: React.ReactNode
+  children: React.ReactNode
+  onClick?: () => void
+  pathname: string
+  target?: string
+  isNew?: boolean
+}
+
 export const DashboardMenuItem = ({
   id,
   link,
@@ -9,7 +20,7 @@ export const DashboardMenuItem = ({
   pathname,
   target,
   isNew,
-}) => {
+}: DashboardMenuItemProps): React.JSX.Element => {
   return (
     <>
       <Link
@@ -34,3 +45,5 @@ export const DashboardMenuItem = ({
     </>
   )
 }
+
+

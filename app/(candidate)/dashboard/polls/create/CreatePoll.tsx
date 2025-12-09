@@ -682,7 +682,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   })
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} campaign={campaign ?? undefined} showAlert={false}>
       {state.step === Step.details && (
         <DetailsForm
           details={state.details}
