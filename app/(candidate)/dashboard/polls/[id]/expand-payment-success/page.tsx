@@ -5,29 +5,42 @@ import ExpandPaymentSuccessPage from './components/ExpandPaymentPage'
 import { PollProvider } from '../../shared/hooks/PollProvider'
 import { getPoll } from '../../shared/serverApiCalls'
 
-const meta = pageMetaData({
+export const metadata = pageMetaData({
   title: 'Expand Poll | GoodParty.org',
   description: 'Expand Poll',
   slug: '/dashboard/polls',
 })
-export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ params, searchParams }) {
+export const parseIntQueryParam = (param: string | string[] | undefined) => {
+  if (typeof param !== 'string') {
+    return undefined
+  }
+  const res = parseInt(param, 10)
+  if (isNaN(res)) {
+    return undefined
+  }
+  return res
+}
+
+export default async function Page({ params, searchParams }: PageProps<any>) {
   await serveAccess()
   const { id } = await params
   const poll = await getPoll(id)
-  const { count } = await searchParams
+  if (!poll) {
+    return redirect('/dashboard/polls')
+  }
+  const { count: countParam } = await searchParams
+
+  const count = parseIntQueryParam(countParam)
   if (!count) {
     redirect(`/dashboard/polls/${id}/expand`)
   }
 
-  const childProps = { count }
-
   return (
     <PollProvider poll={poll}>
-      <ExpandPaymentSuccessPage {...childProps} />
+      <ExpandPaymentSuccessPage count={count} />
     </PollProvider>
   )
 }

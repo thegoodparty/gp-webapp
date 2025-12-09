@@ -11,7 +11,7 @@ interface SpanTextAreaProps {
   onFocus: () => void
   onBlur: () => void
   showHighlights: boolean
-  onContentChange?: () => void
+  onContentChange?: (newValue: string) => void
   showLoadingDots?: boolean
   isReadOnly?: boolean
   hidePlaceholder?: boolean
@@ -68,7 +68,7 @@ export default function SpanTextArea({
     (e: React.FormEvent<HTMLDivElement>) => {
       const newValue = e.currentTarget.textContent || ''
       onChange(newValue)
-      onContentChange?.()
+      onContentChange?.(newValue)
     },
     [onChange, onContentChange],
   )
