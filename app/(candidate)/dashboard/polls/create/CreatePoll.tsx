@@ -34,6 +34,9 @@ import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
 import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
 import Image from 'next/image'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
+import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
+import { uuidv7 } from 'uuidv7'
+import { PollPaymentSuccess } from '../shared/components/PollPaymentSuccess'
 
 const MIN_QUESTION_LENGTH = 25
 
@@ -93,6 +96,8 @@ type State =
   | {
       step: Step.paymentConfirmed
       pollId: string
+      scheduledDate: Date
+      targetAudienceSize: number
     }
 
 const order: Array<Step> = [
@@ -105,6 +110,18 @@ const order: Array<Step> = [
   Step.paymentConfirmed,
 ]
 
+const FormContent: React.FC<{
+  children: React.ReactNode
+}> = ({ children }) => (
+  <div className="flex flex-col">
+    <main className="flex-1 pb-140 md:pb-0">
+      <section className="max-w-screen-md mx-auto bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12 xs:pt-4 md:mb-16">
+        {children}
+      </section>
+    </main>
+  </div>
+)
+
 const FormStep: React.FC<{
   step: Step
   onBack: () => void
@@ -112,25 +129,21 @@ const FormStep: React.FC<{
   children: React.ReactNode
 }> = ({ step, onBack, nextButton, children }) => {
   return (
-    <div className="flex flex-col">
-      <main className="flex-1 pb-140 md:pb-0">
-        <section className="max-w-screen-md mx-auto bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12 xs:pt-4 md:mb-16">
-          <div className="p-4 sm:p-8 lg:p-16 lg:pb-4">{children}</div>
-          <div className="md:block w-full border-t border-slate-200 pt-8 px-8 lg:px-16">
-            <StepIndicator
-              numberOfSteps={order.length}
-              currentStep={order.indexOf(step) + 1}
-            />
-            <div className="flex justify-between py-6">
-              <Button variant="ghost" onClick={onBack}>
-                {order.indexOf(step) === 0 ? 'Exit' : 'Back'}
-              </Button>
-              {nextButton}
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
+    <FormContent>
+      <div className="p-4 sm:p-8 lg:p-16 lg:pb-4">{children}</div>
+      <div className="md:block w-full border-t border-slate-200 pt-8 px-8 lg:px-16">
+        <StepIndicator
+          numberOfSteps={order.length}
+          currentStep={order.indexOf(step) + 1}
+        />
+        <div className="flex justify-between py-6">
+          <Button variant="ghost" onClick={onBack}>
+            {order.indexOf(step) === 0 ? 'Exit' : 'Back'}
+          </Button>
+          {nextButton}
+        </div>
+      </div>
+    </FormContent>
   )
 }
 
@@ -144,6 +157,14 @@ const introOptions = (params: {
   `${params.city} ${params.office} ${params.eoName} wants to hear from you, [Name].`,
   `${params.city} ${params.office} ${params.eoName} needs your input, [Name].`,
 ]
+
+const STOP_MESSAGE = 'Text STOP to opt out'
+
+const toMessage = (details: Details): string =>
+  [details.introduction, details.question, STOP_MESSAGE]
+    .join('\n\n')
+    .replaceAll('[Name]', '{{first_name}}')
+    .trim()
 
 const DetailsForm: React.FC<{
   details?: Details
@@ -332,7 +353,7 @@ const DetailsForm: React.FC<{
         <label className="block mb-2 mt-4">Poll Closing</label>
         <Input
           className="bg-muted color-muted-foreground"
-          value="Text STOP to opt out"
+          value={STOP_MESSAGE}
           disabled
         />
       </form>
@@ -589,8 +610,45 @@ const ReviewForm: React.FC<{
   )
 }
 
+const PaymentForm: React.FC<{
+  goBack: () => void
+  onComplete: () => void
+  pollId: string
+  details: Details
+  targetAudienceSize: number
+  scheduledDate: Date
+  imageUrl?: string
+}> = ({
+  goBack,
+  onComplete,
+  pollId,
+  details,
+  targetAudienceSize,
+  scheduledDate,
+  imageUrl,
+}) => {
+  return (
+    <FormStep step={Step.payment} onBack={goBack} nextButton={<></>}>
+      <PollPayment
+        purchaseMetaData={{
+          pollPurchaseType: PollPurchaseType.new,
+          pollId,
+          name: details.title,
+          message: toMessage(details),
+          imageUrl: imageUrl,
+          audienceSize: targetAudienceSize,
+          scheduledDate: scheduledDate.toISOString(),
+        }}
+        onConfirmed={onComplete}
+      />
+    </FormStep>
+  )
+}
+
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
+
+  const [pollId] = useState(() => uuidv7())
 
   const [state, setState] = useState<State>({
     step: Step.details,
@@ -694,7 +752,43 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
         />
       )}
 
-      {/* TODO: fill out remaining steps */}
+      {state.step === Step.payment && (
+        <PaymentForm
+          goBack={() =>
+            setState({
+              step: Step.review,
+              details: state.details,
+              targetAudienceSize: state.targetAudienceSize,
+              scheduledDate: state.scheduledDate,
+              imageUrl: state.imageUrl,
+            })
+          }
+          onComplete={() =>
+            setState({
+              step: Step.paymentConfirmed,
+              pollId,
+              scheduledDate: state.scheduledDate,
+              targetAudienceSize: state.targetAudienceSize,
+            })
+          }
+          pollId={pollId}
+          details={state.details}
+          targetAudienceSize={state.targetAudienceSize}
+          scheduledDate={state.scheduledDate}
+          imageUrl={state.imageUrl}
+        />
+      )}
+
+      {state.step === Step.paymentConfirmed && (
+        <FormContent>
+          <PollPaymentSuccess
+            className="p-8"
+            scheduledDate={state.scheduledDate}
+            textsPaidFor={state.targetAudienceSize}
+            redirectTo={`/dashboard/polls/${pollId}`}
+          />
+        </FormContent>
+      )}
     </DashboardLayout>
   )
 }

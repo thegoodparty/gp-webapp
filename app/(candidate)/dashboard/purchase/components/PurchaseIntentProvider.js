@@ -5,7 +5,7 @@ import { createPurchaseIntent } from 'app/(candidate)/dashboard/purchase/utils/p
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
 export const PurchaseIntentContext = createContext({
-  paymentIntent: null,
+  purchaseIntent: null,
   setPaymentIntent: () => {},
   error: null,
   setError: () => {},
