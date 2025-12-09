@@ -1,8 +1,15 @@
 import Body2 from '@shared/typography/Body2'
-
 import Chip from '@shared/utils/Chip'
 import { FaQuestionCircle } from 'react-icons/fa'
-export default function SurveyQuestionsChip({ survey, className = '' }) {
+
+interface SurveyQuestionsChipProps {
+  survey?: {
+    questions?: string[]
+  }
+  className?: string
+}
+
+export default function SurveyQuestionsChip({ survey, className = '' }: SurveyQuestionsChipProps): React.JSX.Element {
   const { questions } = survey || {}
   return (
     <Chip

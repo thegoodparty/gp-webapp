@@ -1,9 +1,14 @@
 import { TextField } from '@mui/material'
 
+interface CandidatePositionStatementProps {
+  candidatePosition?: string
+  setCandidatePosition?: (value: string) => void
+}
+
 export const CandidatePositionStatement = ({
   candidatePosition = '',
-  setCandidatePosition = (v) => {},
-}) => (
+  setCandidatePosition = () => {},
+}: CandidatePositionStatementProps): React.JSX.Element => (
   <TextField
     label="Your Position"
     placeholder="Write 1 or 2 sentences about your position on this issue…"

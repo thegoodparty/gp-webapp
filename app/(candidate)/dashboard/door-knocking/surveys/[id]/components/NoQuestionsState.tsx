@@ -4,7 +4,7 @@ import QuestionAnimation from '@shared/animations/QuestionAnimation'
 import Body1 from '@shared/typography/Body1'
 import CreateQuestion from './CreateQuestion'
 
-export default function NoQuestionsState() {
+export default function NoQuestionsState(): React.JSX.Element {
   return (
     <div className="mt-12 flex flex-col items-center justify-center">
       <H2 className="mt-4">No questions to see here quite yet</H2>

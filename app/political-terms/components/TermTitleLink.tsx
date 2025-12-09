@@ -4,7 +4,11 @@ import { slugify } from '../../../helpers/articleHelper'
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 import { termLinkByTitle } from './TermSnippet'
 
-export const TermTitleLink = ({ title }) => (
+interface TermTitleLinkProps {
+  title: string
+}
+
+export const TermTitleLink = ({ title }: TermTitleLinkProps): React.JSX.Element => (
   <Link
     id={`terms-${slugify(title, true)}`}
     onClick={() => {

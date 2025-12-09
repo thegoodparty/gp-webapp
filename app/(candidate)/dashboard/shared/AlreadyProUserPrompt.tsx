@@ -3,7 +3,7 @@ import H2 from '@shared/typography/H2'
 import Link from 'next/link'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 
-export const AlreadyProUserPrompt = () => (
+export const AlreadyProUserPrompt = (): React.JSX.Element => (
   <>
     <H1 className="text-center mb-8">You&apos;re already a Pro Plan user!</H1>
     <H2 className="text-center mb-8">

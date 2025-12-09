@@ -1,10 +1,32 @@
 import { voterFileDownload } from 'helpers/voterFileDownload'
 
+interface VoterFileFilter {
+  audienceSuperVoters?: boolean
+  audienceLikelyVoters?: boolean
+  audienceUnreliableVoters?: boolean
+  audienceUnlikelyVoters?: boolean
+  audienceFirstTimeVoters?: boolean
+  partyIndependent?: boolean
+  partyDemocrat?: boolean
+  partyRepublican?: boolean
+  age18_25?: boolean
+  age25_35?: boolean
+  age35_50?: boolean
+  age50Plus?: boolean
+  genderMale?: boolean
+  genderFemale?: boolean
+}
+
+interface DownloadVoterListParams {
+  voterFileFilter?: VoterFileFilter
+  outreachType?: string
+}
+
 export const downloadVoterList = async (
-  { voterFileFilter = {}, outreachType = '' } = {},
-  setLoading = () => {},
-  errorSnackbar = () => {},
-) => {
+  { voterFileFilter = {}, outreachType = '' }: DownloadVoterListParams = {},
+  setLoading: (loading: boolean) => void = () => {},
+  errorSnackbar: (message: string) => void = () => {},
+): Promise<void> => {
   setLoading(true)
   const {
     audienceSuperVoters,
@@ -25,7 +47,7 @@ export const downloadVoterList = async (
 
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
   //  https://goodparty.atlassian.net/browse/WEB-4277
-  const audience = {
+  const audience: Record<string, boolean | undefined> = {
     audience_superVoters: audienceSuperVoters,
     audience_likelyVoters: audienceLikelyVoters,
     audience_unreliableVoters: audienceUnreliableVoters,

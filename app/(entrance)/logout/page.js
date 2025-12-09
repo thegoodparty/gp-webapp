@@ -8,6 +8,6 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page(): Promise<React.JSX.Element> {
+export default async function Page() {
   return <LogoutPage />
 }

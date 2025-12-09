@@ -3,7 +3,7 @@ import BrightenSection from './BrightenSection'
 import FormSection from './FormSection'
 import MostAmericans from './MostAmericans'
 
-export default function GetStickersPage() {
+export default function GetStickersPage(): React.JSX.Element {
   return (
     <div>
       <Hero />

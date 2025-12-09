@@ -7,7 +7,7 @@ import { LuUsersRound } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 
-export default function PollDetails() {
+export default function PollDetails(): React.JSX.Element {
   const [poll] = usePoll()
   const { scheduledDate, estimatedCompletionDate, cost } = poll || {}
   return (
@@ -34,7 +34,7 @@ export default function PollDetails() {
           </li>
           <li>
             <span className="font-medium">Cost:</span>{' '}
-            <span className="font-light">${numberFormatter(cost, 2)}</span>
+            <span className="font-light">${numberFormatter(cost || 0, 2)}</span>
           </li>
         </ul>
       </Body2>

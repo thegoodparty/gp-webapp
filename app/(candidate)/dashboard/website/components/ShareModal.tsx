@@ -3,7 +3,13 @@ import H1 from '@shared/typography/H1'
 import Link from 'next/link'
 import ShareButtons from './ShareButtons'
 
-export default function ShareModal({ open, onClose, url }) {
+interface ShareModalProps {
+  open: boolean
+  onClose: () => void
+  url: string
+}
+
+export default function ShareModal({ open, onClose, url }: ShareModalProps): React.JSX.Element {
   return (
     <ResponsiveModal open={open} onClose={onClose}>
       <div className="text-center w-auto md:w-[600px]">

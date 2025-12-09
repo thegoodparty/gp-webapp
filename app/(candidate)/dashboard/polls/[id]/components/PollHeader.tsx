@@ -2,7 +2,8 @@
 
 import { usePoll } from '../../shared/hooks/PollProvider'
 import H1 from '@shared/typography/H1'
-export default function PollHeader() {
+
+export default function PollHeader(): React.JSX.Element {
   const [poll] = usePoll()
   return (
     <div className="flex items-center gap-4 mb-4">

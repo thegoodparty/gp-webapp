@@ -1,10 +1,19 @@
-const HopeStatCard = ({ children }) => (
+interface HopeStatCardProps {
+  children: React.ReactNode
+}
+
+const HopeStatCard = ({ children }: HopeStatCardProps): React.JSX.Element => (
   <section className="bg-mint-900 p-5 mb-4 last:mb-0 rounded-3xl text-right md:mb-0 md:p-10">
     {children}
   </section>
 )
 
-export const HopeStat = ({ percentage, blurb }) => (
+interface HopeStatProps {
+  percentage: number
+  blurb: string
+}
+
+export const HopeStat = ({ percentage, blurb }: HopeStatProps): React.JSX.Element => (
   <HopeStatCard>
     <h1 className="text-secondary-light text-6xl leading-snug md:text-8xl">
       {percentage}%

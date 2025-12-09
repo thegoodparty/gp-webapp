@@ -6,7 +6,7 @@ import H4 from '@shared/typography/H4'
 import { LuUsersRound } from 'react-icons/lu'
 import { numberFormatter } from 'helpers/numberHelper'
 
-export default function PollAudience() {
+export default function PollAudience(): React.JSX.Element {
   const [poll] = usePoll()
   const { audienceSize } = poll || {}
   return (

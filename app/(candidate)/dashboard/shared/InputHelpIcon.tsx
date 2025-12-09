@@ -4,7 +4,13 @@ import IconButton from '@mui/material/IconButton'
 import { MdInfoOutline } from 'react-icons/md'
 import React from 'react'
 
-export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }) => (
+interface InputHelpIconProps {
+  message: string
+  showOnFocus?: boolean
+  onOpen?: () => void
+}
+
+export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }: InputHelpIconProps): React.JSX.Element => (
   <InputAdornment position="end">
     <Tooltip
       disableFocusListener={!showOnFocus}

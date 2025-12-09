@@ -7,7 +7,37 @@ import { SlPeople } from 'react-icons/sl'
 
 const MAX_CARDS = 4
 
-const hasKnownData = (category) => {
+interface Bucket {
+  label: string
+  count: number
+  percent: number
+}
+
+interface Category {
+  buckets: Bucket[]
+}
+
+interface PeopleStats {
+  meta?: {
+    totalConstituents?: number
+  }
+  categories?: {
+    partiesDescription?: Category
+    ethnicGroupsEthnicGroup1Desc?: Category
+    age?: Category
+    gender?: Category
+    estimatedIncomeRange?: Category
+  }
+}
+
+interface StatCard {
+  key: string
+  label: string
+  value: string
+  icon: React.JSX.Element
+}
+
+const hasKnownData = (category: Category | undefined): boolean => {
   if (!category || !category.buckets) return false
   const totalCount = category.buckets.reduce(
     (sum, bucket) => sum + bucket.count,
@@ -19,23 +49,21 @@ const hasKnownData = (category) => {
   return totalCount > 0 && unknownCount < totalCount
 }
 
-const getTopItem = (category) => {
+const getTopItem = (category: Category | undefined): Bucket | null => {
   if (!category || !category.buckets) return null
   const sorted = [...category.buckets]
     .filter((b) => b.label !== 'Unknown')
     .sort((a, b) => b.count - a.count)
-  return sorted[0]
+  return sorted[0] || null
 }
 
 /**
  * Generates stat cards from people stats data
- * @param {Object} peopleStats - The aggregated statistics object
- * @param {Object} peopleStats.meta - Metadata including totalConstituents
- * @param {Object} peopleStats.categories - Demographic categories with buckets
- * @returns {Array} Array of card objects with key, label, value, and icon
+ * @param peopleStats - The aggregated statistics object
+ * @returns Array of card objects with key, label, value, and icon
  */
-export const generateCards = (peopleStats) => {
-  const allCards = []
+export const generateCards = (peopleStats: PeopleStats): StatCard[] => {
+  const allCards: StatCard[] = []
 
   if (peopleStats?.meta?.totalConstituents) {
     allCards.push({
@@ -51,7 +79,7 @@ export const generateCards = (peopleStats) => {
   }
 
   if (hasKnownData(peopleStats?.categories?.partiesDescription)) {
-    const topParty = getTopItem(peopleStats.categories.partiesDescription)
+    const topParty = getTopItem(peopleStats.categories?.partiesDescription)
     if (topParty) {
       allCards.push({
         key: 'politicalMakeup',
@@ -68,7 +96,7 @@ export const generateCards = (peopleStats) => {
 
   if (hasKnownData(peopleStats?.categories?.ethnicGroupsEthnicGroup1Desc)) {
     const topEthnic = getTopItem(
-      peopleStats.categories.ethnicGroupsEthnicGroup1Desc,
+      peopleStats.categories?.ethnicGroupsEthnicGroup1Desc,
     )
     if (topEthnic) {
       allCards.push({
@@ -85,7 +113,7 @@ export const generateCards = (peopleStats) => {
   }
 
   if (hasKnownData(peopleStats?.categories?.age)) {
-    const topAge = getTopItem(peopleStats.categories.age)
+    const topAge = getTopItem(peopleStats.categories?.age)
     if (topAge) {
       const label = topAge.label === '51-200' ? '50+' : topAge.label
       allCards.push({
@@ -102,7 +130,7 @@ export const generateCards = (peopleStats) => {
   }
 
   if (hasKnownData(peopleStats?.categories?.gender)) {
-    const topGender = getTopItem(peopleStats.categories.gender)
+    const topGender = getTopItem(peopleStats.categories?.gender)
     if (topGender) {
       allCards.push({
         key: 'gender',
@@ -118,7 +146,7 @@ export const generateCards = (peopleStats) => {
   }
 
   if (hasKnownData(peopleStats?.categories?.estimatedIncomeRange)) {
-    const topIncome = getTopItem(peopleStats.categories.estimatedIncomeRange)
+    const topIncome = getTopItem(peopleStats.categories?.estimatedIncomeRange)
     if (topIncome) {
       allCards.push({
         key: 'income',

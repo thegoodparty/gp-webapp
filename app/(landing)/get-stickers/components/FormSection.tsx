@@ -1,7 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import HubSpotForm from '@shared/utils/HubSpotForm'
 
-export default function FormSection() {
+export default function FormSection(): React.JSX.Element {
   return (
     <section className="my-8" id="get-stickers">
       <MaxWidth>
