@@ -33,7 +33,7 @@ export const buildAiContentSections = (
 
   let jobsProcessing = false
   const statusObj = subsection.generationStatus || {}
-  
+
   for (const statusKey in statusObj) {
     const statusEntry = statusObj[statusKey]
     if (statusEntry?.status === 'processing') {

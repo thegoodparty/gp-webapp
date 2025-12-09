@@ -41,7 +41,10 @@ export default function TextField<Variant extends TextFieldVariants>({
         // Preserve any existing endAdornment from callers (e.g., Autocomplete)
         endAdornment: mergedEndAdornment ?? restProps.InputProps?.endAdornment,
         // Ensure font family styling is applied while preserving caller styles
-        sx: { fontFamily: 'var(--outfit-font)', ...(restProps.InputProps as any)?.sx },
+        sx: {
+          fontFamily: 'var(--outfit-font)',
+          ...(restProps.InputProps as any)?.sx,
+        },
         style: restProps.InputProps?.style,
       }}
     />

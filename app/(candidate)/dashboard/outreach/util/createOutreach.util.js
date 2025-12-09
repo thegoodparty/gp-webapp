@@ -1,13 +1,11 @@
 import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 import { faker } from '@faker-js/faker'
 
-type FlexibleObject = { [key: string]: string | number | boolean | object | null | undefined }
-
-export const createOutreach = (campaignId: number | string): FlexibleObject => {
+export const createOutreach = (campaignId) => {
   const outreachTypes = Object.keys(OUTREACH_TYPE_MAPPING)
   const outreachType = faker.helpers.arrayElement(outreachTypes)
   const now = faker.date.recent()
-  const voterFileFilter: FlexibleObject = {
+  const voterFileFilter = {
     id: faker.number.int({ min: 100, max: 999 }),
     createdAt: faker.date.past().toISOString(),
     updatedAt: faker.date.recent().toISOString(),
@@ -53,5 +51,3 @@ export const createOutreach = (campaignId: number | string): FlexibleObject => {
     voterFileFilter,
   }
 }
-
-export default createOutreach

@@ -1,12 +1,11 @@
-import type React from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
 import candidateAccess from '../../shared/candidateAccess'
 import DomainPage from './components/DomainPage'
-import { WebsiteProvider, Website } from '../components/WebsiteProvider'
-import { DomainStatusProvider, DomainStatus } from './components/DomainStatusProvider'
+import { WebsiteProvider } from '../components/WebsiteProvider'
+import { DomainStatusProvider } from './components/DomainStatusProvider'
 
 const meta = pageMetaData({
   title: 'Add a domain | GoodParty.org',
@@ -17,15 +16,15 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page(): Promise<React.JSX.Element> {
+export default async function Page() {
   await candidateAccess()
   const [websiteRes, statusRes] = await Promise.all([
-    serverFetch<Website>(apiRoutes.website.get),
-    serverFetch<DomainStatus>(apiRoutes.domain.status),
+    serverFetch(apiRoutes.website.get),
+    serverFetch(apiRoutes.domain.status),
   ])
 
-  const website = websiteRes.ok ? (websiteRes.data as Website) : null
-  const status = statusRes.ok ? (statusRes.data as DomainStatus) : null
+  const website = websiteRes.ok ? websiteRes.data : null
+  const status = statusRes.ok ? statusRes.data : null
 
   if (!website) {
     redirect('/dashboard/website')

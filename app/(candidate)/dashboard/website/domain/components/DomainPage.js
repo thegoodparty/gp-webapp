@@ -13,13 +13,11 @@ import DomainPurchaseSuccess from './DomainPurchaseSuccess'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-type DomainPageProps = { pathname?: string }
-
-export default function DomainPage({ pathname }: DomainPageProps): React.JSX.Element {
+export default function DomainPage({ pathname }) {
   const router = useRouter()
   const { status } = useDomainStatus()
   const { website } = useWebsite()
-  const { domain } = website || {}
+  const { domain } = website
   const { message, paymentStatus } = status || {}
 
   useEffect(() => {
@@ -30,12 +28,12 @@ export default function DomainPage({ pathname }: DomainPageProps): React.JSX.Ele
       message === DOMAIN_STATUS.INACTIVE
     ) {
       sendToPurchaseDomainFlow({
-        websiteId: website.id as string | number,
-        domainName: domain.name as string,
+        websiteId: website.id,
+        domainName: domain.name,
         router,
       })
     }
-  }, [website, paymentStatus, message, domain, router])
+  }, [website, paymentStatus, message])
 
   const showDomainSelection = message === DOMAIN_STATUS.NO_DOMAIN && !domain
   const showError =
@@ -46,15 +44,15 @@ export default function DomainPage({ pathname }: DomainPageProps): React.JSX.Ele
 
   const isSuccessfulPurchase =
     paymentStatus === PAYMENT_STATUS.SUCCEEDED &&
-    ([
+    [
       DOMAIN_STATUS.IN_PROGRESS,
       DOMAIN_STATUS.SUBMITTED,
       DOMAIN_STATUS.SUCCESSFUL,
-    ] as string[]).includes(String(message))
+    ].includes(message)
 
   return (
-    <DashboardLayout pathname={pathname} campaign={{}} showAlert={false} hideMenu>
-      {showDomainSelection && <SelectDomain onRegisterSuccess={() => {}} />}
+    <DashboardLayout pathname={pathname} showAlert={false} hideMenu>
+      {showDomainSelection && <SelectDomain />}
       {showError && <DomainError />}
       {isSuccessfulPurchase && <DomainPurchaseSuccess />}
     </DashboardLayout>

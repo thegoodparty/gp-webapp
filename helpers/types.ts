@@ -32,7 +32,6 @@ export interface UserMetaData {
   hubspotId?: string
   profile_updated_count?: number
   textNotifications?: boolean
-  // Added based on usage across app (e.g., AlertSection)
   demoPersona?: boolean
 }
 
@@ -130,8 +129,6 @@ export interface CampaignDetails {
   wonGeneral?: boolean
 }
 
-import type { JsonObject, JsonValue } from './jsonTypes'
-
 export interface CampaignData {
   createdBy?: string
   slug?: string
@@ -140,8 +137,8 @@ export interface CampaignData {
   launchStatus?: string
   lastVisited?: number
   claimProfile?: string
-  customVoterFiles?: JsonValue[]
-  reportedVoterGoals?: JsonObject
+  customVoterFiles?: unknown[]
+  reportedVoterGoals?: Record<string, unknown>
   textCampaignCount?: number
   lastStepDate?: string
   adminUserEmail?: string
@@ -149,10 +146,11 @@ export interface CampaignData {
   name?: string
 }
 
-export type CampaignAiContent = {
+export interface CampaignAiContent {
   generationStatus?: Record<string, string>
   campaignPlanAttempts?: Record<string, number>
-} & JsonObject
+  [key: string]: unknown
+}
 
 export interface Campaign {
   id: number
@@ -171,7 +169,7 @@ export interface Campaign {
   data: CampaignData
   details: CampaignDetails
   aiContent: CampaignAiContent
-  vendorTsData: JsonObject
+  vendorTsData: Record<string, unknown>
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]

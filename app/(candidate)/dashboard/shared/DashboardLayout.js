@@ -7,17 +7,6 @@ import { useUser } from '@shared/hooks/useUser'
 import { ProUpgradePrompt } from './ProUpgradePrompt'
 import { usePathname } from 'next/navigation'
 
-/**
- * @typedef {object} DashboardLayoutProps
- * @property {import('react').ReactNode} children
- * @property {string} [pathname]
- * @property {object} [campaign]
- * @property {boolean} [showAlert]
- * @property {string} [wrapperClassName]
- * @property {boolean} [hideMenu]
- */
-
-/** @param {DashboardLayoutProps} props */
 export default function DashboardLayout({
   children,
   pathname = '',

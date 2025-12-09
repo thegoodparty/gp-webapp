@@ -1,10 +1,5 @@
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
-// Flexible object type per project guidelines (no any/unknown)
-type FlexibleObject = {
-  [key: string]: string | number | boolean | object | null | undefined
-}
-
 export const PAYMENT_STATUS = {
   REQUIRES_PAYMENT_METHOD: 'requires_payment_method',
   REQUIRES_CONFIRMATION: 'requires_confirmation',
@@ -14,9 +9,7 @@ export const PAYMENT_STATUS = {
   CANCELED: 'canceled',
   SUCCEEDED: 'succeeded',
   FAILED: 'failed',
-} as const
-
-export type PaymentStatus = (typeof PAYMENT_STATUS)[keyof typeof PAYMENT_STATUS]
+}
 
 export const DOMAIN_STATUS = {
   NO_DOMAIN: 'NO_DOMAIN',
@@ -25,21 +18,14 @@ export const DOMAIN_STATUS = {
   INACTIVE: 'INACTIVE',
   ERROR: 'ERROR',
   SUCCESSFUL: 'SUCCESSFUL',
-} as const
-
-export type DomainStatus = (typeof DOMAIN_STATUS)[keyof typeof DOMAIN_STATUS]
-
-export interface Domain extends FlexibleObject {
-  name?: string
-  status?: string
 }
 
-export function isDomainActive(domain: Domain | null | undefined = {}): boolean {
+export function isDomainActive(domain = {}) {
   const status = domain?.status ? domain.status.toUpperCase() : null
-  return isDomainStatusActive(status || undefined)
+  return isDomainStatusActive(status)
 }
 
-export function isDomainStatusActive(status?: string): boolean {
+export function isDomainStatusActive(status) {
   if (!status) {
     return false
   }
@@ -49,19 +35,7 @@ export function isDomainStatusActive(status?: string): boolean {
   )
 }
 
-interface RouterLike {
-  push: (href: string) => void
-}
-
-export const sendToPurchaseDomainFlow = ({
-  websiteId,
-  domainName,
-  router,
-}: {
-  websiteId: string | number
-  domainName: string
-  router: RouterLike
-}) => {
+export const sendToPurchaseDomainFlow = ({ websiteId, domainName, router }) => {
   const purchaseUrl = `/dashboard/purchase?type=${
     PURCHASE_TYPES.DOMAIN_REGISTRATION
   }&domain=${encodeURIComponent(

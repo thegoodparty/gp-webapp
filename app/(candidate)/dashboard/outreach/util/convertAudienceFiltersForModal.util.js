@@ -1,9 +1,6 @@
 // TODO: Refactor this later once we can finally kill the old modal:
 //  https://goodparty.atlassian.net/browse/WEB-4277
-
-export type VoterFileFilter = Record<string, string | number | boolean | object | null | undefined>
-
-const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Record<string, string> = {
+const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING = {
   audienceSuperVoters: 'audience_superVoters',
   audienceLikelyVoters: 'audience_likelyVoters',
   audienceUnreliableVoters: 'audience_unreliableVoters',
@@ -20,15 +17,11 @@ const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Record<string, string> = {
   genderFemale: 'gender_female',
 }
 
-export const convertAudienceFiltersForModal = (
-  filters: VoterFileFilter = {},
-): VoterFileFilter =>
-  Object.keys(filters).reduce<VoterFileFilter>((acc, k) => {
+export const convertAudienceFiltersForModal = (filters = {}) =>
+  Object.keys(filters).reduce((acc, k) => {
     const convertedKey = VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING[k] || k
     return {
       ...acc,
       [convertedKey]: filters[k],
     }
   }, {})
-
-export default convertAudienceFiltersForModal
