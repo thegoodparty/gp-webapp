@@ -6,7 +6,7 @@ import H4 from '@shared/typography/H4'
 import { LuUsersRound } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
 
-export default function PollDetails() {
+export default function PollDetails(): React.JSX.Element {
   const [poll] = usePoll()
   const { scheduledDate, estimatedCompletionDate } = poll || {}
   return (

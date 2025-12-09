@@ -27,12 +27,18 @@ const gpFetch = async (
 ): Promise<Response | Record<string, unknown> | false> => {
   let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
     endpoint
-  if ((method === 'GET' || method === 'DELETE') && data && !(data instanceof FormData)) {
+  if (
+    (method === 'GET' || method === 'DELETE') &&
+    data &&
+    !(data instanceof FormData)
+  ) {
     url = `${url}?`
     for (const key in data) {
       if ({}.hasOwnProperty.call(data, key)) {
         const value = data[key]
-        url += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}&`
+        url += `${encodeURIComponent(key)}=${encodeURIComponent(
+          String(value),
+        )}&`
       }
     }
     url = url.slice(0, -1)
@@ -102,7 +108,8 @@ const fetchCall = async (
   }
   try {
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
-    const jsonRes: Record<string, unknown> | Response = isSuccessfulResponseStatus ? await res.json() : res
+    const jsonRes: Record<string, unknown> | Response =
+      isSuccessfulResponseStatus ? await res.json() : res
     return jsonRes
   } catch (e) {
     console.error('error in fetchCall catch', e)
