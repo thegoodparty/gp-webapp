@@ -3,7 +3,7 @@ import { PollScheduledDateSelector } from 'app/(candidate)/dashboard/polls/compo
 import { useOnboardingContext } from 'app/polls/contexts'
 
 export const PickSendDateStep: React.FC = () => {
-  const { formData, updateFormData } = useOnboardingContext()
+  const { formData, setScheduledDate } = useOnboardingContext()
   return (
     <div className="flex flex-col items-center md:justify-center mb-28 md:mb-4">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
@@ -15,8 +15,8 @@ export const PickSendDateStep: React.FC = () => {
       </p>
       <div className="w-full items-center flex flex-col gap-8 mt-8">
         <PollScheduledDateSelector
-          scheduledDate={formData.scheduledDate}
-          onChange={(date) => updateFormData({ scheduledDate: date })}
+          scheduledDate={formData.scheduledDate || undefined}
+          onChange={(date) => setScheduledDate(date)}
         />
       </div>
     </div>

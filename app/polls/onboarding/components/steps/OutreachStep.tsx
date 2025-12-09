@@ -2,7 +2,7 @@ import { LuHandHeart, LuSmile, LuHeartHandshake } from 'react-icons/lu'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export default function OutreachStep({}) {
+export default function OutreachStep() {
   useEffect(() => {
     trackEvent(EVENTS.ServeOnboarding.PollValuePropsViewed)
   }, [])
@@ -12,7 +12,7 @@ export default function OutreachStep({}) {
         Use polling to prioritize issues and remove bias.
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
-        Understanding your community’s priorities will help you:
+        Understanding your community&apos;s priorities will help you:
       </p>
       <div className="grid grid-cols-1 gap-4 mt-6 ">
         <div className="flex items-center gap-4 pb-4 border-b border-slate-200 ">

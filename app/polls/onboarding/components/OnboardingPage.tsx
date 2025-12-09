@@ -14,7 +14,17 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { PickSendDateStep } from './steps/PickSendDateStep'
 
-const steps = [
+interface Step {
+  name: string
+  nextLabel: string
+  nextStep: string | null
+  allowBack: boolean
+  backLabel: string
+  backStep: string | null
+  stepperStepIndex: number
+}
+
+const steps: Step[] = [
   {
     name: 'Insights',
     nextLabel: 'Gather Feedback',
@@ -88,14 +98,8 @@ const maxStepperStepIndex = steps.reduce(
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const {
-    submitOnboarding,
-    isSubmitting,
-    submitError,
-    user,
-    formData,
-    stepValidation,
-  } = useOnboardingContext()
+  const { submitOnboarding, isSubmitting, submitError, user, stepValidation } =
+    useOnboardingContext()
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [showError, setShowError] = useState(false)
@@ -109,11 +113,10 @@ export default function OnboardingPage() {
   }, [currentStepIndex])
 
   const currentStep = useMemo(() => {
-    return steps[currentStepIndex]
+    return steps[currentStepIndex]!
   }, [currentStepIndex])
 
-  // Step validation
-  const currentStepValidation = stepValidation[currentStep.name]
+  const currentStepValidation = stepValidation[currentStep?.name || '']
   const isStepValid = useMemo(() => {
     return currentStepValidation === undefined || currentStepValidation === true
   }, [currentStepValidation])
@@ -182,7 +185,6 @@ export default function OnboardingPage() {
             {currentStep.name === 'Add Image' && <AddImageStep />}
             {currentStep.name === 'Preview' && <PreviewStep />}
 
-            {/* Error message for failed submission */}
             <ErrorMessage
               title="Failed to send SMS poll"
               message={submitError}

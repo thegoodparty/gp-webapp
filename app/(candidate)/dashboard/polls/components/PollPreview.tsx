@@ -29,17 +29,17 @@ export const PollPreview: React.FC<PollPreviewProps> = ({
         title="Outreach Summary"
         description={
           <div className="flex flex-col gap-1 mt-2">
-            <p>
+            <p className="text-sm font-normal">
               Audience: <b>{numberFormatter(targetAudienceSize)}</b>
             </p>
-            <p>
+            <p className="text-sm font-normal">
               Send Date: <b>{scheduledDate.toDateString()} at 11:00am</b>
             </p>
-            <p>
+            <p className="text-sm font-normal">
               Estimated Completion:{' '}
               <b>{estimatedCompletionDate.toDateString()} at 11:00am</b>
             </p>
-            <p>
+            <p className="text-sm font-normal">
               Cost:{' '}
               <b>
                 {isFree
