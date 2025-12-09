@@ -55,45 +55,45 @@ export function getWebsiteUrl(vanityPath: string, preview: boolean = false, doma
   return `${CANDIDATES_SITE_BASE}/${vanityPath}${preview ? '/preview' : ''}`
 }
 
-export async function fetchWebsite(): Promise<Website> {
+export async function fetchWebsite(): Promise<ApiResponse<Website>> {
   const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.get, {})
-  return response.data
+  return response
 }
 
-export async function createWebsite(): Promise<Website> {
+export async function createWebsite(): Promise<ApiResponse<Website>> {
   const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.create, {})
-  return response.data
+  return response
 }
 
-export async function updateWebsite(content: WebsiteContent): Promise<Website | false> {
+export async function updateWebsite(content: WebsiteContent): Promise<ApiResponse<Website> | false> {
   try {
     const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, content)
-    return response.data
+    return response
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-export async function publishWebsite(): Promise<Website> {
+export async function publishWebsite(): Promise<ApiResponse<Website>> {
   const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, {
     status: WEBSITE_STATUS.published,
   })
-  return response.data
+  return response
 }
 
-export async function unpublishWebsite(): Promise<Website> {
+export async function unpublishWebsite(): Promise<ApiResponse<Website>> {
   const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, {
     status: WEBSITE_STATUS.unpublished,
   })
-  return response.data
+  return response
 }
 
-export async function validateVanityPath(vanityPath: string): Promise<{ valid: boolean }> {
+export async function validateVanityPath(vanityPath: string): Promise<ApiResponse<{ valid: boolean }>> {
   const response: ApiResponse<{ valid: boolean }> = await clientFetch(apiRoutes.website.validateVanityPath, {
     vanityPath,
   })
-  return response.data
+  return response
 }
 
 export function combineIssues(issues: Issue[] = [], customIssues: CustomIssue[] = []): CombinedIssue[] {
