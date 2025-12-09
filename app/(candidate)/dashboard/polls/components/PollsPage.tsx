@@ -9,7 +9,7 @@ import PollWelcomePage from 'app/polls/welcome/components/PollWelcomePage'
 import Button from '@shared/buttons/Button'
 import { LuPlus } from 'react-icons/lu'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
-import { Poll } from '../shared/serverApiCalls'
+import { Poll } from '../shared/poll-types'
 
 interface PollsPageProps {
   pathname: string
@@ -42,11 +42,7 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
             </Button>
           )}
         </div>
-        {polls.length > 0 ? (
-          <PollsTable polls={polls} />
-        ) : (
-          <PollWelcomePage />
-        )}
+        {polls.length > 0 ? <PollsTable polls={polls} /> : <PollWelcomePage />}
       </Paper>
     </DashboardLayout>
   )

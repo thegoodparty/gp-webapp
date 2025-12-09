@@ -15,7 +15,7 @@ interface PollTextInputProps {
   onFocus: () => void
   onBlur: () => void
   showHighlights: boolean
-  onContentChange?: () => void
+  onContentChange?: (newValue: string) => void
   showLoadingDots?: boolean
   isReadOnly?: boolean
   hidePlaceholder?: boolean

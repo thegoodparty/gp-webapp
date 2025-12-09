@@ -7,8 +7,8 @@ import PollsContent from './PollsContent'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePoll } from '../../shared/hooks/PollProvider'
-import { POLL_STATUS } from '../../shared/constants'
 import { waitForUsersnap } from '@shared/scripts/UserSnapScript'
+import { PollStatus } from '../../shared/poll-types'
 
 const showSurvey = async () => {
   try {
@@ -27,7 +27,7 @@ export default function PollsDetailPage({ pathname }) {
   useEffect(() => {
     if (pollStatus) {
       trackEvent(EVENTS.polls.resultsViewed, { status: pollStatus })
-      if (pollStatus === POLL_STATUS.COMPLETED) {
+      if (pollStatus === PollStatus.COMPLETED) {
         showSurvey()
       }
     }
