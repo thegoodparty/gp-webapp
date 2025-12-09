@@ -175,7 +175,7 @@ const DetailsForm: React.FC<{
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
-    campaign?.details?.otherOffice || campaign?.details?.office,
+    campaign?.details?.otherOffice || campaign?.details?.office || '',
   )
 
   const introductionOptions = introOptions({

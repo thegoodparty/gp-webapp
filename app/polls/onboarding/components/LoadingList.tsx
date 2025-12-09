@@ -4,9 +4,10 @@ import { FaRegHourglass } from 'react-icons/fa'
 import { FaCheck } from 'react-icons/fa6'
 import { LuLoaderCircle } from 'react-icons/lu'
 
-const STATUS_PENDING = 'pending'
-const STATUS_LOADING = 'loading'
-const STATUS_COMPLETE = 'complete'
+type Status = 'pending' | 'loading' | 'complete'
+const STATUS_PENDING: Status = 'pending'
+const STATUS_LOADING: Status = 'loading'
+const STATUS_COMPLETE: Status = 'complete'
 const LOADING_DELAY = 1250
 
 interface LoadingItem {
@@ -19,14 +20,15 @@ interface LoadingListProps {
   onComplete: () => void
 }
 
-export default function LoadingList({ items, onComplete }: LoadingListProps): React.JSX.Element {
-  
+export default function LoadingList({ items, onComplete }: LoadingListProps) {
   const [loadingItems, setLoadingItems] = useState(items)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setLoadingItems(prevItems => {
-        const currentLoadingIndex = prevItems.findIndex(item => item.status === STATUS_LOADING)
+      setLoadingItems((prevItems) => {
+        const currentLoadingIndex = prevItems.findIndex(
+          (item) => item.status === STATUS_LOADING,
+        )
 
         if (currentLoadingIndex === -1) {
           clearInterval(timer)
@@ -37,13 +39,13 @@ export default function LoadingList({ items, onComplete }: LoadingListProps): Re
 
         newItems[currentLoadingIndex] = {
           ...newItems[currentLoadingIndex],
-          status: STATUS_COMPLETE
+          status: STATUS_COMPLETE,
         }
 
         if (currentLoadingIndex + 1 < newItems.length) {
           newItems[currentLoadingIndex + 1] = {
             ...newItems[currentLoadingIndex + 1],
-            status: STATUS_LOADING
+            status: STATUS_LOADING,
           }
         }
 
@@ -55,7 +57,10 @@ export default function LoadingList({ items, onComplete }: LoadingListProps): Re
   }, [])
 
   useEffect(() => {
-    if (loadingItems.length > 0 && loadingItems.every(item => item.status === STATUS_COMPLETE)) {
+    if (
+      loadingItems.length > 0 &&
+      loadingItems.every((item) => item.status === STATUS_COMPLETE)
+    ) {
       onComplete()
     }
   }, [loadingItems, onComplete])
@@ -69,7 +74,10 @@ export default function LoadingList({ items, onComplete }: LoadingListProps): Re
               <FaRegHourglass className="text-gray-400 text-sm" />
             )}
             {item.status === STATUS_LOADING && (
-              <LuLoaderCircle aria-label="Loading" className="text-blue-500 animate-spin text-xl" />
+              <LuLoaderCircle
+                aria-label="Loading"
+                className="text-blue-500 animate-spin text-xl"
+              />
             )}
             {item.status === STATUS_COMPLETE && (
               <FaCheck className="text-success" />
@@ -81,4 +89,3 @@ export default function LoadingList({ items, onComplete }: LoadingListProps): Re
     </div>
   )
 }
-
