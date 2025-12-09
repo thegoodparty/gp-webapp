@@ -1,7 +1,49 @@
+interface AddressComponent {
+  types: string[]
+  long_name: string
+  short_name: string
+}
+
+interface Address {
+  place_id: string
+  formatted_address: string
+  address_components?: AddressComponent[]
+}
+
+interface PostalAddress {
+  postalCode: string
+  state: string
+  city: string
+  streetLines: string[]
+}
+
+interface FormData {
+  ein: string
+  address: Address
+  campaignCommitteeName: string
+  website: string
+  electionFilingLink: string
+  email: string
+  phone: string
+  matchingContactFields: string[]
+}
+
+interface MappedFormData {
+  ein: string
+  placeId: string
+  formattedAddress: string
+  committeeName: string
+  websiteDomain: string
+  filingUrl: string
+  email: string
+  phone: string
+  matchingContactFields: string[]
+}
+
 // TODO: refactor the API to accept the entire Google Places address object so
 //  that we don't have to extract the postal address here, we can just pass it
 //  along
-const extractPostalAddress = (address) => {
+export const extractPostalAddress = (address: Address): PostalAddress => {
   if (!address || !address.address_components) {
     return {
       postalCode: '',
@@ -13,12 +55,12 @@ const extractPostalAddress = (address) => {
 
   const { address_components } = address
 
-  const extractAddressComponent = (types) => {
+  const extractAddressComponent = (types: string | string[]): AddressComponent => {
     const typeArray = Array.isArray(types) ? types : [types]
     const component = address_components.find((comp) =>
       typeArray.some((type) => comp.types.includes(type)),
     )
-    return component || {}
+    return component || { types: [], long_name: '', short_name: '' }
   }
 
   const streetNumber = extractAddressComponent('street_number').long_name
@@ -43,7 +85,7 @@ export const mapFormData = ({
   email,
   phone,
   matchingContactFields,
-}) => ({
+}: FormData): MappedFormData => ({
   ein,
   placeId: place_id,
   formattedAddress: formatted_address,

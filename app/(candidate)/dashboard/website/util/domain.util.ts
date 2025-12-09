@@ -20,12 +20,26 @@ export const DOMAIN_STATUS = {
   SUCCESSFUL: 'SUCCESSFUL',
 }
 
-export function isDomainActive(domain = {}) {
+interface Domain {
+  status?: string
+}
+
+interface Router {
+  push: (url: string) => void
+}
+
+interface PurchaseDomainFlowParams {
+  websiteId: string | number
+  domainName: string
+  router: Router
+}
+
+export function isDomainActive(domain: Domain = {}): boolean {
   const status = domain?.status ? domain.status.toUpperCase() : null
   return isDomainStatusActive(status)
 }
 
-export function isDomainStatusActive(status) {
+export function isDomainStatusActive(status: string | null): boolean {
   if (!status) {
     return false
   }
@@ -35,7 +49,7 @@ export function isDomainStatusActive(status) {
   )
 }
 
-export const sendToPurchaseDomainFlow = ({ websiteId, domainName, router }) => {
+export const sendToPurchaseDomainFlow = ({ websiteId, domainName, router }: PurchaseDomainFlowParams): void => {
   const purchaseUrl = `/dashboard/purchase?type=${
     PURCHASE_TYPES.DOMAIN_REGISTRATION
   }&domain=${encodeURIComponent(

@@ -1,5 +1,22 @@
 import { AUDIENCE_LABELS_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 
+interface AudienceFilters {
+  audienceSuperVoters?: boolean
+  audienceLikelyVoters?: boolean
+  audienceUnreliableVoters?: boolean
+  audienceUnlikelyVoters?: boolean
+  audienceFirstTimeVoters?: boolean
+  partyIndependent?: boolean
+  partyDemocrat?: boolean
+  partyRepublican?: boolean
+  age18_25?: boolean
+  age25_35?: boolean
+  age35_50?: boolean
+  age50Plus?: boolean
+  genderMale?: boolean
+  genderFemale?: boolean
+}
+
 export const formatAudienceLabels = ({
   audienceSuperVoters,
   audienceLikelyVoters,
@@ -15,8 +32,8 @@ export const formatAudienceLabels = ({
   age50Plus,
   genderMale,
   genderFemale,
-} = {}) => {
-  const filtersFields = {
+}: AudienceFilters = {}): string[] => {
+  const filtersFields: Record<string, boolean | undefined> = {
     audienceSuperVoters,
     audienceLikelyVoters,
     audienceUnreliableVoters,
@@ -49,5 +66,6 @@ export const formatAudienceLabels = ({
     genderFemale,
   })
     .filter((k) => Boolean(filtersFields[k]))
-    .map((k) => AUDIENCE_LABELS_MAPPING[k])
+    .map((k) => (AUDIENCE_LABELS_MAPPING as Record<string, string>)[k])
+    .filter((label): label is string => Boolean(label))
 }
