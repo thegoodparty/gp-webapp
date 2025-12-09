@@ -17,15 +17,15 @@ export default function PreviewStep() {
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         Review your SMS poll
       </h1>
-      <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
+      <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground mb-8">
         This poll will be sent to a representative sample of your constituents
         for <b>FREE</b> and you&apos;ll be able to gather unbiased feedback in 3
         days.
       </p>
       <PollPreview
-        scheduledDate={scheduledDate}
+        scheduledDate={scheduledDate!}
         targetAudienceSize={500}
-        imageUrl={imageUrl}
+        imageUrl={imageUrl || undefined}
         message={demoMessageText}
         isFree={true}
       />

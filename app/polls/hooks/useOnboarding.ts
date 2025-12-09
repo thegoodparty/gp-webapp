@@ -32,6 +32,7 @@ export interface UseOnboardingReturn {
   submitError: string | null
   setImageUrl: (imageUrl: string | null) => void
   setSwornInDate: (swornInDate: Date | undefined) => void
+  setScheduledDate: (scheduledDate: Date | undefined) => void
   submitOnboarding: () => Promise<unknown>
   resetFormData: () => void
   demoMessageText: string
@@ -138,6 +139,13 @@ export const useOnboarding = (): UseOnboardingReturn => {
     [updateFormData],
   )
 
+  const setScheduledDate = useCallback(
+    (scheduledDate: Date | undefined) => {
+      updateFormData({ scheduledDate })
+    },
+    [updateFormData],
+  )
+
   const setSwornInDate = useCallback(
     (swornInDate: Date | undefined) => {
       const isSwornIn = !swornInDate
@@ -208,6 +216,7 @@ export const useOnboarding = (): UseOnboardingReturn => {
     submitError,
     setImageUrl,
     setSwornInDate,
+    setScheduledDate,
     submitOnboarding,
     resetFormData,
     demoMessageText,
