@@ -86,11 +86,11 @@ export const useOnboarding = (): UseOnboardingReturn => {
       !isSwornIn
         ? personElectDemoMessageTextPolls({
             name: userName,
-            office: campaignOffice || '',
+            office: campaignOffice,
           })
         : demoMessageTextPolls({
             name: userName,
-            office: campaignOffice || '',
+            office: campaignOffice,
           }),
     [userName, campaignOffice, isSwornIn],
   )
@@ -99,9 +99,9 @@ export const useOnboarding = (): UseOnboardingReturn => {
       !isSwornIn
         ? personElectMessageTextPolls({
             name: userName,
-            office: campaignOffice || '',
+            office: campaignOffice,
           })
-        : messageTextPolls({ name: userName, office: campaignOffice || '' }),
+        : messageTextPolls({ name: userName, office: campaignOffice }),
     [userName, campaignOffice, isSwornIn],
   )
 
