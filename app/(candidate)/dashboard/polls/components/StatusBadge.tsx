@@ -1,16 +1,17 @@
 import clsx from 'clsx'
-import { POLL_STATUS, POLL_STATUS_LABELS } from '../shared/constants'
+import { POLL_STATUS_LABELS } from '../shared/constants'
+import { PollStatus } from '../shared/poll-types'
 
-export const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
+export const StatusBadge: React.FC<{ status: PollStatus }> = ({ status }) => {
   let colorClass = 'bg-gray-500'
   switch (status) {
-    case POLL_STATUS.IN_PROGRESS:
+    case PollStatus.IN_PROGRESS:
       colorClass = 'bg-blue-500'
       break
-    case POLL_STATUS.SCHEDULED:
+    case PollStatus.SCHEDULED:
       colorClass = 'bg-black'
       break
-    case POLL_STATUS.COMPLETED:
+    case PollStatus.COMPLETED:
       colorClass = 'bg-green-500'
       break
   }
