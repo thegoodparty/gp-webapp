@@ -95,19 +95,6 @@ export const useOnboarding = () => {
     }
   }, [messageText])
 
-  // Calculate and set the scheduled and completion dates
-  useEffect(() => {
-    const now = new Date()
-    // These are placeholder values, will be expanded upon in the future. We are forcing 7 days for tevyn in interim.
-    const scheduledDate = new Date(now)
-    scheduledDate.setDate(now.getDate() + 4) // 4 days from now
-
-    setFormData((prev) => ({
-      ...prev,
-      scheduledDate,
-    }))
-  }, [])
-
   const updateFormData = useCallback((updates) => {
     setFormData((prev) => ({
       ...prev,

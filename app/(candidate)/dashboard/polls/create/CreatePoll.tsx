@@ -35,6 +35,7 @@ import { PollScheduledDateSelector } from '../components/PollScheduledDateSelect
 import { PollPreview } from '../components/PollPreview'
 
 const MIN_QUESTION_LENGTH = 25
+const MAX_QUESTION_LENGTH = 1500
 
 type Details = {
   title: string
@@ -158,6 +159,7 @@ const STOP_MESSAGE = 'Text STOP to opt out'
 
 const toMessage = (details: Details): string =>
   [details.introduction, details.question, STOP_MESSAGE]
+    .map((line) => line.trim())
     .join('\n\n')
     .replaceAll('[Name]', '{{first_name}}')
     .trim()
@@ -305,6 +307,10 @@ const DetailsForm: React.FC<{
               }
               if (trimmedValue.length < MIN_QUESTION_LENGTH) {
                 return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
+              }
+
+              if (trimmedValue.length > MAX_QUESTION_LENGTH) {
+                return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
               }
 
               const state = biasAnalysisStateRef.current

@@ -8,7 +8,6 @@ import {
 } from 'react-icons/lu'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { formatCurrency } from 'helpers/numberHelper'
 import { PRICE_PER_POLL_TEXT } from 'app/(candidate)/dashboard/polls/shared/constants'
 
 export default function StrategyStep() {
@@ -73,9 +72,7 @@ export default function StrategyStep() {
               Your first outreach is <b>FREE</b>
             </p>
           }
-          note={`Future polls are approximately $${formatCurrency(
-            PRICE_PER_POLL_TEXT,
-          )} per text.`}
+          note={`Future polls cost $${PRICE_PER_POLL_TEXT} per text.`}
         />
       </div>
     </div>
