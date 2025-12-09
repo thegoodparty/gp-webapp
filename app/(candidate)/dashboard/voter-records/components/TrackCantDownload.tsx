@@ -14,6 +14,6 @@ export default function TrackCantDownload({ campaign }: TrackCantDownloadProps):
     trackEvent('Pro user can not download voter file page', {
       slug: campaign.slug,
     })
-  }, [campaign.slug])
+  }, [])
   return null
 }
