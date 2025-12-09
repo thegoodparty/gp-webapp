@@ -3,6 +3,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import SuccessPage from './components/SuccessPage'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 import { requireAuth } from 'helpers/authHelper'
+import { redirect } from 'next/navigation'
 
 const meta = pageMetaData({
   title: 'Welcome to GoodParty.org Serve Onboarding',
@@ -12,9 +13,17 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
-export default async function Page(): Promise<ReactNode> {
+export default async function Page({
+  searchParams,
+}: PageProps<any>): Promise<ReactNode> {
   await requireAuth()
   await candidateAccess()
 
-  return <SuccessPage />
+  const { pollId } = await searchParams
+
+  if (typeof pollId !== 'string') {
+    return redirect('/dashboard/polls')
+  }
+
+  return <SuccessPage pollId={pollId} />
 }

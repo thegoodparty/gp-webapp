@@ -13,6 +13,7 @@ import {
 import { format, isBefore } from 'date-fns'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
+import { Poll } from 'app/(candidate)/dashboard/polls/shared/poll-types'
 
 interface FormData {
   imageUrl: string | null
@@ -33,7 +34,7 @@ export interface UseOnboardingReturn {
   setImageUrl: (imageUrl: string | null) => void
   setSwornInDate: (swornInDate: Date | undefined) => void
   setScheduledDate: (scheduledDate: Date | undefined) => void
-  submitOnboarding: () => Promise<unknown>
+  submitOnboarding: () => Promise<Poll>
   resetFormData: () => void
   demoMessageText: string
   user: ReturnType<typeof useUser>[0]
@@ -114,17 +115,6 @@ export const useOnboarding = (): UseOnboardingReturn => {
     }
   }, [messageText])
 
-  useEffect(() => {
-    const now = new Date()
-    const scheduledDate = new Date(now)
-    scheduledDate.setDate(now.getDate() + 4)
-
-    setFormData((prev) => ({
-      ...prev,
-      scheduledDate,
-    }))
-  }, [])
-
   const updateFormData = useCallback((updates: Partial<FormData>) => {
     setFormData((prev) => ({
       ...prev,
@@ -176,7 +166,7 @@ export const useOnboarding = (): UseOnboardingReturn => {
         throw new Error('Missing required fields')
       }
 
-      const response = await clientFetch<unknown>(apiRoutes.polls.initialPoll, {
+      const response = await clientFetch<Poll>(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),

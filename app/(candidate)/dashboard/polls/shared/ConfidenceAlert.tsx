@@ -40,7 +40,7 @@ export default function ConfidenceAlert() {
             color: 'text-blue-500',
             message: `Poll expansion is currently in progress. New results are expected on ${dateUsHelper(
               poll.estimatedCompletionDate,
-            )} at 11:00 AM`,
+            )} at 11:00 AM.`,
           }
     return (
       <Alert variant={alertData.variant}>

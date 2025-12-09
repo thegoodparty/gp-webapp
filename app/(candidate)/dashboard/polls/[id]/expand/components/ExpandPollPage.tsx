@@ -152,6 +152,11 @@ export default function ExpandPollPage({
       <H1 className="text-center">
         When would you like to send your text messages?
       </H1>
+
+      <Body1 className="text-center my-4 text-muted-foreground">
+        You can schedule polls up to 30 days in advance. GoodParty.org sends all
+        polls at 11am local time to maximize responses.
+      </Body1>
       <PollScheduledDateSelector
         scheduledDate={state.scheduledDate}
         onChange={(date) => setState({ ...state, scheduledDate: date })}

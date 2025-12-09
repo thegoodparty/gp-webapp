@@ -46,7 +46,7 @@ export default async function Page({ params, searchParams }: PageProps<any>) {
           className="flex flex-col items-center justify-center"
           scheduledDate={new Date(scheduledDate)}
           textsPaidFor={count}
-          redirectTo={'/dashboard/polls'}
+          redirectTo={`/dashboard/polls/${encodeURIComponent(poll.id)}`}
         />
       </ExpandPollLayout>
     </PollProvider>
