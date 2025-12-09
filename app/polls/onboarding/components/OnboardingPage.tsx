@@ -19,7 +19,6 @@ interface Step {
   nextLabel: string
   nextStep: string | null
   allowBack: boolean
-  backLabel: string
   backStep: string | null
   stepperStepIndex: number
 }
@@ -30,7 +29,6 @@ const steps: Step[] = [
     nextLabel: 'Gather Feedback',
     nextStep: 'Sworn In',
     allowBack: false,
-    backLabel: 'Back',
     backStep: null,
     stepperStepIndex: 1,
   },
@@ -39,7 +37,6 @@ const steps: Step[] = [
     nextLabel: 'Next',
     nextStep: 'Outreach Prelude',
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Insights',
     stepperStepIndex: 2,
   },
@@ -48,7 +45,6 @@ const steps: Step[] = [
     nextLabel: 'Create poll',
     nextStep: 'Strategy',
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Sworn In',
     stepperStepIndex: 3,
   },
@@ -57,7 +53,6 @@ const steps: Step[] = [
     nextLabel: 'Pick Send Date',
     nextStep: 'Pick Send Date',
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Outreach Prelude',
     stepperStepIndex: 4,
   },
@@ -66,7 +61,6 @@ const steps: Step[] = [
     nextLabel: 'Add Image',
     nextStep: 'Add Image',
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Strategy',
     stepperStepIndex: 5,
   },
@@ -75,7 +69,6 @@ const steps: Step[] = [
     nextLabel: 'See Preview',
     nextStep: 'Preview',
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Pick Send Date',
     stepperStepIndex: 6,
   },
@@ -84,7 +77,6 @@ const steps: Step[] = [
     nextLabel: 'Send SMS poll',
     nextStep: null,
     allowBack: true,
-    backLabel: 'Back',
     backStep: 'Add Image',
     stepperStepIndex: 7,
   },
@@ -142,10 +134,12 @@ export default function OnboardingPage() {
   const submit = async () => {
     try {
       setShowError(false)
-      await submitOnboarding()
+      const poll = await submitOnboarding()
       await identifyUser(user?.id, { 'Serve Activated': true })
       trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
-      router.push('/polls/onboarding/success')
+      router.push(
+        `/polls/onboarding/success?pollId=${encodeURIComponent(poll.id)}`,
+      )
     } catch (error) {
       console.error('Failed to submit onboarding:', error)
       setShowError(true)
@@ -198,7 +192,6 @@ export default function OnboardingPage() {
               numberOfSteps={maxStepperStepIndex}
               currentStep={currentStep.stepperStepIndex}
               onBack={currentStep.allowBack ? handleBack : null}
-              onBackText={currentStep.backLabel}
               disabledNext={isNextDisabled}
               onNext={handleNext}
               onNextText={isSubmitting ? 'Sending...' : currentStep.nextLabel}
@@ -211,7 +204,6 @@ export default function OnboardingPage() {
           numberOfSteps={maxStepperStepIndex}
           currentStep={currentStep.stepperStepIndex}
           onBack={currentStep.allowBack ? handleBack : null}
-          onBackText={currentStep.backLabel}
           disabledNext={isNextDisabled}
           onNext={handleNext}
           onNextText={isSubmitting ? 'Sending...' : currentStep.nextLabel}
