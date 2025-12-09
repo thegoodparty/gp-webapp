@@ -10,7 +10,8 @@ import Button from '@shared/buttons/Button'
 import { LuLoaderCircle, LuPlus } from 'react-icons/lu'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { Poll } from '../shared/poll-types'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 interface PollsPageProps {
   pathname: string
@@ -18,30 +19,33 @@ interface PollsPageProps {
 }
 
 export default function PollsPage({ pathname, polls }: PollsPageProps) {
+  const router = useRouter()
   const [campaign] = useCampaign()
   const { ready: flagsReady, on: pollCreationFlagOn } = useFlagOn(
     'serve-poll-creation',
   )
 
-  if (!flagsReady) {
-    return (
-      <DashboardLayout
-        pathname={pathname}
-        campaign={campaign}
-        showAlert={false}
-      >
-        <Paper className="min-h-full flex justify-center items-center">
-          <LuLoaderCircle
-            className="animate-spin text-blue-500 mx-auto"
-            size={60}
-          />
-        </Paper>
-      </DashboardLayout>
-    )
-  }
+  const loadingContent = (
+    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+      <Paper className="min-h-full flex justify-center items-center">
+        <LuLoaderCircle
+          className="animate-spin text-blue-500 mx-auto"
+          size={60}
+        />
+      </Paper>
+    </DashboardLayout>
+  )
 
-  if (!pollCreationFlagOn && polls.length === 1) {
-    return redirect(`/dashboard/polls/${polls[0]?.id}`)
+  const needsRedirect = !pollCreationFlagOn && polls.length === 1
+
+  useEffect(() => {
+    if (flagsReady && needsRedirect) {
+      router.push(`/dashboard/polls/${polls[0]?.id}`)
+    }
+  }, [router, flagsReady, needsRedirect, polls])
+
+  if (!flagsReady || needsRedirect) {
+    return <>{loadingContent}</>
   }
 
   const hasPolls = polls.length > 0
