@@ -50,12 +50,14 @@ export const PollAudienceSelector: React.FC<{
   alreadySent: number
   responsesAlreadyReceived: number
   onSelect: (selected: { count: number; isRecommended: boolean }) => void
+  showRecommended: boolean
 }> = ({
   expectedResponseRate,
   totalConstituentsWithCellPhone,
   alreadySent,
   responsesAlreadyReceived,
   onSelect,
+  showRecommended,
 }) => {
   const [selectedAudienceSize, setSelectedAudienceSize] = useState<
     number | undefined
@@ -113,7 +115,7 @@ export const PollAudienceSelector: React.FC<{
     })
     .filter((option) => option !== null)
 
-  if (!options.some((option) => option.isRecommended)) {
+  if (showRecommended && !options.some((option) => option.isRecommended)) {
     const recommendedPercentage = Math.round(
       (recommendedSendCount / totalRemainingUsableConstituents) * 100,
     )
@@ -162,7 +164,7 @@ export const PollAudienceSelector: React.FC<{
               </p>
               <p className="text-sm text-muted-foreground">{option.message}</p>
             </div>
-            {option.isRecommended && (
+            {showRecommended && option.isRecommended && (
               <span className="ml-8 inline-flex items-center px-2 py-0.5 rounded bg-blue-500 text-white">
                 Recommended
               </span>
