@@ -462,6 +462,7 @@ const AudienceSelectionForm: React.FC<{
         alreadySent={0}
         responsesAlreadyReceived={0}
         onSelect={({ count }) => setSelectedAudienceSize(count)}
+        showRecommended={true}
       />
     </FormStep>
   )

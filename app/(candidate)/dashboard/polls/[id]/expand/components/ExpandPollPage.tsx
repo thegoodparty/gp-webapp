@@ -75,6 +75,7 @@ const AudienceSelectionForm: React.FC<{
         alreadySent={poll.audienceSize}
         responsesAlreadyReceived={responseCount}
         onSelect={setSelection}
+        showRecommended={!!poll.lowConfidence}
       />
     </>,
   )
