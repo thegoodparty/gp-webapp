@@ -10,6 +10,7 @@ interface StepFooterProps {
   onNextText: string
   disabledNext?: boolean
   onBack?: (() => void) | null
+  onBackText?: string
   hideNext?: boolean
   hideBack?: boolean
 }
@@ -21,6 +22,7 @@ export const StepFooter = ({
   onNextText,
   disabledNext = false,
   onBack = null,
+  onBackText = 'Back',
   hideNext = false,
   hideBack = false,
 }: StepFooterProps): React.JSX.Element => {
@@ -39,7 +41,7 @@ export const StepFooter = ({
       >
         {!hideBack && onBack && (
           <Button size="large" className="" variant="ghost" onClick={onBack}>
-            Back
+            {onBackText}
           </Button>
         )}
         {!hideNext && (
