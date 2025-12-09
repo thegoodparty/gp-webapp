@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import CongratulationsAnimation from '@shared/animations/CongratulationsAnimation'
 
-export default function SuccessPage() {
+export default function SuccessPage({ pollId }: { pollId: string }) {
   const router = useRouter()
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function SuccessPage() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      router.replace('/dashboard/polls')
+      router.replace(`/dashboard/polls/${encodeURIComponent(pollId)}`)
     }, 4000)
     return () => clearTimeout(timeoutId)
   }, [router])

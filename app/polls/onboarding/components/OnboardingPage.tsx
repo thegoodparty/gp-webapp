@@ -134,10 +134,12 @@ export default function OnboardingPage() {
   const submit = async () => {
     try {
       setShowError(false)
-      await submitOnboarding()
+      const poll = await submitOnboarding()
       await identifyUser(user?.id, { 'Serve Activated': true })
       trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
-      router.push('/polls/onboarding/success')
+      router.push(
+        `/polls/onboarding/success?pollId=${encodeURIComponent(poll.id)}`,
+      )
     } catch (error) {
       console.error('Failed to submit onboarding:', error)
       setShowError(true)
