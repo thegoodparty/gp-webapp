@@ -14,7 +14,10 @@ import {
 } from '../../../shared/audience-selection'
 import { LuLoaderCircle } from 'react-icons/lu'
 import { Poll } from '../../../shared/poll-types'
-import { PollScheduledDateSelector } from '../../../components/PollScheduledDateSelector'
+import {
+  POLLS_SCHEDULING_COPY,
+  PollScheduledDateSelector,
+} from '../../../components/PollScheduledDateSelector'
 
 const AudienceSelectionForm: React.FC<{
   poll: Poll
@@ -154,8 +157,7 @@ export default function ExpandPollPage({
       </H1>
 
       <Body1 className="text-center my-4 text-muted-foreground">
-        You can schedule polls up to 30 days in advance. GoodParty.org sends all
-        polls at 11am local time to maximize responses.
+        {POLLS_SCHEDULING_COPY}
       </Body1>
       <PollScheduledDateSelector
         scheduledDate={state.scheduledDate}

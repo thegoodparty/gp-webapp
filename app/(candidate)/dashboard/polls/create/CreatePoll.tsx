@@ -32,7 +32,10 @@ import { useUser } from '@shared/hooks/useUser'
 import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
 import { uuidv7 } from 'uuidv7'
 import { PollPaymentSuccess } from '../shared/components/PollPaymentSuccess'
-import { PollScheduledDateSelector } from '../components/PollScheduledDateSelector'
+import {
+  POLLS_SCHEDULING_COPY,
+  PollScheduledDateSelector,
+} from '../components/PollScheduledDateSelector'
 import { PollPreview } from '../components/PollPreview'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
@@ -413,8 +416,7 @@ const DateSelectionForm: React.FC<{
     >
       <H1 className="md:text-center">When should we send your poll?</H1>
       <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
-        You can schedule polls up to 30 days in advance. GoodParty.org sends all
-        polls at 11am local time to maximize responses.
+        {POLLS_SCHEDULING_COPY}
       </p>
 
       <PollScheduledDateSelector
