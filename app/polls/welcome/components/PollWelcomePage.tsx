@@ -10,7 +10,8 @@ export default function PollWelcomePage() {
       <section className="max-w-screen-md mx-auto p-4 sm:p-8 lg:p-16 h-full md:h-auto bg-white md:border md:border-slate-200 md:rounded-xl ">
         <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto  xs:mt-4">
           <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl">
-            Represent your community like a Civic Hero.
+            Congratulations! Ready to represent your community like a Civic
+            Hero?
           </h1>
           <div className="grid grid-cols-1 gap-4 mt-12 w-full">
             <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
