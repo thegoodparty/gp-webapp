@@ -120,7 +120,7 @@ export default function ElectionResultPage({}) {
                 </div>
               </div>
             ) : (
-              <div className="pt-4 md:pt-16 pb-8 max-w-[450px] mx-auto">
+              <div className="pt-4 pb-4 max-w-[450px] mx-auto">
                 <h1
                   id="election-results-heading"
                   className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full"

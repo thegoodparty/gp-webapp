@@ -26,7 +26,7 @@ interface Step {
 const steps: Step[] = [
   {
     name: 'Insights',
-    nextLabel: 'Gather Feedback',
+    nextLabel: 'Next',
     nextStep: 'Sworn In',
     allowBack: false,
     backStep: null,
