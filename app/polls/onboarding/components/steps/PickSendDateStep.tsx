@@ -1,5 +1,8 @@
 'use client'
-import { PollScheduledDateSelector } from 'app/(candidate)/dashboard/polls/components/PollScheduledDateSelector'
+import {
+  POLLS_SCHEDULING_COPY,
+  PollScheduledDateSelector,
+} from 'app/(candidate)/dashboard/polls/components/PollScheduledDateSelector'
 import { useOnboardingContext } from 'app/polls/contexts'
 
 export const PickSendDateStep: React.FC = () => {
@@ -10,8 +13,7 @@ export const PickSendDateStep: React.FC = () => {
         When should we send your poll?
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground">
-        You can schedule polls up to 30 days in advance. GoodParty.org sends all
-        polls at 11am local time to maximize responses.
+        {POLLS_SCHEDULING_COPY}
       </p>
       <div className="w-full items-center flex flex-col gap-8 mt-8">
         <PollScheduledDateSelector
