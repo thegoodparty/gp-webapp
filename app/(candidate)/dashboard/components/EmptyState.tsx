@@ -6,7 +6,18 @@ import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 
-export default function EmptyState({ campaign }) {
+interface Campaign {
+  details?: {
+    office?: string
+    otherOffice?: string
+  }
+}
+
+interface EmptyStateProps {
+  campaign: Campaign
+}
+
+export default function EmptyState({ campaign }: EmptyStateProps): React.JSX.Element {
   const { office, otherOffice } = campaign?.details || {}
   const resolvedOffice = office === 'Other' ? otherOffice : office
   return (

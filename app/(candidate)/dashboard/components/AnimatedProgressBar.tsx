@@ -7,7 +7,7 @@ export const ANIMATED_PROGRESS_BAR_SIZES = {
   LG: 'lg',
 }
 
-const calculateColor = (percent) => {
+const calculateColor = (percent: number): string => {
   let bgColor = 'bg-black'
   if (percent > 0 && percent < 20) {
     bgColor = 'bg-error-main'
@@ -26,10 +26,15 @@ const ANIMATED_PROGRESS_BAR_SIZE_MAP = {
   [ANIMATED_PROGRESS_BAR_SIZES.MD]: 'h-4',
   [ANIMATED_PROGRESS_BAR_SIZES.LG]: 'h-6',
 }
+interface AnimatedProgressBarProps {
+  percent: number
+  size?: string
+}
+
 export function AnimatedProgressBar({
   percent,
   size = ANIMATED_PROGRESS_BAR_SIZES.SM,
-}) {
+}: AnimatedProgressBarProps): React.JSX.Element {
   const width = percent > 100 ? 100 : percent < 0 ? 0 : percent
 
   return (

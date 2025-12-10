@@ -4,7 +4,7 @@ import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import MarketingH3 from '@shared/typography/MarketingH3'
 import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
 
-export default function DomainPurchaseSuccess() {
+export default function DomainPurchaseSuccess(): React.JSX.Element {
   return (
     <div className="text-center flex flex-col items-center gap-4">
       <div className="relative h-24 w-24">
@@ -15,7 +15,10 @@ export default function DomainPurchaseSuccess() {
         <br />
         your website is live!
       </MarketingH3>
-      <AlertBanner title="Please allow up to 30 minutes for your website to update to the new domain." />
+      <AlertBanner
+        title="Please allow up to 30 minutes for your website to update to the new domain."
+        message=""
+      />
       <Button className="mt-12" href="/dashboard/website">
         Back to website metrics
       </Button>

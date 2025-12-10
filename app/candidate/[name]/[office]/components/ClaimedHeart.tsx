@@ -3,9 +3,12 @@
 import Image from 'next/image'
 import { usePublicCandidate } from './PublicCandidateProvider'
 
-export default function ClaimedHeart() {
+export default function ClaimedHeart(): React.JSX.Element {
   const [candidate] = usePublicCandidate()
-  const { claimed } = candidate
+  if (!candidate || typeof candidate === 'function') {
+    return <></>
+  }
+  const claimed = (candidate as { claimed?: boolean }).claimed
 
   return (
     <>

@@ -3,7 +3,7 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import { CheckRounded } from '@mui/icons-material'
 
-export default function ResetPasswordSuccess() {
+export default function SetPasswordSuccess(): React.JSX.Element {
   return (
     <>
       <hgroup className="text-center">

@@ -7,7 +7,19 @@ import {
 } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 
-export const VoterContactsCount = ({ pathToVictory }) => {
+interface PathToVictoryData {
+  voterContactGoal?: number
+  voteGoal?: number
+  [key: string]: string | number | boolean | object | null | undefined
+}
+
+interface VoterContactsCountProps {
+  pathToVictory: PathToVictoryData
+}
+
+export const VoterContactsCount = ({
+  pathToVictory,
+}: VoterContactsCountProps): React.JSX.Element => {
   const [reportedVoterGoals] = useVoterContacts()
   return (
     <H4>
@@ -18,7 +30,10 @@ export const VoterContactsCount = ({ pathToVictory }) => {
       </span>{' '}
       out of{' '}
       <span className="font-bold">
-        {numberFormatter(getVoterContactsGoal(pathToVictory))} needed to win
+        {numberFormatter(
+          getVoterContactsGoal(pathToVictory as { voterContactGoal: number; voteGoal: number }),
+        )}{' '}
+        needed to win
       </span>
       .
     </H4>
