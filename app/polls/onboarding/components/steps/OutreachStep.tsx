@@ -7,14 +7,14 @@ export default function OutreachStep() {
     trackEvent(EVENTS.ServeOnboarding.PollValuePropsViewed)
   }, [])
   return (
-    <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto mb-16">
+    <div className="flex flex-col items-center md:justify-center sm:h-screen md:h-auto mb-8">
       <h1 className="text-left md:text-center font-semibold text-2xl md:text-4xl w-full">
         Use polling to prioritize issues and remove bias.
       </h1>
       <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
         Understanding your community&apos;s priorities will help you:
       </p>
-      <div className="grid grid-cols-1 gap-4 mt-6 ">
+      <div className="grid grid-cols-1 gap-4 mt-12 ">
         <div className="flex items-center gap-4 pb-4 border-b border-slate-200 ">
           <div className="text-2xl bg-red-200 rounded-full p-4">
             <LuHandHeart />

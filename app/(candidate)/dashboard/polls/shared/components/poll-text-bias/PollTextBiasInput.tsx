@@ -5,6 +5,7 @@ import { MdAutoAwesome, MdRotateRight } from 'react-icons/md'
 import { usePollBiasAnalysis } from './hooks/usePollBiasAnalysis'
 import { useTextStreaming } from './hooks/useTextStreaming'
 import PollTextInput from './PollTextInput'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export interface BiasAnalysisState {
   hasBias: boolean
@@ -223,6 +224,7 @@ export default function PollTextBiasInput({
   )
 
   const handleOptimize = useCallback(async () => {
+    trackEvent(EVENTS.createPoll.pollQuestionOptimized)
     if (biasAnalysis) {
       const rewrittenText = await optimizeText(value)
       if (!rewrittenText) return
