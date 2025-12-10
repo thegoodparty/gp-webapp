@@ -108,7 +108,8 @@ export default function OnboardingPage() {
     return steps[currentStepIndex]!
   }, [currentStepIndex])
 
-  const currentStepValidation = stepValidation[currentStep?.name || '']
+  const currentStepValidation =
+    stepValidation[currentStep?.name as keyof typeof stepValidation]
   const isStepValid = useMemo(() => {
     return currentStepValidation === undefined || currentStepValidation === true
   }, [currentStepValidation])
