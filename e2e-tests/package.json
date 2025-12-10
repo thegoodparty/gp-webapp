@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:old": "npx playwright test tests-old/ --project=Local",
-    "test:old:qa": "npx playwright test tests-old/ --project=QA", 
+    "test:old:qa": "npx playwright test tests-old/ --project=QA",
     "test": "npx playwright test tests/ --reporter=list",
     "test:core": "npx playwright test tests/core/ --reporter=list",
     "test:app": "npx playwright test tests/app/ --reporter=list",
@@ -19,6 +19,7 @@
     "@types/node": "^22.7.7",
     "@types/xml2js": "^0.4.14",
     "dotenv": "^16.4.7",
+    "typescript": "^5.9.3",
     "xml2js": "^0.6.2"
   },
   "dependencies": {
