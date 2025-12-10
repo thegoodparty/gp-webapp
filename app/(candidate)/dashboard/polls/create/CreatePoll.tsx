@@ -20,25 +20,25 @@ import PollTextBiasInput, {
 } from '../shared/components/poll-text-bias/PollTextBiasInput'
 import clsx from 'clsx'
 import { LuLoaderCircle } from 'react-icons/lu'
-import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
+import { numberFormatter } from 'helpers/numberHelper'
 import {
+  PollAudienceSelection,
   PollAudienceSelector,
   useTotalConstituentsWithCellPhone,
 } from '../shared/audience-selection'
-import DateInputCalendar from '@shared/inputs/DateInputCalendar'
-import { addDays, startOfDay } from 'date-fns'
 import { PollImageUpload } from '../components/PollImageUpload'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
 import { useUser } from '@shared/hooks/useUser'
-import { MessageCard } from 'app/polls/onboarding/components/MessageCard'
-import TextMessagePreview from '@shared/text-message-previews/TextMessagePreview'
-import Image from 'next/image'
-import { PRICE_PER_POLL_TEXT } from '../shared/constants'
 import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
 import { uuidv7 } from 'uuidv7'
 import { PollPaymentSuccess } from '../shared/components/PollPaymentSuccess'
+import { PollScheduledDateSelector } from '../components/PollScheduledDateSelector'
+import { PollPreview } from '../components/PollPreview'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { PRICE_PER_POLL_TEXT } from '../shared/constants'
 
 const MIN_QUESTION_LENGTH = 25
+const MAX_QUESTION_LENGTH = 1500
 
 type Details = {
   title: string
@@ -64,32 +64,32 @@ type State =
   | {
       step: Step.audienceSelection
       details: Details
-      targetAudienceSize?: number
+      targetAudience?: PollAudienceSelection
     }
   | {
       step: Step.dateSelection
       details: Details
-      targetAudienceSize: number
+      targetAudience: PollAudienceSelection
       scheduledDate?: Date
     }
   | {
       step: Step.addImage
       details: Details
-      targetAudienceSize: number
+      targetAudience: PollAudienceSelection
       scheduledDate: Date
       imageUrl?: string
     }
   | {
       step: Step.review
       details: Details
-      targetAudienceSize: number
+      targetAudience: PollAudienceSelection
       scheduledDate: Date
       imageUrl?: string
     }
   | {
       step: Step.payment
       details: Details
-      targetAudienceSize: number
+      targetAudience: PollAudienceSelection
       scheduledDate: Date
       imageUrl?: string
     }
@@ -97,7 +97,7 @@ type State =
       step: Step.paymentConfirmed
       pollId: string
       scheduledDate: Date
-      targetAudienceSize: number
+      targetAudience: PollAudienceSelection
     }
 
 const order: Array<Step> = [
@@ -121,6 +121,12 @@ const FormContent: React.FC<{
     </main>
   </div>
 )
+
+const useEvent = (event: string, props?: Record<string, any>) => {
+  useEffect(() => {
+    trackEvent(event, props)
+  }, [])
+}
 
 const FormStep: React.FC<{
   step: Step
@@ -162,6 +168,7 @@ const STOP_MESSAGE = 'Text STOP to opt out'
 
 const toMessage = (details: Details): string =>
   [details.introduction, details.question, STOP_MESSAGE]
+    .map((line) => line.trim())
     .join('\n\n')
     .replaceAll('[Name]', '{{first_name}}')
     .trim()
@@ -177,7 +184,7 @@ const DetailsForm: React.FC<{
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
-    campaign?.details?.otherOffice || campaign?.details?.office,
+    campaign?.details?.otherOffice || campaign?.details?.office || '',
   )
 
   const introductionOptions = introOptions({
@@ -223,7 +230,12 @@ const DetailsForm: React.FC<{
 
     // If validation passes, call onChange
     onChange(data)
+    trackEvent(EVENTS.createPoll.pollQuestionCompleted, {
+      Introduction: introductionOptions.indexOf(data.introduction) + 1,
+    })
   }
+
+  useEvent(EVENTS.createPoll.pollQuestionViewed)
 
   return (
     <FormStep
@@ -311,6 +323,10 @@ const DetailsForm: React.FC<{
                 return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
               }
 
+              if (trimmedValue.length > MAX_QUESTION_LENGTH) {
+                return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
+              }
+
               const state = biasAnalysisStateRef.current
               if (!state) {
                 return true
@@ -370,6 +386,8 @@ const DateSelectionForm: React.FC<{
     initialScheduledDate,
   )
 
+  useEvent(EVENTS.createPoll.schedulePollViewed)
+
   return (
     <FormStep
       step={Step.dateSelection}
@@ -383,6 +401,9 @@ const DateSelectionForm: React.FC<{
             if (!scheduledDate) {
               return
             }
+            trackEvent(EVENTS.createPoll.schedulePollCompleted, {
+              ScheduledDate: scheduledDate.toDateString(),
+            })
             onChange(scheduledDate)
           }}
         >
@@ -396,33 +417,26 @@ const DateSelectionForm: React.FC<{
         polls at 11am local time to maximize responses.
       </p>
 
-      <DateInputCalendar
-        value={scheduledDate}
+      <PollScheduledDateSelector
+        scheduledDate={scheduledDate}
         onChange={setScheduledDate}
-        // Give ourselves 2 days to schedule their poll
-        disabled={(date) =>
-          date <= addDays(startOfDay(new Date()), 2) ||
-          date > addDays(startOfDay(new Date()), 30)
-        }
       />
-
-      <p className="mt-4 text-sm text-muted-foreground text-center">
-        * Messages sent on Tuesdays or Thursdays receive the highest engagement.
-      </p>
     </FormStep>
   )
 }
 
 const AudienceSelectionForm: React.FC<{
-  targetAudienceSize?: number
+  targetAudience?: PollAudienceSelection
   goBack: () => void
-  onChange: (targetAudienceSize: number) => void
-}> = ({ targetAudienceSize, goBack, onChange }) => {
-  const [selectedAudienceSize, setSelectedAudienceSize] = useState<
-    number | undefined
-  >(targetAudienceSize)
+  onChange: (targetAudience: PollAudienceSelection) => void
+}> = ({ targetAudience, goBack, onChange }) => {
+  const [selectedAudience, setSelectedAudience] = useState<
+    PollAudienceSelection | undefined
+  >(targetAudience)
 
   const query = useTotalConstituentsWithCellPhone()
+
+  useEvent(EVENTS.createPoll.audienceSelectionViewed)
 
   if (query.status !== 'success') {
     return (
@@ -447,13 +461,19 @@ const AudienceSelectionForm: React.FC<{
         <Button
           type="submit"
           variant="secondary"
-          disabled={!selectedAudienceSize}
+          disabled={!selectedAudience}
           onClick={() => {
-            if (!selectedAudienceSize) {
+            if (!selectedAudience) {
               return
             }
+            trackEvent(EVENTS.createPoll.audienceSelectionCompleted, {
+              Selection: selectedAudience.optionIndex,
+              RecommendedSelection: selectedAudience.isRecommended,
+              Count: selectedAudience.count,
+              Cost: selectedAudience.count * PRICE_PER_POLL_TEXT,
+            })
 
-            onChange(selectedAudienceSize)
+            onChange(selectedAudience)
           }}
         >
           Next
@@ -464,8 +484,9 @@ const AudienceSelectionForm: React.FC<{
         How many constituents do you want to message?
       </H1>
       <p className="text-left md:text-center mt-4 mb-8 text-lg font-normal text-muted-foreground">
-        There are {numberFormatter(query.data.totalConstituents)} constituents
-        with cell phone numbers in your community.
+        You can text up to {numberFormatter(query.data.totalConstituents)} more
+        constituents. We won&apos;t send text messages to constituents
+        you&apos;ve already messaged.
       </p>
 
       <PollAudienceSelector
@@ -473,18 +494,21 @@ const AudienceSelectionForm: React.FC<{
         totalConstituentsWithCellPhone={query.data.totalConstituents}
         alreadySent={0}
         responsesAlreadyReceived={0}
-        onSelect={({ count }) => setSelectedAudienceSize(count)}
+        onSelect={setSelectedAudience}
+        showRecommended={true}
       />
     </FormStep>
   )
 }
 
-const IamgeSelectionForm: React.FC<{
+const ImageSelectionForm: React.FC<{
   goBack: () => void
   onChange: (imageUrl?: string) => void
   imageUrl?: string
 }> = ({ goBack, onChange, imageUrl: initialImageUrl }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(initialImageUrl)
+
+  useEvent(EVENTS.createPoll.addImageViewed)
 
   return (
     <FormStep
@@ -495,6 +519,9 @@ const IamgeSelectionForm: React.FC<{
           type="submit"
           variant="secondary"
           onClick={() => {
+            trackEvent(EVENTS.createPoll.addImageCompleted, {
+              Image: !!imageUrl,
+            })
             onChange(imageUrl)
           }}
         >
@@ -520,28 +547,38 @@ const ReviewForm: React.FC<{
   goBack: () => void
   onSubmit: () => void
   details: Details
-  targetAudienceSize: number
+  targetAudience: PollAudienceSelection
   scheduledDate: Date
   imageUrl?: string
 }> = ({
   goBack,
   onSubmit,
   details,
-  targetAudienceSize,
+  targetAudience,
   scheduledDate,
   imageUrl,
 }) => {
+  useEvent(EVENTS.createPoll.pollPreviewViewed)
+
   const message = [
     details.introduction,
     details.question,
     'Text STOP to opt out.',
   ].join('\n\n')
+
   return (
     <FormStep
       step={Step.review}
       onBack={goBack}
       nextButton={
-        <Button type="submit" variant="secondary" onClick={onSubmit}>
+        <Button
+          type="submit"
+          variant="secondary"
+          onClick={() => {
+            trackEvent(EVENTS.createPoll.pollPreviewCompleted)
+            onSubmit()
+          }}
+        >
           Yes, Checkout
         </Button>
       }
@@ -551,60 +588,12 @@ const ReviewForm: React.FC<{
         Take a moment to review your poll details.
       </p>
 
-      <MessageCard
-        className="mb-6"
-        title="Outreach Summary"
-        description={
-          <div className="flex flex-col gap-1 mt-2">
-            <p>
-              Audience: <b>{numberFormatter(targetAudienceSize)}</b>
-            </p>
-            <p>
-              Send Date: <b>{scheduledDate.toDateString()} at 11:00am</b>
-            </p>
-            <p>
-              Estimated Completion:{' '}
-              <b>{addDays(scheduledDate, 3).toDateString()} at 11:00am</b>
-            </p>
-            <p>
-              Cost:{' '}
-              <b>${formatCurrency(PRICE_PER_POLL_TEXT * targetAudienceSize)}</b>
-            </p>
-          </div>
-        }
-      />
-
-      <MessageCard
-        title="Preview"
-        description={
-          <div className="flex flex-col gap-1">
-            <div className="max-w-xs mx-auto">
-              <TextMessagePreview
-                message={
-                  <div className="flex flex-col gap-2">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt="Campaign image"
-                        width={300}
-                        height={300}
-                        className="object-cover rounded"
-                      />
-                    ) : (
-                      <Image
-                        src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
-                        alt=""
-                        width={300}
-                        height={300}
-                      />
-                    )}
-                    <p className="mt-1 font-normal">{message}</p>
-                  </div>
-                }
-              />
-            </div>
-          </div>
-        }
+      <PollPreview
+        scheduledDate={scheduledDate}
+        targetAudienceSize={targetAudience.count}
+        imageUrl={imageUrl}
+        message={message}
+        isFree={false}
       />
     </FormStep>
   )
@@ -627,6 +616,7 @@ const PaymentForm: React.FC<{
   scheduledDate,
   imageUrl,
 }) => {
+  useEvent(EVENTS.createPoll.paymentViewed)
   return (
     <FormStep step={Step.payment} onBack={goBack} nextButton={<></>}>
       <PollPayment
@@ -645,6 +635,31 @@ const PaymentForm: React.FC<{
   )
 }
 
+const SuccessForm: React.FC<{
+  pollId: string
+  targetAudience: PollAudienceSelection
+  scheduledDate: Date
+}> = ({ pollId, targetAudience, scheduledDate }) => {
+  const [user] = useUser()
+  useEvent(EVENTS.createPoll.paymentCompleted, {
+    cost: targetAudience.count * PRICE_PER_POLL_TEXT,
+    count: targetAudience.count,
+    type: 'New Serve Poll',
+    email: user?.email || 'Unknown',
+    hubspotId: user?.metaData?.hubspotId || 'Unknown',
+  })
+
+  return (
+    <FormContent>
+      <PollPaymentSuccess
+        className="p-8"
+        scheduledDate={scheduledDate}
+        textsPaidFor={targetAudience.count}
+        redirectTo={`/dashboard/polls/${pollId}`}
+      />
+    </FormContent>
+  )
+}
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   const [campaign] = useCampaign()
 
@@ -667,15 +682,15 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
 
       {state.step === Step.audienceSelection && (
         <AudienceSelectionForm
-          targetAudienceSize={state.targetAudienceSize}
+          targetAudience={state.targetAudience}
           goBack={() =>
             setState({ step: Step.details, details: state.details })
           }
-          onChange={(targetAudienceSize) =>
+          onChange={(targetAudience) =>
             setState({
               step: Step.dateSelection,
               details: state.details,
-              targetAudienceSize,
+              targetAudience,
             })
           }
         />
@@ -688,14 +703,14 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             setState({
               step: Step.audienceSelection,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
             })
           }
           onChange={(scheduledDate) =>
             setState({
               step: Step.addImage,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate,
             })
           }
@@ -703,12 +718,12 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
       )}
 
       {state.step === Step.addImage && (
-        <IamgeSelectionForm
+        <ImageSelectionForm
           goBack={() =>
             setState({
               step: Step.dateSelection,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate: state.scheduledDate,
             })
           }
@@ -716,7 +731,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             setState({
               step: Step.review,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate: state.scheduledDate,
               imageUrl,
             })
@@ -731,7 +746,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             setState({
               step: Step.addImage,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate: state.scheduledDate,
               imageUrl: state.imageUrl,
             })
@@ -740,13 +755,13 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             setState({
               step: Step.payment,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate: state.scheduledDate,
               imageUrl: state.imageUrl,
             })
           }
           details={state.details}
-          targetAudienceSize={state.targetAudienceSize}
+          targetAudience={state.targetAudience}
           scheduledDate={state.scheduledDate}
           imageUrl={state.imageUrl}
         />
@@ -758,7 +773,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
             setState({
               step: Step.review,
               details: state.details,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
               scheduledDate: state.scheduledDate,
               imageUrl: state.imageUrl,
             })
@@ -768,26 +783,23 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
               step: Step.paymentConfirmed,
               pollId,
               scheduledDate: state.scheduledDate,
-              targetAudienceSize: state.targetAudienceSize,
+              targetAudience: state.targetAudience,
             })
           }
           pollId={pollId}
           details={state.details}
-          targetAudienceSize={state.targetAudienceSize}
+          targetAudienceSize={state.targetAudience.count}
           scheduledDate={state.scheduledDate}
           imageUrl={state.imageUrl}
         />
       )}
 
       {state.step === Step.paymentConfirmed && (
-        <FormContent>
-          <PollPaymentSuccess
-            className="p-8"
-            scheduledDate={state.scheduledDate}
-            textsPaidFor={state.targetAudienceSize}
-            redirectTo={`/dashboard/polls/${pollId}`}
-          />
-        </FormContent>
+        <SuccessForm
+          pollId={pollId}
+          targetAudience={state.targetAudience}
+          scheduledDate={state.scheduledDate}
+        />
       )}
     </DashboardLayout>
   )

@@ -16,6 +16,7 @@ export type Poll = {
   audienceSize: number
   responseCount?: number
   lowConfidence?: boolean
+  cost?: number
 }
 
 export type PollIssue = {

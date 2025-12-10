@@ -18,4 +18,3 @@ export const fetchPromptInputFields = async (
   const content = resp.data
   return content[subKey]
 }
-

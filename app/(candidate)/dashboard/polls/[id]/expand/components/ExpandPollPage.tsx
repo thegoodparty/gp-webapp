@@ -13,18 +13,18 @@ import {
   useTotalConstituentsWithCellPhone,
 } from '../../../shared/audience-selection'
 import { LuLoaderCircle } from 'react-icons/lu'
+import { Poll } from '../../../shared/poll-types'
+import { PollScheduledDateSelector } from '../../../components/PollScheduledDateSelector'
 
-export default function ExpandPollPage() {
-  const [poll] = usePoll()
-  const router = useRouter()
+const AudienceSelectionForm: React.FC<{
+  poll: Poll
+  onNext: (audience: number) => void
+  onBack: () => void
+}> = ({ poll, onNext, onBack }) => {
   const query = useTotalConstituentsWithCellPhone()
   const [selection, setSelection] = useState<
     { count: number; isRecommended: boolean } | undefined
   >(undefined)
-
-  const handleBack = () => {
-    router.push(`/dashboard/polls/${poll.id}`)
-  }
 
   const handleNext = () => {
     if (!selection) return
@@ -32,14 +32,8 @@ export default function ExpandPollPage() {
       count: selection.count,
       recommended: selection.isRecommended,
     })
-    router.push(
-      `/dashboard/polls/${poll.id}/expand-review?count=${selection.count}`,
-    )
+    onNext(selection.count)
   }
-
-  useEffect(() => {
-    trackEvent(EVENTS.expandPolls.recommendationsViewed)
-  }, [])
 
   const content = (children: React.ReactNode) => (
     <ExpandPollLayout>
@@ -49,10 +43,10 @@ export default function ExpandPollPage() {
       {children}
       <ExpandStepFooter
         currentStep={1}
-        onBack={handleBack}
+        onBack={onBack}
         disabledNext={!selection}
         onNext={handleNext}
-        onNextText="Review"
+        onNextText="Pick Send Date"
       />
     </ExpandPollLayout>
   )
@@ -81,7 +75,100 @@ export default function ExpandPollPage() {
         alreadySent={poll.audienceSize}
         responsesAlreadyReceived={responseCount}
         onSelect={setSelection}
+        showRecommended={!!poll.lowConfidence}
       />
     </>,
+  )
+}
+
+type State = {
+  mode: 'audience-selection' | 'date-selection'
+  audience: number | undefined
+  scheduledDate: Date | undefined
+}
+
+export default function ExpandPollPage({
+  count,
+  scheduledDate,
+}: {
+  count: number | undefined
+  scheduledDate: Date | undefined
+}) {
+  const [poll] = usePoll()
+  const router = useRouter()
+
+  const [state, setState] = useState<State>(() => {
+    const initialState: State = {
+      mode: 'audience-selection',
+      audience: count,
+      scheduledDate,
+    }
+    if (count && scheduledDate) {
+      initialState.mode = 'date-selection'
+    }
+    return initialState
+  })
+
+  // We track this event here instead of in AudienceSelectionForm
+  // because it should only be tracked once, even if the user hits "Back"
+  // to get back to the audience form.
+  useEffect(() => {
+    trackEvent(EVENTS.expandPolls.recommendationsViewed)
+  }, [])
+
+  const handleBack = () => {
+    if (state.mode === 'audience-selection') {
+      router.push(`/dashboard/polls/${poll.id}`)
+    } else {
+      setState({ ...state, mode: 'audience-selection' })
+    }
+  }
+
+  const handleNext = () => {
+    if (!state.audience || !state.scheduledDate) {
+      return
+    }
+    router.push(
+      `/dashboard/polls/${poll.id}/expand-review?count=${
+        state.audience
+      }&scheduledDate=${encodeURIComponent(state.scheduledDate.toISOString())}`,
+    )
+  }
+
+  if (state.mode === 'audience-selection') {
+    return (
+      <AudienceSelectionForm
+        poll={poll}
+        onNext={(count) =>
+          setState({ ...state, mode: 'date-selection', audience: count })
+        }
+        onBack={handleBack}
+      />
+    )
+  }
+
+  return (
+    <ExpandPollLayout>
+      <H1 className="text-center">
+        When would you like to send your text messages?
+      </H1>
+
+      <Body1 className="text-center my-4 text-muted-foreground">
+        You can schedule polls up to 30 days in advance. GoodParty.org sends all
+        polls at 11am local time to maximize responses.
+      </Body1>
+      <PollScheduledDateSelector
+        scheduledDate={state.scheduledDate}
+        onChange={(date) => setState({ ...state, scheduledDate: date })}
+      />
+
+      <ExpandStepFooter
+        currentStep={2}
+        onBack={handleBack}
+        disabledNext={!state.scheduledDate}
+        onNext={handleNext}
+        onNextText="Review"
+      />
+    </ExpandPollLayout>
   )
 }

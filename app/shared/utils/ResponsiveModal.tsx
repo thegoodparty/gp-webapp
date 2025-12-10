@@ -88,4 +88,3 @@ const ResponsiveModal = ({
 }
 
 export default ResponsiveModal
-
