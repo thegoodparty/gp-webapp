@@ -13,6 +13,6 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page(): Promise<never> {
+export default async function Page(): Promise<void> {
   redirect('/dashboard/upgrade-to-pro')
 }
