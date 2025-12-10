@@ -13,9 +13,11 @@ export const metadata = meta
 
 export const maxDuration = 60
 
-const fetchCampaigns = async () => {
+const fetchCampaigns = async (): Promise<
+  { [key: string]: string | number | boolean | object | null }[]
+> => {
   const resp = await serverFetch(apiRoutes.campaign.list)
-  return resp.data
+  return resp.data as { [key: string]: string | number | boolean | object | null }[]
 }
 
 export default async function Page(): Promise<React.JSX.Element> {
