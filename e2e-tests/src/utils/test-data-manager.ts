@@ -389,6 +389,7 @@ export class TestDataManager {
             
             const formData = new FormData(form);
             const data: any = {};
+            // @ts-expect-error FormData.entries() is not typed.
             for (const [key, value] of formData.entries()) {
               data[key] = value;
             }

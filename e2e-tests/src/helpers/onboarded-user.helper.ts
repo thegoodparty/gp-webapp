@@ -148,7 +148,7 @@ export class OnboardedUserHelper {
         // Wait for button to be enabled
         await page.waitForFunction(() => {
           const button = document.querySelector('button[type="submit"][data-step="1"]');
-          return button && !button.disabled;
+          return button && !(button as HTMLButtonElement).disabled;
         }, { timeout: 10000 });
         
         await nextButton.click();
