@@ -1,9 +1,10 @@
 'use client'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Span } from './hooks/usePollBiasAnalysis'
 import LoadingDots from './LoadingDots'
 import SpanTextArea from './SpanTextArea'
 import { TextSpan } from './SpanTextArea.utils'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 interface PollTextInputProps {
   value: string
@@ -37,6 +38,12 @@ export default function PollTextInput({
   hidePlaceholder = false,
 }: PollTextInputProps) {
   const hasError = biasSpans.length > 0 || grammarSpans.length > 0
+
+  useEffect(() => {
+    if (hasError) {
+      trackEvent(EVENTS.createPoll.pollBiasDetectionShown)
+    }
+  }, [hasError])
 
   const spans: TextSpan[] = useMemo(() => {
     const allSpans: TextSpan[] = []

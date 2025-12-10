@@ -44,12 +44,22 @@ const calculateRecommendedPollSize = (params: {
   }
 }
 
+export type PollAudienceSelection = {
+  /** The selected number of constituents. */
+  count: number
+  /** Whether the selected number of constituents was the recommended number. */
+  isRecommended: boolean
+
+  /** The 1-based index of the selected option. */
+  optionIndex: number
+}
+
 export const PollAudienceSelector: React.FC<{
   expectedResponseRate: number
   totalConstituentsWithCellPhone: number
   alreadySent: number
   responsesAlreadyReceived: number
-  onSelect: (selected: { count: number; isRecommended: boolean }) => void
+  onSelect: (selected: PollAudienceSelection) => void
   showRecommended: boolean
 }> = ({
   expectedResponseRate,
@@ -138,7 +148,7 @@ export const PollAudienceSelector: React.FC<{
   return (
     <div>
       <div className="w-full flex flex-col gap-2">
-        {options.map((option) => (
+        {options.map((option, idx) => (
           <div
             key={`audience-option-${option.count}`}
             className={clsx(
@@ -154,6 +164,7 @@ export const PollAudienceSelector: React.FC<{
               onSelect({
                 count: option.count,
                 isRecommended: option.isRecommended,
+                optionIndex: idx + 1,
               })
             }}
           >

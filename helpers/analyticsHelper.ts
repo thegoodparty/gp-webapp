@@ -18,6 +18,23 @@ export const EVENTS = {
     resultsViewed: 'Polls - Poll Results Overview Viewed',
     issueDetailsViewed: 'Polls - Poll Results Issue Details Viewed',
   },
+  createPoll: {
+    createPollClicked: 'Polls - Create Poll Clicked',
+    pollQuestionViewed: 'Polls - Poll Question Viewed',
+    pollQuestionCompleted: 'Polls - Poll Question Completed',
+    pollQuestionOptimized: 'Polls - Poll Question Optimized',
+    pollBiasDetectionShown: 'Polls - Poll Bias Detection Shown',
+    audienceSelectionViewed: 'Polls - Audience Selection Viewed',
+    audienceSelectionCompleted: 'Polls - Audience Selection Completed',
+    schedulePollViewed: 'Polls - Schedule Poll Viewed',
+    schedulePollCompleted: 'Polls - Schedule Poll Completed',
+    addImageViewed: 'Polls - Add Image Viewed',
+    addImageCompleted: 'Polls - Add Image Completed',
+    pollPreviewViewed: 'Polls - Poll Preview Viewed',
+    pollPreviewCompleted: 'Polls - Poll Preview Completed',
+    paymentViewed: 'Payment - Schedule and Pay Viewed',
+    paymentCompleted: 'Payment - Completed',
+  },
   expandPolls: {
     recommendationsViewed: 'Polls - Expand Poll Recommendations Viewed',
     recommendationsCompleted: 'Polls - Expand Poll Recommendations Completed',
@@ -463,8 +480,14 @@ interface UserCookie {
 }
 
 interface AnalyticsInstance {
-  identify?: (userId: string, traits: Record<string, string | number | boolean | null | undefined>) => void
-  track?: (eventName: string, properties: Record<string, string | number | boolean | null | undefined>) => void
+  identify?: (
+    userId: string,
+    traits: Record<string, string | number | boolean | null | undefined>,
+  ) => void
+  track?: (
+    eventName: string,
+    properties: Record<string, string | number | boolean | null | undefined>,
+  ) => void
   ready?: () => Promise<void>
 }
 
@@ -476,7 +499,9 @@ export const storeSessionId = (id: number): void => {
   cookie.set('analytics_session_id', String(id))
 }
 
-export const extractClids = (searchParams: URLSearchParams): Record<string, string> => {
+export const extractClids = (
+  searchParams: URLSearchParams,
+): Record<string, string> => {
   const clids: Record<string, string> = {}
 
   for (const [key, value] of searchParams.entries()) {
@@ -603,7 +628,7 @@ export const getPersistedClids = (): Record<string, string | null> => {
       if (
         key &&
         (key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
-        key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`))
+          key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`))
       ) {
         clids[key] = window.sessionStorage.getItem(key)
       }
@@ -633,7 +658,10 @@ const getUserProperties = (): Record<string, string> => {
   }, {} as Record<string, string>)
 }
 
-export const trackEvent = (name: string, properties?: Record<string, string | number | boolean | null | undefined>): void => {
+export const trackEvent = (
+  name: string,
+  properties?: Record<string, string | number | boolean | null | undefined>,
+): void => {
   try {
     const commonProperties = {
       ...getPersistedUtms(),
@@ -648,7 +676,10 @@ export const trackEvent = (name: string, properties?: Record<string, string | nu
 
 type PropertyValue = string | boolean | number | Date
 
-export const buildTrackingAttrs = (name: string, properties?: Record<string, PropertyValue>): Record<string, string> => {
+export const buildTrackingAttrs = (
+  name: string,
+  properties?: Record<string, PropertyValue>,
+): Record<string, string> => {
   if (!properties) {
     return {
       'data-fs-element': name,
@@ -660,7 +691,10 @@ export const buildTrackingAttrs = (name: string, properties?: Record<string, Pro
 
   Object.entries(properties).forEach(([key, initialValue]) => {
     const prefixedKey = `data-${kebabCase(key)}`
-    let value: string | number | boolean = initialValue as string | number | boolean
+    let value: string | number | boolean = initialValue as
+      | string
+      | number
+      | boolean
     let propType: string
 
     switch (typeof initialValue) {
@@ -694,4 +728,3 @@ export const buildTrackingAttrs = (name: string, properties?: Record<string, Pro
     ...attributes,
   } as Record<string, string>
 }
-
