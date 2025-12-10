@@ -1,40 +1,43 @@
 import type { Page, TestInfo } from "@playwright/test";
 
 export class CleanupHelper {
-  static async takeScreenshotOnFailure(page: Page, testInfo: TestInfo): Promise<void> {
-    if (testInfo.status === "failed") {
-      const screenshotPath = `screenshots/${testInfo.title.replace(/[^a-z0-9]/gi, '_')}-${Date.now()}.png`;
-      await page.screenshot({
-        path: screenshotPath,
-        fullPage: true,
-      });
-      console.log(`Screenshot saved: ${screenshotPath}`);
-    }
-  }
+	static async takeScreenshotOnFailure(
+		page: Page,
+		testInfo: TestInfo,
+	): Promise<void> {
+		if (testInfo.status === "failed") {
+			const screenshotPath = `screenshots/${testInfo.title.replace(/[^a-z0-9]/gi, "_")}-${Date.now()}.png`;
+			await page.screenshot({
+				path: screenshotPath,
+				fullPage: true,
+			});
+			console.log(`Screenshot saved: ${screenshotPath}`);
+		}
+	}
 
-  static async cleanupTestData(page?: Page): Promise<void> {
-    const { TestDataManager } = await import("../utils/test-data-manager");
-    await TestDataManager.cleanup(page);
-  }
+	static async cleanupTestData(page?: Page): Promise<void> {
+		const { TestDataManager } = await import("../utils/test-data-manager");
+		await TestDataManager.cleanup(page);
+	}
 
-  static async clearBrowserData(page: Page): Promise<void> {
-    try {
-      // Clear cookies
-      await page.context().clearCookies();
-      
-      // Clear storage (with error handling for security restrictions)
-      await page.evaluate(() => {
-        try {
-          localStorage.clear();
-          sessionStorage.clear();
-        } catch (error) {
-          // Ignore security errors - some pages restrict storage access
-          console.log("Storage clear skipped due to security restrictions");
-        }
-      });
-    } catch (error) {
-      // Don't fail tests due to cleanup issues
-      console.warn("Browser data cleanup failed:", error.message);
-    }
-  }
+	static async clearBrowserData(page: Page): Promise<void> {
+		try {
+			// Clear cookies
+			await page.context().clearCookies();
+
+			// Clear storage (with error handling for security restrictions)
+			await page.evaluate(() => {
+				try {
+					localStorage.clear();
+					sessionStorage.clear();
+				} catch (error) {
+					// Ignore security errors - some pages restrict storage access
+					console.log("Storage clear skipped due to security restrictions");
+				}
+			});
+		} catch (error) {
+			// Don't fail tests due to cleanup issues
+			console.warn("Browser data cleanup failed:", error.message);
+		}
+	}
 }
