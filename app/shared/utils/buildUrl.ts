@@ -25,4 +25,3 @@ export const buildUrl = (
   const root = typeof window === 'undefined' ? API_ROOT : '/api'
   return `${root}${API_VERSION_PREFIX}${pathname}`
 }
-

@@ -12,6 +12,7 @@ import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { Poll } from '../shared/poll-types'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 interface PollsPageProps {
   pathname: string
@@ -67,6 +68,9 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
               href="/dashboard/polls/create"
               variant="contained"
               color="info"
+              onClick={() => {
+                trackEvent(EVENTS.createPoll.createPollClicked)
+              }}
             >
               <span className="flex items-center gap-2">
                 <LuPlus /> Create Poll

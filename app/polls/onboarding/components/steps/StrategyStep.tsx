@@ -51,16 +51,11 @@ export default function StrategyStep() {
         />
         <MessageCard
           icon={<LuListChecks />}
-          title="Outreach Details"
+          title="Poll Details"
           description={
-            <ul>
-              <li className="leading-normal medium text-sm">
-                SMS Text Messages
-              </li>
-              <li className="leading-normal medium text-sm">
-                Timeline: 3 Days
-              </li>
-            </ul>
+            <p className="mt-3 leading-normal medium text-sm">
+              SMS Text Messages
+            </p>
           }
           note="Text messages are quick, direct, and yield high response rates. All of our messages are 10DLC compliant."
         />

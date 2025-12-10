@@ -24,7 +24,8 @@ interface FormData {
 }
 
 interface StepValidation {
-  [key: string]: boolean
+  'Sworn In': boolean
+  'Pick Send Date': boolean
 }
 
 export interface UseOnboardingReturn {
@@ -57,15 +58,18 @@ export const useOnboarding = (): UseOnboardingReturn => {
 
   const [stepValidation, setStepValidation] = useState<StepValidation>({
     'Sworn In': false,
+    'Pick Send Date': false,
   })
 
   const swornInDate = formData.swornInDate
+  const scheduledDate = formData.scheduledDate
   useEffect(() => {
     setStepValidation((prev) => ({
       ...prev,
       'Sworn In': !!swornInDate,
+      'Pick Send Date': !!scheduledDate,
     }))
-  }, [swornInDate])
+  }, [swornInDate, scheduledDate])
 
   const campaignOffice = useMemo(
     () =>
@@ -198,6 +202,10 @@ export const useOnboarding = (): UseOnboardingReturn => {
       swornIn: false,
     })
     setSubmitError(null)
+    setStepValidation({
+      'Sworn In': false,
+      'Pick Send Date': false,
+    })
   }, [])
 
   return {

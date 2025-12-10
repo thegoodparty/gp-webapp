@@ -24,4 +24,3 @@ export const createVoterFileFilter = async (
     return null
   }
 }
-
