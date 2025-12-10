@@ -1,32 +1,32 @@
 {
-  "name": "test-automation",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "lint": "biome check --diagnostic-level=error",
-    "test:old": "npx playwright test tests-old/ --project=Local",
-    "test:old:qa": "npx playwright test tests-old/ --project=QA",
-    "test": "npx playwright test tests/ --reporter=list",
-    "test:core": "npx playwright test tests/core/ --reporter=list",
-    "test:app": "npx playwright test tests/app/ --reporter=list",
-    "test:system": "npx playwright test tests/system/ --reporter=list"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@biomejs/biome": "2.3.8",
-    "@playwright/test": "^1.48.1",
-    "@types/node": "^22.7.7",
-    "@types/xml2js": "^0.4.14",
-    "dotenv": "^16.4.7",
-    "typescript": "^5.9.3",
-    "xml2js": "^0.6.2"
-  },
-  "dependencies": {
-    "@faker-js/faker": "^9.2.0",
-    "axios": "^1.7.7",
-    "pdfkit": "^0.16.0"
-  }
+	"name": "test-automation",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"lint": "biome check --diagnostic-level=error",
+		"test:old": "npx playwright test tests-old/ --project=Local",
+		"test:old:qa": "npx playwright test tests-old/ --project=QA",
+		"test": "npx playwright test tests/ --reporter=list",
+		"test:core": "npx playwright test tests/core/ --reporter=list",
+		"test:app": "npx playwright test tests/app/ --reporter=list",
+		"test:system": "npx playwright test tests/system/ --reporter=list"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@biomejs/biome": "2.3.8",
+		"@playwright/test": "^1.48.1",
+		"@types/node": "^22.7.7",
+		"@types/xml2js": "^0.4.14",
+		"dotenv": "^16.4.7",
+		"typescript": "^5.9.3",
+		"xml2js": "^0.6.2"
+	},
+	"dependencies": {
+		"@faker-js/faker": "^9.2.0",
+		"axios": "^1.7.7",
+		"pdfkit": "^0.16.0"
+	}
 }
