@@ -326,10 +326,13 @@ const DetailsForm: React.FC<{
               if (trimmedValue.length > MAX_QUESTION_LENGTH) {
                 return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
               }
-
               const state = biasAnalysisStateRef.current
+
               if (!state) {
                 return true
+              }
+              if (!state.hasBeenChecked) {
+                return false
               }
               if (state.hasServerError) {
                 return 'Unable to analyze for bias, please try again later.'
