@@ -9,10 +9,66 @@ import {
   startOfDay,
 } from 'date-fns'
 import { useState } from 'react'
+import { DayProps, Day } from 'react-day-picker'
+import MuiTooltip from '@mui/material/Tooltip'
+
+export const POLLS_SCHEDULING_COPY =
+  'All polls are sent at 11am local time. You can schedule at least 2 business days in advance, and no more than 30 days out.'
 
 export type PollScheduledDateSelectorProps = {
   scheduledDate: Date | undefined
   onChange: (date: Date | undefined) => void
+}
+
+type DisabledState =
+  | { disabled: false }
+  | { disabled: true; reason: string | undefined }
+
+const getDisabledState = (date: Date, now: Date): DisabledState => {
+  const maxDate = addDays(now, 30)
+
+  if (date <= addBusinessDays(now, 2)) {
+    return { disabled: true, reason: undefined }
+  }
+  if (date > maxDate) {
+    return {
+      disabled: true,
+      reason: 'Cannot schedule more than 30 days in advance',
+    }
+  }
+  if (isWeekend(date)) {
+    return { disabled: true, reason: 'Cannot schedule on the weekend' }
+  }
+  return { disabled: false }
+}
+
+const CustomDay = (props: DayProps) => {
+  const [now] = useState(() => startOfDay(new Date()))
+
+  const disabledState = getDisabledState(props.day.date, now)
+
+  if (!disabledState.disabled || !disabledState.reason) {
+    return <Day {...props} />
+  }
+
+  return (
+    <MuiTooltip
+      style={{ backgroundColor: 'black', opacity: 100 }}
+      classes={{
+        tooltip: '!bg-black !opacity-100',
+        arrow: '!text-black !opacity-100',
+      }}
+      title={
+        <p className="text-sm text-white text-center my-0.5">
+          {disabledState.reason}
+        </p>
+      }
+      arrow
+      placement="top"
+    >
+      <Day {...props} />
+    </MuiTooltip>
+  )
 }
 
 export const PollScheduledDateSelector: React.FC<
@@ -21,6 +77,7 @@ export const PollScheduledDateSelector: React.FC<
   const [now] = useState(() => startOfDay(new Date()))
 
   const maxDate = addDays(now, 30)
+
   return (
     <>
       <DateInputCalendar
@@ -37,12 +94,10 @@ export const PollScheduledDateSelector: React.FC<
           at11Am = setSeconds(at11Am, 0)
           onChange(at11Am)
         }}
-        // We only allow scheduling polls 2 days in advance and up to 30 days in advance
-        disabled={(date) =>
-          date <= addBusinessDays(now, 2) || date > maxDate || isWeekend(date)
-        }
+        disabled={(date) => getDisabledState(date, now).disabled}
         startMonth={now}
         endMonth={maxDate}
+        components={{ Day: CustomDay }}
       />
 
       <p className="mt-4 text-sm text-muted-foreground text-center">
