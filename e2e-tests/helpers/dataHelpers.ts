@@ -30,8 +30,3 @@ export function generatePhone() {
 	const number = `5105${timeStamp.slice(-6)}`;
 	return number;
 }
-
-export function generateWebsiteUrl() {
-	const timeStamp = generateTimeStamp();
-	return `test-website-${timeStamp}`;
-}
