@@ -514,9 +514,6 @@ import { AccountHelper } from "../../../src/helpers/account.helper";
 // Create test account (auto-cleanup)
 const testUser = await AccountHelper.createTestAccount(page);
 
-// Login with test credentials
-await AccountHelper.loginWithTestAccount(page, testUser);
-
 // Use global test user (created in globalSetup)
 const globalUser = await AccountHelper.useGlobalTestUser(page);
 ```
@@ -535,8 +532,6 @@ await AuthHelper.loginAsUser(page, {
 // Login as admin (requires env vars)
 await AuthHelper.loginAsAdmin(page);
 
-// Logout current user
-await AuthHelper.logout(page);
 ```
 
 ### General Guidelines
