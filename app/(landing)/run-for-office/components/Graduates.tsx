@@ -1,11 +1,19 @@
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import Link from 'next/link'
 import terryImg from 'public/images/run-for-office/terry.png'
 import certifiedImg from 'public/images/run-for-office/certified.png'
 import martyImg from 'public/images/run-for-office/marty.png'
 
-const graduates = [
+interface Graduate {
+  name: string
+  desc: string
+  img: StaticImageData
+  link: string
+  cta: string
+}
+
+const graduates: Graduate[] = [
   {
     name: "Marty Grohman's Independent win in Maine",
     desc: "Independent candidate Marty Grohman was elected as Biddeford, Maine's newest mayor in November 2023. Now, Grohman is serving his community and sharing his insight.",
@@ -29,7 +37,7 @@ const graduates = [
   },
 ]
 
-export default function Graduates() {
+export default function Graduates(): React.JSX.Element {
   return (
     <section className="pb-12">
       <MaxWidth>

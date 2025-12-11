@@ -2,7 +2,7 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Image from 'next/image'
 import Graduates from './Graduates'
 
-export default function GreatSuccess() {
+export default function GreatSuccess(): React.JSX.Element {
   return (
     <section>
       <div className="relative">

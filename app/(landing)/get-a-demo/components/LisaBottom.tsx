@@ -2,7 +2,7 @@ import Image from 'next/image'
 import lisaImg from 'public/images/landing-pages/lisa.png'
 import { BiSolidQuoteAltRight } from 'react-icons/bi'
 
-export default function LisaBottom() {
+export default function LisaBottom(): React.JSX.Element {
   return (
     <div className="mt-6 mb-6 md:mb-0">
       <div className="grid grid-cols-12 gap-6">

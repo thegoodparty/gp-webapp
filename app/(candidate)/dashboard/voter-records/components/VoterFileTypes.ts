@@ -1,7 +1,13 @@
 import { dateUsHelper } from 'helpers/dateHelper'
 
+interface VoterFileType {
+  key: string
+  name: string
+  fields: string[]
+}
+
 const date = dateUsHelper(new Date())
-const defaultFileTypes = [
+const defaultFileTypes: VoterFileType[] = [
   {
     key: 'full',
     name: `Voter File - ${date}`,
@@ -59,7 +65,7 @@ const defaultFileTypes = [
   },
 ]
 
-export const getDefaultVoterFileName = (type) =>
+export const getDefaultVoterFileName = (type: string): string | undefined =>
   defaultFileTypes.find((file) => file.key.toLowerCase() === type.toLowerCase())
     ?.fields?.[0]
 

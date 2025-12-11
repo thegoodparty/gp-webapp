@@ -1,6 +1,18 @@
 import { ExpertCard } from './ExpertCard'
 
-const EXPERTS = [
+interface ExpertImage {
+  src: string
+  alt: string
+}
+
+interface Expert {
+  name: string
+  role: string
+  desc: string
+  img: ExpertImage
+}
+
+const EXPERTS: Expert[] = [
   {
     name: 'Jared Alper',
     role: 'GoodParty.org: Politics',
@@ -30,7 +42,7 @@ const EXPERTS = [
   },
 ]
 
-const CampaignExperts = () => (
+const CampaignExperts = (): React.JSX.Element => (
   <div className="bg-primary-dark text-white text-center py-8 px-20 align-center">
     <h3 className="text-3xl font-semibold mb-12 md:text-6xl">
       Our campaigning <br className="md:hidden" />

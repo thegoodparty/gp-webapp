@@ -1,7 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import Image from 'next/image'
 
-export default function BrightenSection() {
+export default function BrightenSection(): React.JSX.Element {
   return (
     <section className="bg-indigo-100 pt-8 pb-16">
       <MaxWidth>

@@ -5,7 +5,13 @@ import Image from 'next/image'
 import WarningButton from '@shared/buttons/WarningButton'
 import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
-const icons = [
+interface Icon {
+  icon: string
+  title: string
+  desc: React.JSX.Element
+}
+
+const icons: Icon[] = [
   {
     icon: '/images/landing-pages/expert-icon.svg',
     title: 'Expert Insight',
@@ -52,7 +58,13 @@ const icons = [
   },
 ]
 
-export default function WhyAcademy({ content }) {
+interface WhyAcademyProps {
+  content: {
+    [key: string]: string | number | boolean | object | null
+  }
+}
+
+export default function WhyAcademy({ }: WhyAcademyProps): React.JSX.Element {
   return (
     <>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />

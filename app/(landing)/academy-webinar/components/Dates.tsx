@@ -3,14 +3,20 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import Link from 'next/link'
 
-const dates = [
+const dates: string[] = [
   'Thursday, December 14th, 2023 @ 9am PST',
   'Friday, December 15th, 2023 @ 10am PST',
   'Wednesday, December 20th, 2023 @ 1pm PST',
   'More dates coming soon!',
 ]
 
-export default function Dates({ content }) {
+interface DatesProps {
+  content: {
+    [key: string]: string | number | boolean | object | null
+  }
+}
+
+export default function Dates({ }: DatesProps): React.JSX.Element {
   return (
     <MaxWidth>
       <div className="lg:w-1/2 mt-24 mb-12">

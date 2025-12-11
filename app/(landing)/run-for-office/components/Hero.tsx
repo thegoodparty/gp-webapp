@@ -4,7 +4,7 @@ import MarketingH2 from '@shared/typography/MarketingH2'
 import heroImg from 'public/images/run-for-office/run-hero.png'
 import Button from '@shared/buttons/Button'
 
-export default function Hero() {
+export default function Hero(): React.JSX.Element {
   return (
     <section className="box-content max-w-screen-xl mx-auto py-16 px-4 md:px-8 lg:px-24 sm:flex flex-col md:grid grid-cols-12 gap-x-4 items-center">
       <div className="max-w-lg pb-10 md:pb-8 col-span-6">
@@ -47,7 +47,6 @@ export default function Hero() {
           className="max-w-xl w-full inline"
           alt="run for office"
           priority
-          full
         />
       </div>
     </section>

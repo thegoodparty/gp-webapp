@@ -7,7 +7,13 @@ import Body1 from '@shared/typography/Body1'
 import { MdFolderShared, MdPhonelinkRing, MdGroup } from 'react-icons/md'
 import Body2 from '@shared/typography/Body2'
 
-const cards = [
+interface Card {
+  icon: React.JSX.Element
+  title: string
+  content: string
+}
+
+const cards: Card[] = [
   {
     icon: <MdFolderShared size={48} />,
     title: 'Voter data',
@@ -28,7 +34,7 @@ const cards = [
   },
 ]
 
-export default function ProTools() {
+export default function ProTools(): React.JSX.Element {
   return (
     <section className="mb-28">
       <hgroup className="text-white text-center mb-16">

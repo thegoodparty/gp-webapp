@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 const anoton = Anton({ weight: '400', subsets: ['latin'] })
 
-export default function Hero() {
+export default function Hero(): React.JSX.Element {
   return (
     <MaxWidth>
       <div className="py-12 text-center">

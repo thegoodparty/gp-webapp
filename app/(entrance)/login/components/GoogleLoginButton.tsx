@@ -4,7 +4,22 @@ import Button from '@mui/material/Button'
 import { FcGoogle } from 'react-icons/fc'
 import { useGoogleLogin } from '@react-oauth/google'
 
-const GoogleLoginButton = ({ loginSuccessCallback }) => {
+interface GoogleUser {
+  email: string
+  picture: string
+}
+
+interface SocialUser {
+  _profile: { email: string; profilePicURL: string }
+  _provider: string
+  _token: { idToken: string }
+}
+
+interface GoogleLoginButtonProps {
+  loginSuccessCallback: (socialUser: SocialUser) => void
+}
+
+const GoogleLoginButton = ({ loginSuccessCallback }: GoogleLoginButtonProps): React.JSX.Element => {
   const performGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const accessToken = tokenResponse.access_token
@@ -13,15 +28,15 @@ const GoogleLoginButton = ({ loginSuccessCallback }) => {
     },
   })
 
-  const fetchGoogleUser = async (accessToken) => {
+  const fetchGoogleUser = async (accessToken: string): Promise<SocialUser> => {
     const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    const data = await res.json()
+    const data: GoogleUser = await res.json()
 
-    const socialUser = {
+    const socialUser: SocialUser = {
       _profile: { email: data.email, profilePicURL: data.picture },
       _provider: 'google',
       _token: { idToken: accessToken },
@@ -33,7 +48,7 @@ const GoogleLoginButton = ({ loginSuccessCallback }) => {
     <div data-cy="google-login" className="mt-6">
       <Button
         fullWidth
-        onClick={performGoogleLogin}
+        onClick={() => performGoogleLogin()}
         style={{
           backgroundColor: '#fff',
           borderRadius: '8px',

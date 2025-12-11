@@ -4,7 +4,7 @@ import MarketingH4 from '@shared/typography/MarketingH4'
 import Body1 from '@shared/typography/Body1'
 import Button from '@shared/buttons/Button'
 
-const points1 = [
+const points1: string[] = [
   'AI Campaign Content',
   'Campaign progress tracker',
   'Path to Victory report',
@@ -13,13 +13,21 @@ const points1 = [
   'GoodParty.org Academy',
 ]
 
-const points2 = [
+const points2: string[] = [
   'Voter data and records',
   'Dedicated support',
   'Peer-to-peer texting and calling platform',
 ]
 
-function PricingCard({ heading, subheading, price, points, color }) {
+interface PricingCardProps {
+  heading: string
+  subheading?: string
+  price: number
+  points: string[]
+  color?: string
+}
+
+function PricingCard({ heading, subheading, price, points, color }: PricingCardProps): React.JSX.Element {
   const bgColor = color === 'lime' ? 'bg-lime-400' : 'bg-white'
   const bulletColor =
     color === 'lime'
@@ -53,7 +61,7 @@ function PricingCard({ heading, subheading, price, points, color }) {
   )
 }
 
-export default function Pricing() {
+export default function Pricing(): React.JSX.Element {
   return (
     <section id="pricing-section">
       <hgroup className="text-white text-center mb-8">
@@ -67,7 +75,7 @@ export default function Pricing() {
         </Body1>
       </hgroup>
 
-      <div class="flex-col md:flex-row flex justify-center mx-auto gap-4">
+      <div className="flex-col md:flex-row flex justify-center mx-auto gap-4">
         <PricingCard heading="Free" points={points1} price={0} />
         <PricingCard
           heading="Pro"

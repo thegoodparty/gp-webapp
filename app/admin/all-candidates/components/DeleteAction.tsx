@@ -8,7 +8,7 @@ import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper'
 import { useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 
-async function deleteCandidate(id) {
+async function deleteCandidate(id: number) {
   try {
     const api = gpApi.admin.deleteCandidate
     const payload = {
@@ -21,7 +21,11 @@ async function deleteCandidate(id) {
   }
 }
 
-export default function DeleteAction({ id }) {
+interface DeleteActionProps {
+  id: number
+}
+
+export default function DeleteAction({ id }: DeleteActionProps): React.JSX.Element {
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
 

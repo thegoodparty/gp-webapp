@@ -7,7 +7,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 
-async function reactivate(id) {
+async function reactivate(id: number) {
   try {
     const api = gpApi.admin.reactivateCandidate
     const payload = {
@@ -20,7 +20,13 @@ async function reactivate(id) {
   }
 }
 
-export default function Actions({ id, campaignOnboardingSlug, isActive }) {
+interface ActionsProps {
+  id: number
+  campaignOnboardingSlug: string | null
+  isActive: boolean
+}
+
+export default function Actions({ id, campaignOnboardingSlug, isActive }: ActionsProps): React.JSX.Element {
   const [showMenu, setShowMenu] = useState(false)
   const { successSnackbar } = useSnackbar()
 

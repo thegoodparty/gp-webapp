@@ -5,7 +5,14 @@ import MarketingH2 from '@shared/typography/MarketingH2'
 import WarningButton from '@shared/buttons/WarningButton'
 import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
-const Hero2 = ({ content }) => (
+interface Hero2Props {
+  content: {
+    hero2Desc: string
+    [key: string]: string | number | boolean | object | null
+  }
+}
+
+const Hero2 = ({ content }: Hero2Props): React.JSX.Element => (
   <MaxWidth>
     <div className="grid grid-cols-12 gap-8 mt-24 md:mt-48">
       <div className="col-span-12 md:col-span-6">

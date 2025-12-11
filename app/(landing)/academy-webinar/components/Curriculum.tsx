@@ -3,10 +3,16 @@ import Body1 from '@shared/typography/Body1'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import Image from 'next/image'
 
-const weeks = [
+interface Week {
+  name: string
+  title: string
+  desc: string
+}
+
+const weeks: Week[] = [
   {
     name: '1',
-    title: 'Finding your “why”',
+    title: 'Finding your "why"',
     desc: 'The most important aspect of a political campaign is the reason why you\'re running. We\'ll help you find your "why" and how to message it to your supporters.',
   },
   {
@@ -21,7 +27,7 @@ const weeks = [
   },
 ]
 
-export default function Curriculum() {
+export default function Curriculum(): React.JSX.Element {
   return (
     <MaxWidth>
       <div className="lg:w-1/2 mt-24 mb-16">

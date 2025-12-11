@@ -5,13 +5,18 @@ import Link from 'next/link'
 import WhiteButton from './WhiteButton'
 import doorKnockingImg from 'public/images/run-for-office/door-knocking.png'
 
-const points = [
+interface Point {
+  large: string
+  small: string
+}
+
+const points: Point[] = [
   { large: '300+', small: 'Candidates supported' },
   { large: '25%', small: 'Win rate in 2023' },
   { large: '50+', small: 'Years of campaign expertise' },
 ]
 
-export default function WhatIsCampaign() {
+export default function WhatIsCampaign(): React.JSX.Element {
   return (
     <section className="bg-primary-dark text-white py-20">
       <MaxWidth>

@@ -3,7 +3,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 import MaxWidth from '@shared/layouts/MaxWidth'
 
-const IsNowYourTime = () => (
+const IsNowYourTime = (): React.JSX.Element => (
   <MaxWidth>
     <section className="grid grid-cols-12 md:gap-16 px-8 py-9 lg:px-20 xl:px-4">
       <div className="col-span-12 md:col-span-6">

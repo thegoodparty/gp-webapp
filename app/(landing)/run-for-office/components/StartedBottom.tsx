@@ -3,7 +3,7 @@ import Button from '@shared/buttons/Button'
 import MarketingH3 from '@shared/typography/MarketingH3'
 import Body1 from '@shared/typography/Body1'
 
-export default function StartedBottom() {
+export default function StartedBottom(): React.JSX.Element {
   return (
     <>
       <div className="bg-[linear-gradient(172deg,_#F7FAFB_54.5%,_#fff_55%)] h-[calc(100vw*.17)] w-full" />

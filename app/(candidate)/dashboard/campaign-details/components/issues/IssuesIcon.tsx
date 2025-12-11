@@ -19,7 +19,11 @@ import {
 } from 'react-icons/ri'
 import { TbDrone } from 'react-icons/tb'
 
-export default function IssuesIcon({ issueName = '' }) {
+interface IssuesIconProps {
+  issueName?: string
+}
+
+export default function IssuesIcon({ issueName = '' }: IssuesIconProps): React.JSX.Element {
   const name = issueName.toLowerCase().trim()
   if (name === 'transportation') {
     return <RiTrainLine />

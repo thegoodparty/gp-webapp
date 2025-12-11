@@ -3,7 +3,7 @@ import Image from 'next/image'
 import img from 'public/images/landing-pages/ads-hero.jpg'
 import HeroForm from './HeroForm'
 
-export default function HeroSection() {
+export default function HeroSection(): React.JSX.Element {
   return (
     <section className="relative">
       {/* <div className="absolute">

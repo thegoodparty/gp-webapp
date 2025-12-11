@@ -5,7 +5,12 @@ import LisaBottom from './LisaBottom'
 import { Suspense } from 'react'
 import CalendarIframe from './CalendarIframe'
 
-const points = [
+interface Point {
+  title: string
+  subTitle: string
+}
+
+const points: Point[] = [
   {
     title: 'You + GoodParty.org',
     subTitle:
@@ -23,7 +28,7 @@ const points = [
   },
 ]
 
-export default function GetDemoPage() {
+export default function GetDemoPage(): React.JSX.Element {
   return (
     <div className="grid grid-cols-12 min-h-screen">
       <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">
