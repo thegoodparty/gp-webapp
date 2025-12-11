@@ -14,3 +14,5 @@ testRunId.txt
 reported-test-cases.json
 admin-session-error.png
 playwright/.auth
+
+.vscode/settings.json
