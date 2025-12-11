@@ -181,7 +181,7 @@ export default function Filters({
         segment: editSegment.id,
       })
       appendParam(router, searchParams, 'page', 1)
-      setContacts(people)
+      setContacts(people || [])
     } else {
       errorSnackbar('Failed to update segment')
     }
