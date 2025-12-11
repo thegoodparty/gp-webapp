@@ -69,15 +69,18 @@ export default function Filters({
     }
 
     const incomeMapping = {
-      'Under $25k': 'incomeUnder25k',
+      '$1k - $15k': 'income1kTo15k',
+      '$15k - $25k': 'income15kTo25k',
       '$25k - $35k': 'income25kTo35k',
       '$35k - $50k': 'income35kTo50k',
       '$50k - $75k': 'income50kTo75k',
       '$75k - $100k': 'income75kTo100k',
       '$100k - $125k': 'income100kTo125k',
       '$125k - $150k': 'income125kTo150k',
-      '$150k - $200k': 'income150kTo200k',
-      '$200k+': 'income200kPlus',
+      '$150k - $175k': 'income150kTo175k',
+      '$175k - $200k': 'income175kTo200k',
+      '$200k - $250k': 'income200kTo250k',
+      '$250k +': 'income250kPlus',
     }
 
     Object.values(incomeMapping).forEach((key) => {
@@ -219,15 +222,18 @@ export default function Filters({
 
     const incomeRanges = []
     const incomeMapping = {
-      incomeUnder25k: 'Under $25k',
+      income1kTo15k: '$1k - $15k',
+      income15kTo25k: '$15k - $25k',
       income25kTo35k: '$25k - $35k',
       income35kTo50k: '$35k - $50k',
       income50kTo75k: '$50k - $75k',
       income75kTo100k: '$75k - $100k',
       income100kTo125k: '$100k - $125k',
       income125kTo150k: '$125k - $150k',
-      income150kTo200k: '$150k - $200k',
-      income200kPlus: '$200k+',
+      income150kTo175k: '$150k - $175k',
+      income175kTo200k: '$175k - $200k',
+      income200kTo250k: '$200k - $250k',
+      income250kPlus: '$250k +',
     }
 
     Object.entries(incomeMapping).forEach(([key, value]) => {
