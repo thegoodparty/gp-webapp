@@ -24,7 +24,7 @@ const parseIncomeMin = (label: string): number => {
   const num = parseInt(label.replace(/[^0-9]/g, ''), 10)
   if (label.includes('+')) return 250000
   if (label.includes('k')) return num * 1000
-  return num || Infinity
+  return num
 }
 
 const getMedianIncomeRange = (category?: Category): string | null => {
@@ -36,10 +36,14 @@ const getMedianIncomeRange = (category?: Category): string | null => {
 
   if (!sorted.length) return null
 
+  const totalKnownPercent = sorted.reduce((sum, b) => sum + b.percent, 0)
+  if (totalKnownPercent === 0) return null
+
+  const medianThreshold = totalKnownPercent / 2
   let cumulative = 0
   for (const bucket of sorted) {
     cumulative += bucket.percent
-    if (cumulative >= 0.5) {
+    if (cumulative >= medianThreshold) {
       return `$${bucket.label.replace(/–/g, '-')}`
     }
   }

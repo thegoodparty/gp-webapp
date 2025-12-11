@@ -24,7 +24,7 @@ export const ContactSearch = () => {
 
   const performSearch = useCallback(() => {
     if (!campaign?.isPro) {
-      ;(showProUpgradeModal as (show: boolean) => void)(true)
+      showProUpgradeModal(true)
       return
     }
 
