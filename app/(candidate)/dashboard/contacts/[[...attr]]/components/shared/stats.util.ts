@@ -65,8 +65,9 @@ export const getContactStats = (
   const medianIncomeRange = getMedianIncomeRange(
     stats?.categories?.estimatedIncomeRange,
   )
-  const visibleContactsPercent =
-    (totalVisibleContacts / (totalConstituents ?? 0)) * 100
+  const visibleContactsPercent = totalConstituents
+    ? (totalVisibleContacts / totalConstituents) * 100
+    : 0
   return {
     totalConstituents: totalConstituents
       ? numberFormatter(totalConstituents)
