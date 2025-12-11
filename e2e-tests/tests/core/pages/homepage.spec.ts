@@ -1,15 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
 test.describe("Homepage", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/");
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
 	});
 
 	test("should display homepage elements", async ({ page }) => {

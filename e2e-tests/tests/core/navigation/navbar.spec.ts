@@ -1,16 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Navigation Bar", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/");
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
 	});
 
 	test("should display main navigation elements", async ({ page }) => {
