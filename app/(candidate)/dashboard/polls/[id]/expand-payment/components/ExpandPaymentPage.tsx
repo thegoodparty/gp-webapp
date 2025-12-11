@@ -68,7 +68,8 @@ export default function ExpandPaymentPage({
         hideNext
         hideBack
         disabledNext
-        disabledBack
+        onNext={() => {}}
+        onNextText=""
       />
     </ExpandPollLayout>
   )

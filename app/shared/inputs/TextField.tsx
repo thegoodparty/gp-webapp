@@ -24,10 +24,10 @@ export default function TextField<Variant extends TextFieldVariants>({
 }: TextFieldProps<Variant>) {
   const mergedEndAdornment = endAdornments?.length ? (
     <InputAdornment position="end">
-      {endAdornments.map(
-        (adornment) =>
-          // @ts-expect-error
-          ADORNMENTS[adornment] ?? adornment,
+      {endAdornments.map((adornment) =>
+        typeof adornment === 'string'
+          ? ADORNMENTS[adornment as keyof typeof ADORNMENTS]
+          : adornment,
       )}
     </InputAdornment>
   ) : undefined
