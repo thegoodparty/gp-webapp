@@ -63,7 +63,10 @@ export const PurchaseIntentProvider = ({
       if (response.ok) {
         setPurchaseIntent(response.data)
       } else {
-        setError(response.statusText || 'Failed to create purchase intent')
+        setError(
+          (response.data as { data?: { error?: string } })?.data?.error ||
+            'Failed to create purchase intent',
+        )
       }
     }
 
