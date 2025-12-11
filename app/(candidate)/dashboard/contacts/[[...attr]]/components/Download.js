@@ -1,5 +1,5 @@
 'use client'
-import { Button } from 'goodparty-styleguide'
+import { IconButton } from 'goodparty-styleguide'
 import { useCustomSegments } from '../hooks/CustomSegmentsProvider'
 import { fetchContactsCsv } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
@@ -8,6 +8,7 @@ import { isCustomSegment, findCustomSegment } from './shared/segments.util'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
+import { LuDownload } from 'react-icons/lu'
 
 export default function Download() {
   const [campaign] = useCampaign()
@@ -66,11 +67,14 @@ export default function Download() {
   }
 
   return (
-    <div className="absolute md:right-36 top-14 md:top-4 flex items-center gap-4">
-      <Button variant="outline" onClick={handleDownload}>
-        {!campaign?.isPro && <Lock />}
-        Download
-      </Button>
-    </div>
+    <>
+      <IconButton
+        variant="outline"
+        onClick={handleDownload}
+        className="hidden md:flex"
+      >
+        {!campaign?.isPro ? <Lock /> : <LuDownload />}
+      </IconButton>
+    </>
   )
 }

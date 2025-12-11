@@ -1,6 +1,6 @@
 'use client'
 import RaceCard from './RaceCard'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { CircularProgress } from '@mui/material'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import H3 from '@shared/typography/H3'
@@ -11,6 +11,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body2 from '@shared/typography/Body2'
 import Fuse from 'fuse.js'
+import { useQuery } from '@tanstack/react-query'
 
 const FUSE_OPTIONS = {
   keys: ['position.name'],
@@ -74,46 +75,13 @@ export default function BallotRaces({
   adminMode,
   fuzzyFilter,
 }) {
-  const [races, setRaces] = useState(false)
-  const [filteredRaces, setFilteredRaces] = useState([])
-  const [inputValue] = useState('')
-  const [selected, setSelected] = useState(selectedOffice || false)
-  const [loading, setLoading] = useState(false)
-  const [showHelpModal, setShowHelpModal] = useState(false)
-  const [fuse, setFuse] = useState(null)
+  const query = useQuery({
+    queryKey: ['races', zip, level],
+    queryFn: async () => {
+      if (!zip) {
+        return null
+      }
 
-  const router = useRouter()
-
-  useEffect(() => {
-    loadRaces(zip, level)
-  }, [zip, level])
-
-  useEffect(() => {
-    if (Array.isArray(races)) {
-      const racesData = races.map((race) => ({
-        ...race,
-        position: {
-          ...race.position,
-          name: race.position?.name || '',
-        },
-      }))
-      setFuse(new Fuse(racesData, FUSE_OPTIONS))
-      setFilteredRaces(races)
-    }
-  }, [races])
-
-  useEffect(() => {
-    if (fuse && fuzzyFilter) {
-      const results = fuse.search(fuzzyFilter)
-      setFilteredRaces(results.map((result) => result.item))
-    } else if (Array.isArray(races)) {
-      setFilteredRaces(races)
-    }
-  }, [fuzzyFilter, fuse, races])
-
-  const loadRaces = async (zip, level) => {
-    if (zip) {
-      setLoading(true)
       const initRaces = await fetchRaces(zip, level)
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`)
@@ -123,11 +91,30 @@ export default function BallotRaces({
         const nameB = b?.position?.name || ''
         return nameA.localeCompare(nameB)
       })
-      setRaces(sortedRaces)
-      setFilteredRaces(sortedRaces)
-      setLoading(false)
-    }
-  }
+
+      const racesData = sortedRaces.map((race) => ({
+        ...race,
+        position: { ...race.position, name: race.position?.name || '' },
+      }))
+
+      const fuse = new Fuse(racesData, FUSE_OPTIONS)
+
+      return { sortedRaces, fuse }
+    },
+  })
+
+  const races = query.data?.sortedRaces || []
+
+  const filteredRaces =
+    query.data && fuzzyFilter
+      ? query.data.fuse.search(fuzzyFilter).map((result) => result.item)
+      : query.data?.sortedRaces || []
+  const [inputValue] = useState('')
+  const [selected, setSelected] = useState(selectedOffice || false)
+  const [showHelpModal, setShowHelpModal] = useState(false)
+  const [fuse, setFuse] = useState(null)
+
+  const router = useRouter()
 
   if (!zip) {
     return <div>No valid zip</div>
@@ -213,7 +200,7 @@ export default function BallotRaces({
 
   return (
     <section className="mb-2">
-      {loading ? (
+      {query.isPending ? (
         <div className="mt-6 text-center">
           <CircularProgress />
           <br />
@@ -233,7 +220,6 @@ export default function BallotRaces({
               </ol>
             </div>
           ) : (
-            Array.isArray(filteredRaces) &&
             filteredRaces.map((race, index) => (
               <RaceCard
                 key={index}
@@ -241,7 +227,10 @@ export default function BallotRaces({
                   ...race,
                   position: {
                     ...race.position,
-                    name: getHighlightedText(race?.position?.name || '', fuzzyFilter),
+                    name: getHighlightedText(
+                      race?.position?.name || '',
+                      fuzzyFilter,
+                    ),
                   },
                 }}
                 selected={race?.id === selected?.id}

@@ -2,7 +2,6 @@
 import Paper from '@shared/utils/Paper'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import ContactsTable from './ContactsTable'
-import TitleSection from './TitleSection'
 import PersonOverlay from './person/PersonOverlay'
 import Download from './Download'
 import SegmentSection from './segments/SegmentSection'
@@ -21,14 +20,31 @@ export default function ContactsPage() {
     <ContactProModalProvider value={setShowProModal}>
       <DashboardLayout>
         <Paper className="h-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-end">
-            <TitleSection />
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-semibold">Contacts</h1>
+            <p className="text-lg font-normal text-muted-foreground">
+              Manage and filter on your constituent list
+            </p>
+          </div>
+
+          <div className="w-full mt-6 flex items-center space-between">
+            <div className="flex flex-col md:flex-row flex-1 items-center gap-2 mr-4">
+              <SegmentSection />
+              <Download />
+            </div>
+            <div className="align-right hidden md:flex md:w-full xl:w-[400px]">
+              <ContactSearch />
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <ContactsStatsSection />
+          </div>
+
+          <div className="flex align-right md:hidden sm:w-full">
             <ContactSearch />
           </div>
-          <ContactsStatsSection />
           <div className="relative">
-            <SegmentSection />
-            <Download />
             <ContactsTable />
           </div>
         </Paper>
