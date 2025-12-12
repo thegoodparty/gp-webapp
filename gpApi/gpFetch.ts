@@ -17,9 +17,9 @@ interface GpFetchEndpoint {
   additionalRequestOptions?: RequestInit
 }
 
-const gpFetch = async <T = Record<string, unknown>>(
+const gpFetch = async <T = Partial<Record<string, unknown>>>(
   endpoint: GpFetchEndpoint,
-  data?: Record<string, unknown> | FormData,
+  data?: Partial<Record<string, unknown>> | FormData,
   revalidate?: number,
   token?: string | false,
   isFormData: boolean = false,
@@ -87,7 +87,7 @@ const headersOptions = (
   }
 }
 
-const fetchCall = async <T = Record<string, unknown>>(
+const fetchCall = async <T = Partial<Record<string, unknown>>>(
   url: string,
   options: RequestInit = {},
   revalidate?: number,
@@ -108,8 +108,9 @@ const fetchCall = async <T = Record<string, unknown>>(
   }
   try {
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
-    const jsonRes: T | Response =
-      isSuccessfulResponseStatus ? await res.json() : res
+    const jsonRes: T | Response = isSuccessfulResponseStatus
+      ? await res.json()
+      : res
     return jsonRes
   } catch (e) {
     console.error('error in fetchCall catch', e)

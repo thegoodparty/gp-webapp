@@ -46,7 +46,8 @@ const cards: Card[] = [
 ]
 
 function Values(): React.JSX.Element {
-  const [selected, setSelected] = useState<Record<number, boolean>>({})
+  const [selected, setSelected] = useState<Partial<Record<number, boolean>>>({})
+
   const handleSelected = (index: number) => {
     setSelected({
       ...selected,

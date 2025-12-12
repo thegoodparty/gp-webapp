@@ -19,7 +19,7 @@ export async function generateMetadata() {
 }
 
 interface PageProps {
-  searchParams: Record<string, string>
+  searchParams: Partial<Record<string, string>>
 }
 
 export default async function Page({ searchParams }: PageProps) {

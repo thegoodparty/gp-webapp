@@ -150,7 +150,7 @@ export interface AiContentData {
   name: string
   content: string
   updatedAt: number
-  inputValues?: Record<string, string>
+  inputValues?: Partial<Record<string, string>>
 }
 
 export interface CampaignAiContent {
@@ -158,8 +158,8 @@ export interface CampaignAiContent {
   campaignPlanAttempts?: Record<string, number>
   [key: string]:
     | AiContentData
-    | Record<string, string>
-    | Record<string, number>
+    | Partial<Record<string, string>>
+    | Partial<Record<string, number>>
     | undefined
 }
 

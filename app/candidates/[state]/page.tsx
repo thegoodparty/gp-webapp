@@ -6,7 +6,10 @@ import { notFound } from 'next/navigation'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-const fetchCount = async (state: string, onlyWinners = false): Promise<{ count: number }> => {
+const fetchCount = async (
+  state: string,
+  onlyWinners = false,
+): Promise<{ count: number }> => {
   const resp = await serverFetch<{ count: number }>(
     apiRoutes.campaign.map.count,
     {
@@ -30,7 +33,7 @@ export async function generateMetadata() {
 
 interface PageProps {
   params: { state: string }
-  searchParams: Record<string, string>
+  searchParams: Partial<Record<string, string>>
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
