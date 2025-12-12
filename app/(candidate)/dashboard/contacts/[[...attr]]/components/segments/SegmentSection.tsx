@@ -193,11 +193,12 @@ export default function SegmentSection() {
     )
   }
 
+  const query = searchParams?.get('query')
   useEffect(() => {
-    if (searchParams?.get('query')) {
+    if (query) {
       resetSelect()
     }
-  }, [searchParams])
+  }, [query])
 
   const handleAfterSave = (segmentId: number) => {
     setSegment(segmentId.toString())
