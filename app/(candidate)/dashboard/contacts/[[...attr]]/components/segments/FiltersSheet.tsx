@@ -189,7 +189,7 @@ export default function Filters({
     if (response) {
       successSnackbar('Segment created successfully')
       trackEvent(EVENTS.Contacts.SegmentCreated, {
-        filters: filterOnlyTrueValues(filters as Record<string, boolean>),
+        filters: filterOnlyTrueValues(filters),
       })
       await refreshCustomSegments()
       afterSave(response.id)
@@ -254,10 +254,8 @@ export default function Filters({
     )
   }
 
-  const transformFiltersForBackend = (
-    filters: Filters,
-  ): Record<string, unknown> => {
-    const transformed: Record<string, unknown> = { ...filters }
+  const transformFiltersForBackend = (filters: Filters): BackendFilters => {
+    const transformed: BackendFilters = { ...filters }
 
     const languageCodes: string[] = []
     if (transformed.languageEnglish) {
