@@ -101,7 +101,7 @@ const HopeSection = (): React.JSX.Element => (
       </p>
       <div className="md:grid md:grid-cols-3 md:gap-x-4 md:gap-y-16">
         {HOPE_STATS.map((stat, key) => (
-          <HopeStat {...stat} blurb={stat.blurb as string} key={key} />
+          <HopeStat {...stat} key={key} />
         ))}
       </div>
       <HopeHeader className="mt-8 mb-8 max-w-[238px] md:max-w-full">
