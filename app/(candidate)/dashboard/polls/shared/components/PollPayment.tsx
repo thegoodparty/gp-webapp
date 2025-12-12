@@ -21,17 +21,14 @@ const PurchaseContent: React.FC<{
   const { errorSnackbar } = useSnackbar()
 
   const handlePaymentError = (error: Error) => {
-    setError(
-      // @ts-expect-error setError is not correctly typed yet.
-      error,
-    )
+    setError(error.message)
     errorSnackbar(error.message)
   }
 
   return (
     <div className="p-4 w-[80vw] max-w-xl text-center">
       {error ? (
-        <PurchaseError error={null} serverError={null} />
+        <PurchaseError error={error} serverError={undefined} />
       ) : !purchaseIntent ? (
         <LoadingAnimation />
       ) : (

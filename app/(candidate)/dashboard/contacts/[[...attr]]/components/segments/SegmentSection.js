@@ -1,6 +1,7 @@
 'use client'
 import {
   Button,
+  IconButton,
   Select,
   SelectContent,
   SelectGroup,
@@ -9,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'goodparty-styleguide'
+
 import { useState, useEffect, useRef } from 'react'
 import FiltersSheet from './FiltersSheet'
 import defaultSegments from '../configs/defaultSegments.config'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
-import { FiEdit } from 'react-icons/fi'
 import { ALL_SEGMENTS, SHEET_MODES } from '../shared/constants'
 import { useRouter, useSearchParams } from 'next/navigation'
 import appendParam from '@shared/utils/appendParam'
@@ -27,6 +28,7 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
+import { LuPencil } from 'react-icons/lu'
 
 export default function SegmentSection() {
   const [customSegments, , , querySegment] = useCustomSegments()
@@ -164,10 +166,22 @@ export default function SegmentSection() {
   }
 
   return (
-    <div className="md:absolute md:left-0 md:top-4 flex items-center">
-      <Select value={segment} onValueChange={handleSelect}>
-        <SelectTrigger className="w-full md:w-[180px] lg:w-[240px]">
-          <SelectValue placeholder="All Contacts" />
+    <div className="flex items-center flex-col w-full md:w-auto md:flex-row">
+      <Select
+        value={segment}
+        onValueChange={handleSelect}
+        className="w-full md:w-auto"
+      >
+        <SelectTrigger className="w-full lg:w-[350px] justify-start">
+          <label
+            htmlFor="segment-select"
+            className="text-sm font-normal text-muted-foreground border-r pr-3 border-gray-200"
+          >
+            Current list
+          </label>
+          <div className="w-full text-left pl-1">
+            <SelectValue placeholder="All Contacts" />
+          </div>
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -190,22 +204,35 @@ export default function SegmentSection() {
           )}
         </SelectContent>
       </Select>
-      {isCustom && (
-        <div
-          onClick={handleEdit}
-          className="cursor-pointer w-10 h-10 flex items-center justify-center border-t border-b border-r border-gray-200 rounded-md -ml-1 hover:text-blue-500 :hover:text-white"
-        >
-          <FiEdit />
-        </div>
-      )}
       <Button
-        variant="secondary"
+        variant="default"
         onClick={handleCreateSegment}
-        className="ml-4"
+        className="font-normal text-sm px-4 w-full mt-4 md:mt-0 mb-4 md:mb-0 md:w-auto md:ml-4"
       >
         {!campaign?.isPro && <Lock />}
-        Create a Segment
+        Create list
       </Button>
+
+      {isCustom && (
+        <>
+          <IconButton
+            variant="outline"
+            onClick={handleEdit}
+            className="ml-4 font-normal hidden md:flex"
+          >
+            <div className="w-10 h-10 flex items-center justify-center">
+              <LuPencil />
+            </div>
+          </IconButton>
+          <Button
+            variant="outline"
+            onClick={handleEdit}
+            className="flex md:hidden w-full"
+          >
+            Edit list
+          </Button>
+        </>
+      )}
       <FiltersSheet
         open={sheetState.open}
         handleClose={handleSheetClose}
