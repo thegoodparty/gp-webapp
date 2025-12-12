@@ -1,16 +1,33 @@
 import Body1 from '@shared/typography/Body1'
 import IssuesSelector from './IssuesSelector'
 
+interface CustomIssue {
+  title: string
+  position: string
+  order?: number
+}
+
 interface Campaign {
   id: string
   details?: {
-    customIssues?: unknown[]
+    customIssues?: CustomIssue[]
   }
+}
+
+interface CandidatePosition {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  description: string | null
+  order: number | null
+  campaignId: number
+  positionId: number
+  topIssueId: number | null
 }
 
 interface AddIssuesProps {
   completeCallback?: (value: string) => void
-  updatePositionsCallback?: (value: unknown) => Promise<void>
+  updatePositionsCallback?: (value: CandidatePosition[]) => Promise<void>
   campaign: Campaign
   editIssuePosition?: boolean
 }

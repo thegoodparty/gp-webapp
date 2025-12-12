@@ -32,6 +32,11 @@ interface CombinedIssue {
   description: string
 }
 
+interface WebsiteIssue {
+  title: string
+  description: string
+}
+
 interface WebsiteContent {
   logo?: string
   theme?: string
@@ -43,7 +48,7 @@ interface WebsiteContent {
   }
   about?: {
     bio?: string
-    issues?: unknown[]
+    issues?: WebsiteIssue[]
     committee?: string
   }
   contact?: {
@@ -51,7 +56,9 @@ interface WebsiteContent {
     email?: string
     phone?: string
   }
-  [key: string]: unknown
+  vanityPath?: string
+  status?: string
+  heroFile?: File | null
 }
 
 interface Website {
@@ -65,7 +72,11 @@ interface Website {
   domain?: Domain | null
 }
 
-export function getWebsiteUrl(vanityPath: string, preview: boolean = false, domain: Domain = {}): string {
+export function getWebsiteUrl(
+  vanityPath: string,
+  preview: boolean = false,
+  domain: Domain = {},
+): string {
   if (domain?.name && isDomainActive(domain)) {
     return `https://${domain.name}`
   }
@@ -73,19 +84,22 @@ export function getWebsiteUrl(vanityPath: string, preview: boolean = false, doma
   return `${CANDIDATES_SITE_BASE}/${vanityPath}${preview ? '/preview' : ''}`
 }
 
-export async function fetchWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.get, {})
-  return response
-}
-
 export async function createWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.create, {})
+  const response: ApiResponse<Website> = await clientFetch(
+    apiRoutes.website.create,
+    {},
+  )
   return response
 }
 
-export async function updateWebsite(content: WebsiteContent): Promise<ApiResponse<Website> | false> {
+export async function updateWebsite(
+  content: WebsiteContent,
+): Promise<ApiResponse<Website> | false> {
   try {
-    const response = await clientFetch<Website>(apiRoutes.website.update, content)
+    const response = await clientFetch<Website>(
+      apiRoutes.website.update,
+      content as Record<string, unknown>,
+    )
     return response
   } catch (e) {
     console.error('error', e)
@@ -94,27 +108,41 @@ export async function updateWebsite(content: WebsiteContent): Promise<ApiRespons
 }
 
 export async function publishWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, {
-    status: WEBSITE_STATUS.published,
-  })
+  const response: ApiResponse<Website> = await clientFetch(
+    apiRoutes.website.update,
+    {
+      status: WEBSITE_STATUS.published,
+    },
+  )
   return response
 }
 
 export async function unpublishWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, {
-    status: WEBSITE_STATUS.unpublished,
-  })
+  const response: ApiResponse<Website> = await clientFetch(
+    apiRoutes.website.update,
+    {
+      status: WEBSITE_STATUS.unpublished,
+    },
+  )
   return response
 }
 
-export async function validateVanityPath(vanityPath: string): Promise<ApiResponse<{ valid: boolean }>> {
-  const response: ApiResponse<{ valid: boolean }> = await clientFetch(apiRoutes.website.validateVanityPath, {
-    vanityPath,
-  })
+export async function validateVanityPath(
+  vanityPath: string,
+): Promise<ApiResponse<{ valid: boolean }>> {
+  const response: ApiResponse<{ valid: boolean }> = await clientFetch(
+    apiRoutes.website.validateVanityPath,
+    {
+      vanityPath,
+    },
+  )
   return response
 }
 
-export function combineIssues(issues: Issue[] = [], customIssues: CustomIssue[] = []): CombinedIssue[] {
+export function combineIssues(
+  issues: Issue[] = [],
+  customIssues: CustomIssue[] = [],
+): CombinedIssue[] {
   const mappedIssues = issues.map((issue) => {
     return {
       title: issue.position?.name || '',

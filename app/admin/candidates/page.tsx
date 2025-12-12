@@ -3,6 +3,7 @@ import AdminCandidatesPage from './components/AdminCandidatesPage'
 import pageMetaData from 'helpers/metadataHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { Campaign } from 'helpers/types'
 
 const meta = pageMetaData({
   title: 'Admin Candidates | GoodParty.org',
@@ -12,10 +13,6 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export const maxDuration = 60
-
-// TODO: Investigate actual Campaign properties from AdminCandidatesTable CSV export (lines 46-100)
-// and define specific Campaign interface with all properties
-type Campaign = Record<string, unknown>
 
 const fetchCampaigns = async (): Promise<Campaign[]> => {
   const resp = await serverFetch<Campaign[]>(apiRoutes.campaign.list)

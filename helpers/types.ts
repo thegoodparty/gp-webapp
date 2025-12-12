@@ -146,10 +146,21 @@ export interface CampaignData {
   name?: string
 }
 
+export interface AiContentData {
+  name: string
+  content: string
+  updatedAt: number
+  inputValues?: Record<string, string>
+}
+
 export interface CampaignAiContent {
   generationStatus?: Record<string, string>
   campaignPlanAttempts?: Record<string, number>
-  [key: string]: unknown
+  [key: string]:
+    | AiContentData
+    | Record<string, string>
+    | Record<string, number>
+    | undefined
 }
 
 export interface Campaign {
