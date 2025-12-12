@@ -1,8 +1,18 @@
 import Body1 from '@shared/typography/Body1'
 import IssuesSelector from './IssuesSelector'
 
+interface Campaign {
+  id: string
+  details?: {
+    customIssues?: unknown[]
+  }
+}
+
 interface AddIssuesProps {
-  [key: string]: string | number | boolean | object | null | undefined
+  completeCallback?: (value: string) => void
+  updatePositionsCallback?: (value: unknown) => Promise<void>
+  campaign: Campaign
+  editIssuePosition?: boolean
 }
 
 export default function AddIssues(props: AddIssuesProps): React.JSX.Element {

@@ -9,7 +9,13 @@ import Image from 'next/image'
 import gradientImg from 'public/images/run-for-office/gradients.png'
 
 interface Testimonial {
-  [key: string]: string | number | boolean | object | null | undefined
+  name: string
+  office: string
+  image: {
+    url: string
+    alt: string
+  }
+  testimonial: string
 }
 
 interface RunForOfficePageProps {

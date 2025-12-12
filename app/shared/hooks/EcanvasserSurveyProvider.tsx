@@ -7,7 +7,9 @@ export interface EcanvasserSurvey {
   id: string
   name?: string
   description?: string
-  [key: string]: string | number | boolean | object | null | undefined
+  status?: string
+  requires_signature?: boolean
+  questions?: string[]
 }
 
 type EcanvasserSurveyContextValue = [

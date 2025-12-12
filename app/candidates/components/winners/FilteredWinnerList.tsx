@@ -85,7 +85,6 @@ interface Campaign {
   office: string
   state: string
   avatar?: string
-  [key: string]: string | number | boolean | object | null | undefined
 }
 
 interface FilteredWinnerListProps {

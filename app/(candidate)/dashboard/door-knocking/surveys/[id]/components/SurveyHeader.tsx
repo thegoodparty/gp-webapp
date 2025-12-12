@@ -18,7 +18,7 @@ export default function SurveyHeader(): React.JSX.Element {
         <EditSurvey />
       </div>
       <Body2 className="mt-2">{description}</Body2>
-      <SurveyChips survey={survey as EcanvasserSurvey as { [key: string]: string | number | boolean | object | null }} />
+      <SurveyChips survey={survey as EcanvasserSurvey} />
     </>
   )
 }

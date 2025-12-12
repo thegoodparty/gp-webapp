@@ -1,9 +1,13 @@
 import { IncludedPartiesList } from './IncludedPartiesList'
 import Button from '@shared/buttons/Button'
+import type { ButtonSize, ButtonVariant, ButtonColor } from '@shared/buttons/Button'
 
 interface LearnAboutOurTeamButtonProps {
   className?: string
-  [key: string]: string | number | boolean | object | null | undefined
+  size?: ButtonSize
+  variant?: ButtonVariant
+  color?: ButtonColor
+  disabled?: boolean
 }
 
 const LearnAboutOurTeamButton = ({ className, ...restProps }: LearnAboutOurTeamButtonProps): React.JSX.Element => (
