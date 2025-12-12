@@ -34,48 +34,6 @@ const settings = {
   arrows: true,
   nextArrow: <CustomArrow />,
   prevArrow: <CustomArrow />,
-  appendDots: (dots: React.ReactNode) => (
-    <div
-      style={{
-        overflow: 'hidden',
-        maxWidth: '400px',
-        left: 'calc(50% - 200px)',
-        margin: '0 auto',
-      }}
-    >
-      <ul
-        style={{
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {dots}
-      </ul>
-    </div>
-  ),
-  afterChange: () => {
-    // handles limiting the number of pagination dots that are visible at once
-    const currentDot = document.querySelector('.slick-dots .slick-active') as HTMLElement | null
-    const dotWrapper = currentDot?.parentElement?.parentElement
-    const padding = currentDot ? currentDot.offsetWidth * 1.5 : 0
-
-    if (
-      dotWrapper &&
-      currentDot &&
-      (currentDot.offsetLeft >
-        dotWrapper.scrollLeft + dotWrapper.clientWidth - padding ||
-        currentDot.offsetLeft < dotWrapper.scrollLeft + padding)
-    ) {
-      const scrollTarget = Math.max(
-        0,
-        currentDot.offsetLeft - dotWrapper.clientWidth / 2,
-      )
-
-      dotWrapper.scrollTo({
-        left: scrollTarget,
-        behavior: 'smooth',
-      })
-    }
-  },
 }
 
 interface Campaign {
@@ -91,7 +49,9 @@ interface FilteredWinnerListProps {
   campaigns: Campaign[]
 }
 
-export default function FilteredWinnerList({ campaigns }: FilteredWinnerListProps): React.JSX.Element {
+export default function FilteredWinnerList({
+  campaigns,
+}: FilteredWinnerListProps): React.JSX.Element {
   // split campaigns to and array of arrays each has 9 campaigns max
   const [splitCampaigns, setSplitCampaigns] = useState<Campaign[][]>([])
   useEffect(() => {

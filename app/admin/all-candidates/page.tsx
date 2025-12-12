@@ -26,7 +26,7 @@ interface FetchCandidatesResponse {
 const fetchCandidates = async (): Promise<FetchCandidatesResponse | Response | false> => {
   const api = gpApi.admin.candidates
   const token = await getServerToken()
-  return await gpFetch<FetchCandidatesResponse>(api, undefined, 0, token as string)
+  return await gpFetch<FetchCandidatesResponse>(api, undefined, 0, token)
 }
 
 export default async function Page() {

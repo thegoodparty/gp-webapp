@@ -21,7 +21,7 @@ const gpFetch = async <T = Record<string, unknown>>(
   endpoint: GpFetchEndpoint,
   data?: Record<string, unknown> | FormData,
   revalidate?: number,
-  token?: string,
+  token?: string | false,
   isFormData: boolean = false,
   nonJSON: boolean = false,
 ): Promise<Response | T | false> => {
