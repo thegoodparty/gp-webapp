@@ -14,14 +14,23 @@ import { deleteCustomSegment } from '../shared/ajaxActions'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { useState } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { type SegmentResponse } from '../shared/ajaxActions'
 
-export default function DeleteSegment({ segment, afterDeleteCallback }) {
+interface DeleteSegmentProps {
+  segment: SegmentResponse
+  afterDeleteCallback: () => void
+}
+
+export default function DeleteSegment({
+  segment,
+  afterDeleteCallback,
+}: DeleteSegmentProps) {
   const { id } = segment
   const [, , refreshCustomSegments] = useCustomSegments()
 
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     try {
       setIsDeleting(true)
       await deleteCustomSegment(id)
@@ -36,7 +45,7 @@ export default function DeleteSegment({ segment, afterDeleteCallback }) {
   }
 
   return (
-    <AlertDialog className="z-[1302]">
+    <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
           variant="destructive"

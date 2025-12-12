@@ -14,6 +14,8 @@ import {
   fetchContacts,
   saveCustomSegment,
   updateCustomSegment,
+  type SegmentResponse,
+  type ListContactsResponse,
 } from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
@@ -28,8 +30,49 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useContacts } from '../../hooks/ContactsProvider'
 import appendParam from '@shared/utils/appendParam'
 
-const refetchContacts = async ({ page, resultsPerPage, segment }) => {
-  const response = await fetchContacts({ page, resultsPerPage, segment })
+type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
+
+interface Filters {
+  [key: string]: boolean
+}
+
+interface BackendFilters extends Record<string, unknown> {
+  languageCodes?: string[]
+  incomeRanges?: string[]
+  languageEnglish?: boolean
+  languageSpanish?: boolean
+  languageOther?: boolean
+  id?: number
+  createdAt?: unknown
+  updatedAt?: unknown
+  name?: string
+  campaignId?: number
+}
+
+interface FiltersSheetProps {
+  open?: boolean
+  handleClose?: () => void
+  mode?: SheetMode
+  editSegment?: SegmentResponse | null
+  handleOpenChange?: (open: boolean) => void
+  resetSelect?: () => void
+  afterSave?: (segmentId: number) => void
+}
+
+const refetchContacts = async ({
+  page,
+  resultsPerPage,
+  segment,
+}: {
+  page: number
+  resultsPerPage?: string | null
+  segment: number | string
+}): Promise<ListContactsResponse | null> => {
+  const response = await fetchContacts({
+    page,
+    resultsPerPage: resultsPerPage ? parseInt(resultsPerPage, 10) : undefined,
+    segment: typeof segment === 'number' ? segment.toString() : segment,
+  })
   return response
 }
 
@@ -43,32 +86,36 @@ export default function Filters({
   handleOpenChange = () => {},
   resetSelect = () => {},
   afterSave = () => {},
-}) {
+}: FiltersSheetProps) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
-  const [filters, setFilters] = useState({})
+  const [filters, setFilters] = useState<Filters>({})
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
   const [customSegments, , refreshCustomSegments] = useCustomSegments()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [_, setContacts] = useContacts()
+  const [, setContacts] = useContacts()
 
-  const transformFiltersFromBackend = (backendFilters) => {
+  const transformFiltersFromBackend = (
+    backendFilters: BackendFilters,
+  ): Filters => {
     const transformed = { ...backendFilters }
 
     transformed.languageEnglish = false
     transformed.languageSpanish = false
     transformed.languageOther = false
 
-    if (transformed.languageCodes && Array.isArray(transformed.languageCodes)) {
-      transformed.languageEnglish = transformed.languageCodes.includes('en')
-      transformed.languageSpanish = transformed.languageCodes.includes('es')
-      transformed.languageOther = transformed.languageCodes.includes('other')
-      delete transformed.languageCodes
+    if (
+      backendFilters.languageCodes &&
+      Array.isArray(backendFilters.languageCodes)
+    ) {
+      transformed.languageEnglish = backendFilters.languageCodes.includes('en')
+      transformed.languageSpanish = backendFilters.languageCodes.includes('es')
+      transformed.languageOther = backendFilters.languageCodes.includes('other')
     }
 
-    const incomeMapping = {
+    const incomeMapping: Record<string, string> = {
       'Under $25k': 'incomeUnder25k',
       '$25k - $35k': 'income25kTo35k',
       '$35k - $50k': 'income35kTo50k',
@@ -84,24 +131,26 @@ export default function Filters({
       transformed[key] = false
     })
 
-    if (transformed.incomeRanges && Array.isArray(transformed.incomeRanges)) {
-      transformed.incomeRanges.forEach((range) => {
-        const key = incomeMapping[range]
+    if (
+      backendFilters.incomeRanges &&
+      Array.isArray(backendFilters.incomeRanges)
+    ) {
+      backendFilters.incomeRanges.forEach((range) => {
+        const key = incomeMapping[range as string]
         if (key) {
           transformed[key] = true
         }
       })
-      delete transformed.incomeRanges
     }
 
-    return transformed
+    return transformed as Filters
   }
 
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
       const transformedSegment = transformFiltersFromBackend(editSegment)
       setFilters(transformedSegment)
-      setSegmentName(editSegment.name)
+      setSegmentName(editSegment.name || '')
       setIsEditingName(false)
     } else {
       const nextCustomSegmentName = `Custom Segment ${
@@ -113,11 +162,11 @@ export default function Filters({
     }
   }, [mode, editSegment, open, customSegments])
 
-  const handleCheckedChange = (checked, key) => {
+  const handleCheckedChange = (checked: boolean, key: string) => {
     setFilters({ ...filters, [key]: checked })
   }
 
-  const handleSelectAll = (options) => {
+  const handleSelectAll = (options: Array<{ key: string; label: string }>) => {
     const updatedFilters = { ...filters }
     options.forEach((option) => {
       updatedFilters[option.key] = true
@@ -153,8 +202,10 @@ export default function Filters({
   }
 
   const handleUpdate = async () => {
-    if (!canSave()) {
-      errorSnackbar('Please select at least one filter')
+    if (!canSave() || !editSegment) {
+      if (!canSave()) {
+        errorSnackbar('Please select at least one filter')
+      }
       return
     }
     setSaving(true)
@@ -175,13 +226,15 @@ export default function Filters({
       trackEvent(EVENTS.Contacts.SegmentUpdated, {
         filters: filterOnlyTrueValues(filters),
       })
-      const { people } = await refetchContacts({
+      const contactsResponse = await refetchContacts({
         page: 1,
-        resultsPerPage: searchParams.get('pageSize'),
+        resultsPerPage: searchParams?.get('pageSize') ?? null,
         segment: editSegment.id,
       })
-      appendParam(router, searchParams, 'page', 1)
-      setContacts(people || [])
+      if (contactsResponse && searchParams) {
+        appendParam(router, searchParams, 'page', '1')
+        setContacts(contactsResponse)
+      }
     } else {
       errorSnackbar('Failed to update segment')
     }
@@ -195,14 +248,16 @@ export default function Filters({
     resetSelect()
   }
 
-  const canSave = () => {
-    return segmentName && Object.values(filters).some((value) => value)
+  const canSave = (): boolean => {
+    return (
+      !!segmentName && Object.values(filters).some((value) => value === true)
+    )
   }
 
-  const transformFiltersForBackend = (filters) => {
-    const transformed = { ...filters }
+  const transformFiltersForBackend = (filters: Filters): BackendFilters => {
+    const transformed: BackendFilters = { ...filters }
 
-    const languageCodes = []
+    const languageCodes: string[] = []
     if (transformed.languageEnglish) {
       languageCodes.push('en')
     }
@@ -217,8 +272,8 @@ export default function Filters({
     delete transformed.languageOther
     transformed.languageCodes = languageCodes
 
-    const incomeRanges = []
-    const incomeMapping = {
+    const incomeRanges: string[] = []
+    const incomeMapping: Record<string, string> = {
       incomeUnder25k: 'Under $25k',
       income25kTo35k: '$25k - $35k',
       income35kTo50k: '$35k - $50k',
@@ -242,7 +297,7 @@ export default function Filters({
   }
 
   return (
-    <Sheet open={open} onOpenChange={handleOpenChange} onClose={handleClose}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
         <div className="flex items-center pb-6 border-b border-gray-200">
           {isEditingName ? (
@@ -296,7 +351,7 @@ export default function Filters({
                     <Checkbox
                       checked={filters[option.key] ?? false}
                       onCheckedChange={(checked) => {
-                        handleCheckedChange(checked, option.key)
+                        handleCheckedChange(checked === true, option.key)
                       }}
                       className="data-[state=checked]:!bg-purple-600 data-[state=checked]:!border-purple-600 data-[state=checked]:!text-white [&[data-state=checked]]:!bg-purple-600"
                     />
@@ -308,7 +363,7 @@ export default function Filters({
 
             {index === filterSections.length - 1 && (
               <>
-                {mode === SHEET_MODES.EDIT && (
+                {mode === SHEET_MODES.EDIT && editSegment && (
                   <DeleteSegment
                     segment={editSegment}
                     afterDeleteCallback={handleAfterDelete}

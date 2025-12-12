@@ -3,25 +3,60 @@ import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
+import { type ColumnDef } from '@tanstack/react-table'
+import { type VisibilityState } from '@tanstack/react-table'
+import { type ReactNode } from 'react'
 
-const MaybeBlurredContent = ({ children }) => {
+interface Contact {
+  id: number
+  firstName?: string
+  lastName?: string
+  cellPhone?: string
+  landline?: string
+  age?: number
+  gender?: string
+  address?: string
+  politicalParty?: string
+  ethnicityGroup?: string
+  language?: string
+  levelOfEducation?: string
+  maritalStatus?: string
+  estimatedIncomeRange?: string
+  homeowner?: boolean
+  businessOwner?: boolean
+  hasChildrenUnder18?: boolean
+  veteranStatus?: string
+  activeVoter?: boolean
+  voterStatus?: string
+}
+
+interface MaybeBlurredContentProps {
+  children: ReactNode
+}
+
+const MaybeBlurredContent = ({ children }: MaybeBlurredContentProps) => {
   const [campaign] = useCampaign()
   if (campaign?.isPro) {
-    return children
+    return <>{children}</>
   }
   return <span className="blur-[6px]">{children}</span>
 }
 
-const blurredCell = ({ row, column }) => {
+const blurredCell = ({
+  row,
+  column,
+}: {
+  row: { getValue: (key: string) => ReactNode }
+  column: { id: string }
+}) => {
   const value = row.getValue(column.id)
   return <MaybeBlurredContent>{value}</MaybeBlurredContent>
 }
 
-const columns = [
+const columns: ColumnDef<Contact>[] = [
   {
     accessorKey: 'firstName',
     header: ({ column }) => (
@@ -73,7 +108,6 @@ const columns = [
       <DataTableColumnHeader column={column} title="Political Party" />
     ),
   },
-
   {
     accessorKey: 'ethnicityGroup',
     header: ({ column }) => (
@@ -98,13 +132,6 @@ const columns = [
       <DataTableColumnHeader column={column} title="Marital Status" />
     ),
   },
-  // uncomment when the data is done loading
-  // {
-  //   accessorKey: 'estimatedIncomeRange',
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Income Range" />
-  //   ),
-  // },
   {
     accessorKey: 'homeowner',
     header: ({ column }) => (
@@ -143,7 +170,7 @@ const columns = [
   },
 ]
 
-const initialColumnVisibility = {
+const initialColumnVisibility: VisibilityState = {
   ethnicityGroup: false,
   language: false,
   levelOfEducation: false,
@@ -165,27 +192,27 @@ export default function ContactsTable() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const onColumnVisibilityChange = (visibility) => {
+  const onColumnVisibilityChange = (visibility: VisibilityState): void => {
     trackEvent(EVENTS.Contacts.ColumnEdited, {
-      visibility,
+      visibility: JSON.stringify(visibility),
     })
   }
 
-  const onRowClick = (row) => {
+  const onRowClick = (row: Contact): void => {
     if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
     }
-    router.push(`/dashboard/contacts/${row.id}?${searchParams.toString()}`)
+    router.push(
+      `/dashboard/contacts/${row.id}?${searchParams?.toString() ?? ''}`,
+    )
   }
 
   return (
     <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">
       <ServerDataTable
         columns={columns}
-        data={people}
-        searchKey="FirstName"
-        searchPlaceholder="Search contacts..."
+        data={people as Contact[] | null | undefined}
         pagination={pagination}
         onColumnVisibilityChange={onColumnVisibilityChange}
         initialColumnVisibility={initialColumnVisibility}
