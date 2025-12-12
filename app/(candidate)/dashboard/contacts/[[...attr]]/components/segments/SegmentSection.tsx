@@ -69,7 +69,7 @@ export default function SegmentSection() {
     if (shouldUpdateUrl) {
       appendParam(
         router,
-        searchParams ?? new ReadonlyURLSearchParams(),
+        searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
         'segment',
         segmentValue,
       )
@@ -77,7 +77,7 @@ export default function SegmentSection() {
 
     const segmentName =
       type === 'custom'
-        ? findCustomSegment(customSegments, segmentValue)?.value ?? segmentValue
+        ? findCustomSegment(customSegments, segmentValue)?.name ?? segmentValue
         : segmentValue
 
     trackEvent(EVENTS.Contacts.SegmentViewed, {
@@ -169,7 +169,7 @@ export default function SegmentSection() {
     setSegment(selectedSegment)
     appendParam(
       router,
-      searchParams ?? new ReadonlyURLSearchParams(),
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
       'segment',
       selectedSegment,
     )
@@ -187,7 +187,7 @@ export default function SegmentSection() {
     setSegment(ALL_SEGMENTS)
     appendParam(
       router,
-      searchParams ?? new ReadonlyURLSearchParams(),
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
       'segment',
       ALL_SEGMENTS,
     )
@@ -203,7 +203,7 @@ export default function SegmentSection() {
     setSegment(segmentId.toString())
     appendParam(
       router,
-      searchParams ?? new ReadonlyURLSearchParams(),
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
       'segment',
       segmentId.toString(),
     )

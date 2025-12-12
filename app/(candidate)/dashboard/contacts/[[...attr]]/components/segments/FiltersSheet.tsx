@@ -100,7 +100,7 @@ export default function Filters({
   const transformFiltersFromBackend = (
     backendFilters: BackendFilters,
   ): Filters => {
-    const transformed: Filters = {}
+    const transformed = { ...backendFilters }
 
     transformed.languageEnglish = false
     transformed.languageSpanish = false
@@ -143,7 +143,7 @@ export default function Filters({
       })
     }
 
-    return transformed
+    return transformed as Filters
   }
 
   useEffect(() => {
