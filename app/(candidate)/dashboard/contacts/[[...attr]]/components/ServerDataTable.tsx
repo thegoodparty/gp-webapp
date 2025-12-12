@@ -13,8 +13,29 @@ import {
   ArrowRightIcon,
 } from 'goodparty-styleguide'
 import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
+import { type ColumnDef } from '@tanstack/react-table'
+import { type VisibilityState } from '@tanstack/react-table'
 
-export default function ServerDataTable({
+interface Pagination {
+  totalPages?: number
+  totalResults?: number
+  hasNextPage?: boolean
+  hasPreviousPage?: boolean
+  currentPage?: number
+  pageSize?: number
+}
+
+interface ServerDataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[] | null | undefined
+  pagination?: Pagination
+  className?: string
+  onRowClick?: (row: TData) => void
+  onColumnVisibilityChange?: (visibility: VisibilityState) => void
+  initialColumnVisibility?: VisibilityState
+}
+
+export default function ServerDataTable<TData, TValue>({
   columns,
   data,
   pagination = {},
@@ -22,7 +43,7 @@ export default function ServerDataTable({
   onRowClick = () => {},
   onColumnVisibilityChange = () => {},
   initialColumnVisibility = {},
-}) {
+}: ServerDataTableProps<TData, TValue>) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -35,8 +56,10 @@ export default function ServerDataTable({
     pageSize = DEFAULT_PAGE_SIZE,
   } = pagination
 
-  const updateURL = (newParams) => {
-    const params = new URLSearchParams(searchParams.toString())
+  const updateURL = (
+    newParams: Record<string, string | number | null | undefined>,
+  ): void => {
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
 
     Object.entries(newParams).forEach(([key, value]) => {
       if (value) {
@@ -48,14 +71,16 @@ export default function ServerDataTable({
     router.push(`?${params.toString()}`)
   }
 
-  const handlePageChange = (page) => {
-    if (page < 1) page = 1
-    if (page > totalPages) page = totalPages
-    updateURL({ page })
+  const handlePageChange = (page: number): void => {
+    let newPage = page
+    if (newPage < 1) newPage = 1
+    if (newPage > totalPages) newPage = totalPages
+    updateURL({ page: newPage })
   }
 
-  const handlePageSizeChange = (pageSize) => {
-    updateURL({ pageSize, page: 1 })
+  const handlePageSizeChange = (value: string): void => {
+    const newPageSize = parseInt(value, 10)
+    updateURL({ pageSize: newPageSize, page: 1 })
   }
 
   return (
@@ -79,15 +104,14 @@ export default function ServerDataTable({
             <Select
               value={pageSize.toString()}
               onValueChange={handlePageSizeChange}
-              className="bg-white"
             >
               <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={pageSize} />
+                <SelectValue placeholder={pageSize.toString()} />
               </SelectTrigger>
               <SelectContent side="top">
-                {PAGE_SIZES.map((pageSize) => (
-                  <SelectItem key={pageSize} value={pageSize.toString()}>
-                    {pageSize}
+                {PAGE_SIZES.map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -101,7 +125,6 @@ export default function ServerDataTable({
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => handlePageChange(1)}
-              //   disabled={!hasPreviousPage}
             >
               <span className="sr-only">Go to first page</span>
               <ArrowLeftIcon className="h-4 w-4" />
