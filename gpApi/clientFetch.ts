@@ -16,13 +16,13 @@ interface FetchOptions {
 
 export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
-  data: Record<string, unknown> | FormData | undefined,
+  data: Partial<Record<string, unknown>> | FormData | undefined,
   options: FetchOptions & { returnFullResponse: true },
 ): Promise<Response>
 
-export async function clientFetch<T = unknown>(
+export async function clientFetch<T = unknown, Y = unknown>(
   endpoint: ApiRoute,
-  data?: Record<string, unknown> | FormData,
+  data?: Partial<Record<string, unknown>> | FormData | Y,
   options?: Omit<FetchOptions, 'returnFullResponse'> & {
     returnFullResponse?: false
   },
@@ -30,7 +30,7 @@ export async function clientFetch<T = unknown>(
 
 export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
-  data?: Record<string, unknown> | FormData,
+  data?: Partial<Record<string, unknown>> | FormData,
   options: FetchOptions = {},
 ): Promise<ApiResponse<T> | Response> {
   const { method } = endpoint

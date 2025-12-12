@@ -1,7 +1,28 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-type Outreach = {
-  [key: string]: string | number | boolean | object | null
+type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'robocall' | 'p2p'
+type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
+
+interface Outreach {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  outreachType: OutreachType
+  projectId?: string | null
+  name?: string | null
+  status?: OutreachStatus | null
+  error?: string | null
+  audienceRequest?: string | null
+  script?: string | null
+  message?: string | null
+  date?: Date | string | null
+  imageUrl?: string | null
+  voterFileFilterId?: number | null
+  phoneListId?: number | null
+  identityId?: string | null
+  didState?: string | null
+  title?: string | null
 }
 
 type OutreachContextValue = [
