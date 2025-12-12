@@ -1,9 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
-// Reset storage state for auth tests to avoid being pre-authenticated
-test.use({ storageState: { cookies: [], origins: [] } });
-
 test.describe("Login Functionality", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/login");
