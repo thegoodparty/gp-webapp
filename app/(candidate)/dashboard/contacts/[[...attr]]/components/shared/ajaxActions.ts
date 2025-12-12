@@ -7,7 +7,7 @@ interface SegmentPayload {
   [key: string]: unknown
 }
 
-interface SegmentResponse {
+export interface SegmentResponse {
   id: number
   name?: string
   [key: string]: unknown
@@ -19,7 +19,7 @@ interface FetchContactsParams {
   segment?: string
 }
 
-interface ListContactsResponse {
+export interface ListContactsResponse {
   pagination: {
     totalResults: number
     currentPage: number

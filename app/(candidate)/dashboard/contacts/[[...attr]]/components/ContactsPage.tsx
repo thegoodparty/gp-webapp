@@ -13,12 +13,16 @@ import {
   ProUpgradeModal,
   VARIANTS,
 } from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 export default function ContactsPage() {
   const [showProModal, setShowProModal] = useState(false)
+  const [campaign] = useCampaign()
+  const totalVisibleContacts = 0
+  const onlyTotalVisibleContacts = false
   return (
     <ContactProModalProvider value={setShowProModal}>
-      <DashboardLayout>
+      <DashboardLayout campaign={campaign}>
         <Paper className="h-full">
           <div className="flex flex-col">
             <h1 className="text-3xl font-semibold">Contacts</h1>
@@ -38,7 +42,10 @@ export default function ContactsPage() {
           </div>
 
           <div className="mt-6">
-            <ContactsStatsSection />
+            <ContactsStatsSection
+              totalVisibleContacts={totalVisibleContacts}
+              onlyTotalVisibleContacts={onlyTotalVisibleContacts}
+            />
           </div>
 
           <div className="flex align-right md:hidden sm:w-full">

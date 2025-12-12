@@ -1,10 +1,14 @@
 'use client'
 import { IconButton } from 'goodparty-styleguide'
 import { useCustomSegments } from '../hooks/CustomSegmentsProvider'
-import { fetchContactsCsv } from './shared/ajaxActions'
+import { fetchContactsCsv, type SegmentResponse } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { isCustomSegment, findCustomSegment } from './shared/segments.util'
+import {
+  isCustomSegment,
+  findCustomSegment,
+  filterOnlyTrueValues,
+} from './shared/segments.util'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
@@ -15,7 +19,7 @@ export default function Download() {
   const showProUpgradeModal = useShowContactProModal()
   const [customSegments, , , querySegment] = useCustomSegments()
 
-  const handleDownload = async () => {
+  const handleDownload = async (): Promise<void> => {
     if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
@@ -42,8 +46,11 @@ export default function Download() {
     }
   }
 
-  const generateProperties = () => {
-    if (!isCustomSegment(customSegments, querySegment)) {
+  const generateProperties = (): Record<
+    string,
+    string | number | boolean | null | undefined
+  > => {
+    if (!querySegment || !isCustomSegment(customSegments, querySegment)) {
       return {
         filters: null,
         isCustomSegment: false,
@@ -51,19 +58,37 @@ export default function Download() {
         segment: querySegment,
       }
     }
+    const filterValues = filters()
     return {
-      filters: filters(),
+      filters: filterValues ? JSON.stringify(filterValues) : null,
       isCustomSegment: true,
       isDefaultSegment: false,
     }
   }
 
-  const filters = () => {
-    if (!isCustomSegment(customSegments, querySegment)) {
+  const filters = (): string[] | null => {
+    if (!querySegment || !isCustomSegment(customSegments, querySegment)) {
       return null
     }
-    const allFilters = findCustomSegment(customSegments, querySegment)
-    return filterOnlyTrueValues(allFilters)
+    const allFilters = findCustomSegment(
+      customSegments,
+      querySegment,
+    ) as SegmentResponse | undefined
+    if (!allFilters) {
+      return null
+    }
+    const filterRecord: Record<string, boolean> = {}
+    for (const [key, value] of Object.entries(allFilters)) {
+      if (
+        key !== 'id' &&
+        key !== 'value' &&
+        key !== 'name' &&
+        typeof value === 'boolean'
+      ) {
+        filterRecord[key] = value
+      }
+    }
+    return filterOnlyTrueValues(filterRecord)
   }
 
   return (
@@ -78,3 +103,4 @@ export default function Download() {
     </>
   )
 }
+

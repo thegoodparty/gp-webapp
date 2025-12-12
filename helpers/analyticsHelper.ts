@@ -660,7 +660,10 @@ const getUserProperties = (): Record<string, string> => {
 
 export const trackEvent = (
   name: string,
-  properties?: Record<string, string | number | boolean | null | undefined>,
+  properties?: Record<
+    string,
+    string[] | string | number | boolean | null | undefined
+  >,
 ): void => {
   try {
     const commonProperties = {
