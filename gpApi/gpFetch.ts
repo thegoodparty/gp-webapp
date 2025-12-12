@@ -17,14 +17,14 @@ interface GpFetchEndpoint {
   additionalRequestOptions?: RequestInit
 }
 
-const gpFetch = async (
+const gpFetch = async <T = Record<string, unknown>>(
   endpoint: GpFetchEndpoint,
   data?: Record<string, unknown> | FormData,
   revalidate?: number,
   token?: string,
   isFormData: boolean = false,
   nonJSON: boolean = false,
-): Promise<Response | Record<string, unknown> | false> => {
+): Promise<Response | T | false> => {
   let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
     endpoint
   if (
@@ -56,7 +56,7 @@ const gpFetch = async (
 
   const requestOptions = headersOptions(body, endpoint.method, autoToken)
 
-  return await fetchCall(
+  return await fetchCall<T>(
     url,
     { ...requestOptions, ...additionalRequestOptions },
     revalidate,
@@ -87,13 +87,13 @@ const headersOptions = (
   }
 }
 
-const fetchCall = async (
+const fetchCall = async <T = Record<string, unknown>>(
   url: string,
   options: RequestInit = {},
   revalidate?: number,
   nonJSON?: boolean,
   returnFullResponse: boolean = false,
-): Promise<Response | Record<string, unknown> | false> => {
+): Promise<Response | T | false> => {
   if (options.method === 'GET') {
     delete options.body
   }
@@ -108,7 +108,7 @@ const fetchCall = async (
   }
   try {
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
-    const jsonRes: Record<string, unknown> | Response =
+    const jsonRes: T | Response =
       isSuccessfulResponseStatus ? await res.json() : res
     return jsonRes
   } catch (e) {

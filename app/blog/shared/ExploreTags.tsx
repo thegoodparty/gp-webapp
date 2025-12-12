@@ -14,8 +14,8 @@ interface ExploreTagsProps {
 }
 
 export default function ExploreTags({ tags }: ExploreTagsProps): React.JSX.Element | null {
-  const params = useParams()
-  const selectedTag = params?.tag as string | undefined
+  const params = useParams<{ tag?: string }>()
+  const selectedTag = params?.tag
 
   if (!Array.isArray(tags)) return null
 

@@ -13,15 +13,26 @@ const meta = pageMetaData({
 export const metadata = meta
 export const maxDuration = 60
 
-const fetchCandidates = async () => {
+interface CandidateData {
+  id: number
+  isActive: boolean
+  data: string
+}
+
+interface FetchCandidatesResponse {
+  candidates: CandidateData[]
+}
+
+const fetchCandidates = async (): Promise<FetchCandidatesResponse | Response | false> => {
   const api = gpApi.admin.candidates
   const token = await getServerToken()
-  return await gpFetch(api, undefined, 0, token as string)
+  return await gpFetch<FetchCandidatesResponse>(api, undefined, 0, token as string)
 }
 
 export default async function Page() {
   await adminAccessOnly()
-  const { candidates } = (await fetchCandidates()) as { candidates: Record<string, string>[] }
+  const response = await fetchCandidates()
+  const candidates = response && typeof response === 'object' && 'candidates' in response ? response.candidates : []
 
   const childProps = {
     pathname: '/admin/candidates',

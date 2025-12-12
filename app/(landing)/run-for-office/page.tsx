@@ -26,9 +26,9 @@ interface Testimonial {
 }
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const testimonials = (await fetchContentByType(
+  const testimonials = await fetchContentByType<Testimonial[]>(
     'candidateTestimonials',
-  )) as Testimonial[]
+  )
 
   return <RunForOfficePage testimonials={testimonials} />
 }

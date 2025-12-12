@@ -39,10 +39,10 @@ export default function TermSnippet({ item, last }: TermSnippetProps): React.JSX
         className="leading-8 max-h-[60px] block w-full overflow-hidden"
         style={{
           display: '-webkit-box',
-          '-webkit-line-clamp': '3',
-          '-webkit-box-orient': 'vertical',
-          'text-overflow': 'ellipsis',
-        } as React.CSSProperties}
+          WebkitLineClamp: '3',
+          WebkitBoxOrient: 'vertical',
+          textOverflow: 'ellipsis',
+        }}
       >
         <CmsContentWrapper>{contentfulHelper(description)}</CmsContentWrapper>
       </div>

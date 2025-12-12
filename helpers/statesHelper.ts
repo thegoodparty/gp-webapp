@@ -55,7 +55,7 @@ export const flatStates = [
 export type StateAbbreviation = typeof flatStates[number]
 
 export function isStateAbbreviation(value: string): value is StateAbbreviation {
-  return flatStates.includes(value as StateAbbreviation)
+  return (flatStates as readonly string[]).includes(value)
 }
 
 interface State {
