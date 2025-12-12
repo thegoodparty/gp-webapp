@@ -3,8 +3,11 @@ import { createContext, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-interface EcanvasserSurvey {
+export interface EcanvasserSurvey {
   id: string
+  name?: string
+  description?: string
+  [key: string]: string | number | boolean | object | null | undefined
 }
 
 type EcanvasserSurveyContextValue = [
