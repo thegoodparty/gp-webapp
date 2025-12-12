@@ -3,14 +3,13 @@ import Body2 from '@shared/typography/Body2'
 import SurveyChips from '../../components/SurveyChips'
 import EditSurvey from './EditSurvey'
 import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey'
-import type { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
 export default function SurveyHeader(): React.JSX.Element {
   const [survey] = useEcanvasserSurvey()
   if (!survey || typeof survey === 'function') {
     return <></>
   }
-  const { name, description } = survey as EcanvasserSurvey
+  const { name, description } = survey
   return (
     <>
       <div className="md:flex justify-between items-center">
@@ -18,7 +17,7 @@ export default function SurveyHeader(): React.JSX.Element {
         <EditSurvey />
       </div>
       <Body2 className="mt-2">{description}</Body2>
-      <SurveyChips survey={survey as EcanvasserSurvey} />
+      <SurveyChips survey={survey} />
     </>
   )
 }
