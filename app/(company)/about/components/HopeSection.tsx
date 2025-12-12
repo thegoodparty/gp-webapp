@@ -73,8 +73,7 @@ const HOPE_CHANGES: HopeChangeData[] = [
       alt: 'Local Results',
     },
     header: 'Local results',
-    blurb:
-      'By building up independent, people-powered, and anti-corruptions around the country, we&apos;re building the bench of quality candidates ready to serve the people in higher office.',
+    blurb: `By building up independent, people-powered, and anti-corruptions around the country, we're building the bench of quality candidates ready to serve the people in higher office.`,
     href: '/elections',
     buttonText: 'For voters',
   },
