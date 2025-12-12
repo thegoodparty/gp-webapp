@@ -1,5 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import LinksSection from '../../../shared/LinksSection'
 import RacesSection from '../../../shared/RacesSection'
 import LearnToRun from '../../../shared/LearnToRun'
@@ -27,7 +27,9 @@ interface ElectionsCountyPageProps {
 
 export default function ElectionsCountyPage(props: ElectionsCountyPageProps): React.JSX.Element {
   const { state, childEntities, races, articles, county } = props
-  const stateName = (shortToLongState as Record<string, string>)[state.toUpperCase()]
+
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : state
 
   const cityLink = (city: City): string => {
     return `/elections/${city.slug}`

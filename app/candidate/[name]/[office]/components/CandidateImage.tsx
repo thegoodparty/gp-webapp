@@ -7,7 +7,7 @@ import ClaimedHeart from './ClaimedHeart'
 
 export default function CandidateImage(): React.JSX.Element {
   const [candidate] = usePublicCandidate()
-  const { firstName, lastName, image } = (candidate || {}) as { firstName?: string; lastName?: string; image?: string }
+  const { firstName, lastName, image } = candidate || {}
 
   return (
     <div className="lg:-mb-40">

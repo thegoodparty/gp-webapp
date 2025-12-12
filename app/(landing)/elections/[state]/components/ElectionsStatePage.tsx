@@ -1,5 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import Hero from '../../shared/Hero'
 import LinksSection from '../../shared/LinksSection'
 import RacesSection from '../../shared/RacesSection'
@@ -42,7 +42,8 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
 
   const { counties = [], districts = [], others = [] } = categorizedChildren
 
-  const stateName = (shortToLongState as Record<string, string>)[state.toUpperCase()]
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : state
 
   const placeLink = (place: Place) => `/elections/${place.slug}`
 

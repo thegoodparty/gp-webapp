@@ -174,4 +174,11 @@ export interface Campaign {
   canDownloadFederal: boolean
   completedTaskIds: string[]
   hasFreeTextsOffer: boolean
+  // Public candidate profile properties
+  firstName?: string
+  lastName?: string
+  image?: string
+  claimed?: boolean
+  positionName?: string
+  raceId?: string
 }

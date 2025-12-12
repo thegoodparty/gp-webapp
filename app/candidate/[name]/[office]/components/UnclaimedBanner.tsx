@@ -13,7 +13,7 @@ interface UnclaimedBannerProps {
 export default function UnclaimedBanner({ className }: UnclaimedBannerProps): React.JSX.Element | null {
   const [candidate] = usePublicCandidate()
   const [user] = useUser()
-  const { claimed } = (candidate || {}) as { claimed?: boolean }
+  const { claimed } = candidate || {}
 
   if (claimed || user) return null
 

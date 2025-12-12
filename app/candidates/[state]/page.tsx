@@ -1,13 +1,13 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatesPage from '../components/CandidatesPage'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import { notFound } from 'next/navigation'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-const fetchCount = async (state: string, onlyWinners = false) => {
-  const resp = await serverFetch(
+const fetchCount = async (state: string, onlyWinners = false): Promise<{ count: number }> => {
+  const resp = await serverFetch<{ count: number }>(
     apiRoutes.campaign.map.count,
     {
       state,
@@ -36,12 +36,14 @@ interface PageProps {
 export default async function Page({ params, searchParams }: PageProps) {
   const { state } = params
   const upperState = state.toUpperCase()
-  const longState = (shortToLongState as Record<string, string>)[upperState]
-  if (!longState) {
+
+  if (!isStateAbbreviation(upperState)) {
     notFound()
   }
+
+  const longState = shortToLongState[upperState]
   await adminAccessOnly()
-  const count = await fetchCount(upperState, true)
+  const { count } = await fetchCount(upperState, true)
   const childProps = { count, longState, state: upperState, searchParams }
   return <CandidatesPage {...childProps} />
 }

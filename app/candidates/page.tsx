@@ -4,17 +4,9 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 const WINNER_COUNT = 3444
 
-// const fetchCount = async (onlyWinners = false) => {
-//   const api = gpApi.campaign.mapCount;
-//
-//   return await gpFetch(api, { results: onlyWinners ? true : undefined }, 3600);
-// };
-
 export async function generateMetadata() {
-  // const { count } = await fetchCount(true);
-  const count = WINNER_COUNT
   const title = `${numberFormatter(
-    count,
+    WINNER_COUNT,
   )} Wins by Independents across the U.S. 🎉`
   const meta = pageMetaData({
     title,
@@ -31,8 +23,11 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  // const { count } = await fetchCount(true);
-  const count = WINNER_COUNT
-  const childProps = { count, searchParams, longState: undefined, state: undefined }
+  const childProps = {
+    count: WINNER_COUNT,
+    searchParams,
+    longState: undefined,
+    state: undefined,
+  }
   return <CandidatesPage {...childProps} />
 }
