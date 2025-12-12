@@ -17,8 +17,12 @@ const tangerine = Tangerine({
   subsets: ['latin'],
 })
 
+interface SignaturesResponse {
+  signatures?: string
+}
+
 async function fetchSignatures() {
-  return await unAuthFetch(apiRoutes.homepage.declarationSignatures.list.path)
+  return await unAuthFetch<SignaturesResponse>(apiRoutes.homepage.declarationSignatures.list.path)
 }
 
 const meta = pageMetaData({
@@ -31,7 +35,7 @@ const meta = pageMetaData({
 export const metadata = meta
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const { signatures } = (await fetchSignatures()) as { signatures?: string }
+  const { signatures } = await fetchSignatures()
   const childProps = {
     signatures: signatures || '',
     baskerville,
