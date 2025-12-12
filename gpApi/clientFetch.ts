@@ -20,9 +20,9 @@ export async function clientFetch<T = unknown>(
   options: FetchOptions & { returnFullResponse: true },
 ): Promise<Response>
 
-export async function clientFetch<T = unknown>(
+export async function clientFetch<T = unknown, Y = unknown>(
   endpoint: ApiRoute,
-  data?: Record<string, unknown> | FormData,
+  data?: Record<string, unknown> | FormData | Y,
   options?: Omit<FetchOptions, 'returnFullResponse'> & {
     returnFullResponse?: false
   },

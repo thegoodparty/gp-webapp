@@ -96,35 +96,14 @@ export async function updateWebsite(
   content: WebsiteContent,
 ): Promise<ApiResponse<Website> | false> {
   try {
-    const response = await clientFetch<Website>(
+    return await clientFetch<Website, WebsiteContent>(
       apiRoutes.website.update,
-      content as Record<string, unknown>,
+      content,
     )
-    return response
   } catch (e) {
     console.error('error', e)
     return false
   }
-}
-
-export async function publishWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(
-    apiRoutes.website.update,
-    {
-      status: WEBSITE_STATUS.published,
-    },
-  )
-  return response
-}
-
-export async function unpublishWebsite(): Promise<ApiResponse<Website>> {
-  const response: ApiResponse<Website> = await clientFetch(
-    apiRoutes.website.update,
-    {
-      status: WEBSITE_STATUS.unpublished,
-    },
-  )
-  return response
 }
 
 export async function validateVanityPath(
