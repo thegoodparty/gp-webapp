@@ -39,6 +39,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (!isStateAbbreviation(upperState)) {
     notFound()
+    return
   }
 
   const longState = shortToLongState[upperState]

@@ -6,30 +6,34 @@ import LearnToRun from '../../../shared/LearnToRun'
 import Guides from '../../../shared/Guides'
 import CountyFacts from './CountyFacts'
 import Hero from '../../../shared/Hero'
-
-interface City {
-  slug: string
-}
-
-interface County {
-  name?: string
-}
+import {
+  City,
+  County,
+  Race,
+  Article,
+  Municipality,
+  Parent,
+} from '../../../shared/types'
 
 interface ElectionsCountyPageProps {
   state: string
-  childEntities: Record<string, string | number>[]
-  races: Record<string, string | number>[]
-  articles: Record<string, string | number>[]
+  childEntities: City[]
+  races: Race[]
+  articles: Article[]
   county: County
-  municipality: Record<string, string | number>
-  parent: Record<string, string | number>
+  municipality: Municipality
+  parent: Parent
 }
 
-export default function ElectionsCountyPage(props: ElectionsCountyPageProps): React.JSX.Element {
+export default function ElectionsCountyPage(
+  props: ElectionsCountyPageProps,
+): React.JSX.Element {
   const { state, childEntities, races, articles, county } = props
 
   const upperState = state.toUpperCase()
-  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : state
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : state
 
   const cityLink = (city: City): string => {
     return `/elections/${city.slug}`

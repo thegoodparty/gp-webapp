@@ -1,7 +1,14 @@
+interface MapStyler {
+  color?: string
+  visibility?: string
+  saturation?: number
+  lightness?: number
+}
+
 interface MapStyle {
   featureType: string
   elementType: string
-  stylers: Array<Record<string, string | number>>
+  stylers: MapStyler[]
 }
 
 const mapSkin: MapStyle[] = [
