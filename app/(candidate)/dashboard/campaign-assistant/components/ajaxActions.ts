@@ -1,9 +1,25 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
+interface ChatMessage {
+  role: string
+  content: string
+}
+
+interface Feedback {
+  type: string
+}
+
 interface Chat {
   threadId: string
-  [key: string]: string | number | boolean | object | null
+  name: string
+  updatedAt: string
+}
+
+interface ChatThread {
+  threadId: string
+  chat: ChatMessage[]
+  feedback?: Feedback
 }
 
 interface ChatHistory {
@@ -12,11 +28,7 @@ interface ChatHistory {
 
 interface ChatResponse {
   threadId: string
-  chat: Chat
-}
-
-interface ChatData {
-  [key: string]: string | number | boolean | object | null
+  chat: ChatMessage[]
 }
 
 export async function fetchChatHistory(): Promise<ChatHistory | false> {
@@ -40,44 +52,44 @@ export async function createInitialChat(message: string): Promise<ChatResponse |
   }
 }
 
-export async function getChatThread({ threadId }: { threadId: string }): Promise<Chat | false> {
+export async function getChatThread({ threadId }: { threadId: string }): Promise<ChatThread | false> {
   try {
     const payload = { threadId }
     const resp = await clientFetch(apiRoutes.campaign.chat.get, payload)
-    return resp.data as Chat
+    return resp.data as ChatThread
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-export async function regenerateChatThread(threadId: string): Promise<ChatData | false> {
+export async function regenerateChatThread(threadId: string): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId, regenerate: true }
     const resp = await clientFetch(apiRoutes.campaign.chat.update, payload)
-    return resp.data as ChatData
+    return resp.data as { message: ChatMessage }
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-export async function deleteThread(threadId: string): Promise<ChatData | false> {
+export async function deleteThread(threadId: string): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId }
     const resp = await clientFetch(apiRoutes.campaign.chat.delete, payload)
-    return resp.data as ChatData
+    return resp.data as { message: ChatMessage }
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-export async function chatFeedback(threadId: string, type: string, message: string): Promise<ChatData | false> {
+export async function chatFeedback(threadId: string, type: string, message: string): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId, message, type }
     const resp = await clientFetch(apiRoutes.campaign.chat.feedback, payload)
-    return resp.data as ChatData
+    return resp.data as { message: ChatMessage }
   } catch (e) {
     console.error('error', e)
     return false
