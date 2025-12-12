@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
+import { authenticateTestUser } from "tests/utils/api-registration";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Get Demo Page", () => {
 	test.beforeEach(async ({ page }) => {
+		await authenticateTestUser(page);
 		await NavigationHelper.navigateToPage(page, "/get-a-demo");
 		await NavigationHelper.dismissOverlays(page);
 	});
