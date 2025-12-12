@@ -58,13 +58,7 @@ const icons: Icon[] = [
   },
 ]
 
-interface WhyAcademyProps {
-  content: {
-    [key: string]: string | number | boolean | object | null
-  }
-}
-
-export default function WhyAcademy({ }: WhyAcademyProps): React.JSX.Element {
+export default function WhyAcademy(): React.JSX.Element {
   return (
     <>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />

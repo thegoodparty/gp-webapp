@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-type Outreach = {
-  [key: string]: string | number | boolean | object | null
-}
+// TODO: Investigate actual Outreach properties and define specific interface
+// Grep for outreach property access patterns and replace Record<string, unknown>
+type Outreach = Record<string, unknown>
 
 type OutreachContextValue = [
   Outreach[],

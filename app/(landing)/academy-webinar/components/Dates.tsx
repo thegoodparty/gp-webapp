@@ -10,13 +10,7 @@ const dates: string[] = [
   'More dates coming soon!',
 ]
 
-interface DatesProps {
-  content: {
-    [key: string]: string | number | boolean | object | null
-  }
-}
-
-export default function Dates({ }: DatesProps): React.JSX.Element {
+export default function Dates(): React.JSX.Element {
   return (
     <MaxWidth>
       <div className="lg:w-1/2 mt-24 mb-12">

@@ -13,11 +13,13 @@ export const metadata = meta
 
 export const maxDuration = 60
 
-const fetchCampaigns = async (): Promise<
-  { [key: string]: string | number | boolean | object | null }[]
-> => {
-  const resp = await serverFetch(apiRoutes.campaign.list)
-  return resp.data as { [key: string]: string | number | boolean | object | null }[]
+// TODO: Investigate actual Campaign properties from AdminCandidatesTable CSV export (lines 46-100)
+// and define specific Campaign interface with all properties
+type Campaign = Record<string, unknown>
+
+const fetchCampaigns = async (): Promise<Campaign[]> => {
+  const resp = await serverFetch<Campaign[]>(apiRoutes.campaign.list)
+  return resp.data
 }
 
 export default async function Page(): Promise<React.JSX.Element> {

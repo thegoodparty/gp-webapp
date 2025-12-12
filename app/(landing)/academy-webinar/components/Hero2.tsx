@@ -8,7 +8,6 @@ import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUp
 interface Hero2Props {
   content: {
     hero2Desc: string
-    [key: string]: string | number | boolean | object | null
   }
 }
 

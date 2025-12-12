@@ -32,9 +32,9 @@ interface CombinedIssue {
   description: string
 }
 
-interface WebsiteContent {
-  [key: string]: string | number | boolean | object | null
-}
+// TODO: Investigate actual WebsiteContent properties used across website editor/preview
+// Grep for content. property accesses and define specific interface
+type WebsiteContent = Record<string, unknown>
 
 interface Website {
   id: number

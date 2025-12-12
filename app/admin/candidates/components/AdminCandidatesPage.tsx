@@ -3,12 +3,13 @@ import PortalPanel from '@shared/layouts/PortalPanel'
 import AdminWrapper from 'app/admin/shared/AdminWrapper'
 import AdminCandidatesTable from './AdminCandidatesTable'
 
+// TODO: Define specific Campaign interface with properties from AdminCandidatesTable.js lines 46-100
+type Campaign = Record<string, unknown>
+
 interface AdminCandidatesPageProps {
   pathname: string
   title: string
-  campaigns?: {
-    [key: string]: string | number | boolean | object | null
-  }[]
+  campaigns?: Campaign[]
 }
 
 export default function AdminCandidatesPage(

@@ -23,7 +23,6 @@ interface ElectionsCountyPageProps {
   county: County
   municipality: Record<string, string | number>
   parent: Record<string, string | number>
-  [key: string]: string | number | Record<string, string | number> | Record<string, string | number>[] | County
 }
 
 export default function ElectionsCountyPage(props: ElectionsCountyPageProps): React.JSX.Element {

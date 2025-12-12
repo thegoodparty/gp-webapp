@@ -24,10 +24,10 @@ export default function WebinarPage(): React.JSX.Element {
       <AcademySignUpModal />
       <Hero content={content} />
       <Hero2 content={content} />
-      <WhyAcademy content={content} />
+      <WhyAcademy />
       <Experts />
       <Curriculum />
-      <Dates content={content} />
+      <Dates />
       <Graduates content={content} />
       <GraduateSpotlight />
     </AcademySignUpModalProvider>
