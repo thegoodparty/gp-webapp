@@ -1,8 +1,29 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-// TODO: Investigate actual Outreach properties and define specific interface
-// Grep for outreach property access patterns and replace Record<string, unknown>
-type Outreach = Record<string, unknown>
+type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'robocall' | 'p2p'
+type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
+
+interface Outreach {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  outreachType: OutreachType
+  projectId?: string | null
+  name?: string | null
+  status?: OutreachStatus | null
+  error?: string | null
+  audienceRequest?: string | null
+  script?: string | null
+  message?: string | null
+  date?: Date | string | null
+  imageUrl?: string | null
+  voterFileFilterId?: number | null
+  phoneListId?: number | null
+  identityId?: string | null
+  didState?: string | null
+  title?: string | null
+}
 
 type OutreachContextValue = [
   Outreach[],

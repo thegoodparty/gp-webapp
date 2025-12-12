@@ -32,9 +32,27 @@ interface CombinedIssue {
   description: string
 }
 
-// TODO: Investigate actual WebsiteContent properties used across website editor/preview
-// Grep for content. property accesses and define specific interface
-type WebsiteContent = Record<string, unknown>
+interface WebsiteContent {
+  logo?: string
+  theme?: string
+  createStep?: string
+  main?: {
+    title?: string
+    tagline?: string
+    image?: string
+  }
+  about?: {
+    bio?: string
+    issues?: unknown[]
+    committee?: string
+  }
+  contact?: {
+    address?: string
+    email?: string
+    phone?: string
+  }
+  [key: string]: unknown
+}
 
 interface Website {
   id: number
@@ -67,7 +85,7 @@ export async function createWebsite(): Promise<ApiResponse<Website>> {
 
 export async function updateWebsite(content: WebsiteContent): Promise<ApiResponse<Website> | false> {
   try {
-    const response: ApiResponse<Website> = await clientFetch(apiRoutes.website.update, content)
+    const response = await clientFetch<Website>(apiRoutes.website.update, content)
     return response
   } catch (e) {
     console.error('error', e)
