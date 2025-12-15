@@ -38,12 +38,4 @@ export class TestDataHelper {
 		const seconds = `${now.getSeconds()}`.padStart(2, "0");
 		return `${month}${day}${hours}${minutes}${seconds}`;
 	}
-
-	/**
-	 * Generate website URL for testing
-	 */
-	static generateWebsiteUrl(): string {
-		const timestamp = TestDataHelper.generateTimestamp();
-		return `test-website-${timestamp}`;
-	}
 }
