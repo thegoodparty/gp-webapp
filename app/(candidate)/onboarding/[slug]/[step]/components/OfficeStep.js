@@ -30,9 +30,12 @@ async function runP2V(slug) {
 
 async function updateRaceTargetDetails(slug = undefined) {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
-      slug,
-    })
+    const resp = await clientFetch(
+      apiRoutes.campaign.raceTargetDetails.update,
+      {
+        slug,
+      },
+    )
 
     if (resp.data && resp.data.error) {
       console.error('API error: ', resp.data)
@@ -90,6 +93,15 @@ export default function OfficeStep({
     const orgElection = campaign.details?.electionId
     const orgRace = campaign.details?.raceId
     const { position, election, id } = state.ballotOffice
+
+    console.log('cansubmit', {
+      position,
+      election,
+      id,
+      orgPosition,
+      orgElection,
+      orgRace,
+    })
     if (!position || !election) {
       return false
     }
@@ -100,6 +112,8 @@ export default function OfficeStep({
       id === orgRace
     )
   }
+
+  console.log({ step, canSubmit: canSubmit(), processing })
 
   const calcTerm = (position) => {
     if (!position) return undefined
