@@ -8,7 +8,7 @@ export default function ClaimedHeart(): React.JSX.Element {
   if (!candidate || typeof candidate === 'function') {
     return <></>
   }
-  const claimed = (candidate as { claimed?: boolean }).claimed
+  const claimed = candidate.claimed
 
   return (
     <>

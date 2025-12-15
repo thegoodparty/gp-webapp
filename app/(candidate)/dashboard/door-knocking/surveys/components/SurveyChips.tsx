@@ -1,11 +1,10 @@
 import SurveyStatusChip from './SurveyStatusChip'
 import SurveySignatureChip from './SurveySignatureChip'
 import SurveyQuestionsChip from './SurveyQuestionsChip'
+import type { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
 interface SurveyChipsProps {
-  survey: {
-    [key: string]: string | number | boolean | object | null
-  }
+  survey: EcanvasserSurvey
 }
 
 export default function SurveyChips(

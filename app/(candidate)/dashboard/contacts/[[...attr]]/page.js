@@ -18,9 +18,7 @@ const fetchFilteredContacts = async ({
     resultsPerPage,
     segment,
   }
-  const response = await serverFetch(apiRoutes.contacts.list, payload, {
-    revalidate: 3600,
-  })
+  const response = await serverFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
     return response.data
   } else {

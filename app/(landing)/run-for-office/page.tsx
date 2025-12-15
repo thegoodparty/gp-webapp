@@ -15,12 +15,20 @@ const meta = pageMetaData({
 
 export const metadata = meta
 
+interface Testimonial {
+  name: string
+  office: string
+  image: {
+    url: string
+    alt: string
+  }
+  testimonial: string
+}
+
 export default async function Page(): Promise<React.JSX.Element> {
-  const testimonials = (await fetchContentByType(
+  const testimonials = await fetchContentByType<Testimonial[]>(
     'candidateTestimonials',
-  )) as {
-    [key: string]: string | number | boolean | object | null
-  }[]
+  )
 
   return <RunForOfficePage testimonials={testimonials} />
 }
