@@ -103,15 +103,6 @@ test("should [expected behavior] when [condition]", async ({ page }) => {
 });
 ```
 
-### Error Handling
-
-```typescript
-test.afterEach(async ({ page }, testInfo) => {
-  // Automatic screenshot on failure
-  await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-});
-```
-
 ## 🔧 Configuration
 
 ### Environment Configuration
@@ -335,11 +326,6 @@ test.describe("Blog Page", () => {
     await NavigationHelper.dismissOverlays(page);
   });
 
-  test.afterEach(async ({ page }, testInfo) => {
-    // Automatically capture screenshot on test failure
-    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-  });
-
   test("should display page elements", async ({ page }) => {
     // Assert - verify page content using user-facing locators
     await expect(page.getByRole("heading", { name: "Blog" })).toBeVisible();
@@ -364,7 +350,6 @@ test.describe("Blog Page", () => {
 - No `storageState` configuration needed (tests run unauthenticated by default in `tests/core/`)
 - Use `NavigationHelper.navigateToPage()` for initial navigation
 - Use `NavigationHelper.dismissOverlays()` to clear cookie banners/modals
-- Use `CleanupHelper.takeScreenshotOnFailure()` in `afterEach` for debugging
 - Use `WaitHelper.waitForPageReady()` when waiting for dynamic content
 
 ### For Authenticated Pages (Dashboard/App Features)
@@ -394,8 +379,7 @@ test.describe("Content Builder", () => {
   });
 
   test.afterEach(async ({ page }, testInfo) => {
-    // Screenshot on failure and clear browser data
-    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+    // Clear browser data on failure
     await CleanupHelper.clearBrowserData(page);
   });
 
@@ -447,10 +431,6 @@ import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Registration Flow", () => {
-  test.afterEach(async ({ page }, testInfo) => {
-    await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-  });
-
   test("should create new account", async ({ page }) => {
     // Create a test account (automatically tracked for cleanup)
     const testUser = await AccountHelper.createTestAccount(page);
@@ -499,9 +479,6 @@ await WaitHelper.waitForLoadingToComplete(page);
 ```typescript
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 
-// Take screenshot on test failure (use in afterEach)
-await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-
 // Clear browser data between tests (for authenticated tests)
 await CleanupHelper.clearBrowserData(page);
 ```
@@ -545,4 +522,3 @@ await AuthHelper.loginAsAdmin(page);
    - Authenticated pages → `tests/app/`
    - Registration flows → `tests/onboarding/` or `tests/core/auth/`
 6. **Import helpers from `src/helpers/`** - Use established patterns for consistency
-7. **Always include cleanup** - Use `afterEach` with `CleanupHelper.takeScreenshotOnFailure()`

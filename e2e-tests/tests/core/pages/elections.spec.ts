@@ -1,13 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Elections Pages", () => {
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-	});
-
 	test("should display explore offices page", async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/elections");
 		await NavigationHelper.dismissOverlays(page);

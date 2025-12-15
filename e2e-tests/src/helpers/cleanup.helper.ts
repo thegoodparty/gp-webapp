@@ -1,20 +1,6 @@
-import type { Page, TestInfo } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export class CleanupHelper {
-	static async takeScreenshotOnFailure(
-		page: Page,
-		testInfo: TestInfo,
-	): Promise<void> {
-		if (testInfo.status === "failed") {
-			const screenshotPath = `screenshots/${testInfo.title.replace(/[^a-z0-9]/gi, "_")}-${Date.now()}.png`;
-			await page.screenshot({
-				path: screenshotPath,
-				fullPage: true,
-			});
-			console.log(`Screenshot saved: ${screenshotPath}`);
-		}
-	}
-
 	static async cleanupTestData(page?: Page): Promise<void> {
 		const { TestDataManager } = await import("../utils/test-data-manager");
 		await TestDataManager.cleanup(page);

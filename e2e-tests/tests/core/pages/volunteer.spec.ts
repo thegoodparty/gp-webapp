@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
@@ -8,10 +7,6 @@ test.describe("Volunteer Page", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/volunteer");
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
 	});
 
 	test("should display volunteer page elements", async ({ page }) => {
