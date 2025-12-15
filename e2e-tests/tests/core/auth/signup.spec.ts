@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { AccountHelper } from "../../../src/helpers/account.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
@@ -8,10 +7,6 @@ import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Sign Up Functionality", () => {
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
-	});
-
 	test("should create new account successfully", async ({ page }) => {
 		const testUser = await AccountHelper.createTestAccount(page);
 		await expect(page).toHaveURL(/\/dashboard/);

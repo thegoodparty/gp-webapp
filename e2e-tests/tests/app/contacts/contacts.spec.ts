@@ -4,7 +4,6 @@ import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 import type { TestUser } from "../../../src/utils/test-data-manager";
-import { TestDataManager } from "../../../src/utils/test-data-manager";
 
 test.describe
 	.skip("Contacts Page", () => {
@@ -19,7 +18,6 @@ test.describe
 		});
 
 		test.afterEach(async ({ page }, testInfo) => {
-			await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
 			await CleanupHelper.clearBrowserData(page);
 			await CleanupHelper.cleanupTestData(page);
 		});

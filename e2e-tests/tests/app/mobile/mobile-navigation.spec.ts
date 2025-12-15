@@ -96,8 +96,7 @@ test.describe("Mobile Navigation", () => {
 		await NavigationHelper.dismissOverlays(page);
 	});
 
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+	test.afterEach(async ({ page }) => {
 		await CleanupHelper.clearBrowserData(page);
 	});
 

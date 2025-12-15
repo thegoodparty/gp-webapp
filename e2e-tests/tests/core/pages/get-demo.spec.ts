@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
@@ -7,10 +6,6 @@ test.describe("Get Demo Page", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/get-a-demo");
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
 	});
 
 	test("should display get demo page elements", async ({ page }) => {

@@ -12,8 +12,7 @@ test.describe("Upgrade Pro Candidate Test Account @experimental", () => {
 		await NavigationHelper.dismissOverlays(page);
 	});
 
-	test.afterEach(async ({ page }, testInfo) => {
-		await CleanupHelper.takeScreenshotOnFailure(page, testInfo);
+	test.afterEach(async ({ page }) => {
 		await CleanupHelper.clearBrowserData(page);
 		await CleanupHelper.cleanupTestData(page);
 	});
