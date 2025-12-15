@@ -5,7 +5,7 @@ import { MdInfoOutline } from 'react-icons/md'
 import React from 'react'
 
 interface InputHelpIconProps {
-  message: string
+  message: React.ReactNode
   showOnFocus?: boolean
   onOpen?: () => void
 }

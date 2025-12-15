@@ -4,7 +4,7 @@ import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon'
 import React from 'react'
 
 interface AsyncValidationIconProps {
-  message: string
+  message: React.ReactNode
   loading?: boolean
   validated?: boolean | null
   onTooltipOpen?: () => void
