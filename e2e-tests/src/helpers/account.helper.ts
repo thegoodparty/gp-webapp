@@ -1,18 +1,9 @@
 import { expect, type Page } from "@playwright/test";
-import type { TestUser } from "../utils/test-data-manager";
 import { TestDataManager } from "../utils/test-data-manager";
 import { TestDataHelper } from "./data.helper";
 import { WaitHelper } from "./wait.helper";
 
 export class AccountHelper {
-	/**
-	 * Create a test account that will be automatically cleaned up
-	 */
-	static async createTestAccount(page: Page): Promise<TestUser> {
-		const userData = TestDataHelper.generateTestUser();
-		return await TestDataManager.createAndTrackTestAccount(page, userData);
-	}
-
 	static async upgradeToPro(page: Page): Promise<void> {
 		const { cardNumber, expirationDate, zipCode, cvc } =
 			TestDataManager.getTestCardInfo();
