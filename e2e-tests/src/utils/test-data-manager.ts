@@ -20,7 +20,6 @@ export interface TestCardInfo {
 
 export class TestDataManager {
 	private static createdUsers: TestUser[] = [];
-	private static createdCampaigns: any[] = [];
 	private static readonly testCardInfo: TestCardInfo = {
 		cardNumber: "4242424242424242",
 		expirationDate: "12/28",
@@ -33,20 +32,6 @@ export class TestDataManager {
 	 */
 	static getTestCardInfo(): TestCardInfo {
 		return { ...TestDataManager.testCardInfo };
-	}
-
-	/**
-	 * Create a test user and track it for cleanup
-	 */
-	static async createTestUser(
-		page: Page,
-		userData: TestUser,
-	): Promise<TestUser> {
-		// Track the user for cleanup
-		TestDataManager.createdUsers.push(userData);
-
-		console.log(`📝 Tracking test user for cleanup: ${userData.email}`);
-		return userData;
 	}
 
 	/**
@@ -226,7 +211,7 @@ export class TestDataManager {
 				await page.goto("/dashboard");
 				await page.waitForLoadState("domcontentloaded");
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.warn("Onboarding completion failed:", error.message);
 			// Fallback to direct navigation
 			await page.goto("/dashboard");
@@ -272,7 +257,7 @@ export class TestDataManager {
 			});
 
 			console.log("✅ Test account deleted successfully");
-		} catch (error) {
+		} catch (error: any) {
 			console.warn("⚠️ Failed to delete test account:", error.message);
 			console.warn("Current URL:", page.url());
 			// Don't throw - cleanup should be best effort
@@ -343,7 +328,7 @@ export class TestDataManager {
 
 					// Now try to delete the account
 					await TestDataManager.deleteAccount(page);
-				} catch (error) {
+				} catch (error: any) {
 					console.warn(
 						`⚠️ Failed to cleanup user ${user.email}:`,
 						error.message,
@@ -354,7 +339,6 @@ export class TestDataManager {
 
 		// Clear tracking arrays
 		TestDataManager.createdUsers = [];
-		TestDataManager.createdCampaigns = [];
 
 		console.log("✅ Test data cleanup completed");
 	}
@@ -441,7 +425,7 @@ export class TestDataManager {
 				await NavigationHelper.dismissOverlays(page);
 
 				await joinButton.click();
-			} catch (error) {
+			} catch {
 				console.warn("⚠️ Form validation wait timed out");
 
 				// Check if button is still disabled and why
@@ -503,7 +487,7 @@ export class TestDataManager {
 						`Registration API call failed: ${registrationResponse.status()}`,
 					);
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.error(
 					"❌ Registration API call timeout or failed:",
 					error.message,
@@ -543,7 +527,7 @@ export class TestDataManager {
 					timeout: 15000, // Reduced timeout since we already confirmed API success
 					waitUntil: "domcontentloaded",
 				});
-			} catch (error) {
+			} catch {
 				console.warn(
 					"⚠️ URL change timeout, but registration API succeeded. Checking current state...",
 				);
@@ -578,7 +562,7 @@ export class TestDataManager {
 			await dashboardContent
 				.first()
 				.waitFor({ state: "visible", timeout: 10000 });
-		} catch (error) {
+		} catch (error: any) {
 			console.error(
 				`❌ Account creation failed for ${userData.email}:`,
 				error.message,
@@ -612,7 +596,7 @@ export class TestDataManager {
 							.textContent();
 						throw new Error(`Account creation failed with error: ${errorText}`);
 					}
-				} catch (e) {
+				} catch {
 					// Ignore errors when checking for error messages
 				}
 			}

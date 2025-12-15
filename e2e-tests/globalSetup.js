@@ -1,3 +1,5 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { getCurrentEnvironment } from "./src/config/environments";
 
 export default async function globalSetup() {
@@ -14,10 +16,6 @@ export default async function globalSetup() {
 			"⚠️  Admin credentials not found - admin tests will be skipped",
 		);
 	}
-
-	// Create test results directory
-	const fs = await import("fs");
-	const path = await import("path");
 
 	const resultsDir = path.resolve(__dirname, "test-results");
 	if (!fs.existsSync(resultsDir)) {
@@ -89,7 +87,7 @@ async function createGlobalTestUser() {
 				},
 				{ timeout: 5000 },
 			);
-		} catch (error) {
+		} catch {
 			console.warn("⚠️ Form validation wait timed out, proceeding anyway");
 		}
 
@@ -172,13 +170,13 @@ async function completeOnboardingFlow(page) {
 						// Try different option values
 						try {
 							await levelSelect.selectOption("Local/Township/City");
-						} catch (error) {
+						} catch {
 							console.warn(
 								"⚠️ Failed to select 'Local/Township/City', trying alternatives...",
 							);
 							try {
 								await levelSelect.selectOption({ index: 1 }); // Select first non-default option
-							} catch (error2) {
+							} catch {
 								console.warn(
 									"⚠️ Failed to select by index, trying click approach...",
 								);
@@ -208,7 +206,7 @@ async function completeOnboardingFlow(page) {
 								},
 								{ timeout: 10000 },
 							);
-						} catch (error) {
+						} catch {
 							console.warn("⚠️ Office search timeout, trying to proceed anyway");
 						}
 
@@ -286,7 +284,7 @@ async function completeOnboardingFlow(page) {
 							},
 							{ timeout: 10000 },
 						);
-					} catch (error) {
+					} catch {
 						console.warn("⚠️ Next button wait timeout, proceeding anyway");
 					}
 

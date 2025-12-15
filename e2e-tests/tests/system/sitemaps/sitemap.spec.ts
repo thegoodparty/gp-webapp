@@ -47,7 +47,7 @@ test.describe("Sitemap Tests", () => {
 		const data = await parseStringPromise(response.data);
 
 		const stateSitemaps = data.sitemapindex.sitemap.filter(
-			(sitemap) =>
+			(sitemap: any) =>
 				sitemap.loc[0].includes("/sitemaps/state/") ||
 				sitemap.loc[0].includes("/state/"),
 		);
@@ -55,12 +55,12 @@ test.describe("Sitemap Tests", () => {
 		expect(stateSitemaps.length).toBeGreaterThan(0);
 		console.log(`✅ Found ${stateSitemaps.length} state sitemaps`);
 
-		const sitemapUrls = stateSitemaps.map((s) => s.loc[0]);
+		const sitemapUrls = stateSitemaps.map((s: any) => s.loc[0]);
 		const hasCaliforniaSitemap = sitemapUrls.some(
-			(url) => url.includes("ca") || url.includes("california"),
+			(url: any) => url.includes("ca") || url.includes("california"),
 		);
 		const hasTexasSitemap = sitemapUrls.some(
-			(url) => url.includes("tx") || url.includes("texas"),
+			(url: any) => url.includes("tx") || url.includes("texas"),
 		);
 
 		expect(hasCaliforniaSitemap || hasTexasSitemap).toBe(true);
@@ -81,7 +81,7 @@ test.describe("Sitemap Tests", () => {
 		const data = await parseStringPromise(response.data);
 
 		const candidateSitemaps = data.sitemapindex.sitemap.filter(
-			(sitemap) =>
+			(sitemap: any) =>
 				sitemap.loc[0].includes("/sitemaps/candidates/") ||
 				sitemap.loc[0].includes("/candidates/"),
 		);
@@ -105,7 +105,7 @@ test.describe("Sitemap Tests", () => {
 		const data = await parseStringPromise(response.data);
 
 		for (const sitemap of data.sitemapindex.sitemap) {
-			if (sitemap.lastmod && sitemap.lastmod[0]) {
+			if (sitemap.lastmod?.[0]) {
 				const lastmod = new Date(sitemap.lastmod[0]);
 				expect(lastmod).toBeInstanceOf(Date);
 				expect(lastmod.getTime()).not.toBeNaN();
@@ -135,7 +135,7 @@ test.describe("Sitemap Tests", () => {
 		}
 		const data = await parseStringPromise(response.data);
 
-		const sitemapUrls = data.sitemapindex.sitemap.map((s) => s.loc[0]);
+		const sitemapUrls = data.sitemapindex.sitemap.map((s: any) => s.loc[0]);
 		const sampleUrls = sitemapUrls.slice(0, Math.min(5, sitemapUrls.length));
 
 		for (const url of sampleUrls) {
@@ -145,7 +145,7 @@ test.describe("Sitemap Tests", () => {
 				expect(sitemapResponse.headers["content-type"]).toContain("xml");
 
 				console.log(`✅ Sitemap accessible: ${url}`);
-			} catch (error) {
+			} catch (error: any) {
 				console.warn(`⚠️ Sitemap not accessible: ${url} - ${error.message}`);
 			}
 		}

@@ -16,12 +16,12 @@ export class CleanupHelper {
 				try {
 					localStorage.clear();
 					sessionStorage.clear();
-				} catch (error) {
+				} catch {
 					// Ignore security errors - some pages restrict storage access
 					console.log("Storage clear skipped due to security restrictions");
 				}
 			});
-		} catch (error) {
+		} catch (error: any) {
 			// Don't fail tests due to cleanup issues
 			console.warn("Browser data cleanup failed:", error.message);
 		}

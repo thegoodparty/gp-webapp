@@ -57,7 +57,7 @@ test.describe("Sign Up Functionality", () => {
 			return (
 				resp.url().includes("/register") &&
 				resp.request().method() === "POST" &&
-				resp.headers()["content-type"]?.includes("application/json")
+				!!resp.headers()["content-type"]?.includes("application/json")
 			);
 		});
 
