@@ -15,12 +15,14 @@ export const CANDIDATE_TIERS: CandidateTiers = {
 
 // Reverse mapping from CampaignTier enum to display label
 interface CandidateTiersReversed {
+  'null': 'Review'
   WIN: 'Likely to Win'
   TOSSUP: 'Hard to Call'
   LOSE: 'Likely to Lose'
 }
 
 export const CANDIDATE_TIERS_REVERSED: CandidateTiersReversed = {
+  'null': 'Review',
   WIN: 'Likely to Win',
   TOSSUP: 'Hard to Call',
   LOSE: 'Likely to Lose',
