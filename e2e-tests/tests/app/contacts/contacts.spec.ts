@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { AccountHelper } from "../../../src/helpers/account.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
@@ -12,11 +11,6 @@ test.describe
 			await NavigationHelper.navigateToPage(page, "/dashboard/contacts");
 			await NavigationHelper.dismissOverlays(page);
 			await WaitHelper.waitForPageReady(page);
-		});
-
-		test.afterEach(async ({ page }) => {
-			await CleanupHelper.clearBrowserData(page);
-			await CleanupHelper.cleanupTestData(page);
 		});
 
 		test("should display contacts page", async ({ page }) => {
