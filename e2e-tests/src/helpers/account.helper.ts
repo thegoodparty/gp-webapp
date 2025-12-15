@@ -1,12 +1,16 @@
 import { expect, type Page } from "@playwright/test";
-import { TestDataManager } from "../utils/test-data-manager";
 import { TestDataHelper } from "./data.helper";
 import { WaitHelper } from "./wait.helper";
 
+const testCardInfo = {
+	cardNumber: "4242424242424242",
+	expirationDate: "12/28",
+	zipCode: "90210",
+	cvc: "123",
+};
 export class AccountHelper {
 	static async upgradeToPro(page: Page): Promise<void> {
-		const { cardNumber, expirationDate, zipCode, cvc } =
-			TestDataManager.getTestCardInfo();
+		const { cardNumber, expirationDate, zipCode, cvc } = testCardInfo;
 		const testCampaignCommittee = "Test Campaign Committee";
 		const testUser = TestDataHelper.generateTestUser();
 
