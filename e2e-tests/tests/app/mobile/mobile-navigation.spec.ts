@@ -54,7 +54,7 @@ test.describe("Mobile Navigation", () => {
 							timeout: 15000,
 						});
 					}
-				} catch (error) {
+				} catch {
 					console.log("Office level select not available, continuing...");
 				}
 			}
@@ -71,7 +71,7 @@ test.describe("Mobile Navigation", () => {
 					await page.waitForURL((url) => url.toString().includes("/3"), {
 						timeout: 15000,
 					});
-				} catch (error) {
+				} catch {
 					console.log("Other party field not available, continuing...");
 				}
 			}
