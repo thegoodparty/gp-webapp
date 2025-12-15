@@ -53,6 +53,10 @@ export const downloadSlackFile = async (fileId: string) => {
 		headers: { Authorization: `Bearer ${token}` },
 	});
 
+	if (!response.ok) {
+		throw new Error(`Failed to download file: ${response.statusText}`);
+	}
+
 	const arrayBuffer = await response.arrayBuffer();
 
 	return Buffer.from(arrayBuffer);
