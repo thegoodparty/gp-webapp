@@ -1,9 +1,8 @@
 {
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "@helpers": ["helpers/navHelpers.ts"]
-        }
-    }
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@helpers": ["helpers/navHelpers.ts"]
+		}
+	}
 }
-  
