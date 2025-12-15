@@ -17,31 +17,6 @@ export class WaitHelper {
 		await page.waitForFunction(() => document.readyState === "complete");
 	}
 
-	static async waitForElementVisible(
-		page: Page,
-		selector: string,
-	): Promise<void> {
-		await page.waitForSelector(selector, { state: "visible" });
-	}
-
-	static async waitForApiResponse(
-		page: Page,
-		urlPattern: string,
-	): Promise<void> {
-		await page.waitForResponse(
-			(response) =>
-				response.url().includes(urlPattern) && response.status() === 200,
-		);
-	}
-
-	static async waitForCondition(
-		page: Page,
-		condition: () => Promise<boolean>,
-		timeout: number = 30000,
-	): Promise<void> {
-		await page.waitForFunction(condition, { timeout });
-	}
-
 	static async waitForLoadingToComplete(page: Page): Promise<void> {
 		// Wait for common loading indicators to disappear
 		await page.waitForFunction(
