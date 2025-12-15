@@ -1,11 +1,27 @@
-import { reverseObject } from './reverseObject.util'
+// Maps display labels to CampaignTier enum values from Prisma
+export interface CandidateTiers {
+  Review: null
+  'Likely to Win': 'WIN'
+  'Hard to Call': 'TOSSUP'
+  'Likely to Lose': 'LOSE'
+}
 
-export const CANDIDATE_TIERS: Record<string, string | null> = {
+export const CANDIDATE_TIERS: CandidateTiers = {
   Review: null,
   'Likely to Win': 'WIN',
   'Hard to Call': 'TOSSUP',
   'Likely to Lose': 'LOSE',
 }
-export const CANDIDATE_TIERS_REVERSED = reverseObject(CANDIDATE_TIERS as Record<string, string>)
 
+// Reverse mapping from CampaignTier enum to display label
+interface CandidateTiersReversed {
+  WIN: 'Likely to Win'
+  TOSSUP: 'Hard to Call'
+  LOSE: 'Likely to Lose'
+}
 
+export const CANDIDATE_TIERS_REVERSED: CandidateTiersReversed = {
+  WIN: 'Likely to Win',
+  TOSSUP: 'Hard to Call',
+  LOSE: 'Likely to Lose',
+}
