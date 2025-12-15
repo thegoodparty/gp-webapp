@@ -51,7 +51,7 @@ export const EinCheckInput = ({
       label="EIN Number"
       value={value}
       onChange={handleOnChange}
-      inputProps={{ maxLength: 10 }}
+      maxLength={10}
       InputProps={{
         endAdornment: (
           <AsyncValidationIcon

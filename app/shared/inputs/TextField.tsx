@@ -16,6 +16,7 @@ const ADORNMENTS = {
 export type TextFieldProps<Variant extends TextFieldVariants> =
   MuiTextFieldProps<Variant> & {
     endAdornments?: (keyof typeof ADORNMENTS | JSX.Element)[]
+    maxLength?: number
   }
 
 export default function TextField<Variant extends TextFieldVariants>({
