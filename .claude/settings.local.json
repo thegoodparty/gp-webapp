@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --no-pager diff --shortstat origin/develop)",
+      "Bash(find app -name \"*.js\" -type f ! -path \"*/node_modules/*\" -exec sh -c ' if ! grep -q \"\"from [''''\\\"\"'''']app/\\|from [''''\\\"\"'''']@shared/\"\" \"\"$1\"\" 2>/dev/null; then lines=$(wc -l < \"\"$1\"\") echo \"\"$lines $1\"\" fi ' _ {} ;)",
+      "Bash(git mv:*)",
+      "Bash(ls:*)",
+      "Bash(npm run types:*)",
+      "Bash(for file in \"app/candidate/[name]/[office]/components/Card.js\" \"app/candidate/[name]/[office]/components/OfficeCard.js\" \"app/(company)/team/components/TeamHero.js\" \"app/(company)/team/components/Funding.js\")",
+      "Bash(do echo \"=== $file ===\" grep -E \"^import.*from [''\"\"]\" \"$file\")",
+      "Bash(done)",
+      "Bash(npm run build-local:*)",
+      "Bash(NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 npx next build:*)",
+      "Bash(echo:*)",
+      "Bash(git status:*)"
+    ]
+  }
+}
