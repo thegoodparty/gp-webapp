@@ -31,8 +31,8 @@ test.describe("Sign Up Functionality", () => {
 
 		const testZip = "94066";
 		const unique = TestDataHelper.generateTimestamp();
-		const testEmail = TestDataHelper.generateTestEmail();
-		const testPhone = TestDataHelper.generateTestPhone();
+		const { email: testEmail, phone: testPhone } =
+			TestDataHelper.generateTestUser();
 		await page
 			.getByRole("textbox", { name: "First Name" })
 			.fill(` firstName-${unique}`);

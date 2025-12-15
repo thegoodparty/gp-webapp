@@ -1,29 +1,18 @@
-import { TestDataManager } from "../utils/test-data-manager";
-
 export class TestDataHelper {
 	/**
 	 * Generate test user data (does NOT create actual user)
 	 * Use this for form validation tests that don't submit
 	 */
 	static generateTestUser() {
-		return TestDataManager.generateTestUserData();
-	}
-
-	/**
-	 * Generate safe test email that won't conflict
-	 */
-	static generateTestEmail(): string {
 		const timestamp = Date.now();
-		const env = process.env.NODE_ENV || "local";
-		return `test-${timestamp}@${env}.example.com`;
-	}
-
-	/**
-	 * Generate test phone number
-	 */
-	static generateTestPhone(): string {
-		const timestamp = Date.now().toString().slice(-6);
-		return `5105${timestamp}`;
+		return {
+			firstName: `Test${timestamp}`,
+			lastName: "User",
+			email: `test-${timestamp}@test.goodparty.org`,
+			phone: `5105${timestamp.toString().slice(-6)}`,
+			password: process.env.TEST_DEFAULT_PASSWORD || "TestPassword123!",
+			zipCode: "28739",
+		};
 	}
 
 	/**
