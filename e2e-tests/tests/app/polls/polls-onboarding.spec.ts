@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 import { parse as parseCSV } from "csv-parse/sync";
 import { addBusinessDays, format, subDays } from "date-fns";
 import { downloadSlackFile, waitForSlackMessage } from "tests/utils/slack";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -25,10 +24,6 @@ test.beforeEach(async ({ page }) => {
 	await page.getByRole("button", { name: "Save" }).click();
 	// wait, to let the api call go through
 	await wait(2000);
-});
-
-test.afterEach(async ({ page }) => {
-	await CleanupHelper.clearBrowserData(page);
 });
 
 test("poll onboarding and expansion", async ({ page }) => {

@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import { AccountHelper } from "src/helpers/account.helper";
-import { CleanupHelper } from "src/helpers/cleanup.helper";
 import { NavigationHelper } from "src/helpers/navigation.helper";
 import { WaitHelper } from "src/helpers/wait.helper";
 
@@ -10,11 +9,6 @@ test.describe("Upgrade Pro Candidate Test Account @experimental", () => {
 	test.beforeEach(async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/dashboard/upgrade-to-pro");
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }) => {
-		await CleanupHelper.clearBrowserData(page);
-		await CleanupHelper.cleanupTestData(page);
 	});
 
 	// Skipped due to CORS restrictions; will re-enable once file uploads are supported in Vercel test environments
