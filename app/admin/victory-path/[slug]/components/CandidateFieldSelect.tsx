@@ -1,8 +1,8 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { CandidateTiers } from './candidate-tiers.constant'
-import { IsVerifiedOptions } from './is-verified-options.constant'
+import { CANDIDATE_TIERS } from './candidate-tiers.constant'
+import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant'
 
-type ValueMapping = CandidateTiers | IsVerifiedOptions
+type ValueMapping = typeof CANDIDATE_TIERS | typeof IS_VERIFIED_OPTIONS
 
 interface CandidateFieldSelectProps {
   value: string
@@ -17,8 +17,8 @@ export const CandidateFieldSelect = ({
 }: CandidateFieldSelectProps): React.JSX.Element => (
   <FormControl size="small">
     <Select displayEmpty value={value} onChange={onChange}>
-      {valueMapping && Object.keys(valueMapping).map((display) => (
-        <MenuItem key={display} value={String(valueMapping[display as keyof ValueMapping])}>
+      {valueMapping && Object.entries(valueMapping).map(([display, val]) => (
+        <MenuItem key={display} value={String(val)}>
           {display}
         </MenuItem>
       ))}

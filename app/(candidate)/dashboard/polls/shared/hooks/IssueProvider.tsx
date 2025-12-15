@@ -9,10 +9,10 @@ interface PollIssue {
   importance?: number
 }
 
-type IssueContextType = [PollIssue, Dispatch<SetStateAction<PollIssue>>]
+type IssueContextType = [PollIssue | null, Dispatch<SetStateAction<PollIssue | null>>]
 
 export const IssueContext = createContext<IssueContextType>([
-  {} as PollIssue,
+  null,
   () => {},
 ])
 
@@ -27,7 +27,7 @@ export const IssueProvider = ({
   children,
   issue: initIssue,
 }: IssueProviderProps): React.JSX.Element => {
-  const [issue, setIssue] = useState(initIssue)
+  const [issue, setIssue] = useState<PollIssue | null>(initIssue)
 
   useEffect(() => {
     setIssue(initIssue)
