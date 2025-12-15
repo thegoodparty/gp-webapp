@@ -25,7 +25,7 @@ cleanup("cleanup authenticated user", async ({ page }) => {
 			await OnboardedUserHelper.deleteOnboardedUser(page);
 
 			console.log("✅ Authentication user cleaned up successfully");
-		} catch (error) {
+		} catch (error: any) {
 			console.warn("⚠️ Failed to cleanup authentication user:", error.message);
 		}
 	} else {
@@ -48,7 +48,7 @@ cleanup("cleanup authenticated user", async ({ page }) => {
 			// Delete the second account
 			await OnboardedUserHelper.deleteOnboardedUser(page);
 			console.log("✅ Second authentication user cleaned up successfully");
-		} catch (error) {
+		} catch (error: any) {
 			console.warn(
 				"⚠️ Failed to cleanup second authentication user:",
 				error.message,

@@ -35,7 +35,7 @@ test.describe("Get Demo Page", () => {
 				if (frame) {
 					console.log("✅ HubSpot iframe content accessible");
 				}
-			} catch (error) {
+			} catch {
 				console.log(
 					"ℹ️ HubSpot iframe content not accessible (expected for external iframe)",
 				);

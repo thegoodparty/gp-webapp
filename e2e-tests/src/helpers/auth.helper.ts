@@ -1,6 +1,5 @@
 import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { getCurrentEnvironment } from "../config/environments";
 
 export interface UserCredentials {
 	email: string;
@@ -12,8 +11,6 @@ export class AuthHelper {
 		page: Page,
 		credentials: UserCredentials,
 	): Promise<void> {
-		const config = getCurrentEnvironment();
-
 		await page.goto("/login");
 		await page.waitForLoadState("domcontentloaded");
 

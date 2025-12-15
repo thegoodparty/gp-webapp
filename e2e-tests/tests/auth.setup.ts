@@ -1,5 +1,5 @@
-import { expect, test as setup } from "@playwright/test";
-import * as path from "path";
+import * as path from "node:path";
+import { expect, type Page, test as setup } from "@playwright/test";
 import { TestDataHelper } from "../src/helpers/data.helper";
 import { NavigationHelper } from "../src/helpers/navigation.helper";
 
@@ -111,14 +111,14 @@ setup("authenticate with onboarded user", async ({ page, browser }) => {
 	console.log("💾 Saved second authenticated browser state to:", authFileUser2);
 });
 
-async function completeOnboardingFlow(page: any): Promise<void> {
+async function completeOnboardingFlow(page: Page): Promise<void> {
 	await completeStep1OfficeSelection(page);
 	await completeStep2PartySelection(page);
 	await completeStep3PledgeAgreement(page);
 	await completeStep4FinishOnboarding(page);
 }
 
-async function completeStep1OfficeSelection(page: any): Promise<void> {
+async function completeStep1OfficeSelection(page: Page): Promise<void> {
 	console.log("📍 Completing Step 1: Office Selection");
 
 	await fillZipCode(page);
@@ -130,12 +130,12 @@ async function completeStep1OfficeSelection(page: any): Promise<void> {
 	console.log("✅ Completed Step 1 - moved to step 2");
 }
 
-async function fillZipCode(page: any): Promise<void> {
+async function fillZipCode(page: Page): Promise<void> {
 	const zipField = page.getByLabel("Zip Code");
 	await zipField.fill("28739");
 }
 
-async function selectOfficeLevel(page: any): Promise<void> {
+async function selectOfficeLevel(page: Page): Promise<void> {
 	let levelSelected = false;
 
 	const levelSelect = page.getByLabel("Office Level");
@@ -143,7 +143,7 @@ async function selectOfficeLevel(page: any): Promise<void> {
 		try {
 			await levelSelect.selectOption("Local/Township/City");
 			levelSelected = true;
-		} catch (error) {
+		} catch {
 			await levelSelect.selectOption({ index: 1 });
 			levelSelected = true;
 		}
@@ -157,7 +157,7 @@ async function selectOfficeLevel(page: any): Promise<void> {
 	}
 }
 
-async function waitForOfficesLoad(page: any): Promise<void> {
+async function waitForOfficesLoad(page: Page): Promise<void> {
 	await page.waitForFunction(
 		() => {
 			const text = document.body.textContent || "";
@@ -167,7 +167,7 @@ async function waitForOfficesLoad(page: any): Promise<void> {
 	);
 }
 
-async function selectOffice(page: any): Promise<void> {
+async function selectOffice(page: Page): Promise<void> {
 	let officeSelected = false;
 
 	const officeRadios = page.locator('input[type="radio"]');
@@ -209,7 +209,7 @@ async function selectOffice(page: any): Promise<void> {
 	);
 }
 
-async function proceedToStep2(page: any): Promise<void> {
+async function proceedToStep2(page: Page): Promise<void> {
 	const nextButton = page.getByRole("button", { name: "Next" }).first();
 	await expect(nextButton).toBeVisible();
 	await expect(nextButton).toBeEnabled();
@@ -220,7 +220,7 @@ async function proceedToStep2(page: any): Promise<void> {
 	});
 }
 
-async function completeStep2PartySelection(page: any): Promise<void> {
+async function completeStep2PartySelection(page: Page): Promise<void> {
 	console.log("🎭 Completing Step 2: Party Selection");
 
 	await selectPartyAffiliation(page);
@@ -229,7 +229,7 @@ async function completeStep2PartySelection(page: any): Promise<void> {
 	console.log("✅ Completed Step 2 - moved to step 3");
 }
 
-async function selectPartyAffiliation(page: any): Promise<void> {
+async function selectPartyAffiliation(page: Page): Promise<void> {
 	let partySelected = false;
 
 	const otherLabel = page.getByLabel("Other");
@@ -253,7 +253,7 @@ async function selectPartyAffiliation(page: any): Promise<void> {
 						console.log(`✅ Filled party input field ${i}`);
 						break;
 					}
-				} catch (error) {}
+				} catch {}
 			}
 		}
 	}
@@ -287,7 +287,7 @@ async function selectPartyAffiliation(page: any): Promise<void> {
 	);
 }
 
-async function proceedToStep3(page: any): Promise<void> {
+async function proceedToStep3(page: Page): Promise<void> {
 	const nextButton = page.getByRole("button", { name: "Next" }).first();
 	await expect(nextButton).toBeVisible();
 
@@ -295,7 +295,7 @@ async function proceedToStep3(page: any): Promise<void> {
 	if (!isEnabled) {
 		console.warn("Next button not enabled, checking form state...");
 		const buttonAttrs = await nextButton.evaluate((el) => ({
-			disabled: el.disabled,
+			disabled: (el as HTMLButtonElement).disabled,
 			"data-step": el.getAttribute("data-step"),
 			"data-party": el.getAttribute("data-party"),
 			"data-other-party": el.getAttribute("data-other-party"),
@@ -310,7 +310,7 @@ async function proceedToStep3(page: any): Promise<void> {
 	});
 }
 
-async function completeStep3PledgeAgreement(page: any): Promise<void> {
+async function completeStep3PledgeAgreement(page: Page): Promise<void> {
 	console.log("📜 Completing Step 3: Pledge Agreement");
 
 	await acceptPledge(page);
@@ -319,19 +319,19 @@ async function completeStep3PledgeAgreement(page: any): Promise<void> {
 	console.log("✅ Completed Step 3 - moved to step 4");
 }
 
-async function acceptPledge(page: any): Promise<void> {
+async function acceptPledge(page: Page): Promise<void> {
 	const agreeButton = page.getByRole("button", { name: "I Agree" });
 	await agreeButton.waitFor({ state: "visible" });
 	await agreeButton.click();
 }
 
-async function proceedToStep4(page: any): Promise<void> {
+async function proceedToStep4(page: Page): Promise<void> {
 	await page.waitForURL((url) => url.toString().includes("/4"), {
 		timeout: 15000,
 	});
 }
 
-async function completeStep4FinishOnboarding(page: any): Promise<void> {
+async function completeStep4FinishOnboarding(page: Page): Promise<void> {
 	console.log("🎉 Completing Step 4: Finish Onboarding");
 
 	await navigateToDashboard(page);
@@ -340,7 +340,7 @@ async function completeStep4FinishOnboarding(page: any): Promise<void> {
 	console.log("✅ Reached dashboard - onboarding complete!");
 }
 
-async function navigateToDashboard(page: any): Promise<void> {
+async function navigateToDashboard(page: Page): Promise<void> {
 	const viewDashboardButton = page.getByRole("button", {
 		name: "View Dashboard",
 	});
@@ -348,6 +348,6 @@ async function navigateToDashboard(page: any): Promise<void> {
 	await viewDashboardButton.click();
 }
 
-async function verifyDashboardAccess(page: any): Promise<void> {
+async function verifyDashboardAccess(page: Page): Promise<void> {
 	await page.waitForURL(/\/dashboard/, { timeout: 15000 });
 }
