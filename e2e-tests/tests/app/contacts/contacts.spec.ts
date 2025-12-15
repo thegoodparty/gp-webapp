@@ -3,21 +3,18 @@ import { AccountHelper } from "../../../src/helpers/account.helper";
 import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
-import type { TestUser } from "../../../src/utils/test-data-manager";
 
 test.describe
 	.skip("Contacts Page", () => {
-		let testUser: TestUser;
-
 		test.beforeEach(async ({ page }) => {
-			testUser = await AccountHelper.createTestAccount(page);
+			await AccountHelper.createTestAccount(page);
 
 			await NavigationHelper.navigateToPage(page, "/dashboard/contacts");
 			await NavigationHelper.dismissOverlays(page);
 			await WaitHelper.waitForPageReady(page);
 		});
 
-		test.afterEach(async ({ page }, testInfo) => {
+		test.afterEach(async ({ page }) => {
 			await CleanupHelper.clearBrowserData(page);
 			await CleanupHelper.cleanupTestData(page);
 		});
@@ -40,9 +37,7 @@ test.describe
 					(testId) => {
 						const element = document.querySelector(`[data-testid="${testId}"]`);
 						return (
-							element &&
-							element.textContent &&
-							element.textContent.trim().length > 0
+							element?.textContent && element.textContent.trim().length > 0
 						);
 					},
 					"totalConstituents-value",
@@ -59,9 +54,7 @@ test.describe
 					(testId) => {
 						const element = document.querySelector(`[data-testid="${testId}"]`);
 						return (
-							element &&
-							element.textContent &&
-							element.textContent.trim().length > 0
+							element?.textContent && element.textContent.trim().length > 0
 						);
 					},
 					"politicalMakeup-value",
