@@ -18,6 +18,7 @@
 				"noUnusedVariables": "error"
 			},
 			"style": {
+				"noNonNullAssertion": "off",
 				"useNodejsImportProtocol": "error"
 			},
 			"suspicious": {
