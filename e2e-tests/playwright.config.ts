@@ -33,27 +33,6 @@ export default defineConfig({
 			testMatch: /.*\.cleanup\.ts/,
 		},
 
-		// Main testing project - uses primary authenticated state
-		{
-			name: "chromium",
-			use: {
-				...devices["Desktop Chrome"],
-				storageState: "playwright/.auth/user.json",
-			},
-			dependencies: ["setup"],
-		},
-
-		// Second user project for upgrade tests
-		{
-			name: "chromium-user2",
-			use: {
-				...devices["Desktop Chrome"],
-				storageState: "playwright/.auth/user2.json",
-			},
-			dependencies: ["setup"],
-			testMatch: "**/upgrade-pro/**",
-		},
-
 		// Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
 		{
 			name: "stable",
