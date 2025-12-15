@@ -2,11 +2,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import ArticleSnippet from 'app/blog/shared/ArticleSnippet'
 import Link from 'next/link'
-
-interface Article {
-  id?: string
-  [key: string]: string | number | boolean | null | undefined | object
-}
+import { Article } from './types'
 
 interface GuidesProps {
   articles: Article[]

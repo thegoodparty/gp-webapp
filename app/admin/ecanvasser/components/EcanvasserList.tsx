@@ -2,7 +2,13 @@ import EcanvasserCard from './EcanvasserCard'
 
 interface Ecanvasser {
   id: string | number
-  [key: string]: string | number | boolean | object | null
+  email?: string
+  contacts?: number
+  houses?: number
+  interactions?: number
+  lastSync?: string
+  error?: string
+  campaignId: string | number
 }
 
 interface EcanvasserListProps {

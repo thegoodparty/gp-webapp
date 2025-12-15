@@ -10,7 +10,7 @@ const HopeStatCard = ({ children }: HopeStatCardProps): React.JSX.Element => (
 
 interface HopeStatProps {
   percentage: number
-  blurb: string
+  blurb: React.ReactNode
 }
 
 export const HopeStat = ({ percentage, blurb }: HopeStatProps): React.JSX.Element => (

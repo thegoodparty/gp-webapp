@@ -26,7 +26,7 @@ const PurchaseContent: React.FC<{
   }
 
   return (
-    <div className="p-4 w-[80vw] max-w-xl text-center">
+    <div className="p-4 mx-auto w-[80vw] max-w-xl text-center">
       {error ? (
         <PurchaseError error={error} serverError={undefined} />
       ) : !purchaseIntent ? (

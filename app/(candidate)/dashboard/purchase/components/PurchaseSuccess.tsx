@@ -41,3 +41,4 @@ export default function PurchaseSuccess({ type, returnUrl }: PurchaseSuccessProp
 }
 
 
+

@@ -1,13 +1,9 @@
 import Subtitle2 from '@shared/typography/Subtitle2'
-import Race from './Race'
-
-interface RaceItem {
-  id?: string | number
-  [key: string]: string | number | boolean | null | undefined | object
-}
+import RaceComponent from './Race'
+import { Race } from './types'
 
 interface RacesSectionProps {
-  races: RaceItem[]
+  races: Race[]
 }
 
 export default function RacesSection({ races }: RacesSectionProps): React.JSX.Element {
@@ -30,7 +26,7 @@ export default function RacesSection({ races }: RacesSectionProps): React.JSX.El
           key={race.id}
           className="col-span-12 md:col-span-6 lg:col-span-4"
         >
-          <Race race={race} />
+          <RaceComponent race={race} />
         </div>
       ))}
     </section>
