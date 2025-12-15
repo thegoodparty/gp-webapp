@@ -1,109 +1,109 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests",
-  // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
-  timeout: 60000, // Increased from 30s to 60s for account creation
-  expect: { timeout: 15000 }, // Increased from 10s to 15s
-  
-  // Improved parallelization with better stability
-  fullyParallel: true,
-  workers: process.env.CI ? 4 : 2, // Use 4 workers in CI for faster execution
-  retries: process.env.CI ? 3 : 2, // Increased retries for flaky tests
-  
-  // Clean reporting without TestRail dependency
-  reporter: [
-    ["list"],
-    ["html", { outputFolder: "playwright-report" }],
-    ["json", { outputFile: "test-results/results.json" }],
-  ],
+	testDir: "./tests",
+	// Removed globalSetup/globalTeardown in favor of setup/cleanup projects
+	timeout: 60000, // Increased from 30s to 60s for account creation
+	expect: { timeout: 15000 }, // Increased from 10s to 15s
 
-  // Setup project for authentication + main testing project
-  projects: [
-    // Setup project - runs first to create authenticated state
-    { 
-      name: 'setup', 
-      testMatch: /.*\.setup\.ts/,
-      teardown: 'cleanup'
-    },
-    
-    // Cleanup project - runs after all tests to clean up auth user
-    {
-      name: 'cleanup',
-      testMatch: /.*\.cleanup\.ts/
-    },
+	// Improved parallelization with better stability
+	fullyParallel: true,
+	workers: process.env.CI ? 4 : 2, // Use 4 workers in CI for faster execution
+	retries: process.env.CI ? 3 : 2, // Increased retries for flaky tests
 
-    // Main testing project - uses primary authenticated state
-    {
-      name: "chromium",
-      use: { 
-        ...devices["Desktop Chrome"],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
-    },
-    
-    // Second user project for upgrade tests
-    {
-      name: "chromium-user2",
-      use: { 
-        ...devices["Desktop Chrome"],
-        storageState: 'playwright/.auth/user2.json',
-      },
-      dependencies: ['setup'],
-      testMatch: '**/upgrade-pro/**',
-    },
+	// Clean reporting without TestRail dependency
+	reporter: [
+		["list"],
+		["html", { outputFolder: "playwright-report" }],
+		["json", { outputFile: "test-results/results.json" }],
+	],
 
-    // Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
-    {
-      name: "stable",
-      use: { 
-        ...devices["Desktop Chrome"],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
-      grep: /^(?!.*@experimental).*$/,  // Negative lookahead: exclude @experimental
-    },
+	// Setup project for authentication + main testing project
+	projects: [
+		// Setup project - runs first to create authenticated state
+		{
+			name: "setup",
+			testMatch: /.*\.setup\.ts/,
+			teardown: "cleanup",
+		},
 
-    // Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
-    {
-      name: "experimental",
-      use: { 
-        ...devices["Desktop Chrome"],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
-      grep: /@experimental/,
-    },
-  ],
+		// Cleanup project - runs after all tests to clean up auth user
+		{
+			name: "cleanup",
+			testMatch: /.*\.cleanup\.ts/,
+		},
 
-  use: {
-    baseURL: process.env.BASE_URL || "http://localhost:4000",
-    
-    // Increased timeouts for better reliability
-    actionTimeout: 15000, // Increased from 10s
-    navigationTimeout: 45000, // Increased from 30s
-    
-    // Essential browser settings
-    headless: true,
-    ignoreHTTPSErrors: true,
-    
-    // Browser args optimized for stability
-    launchOptions: {
-      args: [
-        "--no-sandbox", 
-        "--disable-dev-shm-usage", 
-        "--disable-web-security",
-        "--disable-features=VizDisplayCompositor", // Helps with stability
-        "--disable-background-timer-throttling", // Prevents timeouts
-        "--disable-backgrounding-occluded-windows",
-        "--disable-renderer-backgrounding"
-      ],
-    },
-    
-    // Better debugging and error tracking
-    trace: "retain-on-failure",
-    screenshot: "only-on-failure",
-    video: "retain-on-failure",
-  },
+		// Main testing project - uses primary authenticated state
+		{
+			name: "chromium",
+			use: {
+				...devices["Desktop Chrome"],
+				storageState: "playwright/.auth/user.json",
+			},
+			dependencies: ["setup"],
+		},
+
+		// Second user project for upgrade tests
+		{
+			name: "chromium-user2",
+			use: {
+				...devices["Desktop Chrome"],
+				storageState: "playwright/.auth/user2.json",
+			},
+			dependencies: ["setup"],
+			testMatch: "**/upgrade-pro/**",
+		},
+
+		// Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
+		{
+			name: "stable",
+			use: {
+				...devices["Desktop Chrome"],
+				storageState: "playwright/.auth/user.json",
+			},
+			dependencies: ["setup"],
+			grep: /^(?!.*@experimental).*$/, // Negative lookahead: exclude @experimental
+		},
+
+		// Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
+		{
+			name: "experimental",
+			use: {
+				...devices["Desktop Chrome"],
+				storageState: "playwright/.auth/user.json",
+			},
+			dependencies: ["setup"],
+			grep: /@experimental/,
+		},
+	],
+
+	use: {
+		baseURL: process.env.BASE_URL || "http://localhost:4000",
+
+		// Increased timeouts for better reliability
+		actionTimeout: 15000, // Increased from 10s
+		navigationTimeout: 45000, // Increased from 30s
+
+		// Essential browser settings
+		headless: true,
+		ignoreHTTPSErrors: true,
+
+		// Browser args optimized for stability
+		launchOptions: {
+			args: [
+				"--no-sandbox",
+				"--disable-dev-shm-usage",
+				"--disable-web-security",
+				"--disable-features=VizDisplayCompositor", // Helps with stability
+				"--disable-background-timer-throttling", // Prevents timeouts
+				"--disable-backgrounding-occluded-windows",
+				"--disable-renderer-backgrounding",
+			],
+		},
+
+		// Better debugging and error tracking
+		trace: "retain-on-failure",
+		screenshot: "only-on-failure",
+		video: "retain-on-failure",
+	},
 });
