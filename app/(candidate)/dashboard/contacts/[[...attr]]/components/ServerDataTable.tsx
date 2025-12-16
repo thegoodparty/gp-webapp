@@ -141,10 +141,8 @@ export default function ServerDataTable<TData, TValue>({
           <div className="flex items-center justify-center space-x-2">
             <p className=" text-sm !font-normal !mb-0">Rows per page</p>
             <Select
-              value={`${pageSize}`}
-              onValueChange={(value) => {
-                handlePageSizeChange(value)
-              }}
+              value={pageSize.toString()}
+              onValueChange={handlePageSizeChange}
             >
               <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue placeholder={pageSize} />
