@@ -315,7 +315,6 @@ Place tests in `tests/core/pages/` for public-facing pages that don't require au
 ```typescript
 import { test, expect } from "@playwright/test";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Blog Page", () => {
@@ -361,7 +360,6 @@ Place tests in `tests/app/` for features that require authentication. Tests auto
 ```typescript
 import { test, expect } from "@playwright/test";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Content Builder", () => {
@@ -376,11 +374,6 @@ test.describe("Content Builder", () => {
     }
     
     await NavigationHelper.dismissOverlays(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    // Clear browser data on failure
-    await CleanupHelper.clearBrowserData(page);
   });
 
   test("should access feature page", async ({ page }) => {
@@ -413,7 +406,6 @@ test.describe("Content Builder", () => {
 - **No onboarding needed** - user has already completed all 4 steps during setup
 - Navigate directly to `/dashboard` or feature routes
 - **Verify dashboard access** - throw error if redirected to onboarding (indicates setup failure)
-- Use `CleanupHelper.clearBrowserData()` in `afterEach` to reset state between tests
 - Use `WaitHelper.waitForLoadingToComplete()` for loading spinners
 
 ### For Onboarding/Registration (Custom Auth)
@@ -425,7 +417,6 @@ Place tests in `tests/onboarding/` or `tests/core/auth/` for flows that create n
 ```typescript
 import { test, expect } from "@playwright/test";
 import { AccountHelper } from "../../../src/helpers/account.helper";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 
 // Reset storage state to start unauthenticated
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -472,43 +463,6 @@ await WaitHelper.waitForPageReady(page);
 
 // Wait for loading spinners to disappear
 await WaitHelper.waitForLoadingToComplete(page);
-```
-
-**CleanupHelper** - Test cleanup and debugging
-
-```typescript
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
-
-// Clear browser data between tests (for authenticated tests)
-await CleanupHelper.clearBrowserData(page);
-```
-
-**AccountHelper** - User account management
-
-```typescript
-import { AccountHelper } from "../../../src/helpers/account.helper";
-
-// Create test account (auto-cleanup)
-const testUser = await AccountHelper.createTestAccount(page);
-
-// Use global test user (created in globalSetup)
-const globalUser = await AccountHelper.useGlobalTestUser(page);
-```
-
-**AuthHelper** - Authentication operations
-
-```typescript
-import { AuthHelper } from "../../../src/helpers/auth.helper";
-
-// Login as a specific user
-await AuthHelper.loginAsUser(page, {
-  email: "test@example.com",
-  password: "password",
-});
-
-// Login as admin (requires env vars)
-await AuthHelper.loginAsAdmin(page);
-
 ```
 
 ### General Guidelines

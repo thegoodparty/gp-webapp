@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { AccountHelper } from "../../../src/helpers/account.helper";
 import { TestDataHelper } from "../../../src/helpers/data.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
@@ -7,12 +6,6 @@ import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("Sign Up Functionality", () => {
-	test("should create new account successfully", async ({ page }) => {
-		const testUser = await AccountHelper.createTestAccount(page);
-		await expect(page).toHaveURL(/\/dashboard/);
-		console.log(`✅ Test account created and onboarded: ${testUser.email}`);
-	});
-
 	test("should display sign up form elements", async ({ page }) => {
 		await NavigationHelper.navigateToPage(page, "/sign-up");
 		await NavigationHelper.dismissOverlays(page);

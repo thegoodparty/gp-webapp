@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { CleanupHelper } from "../../../src/helpers/cleanup.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
@@ -14,10 +13,6 @@ test.describe("Content Builder", () => {
 		}
 
 		await NavigationHelper.dismissOverlays(page);
-	});
-
-	test.afterEach(async ({ page }) => {
-		await CleanupHelper.clearBrowserData(page);
 	});
 
 	test("should access Content Builder page", async ({ page }) => {
