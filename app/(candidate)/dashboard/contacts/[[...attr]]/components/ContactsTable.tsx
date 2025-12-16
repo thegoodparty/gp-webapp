@@ -73,11 +73,14 @@ const columns: ColumnDef<Contact>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
-      const firstName = row.original.firstName ?? ''
-      const lastName = row.original.lastName ?? ''
-      const middleName = row.original.middleName ?? ''
-      const nameSuffix = row.original.nameSuffix ?? ''
-      const name = `${firstName} ${middleName} ${lastName} ${nameSuffix}`.trim()
+      const name = [
+        row.original.firstName,
+        row.original.middleName,
+        row.original.lastName,
+        row.original.nameSuffix,
+      ]
+        .filter(Boolean)
+        .join(' ')
       return (
         <p className="font-normal text-sm text-info-main">
           {valueFormatter(name)}
