@@ -17,7 +17,7 @@ import {
   PaginationLink,
 } from 'goodparty-styleguide'
 import { clsx } from 'clsx'
-import { DEFAULT_PAGE_SIZE } from './shared/constants'
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type VisibilityState } from '@tanstack/react-table'
 
@@ -150,7 +150,7 @@ export default function ServerDataTable<TData, TValue>({
                 <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {PAGE_SIZES.map((pageSize) => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}
                   </SelectItem>
