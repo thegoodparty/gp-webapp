@@ -2,8 +2,23 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import Categories from './Categories'
 
+interface Article {
+  id: number | string
+  title: string
+}
+
+interface CategoryFields {
+  name: string
+}
+
+interface Category {
+  id: number | string
+  fields: CategoryFields
+  articles?: Article[]
+}
+
 interface FaqsPageProps {
-  content: Record<string, string | number | boolean | object | null>
+  content?: Category[]
 }
 
 const breadcrumbsLinks = [

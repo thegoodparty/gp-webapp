@@ -13,7 +13,15 @@ interface FiltersWithSearchAndStatus {
   status?: string
 }
 
-export const useSearchFilters = () => {
+type FilterItemsFunction = <T extends FilterableItem>(items: T[]) => T[]
+
+type SearchFiltersReturn = [
+  filters: FiltersWithSearchAndStatus,
+  setFilters: (filters: FiltersWithSearchAndStatus) => void,
+  filterItems: FilterItemsFunction
+]
+
+export const useSearchFilters = (): SearchFiltersReturn => {
   const context = useContext(SearchFiltersContext)
   if (!context) {
     throw new Error(
@@ -24,8 +32,8 @@ export const useSearchFilters = () => {
   const [filters, setFilters] = context
   const typedFilters = filters as FiltersWithSearchAndStatus
 
-  const filterItems = useMemo(() => {
-    return (items: FilterableItem[] = []) => {
+  const filterItems: FilterItemsFunction = useMemo(() => {
+    return <T extends FilterableItem>(items: T[] = []): T[] => {
       return (
         items?.filter((item) => {
           const matchesSearch =
@@ -36,10 +44,11 @@ export const useSearchFilters = () => {
               ?.toLowerCase()
               .includes(typedFilters.search.toLowerCase())
 
+          const statusString = typeof item.status === 'string' ? item.status : String(item.status || '')
           const matchesStatus =
             !typedFilters.status ||
             typedFilters.status === 'all' ||
-            item.status === typedFilters.status
+            statusString === typedFilters.status
 
           return matchesSearch && matchesStatus
         }) || []

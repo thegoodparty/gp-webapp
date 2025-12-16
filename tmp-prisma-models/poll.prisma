@@ -15,7 +15,6 @@ model Poll {
   // the cursor-based pagination model supported by the Polls API.
   id                      String          @id @default(uuid(7))
   name                    String
-  status                  PollStatus
   messageContent          String          @map("message_content")
   imageUrl                String?         @map("image_url")
   targetAudienceSize      Int
@@ -24,6 +23,7 @@ model Poll {
   scheduledDate           DateTime        @map("scheduled_date")
   estimatedCompletionDate DateTime
   completedDate           DateTime?       @map("completed_date")
+  isCompleted             Boolean         @default(false) @map("is_completed")
 
   electedOffice   ElectedOffice? @relation(fields: [electedOfficeId], references: [id], onDelete: Cascade)
   electedOfficeId String?        @map("elected_office_id")

@@ -1,5 +1,5 @@
 'use client'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState, createContext } from 'react'
 import Map from './Map'
 import Results from './Results'
 import Filters from './Filters'
@@ -10,6 +10,8 @@ import ShareMap from './ShareMap'
 import { useRouter } from 'next/navigation'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { CircularProgress } from '@mui/material'
+
+export const MapContext = createContext({})
 
 export default memo(function MapSection({
   isLoaded,
