@@ -6,13 +6,8 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import { Fragment } from 'react'
 
-interface AiContentItem {
-  name: string
-  updatedAt: string
-}
-
 interface Campaign {
-  aiContent?: Partial<Record<string, AiContentItem>>
+  aiContent?: PrismaJson.CampaignAiContent
 }
 
 interface AiContentTotalsProps {
