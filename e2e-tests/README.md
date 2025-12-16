@@ -465,34 +465,6 @@ await WaitHelper.waitForPageReady(page);
 await WaitHelper.waitForLoadingToComplete(page);
 ```
 
-**AccountHelper** - User account management
-
-```typescript
-import { AccountHelper } from "../../../src/helpers/account.helper";
-
-// Create test account (auto-cleanup)
-const testUser = await AccountHelper.createTestAccount(page);
-
-// Use global test user (created in globalSetup)
-const globalUser = await AccountHelper.useGlobalTestUser(page);
-```
-
-**AuthHelper** - Authentication operations
-
-```typescript
-import { AuthHelper } from "../../../src/helpers/auth.helper";
-
-// Login as a specific user
-await AuthHelper.loginAsUser(page, {
-  email: "test@example.com",
-  password: "password",
-});
-
-// Login as admin (requires env vars)
-await AuthHelper.loginAsAdmin(page);
-
-```
-
 ### General Guidelines
 
 1. **Use user-facing locators** - `getByRole`, `getByLabel`, `getByText`, `getByPlaceholder`

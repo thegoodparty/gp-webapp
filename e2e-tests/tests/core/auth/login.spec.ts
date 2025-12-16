@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { AuthHelper } from "../../../src/helpers/auth.helper";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
 // Reset storage state for auth tests to avoid being pre-authenticated
@@ -36,16 +35,5 @@ test.describe("Login Functionality", () => {
 				"Invalid login. Please check your credentials and try again.",
 			),
 		).toBeVisible();
-	});
-
-	test.skip("should login with valid admin credentials", async ({ page }) => {
-		// Skip if admin credentials not available
-		if (!process.env.TEST_USER_ADMIN || !process.env.TEST_USER_ADMIN_PASSWORD) {
-			test.skip(true, "Admin credentials not available");
-		}
-
-		await AuthHelper.loginAsAdmin(page);
-		await expect(page).toHaveURL(/\/dashboard$/);
-		await expect(page.getByText("Dashboard")).toBeVisible();
 	});
 });
