@@ -63,7 +63,7 @@ export default function DashboardLayout({
           className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
         >
           {campaign && showAlert && <AlertSection campaign={campaign} />}
-          <ProUpgradePrompt campaign={campaign} user={user} />
+          <ProUpgradePrompt campaign={campaign} user={user} pathname={currentPath} />
           {children}
         </main>
       </div>
