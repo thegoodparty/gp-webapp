@@ -150,9 +150,9 @@ export default function ServerDataTable<TData, TValue>({
                 <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {PAGE_SIZES.map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
+                {PAGE_SIZES.map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
                   </SelectItem>
                 ))}
               </SelectContent>
