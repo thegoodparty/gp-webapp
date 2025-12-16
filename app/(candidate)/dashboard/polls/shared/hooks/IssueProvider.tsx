@@ -8,7 +8,7 @@ interface PollIssue {
   title: string
   summary: string
   details: string
-  representativeComments: Array<{ quote: string }>
+  representativeComments: Array<{ comment: string }>
   mentionCount: number
   createdAt: string
   updatedAt: string

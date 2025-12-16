@@ -140,13 +140,15 @@ export default function ExpandPollPage({
 
   if (state.mode === 'audience-selection') {
     return (
-      <AudienceSelectionForm
-        poll={poll!}
-        onNext={(count) =>
-          setState({ ...state, mode: 'date-selection', audience: count })
-        }
-        onBack={handleBack}
-      />
+      poll && (
+        <AudienceSelectionForm
+          poll={poll}
+          onNext={(count) =>
+            setState({ ...state, mode: 'date-selection', audience: count })
+          }
+          onBack={handleBack}
+        />
+      )
     )
   }
 

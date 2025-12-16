@@ -27,7 +27,7 @@ export type PollIssue = {
   details: string
   mentionCount: number
   representativeComments: Array<{
-    quote: string
+    comment: string
   }>
   createdAt: string
   updatedAt: string
