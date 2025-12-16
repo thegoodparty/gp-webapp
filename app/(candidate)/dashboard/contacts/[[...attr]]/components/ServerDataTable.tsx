@@ -88,13 +88,14 @@ export default function ServerDataTable<TData, TValue>({
       <DataTable
         columns={columns}
         data={data || []}
-        pagination={false}
+        pagination={true}
         onRowClick={onRowClick}
+        columnVisibilityControls={false}
         onColumnVisibilityChange={onColumnVisibilityChange}
         initialColumnVisibility={initialColumnVisibility}
       />
 
-      <div className="flex items-center justify-between space-x-2 py-4">
+      {/* <div className="flex items-center justify-between space-x-2 py-4">
         <div className="hidden md:block flex-1 text-sm text-muted-foreground">
           Showing {data?.length || 0} of {totalResults} rows
         </div>
@@ -160,7 +161,7 @@ export default function ServerDataTable<TData, TValue>({
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

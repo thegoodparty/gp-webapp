@@ -53,7 +53,14 @@ const blurredCell = ({
   column: { id: string }
 }) => {
   const value = row.getValue(column.id)
-  return <MaybeBlurredContent>{value}</MaybeBlurredContent>
+  return <MaybeBlurredContent>{valueFormatter(value)}</MaybeBlurredContent>
+}
+
+const valueFormatter = (value: any) => {
+  if (value == null || value == undefined || value == 'Unknown') {
+    return '--'
+  }
+  return value
 }
 
 const columns: ColumnDef<Contact>[] = [
@@ -62,12 +69,47 @@ const columns: ColumnDef<Contact>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="First Name" />
     ),
+    cell: ({ row }) => valueFormatter(row.getValue('firstName')),
   },
   {
     accessorKey: 'lastName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Last Name" />
     ),
+    cell: ({ row }) => valueFormatter(row.getValue('lastName')),
+  },
+
+  {
+    accessorKey: 'gender',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
+    cell: ({ row }) => {
+      const gender = row.getValue('gender') as string
+      if (gender != 'Male' && gender != 'Female') {
+        return '--'
+      }
+      return gender.charAt(0).toUpperCase()
+    },
+  },
+  {
+    accessorKey: 'age',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Age" />
+    ),
+    cell: ({ row }) => valueFormatter(row.getValue('age')),
+  },
+  {
+    accessorKey: 'address',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Address" />
+    ),
+    cell: ({ row }) => {
+      let value = valueFormatter(row.getValue('address'))
+      // cut off address after the first comma
+      value = value.split(',')[0]
+      return <MaybeBlurredContent>{value}</MaybeBlurredContent>
+    },
   },
   {
     accessorKey: 'cellPhone',
@@ -82,91 +124,6 @@ const columns: ColumnDef<Contact>[] = [
       <DataTableColumnHeader column={column} title="Landline" />
     ),
     cell: blurredCell,
-  },
-  {
-    accessorKey: 'age',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Age" />
-    ),
-  },
-  {
-    accessorKey: 'gender',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
-    ),
-  },
-  {
-    accessorKey: 'address',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Address" />
-    ),
-    cell: blurredCell,
-  },
-  {
-    accessorKey: 'politicalParty',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Political Party" />
-    ),
-  },
-  {
-    accessorKey: 'ethnicityGroup',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ethnicity" />
-    ),
-  },
-  {
-    accessorKey: 'language',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Language" />
-    ),
-  },
-  {
-    accessorKey: 'levelOfEducation',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Education Level" />
-    ),
-  },
-  {
-    accessorKey: 'maritalStatus',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Marital Status" />
-    ),
-  },
-  {
-    accessorKey: 'homeowner',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Homeowner" />
-    ),
-  },
-  {
-    accessorKey: 'businessOwner',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Business Owner" />
-    ),
-  },
-  {
-    accessorKey: 'hasChildrenUnder18',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Children Under 18" />
-    ),
-  },
-  {
-    accessorKey: 'veteranStatus',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Veteran Status" />
-    ),
-  },
-  {
-    accessorKey: 'activeVoter',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Active Voter" />
-    ),
-  },
-  {
-    accessorKey: 'voterStatus',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Voter Status" />
-    ),
   },
 ]
 
@@ -209,7 +166,7 @@ export default function ContactsTable() {
   }
 
   return (
-    <div className="overflow-x-auto w-[calc(100vw-70px)] lg:w-[calc(100vw-346px)]">
+    <div className="overflow-x-auto w-[calc(100vw-50px)] lg:w-[calc(100vw-336px)]">
       <ServerDataTable
         columns={columns}
         data={people as Contact[] | null | undefined}
