@@ -1,8 +1,8 @@
 'use client'
-import { getContactStats, type PeopleStats } from './shared/stats.util'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-import { useEffect, useState } from 'react'
+import {
+  ContactStatsRendered,
+  getContactStatsRendered,
+} from './shared/stats.util'
 import {
   LuUserRound,
   LuHouse,
@@ -11,21 +11,13 @@ import {
   LuPercent,
 } from 'react-icons/lu'
 import { Card } from 'goodparty-styleguide'
-
-const fetchPeopleStats = async (): Promise<PeopleStats> => {
-  const response = await clientFetch<PeopleStats>(apiRoutes.contacts.stats)
-
-  if (response.ok) {
-    return response.data || {}
-  }
-  console.warn('Failed to fetch people stats', response)
-  return {}
-}
+import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
+import { useQuery } from '@tanstack/react-query'
 
 interface StatCard {
   key: string
   label: string
-  value: string | null
+  getValue: (stats: ContactStatsRendered) => string | null
   icon: React.JSX.Element
 }
 
@@ -38,17 +30,9 @@ export default function ContactsStatsSection({
   totalVisibleContacts,
   onlyTotalVisibleContacts,
 }: ContactsStatsSectionProps) {
-  const [stats, setStats] = useState<PeopleStats | undefined>(undefined)
+  const query = useQuery(districtStatsQueryOptions())
 
-  useEffect(() => {
-    fetchPeopleStats().then(setStats)
-  }, [])
-
-  const loading = stats === undefined
-
-  const contactStats = getContactStats(stats ?? {}, totalVisibleContacts)
-
-  const renderCard = (card: StatCard, loading: boolean) => {
+  const renderCard = (card: StatCard) => {
     return (
       <Card className="p-0">
         <div className="flex flex-col p-3">
@@ -61,10 +45,14 @@ export default function ContactsStatsSection({
             </label>
             <div className="text-sm flex-shrink-0">{card.icon}</div>
           </div>
-          {loading ? (
+          {query.status !== 'success' ? (
             <div className="h-8 bg-gray-100 rounded animate-pulse mt-1 w-full"></div>
           ) : (
-            <h4 className="font-bold text-2xl mt-1">{card.value}</h4>
+            <h4 className="font-bold text-2xl mt-1">
+              {card.getValue(
+                getContactStatsRendered(query.data, totalVisibleContacts),
+              )}
+            </h4>
           )}
         </div>
       </Card>
@@ -73,65 +61,50 @@ export default function ContactsStatsSection({
 
   return (
     <section className="mt-4 mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 ">
-      {renderCard(
-        {
-          key: 'totalConstituents',
-          label: 'Total Constituents',
-          value: contactStats.totalConstituents,
-          icon: <LuUserRound />,
-        },
-        loading,
-      )}
+      {renderCard({
+        key: 'totalConstituents',
+        label: 'Total Constituents',
+        getValue: (stats) => stats.totalConstituents,
+        icon: <LuUserRound />,
+      })}
       {onlyTotalVisibleContacts && (
         <div className="hidden md:block">
-          {renderCard(
-            {
-              key: 'visibleContactsPercent',
-              label: '% of Constituents',
-              value: contactStats.visibleContactsPercent,
-              icon: <LuPercent />,
-            },
-            loading,
-          )}
+          {renderCard({
+            key: 'visibleContactsPercent',
+            label: '% of Constituents',
+            getValue: (stats) => stats.visibleContactsPercent,
+            icon: <LuPercent />,
+          })}
         </div>
       )}
       {!onlyTotalVisibleContacts && (
         <div className="hidden md:block">
-          {renderCard(
-            {
-              key: 'homeowners',
-              label: 'Homeowners',
-              value: contactStats.homeownersPercent,
-              icon: <LuHouse />,
-            },
-            loading,
-          )}
+          {renderCard({
+            key: 'homeowners',
+            label: 'Homeowners',
+            getValue: (stats) => stats.homeownersPercent,
+            icon: <LuHouse />,
+          })}
         </div>
       )}
       {!onlyTotalVisibleContacts && (
         <div className="hidden md:block">
-          {renderCard(
-            {
-              key: 'hasChildren',
-              label: 'Has Children Under 18',
-              value: contactStats.hasChildrenUnder18Percent,
-              icon: <LuBaby />,
-            },
-            loading,
-          )}
+          {renderCard({
+            key: 'hasChildren',
+            label: 'Has Children Under 18',
+            getValue: (stats) => stats.hasChildrenUnder18Percent,
+            icon: <LuBaby />,
+          })}
         </div>
       )}
       {!onlyTotalVisibleContacts && (
         <div className="hidden md:block">
-          {renderCard(
-            {
-              key: 'medianIncome',
-              label: 'Median Income Range',
-              value: contactStats.medianIncomeRange,
-              icon: <LuDollarSign />,
-            },
-            loading,
-          )}
+          {renderCard({
+            key: 'medianIncome',
+            label: 'Median Income Range',
+            getValue: (stats) => stats.medianIncomeRange,
+            icon: <LuDollarSign />,
+          })}
         </div>
       )}
     </section>

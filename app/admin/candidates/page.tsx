@@ -3,6 +3,7 @@ import AdminCandidatesPage from './components/AdminCandidatesPage'
 import pageMetaData from 'helpers/metadataHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { Campaign } from 'helpers/types'
 
 const meta = pageMetaData({
   title: 'Admin Candidates | GoodParty.org',
@@ -13,11 +14,9 @@ export const metadata = meta
 
 export const maxDuration = 60
 
-const fetchCampaigns = async (): Promise<
-  { [key: string]: string | number | boolean | object | null }[]
-> => {
-  const resp = await serverFetch(apiRoutes.campaign.list)
-  return resp.data as { [key: string]: string | number | boolean | object | null }[]
+const fetchCampaigns = async (): Promise<Campaign[]> => {
+  const resp = await serverFetch<Campaign[]>(apiRoutes.campaign.list)
+  return resp.data
 }
 
 export default async function Page(): Promise<React.JSX.Element> {

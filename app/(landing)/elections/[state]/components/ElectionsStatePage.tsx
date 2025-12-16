@@ -1,23 +1,11 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import Hero from '../../shared/Hero'
 import LinksSection from '../../shared/LinksSection'
 import RacesSection from '../../shared/RacesSection'
 import LearnToRun from '../../shared/LearnToRun'
 import Guides from '../../shared/Guides'
-
-interface Place {
-  slug: string
-}
-
-interface Article {
-  [key: string]: string | number | boolean | null | undefined | object
-}
-
-interface Race {
-  id?: string | number
-  [key: string]: string | number | boolean | null | undefined | object
-}
+import { Place, Article, Race } from '../../shared/types'
 
 interface ElectionsStatePageProps {
   state: string
@@ -42,7 +30,10 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
 
   const { counties = [], districts = [], others = [] } = categorizedChildren
 
-  const stateName = (shortToLongState as Record<string, string>)[state.toUpperCase()]
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : state
 
   const placeLink = (place: Place) => `/elections/${place.slug}`
 

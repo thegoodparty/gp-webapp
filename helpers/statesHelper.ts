@@ -1,4 +1,4 @@
-export const flatStates = [
+export const flatStates: readonly string[] = [
   'AK',
   'AL',
   'AR',
@@ -50,9 +50,15 @@ export const flatStates = [
   'WI',
   'WV',
   'WY',
-] as const
+]
 
-export type StateAbbreviation = typeof flatStates[number]
+export type StateAbbreviation = 'AK' | 'AL' | 'AR' | 'AZ' | 'CA' | 'CO' | 'CT' | 'DE' | 'DC' | 'FL' | 'GA' | 'HI' | 'IA' | 'ID' | 'IL' | 'IN' | 'KS' | 'KY' | 'LA' | 'MA' | 'MD' | 'ME' | 'MI' | 'MN' | 'MO' | 'MS' | 'MT' | 'NC' | 'ND' | 'NE' | 'NH' | 'NJ' | 'NM' | 'NV' | 'NY' | 'OH' | 'OK' | 'OR' | 'PA' | 'RI' | 'SC' | 'SD' | 'TN' | 'TX' | 'UT' | 'VA' | 'VT' | 'WA' | 'WI' | 'WV' | 'WY'
+
+export function isStateAbbreviation(
+  value: string,
+): value is StateAbbreviation {
+  return flatStates.includes(value)
+}
 
 interface State {
   name: string
@@ -319,4 +325,3 @@ export const shortToLongState: Record<StateAbbreviation, string> = {
   WI: 'Wisconsin',
   WY: 'Wyoming',
 }
-

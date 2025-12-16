@@ -146,10 +146,21 @@ export interface CampaignData {
   name?: string
 }
 
+export interface AiContentData {
+  name: string
+  content: string
+  updatedAt: number
+  inputValues?: Partial<Record<string, string>>
+}
+
 export interface CampaignAiContent {
   generationStatus?: Record<string, string>
   campaignPlanAttempts?: Record<string, number>
-  [key: string]: unknown
+  [key: string]:
+    | AiContentData
+    | Partial<Record<string, string>>
+    | Partial<Record<string, number>>
+    | undefined
 }
 
 export interface Campaign {
@@ -174,4 +185,11 @@ export interface Campaign {
   canDownloadFederal: boolean
   completedTaskIds: string[]
   hasFreeTextsOffer: boolean
+  // Public candidate profile properties
+  firstName?: string
+  lastName?: string
+  image?: string
+  claimed?: boolean
+  positionName?: string
+  raceId?: string
 }

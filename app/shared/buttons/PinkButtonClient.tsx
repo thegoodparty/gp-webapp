@@ -8,7 +8,10 @@ interface PinkButtonClientProps {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  className?: string
 }
+
+export type { PinkButtonClientProps }
 
 const PinkButtonClient = ({
   children,
@@ -16,12 +19,14 @@ const PinkButtonClient = ({
   onClick,
   disabled,
   type,
+  className,
 }: PinkButtonClientProps) => (
   <BaseButtonClient
     style={{ backgroundColor: '#ca2ccd', color: '#fff', ...style }}
     onClick={onClick}
     disabled={disabled}
     type={type}
+    className={className}
   >
     {children}
   </BaseButtonClient>

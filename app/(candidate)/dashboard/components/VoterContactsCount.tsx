@@ -10,7 +10,6 @@ import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 interface PathToVictoryData {
   voterContactGoal?: number
   voteGoal?: number
-  [key: string]: string | number | boolean | object | null | undefined
 }
 
 interface VoterContactsCountProps {
