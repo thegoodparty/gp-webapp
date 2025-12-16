@@ -190,7 +190,7 @@ export default function ServerDataTable<TData, TValue>({
                     isActive={currentPage === page}
                     onClick={(event) => {
                       event.preventDefault()
-                      handlePageChange(page - 1)
+                      handlePageChange(page)
                     }}
                     size="small"
                   >
