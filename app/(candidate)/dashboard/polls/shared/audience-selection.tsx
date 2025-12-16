@@ -4,17 +4,14 @@ import { MAX_CONSTITUENTS_PER_RUN, PRICE_PER_POLL_TEXT } from './constants'
 import { formatCurrency, numberFormatter } from 'helpers/numberHelper'
 import clsx from 'clsx'
 import { useQuery } from '@tanstack/react-query'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { districtStatsQueryOptions } from './queries'
 
 export const useTotalConstituentsWithCellPhone = () =>
   useQuery({
-    queryKey: ['total-constituents-with-cell-phone'],
-    queryFn: () =>
-      clientFetch<{ meta: { totalConstituents: number } }>(
-        apiRoutes.contacts.stats,
-        { hasCellPhone: 'true' },
-      ).then((res) => ({ totalConstituents: res.data.meta.totalConstituents })),
+    ...districtStatsQueryOptions({ hasCellPhone: 'true' }),
+    select: (data) => ({
+      totalConstituents: data.meta?.totalConstituents ?? 0,
+    }),
   })
 
 const calculateRecommendedPollSize = (params: {
