@@ -114,7 +114,6 @@ export default function ServerDataTable<TData, TValue>({
   }
 
   const handlePageChange = (page: number): void => {
-    console.log('handlePageChange', page)
     let newPage = page
     if (newPage < 0) newPage = 1
     if (newPage > totalPages) newPage = totalPages
