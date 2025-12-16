@@ -59,7 +59,12 @@ const blurredCell = ({
 }
 
 const valueFormatter = (value: any) => {
-  if (value == null || value == undefined || value == 'Unknown') {
+  if (
+    value == null ||
+    value == undefined ||
+    value == 'Unknown' ||
+    value == ''
+  ) {
     return '--'
   }
   return value

@@ -8,11 +8,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Button,
-  ArrowLeftIcon,
-  ArrowRightIcon,
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+  PaginationLink,
 } from 'goodparty-styleguide'
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
+import { clsx } from 'clsx'
+import { DEFAULT_PAGE_SIZE } from './shared/constants'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type VisibilityState } from '@tanstack/react-table'
 
@@ -25,6 +30,44 @@ interface Pagination {
   pageSize?: number
 }
 
+type PageElement = number | 'ellipsis'
+
+function getPaginationRange(
+  pageIndex: number,
+  pageCount: number,
+): PageElement[] {
+  const totalPages = pageCount
+  const currentPage = pageIndex
+
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_v, i) => i + 1)
+  }
+
+  const siblings = 1
+  const pages: PageElement[] = []
+  const left = Math.max(1, currentPage - siblings)
+  const right = Math.min(totalPages, currentPage + siblings)
+
+  if (left > 1) {
+    pages.push(1)
+    if (left > 2) {
+      pages.push('ellipsis')
+    }
+  }
+
+  for (let page = left; page <= right; page += 1) {
+    pages.push(page)
+  }
+
+  if (right < totalPages) {
+    if (right < totalPages - 1) {
+      pages.push('ellipsis')
+    }
+    pages.push(totalPages)
+  }
+
+  return pages
+}
 interface ServerDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[] | null | undefined
@@ -49,7 +92,6 @@ export default function ServerDataTable<TData, TValue>({
 
   const {
     totalPages = 1,
-    totalResults = 0,
     hasNextPage = false,
     hasPreviousPage = false,
     currentPage = 1,
@@ -68,12 +110,13 @@ export default function ServerDataTable<TData, TValue>({
         params.delete(key)
       }
     })
-    router.push(`?${params.toString()}`)
+    router.replace(`?${params.toString()}`)
   }
 
   const handlePageChange = (page: number): void => {
+    console.log('handlePageChange', page)
     let newPage = page
-    if (newPage < 1) newPage = 1
+    if (newPage < 0) newPage = 1
     if (newPage > totalPages) newPage = totalPages
     updateURL({ page: newPage })
   }
@@ -88,80 +131,93 @@ export default function ServerDataTable<TData, TValue>({
       <DataTable
         columns={columns}
         data={data || []}
-        pagination={true}
+        pagination={false}
         onRowClick={onRowClick}
         columnVisibilityControls={false}
         onColumnVisibilityChange={onColumnVisibilityChange}
         initialColumnVisibility={initialColumnVisibility}
       />
-
-      {/* <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="hidden md:block flex-1 text-sm text-muted-foreground">
-          Showing {data?.length || 0} of {totalResults} rows
-        </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">Rows per page</p>
+      <div className="flex flex-col md:flex-row items-center justify-between space-x-2 py-4">
+        <div className="flex items-center w-full justify-between md:justify-start md:space-x-10 mb-4 md:mb-0">
+          <div className="flex items-center justify-center space-x-2">
+            <p className=" text-sm !font-normal !mb-0">Rows per page</p>
             <Select
-              value={pageSize.toString()}
-              onValueChange={handlePageSizeChange}
+              value={`${pageSize}`}
+              onValueChange={(value) => {
+                handlePageSizeChange(value)
+              }}
             >
               <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={pageSize.toString()} />
+                <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
-                {PAGE_SIZES.map((size) => (
-                  <SelectItem key={size} value={size.toString()}>
-                    {size}
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {pageSize}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {currentPage} of {totalPages}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => handlePageChange(1)}
-            >
-              <span className="sr-only">Go to first page</span>
-              <ArrowLeftIcon className="h-4 w-4" />
-              <ArrowLeftIcon className="h-4 w-4 -ml-2" />
-            </Button>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0 cursor-pointer"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={!hasPreviousPage}
-            >
-              <span className="sr-only">Go to previous page</span>
-              <ArrowLeftIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0 cursor-pointer"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={!hasNextPage}
-            >
-              <span className="sr-only">Go to next page</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => handlePageChange(totalPages)}
-              disabled={!hasNextPage}
-            >
-              <span className="sr-only">Go to last page</span>
-              <ArrowRightIcon className="h-4 w-4" />
-              <ArrowRightIcon className="h-4 w-4 -ml-2" />
-            </Button>
-          </div>
         </div>
-      </div> */}
+        <Pagination className="w-auto !mb-0">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault()
+                  if (hasPreviousPage) {
+                    handlePageChange(currentPage - 1)
+                  }
+                }}
+                className={clsx(
+                  'h-8 px-2',
+                  !hasPreviousPage && 'pointer-events-none opacity-50',
+                )}
+              />
+            </PaginationItem>
+
+            {getPaginationRange(currentPage, totalPages).map((page, index) =>
+              page === 'ellipsis' ? (
+                <PaginationItem key={`ellipsis-${index}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    href="#"
+                    isActive={currentPage === page}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      handlePageChange(page - 1)
+                    }}
+                    size="small"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ),
+            )}
+
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault()
+                  if (hasNextPage) {
+                    handlePageChange(currentPage + 1)
+                  }
+                }}
+                className={clsx(
+                  'h-8 px-2',
+                  !hasNextPage && 'pointer-events-none opacity-50',
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   )
 }
