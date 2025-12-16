@@ -15,7 +15,7 @@ const fetchArticle = async (id: string): Promise<Article> => {
   return await unAuthFetch(`${apiRoutes.content.byId.path}/${id}`)
 }
 
-export default async function Page({ params }: { params: Promise<Params> }): Promise<never> {
+export default async function Page({ params }: { params: Promise<Params> }): Promise<void> {
   const { titleId } = await params
   const id = titleId?.length && titleId.length > 1 ? titleId[1] : false
 
