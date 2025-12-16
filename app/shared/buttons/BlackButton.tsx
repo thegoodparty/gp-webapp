@@ -4,10 +4,13 @@ import BaseButton from './BaseButton'
 interface BlackButtonProps {
   children?: ReactNode
   style?: CSSProperties
+  className?: string
 }
 
-const BlackButton = ({ children, style = {} }: BlackButtonProps) => (
-  <BaseButton style={{ backgroundColor: '#000', color: '#FFF', ...style }}>
+export type { BlackButtonProps }
+
+const BlackButton = ({ children, style = {}, className }: BlackButtonProps) => (
+  <BaseButton style={{ backgroundColor: '#000', color: '#FFF', ...style }} className={className}>
     {children}
   </BaseButton>
 )

@@ -26,7 +26,7 @@ export default async function Page({ searchParams }: PageProps): Promise<React.J
   const { generate } = searchParams
 
   const campaign = await fetchUserCampaign()
-  const candidatePositions = await serverLoadCandidatePosition((campaign as { id: string }).id)
+  const candidatePositions = campaign ? await serverLoadCandidatePosition(campaign.id) : []
   const topIssues = await serverFetchIssues()
 
   const childProps = {
