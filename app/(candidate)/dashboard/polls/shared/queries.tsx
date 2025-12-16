@@ -10,7 +10,7 @@ export type ContactStatsBucket = {
 export type ContactStatsCategory = { buckets: ContactStatsBucket[] }
 
 export type ContactsStats = {
-  meta: { totalConstituents: number }
+  meta?: { totalConstituents: number }
   categories?: {
     age?: ContactStatsCategory
     homeowner?: ContactStatsCategory
@@ -26,7 +26,7 @@ export const districtStatsQueryOptions = (params?: {
   queryOptions({
     queryKey: ['contacts-stats', params],
     queryFn: () =>
-      clientFetch<ContactsStats>(apiRoutes.contacts.stats, params).then(
-        (res) => res.data,
+      clientFetch<ContactsStats>(apiRoutes.contacts.stats, params).then((res) =>
+        res.ok ? res.data : {},
       ),
   })
