@@ -3,17 +3,21 @@ import { LuUsersRound } from 'react-icons/lu'
 import { TextInsight } from '../TextInsight'
 import { NumberInsight } from '../NumberInsight'
 import { DataVisualizationInsight } from '../DataVisualizationInsight'
-import { useContactsStats } from '../../../contexts/ContactsStatsContext'
 import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
 import { useEffect, useMemo } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useQuery } from '@tanstack/react-query'
+import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
 
 export default function InsightsStep() {
-  const { contactsStats, isLoading, error } = useContactsStats()
+  const query = useQuery(districtStatsQueryOptions())
+
+  const isLoading = query.isPending
+  const error = query.error?.message
 
   const chartData = useMemo(
-    () => mapContactsStatsToCharts(contactsStats),
-    [contactsStats],
+    () => mapContactsStatsToCharts(query.data),
+    [query.data],
   )
 
   useEffect(() => {
