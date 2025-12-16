@@ -1,4 +1,4 @@
-import { AUDIENCE_LABELS_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
+import { AUDIENCE_LABELS_MAPPING, AudienceLabelKey } from 'app/(candidate)/dashboard/outreach/constants'
 
 interface AudienceFilters {
   audienceSuperVoters?: boolean
@@ -17,6 +17,23 @@ interface AudienceFilters {
   genderFemale?: boolean
 }
 
+const AUDIENCE_KEYS: AudienceLabelKey[] = [
+  'audienceSuperVoters',
+  'audienceLikelyVoters',
+  'audienceUnreliableVoters',
+  'audienceUnlikelyVoters',
+  'audienceFirstTimeVoters',
+  'partyIndependent',
+  'partyDemocrat',
+  'partyRepublican',
+  'age18_25',
+  'age25_35',
+  'age35_50',
+  'age50Plus',
+  'genderMale',
+  'genderFemale',
+]
+
 export const formatAudienceLabels = ({
   audienceSuperVoters,
   audienceLikelyVoters,
@@ -33,7 +50,7 @@ export const formatAudienceLabels = ({
   genderMale,
   genderFemale,
 }: AudienceFilters = {}): string[] => {
-  const filtersFields: Record<string, boolean | undefined> = {
+  const filtersFields: AudienceFilters = {
     audienceSuperVoters,
     audienceLikelyVoters,
     audienceUnreliableVoters,
@@ -49,23 +66,8 @@ export const formatAudienceLabels = ({
     genderMale,
     genderFemale,
   }
-  return Object.keys({
-    audienceSuperVoters,
-    audienceLikelyVoters,
-    audienceUnreliableVoters,
-    audienceUnlikelyVoters,
-    audienceFirstTimeVoters,
-    partyIndependent,
-    partyDemocrat,
-    partyRepublican,
-    age18_25,
-    age25_35,
-    age35_50,
-    age50Plus,
-    genderMale,
-    genderFemale,
-  })
+  return AUDIENCE_KEYS
     .filter((k) => Boolean(filtersFields[k]))
-    .map((k) => (AUDIENCE_LABELS_MAPPING as Record<string, string>)[k])
+    .map((k) => AUDIENCE_LABELS_MAPPING[k])
     .filter((label): label is string => Boolean(label))
 }
