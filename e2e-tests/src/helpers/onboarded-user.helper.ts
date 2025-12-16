@@ -1,5 +1,14 @@
 import type { Page } from "@playwright/test";
-import type { TestUser } from "../utils/test-data-manager";
+
+export interface TestUser {
+	id?: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phone: string;
+	password: string;
+	zipCode: string;
+}
 
 export class OnboardedUserHelper {
 	/**
