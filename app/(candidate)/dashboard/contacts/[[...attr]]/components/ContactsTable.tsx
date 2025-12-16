@@ -14,6 +14,8 @@ interface Contact {
   id: number
   firstName?: string
   lastName?: string
+  middleName?: string
+  nameSuffix?: string
   cellPhone?: string
   landline?: string
   age?: number
@@ -66,19 +68,23 @@ const valueFormatter = (value: any) => {
 const columns: ColumnDef<Contact>[] = [
   {
     accessorKey: 'firstName',
+    enableSorting: false,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="First Name" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ row }) => valueFormatter(row.getValue('firstName')),
+    cell: ({ row }) => {
+      const firstName = row.original.firstName ?? ''
+      const lastName = row.original.lastName ?? ''
+      const middleName = row.original.middleName ?? ''
+      const nameSuffix = row.original.nameSuffix ?? ''
+      const name = `${firstName} ${middleName} ${lastName} ${nameSuffix}`.trim()
+      return (
+        <p className="font-normal text-sm text-info-main">
+          {valueFormatter(name)}
+        </p>
+      )
+    },
   },
-  {
-    accessorKey: 'lastName',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last Name" />
-    ),
-    cell: ({ row }) => valueFormatter(row.getValue('lastName')),
-  },
-
   {
     accessorKey: 'gender',
     header: ({ column }) => (
