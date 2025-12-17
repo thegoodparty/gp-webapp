@@ -3,12 +3,11 @@ import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
 
 export default function VoterFileSection(): React.JSX.Element {
   const [campaign] = useAdminCampaign()
-  const campaignData = typeof campaign === 'function' ? null : campaign
 
   return (
     <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <div>
-        {campaignData?.details?.raceId === undefined ? (
+        {campaign?.details?.raceId === undefined ? (
           <div className="my-4">
             This campaign is not eligible for an Automatic Path To Victory
             because the user manually selected an office.
@@ -16,7 +15,7 @@ export default function VoterFileSection(): React.JSX.Element {
         ) : null}
 
         <strong>You can rerun path to victory, but this WILL override the district set above in the District Picker</strong>
-        {campaignData?.details?.raceId ? <RerunP2V /> : null}
+        {campaign?.details?.raceId ? <RerunP2V /> : null}
       </div>
     </div>
   )

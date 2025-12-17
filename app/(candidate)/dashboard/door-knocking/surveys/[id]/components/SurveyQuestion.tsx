@@ -6,6 +6,7 @@ interface AnswerType {
 }
 
 interface Question {
+  id: number | string
   name: string
   answer_type: AnswerType
   required: boolean
