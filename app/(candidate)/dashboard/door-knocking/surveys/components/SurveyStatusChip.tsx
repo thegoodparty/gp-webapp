@@ -8,7 +8,7 @@ interface Survey {
 }
 
 interface SurveyStatusChipProps {
-  survey: Survey
+  survey?: Survey
 }
 
 export default function SurveyStatusChip({ survey }: SurveyStatusChipProps): React.JSX.Element {

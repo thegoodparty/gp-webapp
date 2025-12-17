@@ -4,7 +4,7 @@ import SurveyQuestionsChip from './SurveyQuestionsChip'
 import type { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
 interface SurveyChipsProps {
-  survey: EcanvasserSurvey
+  survey?: EcanvasserSurvey
 }
 
 export default function SurveyChips(

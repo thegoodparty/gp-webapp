@@ -2,9 +2,20 @@ import Body2 from '@shared/typography/Body2'
 import Chip from '@shared/utils/Chip'
 import { FaQuestionCircle } from 'react-icons/fa'
 
+interface AnswerType {
+  name: string
+}
+
+interface Question {
+  id: number | string
+  name: string
+  answer_type: AnswerType
+  required: boolean
+}
+
 interface SurveyQuestionsChipProps {
   survey?: {
-    questions?: string[]
+    questions?: Question[]
   }
   className?: string
 }

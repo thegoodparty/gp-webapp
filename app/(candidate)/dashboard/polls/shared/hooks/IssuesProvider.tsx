@@ -3,10 +3,15 @@
 import { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react'
 
 interface PollIssue {
-  id: number
-  name: string
-  position?: string
-  importance?: number
+  id: string
+  pollId: string
+  title: string
+  summary: string
+  details: string
+  representativeComments: Array<{ comment: string }>
+  mentionCount: number
+  createdAt: string
+  updatedAt: string
 }
 
 type IssuesContextType = [PollIssue[], Dispatch<SetStateAction<PollIssue[]>>]

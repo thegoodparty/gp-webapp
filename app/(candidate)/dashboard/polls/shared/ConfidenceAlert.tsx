@@ -17,7 +17,7 @@ export default function ConfidenceAlert() {
   const { ready: flagsReady, on: expandAccessEnabled } = useFlagOn(
     'serve-polls-expansion',
   )
-  if (!flagsReady || !expandAccessEnabled) {
+  if (!flagsReady || !expandAccessEnabled || !poll) {
     return null
   }
 
@@ -25,13 +25,13 @@ export default function ConfidenceAlert() {
 
   if (isPollExpanding(poll)) {
     const alertData =
-      poll.status === PollStatus.SCHEDULED
+      poll?.status === PollStatus.SCHEDULED
         ? {
             variant: 'success' as const,
             icon: <LuCircleCheck className="mt-0.5" />,
             color: 'text-green-500',
             message: `This poll is scheduled to gather more feedback on ${dateUsHelper(
-              poll.scheduledDate,
+              poll?.scheduledDate,
             )} at 11:00 AM`,
           }
         : {
@@ -39,7 +39,7 @@ export default function ConfidenceAlert() {
             icon: <BsExclamationCircle className="mt-0.5" />,
             color: 'text-blue-500',
             message: `Poll expansion is currently in progress. New results are expected on ${dateUsHelper(
-              poll.estimatedCompletionDate,
+              poll?.estimatedCompletionDate,
             )} at 11:00 AM.`,
           }
     return (
@@ -70,7 +70,7 @@ export default function ConfidenceAlert() {
                 </Body2>
               </div>
             </div>
-            <Link href={`/dashboard/polls/${poll.id}/expand`}>
+            <Link href={`/dashboard/polls/${poll?.id}/expand`}>
               <Button variant="destructive">Gather more feedback</Button>
             </Link>
           </div>
