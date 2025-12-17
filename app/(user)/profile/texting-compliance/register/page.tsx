@@ -27,6 +27,11 @@ const Page = async (): Promise<React.JSX.Element> => {
     fetchUserWebsite(),
   ])
 
+  // Redirect if user doesn't have a purchased domain
+  if (!website?.domain?.name) {
+    redirect('/dashboard/website/domain')
+  }
+
   return (
     <TextingComplianceRegisterPage
       {...{
