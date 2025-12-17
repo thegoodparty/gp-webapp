@@ -27,7 +27,7 @@ interface CustomIssue {
   position?: string
 }
 
-import type { Website, WebsiteContent, WebsiteIssue, Domain } from 'helpers/types'
+import type { Website, WebsiteContent, Domain } from 'helpers/types'
 
 interface CombinedIssue {
   title: string
