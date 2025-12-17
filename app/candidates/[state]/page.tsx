@@ -5,6 +5,7 @@ import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import { notFound } from 'next/navigation'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { SearchParams } from 'next/dist/server/request/search-params'
 
 const fetchCount = async (
   state: string,
@@ -33,7 +34,7 @@ export async function generateMetadata() {
 
 interface PageProps {
   params: { state: string }
-  searchParams: Partial<Record<string, string>>
+  searchParams: SearchParams
 }
 
 export default async function Page({ params, searchParams }: PageProps) {

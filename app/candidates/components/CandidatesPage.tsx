@@ -8,13 +8,14 @@ import '@shared/inputs/slick-theme.min.css'
 import CommunitySection from './CommunitySection'
 import { useState } from 'react'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
+import { SearchParams } from 'next/dist/server/request/search-params'
 import Script from 'next/script'
 
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
 interface CandidatesPageProps {
   count: number
-  searchParams?: Partial<Record<string, string>>
+  searchParams?: SearchParams
   longState?: string
   state?: string
 }

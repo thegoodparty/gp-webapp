@@ -3,6 +3,7 @@ import AdminUsersPage from './components/AdminUsersPage'
 import pageMetaData from 'helpers/metadataHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { SearchParams } from 'next/dist/server/request/search-params'
 
 const meta = pageMetaData({
   title: 'Admin Users',
@@ -22,23 +23,31 @@ interface TableFilter {
   value: string
 }
 
-const buildDefaultTableFilters = (searchParams: Partial<Record<string, string>>): TableFilter[] =>
+const buildDefaultTableFilters = (searchParams: SearchParams): TableFilter[] =>
   Object.keys(searchParams).reduce<TableFilter[]>(
-    (accumulator, key) => [
-      ...accumulator,
-      ...(searchParams[key]
-        ? [
-            {
-              id: key,
-              value: searchParams[key]!,
-            },
-          ]
-        : []),
-    ],
+    (accumulator, key) => {
+      const paramValue = searchParams[key]
+      if (!paramValue) return accumulator
+      
+      const stringValue = Array.isArray(paramValue) ? paramValue[0] : paramValue
+      if (!stringValue) return accumulator
+      
+      return [
+        ...accumulator,
+        {
+          id: key,
+          value: stringValue,
+        },
+      ]
+    },
     [],
   )
 
-export default async function Page({ searchParams }: { searchParams: Partial<Record<string, string>> }): Promise<React.JSX.Element> {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}): Promise<React.JSX.Element> {
   await adminAccessOnly()
   const users = await fetchUsers()
 
