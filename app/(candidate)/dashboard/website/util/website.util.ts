@@ -9,12 +9,6 @@ export const WEBSITE_STATUS = {
   published: 'published',
   unpublished: 'unpublished',
 }
-
-interface Domain {
-  name?: string
-  status?: string
-}
-
 interface Issue {
   position?: {
     name?: string
@@ -37,7 +31,7 @@ interface CombinedIssue {
 export function getWebsiteUrl(
   vanityPath: string,
   preview: boolean = false,
-  domain: Domain = {},
+  domain?: Domain | null,
 ): string {
   if (domain?.name && isDomainActive(domain)) {
     return `https://${domain.name}`
