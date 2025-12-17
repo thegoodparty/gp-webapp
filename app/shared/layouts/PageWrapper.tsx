@@ -15,7 +15,6 @@ import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-import { Campaign } from 'helpers/types'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -23,8 +22,7 @@ interface PageWrapperProps {
 
 const PageWrapper = async ({ children }: PageWrapperProps): Promise<React.JSX.Element> => {
   const pathname = await getReqPathname()
-  const fetchedCampaign = await fetchUserCampaign()
-  const campaign = (fetchedCampaign === false ? null : fetchedCampaign) as Campaign | null
+  const campaign = await fetchUserCampaign()
 
   return (
     <UserProvider>

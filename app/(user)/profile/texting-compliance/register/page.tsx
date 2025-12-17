@@ -24,8 +24,8 @@ const Page = async (): Promise<React.JSX.Element> => {
     fetchUserWebsite(),
   ])
 
-  if (!campaign?.isPro) {
-    return redirect('/dashboard/upgrade-to-pro', 'replace')
+  if (!campaign || !campaign.isPro) {
+     redirect('/dashboard/upgrade-to-pro')
   }
 
   return (

@@ -1,31 +1,19 @@
 import { redirect } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-
-export interface Campaign {
-  id: number
-  slug: string
-  firstName?: string
-  lastName?: string
-  office?: string
-  state?: string
-  currentStep?: string
-  details?: {
-    [key: string]: string | number | boolean | null | undefined
-  }
-}
+import type { Campaign } from 'helpers/types'
 
 interface GetCampaignParams {
   slug: string
 }
 
-export async function fetchUserCampaign(): Promise<Campaign | false> {
+export async function fetchUserCampaign(): Promise<Campaign | null> {
   try {
     const resp = await serverFetch<Campaign>(apiRoutes.campaign.get)
     return resp.data
   } catch (e) {
     console.error('error', e)
-    return false
+    return null
   }
 }
 
