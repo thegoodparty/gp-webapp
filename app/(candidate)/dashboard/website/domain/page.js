@@ -1,4 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
@@ -18,12 +19,11 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   await candidateAccess()
-  const [websiteRes, statusRes] = await Promise.all([
-    serverFetch(apiRoutes.website.get),
+  const [website, statusRes] = await Promise.all([
+    fetchUserWebsite(),
     serverFetch(apiRoutes.domain.status),
   ])
 
-  const website = websiteRes.ok ? websiteRes.data : null
   const status = statusRes.ok ? statusRes.data : null
 
   if (!website) {

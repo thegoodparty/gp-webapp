@@ -3,6 +3,7 @@ import TextingComplianceRegisterPage from './components/TextingComplianceRegiste
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import { getServerUser } from 'helpers/userServerHelper'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,13 +16,23 @@ export const metadata = meta
 const Page = async () => {
   await candidateAccess()
   const user = await getServerUser()
-  const campaign = await fetchUserCampaign()
+  
+  // Parallelize campaign and website fetches since they don't depend on each other
+  const [campaign, website] = await Promise.all([
+    fetchUserCampaign(),
+    fetchUserWebsite(),
+  ])
+
+  if (!campaign?.isPro) {
+    return redirect('/dashboard/upgrade-to-pro', 'replace')
+  }
 
   return (
     <TextingComplianceRegisterPage
       {...{
         user,
         campaign,
+        website,
       }}
     />
   )

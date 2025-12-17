@@ -29,10 +29,13 @@ const createTcrCompliance = async (formData) => {
   return response.data
 }
 
-const reconcileInitialFormState = (user, campaign) => {
+const reconcileInitialFormState = (user, campaign, website) => {
   const { email, phone } = user
   const { details: campaignDetails } = campaign
-  const { einNumber: ein, campaignCommittee, website } = campaignDetails || {}
+  const { einNumber: ein, campaignCommittee } = campaignDetails || {}
+  
+  // Use the official purchased domain instead of manual input
+  const officialDomain = website?.domain?.name || ''
 
   return {
     electionFilingLink: '',
@@ -42,14 +45,14 @@ const reconcileInitialFormState = (user, campaign) => {
     phone: phone || '',
     address: { formatted_address: '' },
     placeId: '',
-    website: website || '',
+    website: officialDomain ? `https://${officialDomain}` : '',
     email: email || '',
     matchingContactFields: [],
   }
 }
 
-export default function TextingComplianceRegisterPage({ user, campaign }) {
-  const initialFormState = reconcileInitialFormState(user, campaign)
+export default function TextingComplianceRegisterPage({ user, campaign, website }) {
+  const initialFormState = reconcileInitialFormState(user, campaign, website)
   const [loading, setLoading] = useState(false)
   const [hasSubmissionError, setHasSubmissionError] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
