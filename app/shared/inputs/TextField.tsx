@@ -16,6 +16,7 @@ const ADORNMENTS = {
 export type TextFieldProps<Variant extends TextFieldVariants> =
   MuiTextFieldProps<Variant> & {
     endAdornments?: (keyof typeof ADORNMENTS | JSX.Element)[]
+    maxLength?: number
   }
 
 export default function TextField<Variant extends TextFieldVariants>({
@@ -24,10 +25,10 @@ export default function TextField<Variant extends TextFieldVariants>({
 }: TextFieldProps<Variant>) {
   const mergedEndAdornment = endAdornments?.length ? (
     <InputAdornment position="end">
-      {endAdornments.map(
-        (adornment) =>
-          // @ts-expect-error
-          ADORNMENTS[adornment] ?? adornment,
+      {endAdornments.map((adornment) =>
+        typeof adornment === 'string'
+          ? ADORNMENTS[adornment as keyof typeof ADORNMENTS]
+          : adornment,
       )}
     </InputAdornment>
   ) : undefined
@@ -41,7 +42,10 @@ export default function TextField<Variant extends TextFieldVariants>({
         // Preserve any existing endAdornment from callers (e.g., Autocomplete)
         endAdornment: mergedEndAdornment ?? restProps.InputProps?.endAdornment,
         // Ensure font family styling is applied while preserving caller styles
-        sx: { fontFamily: 'var(--outfit-font)', ...(restProps.InputProps as any)?.sx },
+        sx: {
+          fontFamily: 'var(--outfit-font)',
+          ...(restProps.InputProps as any)?.sx,
+        },
         style: restProps.InputProps?.style,
       }}
     />

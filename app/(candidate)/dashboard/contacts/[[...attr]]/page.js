@@ -18,11 +18,7 @@ const fetchFilteredContacts = async ({
     resultsPerPage,
     segment,
   }
-  const response = await serverFetch(apiRoutes.contacts.list, payload, {
-    next: {
-      revalidate: 3600,
-    },
-  })
+  const response = await serverFetch(apiRoutes.contacts.list, payload)
   if (response.ok) {
     return response.data
   } else {
@@ -56,9 +52,7 @@ const fetchSearchedContacts = async ({
   }
 
   const response = await serverFetch(apiRoutes.contacts.search, payload, {
-    next: {
-      revalidate: 3600,
-    },
+    revalidate: 3600,
   })
   if (response.ok) {
     return response.data
@@ -81,9 +75,7 @@ const fetchPerson = async (personId) => {
     apiRoutes.contacts.get,
     { id: personId },
     {
-      next: {
-        revalidate: 3600,
-      },
+      revalidate: 3600,
     },
   )
   if (response.ok) {

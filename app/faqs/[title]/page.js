@@ -83,7 +83,7 @@ export default async function Page({ params, searchParams }) {
   const articleTitle = content.title
 
   if (slugify(articleTitle, true) !== title.toLowerCase()) {
-    const correctRoute = faqArticleRoute(content)
+    const correctRoute = faqArticleRoute(content.title)
     permanentRedirect(correctRoute)
   }
 

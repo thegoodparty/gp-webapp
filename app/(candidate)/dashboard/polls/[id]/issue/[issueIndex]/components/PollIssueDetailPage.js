@@ -7,15 +7,20 @@ import Crumbs from '../../../../shared/Crumbs'
 import Title from './Title'
 import ConfidenceAlert from 'app/(candidate)/dashboard/polls/shared/ConfidenceAlert'
 import DetailsSection from './DetailsSection'
-import PollsPageGuard from 'app/(candidate)/dashboard/polls/components/PollsPageGuard'
 import { useIssue } from 'app/(candidate)/dashboard/polls/shared/hooks/IssueProvider'
 import { usePoll } from 'app/(candidate)/dashboard/polls/shared/hooks/PollProvider'
+import { useEffect } from 'react'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function PollIssueDetailPage({ pathname }) {
   const [campaign] = useCampaign()
   const [issue] = useIssue()
   const [poll] = usePoll()
   const { title } = issue || {}
+
+  useEffect(() => {
+    trackEvent(EVENTS.polls.issueDetailsViewed)
+  }, [])
 
   const breadcrumbsLinks = [
     { href: `/dashboard/polls`, label: 'Polls' },
@@ -30,14 +35,12 @@ export default function PollIssueDetailPage({ pathname }) {
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
-      <PollsPageGuard>
-        <Paper className="min-h-full">
-          <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
-          <Title />
-          <ConfidenceAlert />
-          <DetailsSection />
-        </Paper>
-      </PollsPageGuard>
+      <Paper className="min-h-full">
+        <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
+        <Title />
+        <ConfidenceAlert />
+        <DetailsSection />
+      </Paper>
     </DashboardLayout>
   )
 }

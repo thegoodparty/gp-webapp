@@ -1,0 +1,45 @@
+enum OutreachType {
+  text
+  doorKnocking
+  phoneBanking
+  socialMedia
+  robocall
+  p2p
+}
+
+enum OutreachStatus {
+  pending
+  approved
+  denied
+  paid
+  in_progress
+  completed
+}
+
+model Outreach {
+  id                Int              @id @default(autoincrement())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  campaign          Campaign         @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId        Int
+  outreachType      OutreachType     @map("outreach_type")
+  projectId         String?          @map("project_id")
+  name              String?
+  status            OutreachStatus?  @default(pending)
+  error             String?
+  audienceRequest   String?          @map("audience_request")
+  script            String?          @db.Text
+  message           String?
+  date              DateTime?
+  imageUrl          String?          @map("image_url")
+  voterFileFilter   VoterFileFilter? @relation(fields: [voterFileFilterId], references: [id])
+  voterFileFilterId Int?             @map("voter_file_filter_id")
+  phoneListId       Int?             @map("phone_list_id")
+  // P2P-specific fields
+  identityId        String?          @map("identity_id")
+  didState          String?          @map("did_state")
+  title             String?
+
+  @@index([campaignId])
+  @@map("outreach")
+}

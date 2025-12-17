@@ -1,9 +1,0 @@
-export const PositionLevel = {
-  CITY: 'CITY',
-  COUNTY: 'COUNTY',
-  FEDERAL: 'FEDERAL',
-  LOCAL: 'LOCAL',
-  REGIONAL: 'REGIONAL',
-  STATE: 'STATE',
-  TOWNSHIP: 'TOWNSHIP',
-}

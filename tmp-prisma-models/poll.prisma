@@ -1,0 +1,39 @@
+enum PollStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  EXPANDING
+}
+
+enum PollConfidence {
+  LOW
+  HIGH
+}
+
+model Poll {
+  // Using UUID7 here gives us time-based ordering of IDs. This is important for
+  // the cursor-based pagination model supported by the Polls API.
+  id                      String          @id @default(uuid(7))
+  name                    String
+  messageContent          String          @map("message_content")
+  imageUrl                String?         @map("image_url")
+  targetAudienceSize      Int
+  responseCount           Int?            @map("response_count")
+  confidence              PollConfidence?
+  scheduledDate           DateTime        @map("scheduled_date")
+  estimatedCompletionDate DateTime
+  completedDate           DateTime?       @map("completed_date")
+  isCompleted             Boolean         @default(false) @map("is_completed")
+
+  electedOffice   ElectedOffice? @relation(fields: [electedOfficeId], references: [id], onDelete: Cascade)
+  electedOfficeId String?        @map("elected_office_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  issues             PollIssue[]
+  individualMessages PollIndividualMessage[]
+
+  @@index([electedOfficeId, id])
+  @@map("poll")
+}

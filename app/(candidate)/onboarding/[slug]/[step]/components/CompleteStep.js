@@ -5,7 +5,7 @@ import H1 from '@shared/typography/H1'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { getUserCookie } from 'helpers/cookieHelper'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -23,9 +23,15 @@ async function launchCampaign() {
 
 export default function CompleteStep() {
   const [loading, setLoading] = useState(false)
-  const user = getUserCookie(true)
+  const [user, setUser] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const trackingAttrs = buildTrackingAttrs('Onboarding Complete Button')
+
+  // This is to fix the React hydration error that was being thrown from a diff
+  // between the server and client
+  useEffect(() => {
+    setUser(getUserCookie(true))
+  }, [])
 
   const handleSave = async () => {
     if (loading) {
@@ -54,7 +60,7 @@ export default function CompleteStep() {
       <div className="max-w-xs m-auto mb-4">
         <PartyAnimation loop={true} />
       </div>
-      <H1>Congrats, {user.firstName}!</H1>
+      <H1>Congrats{user?.firstName ? `, ${user?.firstName}` : ''}!</H1>
       <Body1 className="mt-4 mb-8">
         You&apos;re officially part of the GoodParty.org community. Let&apos;s
         get started!
