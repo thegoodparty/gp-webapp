@@ -27,7 +27,8 @@ export const getSmsScriptSelectOptions = (aiContent?: PrismaJson.CampaignAiConte
   let arr: ScriptOption[] = []
   for (const [key, value] of Object.entries(nonDefaultScripts)) {
     if (value && typeof value === 'object' && 'name' in value) {
-      arr.push({ key, ...(value as { name: string; updatedAt: number }) })
+      const typedValue: { name: string; updatedAt: number } = value
+      arr.push({ key, ...typedValue })
     }
   }
   return arr.sort((a, b) => b.updatedAt - a.updatedAt)

@@ -55,8 +55,12 @@ export default function Race({ race }: RaceProps): React.JSX.Element {
     slug,
   } = race
 
-  const levelKey = positionLevel?.toUpperCase() as keyof typeof positionLevelColors
-  const colors = positionLevelColors[levelKey] || {}
+  const levelUppercase = positionLevel?.toUpperCase() || ''
+  const colors: Partial<PositionLevelColors> = levelUppercase === 'STATE' ? positionLevelColors.STATE :
+                 levelUppercase === 'COUNTY' ? positionLevelColors.COUNTY :
+                 levelUppercase === 'CITY' ? positionLevelColors.CITY :
+                 levelUppercase === 'LOCAL' ? positionLevelColors.LOCAL :
+                 {}
 
   return (
     <Link

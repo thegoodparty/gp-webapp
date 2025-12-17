@@ -40,7 +40,8 @@ interface MapContextValue {
 
 export default function Markers(): React.JSX.Element {
   const context = useContext(MapContext)
-  const { campaigns, onSelectCampaign } = (context || {}) as Partial<MapContextValue>
+  const typedContext: Partial<MapContextValue> = context || {}
+  const { campaigns, onSelectCampaign } = typedContext
 
   if (!campaigns || campaigns.length === 0) {
     return <></>

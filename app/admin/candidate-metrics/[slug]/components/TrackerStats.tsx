@@ -25,19 +25,27 @@ interface TrackerStatsProps {
   campaign: Campaign
 }
 
-const cards = [
+type TrackerCardKey = 'doorKnocking' | 'calls' | 'digital'
+
+interface TrackerCard {
+  key: TrackerCardKey
+  title: string
+  icon: React.JSX.Element
+}
+
+const cards: TrackerCard[] = [
   {
-    key: 'doorKnocking' as const,
+    key: 'doorKnocking',
     title: 'Doors knocked',
     icon: <RiDoorOpenLine size={36} className="opacity-20 mb-3" />,
   },
   {
-    key: 'calls' as const,
+    key: 'calls',
     title: 'Calls made',
     icon: <RiPhoneLine size={36} className="opacity-20 mb-3" />,
   },
   {
-    key: 'digital' as const,
+    key: 'digital',
     title: 'Online impressions',
     icon: <FaBullhorn size={36} className="opacity-20 mb-3" />,
   },
