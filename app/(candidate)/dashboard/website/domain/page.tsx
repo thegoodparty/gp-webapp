@@ -1,4 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
@@ -16,28 +17,6 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-interface WebsiteContent {
-  hero?: {
-    headline?: string
-    subheadline?: string
-  }
-  about?: {
-    title?: string
-    content?: string
-  }
-  theme?: {
-    color?: string
-  }
-}
-
-interface Website {
-  id: number
-  vanityPath: string
-  status: string
-  content: WebsiteContent | null
-  domain?: { domain: string; status: string } | null
-}
-
 interface DomainStatus {
   status: string
   domain: string
@@ -46,12 +25,11 @@ interface DomainStatus {
 
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
-  const [websiteRes, statusRes] = await Promise.all([
-    serverFetch<Website>(apiRoutes.website.get),
+  const [website, statusRes] = await Promise.all([
+    fetchUserWebsite(),
     serverFetch<DomainStatus>(apiRoutes.domain.status),
   ])
 
-  const website = websiteRes.ok ? websiteRes.data : null
   const status = statusRes.ok ? statusRes.data : null
 
   if (!website) {
