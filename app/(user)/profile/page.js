@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import ProfilePage from './components/ProfilePage'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -20,14 +21,13 @@ export default async function Page() {
   const campaign = await fetchUserCampaign()
   const { subscriptionCancelAt } = campaign?.details || {}
 
-  const [websiteResponse, domainStatusResponse, tcrComplianceResponse] =
+  const [website, domainStatusResponse, tcrComplianceResponse] =
     await Promise.all([
-      serverFetch(apiRoutes.website.get),
+      fetchUserWebsite(),
       serverFetch(apiRoutes.domain.status),
       serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
     ])
 
-  const website = websiteResponse.ok ? websiteResponse.data : null
   const domainStatus = domainStatusResponse.ok
     ? domainStatusResponse.data
     : null
