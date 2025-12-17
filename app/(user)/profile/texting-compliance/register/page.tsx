@@ -16,17 +16,16 @@ export const metadata = meta
 
 const Page = async (): Promise<React.JSX.Element> => {
   await candidateAccess()
-  const user = await getServerUser()
+  const campaign = await fetchUserCampaign()
   
-  // Parallelize campaign and website fetches since they don't depend on each other
-  const [campaign, website] = await Promise.all([
-    fetchUserCampaign(),
+  if (!campaign || !campaign.isPro) {
+    redirect('/dashboard/upgrade-to-pro')
+  }
+  
+  const [user, website] = await Promise.all([
+    getServerUser(),
     fetchUserWebsite(),
   ])
-
-  if (!campaign || !campaign.isPro) {
-     redirect('/dashboard/upgrade-to-pro')
-  }
 
   return (
     <TextingComplianceRegisterPage
