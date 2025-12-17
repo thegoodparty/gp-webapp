@@ -20,7 +20,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   await restrictDemoAccess()
 
   const fetchedCampaign = await fetchUserCampaign()
-  const campaign = (fetchedCampaign === false ? {} : fetchedCampaign) as { isPro?: boolean }
+  const campaign = (fetchedCampaign === null ? {} : fetchedCampaign) as { isPro?: boolean }
 
   const childProps = {
     campaign,
