@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { parse as parseCSV } from "csv-parse/sync";
 import { addBusinessDays, format, subDays } from "date-fns";
+import { authenticateTestUser } from "tests/utils/api-registration";
 import { downloadSlackFile, waitForSlackMessage } from "tests/utils/slack";
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const district = {
 	zip: "82001",
@@ -11,22 +10,11 @@ const district = {
 	constituents: "13,417",
 };
 
-test.beforeEach(async ({ page }) => {
-	await page.goto("/dashboard/campaign-details");
-
-	await wait(1500);
-	if (await page.getByText(district.office).isVisible()) {
-		return;
-	}
-	await page.getByRole("button", { name: "Edit Office Details" }).click();
-	await page.getByLabel("Zip Code").fill(district.zip);
-	await page.getByText(district.office).click();
-	await page.getByRole("button", { name: "Save" }).click();
-	// wait, to let the api call go through
-	await wait(2000);
-});
-
 test("poll onboarding and expansion", async ({ page }) => {
+	const { user } = await authenticateTestUser(page, {
+		isolated: true,
+		race: { zip: district.zip, office: district.office },
+	});
 	await page.goto("/polls/welcome");
 
 	await page.getByRole("button", { name: "Let's get started" }).click();
@@ -77,11 +65,10 @@ test("poll onboarding and expansion", async ({ page }) => {
 		page.getByText(`This poll is scheduled to send on ${scheduledDate}.`),
 	).toBeVisible();
 
-	const userEmail = process.env.AUTH_SETUP_USER_EMAIL!;
 	const slackMessage = await waitForSlackMessage({
 		// #tevyn-api-test
 		channel: "C09KUHEUY95",
-		matching: (message) => !!message.text?.includes(userEmail),
+		matching: (message) => !!message.text?.includes(user.email),
 	});
 
 	const pollId = slackMessage.text?.match(/\*Poll ID:\* `([a-z0-9-]+)`/)?.[1];
