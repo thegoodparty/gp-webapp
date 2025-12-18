@@ -17,9 +17,12 @@ export default function DeleteAction({
   setShowMenu,
   deleteHistoryCallBack,
   description,
+  actionName,
 }: DeleteActionProps): React.JSX.Element {
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
+
+  const deleteDescription = description || (actionName ? `Are you sure you want to delete this ${actionName}?` : 'Are you sure you want to delete this?')
 
   const handleDelete = async () => {
     if (setShowMenu) {
@@ -51,7 +54,7 @@ export default function DeleteAction({
         }}
         redButton={false}
         title="Delete Campaign Action"
-        description={description}
+        description={deleteDescription}
         handleProceed={handleDelete}
         proceedLabel="Delete"
       />
