@@ -1,6 +1,7 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
@@ -16,6 +17,8 @@ import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compli
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
+import Body2 from '@shared/typography/Body2'
+import { StyledAlert } from '@shared/alerts/StyledAlert'
 
 const validateAddress = (address) => Boolean(address?.formatted_address)
 
@@ -23,7 +26,7 @@ export const validateRegistrationForm = (data) => {
   const {
     electionFilingLink,
     campaignCommitteeName,
-    localTribeName,
+    officeLevel,
     ein,
     phone,
     address,
@@ -35,7 +38,8 @@ export const validateRegistrationForm = (data) => {
     electionFilingLink:
       isURL(electionFilingLink) && urlIncludesPath(electionFilingLink),
     campaignCommitteeName: isFilled(campaignCommitteeName),
-    localTribeName: isFilled(localTribeName),
+    // TODO(ENG-6192): Add federal and actually send the officeLevel to the backend.
+    officeLevel: officeLevel === 'state' || officeLevel === 'local',
     ein: isValidEIN(ein),
     phone: isMobilePhone(phone, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
@@ -62,7 +66,7 @@ export default function TextingComplianceRegistrationForm({
   const {
     electionFilingLink,
     campaignCommitteeName,
-    localTribeName,
+    officeLevel,
     ein,
     phone,
     address,
@@ -100,16 +104,19 @@ export default function TextingComplianceRegistrationForm({
   return (
     <>
       <TextingComplianceForm>
+        <FormControl fullWidth required variant="outlined">
+          <InputLabel>Office Level</InputLabel>
+          <Select
+            label="Office Level"
+            value={officeLevel || ''}
+            onChange={(e) => handleChange({ officeLevel: e.target.value })}
+          >
+            <MenuItem value="state">State</MenuItem>
+            <MenuItem value="local">Local</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
-          label="Election filing link"
-          fullWidth
-          required
-          endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
-          value={electionFilingLink}
-          onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
-        />
-        <TextField
-          label="Campaign committee name"
+          label="Campaign Committee Name"
           placeholder="Jane for Council"
           fullWidth
           required
@@ -118,13 +125,6 @@ export default function TextingComplianceRegistrationForm({
             handleChange({ campaignCommitteeName: e.target.value })
           }
         />
-        <TextField
-          label="Local/Tribe Name"
-          required
-          fullWidth
-          value={localTribeName}
-          onChange={(e) => handleChange({ localTribeName: e.target.value })}
-        />
         <EinCheckInput
           {...{
             value: ein,
@@ -132,6 +132,20 @@ export default function TextingComplianceRegistrationForm({
             validated: validEin,
             label: 'EIN *',
           }}
+        />
+        <StyledAlert severity="warning" className="mb-6">
+          <Body2>
+            A PIN is required to verify your identity. <br></br>
+            It will only be sent if your email, phone, or address matches your election filing.
+          </Body2>
+        </StyledAlert>
+        <TextField
+          label="Election Filing Link"
+          fullWidth
+          required
+          endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
+          value={electionFilingLink}
+          onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
         />
         <AddressAutocomplete
           {...{
@@ -142,11 +156,11 @@ export default function TextingComplianceRegistrationForm({
 
               return handleChange({ address })
             },
-            placeholder: 'Address *',
+            placeholder: 'Filing Address *',
           }}
         />
         <TextField
-          label="Email"
+          label="Filing Email"
           placeholder="jane@gmail.com"
           fullWidth
           required
@@ -154,7 +168,7 @@ export default function TextingComplianceRegistrationForm({
           onChange={(e) => handleChange({ email: e.target.value })}
         />
         <TextField
-          label="Phone"
+          label="Filing Phone"
           placeholder="(555) 555-5555"
           required
           fullWidth
