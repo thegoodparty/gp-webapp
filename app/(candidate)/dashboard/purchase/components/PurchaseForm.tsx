@@ -5,8 +5,14 @@ import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from '@shared/utils/Snackbar'
 
+interface PaymentIntent {
+  id: string
+  amount: number
+  status: string
+}
+
 interface PurchaseFormProps {
-  onSuccess: () => void
+  onSuccess: (paymentIntent: PaymentIntent) => void
   onError: (error: Error) => void
 }
 
@@ -36,7 +42,7 @@ export default function PurchaseForm({ onSuccess, onError }: PurchaseFormProps):
       errorSnackbar(error.message || 'Payment failed')
       onError(new Error(error.message || 'Payment failed'))
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      onSuccess()
+      onSuccess(paymentIntent)
     }
 
     setIsLoading(false)
