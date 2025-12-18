@@ -1,0 +1,58 @@
+import TextField from '@shared/inputs/TextField'
+import ImageInput from '@shared/inputs/ImageInput'
+import Caption from './WebsiteEditorPageCaption'
+import Label from './Label'
+import H2 from '@shared/typography/H2'
+import { ChangeEvent } from 'react'
+
+interface HeroStepProps {
+  title?: string
+  tagline?: string
+  image?: string
+  onTitleChange: (value: string) => void
+  onTaglineChange: (value: string) => void
+  onImageChange: (file: File | null) => void
+  noHeading?: boolean
+}
+
+export default function HeroStep({
+  title,
+  tagline,
+  image,
+  onTitleChange,
+  onTaglineChange,
+  onImageChange,
+  noHeading = false,
+}: HeroStepProps): React.JSX.Element {
+  return (
+    <div>
+      {!noHeading && (
+        <H2 className="mb-6">Customize the content visitors will see first</H2>
+      )}
+      <Label>
+        Title <sup>*</sup>
+      </Label>
+      <TextField
+        value={title}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onTitleChange(e.target.value)}
+        fullWidth
+      />
+      <Label className="mt-4">Tagline</Label>
+      <TextField
+        value={tagline}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onTaglineChange(e.target.value)}
+        fullWidth
+      />
+      <Label className="mt-4">Main Image</Label>
+      <ImageInput
+        imageUrl={image}
+        onChange={onImageChange}
+        maxSize={0.5 * 1024 * 1024}
+      />
+      <Caption>
+        Recommended size: 1280x640px. PNG or JPG format. File size must be less
+        than 512KB.
+      </Caption>
+    </div>
+  )
+}

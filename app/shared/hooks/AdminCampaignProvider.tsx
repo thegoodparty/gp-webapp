@@ -5,12 +5,12 @@ import { apiRoutes } from 'gpApi/routes'
 import { Campaign } from 'helpers/types'
 
 type AdminCampaignContextValue = [
-  campaign: Campaign,
+  campaign: Campaign | null,
   setCampaign: (campaign: Campaign) => void,
   refreshCampaign: () => Promise<void>
 ]
 
-export const AdminCampaignContext = createContext<AdminCampaignContextValue>([{} as Campaign, () => {}, async () => {}])
+export const AdminCampaignContext = createContext<AdminCampaignContextValue>([null, () => {}, async () => {}])
 
 interface AdminCampaignProviderProps {
   children: React.ReactNode
@@ -18,8 +18,9 @@ interface AdminCampaignProviderProps {
 }
 
 export const AdminCampaignProvider = ({ children, campaign: initCampaign }: AdminCampaignProviderProps): React.JSX.Element => {
-  const [campaign, setCampaign] = useState<Campaign>(initCampaign)
+  const [campaign, setCampaign] = useState<Campaign | null>(initCampaign)
   const refreshCampaign = async () => {
+    if (!campaign) return
     const { data: refreshedCampaign } = await clientFetch<Campaign>(
       apiRoutes.campaign.findBySlug,
       {
