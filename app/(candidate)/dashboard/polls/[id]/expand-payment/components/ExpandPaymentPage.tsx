@@ -39,7 +39,7 @@ export default function ExpandPaymentPage({
   )}`
 
   const handleBack = () => {
-    router.push(`/dashboard/polls/${poll.id}/expand-review?${params}`)
+    router.push(`/dashboard/polls/${poll?.id}/expand-review?${params}`)
   }
 
   const handlePurchaseComplete = () => {
@@ -48,7 +48,7 @@ export default function ExpandPaymentPage({
       cost,
       count,
     })
-    router.push(`/dashboard/polls/${poll.id}/expand-payment-success?${params}`)
+    router.push(`/dashboard/polls/${poll?.id}/expand-payment-success?${params}`)
   }
 
   return (
@@ -57,7 +57,7 @@ export default function ExpandPaymentPage({
         purchaseMetaData={{
           pollPurchaseType: PollPurchaseType.expansion,
           count,
-          pollId: poll.id,
+          pollId: poll?.id || '',
           scheduledDate,
         }}
         onConfirmed={handlePurchaseComplete}

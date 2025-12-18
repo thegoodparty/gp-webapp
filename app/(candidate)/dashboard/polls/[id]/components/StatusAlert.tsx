@@ -8,8 +8,8 @@ import { PollStatus } from '../../shared/poll-types'
 
 export default function StatusAlert() {
   const [poll] = usePoll()
-  const { status, scheduledDate } = poll
-  if (status === PollStatus.COMPLETED) {
+  const { status, scheduledDate } = poll || {}
+  if (!poll || status === PollStatus.COMPLETED) {
     return null
   }
   let variant: 'default' | 'destructive' | 'success' = 'default'

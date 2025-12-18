@@ -4,13 +4,14 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import H5 from '@shared/typography/H5'
+import { IssueStatus } from '../../shared/StatusPill'
 
 interface Issue {
   createdAt: string
 }
 
 interface StatusChange {
-  toStatus: string
+  toStatus: IssueStatus | 'submitted'
   createdAt: string
 }
 
@@ -29,8 +30,10 @@ export default function ProgressTimeline({ issue, statusHistory }: ProgressTimel
   })
 
   statusHistory.forEach((change) => {
-    const statusInfo = STATUS_DISPLAY_MAP[change.toStatus as keyof typeof STATUS_DISPLAY_MAP]
-    if (statusInfo) {
+    const entries = Object.entries(STATUS_DISPLAY_MAP)
+    const matchingEntry = entries.find(([key]) => key === change.toStatus)
+    if (matchingEntry) {
+      const [, statusInfo] = matchingEntry
       timelineItems.push({
         status: change.toStatus,
         date: change.createdAt,

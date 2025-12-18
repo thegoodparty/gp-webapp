@@ -11,7 +11,7 @@ const SESSION_TRIGGERS = {
   Third: 12,
 }
 
-export function ProUpgradePrompt({ campaign, user }) {
+export function ProUpgradePrompt({ campaign, user, pathname }) {
   const isPro = campaign?.isPro || false
   const sessionCount = user?.metaData?.sessionCount || 0
   const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
@@ -23,6 +23,12 @@ export function ProUpgradePrompt({ campaign, user }) {
 
   useEffect(() => {
     if (isPro) {
+      setModalState((current) => ({ ...current, isOpen: false }))
+      return
+    }
+
+    // Don't show modal on polls pages
+    if (pathname?.startsWith('/dashboard/polls')) {
       setModalState((current) => ({ ...current, isOpen: false }))
       return
     }
@@ -62,7 +68,7 @@ export function ProUpgradePrompt({ campaign, user }) {
         variant: variant,
       })
     }
-  }, [sessionCount, viablityScore, isPro])
+  }, [sessionCount, viablityScore, isPro, pathname])
 
   // Don't want to show modal if campaign is already pro
   if (isPro) return null

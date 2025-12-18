@@ -4,18 +4,22 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
 import { dateUsHelper } from 'helpers/dateHelper'
-import StatusPill from '../../shared/StatusPill'
+import StatusPill, { IssueStatus } from '../../shared/StatusPill'
 
-interface Issue {
+interface CommunityIssue {
   uuid: string
+  createdAt: Date | string
+  updatedAt: Date | string
   title: string
   description: string
-  updatedAt: string
-  status: string
+  status: IssueStatus
+  channel: string
+  attachments: string[]
+  campaignId: number
 }
 
 interface IssueSnippetProps {
-  issue: Issue
+  issue: CommunityIssue
 }
 
 export default function IssueSnippet({ issue }: IssueSnippetProps): React.JSX.Element {

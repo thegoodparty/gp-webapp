@@ -121,7 +121,7 @@ export default function ExpandPollPage({
 
   const handleBack = () => {
     if (state.mode === 'audience-selection') {
-      router.push(`/dashboard/polls/${poll.id}`)
+      router.push(`/dashboard/polls/${poll?.id}`)
     } else {
       setState({ ...state, mode: 'audience-selection' })
     }
@@ -132,7 +132,7 @@ export default function ExpandPollPage({
       return
     }
     router.push(
-      `/dashboard/polls/${poll.id}/expand-review?count=${
+      `/dashboard/polls/${poll?.id}/expand-review?count=${
         state.audience
       }&scheduledDate=${encodeURIComponent(state.scheduledDate.toISOString())}`,
     )
@@ -140,13 +140,15 @@ export default function ExpandPollPage({
 
   if (state.mode === 'audience-selection') {
     return (
-      <AudienceSelectionForm
-        poll={poll}
-        onNext={(count) =>
-          setState({ ...state, mode: 'date-selection', audience: count })
-        }
-        onBack={handleBack}
-      />
+      poll && (
+        <AudienceSelectionForm
+          poll={poll}
+          onNext={(count) =>
+            setState({ ...state, mode: 'date-selection', audience: count })
+          }
+          onBack={handleBack}
+        />
+      )
     )
   }
 

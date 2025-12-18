@@ -1,28 +1,4 @@
-interface ContactsStatsBucket {
-  label: string
-  percent: number
-}
-
-interface ContactsStatsCategory {
-  buckets?: ContactsStatsBucket[]
-}
-
-interface ContactsStatsCategories {
-  age?: ContactsStatsCategory
-  presenceOfChildren?: ContactsStatsCategory
-  homeowner?: ContactsStatsCategory
-  estimatedIncomeRange?: ContactsStatsCategory
-  education?: ContactsStatsCategory
-}
-
-interface ContactsStatsMeta {
-  totalConstituents?: number
-}
-
-interface ContactsStats {
-  categories?: ContactsStatsCategories
-  meta?: ContactsStatsMeta
-}
+import { ContactsStats } from 'app/(candidate)/dashboard/polls/shared/queries'
 
 interface ChartDataPoint {
   name: string
@@ -39,7 +15,7 @@ interface ChartData {
 }
 
 export const mapContactsStatsToCharts = (
-  contactsStats: ContactsStats | null,
+  contactsStats: ContactsStats | undefined,
 ): ChartData => {
   if (!contactsStats || !contactsStats.categories) {
     return {

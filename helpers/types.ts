@@ -193,3 +193,65 @@ export interface Campaign {
   positionName?: string
   raceId?: string
 }
+
+export interface WebsiteIssue {
+  title: string
+  description: string
+}
+
+export interface WebsiteContent {
+  hero?: {
+    headline?: string
+    subheadline?: string
+  }
+  about?: {
+    title?: string
+    content?: string
+    bio?: string
+    issues?: WebsiteIssue[]
+    committee?: string
+  }
+  theme?: {
+    color?: string
+  }
+  logo?: string
+  createStep?: string
+  main?: {
+    title?: string
+    tagline?: string
+    image?: string
+  }
+  contact?: {
+    address?: string
+    email?: string
+    phone?: string
+  }
+  vanityPath?: string
+  status?: string
+  heroFile?: File | null
+  [key: string]: any
+}
+
+export interface Domain {
+  name: string
+  status: string
+  verificationStatus?: string
+}
+
+export interface Website {
+  id: number
+  vanityPath: string
+  status: string
+  content: WebsiteContent | null
+  domain?: Domain | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  campaignId?: number
+}
+
+export interface WebsiteContact {
+  id: number
+  email: string
+  name?: string | null
+  createdAt: Date | string
+}

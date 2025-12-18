@@ -1,35 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, Dispatch, SetStateAction } from 'react'
-
-interface WebsiteContent {
-  hero?: {
-    headline?: string
-    subheadline?: string
-  }
-  about?: {
-    title?: string
-    content?: string
-  }
-  theme?: {
-    color?: string
-  }
-}
-
-interface Website {
-  id: number
-  vanityPath: string
-  status: string
-  content: WebsiteContent | null
-  domain?: { domain: string; status: string } | null
-}
-
-interface WebsiteContact {
-  id: number
-  email: string
-  name?: string
-  createdAt: string
-}
+import type { Website, WebsiteContact } from 'helpers/types'
 
 interface WebsiteContextType {
   website: Website | null

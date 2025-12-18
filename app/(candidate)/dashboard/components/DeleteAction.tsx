@@ -6,9 +6,10 @@ import Button from '@shared/buttons/Button'
 
 interface DeleteActionProps {
   id: string
-  setShowMenu: (value: number) => void
+  setShowMenu?: (value: number) => void
   deleteHistoryCallBack: (id: string) => Promise<void>
-  description: string
+  description?: string
+  actionName?: string
 }
 
 export default function DeleteAction({
@@ -16,12 +17,17 @@ export default function DeleteAction({
   setShowMenu,
   deleteHistoryCallBack,
   description,
+  actionName,
 }: DeleteActionProps): React.JSX.Element {
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
 
+  const deleteDescription = description || (actionName ? `Are you sure you want to delete this ${actionName}?` : 'Are you sure you want to delete this?')
+
   const handleDelete = async () => {
-    setShowMenu(0)
+    if (setShowMenu) {
+      setShowMenu(0)
+    }
     successSnackbar('Deleting...')
     await deleteHistoryCallBack(id)
     successSnackbar('Deleted')
@@ -48,7 +54,7 @@ export default function DeleteAction({
         }}
         redButton={false}
         title="Delete Campaign Action"
-        description={description}
+        description={deleteDescription}
         handleProceed={handleDelete}
         proceedLabel="Delete"
       />

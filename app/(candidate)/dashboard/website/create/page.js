@@ -1,7 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import WebsiteCreatePage from './components/WebsiteCreatePage'
-import { serverFetch } from 'gpApi/serverFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { redirect } from 'next/navigation'
 import { WebsiteProvider } from '../components/WebsiteProvider'
 import candidateAccess from '../../shared/candidateAccess'
@@ -22,8 +21,7 @@ export default async function Page() {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
 
-  const resp = await serverFetch(apiRoutes.website.get)
-  const website = resp.ok ? resp.data : null
+  const website = await fetchUserWebsite()
 
   if (website && website.status === WEBSITE_STATUS.published) {
     redirect('/dashboard/website/editor')

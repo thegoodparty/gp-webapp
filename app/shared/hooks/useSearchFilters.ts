@@ -1,6 +1,6 @@
 'use client'
 import { useContext, useMemo } from 'react'
-import { SearchFiltersContext } from './SearchFiltersProvider'
+import { SearchFilters, SearchFiltersContext } from './SearchFiltersProvider'
 
 interface FilterableItem {
   title?: string
@@ -8,12 +8,15 @@ interface FilterableItem {
   status?: string
 }
 
-interface FiltersWithSearchAndStatus {
-  search?: string
-  status?: string
-}
+type FilterItemsFunction = <T extends FilterableItem>(items: T[]) => T[]
 
-export const useSearchFilters = () => {
+type SearchFiltersReturn = [
+  filters: SearchFilters,
+  setFilters: (filters: SearchFilters) => void,
+  filterItems: FilterItemsFunction,
+]
+
+export const useSearchFilters = (): SearchFiltersReturn => {
   const context = useContext(SearchFiltersContext)
   if (!context) {
     throw new Error(
@@ -22,24 +25,30 @@ export const useSearchFilters = () => {
   }
 
   const [filters, setFilters] = context
-  const typedFilters = filters as FiltersWithSearchAndStatus
+  const typedFilters = filters
 
-  const filterItems = useMemo(() => {
-    return (items: FilterableItem[] = []) => {
+  const filterItems: FilterItemsFunction = useMemo(() => {
+    return <T extends FilterableItem>(items: T[] = []): T[] => {
       return (
         items?.filter((item) => {
           const matchesSearch =
             !typedFilters.search ||
             typedFilters.search === '' ||
-            item.title?.toLowerCase().includes(typedFilters.search.toLowerCase()) ||
+            item.title
+              ?.toLowerCase()
+              .includes(typedFilters.search.toLowerCase()) ||
             item.description
               ?.toLowerCase()
               .includes(typedFilters.search.toLowerCase())
 
+          const statusString =
+            typeof item.status === 'string'
+              ? item.status
+              : String(item.status || '')
           const matchesStatus =
             !typedFilters.status ||
             typedFilters.status === 'all' ||
-            item.status === typedFilters.status
+            statusString === typedFilters.status
 
           return matchesSearch && matchesStatus
         }) || []
@@ -49,4 +58,3 @@ export const useSearchFilters = () => {
 
   return [filters, setFilters, filterItems]
 }
-
