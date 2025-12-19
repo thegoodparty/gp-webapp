@@ -135,7 +135,7 @@ export default function TextingComplianceRegistrationForm({
         />
         <StyledAlert severity="warning" className="mb-6">
           <Body2>
-            A PIN is required to verify your identity. <br></br>
+            A PIN is required to verify your identity. <br />
             It will only be sent if your email, phone, or address matches your election filing.
           </Body2>
         </StyledAlert>
