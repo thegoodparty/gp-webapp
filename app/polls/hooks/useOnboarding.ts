@@ -2,8 +2,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 import {
   personElectDemoMessageText as personElectDemoMessageTextPolls,
   personElectMessageText as personElectMessageTextPolls,
@@ -14,6 +12,7 @@ import { format, isBefore } from 'date-fns'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
 import { Poll } from 'app/(candidate)/dashboard/polls/shared/poll-types'
+import { clientRequest } from 'gpApi/typed-request'
 
 interface FormData {
   imageUrl: string | null
@@ -170,18 +169,12 @@ export const useOnboarding = (): UseOnboardingReturn => {
         throw new Error('Missing required fields')
       }
 
-      const response = await clientFetch<Poll>(apiRoutes.polls.initialPoll, {
+      return clientRequest('POST /v1/polls/initial-poll', {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
-        scheduledDate: formData.scheduledDate,
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to submit onboarding data')
-      }
-
-      return response.data
+        scheduledDate: formData.scheduledDate?.toISOString(),
+      }).then((res) => res.data)
     } catch (error) {
       console.error(error)
       setSubmitError(
