@@ -30,9 +30,16 @@ export const CANDIDATE_TIERS_REVERSED: CandidateTiersReversed = {
   LOSE: 'Likely to Lose',
 }
 
+const isValidTierKey = (key: string): key is CandidateTiersReversedKey => {
+  return key in CANDIDATE_TIERS_REVERSED
+}
+
 export const getTierDisplay = (
   tier: string | null | undefined,
 ): string | undefined => {
-  const key = (tier || 'null') as CandidateTiersReversedKey
-  return CANDIDATE_TIERS_REVERSED[key]
+  const key = tier || 'null'
+  if (isValidTierKey(key)) {
+    return CANDIDATE_TIERS_REVERSED[key]
+  }
+  return undefined
 }

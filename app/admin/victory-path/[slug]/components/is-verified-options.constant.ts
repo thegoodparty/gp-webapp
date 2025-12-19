@@ -25,9 +25,16 @@ export const IS_VERIFIED_OPTIONS_REVERSED: IsVerifiedOptionsReversed = {
   'false': 'No',
 }
 
+const isValidIsVerifiedKey = (key: string): key is IsVerifiedOptionsReversedKey => {
+  return key in IS_VERIFIED_OPTIONS_REVERSED
+}
+
 export const getIsVerifiedDisplay = (
   value: boolean | null | undefined,
 ): string | undefined => {
-  const key = String(value) as IsVerifiedOptionsReversedKey
-  return IS_VERIFIED_OPTIONS_REVERSED[key]
+  const key = String(value)
+  if (isValidIsVerifiedKey(key)) {
+    return IS_VERIFIED_OPTIONS_REVERSED[key]
+  }
+  return undefined
 }

@@ -26,9 +26,13 @@ import {
 import { getReadyAnalytics } from '@shared/utils/analytics'
 import { User, Campaign } from 'helpers/types'
 
-const SIGN_UP_MODES = {
+interface SignUpModes {
+  CANDIDATE: 'candidate'
+}
+
+const SIGN_UP_MODES: SignUpModes = {
   CANDIDATE: 'candidate',
-} as const
+}
 
 interface SignUpField {
   key: keyof SignUpState
@@ -114,12 +118,16 @@ export const validateZip = (zip: string): boolean => {
   return validZip.test(zip)
 }
 
-async function register(payload: RegisterPayload): Promise<RegisterResponse | false> {
+interface ConflictResponse {
+  exists: true
+}
+
+async function register(payload: RegisterPayload): Promise<RegisterResponse | ConflictResponse | false> {
   try {
     const resp = await clientFetch<RegisterResponse>(apiRoutes.authentication.register, payload)
 
     if (resp.status === 409) {
-      return { exists: true, user: {} as User, token: '' }
+      return { exists: true }
     }
     return resp.data
   } catch (e) {
@@ -170,7 +178,7 @@ export default function SignUpPage(): React.JSX.Element {
         signUpMode,
       })
 
-      if (!result || !result.user || result.exists) {
+      if (!result || 'exists' in result) {
         errorSnackbar('Failed to create account')
         setLoading(false)
         return
