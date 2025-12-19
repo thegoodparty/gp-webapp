@@ -57,6 +57,33 @@ export interface UserResponse {
   data: User
 }
 
+// ===== CampaignUpdateHistory Types =====
+
+export enum CampaignUpdateHistoryType {
+  doorKnocking = 'doorKnocking',
+  calls = 'calls',
+  digital = 'digital',
+  directMail = 'directMail',
+  digitalAds = 'digitalAds',
+  text = 'text',
+  events = 'events',
+  yardSigns = 'yardSigns',
+  robocall = 'robocall',
+  phoneBanking = 'phoneBanking',
+  socialMedia = 'socialMedia',
+}
+
+export interface CampaignUpdateHistory {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  userId: number
+  user: User
+  type: CampaignUpdateHistoryType
+  quantity: number
+}
+
 // ===== Campaign Types =====
 
 export enum CampaignTier {

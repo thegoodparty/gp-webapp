@@ -5,20 +5,16 @@ import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { fetchCampaignBySlugAdminOnly } from 'app/admin/shared/fetchCampaignBySlugAdminOnly'
 import { Params } from 'next/dist/server/request/params'
-
-interface UpdateHistoryItem {
-  createdAt: number
-  user: { firstName: string }
-}
+import { CampaignUpdateHistory } from 'helpers/types'
 
 const fetchAdminUpdateHistory = async (
   slug: string,
-): Promise<UpdateHistoryItem[]> => {
+): Promise<CampaignUpdateHistory[]> => {
   try {
     const payload = {
       slug,
     }
-    const resp = await serverFetch<UpdateHistoryItem[]>(
+    const resp = await serverFetch<CampaignUpdateHistory[]>(
       apiRoutes.campaign.updateHistory.list,
       payload,
     )

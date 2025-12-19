@@ -10,23 +10,26 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { CampaignUpdateHistory } from 'helpers/types'
 
-interface User {
-  firstName: string
+interface ChartDataItem {
+  name: string
+  [userName: string]: string | number
 }
 
-interface UpdateHistoryItem {
-  createdAt: number
-  user: User
+interface GroupedDateData {
+  [userName: string]: number
 }
 
-type ChartDataItem = { name: string } & Partial<Record<string, string | number>>
+interface GroupedData {
+  [date: string]: GroupedDateData
+}
 
 interface UpdateHistoryChartProps {
-  updateHistory: UpdateHistoryItem[]
+  updateHistory: CampaignUpdateHistory[]
 }
 
-const timestampToDate = (ts: number): string => {
+const timestampToDate = (ts: Date | string): string => {
   const date = new Date(ts)
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
@@ -34,30 +37,25 @@ const timestampToDate = (ts: number): string => {
   )}-${String(date.getDate()).padStart(2, '0')}`
 }
 
-const groupedData = (
-  input: UpdateHistoryItem[],
-): Partial<Record<string, Partial<Record<string, number>>>> => {
-  return input.reduce<Partial<Record<string, Partial<Record<string, number>>>>>(
-    (acc, item) => {
-      const date = timestampToDate(item.createdAt)
-      if (!acc[date]) {
-        acc[date] = {}
-      }
-      const dateData = acc[date]
-      if (dateData && !dateData[item.user.firstName]) {
-        dateData[item.user.firstName] = 0
-      }
-      if (dateData) {
-        dateData[item.user.firstName] =
-          (dateData[item.user.firstName] || 0) + 1
-      }
-      return acc
-    },
-    {},
-  )
+const groupedData = (input: CampaignUpdateHistory[]): GroupedData => {
+  return input.reduce<GroupedData>((acc, item) => {
+    const date = timestampToDate(item.createdAt)
+    if (!acc[date]) {
+      acc[date] = {}
+    }
+    const dateData = acc[date]
+    if (dateData && !dateData[item.user.firstName || '']) {
+      dateData[item.user.firstName || ''] = 0
+    }
+    if (dateData) {
+      dateData[item.user.firstName || ''] =
+        (dateData[item.user.firstName || ''] || 0) + 1
+    }
+    return acc
+  }, {})
 }
 
-const getDatesBetween = (startDate: number, endDate: number): string[] => {
+const getDatesBetween = (startDate: Date, endDate: Date): string[] => {
   const dates: string[] = []
   let currentDate = new Date(startDate)
   currentDate.setHours(0, 0, 0, 0)
@@ -65,22 +63,28 @@ const getDatesBetween = (startDate: number, endDate: number): string[] => {
   end.setHours(0, 0, 0, 0)
 
   while (currentDate <= end) {
-    dates.push(timestampToDate(currentDate.getTime()))
+    dates.push(timestampToDate(currentDate))
     currentDate.setDate(currentDate.getDate() + 1)
   }
 
   return dates
 }
 
-const transformedData = (input: UpdateHistoryItem[]): ChartDataItem[] => {
+const transformedData = (input: CampaignUpdateHistory[]): ChartDataItem[] => {
   const data = groupedData(input)
 
-  const minDate = Math.min(...input.map((item) => item.createdAt))
-  const maxDate = Math.max(...input.map((item) => item.createdAt))
+  const minDate = new Date(
+    Math.min(...input.map((item) => new Date(item.createdAt).getTime())),
+  )
+  const maxDate = new Date(
+    Math.max(...input.map((item) => new Date(item.createdAt).getTime())),
+  )
 
   const allDates = getDatesBetween(minDate, maxDate)
 
-  const allUsers = [...new Set(input.map((item) => item.user.firstName))]
+  const allUsers = [
+    ...new Set(input.map((item) => item.user.firstName || '')),
+  ]
 
   return allDates.map((date) => {
     const dateData: ChartDataItem = { name: date }

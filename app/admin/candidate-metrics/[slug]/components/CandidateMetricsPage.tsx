@@ -6,18 +6,13 @@ import UpdateHistoryChart from './UpdateHistoryChart'
 import TrackerStats from './TrackerStats'
 import H1 from '@shared/typography/H1'
 import AiContentTotals from './AiContentTotals'
-import { Campaign } from 'helpers/types'
-
-interface UpdateHistoryItem {
-  createdAt: number
-  user: { firstName: string }
-}
+import { Campaign, CampaignUpdateHistory } from 'helpers/types'
 
 interface CandidateMetricsPageProps {
   pathname: string
   title: string
   campaign: Campaign
-  updateHistory: UpdateHistoryItem[]
+  updateHistory: CampaignUpdateHistory[]
 }
 
 export default function CandidateMetricsPage(
