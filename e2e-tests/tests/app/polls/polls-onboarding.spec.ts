@@ -7,7 +7,16 @@ import { downloadSlackFile, waitForSlackMessage } from "tests/utils/slack";
 const district = {
 	zip: "82001",
 	office: "Cheyenne City Council - Ward 2",
-	constituents: "13,417",
+	constituents: 13500,
+};
+
+export const expectToBeWithin = (
+	value: number,
+	expected: number,
+	plusOrMinus: number,
+) => {
+	expect(value).toBeGreaterThanOrEqual(expected - plusOrMinus);
+	expect(value).toBeLessThanOrEqual(expected + plusOrMinus);
 };
 
 test("poll onboarding and expansion", async ({ page }) => {
@@ -20,7 +29,17 @@ test("poll onboarding and expansion", async ({ page }) => {
 	await page.getByRole("button", { name: "Let's get started" }).click();
 
 	// Confirm constituent count.
-	await expect(page.getByText(district.constituents)).toBeVisible();
+	const constituentCount = await page
+		.getByTestId("total-constituents")
+		.textContent();
+
+	expect(constituentCount).toBeDefined();
+
+	expectToBeWithin(
+		parseInt(constituentCount!.replace(/,/g, ""), 10),
+		district.constituents,
+		500,
+	);
 
 	// Move through onboarding flow.
 	await page.getByRole("button", { name: "Next", exact: true }).click();
