@@ -33,7 +33,7 @@ test("poll onboarding and expansion", async ({ page }) => {
 		.getByTestId("total-constituents")
 		.textContent();
 
-	expect(constituentCount).toBeDefined();
+	expect(constituentCount).toBeTruthy();
 
 	expectToBeWithin(
 		parseInt(constituentCount!.replace(/,/g, ""), 10),
