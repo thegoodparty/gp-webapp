@@ -5,8 +5,14 @@ import DoorKnockingTabs from '../../shared/DoorKnockingTabs'
 import SurveyList from './SurveyList'
 import { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
+interface EcanvasserTeam {
+  id: number
+  name: string
+}
+
 export interface DoorKnockingSurveysPageProps {
   surveys?: EcanvasserSurvey[]
+  teams?: EcanvasserTeam[]
   pathname?: string
   title?: string
 }

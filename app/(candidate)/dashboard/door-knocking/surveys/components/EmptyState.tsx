@@ -3,8 +3,13 @@ import Body2 from '@shared/typography/Body2'
 import H2 from '@shared/typography/H2'
 import CreateSurvey from './CreateSurvey'
 
+interface EcanvasserTeam {
+  id: number
+  name: string
+}
+
 interface EmptyStateProps {
-  teams?: []
+  teams?: EcanvasserTeam[]
   createCallback: () => void
 }
 

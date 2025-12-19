@@ -17,7 +17,7 @@ interface CampaignOfficeSelectionModalProps {
 }
 
 export const CampaignOfficeSelectionModal = ({
-  campaign,
+  campaign = { details: {} },
   show = false,
   onClose = () => {},
   onSelect = () => {},

@@ -7,10 +7,27 @@ import { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
 export const dynamic = 'force-dynamic'
 
+interface EcanvasserTeam {
+  id: number
+  name: string
+}
+
 const fetchSurveys = async (): Promise<EcanvasserSurvey[] | false> => {
   try {
     const resp = await serverFetch<EcanvasserSurvey[]>(
       apiRoutes.ecanvasser.surveys.list,
+    )
+    return resp.data
+  } catch (e) {
+    console.error('error', e)
+    return false
+  }
+}
+
+const fetchTeams = async (): Promise<EcanvasserTeam[] | false> => {
+  try {
+    const resp = await serverFetch<EcanvasserTeam[]>(
+      apiRoutes.ecanvasser.teams.list,
     )
     return resp.data
   } catch (e) {
@@ -29,9 +46,10 @@ export const metadata = meta
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
 
-  const surveys = await fetchSurveys()
+  const [surveys, teams] = await Promise.all([fetchSurveys(), fetchTeams()])
   const childProps = {
     surveys: surveys || undefined,
+    teams: teams || undefined,
     pathname: '/dashboard/door-knocking/surveys',
     title: 'Door Knocking Surveys',
   }
