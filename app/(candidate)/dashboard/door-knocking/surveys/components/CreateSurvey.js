@@ -12,6 +12,10 @@ const createSurvey = async (payload) => {
   const resp = await clientFetch(apiRoutes.ecanvasser.surveys.create, payload)
   return resp.data
 }
+
+/**
+ * @param {{ teams?: Array<{id: number, name: string}>, createCallback: () => void }} props
+ */
 export default function CreateSurvey({ teams = [], createCallback }) {
   const teamOptions = Array.isArray(teams)
     ? teams.map((team) => team.name)

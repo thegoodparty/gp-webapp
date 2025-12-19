@@ -1,12 +1,37 @@
 import styles from 'app/(company)/team/components/Team.module.scss'
 import { TeamMemberCard } from 'app/(company)/team/components/TeamMemberCard'
 
+interface PhotoData {
+  url: string
+  alt?: string
+}
+
+interface TeamMember {
+  id: string
+  fullName: string
+  role: string
+  partyRole?: string
+  goodPhoto?: PhotoData
+  partyPhoto?: PhotoData
+}
+
+interface SelectedState {
+  [key: number]: boolean
+}
+
+interface TeamMemberCardsProps {
+  teamMembers?: TeamMember[]
+  flipAll: boolean
+  selected: SelectedState
+  handleSelected: (index: number) => void
+}
+
 export const TeamMemberCards = ({
   teamMembers,
   flipAll,
   selected,
   handleSelected,
-}) => {
+}: TeamMemberCardsProps): React.JSX.Element => {
   return (
     <div className={`mb-8${flipAll ? ' flipped' : ''}`}>
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 max-w-[640px] xl:max-w-full mx-auto">
@@ -17,8 +42,8 @@ export const TeamMemberCards = ({
               fullName,
               role,
               partyRole,
-              goodPhoto: { url: goodPhotoUrl, alt: goodAlt } = {},
-              partyPhoto: { url: partyPhotoUrl, alt: partyAlt } = {},
+              goodPhoto: { url: goodPhotoUrl, alt: goodAlt } = { url: '', alt: '' },
+              partyPhoto: { url: partyPhotoUrl, alt: partyAlt } = { url: '', alt: '' },
             },
             index,
           ) => (
@@ -37,15 +62,15 @@ export const TeamMemberCards = ({
                     fullName={fullName}
                     role={role}
                     src={`https:${goodPhotoUrl}`}
-                    alt={goodAlt}
+                    alt={goodAlt || ''}
                   />
                 </div>
                 <div className={`absolute w-full h-full ${styles.back}`}>
                   <TeamMemberCard
                     fullName={fullName}
-                    role={partyRole}
+                    role={partyRole || role}
                     src={`https:${partyPhotoUrl}`}
-                    alt={partyAlt}
+                    alt={partyAlt || ''}
                   />
                 </div>
               </div>
@@ -54,7 +79,7 @@ export const TeamMemberCards = ({
                   fullName={fullName}
                   role={role}
                   src={`https:${goodPhotoUrl}`}
-                  alt={goodAlt}
+                  alt={goodAlt || ''}
                 />
               </div>
             </div>

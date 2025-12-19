@@ -2,9 +2,26 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Image from 'next/image'
 import Signatures from './Signatures'
 import H1 from '@shared/typography/H1'
+import { NextFont } from 'next/dist/compiled/@next/font'
 
-export default function DeclarePage({ signatures, baskerville, tangerine }) {
-  const content = [
+interface ContentLine {
+  key: string
+  content: string
+  type: 'normal' | 'highlight'
+}
+
+interface DeclarePageProps {
+  signatures: string
+  baskerville: NextFont
+  tangerine: NextFont
+}
+
+export default function DeclarePage({
+  signatures,
+  baskerville,
+  tangerine,
+}: DeclarePageProps): React.JSX.Element {
+  const content: ContentLine[] = [
     {
       key: 't1',
       content:

@@ -1,7 +1,7 @@
 'use client'
 import PortalPanel from '@shared/layouts/PortalPanel'
 import AdminWrapper from 'app/admin/shared/AdminWrapper'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, ChangeEvent } from 'react'
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import RenderInputField from '@shared/inputs/RenderInputField'
@@ -21,23 +21,56 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-export async function sendVictoryMail(id) {
+
+export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
-    return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id })
+    await clientFetch(apiRoutes.admin.campaign.victoryMail, { id })
+    return true
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-const updateDistrict = (slug, L2DistrictType, L2DistrictName) =>
+const updateDistrict = (
+  slug: string,
+  L2DistrictType: string,
+  L2DistrictName: string,
+) =>
   clientFetch(apiRoutes.campaign.district, {
     slug,
     L2DistrictType,
-    L2DistrictName
+    L2DistrictName,
   })
 
-const sections = [
+type FormFieldKey =
+  | 'canDownloadFederal'
+  | 'projectedTurnout'
+  | 'winNumber'
+  | 'voterContactGoal'
+  | 'voteGoal'
+  | 'voterProjection'
+  | 'budgetLow'
+  | 'budgetHigh'
+  | 'voterMap'
+  | 'finalVotes'
+
+interface FieldConfig {
+  key: FormFieldKey
+  label: string
+  type: 'number' | 'text' | 'select'
+  options?: string[]
+  fullRow?: boolean
+  formula?: boolean
+  initialValue?: string | number
+}
+
+interface SectionConfig {
+  title: string
+  fields: FieldConfig[]
+}
+
+const sections: SectionConfig[] = [
   {
     title: 'Voter File Settings',
     fields: [
@@ -104,35 +137,127 @@ const sections = [
   },
 ]
 
-const initialState = {}
-const keys = []
-const keyTypes = {}
+interface FormState {
+  projectedTurnout?: number | string
+  winNumber?: number | string
+  voterContactGoal?: number | string
+  voteGoal?: number | string
+  voterProjection?: number | string
+  budgetLow?: number | string
+  budgetHigh?: number | string
+  voterMap?: string | number
+  finalVotes?: number | string
+  canDownloadFederal?: boolean | string
+  p2vStatus?: string
+  p2vAttempts?: number
+  p2vCompleteDate?: string
+  completedBy?: number
+  electionType?: string
+  electionLocation?: string
+  p2vNotNeeded?: boolean
+  totalRegisteredVoters?: number
+  republicans?: number
+  democrats?: number
+  indies?: number
+  women?: number
+  men?: number
+  white?: number
+  asian?: number
+  africanAmerican?: number
+  hispanic?: number
+  averageTurnout?: number
+  viability?: { score?: number; tier?: string }
+  source?: string
+  districtId?: string
+  districtManuallySet?: boolean
+  officeContextFingerprint?: string
+}
 
-sections.forEach((section) => {
-  section.fields.forEach((field) => {
-    keyTypes[field.key] = field.type
-    if (field.initialValue) {
-      initialState[field.key] = field.initialValue
-    } else {
-      if (field.type === 'number') {
-        initialState[field.key] = 0
-      } else {
-        initialState[field.key] = ''
-      }
-    }
-    keys.push(field.key)
-  })
-})
+interface InitialFormState {
+  canDownloadFederal: string
+  projectedTurnout: number
+  winNumber: number
+  voterContactGoal: number
+  voteGoal: number
+  voterProjection: number
+  budgetLow: number
+  budgetHigh: number
+  voterMap: string
+  finalVotes: number
+}
 
-export default function AdminVictoryPathPage(props) {
+const initialState: InitialFormState = {
+  canDownloadFederal: '',
+  projectedTurnout: 0,
+  winNumber: 0,
+  voterContactGoal: 0,
+  voteGoal: 0,
+  voterProjection: 0,
+  budgetLow: 0,
+  budgetHigh: 0,
+  voterMap: '',
+  finalVotes: 0,
+}
+
+interface KeyTypes {
+  canDownloadFederal: 'select'
+  projectedTurnout: 'number'
+  winNumber: 'number'
+  voterContactGoal: 'number'
+  voteGoal: 'number'
+  voterProjection: 'number'
+  budgetLow: 'number'
+  budgetHigh: 'number'
+  voterMap: 'text'
+  finalVotes: 'number'
+}
+
+const keys: FormFieldKey[] = [
+  'canDownloadFederal',
+  'projectedTurnout',
+  'winNumber',
+  'voterContactGoal',
+  'voteGoal',
+  'voterProjection',
+  'budgetLow',
+  'budgetHigh',
+  'voterMap',
+  'finalVotes',
+]
+
+const keyTypes: KeyTypes = {
+  canDownloadFederal: 'select',
+  projectedTurnout: 'number',
+  winNumber: 'number',
+  voterContactGoal: 'number',
+  voteGoal: 'number',
+  voterProjection: 'number',
+  budgetLow: 'number',
+  budgetHigh: 'number',
+  voterMap: 'text',
+  finalVotes: 'number',
+}
+
+const isFormFieldKey = (key: string): key is FormFieldKey => {
+  return key in keyTypes
+}
+
+interface AdminVictoryPathPageProps {
+  pathname: string
+  title: string
+}
+
+export default function AdminVictoryPathPage(
+  props: AdminVictoryPathPageProps,
+): React.JSX.Element {
   const [campaign, _, refreshCampaign] = useAdminCampaign()
-  const { pathToVictory: p2vObject, details } = campaign
+  const { pathToVictory: p2vObject, details } = campaign || {}
   const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<FormState>({
     ...initialState,
     ...pathToVictory,
-    canDownloadFederal: campaign.canDownloadFederal,
+    canDownloadFederal: campaign?.canDownloadFederal || false,
   })
 
   const [notNeeded, setNotNeeded] = useState(
@@ -146,15 +271,16 @@ export default function AdminVictoryPathPage(props) {
       return {
         ...prevState,
         ...pathToVictory,
-        canDownloadFederal: campaign.canDownloadFederal,
+        canDownloadFederal: campaign?.canDownloadFederal || false,
       }
     })
-  }, [pathToVictory, campaign.canDownloadFederal])
+  }, [pathToVictory, campaign?.canDownloadFederal])
 
-  const onChangeField = (key, value) => {
-    let val = value
+  const onChangeField = (key: string, value: string | boolean): void => {
+    if (!isFormFieldKey(key)) return
+    let val: string | number | boolean = value
     if (keyTypes[key] === 'number' && value !== '') {
-      val = parseFloat(value)
+      val = parseFloat(String(value))
     } else if (keyTypes[key] === 'select' && value !== '') {
       if (value === 'true' || value === 'false') {
         val = value === 'true'
@@ -163,14 +289,13 @@ export default function AdminVictoryPathPage(props) {
       val = value
     }
 
-    const newState = {
+    const newState: FormState = {
       ...state,
       [key]: val,
     }
 
-    // TODO: Move recalculation of these fields to the backend if projectedTurnout is updated on a campaign
     if (key === 'projectedTurnout') {
-      const pt = val === '' ? 0 : parseFloat(val)
+      const pt = val === '' ? 0 : parseFloat(String(val))
       const winNumber = pt > 0 ? Math.floor(pt * 0.5) + 1 : 0
       const voterContactGoal = pt > 0 ? pt * 5 : 0
 
@@ -181,20 +306,18 @@ export default function AdminVictoryPathPage(props) {
     setState(newState)
   }
 
-  const save = async () => {
+  const save = async (): Promise<void> => {
     successSnackbar('Saving...')
 
     try {
-      // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(campaign.id)
+        await sendVictoryMail(campaign?.id || 0)
       }
-      // send only the keys that changed
-      let keysToUpdate = []
+      let keysToUpdate: FormFieldKey[] = []
       if (pathToVictory) {
         keysToUpdate = keys.filter((key) => {
           if (key === 'canDownloadFederal') {
-            return state[key] != campaign.canDownloadFederal
+            return state[key] != campaign?.canDownloadFederal
           }
           return state[key] != pathToVictory[key]
         })
@@ -215,14 +338,14 @@ export default function AdminVictoryPathPage(props) {
         }
       })
 
-      if (state?.projectedTurnout && state.projectedTurnout > 0) {
+      if (state?.projectedTurnout && Number(state.projectedTurnout) > 0) {
         attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' })
       } else {
         errorSnackbar('Projected Turnout is required')
         return
       }
 
-      await updateCampaign(attr, campaign.slug)
+      await updateCampaign(attr, campaign?.slug || '')
       successSnackbar('Saved')
       await revalidatePage('/admin/victory-path/[slug]')
       window.location.reload()
@@ -235,7 +358,9 @@ export default function AdminVictoryPathPage(props) {
   const office =
     details?.office === 'Other' ? `${details?.otherOffice}` : details?.office
 
-  const handleNotNeeded = async (e) => {
+  const handleNotNeeded = async (
+    e: ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
     setNotNeeded(e.target.checked)
 
     await updateCampaign(
@@ -245,14 +370,22 @@ export default function AdminVictoryPathPage(props) {
           value: e.target.checked,
         },
       ],
-      campaign.slug,
+      campaign?.slug || '',
     )
     await refreshCampaign()
   }
 
-  const handleDistrictSubmit = async (typeObj, nameObj) => {
+  const handleDistrictSubmit = async (
+    typeObj: { L2DistrictType: string } | null,
+    nameObj: { L2DistrictName: string } | null,
+  ): Promise<void> => {
+    if (!typeObj || !nameObj) return
     try {
-      await updateDistrict(campaign.slug, typeObj.L2DistrictType, nameObj.L2DistrictName)
+      await updateDistrict(
+        campaign?.slug || '',
+        typeObj.L2DistrictType,
+        nameObj.L2DistrictName,
+      )
       await refreshCampaign()
       successSnackbar('District updated')
     } catch (e) {
@@ -289,22 +422,47 @@ export default function AdminVictoryPathPage(props) {
             <div className="mb-6 flex items-center gap-3">
               <Checkbox
                 defaultChecked={excludeInvalidOverride}
-                onChange={(e) => setExcludeInvalidOverride(e.target.checked)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setExcludeInvalidOverride(e.target.checked)
+                }
                 color="error"
               />
               <div>
-                excludeInvalid override - only check this if you aren&apos;t seeing districts, and/or you&apos;re confident you can select the correct one without safeguards for validity. Any districts you see exclusively with this override we do not have a projected turnout for.
+                excludeInvalid override - only check this if you aren&apos;t
+                seeing districts, and/or you&apos;re confident you can select
+                the correct one without safeguards for validity. Any districts
+                you see exclusively with this override we do not have a
+                projected turnout for.
               </div>
             </div>
             <DistrictPicker
-              state={details?.state}
-              electionYear={new Date(details?.electionDate).getFullYear()}
+              state={details?.state || ''}
+              electionYear={
+                details?.electionDate
+                  ? new Date(details.electionDate).getFullYear()
+                  : new Date().getFullYear()
+              }
               className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
               buttonText="Save District"
               onSubmit={handleDistrictSubmit}
               excludeInvalidOverride={excludeInvalidOverride}
-              initialType={pathToVictory?.electionType ? { id: pathToVictory.electionType, L2DistrictType: pathToVictory.electionType, label: pathToVictory.electionType.replace(/_/g, ' ') } : null}
-              initialName={pathToVictory?.electionLocation ? { id: pathToVictory.electionLocation, L2DistrictName: pathToVictory.electionLocation } : null}
+              initialType={
+                pathToVictory?.electionType
+                  ? {
+                      id: pathToVictory.electionType,
+                      L2DistrictType: pathToVictory.electionType,
+                      label: pathToVictory.electionType.replace(/_/g, ' '),
+                    }
+                  : null
+              }
+              initialName={
+                pathToVictory?.electionLocation
+                  ? {
+                      id: pathToVictory.electionLocation,
+                      L2DistrictName: pathToVictory.electionLocation,
+                    }
+                  : null
+              }
             />
             {!notNeeded && <VoterFileSection />}
           </div>
@@ -332,7 +490,11 @@ export default function AdminVictoryPathPage(props) {
                       <RenderInputField
                         field={field}
                         onChangeCallback={onChangeField}
-                        value={state[field.key]}
+                        value={(() => {
+                          const val = state[field.key]
+                          if (typeof val === 'boolean') return val
+                          return String(val ?? '')
+                        })()}
                       />
                     )}
                   </div>

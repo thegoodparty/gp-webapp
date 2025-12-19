@@ -6,6 +6,20 @@ import { fetchContentByType } from 'helpers/fetchHelper'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
+interface PhotoData {
+  url: string
+  alt?: string
+}
+
+interface TeamMember {
+  id: string
+  fullName: string
+  role: string
+  partyRole?: string
+  goodPhoto?: PhotoData
+  partyPhoto?: PhotoData
+}
+
 const meta = pageMetaData({
   title: 'Team | GoodParty.org',
   description:
@@ -14,8 +28,8 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const fetchTeamMembers = async () => {
-  return await fetchContentByType('goodPartyTeamMembers')
+const fetchTeamMembers = async (): Promise<TeamMember[]> => {
+  return await fetchContentByType<TeamMember[]>('goodPartyTeamMembers')
 }
 
 const Page = async (): Promise<React.JSX.Element> => {

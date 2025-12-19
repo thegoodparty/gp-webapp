@@ -7,7 +7,25 @@ import LeadingTheMovement from 'app/(company)/team/components/LeadingTheMovement
 import MoreQuestions from 'app/(company)/team/components/MoreQuestions'
 import MaxWidth from '@shared/layouts/MaxWidth'
 
-const TeamPage = ({ teamMembers }) => (
+interface PhotoData {
+  url: string
+  alt?: string
+}
+
+interface TeamMember {
+  id: string
+  fullName: string
+  role: string
+  partyRole?: string
+  goodPhoto?: PhotoData
+  partyPhoto?: PhotoData
+}
+
+interface TeamPageProps {
+  teamMembers?: TeamMember[]
+}
+
+const TeamPage = ({ teamMembers }: TeamPageProps): React.JSX.Element => (
   <>
     <TeamHero />
     <OurImpact />

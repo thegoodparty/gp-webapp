@@ -9,14 +9,86 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { BsFiletypeCsv } from 'react-icons/bs'
 import { formatPhoneNumber } from 'helpers/numberHelper'
 import { dateColumnSort } from 'helpers/dateColumnSort'
-import { IS_VERIFIED_OPTIONS_REVERSED } from '../../victory-path/[slug]/components/is-verified-options.constant'
-import { CANDIDATE_TIERS_REVERSED } from '../../victory-path/[slug]/components/candidate-tiers.constant'
+import { getIsVerifiedDisplay } from '../../victory-path/[slug]/components/is-verified-options.constant'
+import { getTierDisplay } from '../../victory-path/[slug]/components/candidate-tiers.constant'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 import { UserAdminLink } from 'app/admin/shared/UserAdminLink'
 import { useMemo, useState } from 'react'
+import { Campaign } from 'helpers/types'
+import { TableColumn } from '@shared/utils/Table'
 
-const getDateCellContents = (origDate) => {
-  let date
+interface CandidateTableRow {
+  id: number
+  candidateUserId: number | undefined
+  isActive: string
+  slug: string
+  firstName: string
+  lastName: string
+  userName: string
+  launched: string
+  lastVisited: string | number | undefined
+  party: string
+  office: string | null | undefined
+  officeTermLength: string | null | undefined
+  level: string | null | undefined
+  ballotLevel: string | null | undefined
+  city: string | null | undefined
+  zip: string
+  district: string
+  state: string
+  createdAt: Date | string
+  updatedAt: Date | string
+  email: string
+  phone: string
+  currentStep: string | undefined
+  shortVersion: string | null | undefined
+  campaignCommittee: string | null | undefined
+  website: string
+  primaryElectionDate: string | null | undefined
+  electionDate: string | null | undefined
+  doorKnocking: number
+  directMail: number
+  calls: number
+  digitalAds: number
+  text: number
+  events: number
+  yardSigns: number
+  aiDocsCreated: number
+  waitingForP2v: string
+  p2vStatus: string | undefined
+  viabilityScore: number
+  pledged: string
+  knowRun: string
+  isPro: string
+  isVerified: string | undefined
+  dateVerified: Date | string
+  tier: string | undefined
+  didWin: string
+  filingPeriodsStart: string | null | undefined
+  filingPeriodsEnd: string | null | undefined
+  hbPastCandidate: string | undefined
+  hbIncumbent: string | undefined
+  hbCandidateExperienceLevel: string | undefined
+  hbFinalViabilityRating: string | undefined
+  hbPrimaryElectionResult: string | undefined
+  hbElectionResults: string | undefined
+  hbProfessionalExperience: string | undefined
+  hbP2pCampaigns: string | undefined
+  hbP2pSent: string | undefined
+  hbConfirmedSelfFiler: string | undefined
+  hbVerifiedCandidates: string | undefined
+  hbDateVerified: string | undefined
+  hbProCandidate: string | undefined
+  hbFilingDeadline: string | undefined
+  hbOpponents: string | undefined
+}
+
+interface AdminCandidatesTableProps {
+  campaigns?: Campaign[]
+}
+
+const getDateCellContents = (origDate: Date | string | undefined): string | undefined => {
+  let date: string | undefined
   if (origDate) {
     date = dateUsHelper(origDate)
     if (date === undefined || date === 'Invalid Date') {
@@ -27,7 +99,7 @@ const getDateCellContents = (origDate) => {
   return date
 }
 
-function mapStatus(status, isActive) {
+const mapStatus = (status: string | undefined): string => {
   if (!status) {
     return 'No (Onboarding)'
   }
@@ -40,10 +112,10 @@ function mapStatus(status, isActive) {
   return 'No'
 }
 
-export default function AdminCandidatesTable({ campaigns = [] }) {
-  // TODO: Build this array of keys w/ an Object.keys() of the `fields` object below
-  //  so that we can just manage these keys/fields in one place instead of two.
-  const csvData = [
+export default function AdminCandidatesTable({
+  campaigns = [],
+}: AdminCandidatesTableProps): React.JSX.Element {
+  const csvData: (string | number | Date | null | undefined)[][] = [
     [
       'id',
       'candidateUserId',
@@ -114,7 +186,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
   const [pageSize, setPageSize] = useState(25)
 
   const inputData = useMemo(() => {
-    const resultArray = []
+    const resultArray: CandidateTableRow[] = []
     campaigns.map((campaign) => {
       const {
         data,
@@ -162,7 +234,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         opponents,
       } = hubSpotUpdates || {}
 
-      const lastVisited = user?.lastVisited
+      const lastVisited = user?.metaData?.lastVisited
 
       let waitingForP2v =
         !pathToVictory?.data?.p2vStatus ||
@@ -176,7 +248,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         waitingForP2v = 'n/a'
       }
 
-      if (data.p2vNotNeeded || pathToVictory?.data?.p2vNotNeeded) {
+      if (data?.p2vNotNeeded || pathToVictory?.data?.p2vNotNeeded) {
         waitingForP2v = 'Not Needed'
       }
 
@@ -187,7 +259,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         runningForOffice = 'Yes'
       }
 
-      let didWinDisplay
+      let didWinDisplay: string
       if (didWin === null) {
         didWinDisplay = 'N/A'
       } else if (didWin) {
@@ -196,7 +268,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         didWinDisplay = 'No'
       }
 
-      const fields = {
+      const fields: CandidateTableRow = {
         id: campaign.id,
         candidateUserId: user?.id,
         isActive: campaign.isActive ? 'Yes' : 'No',
@@ -207,7 +279,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         launched: mapStatus(details?.launchStatus),
         lastVisited,
         party: partyResolver(details?.party),
-        office: office === 'Other' ? otherOffice : office,
+        office: office === 'Other' ? `${otherOffice}` : office,
         officeTermLength: details?.officeTermLength,
         level,
         ballotLevel,
@@ -239,12 +311,12 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
         knowRun: runningForOffice,
         isPro: isPro ? 'Yes' : 'No',
-        isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
+        isVerified: getIsVerifiedDisplay(isVerified),
         dateVerified:
-          campaign.dateVerified === null
-            ? 'N/A'
-            : new Date(campaign.dateVerified),
-        tier: CANDIDATE_TIERS_REVERSED[tier],
+          campaign.dateVerified
+            ? new Date(campaign.dateVerified)
+            : 'N/A',
+        tier: getTierDisplay(tier),
         didWin: didWinDisplay,
         filingPeriodsStart: filingPeriodsStart,
         filingPeriodsEnd: filingPeriodsEnd,
@@ -265,11 +337,16 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         hbOpponents: opponents,
       }
       resultArray.push(fields)
-      let csvFields = fields
-      csvFields.lastVisited = dateUsHelper(fields.lastVisited)
-      csvFields.createdAt = dateUsHelper(fields.createdAt)
-      csvFields.updatedAt = dateUsHelper(fields.updatedAt)
-      csvData.push(Object.values(csvFields))
+      const csvRow = Object.values({
+        ...fields,
+        lastVisited: dateUsHelper(fields.lastVisited),
+        createdAt: dateUsHelper(fields.createdAt),
+        updatedAt: dateUsHelper(fields.updatedAt),
+      })
+      // TODO: Preexisting bug that prolly won't be fixed w/ the Admin platform being built
+      //  to replace this area of the app.
+      //  https://app.clickup.com/t/90132012119/ENG-6302
+      csvData.push(csvRow)
       return fields
     })
     return resultArray
@@ -280,13 +357,13 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
     return inputData.slice(start, start + pageSize)
   }, [inputData, pageIndex, pageSize])
 
-  const columns = useMemo(
+  const columns = useMemo<TableColumn<CandidateTableRow>[]>(
     () => [
       {
         id: 'actions',
         header: 'Actions',
         collapse: true,
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return <Actions {...row.original} />
         },
       },
@@ -299,7 +376,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'candidateUser',
         header: 'Candidate User',
         accessorKey: 'userName',
-        cell: ({ row }) => (
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => (
           <UserAdminLink userId={row.original.candidateUserId}>
             {row.original.userName}
           </UserAdminLink>
@@ -439,7 +516,8 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'dateVerified',
         header: 'Verified Date',
         accessorKey: 'dateVerified',
-        cell: ({ row }) => getDateCellContents(row?.original?.dateVerified),
+        cell: ({ row }: { row: { original: CandidateTableRow } }) =>
+          getDateCellContents(row?.original?.dateVerified),
       },
       {
         id: 'tier',
@@ -455,7 +533,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'victoryPath',
         header: 'Path to Victory',
         accessorKey: 'victoryPath',
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return (
             <Link
               href={`/admin/victory-path/${row.original.slug}`}
@@ -470,7 +548,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'email',
         header: 'Email',
         accessorKey: 'email',
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return (
             <a href={`mailto:${row.original.email}`} className="underline">
               {row.original.email}
@@ -482,7 +560,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'metrics',
         header: 'Metrics',
         accessorKey: 'metrics',
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return (
             <a
               href={`/admin/candidate-metrics/${row.original.slug}`}
@@ -540,7 +618,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         header: 'Phone',
         accessorKey: 'phone',
         collapse: true,
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           if (row.original.phone === 'n/a') {
             return 'n/a'
           }
@@ -560,9 +638,12 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'lastVisited',
         header: 'Last Visit',
         accessorKey: 'lastVisited',
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (
+          rowA: { original: CandidateTableRow },
+          rowB: { original: CandidateTableRow },
+        ) =>
           dateColumnSort(rowA.original.lastVisited, rowB.original.lastVisited),
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return row.original.lastVisited
             ? dateWithTime(row.original.lastVisited)
             : 'n/a'
@@ -571,18 +652,20 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
       {
         id: 'createdAt',
         header: 'Date Created',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.createdAt ? new Date(row.createdAt) : new Date(),
         sortingFn: 'datetime',
-        cell: ({ row }) => getDateCellContents(row?.original?.createdAt),
+        cell: ({ row }: { row: { original: CandidateTableRow } }) =>
+          getDateCellContents(row?.original?.createdAt),
       },
       {
         id: 'updatedAt',
         header: 'Last Modified',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.updatedAt ? new Date(row.updatedAt) : new Date(),
         sortingFn: 'datetime',
-        cell: ({ row }) => getDateCellContents(row?.original?.updatedAt),
+        cell: ({ row }: { row: { original: CandidateTableRow } }) =>
+          getDateCellContents(row?.original?.updatedAt),
       },
       {
         id: 'party',
@@ -607,64 +690,76 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
       {
         id: 'primaryElectionDate',
         header: 'Primary Date',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.primaryElectionDate
             ? new Date(row.primaryElectionDate)
             : new Date('1970-01-01'),
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (
+          rowA: { original: CandidateTableRow },
+          rowB: { original: CandidateTableRow },
+        ) =>
           dateColumnSort(
             rowA.original.primaryElectionDate,
             rowB.original.primaryElectionDate,
           ),
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return dateUsHelper(row.original.primaryElectionDate)
         },
       },
       {
         id: 'electionDate',
         header: 'Election Date',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.electionDate
             ? new Date(row.electionDate)
             : new Date('1970-01-01'),
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (
+          rowA: { original: CandidateTableRow },
+          rowB: { original: CandidateTableRow },
+        ) =>
           dateColumnSort(
             rowA.original.electionDate,
             rowB.original.electionDate,
           ),
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return dateUsHelper(row.original.electionDate)
         },
       },
       {
         id: 'filingPeriodsStart',
         header: 'Filing Period Start',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.electionDate
-            ? new Date(row.filingPeriodsStart)
+            ? new Date(row.filingPeriodsStart || '')
             : new Date('1970-01-01'),
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (
+          rowA: { original: CandidateTableRow },
+          rowB: { original: CandidateTableRow },
+        ) =>
           dateColumnSort(
             rowA.original.filingPeriodsStart,
             rowB.original.filingPeriodsStart,
           ),
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return dateUsHelper(row.original.filingPeriodsStart)
         },
       },
       {
         id: 'filingPeriodsEnd',
         header: 'Filing Period End',
-        accessorFn: (row) =>
+        accessorFn: (row: CandidateTableRow) =>
           row.electionDate
-            ? new Date(row.filingPeriodsEnd)
+            ? new Date(row.filingPeriodsEnd || '')
             : new Date('1970-01-01'),
-        sortingFn: (rowA, rowB) =>
+        sortingFn: (
+          rowA: { original: CandidateTableRow },
+          rowB: { original: CandidateTableRow },
+        ) =>
           dateColumnSort(
             rowA.original.filingPeriodsEnd,
             rowB.original.filingPeriodsEnd,
           ),
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           return dateUsHelper(row.original.filingPeriodsEnd)
         },
       },
@@ -703,7 +798,7 @@ export default function AdminCandidatesTable({ campaigns = [] }) {
         id: 'website',
         header: 'Website',
         accessorKey: 'website',
-        cell: ({ row }) => {
+        cell: ({ row }: { row: { original: CandidateTableRow } }) => {
           if (!row.original.website) {
             return ''
           }

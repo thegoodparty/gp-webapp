@@ -7,9 +7,14 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
+interface EcanvasserTeam {
+  id: number
+  name: string
+}
+
 interface SurveyListProps {
   surveys?: EcanvasserSurvey[]
-  teams?: []
+  teams?: EcanvasserTeam[]
 }
 
 const fetchSurveys = async (): Promise<EcanvasserSurvey[]> => {

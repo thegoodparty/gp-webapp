@@ -8,21 +8,43 @@ import ExploreTags from './ExploreTags'
 import MoreResources from './MoreResources'
 import BlogSearch from './BlogSearch'
 import BlogNavLink from './BlogNavLink'
+import { ReactNode } from 'react'
 
-/**
- * @typedef {Object} BlogWrapperProps
- * @property {Object[]} sections Array of sections to link to at the top of wrapper
- * @property {Object[]} topTags Array of tags + slugs to render under Heading
- * @property {string} pageTitle Title for the currently viewed page
- * @property {string} pageSubtitle Subtitle for the currently viewed page
- * @property {string} pageSlug Slug for the currently viewed page
- * @property {boolean} showBreadcrumbs Bool to display or hide breadcrumbs
- */
+interface Section {
+  fields?: {
+    slug?: string
+    title?: string
+    order?: string | number
+  }
+}
 
-/**
- * Wrapper element for Blog list views
- * @param {BlogWrapperProps} props
- */
+interface Tag {
+  slug: string
+  name: string
+}
+
+interface ArticleTitle {
+  title: string
+  slug: string
+}
+
+interface BreadcrumbLink {
+  href: string
+  label: string
+}
+
+interface BlogWrapperProps {
+  sections: Section[]
+  topTags?: Tag[]
+  pageTitle: string
+  pageSubtitle?: string
+  pageSlug?: string
+  showBreadcrumbs?: boolean
+  children?: ReactNode
+  allTags?: Tag[]
+  articleTitles?: ArticleTitle[]
+}
+
 export default async function BlogWrapper({
   sections,
   topTags,
@@ -33,13 +55,15 @@ export default async function BlogWrapper({
   children,
   allTags,
   articleTitles,
-}) {
+}: BlogWrapperProps): Promise<React.JSX.Element> {
   const tags = allTags || (await fetchArticleTags())
   const titles = articleTitles || (await fetchArticlesTitles())
 
-  const breadcrumbs = [{ href: '/blog', label: 'Blog' }, { label: pageTitle }]
+  const breadcrumbs: BreadcrumbLink[] = [
+    { href: '/blog', label: 'Blog' },
+    { href: '#', label: pageTitle },
+  ]
 
-  // ensure sections are ordered correctly
   const sortedSections = sections.sort(
     (a, b) => Number(a.fields?.order) - Number(b.fields?.order),
   )
@@ -65,11 +89,11 @@ export default async function BlogWrapper({
 
             {sortedSections.map((section) => (
               <BlogNavLink
-                key={section.fields.slug}
-                href={`/blog/section/${section.fields.slug}`}
-                isSelected={section.fields.slug === pageSlug}
+                key={section.fields?.slug}
+                href={`/blog/section/${section.fields?.slug}`}
+                isSelected={section.fields?.slug === pageSlug}
               >
-                {section.fields.title}
+                {section.fields?.title}
               </BlogNavLink>
             ))}
           </nav>

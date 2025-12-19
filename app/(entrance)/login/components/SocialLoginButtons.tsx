@@ -10,10 +10,29 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { identifyUser } from '@shared/utils/analytics'
 import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
+import { User } from 'helpers/types'
 
-async function login(payload) {
+interface SocialLoginPayload {
+  email: string
+  socialPic: string
+  socialProvider: string
+  socialToken: string | undefined
+}
+
+interface SocialUser {
+  _profile: { email: string; profilePicURL: string }
+  _provider: string
+  _token: { idToken: string; accessToken?: string }
+}
+
+interface LoginResponse {
+  user: User
+  token: string
+}
+
+async function login(payload: SocialLoginPayload): Promise<LoginResponse | false> {
   try {
-    const resp = await clientFetch(
+    const resp = await clientFetch<LoginResponse>(
       apiRoutes.authentication.socialLogin,
       payload,
     )
@@ -24,18 +43,18 @@ async function login(payload) {
   }
 }
 
-export default function SocialLoginButtons() {
+export default function SocialLoginButtons(): React.JSX.Element {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
 
-  const socialLoginCallback = async (socialUser) => {
+  const socialLoginCallback = async (socialUser: SocialUser): Promise<void> => {
     const profile = socialUser._profile
     const provider = socialUser._provider
     const { email, profilePicURL } = profile
     // for facebook - get a larger image
-    let socialPic = profilePicURL
-    let idToken
+    let socialPic: string = profilePicURL
+    let idToken: string | undefined
     if (provider === 'facebook') {
       try {
         idToken = socialUser._token.accessToken
@@ -62,14 +81,21 @@ export default function SocialLoginButtons() {
       socialToken: idToken,
     }
 
-    const { user, token } = await login(payload)
-    if (user) {
+    const result = await login(payload)
+    if (result && result.user) {
+      const { user, token } = result
       await saveToken(token)
       setUser(user)
-      const { id, email, firstName, lastName, phone, zip } = user
-      await identifyUser(id, { email, firstName, lastName, phone, zip })
+      const { id, email: userEmail, firstName, lastName, phone, zip } = user
+      await identifyUser(id, { 
+        email: userEmail, 
+        firstName: firstName ?? undefined, 
+        lastName: lastName ?? undefined, 
+        phone: phone ?? undefined, 
+        zip: zip ?? undefined 
+      })
       successSnackbar('Welcome back to GoodParty.org!')
-      await doLoginRedirect(router, user)
+      await doLoginRedirect(router, user, undefined)
     } else {
       errorSnackbar('Error [loginType] in')
     }

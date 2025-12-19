@@ -7,7 +7,19 @@ import { MdEmail } from 'react-icons/md'
 import { AiOutlineLink } from 'react-icons/ai'
 import Overline from '@shared/typography/Overline'
 
-export default function ShareBlog({ className }) {
+interface ShareChannel {
+  label: string
+  icon: React.ReactNode
+  link: string
+}
+
+interface ShareBlogProps {
+  className?: string
+}
+
+export default function ShareBlog({
+  className,
+}: ShareBlogProps): React.JSX.Element {
   const pathname = usePathname()
   const [appBase, setAppBase] = useState('')
   const url = appBase + pathname
@@ -25,7 +37,7 @@ export default function ShareBlog({ className }) {
   const hashQueryTwitter = hash ? `&hashtags=${hash}` : ''
   const hashQueryFacebook = hash ? `&hashtag=${hash}` : ''
 
-  const channels = [
+  const channels: ShareChannel[] = [
     {
       label: 'Facebook',
       icon: <FaFacebookF className="text-xl" />,
@@ -56,7 +68,7 @@ export default function ShareBlog({ className }) {
   return (
     <div className={`mb-8 ${className}`} data-testid="shareBlog">
       <Overline className="mb-4">Share on</Overline>
-      {channels.map((channel, index) => (
+      {channels.map((channel) => (
         <Fragment key={channel.label}>
           {channel.link && (
             <a

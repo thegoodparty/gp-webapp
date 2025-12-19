@@ -3,12 +3,20 @@ import DoorKnockingSurveysPage from './components/DoorKnockingSurveysPage'
 import candidateAccess from '../../shared/candidateAccess'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
 
 export const dynamic = 'force-dynamic'
 
-const fetchSurveys = async () => {
+interface EcanvasserTeam {
+  id: number
+  name: string
+}
+
+const fetchSurveys = async (): Promise<EcanvasserSurvey[] | false> => {
   try {
-    const resp = await serverFetch(apiRoutes.ecanvasser.surveys.list)
+    const resp = await serverFetch<EcanvasserSurvey[]>(
+      apiRoutes.ecanvasser.surveys.list,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -16,9 +24,11 @@ const fetchSurveys = async () => {
   }
 }
 
-const fetchTeams = async () => {
+const fetchTeams = async (): Promise<EcanvasserTeam[] | false> => {
   try {
-    const resp = await serverFetch(apiRoutes.ecanvasser.teams.list)
+    const resp = await serverFetch<EcanvasserTeam[]>(
+      apiRoutes.ecanvasser.teams.list,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -38,11 +48,11 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   const [surveys, teams] = await Promise.all([fetchSurveys(), fetchTeams()])
   const childProps = {
-    surveys,
-    teams,
+    surveys: surveys || undefined,
+    teams: teams || undefined,
+    pathname: '/dashboard/door-knocking/surveys',
+    title: 'Door Knocking Surveys',
   }
 
   return <DoorKnockingSurveysPage {...childProps} />
 }
-
-

@@ -1,6 +1,9 @@
 import { fetchContentByType } from 'helpers/fetchHelper'
 
-export const fetchArticlesTitles = async () =>
-  await fetchContentByType('blogArticleTitles')
+interface ArticleTitle {
+  title: string
+  slug: string
+}
 
-
+export const fetchArticlesTitles = async (): Promise<ArticleTitle[]> =>
+  await fetchContentByType<ArticleTitle[]>('blogArticleTitles')

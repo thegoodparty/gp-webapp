@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, MouseEvent } from 'react'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { TeamMemberCards } from 'app/(company)/team/components/TeamMemberCards'
 import Image from 'next/image'
@@ -7,21 +7,44 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Link from 'next/link'
 import MaxWidth from '@shared/layouts/MaxWidth'
 
-export default function TeamMembersSection(props) {
-  const { teamMembers } = props
-  const [selected, setSelected] = useState({})
+interface PhotoData {
+  url: string
+  alt?: string
+}
+
+interface TeamMember {
+  id: string
+  fullName: string
+  role: string
+  partyRole?: string
+  goodPhoto?: PhotoData
+  partyPhoto?: PhotoData
+}
+
+interface SelectedState {
+  [key: number]: boolean
+}
+
+interface TeamMembersSectionProps {
+  teamMembers?: TeamMember[]
+}
+
+export default function TeamMembersSection({
+  teamMembers,
+}: TeamMembersSectionProps): React.JSX.Element {
+  const [selected, setSelected] = useState<SelectedState>({})
   const [flipAll, setFlipAll] = useState(false)
 
-  const handleSelected = (index) =>
+  const handleSelected = (index: number): void =>
     setSelected({
       ...selected,
       [index]: !selected[index],
     })
 
-  const handleFlipAll = (e) => {
+  const handleFlipAll = (e: MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault()
-    const all = {}
-    teamMembers.forEach((member, index) => {
+    const all: SelectedState = {}
+    teamMembers?.forEach((_, index) => {
       all[index] = !flipAll
     })
     setSelected(all)
@@ -71,7 +94,7 @@ export default function TeamMembersSection(props) {
             <div className="col-span-12 lg:col-span-5">
               <h3 className="text-2xl mb-1">Interested in joining our team?</h3>
               <p className="font-sfpro mb-8 lg:mb-auto">
-                We’re always looking for new talent ready to create change.
+                We&apos;re always looking for new talent ready to create change.
               </p>
             </div>
             <Link className="col-span-12 lg:col-span-4" href="/work-with-us">

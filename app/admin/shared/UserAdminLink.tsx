@@ -1,5 +1,5 @@
 interface UserAdminLinkProps {
-  userId: string | number
+  userId: string | number | undefined
   className?: string
   children: React.ReactNode
 }

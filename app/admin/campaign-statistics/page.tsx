@@ -47,10 +47,7 @@ const stripEmptyFilters = (filters: FiltersPayload): FiltersPayload => {
   return result
 }
 
-interface Campaign {
-  id: number
-  slug: string
-}
+import { Campaign } from 'helpers/types'
 
 const fetchCampaigns = async (filters: FiltersPayload): Promise<Campaign[]> => {
   try {
