@@ -10,7 +10,7 @@ export default function PollsContent() {
   const [poll] = usePoll()
 
   // If a poll has responses, then show the issues
-  if (!!poll?.responseCount) {
+  if (!!poll.responseCount) {
     return <CompletedPoll />
   }
 

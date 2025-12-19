@@ -23,13 +23,11 @@ export default function PollsDetailPage({ pathname }) {
   const [poll] = usePoll()
   const [campaign] = useCampaign()
 
-  const pollStatus = poll?.status
+  const pollStatus = poll.status
   useEffect(() => {
-    if (pollStatus) {
-      trackEvent(EVENTS.polls.resultsViewed, { status: pollStatus })
-      if (pollStatus === PollStatus.COMPLETED) {
-        showSurvey()
-      }
+    trackEvent(EVENTS.polls.resultsViewed, { status: pollStatus })
+    if (pollStatus === PollStatus.COMPLETED) {
+      showSurvey()
     }
   }, [pollStatus])
 
