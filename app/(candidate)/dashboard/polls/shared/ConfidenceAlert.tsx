@@ -11,17 +11,31 @@ import { isPollExpanding } from './poll-utils'
 import { PollStatus } from './poll-types'
 import { LuCircleCheck } from 'react-icons/lu'
 import clsx from 'clsx'
+import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { districtStatsQueryOptions } from './queries'
 
 export default function ConfidenceAlert() {
+  const queryClient = useQueryClient()
   const [poll] = usePoll()
   const { ready: flagsReady, on: expandAccessEnabled } = useFlagOn(
     'serve-polls-expansion',
   )
+  const { lowConfidence } = poll
+
+  // Prefetch the district stats query if the poll has low confidence. We're going to need
+  // this to calculate the recommended poll size, and this _can_ be a slow query.
+  useEffect(() => {
+    if (lowConfidence) {
+      queryClient.prefetchQuery(
+        districtStatsQueryOptions({ hasCellPhone: 'true' }),
+      )
+    }
+  }, [lowConfidence])
+
   if (!flagsReady || !expandAccessEnabled) {
     return null
   }
-
-  const { lowConfidence } = poll
 
   if (isPollExpanding(poll)) {
     const alertData =
