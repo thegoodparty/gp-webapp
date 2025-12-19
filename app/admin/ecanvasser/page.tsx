@@ -13,5 +13,7 @@ export const maxDuration = 60
 export default async function Page(): Promise<React.JSX.Element> {
   await adminAccessOnly()
 
-  return <AdminEcanvasserPage />
+  return (
+    <AdminEcanvasserPage pathname="/admin/ecanvasser" title="Ecanvasser" />
+  )
 }

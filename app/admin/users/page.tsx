@@ -13,8 +13,25 @@ const meta = pageMetaData({
 export const metadata = meta
 export const maxDuration = 60
 
-const fetchUsers = async () => {
-  const resp = await serverFetch(apiRoutes.admin.user.list)
+interface UserMetaData {
+  lastVisited?: string
+}
+
+interface User {
+  id: number
+  firstName?: string
+  lastName?: string
+  email?: string
+  phone?: string
+  zip?: string
+  createdAt?: string
+  roles?: string[]
+  metaData?: UserMetaData
+  campaigns?: { id: number; slug: string }[]
+}
+
+const fetchUsers = async (): Promise<User[]> => {
+  const resp = await serverFetch<User[]>(apiRoutes.admin.user.list)
   return resp.data
 }
 

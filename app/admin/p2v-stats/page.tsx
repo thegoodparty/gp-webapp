@@ -13,6 +13,5 @@ export const maxDuration = 60
 export default async function Page(): Promise<React.JSX.Element> {
   await adminAccessOnly()
 
-  const childProps = {}
-  return <P2VStatsPage {...childProps} />
+  return <P2VStatsPage pathname="/admin/p2v-stats" title="P2V Stats" />
 }

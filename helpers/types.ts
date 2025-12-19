@@ -57,6 +57,33 @@ export interface UserResponse {
   data: User
 }
 
+// ===== CampaignUpdateHistory Types =====
+
+export enum CampaignUpdateHistoryType {
+  doorKnocking = 'doorKnocking',
+  calls = 'calls',
+  digital = 'digital',
+  directMail = 'directMail',
+  digitalAds = 'digitalAds',
+  text = 'text',
+  events = 'events',
+  yardSigns = 'yardSigns',
+  robocall = 'robocall',
+  phoneBanking = 'phoneBanking',
+  socialMedia = 'socialMedia',
+}
+
+export interface CampaignUpdateHistory {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  userId: number
+  user: User
+  type: CampaignUpdateHistoryType
+  quantity: number
+}
+
 // ===== Campaign Types =====
 
 export enum CampaignTier {
@@ -129,6 +156,19 @@ export interface CampaignDetails {
   wonGeneral?: boolean
 }
 
+export interface ReportedVoterGoals {
+  doorKnocking?: number
+  calls?: number
+  digital?: number
+  directMail?: number
+  digitalAds?: number
+  text?: number
+  events?: number
+  robocall?: number
+  phoneBanking?: number
+  socialMedia?: number
+}
+
 export interface CampaignData {
   createdBy?: string
   slug?: string
@@ -137,13 +177,19 @@ export interface CampaignData {
   launchStatus?: string
   lastVisited?: number
   claimProfile?: string
-  customVoterFiles?: unknown[]
-  reportedVoterGoals?: Record<string, unknown>
+  customVoterFiles?: CustomVoterFile[]
+  reportedVoterGoals?: ReportedVoterGoals
   textCampaignCount?: number
   lastStepDate?: string
   adminUserEmail?: string
   hubspotId?: string
   name?: string
+}
+
+export interface CustomVoterFile {
+  id?: string
+  name?: string
+  url?: string
 }
 
 export interface AiContentData {
@@ -163,6 +209,43 @@ export interface CampaignAiContent {
     | undefined
 }
 
+export interface PathToVictoryData {
+  p2vStatus?: string
+  p2vAttempts?: number
+  p2vCompleteDate?: string
+  completedBy?: number
+  electionType?: string
+  electionLocation?: string
+  voterContactGoal?: number
+  winNumber?: number
+  p2vNotNeeded?: boolean
+  totalRegisteredVoters?: number
+  republicans?: number
+  democrats?: number
+  indies?: number
+  women?: number
+  men?: number
+  white?: number
+  asian?: number
+  africanAmerican?: number
+  hispanic?: number
+  averageTurnout?: number
+  projectedTurnout?: number
+  viability?: string
+  source?: string
+  districtId?: string
+  districtManuallySet?: boolean
+  officeContextFingerprint?: string
+}
+
+export interface PathToVictory {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  data: PathToVictoryData
+}
+
 export interface Campaign {
   id: number
   createdAt: Date | string
@@ -180,18 +263,23 @@ export interface Campaign {
   data: CampaignData
   details: CampaignDetails
   aiContent: CampaignAiContent
-  vendorTsData: Record<string, unknown>
+  vendorTsData: VendorTsData
+  pathToVictory?: PathToVictory
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]
   hasFreeTextsOffer: boolean
-  // Public candidate profile properties
   firstName?: string
   lastName?: string
   image?: string
   claimed?: boolean
   positionName?: string
   raceId?: string
+}
+
+export interface VendorTsData {
+  pathToVictory?: PathToVictoryData
+  [key: string]: PathToVictoryData | string | number | boolean | object | undefined
 }
 
 export interface WebsiteIssue {

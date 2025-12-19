@@ -13,7 +13,7 @@ interface SimpleTableProps<T> {
   onRowClick?: ((row: T, e: React.MouseEvent<HTMLTableRowElement>) => void) | null
 }
 
-const SimpleTable = <T extends Record<string, never>>({
+const SimpleTable = <T extends Record<string, React.ReactNode>,>({
   columns = [],
   data = [],
   onRowClick = null,

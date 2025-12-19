@@ -13,5 +13,10 @@ export const maxDuration = 60
 export default async function Page(): Promise<React.JSX.Element> {
   await adminAccessOnly()
 
-  return <PublicCandidates />
+  return (
+    <PublicCandidates
+      pathname="/admin/public-candidates"
+      title="Public Candidates"
+    />
+  )
 }
