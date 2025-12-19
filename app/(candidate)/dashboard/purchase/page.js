@@ -29,6 +29,10 @@ export default async function Page({ searchParams }) {
   await candidateAccess()
   const { type, domain, websiteId, returnUrl } = await searchParams
 
+  if (!type || !PURCHASE_TYPES[type]) {
+    return notFound()
+  }
+
   return (
     <PurchaseIntentProvider
       {...{
