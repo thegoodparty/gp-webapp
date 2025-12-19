@@ -343,6 +343,9 @@ export default function AdminCandidatesTable({
         createdAt: dateUsHelper(fields.createdAt),
         updatedAt: dateUsHelper(fields.updatedAt),
       })
+      // TODO: Preexisting bug that prolly won't be fixed w/ the Admin platform being built
+      //  to replace this area of the app.
+      //  https://app.clickup.com/t/90132012119/ENG-6302
       csvData.push(csvRow)
       return fields
     })
