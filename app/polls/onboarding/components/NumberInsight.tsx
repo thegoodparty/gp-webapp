@@ -8,6 +8,7 @@ interface NumberInsightProps {
   icon: ReactNode
   isLoading?: boolean
   error?: string | null
+  testID?: string
 }
 
 export const NumberInsight = ({
@@ -16,6 +17,7 @@ export const NumberInsight = ({
   icon,
   isLoading = false,
   error,
+  testID,
 }: NumberInsightProps) => {
   const showSkeleton = isLoading
   const showError = !isLoading && error
@@ -37,7 +39,10 @@ export const NumberInsight = ({
           </p>
         )}
         {showValue && (
-          <p className="text-2xl leading-normal font-bold mt-2">
+          <p
+            className="text-2xl leading-normal font-bold mt-2"
+            data-testid={testID}
+          >
             {numberFormatter(value)}
           </p>
         )}
