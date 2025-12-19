@@ -224,7 +224,7 @@ export default function SegmentSection() {
             <SelectValue placeholder="All Contacts" />
           </div>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-[50vh]">
           <SelectGroup>
             <SelectLabel>Default Segments</SelectLabel>
             {defaultSegments.map((segment) => (

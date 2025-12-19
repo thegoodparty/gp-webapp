@@ -4,12 +4,12 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import Link from 'next/link'
 import { FaMapMarkerAlt, FaRegClock } from 'react-icons/fa'
 import { MdOutlineArrowBack } from 'react-icons/md'
-import StatusPill from '../../shared/StatusPill'
+import StatusPill, { IssueStatus } from '../../shared/StatusPill'
 
 interface Issue {
   title: string
   location?: string
-  status: string
+  status: IssueStatus
   createdAt: string
 }
 

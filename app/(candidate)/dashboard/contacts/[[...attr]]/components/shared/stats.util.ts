@@ -1,18 +1,10 @@
+import {
+  ContactStatsCategory,
+  ContactsStats,
+} from 'app/(candidate)/dashboard/polls/shared/queries'
 import { numberFormatter } from 'helpers/numberHelper'
 
-type Bucket = { label: string; count: number; percent: number }
-type Category = { buckets: Bucket[] }
-
-export type PeopleStats = {
-  meta?: { totalConstituents?: number }
-  categories?: {
-    homeowner?: Category
-    presenceOfChildren?: Category
-    estimatedIncomeRange?: Category
-  }
-}
-
-export interface ContactStats {
+export interface ContactStatsRendered {
   totalConstituents: string | null
   homeownersPercent: string | null
   hasChildrenUnder18Percent: string | null
@@ -27,7 +19,9 @@ const parseIncomeMin = (label: string): number => {
   return num
 }
 
-const getMedianIncomeRange = (category?: Category): string | null => {
+const getMedianIncomeRange = (
+  category?: ContactStatsCategory,
+): string | null => {
   if (!category?.buckets?.length) return null
 
   const sorted = category.buckets
@@ -52,15 +46,15 @@ const getMedianIncomeRange = (category?: Category): string | null => {
   return last ? `$${last.label.replace(/–/g, '-')}` : null
 }
 
-const getPercentForYes = (category?: Category): number | null => {
+const getPercentForYes = (category?: ContactStatsCategory): number | null => {
   const yes = category?.buckets?.find((b) => b.label === 'Yes')
   return yes?.percent ? Math.round(yes.percent * 100) : null
 }
 
-export const getContactStats = (
-  stats: PeopleStats,
+export const getContactStatsRendered = (
+  stats: ContactsStats,
   totalVisibleContacts: number,
-): ContactStats => {
+): ContactStatsRendered => {
   const totalConstituents = stats?.meta?.totalConstituents
   const homeownersPercent = getPercentForYes(stats?.categories?.homeowner)
   const hasChildrenUnder18Percent = getPercentForYes(

@@ -15,7 +15,7 @@ export default function PollAudience(): React.JSX.Element {
         <LuUsersRound />
         <H4>Audience</H4>
       </div>
-      <Body2>{numberFormatter(audienceSize)} randomly selected residents</Body2>
+      <Body2>{numberFormatter(audienceSize || 0)} randomly selected residents</Body2>
     </div>
   )
 }

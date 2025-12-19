@@ -1,6 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatesPage from './components/CandidatesPage'
 import { numberFormatter } from 'helpers/numberHelper'
+import { SearchParams } from 'next/dist/server/request/search-params'
 
 const WINNER_COUNT = 3444
 
@@ -19,7 +20,7 @@ export async function generateMetadata() {
 }
 
 interface PageProps {
-  searchParams: Partial<Record<string, string>>
+  searchParams: SearchParams
 }
 
 export default async function Page({ searchParams }: PageProps) {

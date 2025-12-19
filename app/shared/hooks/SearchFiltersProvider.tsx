@@ -1,7 +1,9 @@
 'use client'
 import { createContext, useState } from 'react'
 
-interface SearchFilters {
+export interface SearchFilters {
+  search?: string
+  status?: string
 }
 
 type SearchFiltersContextValue = [

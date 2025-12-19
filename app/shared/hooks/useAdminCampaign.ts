@@ -1,7 +1,14 @@
 import { useContext } from 'react'
 import { AdminCampaignContext } from '@shared/hooks/AdminCampaignProvider'
+import { Campaign } from 'helpers/types'
 
-export const useAdminCampaign = () => {
+type UseAdminCampaignReturn = [
+  campaign: Campaign | null,
+  setCampaign: (campaign: Campaign) => void,
+  refreshCampaign: () => Promise<void>
+]
+
+export const useAdminCampaign = (): UseAdminCampaignReturn => {
   const [campaign, setCampaign, refreshCampaign] =
     useContext(AdminCampaignContext)
   if (campaign === undefined) {

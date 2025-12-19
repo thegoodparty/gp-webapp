@@ -20,6 +20,7 @@ export type Poll = {
 }
 
 export type PollIssue = {
+  id: string
   pollId: string
   title: string
   summary: string
@@ -28,4 +29,6 @@ export type PollIssue = {
   representativeComments: Array<{
     comment: string
   }>
+  createdAt: string
+  updatedAt: string
 }

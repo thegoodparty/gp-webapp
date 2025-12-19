@@ -9,12 +9,6 @@ export const WEBSITE_STATUS = {
   published: 'published',
   unpublished: 'unpublished',
 }
-
-interface Domain {
-  name?: string
-  status?: string
-}
-
 interface Issue {
   position?: {
     name?: string
@@ -27,55 +21,17 @@ interface CustomIssue {
   position?: string
 }
 
+import type { Website, WebsiteContent, Domain } from 'helpers/types'
+
 interface CombinedIssue {
   title: string
   description: string
 }
 
-interface WebsiteIssue {
-  title: string
-  description: string
-}
-
-interface WebsiteContent {
-  logo?: string
-  theme?: string
-  createStep?: string
-  main?: {
-    title?: string
-    tagline?: string
-    image?: string
-  }
-  about?: {
-    bio?: string
-    issues?: WebsiteIssue[]
-    committee?: string
-  }
-  contact?: {
-    address?: string
-    email?: string
-    phone?: string
-  }
-  vanityPath?: string
-  status?: string
-  heroFile?: File | null
-}
-
-interface Website {
-  id: number
-  createdAt: string
-  updatedAt: string
-  campaignId: number
-  status: string
-  vanityPath: string
-  content: WebsiteContent | null
-  domain?: Domain | null
-}
-
 export function getWebsiteUrl(
   vanityPath: string,
   preview: boolean = false,
-  domain: Domain = {},
+  domain?: Domain | null,
 ): string {
   if (domain?.name && isDomainActive(domain)) {
     return `https://${domain.name}`

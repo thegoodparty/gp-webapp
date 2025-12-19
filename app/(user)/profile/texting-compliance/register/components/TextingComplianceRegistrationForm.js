@@ -42,7 +42,8 @@ export const validateRegistrationForm = (data) => {
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
     address: validateAddress(address),
-    website: isURL(website),
+    // Website must exist (official purchased domain)
+    website: isFilled(website) && isURL(website),
     email: isEmail(email),
     matchingContactFields: matchingContactFields.length > 0,
   }
@@ -131,14 +132,6 @@ export default function TextingComplianceRegistrationForm({
             validated: validEin,
             label: 'EIN *',
           }}
-        />
-        <TextField
-          label="Website"
-          placeholder="janesmithcitycouncil.co"
-          fullWidth
-          required
-          value={website}
-          onChange={(e) => handleChange({ website: e.target.value })}
         />
         <AddressAutocomplete
           {...{
