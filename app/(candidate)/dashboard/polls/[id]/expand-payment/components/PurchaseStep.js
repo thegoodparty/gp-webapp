@@ -9,9 +9,9 @@ export const PurchaseStep = ({ onComplete = () => {} }) => {
   const { purchaseIntent, error, setError } = usePurchaseIntent()
   const { errorSnackbar } = useSnackbar()
 
-  const handlePaymentError = (error) => {
-    setError(error)
-    errorSnackbar(error.message)
+  const handlePaymentError = (errorMessage) => {
+    setError(errorMessage)
+    errorSnackbar(errorMessage)
   }
 
   return (

@@ -45,16 +45,14 @@ export const PurchaseIntentProvider = ({
   const [purchaseIntent, setPurchaseIntent] =
     useState<PurchaseIntentResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [metaData, setMetaData] = useState<
-    Record<string, string | number | boolean | undefined>
-  >(purchaseMetaData)
+  const [metaData, setMetaData] =
+    useState<Record<string, string | number | boolean | undefined>>(
+      purchaseMetaData,
+    )
 
   useSingleEffect(() => {
     const createNewPurchaseIntent = async () => {
-      if (
-        !type ||
-        !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]
-      ) {
+      if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
         setError('Invalid purchase type')
         return
       }

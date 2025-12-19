@@ -20,22 +20,26 @@ export const PurchaseStep = ({
   const hasTrackedPaymentStarted = useRef(false)
 
   useEffect(() => {
-    if (purchaseIntent && contactCount > 0 && !hasTrackedPaymentStarted.current) {
+    if (
+      purchaseIntent &&
+      contactCount > 0 &&
+      !hasTrackedPaymentStarted.current
+    ) {
       const totalCost = centsToDollars(pricePerContact * contactCount)
-      
+
       trackEvent(EVENTS.Outreach.PaymentStarted, {
         channel: type === 'text' ? 'texting' : type,
         units: contactCount,
-        cost: totalCost
+        cost: totalCost,
       })
-      
+
       hasTrackedPaymentStarted.current = true
     }
   }, [purchaseIntent, contactCount, type, pricePerContact])
 
   const handlePaymentError = (error) => {
-    setError(error)
-    errorSnackbar(error.message)
+    setError(errorMessage)
+    errorSnackbar(errorMessage)
   }
 
   return (

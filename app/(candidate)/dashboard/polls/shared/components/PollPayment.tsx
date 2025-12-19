@@ -7,7 +7,6 @@ import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 
 import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { useSnackbar } from 'helpers/useSnackbar'
 
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
@@ -18,12 +17,6 @@ const PurchaseContent: React.FC<{
   onPaymentSuccess: (paymentIntent: PaymentIntent) => void
 }> = ({ onPaymentSuccess }) => {
   const { purchaseIntent, error, setError } = usePurchaseIntent()
-  const { errorSnackbar } = useSnackbar()
-
-  const handlePaymentError = (error: Error) => {
-    setError(error.message)
-    errorSnackbar(error.message)
-  }
 
   return (
     <div className="p-4 mx-auto w-[80vw] max-w-xl text-center">
@@ -34,7 +27,7 @@ const PurchaseContent: React.FC<{
       ) : (
         <PurchasePayment
           onPaymentSuccess={onPaymentSuccess}
-          onPaymentError={handlePaymentError}
+          onPaymentError={setError}
         />
       )}
     </div>
