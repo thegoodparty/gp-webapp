@@ -15,6 +15,7 @@ import { ReactQueryProvider } from '@shared/query-client'
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
 const sfPro = localFont({
+  // @ts-expect-error - localFont types are not correct
   subsets: ['latin'],
   src: [
     {
@@ -51,7 +52,7 @@ export const metadata = {
     "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",
 }
 
-const RootLayout = ({ children }) => (
+const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
     <head>
       <meta charSet="utf-8" />
@@ -76,16 +77,17 @@ const RootLayout = ({ children }) => (
       />
 
       <link rel="manifest" href="/manifest.json" />
+
       <VwoScript />
 
       <Script strategy="afterInteractive" id="gtm">
         {`
-          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M53W2ZV');
-        `}
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M53W2ZV');
+      `}
       </Script>
     </head>
     <body>
