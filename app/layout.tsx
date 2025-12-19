@@ -72,7 +72,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
         <meta name="theme-color" content="#ffffff" />
         <meta property="fb:app_id" content="241239336921963" />
         {!IS_PROD && <meta name="robots" content="noindex" />}
-        {IS_LOCAL && isProductRoute(pathname) && (
+        {!IS_LOCAL && isProductRoute(pathname) && (
           <Script
             id="nr-browser-agent"
             strategy="afterInteractive"
