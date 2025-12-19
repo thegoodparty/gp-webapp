@@ -43,6 +43,7 @@ export default function InsightsStep() {
           icon={<LuUsersRound />}
           isLoading={isLoading}
           error={error}
+          testID="total-constituents"
         />
         {insights.map((insight, index) => (
           <div key={index} className="col-span-1 flex justify-center w-full">
