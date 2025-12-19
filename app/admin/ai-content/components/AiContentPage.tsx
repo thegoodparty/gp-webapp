@@ -6,14 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Table from '@shared/utils/Table'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-
-interface CampaignData {
-  aiContent?: Partial<Record<string, string | object>>
-}
-
-interface Campaign {
-  data: CampaignData
-}
+import { Campaign } from 'helpers/types'
 
 interface ContentRow {
   contentType: string
@@ -46,8 +39,7 @@ export default function AiContentsPage(
   const contentCount: Partial<Record<string, number>> = {}
   if (campaigns) {
     campaigns.map((campaignObj) => {
-      const { data } = campaignObj
-      const { aiContent } = data
+      const { aiContent } = campaignObj
       if (aiContent) {
         Object.keys(aiContent).forEach((key) => {
           const keyNoDigits = key.replace(/\d+$/, '')
