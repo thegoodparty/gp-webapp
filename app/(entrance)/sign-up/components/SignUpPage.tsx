@@ -1,6 +1,6 @@
 'use client'
-import { isValidEmail } from '@shared/inputs/EmailInput.tsx'
-import { isValidPhone } from '@shared/inputs/PhoneInput.tsx'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
 import PasswordInput from '@shared/inputs/PasswordInput'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { Fragment, useState } from 'react'
@@ -23,13 +23,51 @@ import {
   trackEvent,
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
-import { analytics } from '@shared/utils/analytics'
+import { getReadyAnalytics } from '@shared/utils/analytics'
+import { User, Campaign } from 'helpers/types'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
+} as const
+
+interface SignUpField {
+  key: keyof SignUpState
+  label: string
+  type: string
+  placeholder: string
+  required?: boolean
+  cols?: number
+  noBottomMargin?: boolean
 }
 
-const SIGN_UP_FIELDS = [
+interface SignUpState {
+  firstName: string
+  lastName: string
+  signUpMode: string
+  email: string
+  phone: string
+  zip: string
+  password: string
+}
+
+interface RegisterPayload {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string | undefined
+  zip: string
+  password: string
+  signUpMode: string
+}
+
+interface RegisterResponse {
+  user: User
+  token: string
+  campaign?: Campaign
+  exists?: boolean
+}
+
+const SIGN_UP_FIELDS: SignUpField[] = [
   {
     key: 'firstName',
     label: 'First Name',
@@ -71,33 +109,17 @@ const SIGN_UP_FIELDS = [
   },
 ]
 
-export const validateZip = (zip) => {
+export const validateZip = (zip: string): boolean => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
   return validZip.test(zip)
 }
 
-async function register({
-  firstName,
-  lastName,
-  email,
-  phone,
-  zip,
-  password,
-  signUpMode,
-}) {
+async function register(payload: RegisterPayload): Promise<RegisterResponse | false> {
   try {
-    const resp = await clientFetch(apiRoutes.authentication.register, {
-      firstName,
-      lastName,
-      email,
-      phone,
-      zip,
-      password,
-      signUpMode,
-    })
+    const resp = await clientFetch<RegisterResponse>(apiRoutes.authentication.register, payload)
 
     if (resp.status === 409) {
-      return { exists: true }
+      return { exists: true, user: {} as User, token: '' }
     }
     return resp.data
   } catch (e) {
@@ -106,8 +128,8 @@ async function register({
   }
 }
 
-export default function SignUpPage() {
-  const [state, setState] = useState({
+export default function SignUpPage(): React.JSX.Element {
+  const [state, setState] = useState<SignUpState>({
     firstName: '',
     lastName: '',
     signUpMode: SIGN_UP_MODES.CANDIDATE,
@@ -117,7 +139,7 @@ export default function SignUpPage() {
     password: '',
   })
 
-  const [fields] = useState([...SIGN_UP_FIELDS])
+  const [fields] = useState<SignUpField[]>([...SIGN_UP_FIELDS])
   const [loading, setLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
@@ -133,7 +155,7 @@ export default function SignUpPage() {
     isValidPhone(phone) &&
     validateZip(zip)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (loading) return
     setLoading(true)
 
@@ -148,7 +170,7 @@ export default function SignUpPage() {
         signUpMode,
       })
 
-      if (!result || !result.user) {
+      if (!result || !result.user || result.exists) {
         errorSnackbar('Failed to create account')
         setLoading(false)
         return
@@ -160,8 +182,8 @@ export default function SignUpPage() {
       setUser(user)
 
       await trackRegistrationCompleted({
-        analytics,
-        userId: user.id,
+        analytics: getReadyAnalytics(),
+        userId: String(user.id),
         email: user.email || email,
       })
 
@@ -183,10 +205,10 @@ export default function SignUpPage() {
     }
   }
 
-  const onChangeField = (key, value) => {
+  const onChangeField = (key: string, value: string | boolean): void => {
     setState({
       ...state,
-      [key]: value,
+      [key]: String(value),
     })
   }
 
@@ -237,9 +259,6 @@ export default function SignUpPage() {
                       label="Password"
                       value={state.password}
                       onChangeCallback={(pwd) => onChangeField('password', pwd)}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       placeholder="Please don't use your dog's name"
                     />
                   </div>

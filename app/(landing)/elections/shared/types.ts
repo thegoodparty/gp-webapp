@@ -7,12 +7,18 @@ export interface Race {
   positionLevel?: string
 }
 
+interface ImageData {
+  url: string
+  alt?: string
+}
+
 export interface Article {
   id: number | string
   title: string
   slug: string
   summary?: string
-  mainImage?: string
+  mainImage?: ImageData
+  publishDate: string
 }
 
 export interface City {

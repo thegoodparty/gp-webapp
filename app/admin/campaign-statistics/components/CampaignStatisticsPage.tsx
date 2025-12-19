@@ -16,10 +16,7 @@ import Link from 'next/link'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-interface Campaign {
-  id: number
-  slug: string
-}
+import { Campaign } from 'helpers/types'
 
 interface CampaignStatisticsPageProps {
   pathname: string

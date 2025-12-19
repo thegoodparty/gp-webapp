@@ -1,6 +1,6 @@
 const ONE_HOUR = 60 * 60 * 1000
 
-type DateInput = Date | string | number | null | undefined
+export type DateInput = Date | string | number | null | undefined
 
 const invalidDateFormat = (date: DateInput): boolean =>
   !date || (typeof date === 'string' && [' ', '', 'null', 'N/A', 'n/a', 'Invalid Date'].includes(date))

@@ -4,18 +4,20 @@ import { Autocomplete, TextField, InputAdornment } from '@mui/material'
 import { SearchRounded } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
+import { SyntheticEvent } from 'react'
 
-/**
- * @typedef {Object} BlogSearchProps
- * @property {Object[]} blogItems Array of blog article objects with title and slug properties
- */
+interface BlogItem {
+  title: string
+  slug: string
+}
 
-/**
- * Autocomplete search component for blog articles
- * @param {BlogSearchProps} props
- */
+interface BlogSearchProps {
+  blogItems?: BlogItem[]
+}
 
-export default function BlogSearch({ blogItems }) {
+export default function BlogSearch({
+  blogItems,
+}: BlogSearchProps): React.JSX.Element | null {
   const router = useRouter()
 
   if (!blogItems || blogItems.length <= 0) return null
@@ -61,11 +63,11 @@ export default function BlogSearch({ blogItems }) {
             }}
           />
         )}
-        onChange={(event, item) => {
+        onChange={(_: SyntheticEvent, item: BlogItem | null) => {
           fireGTMButtonClickEvent({
             id: 'blog-search',
           })
-          if (item != undefined && item != '') {
+          if (item != undefined && item != null) {
             router.push('/blog/article/' + item.slug)
           }
         }}

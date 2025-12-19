@@ -3,9 +3,19 @@ import Body2 from '@shared/typography/Body2'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import DoorKnockingTabs from '../../shared/DoorKnockingTabs'
 import SurveyList from './SurveyList'
-export default function DoorKnockingSurveysPage(props) {
+import { EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
+
+export interface DoorKnockingSurveysPageProps {
+  surveys?: EcanvasserSurvey[]
+  pathname?: string
+  title?: string
+}
+
+export default function DoorKnockingSurveysPage(
+  props: DoorKnockingSurveysPageProps,
+): React.JSX.Element {
   return (
-    <DashboardLayout {...props} showAlert={false}>
+    <DashboardLayout pathname={props.pathname} campaign={undefined} showAlert={false}>
       <div>
         <H1>Door Knocking Scripts</H1>
         <Body2 className="text-gray-500 mb-4">

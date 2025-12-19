@@ -1,5 +1,5 @@
 'use client'
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.tsx'
+import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput'
 import PasswordInput from '@shared/inputs/PasswordInput'
 import { setUserCookie } from 'helpers/cookieHelper'
 import Link from 'next/link.js'
@@ -20,19 +20,31 @@ import { identifyUser } from '@shared/utils/analytics'
 import { useRouter } from 'next/navigation'
 
 import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
+import { User, Campaign } from 'helpers/types'
 
-export const validateZip = (zip) => {
+interface LoginState {
+  email: string
+  password: string
+}
+
+interface LoginResponse {
+  user: User
+  campaign?: Campaign
+  token: string
+}
+
+export const validateZip = (zip: string): boolean => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
   return validZip.test(zip)
 }
 
-async function login(email, password) {
+async function login(email: string, password: string): Promise<LoginResponse | false> {
   try {
     const payload = {
       email,
       password,
     }
-    const resp = await clientFetch(apiRoutes.authentication.login, payload)
+    const resp = await clientFetch<LoginResponse>(apiRoutes.authentication.login, payload)
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -40,8 +52,8 @@ async function login(email, password) {
   }
 }
 
-export default function LoginPage() {
-  const [state, setState] = useState({
+export default function LoginPage(): React.JSX.Element {
+  const [state, setState] = useState<LoginState>({
     email: '',
     password: '',
   })
@@ -50,19 +62,26 @@ export default function LoginPage() {
   const { errorSnackbar } = useSnackbar()
   const router = useRouter()
 
-  const enableSubmit = () =>
+  const enableSubmit = (): boolean =>
     isValidEmail(state.email) && isValidPassword(state.password)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (enableSubmit()) {
-      const { user, campaign, token } = await login(state.email, state.password)
+      const result = await login(state.email, state.password)
 
-      if (user) {
+      if (result && result.user) {
+        const { user, campaign, token } = result
         await saveToken(token)
         setUserCookie(user)
         setUser(user)
-        const { id, email, firstName, lastName, phone, zip } = user
-        await identifyUser(id, { email, firstName, lastName, phone, zip })
+        const { id, email: userEmail, firstName, lastName, phone, zip } = user
+        await identifyUser(id, { 
+          email: userEmail, 
+          firstName: firstName ?? undefined, 
+          lastName: lastName ?? undefined, 
+          phone: phone ?? undefined, 
+          zip: zip ?? undefined 
+        })
 
         await doLoginRedirect(router, user, campaign)
       } else {
@@ -73,7 +92,7 @@ export default function LoginPage() {
     }
   }
 
-  const onChangeField = (value, key) => {
+  const onChangeField = (value: string, key: keyof LoginState): void => {
     setState({
       ...state,
       [key]: value,
@@ -108,11 +127,12 @@ export default function LoginPage() {
           >
             <div className="flex mt-5">
               <EmailInput
-                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
+                onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField(e.target.value, 'email')}
                 value={state.email}
                 shrink
                 placeholder="hello@email.com"
                 data-testid="login-email-input"
+                variant="outlined"
               />
             </div>
 
@@ -121,9 +141,6 @@ export default function LoginPage() {
                 value={state.password}
                 label="Password"
                 onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 placeholder="Please don't use your dog's name"
                 data-testid="login-password-input"
               />

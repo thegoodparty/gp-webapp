@@ -488,7 +488,7 @@ interface AnalyticsInstance {
     eventName: string,
     properties: Record<string, string | number | boolean | null | undefined>,
   ) => void
-  ready?: () => Promise<void>
+  ready?: () => Promise<unknown>
 }
 
 export const getStoredSessionId = (): number => {

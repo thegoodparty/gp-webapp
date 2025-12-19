@@ -9,26 +9,36 @@ import Body1 from '@shared/typography/Body1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import clsx from 'clsx'
 
-/**
- * @typedef {Object} ArticleSnippetProps
- * @property {Object} article Article object to render
- * @property {boolean} heroMode Render snippet styled as a hero element
- * @property {Object} section Section object article belongs to
- */
+interface ImageData {
+  url: string
+  alt?: string
+}
 
-/**
- * UI for embedded article previews
- * @param {ArticleSnippetProps} props
- */
+interface Article {
+  title: string
+  mainImage?: ImageData
+  publishDate: string
+  summary?: string
+  slug: string
+}
+
+interface Section {
+  fields?: {
+    title?: string
+  }
+}
+
+interface ArticleSnippetProps {
+  article?: Article
+  heroMode?: boolean
+  section?: Section
+}
 
 export default function ArticleSnippet({
   article,
   heroMode,
   section,
-
-  // minimal NOTE: was not being used anywhere
-  // target = false, NOTE: does not seem to be used anywhere, default false value throws error when being applied to Link.target prop
-}) {
+}: ArticleSnippetProps): React.JSX.Element | null {
   if (!article) {
     return null
   }
@@ -66,7 +76,7 @@ export default function ArticleSnippet({
                     objectPosition: 'center',
                   }}
                   src={`https:${mainImage.url}`}
-                  alt={mainImage.alt}
+                  alt={mainImage.alt || ''}
                   sizes="100vw"
                   fill
                   priority={!!heroMode}

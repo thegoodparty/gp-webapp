@@ -153,7 +153,10 @@ export interface CampaignDetails {
   electionId?: string | null
   tier?: string
   einNumber?: string | null
+  einSupportingDocument?: string | null
   wonGeneral?: boolean
+  launchStatus?: string
+  filedStatement?: string
 }
 
 export interface ReportedVoterGoals {
@@ -164,6 +167,7 @@ export interface ReportedVoterGoals {
   digitalAds?: number
   text?: number
   events?: number
+  yardSigns?: number
   robocall?: number
   phoneBanking?: number
   socialMedia?: number
@@ -172,7 +176,7 @@ export interface ReportedVoterGoals {
 export interface CampaignData {
   createdBy?: string
   slug?: string
-  hubSpotUpdates?: Record<string, string>
+  hubSpotUpdates?: HubSpotUpdates
   currentStep?: string
   launchStatus?: string
   lastVisited?: number
@@ -184,6 +188,25 @@ export interface CampaignData {
   adminUserEmail?: string
   hubspotId?: string
   name?: string
+  p2vNotNeeded?: boolean
+}
+
+export interface HubSpotUpdates {
+  past_candidate?: string
+  incumbent?: string
+  candidate_experience_level?: string
+  final_viability_rating?: string
+  primary_election_result?: string
+  election_results?: string
+  professional_experience?: string
+  p2p_campaigns?: string
+  p2p_sent?: string
+  confirmed_self_filer?: string
+  verified_candidates?: string
+  date_verified?: string
+  pro_candidate?: string
+  filing_deadline?: string
+  opponents?: string
 }
 
 export interface CustomVoterFile {
@@ -209,6 +232,11 @@ export interface CampaignAiContent {
     | undefined
 }
 
+export interface ViabilityScore {
+  score?: number
+  tier?: string
+}
+
 export interface PathToVictoryData {
   p2vStatus?: string
   p2vAttempts?: number
@@ -231,11 +259,17 @@ export interface PathToVictoryData {
   hispanic?: number
   averageTurnout?: number
   projectedTurnout?: number
-  viability?: string
+  viability?: ViabilityScore
   source?: string
   districtId?: string
   districtManuallySet?: boolean
   officeContextFingerprint?: string
+  voteGoal?: number
+  voterProjection?: number
+  budgetLow?: number
+  budgetHigh?: number
+  voterMap?: string
+  finalVotes?: number
 }
 
 export interface PathToVictory {
@@ -265,6 +299,7 @@ export interface Campaign {
   aiContent: CampaignAiContent
   vendorTsData: VendorTsData
   pathToVictory?: PathToVictory
+  user?: User
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]

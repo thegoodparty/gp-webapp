@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from 'react'
 type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'robocall' | 'p2p'
 type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
 
-interface Outreach {
+export interface Outreach {
   id: number
   createdAt: Date | string
   updatedAt: Date | string

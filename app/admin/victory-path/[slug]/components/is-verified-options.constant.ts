@@ -11,6 +11,8 @@ export const IS_VERIFIED_OPTIONS: IsVerifiedOptions = {
   No: false,
 }
 
+type IsVerifiedOptionsReversedKey = 'null' | 'true' | 'false'
+
 interface IsVerifiedOptionsReversed {
   'null': 'Review'
   'true': 'Yes'
@@ -21,4 +23,11 @@ export const IS_VERIFIED_OPTIONS_REVERSED: IsVerifiedOptionsReversed = {
   'null': 'Review',
   'true': 'Yes',
   'false': 'No',
+}
+
+export const getIsVerifiedDisplay = (
+  value: boolean | null | undefined,
+): string | undefined => {
+  const key = String(value) as IsVerifiedOptionsReversedKey
+  return IS_VERIFIED_OPTIONS_REVERSED[key]
 }
