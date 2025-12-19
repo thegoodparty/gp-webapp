@@ -8,7 +8,7 @@ import { formatPhoneNumber } from 'helpers/numberHelper'
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
 import Actions from './Actions'
 import { USER_ROLES } from 'helpers/userHelper'
-import { ColumnDef, CellContext, ColumnFiltersState } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState } from '@tanstack/react-table'
 
 interface UserMetaData {
   lastVisited?: string
@@ -96,7 +96,7 @@ export default function AdminUsersPage(
       {
         id: 'actions',
         header: 'Actions',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           return <Actions user={row.original} />
         },
       },
@@ -105,7 +105,7 @@ export default function AdminUsersPage(
         header: 'Name',
         accessorFn: (row: TableUser) =>
           `${row.firstName || ''} ${row.lastName || ''}`.trim() || 'N/A',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           const name = `${row.original.firstName || ''} ${
             row.original.lastName || ''
           }`.trim()
@@ -116,7 +116,7 @@ export default function AdminUsersPage(
         id: 'email',
         header: 'Email',
         accessorKey: 'email',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           const email = row.original.email
           if (!email) return 'N/A'
           return (
@@ -131,7 +131,7 @@ export default function AdminUsersPage(
         header: 'Last Visit',
         accessorKey: 'lastVisited',
         sortingFn: 'datetime',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           const date = row.original.lastVisited
           return date && date.toString() !== 'Invalid Date'
             ? dateWithTime(date)
@@ -143,7 +143,7 @@ export default function AdminUsersPage(
         header: 'Date Created',
         accessorKey: 'createdAt',
         sortingFn: 'datetime',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           const date = row.original.createdAt
           return date && date.toString() !== 'Invalid Date'
             ? dateUsHelper(date)
@@ -154,7 +154,7 @@ export default function AdminUsersPage(
         id: 'phone',
         header: 'Phone',
         accessorKey: 'phone',
-        cell: ({ row }: CellContext<TableUser, unknown>) => {
+        cell: ({ row }) => {
           const phone = row.original.phone
           if (!phone) return 'N/A'
           return (
@@ -168,14 +168,14 @@ export default function AdminUsersPage(
         id: 'zip',
         header: 'Zip',
         accessorKey: 'zip',
-        cell: ({ row }: CellContext<TableUser, unknown>) =>
+        cell: ({ row }) =>
           row.original.zip || 'N/A',
       },
       {
         id: 'userType',
         header: 'User Type',
         accessorKey: 'userType',
-        cell: ({ row }: CellContext<TableUser, unknown>) =>
+        cell: ({ row }) =>
           row.original.userType || 'N/A',
       },
       {
