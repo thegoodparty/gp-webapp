@@ -3,9 +3,10 @@ import pageMetaData from 'helpers/metadataHelper'
 import ProNoVoterPage from './components/ProNoVoterPage'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { Campaign } from 'helpers/types'
 
 interface CampaignsResponse {
-  campaigns: []
+  campaigns: Campaign[]
 }
 
 const fetchCampaignsNoVoter = async (): Promise<CampaignsResponse> => {
@@ -34,7 +35,12 @@ export const maxDuration = 60
 export default async function Page(): Promise<React.JSX.Element> {
   await adminAccessOnly()
 
-  const campaigns = await fetchCampaignsNoVoter()
-  const childProps = { campaigns }
-  return <ProNoVoterPage {...childProps} />
+  const { campaigns } = await fetchCampaignsNoVoter()
+  return (
+    <ProNoVoterPage
+      pathname="/admin/pro-no-voter-file"
+      title="Pro Users without L2 Data"
+      campaigns={campaigns}
+    />
+  )
 }

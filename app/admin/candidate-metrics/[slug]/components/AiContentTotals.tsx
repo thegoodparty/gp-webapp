@@ -5,10 +5,7 @@ import H3 from '@shared/typography/H3'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import { Fragment } from 'react'
-
-interface Campaign {
-  aiContent?: PrismaJson.CampaignAiContent
-}
+import { Campaign } from 'helpers/types'
 
 interface AiContentTotalsProps {
   campaign: Campaign
