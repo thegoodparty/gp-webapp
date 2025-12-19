@@ -1,6 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { request } from 'gpApi/typed-request'
 
 export type ContactStatsBucket = {
   label: string
@@ -26,7 +25,5 @@ export const districtStatsQueryOptions = (params?: {
   queryOptions({
     queryKey: ['contacts-stats', params],
     queryFn: () =>
-      clientFetch<ContactsStats>(apiRoutes.contacts.stats, params).then((res) =>
-        res.ok ? res.data : {},
-      ),
+      request('GET /v1/contacts/stats', params ?? {}).then((res) => res.data),
   })
