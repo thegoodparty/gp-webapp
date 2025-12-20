@@ -6,7 +6,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 interface ImpersonateActionProps {
   email: string
   isCandidate: boolean
-  launched: string
+  launched?: string
 }
 
 export default function ImpersonateAction({

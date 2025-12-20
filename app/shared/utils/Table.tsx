@@ -40,8 +40,10 @@ const fuzzyTextFilterFn = <T,>(row: Row<T>, columnId: string, filterValue: strin
   )
 }
 
+export type TableColumn<T> = ColumnDef<T> & { collapse?: boolean }
+
 interface TableProps<T> {
-  columns: ColumnDef<T>[]
+  columns: TableColumn<T>[]
   data: T[]
   filterColumns?: boolean
   initialSortById?: string

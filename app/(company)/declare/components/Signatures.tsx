@@ -4,7 +4,7 @@ import SignModal from './SignModal'
 import { NextFont } from 'next/dist/compiled/@next/font'
 
 interface SignaturesProps {
-  signatures: string[]
+  signatures: string
   tangerine: NextFont
 }
 

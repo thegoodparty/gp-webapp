@@ -14,6 +14,8 @@ export const CANDIDATE_TIERS: CandidateTiers = {
 }
 
 // Reverse mapping from CampaignTier enum to display label
+type CandidateTiersReversedKey = 'null' | 'WIN' | 'TOSSUP' | 'LOSE'
+
 interface CandidateTiersReversed {
   'null': 'Review'
   WIN: 'Likely to Win'
@@ -26,4 +28,18 @@ export const CANDIDATE_TIERS_REVERSED: CandidateTiersReversed = {
   WIN: 'Likely to Win',
   TOSSUP: 'Hard to Call',
   LOSE: 'Likely to Lose',
+}
+
+const isValidTierKey = (key: string): key is CandidateTiersReversedKey => {
+  return key in CANDIDATE_TIERS_REVERSED
+}
+
+export const getTierDisplay = (
+  tier: string | null | undefined,
+): string | undefined => {
+  const key = tier || 'null'
+  if (isValidTierKey(key)) {
+    return CANDIDATE_TIERS_REVERSED[key]
+  }
+  return undefined
 }

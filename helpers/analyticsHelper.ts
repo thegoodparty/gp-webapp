@@ -2,6 +2,7 @@ import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
 import { getUserCookie } from './cookieHelper'
+import type { Analytics } from '@segment/analytics-next'
 
 const UTM_KEYS = [
   'utm_source',
@@ -479,18 +480,6 @@ interface UserCookie {
   }
 }
 
-interface AnalyticsInstance {
-  identify?: (
-    userId: string,
-    traits: Record<string, string | number | boolean | null | undefined>,
-  ) => void
-  track?: (
-    eventName: string,
-    properties: Record<string, string | number | boolean | null | undefined>,
-  ) => void
-  ready?: () => Promise<void>
-}
-
 export const getStoredSessionId = (): number => {
   return Number(cookie.get('analytics_session_id') ?? 0)
 }
@@ -513,7 +502,7 @@ export const extractClids = (
 }
 
 interface TrackRegistrationParams {
-  analytics: Promise<AnalyticsInstance | null>
+  analytics: Promise<Analytics | null>
   userId: string
   email?: string
   signUpMethod?: string

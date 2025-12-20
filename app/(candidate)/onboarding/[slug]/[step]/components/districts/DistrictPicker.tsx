@@ -6,10 +6,13 @@ import DistrictNameAutocomplete from './DistrictNameAutocomplete'
 
 interface DistrictType {
   L2DistrictType: string
+  id?: string
+  label?: string
 }
 
 interface DistrictName {
   L2DistrictName: string
+  id?: string
 }
 
 interface DistrictPickerProps {
