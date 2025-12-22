@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react'
-import VoterFileTypes from '../../components/VoterFileTypes'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import { CircularProgress } from '@mui/material'
 import { numberFormatter } from 'helpers/numberHelper'
@@ -32,7 +31,10 @@ export const countVoterFile = async (
       payload.customFilters = JSON.stringify(customFilters)
     }
 
-    const resp = await clientFetch<{ count: number }>(apiRoutes.voters.voterFile.get, payload)
+    const resp = await clientFetch<{ count: number }>(
+      apiRoutes.voters.voterFile.get,
+      payload,
+    )
     const count = resp.data?.count
     if (typeof count === 'number') {
       return count
@@ -44,23 +46,6 @@ export const countVoterFile = async (
   }
 }
 
-interface VoterFileType {
-  key: string
-  name?: string
-  fields?: string[]
-}
-
-interface FileByKey {
-  [key: string]: VoterFileType
-}
-
-const fileByKey: FileByKey = {}
-VoterFileTypes.forEach((file: VoterFileType) => {
-  if (typeof file?.key?.toLowerCase === 'function') {
-    fileByKey[file.key.toLowerCase()] = file
-  }
-})
-
 interface RecordCountProps {
   type: string
   isCustom: boolean
@@ -68,10 +53,10 @@ interface RecordCountProps {
   index: number
 }
 
-export default function RecordCount(props: RecordCountProps): React.JSX.Element {
+export default function RecordCount(
+  props: RecordCountProps,
+): React.JSX.Element {
   const { type, isCustom, campaign, index } = props
-  // const file = fileByKey[type];
-  // const { name, fields } = file;
   const [loading, setLoading] = useState(true)
   const [count, setCount] = useState(0)
   const [error, setError] = useState(false)
