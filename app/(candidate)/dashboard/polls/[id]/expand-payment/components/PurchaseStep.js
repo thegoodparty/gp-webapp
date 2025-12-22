@@ -9,11 +9,6 @@ export const PurchaseStep = ({ onComplete = () => {} }) => {
   const { purchaseIntent, error, setError } = usePurchaseIntent()
   const { errorSnackbar } = useSnackbar()
 
-  const handlePaymentError = (errorMessage) => {
-    setError(errorMessage)
-    errorSnackbar(errorMessage)
-  }
-
   return (
     <div className="p-4 w-[80vw] max-w-xl text-center">
       {error ? (
@@ -23,7 +18,7 @@ export const PurchaseStep = ({ onComplete = () => {} }) => {
       ) : (
         <PurchasePayment
           onPaymentSuccess={onComplete}
-          onPaymentError={handlePaymentError}
+          onPaymentError={setError}
         />
       )}
     </div>

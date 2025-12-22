@@ -23,9 +23,17 @@ export default function PurchaseForm({
 
   const [isPaymentElementReady, setIsPaymentElementReady] = useState(false)
 
-  const onStripeError = (type: string, error: StripeError) => {
-    reportErrorToNewRelic(type, { stripeError: error })
-    const msg = error.message || 'Unexpected payment error'
+  const _onError = (error: Error | StripeError) => {
+    let msg: string
+    if (error instanceof Error) {
+      msg = error.message
+      reportErrorToNewRelic(error, { location: 'purchase-form' })
+    } else {
+      msg = error.message || 'Unexpected payment error'
+      reportErrorToNewRelic('purchase form stripe error', {
+        stripeError: error,
+      })
+    }
     errorSnackbar(msg)
     onError(msg)
   }
@@ -42,8 +50,7 @@ export default function PurchaseForm({
       })
 
       if (error) {
-        onStripeError('payment confirmation error', error)
-        throw new Error(error.message || 'Unexpected payment error')
+        throw error
       }
 
       if (paymentIntent.status !== 'succeeded') {
@@ -54,11 +61,7 @@ export default function PurchaseForm({
 
       return paymentIntent
     },
-    onError: (error) => {
-      reportErrorToNewRelic(error)
-      errorSnackbar(error.message)
-      onError(error.message)
-    },
+    onError: _onError,
     onSuccess,
   })
 
@@ -71,7 +74,7 @@ export default function PurchaseForm({
     <form onSubmit={handleSubmit}>
       <PaymentElement
         onLoadError={({ error }) => {
-          onStripeError('payment element load error', error)
+          _onError(error)
         }}
         onReady={() => setIsPaymentElementReady(true)}
         options={{
