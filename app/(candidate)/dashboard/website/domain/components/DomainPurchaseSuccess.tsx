@@ -16,7 +16,7 @@ export default function DomainPurchaseSuccess(): React.JSX.Element {
         your website is live!
       </MarketingH3>
       <AlertBanner
-        title="Please allow up to 30 minutes for your website to update to the new domain."
+        title="Verify your domain by clicking the link in your email from our hosting provider, Vercel. Allow up to 30 minutes for your site to go live."
         message=""
       />
       <Button className="mt-12" href="/dashboard/website">
