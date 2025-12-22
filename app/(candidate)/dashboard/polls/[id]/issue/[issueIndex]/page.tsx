@@ -15,7 +15,7 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ params }) {
+export default async function Page({ params }: PageProps<any>) {
   await serveAccess()
   const { id, issueIndex } = await params
   const poll = await getPoll(id)
@@ -28,7 +28,8 @@ export default async function Page({ params }) {
   if (
     isNaN(issueIndexNum) ||
     issueIndexNum < 0 ||
-    issueIndexNum >= issues.length
+    issueIndexNum >= issues.length ||
+    !issues[issueIndexNum]
   ) {
     notFound()
   }

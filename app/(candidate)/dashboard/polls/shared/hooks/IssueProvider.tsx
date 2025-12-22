@@ -1,28 +1,17 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react'
+import { createContext, useContext } from 'react'
+import { PollIssue } from '../poll-types'
 
-interface PollIssue {
-  id: string
-  pollId: string
-  title: string
-  summary: string
-  details: string
-  representativeComments: Array<{ comment: string }>
-  mentionCount: number
-  createdAt: string
-  updatedAt: string
+const IssueContext = createContext<PollIssue | undefined>(undefined)
+
+export const useIssue = () => {
+  const context = useContext(IssueContext)
+  if (!context) {
+    throw new Error('useIssue must be used within an IssueProvider')
+  }
+  return context
 }
-
-type IssueContextType = [PollIssue | null, Dispatch<SetStateAction<PollIssue | null>>]
-
-export const IssueContext = createContext<IssueContextType>([
-  null,
-  () => {},
-])
-
-export const useIssue = (): IssueContextType => useContext(IssueContext)
-
 interface IssueProviderProps {
   children: React.ReactNode
   issue: PollIssue
@@ -30,17 +19,7 @@ interface IssueProviderProps {
 
 export const IssueProvider = ({
   children,
-  issue: initIssue,
+  issue,
 }: IssueProviderProps): React.JSX.Element => {
-  const [issue, setIssue] = useState<PollIssue | null>(initIssue)
-
-  useEffect(() => {
-    setIssue(initIssue)
-  }, [initIssue])
-
-  return (
-    <IssueContext.Provider value={[issue, setIssue]}>
-      {children}
-    </IssueContext.Provider>
-  )
+  return <IssueContext.Provider value={issue}>{children}</IssueContext.Provider>
 }
