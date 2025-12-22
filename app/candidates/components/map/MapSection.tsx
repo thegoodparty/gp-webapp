@@ -111,17 +111,14 @@ export default memo(function MapSection({
         }
 
         // add the filters to the url query only if they are not empty
-        const query = Object.entries(updatedFilters).reduce<Record<string, string>>(
-          (acc, [filterKey, filterVal]) => {
-            if (filterVal !== undefined && filterVal !== '') {
-              acc[filterKey] = String(filterVal)
-            }
-            return acc
-          },
-          {},
-        )
+        const queryParams = new URLSearchParams()
+        Object.entries(updatedFilters).forEach(([filterKey, filterVal]) => {
+          if (filterVal !== undefined && filterVal !== '') {
+            queryParams.set(filterKey, String(filterVal))
+          }
+        })
 
-        const queryString = new URLSearchParams(query)
+        const queryString = queryParams
         router.push(`?${queryString.toString()}`, {
           scroll: false,
         })

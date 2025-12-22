@@ -209,13 +209,73 @@ export interface HubSpotUpdates {
   opponents?: string
 }
 
+export interface VoterFileFilters {
+  audienceSuperVoters?: boolean
+  audienceLikelyVoters?: boolean
+  audienceUnreliableVoters?: boolean
+  audienceUnlikelyVoters?: boolean
+  audienceFirstTimeVoters?: boolean
+  audienceUnknown?: boolean
+  partyIndependent?: boolean
+  partyDemocrat?: boolean
+  partyRepublican?: boolean
+  partyUnknown?: boolean
+  age18_25?: boolean
+  age25_35?: boolean
+  age35_50?: boolean
+  age50Plus?: boolean
+  ageUnknown?: boolean
+  genderMale?: boolean
+  genderFemale?: boolean
+  genderUnknown?: boolean
+  hasCellPhone?: boolean
+  hasLandline?: boolean
+  languageCodes?: string[]
+  voterStatus?: string[]
+  likelyMarried?: boolean
+  likelySingle?: boolean
+  married?: boolean
+  single?: boolean
+  maritalUnknown?: boolean
+  veteranYes?: boolean
+  veteranUnknown?: boolean
+  educationNone?: boolean
+  educationHighSchoolDiploma?: boolean
+  educationTechnicalSchool?: boolean
+  educationSomeCollege?: boolean
+  educationCollegeDegree?: boolean
+  educationGraduateDegree?: boolean
+  educationUnknown?: boolean
+  incomeRanges?: string[]
+  incomeUnknown?: boolean
+  ethnicityAsian?: boolean
+  ethnicityEuropean?: boolean
+  ethnicityHispanic?: boolean
+  ethnicityAfricanAmerican?: boolean
+  ethnicityOther?: boolean
+  ethnicityUnknown?: boolean
+  businessOwnerYes?: boolean
+  businessOwnerUnknown?: boolean
+  registeredVoterTrue?: boolean
+  registeredVoterFalse?: boolean
+  registeredVoterUnknown?: boolean
+  hasChildrenYes?: boolean
+  hasChildrenNo?: boolean
+  hasChildrenUnknown?: boolean
+  homeownerYes?: boolean
+  homeownerLikely?: boolean
+  homeownerNo?: boolean
+  homeownerUnknown?: boolean
+  voterCount?: number
+}
+
 export interface CustomVoterFile {
   id?: string
   name?: string
   url?: string
   channel?: string
   purpose?: string
-  filters?: Record<string, string | number | boolean>
+  filters?: VoterFileFilters
 }
 
 export interface AiContentData {
