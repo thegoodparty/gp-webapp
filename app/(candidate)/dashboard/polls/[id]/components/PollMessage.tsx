@@ -13,11 +13,13 @@ interface ImageDimensions {
 }
 
 export default function PollMessage(): React.JSX.Element {
-  const [poll] = usePoll()
-  const { messageContent, imageUrl } = poll || {}
+  const [{ messageContent, imageUrl }] = usePoll()
   const [isHorizontal, setIsHorizontal] = useState(true)
 
-  const handleImageLoad = ({ naturalWidth, naturalHeight }: ImageDimensions) => {
+  const handleImageLoad = ({
+    naturalWidth,
+    naturalHeight,
+  }: ImageDimensions) => {
     setIsHorizontal(naturalWidth >= naturalHeight)
   }
 
