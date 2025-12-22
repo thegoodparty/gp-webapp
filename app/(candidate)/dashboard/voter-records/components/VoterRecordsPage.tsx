@@ -18,18 +18,14 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import PaginationButtons from './PaginationButtons'
-import { Campaign, User } from 'helpers/types'
-
-export interface CustomFilters {
-  [key: string]: string | number | boolean | string[]
-}
+import { Campaign, User, VoterFileFilters } from 'helpers/types'
 
 interface VoterFile {
   key: string | number
   name: string
   fields: string[]
   isCustom?: boolean
-  filters?: CustomFilters
+  filters?: VoterFileFilters
 }
 
 interface VoterRecordsPageProps {
@@ -47,7 +43,11 @@ export interface VoterFileResponse {
   blob?: () => Promise<Blob>
 }
 
-export async function fetchVoterFile(type: string, customFilters?: CustomFilters): Promise<VoterFileResponse | false> {
+interface DownloadFilters extends VoterFileFilters {
+  filters?: string[]
+}
+
+export async function fetchVoterFile(type: string, customFilters?: VoterFileFilters | DownloadFilters): Promise<VoterFileResponse | false> {
   try {
     const payload: { type: string; customFilters?: string } = {
       type,

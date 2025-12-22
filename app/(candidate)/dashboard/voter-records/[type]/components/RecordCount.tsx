@@ -7,14 +7,10 @@ import { numberFormatter } from 'helpers/numberHelper'
 import H2 from '@shared/typography/H2'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { Campaign } from 'helpers/types'
+import { Campaign, VoterFileFilters } from 'helpers/types'
 
 let attempts = 0
 const MAX_ATTEMPTS = 3
-
-interface CustomFilters {
-  [key: string]: string | number | boolean
-}
 
 interface VoterFilePayload {
   type: string
@@ -24,7 +20,7 @@ interface VoterFilePayload {
 
 export const countVoterFile = async (
   type: string,
-  customFilters?: CustomFilters,
+  customFilters?: VoterFileFilters,
 ): Promise<number | false> => {
   try {
     const payload: VoterFilePayload = {
@@ -37,7 +33,11 @@ export const countVoterFile = async (
     }
 
     const resp = await clientFetch<{ count: number }>(apiRoutes.voters.voterFile.get, payload)
-    return resp.data?.count ?? 0
+    const count = resp.data?.count
+    if (typeof count === 'number') {
+      return count
+    }
+    return false
   } catch (e) {
     console.error('error', e)
     return false
@@ -87,7 +87,7 @@ export default function RecordCount(props: RecordCountProps): React.JSX.Element 
     } else {
       response = await countVoterFile(type)
     }
-    if (!response) {
+    if (response === false) {
       attempts++
       if (attempts < MAX_ATTEMPTS) {
         handleCount()

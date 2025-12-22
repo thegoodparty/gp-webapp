@@ -44,7 +44,7 @@ const mapOptions = {
 }
 
 interface MapHandle {
-  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBoundsLiteral | google.maps.LatLng | 'full') => void
+  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | google.maps.LatLng | 'full') => void
 }
 
 interface MapProps {

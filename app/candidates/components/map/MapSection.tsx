@@ -23,7 +23,7 @@ interface MapFilters {
 }
 
 interface MapRef {
-  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBoundsLiteral | google.maps.LatLngLiteral | google.maps.LatLng | 'full') => void
+  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | google.maps.LatLngLiteral | google.maps.LatLng | 'full') => void
 }
 
 interface MapSearchParams {

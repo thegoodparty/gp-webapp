@@ -1,9 +1,14 @@
-import { fetchVoterFile, CustomFilters } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
+import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
 import { format } from 'date-fns'
+import { VoterFileFilters } from 'helpers/types'
+
+interface DownloadFilters extends VoterFileFilters {
+  filters?: string[]
+}
 
 export const voterFileDownload = async (
   type: string,
-  filters: CustomFilters | undefined,
+  filters: DownloadFilters | undefined,
   fileName?: string,
 ): Promise<void> => {
   const res = await fetchVoterFile(type, filters)
