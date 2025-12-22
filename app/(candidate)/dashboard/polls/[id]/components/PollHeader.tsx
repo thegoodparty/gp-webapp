@@ -11,7 +11,7 @@ export default function PollHeader(): React.JSX.Element {
       {/* <Link href="/dashboard/polls">
         <IoArrowBack />
       </Link> */}
-      <H1>{poll?.name}</H1>
+      <H1>{poll.name}</H1>
     </div>
   )
 }

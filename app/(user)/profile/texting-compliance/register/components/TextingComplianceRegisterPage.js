@@ -1,8 +1,6 @@
 'use client'
 import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
-import Body2 from '@shared/typography/Body2'
-import NewInfoAlert from '@shared/alerts/NewInfoAlert'
 import TextingComplianceHeader from 'app/(user)/profile/texting-compliance/shared/TextingComplianceHeader'
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
@@ -40,7 +38,7 @@ const reconcileInitialFormState = (user, campaign, website) => {
   return {
     electionFilingLink: '',
     campaignCommitteeName: campaignCommittee || '',
-    localTribeName: '',
+    officeLevel: '',
     ein: ein || '',
     phone: phone || '',
     address: { formatted_address: '' },
@@ -88,13 +86,6 @@ export default function TextingComplianceRegisterPage({ user, campaign, website 
 
       <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
         <H2 className="mb-6 hidden md:block">Register your campaign</H2>
-
-        <NewInfoAlert className="mb-6">
-          <Body2>
-            Try to match this information with your election filing when
-            possible
-          </Body2>
-        </NewInfoAlert>
 
         <FormDataProvider
           initialState={initialFormState}

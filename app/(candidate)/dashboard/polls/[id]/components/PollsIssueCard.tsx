@@ -38,7 +38,7 @@ export default function PollsIssueCard({
         </div>
         <div className="mt-4">{summary}</div>
         <Link
-          href={`/dashboard/polls/${poll?.id}/issue/${index}`}
+          href={`/dashboard/polls/${poll.id}/issue/${index}`}
           className="mt-12"
         >
           <Button variant="outline" className="w-full">

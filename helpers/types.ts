@@ -57,6 +57,33 @@ export interface UserResponse {
   data: User
 }
 
+// ===== CampaignUpdateHistory Types =====
+
+export enum CampaignUpdateHistoryType {
+  doorKnocking = 'doorKnocking',
+  calls = 'calls',
+  digital = 'digital',
+  directMail = 'directMail',
+  digitalAds = 'digitalAds',
+  text = 'text',
+  events = 'events',
+  yardSigns = 'yardSigns',
+  robocall = 'robocall',
+  phoneBanking = 'phoneBanking',
+  socialMedia = 'socialMedia',
+}
+
+export interface CampaignUpdateHistory {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  userId: number
+  user: User
+  type: CampaignUpdateHistoryType
+  quantity: number
+}
+
 // ===== Campaign Types =====
 
 export enum CampaignTier {
@@ -126,24 +153,66 @@ export interface CampaignDetails {
   electionId?: string | null
   tier?: string
   einNumber?: string | null
+  einSupportingDocument?: string | null
   wonGeneral?: boolean
+  launchStatus?: string
+  filedStatement?: string
+}
+
+export interface ReportedVoterGoals {
+  doorKnocking?: number
+  calls?: number
+  digital?: number
+  directMail?: number
+  digitalAds?: number
+  text?: number
+  events?: number
+  yardSigns?: number
+  robocall?: number
+  phoneBanking?: number
+  socialMedia?: number
 }
 
 export interface CampaignData {
   createdBy?: string
   slug?: string
-  hubSpotUpdates?: Record<string, string>
+  hubSpotUpdates?: HubSpotUpdates
   currentStep?: string
   launchStatus?: string
   lastVisited?: number
   claimProfile?: string
-  customVoterFiles?: unknown[]
-  reportedVoterGoals?: Record<string, unknown>
+  customVoterFiles?: CustomVoterFile[]
+  reportedVoterGoals?: ReportedVoterGoals
   textCampaignCount?: number
   lastStepDate?: string
   adminUserEmail?: string
   hubspotId?: string
   name?: string
+  p2vNotNeeded?: boolean
+}
+
+export interface HubSpotUpdates {
+  past_candidate?: string
+  incumbent?: string
+  candidate_experience_level?: string
+  final_viability_rating?: string
+  primary_election_result?: string
+  election_results?: string
+  professional_experience?: string
+  p2p_campaigns?: string
+  p2p_sent?: string
+  confirmed_self_filer?: string
+  verified_candidates?: string
+  date_verified?: string
+  pro_candidate?: string
+  filing_deadline?: string
+  opponents?: string
+}
+
+export interface CustomVoterFile {
+  id?: string
+  name?: string
+  url?: string
 }
 
 export interface AiContentData {
@@ -163,6 +232,54 @@ export interface CampaignAiContent {
     | undefined
 }
 
+export interface ViabilityScore {
+  score?: number
+  tier?: string
+}
+
+export interface PathToVictoryData {
+  p2vStatus?: string
+  p2vAttempts?: number
+  p2vCompleteDate?: string
+  completedBy?: number
+  electionType?: string
+  electionLocation?: string
+  voterContactGoal?: number
+  winNumber?: number
+  p2vNotNeeded?: boolean
+  totalRegisteredVoters?: number
+  republicans?: number
+  democrats?: number
+  indies?: number
+  women?: number
+  men?: number
+  white?: number
+  asian?: number
+  africanAmerican?: number
+  hispanic?: number
+  averageTurnout?: number
+  projectedTurnout?: number
+  viability?: ViabilityScore
+  source?: string
+  districtId?: string
+  districtManuallySet?: boolean
+  officeContextFingerprint?: string
+  voteGoal?: number
+  voterProjection?: number
+  budgetLow?: number
+  budgetHigh?: number
+  voterMap?: string
+  finalVotes?: number
+}
+
+export interface PathToVictory {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  data: PathToVictoryData
+}
+
 export interface Campaign {
   id: number
   createdAt: Date | string
@@ -180,18 +297,24 @@ export interface Campaign {
   data: CampaignData
   details: CampaignDetails
   aiContent: CampaignAiContent
-  vendorTsData: Record<string, unknown>
+  vendorTsData: VendorTsData
+  pathToVictory?: PathToVictory
+  user?: User
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]
   hasFreeTextsOffer: boolean
-  // Public candidate profile properties
   firstName?: string
   lastName?: string
   image?: string
   claimed?: boolean
   positionName?: string
   raceId?: string
+}
+
+export interface VendorTsData {
+  pathToVictory?: PathToVictoryData
+  [key: string]: PathToVictoryData | string | number | boolean | object | undefined
 }
 
 export interface WebsiteIssue {

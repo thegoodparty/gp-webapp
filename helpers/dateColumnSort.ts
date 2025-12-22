@@ -1,4 +1,4 @@
-export const dateColumnSort = (dateA: string | Date | null | undefined, dateB: string | Date | null | undefined): number => {
+export const dateColumnSort = (dateA: string | number | Date | null | undefined, dateB: string | number | Date | null | undefined): number => {
   const a = dateA
   const b = dateB
   let errorA = false

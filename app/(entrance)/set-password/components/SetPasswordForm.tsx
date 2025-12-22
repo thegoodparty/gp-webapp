@@ -9,9 +9,9 @@ interface SetPasswordFormProps {
   confirmPassword: string
   isValid: boolean
   isMatch: boolean
-  onPasswordChange: (value: string) => void
+  onPasswordChange: (value: string, isValid: boolean) => void
   onConfirmPasswordChange: (value: string) => void
-  onSubmit: () => void
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 export default function SetPasswordForm({

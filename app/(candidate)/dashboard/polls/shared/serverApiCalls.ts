@@ -16,10 +16,7 @@ export type HasPollsResponse = {
 }
 
 export const hasPolls = async () => {
-  const res = await serverFetch<HasPollsResponse>(
-    apiRoutes.polls.hasPolls,
-    undefined,
-  )
+  const res = await serverFetch<HasPollsResponse>(apiRoutes.polls.hasPolls)
   if (res.ok) {
     return res.data
   }
@@ -27,10 +24,7 @@ export const hasPolls = async () => {
 }
 
 export const getPolls = async () => {
-  const res = await serverFetch<GetPollsResponse>(
-    apiRoutes.polls.list,
-    undefined,
-  )
+  const res = await serverFetch<GetPollsResponse>(apiRoutes.polls.list)
   if (res.ok) {
     return res.data
   }
@@ -48,7 +42,6 @@ export const getPollTopIssues = async (pollId: string) => {
   const res = await serverFetch<GetPollIssuesResponse>(
     apiRoutes.polls.topIssues,
     { pollId },
-    { revalidate: 60 },
   )
   if (res.ok) {
     return res.data

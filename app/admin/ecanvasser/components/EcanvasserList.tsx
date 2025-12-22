@@ -1,14 +1,13 @@
 import EcanvasserCard from './EcanvasserCard'
 
 interface Ecanvasser {
-  id: string | number
-  email?: string
+  campaignId: number
+  email: string
   contacts?: number
   houses?: number
   interactions?: number
   lastSync?: string
   error?: string
-  campaignId: string | number
 }
 
 interface EcanvasserListProps {
@@ -25,7 +24,7 @@ export default function EcanvasserList({
       {Array.isArray(ecanvassers) &&
         ecanvassers.map((ecanvasser) => (
           <EcanvasserCard
-            key={ecanvasser.id}
+            key={ecanvasser.campaignId}
             ecanvasser={ecanvasser}
             onUpdate={onUpdate}
           />

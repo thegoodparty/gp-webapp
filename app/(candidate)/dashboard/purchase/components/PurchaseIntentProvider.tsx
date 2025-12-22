@@ -10,6 +10,7 @@ import {
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { createPurchaseIntent } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
+import { reportErrorToNewRelic } from '@shared/new-relic'
 
 interface PurchaseIntentResponse {
   clientSecret: string
@@ -21,10 +22,6 @@ interface PurchaseIntentContextValue {
   setPurchaseIntent: Dispatch<SetStateAction<PurchaseIntentResponse | null>>
   error: string | null
   setError: Dispatch<SetStateAction<string | null>>
-  metaData: Record<string, string | number | boolean | undefined>
-  setMetaData: Dispatch<
-    SetStateAction<Record<string, string | number | boolean | undefined>>
-  >
 }
 
 export const PurchaseIntentContext = createContext<
@@ -45,25 +42,24 @@ export const PurchaseIntentProvider = ({
   const [purchaseIntent, setPurchaseIntent] =
     useState<PurchaseIntentResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [metaData, setMetaData] = useState<
-    Record<string, string | number | boolean | undefined>
-  >(purchaseMetaData)
+
+  const onError = (error: string) => {
+    setError(error)
+    reportErrorToNewRelic('PurchaseIntentProvider error', { message: error })
+  }
 
   useSingleEffect(() => {
     const createNewPurchaseIntent = async () => {
-      if (
-        !type ||
-        !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]
-      ) {
-        setError('Invalid purchase type')
+      if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
+        onError('Invalid purchase type')
         return
       }
 
-      const response = await createPurchaseIntent(type, metaData)
+      const response = await createPurchaseIntent(type, purchaseMetaData)
       if (response.ok) {
         setPurchaseIntent(response.data)
       } else {
-        setError(
+        onError(
           (response.data as { data?: { error?: string } })?.data?.error ||
             'Failed to create purchase intent',
         )
@@ -73,7 +69,7 @@ export const PurchaseIntentProvider = ({
     if (!purchaseIntent) {
       createNewPurchaseIntent()
     }
-  }, [purchaseIntent, type, metaData])
+  }, [purchaseIntent, type])
 
   return (
     <PurchaseIntentContext.Provider
@@ -82,8 +78,6 @@ export const PurchaseIntentProvider = ({
         setPurchaseIntent,
         error,
         setError,
-        metaData,
-        setMetaData,
       }}
     >
       {children}

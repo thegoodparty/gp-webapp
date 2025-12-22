@@ -28,22 +28,22 @@ export default function ExpandReviewPage({
   )}`
 
   const handleNext = () => {
-    router.push(`/dashboard/polls/${poll?.id}/expand-payment?${params}`)
+    router.push(`/dashboard/polls/${poll.id}/expand-payment?${params}`)
   }
   const handleBack = () => {
-    router.push(`/dashboard/polls/${poll?.id}/expand?${params}`)
+    router.push(`/dashboard/polls/${poll.id}/expand?${params}`)
   }
 
-  const { messageContent, imageUrl } = poll || {}
+  const { messageContent, imageUrl } = poll
 
   return (
     <ExpandPollLayout>
-      <H1 className="text-center">Review your SMS poll.</H1>
+      <H1 className="text-center mb-4">Review your SMS poll.</H1>
       <PollPreview
         scheduledDate={scheduledDate}
         targetAudienceSize={count}
-        imageUrl={imageUrl || ''}
-        message={messageContent || ''}
+        imageUrl={imageUrl}
+        message={messageContent}
         isFree={false}
       />
       <ExpandStepFooter
