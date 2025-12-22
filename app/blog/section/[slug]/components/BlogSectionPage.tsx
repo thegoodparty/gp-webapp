@@ -72,7 +72,7 @@ export default function BlogSectionPage({
       allTags={allTags}
       articleTitles={articleTitles}
     >
-      {slug && articles.length > 0 && (
+      {slug && articles.length > 1 && (
         <div className="border-t border-gray-200 py-16">
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
           {hero && <ArticleSnippet article={hero} heroMode section={currentSection} />}

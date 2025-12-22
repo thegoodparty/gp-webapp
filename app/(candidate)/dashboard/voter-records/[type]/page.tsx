@@ -26,7 +26,8 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 
   const user = await getServerUser() // can be removed when door knocking app is not for admins only
   const campaign = await fetchUserCampaign()
-  const canDownload = await fetchCanDownload()
+  const canDownloadResponse = await fetchCanDownload()
+  const canDownload = canDownloadResponse.canDownload ?? false
   if (!canDownload) {
     redirect('/dashboard')
   }
