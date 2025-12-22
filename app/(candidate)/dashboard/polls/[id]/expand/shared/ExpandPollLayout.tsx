@@ -32,7 +32,7 @@ export default function ExpandPollLayout({
       <FeatureFlagGuard flagKey="serve-polls-expansion">
         {showBreadcrumbs && <Crumbs breadcrumbsLinks={breadcrumbsLinks} />}
 
-        <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12">
+        <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12 flex flex-col items-center">
           {children}
         </Paper>
       </FeatureFlagGuard>
