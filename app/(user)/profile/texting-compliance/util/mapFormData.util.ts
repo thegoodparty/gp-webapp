@@ -25,7 +25,6 @@ interface FormData {
   electionFilingLink: string
   email: string
   phone: string
-  matchingContactFields: string[]
 }
 
 interface MappedFormData {
@@ -37,7 +36,6 @@ interface MappedFormData {
   filingUrl: string
   email: string
   phone: string
-  matchingContactFields: string[]
 }
 
 // TODO: refactor the API to accept the entire Google Places address object so
@@ -84,7 +82,6 @@ export const mapFormData = ({
   electionFilingLink,
   email,
   phone,
-  matchingContactFields,
 }: FormData): MappedFormData => ({
   ein,
   placeId: place_id,
@@ -94,5 +91,4 @@ export const mapFormData = ({
   filingUrl: electionFilingLink,
   email,
   phone,
-  matchingContactFields,
 })
