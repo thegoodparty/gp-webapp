@@ -21,7 +21,8 @@ export default function PurchaseForm({
   const elements = useElements()
   const { errorSnackbar } = useSnackbar()
 
-  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false)
+  const [isPaymentMethodCompleted, setIsPaymentMethodCompleted] =
+    useState(false)
 
   const _onError = (error: Error | StripeError) => {
     let msg: string
@@ -76,14 +77,16 @@ export default function PurchaseForm({
         onLoadError={({ error }) => {
           _onError(error)
         }}
-        onReady={() => setIsPaymentElementReady(true)}
+        onChange={(event) => {
+          setIsPaymentMethodCompleted(event.complete)
+        }}
         options={{
           layout: 'tabs',
         }}
       />
       <Button
         type="submit"
-        disabled={!stripe || !isPaymentElementReady || mutation.isPending}
+        disabled={!stripe || !isPaymentMethodCompleted || mutation.isPending}
         loading={mutation.isPending}
         className="mt-6 w-full"
         color="primary"
