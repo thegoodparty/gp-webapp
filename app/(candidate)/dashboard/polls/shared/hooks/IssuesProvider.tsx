@@ -1,9 +1,15 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 
 interface PollIssue {
-  id: string
   pollId: string
   title: string
   summary: string

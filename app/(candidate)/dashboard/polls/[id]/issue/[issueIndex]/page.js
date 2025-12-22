@@ -4,7 +4,7 @@ import PollIssueDetailPage from './components/PollIssueDetailPage'
 import { IssueProvider } from '../../../shared/hooks/IssueProvider'
 import { PollProvider } from '../../../shared/hooks/PollProvider'
 import { getPoll, getPollTopIssues } from '../../../shared/serverApiCalls'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -19,6 +19,9 @@ export default async function Page({ params }) {
   await serveAccess()
   const { id, issueIndex } = await params
   const poll = await getPoll(id)
+  if (!poll) {
+    redirect('/dashboard/polls')
+  }
   const issues = (await getPollTopIssues(id))?.results || []
 
   const issueIndexNum = parseInt(issueIndex, 10)

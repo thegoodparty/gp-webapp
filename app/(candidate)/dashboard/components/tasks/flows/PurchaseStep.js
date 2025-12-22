@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { centsToDollars } from 'helpers/numberHelper'
 
@@ -16,27 +15,25 @@ export const PurchaseStep = ({
   phoneListId,
 }) => {
   const { purchaseIntent, error, setError } = usePurchaseIntent()
-  const { errorSnackbar } = useSnackbar()
   const hasTrackedPaymentStarted = useRef(false)
 
   useEffect(() => {
-    if (purchaseIntent && contactCount > 0 && !hasTrackedPaymentStarted.current) {
+    if (
+      purchaseIntent &&
+      contactCount > 0 &&
+      !hasTrackedPaymentStarted.current
+    ) {
       const totalCost = centsToDollars(pricePerContact * contactCount)
-      
+
       trackEvent(EVENTS.Outreach.PaymentStarted, {
         channel: type === 'text' ? 'texting' : type,
         units: contactCount,
-        cost: totalCost
+        cost: totalCost,
       })
-      
+
       hasTrackedPaymentStarted.current = true
     }
   }, [purchaseIntent, contactCount, type, pricePerContact])
-
-  const handlePaymentError = (error) => {
-    setError(error)
-    errorSnackbar(error.message)
-  }
 
   return (
     <div className="p-4 w-[80vw] max-w-xl">
@@ -49,7 +46,7 @@ export const PurchaseStep = ({
           {...{
             contactCount,
             onComplete,
-            onError: handlePaymentError,
+            onError: setError,
           }}
         />
       )}

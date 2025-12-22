@@ -10,14 +10,17 @@ interface ExpandPollLayoutProps {
   showBreadcrumbs?: boolean
 }
 
-export default function ExpandPollLayout({ children, showBreadcrumbs = true }: ExpandPollLayoutProps): React.JSX.Element {
+export default function ExpandPollLayout({
+  children,
+  showBreadcrumbs = true,
+}: ExpandPollLayoutProps): React.JSX.Element {
   const [poll] = usePoll()
 
   const breadcrumbsLinks = [
     { href: `/dashboard/polls`, label: 'Polls' },
     {
-      label: `${poll?.name}`,
-      href: `/dashboard/polls/${poll?.id}`,
+      label: `${poll.name}`,
+      href: `/dashboard/polls/${poll.id}`,
     },
     {
       label: 'Expand Poll',
@@ -29,7 +32,7 @@ export default function ExpandPollLayout({ children, showBreadcrumbs = true }: E
       <FeatureFlagGuard flagKey="serve-polls-expansion">
         {showBreadcrumbs && <Crumbs breadcrumbsLinks={breadcrumbsLinks} />}
 
-        <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12">
+        <Paper className="min-h-full max-w-[700px] mx-auto mt-8 md:mt-16 lg:p-12 flex flex-col items-center">
           {children}
         </Paper>
       </FeatureFlagGuard>

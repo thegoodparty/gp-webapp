@@ -4,6 +4,7 @@ import serveAccess from '../../shared/serveAccess'
 import { PollProvider } from '../shared/hooks/PollProvider'
 import { IssuesProvider } from '../shared/hooks/IssuesProvider'
 import { getPoll, getPollTopIssues } from '../shared/serverApiCalls'
+import { redirect } from 'next/navigation'
 
 const meta = pageMetaData({
   title: 'Polls | GoodParty.org',
@@ -18,10 +19,17 @@ interface Params {
   id: string
 }
 
-export default async function Page({ params }: { params: Promise<Params> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<Params>
+}): Promise<React.JSX.Element> {
   await serveAccess()
   const { id } = await params
   const poll = await getPoll(id)
+  if (!poll) {
+    redirect('/dashboard/polls')
+  }
   const issues = (await getPollTopIssues(id))?.results || []
 
   return (

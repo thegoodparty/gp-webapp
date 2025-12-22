@@ -18,13 +18,14 @@ import {
   POLLS_SCHEDULING_COPY,
   PollScheduledDateSelector,
 } from '../../../components/PollScheduledDateSelector'
+import { Button } from 'goodparty-styleguide'
 
 const AudienceSelectionForm: React.FC<{
   poll: Poll
+  totalConstituentsWithCellPhone: number
   onNext: (audience: number) => void
   onBack: () => void
-}> = ({ poll, onNext, onBack }) => {
-  const query = useTotalConstituentsWithCellPhone()
+}> = ({ poll, totalConstituentsWithCellPhone, onNext, onBack }) => {
   const [selection, setSelection] = useState<
     { count: number; isRecommended: boolean } | undefined
   >(undefined)
@@ -40,41 +41,36 @@ const AudienceSelectionForm: React.FC<{
 
   const content = (children: React.ReactNode) => (
     <ExpandPollLayout>
-      <H1 className="text-center">
-        How many more messages would you like to send?
-      </H1>
       {children}
-      <ExpandStepFooter
-        currentStep={1}
-        onBack={onBack}
-        disabledNext={!selection}
-        onNext={handleNext}
-        onNextText="Pick Send Date"
-      />
+
+      <div className="w-full">
+        <ExpandStepFooter
+          currentStep={1}
+          onBack={onBack}
+          disabledNext={!selection}
+          onNext={handleNext}
+          onNextText="Pick Send Date"
+        />
+      </div>
     </ExpandPollLayout>
   )
 
-  if (query.status !== 'success') {
-    return content(
-      <LuLoaderCircle
-        className="animate-spin text-blue-500 mx-auto my-4"
-        size={60}
-      />,
-    )
-  }
   // Poll response count will always be defined for an expanding poll, so this ??
   // operation is just to satisfy the type checker.
   const responseCount = poll.responseCount ?? 0
 
   return content(
     <>
+      <H1 className="text-center">
+        How many more messages would you like to send?
+      </H1>
       <Body1 className="text-center my-4 text-muted-foreground">
         We won&apos;t send text messages to constituents you&apos;ve already
         messaged.
       </Body1>
       <PollAudienceSelector
         expectedResponseRate={responseCount / poll.audienceSize}
-        totalConstituentsWithCellPhone={query.data.totalConstituents}
+        totalConstituentsWithCellPhone={totalConstituentsWithCellPhone}
         alreadySent={poll.audienceSize}
         responsesAlreadyReceived={responseCount}
         onSelect={setSelection}
@@ -100,6 +96,8 @@ export default function ExpandPollPage({
   const [poll] = usePoll()
   const router = useRouter()
 
+  const query = useTotalConstituentsWithCellPhone()
+
   const [state, setState] = useState<State>(() => {
     const initialState: State = {
       mode: 'audience-selection',
@@ -121,7 +119,7 @@ export default function ExpandPollPage({
 
   const handleBack = () => {
     if (state.mode === 'audience-selection') {
-      router.push(`/dashboard/polls/${poll?.id}`)
+      router.push(`/dashboard/polls/${poll.id}`)
     } else {
       setState({ ...state, mode: 'audience-selection' })
     }
@@ -132,23 +130,55 @@ export default function ExpandPollPage({
       return
     }
     router.push(
-      `/dashboard/polls/${poll?.id}/expand-review?count=${
+      `/dashboard/polls/${poll.id}/expand-review?count=${
         state.audience
       }&scheduledDate=${encodeURIComponent(state.scheduledDate.toISOString())}`,
     )
   }
 
+  if (query.status !== 'success') {
+    return (
+      <ExpandPollLayout>
+        <LuLoaderCircle
+          className="animate-spin text-blue-500 mx-auto my-4"
+          size={60}
+        />
+      </ExpandPollLayout>
+    )
+  }
+
+  const totalConstituentsWithCellPhone = query.data.totalConstituents
+
+  if (poll.audienceSize >= totalConstituentsWithCellPhone) {
+    return (
+      <ExpandPollLayout>
+        <H1 className="text-center">
+          You&apos;ve already sent this poll to all of your constituents.
+        </H1>
+        <Body1 className="text-center my-4 text-muted-foreground">
+          If you&apos;d like to send more messages, you can create a new poll.
+        </Body1>
+
+        <Button
+          className="mx-auto mt-6"
+          onClick={() => router.push('/dashboard/polls/create')}
+        >
+          Create New Poll
+        </Button>
+      </ExpandPollLayout>
+    )
+  }
+
   if (state.mode === 'audience-selection') {
     return (
-      poll && (
-        <AudienceSelectionForm
-          poll={poll}
-          onNext={(count) =>
-            setState({ ...state, mode: 'date-selection', audience: count })
-          }
-          onBack={handleBack}
-        />
-      )
+      <AudienceSelectionForm
+        poll={poll}
+        totalConstituentsWithCellPhone={totalConstituentsWithCellPhone}
+        onNext={(count) =>
+          setState({ ...state, mode: 'date-selection', audience: count })
+        }
+        onBack={handleBack}
+      />
     )
   }
 
@@ -166,13 +196,15 @@ export default function ExpandPollPage({
         onChange={(date) => setState({ ...state, scheduledDate: date })}
       />
 
-      <ExpandStepFooter
-        currentStep={2}
-        onBack={handleBack}
-        disabledNext={!state.scheduledDate}
-        onNext={handleNext}
-        onNextText="Review"
-      />
+      <div className="w-full">
+        <ExpandStepFooter
+          currentStep={2}
+          onBack={handleBack}
+          disabledNext={!state.scheduledDate}
+          onNext={handleNext}
+          onNextText="Review"
+        />
+      </div>
     </ExpandPollLayout>
   )
 }
