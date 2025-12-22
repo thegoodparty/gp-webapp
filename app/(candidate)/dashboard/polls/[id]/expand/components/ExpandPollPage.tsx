@@ -43,15 +43,13 @@ const AudienceSelectionForm: React.FC<{
     <ExpandPollLayout>
       {children}
 
-      <div className="w-full">
-        <ExpandStepFooter
-          currentStep={1}
-          onBack={onBack}
-          disabledNext={!selection}
-          onNext={handleNext}
-          onNextText="Pick Send Date"
-        />
-      </div>
+      <ExpandStepFooter
+        currentStep={1}
+        onBack={onBack}
+        disabledNext={!selection}
+        onNext={handleNext}
+        onNextText="Pick Send Date"
+      />
     </ExpandPollLayout>
   )
 
@@ -196,15 +194,13 @@ export default function ExpandPollPage({
         onChange={(date) => setState({ ...state, scheduledDate: date })}
       />
 
-      <div className="w-full">
-        <ExpandStepFooter
-          currentStep={2}
-          onBack={handleBack}
-          disabledNext={!state.scheduledDate}
-          onNext={handleNext}
-          onNextText="Review"
-        />
-      </div>
+      <ExpandStepFooter
+        currentStep={2}
+        onBack={handleBack}
+        disabledNext={!state.scheduledDate}
+        onNext={handleNext}
+        onNextText="Review"
+      />
     </ExpandPollLayout>
   )
 }

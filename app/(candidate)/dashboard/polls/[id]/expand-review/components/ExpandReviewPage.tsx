@@ -38,7 +38,7 @@ export default function ExpandReviewPage({
 
   return (
     <ExpandPollLayout>
-      <H1 className="text-center">Review your SMS poll.</H1>
+      <H1 className="text-center mb-4">Review your SMS poll.</H1>
       <PollPreview
         scheduledDate={scheduledDate}
         targetAudienceSize={count}

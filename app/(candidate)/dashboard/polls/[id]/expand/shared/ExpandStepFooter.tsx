@@ -20,9 +20,9 @@ export default function ExpandStepFooter(
   props: ExpandStepFooterProps,
 ): React.JSX.Element {
   return (
-    <>
+    <div className="w-full">
       <div className="mt-8 pb-2 border-t border-slate-200" />
       <StepFooter {...props} numberOfSteps={3} />
-    </>
+    </div>
   )
 }
