@@ -160,7 +160,6 @@ export default function ExpandPollPage({
         </Body1>
 
         <Button
-          // center the button in the page
           className="mx-auto mt-6"
           onClick={() => router.push('/dashboard/polls/create')}
         >
