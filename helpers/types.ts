@@ -213,6 +213,9 @@ export interface CustomVoterFile {
   id?: string
   name?: string
   url?: string
+  channel?: string
+  purpose?: string
+  filters?: Record<string, string | number | boolean>
 }
 
 export interface AiContentData {
@@ -280,6 +283,23 @@ export interface PathToVictory {
   data: PathToVictoryData
 }
 
+export interface CandidatePosition {
+  id: number
+  topIssueId: number
+  positionId: number
+  description: string
+  order: number
+}
+
+export interface ClaimedCampaign {
+  website?: {
+    vanityPath?: string
+    domain?: Domain | null
+  }
+  details?: CampaignDetails
+  campaignPositions?: CandidatePosition[]
+}
+
 export interface Campaign {
   id: number
   createdAt: Date | string
@@ -307,9 +327,32 @@ export interface Campaign {
   firstName?: string
   lastName?: string
   image?: string
-  claimed?: boolean
+  claimed?: boolean | ClaimedCampaign
   positionName?: string
   raceId?: string
+  // Map-related fields (flattened from API)
+  party?: string
+  office?: string
+  city?: string
+  county?: string
+  state?: string
+  avatar?: string
+  electionDate?: string
+  name?: string
+  normalizedOffice?: string
+  ballotLevel?: string
+  globalPosition?: {
+    lat: number
+    lng: number
+  }
+  email?: string
+  urls?: string[]
+  Stances?: CandidateStance[]
+}
+
+export interface CandidateStance {
+  Issue?: { name?: string }
+  stanceStatement?: string
 }
 
 export interface VendorTsData {

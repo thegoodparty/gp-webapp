@@ -25,12 +25,27 @@ const dtrOptions: Options = {
   },
 }
 
-const contentfulHelper = (rawRichTextField: string | Document | undefined): React.ReactNode => {
+const isDocument = (obj: Document | string | null | undefined): obj is Document => {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'nodeType' in obj &&
+    'content' in obj
+  )
+}
+
+const contentfulHelper = (
+  rawRichTextField: Document | string | null | undefined,
+): React.ReactNode => {
   if (!rawRichTextField) return null
   try {
-    let doc: Document = rawRichTextField as Document
+    let doc: Document
     if (typeof rawRichTextField === 'string') {
-      doc = JSON.parse(rawRichTextField) as Document
+      doc = JSON.parse(rawRichTextField)
+    } else if (isDocument(rawRichTextField)) {
+      doc = rawRichTextField
+    } else {
+      return null
     }
     return documentToReactComponents(doc, dtrOptions)
   } catch (e) {
@@ -42,14 +57,29 @@ const contentfulHelper = (rawRichTextField: string | Document | undefined): Reac
 
 export default contentfulHelper
 
-export const cmsToPlainText = (content: Document | null | undefined, limit?: number): string => {
+export const cmsToPlainText = (
+  content: Document | string | null | undefined,
+  limit?: number,
+): string => {
   if (!content) {
     return ''
   }
-  const text = documentToPlainTextString(content)
-  if (text && limit) {
-    return text.substring(0, limit - 3) + '...'
+  try {
+    let doc: Document
+    if (typeof content === 'string') {
+      doc = JSON.parse(content)
+    } else if (isDocument(content)) {
+      doc = content
+    } else {
+      return ''
+    }
+    const text = documentToPlainTextString(doc)
+    if (text && limit) {
+      return text.substring(0, limit - 3) + '...'
+    }
+    return text
+  } catch {
+    return ''
   }
-  return text
 }
 

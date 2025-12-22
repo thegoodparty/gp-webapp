@@ -1,45 +1,9 @@
 import { JsonLd } from 'react-schemaorg'
 import { cmsToPlainText } from 'helpers/contentfulHelper'
-import { Document } from '@contentful/rich-text-types'
-
-interface ArticleAuthor {
-  fields?: {
-    name?: string
-    summary?: string
-    image?: {
-      fields?: {
-        file?: {
-          url?: string
-        }
-      }
-    }
-  }
-}
-
-interface ArticleSection {
-  fields?: {
-    title?: string
-  }
-}
-
-interface ArticleImage {
-  url?: string
-}
-
-interface Article {
-  section?: ArticleSection
-  author?: ArticleAuthor
-  body?: Document
-  mainImage?: ArticleImage
-  publishDate?: string
-  updateDate?: string
-  title?: string
-  slug?: string
-  summary?: string
-}
+import { ArticleContent } from './utils'
 
 interface ArticleSchemaProps {
-  article: Article | null
+  article: ArticleContent | null
 }
 
 export default function ArticleSchema({

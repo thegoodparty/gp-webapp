@@ -1,33 +1,10 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
 import BlogWrapper from '../shared/BlogWrapper'
-import ArticleSnippet from '../shared/ArticleSnippet'
+import ArticleSnippet, { Article } from '../shared/ArticleSnippet'
 import MarketingH5 from '@shared/typography/MarketingH5'
 import SubscribeBlog from '../shared/SubscribeBlog'
-
-interface ImageData {
-  url: string
-  alt?: string
-}
-
-interface Section {
-  id: string
-  fields?: {
-    slug?: string
-    title?: string
-    order?: string | number
-  }
-}
-
-interface Article {
-  id: string
-  title: string
-  slug: string
-  publishDate: string
-  summary?: string
-  mainImage?: ImageData
-  section?: Section
-}
+import { BlogSection } from '../shared/fetchSections'
 
 interface Tag {
   slug: string
@@ -44,8 +21,8 @@ interface ArticlesBySection {
 }
 
 interface BlogPageProps {
-  sections: Section[]
-  hero: Article
+  sections: BlogSection[]
+  hero?: Article
   topTags?: Tag[]
   allTags?: Tag[]
   articleTitles?: ArticleTitle[]
@@ -73,12 +50,12 @@ export default async function BlogPage({
       {sections?.length > 0 && (
         <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
-          <ArticleSnippet article={hero} heroMode section={hero.section} />
+          {hero && <ArticleSnippet article={hero} heroMode />}
           {sections.map((section, index) => {
             const sectionSlug = section.fields?.slug || ''
             const sectionArticles = articlesBySection[sectionSlug] || []
             return (
-              <Fragment key={section.id}>
+              <Fragment key={section.id || sectionSlug}>
                 <Link
                   className="group no-underline flex justify-between align-center mb-6 mt-16"
                   href={`/blog/section/${section.fields?.slug}`}
@@ -95,7 +72,7 @@ export default async function BlogPage({
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {sectionArticles.map((article) => (
                     <ArticleSnippet
-                      key={article.id}
+                      key={article.id || article.slug}
                       article={article}
                       section={section}
                     />

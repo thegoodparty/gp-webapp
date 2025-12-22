@@ -43,6 +43,9 @@ export async function updateCampaign(attr, slug) {
   }
 }
 
+/**
+ * @returns {Promise<import('helpers/types').Campaign | false>}
+ */
 export async function getCampaign() {
   try {
     const resp = await clientFetch(apiRoutes.campaign.get)

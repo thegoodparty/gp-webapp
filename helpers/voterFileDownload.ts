@@ -1,14 +1,14 @@
-import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
+import { fetchVoterFile, CustomFilters } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
 import { format } from 'date-fns'
 
 export const voterFileDownload = async (
   type: string,
-  filters: Record<string, unknown> | undefined,
+  filters: CustomFilters | undefined,
   fileName?: string,
 ): Promise<void> => {
-  const res = await fetchVoterFile(type, filters || undefined)
+  const res = await fetchVoterFile(type, filters)
 
-  if (res && res.ok) {
+  if (res && res.ok && res.blob) {
     const blob = await res.blob()
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')

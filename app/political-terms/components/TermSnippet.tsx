@@ -2,6 +2,7 @@ import CmsContentWrapper from '@shared/content/CmsContentWrapper'
 import { slugify } from 'helpers/articleHelper'
 import contentfulHelper from 'helpers/contentfulHelper'
 import { TermTitleLink } from './TermTitleLink'
+import { GlossaryItem } from '../util/glossaryItemFetching.util'
 
 interface Term {
   title: string
@@ -12,13 +13,8 @@ export const termLink = (term: Term): string => termLinkByTitle(term?.title)
 export const termLinkByTitle = (title: string): string =>
   `/political-terms/${slugify(title, true)}`
 
-interface TermSnippetItem {
-  title: string
-  description: string
-}
-
 interface TermSnippetProps {
-  item: TermSnippetItem
+  item: GlossaryItem
   last?: boolean
 }
 
