@@ -16,9 +16,7 @@ interface ArticleTitle {
   slug: string
 }
 
-interface ArticlesBySection {
-  [slug: string]: Article[]
-}
+type ArticlesBySection = Partial<Record<string, Article[]>>
 
 interface BlogPageProps {
   sections: BlogSection[]

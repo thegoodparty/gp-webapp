@@ -21,9 +21,7 @@ interface BlogHomeContent {
   tags?: Tag[]
 }
 
-interface ArticlesBySection {
-  [key: string]: Article[]
-}
+type ArticlesBySection = Partial<Record<string, Article[]>>
 
 const fetchTopTags = async (): Promise<BlogHomeContent> => {
   return await fetchContentByType<BlogHomeContent>('blogHome')

@@ -7,9 +7,7 @@ interface FetchOptions {
   limit?: number
 }
 
-interface ArticlesBySection {
-  [sectionSlug: string]: Article[]
-}
+type ArticlesBySection = Partial<Record<string, Article[]>>
 
 export const fetchArticlesBySection = async ({ sectionSlug, limit }: FetchOptions = {}): Promise<ArticlesBySection> => {
   return await unAuthFetch(apiRoutes.content.blogArticle.bySection.path, {
