@@ -155,7 +155,7 @@ export default memo(function MapSection({
   const onClusterClick = useCallback((cluster: { bounds: google.maps.LatLngBounds }) => {
     if (!mapRef.current) return
 
-    mapRef.current.moveMapWithHistory(cluster.bounds.toJSON())
+    mapRef.current.moveMapWithHistory(cluster.bounds)
   }, [])
 
   const onZoomOut = useCallback((): void => {
