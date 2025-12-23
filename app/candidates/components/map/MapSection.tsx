@@ -19,7 +19,6 @@ interface MapFilters {
   results?: boolean
   office?: string
   name?: string
-  [key: string]: string | boolean | undefined
 }
 
 interface MapRef {
