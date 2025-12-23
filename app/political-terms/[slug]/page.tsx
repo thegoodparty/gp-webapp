@@ -68,7 +68,7 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 
   // Build glossaryItems array for the home page
   const glossaryItemsArray: string[] = Object.values(itemsBySlug)
-    .map((glossaryItem) => glossaryItem.title)
+    .map((glossaryItem) => glossaryItem!.title)
     .sort()
 
   const activeLetter = slug.charAt(0).toUpperCase()

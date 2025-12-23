@@ -29,13 +29,9 @@ export interface GlossaryItem {
   banner?: BannerData
 }
 
-export interface GlossaryBySlug {
-  [slug: string]: GlossaryItem
-}
+export type GlossaryBySlug = Partial<Record<string, GlossaryItem>>
 
-export interface GlossaryByLetter {
-  [letter: string]: GlossaryItem[]
-}
+export type GlossaryByLetter = Partial<Record<string, GlossaryItem[]>>
 
 export const fetchGlossaryItemsBySlug = async (): Promise<GlossaryBySlug> => {
   try {
