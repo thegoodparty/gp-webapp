@@ -15,7 +15,9 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ params }: PageProps<any>) {
+export default async function Page({
+  params,
+}: PageProps<'/dashboard/polls/[id]/issue/[issueIndex]'>) {
   await serveAccess()
   const { id, issueIndex } = await params
   const poll = await getPoll(id)
