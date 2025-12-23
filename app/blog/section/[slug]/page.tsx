@@ -54,7 +54,7 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
     <BlogSectionPage
       sections={sections}
       articles={articles.filter(
-        (article) => article.contentId !== hero?.contentId,
+        (article) => !hero?.contentId || article.contentId !== hero.contentId,
       )}
       sectionTitle={sectionTitle}
       currentSection={currentSection}

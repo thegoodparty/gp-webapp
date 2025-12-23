@@ -68,7 +68,7 @@ const filterOutHero = (
   return Object.keys(articlesBySection).reduce<ArticlesBySection>((acc, key) => {
     const sectionArticles = articlesBySection[key] || []
     acc[key] = sectionArticles
-      .filter((article) => article.contentId !== heroContentId)
+      .filter((article) => !heroContentId || article.contentId !== heroContentId)
       .slice(0, 3)
     return acc
   }, {})
