@@ -4,6 +4,7 @@ import { ChooseScriptAddFlow } from './ChooseScriptAddFlow'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { SelectScriptScreen } from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SelectScriptScreen'
 import { CreateSmSScriptScreen } from './CreateSmSScriptScreen'
+import { getSmsScriptSelectOptions } from './SmsScriptSelect'
 import {
   fetchAiContentCategories,
   SelectAiTemplateScreen,
@@ -56,9 +57,16 @@ export default function AddScriptStep({
     }
   }
 
+  const hasSavedScripts =
+    getSmsScriptSelectOptions(campaign?.aiContent).length > 0
+
   const Screens = {
     [ADD_SCRIPT_FLOW.CHOOSE_FLOW]: (
-      <ChooseScriptAddFlow onBack={() => onBack()} onNext={onNext} />
+      <ChooseScriptAddFlow
+        onBack={() => onBack()}
+        onNext={onNext}
+        hasSavedScripts={hasSavedScripts}
+      />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS]: (
       <SelectScriptScreen

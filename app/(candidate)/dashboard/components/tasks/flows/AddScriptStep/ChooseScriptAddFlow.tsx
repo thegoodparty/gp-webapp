@@ -10,11 +10,13 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 interface ChooseScriptAddFlowProps {
   onBack?: () => void
   onNext?: (choiceKey: string | undefined) => void
+  hasSavedScripts?: boolean
 }
 
 export const ChooseScriptAddFlow = ({
   onBack = () => {},
   onNext = () => {},
+  hasSavedScripts = false,
 }: ChooseScriptAddFlowProps): React.JSX.Element => {
   const [selected, setSelected] = useState<string>()
   const handleOnNext = () => {
@@ -28,6 +30,10 @@ export const ChooseScriptAddFlow = ({
     if (key === ADD_SCRIPT_FLOW.SELECT_SMS) {
       eventName =
         EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickSaved
+    } else if (key === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE) {
+      eventName =
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
+          .ClickGenerate
     } else {
       eventName =
         EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickAdd
@@ -36,10 +42,19 @@ export const ChooseScriptAddFlow = ({
   }
 
   const options = [
+    ...(hasSavedScripts
+      ? [
+          {
+            key: ADD_SCRIPT_FLOW.SELECT_SMS,
+            value: 'Select a saved script',
+            label: 'Select a saved script',
+          },
+        ]
+      : []),
     {
-      key: ADD_SCRIPT_FLOW.SELECT_SMS,
-      value: 'Select a saved script',
-      label: 'Select a saved script',
+      key: ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE,
+      value: 'Generate a new script',
+      label: 'Generate a new script',
     },
     {
       key: ADD_SCRIPT_FLOW.CREATE_SMS,
