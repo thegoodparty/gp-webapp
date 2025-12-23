@@ -12,11 +12,14 @@ import { usePoll } from 'app/(candidate)/dashboard/polls/shared/hooks/PollProvid
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export default function PollIssueDetailPage({ pathname }) {
+export default function PollIssueDetailPage({
+  pathname,
+}: {
+  pathname: string
+}) {
   const [campaign] = useCampaign()
-  const [issue] = useIssue()
+  const { title } = useIssue()
   const [poll] = usePoll()
-  const { title } = issue || {}
 
   useEffect(() => {
     trackEvent(EVENTS.polls.issueDetailsViewed)
