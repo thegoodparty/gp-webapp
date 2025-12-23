@@ -5,14 +5,14 @@ import { useEffect } from 'react'
 
 interface TrackCantDownloadProps {
   campaign: {
-    slug: string
-  }
+    slug?: string
+  } | null
 }
 
 export default function TrackCantDownload({ campaign }: TrackCantDownloadProps): null {
   useEffect(() => {
     trackEvent('Pro user can not download voter file page', {
-      slug: campaign.slug,
+      slug: campaign?.slug,
     })
   }, [])
   return null

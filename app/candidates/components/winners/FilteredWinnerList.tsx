@@ -36,14 +36,7 @@ const settings = {
   prevArrow: <CustomArrow />,
 }
 
-interface Campaign {
-  slug: string
-  firstName?: string
-  lastName?: string
-  office: string
-  state: string
-  avatar?: string
-}
+import { Campaign } from 'helpers/types'
 
 interface FilteredWinnerListProps {
   campaigns: Campaign[]

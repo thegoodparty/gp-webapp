@@ -2,13 +2,10 @@ import React from 'react'
 import { JsonLd } from 'react-schemaorg'
 
 import { cmsToPlainText } from 'helpers/contentfulHelper'
-import { Document } from '@contentful/rich-text-types'
+import { GlossaryItem } from 'app/political-terms/util/glossaryItemFetching.util'
 
 interface DefinedTermSchemaProps {
-  item: {
-    title: string
-    description: Document
-  }
+  item: GlossaryItem
   slug: string
 }
 

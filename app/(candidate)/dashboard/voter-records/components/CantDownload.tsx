@@ -6,11 +6,11 @@ import { RiFolderForbidLine } from 'react-icons/ri'
 import TrackCantDownload from './TrackCantDownload'
 
 interface Campaign {
-  slug: string
+  slug?: string
 }
 
 interface CantDownloadProps {
-  campaign: Campaign
+  campaign: Campaign | null
 }
 
 export default function CantDownload(props: CantDownloadProps): React.JSX.Element {

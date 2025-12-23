@@ -3,14 +3,7 @@ import H4 from '@shared/typography/H4'
 import Image from 'next/image'
 import { useState } from 'react'
 import { IoPersonSharp } from 'react-icons/io5'
-
-interface Campaign {
-  firstName?: string
-  lastName?: string
-  office: string
-  state: string
-  avatar?: string
-}
+import { Campaign } from 'helpers/types'
 
 interface WinnerSnippetProps {
   campaign: Campaign
