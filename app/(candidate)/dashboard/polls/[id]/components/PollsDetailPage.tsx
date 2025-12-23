@@ -19,7 +19,7 @@ const showSurvey = async () => {
   }
 }
 
-export default function PollsDetailPage({ pathname }) {
+export default function PollsDetailPage({ pathname }: { pathname: string }) {
   const [poll] = usePoll()
   const [campaign] = useCampaign()
 

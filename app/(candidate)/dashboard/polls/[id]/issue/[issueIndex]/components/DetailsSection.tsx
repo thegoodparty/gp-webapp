@@ -6,8 +6,7 @@ import Body1 from '@shared/typography/Body1'
 import RepComments from './RepComments'
 
 export default function DetailsSection(): React.JSX.Element {
-  const [issue] = useIssue()
-  const { details } = issue || {}
+  const { details } = useIssue()
   return (
     <section className="my-4">
       <Card>
