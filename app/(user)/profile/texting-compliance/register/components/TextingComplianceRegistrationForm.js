@@ -15,7 +15,6 @@ import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { MatchingComplianceContactFields } from 'app/(user)/profile/texting-compliance/register/components/MatchingComplianceContactFields'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
@@ -32,7 +31,6 @@ export const validateRegistrationForm = (data) => {
     address,
     website,
     email,
-    matchingContactFields,
   } = data
   const validations = {
     electionFilingLink:
@@ -49,7 +47,6 @@ export const validateRegistrationForm = (data) => {
     // Website must exist (official purchased domain)
     website: isFilled(website) && isURL(website),
     email: isEmail(email),
-    matchingContactFields: matchingContactFields.length > 0,
   }
   return {
     validations,
@@ -72,7 +69,6 @@ export default function TextingComplianceRegistrationForm({
     address,
     website,
     email,
-    matchingContactFields,
   } = formData
   const formValidation = validateRegistrationForm(formData)
   const { isValid } = formValidation
@@ -174,12 +170,6 @@ export default function TextingComplianceRegistrationForm({
           fullWidth
           value={phone}
           onChange={(e) => handleChange({ phone: e.target.value })}
-        />
-        <MatchingComplianceContactFields
-          {...{
-            value: matchingContactFields,
-            onChange: (value) => handleChange({ matchingContactFields: value }),
-          }}
         />
       </TextingComplianceForm>
       <TextingComplianceFooter>
