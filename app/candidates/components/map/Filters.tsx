@@ -36,7 +36,6 @@ interface MapFilters {
   results?: boolean
   office?: string
   name?: string
-  [key: string]: string | boolean | undefined
 }
 
 interface FiltersProps {
@@ -45,7 +44,11 @@ interface FiltersProps {
   campaigns: Campaign[]
 }
 
-export default memo(function Filters({ filters, onChangeFilters, campaigns }: FiltersProps): React.JSX.Element {
+export default memo(function Filters({
+  filters,
+  onChangeFilters,
+  campaigns,
+}: FiltersProps): React.JSX.Element {
   const [officeOptions, setOfficeOptions] = useState<string[]>([])
   const [name, setName] = useState(filters.name || '')
 
@@ -53,7 +56,9 @@ export default memo(function Filters({ filters, onChangeFilters, campaigns }: Fi
     if (!campaigns || campaigns.length === 0) {
       return
     }
-    const allOffices = campaigns.map((campaign) => campaign.normalizedOffice).filter((office): office is string => Boolean(office))
+    const allOffices = campaigns
+      .map((campaign) => campaign.normalizedOffice)
+      .filter((office): office is string => Boolean(office))
     const offices = [...new Set(allOffices)] // dedupe
     setOfficeOptions(offices)
   }, [campaigns])
