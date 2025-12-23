@@ -20,7 +20,7 @@ interface ScriptOption {
 }
 
 export const getSmsScriptSelectOptions = (aiContent?: PrismaJson.CampaignAiContent): ScriptOption[] => {
-  let nonDefaultScripts = aiContent || {}
+  const nonDefaultScripts = { ...(aiContent || {}) }
   DEFAULT_SMS_SCRIPTS.forEach((script) => {
     delete nonDefaultScripts[script]
   })
