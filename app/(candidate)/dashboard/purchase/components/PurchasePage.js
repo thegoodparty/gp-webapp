@@ -49,7 +49,6 @@ export default function PurchasePage({ type, domain, returnUrl }) {
   }
 
   const handlePaymentError = (errorMessage) => {
-    setError(errorMessage)
     setPurchaseState(PURCHASE_STATE.ERROR)
   }
 
