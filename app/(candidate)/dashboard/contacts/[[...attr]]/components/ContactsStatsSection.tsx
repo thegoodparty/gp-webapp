@@ -30,7 +30,7 @@ export default function ContactsStatsSection({
   totalVisibleContacts,
   onlyTotalVisibleContacts,
 }: ContactsStatsSectionProps) {
-  const query = useQuery(districtStatsQueryOptions())
+  const query = useQuery(districtStatsQueryOptions)
 
   const renderCard = (card: StatCard) => {
     return (
