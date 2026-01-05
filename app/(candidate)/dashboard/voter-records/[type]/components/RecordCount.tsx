@@ -6,7 +6,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 import H2 from '@shared/typography/H2'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { Campaign, VoterFileFilters } from 'helpers/types'
+import { Campaign } from 'helpers/types'
 
 let attempts = 0
 const MAX_ATTEMPTS = 3
@@ -19,7 +19,7 @@ interface VoterFilePayload {
 
 export const countVoterFile = async (
   type: string,
-  customFilters?: VoterFileFilters,
+  customFilters?: string[],
 ): Promise<number | false> => {
   try {
     const payload: VoterFilePayload = {

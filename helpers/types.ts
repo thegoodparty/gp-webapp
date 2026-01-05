@@ -275,7 +275,7 @@ export interface CustomVoterFile {
   url?: string
   channel?: string
   purpose?: string
-  filters?: VoterFileFilters
+  filters?: string[]
 }
 
 export interface AiContentData {
@@ -479,5 +479,7 @@ export interface WebsiteContact {
   id: number
   email: string
   name?: string | null
+  phone?: string | null
+  message?: string | null
   createdAt: Date | string
 }
