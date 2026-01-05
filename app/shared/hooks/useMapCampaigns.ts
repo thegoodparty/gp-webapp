@@ -11,7 +11,6 @@ interface CampaignFilters {
   results?: boolean
   office?: string
   name?: string
-  [key: string]: string | boolean | undefined
 }
 
 const fetchCampaigns = async (filters: CampaignFilters | null) => {

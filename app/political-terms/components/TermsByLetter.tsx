@@ -10,8 +10,9 @@ interface TermItem {
 interface TermsByLetterProps {
   items: TermItem[]
   activeLetter: string
-  glossaryItems: TermItem[]
-  recentGlossaryItems: TermItem[]
+  letter?: string
+  glossaryItems?: TermItem[]
+  recentGlossaryItems?: TermItem[]
 }
 
 export default function TermsByLetter(props: TermsByLetterProps): React.JSX.Element {

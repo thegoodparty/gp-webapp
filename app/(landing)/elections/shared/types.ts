@@ -13,12 +13,13 @@ interface ImageData {
 }
 
 export interface Article {
-  id: number | string
+  id?: string
   title: string
   slug: string
   summary?: string
   mainImage?: ImageData
   publishDate: string
+  contentId?: string
 }
 
 export interface City {

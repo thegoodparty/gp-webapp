@@ -14,12 +14,14 @@ interface ImageData {
   alt?: string
 }
 
-interface Article {
+export interface Article {
+  id?: string
   title: string
   mainImage?: ImageData
   publishDate: string
   summary?: string
   slug: string
+  contentId?: string
 }
 
 interface Section {

@@ -3,25 +3,11 @@ import { memo, useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import Subtitle2 from '@shared/typography/Subtitle2'
 import Image from 'next/image'
-
-interface Campaign {
-  firstName?: string
-  lastName?: string
-  avatar?: string
-  office: string
-  state: string
-  didWin?: boolean | null
-  slug: string
-  data?: {
-    hubSpotUpdates?: {
-      election_results?: string
-    }
-  }
-}
+import { Campaign } from 'helpers/types'
 
 interface CampaignSnippetProps {
   campaign: Campaign
-  onSelectCampaign: (campaign: Campaign) => void
+  onSelectCampaign: (campaign: Campaign | null) => void
   selectedCampaign: Campaign | null
 }
 

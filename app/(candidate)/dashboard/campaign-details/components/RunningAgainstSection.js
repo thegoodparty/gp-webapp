@@ -8,6 +8,12 @@ import RunningAgainstForm from './RunningAgainstForm'
 import RunningAgainstCard from './RunningAgainstCard'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
+/**
+ * @param {object} props
+ * @param {object} props.campaign
+ * @param {function(): void} [props.nextCallback]
+ * @param {React.ReactNode} [props.header]
+ */
 export default function RunningAgainstSection({
   campaign,
   nextCallback,
