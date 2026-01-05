@@ -16,7 +16,7 @@ import { PaymentIntent } from '@stripe/stripe-js'
 const PurchaseContent: React.FC<{
   onPaymentSuccess: (paymentIntent: PaymentIntent) => void
 }> = ({ onPaymentSuccess }) => {
-  const { purchaseIntent, error, setError } = usePurchaseIntent()
+  const { purchaseIntent, error } = usePurchaseIntent()
 
   return (
     <div className="p-4 mx-auto w-[80vw] max-w-xl text-center">
@@ -25,10 +25,7 @@ const PurchaseContent: React.FC<{
       ) : !purchaseIntent ? (
         <LoadingAnimation />
       ) : (
-        <PurchasePayment
-          onPaymentSuccess={onPaymentSuccess}
-          onPaymentError={setError}
-        />
+        <PurchasePayment onPaymentSuccess={onPaymentSuccess} />
       )}
     </div>
   )
