@@ -31,7 +31,7 @@ export const countVoterFile = async (
       payload.customFilters = JSON.stringify(customFilters)
     }
 
-    const resp = await clientFetch<{ count: number }>(
+    const resp = await clientFetch<number | File>(
       apiRoutes.voters.voterFile.get,
       payload,
     )
