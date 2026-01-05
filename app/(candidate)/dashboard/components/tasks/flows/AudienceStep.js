@@ -79,7 +79,6 @@ export default function AudienceStep({
       const res = await countVoterFile(isCustom ? 'custom' : type, {
         filters: selectedAudience,
       })
-      console.log(`res =>`, res)
 
       setCount(res)
       onChangeCallback('voterCount', res)
