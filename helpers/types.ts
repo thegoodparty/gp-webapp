@@ -209,10 +209,73 @@ export interface HubSpotUpdates {
   opponents?: string
 }
 
+export interface VoterFileFilters {
+  audienceSuperVoters?: boolean
+  audienceLikelyVoters?: boolean
+  audienceUnreliableVoters?: boolean
+  audienceUnlikelyVoters?: boolean
+  audienceFirstTimeVoters?: boolean
+  audienceUnknown?: boolean
+  partyIndependent?: boolean
+  partyDemocrat?: boolean
+  partyRepublican?: boolean
+  partyUnknown?: boolean
+  age18_25?: boolean
+  age25_35?: boolean
+  age35_50?: boolean
+  age50Plus?: boolean
+  ageUnknown?: boolean
+  genderMale?: boolean
+  genderFemale?: boolean
+  genderUnknown?: boolean
+  hasCellPhone?: boolean
+  hasLandline?: boolean
+  languageCodes?: string[]
+  voterStatus?: string[]
+  likelyMarried?: boolean
+  likelySingle?: boolean
+  married?: boolean
+  single?: boolean
+  maritalUnknown?: boolean
+  veteranYes?: boolean
+  veteranUnknown?: boolean
+  educationNone?: boolean
+  educationHighSchoolDiploma?: boolean
+  educationTechnicalSchool?: boolean
+  educationSomeCollege?: boolean
+  educationCollegeDegree?: boolean
+  educationGraduateDegree?: boolean
+  educationUnknown?: boolean
+  incomeRanges?: string[]
+  incomeUnknown?: boolean
+  ethnicityAsian?: boolean
+  ethnicityEuropean?: boolean
+  ethnicityHispanic?: boolean
+  ethnicityAfricanAmerican?: boolean
+  ethnicityOther?: boolean
+  ethnicityUnknown?: boolean
+  businessOwnerYes?: boolean
+  businessOwnerUnknown?: boolean
+  registeredVoterTrue?: boolean
+  registeredVoterFalse?: boolean
+  registeredVoterUnknown?: boolean
+  hasChildrenYes?: boolean
+  hasChildrenNo?: boolean
+  hasChildrenUnknown?: boolean
+  homeownerYes?: boolean
+  homeownerLikely?: boolean
+  homeownerNo?: boolean
+  homeownerUnknown?: boolean
+  voterCount?: number
+}
+
 export interface CustomVoterFile {
   id?: string
   name?: string
   url?: string
+  channel?: string
+  purpose?: string
+  filters?: VoterFileFilters
 }
 
 export interface AiContentData {
@@ -280,6 +343,23 @@ export interface PathToVictory {
   data: PathToVictoryData
 }
 
+export interface CandidatePosition {
+  id: number
+  topIssueId: number
+  positionId: number
+  description: string
+  order: number
+}
+
+export interface ClaimedCampaign {
+  website?: {
+    vanityPath?: string
+    domain?: Domain | null
+  }
+  details?: CampaignDetails
+  campaignPositions?: CandidatePosition[]
+}
+
 export interface Campaign {
   id: number
   createdAt: Date | string
@@ -307,9 +387,32 @@ export interface Campaign {
   firstName?: string
   lastName?: string
   image?: string
-  claimed?: boolean
+  claimed?: boolean | ClaimedCampaign
   positionName?: string
   raceId?: string
+  // Map-related fields (flattened from API)
+  party?: string
+  office?: string
+  city?: string
+  county?: string
+  state?: string
+  avatar?: string
+  electionDate?: string
+  name?: string
+  normalizedOffice?: string
+  ballotLevel?: string
+  globalPosition?: {
+    lat: number
+    lng: number
+  }
+  email?: string
+  urls?: string[]
+  Stances?: CandidateStance[]
+}
+
+export interface CandidateStance {
+  Issue?: { name?: string }
+  stanceStatement?: string
 }
 
 export interface VendorTsData {

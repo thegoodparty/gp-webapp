@@ -4,7 +4,7 @@ interface Template {
   [key: string]: unknown
 }
 
-interface RequiresQuestionsMap {
+export interface RequiresQuestionsMap {
   [key: string]: unknown[]
 }
 

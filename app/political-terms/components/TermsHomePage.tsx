@@ -5,13 +5,10 @@ import LayoutWithAlphabet from './LayoutWithAlphabet'
 import TermSnippet from './TermSnippet'
 import TermsSearch from './TermsSearch'
 
-interface TermItem {
-  title: string
-  description: string
-}
+import { GlossaryItem } from '../util/glossaryItemFetching.util'
 
 interface TermsHomePageProps {
-  items: TermItem[]
+  items: GlossaryItem[]
   activeLetter: string
   glossaryItems: string[]
 }

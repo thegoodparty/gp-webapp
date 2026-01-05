@@ -3,20 +3,15 @@ import { Button, Card } from 'goodparty-styleguide'
 import { MdArrowRightAlt } from 'react-icons/md'
 import Link from 'next/link'
 import { usePoll } from '../../shared/hooks/PollProvider'
-
-interface PollIssue {
-  title?: string
-  summary?: string
-  mentionCount?: number
-}
+import { PollIssue } from '../../shared/poll-types'
 
 interface PollsIssueCardProps {
-  issue?: PollIssue
+  issue: PollIssue
   index: number
 }
 
 export default function PollsIssueCard({
-  issue = {},
+  issue,
   index,
 }: PollsIssueCardProps): React.JSX.Element {
   const [poll] = usePoll()

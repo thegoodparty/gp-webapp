@@ -4,8 +4,8 @@ import PollsIssueCard from './PollsIssueCard'
 import { useIssues } from '../../shared/hooks/IssuesProvider'
 
 export default function PollsIssues(): React.JSX.Element {
-  const [issues] = useIssues()
-  if (!issues?.length) {
+  const issues = useIssues()
+  if (!issues.length) {
     return (
       <div className="mt-4 text-center text-2xl font-medium">
         No issues found

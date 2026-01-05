@@ -20,7 +20,6 @@ export type Poll = {
 }
 
 export type PollIssue = {
-  id: string
   pollId: string
   title: string
   summary: string
