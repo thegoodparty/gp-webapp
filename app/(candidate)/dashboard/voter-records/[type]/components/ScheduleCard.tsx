@@ -42,7 +42,7 @@ const ScheduleCard = (props: ScheduleCardProps): React.JSX.Element => {
             : '$.04 per outbound call. Automatically leave voicemails for one and a half cents.'}
         </Body2>
       </div>
-      <TaskFlow {...props} type={taskType} isCustom={props.isCustom ?? false} customButton={<></>} />
+      <TaskFlow {...props} type={taskType} isCustom={props.isCustom ?? false} />
     </Paper>
   )
 }

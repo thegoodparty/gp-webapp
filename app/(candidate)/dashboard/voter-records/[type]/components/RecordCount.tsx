@@ -35,7 +35,8 @@ export const countVoterFile = async (
       apiRoutes.voters.voterFile.get,
       payload,
     )
-    const count = resp.data?.count
+    console.log(`resp.data =>`, resp.data)
+    const count = resp.data
     if (typeof count === 'number') {
       return count
     }

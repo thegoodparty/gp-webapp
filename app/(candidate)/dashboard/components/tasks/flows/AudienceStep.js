@@ -55,7 +55,7 @@ export default function AudienceStep({
 
   const handleOnNext = async () => {
     setLoading(true)
-    
+
     const voterFileFilter = await onCreateVoterFileFilter()
     const phoneListToken = p2pUxEnabled
       ? await onCreatePhoneList(voterFileFilter)
@@ -79,6 +79,7 @@ export default function AudienceStep({
       const res = await countVoterFile(isCustom ? 'custom' : type, {
         filters: selectedAudience,
       })
+      console.log(`res =>`, res)
 
       setCount(res)
       onChangeCallback('voterCount', res)
@@ -102,8 +103,9 @@ export default function AudienceStep({
   }
 
   const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
-  const hasFreeTextsOffer = p2pUxEnabled && campaign?.hasFreeTextsOffer && isTextType
-  
+  const hasFreeTextsOffer =
+    p2pUxEnabled && campaign?.hasFreeTextsOffer && isTextType
+
   const calculateCost = (textCount) => {
     if (hasFreeTextsOffer && textCount > 0) {
       const discountedCount = Math.max(0, textCount - FREE_TEXTS_OFFER.COUNT)

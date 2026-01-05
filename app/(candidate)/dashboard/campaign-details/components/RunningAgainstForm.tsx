@@ -109,7 +109,7 @@ export default function RunningAgainstForm({
       </div>
 
       <div className="flex gap-2 mt-4">
-        <SecondaryButton size="small" onClick={handleCancel}>
+        <SecondaryButton size="small" type="button" onClick={handleCancel}>
           Cancel
         </SecondaryButton>
         <PrimaryButton size="small" type="submit" disabled={!canSave}>

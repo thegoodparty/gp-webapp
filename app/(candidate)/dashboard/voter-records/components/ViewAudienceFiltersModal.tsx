@@ -4,7 +4,7 @@ import IconButton from '@shared/buttons/IconButton'
 import Modal from '@shared/utils/Modal'
 import CustomVoterAudienceFilters, { AudienceFiltersState, AudienceFilterKey } from './CustomVoterAudienceFilters'
 
-const VALID_AUDIENCE_FILTER_KEYS: AudienceFilterKey[] = [
+const VALID_AUDIENCE_FILTER_KEYS: Set<string> = new Set([
   'audience_superVoters',
   'audience_likelyVoters',
   'audience_unreliableVoters',
@@ -21,10 +21,10 @@ const VALID_AUDIENCE_FILTER_KEYS: AudienceFilterKey[] = [
   'gender_female',
   'gender_unknown',
   'audience_request',
-]
+])
 
 const isAudienceFilterKey = (key: string): key is AudienceFilterKey => {
-  return VALID_AUDIENCE_FILTER_KEYS.includes(key as AudienceFilterKey)
+  return VALID_AUDIENCE_FILTER_KEYS.has(key)
 }
 import H2 from '@shared/typography/H2'
 import Body1 from '@shared/typography/Body1'
