@@ -1,9 +1,12 @@
+import type { NextConfig } from 'next'
+import { newRelicSourceMapPlugin } from 'utils/upload-sourcemaps'
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
 })
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
@@ -35,6 +38,15 @@ const nextConfig = {
       },
     ]
   },
+  productionBrowserSourceMaps: true,
+  webpack: (config, { isServer }) => {
+    // Only upload sourcemaps on the client build (not server)
+    // and only in production builds
+    if (!isServer && process.env.NODE_ENV === 'production') {
+      config.plugins.push(newRelicSourceMapPlugin)
+    }
+    return config
+  },
 }
 
-module.exports = withPWA(nextConfig)
+export default withPWA(nextConfig)
