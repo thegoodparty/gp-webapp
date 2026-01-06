@@ -7,16 +7,18 @@ import { useSnackbar } from '@shared/utils/Snackbar'
 import { reportErrorToNewRelic } from '@shared/new-relic'
 import { useMutation } from '@tanstack/react-query'
 import { PaymentIntent, StripeError } from '@stripe/stripe-js'
+import { usePurchaseIntent } from './PurchaseIntentProvider'
 
 interface PurchaseFormProps {
   onSuccess: (paymentIntent: PaymentIntent) => void
-  onError: (error: string) => void
+  onError?: (error: string) => void
 }
 
 export default function PurchaseForm({
   onSuccess,
   onError,
 }: PurchaseFormProps): React.JSX.Element {
+  const { setError } = usePurchaseIntent()
   const stripe = useStripe()
   const elements = useElements()
   const { errorSnackbar } = useSnackbar()
@@ -36,7 +38,10 @@ export default function PurchaseForm({
       })
     }
     errorSnackbar(msg)
-    onError(msg)
+    setError(msg)
+    if (onError) {
+      onError(msg)
+    }
   }
 
   const mutation = useMutation({
