@@ -15,6 +15,12 @@ interface SaveCandidatePositionParams {
   topIssueId: number
 }
 
+interface CampaignWithCustomIssues {
+  details?: {
+    customIssues?: CustomIssue[]
+  }
+}
+
 export const writeCampaignCustomIssue = async (
   existingIndex = -1,
   title: string,
@@ -35,7 +41,10 @@ export const writeCampaignCustomIssue = async (
   return customIssues
 }
 
-export const deleteCustomIssue = async (index: number, customIssues: CustomIssue[] = []): Promise<CustomIssue[]> => {
+export const deleteCustomIssue = async (
+  index: number,
+  customIssues: CustomIssue[] = [],
+): Promise<CustomIssue[]> => {
   customIssues.splice(index, 1)
   await updateCampaign([{ key: 'details.customIssues', value: customIssues }])
   return [...customIssues]
@@ -76,16 +85,16 @@ export const saveCandidatePosition = async ({
   }
 }
 
-export const deleteCandidatePosition = async (positionId: number, campaignId: number): Promise<boolean> => {
+export const deleteCandidatePosition = async (
+  positionId: number,
+  campaignId: number,
+): Promise<boolean> => {
   try {
     const payload = {
       id: campaignId,
       positionId,
     }
-    await clientFetch(
-      apiRoutes.campaign.campaignPosition.delete,
-      payload,
-    )
+    await clientFetch(apiRoutes.campaign.campaignPosition.delete, payload)
     return true
   } catch (e) {
     console.log('error at deleteCandidatePosition', e)
@@ -115,7 +124,9 @@ export async function updateCandidatePosition(
   }
 }
 
-export async function loadCandidatePosition(campaignId: number): Promise<CandidatePosition[] | false> {
+export async function loadCandidatePosition(
+  campaignId: number,
+): Promise<CandidatePosition[] | false> {
   try {
     const payload = {
       id: campaignId,
@@ -128,19 +139,6 @@ export async function loadCandidatePosition(campaignId: number): Promise<Candida
   } catch (e) {
     console.log('error at loadCandidatePosition', e)
     return false
-  }
-}
-
-export const fetchIssues = async (): Promise<TopIssue[] | undefined> => {
-  const resp = await clientFetch<TopIssue[]>(apiRoutes.topIssue.list, undefined, {
-    revalidate: 3600,
-  })
-  return resp.data
-}
-
-interface CampaignWithCustomIssues {
-  details?: {
-    customIssues?: CustomIssue[]
   }
 }
 
@@ -161,7 +159,10 @@ export const findExistingCustomIssueIndex = (
   return index
 }
 
-export const handleDeleteCustomIssue = async (customIssue: CustomIssue, campaign: Campaign): Promise<CustomIssue[]> => {
+export const handleDeleteCustomIssue = async (
+  customIssue: CustomIssue,
+  campaign: Campaign,
+): Promise<CustomIssue[]> => {
   const existingIndex = findExistingCustomIssueIndex(campaign, customIssue)
   const currentCustomIssues = campaign.details?.customIssues || []
   return existingIndex !== -1

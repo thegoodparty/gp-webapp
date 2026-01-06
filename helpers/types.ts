@@ -101,6 +101,7 @@ export interface CampaignGeoLocation {
 export interface CustomIssue {
   title: string
   position: string
+  order?: number
 }
 
 export interface RunningAgainst {

@@ -11,7 +11,7 @@ interface Position {
 }
 
 interface CandidatePositionData {
-  id: number | string
+  id?: number | string
   topIssue?: TopIssue
   position?: Position
   description: string
