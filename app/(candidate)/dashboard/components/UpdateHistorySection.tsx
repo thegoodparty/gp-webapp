@@ -12,7 +12,6 @@ import { numberFormatter } from 'helpers/numberHelper'
 import H3 from '@shared/typography/H3'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { VoterContactsState } from '@shared/hooks/VoterContactsProvider'
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import {
   CampaignUpdateHistoryWithUser,
@@ -61,20 +60,6 @@ const massageHistoryItem = (
   createdAt: new Date(historyItem.createdAt),
 })
 
-const isVoterContactKey = (key: string): key is keyof VoterContactsState =>
-  key in {
-    doorKnocking: true,
-    calls: true,
-    digital: true,
-    directMail: true,
-    digitalAds: true,
-    text: true,
-    events: true,
-    robocall: true,
-    phoneBanking: true,
-    socialMedia: true,
-  }
-
 const UpdateHistorySection = memo(function UpdateHistorySection(): React.JSX.Element {
   const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
   const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
@@ -97,16 +82,13 @@ const UpdateHistorySection = memo(function UpdateHistorySection(): React.JSX.Ele
     )
     await deleteUpdateHistory(numId)
     setUpdateHistory(restItems)
-    const typeKey = deletedItem!.type
-    if (isVoterContactKey(typeKey)) {
-      setReportedVoterGoals(() => ({
-        ...reportedVoterGoals,
-        [typeKey]: Math.max(
-          reportedVoterGoals[typeKey] - deletedItem!.quantity,
-          0,
-        ),
-      }))
-    }
+    setReportedVoterGoals(() => ({
+      ...reportedVoterGoals,
+      [deletedItem!.type]: Math.max(
+        reportedVoterGoals[deletedItem!.type]! - deletedItem!.quantity,
+        0,
+      ),
+    }))
   }
 
   return (
