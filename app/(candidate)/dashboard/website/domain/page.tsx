@@ -7,6 +7,7 @@ import candidateAccess from '../../shared/candidateAccess'
 import DomainPage from './components/DomainPage'
 import { WebsiteProvider } from '../components/WebsiteProvider'
 import { DomainStatusProvider } from './components/DomainStatusProvider'
+import { Campaign } from 'helpers/types'
 
 const meta = pageMetaData({
   title: 'Add a domain | GoodParty.org',
@@ -23,11 +24,22 @@ interface DomainStatus {
   verificationStatus?: string
 }
 
+const fetchCampaign = async (): Promise<Campaign | null> => {
+  try {
+    const resp = await serverFetch<Campaign>(apiRoutes.campaign.get)
+    return resp.data
+  } catch (e) {
+    console.error('error fetching campaign', e)
+    return null
+  }
+}
+
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
-  const [website, statusRes] = await Promise.all([
+  const [website, statusRes, campaign] = await Promise.all([
     fetchUserWebsite(),
     serverFetch<DomainStatus>(apiRoutes.domain.status),
+    fetchCampaign(),
   ])
 
   const status = statusRes.ok ? statusRes.data : null
@@ -39,7 +51,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   return (
     <WebsiteProvider website={website} contacts={null}>
       <DomainStatusProvider status={status}>
-        <DomainPage pathname="/dashboard/website/domain" />
+        <DomainPage pathname="/dashboard/website/domain" campaign={campaign} />
       </DomainStatusProvider>
     </WebsiteProvider>
   )

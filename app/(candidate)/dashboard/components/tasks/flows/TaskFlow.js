@@ -54,7 +54,7 @@ const DEFAULT_STATE = {
 /**
  * @typedef {Object} TaskFlowProps
  * @property {string} type
- * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
+ * @property {React.ReactElement} [customButton] Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
  * @property {boolean} isCustom
  */

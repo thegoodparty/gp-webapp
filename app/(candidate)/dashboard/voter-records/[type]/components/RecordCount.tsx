@@ -6,10 +6,14 @@ import { numberFormatter } from 'helpers/numberHelper'
 import H2 from '@shared/typography/H2'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { Campaign, VoterFileFilters } from 'helpers/types'
+import { Campaign } from 'helpers/types'
 
 let attempts = 0
 const MAX_ATTEMPTS = 3
+
+interface VoterFileFilters {
+  filters: string[]
+}
 
 interface VoterFilePayload {
   type: string
@@ -19,7 +23,7 @@ interface VoterFilePayload {
 
 export const countVoterFile = async (
   type: string,
-  customFilters?: VoterFileFilters,
+  customFilters?: VoterFileFilters | string[],
 ): Promise<number | false> => {
   try {
     const payload: VoterFilePayload = {
@@ -28,14 +32,18 @@ export const countVoterFile = async (
     }
 
     if (customFilters) {
-      payload.customFilters = JSON.stringify(customFilters)
+      const filtersArray = Array.isArray(customFilters)
+        ? customFilters
+        : customFilters.filters
+      payload.customFilters = JSON.stringify(filtersArray)
     }
 
-    const resp = await clientFetch<{ count: number }>(
+    const resp = await clientFetch<number | File>(
       apiRoutes.voters.voterFile.get,
       payload,
     )
-    const count = resp.data?.count
+
+    const count = resp.data
     if (typeof count === 'number') {
       return count
     }

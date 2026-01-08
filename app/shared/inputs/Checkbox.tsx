@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import MuiCheckbox, { CheckboxProps as MuiCheckboxProps } from '@mui/material/Checkbox'
 
 interface CheckboxProps extends MuiCheckboxProps {
-  label?: string
+  label?: React.ReactNode
   name?: string
 }
 

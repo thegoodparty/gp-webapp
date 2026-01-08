@@ -2,10 +2,12 @@
 
 import { createContext, useContext, useState, Dispatch, SetStateAction } from 'react'
 
-interface DomainStatus {
-  status: string
-  domain: string
+export interface DomainStatus {
+  status?: string
+  domain?: string
   verificationStatus?: string
+  message?: string
+  paymentStatus?: string
 }
 
 interface DomainStatusContextType {

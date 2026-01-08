@@ -1,11 +1,13 @@
 import ReadMoreCard from './ReadMoreCard'
 import ScheduleCard from './ScheduleCard'
 import ScriptCard from './ScriptCard'
+import { Campaign } from 'helpers/types'
 
 interface ActionCardsProps {
   type: string
   isCustom: boolean
-  [key: string]: string | number | boolean | undefined
+  campaign: Campaign
+  fileName?: string
 }
 
 const cardsByType = (type: string, props: ActionCardsProps): React.JSX.Element[] => {
@@ -30,7 +32,7 @@ const cardsByType = (type: string, props: ActionCardsProps): React.JSX.Element[]
   return cards
 }
 
-export default function ActionCards(props: ActionCardsProps): React.JSX.Element | null {
+const ActionCards = (props: ActionCardsProps): React.JSX.Element | null => {
   const { type, isCustom } = props
   if (isCustom) {
     return null
@@ -53,3 +55,5 @@ export default function ActionCards(props: ActionCardsProps): React.JSX.Element 
     </div>
   )
 }
+
+export default ActionCards

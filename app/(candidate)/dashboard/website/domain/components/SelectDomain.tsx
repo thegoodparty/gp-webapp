@@ -6,7 +6,7 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Button from '@shared/buttons/Button'
 
 interface SelectDomainProps {
-  onRegisterSuccess: () => void
+  onRegisterSuccess?: () => void
 }
 
 export default function SelectDomain({ onRegisterSuccess: _onRegisterSuccess }: SelectDomainProps): React.JSX.Element {

@@ -3,7 +3,7 @@ import Button from '@shared/buttons/Button'
 
 interface PaginationButtonsProps {
   currentPage: number
-  totalPages: number
+  totalPages: number | null
   onPageChange: (page: number) => void
   loading?: boolean
   className?: string
