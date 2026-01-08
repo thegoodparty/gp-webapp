@@ -44,9 +44,11 @@ export const IssuesSearch = ({
     onInputChange(newInputValue)
   }
 
+  const autoCompleteValue: IssueOption | undefined = value ?? undefined
+
   return (
     <Autocomplete
-      value={value || undefined}
+      value={autoCompleteValue}
       onChange={(_event: SyntheticEvent, newValue: IssueOption | null) => {
         setValue(newValue)
       }}
