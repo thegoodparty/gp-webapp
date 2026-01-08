@@ -78,6 +78,10 @@ const PlaceSchema = ({ place }: PlaceSchemaProps): React.JSX.Element => {
         '@type': 'Place',
         name: parent.name,
         identifier: parent.geoId,
+        address: {
+          '@type': 'PostalAddress',
+          addressRegion: parent.state,
+        },
       },
     }),
     ...(additionalProperties.length > 0 && {
