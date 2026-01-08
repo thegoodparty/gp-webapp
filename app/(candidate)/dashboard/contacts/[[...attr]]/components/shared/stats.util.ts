@@ -46,8 +46,8 @@ const getMedianIncomeRange = (
   return last ? `$${last.label.replace(/–/g, '-')}` : null
 }
 
-const getPercentForYes = (category?: ContactStatsCategory): number | null => {
-  const yes = category?.buckets?.find((b) => b.label === 'Yes')
+const getPercentForYes = (category: ContactStatsCategory): number | null => {
+  const yes = category.buckets.find((b) => b.label === 'Yes')
   return yes?.percent ? Math.round(yes.percent * 100) : null
 }
 
@@ -55,13 +55,13 @@ export const getContactStatsRendered = (
   stats: ContactsStats,
   totalVisibleContacts: number,
 ): ContactStatsRendered => {
-  const totalConstituents = stats?.meta?.totalConstituents
-  const homeownersPercent = getPercentForYes(stats?.categories?.homeowner)
+  const totalConstituents = stats.totalConstituents
+  const homeownersPercent = getPercentForYes(stats.buckets.homeowner)
   const hasChildrenUnder18Percent = getPercentForYes(
-    stats?.categories?.presenceOfChildren,
+    stats.buckets.presenceOfChildren,
   )
   const medianIncomeRange = getMedianIncomeRange(
-    stats?.categories?.estimatedIncomeRange,
+    stats.buckets.estimatedIncomeRange,
   )
   const visibleContactsPercent = totalConstituents
     ? (totalVisibleContacts / totalConstituents) * 100

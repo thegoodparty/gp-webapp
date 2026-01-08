@@ -10,23 +10,27 @@ export type ContactStatsBucket = {
 export type ContactStatsCategory = { buckets: ContactStatsBucket[] }
 
 export type ContactsStats = {
-  meta?: { totalConstituents: number }
-  categories?: {
-    age?: ContactStatsCategory
-    homeowner?: ContactStatsCategory
-    presenceOfChildren?: ContactStatsCategory
-    estimatedIncomeRange?: ContactStatsCategory
-    education?: ContactStatsCategory
+  districtId: string
+  computedAt: string
+  totalConstituents: number
+  totalConstituentsWithCellPhone: number
+  buckets: {
+    age: ContactStatsCategory
+    homeowner: ContactStatsCategory
+    education: ContactStatsCategory
+    presenceOfChildren: ContactStatsCategory
+    estimatedIncomeRange: ContactStatsCategory
   }
 }
 
-export const districtStatsQueryOptions = (params?: {
-  hasCellPhone?: 'true' | undefined
-}) =>
-  queryOptions({
-    queryKey: ['contacts-stats', params],
-    queryFn: () =>
-      clientFetch<ContactsStats>(apiRoutes.contacts.stats, params).then((res) =>
-        res.ok ? res.data : {},
-      ),
-  })
+export const districtStatsQueryOptions = queryOptions({
+  queryKey: ['contacts-stats'],
+  queryFn: () =>
+    clientFetch<ContactsStats>(apiRoutes.contacts.stats).then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch contacts stats')
+      }
+
+      return res.data
+    }),
+})
