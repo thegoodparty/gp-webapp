@@ -18,14 +18,14 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import PaginationButtons from './PaginationButtons'
-import { Campaign, User, VoterFileFilters } from 'helpers/types'
+import { Campaign, User } from 'helpers/types'
 
 interface VoterFile {
   key: string | number
   name: string
   fields: string[]
   isCustom?: boolean
-  filters?: VoterFileFilters
+  filters?: string[]
 }
 
 interface VoterRecordsPageProps {
@@ -43,11 +43,11 @@ export interface VoterFileResponse {
   blob?: () => Promise<Blob>
 }
 
-interface DownloadFilters extends VoterFileFilters {
+interface DownloadFilters {
   filters?: string[]
 }
 
-export async function fetchVoterFile(type: string, customFilters?: VoterFileFilters | DownloadFilters): Promise<VoterFileResponse | false> {
+export async function fetchVoterFile(type: string, customFilters?: DownloadFilters): Promise<VoterFileResponse | false> {
   try {
     const payload: { type: string; customFilters?: string } = {
       type,
@@ -166,12 +166,14 @@ export default function VoterRecordsPage(props: VoterRecordsPageProps): React.JS
               </div>
               <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
                 <NeedHelp />
-                <CustomVoterFile
-                  {...props}
-                  reloadCampaignCallback={reloadCampaign}
-                  campaign={campaign}
-                  buttonPosition="top"
-                />
+                {campaign && (
+                  <CustomVoterFile
+                    {...props}
+                    reloadCampaignCallback={reloadCampaign}
+                    campaign={campaign}
+                    buttonPosition="top"
+                  />
+                )}
               </div>
             </div>
             <div className="mt-6 flex gap-2 justify-between items-center">
@@ -272,12 +274,14 @@ export default function VoterRecordsPage(props: VoterRecordsPageProps): React.JS
               ))}
             </div>
             <div className="mt-8 flex justify-center">
-              <CustomVoterFile
-                {...props}
-                reloadCampaignCallback={reloadCampaign}
-                campaign={campaign}
-                buttonPosition="bottom"
-              />
+              {campaign && (
+                <CustomVoterFile
+                  {...props}
+                  reloadCampaignCallback={reloadCampaign}
+                  campaign={campaign}
+                  buttonPosition="bottom"
+                />
+              )}
             </div>
           </>
         ) : (
