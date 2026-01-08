@@ -9,9 +9,16 @@ import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import { getUserCookie } from 'helpers/cookieHelper'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, ChangeEvent, FormEvent } from 'react'
 
-const fields = [
+interface FormField {
+  key: 'firstName' | 'lastName' | 'phone' | 'email'
+  label: string
+  required: boolean
+  type: string
+}
+
+const fields: FormField[] = [
   {
     key: 'firstName',
     label: 'First Name',
@@ -37,9 +44,20 @@ const fields = [
     type: 'email',
   },
 ]
-export default function HeroForm() {
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [state, setState] = useState({
+
+interface FormState {
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+  forOffice: boolean
+}
+
+type SubmitStatus = false | 'success' | 'error'
+
+export default function HeroForm(): React.JSX.Element {
+  const [submitSuccess, setSubmitSuccess] = useState<SubmitStatus>(false)
+  const [state, setState] = useState<FormState>({
     firstName: '',
     lastName: '',
     phone: '',
@@ -58,14 +76,17 @@ export default function HeroForm() {
     }
   }, [])
 
-  const onChangeField = (key, value) => {
+  const onChangeField = (
+    key: string,
+    value: string | boolean,
+  ): void => {
     setState({
       ...state,
       [key]: value,
     })
   }
 
-  const canSubmit = () => {
+  const canSubmit = (): boolean => {
     return (
       state.firstName !== '' &&
       state.lastName !== '' &&
@@ -74,26 +95,29 @@ export default function HeroForm() {
     )
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!canSubmit()) {
       return
     }
     const payload = {
-      ...state,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      phone: state.phone,
+      email: state.email,
       uri: window.location.href,
       pageName: 'ads2023',
       formId: 'c7d78873-1ed0-4202-ab01-76577e57352c',
-    }
-
-    delete payload.forOffice
-    if (state.forOffice) {
-      payload.additionalFields = JSON.stringify([
-        {
-          name: 'candidate_interest',
-          value: 'yes',
-          objectTypeId: '0-1',
-        },
-      ])
+      ...(state.forOffice
+        ? {
+            additionalFields: JSON.stringify([
+              {
+                name: 'candidate_interest',
+                value: 'yes',
+                objectTypeId: '0-1',
+              },
+            ]),
+          }
+        : {}),
     }
     const res = await subscribeEmail(payload)
     if (res) {
@@ -112,7 +136,7 @@ export default function HeroForm() {
       ) : (
         <form
           noValidate
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e: FormEvent) => e.preventDefault()}
           id="ads23-hero-form"
         >
           <div className="grid grid-cols-12 gap-4">
@@ -128,8 +152,8 @@ export default function HeroForm() {
           </div>
           <div className="flex items-center">
             <Checkbox
-              value={state.forOffice}
-              onChange={(e) => {
+              checked={state.forOffice}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 onChangeField('forOffice', e.target.checked)
               }}
             />

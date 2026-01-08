@@ -12,19 +12,24 @@ import { getUserCookie } from 'helpers/cookieHelper'
 import Body2 from '@shared/typography/Body2'
 import { useUser } from '@shared/hooks/useUser'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { User } from 'helpers/types'
 
-function ImageSection() {
+const ImageSection = (): React.JSX.Element => {
   const [user, setUser] = useUser()
   const [loading, setLoading] = useState(false)
 
-  const [uploadedImage, setUploadedImage] = useState(false)
+  const [uploadedImage, setUploadedImage] = useState<string | false>(false)
 
-  let updatedUser = uploadedImage ? { avatar: uploadedImage } : user
+  const updatedUser: User | null = uploadedImage && user
+    ? { ...user, avatar: uploadedImage }
+    : user
 
   useEffect(() => {
     if (uploadedImage) {
       const updated = getUserCookie(true)
-      setUser(updated)
+      if (updated) {
+        setUser(updated)
+      }
     }
   }, [uploadedImage])
 
@@ -44,16 +49,24 @@ function ImageSection() {
               onClick={() =>
                 trackEvent(EVENTS.Settings.PersonalInfo.ClickUpload)
               }
-              className={`text-lg py-3 px-6 rounded-lg font-medium bg-primary-dark text-slate-50 inline-block ${
-                loading ? 'bg-primary-light' : 'bg-primary-dark'
-              }`}
+              className={`
+                text-lg
+                py-3
+                px-6
+                rounded-lg
+                font-medium
+                bg-primary-dark
+                text-slate-50
+                inline-block
+                ${loading ? 'bg-primary-light' : 'bg-primary-dark'}
+              `}
             >
               {loading ? 'Updating...' : 'Upload Image'}
             </div>
           }
-          uploadCallback={(image) => setUploadedImage(image)}
+          uploadCallback={(image: string | false) => setUploadedImage(image)}
           maxFileSize={1000000}
-          loadingStatusCallback={(loading) => setLoading(loading)}
+          loadingStatusCallback={(loading: boolean) => setLoading(loading)}
         />
         <Body2 className="mt-2">File size less than 1mb. JPG or PNG.</Body2>
       </div>

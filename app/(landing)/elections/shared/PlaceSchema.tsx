@@ -1,7 +1,13 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
+import { Place } from './types'
+import { Place as SchemaPlace, WithContext } from 'schema-dts'
 
-export default function PlaceSchema({ place }) {
+interface PlaceSchemaProps {
+  place: Place
+}
+
+const PlaceSchema = ({ place }: PlaceSchemaProps): React.JSX.Element => {
   const {
     name,
     slug,
@@ -19,8 +25,11 @@ export default function PlaceSchema({ place }) {
 
   const url = `${APP_BASE}/${slug}`
 
-  // Create additional properties array only with non-null values
-  const additionalProperties = []
+  const additionalProperties: Array<{
+    '@type': 'PropertyValue'
+    name: string
+    value: number
+  }> = []
   if (population != null) {
     additionalProperties.push({
       '@type': 'PropertyValue',
@@ -57,33 +66,32 @@ export default function PlaceSchema({ place }) {
     })
   }
 
-  return (
-    <JsonLd
-      item={{
-        '@context': 'https://schema.org',
+  const schemaItem: WithContext<SchemaPlace> = {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    '@id': `https://goodparty.org/elections/${slug}`,
+    name: name,
+    identifier: geoId,
+    url,
+    ...(parent && {
+      containedInPlace: {
         '@type': 'Place',
-        '@id': `https://goodparty.org/elections/${slug}`,
-        name: name,
-        identifier: geoId,
-        containedInPlace: parent
-          ? {
-              '@type': 'Place',
-              name: parent.name,
-              identifier: parent.geoId,
-              addressRegion: parent.state,
-            }
-          : undefined,
-        ...(additionalProperties.length > 0 && {
-          additionalProperty: additionalProperties,
-        }),
-        address: {
-          '@type': 'PostalAddress',
-          addressRegion: state,
-          addressLocality: cityLargest,
-          name: countyName,
-        },
-        url,
-      }}
-    />
-  )
+        name: parent.name,
+        identifier: parent.geoId,
+      },
+    }),
+    ...(additionalProperties.length > 0 && {
+      additionalProperty: additionalProperties,
+    }),
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: state,
+      addressLocality: cityLargest,
+      name: countyName,
+    },
+  }
+
+  return <JsonLd item={schemaItem} />
 }
+
+export default PlaceSchema

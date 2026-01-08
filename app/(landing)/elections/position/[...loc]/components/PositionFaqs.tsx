@@ -1,8 +1,18 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import PositionFaq from './PositionFaq'
 import { Fragment } from 'react'
+import { Race } from 'app/(landing)/elections/shared/types'
 
-export default function PositionFaqs({ race }) {
+interface Faq {
+  q: string
+  a: string
+}
+
+interface PositionFaqsProps {
+  race: Race
+}
+
+const PositionFaqs = ({ race }: PositionFaqsProps): React.JSX.Element => {
   const {
     frequency,
     normalizedPositionName,
@@ -28,7 +38,7 @@ export default function PositionFaqs({ race }) {
     runOffPrimary = `The next election for ${normalizedPositionName}  includes a runoff, but not a primary election.`
   }
 
-  const faqs = [
+  const faqs: Faq[] = [
     {
       q: `How often is ${normalizedPositionName} elected?`,
       a: `The position of ${normalizedPositionName} is typically elected every ${term} years.`,
@@ -43,19 +53,19 @@ export default function PositionFaqs({ race }) {
     },
     {
       q: `What are the filing requirements to get on the ballot in ${loc}?`,
-      a: filingRequirements,
+      a: filingRequirements || 'Filing requirements are not available.',
     },
     {
       q: `Where do I submit my candidate paperwork?`,
-      a: paperworkInstructions,
+      a: paperworkInstructions || 'Paperwork instructions are not available.',
     },
     {
       q: `Where is the filing office?`,
-      a: `${filingOfficeAddress}.`,
+      a: filingOfficeAddress ? `${filingOfficeAddress}.` : 'Filing office address is not available.',
     },
     {
       q: `How can I get in touch with the filing office?`,
-      a: `You can contact the filing office by calling ${filingPhoneNumber}.`,
+      a: filingPhoneNumber ? `You can contact the filing office by calling ${filingPhoneNumber}.` : 'Filing office phone number is not available.',
     },
     {
       q: `How do I get started running for ${normalizedPositionName}?`,
@@ -79,3 +89,5 @@ export default function PositionFaqs({ race }) {
     </section>
   )
 }
+
+export default PositionFaqs

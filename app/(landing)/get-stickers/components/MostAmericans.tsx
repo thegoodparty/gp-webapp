@@ -3,7 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth'
 import Body1 from '@shared/typography/Body1'
 import Image from 'next/image'
 
-export default function MostAmericans() {
+export default function MostAmericans(): React.JSX.Element {
   return (
     <>
       <section className="bg-primary-dark py-16 text-white  text-center">

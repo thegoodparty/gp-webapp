@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import Body2 from '@shared/typography/Body2'
 import H5 from '@shared/typography/H5'
 import { Switch } from '@mui/material'
@@ -10,8 +10,22 @@ import H2 from '@shared/typography/H2'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { UserMetaData } from 'helpers/types'
 
-const fields = [
+interface NotificationField {
+  key: keyof NotificationSettings
+  label: string
+  subTitle: string
+}
+
+interface NotificationSettings {
+  notificationEmails?: boolean
+  textNotifications?: boolean
+  marketingEmails?: boolean
+  weeklyNewsletter?: boolean
+}
+
+const fields: NotificationField[] = [
   {
     key: 'notificationEmails',
     label: 'Campaign Emails',
@@ -34,14 +48,14 @@ const fields = [
   },
 ]
 
-export default function NotificationSection() {
+const NotificationSection = (): React.JSX.Element => {
   const [user, setUser] = useUser()
-  const [state, setState] = useState({})
+  const [state, setState] = useState<NotificationSettings>({})
   const [initialUpdate, setInitialUpdate] = useState(false)
 
   useEffect(() => {
     if (user && !initialUpdate) {
-      let meta = {}
+      let meta: UserMetaData = {}
       try {
         meta = user?.metaData || {}
       } catch (error) {
@@ -53,19 +67,25 @@ export default function NotificationSection() {
     }
   }, [user])
 
-  async function updateUserCallback(updatedMeta) {
+  const updateUserCallback = async (
+    updatedMeta: NotificationSettings,
+  ): Promise<void> => {
     try {
-      const response = await clientFetch(apiRoutes.user.updateMeta, {
+      const response = await clientFetch<import('helpers/types').User>(apiRoutes.user.updateMeta, {
         meta: updatedMeta,
       })
-      const user = response.data
-      setUser(user)
+      if (response.data && response.data.id) {
+        setUser(response.data)
+      }
     } catch (error) {
       console.log('Error updating user', error)
     }
   }
 
-  const handleChange = (key, event) => {
+  const handleChange = (
+    key: keyof NotificationSettings,
+    event: ChangeEvent<HTMLInputElement>,
+  ): void => {
     const updatedState = {
       ...state,
       [key]: event.target.checked,
@@ -114,3 +134,5 @@ export default function NotificationSection() {
     </Paper>
   )
 }
+
+export default NotificationSection

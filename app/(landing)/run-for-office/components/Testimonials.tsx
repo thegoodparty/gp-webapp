@@ -16,7 +16,17 @@ const SM_PAGE_SIZE = 1
 const LG_MIN = 1024
 const MD_MIN = 768
 
-function PageDot({ pageNum, isSelected, onClick }) {
+interface PageDotProps {
+  pageNum: number
+  isSelected: boolean
+  onClick: () => void
+}
+
+function PageDot({
+  pageNum,
+  isSelected,
+  onClick,
+}: PageDotProps): React.JSX.Element {
   return (
     <span
       onClick={onClick}
@@ -29,19 +39,37 @@ function PageDot({ pageNum, isSelected, onClick }) {
   )
 }
 
-export default function Testimonials({ testimonials }) {
+interface TestimonialImage {
+  url: string
+  alt: string
+}
+
+interface Testimonial {
+  name: string
+  office: string
+  image: TestimonialImage
+  testimonial: string
+}
+
+interface TestimonialsProps {
+  testimonials: Testimonial[]
+}
+
+export default function Testimonials({
+  testimonials,
+}: TestimonialsProps): React.JSX.Element | null {
   const [currentPage, setCurrentPage] = useState(0)
   const [pageSize, setPageSize] = useState(SM_PAGE_SIZE)
 
   useEffect(() => {
-    function handleResize() {
+    function handleResize(): void {
       const windowWidth = window.innerWidth
       const newPageSize =
         windowWidth > LG_MIN
           ? LG_PAGE_SIZE
           : windowWidth <= MD_MIN
-          ? SM_PAGE_SIZE
-          : MD_PAGE_SIZE
+            ? SM_PAGE_SIZE
+            : MD_PAGE_SIZE
 
       if (pageSize !== newPageSize) {
         setPageSize(newPageSize)
@@ -62,19 +90,19 @@ export default function Testimonials({ testimonials }) {
   const lastPage = Math.floor((testimonials.length - 1) / pageSize)
   const startIndex = currentPage * pageSize
 
-  function incrementPage() {
+  function incrementPage(): void {
     const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage
 
     setCurrentPage(nextPage)
   }
 
-  function decrementPage() {
+  function decrementPage(): void {
     const nextPage = currentPage > 0 ? currentPage - 1 : 0
 
     setCurrentPage(nextPage)
   }
 
-  function goToPage(pageNum) {
+  function goToPage(pageNum: number): void {
     if (pageNum >= 0 && pageNum <= lastPage) setCurrentPage(pageNum)
   }
 

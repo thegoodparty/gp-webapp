@@ -3,8 +3,22 @@ import { MdOutlineWorkOff } from 'react-icons/md'
 import { SlWallet } from 'react-icons/sl'
 import { TbHomeShare } from 'react-icons/tb'
 import { numberFormatter } from 'helpers/numberHelper'
+import { City } from 'app/(landing)/elections/shared/types'
 
-export default function CityFacts({ city, county }) {
+interface CityField {
+  label: string
+  value: string | number | undefined
+  icon: React.JSX.Element
+  isNumber?: boolean
+  isPercent?: boolean
+  isMoney?: boolean
+}
+
+interface CityFactsProps {
+  city: City
+}
+
+const CityFacts = ({ city }: CityFactsProps): React.JSX.Element | null => {
   if (!city) return null
   const {
     population,
@@ -14,7 +28,7 @@ export default function CityFacts({ city, county }) {
     homeValue,
     county_name,
   } = city
-  const fields = [
+  const fields: CityField[] = [
     { label: 'County', value: county_name, icon: <FaCity /> },
     {
       label: 'Population',
@@ -62,7 +76,24 @@ export default function CityFacts({ city, county }) {
                   key={field.label}
                   className="col-span-6 md:col-span-4 flex flex-col items-center"
                 >
-                  <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#897AF1] to-[#C985F2] flex items-center justify-center text-3xl md:text-5xl text-primary">
+                  <div
+                    className="
+                      w-32
+                      h-32
+                      md:w-36
+                      md:h-36
+                      rounded-full
+                      bg-gradient-to-br
+                      from-[#897AF1]
+                      to-[#C985F2]
+                      flex
+                      items-center
+                      justify-center
+                      text-3xl
+                      md:text-5xl
+                      text-primary
+                    "
+                  >
                     {field.icon}
                   </div>
                   <div className="mt-4 text-center">
@@ -86,3 +117,5 @@ export default function CityFacts({ city, county }) {
     </section>
   )
 }
+
+export default CityFacts

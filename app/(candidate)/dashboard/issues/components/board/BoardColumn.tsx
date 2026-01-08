@@ -1,26 +1,45 @@
 import { useDroppable } from '@dnd-kit/core'
 import H4 from '@shared/typography/H4'
-import IssueCard from './IssueCard'
+import IssueCard, { Issue } from './IssueCard'
 import { LuClipboardX } from 'react-icons/lu'
 import Body2 from '@shared/typography/Body2'
-import { ISSUE_STATUSES } from '../../shared/constants'
+import { IssueStatus } from '@shared/hooks/IssuesProvider'
 
-const columnTypes = {
+interface ColumnTypeConfig {
+  title: string
+  statuses: IssueStatus[]
+}
+
+type ColumnType = 'accepted' | 'inProgress' | 'completed'
+
+type ColumnTypes = {
+  [K in ColumnType]: ColumnTypeConfig
+}
+
+const columnTypes: ColumnTypes = {
   accepted: {
     title: 'Accepted',
-    statuses: [ISSUE_STATUSES.ACCEPTED],
+    statuses: [IssueStatus.accepted],
   },
   inProgress: {
     title: 'In Progress',
-    statuses: [ISSUE_STATUSES.IN_PROGRESS],
+    statuses: [IssueStatus.inProgress],
   },
   completed: {
     title: 'Resolved or Deferred',
-    statuses: [ISSUE_STATUSES.COMPLETED, ISSUE_STATUSES.WONT_DO],
+    statuses: [IssueStatus.completed, IssueStatus.wontDo],
   },
 }
 
-export default function BoardColumn({ type, issues = [] }) {
+interface BoardColumnProps {
+  type: ColumnType
+  issues?: Issue[]
+}
+
+const BoardColumn = ({
+  type,
+  issues = [],
+}: BoardColumnProps): React.JSX.Element => {
   const { title, statuses } = columnTypes[type]
 
   const columnIssues = issues.filter((issue) => statuses.includes(issue.status))
@@ -36,9 +55,32 @@ export default function BoardColumn({ type, issues = [] }) {
 
   return (
     <div className="rounded-md border border-slate-200 p-4 w-full min-h-[400px]">
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
+      <div
+        className="
+          flex
+          items-center
+          justify-between
+          border-b
+          border-slate-200
+          pb-4
+          mb-4
+        "
+      >
         <H4>{title}</H4>
-        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-300 text-slate-900 text-sm font-medium">
+        <div
+          className="
+            w-8
+            h-8
+            flex
+            items-center
+            justify-center
+            rounded-full
+            bg-slate-300
+            text-slate-900
+            text-sm
+            font-medium
+          "
+        >
           {columnIssues.length}
         </div>
       </div>
@@ -54,7 +96,17 @@ export default function BoardColumn({ type, issues = [] }) {
         {columnIssues.length === 0 ? (
           <div className="flex items-center justify-center mt-16  text-slate-400 ">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-slate-200">
+              <div
+                className="
+                  w-16
+                  h-16
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-slate-200
+                "
+              >
                 <LuClipboardX size={28} />
               </div>
               <Body2 className="text-slate-400">No issues</Body2>
@@ -62,10 +114,12 @@ export default function BoardColumn({ type, issues = [] }) {
           </div>
         ) : (
           columnIssues.map((issue) => (
-            <IssueCard key={issue.id} issue={issue} />
+            <IssueCard key={issue.uuid} issue={issue} />
           ))
         )}
       </div>
     </div>
   )
 }
+
+export default BoardColumn

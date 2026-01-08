@@ -1,6 +1,6 @@
 'use client'
 
-import { InputAdornment, Select } from '@mui/material'
+import { InputAdornment, Select, SelectChangeEvent } from '@mui/material'
 import H2 from '@shared/typography/H2'
 import { slugify } from 'helpers/articleHelper'
 import { states } from 'helpers/statesHelper'
@@ -11,11 +11,34 @@ import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent
 import Button from '@shared/buttons/Button'
 import fetchPlace from './fetchPlace'
 
-const nameCompare = ({ name: aName }, { name: bName }) =>
-  aName.localeCompare(bName)
+interface LocationOption {
+  id: number | string
+  name: string
+}
 
-export default function SearchLocation({ withHeader = false, initialState }) {
-  const [state, setState] = useState({
+interface LocationState {
+  state: string
+  county: string
+  municipality: string
+  countyOptions: LocationOption[]
+  munOptions: LocationOption[]
+}
+
+const nameCompare = (
+  { name: aName }: LocationOption,
+  { name: bName }: LocationOption,
+): number => aName.localeCompare(bName)
+
+interface SearchLocationProps {
+  withHeader?: boolean
+  initialState?: string
+}
+
+const SearchLocation = ({
+  withHeader = false,
+  initialState,
+}: SearchLocationProps): React.JSX.Element => {
+  const [state, setState] = useState<LocationState>({
     state: initialState || '',
     county: '',
     municipality: '',
@@ -25,33 +48,37 @@ export default function SearchLocation({ withHeader = false, initialState }) {
 
   const router = useRouter()
 
-  const onChangeState = async (stateName) => {
-    const place = await fetchPlace({ slug: stateName, includeRaces: false, placeColumns: 'slug,name,id' })
+  const onChangeState = async (stateName: string): Promise<void> => {
+    const place = await fetchPlace({
+      slug: stateName,
+      includeRaces: false,
+      placeColumns: 'slug,name,id',
+    })
     setState({
       ...state,
       state: stateName,
-      countyOptions: place.children,
+      countyOptions: place && place.children ? place.children : [],
     })
   }
 
-  const onChangeCounty = async (countyName) => {
+  const onChangeCounty = async (countyName: string): Promise<void> => {
     const place = await fetchPlace({
       slug: `${state.state.toLowerCase()}/${slugify(countyName, true)}`,
       includeRaces: false,
-      placeColumns: 'slug,name,id'
+      placeColumns: 'slug,name,id',
     })
     setState({
       ...state,
       county: countyName,
-      munOptions: place.children,
+      munOptions: place && place.children ? place.children : [],
     })
   }
 
-  const onChangeMun = (munName) => {
+  const onChangeMun = (munName: string): void => {
     setState({ ...state, municipality: munName })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (state.state === '') {
       return
     }
@@ -81,8 +108,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             fullWidth
             label=" state "
             variant="outlined"
-            onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+            onChange={(e: SelectChangeEvent<string>) => {
+              fireGTMButtonClickEvent({ id: 'election-select-state' })
               return onChangeState(e.target.value)
             }}
             sx={{ backgroundColor: 'white' }}
@@ -118,8 +145,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             sx={{ backgroundColor: 'white' }}
             label=" "
             disabled={state.state === '' || state.countyOptions.length === 0}
-            onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+            onChange={(e: SelectChangeEvent<string>) => {
+              fireGTMButtonClickEvent({ id: 'election-select-county' })
               return onChangeCounty(e.target.value)
             }}
             startAdornment={
@@ -160,8 +187,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             sx={{ backgroundColor: 'white' }}
             label=" "
             disabled={state.county === '' || state.munOptions.length === 0}
-            onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+            onChange={(e: SelectChangeEvent<string>) => {
+              fireGTMButtonClickEvent({ id: 'election-select-city' })
               return onChangeMun(e.target.value)
             }}
             startAdornment={
@@ -208,3 +235,5 @@ export default function SearchLocation({ withHeader = false, initialState }) {
     </div>
   )
 }
+
+export default SearchLocation

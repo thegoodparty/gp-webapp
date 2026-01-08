@@ -1,23 +1,42 @@
-import { useState } from 'react'
-import { Autocomplete, InputAdornment } from '@mui/material'
+import { useState, SyntheticEvent } from 'react'
+import { Autocomplete, InputAdornment, FilterOptionsState } from '@mui/material'
 import { theme } from 'tailwind.config'
 import TextField from '@shared/inputs/TextField'
 import IconButton from '@mui/material/IconButton'
 import { IoCloseSharp } from 'react-icons/io5'
 
-const filterOptions = (options, { inputValue }) => {
+interface IssueOption {
+  name: string
+}
+
+const filterOptions = (
+  options: IssueOption[],
+  { inputValue }: FilterOptionsState<IssueOption>,
+): IssueOption[] => {
   if (options && typeof options.filter === 'function') {
     return options.filter((option) => {
       return option.name.toLowerCase().includes(inputValue.toLowerCase())
     })
   }
+  return []
 }
 
-export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
-  const [value, setValue] = useState(null)
+interface IssuesSearchProps {
+  issues: IssueOption[]
+  onInputChange?: (value: string) => void
+}
+
+export const IssuesSearch = ({
+  issues,
+  onInputChange = () => {},
+}: IssuesSearchProps): React.JSX.Element => {
+  const [value, setValue] = useState<IssueOption | null>(null)
   const [inputValue, setInputValue] = useState('')
 
-  const handleInputChange = (event, newInputValue) => {
+  const handleInputChange = (
+    _event: SyntheticEvent | null,
+    newInputValue: string,
+  ): void => {
     // TODO: We REALLY need to figure out why we're updating THREE different states here.
     //  seems like a bad code smell.
     !newInputValue && setValue(null)
@@ -27,12 +46,12 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
 
   return (
     <Autocomplete
-      value={value}
-      onChange={(event, newValue) => {
+      value={value || undefined}
+      onChange={(_event: SyntheticEvent, newValue: IssueOption | null) => {
         setValue(newValue)
       }}
       inputValue={inputValue}
-      onInputChange={handleInputChange}
+      onInputChange={(_e, v) => handleInputChange(null, v)}
       className="office-autocomplete"
       sx={{
         '& fieldset': {
@@ -65,7 +84,7 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
           }}
         />
       )}
-      getOptionLabel={({ name }) => name}
+      getOptionLabel={({ name }: IssueOption) => name}
       filterOptions={filterOptions}
     />
   )

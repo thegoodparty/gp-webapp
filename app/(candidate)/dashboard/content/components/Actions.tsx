@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, KeyboardEvent } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
 import { Button } from '@mui/material'
 import { FaPencilAlt, FaTrashAlt, FaGlobe } from 'react-icons/fa'
@@ -12,14 +12,25 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import CircularProgress from '@mui/material/CircularProgress'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-export default function Actions(props) {
+interface ActionsProps {
+  name: string
+  slug: string
+  tableVersion: boolean
+  setDocumentName: (name: string) => void
+  documentKey?: string
+  status?: string
+  handleTranslateCallback?: () => void
+  showTranslate: boolean
+  setShowTranslate: (show: boolean) => void
+}
+
+export default function Actions(props: ActionsProps): React.JSX.Element {
   let {
     name,
     slug,
     tableVersion,
     setDocumentName,
     documentKey,
-    updatedAt,
     status,
     handleTranslateCallback,
     showTranslate,
@@ -28,7 +39,6 @@ export default function Actions(props) {
 
   const [showMenu, setShowMenu] = useState(false)
   const [showRename, setShowRename] = useState(false)
-  const [showDuplicate, setShowDuplicate] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
 
   if (tableVersion === false) {
@@ -43,7 +53,9 @@ export default function Actions(props) {
             <BsThreeDots
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
+              onKeyDown={(e: KeyboardEvent) =>
+                e.key === 'Enter' && setShowMenu(!showMenu)
+              }
               onClick={() => {
                 trackEvent(EVENTS.ContentBuilder.OpenKebabMenu, {
                   name: name,
@@ -62,7 +74,9 @@ export default function Actions(props) {
           <div
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
+            onKeyDown={(e: KeyboardEvent<HTMLDivElement>) =>
+              e.key === 'Enter' && setShowMenu(!showMenu)
+            }
             onClick={() => {
               setShowMenu(!showMenu)
             }}
@@ -210,7 +224,7 @@ export default function Actions(props) {
       /> */}
 
       <DeleteAction
-        documentKey={documentKey}
+        documentKey={documentKey || ''}
         showDelete={showDelete}
         setShowDelete={setShowDelete}
       />

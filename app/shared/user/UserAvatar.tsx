@@ -1,11 +1,16 @@
 import React from 'react'
 import { MdPerson } from 'react-icons/md'
-import { User } from '../../../helpers/types'
 
 type UserAvatarSize = 'small' | 'large' | 'smaller'
 
+interface UserAvatarUser {
+  firstName?: string | null
+  lastName?: string | null
+  avatar?: string | null
+}
+
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
-  user?: User | null
+  user?: UserAvatarUser | null
   size?: UserAvatarSize
 }
 
