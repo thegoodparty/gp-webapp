@@ -3,8 +3,22 @@ import { MdOutlineWorkOff } from 'react-icons/md'
 import { SlWallet } from 'react-icons/sl'
 import { TbHomeShare } from 'react-icons/tb'
 import { numberFormatter } from 'helpers/numberHelper'
+import { County } from 'app/(landing)/elections/shared/types'
 
-export default function CountyFacts({ county }) {
+interface CountyField {
+  label: string
+  value: string | number | undefined
+  icon: React.JSX.Element
+  isNumber?: boolean
+  isPercent?: boolean
+  isMoney?: boolean
+}
+
+interface CountyFactsProps {
+  county: County
+}
+
+const CountyFacts = ({ county }: CountyFactsProps): React.JSX.Element | null => {
   if (!county) return null
   const {
     cityLargest,
@@ -26,7 +40,7 @@ export default function CountyFacts({ county }) {
     return null
   }
 
-  const fields = [
+  const fields: CountyField[] = [
     { label: 'Largest city', value: cityLargest, icon: <FaCity /> },
     {
       label: 'Population',
@@ -74,7 +88,24 @@ export default function CountyFacts({ county }) {
                   key={field.label}
                   className="col-span-6 md:col-span-4 flex flex-col items-center"
                 >
-                  <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#2AC8E2] to-[#8578ED] flex items-center justify-center text-3xl md:text-5xl text-primary">
+                  <div
+                    className="
+                      w-32
+                      h-32
+                      md:w-36
+                      md:h-36
+                      rounded-full
+                      bg-gradient-to-br
+                      from-[#2AC8E2]
+                      to-[#8578ED]
+                      flex
+                      items-center
+                      justify-center
+                      text-3xl
+                      md:text-5xl
+                      text-primary
+                    "
+                  >
                     {field.icon}
                   </div>
                   <div className="mt-4 text-center">
@@ -96,3 +127,5 @@ export default function CountyFacts({ county }) {
     </section>
   )
 }
+
+export default CountyFacts

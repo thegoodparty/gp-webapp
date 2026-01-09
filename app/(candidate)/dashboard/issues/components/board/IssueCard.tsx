@@ -7,7 +7,7 @@ import StatusPill from '../../shared/StatusPill'
 import Button from '@shared/buttons/Button'
 import { IssueStatus } from '@shared/hooks/IssuesProvider'
 
-interface Issue {
+export interface Issue {
   uuid: string
   title: string
   description: string

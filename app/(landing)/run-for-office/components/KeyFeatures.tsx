@@ -9,7 +9,15 @@ import MarketingH4 from '@shared/typography/MarketingH4'
 import Button from '@shared/buttons/Button'
 import { MdArrowForward } from 'react-icons/md'
 
-function CardWrapper({ children, className }) {
+interface CardWrapperProps {
+  children: React.ReactNode
+  className?: string
+}
+
+function CardWrapper({
+  children,
+  className,
+}: CardWrapperProps): React.JSX.Element {
   return (
     <div
       className={`px-4 py-8 md:px-8 bg-white rounded-3xl border border-black/[0.12] ${
@@ -21,7 +29,12 @@ function CardWrapper({ children, className }) {
   )
 }
 
-function CTALink({ id, href = '/sign-up' }) {
+interface CTALinkProps {
+  id: string
+  href?: string
+}
+
+function CTALink({ id, href = '/sign-up' }: CTALinkProps): React.JSX.Element {
   return (
     <Button
       id={id}
@@ -35,7 +48,7 @@ function CTALink({ id, href = '/sign-up' }) {
   )
 }
 
-export default function KeyFeatures() {
+export default function KeyFeatures(): React.JSX.Element {
   return (
     <section className="box-content max-w-screen-xl mx-auto pt-24 px-4 md:px-8 lg:px-24">
       <MarketingH3 className="text-center mb-4 !text-4xl md:!text-5xl">

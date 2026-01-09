@@ -7,15 +7,20 @@ import { getUserCookie } from 'helpers/cookieHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Link from 'next/link'
 
-export default function FlowComplete({ resetCallback }) {
+interface FlowCompleteProps {
+  resetCallback: () => void
+}
+
+const FlowComplete = ({ resetCallback }: FlowCompleteProps): React.JSX.Element => {
   const user = getUserCookie(true)
+  const userEmail = user && user.email ? user.email : ''
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
         <H1>Request Submitted</H1>
         <Body1 className="mt-4 mb-2">
           A confirmation has been sent to{' '}
-          <span className="font-bold">{user.email}</span>.<br />
+          <span className="font-bold">{userEmail}</span>.<br />
           We will be reaching out to you shortly to pay your invoice and
           schedule your campaign.
         </Body1>
@@ -64,3 +69,5 @@ export default function FlowComplete({ resetCallback }) {
     </div>
   )
 }
+
+export default FlowComplete

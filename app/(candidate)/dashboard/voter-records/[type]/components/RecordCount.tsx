@@ -32,10 +32,10 @@ export const countVoterFile = async (
     }
 
     if (customFilters) {
-      const filtersArray = Array.isArray(customFilters)
-        ? customFilters
-        : customFilters.filters
-      payload.customFilters = JSON.stringify(filtersArray)
+      const filters: VoterFileFilters = Array.isArray(customFilters)
+        ? { filters: customFilters }
+        : customFilters
+      payload.customFilters = JSON.stringify(filters)
     }
 
     const resp = await clientFetch<number | File>(

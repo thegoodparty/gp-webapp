@@ -7,11 +7,23 @@ import H6 from '@shared/typography/H6'
 import H2 from '@shared/typography/H2'
 import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper'
 
+interface PathToVictoryData {
+  projectedTurnout?: number
+  voterContactGoal?: number
+  winNumber?: number
+}
+
+interface ContactCountsInfoModalProps {
+  open?: boolean
+  setOpen?: () => void
+  pathToVictory?: PathToVictoryData
+}
+
 export const ContactCountsInfoModal = ({
   open = true,
   setOpen = () => {},
   pathToVictory = {},
-}) => {
+}: ContactCountsInfoModalProps): React.JSX.Element => {
   const {
     projectedTurnout,
     voterContactGoal,
@@ -39,7 +51,17 @@ export const ContactCountsInfoModal = ({
 
         <div className="bg-white rounded-lg p-8 border border-gray-200">
           <H2 className="text-center">How we calculate this number</H2>
-          <ol className="mt-6 list-decimal list-inside [&>li]:marker:font-normal [&>li]:marker:text-base [&>li]:font-outfit [&>li]:mb-2">
+          <ol
+            className="
+              mt-6
+              list-decimal
+              list-inside
+              [&>li]:marker:font-normal
+              [&>li]:marker:text-base
+              [&>li]:font-outfit
+              [&>li]:mb-2
+            "
+          >
             <li>
               We expect{' '}
               <span className="font-semibold">

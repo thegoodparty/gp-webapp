@@ -32,8 +32,8 @@ export const numberNth = (number: number | string | null | undefined): string =>
   return `${num}th`
 }
 
-export const numberFormatter = (num: number | string, fixed: number = 0): string => {
-  if (isNaN(Number(num))) {
+export const numberFormatter = (num: number | string | undefined, fixed: number = 0): string => {
+  if (num === undefined || isNaN(Number(num))) {
     return '0'
   }
   if (!num) return '0'

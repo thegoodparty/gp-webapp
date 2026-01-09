@@ -30,7 +30,14 @@ export const STEPS = {
   purchase: 'purchase',
 }
 
-export const STEPS_BY_TYPE = {
+type TaskTypeKey = keyof typeof TASK_TYPES
+type LegacyTaskTypeKey = keyof typeof LEGACY_TASK_TYPES
+
+type StepsByTypeMap = {
+  [K in typeof TASK_TYPES[TaskTypeKey] | typeof LEGACY_TASK_TYPES[LegacyTaskTypeKey]]?: string[]
+}
+
+export const STEPS_BY_TYPE: StepsByTypeMap = {
   [TASK_TYPES.text]: [
     STEPS.intro,
     STEPS.audience,

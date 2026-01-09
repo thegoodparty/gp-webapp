@@ -1,5 +1,5 @@
 import MarketingH2 from '@shared/typography/MarketingH2'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import VictoriaImg from 'public/images/landing-pages/victoria.png'
 import TerryImg from 'public/images/landing-pages/terry-c.png'
@@ -10,7 +10,14 @@ import WarningButton from '@shared/buttons/WarningButton'
 import Link from 'next/link'
 import Body2 from '@shared/typography/Body2'
 
-const graduates = [
+interface Graduate {
+  name: string
+  img: StaticImageData
+  desc: string
+  run: string
+}
+
+const graduates: Graduate[] = [
   {
     name: 'Victoria - School Teacher, NC',
     img: VictoriaImg,
@@ -31,12 +38,26 @@ const graduates = [
   },
 ]
 
-export default function LearnToRun({ stateName }) {
+interface LearnToRunProps {
+  stateName: string
+}
+
+const LearnToRun = ({ stateName }: LearnToRunProps): React.JSX.Element => {
   return (
     <div className="relative pt-20 md:pt-48">
       <div className="absolute bg-primary-dark top-0 h-1/2 w-full left-0"></div>
       <div className="max-w-screen-xl mx-auto relative z-10">
-        <section className=" px-4 py-10 md:p-20 md:rounded-xl relative bg-indigo-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <section
+          className="
+            px-4
+            py-10
+            md:p-20
+            md:rounded-xl
+            relative
+            bg-indigo-50
+            shadow-[0_3px_10px_rgb(0,0,0,0.2)]
+          "
+        >
           <div className="relative z-10">
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-12 md:col-span-6">
@@ -69,7 +90,17 @@ export default function LearnToRun({ stateName }) {
                   {graduates.map((graduate) => (
                     <div
                       key={graduate.name}
-                      className="px-6 py-5  shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] bg-white rounded-xl mb-7 grid grid-cols-12 gap-4"
+                      className="
+                        px-6
+                        py-5
+                        shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]
+                        bg-white
+                        rounded-xl
+                        mb-7
+                        grid
+                        grid-cols-12
+                        gap-4
+                      "
                     >
                       <div className="col-span-3 relative">
                         <Image
@@ -114,3 +145,5 @@ export default function LearnToRun({ stateName }) {
     </div>
   )
 }
+
+export default LearnToRun

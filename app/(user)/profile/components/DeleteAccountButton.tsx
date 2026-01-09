@@ -15,7 +15,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-async function deleteAccountCallback(id) {
+const deleteAccountCallback = async (id: number): Promise<string | void> => {
   try {
     const resp = await clientFetch(apiRoutes.user.deleteAccount, { id })
 
@@ -28,16 +28,22 @@ async function deleteAccountCallback(id) {
       return 'Error deleting account'
     }
   } catch (error) {
-    console.error('Error deleting account', resp.statusText)
+    console.error('Error deleting account', error)
     return 'Error deleting account'
   }
 }
 
-function DeleteAccountButton({ userId }) {
+interface DeleteAccountButtonProps {
+  userId: number
+}
+
+const DeleteAccountButton = ({
+  userId,
+}: DeleteAccountButtonProps): React.JSX.Element => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
-  async function handleDeleteAccount() {
+  const handleDeleteAccount = async (): Promise<void> => {
     trackEvent(EVENTS.Settings.DeleteAccount.SubmitDelete)
     const msg = await deleteAccountCallback(userId)
     if (msg) {

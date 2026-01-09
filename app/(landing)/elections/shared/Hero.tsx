@@ -1,11 +1,22 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import SearchLocation from './SearchLocation'
-import Breadcrumbs from '@shared/utils/Breadcrumbs'
-import { shortToLongState } from 'helpers/statesHelper'
+import Breadcrumbs, { BreadcrumbLink } from '@shared/utils/Breadcrumbs'
+import { shortToLongState, StateAbbreviation } from 'helpers/statesHelper'
 import Image from 'next/image'
 import Subtitle2 from '@shared/typography/Subtitle2'
+import { County, Municipality, Parent } from './types'
 
-export default function Hero({
+interface HeroProps {
+  state: string
+  county?: County
+  color1: string
+  color2: string
+  level: 'state' | 'county' | 'city'
+  municipality?: Municipality
+  parent?: Parent
+}
+
+const Hero = ({
   state,
   county,
   color1,
@@ -13,29 +24,37 @@ export default function Hero({
   level,
   municipality,
   parent,
-}) {
-  const stateName = shortToLongState[state.toUpperCase()]
-  const breadcrumbsLinks = [
+}: HeroProps): React.JSX.Element => {
+  const stateKey = state.toUpperCase()
+  const isValidStateAbbreviation = (key: string): key is StateAbbreviation =>
+    key in shortToLongState
+  const stateName = isValidStateAbbreviation(stateKey)
+    ? shortToLongState[stateKey]
+    : stateKey
+  const breadcrumbsLinks: BreadcrumbLink[] = [
     { href: `/elections`, label: 'How to run' },
     {
+      href: '',
       label: `How to run in ${stateName}`,
     },
   ]
-  if (level === 'county') {
+  if (level === 'county' && breadcrumbsLinks[1]) {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
+      href: '',
       label: county?.name || '',
     })
   }
 
-  if (level === 'city') {
+  if (level === 'city' && breadcrumbsLinks[1]) {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: `${parent.name}`,
-      href: `/elections/${parent.slug}`,
+      label: parent?.name || '',
+      href: `/elections/${parent?.slug || ''}`,
     })
     breadcrumbsLinks.push({
-      label: municipality.name,
+      href: '',
+      label: municipality?.name || '',
     })
   }
   let title = ''
@@ -118,3 +137,5 @@ export default function Hero({
     </>
   )
 }
+
+export default Hero

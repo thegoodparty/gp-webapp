@@ -3,7 +3,7 @@ import { TbSlash } from 'react-icons/tb'
 import { JsonLd } from 'react-schemaorg'
 import clsx from 'clsx'
 
-interface BreadcrumbLink {
+export interface BreadcrumbLink {
   href: string
   label: string
 }

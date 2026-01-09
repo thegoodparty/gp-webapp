@@ -5,17 +5,29 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { FREE_TEXTS_OFFER } from '../outreach/constants'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent, buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 
 export const VIABILITY_SCORE_THRESHOLD = 2
-export const VARIANTS = {
+
+export type VariantType = 'First' | 'Second_NonViable' | 'Second_Viable' | 'Third'
+
+export const VARIANTS: { [K in VariantType]: K } = {
   First: 'First',
   Second_NonViable: 'Second_NonViable',
   Second_Viable: 'Second_Viable',
   Third: 'Third',
+}
+
+interface ProUpgradeModalProps {
+  open: boolean
+  variant: VariantType
+  onClose?: () => void
+  onUpgradeLinkClick?: () => void
+  defaultTrackingEnabled?: boolean
+  trackingAttrs?: ReturnType<typeof buildTrackingAttrs>
 }
 
 export function ProUpgradeModal({
@@ -25,13 +37,17 @@ export function ProUpgradeModal({
   onUpgradeLinkClick,
   defaultTrackingEnabled = false,
   trackingAttrs = {},
-}) {
+}: ProUpgradeModalProps): React.JSX.Element {
   const [user] = useUser()
   const [campaign] = useCampaign()
   const sessionCount = user?.metaData?.sessionCount || 0
   const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
 
-  let title, description, items, highlight, cta
+  let title: string,
+    description: string,
+    items: React.ReactNode[],
+    highlight: string | null,
+    cta: string
 
   switch (variant) {
     case VARIANTS.First:
@@ -119,7 +135,7 @@ export function ProUpgradeModal({
     }
   }, [open])
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     if (defaultTrackingEnabled) {
       trackEvent(EVENTS.ProUpgrade.Modal.Exit, {
         sessionCount,
@@ -133,7 +149,7 @@ export function ProUpgradeModal({
     }
   }
 
-  const handleUpgradeLinkClick = () => {
+  const handleUpgradeLinkClick = (): void => {
     if (defaultTrackingEnabled) {
       trackEvent(EVENTS.ProUpgrade.Modal.ClickButton, {
         sessionCount,

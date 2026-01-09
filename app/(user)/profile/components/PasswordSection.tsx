@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 import { passwordRegex, updateUser } from 'helpers/userHelper'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
@@ -11,25 +11,37 @@ import DeleteAccountButton from './DeleteAccountButton'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { User } from 'helpers/types'
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed'
 const CURRENT_PASSWORD_INCORRECT = 'Old password is incorrect'
 const INVALID_PASSWORD_MSG = 'Invalid password'
 
-function PasswordSection({ user: initUser }) {
-  const [user, setUser] = useState(initUser)
+interface PasswordState {
+  oldPassword: string
+  password: string
+}
+
+interface PasswordSectionProps {
+  user: User
+}
+
+const PasswordSection = ({
+  user: initUser,
+}: PasswordSectionProps): React.JSX.Element => {
+  const [user, setUser] = useState<User>(initUser)
   const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [passwordChangeSuccessful, setPasswordChangeSuccessful] =
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [, setPasswordChangeSuccessful] =
     useState(false)
 
-  const initialState = {
+  const initialState: PasswordState = {
     oldPassword: '',
     password: '',
   }
-  const [state, setState] = useState(initialState)
+  const [state, setState] = useState<PasswordState>(initialState)
 
-  const onChangeField = (key, val) => {
+  const onChangeField = (key: keyof PasswordState, val: string): void => {
     setErrorMessage(null)
     setPasswordChangeSuccessful(false)
     setState({
@@ -52,18 +64,25 @@ function PasswordSection({ user: initUser }) {
       state.password.length > 7) ||
     (!user.hasPassword && state.password !== '' && state.password.length > 7)
 
-  const reset = () => {
+  const reset = (): void => {
     setState(initialState)
   }
 
-  const handleReqResult = async (result) => {
+  const handleReqResult = async (result: {
+    ok: boolean
+    data: { message?: string }
+    status: number
+  }): Promise<void> => {
     if (result.ok) {
       setErrorMessage(null)
       setPasswordChangeSuccessful(true)
-      setUser(await updateUser())
+      const updatedUser = await updateUser()
+      if (updatedUser) {
+        setUser(updatedUser)
+      }
       reset()
     } else {
-      const reason = await result.data
+      const reason = result.data
       setPasswordChangeSuccessful(false)
       setErrorMessage(
         result.status === 401 && reason.message === INVALID_PASSWORD_MSG
@@ -73,17 +92,21 @@ function PasswordSection({ user: initUser }) {
     }
   }
 
-  const doPasswordChange = async () => {
+  const doPasswordChange = async (): Promise<void> => {
     const { password, oldPassword } = state
     setLoading(true)
     try {
-      const result = await clientFetch(apiRoutes.user.changePassword, {
+      const result = await clientFetch<{ message?: string }>(apiRoutes.user.changePassword, {
         id: user.id,
         newPassword: password,
         oldPassword,
       })
 
-      await handleReqResult(result)
+      await handleReqResult({
+        ok: result.ok,
+        data: result.data ? { message: result.data.message } : {},
+        status: result.status,
+      })
     } catch (error) {
       console.error(error)
     } finally {
@@ -91,10 +114,10 @@ function PasswordSection({ user: initUser }) {
     }
   }
 
-  const handleSavePassword = () => {
+  const handleSavePassword = (): void => {
     trackEvent(EVENTS.Settings.Password.ClickSave)
     if (fieldsValid) {
-      doPasswordChange(state.password, state.oldPassword)
+      doPasswordChange()
     }
   }
 
@@ -104,7 +127,7 @@ function PasswordSection({ user: initUser }) {
       <Body2 className="text-gray-600 mb-8">
         Update your password and manage account.
       </Body2>
-      <form noValidate onSubmit={(e) => e.preventDefault()}>
+      <form noValidate onSubmit={(e: FormEvent) => e.preventDefault()}>
         <H4>Password</H4>
         <Body2 className="text-indigo-600 mb-6">
           {user?.hasPassword ? 'Change' : 'Create'} your password
@@ -118,13 +141,13 @@ function PasswordSection({ user: initUser }) {
               <div className="mb-4">
                 <PasswordInput
                   value={state.oldPassword}
-                  onChangeCallback={(pwd) => {
+                  onChangeCallback={(pwd: string) => {
                     onChangeField('oldPassword', pwd)
                   }}
                   label="Old Password"
                   helperText=""
                   error={
-                    errorMessage && errorMessage === CURRENT_PASSWORD_INCORRECT
+                    errorMessage === CURRENT_PASSWORD_INCORRECT
                   }
                 />
               </div>
@@ -136,7 +159,7 @@ function PasswordSection({ user: initUser }) {
           <div className="col-span-12 lg:col-span-6">
             <PasswordInput
               value={state.password}
-              onChangeCallback={(pwd) => {
+              onChangeCallback={(pwd: string) => {
                 onChangeField('password', pwd)
               }}
               label="New Password"

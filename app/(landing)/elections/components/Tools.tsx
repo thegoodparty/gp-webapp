@@ -4,7 +4,11 @@ import Image from 'next/image'
 import dashboardImg from 'public/images/elections/dashboard.png'
 import helpImg from 'public/images/elections/help.png'
 
-export default function Tools({ negativeMargin = true }) {
+interface ToolsProps {
+  negativeMargin?: boolean
+}
+
+const Tools = ({ negativeMargin = true }: ToolsProps): React.JSX.Element => {
   return (
     <section>
       <div className="max-w-screen-xl mx-auto">
@@ -95,3 +99,5 @@ export default function Tools({ negativeMargin = true }) {
     </section>
   )
 }
+
+export default Tools
