@@ -7,19 +7,36 @@ import MyContent from './MyContent'
 import { getCookie } from 'helpers/cookieHelper'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { Campaign } from 'helpers/types'
+import { Campaign, CandidatePosition, PathToVictoryData, User } from 'helpers/types'
 
 const ContentTutorial = dynamic(() => import('./ContentTutorial'), {
   ssr: false,
 })
 
+interface Prompt {
+  key: string
+  title: string
+}
+
+interface Category {
+  name: string
+  templates: { key: string; name: string }[]
+}
+
 interface ContentPageProps {
-  campaign: Campaign
+  campaign: Campaign | null
   pathname?: string
+  prompts?: Prompt[]
+  templates?: object
+  categories?: Category[]
+  pathToVictory?: PathToVictoryData
+  requiresQuestions?: Partial<Record<string, boolean>>
+  candidatePositions?: CandidatePosition[] | false
+  user?: User | null
 }
 
 const ContentPage = (props: ContentPageProps): React.JSX.Element => {
-  const { campaign } = props
+  const campaign = props.campaign
   const [forceOpenModal, setForceOpenModal] = useState(false)
   const searchParams = useSearchParams()
   const modalParam = searchParams?.get('showModal')
