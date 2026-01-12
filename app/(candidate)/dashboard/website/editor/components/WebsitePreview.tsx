@@ -45,8 +45,9 @@ const WebsitePreview = memo(function WebsitePreview({
     const iframe = iframeRef.current
 
     const sendData = () => {
-      const { addressPlace, ...contactWithoutPlace } =
-        (website?.content?.contact || {}) as { addressPlace?: string; [key: string]: string | undefined }
+      const contact = website?.content?.contact || {}
+      const { address, email, phone } = contact
+      const contactWithoutPlace = { address, email, phone }
       const websiteForMessage = {
         ...website,
         content: {

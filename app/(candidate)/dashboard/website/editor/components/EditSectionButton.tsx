@@ -13,16 +13,20 @@ export const SECTIONS = {
   title: 'title',
   about: 'about',
   contact: 'contact',
-} as const
+}
 
-type SectionKey = typeof SECTIONS[keyof typeof SECTIONS]
+type SectionKey = keyof typeof SECTIONS
 
 interface SectionContent {
   title: string
   description?: string
 }
 
-export const SECTION_BTN_CONTENT: Record<SectionKey, SectionContent> = {
+type SectionBtnContentMap = {
+  [K in SectionKey]?: SectionContent
+}
+
+export const SECTION_BTN_CONTENT: SectionBtnContentMap = {
   [SECTIONS.link]: {
     title: 'Custom link',
     description: 'Custom link',
@@ -79,29 +83,29 @@ const EditSectionButton = ({
       {section === SECTIONS.link ? (
         <>
           <div className="text-left">
-            <H5>{SECTION_BTN_CONTENT[section].title}</H5>
+            <H5>{SECTION_BTN_CONTENT[section]?.title}</H5>
             <p className="text-gray-500 text-xs">{url}</p>
           </div>
           <LockOutlined className="text-gray-500" />
         </>
       ) : section === SECTIONS.logo ? (
         <>
-          <H5>{SECTION_BTN_CONTENT[section].title}</H5>
+          <H5>{SECTION_BTN_CONTENT[section]?.title}</H5>
           <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
             <LuCloudUpload size={16} />
-            {SECTION_BTN_CONTENT[section].description}
+            {SECTION_BTN_CONTENT[section]?.description}
           </div>
         </>
       ) : section === SECTIONS.theme ? (
         <>
-          <H5 className="mb-1">{SECTION_BTN_CONTENT[section].title}</H5>
+          <H5 className="mb-1">{SECTION_BTN_CONTENT[section]?.title}</H5>
           <DisplaySwatch theme={website.content?.theme?.color || 'light'} />
         </>
       ) : (
         <>
-          <H5>{SECTION_BTN_CONTENT[section].title}</H5>
+          <H5>{SECTION_BTN_CONTENT[section]?.title}</H5>
           <div className="text-xs text-gray-500 mt-1">
-            {SECTION_BTN_CONTENT[section].description}
+            {SECTION_BTN_CONTENT[section]?.description}
           </div>
         </>
       )}

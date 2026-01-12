@@ -35,9 +35,11 @@ const DashboardLayout = ({
   const currentPath = pathname || hookPathname
 
   const activeCampaign = campaign || hookCampaign
-  const { details } = activeCampaign || {}
-  const goals = (activeCampaign as { goals?: { electionDate?: string } })?.goals
-  const electionDate = details?.electionDate || goals?.electionDate
+  const details = activeCampaign?.details
+  const goals = activeCampaign && 'goals' in activeCampaign ? activeCampaign.goals : undefined
+  const goalsObj = goals && typeof goals === 'object' ? goals : null
+  const goalsElectionDate = goalsObj && 'electionDate' in goalsObj && typeof goalsObj.electionDate === 'string' ? goalsObj.electionDate : undefined
+  const electionDate = details?.electionDate || goalsElectionDate
 
   useEffect(() => {
     if (currentPath?.startsWith('/dashboard/election-result')) {

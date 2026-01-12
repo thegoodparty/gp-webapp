@@ -25,7 +25,7 @@ const ChatMessage = ({ message, type, isLastMessage }: ChatMessageProps): React.
   let { content, role } = message
   try {
     if (role === 'assistant') {
-      content = marked(content) as string
+      content = String(marked(content))
     }
   } catch (e) {
     console.log('error converting marked', e)

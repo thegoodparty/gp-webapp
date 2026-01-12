@@ -13,9 +13,7 @@ interface InputField {
   isDate?: boolean
 }
 
-interface InputState {
-  [key: string]: string
-}
+type InputState = Partial<Record<string, string>>
 
 interface InputFieldsModalProps {
   onSelectCallback: (additionalPrompt: string, inputValues: InputState) => void

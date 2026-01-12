@@ -16,7 +16,7 @@ import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign, CandidatePosition } from 'helpers/types'
 import { KeyboardEvent } from 'react'
 
-export const TEMPLATE_CATEGORY_ICONS: Record<string, React.JSX.Element> = {
+const TEMPLATE_CATEGORY_ICONS = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
   'Media & PR': <BsMegaphone className="text-orange-600" />,
   'Social Media Content': <FiShare2 className="text-cyan-600" />,
@@ -28,6 +28,14 @@ export const TEMPLATE_CATEGORY_ICONS: Record<string, React.JSX.Element> = {
     <FaHandHoldingHeart className="text-red-400" />
   ),
 }
+
+type TemplateCategoryKey = keyof typeof TEMPLATE_CATEGORY_ICONS
+
+const isTemplateCategoryKey = (key: string): key is TemplateCategoryKey =>
+  key in TEMPLATE_CATEGORY_ICONS
+
+const getTemplateCategoryIcon = (name: string): React.JSX.Element | undefined =>
+  isTemplateCategoryKey(name) ? TEMPLATE_CATEGORY_ICONS[name] : undefined
 
 interface Template {
   key: string
@@ -43,7 +51,7 @@ interface TemplateListProps {
   categories: Category[]
   onSelectCallback: (key: string) => void
   selectedKey: string
-  requiresQuestions: Record<string, boolean>
+  requiresQuestions: Partial<Record<string, boolean>>
   campaign: Campaign | null
   candidatePositions: CandidatePosition[] | null
 }
@@ -121,7 +129,7 @@ const TemplateList = ({
                   `}
                   >
                     <div className="mr-3 md:mr-0 md:mb-4 text-2xl ">
-                      {TEMPLATE_CATEGORY_ICONS[category.name]}
+                      {getTemplateCategoryIcon(category.name)}
                     </div>
                     <H5>{template.name}</H5>
                   </div>

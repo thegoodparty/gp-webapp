@@ -6,32 +6,29 @@ import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 
-interface TrackingAttrs {
-  [key: string]: string | number | boolean | undefined
-}
-
 interface ComplianceModalProps {
   open: boolean
   tcrComplianceStatus: string
   onClose: () => void
-  trackingAttrs?: TrackingAttrs
 }
 
 export function ComplianceModal({
   open,
   tcrComplianceStatus,
   onClose,
-  trackingAttrs = {},
 }: ComplianceModalProps): React.JSX.Element {
-  let title: string, description: string, cta: string, ctaHref: string | undefined
+  let title: string,
+    description: string,
+    cta: string,
+    ctaHref: string | undefined
 
   switch (tcrComplianceStatus) {
     case TCR_COMPLIANCE_STATUS.PENDING:
       title = 'Texting registration under review'
       description =
         'Your 10DLC registration is being reviewed and cannot send text messages yet. This typically takes 3-7 business days. We will email you once approved.'
-        cta = 'Got it'
-        ctaHref = undefined
+      cta = 'Got it'
+      ctaHref = undefined
       break
     case TCR_COMPLIANCE_STATUS.REJECTED:
       title = 'Texting registration needs attention'
@@ -67,11 +64,7 @@ export function ComplianceModal({
         <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
         <Body2 className="my-4">{description}</Body2>
         <div className="flex justify-between gap-4 mt-8">
-          <Button
-            size="large"
-            color="neutral"
-            onClick={onClose}
-          >
+          <Button size="large" color="neutral" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -79,7 +72,6 @@ export function ComplianceModal({
             size="large"
             color="secondary"
             onClick={ctaHref ? undefined : onClose}
-            {...trackingAttrs}
           >
             {cta}
           </Button>

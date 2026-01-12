@@ -18,7 +18,8 @@ const EditSettingsMenu = (): React.JSX.Element => {
 
   useEffect(() => {
     const handleClickOutside = (event: globalThis.MouseEvent) => {
-      if (settingsMenuOpen && !(event.target as Element).closest('.settings-menu')) {
+      const target = event.target
+      if (settingsMenuOpen && target instanceof Element && !target.closest('.settings-menu')) {
         setSettingsMenuOpen(false)
       }
     }

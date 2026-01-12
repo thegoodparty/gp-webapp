@@ -10,7 +10,6 @@ const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
 interface Outreach {
   id: string
-  [key: string]: unknown
 }
 
 interface AudienceState {
@@ -38,17 +37,11 @@ interface ScheduleState {
   message?: string
 }
 
-interface VoterFileFilter {
-  id: string
-  name?: string
-  [key: string]: unknown
-}
-
 interface FlowState {
   script?: string
   schedule?: ScheduleState
   image?: File | null
-  voterFileFilter?: VoterFileFilter
+  voterFileFilter?: { id: string; name?: string }
   audience?: AudienceState
   phoneListId?: string
 }
@@ -94,8 +87,9 @@ interface MappedAudience {
   genderMale?: boolean
   genderFemale?: boolean
   genderUnknown?: boolean
-  [key: string]: boolean | undefined
 }
+
+type MappedAudienceKey = keyof MappedAudience
 
 export const handleScheduleOutreach =
   (
@@ -206,7 +200,25 @@ export const mapAudienceForPersistence = ({
     genderUnknown,
   }
 
-  return Object.keys(mappedAudience).reduce<MappedAudience>(
+  const AUDIENCE_KEYS: MappedAudienceKey[] = [
+    'audienceSuperVoters',
+    'audienceLikelyVoters',
+    'audienceUnreliableVoters',
+    'audienceUnlikelyVoters',
+    'audienceFirstTimeVoters',
+    'partyIndependent',
+    'partyDemocrat',
+    'partyRepublican',
+    'age18_25',
+    'age25_35',
+    'age35_50',
+    'age50Plus',
+    'genderMale',
+    'genderFemale',
+    'genderUnknown',
+  ]
+
+  return AUDIENCE_KEYS.reduce<MappedAudience>(
     (acc, k) => ({
       ...acc,
       ...(Boolean(mappedAudience[k]) ? { [k]: mappedAudience[k] } : {}),
@@ -217,7 +229,7 @@ export const mapAudienceForPersistence = ({
 
 export const handleCreatePhoneList =
   (errorSnackbar: (message: string) => void = noop) =>
-  async (voterFileFilter: VoterFileFilter | undefined): Promise<string | undefined> => {
+  async (voterFileFilter: { name?: string } | undefined): Promise<string | undefined> => {
     const result = await createP2pPhoneList(voterFileFilter)
     const phoneListToken = result ? result.phoneListToken : undefined
 
@@ -232,7 +244,7 @@ export const handleCreatePhoneList =
 
 export const handleCreateVoterFileFilter =
   ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
-  async (): Promise<VoterFileFilter | undefined> => {
+  async (): Promise<{ id: string; name?: string } | undefined> => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 
     const voterFileFilter = await createVoterFileFilter({

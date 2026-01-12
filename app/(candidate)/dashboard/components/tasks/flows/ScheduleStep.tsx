@@ -15,12 +15,16 @@ interface ScheduleState {
   message: string
 }
 
+interface Outreach {
+  id: string
+}
+
 interface ScheduleStepProps {
   onChangeCallback: (key: string, value: ScheduleState) => void
   nextCallback: () => void
   backCallback: () => void
-  onCreateOutreach?: () => Promise<Record<string, unknown>>
-  onScheduleOutreach?: (outreach: Record<string, unknown>) => Promise<void>
+  onCreateOutreach?: () => Promise<Outreach | undefined>
+  onScheduleOutreach?: (outreach?: Outreach) => Promise<void>
   type: string
   schedule?: ScheduleState
   isLastStep?: boolean
@@ -30,7 +34,7 @@ export default function ScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,
-  onCreateOutreach = async () => ({}),
+  onCreateOutreach = async () => undefined,
   onScheduleOutreach = async () => {},
   type,
   schedule,
