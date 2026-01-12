@@ -1,32 +1,32 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-interface ChatMessage {
+export interface ChatMessage {
   role: string
   content: string
 }
 
-interface Feedback {
+export interface Feedback {
   type: string
 }
 
-interface Chat {
+export interface Chat {
   threadId: string
   name: string
   updatedAt: string
 }
 
-interface ChatThread {
+export interface ChatThread {
   threadId: string
   chat: ChatMessage[]
   feedback?: Feedback
 }
 
-interface ChatHistory {
+export interface ChatHistory {
   chats: Chat[]
 }
 
-interface ChatResponse {
+export interface ChatResponse {
   threadId: string
   chat: ChatMessage[]
 }

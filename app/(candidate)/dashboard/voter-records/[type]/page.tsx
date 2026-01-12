@@ -41,7 +41,7 @@ export default async function Page({
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
-    candidatePositions,
+    candidatePositions || null,
   )
 
   const hasCompletedQuestions = answeredQuestions >= totalQuestions
