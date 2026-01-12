@@ -14,7 +14,7 @@ export const PurchaseStep = ({
   pricePerContact = 0,
   phoneListId,
 }) => {
-  const { purchaseIntent, error, setError } = usePurchaseIntent()
+  const { purchaseIntent, error } = usePurchaseIntent()
   const hasTrackedPaymentStarted = useRef(false)
 
   useEffect(() => {
@@ -46,7 +46,6 @@ export const PurchaseStep = ({
           {...{
             contactCount,
             onComplete,
-            onError: setError,
           }}
         />
       )}

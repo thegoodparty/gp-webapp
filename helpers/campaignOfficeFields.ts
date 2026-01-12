@@ -1,7 +1,17 @@
+type OfficeFieldKey = 'office' | 'state' | 'electionDate' | 'primaryElectionDate' | 'officeTermLength'
+
 interface OfficeInputField {
-  key: string
+  key: OfficeFieldKey
   label: string
   type: 'text' | 'date'
+}
+
+export interface OfficeFieldState {
+  office: string
+  state: string
+  electionDate: string
+  primaryElectionDate: string
+  officeTermLength: string
 }
 
 export const OFFICE_INPUT_FIELDS: OfficeInputField[] = [
@@ -34,26 +44,22 @@ export const OFFICE_INPUT_FIELDS: OfficeInputField[] = [
   },
 ]
 
-interface CampaignDetails {
+interface CampaignDetailsInput {
   office?: string
   otherOffice?: string
   state?: string
   electionDate?: string
   primaryElectionDate?: string
   officeTermLength?: string
-  [key: string]: string | undefined
 }
 
-export const campaignOfficeFields = (campaignDetails: CampaignDetails = {}): Record<string, string> => {
-  const fieldsAsMap = OFFICE_INPUT_FIELDS.reduce(
-    (accumulator, field) => ({
-      ...accumulator,
-      [field.key]: campaignDetails[field.key] || '',
-    }),
-    {} as Record<string, string>,
-  )
-  fieldsAsMap.office =
-    campaignDetails.otherOffice || campaignDetails.office || ''
-  return fieldsAsMap
+export const campaignOfficeFields = (campaignDetails: CampaignDetailsInput = {}): OfficeFieldState => {
+  return {
+    office: campaignDetails.otherOffice || campaignDetails.office || '',
+    state: campaignDetails.state || '',
+    electionDate: campaignDetails.electionDate || '',
+    primaryElectionDate: campaignDetails.primaryElectionDate || '',
+    officeTermLength: campaignDetails.officeTermLength || '',
+  }
 }
 

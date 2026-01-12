@@ -10,7 +10,7 @@ const stripePromise = loadStripe(NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export type PurchasePaymentProps = {
   onPaymentSuccess: (paymentIntent: PaymentIntent) => void
-  onPaymentError: (errorMessage: string) => void
+  onPaymentError?: (errorMessage: string) => void
 }
 
 const PurchasePayment: React.FC<PurchasePaymentProps> = ({

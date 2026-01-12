@@ -1,10 +1,8 @@
 'use client'
 import { useContext } from 'react'
-import { EcanvasserSurveyContext } from './EcanvasserSurveyProvider'
+import { EcanvasserSurveyContext, EcanvasserSurveyContextValue } from './EcanvasserSurveyProvider'
 
-export const useEcanvasserSurvey = () => {
-  const [survey, refreshSurvey] = useContext(EcanvasserSurveyContext)
-
-  return [survey, refreshSurvey]
+export const useEcanvasserSurvey = (): EcanvasserSurveyContextValue => {
+  return useContext(EcanvasserSurveyContext)
 }
 
