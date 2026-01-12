@@ -7,7 +7,12 @@ import MyContent from './MyContent'
 import { getCookie } from 'helpers/cookieHelper'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { Campaign, CandidatePosition, PathToVictoryData, User } from 'helpers/types'
+import {
+  Campaign,
+  CandidatePosition,
+  PathToVictoryData,
+  User,
+} from 'helpers/types'
 
 const ContentTutorial = dynamic(() => import('./ContentTutorial'), {
   ssr: false,
@@ -54,8 +59,7 @@ const ContentPage = (props: ContentPageProps): React.JSX.Element => {
     setForceOpenModal(true)
   }
   const cookie = getCookie('tutorial-content')
-  const shouldShowTutorial =
-    !cookie && !campaign?.aiContent && !forceOpenModal
+  const shouldShowTutorial = !cookie && !campaign?.aiContent && !forceOpenModal
   return (
     <DashboardLayout {...props}>
       <TitleSection

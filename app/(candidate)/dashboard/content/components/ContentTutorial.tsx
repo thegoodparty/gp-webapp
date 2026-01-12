@@ -96,26 +96,16 @@ const ContentTutorial = ({
     }
   }
   const onBeforeChange = (nextStepIndex: number) => {
-    const stepsInstance = stepsRef.current
-    if (stepsInstance && 'updateStepElement' in stepsInstance) {
-      const updateFn = stepsInstance.updateStepElement
-      if (typeof updateFn === 'function') {
-        updateFn(nextStepIndex)
-      }
-    }
+    stepsRef.current?.updateStepElement(nextStepIndex)
     setTimeout(() => {
-      const stepsInstance = stepsRef.current
-      if (stepsInstance && 'introJs' in stepsInstance) {
-        const intro = stepsInstance.introJs
-        if (intro && typeof intro === 'object' && '_targetElement' in intro) {
-          const targetElement = intro._targetElement
-          if (targetElement instanceof Element) {
-            const backButton = targetElement.querySelector('.introjs-prevbutton')
-            if (backButton instanceof HTMLElement) {
-              backButton.style.display =
-                nextStepIndex === 0 ? 'none' : 'inline-block'
-            }
-          }
+      const intro = stepsRef.current?.introJs
+      if (intro && intro._targetElement) {
+        const backButton = intro._targetElement.querySelector<HTMLElement>(
+          '.introjs-prevbutton',
+        )
+        if (backButton) {
+          backButton.style.display =
+            nextStepIndex === 0 ? 'none' : 'inline-block'
         }
       }
     }, 1)
