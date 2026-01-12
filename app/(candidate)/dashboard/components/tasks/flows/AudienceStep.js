@@ -14,7 +14,7 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
@@ -55,6 +55,13 @@ export default function AudienceStep({
 
   const handleOnNext = async () => {
     setLoading(true)
+
+    if (type === TASK_TYPES.robocall) {
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.Robocall.ScheduleCampaign.Audience
+          .CheckAudience,
+      )
+    }
 
     const voterFileFilter = await onCreateVoterFileFilter()
     const phoneListToken = p2pUxEnabled
@@ -155,7 +162,11 @@ export default function AudienceStep({
         </div>
         <div className="text-left">
           <CustomVoterAudienceFilters
-            trackingKey={TRACKING_KEYS.scheduleCampaign}
+            trackingKey={
+              type === TASK_TYPES.robocall
+                ? undefined
+                : TRACKING_KEYS.scheduleCampaign
+            }
             showAudienceRequest
             audience={audience}
             onChangeCallback={handleChangeAudience}

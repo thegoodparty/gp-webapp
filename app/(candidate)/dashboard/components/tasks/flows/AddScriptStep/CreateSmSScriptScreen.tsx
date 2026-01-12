@@ -4,25 +4,36 @@ import Body1 from '@shared/typography/Body1'
 import TextField from '@shared/inputs/TextField'
 import { ModalFooter } from '@shared/ModalFooter'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { TASK_TYPES } from '../../../../shared/constants/tasks.const'
 
 const MAX_SMS_CHAR_COUNT = 1600
 
 interface CreateSmSScriptScreenProps {
   onNext?: (scriptText: string) => void
   onBack?: () => void
+  flowType?: string
 }
 
 export const CreateSmSScriptScreen = ({
   onNext = () => {},
   onBack = () => {},
+  flowType,
 }: CreateSmSScriptScreenProps): React.JSX.Element => {
   const [scriptText, setScriptText] = useState('')
   const overLimit = scriptText.length > MAX_SMS_CHAR_COUNT
 
   const handleOnNext = () => {
-    trackEvent(
-      EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SubmitAdd,
-    )
+    if (flowType === TASK_TYPES.robocall) {
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.Robocall.ScheduleCampaign.Script
+          .SubmitScript,
+        { scriptType: 'newScript' },
+      )
+    } else {
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SubmitAdd,
+      )
+    }
     onNext(scriptText)
   }
 

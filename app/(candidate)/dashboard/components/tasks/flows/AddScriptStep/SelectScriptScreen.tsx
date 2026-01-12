@@ -4,23 +4,31 @@ import Body1 from '@shared/typography/Body1'
 import { SmsScriptSelect } from './SmsScriptSelect'
 import { ModalFooter } from '@shared/ModalFooter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { TASK_TYPES } from '../../../../shared/constants/tasks.const'
 
 interface SelectScriptScreenProps {
   aiContent?: PrismaJson.CampaignAiContent
   onBack?: () => void
   onNext?: (scriptKey: string | null) => void
+  flowType?: string
 }
 
 export const SelectScriptScreen = ({
   aiContent,
   onBack = () => {},
   onNext = () => {},
+  flowType,
 }: SelectScriptScreenProps): React.JSX.Element => {
   const [smsScript, setSmsScript] = useState<string | null>(null)
   const handleOnNext = () => {
-    trackEvent(
-      EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SelectSaved,
-    )
+    // For robocall, Submit Script tracking happens in GenerateReviewScreen
+    // This screen is just for selection, not final submission
+    if (flowType !== TASK_TYPES.robocall) {
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
+          .SelectSaved,
+      )
+    }
 
     onNext(smsScript)
   }

@@ -209,6 +209,19 @@ export const EVENTS = {
         ClickLogProgress:
           'Dashboard - Voter Contact - Phone Banking: Click Log Progress',
       },
+      Robocall: {
+        ScheduleCampaign: {
+          Audience: {
+            CheckAudience:
+              'Schedule Robocall Campaign - Audience: Check Audience',
+          },
+          Script: {
+            AddScript: 'Schedule Robocall Campaign - Script: Add Script',
+            SubmitScript: 'Schedule Robocall Campaign - Script: Submit Script',
+          },
+          Submit: 'Schedule Robocall Campaign - Script: Schedule Campaign',
+        },
+      },
       YardSigns: {
         ClickGenerateScript:
           'Dashboard - Voter Contact - Yard Signs: Click Generate Script',

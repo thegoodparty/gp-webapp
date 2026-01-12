@@ -25,6 +25,7 @@ export default function AddScriptStep({
   const [aiTemplateKey, setAiTemplateKey] = useState('')
   const [aiScriptKey, setAiScriptKey] = useState('')
   const [contentCategories, setContentCategories] = useState([])
+  const [scriptSource, setScriptSource] = useState('') // 'saved' or 'generated'
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -66,6 +67,7 @@ export default function AddScriptStep({
         onBack={() => onBack()}
         onNext={onNext}
         hasSavedScripts={hasSavedScripts}
+        flowType={type}
       />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS]: (
@@ -74,8 +76,10 @@ export default function AddScriptStep({
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(scriptKey) => {
           setAiScriptKey(scriptKey)
+          setScriptSource('saved')
           onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)
         }}
+        flowType={type}
       />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
@@ -98,6 +102,7 @@ export default function AddScriptStep({
             onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW.SELECT_SMS_AI_TEMPLATE),
           onNext: (aiScriptKey) => {
             setAiScriptKey(aiScriptKey)
+            setScriptSource('generated')
             onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)
           },
         }}
@@ -108,12 +113,15 @@ export default function AddScriptStep({
         aiScriptKey={aiScriptKey}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={onComplete}
+        flowType={type}
+        scriptSource={scriptSource}
       />
     ),
     [ADD_SCRIPT_FLOW.CREATE_SMS]: (
       <CreateSmSScriptScreen
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(scriptText) => onComplete(scriptText)}
+        flowType={type}
       />
     ),
   }

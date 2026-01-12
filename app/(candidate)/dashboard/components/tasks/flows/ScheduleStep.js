@@ -2,7 +2,7 @@
 import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useMemo, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import {
@@ -48,6 +48,11 @@ export default function ScheduleStep({
 
   const handleNext = async () => {
     setIsLoading(true)
+
+    if (type === TASK_TYPES.robocall) {
+      trackEvent(EVENTS.Dashboard.VoterContact.Robocall.ScheduleCampaign.Submit)
+    }
+
     await onScheduleOutreach(await onCreateOutreach())
     setIsLoading(false)
     nextCallback()

@@ -8,6 +8,8 @@ import {
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { TASK_TYPES } from '../../../../shared/constants/tasks.const'
 import dynamic from 'next/dynamic'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
@@ -21,6 +23,8 @@ export const GenerateReviewScreen = ({
   aiScriptKey = '',
   onBack = () => {},
   onNext = (scriptKey, scriptContent) => {},
+  flowType,
+  scriptSource = 'generated', // 'saved' or 'generated'
 }) => {
   const { errorSnackbar } = useSnackbar()
   const [aiContent, setAiContent] = useState({})
@@ -54,6 +58,17 @@ export const GenerateReviewScreen = ({
           value: { ...aiContent, content: scriptContent },
         },
       ])
+
+      if (flowType === TASK_TYPES.robocall) {
+        const scriptType =
+          scriptSource === 'saved' ? 'savedScript' : 'generatedScript'
+        trackEvent(
+          EVENTS.Dashboard.VoterContact.Robocall.ScheduleCampaign.Script
+            .SubmitScript,
+          { scriptType },
+        )
+      }
+
       onNext(aiScriptKey, scriptContent)
     } catch (e) {
       console.error('Error updating campaign with AI content => ', e)

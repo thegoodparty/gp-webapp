@@ -12,7 +12,7 @@ import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { STEPS } from '../../../shared/constants/tasks.const'
+import { STEPS, TASK_TYPES } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -131,9 +131,11 @@ export default function TaskFlow({
   }
 
   const handleCloseConfirm = () => {
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
-      step: stepName,
-    })
+    if (type !== TASK_TYPES.robocall) {
+      trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
+        step: stepName,
+      })
+    }
     setConfirmOpen(false)
     setOpen(false)
     handleReset()
@@ -145,9 +147,11 @@ export default function TaskFlow({
       handleCloseConfirm()
       return
     }
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
-      step: stepName,
-    })
+    if (type !== TASK_TYPES.robocall) {
+      trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
+        step: stepName,
+      })
+    }
     setState((prevState) => ({
       ...prevState,
       step: state.step + 1,
@@ -156,9 +160,11 @@ export default function TaskFlow({
 
   const handleBack = () => {
     if (state.step <= 0) return
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Back, {
-      step: stepName,
-    })
+    if (type !== TASK_TYPES.robocall) {
+      trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Back, {
+        step: stepName,
+      })
+    }
     setState({
       ...state,
       step: state.step - 1,
