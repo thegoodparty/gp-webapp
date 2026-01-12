@@ -3,23 +3,17 @@ import { useState } from 'react'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { voterFileDownload } from 'helpers/voterFileDownload'
-
-interface Campaign {
-  slug: string
-  data: {
-    customVoterFiles?: []
-  }
-}
+import { Campaign } from 'helpers/types'
 
 interface DownloadFileProps {
   type: string
   campaign: Campaign
-  fileName: string
+  fileName: string | undefined
   isCustom: boolean
   index: number
 }
 
-export default function DownloadFile(props: DownloadFileProps): React.JSX.Element {
+const DownloadFile = (props: DownloadFileProps): React.JSX.Element => {
   const [loading, setLoading] = useState(false)
   const { type, campaign, fileName, isCustom, index } = props
 
@@ -29,12 +23,13 @@ export default function DownloadFile(props: DownloadFileProps): React.JSX.Elemen
     }
     trackEvent(EVENTS.VoterData.FileDetail.ClickDownloadCSV, {
       type,
-      file: fileName,
+      file: fileName || '',
     })
     setLoading(true)
 
     const downloadType = isCustom ? 'custom' : type
-    const filters = isCustom ? campaign.data.customVoterFiles?.[index] : undefined
+    const customFiles = campaign.data?.customVoterFiles
+    const filters = isCustom && customFiles ? customFiles[index] : undefined
 
     trackEvent('Download Voter File attempt', { type: downloadType })
     try {
@@ -43,7 +38,7 @@ export default function DownloadFile(props: DownloadFileProps): React.JSX.Elemen
     } catch (error) {
       trackEvent('Download Voter File Failure', {
         type: downloadType,
-        slug: props.campaign.slug,
+        slug: campaign.slug,
       })
     }
     setLoading(false)
@@ -63,3 +58,5 @@ export default function DownloadFile(props: DownloadFileProps): React.JSX.Elemen
     </div>
   )
 }
+
+export default DownloadFile

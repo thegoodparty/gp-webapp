@@ -45,7 +45,6 @@ const reconcileInitialFormState = (user, campaign, website) => {
     placeId: '',
     website: officialDomain ? `https://${officialDomain}` : '',
     email: email || '',
-    matchingContactFields: [],
   }
 }
 

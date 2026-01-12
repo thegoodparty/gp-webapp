@@ -69,8 +69,12 @@ export const NewRelicIdentifier: React.FC = () => {
         void newrelic.start()
         started = true
       }
-      if (user) {
+      const VERSION = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || 'local'
+      newrelic.setApplicationVersion(VERSION)
+      if (user?.id) {
         newrelic.setUserId(user.id.toString())
+      }
+      if (user?.email) {
         newrelic.setCustomAttribute('email', user.email)
       }
       if (campaign) {

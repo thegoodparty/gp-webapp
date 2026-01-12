@@ -7,8 +7,7 @@ import { LuUsersRound } from 'react-icons/lu'
 import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function PollDetails(): React.JSX.Element {
-  const [poll] = usePoll()
-  const { scheduledDate, estimatedCompletionDate } = poll || {}
+  const [{ scheduledDate, estimatedCompletionDate }] = usePoll()
   return (
     <div className="w-full max-w-[600px] bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex gap-2 items-center mb-4">

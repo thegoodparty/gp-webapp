@@ -5,7 +5,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { useState, ReactNode } from 'react'
 
 interface TabsProps {
-  tabLabels?: string[]
+  tabLabels?: ReactNode[]
   tabPanels?: ReactNode[]
   orientation?: 'horizontal' | 'vertical'
   variant?: 'standard' | 'scrollable' | 'fullWidth'
@@ -68,7 +68,7 @@ const Tabs = ({
                 <SecondaryButton
                   variant="text"
                   size={size}
-                  ariaLabel={label}
+                  ariaLabel={typeof label === 'string' ? label : `Tab ${index + 1}`}
                 >
                   <span
                     style={isSelected(index) ? { color } : { color: '#ADB6C8' }}
