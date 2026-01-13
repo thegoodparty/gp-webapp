@@ -3,7 +3,6 @@ import { type Page, test } from "@playwright/test";
 import axios, { type AxiosInstance } from "axios";
 import { uniqBy } from "es-toolkit";
 import { TestDataHelper } from "src/helpers/data.helper";
-import type { TestUser } from "src/helpers/onboarded-user.helper";
 
 const baseURL = process.env.BASE_URL || "http://localhost:4000";
 const apiURL = `${baseURL}/api`;
@@ -14,7 +13,12 @@ export type TestUserOptions = {
 	 * Otherwise, the user will be shared with other tests.
 	 */
 	isolated?: boolean;
-	user?: Partial<Omit<TestUser, "password" | "id" | "zip">>;
+	user?: Partial<{
+		firstName: string;
+		lastName: string;
+		email: string;
+		phone: string;
+	}>;
 	race?: {
 		zip: string;
 		office: string | ((offices: string) => boolean);

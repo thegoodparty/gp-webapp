@@ -5,8 +5,6 @@
 	"main": "index.js",
 	"scripts": {
 		"lint": "biome check --diagnostic-level=error",
-		"test:old": "npx playwright test tests-old/ --project=Local",
-		"test:old:qa": "npx playwright test tests-old/ --project=QA",
 		"test": "npx playwright test tests/ --reporter=list",
 		"test:core": "npx playwright test tests/core/ --reporter=list",
 		"test:app": "npx playwright test tests/app/ --reporter=list",

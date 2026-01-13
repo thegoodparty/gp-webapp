@@ -1,19 +1,16 @@
 import { expect, test } from "@playwright/test";
 import { NavigationHelper } from "src/helpers/navigation.helper";
 import { WaitHelper } from "src/helpers/wait.helper";
+import { authenticateTestUser } from "tests/utils/api-registration";
 
 test.describe("Website Management @experimental", () => {
-	// Explicitly use the authenticated state created by setup
-	test.use({ storageState: "playwright/.auth/user.json" });
-
-	test.beforeEach(async ({ page }) => {
-		await NavigationHelper.navigateToPage(page, "/dashboard/website");
-		await NavigationHelper.dismissOverlays(page);
-	});
-
 	test("should create and publish website through complete flow", async ({
 		page,
 	}) => {
+		await authenticateTestUser(page);
+		await NavigationHelper.navigateToPage(page, "/dashboard/website");
+		await NavigationHelper.dismissOverlays(page);
+
 		await expect(
 			page.getByRole("heading", { name: "Create your free website" }).first(),
 		).toBeVisible();
