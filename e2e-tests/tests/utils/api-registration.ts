@@ -5,7 +5,8 @@ import { uniqBy } from "es-toolkit";
 import { TestDataHelper } from "src/helpers/data.helper";
 
 const baseURL = process.env.BASE_URL || "http://localhost:4000";
-const apiURL = `${baseURL}/api`;
+const apiBaseURL = process.env.API_BASE_URL || baseURL;
+const apiURL = `${apiBaseURL}/api`;
 
 export type TestUserOptions = {
 	/**
