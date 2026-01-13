@@ -1,26 +1,18 @@
 import { expect, test } from "@playwright/test";
+import { authenticateTestUser } from "tests/utils/api-registration";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 import { WaitHelper } from "../../../src/helpers/wait.helper";
 
 test.describe("Dashboard Functionality", () => {
-	test.beforeEach(async ({ page }) => {
-		// Page is already authenticated and fully onboarded via storageState from auth.setup.ts
-		await page.goto("/dashboard");
-		await page.waitForLoadState("domcontentloaded");
-
-		if (!page.url().includes("/dashboard")) {
-			throw new Error(`Expected dashboard but got: ${page.url()}`);
-		}
-
-		await NavigationHelper.dismissOverlays(page);
-	});
-
 	test("should access dashboard and navigate to app features", async ({
 		page,
 	}) => {
 		console.log(
 			`🧪 Testing dashboard functionality with pre-authenticated user`,
 		);
+		await authenticateTestUser(page);
+		await page.goto("/dashboard");
+		await NavigationHelper.dismissOverlays(page);
 
 		await expect(page).toHaveURL(/\/dashboard$/);
 

@@ -1,22 +1,16 @@
 import { expect, test } from "@playwright/test";
-import { WaitHelper } from "src/helpers/wait.helper";
+import { authenticateTestUser } from "tests/utils/api-registration";
 import { NavigationHelper } from "../../../src/helpers/navigation.helper";
 
 test.describe("Resources Functionality", () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto("/dashboard/resources");
-		await WaitHelper.waitForPageReady(page);
-
-		if (!page.url().includes("/dashboard/resources")) {
-			throw new Error(`Expected resources page but got: ${page.url()}`);
-		}
-
-		await NavigationHelper.dismissOverlays(page);
-	});
-
 	test("should display resources page with guides and templates @experimental", async ({
 		page,
 	}) => {
+		await authenticateTestUser(page);
+		await page.goto("/dashboard");
+		await NavigationHelper.dismissOverlays(page);
+		await page.goto("/dashboard/resources");
+
 		await expect(page).toHaveURL(/\/dashboard\/resources$/);
 		await expect(page.getByRole("heading", { name: "Guides" })).toBeVisible();
 		await expect(

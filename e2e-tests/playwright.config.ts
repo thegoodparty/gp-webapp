@@ -21,38 +21,16 @@ export default defineConfig({
 
 	// Setup project for authentication + main testing project
 	projects: [
-		// Setup project - runs first to create authenticated state
-		{
-			name: "setup",
-			testMatch: /.*\.setup\.ts/,
-			teardown: "cleanup",
-		},
-
-		// Cleanup project - runs after all tests to clean up auth user
-		{
-			name: "cleanup",
-			testMatch: /.*\.cleanup\.ts/,
-		},
-
 		// Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
 		{
 			name: "stable",
-			use: {
-				...devices["Desktop Chrome"],
-				storageState: "playwright/.auth/user.json",
-			},
-			dependencies: ["setup"],
+			use: devices["Desktop Chrome"],
 			grep: /^(?!.*@experimental).*$/, // Negative lookahead: exclude @experimental
 		},
-
 		// Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
 		{
 			name: "experimental",
-			use: {
-				...devices["Desktop Chrome"],
-				storageState: "playwright/.auth/user.json",
-			},
-			dependencies: ["setup"],
+			use: devices["Desktop Chrome"],
 			grep: /@experimental/,
 		},
 	],
