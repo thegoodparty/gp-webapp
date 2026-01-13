@@ -2,13 +2,11 @@
 import DashboardLayout from '../../shared/DashboardLayout'
 import ResourceCard from './ResourceCard'
 import { RESOURCES_DATA } from './resourcesData'
+import { Campaign } from 'helpers/types'
 
 interface ResourcesPageProps {
   pathname: string
-  campaign: {
-    id: number
-    slug: string
-  }
+  campaign: Campaign
 }
 
 const ResourcesPage = (props: ResourcesPageProps): React.JSX.Element => {
