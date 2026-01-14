@@ -3,6 +3,7 @@ import { getUserCookie } from 'helpers/cookieHelper'
 import { trackEvent } from 'helpers/analyticsHelper'
 import Script from 'next/script'
 import React, { useEffect } from 'react'
+import { isTestUser } from 'helpers/test-users'
 
 interface UsersnapApi {
   init: (config: {
@@ -57,6 +58,10 @@ export default function UserSnapScript(): React.JSX.Element {
       if (window.__usersnapResolve) {
         window.__usersnapResolve(api)
         window.__usersnapResolve = undefined
+      }
+      // Disable Usersnap for test users -- the pop-ups cause problems in end-to-end tests.
+      if (user && user.email && isTestUser({ email: user.email })) {
+        return
       }
 
       api.init({
