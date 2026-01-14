@@ -1,0 +1,30 @@
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_e4HAh1NYJW4yYc38qx66yTtG
+      VERCEL_PROJECT_ID: prj_4Ef0XA655ylZnQNCIgs0ZARGKLyk
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - run: npm install --global vercel
+
+      - run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
