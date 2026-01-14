@@ -5,7 +5,19 @@ permissions:
   pull-requests: write
 
 jobs:
-  main:
+  valide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
+
+  e2e-tests:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: team_e4HAh1NYJW4yYc38qx66yTtG
