@@ -1,6 +1,6 @@
 import { electionApiRoutes } from 'gpApi/routes'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
-import { Place, Race } from './types'
+import { Place, Race, PlaceChild } from './types'
 
 interface FetchPlaceParams {
   slug: string
@@ -10,10 +10,28 @@ interface FetchPlaceParams {
   placeColumns?: string
 }
 
-interface PlaceResult extends Place {
+interface PlaceParent {
+  name: string
+  slug: string
+  state: string
+  geoId?: string
+}
+
+export interface PlaceResult {
+  slug: string
+  name?: string
+  geoId?: string
+  state?: string
+  cityLargest?: string
+  countyName?: string
+  population?: number
+  density?: number
+  incomeHouseholdMedian?: number
+  unemploymentRate?: number
+  homeValue?: number
   races?: Race[]
-  children?: Place[]
-  parent?: Place
+  children?: PlaceChild[]
+  parent?: PlaceParent
   categorizedChildren?: {
     counties?: Place[]
     districts?: Place[]

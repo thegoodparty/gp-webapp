@@ -8,11 +8,7 @@ import IssuesContainer from './IssuesContainer'
 import SearchContainer from './search/SearchContainer'
 
 import { IssueStatus, IssueChannel } from '@shared/hooks/IssuesProvider'
-
-interface Campaign {
-  id: number
-  slug: string
-}
+import { Campaign } from 'helpers/types'
 
 interface CommunityIssue {
   uuid: string

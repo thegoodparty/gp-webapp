@@ -23,15 +23,15 @@ export default async function Page(): Promise<React.JSX.Element> {
   if (!campaign?.isPro) {
     redirect('/dashboard/upgrade-to-pro')
   }
-  const canDownloadResponse = await fetchCanDownload()
-  const canDownload = canDownloadResponse.canDownload ?? false
 
-  const childProps = {
-    pathname: '/dashboard/voter-records',
-    user,
-    campaign,
-    canDownload,
-  }
-
-  return <VoterRecordsPage {...childProps} />
+  return (
+    <VoterRecordsPage
+      {...{
+        pathname: '/dashboard/voter-records',
+        user,
+        campaign,
+        canDownload: await fetchCanDownload(),
+      }}
+    />
+  )
 }

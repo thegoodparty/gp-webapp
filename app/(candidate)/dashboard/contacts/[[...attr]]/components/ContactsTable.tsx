@@ -2,12 +2,10 @@
 import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { useContacts } from '../hooks/ContactsProvider'
 import ServerDataTable from './ServerDataTable'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { type ColumnDef } from '@tanstack/react-table'
-import { type VisibilityState } from '@tanstack/react-table'
 import { type ReactNode } from 'react'
 
 interface Contact {
@@ -95,6 +93,7 @@ const columns: ColumnDef<Contact>[] = [
   },
   {
     accessorKey: 'gender',
+    enableSorting: false,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Gender" />
     ),
@@ -108,6 +107,7 @@ const columns: ColumnDef<Contact>[] = [
   },
   {
     accessorKey: 'age',
+    enableSorting: false,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Age" />
     ),
@@ -115,6 +115,7 @@ const columns: ColumnDef<Contact>[] = [
   },
   {
     accessorKey: 'address',
+    enableSorting: false,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Address" />
     ),
@@ -127,6 +128,7 @@ const columns: ColumnDef<Contact>[] = [
   },
   {
     accessorKey: 'cellPhone',
+    enableSorting: false,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Cell Phone" />
     ),
@@ -134,26 +136,13 @@ const columns: ColumnDef<Contact>[] = [
   },
   {
     accessorKey: 'landline',
+    enableSorting: false,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Landline" />
     ),
     cell: blurredCell,
   },
 ]
-
-const initialColumnVisibility: VisibilityState = {
-  ethnicityGroup: false,
-  language: false,
-  levelOfEducation: false,
-  maritalStatus: false,
-  estimatedIncomeRange: false,
-  homeowner: false,
-  businessOwner: false,
-  hasChildrenUnder18: false,
-  veteranStatus: false,
-  activeVoter: false,
-  voterStatus: false,
-}
 
 export default function ContactsTable() {
   const [contacts] = useContacts()
@@ -162,12 +151,6 @@ export default function ContactsTable() {
   const { people, pagination } = contacts || {}
   const router = useRouter()
   const searchParams = useSearchParams()
-
-  const onColumnVisibilityChange = (visibility: VisibilityState): void => {
-    trackEvent(EVENTS.Contacts.ColumnEdited, {
-      visibility: JSON.stringify(visibility),
-    })
-  }
 
   const onRowClick = (row: Contact): void => {
     if (!campaign?.isPro) {
@@ -185,8 +168,6 @@ export default function ContactsTable() {
         columns={columns}
         data={people as Contact[] | null | undefined}
         pagination={pagination}
-        onColumnVisibilityChange={onColumnVisibilityChange}
-        initialColumnVisibility={initialColumnVisibility}
         onRowClick={onRowClick}
       />
     </div>

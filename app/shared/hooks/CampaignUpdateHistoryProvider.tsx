@@ -1,17 +1,23 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import {
+  CampaignUpdateHistory,
+  CampaignUpdateHistoryWithUser,
+  CampaignUpdateHistoryType,
+} from '@shared/utils/campaignUpdateHistoryServices'
 
-interface CampaignUpdateHistory {
-  id: string
-  timestamp: string
+export type {
+  CampaignUpdateHistory,
+  CampaignUpdateHistoryWithUser,
+  CampaignUpdateHistoryType,
 }
 
-const INITIAL_UPDATE_HISTORY_STATE: CampaignUpdateHistory[] = []
+const INITIAL_UPDATE_HISTORY_STATE: CampaignUpdateHistoryWithUser[] = []
 
 type CampaignUpdateHistoryContextValue = [
-  state: CampaignUpdateHistory[],
-  updateState: (next: CampaignUpdateHistory[] | ((prev: CampaignUpdateHistory[]) => CampaignUpdateHistory[])) => void
+  state: CampaignUpdateHistoryWithUser[],
+  updateState: (next: CampaignUpdateHistoryWithUser[] | ((prev: CampaignUpdateHistoryWithUser[]) => CampaignUpdateHistoryWithUser[])) => void
 ]
 
 export const CampaignUpdateHistoryContext = createContext<CampaignUpdateHistoryContextValue>([
@@ -24,11 +30,11 @@ interface CampaignUpdateHistoryProviderProps {
 }
 
 export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistoryProviderProps): React.JSX.Element => {
-  const [state, setState] = useState<CampaignUpdateHistory[]>(INITIAL_UPDATE_HISTORY_STATE)
+  const [state, setState] = useState<CampaignUpdateHistoryWithUser[]>(INITIAL_UPDATE_HISTORY_STATE)
 
   const loadHistory = async () => {
     try {
-      const resp = await clientFetch<CampaignUpdateHistory[]>(
+      const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
         apiRoutes.campaign.updateHistory.list,
         undefined,
         { revalidate: 3 },
@@ -45,7 +51,7 @@ export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistor
   }, [])
 
   const updateState = useCallback(
-    (next: CampaignUpdateHistory[] | ((prev: CampaignUpdateHistory[]) => CampaignUpdateHistory[])) => {
+    (next: CampaignUpdateHistoryWithUser[] | ((prev: CampaignUpdateHistoryWithUser[]) => CampaignUpdateHistoryWithUser[])) => {
       const newValues = typeof next === 'function' ? next(state) : next
       setState(newValues)
     },

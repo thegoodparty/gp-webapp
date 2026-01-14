@@ -4,15 +4,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { CompleteProSignUpAlert } from './CompleteProSignUpAlert'
 import { PendingProSubscriptionAlert } from './PendingProSignUpAlert'
 import { DemoAccountWarningAlert } from '../shared/DemoAccountWarningAlert'
-
-interface CampaignDetails {
-  subscriptionId?: string
-}
-
-interface Campaign {
-  isPro?: boolean
-  details?: CampaignDetails
-}
+import { Campaign } from 'helpers/types'
 
 interface AlertSectionProps {
   campaign: Campaign
