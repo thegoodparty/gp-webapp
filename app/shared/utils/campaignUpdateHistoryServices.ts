@@ -1,9 +1,8 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { getUserFullName } from '@shared/utils/getUserFullName'
 import { User } from 'helpers/types'
 
-type CampaignUpdateHistoryType =
+export type CampaignUpdateHistoryType =
   | 'doorKnocking'
   | 'calls'
   | 'digital'
@@ -16,7 +15,7 @@ type CampaignUpdateHistoryType =
   | 'phoneBanking'
   | 'socialMedia'
 
-interface CampaignUpdateHistory {
+export interface CampaignUpdateHistory {
   id: number
   createdAt: string
   updatedAt: string
@@ -26,15 +25,16 @@ interface CampaignUpdateHistory {
   quantity: number
 }
 
-interface CampaignUpdateHistoryWithUser extends CampaignUpdateHistory {
+export interface CampaignUpdateHistoryWithUser extends CampaignUpdateHistory {
   user: {
     id: number
-    name: string
+    firstName?: string
+    lastName?: string
     avatar?: string
   }
 }
 
-type CreateCampaignUpdateHistoryPayload = {
+export type CreateCampaignUpdateHistoryPayload = {
   type: CampaignUpdateHistoryType
   quantity: number
 }
@@ -63,7 +63,8 @@ export const createIrresponsiblyMassagedHistoryItem = (
   ...historyItem,
   user: {
     id: user.id,
-    name: getUserFullName(user),
+    firstName: user.firstName ?? undefined,
+    lastName: user.lastName ?? undefined,
     ...(user.avatar ? { avatar: user.avatar } : {}),
   },
 })

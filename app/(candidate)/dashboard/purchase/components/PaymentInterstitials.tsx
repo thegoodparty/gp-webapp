@@ -1,12 +1,12 @@
 import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { PURCHASE_STATE } from 'helpers/purchaseTypes'
+import { PURCHASE_STATE, PurchaseType, PurchaseState } from 'helpers/purchaseTypes'
 import LoadingAnimationModal from '@shared/utils/LoadingAnimationModal'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 import PurchaseSuccess from 'app/(candidate)/dashboard/purchase/components/PurchaseSuccess'
 
 interface PaymentInterstitialsProps {
-  type: string
-  purchaseState: string
+  type: PurchaseType
+  purchaseState: PurchaseState
   returnUrl: string
 }
 

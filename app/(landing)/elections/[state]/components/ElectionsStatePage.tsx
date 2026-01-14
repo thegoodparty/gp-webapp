@@ -39,7 +39,7 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
 
     return (
       <div className="bg-indigo-50 pb-20">
-        <Hero state={state} county={null} color1="#3EE996" color2="#31D3C8" level="state" municipality={null} parent={null} />
+        <Hero state={state} county={undefined} color1="#3EE996" color2="#31D3C8" level="state" municipality={undefined} parent={undefined} />
   
         <MaxWidth>
           <RacesSection races={races} />

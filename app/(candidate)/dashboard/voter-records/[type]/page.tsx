@@ -5,7 +5,10 @@ import { getServerUser } from 'helpers/userServerHelper'
 import { redirect } from 'next/navigation'
 import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/components/VoterFileDetailPage'
 import { fetchContentByType } from 'helpers/fetchHelper'
-import { setRequiresQuestionsOnTemplates, RequiresQuestionsMap } from 'helpers/setRequiresQuestionsOnTemplates'
+import {
+  setRequiresQuestionsOnTemplates,
+  RequiresQuestionsMap,
+} from 'helpers/setRequiresQuestionsOnTemplates'
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
 import { fetchCanDownload } from '../utils'
@@ -20,19 +23,17 @@ interface PageParams {
   params: Promise<{ type: string }>
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element> {
   const { type } = await params
   await candidateAccess()
 
   const user = await getServerUser() // can be removed when door knocking app is not for admins only
   const campaign = await fetchUserCampaign()
-  const canDownloadResponse = await fetchCanDownload()
-  const canDownload = canDownloadResponse.canDownload ?? false
-  if (!canDownload) {
-    redirect('/dashboard')
-  }
+  const canDownload = await fetchCanDownload()
 
-  if (!campaign) {
+  if (!campaign || !canDownload) {
     redirect('/dashboard')
   }
 
@@ -40,7 +41,7 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
-    candidatePositions,
+    candidatePositions || null,
   )
 
   const hasCompletedQuestions = answeredQuestions >= totalQuestions
@@ -56,10 +57,14 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
   }
 
   const requiresQuestions: RequiresQuestionsMap = !hasCompletedQuestions
-    ? (await fetchContentByType<RequiresQuestionsMap>('contentPromptsQuestions')) || {}
+    ? (await fetchContentByType<RequiresQuestionsMap>(
+        'contentPromptsQuestions',
+      )) || {}
     : {}
 
-  const categoriesData = await fetchContentByType<AiContentCategories>('aiContentCategories')
+  const categoriesData = await fetchContentByType<AiContentCategories>(
+    'aiContentCategories',
+  )
   const categories = categoriesData?.content?.map((category) => ({
     ...category,
     templates: setRequiresQuestionsOnTemplates(
