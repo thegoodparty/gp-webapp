@@ -156,6 +156,7 @@ export default function CustomOfficeForm({
       ...state,
       positionId: null,
       electionId: null,
+      ballotOffice: null,
       electionDate: state.electionDate,
     }
     onSave(updated)

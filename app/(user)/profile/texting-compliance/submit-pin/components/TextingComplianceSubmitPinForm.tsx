@@ -7,7 +7,7 @@ import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/share
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-interface PinFormData {
+export type PinFormData = Partial<Record<string, string | number | boolean>> & {
   pin: string
 }
 

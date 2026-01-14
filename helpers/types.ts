@@ -129,6 +129,7 @@ export interface CampaignDetails {
   normalizedOffice?: string | null
   otherOffice?: string
   office?: string
+  ballotOffice?: boolean | null
   party?: string
   otherParty?: string
   district?: string

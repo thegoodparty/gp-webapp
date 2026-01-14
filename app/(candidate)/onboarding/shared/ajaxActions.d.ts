@@ -2,8 +2,8 @@ import { Campaign } from 'helpers/types'
 
 export function updateCampaign(
   attr:
-    | { key: string; value: string | number | boolean | object | null }[]
-    | { key: string; value: string | number | boolean | object | null },
+    | { key: string; value: string | number | boolean | object | null | undefined }[]
+    | { key: string; value: string | number | boolean | object | null | undefined },
   slug?: string
 ): Promise<Campaign | false>
 

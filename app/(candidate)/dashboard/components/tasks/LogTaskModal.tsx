@@ -57,6 +57,10 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
   }
 
   const handleSubmit = async () => {
+    if (!user) {
+      throw new Error('User is required')
+    }
+
     let newAddition = parseInt(value || '0', 10)
 
     const nextGoals = {
@@ -85,9 +89,6 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
       quantity: newAddition,
     })
 
-    if (!user) {
-      throw new Error('User is required')
-    }
     setUpdateHistory([
       ...updateHistoryItems,
       createIrresponsiblyMassagedHistoryItem(newHistoryItem, user),
