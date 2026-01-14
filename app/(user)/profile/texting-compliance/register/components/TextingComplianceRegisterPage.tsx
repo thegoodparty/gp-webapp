@@ -17,7 +17,6 @@ interface RegistrationFormData {
   placeId: string
   website: string
   email: string
-  [key: string]: string | number | boolean | object
 }
 import { FormDataProvider } from '@shared/hooks/useFormData'
 import { useState } from 'react'
@@ -57,7 +56,7 @@ const reconcileInitialFormState = (
   const { email, phone } = user
   const { details: campaignDetails } = campaign
   const { einNumber: ein, campaignCommittee } = campaignDetails || {}
-  
+
   // Use the official purchased domain instead of manual input
   const officialDomain = website?.domain?.name || ''
 
@@ -91,13 +90,13 @@ export default function TextingComplianceRegisterPage({ user, campaign, website 
     setLoading(true)
     try {
       await createTcrCompliance(formData)
-      
+
       // Track 10 DLC compliance status change to Pending
       trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {
         email: user.email,
         dlcComplianceStatus: 'Pending',
       })
-      
+
       successSnackbar('Successfully registered for compliance')
       router.push('/profile')
     } catch {

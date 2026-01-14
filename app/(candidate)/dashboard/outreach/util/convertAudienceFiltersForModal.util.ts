@@ -25,10 +25,10 @@ export const convertAudienceFiltersForModal = (
   filters: VoterFileFilters = {}
 ): AudienceFiltersState => {
   const result: AudienceFiltersState = {}
-  for (const k of Object.keys(filters) as (keyof VoterFileFilters)[]) {
-    if (isConvertibleFilterKey(k)) {
-      const convertedKey = VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING[k]
-      const value = filters[k]
+  for (const key of Object.keys(filters)) {
+    if (isConvertibleFilterKey(key)) {
+      const convertedKey = VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING[key]
+      const value = filters[key]
       if (convertedKey && typeof value === 'boolean') {
         result[convertedKey] = value
       }

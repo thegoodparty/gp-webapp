@@ -7,12 +7,12 @@ import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/share
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export interface PinFormData extends Record<string, string | number | boolean> {
+interface PinFormData {
   pin: string
 }
 
 interface ValidationResult {
-  validations: Record<string, string>
+  validations: Partial<Record<string, string>>
   isValid: boolean
 }
 
@@ -35,15 +35,15 @@ export const TextingComplianceSubmitPinForm = ({
   loading = false,
   error = null,
 }: TextingComplianceSubmitPinFormProps): React.JSX.Element => {
-  const { formData, handleChange } = useFormData<PinFormData>()
-  const pin = formData.pin
-  const { isValid } = validatePinForm({ pin: pin || '' })
+  const { formData, handleChange } = useFormData()
+  const pin = typeof formData.pin === 'string' ? formData.pin : ''
+  const { isValid } = validatePinForm({ pin })
 
   const handleSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted, {
       source: 'compliance_flow'
     })
-    return onSubmit({ pin: pin || '' })
+    return onSubmit({ pin })
   }
 
   return (
