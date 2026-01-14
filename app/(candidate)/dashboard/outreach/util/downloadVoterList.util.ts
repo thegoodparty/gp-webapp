@@ -1,24 +1,8 @@
 import { voterFileDownload } from 'helpers/voterFileDownload'
-
-interface VoterFileFilter {
-  audienceSuperVoters?: boolean
-  audienceLikelyVoters?: boolean
-  audienceUnreliableVoters?: boolean
-  audienceUnlikelyVoters?: boolean
-  audienceFirstTimeVoters?: boolean
-  partyIndependent?: boolean
-  partyDemocrat?: boolean
-  partyRepublican?: boolean
-  age18_25?: boolean
-  age25_35?: boolean
-  age35_50?: boolean
-  age50Plus?: boolean
-  genderMale?: boolean
-  genderFemale?: boolean
-}
+import { VoterFileFilters } from 'helpers/types'
 
 interface DownloadVoterListParams {
-  voterFileFilter?: VoterFileFilter
+  voterFileFilter?: VoterFileFilters
   outreachType?: string
 }
 

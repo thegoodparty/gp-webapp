@@ -16,8 +16,8 @@ export const BOARD_COLUMNS = {
   COMPLETED: 'completed',
 } as const
 
-type IssueStatus = typeof ISSUE_STATUSES[keyof typeof ISSUE_STATUSES]
-type BoardColumn = typeof BOARD_COLUMNS[keyof typeof BOARD_COLUMNS]
+export type IssueStatus = typeof ISSUE_STATUSES[keyof typeof ISSUE_STATUSES]
+export type BoardColumn = typeof BOARD_COLUMNS[keyof typeof BOARD_COLUMNS]
 
 export const COLUMN_TO_STATUS_MAP: Record<BoardColumn, IssueStatus> = {
   [BOARD_COLUMNS.ACCEPTED]: ISSUE_STATUSES.ACCEPTED,

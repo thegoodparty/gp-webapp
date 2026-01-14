@@ -210,6 +210,7 @@ export interface HubSpotUpdates {
   opponents?: string
 }
 
+// VoterFileFilters - Just the filter fields (for forms and partial data)
 export interface VoterFileFilters {
   audienceSuperVoters?: boolean
   audienceLikelyVoters?: boolean
@@ -268,6 +269,15 @@ export interface VoterFileFilters {
   homeownerNo?: boolean
   homeownerUnknown?: boolean
   voterCount?: number
+}
+
+// VoterFileFilter - Full Prisma model (for API responses with DB fields)
+export interface VoterFileFilter extends VoterFileFilters {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  name?: string | null
+  campaignId: number | string
 }
 
 export interface CustomVoterFile {

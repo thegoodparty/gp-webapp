@@ -7,7 +7,7 @@ import PurchaseSuccess from 'app/(candidate)/dashboard/purchase/components/Purch
 interface PaymentInterstitialsProps {
   type: PurchaseType
   purchaseState: PurchaseState
-  returnUrl: string
+  returnUrl?: string
 }
 
 export const PaymentInterstitials = ({

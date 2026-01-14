@@ -1,11 +1,8 @@
 import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 import { faker } from '@faker-js/faker'
+import { VoterFileFilter } from 'helpers/types'
 
-interface VoterFileFilter {
-  id: number
-  createdAt: string
-  updatedAt: string
-  name: string
+interface MockVoterFileFilter extends VoterFileFilter {
   audienceSuperVoters: boolean
   audienceLikelyVoters: boolean
   audienceUnreliableVoters: boolean
@@ -21,7 +18,6 @@ interface VoterFileFilter {
   genderMale: boolean
   genderFemale: boolean
   voterCount: number
-  campaignId: string | number
 }
 
 interface Outreach {
@@ -39,14 +35,14 @@ interface Outreach {
   message: string
   date: string
   imageUrl: string
-  voterFileFilter: VoterFileFilter
+  voterFileFilter: MockVoterFileFilter
 }
 
 export const createOutreach = (campaignId: string | number): Outreach => {
   const outreachTypes = Object.keys(OUTREACH_TYPE_MAPPING)
   const outreachType = faker.helpers.arrayElement(outreachTypes)
   const now = faker.date.recent()
-  const voterFileFilter: VoterFileFilter = {
+  const voterFileFilter: MockVoterFileFilter = {
     id: faker.number.int({ min: 100, max: 999 }),
     createdAt: faker.date.past().toISOString(),
     updatedAt: faker.date.recent().toISOString(),

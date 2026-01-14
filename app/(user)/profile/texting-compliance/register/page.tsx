@@ -32,6 +32,11 @@ const Page = async (): Promise<React.JSX.Element> => {
     redirect('/dashboard/website/domain')
   }
 
+  // Redirect if user is not available
+  if (!user) {
+    redirect('/login')
+  }
+
   return (
     <TextingComplianceRegisterPage
       {...{

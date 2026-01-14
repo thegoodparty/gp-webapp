@@ -1,23 +1,20 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { VoterFileFilters } from 'helpers/types'
 
-interface VoterFileFilter {
-  name?: string
-  [key: string]: unknown
-}
+export type PhoneListInput = VoterFileFilters & { name?: string }
 
 interface PhoneListResponse {
-  phoneListToken: string
-  [key: string]: unknown
+  token: string
 }
 
 interface PhoneListStatusResponse {
-  status: string
-  [key: string]: unknown
+  phoneListId: number
+  leadsLoaded: number
 }
 
 export const createP2pPhoneList = async (
-  voterFileFilter: VoterFileFilter | undefined,
+  voterFileFilter: PhoneListInput | undefined,
 ): Promise<PhoneListResponse | false> => {
   try {
     if (!voterFileFilter) {
