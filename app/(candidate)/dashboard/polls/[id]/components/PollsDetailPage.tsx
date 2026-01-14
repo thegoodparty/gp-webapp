@@ -9,8 +9,6 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePoll } from '../../shared/hooks/PollProvider'
 import { waitForUsersnap } from '@shared/scripts/UserSnapScript'
 import { PollStatus } from '../../shared/poll-types'
-import { useUser } from '@shared/hooks/useUser'
-import { isTestUser } from 'helpers/test-users'
 
 const showSurvey = async () => {
   try {
@@ -24,19 +22,14 @@ const showSurvey = async () => {
 export default function PollsDetailPage({ pathname }: { pathname: string }) {
   const [poll] = usePoll()
   const [campaign] = useCampaign()
-  const [user] = useUser()
 
   const pollStatus = poll.status
   useEffect(() => {
     trackEvent(EVENTS.polls.resultsViewed, { status: pollStatus })
-    if (
-      pollStatus === PollStatus.COMPLETED &&
-      // Don't show survey for test users -- the pop-up causes problems in end-to-end tests.
-      !isTestUser({ email: user?.email || '' })
-    ) {
+    if (pollStatus === PollStatus.COMPLETED) {
       showSurvey()
     }
-  }, [pollStatus, user?.email])
+  }, [pollStatus])
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
