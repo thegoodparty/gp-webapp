@@ -7,9 +7,14 @@ export const isProductRoute = (pathname: string | null | undefined): boolean => 
 
   const isProfilePath = pathname?.startsWith('/profile')
   const isServePath = pathname?.startsWith('/polls')
+  const isAuthPath = pathname === '/login' || pathname === '/sign-up'
 
   return Boolean(
-    isOnboardingPath || isDashboardPath || isProfilePath || isServePath,
+    isOnboardingPath ||
+      isDashboardPath ||
+      isProfilePath ||
+      isServePath ||
+      isAuthPath,
   )
 }
 
