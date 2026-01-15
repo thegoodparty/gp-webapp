@@ -5,16 +5,53 @@ import { useCampaign } from './hooks/useCampaign'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { isProductRoute } from './utils/isProductRoute'
-import type { Init } from '@newrelic/browser-agent/src/common/config/init-types.js'
+import type { AgentOptions } from '@newrelic/browser-agent/src/loaders/agent.js'
 import { IS_LOCAL } from 'appEnv'
 
-declare global {
-  interface Window {
-    newrelic?: BrowserAgent
-  }
-}
+let agent: BrowserAgent | undefined = undefined
+let started = false
 
-const DISABLED_FEATURES: (keyof Init)[] = [
+/**
+ * This object is copied from the newrelic Application Settings screen.
+ */
+const options: AgentOptions = {
+  info: {
+    beacon: 'bam.nr-data.net',
+    errorBeacon: 'bam.nr-data.net',
+    licenseKey: 'NRJS-f5250be4de5180494b6',
+    applicationID: '1120481134',
+    sa: 1,
+  },
+  loader_config: {
+    accountID: '7128335',
+    trustKey: '7128335',
+    agentID: '1120481134',
+    licenseKey: 'NRJS-f5250be4de5180494b6',
+    applicationID: '1120481134',
+  },
+  init: {
+    session_replay: {
+      enabled: true,
+      block_selector: '',
+      mask_text_selector: '*',
+      sampling_rate: 100.0,
+      error_sampling_rate: 100.0,
+      mask_all_inputs: true,
+      collect_fonts: true,
+      inline_images: false,
+      fix_stylesheets: true,
+      preload: false,
+      mask_input_options: {},
+    },
+    distributed_tracing: { enabled: true },
+    performance: { capture_measures: true },
+    browser_consent_mode: { enabled: false },
+    privacy: { cookies_enabled: true },
+    ajax: { deny_list: ['bam.nr-data.net'] },
+  },
+} satisfies AgentOptions
+
+const DISABLED_FEATURES = [
   'ajax',
   'jserrors',
   'metrics',
@@ -25,10 +62,15 @@ const DISABLED_FEATURES: (keyof Init)[] = [
   'session_trace',
   'spa',
   'logging',
-]
+] as const
 
-let agent: BrowserAgent | undefined = undefined
-let started = false
+for (const feature of DISABLED_FEATURES) {
+  if (options.init![feature]) {
+    options.init![feature].autoStart = false
+  } else {
+    options.init![feature] = { autoStart: false }
+  }
+}
 
 const getNewRelic = async () => {
   if (agent) {
@@ -36,15 +78,7 @@ const getNewRelic = async () => {
   }
   const { BrowserAgent: Agent } = await import('@newrelic/browser-agent')
 
-  agent = new Agent({
-    info: {
-      licenseKey: 'NRJS-f5250be4de5180494b6',
-      applicationID: '1120481134',
-    },
-    init: Object.fromEntries(
-      DISABLED_FEATURES.map((feature) => [feature, { autoStart: false }]),
-    ),
-  })
+  agent = new Agent(options)
 
   return agent
 }
