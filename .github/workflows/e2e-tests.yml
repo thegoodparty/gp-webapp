@@ -67,9 +67,15 @@ jobs:
       actions: read
       contents: read
       pull-requests: write
+      id-token: write
     env:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     steps:
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::333022194791:role/web-app-e2e-tests
+          aws-region: us-west-2
+
       - name: Debug deployment info
         run: |
           echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
@@ -252,9 +258,15 @@ jobs:
       actions: read
       contents: read
       pull-requests: write
+      id-token: write
     env:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     steps:
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::333022194791:role/web-app-e2e-tests
+          aws-region: us-west-2
+
       - name: Debug deployment info
         run: |
           echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
