@@ -7,7 +7,7 @@ interface VoterFileFilter {
 }
 
 interface PhoneListResponse {
-  phoneListToken: string
+  token: string
   [key: string]: unknown
 }
 

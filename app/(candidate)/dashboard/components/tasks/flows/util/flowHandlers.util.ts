@@ -231,7 +231,7 @@ export const handleCreatePhoneList =
   (errorSnackbar: (message: string) => void = noop) =>
   async (voterFileFilter: { name?: string } | undefined): Promise<string | undefined> => {
     const result = await createP2pPhoneList(voterFileFilter)
-    const phoneListToken = result ? result.phoneListToken : undefined
+    const phoneListToken = result ? result.token : undefined
 
     if (!phoneListToken) {
       errorSnackbar(
