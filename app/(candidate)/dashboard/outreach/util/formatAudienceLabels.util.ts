@@ -1,21 +1,5 @@
 import { AUDIENCE_LABELS_MAPPING, AudienceLabelKey } from 'app/(candidate)/dashboard/outreach/constants'
-
-interface AudienceFilters {
-  audienceSuperVoters?: boolean
-  audienceLikelyVoters?: boolean
-  audienceUnreliableVoters?: boolean
-  audienceUnlikelyVoters?: boolean
-  audienceFirstTimeVoters?: boolean
-  partyIndependent?: boolean
-  partyDemocrat?: boolean
-  partyRepublican?: boolean
-  age18_25?: boolean
-  age25_35?: boolean
-  age35_50?: boolean
-  age50Plus?: boolean
-  genderMale?: boolean
-  genderFemale?: boolean
-}
+import { VoterFileFilters } from 'helpers/types'
 
 const AUDIENCE_KEYS: AudienceLabelKey[] = [
   'audienceSuperVoters',
@@ -49,8 +33,8 @@ export const formatAudienceLabels = ({
   age50Plus,
   genderMale,
   genderFemale,
-}: AudienceFilters = {}): string[] => {
-  const filtersFields: AudienceFilters = {
+}: VoterFileFilters = {}): string[] => {
+  const filtersFields: VoterFileFilters = {
     audienceSuperVoters,
     audienceLikelyVoters,
     audienceUnreliableVoters,

@@ -1,10 +1,7 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch, ApiResponse } from 'gpApi/clientFetch'
 
-interface PurchaseIntentResponse {
-  clientSecret: string
-  paymentIntentId: string
-}
+import { PurchaseIntentResponse } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 
 interface CompletePurchaseResponse {
   success: boolean

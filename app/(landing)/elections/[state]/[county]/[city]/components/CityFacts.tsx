@@ -3,7 +3,7 @@ import { MdOutlineWorkOff } from 'react-icons/md'
 import { SlWallet } from 'react-icons/sl'
 import { TbHomeShare } from 'react-icons/tb'
 import { numberFormatter } from 'helpers/numberHelper'
-import { City } from 'app/(landing)/elections/shared/types'
+import { City, County } from 'app/(landing)/elections/shared/types'
 
 interface CityField {
   label: string
@@ -16,6 +16,7 @@ interface CityField {
 
 interface CityFactsProps {
   city: City
+  county?: County
 }
 
 const CityFacts = ({ city }: CityFactsProps): React.JSX.Element | null => {

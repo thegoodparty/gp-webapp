@@ -20,7 +20,7 @@ export enum IssueChannel {
   other = 'other',
 }
 
-interface Issue {
+export interface Issue {
   uuid: string
   createdAt: Date | string
   updatedAt: Date | string

@@ -4,12 +4,13 @@ import Modal from '@shared/utils/Modal'
 import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'
 import PaymentForm from '../../editor/components/PaymentForm'
+import { StripeError } from '@stripe/stripe-js'
 
 interface DomainPurchaseModalProps {
   open: boolean
   onClose: () => void
   onSuccess: () => void
-  onError: (error: Error) => void
+  onError: (error: StripeError) => void
   domainName: string
   price: number
   clientSecret: string

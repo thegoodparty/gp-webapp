@@ -3,9 +3,9 @@ import CandidatesPage from './components/CandidatesPage'
 import { numberFormatter } from 'helpers/numberHelper'
 import { SearchParams } from 'next/dist/server/request/search-params'
 
-const WINNER_COUNT = 3444
+export const WINNER_COUNT = 3444
 
-export async function generateMetadata() {
+export const generateMetadata = async () => {
   const title = `${numberFormatter(
     WINNER_COUNT,
   )} Wins by Independents across the U.S. 🎉`
@@ -23,7 +23,7 @@ interface PageProps {
   searchParams: SearchParams
 }
 
-export default async function Page({ searchParams }: PageProps) {
+const Page = async ({ searchParams }: PageProps): Promise<React.JSX.Element> => {
   const childProps = {
     count: WINNER_COUNT,
     searchParams,
@@ -32,3 +32,5 @@ export default async function Page({ searchParams }: PageProps) {
   }
   return <CandidatesPage {...childProps} />
 }
+
+export default Page

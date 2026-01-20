@@ -8,7 +8,7 @@ interface ResetPasswordFormProps {
   confirmPassword: string
   isValid: boolean
   isMatch: boolean
-  onPasswordChange: (value: string) => void
+  onPasswordChange: (value: string, isValid: boolean) => void
   onConfirmPasswordChange: (value: string) => void
   onSubmit: (e: React.FormEvent) => void
 }

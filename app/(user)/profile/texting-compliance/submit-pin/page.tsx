@@ -7,8 +7,12 @@ import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
-const fetchTcrCompliance = async () => {
-  const response = await serverFetch(apiRoutes.campaign.tcrCompliance.fetch)
+interface TcrComplianceData {
+  id: number
+}
+
+const fetchTcrCompliance = async (): Promise<TcrComplianceData> => {
+  const response = await serverFetch<TcrComplianceData>(apiRoutes.campaign.tcrCompliance.fetch)
   if (!response.ok) {
     throw new Error('Failed to fetch TCR Compliance data')
   }

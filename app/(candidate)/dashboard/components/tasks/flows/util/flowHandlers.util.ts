@@ -2,9 +2,10 @@ import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCa
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { createP2pPhoneList } from 'helpers/createP2pPhoneList'
+import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
 import { noop } from '@shared/utils/noop'
 import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+import { VoterFileFilters } from 'helpers/types'
 
 const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
@@ -12,6 +13,8 @@ interface Outreach {
   id: string
 }
 
+// AudienceState uses underscore keys for frontend form state (CustomVoterAudienceFilters)
+// This differs from VoterFileFilters which uses camelCase for API persistence
 interface AudienceState {
   audience_request?: string
   count?: number
@@ -71,23 +74,24 @@ interface CreateVoterFileFilterParams {
   errorSnackbar?: (message: string) => void
 }
 
-interface MappedAudience {
-  audienceSuperVoters?: boolean
-  audienceLikelyVoters?: boolean
-  audienceUnreliableVoters?: boolean
-  audienceUnlikelyVoters?: boolean
-  audienceFirstTimeVoters?: boolean
-  partyIndependent?: boolean
-  partyDemocrat?: boolean
-  partyRepublican?: boolean
-  age18_25?: boolean
-  age25_35?: boolean
-  age35_50?: boolean
-  age50Plus?: boolean
-  genderMale?: boolean
-  genderFemale?: boolean
-  genderUnknown?: boolean
-}
+// MappedAudience is the subset of VoterFileFilters used for audience mapping
+type MappedAudience = Pick<VoterFileFilters,
+  | 'audienceSuperVoters'
+  | 'audienceLikelyVoters'
+  | 'audienceUnreliableVoters'
+  | 'audienceUnlikelyVoters'
+  | 'audienceFirstTimeVoters'
+  | 'partyIndependent'
+  | 'partyDemocrat'
+  | 'partyRepublican'
+  | 'age18_25'
+  | 'age25_35'
+  | 'age35_50'
+  | 'age50Plus'
+  | 'genderMale'
+  | 'genderFemale'
+  | 'genderUnknown'
+>
 
 type MappedAudienceKey = keyof MappedAudience
 
@@ -229,7 +233,7 @@ export const mapAudienceForPersistence = ({
 
 export const handleCreatePhoneList =
   (errorSnackbar: (message: string) => void = noop) =>
-  async (voterFileFilter: { name?: string } | undefined): Promise<string | undefined> => {
+  async (voterFileFilter: PhoneListInput | undefined): Promise<string | undefined> => {
     const result = await createP2pPhoneList(voterFileFilter)
     const phoneListToken = result ? result.token : undefined
 

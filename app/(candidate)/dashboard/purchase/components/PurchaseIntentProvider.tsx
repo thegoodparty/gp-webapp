@@ -12,9 +12,11 @@ import { createPurchaseIntent } from 'app/(candidate)/dashboard/purchase/utils/p
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { reportErrorToNewRelic } from '@shared/new-relic'
 
-interface PurchaseIntentResponse {
+export interface PurchaseIntentResponse {
   clientSecret: string
   paymentIntentId: string
+  amount?: number
+  status?: string
 }
 
 interface PurchaseIntentContextValue {
