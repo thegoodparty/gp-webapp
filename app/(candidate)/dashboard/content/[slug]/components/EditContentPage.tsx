@@ -14,12 +14,17 @@ interface EditContentPageProps {
   campaign: Campaign | null
 }
 
-export default function EditContentPage({ slug, campaign }: EditContentPageProps): React.JSX.Element {
+const EditContentPage = ({
+  slug,
+  campaign,
+}: EditContentPageProps): React.JSX.Element => {
   const section = kebabToCamel(slug)
   const subSectionKey = 'aiContent'
 
   const versions = useVersions()
-  const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(false)
+  const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(
+    false,
+  )
 
   const updateVersionsCallback = async () => {
     const fetchedVersions: Versions = await fetchCampaignVersions()
@@ -45,3 +50,5 @@ export default function EditContentPage({ slug, campaign }: EditContentPageProps
     </>
   )
 }
+
+export default EditContentPage

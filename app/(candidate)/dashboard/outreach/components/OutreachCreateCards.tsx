@@ -32,7 +32,13 @@ interface FlowModalTask {
   flowType: string
 }
 
-type OutreachType = 'text' | 'p2p' | 'robocall' | 'doorKnocking' | 'phoneBanking' | 'socialMedia'
+type OutreachType =
+  | 'text'
+  | 'p2p'
+  | 'robocall'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
 
 interface OutreachOption {
   title: string
@@ -79,7 +85,9 @@ export const OUTREACH_OPTIONS: OutreachOption[] = [
   },
 ]
 
-export default function OutreachCreateCards({ tcrCompliance }: OutreachCreateCardsProps) {
+const OutreachCreateCards = ({
+  tcrCompliance,
+}: OutreachCreateCardsProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [campaign] = useCampaign()
   const { isPro, hasFreeTextsOffer } = campaign || {}
@@ -205,3 +213,5 @@ export default function OutreachCreateCards({ tcrCompliance }: OutreachCreateCar
     </div>
   )
 }
+
+export default OutreachCreateCards
