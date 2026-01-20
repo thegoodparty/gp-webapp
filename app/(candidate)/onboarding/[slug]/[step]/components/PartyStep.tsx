@@ -139,7 +139,7 @@ const invalidOptions = [
   'republican activist',
 ]
 
-export default function PartyStep({ campaign, step }: PartyStepProps) {
+const PartyStep = ({ campaign, step }: PartyStepProps): React.JSX.Element => {
   const router = useRouter()
   const [user] = useUser()
   const [state, setState] = useState<PartyState>({
@@ -191,8 +191,7 @@ export default function PartyStep({ campaign, step }: PartyStepProps) {
       })
       return
     }
-    // @ts-expect-error - Original JS code checks function reference, not return value (pre-existing bug)
-    if (canSubmit) {
+    if (canSubmit()) {
       const currentStep = onboardingStep(campaign, step)
       const attr = [{ key: 'data.currentStep', value: currentStep }]
       if (state.otherParty === '') {
@@ -288,3 +287,5 @@ export default function PartyStep({ campaign, step }: PartyStepProps) {
     </form>
   )
 }
+
+export default PartyStep
