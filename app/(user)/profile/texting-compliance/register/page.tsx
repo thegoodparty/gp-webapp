@@ -17,11 +17,11 @@ export const metadata = meta
 const Page = async (): Promise<React.JSX.Element> => {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
-  
+
   if (!campaign || !campaign.isPro) {
     redirect('/dashboard/upgrade-to-pro')
   }
-  
+
   const [user, website] = await Promise.all([
     getServerUser(),
     fetchUserWebsite(),
@@ -32,15 +32,10 @@ const Page = async (): Promise<React.JSX.Element> => {
     redirect('/dashboard/website/domain')
   }
 
-  // Redirect if user is not available
-  if (!user) {
-    redirect('/login')
-  }
-
   return (
     <TextingComplianceRegisterPage
       {...{
-        user,
+        user: user!,
         campaign,
         website,
       }}
@@ -49,5 +44,3 @@ const Page = async (): Promise<React.JSX.Element> => {
 }
 
 export default Page
-
-
