@@ -6,36 +6,35 @@ interface ValidationResult {
   isValid: boolean
 }
 
-interface FormDataContextValue<T> {
-  formData: T
-  handleChange: (change: Partial<T>) => void
+type FormDataValue = string | number | boolean | object | null
+export type FormDataState = Partial<Record<string, FormDataValue>>
+
+interface FormDataContextValue {
+  formData: FormDataState
+  handleChange: (change: FormDataState) => void
   isValid: ValidationResult
 }
 
-interface FormDataProviderProps<T> {
+interface FormDataProviderProps {
   children: React.ReactNode
-  initialState?: T
-  validator?: (data: T) => ValidationResult
+  initialState?: FormDataState
+  validator?: (data: FormDataState) => ValidationResult
 }
 
-const FormDataContext = createContext<{
-  formData: Partial<Record<string, string | number | boolean>>
-  handleChange: (change: Partial<Record<string, string | number | boolean>>) => void
-  isValid: ValidationResult
-} | null>(null)
+const FormDataContext = createContext<FormDataContextValue | null>(null)
 
-export const FormDataProvider = <T extends Partial<Record<string, string | number | boolean>>>({
+export const FormDataProvider = ({
   children,
-  initialState = {} as T,
+  initialState = {},
   validator = () => ({
     validations: {},
     isValid: true,
   }),
-}: FormDataProviderProps<T>): React.JSX.Element => {
-  const [formData, setFormData] = useState<T>(initialState)
+}: FormDataProviderProps): React.JSX.Element => {
+  const [formData, setFormData] = useState<FormDataState>(initialState)
   const [isValid, setIsValid] = useState(validator(initialState))
 
-  const handleChange = (change: Partial<T>) => {
+  const handleChange = (change: FormDataState) => {
     const newFormData = { ...formData, ...change }
     const newIsValid = validator(newFormData)
     setFormData(newFormData)
@@ -43,21 +42,17 @@ export const FormDataProvider = <T extends Partial<Record<string, string | numbe
   }
 
   return (
-    <FormDataContext.Provider value={{ formData: formData as Partial<Record<string, string | number | boolean>>, handleChange: handleChange as (change: Partial<Record<string, string | number | boolean>>) => void, isValid }}>
+    <FormDataContext.Provider value={{ formData, handleChange, isValid }}>
       {children}
     </FormDataContext.Provider>
   )
 }
 
-export const useFormData = <T extends Partial<Record<string, string | number | boolean>>>(): FormDataContextValue<T> => {
+export const useFormData = (): FormDataContextValue => {
   const context = useContext(FormDataContext)
   if (!context) {
     throw new Error('useFormData must be used within a FormDataProvider')
   }
-  return {
-    formData: context.formData as T,
-    handleChange: context.handleChange as (change: Partial<T>) => void,
-    isValid: context.isValid,
-  }
+  return context
 }
 

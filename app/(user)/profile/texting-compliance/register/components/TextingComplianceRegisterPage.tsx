@@ -18,7 +18,7 @@ interface RegistrationFormData {
   website: string
   email: string
 }
-import { FormDataProvider } from '@shared/hooks/useFormData'
+import { FormDataProvider, FormDataState } from '@shared/hooks/useFormData'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
@@ -79,8 +79,14 @@ interface TextingComplianceRegisterPageProps {
   website: WebsiteWithDomain | null | undefined
 }
 
-export default function TextingComplianceRegisterPage({ user, campaign, website }: TextingComplianceRegisterPageProps): React.JSX.Element {
-  const initialFormState = reconcileInitialFormState(user, campaign, website)
+const TextingComplianceRegisterPage = ({
+  user,
+  campaign,
+  website,
+}: TextingComplianceRegisterPageProps): React.JSX.Element => {
+  const initialFormState: FormDataState = {
+    ...reconcileInitialFormState(user, campaign, website),
+  }
   const [loading, setLoading] = useState(false)
   const [hasSubmissionError, setHasSubmissionError] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
@@ -134,3 +140,5 @@ export default function TextingComplianceRegisterPage({ user, campaign, website 
     </div>
   )
 }
+
+export default TextingComplianceRegisterPage

@@ -1,5 +1,5 @@
 'use client'
-import { useFormData } from '@shared/hooks/useFormData'
+import { FormDataState, useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
 import isEmpty from 'validator/es/lib/isEmpty'
 import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
@@ -7,7 +7,7 @@ import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/share
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export type PinFormData = Partial<Record<string, string | number | boolean>> & {
+export type PinFormData = FormDataState & {
   pin: string
 }
 
@@ -16,8 +16,9 @@ interface ValidationResult {
   isValid: boolean
 }
 
-export const validatePinForm = (data: PinFormData): ValidationResult => {
-  const { pin } = data
+export const validatePinForm = (data: FormDataState): ValidationResult => {
+  const pinValue = data.pin
+  const pin = typeof pinValue === 'string' ? pinValue : ''
   return {
     validations: {},
     isValid: !isEmpty(pin) && pin.length === 6,

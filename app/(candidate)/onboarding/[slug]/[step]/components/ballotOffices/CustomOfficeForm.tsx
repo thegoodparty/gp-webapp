@@ -14,7 +14,13 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useUser } from '@shared/hooks/useUser'
 import { Campaign } from 'helpers/types'
 
-type FormFieldKey = 'office' | 'state' | 'city' | 'district' | 'officeTermLength' | 'electionDate'
+type FormFieldKey =
+  | 'office'
+  | 'state'
+  | 'city'
+  | 'district'
+  | 'officeTermLength'
+  | 'electionDate'
 
 interface FormField {
   key: FormFieldKey
@@ -37,7 +43,7 @@ const fields: FormField[] = [
     required: true,
     placeholder: 'Other',
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -47,7 +53,7 @@ const fields: FormField[] = [
     options: [...flatStates],
     required: true,
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -56,7 +62,7 @@ const fields: FormField[] = [
     type: 'text',
     required: true,
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -65,7 +71,7 @@ const fields: FormField[] = [
     type: 'text',
     placeholder: '2',
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -75,7 +81,7 @@ const fields: FormField[] = [
     required: true,
     options: ['Select', '2 years', '3 years', '4 years', '6 years'],
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -86,7 +92,7 @@ const fields: FormField[] = [
     noPastDates: true,
     placeholder: '10/28/2025',
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
 ]
@@ -99,6 +105,7 @@ interface CustomOfficeFormState {
   district: string
   city: string
   electionDate: string
+  ballotOffice: boolean
 }
 
 interface CustomOfficeFormProps {
@@ -120,6 +127,7 @@ export default function CustomOfficeForm({
     district: campaign.details?.district || '',
     city: campaign.details?.city || '',
     electionDate: campaign.details?.electionDate || '',
+    ballotOffice: campaign.details?.ballotOffice || false,
   })
   const [user] = useUser()
   const now = new Date()
