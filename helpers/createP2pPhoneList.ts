@@ -6,10 +6,6 @@ export type PhoneListInput = VoterFileFilters & { name?: string }
 
 interface PhoneListResponse {
   token: string
-  // <<<<<<< HEAD
-  // =======
-  //   [key: string]: unknown
-  // >>>>>>> origin/develop
 }
 
 interface PhoneListStatusResponse {
