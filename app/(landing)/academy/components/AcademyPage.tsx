@@ -13,19 +13,21 @@ const content = {
     'Discover over three free video sessions how you can run for office and make a real impact in your community.',
   hero2Desc:
     'A 3-week course designed to guide you through every step of running for public office. Leave with the knowledge and skills to make a clear-headed decision about a run',
+  formId: '46116311-525b-42a2-b88e-d2ab86f26b8a',
+  ctaRedirect: true,
 }
 
-export default function AcademyPage(): React.JSX.Element {
-  return (
-    <AcademySignUpModalProvider>
-      <AcademySignUpModal />
-      <Hero content={content} />
-      <Hero2 content={content} />
-      <WhyAcademy />
-      <Experts />
-      <Sessions />
-      <Graduates content={{}} />
-      <GraduateSpotlight />
-    </AcademySignUpModalProvider>
-  )
-}
+const AcademyPage = (): React.JSX.Element => (
+  <AcademySignUpModalProvider>
+    <AcademySignUpModal />
+    <Hero content={content} />
+    <Hero2 content={content} />
+    <WhyAcademy content={content} />
+    <Experts content={content} />
+    <Sessions />
+    <Graduates content={content} />
+    <GraduateSpotlight content={content} />
+  </AcademySignUpModalProvider>
+)
+
+export default AcademyPage

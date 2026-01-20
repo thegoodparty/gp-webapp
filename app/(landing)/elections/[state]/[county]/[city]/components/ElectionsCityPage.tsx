@@ -1,11 +1,11 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
+import { isStateAbbreviation, shortToLongState } from 'helpers/statesHelper'
 import CityFacts from './CityFacts'
 import RacesSection from 'app/(landing)/elections/shared/RacesSection'
 import LearnToRun from 'app/(landing)/elections/shared/LearnToRun'
 import Guides from 'app/(landing)/elections/shared/Guides'
 import Hero from '../../../../shared/Hero'
-import { Race, Article, City, County, Parent, Municipality } from 'app/(landing)/elections/shared/types'
+import { Article, City, County, Municipality, Parent, Race } from 'app/(landing)/elections/shared/types'
 
 interface ElectionsCityPageProps {
   state: string
@@ -16,11 +16,12 @@ interface ElectionsCityPageProps {
   parent?: Parent
 }
 
-export default function ElectionsCountyPage(props: ElectionsCityPageProps): React.JSX.Element {
+const ElectionsCountyPage = (props: ElectionsCityPageProps): React.JSX.Element => {
   const { state, municipality, races, articles, county, parent } = props
   const upperState = state.toUpperCase()
-  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : upperState
-
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : undefined
   const municipalityWithState: Municipality = {
     name: municipality.name,
     slug: municipality.slug,
@@ -42,10 +43,12 @@ export default function ElectionsCountyPage(props: ElectionsCityPageProps): Reac
         <RacesSection races={races} />
       </MaxWidth>
 
-      <CityFacts city={municipality} />
+      <CityFacts city={municipality} county={county} />
 
       <LearnToRun stateName={stateName} />
       <Guides articles={articles} />
     </div>
   )
 }
+
+export default ElectionsCountyPage
