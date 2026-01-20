@@ -2,7 +2,7 @@
 import { createContext, useContext, useState } from 'react'
 
 interface ValidationResult {
-  validations: Partial<Record<string, string>>
+  validations: Partial<Record<string, string | boolean | null>>
   isValid: boolean
 }
 

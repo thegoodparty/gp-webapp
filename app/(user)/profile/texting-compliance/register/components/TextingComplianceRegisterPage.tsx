@@ -6,15 +6,13 @@ import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
 
-// Form data type that matches what the form produces
 interface RegistrationFormData {
   electionFilingLink: string
   campaignCommitteeName: string
   officeLevel: string
   ein: string
   phone: string
-  address: { formatted_address: string; place_id?: string }
-  placeId: string
+  address: { formatted_address: string; place_id: string }
   website: string
   email: string
 }
@@ -29,8 +27,16 @@ import { trackEvent } from 'helpers/analyticsHelper'
 import { EVENTS } from 'helpers/analyticsHelper'
 import { User, Campaign, Website } from 'helpers/types'
 
+type RegistrationValidationResult = {
+  validations: Partial<Record<string, string | boolean | null>>
+  isValid: boolean
+}
+
+const validateRegistrationFormTyped: (
+  data: FormDataState,
+) => RegistrationValidationResult = validateRegistrationForm
+
 const createTcrCompliance = async (formData: RegistrationFormData) => {
-  // @ts-ignore - formData shape matches what mapFormData expects at runtime
   const mappedData = mapFormData(formData)
   const response = await clientFetch(apiRoutes.campaign.tcrCompliance.create, {
     ...mappedData,
@@ -66,8 +72,7 @@ const reconcileInitialFormState = (
     officeLevel: '',
     ein: ein || '',
     phone: phone || '',
-    address: { formatted_address: '' },
-    placeId: '',
+    address: { formatted_address: '', place_id: '' },
     website: officialDomain ? `https://${officialDomain}` : '',
     email: email || '',
   }
@@ -125,8 +130,7 @@ const TextingComplianceRegisterPage = ({
 
         <FormDataProvider
           initialState={initialFormState}
-          // @ts-ignore - JS validator returns different shape than expected
-          validator={validateRegistrationForm}
+      validator={validateRegistrationFormTyped}
         >
           <TextingComplianceRegistrationForm
             {...{
