@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { isProductRoute } from './utils/isProductRoute'
 import type { AgentOptions } from '@newrelic/browser-agent/src/loaders/agent.js'
 import { IS_LOCAL } from 'appEnv'
+import { getUserCookie } from 'helpers/cookieHelper'
 
 let agent: BrowserAgent | undefined = undefined
 let started = false
@@ -32,8 +33,6 @@ const options: AgentOptions = {
   init: {
     session_replay: {
       enabled: true,
-      block_selector: '',
-      mask_text_selector: '*',
       sampling_rate: 100.0,
       error_sampling_rate: 100.0,
       mask_all_inputs: true,
@@ -41,7 +40,6 @@ const options: AgentOptions = {
       inline_images: false,
       fix_stylesheets: true,
       preload: false,
-      mask_input_options: {},
     },
     distributed_tracing: { enabled: true },
     performance: { capture_measures: true },
@@ -97,6 +95,10 @@ export const NewRelicIdentifier: React.FC = () => {
   const [user] = useUser()
   const [campaign] = useCampaign()
 
+  const cookieUser = getUserCookie(true)
+  const userId = user?.id ?? cookieUser?.id
+  const email = user?.email ?? cookieUser?.email
+
   useEffect(() => {
     void getNewRelic().then((newrelic) => {
       if (!IS_LOCAL && isProductRoute(pathname) && !started) {
@@ -105,17 +107,17 @@ export const NewRelicIdentifier: React.FC = () => {
       }
       const VERSION = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || 'local'
       newrelic.setApplicationVersion(VERSION)
-      if (user?.id) {
-        newrelic.setUserId(user.id.toString())
+      if (userId) {
+        newrelic.setUserId(userId.toString())
       }
-      if (user?.email) {
-        newrelic.setCustomAttribute('email', user.email)
+      if (email) {
+        newrelic.setCustomAttribute('email', email)
       }
       if (campaign) {
         newrelic.setCustomAttribute('campaignSlug', campaign.slug)
       }
     })
-  }, [pathname, user, campaign])
+  }, [pathname, userId, email, campaign])
 
   return null
 }
