@@ -50,7 +50,7 @@ const AddScriptStep = ({
           .flatMap((category) => category.templates || [])
           .find((template) => template.id === defaultAiTemplateId)
 
-        setAiTemplateKey(template!.key)
+        setAiTemplateKey(template ? template.key : '')
       } else {
         setAiTemplateKey('')
       }

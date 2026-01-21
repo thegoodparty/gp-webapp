@@ -154,7 +154,7 @@ interface Params {
 
 interface PageProps {
   params: Promise<Params>
-  searchParams: SearchParams
+  searchParams: Promise<SearchParams>
 }
 
 const Page = async ({
@@ -162,7 +162,7 @@ const Page = async ({
   searchParams,
 }: PageProps): Promise<React.JSX.Element> => {
   await candidateAccess()
-  const { page, pageSize, segment, query } = searchParams
+  const { page, pageSize, segment, query } = await searchParams
   const { attr } = await params
   const segmentValue = Array.isArray(segment) ? segment.join(',') : segment
   const queryValue = Array.isArray(query) ? query.join(',') : query

@@ -43,7 +43,7 @@ const DashboardPage = ({
   const [primaryResultState, setPrimaryResultState] = useState<PrimaryResultState>({
     modalOpen: false,
     modalDismissed: false,
-    primaryResult: campaignProp!.details?.primaryResult,
+    primaryResult: campaignProp?.details?.primaryResult,
   })
 
   const officeName =
@@ -101,13 +101,17 @@ const DashboardPage = ({
       }))
 
       //update local campaign object
-      setCampaign((campaign) => ({
-        ...campaign!,
-        details: {
-          ...campaign!.details,
-          primaryResult: selectedResult,
-        },
-      }))
+      setCampaign((campaign) =>
+        campaign
+          ? {
+              ...campaign,
+              details: {
+                ...campaign.details,
+                primaryResult: selectedResult,
+              },
+            }
+          : campaign,
+      )
     } else {
       // user pressed Cancel to dismiss modal for now
       setPrimaryResultState({

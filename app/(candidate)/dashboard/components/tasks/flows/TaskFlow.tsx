@@ -106,15 +106,10 @@ const TaskFlow = ({
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo<string[] | undefined>(
-    getFlowStepsByType(type, p2pUxEnabled),
-    [
-    type,
-    p2pUxEnabled,
-    ],
-  )
-  const stepName = stepList![state.step]
-  const isLastStep = state.step >= stepList!.length - 1
+  const stepList =
+    useMemo(getFlowStepsByType(type, p2pUxEnabled), [type, p2pUxEnabled]) || []
+  const stepName = stepList[state.step]
+  const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [, updateVoterContacts] = useVoterContacts()

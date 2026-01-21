@@ -44,7 +44,7 @@ const TasksList = ({
   tcrCompliance,
 }: TasksListProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
-  const [tasks, setTasks] = useState<Task[] | undefined>(tasksProp)
+  const [tasks, setTasks] = useState<Task[]>(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
@@ -138,15 +138,14 @@ const TasksList = ({
     if (resp.ok) {
       const updatedTask = resp.data
       setTasks((currentTasks) => {
-        const taskIndex = currentTasks!.findIndex((task) => task.id === taskId)
+        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
         if (taskIndex !== -1) {
-          currentTasks!.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks!]
-        } else {
-          // Shouldn't happen
-          console.error('Completed task not found')
-          return undefined
+          currentTasks.splice(taskIndex, 1, updatedTask)
+          return [...currentTasks]
         }
+        // Shouldn't happen
+        console.error('Completed task not found')
+        return currentTasks
       })
     } else {
       errorSnackbar('Failed to complete task')
@@ -163,8 +162,8 @@ const TasksList = ({
         </Body2>
 
         <ul className="p-0 mt-4">
-          {tasks!.length > 0 ? (
-            tasks!.map((task) => (
+          {tasks.length > 0 ? (
+            tasks.map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}

@@ -38,7 +38,7 @@ export const getSmsScriptSelectOptions = (
       arr.push({ key, name, updatedAt })
     }
   }
-  return arr.sort((a, b) => b.updatedAt! - a.updatedAt!)
+  return arr.sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
 }
 
 interface SmsScriptSelectProps {
