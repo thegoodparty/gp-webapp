@@ -7,7 +7,7 @@ export type ContactStatsBucket = {
   count: number
   percent: number
 }
-export type ContactStatsCategory = { buckets: ContactStatsBucket[] }
+export type ContactStatsCategory = ContactStatsBucket[]
 
 export type ContactsStats = {
   districtId: string

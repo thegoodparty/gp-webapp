@@ -22,9 +22,9 @@ const parseIncomeMin = (label: string): number => {
 const getMedianIncomeRange = (
   category?: ContactStatsCategory,
 ): string | null => {
-  if (!category?.buckets?.length) return null
+  if (!category?.length) return null
 
-  const sorted = category.buckets
+  const sorted = category
     .filter((b) => b.label !== 'Unknown' && b.percent > 0)
     .sort((a, b) => parseIncomeMin(a.label) - parseIncomeMin(b.label))
 
@@ -47,8 +47,8 @@ const getMedianIncomeRange = (
 }
 
 const getPercentForYes = (category: ContactStatsCategory): number | null => {
-  const yes = category.buckets.find((b) => b.label === 'Yes')
-  return yes?.percent ? Math.round(yes.percent * 100) : null
+  const yes = category?.find((b) => b.label === 'Yes')
+  return yes?.percent ? yes.percent : null
 }
 
 export const getContactStatsRendered = (
