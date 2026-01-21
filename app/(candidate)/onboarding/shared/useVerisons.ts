@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { fetchCampaignVersions } from '../../onboarding/shared/ajaxActions'
 
-export default function useVersions(): Record<string, string | number | boolean | object | null> {
-  const [versions, setVersions] = useState<Record<string, string | number | boolean | object | null>>({})
+export default function useVersions(): Partial<Record<string, string | number | boolean | object | null>> {
+  const [versions, setVersions] = useState<Partial<Record<string, string | number | boolean | object | null>>>({})
 
   useEffect(() => {
     loadVersions()
@@ -10,7 +10,7 @@ export default function useVersions(): Record<string, string | number | boolean 
 
   const loadVersions = async (): Promise<void> => {
     const versions = await fetchCampaignVersions()
-    setVersions(versions as Record<string, string | number | boolean | object | null>)
+    setVersions(versions)
   }
 
   return versions

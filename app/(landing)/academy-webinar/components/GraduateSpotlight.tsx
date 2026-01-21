@@ -15,6 +15,13 @@ interface Graduate {
   link: string
 }
 
+interface AcademyContent {
+  heroDesc: string
+  hero2Desc: string
+  formId: string
+  ctaRedirect: boolean
+}
+
 const graduates: Graduate[] = [
   {
     name: 'Carlos Rousselin',
@@ -39,9 +46,13 @@ const graduates: Graduate[] = [
 interface GraduateSpotlightProps {
   title?: React.ReactNode
   cta?: React.ReactNode
+  content?: AcademyContent
 }
 
-export default function GraduateSpotlight({ title, cta }: GraduateSpotlightProps): React.JSX.Element {
+const GraduateSpotlight = ({
+  title,
+  cta,
+}: GraduateSpotlightProps): React.JSX.Element => {
   const header = title ? (
     title
   ) : (
@@ -92,3 +103,5 @@ export default function GraduateSpotlight({ title, cta }: GraduateSpotlightProps
     </section>
   )
 }
+
+export default GraduateSpotlight

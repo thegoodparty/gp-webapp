@@ -1,6 +1,7 @@
-// TODO: Refactor this later once we can finally kill the old modal:
-//  https://goodparty.atlassian.net/browse/WEB-4277
-const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Record<string, string> = {
+import { AudienceFiltersState, AudienceFilterKey } from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
+import { VoterFileFilters } from 'helpers/types'
+
+const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<Record<keyof VoterFileFilters, AudienceFilterKey>> = {
   audienceSuperVoters: 'audience_superVoters',
   audienceLikelyVoters: 'audience_likelyVoters',
   audienceUnreliableVoters: 'audience_unreliableVoters',
@@ -17,11 +18,21 @@ const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Record<string, string> = {
   genderFemale: 'gender_female',
 }
 
-export const convertAudienceFiltersForModal = (filters: Record<string, boolean> = {}): Record<string, boolean> =>
-  Object.keys(filters).reduce((acc, k) => {
-    const convertedKey = VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING[k] || k
-    return {
-      ...acc,
-      [convertedKey]: filters[k],
+const isConvertibleFilterKey = (key: string): key is keyof typeof VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING =>
+  key in VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING
+
+export const convertAudienceFiltersForModal = (
+  filters: VoterFileFilters = {}
+): AudienceFiltersState => {
+  const result: AudienceFiltersState = {}
+  for (const key of Object.keys(filters)) {
+    if (isConvertibleFilterKey(key)) {
+      const convertedKey = VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING[key]
+      const value = filters[key]
+      if (convertedKey && typeof value === 'boolean') {
+        result[convertedKey] = value
+      }
     }
-  }, {})
+  }
+  return result
+}

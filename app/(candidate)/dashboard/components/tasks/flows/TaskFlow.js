@@ -56,7 +56,10 @@ const DEFAULT_STATE = {
  * @property {string} type
  * @property {React.ReactElement} [customButton] Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
- * @property {boolean} isCustom
+ * @property {boolean} [isCustom]
+ * @property {boolean} [forceOpen]
+ * @property {function} [onClose]
+ * @property {string} [defaultAiTemplateId]
  */
 
 /**

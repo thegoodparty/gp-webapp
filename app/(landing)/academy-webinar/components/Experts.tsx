@@ -12,6 +12,17 @@ interface Expert {
   img: StaticImageData
 }
 
+interface AcademyContent {
+  heroDesc: string
+  hero2Desc: string
+  formId: string
+  ctaRedirect: boolean
+}
+
+interface ExpertsProps {
+  content?: AcademyContent
+}
+
 const experts: Expert[] = [
   {
     name: 'Jared Alper',
@@ -27,38 +38,35 @@ const experts: Expert[] = [
   },
 ]
 
-export default function Experts(): React.JSX.Element {
-  return (
-    <>
-      <div className="bg-primary-dark text-white text-center pt-20 lg:pt-44">
-        <MaxWidth>
-          <MarketingH2>Our campaigning experts</MarketingH2>
-          <div className="pt-24 grid grid-cols-12 gap-5 lg:gap-12">
-            {experts.map((expert) => (
-              <div
-                className="col-span-12 md:col-span-6 h-full"
-                key={expert.name}
-              >
-                <div className="rounded-xl overflow-hidden relative bg-primary-dark-dark mx-8 h-full">
-                  <Image
-                    src={expert.img}
-                    alt={expert.name}
-                    className="object-contain"
-                  />
-                  <div className="p-10">
-                    <h3 className="text-5xl">{expert.name}</h3>
-                    <h4 className="text-3xl mt-6">{expert.role}</h4>
-                    <Body1 className="mt-8 text-slate-200 text-left">
-                      {expert.desc}
-                    </Body1>
-                  </div>
+const Experts = (_props: ExpertsProps): React.JSX.Element => (
+  <>
+    <div className="bg-primary-dark text-white text-center pt-20 lg:pt-44">
+      <MaxWidth>
+        <MarketingH2>Our campaigning experts</MarketingH2>
+        <div className="pt-24 grid grid-cols-12 gap-5 lg:gap-12">
+          {experts.map((expert) => (
+            <div className="col-span-12 md:col-span-6 h-full" key={expert.name}>
+              <div className="rounded-xl overflow-hidden relative bg-primary-dark-dark mx-8 h-full">
+                <Image
+                  src={expert.img}
+                  alt={expert.name}
+                  className="object-contain"
+                />
+                <div className="p-10">
+                  <h3 className="text-5xl">{expert.name}</h3>
+                  <h4 className="text-3xl mt-6">{expert.role}</h4>
+                  <Body1 className="mt-8 text-slate-200 text-left">
+                    {expert.desc}
+                  </Body1>
                 </div>
               </div>
-            ))}
-          </div>
-        </MaxWidth>
-      </div>
-      <div className="bg-[linear-gradient(176deg,_#0D1528_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
-    </>
-  )
-}
+            </div>
+          ))}
+        </div>
+      </MaxWidth>
+    </div>
+    <div className="bg-[linear-gradient(176deg,_#0D1528_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
+  </>
+)
+
+export default Experts
