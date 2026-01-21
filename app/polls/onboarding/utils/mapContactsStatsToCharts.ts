@@ -44,7 +44,7 @@ export const mapContactsStatsToCharts = (
     }))
 
   const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
-    const buckets = categories.estimatedIncomeRange.buckets
+    const buckets = categories.estimatedIncomeRange
     const consolidated = {
       'Under $50K': 0,
       '$50K - $75K': 0,
@@ -82,10 +82,10 @@ export const mapContactsStatsToCharts = (
 
   return {
     totalConstituents: contactsStats.totalConstituents,
-    ageDistribution: toChartData(categories.age.buckets),
-    presenceOfChildren: toChartData(categories.presenceOfChildren.buckets),
-    homeowner: toChartData(categories.homeowner.buckets),
+    ageDistribution: toChartData(categories.age),
+    presenceOfChildren: toChartData(categories.presenceOfChildren),
+    homeowner: toChartData(categories.homeowner),
     estimatedIncomeRange: mapEstimatedIncomeRange(),
-    education: toChartData(categories.education.buckets),
+    education: toChartData(categories.education),
   }
 }
