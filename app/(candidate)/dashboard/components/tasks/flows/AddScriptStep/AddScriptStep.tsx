@@ -108,7 +108,8 @@ const AddScriptStep = ({
         {...{
           campaign,
           aiTemplateKey,
-          onBack: () => onBack(),
+          onBack: () =>
+            onBack(ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE),
           onNext: (aiScriptKey) => {
             setAiScriptKey(aiScriptKey)
             onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)

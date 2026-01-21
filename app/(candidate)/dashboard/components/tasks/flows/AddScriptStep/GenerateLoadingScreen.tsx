@@ -30,9 +30,9 @@ export const GenerateLoadingScreen = ({
     AI_CONTENT_SUB_SECTION_KEY,
   )
   const { errorSnackbar } = useSnackbar()
-  const [generateTimeoutId, setGenerateTimeoutId] = useState<
-    ReturnType<typeof setTimeout> | null
-  >(null)
+  const [generateTimeoutId, setGenerateTimeoutId] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const [waiting, setWaiting] = useState(false)
 
   const fireError = () => {
@@ -57,7 +57,7 @@ export const GenerateLoadingScreen = ({
       AI_CONTENT_SUB_SECTION_KEY,
     )
 
-    setCampaign(campaign === false ? null : campaign)
+    setCampaign(campaign ? campaign : null)
     if (jobsProcessing) {
       return debounce(() => generateContentPolling(aiScriptKey), 1000 * 3)
     } else {

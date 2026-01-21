@@ -26,6 +26,15 @@ interface FetchSearchedContactsParams {
   query?: string | string[]
 }
 
+interface SearchContactsPayload {
+  page: number
+  resultsPerPage: number
+  name?: string
+  firstName?: string
+  lastName?: string
+  phone?: string
+}
+
 type PersonData = ComponentProps<typeof PersonProvider>['person']
 
 const fetchFilteredContacts = async ({
@@ -64,7 +73,8 @@ const fetchSearchedContacts = async ({
   resultsPerPage = DEFAULT_PAGE_SIZE,
   query = '',
 }: FetchSearchedContactsParams): Promise<ListContactsResponse> => {
-  const payload: Record<string, string | number> = {
+  const payload: SearchContactsPayload &
+    Partial<Record<string, string | number>> = {
     page,
     resultsPerPage,
   }

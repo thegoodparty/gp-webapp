@@ -321,12 +321,13 @@ export interface AiContentData {
 }
 
 export interface CampaignAiContent {
-  generationStatus?: Record<string, string>
-  campaignPlanAttempts?: Record<string, number>
+  generationStatus?: Partial<Record<string, { status?: string }>>
+  campaignPlanAttempts?: Partial<Record<string, number>>
   [key: string]:
     | AiContentData
     | Partial<Record<string, string>>
     | Partial<Record<string, number>>
+    | Partial<Record<string, { status?: string }>>
     | undefined
 }
 

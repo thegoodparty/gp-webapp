@@ -6,9 +6,12 @@ enum GenerationStatus {
   completed = 'completed',
 }
 
-type AiContentInputValues = Record<
-  string,
-  string | boolean | number | undefined
+type AiContentInputValues = Partial<
+  Record<string, string | boolean | number | undefined>
+>
+
+type AiContentChat = Partial<
+  Record<string, string | boolean | number | undefined>
 >
 
 type AiContentData = {
@@ -25,8 +28,8 @@ interface GenerateAIContentResponse {
 
 export const generateAIContent = async (
   key: string,
-  chat?: string | Record<string, unknown>,
-  inputValues: Record<string, unknown> = {},
+  chat?: string | AiContentChat,
+  inputValues: AiContentInputValues = {},
 ): Promise<GenerateAIContentResponse | false> => {
   try {
     const resp = await clientFetch<GenerateAIContentResponse>(
