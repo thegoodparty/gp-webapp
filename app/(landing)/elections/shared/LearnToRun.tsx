@@ -39,7 +39,7 @@ const graduates: Graduate[] = [
 ]
 
 interface LearnToRunProps {
-  stateName: string
+  stateName: string | undefined
 }
 
 const LearnToRun = ({ stateName }: LearnToRunProps): React.JSX.Element => {

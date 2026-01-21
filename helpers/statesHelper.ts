@@ -60,7 +60,7 @@ export function isStateAbbreviation(
   return flatStates.includes(value)
 }
 
-interface State {
+export interface State {
   name: string
   abbreviation: StateAbbreviation
 }

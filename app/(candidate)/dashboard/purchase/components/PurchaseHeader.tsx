@@ -15,8 +15,7 @@ export const PurchaseHeader = ({
   children = null,
 }: PurchaseHeaderProps): React.JSX.Element => {
   const { purchaseIntent } = usePurchaseIntent()
-  const amount =
-    (purchaseIntent as { amount?: number } | null)?.amount || 0
+  const amount = purchaseIntent?.amount || 0
   return (
     <div className="bg-gray-50 p-4 rounded-lg mt-6 mb-8">
       {label && <H2>{label}</H2>}

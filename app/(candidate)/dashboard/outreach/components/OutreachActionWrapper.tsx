@@ -3,7 +3,7 @@ import React from 'react'
 interface OutreachActionWrapperProps {
   children: React.ReactNode
   className?: string
-  [key: string]: string | number | boolean | React.ReactNode | undefined
+  onClick?: () => void
 }
 
 export const OutreachActionWrapper = ({

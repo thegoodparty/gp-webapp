@@ -8,7 +8,7 @@ import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/com
 
 interface ComplianceModalProps {
   open: boolean
-  tcrComplianceStatus: string
+  tcrComplianceStatus?: string
   onClose: () => void
 }
 

@@ -2,6 +2,8 @@ import Label from './Label'
 import IssuesForm from './IssuesForm'
 import H2 from '@shared/typography/H2'
 import dynamic from 'next/dynamic'
+import { WebsiteIssue } from 'helpers/types'
+
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
   loading: () => (
@@ -11,10 +13,10 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
 
 interface AboutStepProps {
   initialBio?: string
-  initialIssues?: []
-  issues?: []
+  initialIssues?: WebsiteIssue[]
+  issues?: WebsiteIssue[]
   onBioChange: (content: string) => void
-  onIssuesChange: (issues: []) => void
+  onIssuesChange: (issues: WebsiteIssue[]) => void
   noHeading?: boolean
 }
 
