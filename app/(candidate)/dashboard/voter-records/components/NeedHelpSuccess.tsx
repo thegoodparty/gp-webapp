@@ -10,8 +10,10 @@ interface NeedHelpSuccessProps {
   closeCallback: () => void
 }
 
-export default function NeedHelpSuccess({ closeCallback }: NeedHelpSuccessProps): React.JSX.Element {
-  const user = getUserCookie(true)
+export default function NeedHelpSuccess({
+  closeCallback,
+}: NeedHelpSuccessProps): React.JSX.Element {
+  const user = getUserCookie()
   return (
     <div className="text-center">
       <H1>Request Submitted</H1>

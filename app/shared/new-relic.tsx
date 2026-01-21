@@ -95,9 +95,9 @@ export const NewRelicIdentifier: React.FC = () => {
   const [user] = useUser()
   const [campaign] = useCampaign()
 
-  const cookieUser = getUserCookie(true)
-  const userId = user?.id ?? (cookieUser ? cookieUser?.id : undefined)
-  const email = user?.email ?? (cookieUser ? cookieUser?.email : undefined)
+  const cookieUser = getUserCookie()
+  const userId = user?.id ?? cookieUser?.id
+  const email = user?.email ?? cookieUser?.email
 
   useEffect(() => {
     void getNewRelic().then((newrelic) => {

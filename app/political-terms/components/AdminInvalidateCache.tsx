@@ -7,7 +7,7 @@ import { userIsAdmin } from 'helpers/userHelper'
 import { ALPHABET } from '@shared/utils/alphabet'
 
 export default function AdminInvalidateCache(): React.JSX.Element | null {
-  const user = getUserCookie(true)
+  const user = getUserCookie()
   const { successSnackbar } = useSnackbar()
 
   if (!user || !userIsAdmin(user)) {
@@ -28,5 +28,3 @@ export default function AdminInvalidateCache(): React.JSX.Element | null {
     </div>
   )
 }
-
-

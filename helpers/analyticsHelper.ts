@@ -473,13 +473,6 @@ export const EVENTS = {
   },
 } as const
 
-interface UserCookie {
-  email?: string
-  metaData?: {
-    hubspotId?: string
-  }
-}
-
 export const getStoredSessionId = (): number => {
   return Number(cookie.get('analytics_session_id') ?? 0)
 }
@@ -629,7 +622,7 @@ export const getPersistedClids = (): Record<string, string | null> => {
 }
 
 const getUserProperties = (): Record<string, string> => {
-  const userCookie = getUserCookie(true) as UserCookie | false
+  const userCookie = getUserCookie()
   if (!userCookie) {
     return {}
   }

@@ -15,7 +15,11 @@ export const getCookie = (name: string): string | false => {
   return false
 }
 
-export const setCookie = (name: string, value: string, days: number = 120): void => {
+export const setCookie = (
+  name: string,
+  value: string,
+  days: number = 120,
+): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -63,38 +67,27 @@ export const setUserCookie = (value: string | object): void => {
   setCookie(getCookie('impersonateUser') ? 'impersonateUser' : 'user', val)
 }
 
-export function getUserCookie(withParse: false): string | false
-export function getUserCookie(withParse: true): User | false
-export function getUserCookie(withParse: boolean = false): string | User | false {
+export function getUserCookie(): User | undefined {
   if (typeof window === 'undefined') {
-    return false
+    return undefined
   }
 
   const impersonateUser = getCookie('impersonateUser')
   if (impersonateUser) {
-    if (withParse) {
-      return JSON.parse(impersonateUser)
-    } else {
-      return impersonateUser
-    }
+    return JSON.parse(impersonateUser)
   }
 
   const userCookieName = 'user'
 
   const user = getCookie(userCookieName)
-  if (user && withParse) {
+  if (user) {
     try {
       return JSON.parse(decodeURIComponent(user))
     } catch (e) {
       console.error('User cookie parse failed')
       deleteCookie(userCookieName)
-      return false
+      return undefined
     }
   }
-  if (user) {
-    return decodeURIComponent(user)
-  } else {
-    return false
-  }
+  return undefined
 }
-

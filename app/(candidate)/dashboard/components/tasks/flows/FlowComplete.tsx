@@ -11,8 +11,10 @@ interface FlowCompleteProps {
   resetCallback: () => void
 }
 
-const FlowComplete = ({ resetCallback }: FlowCompleteProps): React.JSX.Element => {
-  const user = getUserCookie(true)
+const FlowComplete = ({
+  resetCallback,
+}: FlowCompleteProps): React.JSX.Element => {
+  const user = getUserCookie()
   const userEmail = user && user.email ? user.email : ''
   return (
     <div className="p-4 w-[80vw] max-w-xl">

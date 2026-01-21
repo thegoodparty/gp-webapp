@@ -34,7 +34,7 @@ export default function CompleteStep() {
   // This is to fix the React hydration error that was being thrown from a diff
   // between the server and client
   useEffect(() => {
-    const userCookie = getUserCookie(true)
+    const userCookie = getUserCookie()
     setUser(userCookie || false)
   }, [])
 

@@ -66,7 +66,7 @@ export default function HeroForm(): React.JSX.Element {
   })
 
   useEffect(() => {
-    const user = getUserCookie(true)
+    const user = getUserCookie()
     if (user) {
       setState({
         ...state,
@@ -76,10 +76,7 @@ export default function HeroForm(): React.JSX.Element {
     }
   }, [])
 
-  const onChangeField = (
-    key: string,
-    value: string | boolean,
-  ): void => {
+  const onChangeField = (key: string, value: string | boolean): void => {
     setState({
       ...state,
       [key]: value,

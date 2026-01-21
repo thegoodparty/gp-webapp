@@ -51,7 +51,7 @@ export function waitForUsersnap(timeoutMs = 10000): Promise<UsersnapApi> {
 export default function UserSnapScript(): React.JSX.Element {
   useEffect(() => {
     window.onUsersnapLoad = (api: UsersnapApi) => {
-      const user = getUserCookie(true)
+      const user = getUserCookie()
 
       window.Usersnap = { api }
 

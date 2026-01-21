@@ -39,7 +39,7 @@ export default function Error({ error }: ErrorPageProps): React.JSX.Element {
   }, [error])
 
   const logError = async (): Promise<void> => {
-    const user = getUserCookie(true)
+    const user = getUserCookie()
     await sendError({
       message: error?.message,
       url: window.location.href,

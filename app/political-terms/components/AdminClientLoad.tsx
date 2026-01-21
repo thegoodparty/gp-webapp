@@ -5,7 +5,7 @@ import { getUserCookie } from 'helpers/cookieHelper'
 const AdminInvalidateCache = dynamic(() => import('./AdminInvalidateCache'))
 
 export default function AdminClientLoad(): React.JSX.Element | null {
-  const user = getUserCookie(true)
+  const user = getUserCookie()
   const isAdmin = user && userIsAdmin(user)
 
   if (!user || !isAdmin) {

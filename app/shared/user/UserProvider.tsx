@@ -15,7 +15,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userState, setUserState] = useState<User | null>(null)
 
   useEffect(() => {
-    const cookieUser = getUserCookie(true)
+    const cookieUser = getUserCookie()
     if (cookieUser && cookieUser?.id) {
       setUserState(cookieUser)
     }

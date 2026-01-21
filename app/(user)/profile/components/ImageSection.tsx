@@ -20,13 +20,12 @@ const ImageSection = (): React.JSX.Element => {
 
   const [uploadedImage, setUploadedImage] = useState<string | false>(false)
 
-  const updatedUser: User | null = uploadedImage && user
-    ? { ...user, avatar: uploadedImage }
-    : user
+  const updatedUser: User | null =
+    uploadedImage && user ? { ...user, avatar: uploadedImage } : user
 
   useEffect(() => {
     if (uploadedImage) {
-      const updated = getUserCookie(true)
+      const updated = getUserCookie()
       if (updated) {
         setUser(updated)
       }
