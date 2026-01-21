@@ -66,7 +66,7 @@ interface AnswersState {
   candidatePositions?: CandidatePosition[] | false
 }
 
-export default function QuestionsPage(props: QuestionsPageProps) {
+const QuestionsPage = (props: QuestionsPageProps): React.JSX.Element => {
   const { generate, candidatePositions: initCandidatePositions } = props
   const [campaign, setCampaign] = useState(props.campaign)
   const [answers, setAnswers] = useState<AnswersState>({
@@ -102,7 +102,17 @@ export default function QuestionsPage(props: QuestionsPageProps) {
     } else {
       const details = campaign?.details
       const stepKey = flow[i]
-      if (!details || !stepKey || !(stepKey in details)) {
+      const isStepComplete =
+        stepKey === 'occupation'
+          ? Boolean(details?.occupation)
+          : stepKey === 'funFact'
+          ? Boolean(details?.funFact)
+          : stepKey === 'pastExperience'
+          ? Boolean(details?.pastExperience)
+          : stepKey === 'website'
+          ? Boolean(details?.website)
+          : false
+      if (!details || !stepKey || !isStepComplete) {
         break
       }
     }
@@ -238,3 +248,5 @@ export default function QuestionsPage(props: QuestionsPageProps) {
     </FocusedExperienceWrapper>
   )
 }
+
+export default QuestionsPage
