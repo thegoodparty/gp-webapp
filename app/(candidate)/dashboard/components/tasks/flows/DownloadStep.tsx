@@ -10,6 +10,7 @@ import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 import { downloadVoterList } from 'app/(candidate)/dashboard/outreach/util/downloadVoterList.util'
 import { VoterFileFilters } from 'helpers/types'
+import { AudienceState } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -18,7 +19,7 @@ const PHONE_BANKING_BLOG_URL =
 
 interface DownloadStepProps {
   type: string
-  audience: VoterFileFilters
+  audience: VoterFileFilters | AudienceState
   scriptText: string
   onCreateOutreach?: () => Promise<void>
   voterCount?: number

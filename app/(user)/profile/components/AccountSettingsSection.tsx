@@ -13,8 +13,8 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
 
-export const AccountSettingsSection = () => {
-  const [user = {}] = useUser()
+export const AccountSettingsSection = (): React.JSX.Element => {
+  const [user] = useUser()
   const userMetaData = user?.metaData || {}
   const { demoPersona } = userMetaData
   const [campaign] = useCampaign()
@@ -74,7 +74,7 @@ export const AccountSettingsSection = () => {
           </div>
           {hideButtonForLimboProUsers ? null : (
             <AccountSettingsButton
-              isPro={isPro}
+              isPro={Boolean(isPro)}
               isDemo={Boolean(demoPersona)}
             />
           )}

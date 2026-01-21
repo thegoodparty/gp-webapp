@@ -36,6 +36,29 @@ const validateRegistrationFormTyped: (
   data: FormDataState,
 ) => RegistrationValidationResult = validateRegistrationForm
 
+const isAddressValue = (
+  value: FormDataState[keyof FormDataState] | undefined,
+): value is RegistrationFormData['address'] =>
+  Boolean(
+    value &&
+      typeof value === 'object' &&
+      'formatted_address' in value &&
+      'place_id' in value,
+  )
+
+const toRegistrationFormData = (formData: FormDataState): RegistrationFormData => ({
+  electionFilingLink: String(formData.electionFilingLink || ''),
+  campaignCommitteeName: String(formData.campaignCommitteeName || ''),
+  officeLevel: String(formData.officeLevel || ''),
+  ein: String(formData.ein || ''),
+  phone: String(formData.phone || ''),
+  address: isAddressValue(formData.address)
+    ? formData.address
+    : { formatted_address: '', place_id: '' },
+  website: String(formData.website || ''),
+  email: String(formData.email || ''),
+})
+
 const createTcrCompliance = async (formData: RegistrationFormData) => {
   const mappedData = mapFormData(formData)
   const response = await clientFetch(apiRoutes.campaign.tcrCompliance.create, {
@@ -97,10 +120,10 @@ const TextingComplianceRegisterPage = ({
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
 
-  const handleFormSubmit = async (formData: RegistrationFormData) => {
+  const handleFormSubmit = async (formData: FormDataState) => {
     setLoading(true)
     try {
-      await createTcrCompliance(formData)
+      await createTcrCompliance(toRegistrationFormData(formData))
 
       // Track 10 DLC compliance status change to Pending
       trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {

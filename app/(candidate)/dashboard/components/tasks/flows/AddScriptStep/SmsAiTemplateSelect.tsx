@@ -2,8 +2,8 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 interface SmsTemplate {
   key: string
-  name: string
-  requiresQuestions?: boolean
+  name?: string
+  requiresQuestions?: string[]
 }
 
 interface SmsAiTemplateSelectProps {
@@ -38,7 +38,7 @@ export const SmsAiTemplateSelect = ({
           value={template.key}
           key={template.key}
         >
-          {template.name}
+          {template.name || ''}
         </MenuItem>
       ))}
     </Select>

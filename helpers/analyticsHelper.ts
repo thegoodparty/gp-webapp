@@ -651,7 +651,7 @@ export const trackEvent = (
   name: string,
   properties?: Record<
     string,
-    string[] | string | number | boolean | null | undefined
+    string[] | string | number | boolean | object | null | undefined
   >,
 ): void => {
   try {

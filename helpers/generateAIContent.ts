@@ -25,7 +25,7 @@ interface GenerateAIContentResponse {
 
 export const generateAIContent = async (
   key: string,
-  chat: string | Record<string, unknown>,
+  chat?: string | Record<string, unknown>,
   inputValues: Record<string, unknown> = {},
 ): Promise<GenerateAIContentResponse | false> => {
   try {

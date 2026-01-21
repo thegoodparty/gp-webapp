@@ -12,38 +12,64 @@ import {
 import { IssuesSearch } from './IssuesSearch'
 import { IssuesSelectList } from './IssuesSelectList'
 import { AddNewIssueTrigger } from './AddNewIssueTrigger'
+import type { Campaign, CandidatePosition, CustomIssue, IssuePosition, TopIssue } from 'helpers/types'
 
-export default function IssuesList({
+export type IssueOption = TopIssue
+
+export interface EditIssuePosition {
+  id?: number
+  type?: 'custom' | 'position'
+  topIssue?: TopIssue
+  position?: IssuePosition | string
+  description?: string
+  title?: string
+}
+
+interface IssuesListProps {
+  nextCallback: () => void
+  candidatePositions?: CandidatePosition[] | false | null
+  editIssuePosition?: EditIssuePosition | false
+  campaign: Campaign
+  topIssues: IssueOption[]
+  setEditIssuePosition?: (issue: EditIssuePosition | false | null) => void
+  order?: number
+}
+
+const IssuesList = ({
   nextCallback,
   candidatePositions,
   editIssuePosition,
   campaign: incomingCampaign,
   topIssues,
-  setEditIssuePosition,
-}) {
-  const [campaign, setCampaign] = useState(incomingCampaign)
+  setEditIssuePosition = () => {},
+}: IssuesListProps): React.JSX.Element => {
+  const [campaign, setCampaign] = useState<Campaign>(incomingCampaign)
   const [filterValue, setFilterValue] = useState('')
-  const [selectedIssue, setSelectedIssue] = useState(null)
+  const [selectedIssue, setSelectedIssue] = useState<IssueOption | 'custom' | null | false>(null)
+  const activeEditIssuePosition =
+    typeof editIssuePosition === 'object' && editIssuePosition !== null
+      ? editIssuePosition
+      : null
   const editingCustomIssue =
-    editIssuePosition && editIssuePosition.type === 'custom'
+    activeEditIssuePosition?.type === 'custom'
   const showSelectList = !selectedIssue
 
   useEffect(() => {
-    if (editIssuePosition) {
-      setSelectedIssue(
-        editIssuePosition.type === 'custom'
+    if (activeEditIssuePosition) {
+      const nextIssue =
+        activeEditIssuePosition.type === 'custom'
           ? 'custom'
-          : editIssuePosition.topIssue,
-      )
+          : activeEditIssuePosition.topIssue || null
+      setSelectedIssue(nextIssue)
     }
-  }, [editIssuePosition])
+  }, [activeEditIssuePosition])
 
-  const selectIssueCallback = (issue) => {
+  const selectIssueCallback = (issue: IssueOption | 'custom' | null | false) => {
     setSelectedIssue(issue)
     setFilterValue('')
   }
 
-  const updateCustomIssuesState = (customIssues) =>
+  const updateCustomIssuesState = (customIssues: CustomIssue[]) =>
     setCampaign({
       ...campaign,
       details: {
@@ -52,30 +78,47 @@ export default function IssuesList({
       },
     })
 
-  const saveCallback = async (position, issue, candidatePosition) => {
+  const saveCallback = async (
+    position: IssuePosition,
+    issue: IssueOption,
+    candidatePosition: string,
+  ) => {
     // if candidate position already exists in this order, delete it
-    editIssuePosition?.id &&
-      (await deleteCandidatePosition(editIssuePosition.id, campaign.id))
+    activeEditIssuePosition?.id &&
+      (await deleteCandidatePosition(activeEditIssuePosition.id, campaign.id))
 
-    if (editIssuePosition?.type === 'custom') {
-      updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition))
+    if (activeEditIssuePosition?.type === 'custom') {
+      updateCustomIssuesState(
+        await handleDeleteCustomIssue(
+          {
+            title: activeEditIssuePosition.title!,
+            position:
+              typeof activeEditIssuePosition.position === 'string'
+                ? activeEditIssuePosition.position
+                : '',
+          },
+          campaign,
+        ),
+      )
     }
     await saveCandidatePosition({
       description: candidatePosition,
       campaignId: campaign.id,
       positionId: position.id,
-      topIssueId: issue.id,
+      topIssueId: issue.id!,
     })
     nextCallback()
   }
 
   const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
-    if (editIssuePosition?.id) {
-      await deleteCandidatePosition(editIssuePosition.id, campaign.id)
+    if (activeEditIssuePosition?.id) {
+      await deleteCandidatePosition(activeEditIssuePosition.id, campaign.id)
     }
     const updatedCampaign = await getCampaign()
-    setCampaign(updatedCampaign)
+    if (updatedCampaign) {
+      setCampaign(updatedCampaign)
+    }
 
     nextCallback()
   }
@@ -111,7 +154,7 @@ export default function IssuesList({
             campaign={campaign}
             selectIssueCallback={selectIssueCallback}
             saveCallback={handleSaveCustom}
-            editIssuePosition={editIssuePosition}
+            editIssuePosition={editIssuePosition ?? null}
             setEditIssuePosition={setEditIssuePosition}
           />
         ) : (
@@ -122,10 +165,12 @@ export default function IssuesList({
             selectIssueCallback={selectIssueCallback}
             saveCallback={saveCallback}
             candidatePositions={candidatePositions}
-            editIssuePosition={editIssuePosition}
+            editIssuePosition={editIssuePosition ?? null}
             setEditIssuePosition={setEditIssuePosition}
           />
         ))}
     </div>
   )
 }
+
+export default IssuesList

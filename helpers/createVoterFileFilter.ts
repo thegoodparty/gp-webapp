@@ -1,9 +1,10 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { VoterFileFilters } from 'helpers/types'
 
-interface VoterFileFilterResponse {
+interface VoterFileFilterResponse extends VoterFileFilters {
   id: string
-  [key: string]: unknown
+  name?: string
 }
 
 export const createVoterFileFilter = async (

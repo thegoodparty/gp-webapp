@@ -1,7 +1,7 @@
 import ComplianceStep from 'app/(user)/profile/texting-compliance/components/ComplianceStep'
 import { WEBSITE_STATUS } from 'app/(candidate)/dashboard/website/util/website.util'
 import { isDomainStatusActive } from 'app/(candidate)/dashboard/website/util/domain.util'
-import { Website } from 'helpers/types'
+import { Website, TcrCompliance } from 'helpers/types'
 
 export const STEP_STATUS: {
   DISABLED: 'disabled'
@@ -30,10 +30,6 @@ export const TCR_COMPLIANCE_STATUS: {
 // domainStatus can be either a string (the message directly) or an object with a message property
 type DomainStatus = string | { message?: string }
 
-interface TcrCompliance {
-  status?: string
-}
-
 interface StepCompletions {
   websiteComplete: boolean
   domainComplete: boolean
@@ -60,8 +56,8 @@ export const getTcrComplianceStepCompletions = (
     TCR_COMPLIANCE_STATUS.PENDING,
     TCR_COMPLIANCE_STATUS.APPROVED,
   ]
-  const registrationComplete = tcrStatus !== undefined && registrationStatuses.includes(tcrStatus)
-  const pinComplete = tcrStatus !== undefined && pinStatuses.includes(tcrStatus)
+  const registrationComplete = tcrStatus != null && registrationStatuses.includes(tcrStatus)
+  const pinComplete = tcrStatus != null && pinStatuses.includes(tcrStatus)
 
   return {
     websiteComplete,

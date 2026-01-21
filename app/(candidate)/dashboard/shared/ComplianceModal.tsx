@@ -5,10 +5,11 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
+import type { TcrComplianceStatus } from 'helpers/types'
 
 interface ComplianceModalProps {
   open: boolean
-  tcrComplianceStatus?: string
+  tcrComplianceStatus?: TcrComplianceStatus | null
   onClose: () => void
 }
 

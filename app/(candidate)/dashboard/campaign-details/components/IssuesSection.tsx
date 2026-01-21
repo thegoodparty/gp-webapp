@@ -19,32 +19,8 @@ import { IoAddSharp } from 'react-icons/io5'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
-import { Campaign, CustomIssue } from 'helpers/types'
-
-interface TopIssue {
-  name?: string
-}
-
-interface Position {
-  name?: string
-}
-
-interface CandidatePosition {
-  id?: number
-  topIssue?: TopIssue
-  position?: Position
-  title?: string
-  description?: string
-}
-
-interface CombinedIssue {
-  id?: number | string
-  type: 'position' | 'custom'
-  topIssue?: TopIssue
-  position?: Position | string
-  title?: string
-  description?: string
-}
+import { Campaign, CustomIssue, CandidatePosition } from 'helpers/types'
+import { EditIssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuesList'
 
 interface IssuesSectionProps {
   campaign?: Campaign
@@ -53,20 +29,34 @@ interface IssuesSectionProps {
 const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign | undefined>(props.campaign)
   const [candidatePositions, setCandidatePositions] = useCandidatePositions()
-  const [combinedIssues, setCombinedIssues] = useState<CombinedIssue[]>([])
-  const [editIssuePosition, setEditIssuePosition] = useState<CombinedIssue | false>(false)
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<CombinedIssue | null>(null)
+  const [combinedIssues, setCombinedIssues] = useState<EditIssuePosition[]>([])
+  const [editIssuePosition, setEditIssuePosition] =
+    useState<EditIssuePosition | false | null>(false)
+  const [showDeleteConfirmation, setShowDeleteConfirmation] =
+    useState<EditIssuePosition | null>(null)
   const { errorSnackbar } = useSnackbar()
 
   useEffect(() => {
-    const combined: CombinedIssue[] = []
+    const combined: EditIssuePosition[] = []
     if (Array.isArray(candidatePositions)) {
       candidatePositions?.forEach((position: CandidatePosition) => {
-        combined.push({ ...position, type: 'position' })
+        const { id, topIssue, position: issuePosition, description } = position
+        combined.push({
+          id,
+          topIssue,
+          position: issuePosition,
+          description,
+          type: 'position',
+        })
       })
     }
     campaign?.details?.customIssues?.forEach((issue: CustomIssue) => {
-      combined.push({ ...issue, type: 'custom' })
+      const { title, position } = issue
+      combined.push({
+        title,
+        position,
+        type: 'custom',
+      })
     })
     setCombinedIssues(combined)
   }, [candidatePositions, campaign?.details?.customIssues])
@@ -140,6 +130,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
       {editIssuePosition ? (
         <IssuesSelector
           {...props}
+          campaign={campaign!}
           completeCallback={completeCallback}
           candidatePositions={candidatePositions}
           updatePositionsCallback={completeCallback}

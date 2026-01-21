@@ -24,7 +24,7 @@ interface SectionsObject {
 }
 
 export const buildAiContentSections = (
-  campaign: Campaign | Record<string, unknown> = {},
+  campaign: Campaign | Record<string, unknown> | null | false = {},
   subSectionKey: string,
 ): [SectionsObject, boolean] => {
   const campaignData = campaign as Record<string, unknown>

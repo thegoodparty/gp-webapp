@@ -1,11 +1,18 @@
 export interface Race {
   id: number | string
   slug: string
+  name?: string
+  state?: string
   normalizedPositionName?: string
   electionDate?: string
   positionDescription?: string
   positionLevel?: string
   frequency?: string[]
+  filingDateStart?: string
+  filingDateEnd?: string
+  employmentType?: string
+  salary?: string
+  eligibilityRequirements?: string
   filingOfficeAddress?: string
   filingPhoneNumber?: string
   paperworkInstructions?: string
@@ -13,6 +20,8 @@ export interface Race {
   isRunoff?: boolean
   isPrimary?: boolean
   partisanType?: string
+  positionNames?: string[]
+  Place?: Place
   loc?: string
 }
 

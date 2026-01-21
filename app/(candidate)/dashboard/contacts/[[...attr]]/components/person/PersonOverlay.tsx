@@ -5,15 +5,18 @@ import { useRouter } from 'next/navigation'
 import InfoSection from './InfoSection'
 import PersonMap from './PersonMap'
 import { useSearchParams } from 'next/navigation'
+import type { ComponentProps } from 'react'
 
-const sections = [
+type InfoSectionProps = ComponentProps<typeof InfoSection>
+
+const sections: InfoSectionProps['section'][] = [
   {
     title: 'General Information',
     fields: [
       {
         key: 'gender',
         label: 'Gender',
-        transform: (value) => value || 'N/A',
+        transform: (value) => (value ? String(value) : 'N/A'),
       },
       {
         key: 'age',
@@ -23,17 +26,17 @@ const sections = [
       {
         key: 'politicalParty',
         label: 'Political Party',
-        transform: (value) => value || 'N/A',
+        transform: (value) => (value ? String(value) : 'N/A'),
       },
       {
         key: 'maritalStatus',
         label: 'Marital Status',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'ethnicityGroup',
         label: 'Ethnicity',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
     ],
   },
@@ -43,19 +46,19 @@ const sections = [
       {
         key: 'address',
         label: 'Address',
-        transform: (value) => value || 'N/A',
+        transform: (value) => (value ? String(value) : 'N/A'),
         allowCopy: true,
       },
       {
         key: 'cellPhone',
         label: 'Cell Phone Number',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
         allowCopy: true,
       },
       {
         key: 'landline',
         label: 'Landline',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
         allowCopy: true,
       },
     ],
@@ -66,12 +69,12 @@ const sections = [
       {
         key: 'activeVoter',
         label: 'Active Voter',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'voterStatus',
         label: 'Voter Status',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
     ],
   },
@@ -81,32 +84,32 @@ const sections = [
       {
         key: 'hasChildrenUnder18',
         label: 'Has Children Under 18',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'veteranStatus',
         label: 'Veteran Status',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'homeowner',
         label: 'Homeowner',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'businessOwner',
         label: 'Business Owner',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'levelOfEducation',
         label: 'Education Level',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       {
         key: 'language',
         label: 'Language',
-        transform: (value) => value || 'Unknown',
+        transform: (value) => (value ? String(value) : 'Unknown'),
       },
       // uncomment when the data is done loading
       // {
@@ -118,27 +121,46 @@ const sections = [
   },
 ]
 
-export default function PersonOverlay() {
+const PersonOverlay = (): React.JSX.Element => {
   const [person, setPerson] = usePerson()
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const handleClose = (open) => {
+  const handleClose = (open: boolean) => {
     if (!open) {
       setPerson(null)
-      const queryString = searchParams.toString()
+      const queryString = searchParams!.toString()
       router.push(`/dashboard/contacts${queryString ? `?${queryString}` : ''}`)
     }
   }
-  const name = `${person?.firstName} ${person?.lastName}`
+  const { firstName, lastName } = person || {}
+  const name = `${firstName} ${lastName}`
 
   return (
     <Sheet open={!!person} onOpenChange={handleClose}>
-      <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl h-full overflow-y-auto z-[1301]">
+      <SheetContent
+        className="
+          w-[90vw]
+          max-w-xl
+          sm:max-w-xl
+          h-full
+          overflow-y-auto
+          z-[1301]
+        "
+      >
         <div className="p-4">
           {person && (
             <div>
-              <h2 className="text-3xl font-semibold lg:text-4xl py-4 border-b border-gray-200">
+              <h2
+                className="
+                  text-3xl
+                  font-semibold
+                  lg:text-4xl
+                  py-4
+                  border-b
+                  border-gray-200
+                "
+              >
                 {name}
               </h2>
               {sections.map((section) => (
@@ -152,3 +174,5 @@ export default function PersonOverlay() {
     </Sheet>
   )
 }
+
+export default PersonOverlay

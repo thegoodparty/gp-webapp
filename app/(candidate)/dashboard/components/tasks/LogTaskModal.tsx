@@ -13,7 +13,13 @@ import {
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 
-type LogTaskFlowType = 'text' | 'robocall' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'events'
+export type LogTaskFlowType =
+  | 'text'
+  | 'robocall'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
+  | 'events'
 
 interface LogTaskModalProps {
   onSubmit: (value: number) => void

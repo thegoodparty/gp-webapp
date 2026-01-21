@@ -1,9 +1,11 @@
 import { IssueSelectItem } from './IssueSelectItem'
 
+import type { IssuePosition } from 'helpers/types'
+
 interface IssueForSelect {
-  id?: string | number
+  id?: number
   name?: string
-  positions?: string[]
+  positions?: IssuePosition[]
 }
 
 interface IssuesSelectListProps {
