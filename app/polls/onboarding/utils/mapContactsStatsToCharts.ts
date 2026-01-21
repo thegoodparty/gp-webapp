@@ -33,7 +33,7 @@ export const mapContactsStatsToCharts = (
   const toPercent = (value: number): number => {
     if (typeof value !== 'number' || Number.isNaN(value)) return 0
     if (value <= 0) return 0
-    return Number((value * 100).toFixed(1))
+    return Number(value.toFixed(1))
   }
   const toChartData = (
     buckets: { label: string; percent: number }[],
@@ -44,7 +44,7 @@ export const mapContactsStatsToCharts = (
     }))
 
   const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
-    const buckets = categories.estimatedIncomeRange.buckets
+    const buckets = categories.estimatedIncomeRange
     const consolidated = {
       'Under $50K': 0,
       '$50K - $75K': 0,
@@ -55,16 +55,21 @@ export const mapContactsStatsToCharts = (
     }
 
     buckets.forEach((bucket) => {
-      if (['1k-15k', '15k-25k', '25k-35k', '35k-50k'].includes(bucket.label)) {
+      const normalizedLabel = bucket.label.replace(/–/g, '-').toLowerCase()
+      if (
+        ['1k-15k', '15k-25k', '25k-35k', '35k-50k'].includes(normalizedLabel)
+      ) {
         consolidated['Under $50K'] += bucket.percent
-      } else if (bucket.label === '50k-75k') {
+      } else if (normalizedLabel === '50k-75k') {
         consolidated['$50K - $75K'] += bucket.percent
-      } else if (bucket.label === '75k-100k') {
+      } else if (normalizedLabel === '75k-100k') {
         consolidated['$75K - $100K'] += bucket.percent
-      } else if (['100k-125k', '125k-150k'].includes(bucket.label)) {
+      } else if (['100k-125k', '125k-150k'].includes(normalizedLabel)) {
         consolidated['$100K - $150K'] += bucket.percent
       } else if (
-        ['150k-175k', '175k-200k', '200k-250k', '250k+'].includes(bucket.label)
+        ['150k-175k', '175k-200k', '200k-250k', '250k+'].includes(
+          normalizedLabel,
+        )
       ) {
         consolidated['$150K+'] += bucket.percent
       } else if (bucket.label === 'Unknown') {
@@ -82,10 +87,10 @@ export const mapContactsStatsToCharts = (
 
   return {
     totalConstituents: contactsStats.totalConstituents,
-    ageDistribution: toChartData(categories.age.buckets),
-    presenceOfChildren: toChartData(categories.presenceOfChildren.buckets),
-    homeowner: toChartData(categories.homeowner.buckets),
+    ageDistribution: toChartData(categories.age),
+    presenceOfChildren: toChartData(categories.presenceOfChildren),
+    homeowner: toChartData(categories.homeowner),
     estimatedIncomeRange: mapEstimatedIncomeRange(),
-    education: toChartData(categories.education.buckets),
+    education: toChartData(categories.education),
   }
 }

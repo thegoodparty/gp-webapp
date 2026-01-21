@@ -8,7 +8,7 @@ import { districtStatsQueryOptions } from './queries'
 
 export const useTotalConstituentsWithCellPhone = () =>
   useQuery({
-    ...districtStatsQueryOptions,
+    ...districtStatsQueryOptions(),
     select: (data) => ({
       totalConstituents: data.totalConstituentsWithCellPhone,
     }),

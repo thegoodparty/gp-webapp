@@ -7,7 +7,7 @@ export type ContactStatsBucket = {
   count: number
   percent: number
 }
-export type ContactStatsCategory = { buckets: ContactStatsBucket[] }
+export type ContactStatsCategory = ContactStatsBucket[]
 
 export type ContactsStats = {
   districtId: string
@@ -23,14 +23,17 @@ export type ContactsStats = {
   }
 }
 
-export const districtStatsQueryOptions = queryOptions({
-  queryKey: ['contacts-stats'],
-  queryFn: () =>
-    clientFetch<ContactsStats>(apiRoutes.contacts.stats).then((res) => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch contacts stats')
-      }
+export const districtStatsQueryOptions = (params?: { hasCellPhone?: string }) =>
+  queryOptions({
+    queryKey: params ? ['contacts-stats', params] : ['contacts-stats'],
+    queryFn: () =>
+      clientFetch<ContactsStats>(apiRoutes.contacts.stats, params).then(
+        (res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch contacts stats')
+          }
 
-      return res.data
-    }),
-})
+          return res.data
+        },
+      ),
+  })
