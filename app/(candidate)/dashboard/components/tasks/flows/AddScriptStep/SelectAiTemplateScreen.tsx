@@ -15,6 +15,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress'
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 import { Campaign } from 'helpers/types'
+import { hasRequiredQuestions } from '../util/hasRequiredQuestions.util'
 
 type TemplateCategoryList = NonNullable<
   Parameters<typeof getAiTemplatesFromCategories>[0]
@@ -28,10 +29,7 @@ export const fetchAiContentCategories = async (
   const candidatePositions = await loadCandidatePosition(campaign.id)
   const positions = candidatePositions === false ? null : candidatePositions
 
-  const { answeredQuestions, totalQuestions } = calcAnswers(
-    campaign,
-    positions,
-  )
+  const { answeredQuestions, totalQuestions } = calcAnswers(campaign, positions)
 
   const hasCompletedQuestions = answeredQuestions >= totalQuestions
 
@@ -129,7 +127,8 @@ export const SelectAiTemplateScreen = ({
         onBack={onBack}
         onNext={handleOnNext}
         disabled={
-          !Boolean(selectedTemplate) || Boolean(selectedTemplate?.requiresQuestions)
+          !Boolean(selectedTemplate) ||
+          (selectedTemplate && Boolean(hasRequiredQuestions(selectedTemplate)))
         }
       />
     </>

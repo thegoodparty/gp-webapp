@@ -1,6 +1,7 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { hasRequiredQuestions } from '../util/hasRequiredQuestions.util'
 
-interface SmsTemplate {
+export interface SmsTemplate {
   key: string
   name?: string
   requiresQuestions?: string[]
@@ -17,7 +18,9 @@ export const SmsAiTemplateSelect = ({
   selected = '',
   onChange = () => {},
 }: SmsAiTemplateSelectProps): React.JSX.Element => {
-  const handleOnChange = (e: SelectChangeEvent<string>) => onChange(e.target.value)
+  const handleOnChange = (e: SelectChangeEvent<string>) =>
+    onChange(e.target.value)
+
   return (
     <Select
       value={selected || ''}
@@ -33,7 +36,9 @@ export const SmsAiTemplateSelect = ({
       {templates.map((template) => (
         <MenuItem
           className={`${
-            template.requiresQuestions ? 'cursor-not-allowed opacity-70' : ''
+            hasRequiredQuestions(template)
+              ? 'cursor-not-allowed opacity-70'
+              : ''
           }`}
           value={template.key}
           key={template.key}
