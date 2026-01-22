@@ -40,7 +40,7 @@ import {
 } from 'helpers/createP2pPhoneList'
 import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/constants'
 import { Campaign } from 'helpers/types'
 
 interface TaskFlowState extends FlowState {
@@ -126,10 +126,7 @@ const TaskFlow = ({
   const purchaseMetaData = {
     contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
-    outreachType:
-      p2pUxEnabled && type === OUTREACH_TYPES.text
-        ? OUTREACH_TYPES.p2p
-        : type,
+    outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
     campaignId,
   }
 
