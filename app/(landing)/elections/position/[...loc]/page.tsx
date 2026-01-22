@@ -2,7 +2,10 @@ import pageMetaData from 'helpers/metadataHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
-import { fetchArticle, type ArticleContent } from 'app/blog/article/[slug]/utils'
+import {
+  fetchArticle,
+  type ArticleContent,
+} from 'app/blog/article/[slug]/utils'
 import { PositionLevel } from '../../shared/PositionLevel'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { electionApiRoutes } from 'gpApi/routes'
@@ -71,9 +74,9 @@ const parseLoc = (loc: string[]): ParsedLoc => {
 export const generateMetadata = async ({
   params,
 }: {
-  params: Params
+  params: Promise<Params>
 }): Promise<Metadata> => {
-  const { loc } = params
+  const { loc } = await params
   const race = await fetchRace(loc.join('/'))
   const slug = `elections/position/${loc.join('/')}`
 
@@ -96,7 +99,9 @@ export const generateMetadata = async ({
 
   const meta = pageMetaData({
     title: `Run for ${race?.normalizedPositionName || ''} in ${locStr}`,
-    description: `Learn the details about running for ${race?.normalizedPositionName || ''} in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
+    description: `Learn the details about running for ${
+      race?.normalizedPositionName || ''
+    } in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
     slug,
   })
   return meta
@@ -131,9 +136,7 @@ const Page = async ({
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const buildArticle = (
-    content: ArticleContent,
-  ): PositionArticles[number] => ({
+  const buildArticle = (content: ArticleContent): PositionArticles[number] => ({
     title: content.title,
     slug: content.slug,
     summary: content.summary,
