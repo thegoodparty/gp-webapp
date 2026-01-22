@@ -1,10 +1,11 @@
 import { FaChevronRight } from 'react-icons/fa6'
 import { IssueItemLabel } from './IssueItemLabel'
+import type { IssuePosition } from 'helpers/types'
 
 interface Issue {
-  id?: string | number
+  id?: number
   name?: string
-  positions?: string[]
+  positions?: IssuePosition[]
 }
 
 interface IssueSelectItemProps {

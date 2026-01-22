@@ -1,8 +1,17 @@
 import Body1 from '@shared/typography/Body1'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { PositionsListItem } from './PositionsListItem'
+import type { Race } from 'app/(landing)/elections/shared/types'
 
-export default function PositionDetails({ race, positions }) {
+interface PositionDetailsProps {
+  race: Race
+  positions?: Array<string | undefined>
+}
+
+const PositionDetails = ({
+  race,
+  positions: _positions,
+}: PositionDetailsProps): React.JSX.Element => {
   const {
     positionLevel,
     filingDateStart,
@@ -23,7 +32,15 @@ export default function PositionDetails({ race, positions }) {
   } = race
   const term = frequency?.[0] || 'N/A'
   return (
-    <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
+    <section
+      className="
+        grid
+        grid-cols-12
+        gap-4
+        mt-6
+        md:mt-12
+      "
+    >
       <div className="col-span-12 md:col-span-6">
         <h3 className=" text-lg md:text-2xl">Election Details</h3>
         <ul className="text-lg">
@@ -99,3 +116,5 @@ export default function PositionDetails({ race, positions }) {
     </section>
   )
 }
+
+export default PositionDetails

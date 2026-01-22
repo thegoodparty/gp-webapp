@@ -9,6 +9,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import dynamic from 'next/dynamic'
+import { AiContentData, CampaignAiContent } from 'helpers/types'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
@@ -17,26 +18,38 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ),
 })
 
+type GenerateReviewScreenProps = {
+  aiScriptKey?: string | null
+  onBack?: () => void
+  onNext?: (scriptKey: string | null, scriptContent: string) => void
+}
+
+const isAiContentData = (
+  value: CampaignAiContent[string] | undefined,
+): value is AiContentData => Boolean(value)
+
 export const GenerateReviewScreen = ({
   aiScriptKey = '',
   onBack = () => {},
-  onNext = (scriptKey, scriptContent) => {},
-}) => {
+  onNext = () => {},
+}: GenerateReviewScreenProps): React.JSX.Element => {
   const { errorSnackbar } = useSnackbar()
-  const [aiContent, setAiContent] = useState({})
+  const [aiContent, setAiContent] = useState<AiContentData | null>(null)
   const [scriptContent, setScriptContent] = useState('')
   const [saving, setSaving] = useState(false)
+  const aiScriptKeyValue = String(aiScriptKey)
 
   useEffect(() => {
     const fetchAiContent = async () => {
       try {
         const campaign = await getCampaign()
-        const { aiContent } = campaign || {}
-        if (!aiContent?.[aiScriptKey]) {
+        const aiContent = campaign ? campaign.aiContent : undefined
+        const aiScriptContent = aiContent?.[aiScriptKeyValue]
+        if (!isAiContentData(aiScriptContent)) {
           throw new Error(`No aiScriptKey AI content found => ${aiScriptKey}`)
         }
-        setAiContent(aiContent[aiScriptKey])
-        setScriptContent(aiContent[aiScriptKey]?.content || '')
+        setAiContent(aiScriptContent)
+        setScriptContent(aiScriptContent.content || '')
       } catch (e) {
         console.error('error fetching aiContent for review => ', e)
         errorSnackbar('Error fetching AI-generated content')
@@ -50,8 +63,8 @@ export const GenerateReviewScreen = ({
     try {
       await updateCampaign([
         {
-          key: `aiContent.${aiScriptKey}`,
-          value: { ...aiContent, content: scriptContent },
+          key: `aiContent.${aiScriptKeyValue}`,
+          value: { ...aiContent!, content: scriptContent },
         },
       ])
       onNext(aiScriptKey, scriptContent)
@@ -73,7 +86,7 @@ export const GenerateReviewScreen = ({
       </header>
       <section>
         <RichEditor
-          initialText={aiContent.content}
+          initialText={aiContent?.content}
           onChangeCallback={(content) => {
             setScriptContent(content)
           }}

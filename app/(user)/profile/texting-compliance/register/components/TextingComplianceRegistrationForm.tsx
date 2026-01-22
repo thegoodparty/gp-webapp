@@ -2,7 +2,7 @@
 import TextField from '@shared/inputs/TextField'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/(user)/profile/texting-compliance/shared/TextingComplianceForm'
 import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
@@ -18,10 +18,24 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
+import type { FormDataState } from '@shared/hooks/useFormData'
 
-const validateAddress = (address) => Boolean(address?.formatted_address)
+type AddressValue = Parameters<
+  NonNullable<ComponentProps<typeof AddressAutocomplete>['onSelect']>
+>[0]
 
-export const validateRegistrationForm = (data) => {
+type FormValue = FormDataState[keyof FormDataState] | undefined
+
+const isAddressValue = (value: FormValue): value is AddressValue =>
+  Boolean(value && typeof value === 'object' && 'formatted_address' in value)
+
+const getStringValue = (value: FormValue): string =>
+  typeof value === 'string' ? value : ''
+
+const validateAddress = (address: AddressValue | null): boolean =>
+  Boolean(address?.formatted_address)
+
+export const validateRegistrationForm = (data: FormDataState) => {
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -32,21 +46,30 @@ export const validateRegistrationForm = (data) => {
     website,
     email,
   } = data
+  const electionFilingLinkValue = getStringValue(electionFilingLink)
+  const campaignCommitteeNameValue = getStringValue(campaignCommitteeName)
+  const officeLevelValue = getStringValue(officeLevel)
+  const einValue = getStringValue(ein)
+  const phoneValue = getStringValue(phone)
+  const addressValue = isAddressValue(address) ? address : null
+  const websiteValue = getStringValue(website)
+  const emailValue = getStringValue(email)
   const validations = {
     electionFilingLink:
-      isURL(electionFilingLink) && urlIncludesPath(electionFilingLink),
-    campaignCommitteeName: isFilled(campaignCommitteeName),
+      isURL(electionFilingLinkValue) &&
+      urlIncludesPath(electionFilingLinkValue),
+    campaignCommitteeName: isFilled(campaignCommitteeNameValue),
     // TODO(ENG-6192): Add federal and actually send the officeLevel to the backend.
-    officeLevel: officeLevel === 'state' || officeLevel === 'local',
-    ein: isValidEIN(ein),
-    phone: isMobilePhone(phone, 'en-US'),
+    officeLevel: officeLevelValue === 'state' || officeLevelValue === 'local',
+    ein: isValidEIN(einValue),
+    phone: isMobilePhone(phoneValue, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
-    address: validateAddress(address),
+    address: validateAddress(addressValue),
     // Website must exist (official purchased domain)
-    website: isFilled(website) && isURL(website),
-    email: isEmail(email),
+    website: isFilled(websiteValue) && isURL(websiteValue),
+    email: isEmail(emailValue),
   }
   return {
     validations,
@@ -54,11 +77,17 @@ export const validateRegistrationForm = (data) => {
   }
 }
 
-export default function TextingComplianceRegistrationForm({
-  onSubmit = (formData) => {},
+interface TextingComplianceRegistrationFormProps {
+  onSubmit?: (formData: FormDataState) => void
+  loading?: boolean
+  hasSubmissionError?: boolean
+}
+
+const TextingComplianceRegistrationForm = ({
+  onSubmit = () => {},
   loading = false,
   hasSubmissionError = false,
-}) {
+}: TextingComplianceRegistrationFormProps): React.JSX.Element => {
   const { formData, handleChange } = useFormData()
   const {
     electionFilingLink,
@@ -67,20 +96,20 @@ export default function TextingComplianceRegistrationForm({
     ein,
     phone,
     address,
-    website,
     email,
   } = formData
   const formValidation = validateRegistrationForm(formData)
   const { isValid } = formValidation
 
-  const [addressInputValue, setAddressInputValue] = useState(
-    address?.formatted_address || '',
+  const addressValue = isAddressValue(address) ? address : null
+  const [addressInputValue, setAddressInputValue] = useState<string | undefined>(
+    addressValue?.formatted_address || '',
   )
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
   //  components to support signature change
-  const [validEin, setValidEin] = useState(isValidEIN(ein))
-  const handleEINChange = (value) => {
+  const [validEin, setValidEin] = useState(isValidEIN(getStringValue(ein)))
+  const handleEINChange = (value: string) => {
     setValidEin(isValidEIN(value))
     handleChange({ ein: value })
   }
@@ -92,7 +121,7 @@ export default function TextingComplianceRegistrationForm({
     return onSubmit(formData)
   }
 
-  const handleAddressOnChange = (value) => {
+  const handleAddressOnChange = (value: string) => {
     setAddressInputValue(value)
     return !value && handleChange({ address: null })
   }
@@ -123,7 +152,7 @@ export default function TextingComplianceRegistrationForm({
         />
         <EinCheckInput
           {...{
-            value: ein,
+            value: getStringValue(ein),
             onChange: handleEINChange,
             validated: validEin,
             label: 'EIN *',
@@ -153,6 +182,7 @@ export default function TextingComplianceRegistrationForm({
               return handleChange({ address })
             },
             placeholder: 'Filing Address *',
+            variant: 'outlined',
           }}
         />
         <TextField
@@ -186,3 +216,5 @@ export default function TextingComplianceRegistrationForm({
     </>
   )
 }
+
+export default TextingComplianceRegistrationForm

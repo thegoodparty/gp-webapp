@@ -11,7 +11,7 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page() {
+const Page = async (): Promise<React.JSX.Element> => {
   const user = await getServerUser()
   if (user) {
     const { status, slug } = await fetchCampaignStatus()
@@ -25,3 +25,5 @@ export default async function Page() {
   }
   return <SignUpPage />
 }
+
+export default Page

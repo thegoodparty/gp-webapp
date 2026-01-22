@@ -4,7 +4,7 @@ import Body2 from '@shared/typography/Body2'
 import { dateUSClientLocaleHelper } from 'helpers/dateHelper'
 
 interface SubscriptionPendingCancellationAlertProps {
-  subscriptionCancelAt: string
+  subscriptionCancelAt: string | number
 }
 
 export const SubscriptionPendingCancellationAlert = ({

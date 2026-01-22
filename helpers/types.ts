@@ -115,6 +115,7 @@ export interface CampaignDetails {
   ballotLevel?: string
   electionDate?: string
   primaryElectionDate?: string
+  primaryResult?: 'won' | 'lost' | null
   zip?: string
   knowRun?: 'yes' | null
   runForOffice?: 'yes' | 'no' | null
@@ -159,6 +160,28 @@ export interface CampaignDetails {
   wonGeneral?: boolean
   launchStatus?: string
   filedStatement?: string
+}
+
+export type TcrComplianceStatus = 'submitted' | 'pending' | 'approved' | 'rejected' | 'error'
+
+export interface TcrCompliance {
+  id: string
+  ein: string
+  postalAddress: string
+  committeeName: string
+  websiteDomain: string
+  filingUrl: string
+  phone: string
+  email: string
+  status?: TcrComplianceStatus | null
+  tdlcNumber?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  peerlyIdentityId?: string | null
+  peerlyRegistrationLink?: string | null
+  peerlyIdentityProfileLink?: string | null
+  peerly10DLCBrandSubmissionKey?: string | null
 }
 
 export interface ReportedVoterGoals {
@@ -298,12 +321,13 @@ export interface AiContentData {
 }
 
 export interface CampaignAiContent {
-  generationStatus?: Record<string, string>
-  campaignPlanAttempts?: Record<string, number>
+  generationStatus?: Partial<Record<string, { status?: string }>>
+  campaignPlanAttempts?: Partial<Record<string, number>>
   [key: string]:
     | AiContentData
     | Partial<Record<string, string>>
     | Partial<Record<string, number>>
+    | Partial<Record<string, { status?: string }>>
     | undefined
 }
 
@@ -355,12 +379,25 @@ export interface PathToVictory {
   data: PathToVictoryData
 }
 
+export interface IssuePosition {
+  id: number
+  name: string
+}
+
+export interface TopIssue {
+  id?: number
+  name?: string
+  positions?: IssuePosition[]
+}
+
 export interface CandidatePosition {
   id: number
   topIssueId: number
   positionId: number
   description: string
   order: number
+  topIssue?: TopIssue
+  position?: IssuePosition
 }
 
 export interface ClaimedCampaign {
@@ -370,6 +407,10 @@ export interface ClaimedCampaign {
   }
   details?: CampaignDetails
   campaignPositions?: CandidatePosition[]
+}
+
+export interface CampaignGoals {
+  electionDate?: string
 }
 
 export interface Campaign {
@@ -420,6 +461,7 @@ export interface Campaign {
   email?: string
   urls?: string[]
   Stances?: CandidateStance[]
+  goals?: CampaignGoals
 }
 
 export interface CandidateStance {

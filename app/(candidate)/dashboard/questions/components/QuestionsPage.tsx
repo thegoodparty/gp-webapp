@@ -16,6 +16,7 @@ import Done from './Done'
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper'
+import type { Campaign, CandidatePosition, TopIssue } from 'helpers/types'
 
 export const flows = {
   all: [
@@ -41,22 +42,51 @@ export const flows = {
   pathToVictory: ['occupation', 'funFact', 'pastExperience', 'issues'],
   mobilizing: ['occupation', 'funFact', 'pastExperience', 'issues'],
 }
-export default function QuestionsPage(props) {
+type FlowKey = keyof typeof flows
+
+interface QuestionsPageProps {
+  generate?: string
+  campaign: Campaign | null
+  candidatePositions?: CandidatePosition[] | false
+  topIssues?: TopIssue[]
+}
+
+interface PastExperienceValue {
+  responsibility?: string
+  achievements?: string
+  skills?: string
+}
+
+interface AnswersState {
+  occupation: string
+  funFact: string
+  pastExperience: PastExperienceValue
+  issues: string
+  website: string
+  candidatePositions?: CandidatePosition[] | false
+}
+
+const QuestionsPage = (props: QuestionsPageProps): React.JSX.Element => {
   const { generate, candidatePositions: initCandidatePositions } = props
   const [campaign, setCampaign] = useState(props.campaign)
-  const [answers, setAnswers] = useState({
+  const [answers, setAnswers] = useState<AnswersState>({
     occupation: '',
     funFact: '',
-    pastExperience: '',
+    pastExperience: {},
     issues: '',
     website: '',
     candidatePositions: initCandidatePositions,
   })
 
-  const flow = flows[generate]
+  const isFlowKey = (key?: string): key is FlowKey =>
+    Boolean(key && key in flows)
+  const flowKey = isFlowKey(generate) ? generate : 'all'
+  const flow = flows[flowKey]
   let nextStep = 0
   const combinedIssuedCount =
-    (answers.candidatePositions?.length || 0) +
+    (Array.isArray(answers.candidatePositions)
+      ? answers.candidatePositions.length
+      : 0) +
     (campaign?.details?.customIssues?.length || 0)
 
   for (let i = 0; i < flow.length; i++) {
@@ -69,37 +99,65 @@ export default function QuestionsPage(props) {
       if (!campaign?.details?.runningAgainst) {
         break
       }
-    } else if (!campaign?.details || !campaign.details[flow[i]]) {
-      break
+    } else {
+      const details = campaign?.details
+      const stepKey = flow[i]
+      const isStepComplete =
+        stepKey === 'occupation'
+          ? Boolean(details?.occupation)
+          : stepKey === 'funFact'
+          ? Boolean(details?.funFact)
+          : stepKey === 'pastExperience'
+          ? Boolean(details?.pastExperience)
+          : stepKey === 'website'
+          ? Boolean(details?.website)
+          : false
+      if (!details || !stepKey || !isStepComplete) {
+        break
+      }
     }
     if (i === flow.length - 1) {
       nextStep = i + 1
     }
   }
 
-  const onChangeField = (key, value) => {
+  const onChangeField = (key: string, value: string) => {
     setAnswers({
       ...answers,
       [key]: value,
     })
   }
 
-  const handleSave = async (keys, values) => {
-    const attr = keys.map((key, i) => {
-      return { key: keys[0], value: values[i] }
+  const onChangePositions = (value: CandidatePosition[] | false) => {
+    setAnswers({
+      ...answers,
+      candidatePositions: value,
     })
-    const campaign = await updateCampaign(attr)
-    setCampaign(campaign)
   }
 
-  const handleComplete = async (type = false) => {
-    const campaign = await getCampaign()
-    setCampaign(campaign)
-    if (type === 'issues') {
-      const candidatePositions = await loadCandidatePosition(campaign.id)
-      onChangeField('candidatePositions', candidatePositions)
-      const campaign = await getCampaign()
+  type UpdateValue = string | number | boolean | object | null | undefined
+  const handleSave = async (keys: string[], values: UpdateValue[]) => {
+    const attr = keys.map((_key, i) => {
+      return { key: keys[0]!, value: values[i]! }
+    })
+    const campaign = await updateCampaign(attr)
+    if (campaign) {
       setCampaign(campaign)
+    }
+  }
+
+  const handleComplete = async (type: string | false = false) => {
+    const updatedCampaign = await getCampaign()
+    if (updatedCampaign) {
+      setCampaign(updatedCampaign)
+    }
+    if (type === 'issues' && updatedCampaign) {
+      const candidatePositions = await loadCandidatePosition(updatedCampaign.id)
+      onChangePositions(candidatePositions)
+      const refreshedCampaign = await getCampaign()
+      if (refreshedCampaign) {
+        setCampaign(refreshedCampaign)
+      }
     }
   }
   let nextKey
@@ -109,11 +167,15 @@ export default function QuestionsPage(props) {
     nextKey = 'done'
   }
 
-  const updatePositionsCallback = async (freshCandidatePositions) => {
-    const campaign = await getCampaign()
+  const updatePositionsCallback = async (
+    freshCandidatePositions: CandidatePosition[] | false,
+  ) => {
+    const updatedCampaign = await getCampaign()
 
-    onChangeField('candidatePositions', freshCandidatePositions)
-    setCampaign(campaign)
+    onChangePositions(freshCandidatePositions)
+    if (updatedCampaign) {
+      setCampaign(updatedCampaign)
+    }
   }
 
   return (
@@ -123,7 +185,6 @@ export default function QuestionsPage(props) {
           value={answers.occupation}
           onChangeCallback={onChangeField}
           saveCallback={handleSave}
-          campaign={campaign}
           campaignKey={nextKey}
         />
       )}
@@ -132,14 +193,12 @@ export default function QuestionsPage(props) {
           value={answers.funFact}
           onChangeCallback={onChangeField}
           saveCallback={handleSave}
-          campaign={campaign}
           campaignKey={nextKey}
         />
       )}
       {campaign && nextKey === 'pastExperience' && (
         <PastExperience
           value={answers.pastExperience}
-          onChangeCallback={onChangeField}
           saveCallback={handleSave}
           campaign={campaign}
           campaignKey={nextKey}
@@ -182,7 +241,6 @@ export default function QuestionsPage(props) {
           value={answers.website}
           onChangeCallback={onChangeField}
           saveCallback={handleSave}
-          campaign={campaign}
           campaignKey={nextKey}
         />
       )}
@@ -190,3 +248,5 @@ export default function QuestionsPage(props) {
     </FocusedExperienceWrapper>
   )
 }
+
+export default QuestionsPage

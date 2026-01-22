@@ -4,9 +4,10 @@ import Body1 from '@shared/typography/Body1'
 import { SmsScriptSelect } from './SmsScriptSelect'
 import { ModalFooter } from '@shared/ModalFooter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { CampaignAiContent } from 'helpers/types'
 
 interface SelectScriptScreenProps {
-  aiContent?: PrismaJson.CampaignAiContent
+  aiContent?: CampaignAiContent
   onBack?: () => void
   onNext?: (scriptKey: string | null) => void
 }

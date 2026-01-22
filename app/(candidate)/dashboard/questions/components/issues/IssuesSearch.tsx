@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import { IoCloseSharp } from 'react-icons/io5'
 
 interface IssueOption {
-  name: string
+  name?: string
 }
 
 const filterOptions = (
@@ -15,7 +15,8 @@ const filterOptions = (
 ): IssueOption[] => {
   if (options && typeof options.filter === 'function') {
     return options.filter((option) => {
-      return option.name.toLowerCase().includes(inputValue.toLowerCase())
+      const name = option.name || ''
+      return name.toLowerCase().includes(inputValue.toLowerCase())
     })
   }
   return []
@@ -86,7 +87,7 @@ export const IssuesSearch = ({
           }}
         />
       )}
-      getOptionLabel={({ name }: IssueOption) => name}
+      getOptionLabel={({ name }: IssueOption) => name || ''}
       filterOptions={filterOptions}
     />
   )

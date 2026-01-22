@@ -14,17 +14,25 @@ import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCampaign } from '@shared/hooks/useCampaign'
 
+type GenerateLoadingScreenProps = {
+  aiTemplateKey?: string
+  onNext?: (aiScriptKey: string) => void
+  onBack?: () => void
+}
+
 export const GenerateLoadingScreen = ({
   aiTemplateKey = '',
-  onNext = (aiScriptKey = '') => {},
-}) => {
+  onNext = () => {},
+}: GenerateLoadingScreenProps): React.JSX.Element => {
   const [campaign, setCampaign] = useCampaign()
   const [aiContentSections] = buildAiContentSections(
     campaign,
     AI_CONTENT_SUB_SECTION_KEY,
   )
   const { errorSnackbar } = useSnackbar()
-  const [generateTimeoutId, setGenerateTimeoutId] = useState(null)
+  const [generateTimeoutId, setGenerateTimeoutId] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const [waiting, setWaiting] = useState(false)
 
   const fireError = () => {
@@ -42,28 +50,29 @@ export const GenerateLoadingScreen = ({
     )
   }
 
-  const generateContentPolling = async (aiScriptKey) => {
+  const generateContentPolling = async (aiScriptKey: string) => {
     const campaign = await getCampaign()
     const [_, jobsProcessing] = buildAiContentSections(
       campaign,
       AI_CONTENT_SUB_SECTION_KEY,
     )
 
-    setCampaign(campaign)
+    setCampaign(campaign ? campaign : null)
     if (jobsProcessing) {
       return debounce(() => generateContentPolling(aiScriptKey), 1000 * 3)
     } else {
-      clearTimeout(generateTimeoutId)
+      clearTimeout(generateTimeoutId!)
       setWaiting(false)
       onNext(aiScriptKey)
     }
   }
 
   useEffect(() => {
-    const initiateContentGeneration = async (aiScriptKey) => {
+    const initiateContentGeneration = async (aiScriptKey: string) => {
       setWaiting(true)
       Boolean(!generateTimeoutId) && startTimeout()
-      const { chatResponse, status } = await generateAIContent(aiScriptKey)
+      const response = await generateAIContent(aiScriptKey)
+      const { chatResponse, status } = response || {}
 
       if (status === 'processing' && !chatResponse) {
         generateContentPolling(aiScriptKey)
@@ -77,7 +86,7 @@ export const GenerateLoadingScreen = ({
         getNewAiContentSectionKey(aiContentSections, aiTemplateKey),
       )
     }
-    return () => clearTimeout(generateTimeoutId)
+    return () => clearTimeout(generateTimeoutId!)
   }, [])
 
   return (

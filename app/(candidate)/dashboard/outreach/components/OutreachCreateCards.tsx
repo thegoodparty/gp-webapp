@@ -19,10 +19,7 @@ import { ComplianceModal } from 'app/(candidate)/dashboard/shared/ComplianceModa
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-
-interface TcrCompliance {
-  status?: string
-}
+import type { TcrCompliance } from 'helpers/types'
 
 interface OutreachCreateCardsProps {
   tcrCompliance?: TcrCompliance
