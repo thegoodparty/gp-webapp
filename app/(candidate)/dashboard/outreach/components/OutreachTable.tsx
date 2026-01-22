@@ -51,7 +51,9 @@ const isStatusKey = (key: string | null | undefined): key is StatusKey => {
 const STATUS_COLUMN = {
   header: 'Status',
   cell: ({ row }: { row: OutreachRow }) => {
-    if (row.outreachType !== OUTREACH_TYPES.p2p) {
+    // Check if this is a P2P outreach by checking for phoneListId
+    // (phoneListId indicates it was created via P2P flow, even if type is normalized to 'text')
+    if (row.phoneListId == null) {
       return <NotApplicableLabel />
     }
 
