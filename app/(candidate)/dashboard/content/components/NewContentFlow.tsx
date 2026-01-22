@@ -62,7 +62,7 @@ const NewContentFlow = (props: NewContentFlowProps): React.JSX.Element => {
   const [inputFields, setInputFields] = useState<PromptInputField[]>([])
 
   useEffect(() => {
-    if (selected !== '') {
+    if (selected) {
       onSelectPrompt()
     }
   }, [selected])
