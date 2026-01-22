@@ -35,6 +35,7 @@ import { LongPoll } from '@shared/utils/LongPoll'
 import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
 import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -97,7 +98,10 @@ export default function TaskFlow({
   const purchaseMetaData = {
     contactCount: leadsLoaded,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
-    outreachType: type,
+    outreachType:
+      p2pUxEnabled && type === OUTREACH_TYPES.text
+        ? OUTREACH_TYPES.p2p
+        : type,
     campaignId: campaign.id,
   }
 
