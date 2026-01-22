@@ -1,6 +1,7 @@
 'use client'
 import Modal from '@shared/utils/Modal'
 import { useMemo, useState } from 'react'
+import type { ReactElement } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
 import AudienceStep from './AudienceStep'
@@ -24,20 +25,37 @@ import {
   handleCreatePhoneList,
   handleCreateVoterFileFilter,
   handleScheduleOutreach,
+  FlowState,
+  AudienceState,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
-import { noop } from '@shared/utils/noop'
 import { LongPoll } from '@shared/utils/LongPoll'
-import { getP2pPhoneListStatus } from 'helpers/createP2pPhoneList'
+import {
+  getP2pPhoneListStatus,
+  PhoneListStatusResponse,
+} from 'helpers/createP2pPhoneList'
 import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+import { Campaign } from 'helpers/types'
 
-const DEFAULT_STATE = {
+interface TaskFlowState extends FlowState {
+  step: number
+  budget: number
+  voicemail?: boolean
+  audience: AudienceState
+  script: string | false | null
+  scriptText: string
+  voterCount: number
+  phoneListToken: string | null
+  leadsLoaded: number | null
+}
+
+const DEFAULT_STATE: TaskFlowState = {
   step: 0,
   budget: 0,
   voicemail: undefined,
@@ -66,7 +84,17 @@ const DEFAULT_STATE = {
 /**
  * @param {TaskFlowProps} props
  */
-export default function TaskFlow({
+type TaskFlowProps = {
+  type: string
+  customButton?: ReactElement
+  campaign: Campaign
+  isCustom?: boolean
+  forceOpen?: boolean
+  onClose?: () => void
+  defaultAiTemplateId?: string | number
+}
+
+const TaskFlow = ({
   forceOpen = false,
   type,
   customButton,
@@ -74,15 +102,13 @@ export default function TaskFlow({
   isCustom,
   onClose,
   defaultAiTemplateId,
-}) {
+}: TaskFlowProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
-  const stepList = useMemo(getFlowStepsByType(type, p2pUxEnabled), [
-    type,
-    p2pUxEnabled,
-  ])
+  const stepList =
+    useMemo(getFlowStepsByType(type, p2pUxEnabled), [type, p2pUxEnabled]) || []
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
@@ -93,16 +119,18 @@ export default function TaskFlow({
     (outreach) => outreach.type === type,
   )
   const { phoneListToken, phoneListId, leadsLoaded } = state
+  const { id: campaignId, aiContent } = campaign
   const [stopPolling, setStopPolling] = useState(false)
 
+  const contactCount = leadsLoaded ?? undefined
   const purchaseMetaData = {
-    contactCount: leadsLoaded,
+    contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
     outreachType:
       p2pUxEnabled && type === OUTREACH_TYPES.text
         ? OUTREACH_TYPES.p2p
         : type,
-    campaignId: campaign.id,
+    campaignId,
   }
 
   const trackingAttrs = useMemo(
@@ -110,7 +138,13 @@ export default function TaskFlow({
     [type],
   )
 
-  const handleChange = (changeSetOrKey, value) => {
+  const handleChange = (
+    changeSetOrKey:
+      | Partial<TaskFlowState>
+      | keyof TaskFlowState
+      | string,
+    value?: TaskFlowState[keyof TaskFlowState],
+  ) => {
     if (typeof changeSetOrKey === 'object') {
       setState((prevState) => ({
         ...prevState,
@@ -176,17 +210,21 @@ export default function TaskFlow({
     setState(DEFAULT_STATE)
   }
 
-  const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {
+  const handleAddScriptOnComplete = (
+    scriptKeyOrText: string | null,
+    scriptContent?: string,
+  ) => {
+    const scriptKeyValue = String(scriptKeyOrText)
     handleChange('script', scriptKeyOrText)
 
     const content =
-      scriptContent ?? campaign.aiContent?.[scriptKeyOrText]?.content
+      scriptContent ?? aiContent?.[scriptKeyValue]?.content
     const scriptText = content
-      ? sanitizeHtml(content, {
+      ? sanitizeHtml(String(content), {
           allowedTags: [],
           allowedAttributes: {},
         })
-      : scriptKeyOrText
+      : scriptKeyValue
 
     handleChange('scriptText', scriptText)
     handleNext()
@@ -205,7 +243,7 @@ export default function TaskFlow({
       handleCreateOutreach({
         type,
         state,
-        campaignId: campaign.id,
+        campaignId,
         outreaches,
         setOutreaches,
         errorSnackbar,
@@ -293,13 +331,15 @@ export default function TaskFlow({
       />
       <Modal open={open} closeCallback={handleClose}>
         {p2pUxEnabled && phoneListToken && (
-          <LongPoll
+          <LongPoll<PhoneListStatusResponse | false>
             {...{
-              pollingMethod: async () => {
-                return await getP2pPhoneListStatus(phoneListToken)
-              },
+              pollingMethod: async () => getP2pPhoneListStatus(phoneListToken),
               onSuccess: (result) => {
-                const { phoneListId, leadsLoaded } = result || {}
+                if (result === undefined || result === false) {
+                  setStopPolling(true)
+                  return
+                }
+                const { phoneListId, leadsLoaded } = result
                 handleChange({
                   phoneListId,
                   leadsLoaded,
@@ -338,7 +378,7 @@ export default function TaskFlow({
           />
         )}
         {stepName === STEPS.image && (
-          <ImageStep type={type} image={state.image} {...callbackProps} />
+          <ImageStep type={type} image={state.image ?? null} {...callbackProps} />
         )}
         {stepName === STEPS.schedule && (
           <ScheduleStep
@@ -347,7 +387,9 @@ export default function TaskFlow({
             {...callbackProps}
             // Only call onCreateOutreach if we're on the last step, otherwise
             // we'll call it in the last step
-            onCreateOutreach={isLastStep ? onCreateOutreach : noop}
+            onCreateOutreach={
+              isLastStep ? onCreateOutreach : async () => undefined
+            }
             onScheduleOutreach={
               isLastStep
                 ? handleScheduleOutreach(
@@ -356,7 +398,7 @@ export default function TaskFlow({
                     successSnackbar,
                     state,
                   )
-                : noop
+                : async () => {}
             }
             isLastStep
           />
@@ -372,7 +414,7 @@ export default function TaskFlow({
               {...{
                 onComplete: handlePurchaseComplete,
                 phoneListId,
-                contactCount: purchaseMetaData?.contactCount,
+                contactCount,
                 type,
                 pricePerContact: purchaseMetaData?.pricePerContact,
               }}
@@ -386,7 +428,9 @@ export default function TaskFlow({
               scriptText: state.scriptText,
               audience: state.audience,
               ...callbackProps,
-              onCreateOutreach,
+              onCreateOutreach: async () => {
+                await onCreateOutreach()
+              },
               voterCount: state.voterCount,
             }}
           />
@@ -395,10 +439,14 @@ export default function TaskFlow({
           <SocialPostStep
             scriptText={state.scriptText}
             {...callbackProps}
-            onCreateOutreach={onCreateOutreach}
+            onCreateOutreach={async () => {
+              await onCreateOutreach()
+            }}
           />
         )}
       </Modal>
     </>
   )
 }
+
+export default TaskFlow

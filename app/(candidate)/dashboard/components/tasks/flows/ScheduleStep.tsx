@@ -9,14 +9,11 @@ import {
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
+import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
 interface ScheduleState {
-  date: Date | string
-  message: string
-}
-
-interface Outreach {
-  id: string
+  date?: Date | string
+  message?: string
 }
 
 interface ScheduleStepProps {

@@ -13,8 +13,26 @@ import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 import Link from 'next/link'
 import H3 from '@shared/typography/H3'
 import CandidatePreview from './CandidatePreview'
+import type { ComponentProps } from 'react'
+import type { Article, Race } from 'app/(landing)/elections/shared/types'
 
-export default function PositionPage(props) {
+type CandidatePreviewCandidate = ComponentProps<typeof CandidatePreview>['candidate']
+
+type Candidate = CandidatePreviewCandidate & {
+  slug: string
+}
+
+interface PositionPageProps {
+  race: Race
+  otherRaces: Race[]
+  articles: Article[]
+  county?: string
+  city?: string
+  positions: Array<string | undefined>
+  candidates?: Candidate[] | null
+}
+
+const PositionPage = (props: PositionPageProps): React.JSX.Element => {
   const { race, otherRaces, articles, county, city, positions, candidates } =
     props
   const { positionLevel, state, Place } = race
@@ -28,13 +46,13 @@ export default function PositionPage(props) {
     loc += ` County, ${state?.toUpperCase()}`
   }
 
-  const positionLink = (race) => {
+  const positionLink = (race: Race) => {
     return `/elections/position/${state}/${county ? `${county}/` : ''}${
       city ? `${city}/` : ''
     }${race.slug}`
   }
 
-  const candidateLink = (c) => `/candidate/${c.slug}`
+  const candidateLink = (c: Candidate) => `/candidate/${c.slug}`
   // const candidatesForLinks = candidates?.map((c) => ({
   //    ...c,
   //   name: `${c.firstName} ${c.lastName}`
@@ -48,14 +66,21 @@ export default function PositionPage(props) {
         <Hero {...race} />
         <PositionDetails race={race} positions={positions} />
         {/* ---------- Candidates running in this race ---------- */}
-        {candidates?.length > 0 && (
+        {Array.isArray(candidates) && candidates.length > 0 && (
           <section className="my-20">
             <H3 className="mb-8">
               Independent Candidates running for {race.normalizedPositionName}
             </H3>
 
             {/* grid → max 3 per row */}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              className="
+                grid
+                gap-6
+                sm:grid-cols-2
+                lg:grid-cols-3
+              "
+            >
               {candidates.map((c) => (
                 <Link
                   key={c.slug}
@@ -89,3 +114,5 @@ export default function PositionPage(props) {
     </div>
   )
 }
+
+export default PositionPage

@@ -20,6 +20,7 @@ import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { PhoneListInput } from 'helpers/createP2pPhoneList'
 
 const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
@@ -29,20 +30,26 @@ const isAudienceFilterKey = (key: string, audience: AudienceFiltersState): key i
   return key in audience
 }
 
-interface VoterFileFilterResult {
-  id?: number
-}
+type VoterFileFilterResult = PhoneListInput & { id?: string }
 
 interface AudienceStepProps {
-  onChangeCallback: (keyOrData: string | { voterFileFilter: VoterFileFilterResult; phoneListToken: string | null }, value?: AudienceFiltersState | number) => void
+  onChangeCallback: (
+    keyOrData:
+      | string
+      | {
+          voterFileFilter?: VoterFileFilterResult
+          phoneListToken: string | null | undefined
+        },
+    value?: AudienceFiltersState | number,
+  ) => void
   nextCallback: () => void
   backCallback: () => void
   type: string
   withVoicemail?: boolean
   audience: AudienceFiltersState
   isCustom?: boolean
-  onCreateVoterFileFilter?: () => Promise<VoterFileFilterResult>
-  onCreatePhoneList?: (voterFileFilter: VoterFileFilterResult) => Promise<string | null>
+  onCreateVoterFileFilter?: () => Promise<VoterFileFilterResult | undefined>
+  onCreatePhoneList?: (voterFileFilter: VoterFileFilterResult | undefined) => Promise<string | null | undefined>
 }
 
 export default function AudienceStep({

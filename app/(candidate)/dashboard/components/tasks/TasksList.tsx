@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import TaskItem from './TaskItem'
+import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
@@ -9,7 +9,10 @@ import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardH
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
-import LogTaskModal from './LogTaskModal'
+import LogTaskModal, {
+  TASK_TYPE_HEADINGS,
+  LogTaskFlowType,
+} from './LogTaskModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
@@ -27,29 +30,40 @@ import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { Campaign, TcrCompliance } from 'helpers/types'
 
-export default function TasksList({
+interface TasksListProps {
+  campaign: Campaign
+  tasks?: Task[]
+  tcrCompliance?: TcrCompliance | null
+}
+
+const TasksList = ({
   campaign,
   tasks: tasksProp = [],
   tcrCompliance,
-}) {
+}: TasksListProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
-  const [tasks, setTasks] = useState(tasksProp)
-  const [completeModalTask, setCompleteModalTask] = useState(null)
+  const [tasks, setTasks] = useState<Task[]>(tasksProp)
+  const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
-  const [p2pTrackingAttrs, setP2PTrackingAttrs] = useState({})
-  const [deadlineModalTask, setDeadlineModalTask] = useState(null)
-  const [flowModalTask, setFlowModalTask] = useState(null)
-  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
+  const [p2pTrackingAttrs, setP2PTrackingAttrs] =
+    useState<ReturnType<typeof buildTrackingAttrs>>({})
+  const [deadlineModalTask, setDeadlineModalTask] = useState<Task | null>(null)
+  const [flowModalTask, setFlowModalTask] = useState<Task | null>(null)
+  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] =
+    useState<ReturnType<typeof buildTrackingAttrs>>({})
   const { errorSnackbar } = useSnackbar()
 
-  const electionDate = campaign.details.electionDate
-  const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = differenceInDays(electionDate, new Date())
+  const { details, pathToVictory, hasFreeTextsOffer } = campaign
+  const isPro = campaign.isPro ?? false
+  const { electionDate } = details
+  const viabilityScore = pathToVictory?.data?.viability?.score || 0
+  const daysUntilElection = differenceInDays(electionDate!, new Date())
 
-  async function handleCheckClick(task) {
+  const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
 
     // skip voter counts for education tasks
@@ -60,22 +74,22 @@ export default function TasksList({
     }
   }
 
-  function handleCompleteSubmit(_count) {
-    completeTask(completeModalTask.id)
+  const handleCompleteSubmit = (_count: number) => {
+    completeTask(completeModalTask!.id)
     setCompleteModalTask(null)
   }
 
-  function handleCompleteCancel() {
+  const handleCompleteCancel = () => {
     setCompleteModalTask(null)
   }
 
-  const handleActionClick = (task) => {
+  const handleActionClick = (task: Task) => {
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
     if (flowType === TASK_TYPES.text) {
-      if (!campaign.isPro) {
+      if (!isPro) {
         setShowP2PModal(true)
         setP2PTrackingAttrs(
           buildTrackingAttrs('Upgrade to Pro', {
@@ -89,7 +103,7 @@ export default function TasksList({
         setShowComplianceModal(true)
         return
       }
-    } else if (proRequired && !campaign.isPro) {
+    } else if (proRequired && !isPro) {
       trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceStarted, {
         source: 'task_list',
       })
@@ -116,8 +130,8 @@ export default function TasksList({
     }
   }
 
-  async function completeTask(taskId) {
-    const resp = await clientFetch(apiRoutes.campaign.tasks.complete, {
+  const completeTask = async (taskId: string) => {
+    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.complete, {
       taskId,
     })
 
@@ -128,10 +142,10 @@ export default function TasksList({
         if (taskIndex !== -1) {
           currentTasks.splice(taskIndex, 1, updatedTask)
           return [...currentTasks]
-        } else {
-          // Shouldn't happen
-          console.error('Completed task not found')
         }
+        // Shouldn't happen
+        console.error('Completed task not found')
+        return currentTasks
       })
     } else {
       errorSnackbar('Failed to complete task')
@@ -144,7 +158,7 @@ export default function TasksList({
       <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
         <H2>Tasks for this week</H2>
         <Body2 className="!font-outfit mt-1">
-          Election day: {dateUsHelper(electionDate)}
+          Election day: {dateUsHelper(electionDate!)}
         </Body2>
 
         <ul className="p-0 mt-4">
@@ -153,7 +167,7 @@ export default function TasksList({
               <TaskItem
                 key={task.id}
                 task={task}
-                isPro={campaign.isPro}
+                isPro={isPro}
                 daysUntilElection={daysUntilElection}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
@@ -166,7 +180,9 @@ export default function TasksList({
           )}
         </ul>
       </div>
-      {completeModalTask && (
+      {completeModalTask &&
+        ((value: Task['flowType']): value is LogTaskFlowType =>
+          value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
         <LogTaskModal
           onSubmit={handleCompleteSubmit}
           onClose={handleCompleteCancel}
@@ -193,9 +209,9 @@ export default function TasksList({
       <P2PUpgradeModal
         open={showP2PModal}
         variant={(() => {
-          if (!campaign.isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
+          if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
           const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
-          if (p2pUxEnabled && campaign.hasFreeTextsOffer && !isTextCompliant) {
+          if (p2pUxEnabled && hasFreeTextsOffer && !isTextCompliant) {
             return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
           }
           return P2P_MODAL_VARIANTS.NonProUpgrade
@@ -223,3 +239,5 @@ export default function TasksList({
     </>
   )
 }
+
+export default TasksList

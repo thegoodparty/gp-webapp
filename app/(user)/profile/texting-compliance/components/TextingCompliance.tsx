@@ -8,7 +8,7 @@ import ComplianceSteps, {
 } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { formatPhoneNumber } from 'helpers/numberHelper'
 import { HiOutlineCheckBadge } from 'react-icons/hi2'
-import { Website } from 'helpers/types'
+import { Website, TcrCompliance } from 'helpers/types'
 
 interface TDlcNumberProps {
   tdlcNumber: string
@@ -21,11 +21,6 @@ const TDlcNumber = ({ tdlcNumber }: TDlcNumberProps): React.JSX.Element => (
     </span>
   </div>
 )
-
-interface TcrCompliance {
-  status?: string
-  tdlcNumber?: string
-}
 
 interface TextingComplianceProps {
   website?: Website | null

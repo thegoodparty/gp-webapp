@@ -19,17 +19,42 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import type { User } from 'helpers/types'
 
-async function refreshUser() {
+const refreshUser = async (): Promise<User | undefined> => {
   try {
-    const resp = await clientFetch(apiRoutes.user.getUser)
+    const resp = await clientFetch<User>(apiRoutes.user.getUser)
     return resp.data
   } catch (error) {
     console.log('Error updating user', error)
+    return undefined
   }
 }
 
-export const USER_SETTING_FIELDS = [
+type UserSettingsKey = 'firstName' | 'lastName' | 'email' | 'phone' | 'zip'
+
+interface UserSettingsField {
+  key: UserSettingsKey
+  label: string
+  initialValue: string
+  maxLength: number
+  required: boolean
+  dataTestid?: string
+  dataTestId?: string
+  cols?: number
+  type?: 'email' | 'phone'
+}
+
+interface UserSettingsState {
+  firstName?: string
+  lastName?: string
+  email?: string
+  phone?: string
+  zip?: string
+  name?: string
+}
+
+export const USER_SETTING_FIELDS: UserSettingsField[] = [
   {
     key: 'firstName',
     label: 'First Name',
@@ -75,18 +100,25 @@ export const USER_SETTING_FIELDS = [
   },
 ]
 
+interface PersonalSectionProps {
+  user: User | null
+}
+
 // TODO: stop prop-drilling down the user object. Use the useUser hook instead
-function PersonalSection({ user }) {
+const PersonalSection = ({ user }: PersonalSectionProps): React.JSX.Element => {
   const [_, setUserState] = useUser()
   const [saving, setSaving] = useState(false)
 
-  const updatedState = {}
-  if (user) {
+  const buildUserState = (currentUser?: User | null): UserSettingsState => {
+    const updatedState: UserSettingsState = {
+      name: currentUser?.name ?? undefined,
+    }
     USER_SETTING_FIELDS.forEach((field) => {
-      updatedState[field.key] = user[field.key] || field.initialValue
+      updatedState[field.key] = currentUser?.[field.key] || field.initialValue
     })
+    return updatedState
   }
-  const [state, setState] = useState(updatedState)
+  const [state, setState] = useState<UserSettingsState>(buildUserState(user))
   const [isPhoneValid, setIsPhoneValid] = useState(true)
 
   useEffect(() => {
@@ -95,19 +127,23 @@ function PersonalSection({ user }) {
 
   useEffect(() => {
     if (!state.email) {
-      setState(user)
+      setState(buildUserState(user))
     }
   }, [user])
 
   const refetchUser = async () => {
     const updated = await refreshUser()
-
-    setUserState(updated)
+    if (updated) {
+      setUserState(updated)
+    }
   }
 
-  async function updateUserCallback(updatedFields) {
+  const updateUserCallback = async (updatedFields: UserSettingsState) => {
     try {
-      setUserState(await updateUser(updatedFields))
+      const updatedUser = await updateUser(updatedFields)
+      if (updatedUser) {
+        setUserState(updatedUser)
+      }
       updatedFields.zip &&
         (await updateCampaign([
           {
@@ -120,30 +156,21 @@ function PersonalSection({ user }) {
     }
   }
 
-  const onChangeField = (key, val) => {
+  const onChangeField = (key: UserSettingsKey, val: string) => {
     setState({
       ...state,
       [key]: val,
     })
   }
 
-  const cancel = () => {
-    const updatedState = {}
-    USER_SETTING_FIELDS.forEach((field) => {
-      updatedState[field.key] = user[field.key] || field.initialValue
-    })
-    setState(updatedState)
-    setIsPhoneValid(true)
-  }
-
   // TODO: This should only be true if the user has made changes
   const canSave = !(
     (state.phone !== '' && !isPhoneValid) ||
     state.name === '' ||
-    state.zip === '' ||
+    (state.zip || '') === '' ||
     (state.email === '' && state.phone === '') ||
-    (state.email !== '' && !isValidEmail(state.email)) ||
-    (state.zip !== '' && state.zip.length !== 5)
+    (state.email !== '' && !isValidEmail(state.email || '')) ||
+    ((state.zip || '') !== '' && (state.zip || '').length !== 5)
   )
 
   const submit = async () => {
@@ -176,7 +203,7 @@ function PersonalSection({ user }) {
               {field.type === 'phone' ? (
                 <div>
                   <PhoneInput
-                    value={state[field.key]}
+                    value={state[field.key] || ''}
                     onChangeCallback={(phone, isValid) => {
                       onChangeField(field.key, phone)
                       setIsPhoneValid(isValid)
@@ -191,7 +218,7 @@ function PersonalSection({ user }) {
               ) : (
                 <TextField
                   key={field.label}
-                  value={state[field.key]}
+                  value={state[field.key] || ''}
                   fullWidth
                   variant="outlined"
                   label={field.label}

@@ -6,31 +6,57 @@ import { IssueItemLabel } from 'app/(candidate)/dashboard/questions/components/i
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons'
 import { CandidatePositionStatement } from 'app/(candidate)/dashboard/questions/components/issues/CandidatePositionStatement'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import type { ComponentProps } from 'react'
+import type { EditIssuePosition, IssueOption } from './IssuesList'
+import type { CandidatePosition } from 'helpers/types'
 
-export default function IssueItemEditor({
+type IssuePositionData =
+  ComponentProps<typeof IssuePositionsList>['positions'][number]
+
+interface IssueItemEditorProps {
+  issue?: IssueOption
+  selectIssueCallback?: (issue: IssueOption | null) => void
+  saveCallback?: (
+    position: IssuePositionData,
+    issue: IssueOption,
+    candidatePosition: string,
+  ) => void
+  editIssuePosition?: EditIssuePosition | false | null
+  setEditIssuePosition?: (issue: EditIssuePosition | false | null) => void
+  candidatePositions?: CandidatePosition[] | false | null
+}
+
+const IssueItemEditor = ({
   issue,
-  selectIssueCallback = (v) => {},
-  saveCallback = (position, issue, candidatePosition) => {},
+  selectIssueCallback = () => {},
+  saveCallback = () => {},
   editIssuePosition,
-  setEditIssuePosition = (v) => {},
-}) {
-  const { name, positions } = issue
-  const [selectedPosition, setSelectedPosition] = useState(null)
+  setEditIssuePosition = () => {},
+}: IssueItemEditorProps): React.JSX.Element | null => {
+  const [selectedPosition, setSelectedPosition] =
+    useState<IssuePositionData | null>(null)
   const [candidatePosition, setCandidatePosition] = useState('')
   const saveAllowed = candidatePosition !== '' && selectedPosition
 
   useEffect(() => {
-    if (editIssuePosition?.topIssue?.id === issue.id) {
-      setSelectedPosition(editIssuePosition.position)
-      setCandidatePosition(editIssuePosition.description)
+    if (
+      typeof editIssuePosition === 'object' &&
+      editIssuePosition !== null &&
+      editIssuePosition.topIssue?.id === issue?.id
+    ) {
+      if (typeof editIssuePosition.position === 'object') {
+        setSelectedPosition(editIssuePosition.position)
+      }
+      setCandidatePosition(editIssuePosition.description!)
     }
-  }, [editIssuePosition])
+  }, [editIssuePosition, issue?.id])
 
   if (!issue || issue.positions?.length === 0) {
     return null
   }
+  const { name, positions } = issue
 
-  const handleSelectPosition = (position) => {
+  const handleSelectPosition = (position: IssuePositionData) => {
     if (selectedPosition?.id === position.id) {
       setSelectedPosition(null)
     } else {
@@ -57,25 +83,37 @@ export default function IssueItemEditor({
   }
 
   return (
-    issue &&
-    positions?.length && (
       <>
         <div
-          className="flex my-2 items-center font-medium text-sm cursor-pointer"
+          className="
+            flex
+            my-2
+            items-center
+            font-medium
+            text-sm
+            cursor-pointer
+          "
           onClick={handleAnotherIssue}
         >
           <FaChevronLeft />
           <div className="ml-2 ">Choose another issue</div>
         </div>
-        <div className="p-4 rounded-lg mt-2 bg-tertiary-light">
-          <IssueItemLabel name={name} numPositions={positions?.length} />
+        <div
+          className="
+            p-4
+            rounded-lg
+            mt-2
+            bg-tertiary-light
+          "
+        >
+          <IssueItemLabel name={name || ''} numPositions={positions?.length} />
         </div>
         <div>
           <div className="my-4 font-semibold">
             Select your positions on this issue
           </div>
           <IssuePositionsList
-            positions={positions}
+            positions={positions!}
             selectedPosition={selectedPosition}
             handleSelectPosition={handleSelectPosition}
           />
@@ -89,12 +127,13 @@ export default function IssueItemEditor({
         <div className="mt-10 flex justify-center">
           <IssueEditorButtons
             disableSave={!saveAllowed}
-            editIssuePosition={editIssuePosition}
+            editIssuePosition={Boolean(editIssuePosition)}
             onSave={handleSave}
             onCancel={onCancel}
           />
         </div>
       </>
-    )
   )
 }
+
+export default IssueItemEditor

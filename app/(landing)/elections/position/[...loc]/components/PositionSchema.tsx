@@ -1,8 +1,17 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
 import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
+import type { Race } from 'app/(landing)/elections/shared/types'
 
-export default function PositionSchema({ race, loc }) {
+interface PositionSchemaProps {
+  race: Race
+  loc: string[]
+}
+
+const PositionSchema = ({
+  race,
+  loc,
+}: PositionSchemaProps): React.JSX.Element => {
   const {
     positionLevel,
     normalizedPositionName,
@@ -15,7 +24,6 @@ export default function PositionSchema({ race, loc }) {
     employmentType,
     filingOfficeAddress,
     filingPhoneNumber,
-    filingDateEnd,
   } = race
   let locStr = Place?.name || ''
   if (positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
@@ -36,7 +44,6 @@ export default function PositionSchema({ race, loc }) {
         '@context': 'https://schema.org',
         '@type': 'JobPosting',
         datePosted: '2024-01-01',
-        validThrough: filingDateEnd,
         title: normalizedPositionName,
         name: normalizedPositionName,
         description: positionDescription,
@@ -74,3 +81,5 @@ export default function PositionSchema({ race, loc }) {
     />
   )
 }
+
+export default PositionSchema

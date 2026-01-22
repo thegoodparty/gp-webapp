@@ -6,26 +6,37 @@ import { ModalFooter } from '@shared/ModalFooter'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { SmsAiTemplateSelect } from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SmsAiTemplateSelect'
-import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates'
+import {
+  setRequiresQuestionsOnTemplates,
+  RequiresQuestionsMap,
+} from 'helpers/setRequiresQuestionsOnTemplates'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress'
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import { Campaign } from 'helpers/types'
+import { hasRequiredQuestions } from '../util/hasRequiredQuestions.util'
 
-export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
+type TemplateCategoryList = NonNullable<
+  Parameters<typeof getAiTemplatesFromCategories>[0]
+>
+type TemplateList = ReturnType<typeof getAiTemplatesFromCategories>
+
+export const fetchAiContentCategories = async (
+  campaign: Campaign,
+  cacheTime: number = 3600,
+): Promise<TemplateCategoryList> => {
   const candidatePositions = await loadCandidatePosition(campaign.id)
+  const positions = candidatePositions === false ? null : candidatePositions
 
-  const { answeredQuestions, totalQuestions } = calcAnswers(
-    campaign,
-    candidatePositions,
-  )
+  const { answeredQuestions, totalQuestions } = calcAnswers(campaign, positions)
 
   const hasCompletedQuestions = answeredQuestions >= totalQuestions
 
   // TODO: Find out why in the world aren't these booleans just being passed along from the entity in Contentful.
   const requiresQuestions = !hasCompletedQuestions
     ? (
-        await clientFetch(
+        await clientFetch<RequiresQuestionsMap>(
           apiRoutes.content.getByType,
           {
             type: 'contentPromptsQuestions',
@@ -37,7 +48,7 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
       ).data
     : {}
 
-  const resp = await clientFetch(
+  const resp = await clientFetch<TemplateCategoryList>(
     apiRoutes.content.getByType,
     {
       type: 'aiContentCategories',
@@ -47,7 +58,8 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
     },
   )
 
-  return resp.data.map((category = {}) => ({
+  const categories = resp.data || []
+  return categories.map((category) => ({
     ...category,
     templates: setRequiresQuestionsOnTemplates(
       category.templates,
@@ -60,10 +72,15 @@ export const SelectAiTemplateScreen = ({
   flowType = '',
   categories,
   onBack = () => {},
-  onNext = (scriptKey) => {},
-}) => {
+  onNext = () => {},
+}: {
+  flowType?: string
+  categories?: TemplateCategoryList
+  onBack?: () => void
+  onNext?: (scriptKey: string) => void
+}): React.JSX.Element => {
   const [selectedTemplateKey, setSelectedTemplateKey] = useState('')
-  const [templates, setTemplates] = useState([])
+  const [templates, setTemplates] = useState<TemplateList>([])
   const selectedTemplate = templates.find(
     ({ key }) => key === selectedTemplateKey,
   )
@@ -110,7 +127,8 @@ export const SelectAiTemplateScreen = ({
         onBack={onBack}
         onNext={handleOnNext}
         disabled={
-          !Boolean(selectedTemplate) || selectedTemplate.requiresQuestions
+          !Boolean(selectedTemplate) ||
+          (selectedTemplate && Boolean(hasRequiredQuestions(selectedTemplate)))
         }
       />
     </>

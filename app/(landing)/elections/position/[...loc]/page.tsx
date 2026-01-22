@@ -2,12 +2,26 @@ import pageMetaData from 'helpers/metadataHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
-import { fetchArticle } from 'app/blog/article/[slug]/utils'
+import {
+  fetchArticle,
+  type ArticleContent,
+} from 'app/blog/article/[slug]/utils'
 import { PositionLevel } from '../../shared/PositionLevel'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { electionApiRoutes } from 'gpApi/routes'
+import type { ComponentProps } from 'react'
+import type { Metadata } from 'next'
 
-const fetchRace = async (raceSlug) => {
+type PositionPageProps = ComponentProps<typeof PositionPage>
+type PositionRace = PositionPageProps['race']
+type PositionCandidates = PositionPageProps['candidates']
+type PositionArticles = PositionPageProps['articles']
+
+interface Params {
+  loc: string[]
+}
+
+const fetchRace = async (raceSlug: string): Promise<PositionRace | null> => {
   const api = electionApiRoutes.races.find.path
   const payload = {
     raceSlug,
@@ -21,7 +35,9 @@ const fetchRace = async (raceSlug) => {
   return null
 }
 
-const fetchCandidates = async (raceSlug) => {
+const fetchCandidates = async (
+  raceSlug: string,
+): Promise<PositionCandidates> => {
   const api = electionApiRoutes.candidacies.find.path
   const payload = {
     raceSlug,
@@ -34,9 +50,16 @@ const fetchCandidates = async (raceSlug) => {
   return null
 }
 
-const parseLoc = (loc) => {
-  const state = loc[0]
-  const positionSlug = loc[loc.length - 1]
+interface ParsedLoc {
+  state: string
+  county?: string
+  city?: string
+  positionSlug: string
+}
+
+const parseLoc = (loc: string[]): ParsedLoc => {
+  const state = loc[0]!
+  const positionSlug = loc[loc.length - 1]!
   let county, city
   if (loc.length === 4) {
     county = loc[1]
@@ -48,8 +71,12 @@ const parseLoc = (loc) => {
   return { state, county, city, positionSlug }
 }
 
-export async function generateMetadata({ params }) {
-  const { loc } = params
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<Params>
+}): Promise<Metadata> => {
+  const { loc } = await params
   const race = await fetchRace(loc.join('/'))
   const slug = `elections/position/${loc.join('/')}`
 
@@ -71,15 +98,21 @@ export async function generateMetadata({ params }) {
   }
 
   const meta = pageMetaData({
-    title: `Run for ${race?.normalizedPositionName} in ${locStr}`,
-    description: `Learn the details about running for ${race?.normalizedPositionName} in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
+    title: `Run for ${race?.normalizedPositionName || ''} in ${locStr}`,
+    description: `Learn the details about running for ${
+      race?.normalizedPositionName || ''
+    } in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
     slug,
   })
   return meta
 }
 
-export default async function Page({ params }) {
-  const { loc } = params
+const Page = async ({
+  params,
+}: {
+  params: Promise<Params>
+}): Promise<React.JSX.Element> => {
+  const { loc } = await params
   if (!loc || loc.length === 0 || loc.length > 4) {
     return notFound()
   }
@@ -96,25 +129,36 @@ export default async function Page({ params }) {
     return notFound()
   }
 
-  const { state, county, city } = parseLoc(loc)
+  const { county, city } = parseLoc(loc)
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = []
+  const buildArticle = (content: ArticleContent): PositionArticles[number] => ({
+    title: content.title,
+    slug: content.slug,
+    summary: content.summary,
+    publishDate: content.publishDate,
+    mainImage: content.mainImage?.url
+      ? {
+          url: content.mainImage.url,
+          alt: content.mainImage.alt,
+        }
+      : undefined,
+  })
+  const articles: PositionArticles = []
   for (const slug of articleSlugs) {
     const content = await fetchArticle(slug)
-    articles.push(content)
+    articles.push(buildArticle(content))
   }
 
-  const childProps = {
+  const childProps: PositionPageProps = {
     race,
     otherRaces: [], // We'll need to update this once we have the otherRaces data
     articles,
     positions: race.positionNames || [race.normalizedPositionName],
-    state,
     county,
     city,
     candidates,
@@ -126,3 +170,5 @@ export default async function Page({ params }) {
     </>
   )
 }
+
+export default Page

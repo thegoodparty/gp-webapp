@@ -11,20 +11,34 @@ import {
 } from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SelectAiTemplateScreen'
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
+import { Campaign } from 'helpers/types'
 
-export default function AddScriptStep({
+type ContentCategoryList = Awaited<
+  ReturnType<typeof fetchAiContentCategories>
+>
+
+type AddScriptStepProps = {
+  type?: string
+  onComplete?: (scriptKey: string | null, scriptContent?: string) => void
+  backCallback: () => void
+  campaign: Campaign
+  defaultAiTemplateId?: number | string
+}
+
+const AddScriptStep = ({
   type,
-  onComplete = (scriptKey, scriptContent) => {},
+  onComplete = () => {},
   backCallback,
   campaign,
   defaultAiTemplateId,
-}) {
-  const [currentScreen, setCurrentScreen] = useState(
+}: AddScriptStepProps): React.JSX.Element => {
+  const [currentScreen, setCurrentScreen] = useState<string | undefined>(
     ADD_SCRIPT_FLOW.CHOOSE_FLOW,
   )
   const [aiTemplateKey, setAiTemplateKey] = useState('')
-  const [aiScriptKey, setAiScriptKey] = useState('')
-  const [contentCategories, setContentCategories] = useState([])
+  const [aiScriptKey, setAiScriptKey] = useState<string | null>('')
+  const [contentCategories, setContentCategories] =
+    useState<ContentCategoryList>([])
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -32,11 +46,11 @@ export default function AddScriptStep({
       setContentCategories(categories)
 
       if (defaultAiTemplateId) {
-        const template = categories
-          .flatMap((category) => category.templates)
+        const template = categories!
+          .flatMap((category) => category.templates || [])
           .find((template) => template.id === defaultAiTemplateId)
 
-        setAiTemplateKey(template.key)
+        setAiTemplateKey(template ? template.key : '')
       } else {
         setAiTemplateKey('')
       }
@@ -44,12 +58,12 @@ export default function AddScriptStep({
     fetchCategories()
   }, [campaign, defaultAiTemplateId])
 
-  const onBack = (screen) => {
+  const onBack = (screen?: string) => {
     if (!screen) return backCallback()
     setCurrentScreen(screen)
   }
 
-  const onNext = (screen) => {
+  const onNext = (screen?: string) => {
     if (screen === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE && aiTemplateKey) {
       setCurrentScreen(ADD_SCRIPT_FLOW.GENERATE_LOADING)
     } else {
@@ -95,7 +109,7 @@ export default function AddScriptStep({
           campaign,
           aiTemplateKey,
           onBack: () =>
-            onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW.SELECT_SMS_AI_TEMPLATE),
+            onBack(ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE),
           onNext: (aiScriptKey) => {
             setAiScriptKey(aiScriptKey)
             onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)
@@ -118,5 +132,9 @@ export default function AddScriptStep({
     ),
   }
 
-  return <div className="p-4 w-[80vw] max-w-xl">{Screens[currentScreen]}</div>
+  return (
+    <div className="p-4 w-[80vw] max-w-xl">{Screens[currentScreen!]}</div>
+  )
 }
+
+export default AddScriptStep

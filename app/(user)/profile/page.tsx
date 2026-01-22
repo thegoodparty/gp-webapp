@@ -6,6 +6,8 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
+import type { TcrCompliance } from 'helpers/types'
+import type { ComponentProps } from 'react'
 
 const meta = pageMetaData({
   title: 'Profile Settings',
@@ -13,7 +15,9 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page() {
+type ProfilePageProps = ComponentProps<typeof ProfilePage>
+
+const Page = async (): Promise<React.JSX.Element> => {
   const user = await getServerUser()
   if (!user) {
     redirect('/login')
@@ -24,8 +28,8 @@ export default async function Page() {
   const [website, domainStatusResponse, tcrComplianceResponse] =
     await Promise.all([
       fetchUserWebsite(),
-      serverFetch(apiRoutes.domain.status),
-      serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
+      serverFetch<string>(apiRoutes.domain.status),
+      serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
     ])
 
   const domainStatus = domainStatusResponse.ok
@@ -35,9 +39,9 @@ export default async function Page() {
     ? tcrComplianceResponse.data
     : null
 
-  const childProps = {
+  const childProps: ProfilePageProps = {
     user,
-    isPro: campaign?.isPro,
+    isPro: Boolean(campaign?.isPro),
     subscriptionCancelAt,
     website,
     domainStatus,
@@ -46,3 +50,5 @@ export default async function Page() {
 
   return <ProfilePage {...childProps} />
 }
+
+export default Page
