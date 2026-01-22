@@ -40,7 +40,7 @@ import {
 } from 'helpers/createP2pPhoneList'
 import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/flows/util/getFlowStepsByType.util'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/constants'
+import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
 
 interface TaskFlowState extends FlowState {

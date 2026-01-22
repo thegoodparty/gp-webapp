@@ -4,10 +4,7 @@ import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
 import { noop } from '@shared/utils/noop'
-import {
-  OUTREACH_TYPES,
-  getEffectiveOutreachType,
-} from 'app/(candidate)/dashboard/outreach/constants'
+import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { VoterFileFilters } from 'helpers/types'
 import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
