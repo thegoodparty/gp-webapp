@@ -6,11 +6,12 @@ interface FetchPlaceParams {
   slug: string
   includeRaces?: boolean
   includeParent?: boolean
+  includeChildren?: boolean
   categorizeChildren?: boolean
   placeColumns?: string
 }
 
-interface PlaceParent {
+export interface PlaceParent {
   name: string
   slug: string
   state: string
@@ -29,9 +30,13 @@ export interface PlaceResult {
   incomeHouseholdMedian?: number
   unemploymentRate?: number
   homeValue?: number
-  races?: Race[]
-  children?: PlaceChild[]
+  Races?: Race[]
+  races?: Race[] | null
+  children?: PlaceChild[] | null
   parent?: PlaceParent
+  counties?: Place[]
+  districts?: Place[]
+  others?: Place[]
   categorizedChildren?: {
     counties?: Place[]
     districts?: Place[]
@@ -43,13 +48,14 @@ const fetchPlace = async ({
   slug,
   includeRaces = true,
   includeParent = false,
+  includeChildren = true,
   categorizeChildren = false,
   placeColumns = ''
-}: FetchPlaceParams): Promise<PlaceResult | false> => {
+}: FetchPlaceParams): Promise<PlaceResult | null> => {
   const api = electionApiRoutes.places.find.path
   const payload = {
     slug: slug.toLowerCase(),
-    includeChildren: true,
+    includeChildren,
     includeRaces,
     raceColumns:
       'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
@@ -62,6 +68,6 @@ const fetchPlace = async ({
   if (Array.isArray(res)) {
     return res[0]
   }
-  return false
+  return null
 }
 export default fetchPlace

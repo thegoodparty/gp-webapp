@@ -17,7 +17,7 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
+export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
 
@@ -26,12 +26,17 @@ export default async function Page() {
   if (website && website.status === WEBSITE_STATUS.published) {
     redirect('/dashboard/website/editor')
   }
+
+  if (!campaign) {
+    redirect('/run-for-office')
+  }
+
   const issues = await serverLoadCandidatePosition(campaign.id)
 
-  const combinedIssues = combineIssues(issues, campaign?.details?.customIssues)
+  const combinedIssues = combineIssues(issues || [], campaign?.details?.customIssues)
 
   return (
-    <WebsiteProvider website={website}>
+    <WebsiteProvider website={website} contacts={null}>
       <WebsiteCreatePage
         pathname="/dashboard/website/create"
         initialIssues={combinedIssues}

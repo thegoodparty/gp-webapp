@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, KeyboardEvent, ChangeEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import TextField from '@shared/inputs/TextField'
 import H2 from '@shared/typography/H2'
 import H3 from '@shared/typography/H3'
 import Button from '@shared/buttons/Button'
-import { searchDomains } from '../../util/domainFetch.util'
+import { searchDomains, DomainSearchResults } from '../../util/domainFetch.util'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import DomainResult from './DomainResult'
 import { useWebsite } from '../../components/WebsiteProvider'
@@ -15,18 +15,22 @@ import { isValidUrl } from 'helpers/linkhelper'
 import Body2 from '@shared/typography/Body2'
 import { sendToPurchaseDomainFlow } from 'app/(candidate)/dashboard/website/util/domain.util'
 
-export default function DomainSearch({ prefillSearch }) {
+interface DomainSearchProps {
+  prefillSearch?: string
+}
+
+export default function DomainSearch({ prefillSearch }: DomainSearchProps): React.JSX.Element {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(prefillSearch || '')
-  const [searchResults, setSearchResults] = useState(null)
+  const [searchResults, setSearchResults] = useState<DomainSearchResults | null>(null)
   const [searchLoading, setSearchLoading] = useState(false)
-  const [selectedDomain, setSelectedDomain] = useState(null)
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const { website } = useWebsite()
-  const { id: websiteId } = website
+  const websiteId = website?.id
 
-  const handleEnter = (e) => {
+  const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleSearch()
@@ -57,16 +61,16 @@ export default function DomainSearch({ prefillSearch }) {
     }
   }
 
-  const handleToggleDomain = (domainName) => {
+  const handleToggleDomain = (domainName: string) => {
     if (selectedDomain === domainName) {
       setSelectedDomain(null)
     } else {
       setSelectedDomain(domainName)
 
       const domainData =
-        searchResults.domainName === domainName
+        searchResults?.domainName === domainName
           ? searchResults
-          : searchResults.suggestions?.find((s) => s.DomainName === domainName)
+          : searchResults?.suggestions?.find((s) => s.DomainName === domainName)
 
       const price =
         domainData?.price ||
@@ -115,7 +119,7 @@ export default function DomainSearch({ prefillSearch }) {
             placeholder="yourdomain.com"
             fullWidth
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
             onKeyPress={handleEnter}
             InputLabelProps={{ shrink: true }}
             error={!isValidDomain}
@@ -153,7 +157,7 @@ export default function DomainSearch({ prefillSearch }) {
             selected={selectedDomain === searchResults.domainName}
           />
 
-          {searchResults.suggestions?.length > 0 && (
+          {searchResults.suggestions && searchResults.suggestions.length > 0 && (
             <div className="mt-8 space-y-3">
               <H3>Suggestions</H3>
               {searchResults.suggestions.map((suggestion, index) => (

@@ -14,7 +14,7 @@ const STEPS = {
 interface CantFindRaceModalProps {
   campaign: Campaign
   onClose: () => void
-  onSaveCustomOffice: () => void
+  onSaveCustomOffice: (campaign: Campaign) => void
 }
 
 export default function CantFindRaceModal({

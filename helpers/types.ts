@@ -491,9 +491,7 @@ export interface WebsiteContent {
     issues?: WebsiteIssue[]
     committee?: string
   }
-  theme?: {
-    color?: string
-  }
+  theme?: string
   logo?: string
   createStep?: string
   main?: {
@@ -536,4 +534,28 @@ export interface WebsiteContact {
   phone?: string | null
   message?: string | null
   createdAt: Date | string
+}
+
+// ===== CMS Content Types =====
+
+export interface PledgeContent {
+  title?: string
+  body?: string
+}
+
+// ===== Blog/Article Types =====
+
+export interface ImageData {
+  url?: string
+  alt?: string
+}
+
+export interface Article {
+  id?: string
+  title: string
+  slug: string
+  summary?: string
+  mainImage?: ImageData
+  publishDate: string
+  contentId?: string
 }

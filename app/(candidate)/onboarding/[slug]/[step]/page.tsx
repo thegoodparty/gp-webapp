@@ -5,6 +5,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import { redirect } from 'next/navigation'
 import OnboardingPage from './components/OnboardingPage'
 import { fetchContentByType } from 'helpers/fetchHelper'
+import { PledgeContent } from 'helpers/types'
 
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GoodParty.org',
@@ -13,9 +14,14 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page({ params }) {
+interface PageParams {
+  slug: string
+  step: string
+}
+
+export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
   const { slug, step } = await params
-  const campaign = await getCampaign(params)
+  const campaign = await getCampaign({ slug })
 
   const totalSteps = 4
 
@@ -24,9 +30,13 @@ export default async function Page({ params }) {
     redirect(`/onboarding/${slug}/1`)
   }
 
-  let pledge
+  let pledge: PledgeContent | undefined
   if (stepInt === 3) {
-    pledge = await fetchContentByType('pledge')
+    pledge = await fetchContentByType<PledgeContent>('pledge')
+  }
+
+  if (!campaign) {
+    redirect('/run-for-office')
   }
 
   const childProps = {

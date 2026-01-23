@@ -14,6 +14,11 @@ type AiContentChat = Partial<
   Record<string, string | boolean | number | undefined>
 >
 
+interface ChatMessage {
+  role: string
+  content: string
+}
+
 type AiContentData = {
   name: string
   content: string
@@ -21,14 +26,14 @@ type AiContentData = {
   inputValues?: AiContentInputValues
 }
 
-interface GenerateAIContentResponse {
+export interface GenerateAIContentResponse {
   status: GenerationStatus
   chatResponse: AiContentData
 }
 
 export const generateAIContent = async (
   key: string,
-  chat?: string | AiContentChat,
+  chat?: string | AiContentChat | ChatMessage[],
   inputValues: AiContentInputValues = {},
 ): Promise<GenerateAIContentResponse | false> => {
   try {

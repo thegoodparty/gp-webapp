@@ -12,7 +12,7 @@ import { Website, Domain } from 'helpers/types'
 const DEBOUNCE_TIME = 500
 
 interface VanityPathStepProps {
-  website: Website & { vanityPath?: string; domain?: Domain }
+  website: Website & { vanityPath?: string; domain?: Domain | null }
   onChange: (value: string) => void
   validateCallback: (valid: boolean) => void
 }

@@ -1,14 +1,21 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
 import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import fetchPlace from '../../shared/fetchPlace'
 import PlaceSchema from '../../shared/PlaceSchema'
+import { Article } from '../../shared/types'
+
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
-const fetchCounty = async (state, county) => {
+interface PageParams {
+  state: string
+  county: string
+}
+
+const fetchCounty = async (state: string, county: string) => {
   const place = await fetchPlace({
     slug: `${state}/${county}`,
     includeChildren: true,
@@ -19,11 +26,12 @@ const fetchCounty = async (state, county) => {
 
 const year = new Date().getFullYear()
 
-export async function generateMetadata({ params }) {
-  const { state } = params
+export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+  const { state } = await params
   if (state.length === 2) {
-    const stateName = shortToLongState[state.toUpperCase()]
-    const county = await fetchCounty(state, params.county)
+    const upperState = state.toUpperCase()
+    const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
+    const county = await fetchCounty(state, (await params).county)
 
     const meta = pageMetaData({
       title: `Run for Office in ${
@@ -32,17 +40,19 @@ export async function generateMetadata({ params }) {
       description: `Learn about available opportunities to run for office in ${
         county?.name || 'a'
       } county, ${stateName} and tips for launching a successful campaign.`,
-      slug: `/elections/${state}/${params.county}`,
+      slug: `/elections/${state}/${(await params).county}`,
     })
     return meta
   }
+  return {}
 }
 
-export default async function Page({ params }) {
-  const { state } = params
+export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+  const { state } = await params
+  const upperState = state.toUpperCase()
   if (
     !state ||
-    (state.length === 2 && !shortToLongState[state.toUpperCase()])
+    (state.length === 2 && !isStateAbbreviation(upperState))
   ) {
     notFound()
   }
@@ -52,14 +62,14 @@ export default async function Page({ params }) {
     'comprehensive-guide-running-for-local-office',
   ]
 
-  const articles = await Promise.all(
+  const articles: Article[] = await Promise.all(
     articleSlugs.map((slug) => fetchArticle(slug)),
   )
 
-  const county = await fetchPlace({ slug: `${state}/${params.county}` })
+  const county = await fetchPlace({ slug: `${state}/${(await params).county}` })
   if (!county) {
     // try to append county to the slug and redirect if found
-    const newSlug = `${state}/${params.county}-county`
+    const newSlug = `${state}/${(await params).county}-county`
     const newCounty = await fetchPlace({
       slug: newSlug,
       includeParent: false,

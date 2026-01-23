@@ -18,6 +18,40 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { CircularProgress } from '@mui/material'
+import { Campaign, CampaignAiContent, AiContentData, CandidatePosition } from 'helpers/types'
+
+// Type for values in CampaignAiContent index signature
+type CampaignAiContentValue =
+  | AiContentData
+  | Partial<Record<string, string>>
+  | Partial<Record<string, number>>
+  | Partial<Record<string, { status?: string }>>
+  | undefined
+
+interface ChatMessage {
+  role: string
+  content: string
+}
+
+interface ContentRow {
+  name: string
+  updatedAt: Date
+  slug: string
+  documentKey: string
+}
+
+interface Category {
+  name: string
+  templates: { key: string; name: string }[]
+}
+
+interface MyContentProps {
+  forceOpenModal?: boolean
+  campaign?: Campaign | null
+  requiresQuestions?: Partial<Record<string, boolean>>
+  candidatePositions?: CandidatePosition[] | false | null
+  categories?: Category[]
+}
 
 let aiTotalCount = 0
 const excludedKeys = [
@@ -30,18 +64,19 @@ const excludedKeys = [
   'mobilizing',
 ]
 
-export default function MyContent(props) {
+export default function MyContent(props: MyContentProps): React.JSX.Element {
   const [loading, setLoading] = useState(true)
   const [section, setSection] = useState('')
-  const [sections, setSections] = useState(undefined)
-  const [initialChat, setInitialChat] = useState(false)
-  const [initialValues, setInitialValues] = useState({})
-  const [campaign, setCampaign] = useState(undefined)
-  const [campaignPlan, setCampaignPlan] = useState(undefined)
+  const [sections, setSections] = useState<CampaignAiContent | undefined>(undefined)
+  const [initialChat, setInitialChat] = useState<ChatMessage[] | undefined>(undefined)
+  const [initialValues, setInitialValues] = useState<Partial<Record<string, string>>>({})
+  const [campaign, setCampaign] = useState<Campaign | null | undefined>(undefined)
+  const [campaignPlan, setCampaignPlan] = useState<CampaignAiContent | undefined>(undefined)
   const [jobStarting, setJobStarting] = useState(false)
+  const [isFailed, setIsFailed] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
-  const onSelectPrompt = (key, additionalPrompts, inputValues) => {
+  const onSelectPrompt = (key: string, additionalPrompts?: ChatMessage[], inputValues?: Partial<Record<string, string>>) => {
     setJobStarting(true)
     trackEvent('ai_content_generation_start', { key })
     if (additionalPrompts) {
@@ -56,8 +91,8 @@ export default function MyContent(props) {
   const columns = [
     {
       header: 'Name',
-      cell: ({ row }) => {
-        let updatedAt
+      cell: ({ row }: { row: ContentRow }) => {
+        let updatedAt: string | undefined
         if (row.updatedAt) {
           updatedAt = dateWithTime(row.updatedAt)
           if (updatedAt === undefined || updatedAt === 'Invalid Date') {
@@ -96,8 +131,8 @@ export default function MyContent(props) {
     },
     {
       header: 'Last Modified',
-      cell: ({ row }) => {
-        let updatedAt
+      cell: ({ row }: { row: ContentRow }) => {
+        let updatedAt: string | undefined
         if (row.updatedAt) {
           updatedAt = dateWithTime(row.updatedAt)
           if (updatedAt === undefined || updatedAt === 'Invalid Date') {
@@ -117,14 +152,14 @@ export default function MyContent(props) {
     },
     {
       header: '',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: ContentRow }) => {
         const actionProps = {
           slug: row.slug || '',
           name: row.name || '',
           documentKey: row.documentKey || '',
           updatedAt: row.updatedAt,
           status:
-            row.updatedAt && row.updatedAt !== 'Invalid Date'
+            row.updatedAt && dateWithTime(row.updatedAt) !== 'Invalid Date'
               ? undefined
               : 'processing',
         }
@@ -133,18 +168,34 @@ export default function MyContent(props) {
     },
   ]
 
-  const tableData = useMemo(() => {
+  // Type guard to check if a value is AiContentData
+  const isAiContentData = (value: CampaignAiContentValue): value is AiContentData => {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      'name' in value &&
+      'updatedAt' in value &&
+      'content' in value
+    )
+  }
+
+  const tableData = useMemo((): ContentRow[] => {
     if (!sections) return []
 
     return Object.entries(sections)
-      .filter(([key]) => !excludedKeys.includes(key) && sections[key].name)
-      .map(([key, section]) => ({
-        name: section.name,
-        updatedAt: new Date(section.updatedAt),
-        slug: camelToKebab(key),
-        documentKey: key,
-      }))
-      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .filter(([key, value]) => !excludedKeys.includes(key) && isAiContentData(value) && value.name)
+      .map(([key, section]) => {
+        // After filtering with isAiContentData, section is typed as AiContentData
+        if (!isAiContentData(section)) return null
+        return {
+          name: section.name || '',
+          updatedAt: new Date(section.updatedAt || Date.now()),
+          slug: camelToKebab(key),
+          documentKey: key,
+        }
+      })
+      .filter((row): row is ContentRow => row !== null)
+      .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
   }, [sections])
 
   async function getUserCampaign() {
@@ -203,36 +254,51 @@ export default function MyContent(props) {
     ) {
       createAIContent({
         section,
-        initialChat,
+        initialChat: initialChat || [],
         initialValues,
       })
     }
   }, [campaignPlan, section])
 
   const createAIContent = async ({
-    section = '',
-    initialChat = [],
-    initialValues = {},
+    section: sectionArg = '',
+    initialChat: initialChatArg,
+    initialValues: initialValuesArg,
+  }: {
+    section?: string
+    initialChat?: ChatMessage[]
+    initialValues?: Partial<Record<string, string>>
   }) => {
-    if (initialChat === false) {
-      initialChat = []
-    }
-    const { chatResponse, status } = await generateAIContent(
-      section,
-      initialChat,
-      initialValues,
+    const chatMessages: ChatMessage[] = initialChatArg || []
+    const inputVals: Partial<Record<string, string>> = initialValuesArg || {}
+    const result = await generateAIContent(
+      sectionArg || '',
+      chatMessages,
+      inputVals,
     )
+
+    if (result === false) {
+      setJobStarting(false)
+      setLoading(false)
+      setInitialChat(undefined)
+      errorSnackbar(
+        'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
+      )
+      return
+    }
+
+    const { chatResponse, status } = result
 
     if (!chatResponse && status === 'processing') {
       if (jobStarting === true) {
         await getUserCampaign()
         setJobStarting(false)
-        setInitialChat(false)
+        setInitialChat(undefined)
       }
     } else {
       setJobStarting(false)
       setLoading(false)
-      setInitialChat(false)
+      setInitialChat(undefined)
       errorSnackbar(
         'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
       )
@@ -245,13 +311,20 @@ export default function MyContent(props) {
         <div className="flex justify-center w-full">
           <LoadingList />
         </div>
+      ) : isFailed ? (
+        <div className="flex justify-center w-full text-red-500">
+          Failed to load content. Please refresh the page.
+        </div>
       ) : (
         <>
           <NewContentFlow
-            {...props}
             onSelectCallback={onSelectPrompt}
             isProcessing={jobStarting}
             forceOpenModal={props.forceOpenModal}
+            campaign={props.campaign || null}
+            requiresQuestions={props.requiresQuestions || {}}
+            candidatePositions={props.candidatePositions ?? null}
+            categories={props.categories || []}
           />
 
           <SimpleTable columns={columns} data={tableData} />
