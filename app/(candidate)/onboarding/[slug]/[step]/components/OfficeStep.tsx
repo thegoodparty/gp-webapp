@@ -1,11 +1,11 @@
 'use client'
+import React, { useMemo, useState } from 'react'
 import {
   onboardingStep,
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
-import { useMemo, useState } from 'react'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -14,23 +14,49 @@ import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
 import { identifyUser } from '@shared/utils/analytics'
+import { Campaign } from 'helpers/types'
+import { Race, RacePosition } from './ballotOffices/types'
 
-async function runP2V(slug) {
+interface BallotSearch {
+  zip?: string
+  level?: string
+  inputValue?: string
+  fuzzyFilter?: string
+}
+
+interface OfficeStepState {
+  ballotOffice: Race | false
+  originalPosition: string | number | null | undefined | false
+  ballotSearch?: BallotSearch
+}
+
+interface OfficeStepProps {
+  campaign: Campaign
+  step?: number
+  updateCallback?: () => void | Promise<void>
+  adminMode?: boolean
+}
+
+async function runP2V(slug: string): Promise<boolean> {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
+    const resp = await clientFetch<boolean>(apiRoutes.campaign.pathToVictory.create, {
       slug,
     })
 
-    return resp.data
+    return !!resp.data
   } catch (e) {
     console.error('error', e)
     return false
   }
 }
 
-async function updateRaceTargetDetails(slug = undefined) {
+interface CampaignResponse extends Campaign {
+  error?: string
+}
+
+async function updateRaceTargetDetails(slug: string | undefined = undefined): Promise<Campaign | false> {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.raceTargetDetails.update, {
+    const resp = await clientFetch<CampaignResponse>(apiRoutes.campaign.raceTargetDetails.update, {
       slug,
     })
 
@@ -45,11 +71,16 @@ async function updateRaceTargetDetails(slug = undefined) {
   }
 }
 
-async function runPostOfficeStepUpdates(attr, slug = undefined) {
+interface UpdateAttr {
+  key: string
+  value: string | number | boolean | undefined
+}
+
+async function runPostOfficeStepUpdates(attr: UpdateAttr[], slug: string | undefined = undefined): Promise<void> {
   await updateCampaign(attr, slug)
   const campaign = await updateRaceTargetDetails(slug)
-  if (!campaign?.pathToVictory?.data?.projectedTurnout) {
-    runP2V(slug)
+  if (campaign && !campaign?.pathToVictory?.data?.projectedTurnout) {
+    runP2V(slug!)
   }
 }
 
@@ -58,22 +89,20 @@ export default function OfficeStep({
   step,
   updateCallback,
   adminMode,
-}) {
+}: OfficeStepProps): React.JSX.Element {
   const router = useRouter()
-  const [state, setState] = useState({
+  const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   })
-  const user = useUser()
+  const [user] = useUser()
 
   const { ballotSearch } = state
 
   const [processing, setProcessing] = useState(false)
   const trackingAttrs = useMemo(
     () =>
-      buildTrackingAttrs('Onboarding Next Button', {
-        step,
-      }),
+      buildTrackingAttrs('Onboarding Next Button', step ? { step } : undefined),
     [step],
   )
   useTrackOfficeSearch({
@@ -82,13 +111,16 @@ export default function OfficeStep({
     officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter,
   })
 
-  const canSubmit = () => {
+  const canSubmit = (): boolean => {
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
     const orgPosition = campaign.details?.positionId
     const orgElection = campaign.details?.electionId
     const orgRace = campaign.details?.raceId
+    if (!state.ballotOffice) {
+      return false
+    }
     const { position, election, id } = state.ballotOffice
     if (!position || !election) {
       return false
@@ -101,17 +133,17 @@ export default function OfficeStep({
     )
   }
 
-  const calcTerm = (position) => {
+  const calcTerm = (position: RacePosition | undefined): string | undefined => {
     if (!position) return undefined
     if (!position.electionFrequencies) return undefined
-    if (!position.electionFrequencies.length === 0) return undefined
+    if (position.electionFrequencies.length === 0) return undefined
     if (!position.electionFrequencies[0]) return undefined
     return `${position.electionFrequencies[0]?.frequency} years`
   }
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setProcessing(true)
-    if (!canSubmit()) {
+    if (!canSubmit() || !state.ballotOffice) {
       setProcessing(false)
       return
     }
@@ -158,14 +190,14 @@ export default function OfficeStep({
         key: 'details.filingPeriodsStart',
         value:
           filingPeriods && filingPeriods.length > 0
-            ? filingPeriods[0].startOn
+            ? filingPeriods[0]?.startOn
             : undefined,
       },
       {
         key: 'details.filingPeriodsEnd',
         value:
           filingPeriods && filingPeriods.length > 0
-            ? filingPeriods[0].endOn
+            ? filingPeriods[0]?.endOn
             : undefined,
       },
       // reset the electionType and electionLocation
@@ -193,7 +225,7 @@ export default function OfficeStep({
         officeName: position.name,
         officeElectionDate: election.electionDay,
       }
-      await identifyUser(user.id, trackingProperties)
+      await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,
@@ -210,7 +242,7 @@ export default function OfficeStep({
     setProcessing(false)
   }
 
-  const onSelect = async (office) => {
+  const onSelect = async (office: Race | false): Promise<void> => {
     if (office) {
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
         office: office?.position?.name,
@@ -230,14 +262,14 @@ export default function OfficeStep({
     }
   }
 
-  const selectedOffice = campaign.details?.positionId
+  const selectedOffice: { position: { id: string | number | undefined }; election: { id: string | number | null | undefined } } | false = campaign.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
         election: { id: campaign.details.electionId },
       }
     : false
 
-  const updateState = (newState) => {
+  const updateState = (newState: BallotSearch): void => {
     setState({
       ...state,
       ballotSearch: newState,
@@ -248,7 +280,6 @@ export default function OfficeStep({
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col">
         <OfficeStepForm
-          campaign={campaign}
           onChange={updateState}
           zip={ballotSearch?.zip || campaign.details?.zip}
           level={ballotSearch?.level || ''}

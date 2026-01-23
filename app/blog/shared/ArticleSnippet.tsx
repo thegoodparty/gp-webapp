@@ -10,7 +10,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import clsx from 'clsx'
 
 interface ImageData {
-  url: string
+  url?: string
   alt?: string
 }
 

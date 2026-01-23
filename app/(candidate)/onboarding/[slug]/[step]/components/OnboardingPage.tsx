@@ -6,12 +6,19 @@ import UserSnapScript from '@shared/scripts/UserSnapScript'
 import CompleteStep from './CompleteStep'
 import { Campaign } from 'helpers/types'
 
+interface PledgeContent {
+  title?: string
+  body?: string
+  [key: string]: string | number | boolean | null | undefined | object
+}
+
 interface OnboardingPageProps {
   step: number
   campaign: Campaign
   totalSteps: number
   updateCallback?: () => Promise<void>
   adminMode?: boolean
+  pledge?: PledgeContent
 }
 
 export default function OnboardingPage(props: OnboardingPageProps): React.JSX.Element {

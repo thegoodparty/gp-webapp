@@ -4,7 +4,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 interface DomainResultProps {
   domain: string
-  price: number
+  price?: number
   available?: boolean
   loading?: boolean
   onClick?: () => void
@@ -21,7 +21,7 @@ const DomainResult = memo(function DomainResult({
 }: DomainResultProps): React.JSX.Element {
   const isInteractive = available && !loading
   const displayText = available
-    ? `$${numberFormatter(price, 2)}`
+    ? price !== undefined ? `$${numberFormatter(price, 2)}` : 'Price unavailable'
     : 'Unavailable'
 
   return (

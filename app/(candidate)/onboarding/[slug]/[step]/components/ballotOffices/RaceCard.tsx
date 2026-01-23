@@ -2,28 +2,12 @@ import { GrRadial, GrRadialSelected } from 'react-icons/gr'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import H5 from '@shared/typography/H5'
-
-interface Position {
-  name: string
-  normalizedPosition?: {
-    name: string
-  }
-}
-
-interface Election {
-  electionDay: string
-  primaryElectionDate?: string
-}
-
-interface Race {
-  position: Position
-  election: Election
-}
+import { RaceWithHighlight } from './types'
 
 interface RaceCardProps {
-  race: Race
+  race: RaceWithHighlight
   selected: boolean
-  selectCallback: (race: Race) => void
+  selectCallback: (race: { id: string }) => void
 }
 
 export default function RaceCard({ race, selected, selectCallback }: RaceCardProps): React.JSX.Element | null {
@@ -34,7 +18,7 @@ export default function RaceCard({ race, selected, selectCallback }: RaceCardPro
   const { name, normalizedPosition } = position
   const { electionDay, primaryElectionDate } = election
 
-  const handleKeyDown = (e: React.KeyboardEvent, race: Race) => {
+  const handleKeyDown = (e: React.KeyboardEvent, race: RaceWithHighlight) => {
     if (e.key === 'Enter') {
       selectCallback(race)
     }

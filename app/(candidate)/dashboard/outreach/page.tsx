@@ -6,16 +6,19 @@ import { NUM_OF_MOCK_OUTREACHES } from 'app/(candidate)/dashboard/outreach/const
 import { createOutreach } from 'app/(candidate)/dashboard/outreach/util/createOutreach.util'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { redirect } from 'next/navigation'
+import { Outreach } from './hooks/OutreachContext'
+import { TcrCompliance } from 'helpers/types'
 
-const fetchOutreaches = async () => {
-  const response = await serverFetch(apiRoutes.outreach.list)
+const fetchOutreaches = async (): Promise<Outreach[]> => {
+  const response = await serverFetch<Outreach[]>(apiRoutes.outreach.list)
   if (!response.ok) {
     if (response.status === 404) {
       return []
     }
     throw new Error('Failed to fetch outreach data')
   }
-  return response.data
+  return response.data || []
 }
 
 const meta = pageMetaData({
@@ -26,17 +29,22 @@ const meta = pageMetaData({
 export const metadata = meta
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
+export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
+
+  if (!campaign) {
+    redirect('/run-for-office')
+  }
+
   const [outreaches, tcrComplianceResponse] = await Promise.all([
     fetchOutreaches(),
-    serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
+    serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
   ])
 
-  const tcrCompliance = tcrComplianceResponse.ok
+  const tcrCompliance: TcrCompliance | undefined = tcrComplianceResponse.ok
     ? tcrComplianceResponse.data
-    : null
+    : undefined
 
   const mockOutreaches = Array.from({ length: NUM_OF_MOCK_OUTREACHES }, () =>
     createOutreach(campaign.id),
@@ -45,6 +53,7 @@ export default async function Page() {
   return (
     <OutreachPage
       {...{
+        pathname: '/dashboard/outreach',
         campaign,
         outreaches,
         mockOutreaches,

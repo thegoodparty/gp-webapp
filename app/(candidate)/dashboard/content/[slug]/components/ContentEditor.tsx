@@ -13,11 +13,20 @@ import { LuClipboard } from 'react-icons/lu'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import InputFieldsModal from '../../components/InputFieldsModal'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields'
+import { fetchPromptInputFields, PromptInputField } from 'helpers/fetchPromptInputFields'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { Campaign, AiContentData } from 'helpers/types'
+
+// Type for values in CampaignAiContent index signature
+type CampaignAiContentValue =
+  | AiContentData
+  | Partial<Record<string, string>>
+  | Partial<Record<string, number>>
+  | Partial<Record<string, { status?: string }>>
+  | undefined
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
@@ -25,6 +34,42 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
   ),
 })
+
+interface ChatMessage {
+  role: string
+  content: string
+}
+
+export interface Version {
+  date: string
+  name?: string
+  key?: string
+  language?: string
+  text?: string
+  inputValues?: Partial<Record<string, string>>
+}
+
+export type Versions = Partial<Record<string, string | number | boolean | object | null>>
+
+interface ContentEditorProps {
+  section?: string
+  campaign: Campaign
+  versions?: Versions
+  updateVersionsCallback: () => Promise<void>
+}
+
+interface GenerateAIResponse {
+  chatResponse?: { content: string }
+  status?: string
+}
+
+// Type guard to check if aiContent value is actual content data
+function isAiContentData(value: CampaignAiContentValue): value is AiContentData {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+  return 'content' in value && 'name' in value && 'updatedAt' in value
+}
 
 let aiCount = 0
 let aiTotalCount = 0
@@ -34,26 +79,26 @@ export default function ContentEditor({
   campaign,
   versions = {},
   updateVersionsCallback,
-  subSectionKey = 'aiContent',
-}) {
-  const [plan, setPlan] = useState(false)
+}: ContentEditorProps): React.JSX.Element {
+  const [plan, setPlan] = useState<string | false>(false)
   const [loading, setLoading] = useState(true)
   const [regenerating, setRegenerating] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const [documentName, setDocumentName] = useState('Untitled Document')
   const [saved, setSaved] = useState('Saved')
-  const [inputFields, setInputFields] = useState([])
-  const [initialInputValues, setInitialInputValues] = useState({})
+  const [inputFields, setInputFields] = useState<PromptInputField[]>([])
+  const [initialInputValues, setInitialInputValues] = useState<Partial<Record<string, string>>>({})
   const [showModal, setShowModal] = useState(false)
   const [showTranslate, setShowTranslate] = useState(false)
 
   const campaignPlan = campaign.aiContent
   const key = section
+  const sectionData = campaignPlan?.[key]
 
   useEffect(() => {
-    if (campaignPlan && campaignPlan[key]) {
-      setPlan(campaignPlan[key].content)
-      setDocumentName(campaignPlan[key].name)
+    if (campaignPlan && sectionData && isAiContentData(sectionData)) {
+      setPlan(sectionData.content)
+      setDocumentName(sectionData.name)
       setLoading(false)
       setRegenerating(false)
       loadInputFields()
@@ -72,14 +117,14 @@ export default function ContentEditor({
   }
 
   const loadInputValues = async () => {
-    if (campaignPlan[key]?.inputValues) {
-      setInitialInputValues(campaignPlan[key].inputValues)
+    if (sectionData && isAiContentData(sectionData) && sectionData.inputValues) {
+      setInitialInputValues(sectionData.inputValues)
     }
   }
 
-  const handleEdit = async (editedPlan, debounceTime = 5000) => {
+  const handleEdit = async (editedPlan: string, debounceTime = 5000) => {
     setPlan(editedPlan)
-    if (campaignPlan[key].content != plan) {
+    if (sectionData && isAiContentData(sectionData) && sectionData.content != plan) {
       debounce(handleTypingComplete, debounceTime)
     }
   }
@@ -92,15 +137,16 @@ export default function ContentEditor({
   const handleSave = async () => {
     setSaved('Saving...')
 
-    let existingName
-    let existingInputs = {}
-    if (campaign.aiContent && campaign.aiContent[key]) {
-      existingName = campaign.aiContent[key].name
-      existingInputs = campaign.aiContent[key].inputValues
+    let existingName: string | undefined
+    let existingInputs: Partial<Record<string, string>> = {}
+    const existingData = campaign.aiContent?.[key]
+    if (isAiContentData(existingData)) {
+      existingName = existingData.name
+      existingInputs = existingData.inputValues || {}
     }
 
-    let now = new Date()
-    let updatedAt = now.valueOf()
+    const now = new Date()
+    const updatedAt = now.valueOf()
 
     const newVal = {
       name: existingName ? existingName : key,
@@ -113,21 +159,29 @@ export default function ContentEditor({
     setSaved('Saved')
   }
 
-  const updatePlanCallback = (version) => {
-    setPlan(version.text)
-    setInitialInputValues(version.inputValues)
+  const updatePlanCallback = (version: Version | null) => {
+    if (version) {
+      setPlan(version.text || '')
+      setInitialInputValues(version.inputValues || {})
+    }
   }
 
-  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
+  async function generateAI(
+    aiKey: string,
+    regenerate: boolean,
+    chat: ChatMessage[],
+    editMode: boolean,
+    inputValues: Partial<Record<string, string>> = {},
+  ): Promise<GenerateAIResponse | false> {
     try {
-      const resp = await clientFetch(apiRoutes.campaign.ai.create, {
-        key,
+      const resp = await clientFetch<GenerateAIResponse>(apiRoutes.campaign.ai.create, {
+        key: aiKey,
         regenerate,
         chat,
         editMode,
         inputValues,
       })
-      return resp.data
+      return resp.data || false
     } catch (e) {
       console.error('error', e)
       return false
@@ -135,10 +189,10 @@ export default function ContentEditor({
   }
 
   const createInitialAI = async (
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
+    regenerate = false,
+    chat: ChatMessage[] = [],
+    editMode = false,
+    inputValues: Partial<Record<string, string>> = {},
   ) => {
     aiCount++
     aiTotalCount++
@@ -151,13 +205,19 @@ export default function ContentEditor({
       return
     }
 
-    const { chatResponse, status } = await generateAI(
+    const result = await generateAI(
       key,
       regenerate,
       chat,
       editMode,
       inputValues,
     )
+    if (result === false) {
+      setIsFailed(true)
+      setLoading(false)
+      return
+    }
+    const { chatResponse, status } = result
     if (!chatResponse && status === 'processing') {
       if (aiCount < 40) {
         setTimeout(async () => {
@@ -171,7 +231,7 @@ export default function ContentEditor({
       }
     } else {
       aiCount = 0
-      if (status === 'completed') {
+      if (status === 'completed' && chatResponse) {
         setPlan(chatResponse.content)
         await updateVersionsCallback()
         setLoading(false)
@@ -181,14 +241,14 @@ export default function ContentEditor({
     }
   }
 
-  const handleAdditionalInput = async (additionalPrompt, inputValues) => {
+  const handleAdditionalInput = async (additionalPrompt: string, inputValues: Partial<Record<string, string>>) => {
     trackEvent(EVENTS.ContentBuilder.Editor.SubmitRegenerate, {
       name: documentName,
       key,
     })
     setLoading(true)
     setInitialInputValues(inputValues)
-    const chat = [
+    const chat: ChatMessage[] = [
       // the re-generate does not need the context of the old plan.
       // { role: 'system', content: plan },
       { role: 'user', content: additionalPrompt },
@@ -198,24 +258,25 @@ export default function ContentEditor({
     setShowModal(false)
   }
 
-  const handleTranslate = async (language) => {
+  const handleTranslate = async (language: string) => {
     setLoading(true)
-    setInitialInputValues([])
-    const chat = [
-      { role: 'system', content: plan },
+    setInitialInputValues({})
+    const planContent = typeof plan === 'string' ? plan : ''
+    const chat: ChatMessage[] = [
+      { role: 'system', content: planContent },
       {
         role: 'user',
         content: 'Please translate the above text to: ' + language,
       },
     ]
-    await createInitialAI(true, chat, true, [{ language: language }])
+    await createInitialAI(true, chat, true, { language: language })
 
     setShowModal(false)
   }
 
   const initialText = useMemo(
-    () => campaignPlan[key].content || '',
-    [campaignPlan, key],
+    () => (sectionData && isAiContentData(sectionData) ? sectionData.content : '') || '',
+    [sectionData],
   )
 
   return (
@@ -269,7 +330,7 @@ export default function ContentEditor({
           )}
           {/* copy button mobile */}
           <div className="md:hidden mr-3">
-            <CopyToClipboard text={plan}>
+            <CopyToClipboard text={typeof plan === 'string' ? plan : ''}>
               <PrimaryButton size="medium">
                 <div className="flex items-center whitespace-nowrap px-1  h-6">
                   <LuClipboard className="text-sm" />
@@ -281,9 +342,8 @@ export default function ContentEditor({
           {/* copy button desktop */}
           <div className="hidden md:block mr-3">
             <CopyToClipboard
-              text={plan}
-              usePadding={false}
-              onClick={() => {
+              text={typeof plan === 'string' ? plan : ''}
+              onCopy={() => {
                 trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
                   name: documentName,
                   key,
@@ -326,19 +386,16 @@ export default function ContentEditor({
 
           {/* version button */}
           <PlanVersion
-            campaign={campaign}
-            versions={versions ? versions[key] : {}}
+            versions={Array.isArray(versions?.[key]) ? versions[key] : []}
             updatePlanCallback={updatePlanCallback}
             latestVersion={
-              campaignPlan
+              sectionData && isAiContentData(sectionData)
                 ? {
-                    text: campaignPlan[key].content,
+                    date: new Date().toISOString(),
+                    text: sectionData.content,
                     inputValues: initialInputValues,
                   }
-                : {
-                    text: '',
-                    inputValues: {},
-                  }
+                : null
             }
           />
           <Actions
@@ -355,7 +412,7 @@ export default function ContentEditor({
 
       <div className="flex w-full h-auto justify-items-center justify-center">
         <div className="max-w-6xl w-full h-auto p-10 font-sfpro">
-          <section key={section.key} className="my-3">
+          <section key={section} className="my-3">
             <div className="">
               {loading ? (
                 <LoadingContent

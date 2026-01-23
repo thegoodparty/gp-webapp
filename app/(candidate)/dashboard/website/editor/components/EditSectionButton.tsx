@@ -13,9 +13,11 @@ export const SECTIONS = {
   title: 'title',
   about: 'about',
   contact: 'contact',
-}
+} as const
 
-type SectionKey = keyof typeof SECTIONS
+export type SectionKey = keyof typeof SECTIONS
+
+export const SECTION_KEYS: SectionKey[] = ['link', 'logo', 'theme', 'title', 'about', 'contact']
 
 interface SectionContent {
   title: string
@@ -54,8 +56,8 @@ export const SECTION_BTN_CONTENT: SectionBtnContentMap = {
 
 interface EditSectionButtonProps {
   section: SectionKey
-  currentSection: SectionKey
-  onSelect: (section: SectionKey) => void
+  currentSection: SectionKey | null | ''
+  onSelect: (section: SectionKey | null) => void
   website: Website
 }
 

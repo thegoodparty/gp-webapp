@@ -26,7 +26,7 @@ export interface Race {
 }
 
 interface ImageData {
-  url: string
+  url?: string
   alt?: string
 }
 

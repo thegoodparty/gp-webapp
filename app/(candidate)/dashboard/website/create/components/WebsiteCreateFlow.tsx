@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import WebsitePreview from '../../editor/components/WebsitePreview'
@@ -18,17 +18,30 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
+import { Website, WebsiteIssue } from 'helpers/types'
+
+interface WebsiteCreateFlowProps {
+  initialIssues?: WebsiteIssue[]
+}
+
+interface GooglePlace {
+  formatted_address?: string
+  place_id?: string
+}
 
 const COMPLETE_STEP = 'complete'
 const NUM_STEPS = 6
 
-export const cantSaveReasons = (website) => {
+export const cantSaveReasons = (website: Website | null): string => {
   let cantSaveReason = ''
-  if (!isValidEmail(website.content.contact?.email)) {
+  if (!website) {
+    return 'No website'
+  }
+  if (!isValidEmail(website.content?.contact?.email || '')) {
     cantSaveReason = 'Invalid email'
-  } else if (!isValidPhone(website.content.contact?.phone)) {
+  } else if (!isValidPhone(website.content?.contact?.phone || '')) {
     cantSaveReason = 'Invalid phone'
-  } else if (website.content.main?.title == '') {
+  } else if (website.content?.main?.title == '') {
     cantSaveReason = 'Missing title'
   } else if (website.vanityPath == '') {
     cantSaveReason = 'Missing vanity path'
@@ -36,14 +49,14 @@ export const cantSaveReasons = (website) => {
   return cantSaveReason
 }
 
-export default function WebsiteCreateFlow({ initialIssues }) {
+export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowProps): React.JSX.Element {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState<number | typeof COMPLETE_STEP>(1)
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
-  const [updatedPlace, setUpdatedPlace] = useState(null)
+  const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
 
   useEffect(() => {
     if (
@@ -57,7 +70,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }, [website?.content?.createStep])
 
-  async function handleSaveAndExit() {
+  async function handleSaveAndExit(): Promise<void> {
     const saved = await handleSave()
 
     if (saved) {
@@ -65,7 +78,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }
 
-  async function handleComplete() {
+  async function handleComplete(): Promise<void> {
     const saved = await handleSave(true)
 
     if (saved) {
@@ -77,13 +90,14 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     }
   }
 
-  async function handleSave(publish = false) {
+  async function handleSave(publish = false): Promise<boolean> {
+    if (!website) return false
     setSaveLoading(true)
     const resp = await updateWebsite({
       ...website.content,
       status: publish ? WEBSITE_STATUS.published : website.status,
       vanityPath: website.vanityPath,
-      createStep: publish ? COMPLETE_STEP : step,
+      createStep: publish ? COMPLETE_STEP : String(step),
     })
     if (updatedPlace) {
       await updateCampaign([
@@ -92,28 +106,28 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       ])
     }
     setSaveLoading(false)
-    if (resp.ok) {
+    if (resp && resp.ok) {
       setWebsite(resp.data)
+      return true
     } else {
       console.error('Failed to save website', resp)
       errorSnackbar('Failed to save website')
+      return false
     }
-
-    return resp.ok
   }
 
-  function handleStepChange(newStep) {
+  function handleStepChange(newStep: number): void {
     setStep(newStep)
   }
 
-  function handleVanityPathChange(value) {
-    setWebsite((current) => ({
+  function handleVanityPathChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       vanityPath: value,
-    }))
+    } : null)
   }
 
-  function handleLogoChange(file) {
+  function handleLogoChange(file: File | null): void {
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => setLogo(reader.result, file)
@@ -122,54 +136,50 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       setLogo(null, undefined)
     }
 
-    function setLogo(url, file) {
-      setWebsite((current) => ({
+    function setLogo(url: string | ArrayBuffer | null, file: File | undefined): void {
+      setWebsite((current) => current ? {
         ...current,
         content: {
           ...current.content,
-          logo: url,
+          logo: typeof url === 'string' ? url : undefined,
           logoFile: file,
         },
-      }))
+      } : null)
     }
   }
 
-  function handleThemeChange(value) {
-    setWebsite((current) => ({
+  function handleThemeChange(color: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        theme: value,
+        theme: { color },
       },
-    }))
+    } : null)
   }
 
-  function handleTitleChange(value) {
-    setWebsite((current) => ({
+  function handleTitleChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        main: { ...current.content.main, title: value },
+        main: { ...current.content?.main, title: value },
       },
-    }))
-    if (value.length > 0) {
-      setIsValid(true)
-    } else {
-      setIsValid(false)
-    }
+    } : null)
+    setIsValid(value.length > 0)
   }
 
-  function handleTaglineChange(value) {
-    setWebsite((current) => ({
+  function handleTaglineChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        main: { ...current.content.main, tagline: value },
+        main: { ...current.content?.main, tagline: value },
       },
-    }))
+    } : null)
   }
 
-  function handleHeroChange(file) {
+  function handleHeroChange(file: File | null): void {
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => setHero(reader.result, file)
@@ -178,93 +188,85 @@ export default function WebsiteCreateFlow({ initialIssues }) {
       setHero(null, undefined)
     }
 
-    function setHero(url, file) {
-      setWebsite((current) => ({
+    function setHero(url: string | ArrayBuffer | null, file: File | undefined): void {
+      setWebsite((current) => current ? {
         ...current,
         content: {
           ...current.content,
-          main: { ...current.content.main, image: url },
+          main: { ...current.content?.main, image: typeof url === 'string' ? url : undefined },
           heroFile: file,
         },
-      }))
+      } : null)
     }
   }
 
-  function handleBioChange(value) {
-    setWebsite((current) => ({
+  function handleBioChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        about: { ...current.content.about, bio: value },
+        about: { ...current.content?.about, bio: value },
       },
-    }))
+    } : null)
   }
 
-  function handleIssuesChange(issues) {
-    setWebsite((current) => ({
+  function handleIssuesChange(issues: WebsiteIssue[]): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        about: { ...current.content.about, issues },
+        about: { ...current.content?.about, issues },
       },
-    }))
+    } : null)
   }
 
-  async function handleAddressSelect(place) {
-    setWebsite((current) => ({
+  async function handleAddressSelect(place: GooglePlace): Promise<void> {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
         contact: {
-          ...current.content.contact,
+          ...current.content?.contact,
           address: place.formatted_address,
         },
       },
-    }))
+    } : null)
 
     if (place.formatted_address && place.place_id) {
       setUpdatedPlace(place)
     }
   }
 
-  function handleEmailChange(value) {
-    setWebsite((current) => ({
+  function handleEmailChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        contact: { ...current.content.contact, email: value },
+        contact: { ...current.content?.contact, email: value },
       },
-    }))
-    if (isValidEmail(value)) {
-      setIsValid(true)
-    } else {
-      setIsValid(false)
-    }
+    } : null)
+    setIsValid(isValidEmail(value))
   }
 
-  function handlePhoneChange(value) {
-    setWebsite((current) => ({
+  function handlePhoneChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        contact: { ...current.content.contact, phone: value },
+        contact: { ...current.content?.contact, phone: value },
       },
-    }))
-    if (isValidPhone(value)) {
-      setIsValid(true)
-    } else {
-      setIsValid(false)
-    }
+    } : null)
+    setIsValid(isValidPhone(value))
   }
 
-  function handleCommitteeChange(value) {
-    setWebsite((current) => ({
+  function handleCommitteeChange(value: string): void {
+    setWebsite((current) => current ? {
       ...current,
       content: {
         ...current.content,
-        about: { ...current.content.about, committee: value },
+        about: { ...current.content?.about, committee: value },
       },
-    }))
+    } : null)
   }
 
   const initialBio = useMemo(
@@ -272,17 +274,22 @@ export default function WebsiteCreateFlow({ initialIssues }) {
     [website?.id],
   )
 
-  function validateCallback(value) {
+  function validateCallback(value: boolean): void {
     setIsValid(value)
   }
 
   const canPublish =
-    isValidEmail(website.content.contact?.email) &&
-    isValidPhone(website.content.contact?.phone) &&
-    website.content.main?.title != '' &&
+    website &&
+    isValidEmail(website.content?.contact?.email || '') &&
+    isValidPhone(website.content?.contact?.phone || '') &&
+    website.content?.main?.title != '' &&
     website.vanityPath != ''
 
   const cantSaveReason = cantSaveReasons(website)
+
+  if (!website) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -322,23 +329,23 @@ export default function WebsiteCreateFlow({ initialIssues }) {
 
             {step === 2 && (
               <LogoStep
-                logo={website.content.logo}
+                logo={website.content?.logo}
                 onChange={handleLogoChange}
               />
             )}
 
             {step === 3 && (
               <ThemeStep
-                theme={website.content.theme}
+                theme={website.content?.theme?.color || ''}
                 onChange={handleThemeChange}
               />
             )}
 
             {step === 4 && (
               <HeroStep
-                title={website.content.main?.title}
-                tagline={website.content.main?.tagline}
-                image={website.content.main?.image}
+                title={website.content?.main?.title}
+                tagline={website.content?.main?.tagline}
+                image={website.content?.main?.image}
                 onTitleChange={handleTitleChange}
                 onTaglineChange={handleTaglineChange}
                 onImageChange={handleHeroChange}
@@ -348,8 +355,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             {step === 5 && (
               <AboutStep
                 initialBio={initialBio}
-                bio={website.content.about?.bio}
-                issues={website.content.about?.issues}
+                issues={website.content?.about?.issues}
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
                 initialIssues={initialIssues}
@@ -358,13 +364,13 @@ export default function WebsiteCreateFlow({ initialIssues }) {
 
             {step === 6 && (
               <ContactStep
-                address={website.content.contact?.address}
-                email={website.content.contact?.email}
-                phone={website.content.contact?.phone}
+                address={website.content?.contact?.address}
+                email={website.content?.contact?.email}
+                phone={website.content?.contact?.phone}
                 onAddressSelect={handleAddressSelect}
                 onEmailChange={handleEmailChange}
                 onPhoneChange={handlePhoneChange}
-                committee={website.content.about?.committee}
+                committee={website.content?.about?.committee}
                 onCommitteeChange={handleCommitteeChange}
               />
             )}
@@ -375,13 +381,13 @@ export default function WebsiteCreateFlow({ initialIssues }) {
               />
             )}
           </div>
-          {step !== COMPLETE_STEP && (
+          {step !== COMPLETE_STEP && typeof step === 'number' && (
             <div className="hidden lg:block h-[60vh]">
-              <WebsitePreview website={website} zoomScale={0.5} step={step} />
+              <WebsitePreview website={website} step={step} />
             </div>
           )}
         </div>
-        {step !== COMPLETE_STEP && (
+        {step !== COMPLETE_STEP && typeof step === 'number' && (
           <WebsiteEditorPageStepper
             totalSteps={NUM_STEPS}
             currentStep={step}
@@ -390,7 +396,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
             completeLabel="Publish website"
             completeLoading={saveLoading}
             nextDisabled={!isValid}
-            canPublish={canPublish}
+            canPublish={!!canPublish}
             cantSaveReason={cantSaveReason}
           />
         )}
@@ -403,7 +409,7 @@ export default function WebsiteCreateFlow({ initialIssues }) {
         <WebsitePreview
           website={website}
           className="min-w-[60vw]"
-          step={step}
+          step={typeof step === 'number' ? step : undefined}
         />
       </ResponsiveModal>
     </>

@@ -2,14 +2,24 @@ import Modal from '@shared/utils/Modal'
 import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep'
 import { Campaign, CampaignDetails } from 'helpers/types'
 
-interface MinimalCampaign {
-  id?: number | string
+interface PartialCampaign {
+  id?: string | number
   slug?: string
+  userId?: string
   details?: Partial<CampaignDetails>
 }
 
+function isFullCampaign(campaign: Campaign | PartialCampaign): campaign is Campaign {
+  return (
+    'createdAt' in campaign &&
+    'updatedAt' in campaign &&
+    'details' in campaign &&
+    campaign.details !== undefined
+  )
+}
+
 interface CampaignOfficeSelectionModalProps {
-  campaign?: Campaign | MinimalCampaign
+  campaign?: Campaign | PartialCampaign
   show?: boolean
   onClose?: () => void
   onSelect?: () => void
@@ -17,7 +27,7 @@ interface CampaignOfficeSelectionModalProps {
 }
 
 export const CampaignOfficeSelectionModal = ({
-  campaign = { details: {} },
+  campaign,
   show = false,
   onClose = () => {},
   onSelect = () => {},
@@ -28,11 +38,17 @@ export const CampaignOfficeSelectionModal = ({
     closeCallback={onClose}
     boxClassName="w-[95vw] lg:w-[60vw]"
   >
-    <OfficeStep
-      campaign={campaign}
-      step={undefined}
-      updateCallback={onSelect}
-      adminMode={adminMode}
-    />
+    {campaign && isFullCampaign(campaign) ? (
+      <OfficeStep
+        campaign={campaign}
+        step={undefined}
+        updateCallback={onSelect}
+        adminMode={adminMode}
+      />
+    ) : (
+      <div className="p-4 text-center">
+        <p>Loading campaign details...</p>
+      </div>
+    )}
   </Modal>
 )

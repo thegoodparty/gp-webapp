@@ -5,17 +5,17 @@ import LinksSection from '../../shared/LinksSection'
 import RacesSection from '../../shared/RacesSection'
 import LearnToRun from '../../shared/LearnToRun'
 import Guides from '../../shared/Guides'
-import { Place, Article, Race } from '../../shared/types'
+import { Place, Article, Race, PlaceChild } from '../../shared/types'
 
 interface ElectionsStatePageProps {
   state: string
-  categorizedChildren: {
+  categorizedChildren?: {
     counties?: Place[]
     districts?: Place[]
     others?: Place[]
   }
-  children: Place[]
-  races: Race[]
+  children?: PlaceChild[] | null
+  races?: Race[]
   articles: Article[]
 }
 
@@ -23,10 +23,11 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
   const {
     state,
     categorizedChildren = {},
-    children = [],
+    children: rawChildren,
     races,
     articles,
   } = props
+  const children = rawChildren || []
 
   const { counties = [], districts = [], others = [] } = categorizedChildren
 
@@ -35,7 +36,7 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
     ? shortToLongState[upperState]
     : state
 
-  const placeLink = (place: Place) => `/elections/${place.slug}`
+  const placeLink = (place: PlaceChild | Place) => `/elections/${place.slug || ''}`
 
     return (
       <div className="bg-indigo-50 pb-20">

@@ -10,8 +10,8 @@ import H6 from '@shared/typography/H6'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 interface TranslateActionProps {
-  showTranslate: boolean
-  setShowTranslate: (show: boolean) => void
+  showTranslate?: boolean
+  setShowTranslate?: (show: boolean) => void
   handleTranslateCallback?: (language: string) => void
 }
 
@@ -24,7 +24,7 @@ const TranslateAction = ({
 
   return (
     <>
-      <Modal closeCallback={() => setShowTranslate(false)} open={showTranslate}>
+      <Modal closeCallback={() => setShowTranslate?.(false)} open={showTranslate ?? false}>
         <div className="lg:min-w-[400px] max-w-md">
           <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
             Translate document
@@ -54,7 +54,7 @@ const TranslateAction = ({
           <div className="mt-16 flex w-full justify-end">
             <div
               onClick={() => {
-                setShowTranslate(false)
+                setShowTranslate?.(false)
               }}
             >
               <SecondaryButton>Cancel</SecondaryButton>
@@ -62,7 +62,7 @@ const TranslateAction = ({
             <div
               className="ml-3"
               onClick={() => {
-                setShowTranslate(false)
+                setShowTranslate?.(false)
                 trackEvent(EVENTS.ContentBuilder.Editor.SubmitTranslate, {
                   language: newLanguage,
                 })

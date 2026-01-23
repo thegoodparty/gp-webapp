@@ -13,9 +13,20 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page({ params }) {
+interface PageParams {
+  slug: string
+  step: string
+}
+
+interface PledgeContent {
+  title?: string
+  body?: string
+  [key: string]: string | number | boolean | null | undefined | object
+}
+
+export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
   const { slug, step } = await params
-  const campaign = await getCampaign(params)
+  const campaign = await getCampaign({ slug })
 
   const totalSteps = 4
 
@@ -24,9 +35,13 @@ export default async function Page({ params }) {
     redirect(`/onboarding/${slug}/1`)
   }
 
-  let pledge
+  let pledge: PledgeContent | undefined
   if (stepInt === 3) {
-    pledge = await fetchContentByType('pledge')
+    pledge = await fetchContentByType<PledgeContent>('pledge')
+  }
+
+  if (!campaign) {
+    redirect('/run-for-office')
   }
 
   const childProps = {

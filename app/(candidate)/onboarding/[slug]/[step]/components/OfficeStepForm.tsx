@@ -1,12 +1,31 @@
 'use client'
 import { useUser } from '@shared/hooks/useUser'
-import RenderInputField from '@shared/inputs/RenderInputField'
+import RenderInputField, { FieldConfig } from '@shared/inputs/RenderInputField'
 import H1 from '@shared/typography/H1'
 import { validateZip } from 'app/(entrance)/sign-up/components/SignUpPage'
 import { Fragment, useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 
-const fields = [
+type OfficeStepFieldKey = 'zip' | 'level' | 'fuzzyFilter'
+
+interface OfficeStepField extends FieldConfig {
+  key: OfficeStepFieldKey
+}
+
+interface OfficeStepFormState {
+  zip: string
+  level: string
+  fuzzyFilter: string
+}
+
+interface OfficeStepFormProps {
+  onChange: (state: OfficeStepFormState) => void
+  level?: string
+  zip?: string
+  adminMode?: boolean
+}
+
+const fields: OfficeStepField[] = [
   {
     key: 'zip',
     label: 'Zip Code',
@@ -35,13 +54,13 @@ const fields = [
   },
 ]
 
-export default function OfficeStepForm({ onChange, level, zip, adminMode }) {
-  const [state, setState] = useState({
+export default function OfficeStepForm({ onChange, level, zip, adminMode }: OfficeStepFormProps): React.JSX.Element {
+  const [state, setState] = useState<OfficeStepFormState>({
     zip: zip || '',
     level: level || '',
     fuzzyFilter: '',
   })
-  const [user, _] = useUser()
+  const [user] = useUser()
 
   const canSubmit = state.zip && validateZip(state.zip)
 
@@ -49,7 +68,7 @@ export default function OfficeStepForm({ onChange, level, zip, adminMode }) {
     canSubmit && onChange({ ...state })
   }, [state])
 
-  const onChangeField = (key, value) => {
+  const onChangeField = (key: string, value: string | boolean) => {
     setState({
       ...state,
       [key]: value,
