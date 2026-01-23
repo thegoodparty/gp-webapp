@@ -6,6 +6,7 @@ import 'quill/dist/quill.bubble.css'
 interface RichEditorProps {
   initialText?: string
   onChangeCallback?: (value: string, flag?: number) => void
+  useOnChange?: boolean
 }
 
 const RichEditor = ({

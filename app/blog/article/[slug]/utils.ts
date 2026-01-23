@@ -26,8 +26,8 @@ interface RelatedArticle {
 }
 
 export interface ArticleContent {
-  title?: string
-  slug?: string
+  title: string
+  slug: string
   summary?: string
   mainImage?: {
     url?: string
@@ -52,7 +52,7 @@ export interface ArticleContent {
       summary?: string
     }
   }
-  publishDate?: string
+  publishDate: string
   updateDate?: string
   body?: Document
   body2?: Document
@@ -69,7 +69,7 @@ export interface ArticleContent {
   statusCode?: number
 }
 
-export const fetchArticle = async (slug: string): Promise<ArticleContent | null> => {
+export const fetchArticle = async (slug: string): Promise<ArticleContent> => {
   return await unAuthFetch(apiRoutes.content.blogArticle.getBySlug.path, {
     slug,
   })

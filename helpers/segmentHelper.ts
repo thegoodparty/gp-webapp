@@ -4,7 +4,7 @@ export const segmentTrackEvent = async (
   eventName: string,
   properties: Record<
     string,
-    string | number | boolean | string[] | null | undefined
+    string | number | boolean | string[] | object | null | undefined
   >,
 ): Promise<void> => {
   try {

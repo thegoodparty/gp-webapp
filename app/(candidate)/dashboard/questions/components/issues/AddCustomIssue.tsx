@@ -8,17 +8,14 @@ import {
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons'
 import { Campaign, CustomIssue } from 'helpers/types'
-
-interface EditIssuePosition extends CustomIssue {
-  type: string
-}
+import type { EditIssuePosition, IssueOption } from './IssuesList'
 
 interface AddCustomIssueProps {
-  selectIssueCallback: (value: boolean | string) => void
+  selectIssueCallback: (value: IssueOption | 'custom' | null | false) => void
   saveCallback: (customIssues: CustomIssue[]) => Promise<void>
   campaign: Campaign
-  editIssuePosition: EditIssuePosition | null
-  setEditIssuePosition: (value: EditIssuePosition | null) => void
+  editIssuePosition: EditIssuePosition | false | null
+  setEditIssuePosition: (value: EditIssuePosition | false | null) => void
 }
 
 export default function AddCustomIssue({
@@ -28,21 +25,37 @@ export default function AddCustomIssue({
   editIssuePosition,
   setEditIssuePosition,
 }: AddCustomIssueProps) {
-  const editingCustomIssue = editIssuePosition?.type === 'custom'
+  const editingCustomIssue =
+    typeof editIssuePosition === 'object' &&
+    editIssuePosition !== null &&
+    editIssuePosition.type === 'custom'
 
   const [existingIndex] = useState(
     findExistingCustomIssueIndex(
       campaign,
-      editIssuePosition || undefined,
-      selectIssueCallback,
+      editingCustomIssue
+        ? {
+            title: editIssuePosition.title!,
+            position:
+              typeof editIssuePosition.position === 'string'
+                ? editIssuePosition.position
+                : '',
+          }
+        : undefined,
+      (value) =>
+        selectIssueCallback(value === 'custom' ? 'custom' : null),
     ),
   )
 
   const [title, setTitle] = useState(
-    editingCustomIssue ? editIssuePosition.title : '',
+    editingCustomIssue ? editIssuePosition.title || '' : '',
   )
   const [position, setPosition] = useState(
-    editingCustomIssue ? editIssuePosition.position : '',
+    editingCustomIssue
+      ? typeof editIssuePosition.position === 'string'
+        ? editIssuePosition.position
+        : ''
+      : '',
   )
   const saveAllowed = title !== '' && position !== ''
 

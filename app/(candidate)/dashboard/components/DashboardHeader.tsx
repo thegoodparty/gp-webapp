@@ -5,14 +5,14 @@ import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTa
 import { CampaignProgress } from 'app/(candidate)/dashboard/components/CampaignProgress'
 import { Campaign, PathToVictoryData } from 'helpers/types'
 
-interface Task {
+export interface DashboardTask {
   id: string
   completed: boolean
 }
 
 interface DashboardHeaderProps {
   campaign: Campaign
-  tasks?: Task[]
+  tasks?: DashboardTask[]
 }
 
 export const DashboardHeader = ({

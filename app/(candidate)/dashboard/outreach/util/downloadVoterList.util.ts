@@ -1,8 +1,9 @@
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { VoterFileFilters } from 'helpers/types'
+import { AudienceState } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 
 interface DownloadVoterListParams {
-  voterFileFilter?: VoterFileFilters
+  voterFileFilter?: VoterFileFilters | AudienceState
   outreachType?: string
 }
 
@@ -12,6 +13,10 @@ export const downloadVoterList = async (
   errorSnackbar: (message: string) => void = () => {},
 ): Promise<void> => {
   setLoading(true)
+  const resolvedFilter: VoterFileFilters =
+    voterFileFilter && 'audienceSuperVoters' in voterFileFilter
+      ? voterFileFilter
+      : {}
   const {
     audienceSuperVoters,
     audienceLikelyVoters,
@@ -27,7 +32,7 @@ export const downloadVoterList = async (
     age50Plus,
     genderMale,
     genderFemale,
-  } = voterFileFilter
+  } = resolvedFilter
 
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
   //  https://goodparty.atlassian.net/browse/WEB-4277

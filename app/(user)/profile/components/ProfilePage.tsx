@@ -3,17 +3,12 @@ import PasswordSection from './PasswordSection'
 import PersonalSection from './PersonalSection'
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection'
 import TextingCompliance from 'app/(user)/profile/texting-compliance/components/TextingCompliance'
-import { User, Website } from 'helpers/types'
-
-interface TcrCompliance {
-  status?: string
-  tdlcNumber?: string
-}
+import { User, Website, TcrCompliance } from 'helpers/types'
 
 interface ProfilePageProps {
   user: User
   isPro?: boolean
-  subscriptionCancelAt?: string | null
+  subscriptionCancelAt?: number | null
   website?: Website | null
   domainStatus?: string | null
   tcrCompliance?: TcrCompliance | null

@@ -4,19 +4,16 @@ import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
 import { noop } from '@shared/utils/noop'
-import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { VoterFileFilters } from 'helpers/types'
+import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
 const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
-interface Outreach {
-  id: string
-}
-
 // AudienceState uses underscore keys for frontend form state (CustomVoterAudienceFilters)
 // This differs from VoterFileFilters which uses camelCase for API persistence
-interface AudienceState {
-  audience_request?: string
+export interface AudienceState {
+  audience_request?: string | boolean
   count?: number
   audience_superVoters?: boolean
   audience_likelyVoters?: boolean
@@ -35,18 +32,18 @@ interface AudienceState {
   gender_unknown?: boolean
 }
 
-interface ScheduleState {
+export interface ScheduleState {
   date?: Date | string
   message?: string
 }
 
-interface FlowState {
-  script?: string
+export interface FlowState {
+  script?: string | false | null
   schedule?: ScheduleState
   image?: File | null
-  voterFileFilter?: { id: string; name?: string }
+  voterFileFilter?: (PhoneListInput & { id?: string }) | null
   audience?: AudienceState
-  phoneListId?: string
+  phoneListId?: number | null
 }
 
 interface ScheduleOutreachParams {
@@ -138,10 +135,7 @@ export const handleCreateOutreach =
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType:
-          p2pUxEnabled && type === OUTREACH_TYPES.text
-            ? OUTREACH_TYPES.p2p
-            : type,
+        outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
         message,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
@@ -248,7 +242,7 @@ export const handleCreatePhoneList =
 
 export const handleCreateVoterFileFilter =
   ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
-  async (): Promise<{ id: string; name?: string } | undefined> => {
+  async (): Promise<PhoneListInput | undefined> => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 
     const voterFileFilter = await createVoterFileFilter({

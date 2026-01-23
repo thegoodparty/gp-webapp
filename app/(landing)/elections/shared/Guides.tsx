@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Article } from './types'
 
 interface GuidesProps {
-  articles: Article[]
+  articles?: Article[]
 }
 
 export default function Guides({ articles }: GuidesProps): React.JSX.Element {
@@ -16,7 +16,7 @@ export default function Guides({ articles }: GuidesProps): React.JSX.Element {
           Campaign guides and resources
         </h2>
         <div className="grid grid-cols-12 gap-6 mt-8">
-          {articles.map((article, index) => (
+          {articles && articles.map((article, index) => (
             <div key={article.id || index} className=" col-span-12 md:col-span-4">
               <ArticleSnippet article={article} heroMode={false} section={{}} />
             </div>

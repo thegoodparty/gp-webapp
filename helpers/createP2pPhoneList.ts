@@ -4,11 +4,11 @@ import { VoterFileFilters } from 'helpers/types'
 
 export type PhoneListInput = VoterFileFilters & { name?: string }
 
-interface PhoneListResponse {
+export interface PhoneListResponse {
   token: string
 }
 
-interface PhoneListStatusResponse {
+export interface PhoneListStatusResponse {
   phoneListId: number
   leadsLoaded: number
 }

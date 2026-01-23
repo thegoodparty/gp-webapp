@@ -2,13 +2,14 @@ import { TASK_TYPES } from 'app/(candidate)/dashboard/shared/constants/tasks.con
 
 interface AiTemplate {
   key: string
-  requiresQuestions?: boolean
-  [key: string]: unknown
+  id?: string | number
+  name?: string
+  requiresQuestions?: string[]
 }
 
 interface TemplateCategory {
-  templates: AiTemplate[]
-  [key: string]: unknown
+  name?: string
+  templates?: AiTemplate[]
 }
 
 const AI_TEMPLATE_KEYS_BY_TASK_TYPE: Record<string, string[]> = {
