@@ -48,28 +48,33 @@ const isStatusKey = (key: string | null | undefined): key is StatusKey => {
   return key !== null && key !== undefined && key in statusLabels
 }
 
+const getP2pStatusLabel = (row: OutreachRow): string | null => {
+  // Only show status for P2P outreaches
+  if (row.outreachType !== OUTREACH_TYPES.p2p) {
+    return null
+  }
+
+  const { p2pJob, status } = row
+
+  // Need both p2pJob status and outreach status to display
+  if (!p2pJob?.status || !status || !isStatusKey(status)) {
+    return null
+  }
+
+  // If P2P job is active, show as completed; otherwise use the outreach status
+  const displayStatus: StatusKey = p2pJob.status === 'active' ? 'completed' : status
+  return statusLabels[displayStatus]
+}
+
 const STATUS_COLUMN = {
   header: 'Status',
   cell: ({ row }: { row: OutreachRow }) => {
-    if (row.outreachType !== OUTREACH_TYPES.p2p) {
+    const statusLabel = getP2pStatusLabel(row)
+    // Return null to indicate no status available, which will render as "n/a"
+    if (!statusLabel) {
       return <NotApplicableLabel />
     }
-
-    const { p2pJob } = row
-
-    if (!p2pJob?.status || !row.status || !isStatusKey(row.status)) {
-      return <NotApplicableLabel />
-    }
-
-    const showActiveStatus = p2pJob?.status === 'active'
-
-    return (
-      <span className="capitalize">
-        {p2pJob && showActiveStatus
-          ? statusLabels.completed
-          : statusLabels[row.status]}
-      </span>
-    )
+    return <span className="capitalize">{statusLabel}</span>
   },
 }
 
@@ -86,80 +91,90 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
   })
   const title = useMockData ? 'How your outreach could look' : 'Your campaigns'
 
-  const columns = [
-    {
-      header: 'Date',
-      cell: ({ row }: { row: OutreachRow }) =>
-        row.date ? dateUsHelper(row.date, 'long') : <NotApplicableLabel />,
-    },
-    {
-      header: 'Channel',
-      cell: ({ row }: { row: OutreachRow }) => {
-        const { outreachType } = row
-        return outreachType
-          ? OUTREACH_TYPE_MAPPING[outreachType] ||
-              outreachType.charAt(0).toUpperCase() + outreachType.slice(1)
-          : ''
+  const getChannelLabel = (outreachType?: string): string => {
+    if (!outreachType) return ''
+    const mappedLabel = OUTREACH_TYPE_MAPPING[outreachType as keyof typeof OUTREACH_TYPE_MAPPING]
+    return mappedLabel || outreachType.charAt(0).toUpperCase() + outreachType.slice(1)
+  }
+
+  const formatVoterCount = (count: number | null | undefined): string | null => {
+    if (count == null) return null
+    return Number(count).toLocaleString()
+  }
+
+  const columns = useMemo(
+    () => [
+      {
+        header: 'Date',
+        cell: ({ row }: { row: OutreachRow }) =>
+          row.date ? dateUsHelper(row.date, 'long') : <NotApplicableLabel />,
       },
-    },
-    {
-      header: 'Audience',
-      cell: ({ row }: { row: OutreachRow }) => {
-        const audienceLabels = formatAudienceLabels(row.voterFileFilter || {})
-        const atMostThreeLabels = audienceLabels.slice(0, 3)
-        return !audienceLabels?.length ? (
-          <NotApplicableLabel />
-        ) : (
-          <span className="flex flex-row items-center relative">
-            <StackedChips
-              {...{
-                labels: audienceLabels,
-                onClick: (_labels: string[], e: React.MouseEvent) => {
-                  e.stopPropagation()
-                  setViewFilters(row.voterFileFilter || null)
-                },
-              }}
-            />
-            {audienceLabels.length && (
-              <span
-                className="relative ml-2"
-                style={{
-                  left: `${(atMostThreeLabels.length - 1) * 0.25}rem`,
+      {
+        header: 'Channel',
+        cell: ({ row }: { row: OutreachRow }) => getChannelLabel(row.outreachType),
+      },
+      {
+        header: 'Audience',
+        cell: ({ row }: { row: OutreachRow }) => {
+          const audienceLabels = formatAudienceLabels(row.voterFileFilter || {})
+          if (!audienceLabels.length) {
+            return <NotApplicableLabel />
+          }
+
+          const firstThreeLabels = audienceLabels.slice(0, 3)
+          return (
+            <span className="flex flex-row items-center relative">
+              <StackedChips
+                {...{
+                  labels: audienceLabels,
+                  onClick: (_labels: string[], e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    setViewFilters(row.voterFileFilter || null)
+                  },
                 }}
-              >
-                ({audienceLabels.length})
-              </span>
-            )}
-          </span>
-        )
+              />
+              {audienceLabels.length > 0 && (
+                <span
+                  className="relative ml-2"
+                  style={{
+                    left: `${(firstThreeLabels.length - 1) * 0.25}rem`,
+                  }}
+                >
+                  ({audienceLabels.length})
+                </span>
+              )}
+            </span>
+          )
+        },
       },
-    },
-    {
-      header: 'Voters',
-      cell: ({ row }: { row: OutreachRow }) => {
-        const voterCount = row.voterFileFilter?.voterCount
-        const hasVoterCount = voterCount !== undefined && voterCount !== null
-        return hasVoterCount ? (
-          Number(voterCount).toLocaleString()
-        ) : (
-          <NotApplicableLabel />
-        )
+      {
+        header: 'Voters',
+        cell: ({ row }: { row: OutreachRow }) => {
+          const formattedCount = formatVoterCount(row.voterFileFilter?.voterCount)
+          return formattedCount ? formattedCount : <NotApplicableLabel />
+        },
       },
-    },
-    ...(p2pUxEnabled ? [STATUS_COLUMN] : []),
-  ]
+      ...(p2pUxEnabled ? [STATUS_COLUMN] : []),
+    ],
+    [p2pUxEnabled, setViewFilters],
+  )
 
   const convertedFilters = useMemo(
     () => viewFilters && convertAudienceFiltersForModal(viewFilters),
     [viewFilters],
   )
 
-  const handleRowClick = (outreach: OutreachRow, { clientX, clientY }: { clientX?: number; clientY?: number } = {}) => {
+  const calculatePopoverPosition = (clientX?: number, clientY?: number): PopoverPosition => ({
+    top: (clientY ?? 0) + 10,
+    left: (clientX ?? 0) + 10,
+  })
+
+  const handleRowClick = (
+    outreach: OutreachRow,
+    { clientX, clientY }: { clientX?: number; clientY?: number } = {},
+  ) => {
     setActOnOutreach(outreach)
-    setPopoverPosition({
-      top: (clientY || 0) + 10,
-      left: (clientX || 0) + 10,
-    })
+    setPopoverPosition(calculatePopoverPosition(clientX, clientY))
   }
 
   const handlePopoverClose = () => {
@@ -177,19 +192,20 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
   }
 
   // Sort table data by date, placing entries without a date at the end
-  const sortedTableData = useMemo(
-    () =>
-      [...tableData].sort((a, b) =>
-        !a.date && !b.date
-          ? 0
-          : !a.date
-          ? 1
-          : !b.date
-          ? -1
-          : new Date(a.date).getTime() - new Date(b.date).getTime(),
-      ),
-    [tableData],
-  )
+  const sortedTableData = useMemo(() => {
+    return [...tableData].sort((a, b) => {
+      // Both have dates: sort by date (newest first)
+      if (a.date && b.date) {
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      }
+      // Only a has date: a comes first
+      if (a.date) return -1
+      // Only b has date: b comes first
+      if (b.date) return 1
+      // Neither has date: maintain order
+      return 0
+    })
+  }, [tableData])
 
   const table = (
     <SimpleTable
