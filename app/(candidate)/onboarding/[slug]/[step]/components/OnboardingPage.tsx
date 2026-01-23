@@ -4,13 +4,7 @@ import OfficeStep from './OfficeStep'
 import PledgeStep from './PledgeStep'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import CompleteStep from './CompleteStep'
-import { Campaign } from 'helpers/types'
-
-interface PledgeContent {
-  title?: string
-  body?: string
-  [key: string]: string | number | boolean | null | undefined | object
-}
+import { Campaign, PledgeContent } from 'helpers/types'
 
 interface OnboardingPageProps {
   step: number

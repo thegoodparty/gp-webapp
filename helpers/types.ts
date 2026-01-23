@@ -537,3 +537,10 @@ export interface WebsiteContact {
   message?: string | null
   createdAt: Date | string
 }
+
+// ===== CMS Content Types =====
+
+export interface PledgeContent {
+  title?: string
+  body?: string
+}

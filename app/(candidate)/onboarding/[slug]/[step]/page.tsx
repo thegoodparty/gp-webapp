@@ -5,6 +5,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import { redirect } from 'next/navigation'
 import OnboardingPage from './components/OnboardingPage'
 import { fetchContentByType } from 'helpers/fetchHelper'
+import { PledgeContent } from 'helpers/types'
 
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GoodParty.org',
@@ -16,12 +17,6 @@ export const metadata = meta
 interface PageParams {
   slug: string
   step: string
-}
-
-interface PledgeContent {
-  title?: string
-  body?: string
-  [key: string]: string | number | boolean | null | undefined | object
 }
 
 export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
