@@ -6,15 +6,13 @@ import Body2 from '@shared/typography/Body2'
 import CopyToClipboardButton from '@shared/utils/CopyToClipboardButton'
 import { Fragment } from 'react'
 
-type PersonRecord = Partial<
-  Record<string, string | number | boolean | object | null>
->
+type PersonRecord = Record<string, unknown>
 
 interface Field {
   key: string
   label: string
   transform?: (
-    value: string | number | boolean | object | null,
+    value: string | number | boolean | object | null | unknown,
     person: PersonRecord,
   ) => string | null
   allowCopy?: boolean
