@@ -4,7 +4,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 
 interface CampaignStatus {
-  status: boolean
+  status: string | boolean
   slug?: string
   currentStep?: string
 }

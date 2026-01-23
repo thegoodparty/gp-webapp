@@ -15,13 +15,14 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 interface ActionsProps {
   name: string
   slug: string
-  tableVersion: boolean
-  setDocumentName: (name: string) => void
+  tableVersion?: boolean
+  setDocumentName?: (name: string) => void
   documentKey?: string
   status?: string
-  handleTranslateCallback?: () => void
-  showTranslate: boolean
-  setShowTranslate: (show: boolean) => void
+  updatedAt?: Date
+  handleTranslateCallback?: (language: string) => void
+  showTranslate?: boolean
+  setShowTranslate?: (show: boolean) => void
 }
 
 export default function Actions(props: ActionsProps): React.JSX.Element {
@@ -148,7 +149,7 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
               <div className="md:hidden">
                 <Button
                   onClick={() => {
-                    setShowTranslate(true)
+                    setShowTranslate?.(true)
                     setShowMenu(false)
                   }}
                 >

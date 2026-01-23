@@ -5,15 +5,16 @@ import RacesSection from 'app/(landing)/elections/shared/RacesSection'
 import LearnToRun from 'app/(landing)/elections/shared/LearnToRun'
 import Guides from 'app/(landing)/elections/shared/Guides'
 import Hero from '../../../../shared/Hero'
-import { Article, City, County, Municipality, Parent, Race } from 'app/(landing)/elections/shared/types'
+import { Article, City, Municipality, Parent, Race } from 'app/(landing)/elections/shared/types'
+import { PlaceResult, PlaceParent } from 'app/(landing)/elections/shared/fetchPlace'
 
 interface ElectionsCityPageProps {
   state: string
-  municipality: City
-  races: Race[]
-  articles: Article[]
-  county: County
-  parent?: Parent
+  municipality: City | PlaceResult
+  races?: Race[]
+  articles?: Article[]
+  county: string
+  parent?: Parent | PlaceParent
 }
 
 const ElectionsCountyPage = (props: ElectionsCityPageProps): React.JSX.Element => {
@@ -21,10 +22,10 @@ const ElectionsCountyPage = (props: ElectionsCityPageProps): React.JSX.Element =
   const upperState = state.toUpperCase()
   const stateName = isStateAbbreviation(upperState)
     ? shortToLongState[upperState]
-    : undefined
+    : state
   const municipalityWithState: Municipality = {
-    name: municipality.name,
-    slug: municipality.slug,
+    name: municipality.name || '',
+    slug: municipality.slug || '',
     state,
   }
 
@@ -33,7 +34,6 @@ const ElectionsCountyPage = (props: ElectionsCityPageProps): React.JSX.Element =
       <Hero
         state={state}
         municipality={municipalityWithState}
-        county={county}
         parent={parent}
         color1="#897AF1"
         color2="#C985F2"

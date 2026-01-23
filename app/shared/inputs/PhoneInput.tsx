@@ -19,7 +19,7 @@ export const isValidPhone = (phone: string): boolean => {
   )
 }
 
-interface PhoneInputProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onBlur' | 'label' | 'name' | 'variant' | 'error'> {
+interface PhoneInputProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onBlur' | 'name' | 'variant' | 'error'> {
   value: string
   onChangeCallback: (value: string, isValid: boolean) => void
   onBlurCallback?: (value: string) => void

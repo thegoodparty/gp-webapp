@@ -3,7 +3,7 @@ import RaceComponent from './Race'
 import { Race } from './types'
 
 interface RacesSectionProps {
-  races: Race[]
+  races?: Race[]
 }
 
 export default function RacesSection({ races }: RacesSectionProps): React.JSX.Element {

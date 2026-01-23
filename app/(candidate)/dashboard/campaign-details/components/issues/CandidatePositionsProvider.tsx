@@ -10,8 +10,8 @@ interface CandidatePosition {
 }
 
 type CandidatePositionsContextType = [
-  CandidatePosition[],
-  Dispatch<SetStateAction<CandidatePosition[]>>,
+  CandidatePosition[] | false,
+  Dispatch<SetStateAction<CandidatePosition[] | false>>,
 ]
 
 export const CandidatePositionsContext =
@@ -19,7 +19,7 @@ export const CandidatePositionsContext =
 
 interface CandidatePositionsProviderProps {
   children: React.ReactNode
-  candidatePositions?: CandidatePosition[]
+  candidatePositions?: CandidatePosition[] | false
 }
 
 export const CandidatePositionsProvider = ({

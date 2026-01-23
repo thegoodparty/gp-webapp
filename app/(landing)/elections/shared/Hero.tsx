@@ -5,10 +5,11 @@ import { shortToLongState, StateAbbreviation } from 'helpers/statesHelper'
 import Image from 'next/image'
 import Subtitle2 from '@shared/typography/Subtitle2'
 import { County, Municipality, Parent } from './types'
+import { PlaceResult } from './fetchPlace'
 
 interface HeroProps {
   state: string
-  county?: County
+  county?: County | PlaceResult
   color1: string
   color2: string
   level: 'state' | 'county' | 'city'

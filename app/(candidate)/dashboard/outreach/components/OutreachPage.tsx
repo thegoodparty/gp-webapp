@@ -8,11 +8,7 @@ import { OutreachTable } from 'app/(candidate)/dashboard/outreach/components/Out
 import { OutreachProvider, Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
-import { Campaign } from 'helpers/types'
-
-interface TcrCompliance {
-  status?: string
-}
+import { Campaign, TcrCompliance } from 'helpers/types'
 
 interface OutreachPageProps {
   pathname: string

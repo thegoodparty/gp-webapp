@@ -5,18 +5,20 @@ import { CheckRounded, LockRounded } from '@mui/icons-material'
 import TaskCheck from './TaskCheck'
 import H4 from '@shared/typography/H4'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { TASK_TYPES } from '../../shared/constants/tasks.const'
 
-interface Task {
+export interface Task {
   id: string
   title: string
   description: string
   cta?: string
   proRequired?: boolean
-  flowType: string
+  flowType: typeof TASK_TYPES[keyof typeof TASK_TYPES]
   week: number
   deadline: number
   link?: string
   completed: boolean
+  defaultAiTemplateId?: string | number
 }
 
 interface TaskItemProps {
