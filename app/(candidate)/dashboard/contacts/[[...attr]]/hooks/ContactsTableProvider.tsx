@@ -145,77 +145,65 @@ export const ContactsTableProvider = ({
     [params],
   )
 
-  const contactsQueryOptions = useMemo(
-    () =>
-      queryOptions({
-        queryKey: [
-          'contacts',
-          {
-            page: currentPage,
-            pageSize,
-            segment: currentSegment,
-            query: searchTerm,
-          },
-        ],
-        queryFn: async () => {
-          const emptyResponse = {
-            people: [],
-            pagination: createEmptyPagination(currentPage, pageSize),
-          }
+  const contactsQueryOptions = queryOptions({
+    queryKey: [
+      'contacts',
+      {
+        page: currentPage,
+        pageSize,
+        segment: currentSegment,
+        query: searchTerm,
+      },
+    ],
+    queryFn: async () => {
+      const emptyResponse = {
+        people: [],
+        pagination: createEmptyPagination(currentPage, pageSize),
+      }
 
-          if (searchTerm) {
-            const data = await searchContacts({
-              page: currentPage,
-              resultsPerPage: pageSize,
-              query: searchTerm.trim(),
-            })
-            return data || emptyResponse
-          }
+      if (searchTerm) {
+        const data = await searchContacts({
+          page: currentPage,
+          resultsPerPage: pageSize,
+          query: searchTerm.trim(),
+        })
+        return data || emptyResponse
+      }
 
-          const data = await fetchContacts({
-            page: currentPage,
-            resultsPerPage: pageSize,
-            segment: currentSegment,
-          })
-          return data || emptyResponse
-        },
-        refetchOnMount: false,
-      }),
-    [currentPage, pageSize, currentSegment, searchTerm],
-  )
+      const data = await fetchContacts({
+        page: currentPage,
+        resultsPerPage: pageSize,
+        segment: currentSegment,
+      })
+      return data || emptyResponse
+    },
+    refetchOnMount: false,
+  })
 
   const contactsQuery = useQuery(contactsQueryOptions)
 
-  const personQueryOptions = useMemo(
-    () =>
-      queryOptions({
-        queryKey: ['person', currentlySelectedPersonId],
-        queryFn: async () => {
-          const id = currentlySelectedPersonId
-          if (!id) return null
-          const person = await fetchPerson(id)
-          return person as Person | null
-        },
-        enabled: Boolean(currentlySelectedPersonId),
-        initialData: undefined,
-      }),
-    [currentlySelectedPersonId],
-  )
+  const personQueryOptions = queryOptions({
+    queryKey: ['person', currentlySelectedPersonId],
+    queryFn: async () => {
+      const id = currentlySelectedPersonId
+      if (!id) return null
+      const person = await fetchPerson(id)
+      return person as Person | null
+    },
+    enabled: Boolean(currentlySelectedPersonId),
+    initialData: undefined,
+  })
 
   const personQuery = useQuery(personQueryOptions)
 
-  const customSegmentsQueryOptions = useMemo(
-    () =>
-      queryOptions({
-        queryKey: ['custom-segments'],
-        queryFn: async () => {
-          const segments = await fetchCustomSegments()
-          return segments || []
-        },
-        initialData: undefined,
-      }),
-    [],
-  )
+  const customSegmentsQueryOptions = queryOptions({
+    queryKey: ['custom-segments'],
+    queryFn: async () => {
+      const segments = await fetchCustomSegments()
+      return segments || []
+    },
+    initialData: undefined,
+  })
 
   const customSegmentsQuery = useQuery(customSegmentsQueryOptions)
 
