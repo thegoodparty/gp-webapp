@@ -101,7 +101,7 @@ const EditSectionButton = ({
       ) : section === SECTIONS.theme ? (
         <>
           <H5 className="mb-1">{SECTION_BTN_CONTENT[section]?.title}</H5>
-          <DisplaySwatch theme={website.content?.theme?.color || 'light'} />
+          <DisplaySwatch theme={website.content?.theme || 'light'} />
         </>
       ) : (
         <>

@@ -153,7 +153,7 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
       ...current,
       content: {
         ...current.content,
-        theme: { color },
+        theme: color,
       },
     } : null)
   }
@@ -336,7 +336,7 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
 
             {step === 3 && (
               <ThemeStep
-                theme={website.content?.theme?.color || ''}
+                theme={website.content?.theme || ''}
                 onChange={handleThemeChange}
               />
             )}

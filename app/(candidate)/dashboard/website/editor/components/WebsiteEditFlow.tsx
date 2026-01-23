@@ -110,7 +110,7 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       ...current,
       content: {
         ...current.content,
-        theme: { color },
+        theme: color,
       },
     } : null)
   }

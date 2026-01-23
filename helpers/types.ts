@@ -491,9 +491,7 @@ export interface WebsiteContent {
     issues?: WebsiteIssue[]
     committee?: string
   }
-  theme?: {
-    color?: string
-  }
+  theme?: string
   logo?: string
   createStep?: string
   main?: {
