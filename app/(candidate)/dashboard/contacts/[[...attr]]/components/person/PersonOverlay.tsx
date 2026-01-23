@@ -4,12 +4,15 @@ import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import InfoSection from './InfoSection'
 import PersonMap from './PersonMap'
 
-type PersonFieldValue = string | number | boolean | object | null
+type PersonRecord = Record<string, unknown>
 
 interface Field {
   key: string
   label: string
-  transform?: (value: PersonFieldValue) => string
+  transform?: (
+    value: string | number | boolean | object | null | unknown,
+    person: PersonRecord,
+  ) => string | null
   allowCopy?: boolean
 }
 
