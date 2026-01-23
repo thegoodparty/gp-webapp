@@ -2,14 +2,14 @@
  * Shared utilities for sitemap generation
  */
 
-const fs = require('fs').promises
-const path = require('path')
+import * as fs from 'fs/promises'
+import * as path from 'path'
+import { SitemapUrl, SitemapIndexEntry } from './xml'
 
 /**
  * Ensure a directory exists, creating it if necessary
- * @param {string} dirPath - The directory path to ensure exists
  */
-async function ensureDirectoryExists(dirPath) {
+export const ensureDirectoryExists = async (dirPath: string): Promise<void> => {
   try {
     await fs.access(dirPath)
   } catch {
@@ -19,36 +19,28 @@ async function ensureDirectoryExists(dirPath) {
 
 /**
  * Write sitemap XML to file
- * @param {string} filePath - The file path to write to
- * @param {string} xmlContent - The XML content to write
  */
-async function writeSitemapXML(filePath, xmlContent) {
+export const writeSitemapXML = async (filePath: string, xmlContent: string): Promise<void> => {
   await fs.writeFile(filePath, xmlContent, 'utf8')
 }
 
 /**
  * Normalize URL to ensure consistency
- * @param {string} url - The URL to normalize
- * @returns {string} Normalized URL
  */
-function normalizeUrl(url) {
-  // Remove trailing slashes
-  url = url.replace(/\/$/, '')
+export const normalizeUrl = (url: string): string => {
+  let normalized = url.replace(/\/$/, '')
   
-  // Ensure proper protocol
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url
+  if (!normalized.startsWith('http://') && !normalized.startsWith('https://')) {
+    normalized = 'https://' + normalized
   }
   
-  return url
+  return normalized
 }
 
 /**
  * Format date for sitemap lastmod field
- * @param {Date|string} date - The date to format
- * @returns {string} ISO date string
  */
-function formatSitemapDate(date) {
+export const formatSitemapDate = (date?: Date | string): string => {
   if (!date) {
     return new Date().toISOString()
   }
@@ -62,12 +54,9 @@ function formatSitemapDate(date) {
 
 /**
  * Chunk an array into smaller arrays
- * @param {Array} array - The array to chunk
- * @param {number} size - The chunk size
- * @returns {Array} Array of chunks
  */
-function chunkArray(array, size) {
-  const chunks = []
+export const chunkArray = <T>(array: T[], size: number): T[][] => {
+  const chunks: T[][] = []
   for (let i = 0; i < array.length; i += size) {
     chunks.push(array.slice(i, i + size))
   }
@@ -76,42 +65,32 @@ function chunkArray(array, size) {
 
 /**
  * Calculate the approximate size of a sitemap XML string
- * @param {string} xml - The XML string
- * @returns {number} Size in bytes
  */
-function getSitemapSize(xml) {
+export const getSitemapSize = (xml: string): number => {
   return Buffer.byteLength(xml, 'utf8')
 }
 
+const MAX_SIZE_BYTES = 50 * 1024 * 1024
+
 /**
  * Check if sitemap exceeds size limits
- * @param {string} xml - The XML string
- * @returns {boolean} True if exceeds limits
  */
-function exceedsSizeLimit(xml) {
-  const MAX_SIZE_BYTES = 50 * 1024 * 1024 // 50 MB
+export const exceedsSizeLimit = (xml: string): boolean => {
   return getSitemapSize(xml) > MAX_SIZE_BYTES
 }
 
+const MAX_URLS = 50000
+
 /**
  * Check if URL array needs to be split based on count or potential size
- * @param {Array} urls - Array of URL objects
- * @returns {boolean} True if needs splitting
  */
-function needsSplitting(urls) {
-  const MAX_URLS = 50000
-  
-  // Check URL count first (fast check)
+export const needsSplitting = (urls: SitemapUrl[]): boolean => {
   if (urls.length > MAX_URLS) {
     return true
   }
   
-  // For arrays close to the limit, check estimated size
   if (urls.length > 40000) {
-    // Estimate size without generating full XML (rough calculation)
-    // Each URL entry is roughly 150-200 bytes on average
     const estimatedSize = urls.length * 180
-    const MAX_SIZE_BYTES = 50 * 1024 * 1024 // 50 MB
     return estimatedSize > MAX_SIZE_BYTES
   }
   
@@ -120,41 +99,33 @@ function needsSplitting(urls) {
 
 /**
  * Split URLs into chunks that respect both URL count and size limits
- * @param {Array} urls - Array of URL objects
- * @param {Function} convertToXML - Function to convert URLs to XML
- * @returns {Array} Array of URL chunks
  */
-function splitUrlsForSitemap(urls, convertToXML) {
-  const MAX_URLS = 50000
-  const MAX_SIZE_BYTES = 50 * 1024 * 1024 // 50 MB
-  
-  // If small enough, return as single chunk
+export const splitUrlsForSitemap = (
+  urls: SitemapUrl[],
+  xmlConverter: (urls: SitemapUrl[]) => string
+): SitemapUrl[][] => {
   if (!needsSplitting(urls)) {
     return [urls]
   }
   
-  const chunks = []
-  let currentChunk = []
+  const chunks: SitemapUrl[][] = []
+  let currentChunk: SitemapUrl[] = []
   
   for (const url of urls) {
-    // Add URL to current chunk
     currentChunk.push(url)
     
-    // Check if we need to finalize this chunk
     if (currentChunk.length >= MAX_URLS) {
       chunks.push(currentChunk)
       currentChunk = []
     } else if (currentChunk.length % 1000 === 0) {
-      // Every 1000 URLs, check size to avoid massive chunks
-      const testXml = convertToXML(currentChunk)
-      if (getSitemapSize(testXml) > MAX_SIZE_BYTES * 0.9) { // 90% of limit
+      const testXml = xmlConverter(currentChunk)
+      if (getSitemapSize(testXml) > MAX_SIZE_BYTES * 0.9) {
         chunks.push(currentChunk)
         currentChunk = []
       }
     }
   }
   
-  // Add remaining URLs if any
   if (currentChunk.length > 0) {
     chunks.push(currentChunk)
   }
@@ -164,34 +135,37 @@ function splitUrlsForSitemap(urls, convertToXML) {
 
 /**
  * Generate multiple sitemap files for large URL sets
- * @param {Array} urls - Array of URL objects  
- * @param {string} baseDir - Base directory for sitemap files
- * @param {string} baseName - Base name for sitemap files (without extension)
- * @param {Function} convertToXML - Function to convert URLs to XML
- * @param {string} baseUrl - Base URL for sitemap index entries
- * @returns {Array} Array of sitemap index entries
  */
-async function writeSplitSitemaps(urls, baseDir, baseName, convertToXML, baseUrl) {
+export const writeSplitSitemaps = async (
+  urls: SitemapUrl[],
+  baseDir: string,
+  baseName: string,
+  xmlConverter: (urls: SitemapUrl[]) => string,
+  baseUrl: string
+): Promise<SitemapIndexEntry[]> => {
   await ensureDirectoryExists(baseDir)
   
-  const chunks = splitUrlsForSitemap(urls, convertToXML)
-  const sitemapEntries = []
+  const chunks = splitUrlsForSitemap(urls, xmlConverter)
+  const sitemapEntries: SitemapIndexEntry[] = []
   const currentDate = new Date().toISOString().split('T')[0]
   
   if (chunks.length === 1) {
-    // Single sitemap
-    const xml = convertToXML(chunks[0])
-    const filePath = path.join(baseDir, `${baseName}.xml`)
-    await writeSitemapXML(filePath, xml)
-    
-    sitemapEntries.push({
-      loc: `${baseUrl}/${baseName}.xml`,
-      lastmod: currentDate
-    })
+    const firstChunk = chunks[0]
+    if (firstChunk) {
+      const xml = xmlConverter(firstChunk)
+      const filePath = path.join(baseDir, `${baseName}.xml`)
+      await writeSitemapXML(filePath, xml)
+      
+      sitemapEntries.push({
+        loc: `${baseUrl}/${baseName}.xml`,
+        lastmod: currentDate
+      })
+    }
   } else {
-    // Multiple sitemaps
     for (let i = 0; i < chunks.length; i++) {
-      const xml = convertToXML(chunks[i])
+      const chunk = chunks[i]
+      if (!chunk) continue
+      const xml = xmlConverter(chunk)
       const fileName = `${baseName}-${i + 1}.xml`
       const filePath = path.join(baseDir, fileName)
       await writeSitemapXML(filePath, xml)
@@ -217,4 +191,4 @@ module.exports = {
   needsSplitting,
   splitUrlsForSitemap,
   writeSplitSitemaps
-} 
+}
