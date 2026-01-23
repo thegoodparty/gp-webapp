@@ -1,11 +1,22 @@
 import { ELECTION_API_ROOT } from 'appEnv'
 
-export const unAuthElectionFetch = async (
-  path,
-  data = {},
+export function unAuthElectionFetch<T>(
+  path: string,
+  data?: object,
+  revalidate?: number
+): Promise<T>
+export async function unAuthElectionFetch<T>(
+  path: string,
+  data: object = {},
   revalidate = 3600,
-) => {
-  const qs = Object.keys(data).length ? `?${new URLSearchParams(data)}` : ''
+): Promise<T> {
+  const entries: [string, string][] = []
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== undefined && value !== null) {
+      entries.push([key, String(value)])
+    }
+  }
+  const qs = entries.length > 0 ? `?${new URLSearchParams(entries)}` : ''
   const url = `${ELECTION_API_ROOT}/v1${path}${qs}`
   const resp = await fetch(url, {
     method: 'GET',

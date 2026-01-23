@@ -8,7 +8,7 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 
 ## Scripts
 
-### 📝 `generate-sitemaps.js`
+### 📝 `generate-sitemaps.ts`
 
 **Purpose**: Main sitemap generation script that creates all XML sitemap files at build time.
 
@@ -24,19 +24,19 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 **Usage**:
 ```bash
 # Generate all sitemaps (production URLs by default)
-node scripts/generate-sitemaps.js
+npx tsx scripts/generate-sitemaps.ts
 
 # Generate main sitemap only (fast - useful for testing)
-node scripts/generate-sitemaps.js --main-only
+npx tsx scripts/generate-sitemaps.ts --main-only
 
 # Generate sitemaps with URL validation (validates dynamic URLs only - skips static main sitemap)
-node scripts/generate-sitemaps.js --validate
+npx tsx scripts/generate-sitemaps.ts --validate
 
 # Generate with enhanced redirect handling (removes all redirects for better SEO)
-node scripts/generate-sitemaps.js --validate --redirect-handling remove
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
 
 # Generate main sitemap only with validation (fastest validation option)
-node scripts/generate-sitemaps.js --main-only --validate
+npx tsx scripts/generate-sitemaps.ts --main-only --validate
 ```
 
 **Output**:
@@ -49,7 +49,7 @@ node scripts/generate-sitemaps.js --main-only --validate
 
 ---
 
-### 🔍 `validate-sitemap-urls.js`
+### 🔍 `validate-sitemap-urls.ts`
 
 **Purpose**: Enhanced URL validation that follows redirects and provides multiple strategies for handling them in sitemaps according to SEO best practices.
 
@@ -78,7 +78,7 @@ node scripts/generate-sitemaps.js --main-only --validate
 - **Error Categorization**: Groups errors by status code
 - **Progress Reporting**: Shows validation progress in 10% increments
 
-**Used by**: `generate-sitemaps.js` when `--validate` flag is provided
+**Used by**: `generate-sitemaps.ts` when `--validate` flag is provided
 
 ---
 
@@ -91,7 +91,7 @@ The validation supports three different approaches for managing redirects in sit
 1. **`remove` (Recommended for SEO)**:
    ```bash
    # Remove all redirects from sitemap
-   node scripts/generate-sitemaps.js --validate --redirect-handling remove
+   npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
    ```
    - Removes all URLs that redirect (even successful ones)
    - Cleanest sitemap with only direct 200 OK responses
@@ -100,7 +100,7 @@ The validation supports three different approaches for managing redirects in sit
 2. **`replace` (Alternative SEO approach)**:
    ```bash
    # Replace redirects with their final destinations
-   node scripts/generate-sitemaps.js --validate --redirect-handling replace
+   npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling replace
    ```
    - Replaces redirect URLs with their final destinations
    - Includes deduplication to prevent multiple URLs pointing to same page
@@ -109,7 +109,7 @@ The validation supports three different approaches for managing redirects in sit
 3. **`keep` (Legacy behavior)**:
    ```bash
    # Keep redirects if they lead to valid destinations
-   node scripts/generate-sitemaps.js --validate --redirect-handling keep
+   npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling keep
    ```
    - Keeps redirects in sitemap if final destination is accessible
    - Only removes redirects that lead to 404s
@@ -118,19 +118,19 @@ The validation supports three different approaches for managing redirects in sit
 **Usage Examples**:
 ```bash
 # Recommended: Remove all redirects (cleanest for SEO)
-node scripts/generate-sitemaps.js --validate --redirect-handling remove
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
 
 # Alternative: Replace redirects with destinations
-node scripts/generate-sitemaps.js --validate --redirect-handling replace
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling replace
 
 # Legacy: Keep successful redirects
-node scripts/generate-sitemaps.js --validate --redirect-handling keep
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling keep
 
 # Validate with custom redirect depth
-node scripts/generate-sitemaps.js --validate --redirect-handling remove --max-redirects 10
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove --max-redirects 10
 
 # Disable redirect following (fastest)
-node scripts/generate-sitemaps.js --validate --no-follow-redirects
+npx tsx scripts/generate-sitemaps.ts --validate --no-follow-redirects
 ```
 
 **Example Redirect Validation Results**:
@@ -192,7 +192,7 @@ Use `remove` mode for optimal SEO performance. This ensures your sitemap only co
 
 ---
 
-### 🧹 `prune-invalid-urls.js`
+### 🧹 `prune-invalid-urls.ts`
 
 **Purpose**: Removes invalid URLs from existing sitemaps using validation reports (much faster than re-validation).
 
@@ -207,16 +207,16 @@ Use `remove` mode for optimal SEO performance. This ensures your sitemap only co
 **Usage**:
 ```bash
 # Preview what would be removed (safe dry-run)
-node scripts/prune-invalid-urls.js --dry-run
+npx tsx scripts/prune-invalid-urls.ts --dry-run
 
 # Remove invalid URLs using most recent validation report
-node scripts/prune-invalid-urls.js
+npx tsx scripts/prune-invalid-urls.ts
 
 # Use specific validation report
-node scripts/prune-invalid-urls.js --report path/to/validation-report.json
+npx tsx scripts/prune-invalid-urls.ts --report path/to/validation-report.json
 
 # Dry run with specific report
-node scripts/prune-invalid-urls.js --report path/to/report.json --dry-run
+npx tsx scripts/prune-invalid-urls.ts --report path/to/report.json --dry-run
 ```
 
 **Key Benefits**:
@@ -232,7 +232,7 @@ node scripts/prune-invalid-urls.js --report path/to/report.json --dry-run
 
 ---
 
-### 📊 `generate-invalid-urls-csv.js`
+### 📊 `generate-invalid-urls-csv.ts`
 
 **Purpose**: Converts validation report JSON to CSV format for easier analysis of invalid URLs and redirects.
 
@@ -245,10 +245,10 @@ node scripts/prune-invalid-urls.js --report path/to/report.json --dry-run
 **Usage**:
 ```bash
 # Generate CSV from validation report
-node scripts/generate-invalid-urls-csv.js public/sitemaps/validation-report-2025-07-08T00-47-10.json
+npx tsx scripts/generate-invalid-urls-csv.ts public/sitemaps/validation-report-2025-07-08T00-47-10.json
 
 # Specify custom output filename
-node scripts/generate-invalid-urls-csv.js validation-report.json custom-output.csv
+npx tsx scripts/generate-invalid-urls-csv.ts validation-report.json custom-output.csv
 ```
 
 **CSV Output Format**:
@@ -278,12 +278,12 @@ This CSV format allows your team to easily analyze both invalid URLs and redirec
 
 ## Library Files (`lib/`)
 
-### `xml.js`
+### `xml.ts`
 - **`convertToXML(urls)`**: Converts URL objects to XML sitemap format
 - **`generateRootIndex(sitemaps)`**: Creates sitemap index XML
 - **Character escaping**: Handles XML special characters (&, <, >, ", ')
 
-### `sitemap-helpers.js`
+### `sitemap-helpers.ts`
 - **`writeSplitSitemaps()`**: Handles large sitemaps that exceed size/URL limits
 - **`needsSplitting()`**: Checks if sitemap should be split
 - **`ensureDirectoryExists()`**: Creates directories as needed
@@ -291,17 +291,17 @@ This CSV format allows your team to easily analyze both invalid URLs and redirec
 
 ## Direct Script Execution
 
-All scripts can be run directly with Node.js:
+All scripts are TypeScript files and can be run with `npx tsx`:
 
 ```bash
 # Main generation script
-node scripts/generate-sitemaps.js
+npx tsx scripts/generate-sitemaps.ts
 
 # URL validation (standalone)
-node scripts/validate-sitemap-urls.js
+npx tsx scripts/validate-sitemap-urls.ts
 
 # Invalid URL pruning
-node scripts/prune-invalid-urls.js
+npx tsx scripts/prune-invalid-urls.ts
 
 # Clean sitemaps directory
 rm -rf public/sitemaps
@@ -315,7 +315,7 @@ rm -rf public/sitemaps
 rm -rf public/sitemaps
 
 # Generate fresh sitemaps with validation (removes redirects for better SEO)
-node scripts/generate-sitemaps.js --validate --redirect-handling remove
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
 
 # This creates both sitemaps AND validation report
 ```
@@ -323,19 +323,19 @@ node scripts/generate-sitemaps.js --validate --redirect-handling remove
 ### ⚡ **Regular Maintenance**
 ```bash
 # Quick regeneration (main sitemap only - great for testing content changes)
-node scripts/generate-sitemaps.js --main-only
+npx tsx scripts/generate-sitemaps.ts --main-only
 
 # Full regeneration (when content changes)
-node scripts/generate-sitemaps.js
+npx tsx scripts/generate-sitemaps.ts
 
 # Clean up invalid URLs using existing validation report
-node scripts/prune-invalid-urls.js
+npx tsx scripts/prune-invalid-urls.ts
 ```
 
 ### 🔍 **Quality Assurance**
 ```bash
 # Preview what URLs would be removed
-node scripts/prune-invalid-urls.js --dry-run
+npx tsx scripts/prune-invalid-urls.ts --dry-run
 
 # Check recent validation report
 cat public/sitemaps/validation-report-*.json | jq '.summary'
@@ -409,13 +409,13 @@ The scripts include comprehensive error handling:
 Add sitemap generation to your build process:
 ```bash
 # In your CI/CD pipeline (production URLs by default)
-node scripts/generate-sitemaps.js
+npx tsx scripts/generate-sitemaps.ts
 
 # With validation for quality assurance
-node scripts/generate-sitemaps.js --validate --redirect-handling remove
+npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
 
 # Quick build for testing (main sitemap only)
-node scripts/generate-sitemaps.js --main-only
+npx tsx scripts/generate-sitemaps.ts --main-only
 ```
 
 ### **Deployment**
@@ -483,4 +483,3 @@ The static system replaces the previous dynamic sitemap generation (`app/sitemap
 - **Flexibility**: Main-only mode for rapid development and testing
 
 The dynamic routes have been disabled (renamed to `.disabled`) to prevent conflicts with static files.
-
