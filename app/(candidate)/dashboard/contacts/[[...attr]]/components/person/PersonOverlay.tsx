@@ -177,9 +177,22 @@ export default function PersonOverlay(): React.JSX.Element {
               </button>
             </div>
           ) : isLoadingPerson ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-              <p className="text-muted-foreground">Loading contact...</p>
+            <div>
+              <div className="h-12 bg-gray-200 rounded animate-pulse mb-4 w-3/4"></div>
+              <div className="py-4 border-b border-gray-200">
+                <div className="h-10 bg-gray-200 rounded animate-pulse w-1/2"></div>
+              </div>
+              {sections.map((section) => (
+                <section key={section.title} className="mt-8">
+                  <div className="h-8 bg-gray-200 rounded animate-pulse w-1/3 mb-4"></div>
+                  {section.fields.map((field) => (
+                    <div key={field.key} className="mt-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/4 mb-2"></div>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
+                    </div>
+                  ))}
+                </section>
+              ))}
             </div>
           ) : (
             currentlySelectedPerson && (
