@@ -542,3 +542,20 @@ export interface PledgeContent {
   title?: string
   body?: string
 }
+
+// ===== Blog/Article Types =====
+
+export interface ImageData {
+  url?: string
+  alt?: string
+}
+
+export interface Article {
+  id?: string
+  title: string
+  slug: string
+  summary?: string
+  mainImage?: ImageData
+  publishDate: string
+  contentId?: string
+}

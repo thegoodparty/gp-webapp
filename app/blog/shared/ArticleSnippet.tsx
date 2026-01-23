@@ -8,21 +8,9 @@ import MarketingH5 from '@shared/typography/MarketingH5'
 import Body1 from '@shared/typography/Body1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import clsx from 'clsx'
+import { Article, ImageData } from 'helpers/types'
 
-interface ImageData {
-  url?: string
-  alt?: string
-}
-
-export interface Article {
-  id?: string
-  title: string
-  mainImage?: ImageData
-  publishDate: string
-  summary?: string
-  slug: string
-  contentId?: string
-}
+export type { Article, ImageData }
 
 interface Section {
   fields?: {
