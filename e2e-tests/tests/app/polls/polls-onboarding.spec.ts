@@ -72,8 +72,18 @@ const waitForPollSlackData = async (
 	return { pollId, csvRows, queueName };
 };
 
-const pickDateOnCalendar = (page: Page, date: Date) =>
-	page.locator(`[data-day="${format(date, "yyyy-MM-dd")}"]`).click();
+const pickDateOnCalendar = async (page: Page, date: Date) => {
+	const dateLocator = page.locator(
+		`[data-day="${format(date, "yyyy-MM-dd")}"]`,
+	);
+
+	// If the date is not visible (e.g., it's in the next month), navigate forward
+	if (!(await dateLocator.isVisible())) {
+		await page.getByRole("button", { name: "Go to the Next Month" }).click();
+	}
+
+	await dateLocator.click();
+};
 
 const completePoll = async (params: {
 	queueName: string;
