@@ -6,6 +6,7 @@ import {
   Input,
   Sheet,
   SheetContent,
+  SheetTitle,
 } from 'goodparty-styleguide'
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
@@ -202,11 +203,12 @@ export default function Filters({
       trackEvent(EVENTS.Contacts.SegmentUpdated, {
         filters: filterOnlyTrueValues(filters),
       })
+      await refreshCustomSegments()
       selectSegment(editSegment.id.toString())
     } else {
       errorSnackbar('Failed to update segment')
+      await refreshCustomSegments()
     }
-    await refreshCustomSegments()
     setSaving(false)
     handleClose()
   }
@@ -266,6 +268,7 @@ export default function Filters({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTitle className="sr-only"> Filters </SheetTitle>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
         <div className="flex items-center pb-6 border-b border-gray-200">
           {isEditingName ? (

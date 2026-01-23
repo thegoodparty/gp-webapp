@@ -13,7 +13,7 @@ import {
   usePathname,
   useParams,
 } from 'next/navigation'
-import { useQuery, queryOptions } from '@tanstack/react-query'
+import { useQuery, queryOptions, useQueryClient } from '@tanstack/react-query'
 import {
   fetchContacts,
   searchContacts,
@@ -29,6 +29,34 @@ import { isCustomSegment } from '../components/shared/segments.util'
 interface Person {
   id: number
   [key: string]: unknown
+}
+
+const createEmptyPagination = (
+  currentPage: number,
+  pageSize: number,
+): ListContactsResponse['pagination'] => ({
+  totalResults: 0,
+  currentPage,
+  pageSize,
+  totalPages: 0,
+  hasNextPage: false,
+  hasPreviousPage: false,
+})
+
+const extractPersonIdFromParams = (
+  params: ReturnType<typeof useParams> | null,
+): string | null => {
+  if (!params?.attr) return null
+
+  const attrArray = Array.isArray(params.attr) ? params.attr : [params.attr]
+  if (attrArray.length !== 1) return null
+
+  const personId = attrArray[0]
+  if (personId && typeof personId === 'string' && personId.trim().length > 0) {
+    return personId
+  }
+
+  return null
 }
 
 interface ContactsTableState {
@@ -112,25 +140,10 @@ export const ContactsTableProvider = ({
     )
   }, [searchParams])
 
-  const currentlySelectedPersonId = useMemo(() => {
-    if (!params) return null
-
-    const attr = params.attr
-    if (!attr) return null
-
-    const attrArray = Array.isArray(attr) ? attr : [attr]
-    if (attrArray.length === 1) {
-      const personId = attrArray[0]
-      if (
-        personId &&
-        typeof personId === 'string' &&
-        personId.trim().length > 0
-      ) {
-        return personId
-      }
-    }
-    return null
-  }, [params])
+  const currentlySelectedPersonId = useMemo(
+    () => extractPersonIdFromParams(params),
+    [params],
+  )
 
   const contactsQueryOptions = useMemo(
     () =>
@@ -145,45 +158,26 @@ export const ContactsTableProvider = ({
           },
         ],
         queryFn: async () => {
+          const emptyResponse = {
+            people: [],
+            pagination: createEmptyPagination(currentPage, pageSize),
+          }
+
           if (searchTerm) {
             const data = await searchContacts({
               page: currentPage,
               resultsPerPage: pageSize,
               query: searchTerm.trim(),
             })
-            return (
-              data || {
-                people: [],
-                pagination: {
-                  totalResults: 0,
-                  currentPage: currentPage,
-                  pageSize: pageSize,
-                  totalPages: 0,
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                },
-              }
-            )
-          } else {
-            const data = await fetchContacts({
-              page: currentPage,
-              resultsPerPage: pageSize,
-              segment: currentSegment,
-            })
-            return (
-              data || {
-                people: [],
-                pagination: {
-                  totalResults: 0,
-                  currentPage: currentPage,
-                  pageSize: pageSize,
-                  totalPages: 0,
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                },
-              }
-            )
+            return data || emptyResponse
           }
+
+          const data = await fetchContacts({
+            page: currentPage,
+            resultsPerPage: pageSize,
+            segment: currentSegment,
+          })
+          return data || emptyResponse
         },
         refetchOnMount: false,
       }),
@@ -277,9 +271,12 @@ export const ContactsTableProvider = ({
     [router, pathname, searchParams],
   )
 
+  const queryClient = useQueryClient()
+
   const refreshCustomSegments = useCallback(async () => {
     await customSegmentsQuery.refetch()
-  }, [customSegmentsQuery])
+    queryClient.invalidateQueries({ queryKey: ['contacts'] })
+  }, [customSegmentsQuery, queryClient])
 
   const pageUp = useCallback(() => {
     if (pagination?.hasNextPage) {
@@ -317,13 +314,10 @@ export const ContactsTableProvider = ({
         ? `?${currentParams.toString()}`
         : ''
 
-      if (personId === null) {
-        router.push(`${basePath}${queryString}`, { scroll: false })
-        return
-      }
+      const path =
+        personId === null ? basePath : `${basePath}/${String(personId)}`
 
-      const personIdStr = String(personId)
-      router.push(`${basePath}/${personIdStr}${queryString}`, { scroll: false })
+      router.push(`${path}${queryString}`, { scroll: false })
     },
     [router, searchParams],
   )
