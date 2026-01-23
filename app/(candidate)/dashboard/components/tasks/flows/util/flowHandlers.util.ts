@@ -4,7 +4,7 @@ import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
 import { noop } from '@shared/utils/noop'
-import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
+import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { VoterFileFilters } from 'helpers/types'
 import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
@@ -135,10 +135,7 @@ export const handleCreateOutreach =
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType:
-          p2pUxEnabled && type === OUTREACH_TYPES.text
-            ? OUTREACH_TYPES.p2p
-            : type,
+        outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
         message,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script,
