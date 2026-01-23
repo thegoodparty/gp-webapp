@@ -76,7 +76,7 @@ export const getContactStatsRendered = (
       : null,
     medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : null,
     visibleContactsPercent: visibleContactsPercent
-      ? `${visibleContactsPercent}%`
+      ? `${visibleContactsPercent.toFixed(2)}%`
       : null,
   }
 }
