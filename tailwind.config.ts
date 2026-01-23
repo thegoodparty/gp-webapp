@@ -1,4 +1,6 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+import type { Config } from 'tailwindcss'
+import defaultTheme from 'tailwindcss/defaultTheme'
+import typography from '@tailwindcss/typography'
 
 const COLORS = {
   black: '#000000',
@@ -140,13 +142,49 @@ const COLORS = {
   },
 }
 
-module.exports = {
+// Export theme for backward compatibility with files that import { theme } from 'tailwind.config'
+export const theme = {
+  extend: {
+    colors: {
+      primary: {
+        DEFAULT: COLORS.indigo[700],
+        dark: COLORS.indigo[900],
+        main: COLORS.indigo[700],
+        light: COLORS.indigo[500],
+        background: COLORS.indigo[50],
+        contrast: COLORS.white,
+      },
+      secondary: {
+        DEFAULT: COLORS.yellow[600],
+        dark: COLORS.yellow[700],
+        main: COLORS.yellow[600],
+        light: COLORS.yellow[300],
+        background: COLORS.yellow[50],
+        contrast: COLORS.black,
+      },
+      indigo: {
+        ...COLORS.indigo,
+        DEFAULT: COLORS.indigo[500],
+      },
+      gray: {
+        ...COLORS.gray,
+        DEFAULT: COLORS.gray[500],
+      },
+      yellow: {
+        ...COLORS.yellow,
+        DEFAULT: COLORS.yellow[600],
+      },
+    },
+  },
+}
+
+const config: Config = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}', // Note the addition of the `app` directory.
     './components/**/*.{js,ts,jsx,tsx}',
     './node_modules/goodparty-styleguide/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
   theme: {
     screens: {
       xs: '400px',
@@ -324,3 +362,5 @@ module.exports = {
     },
   },
 }
+
+export default config

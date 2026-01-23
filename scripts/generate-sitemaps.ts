@@ -11,6 +11,162 @@ const { generateRootIndex, convertToXML } = require('./lib/xml')
 const { ensureDirectoryExists, writeSitemapXML, writeSplitSitemaps } = require('./lib/sitemap-helpers')
 const { validateUrls, generateValidationReport, filterValidUrls } = require('./validate-sitemap-urls')
 
+// Type definitions
+interface SitemapUrl {
+  url: string
+  lastModified: Date
+  changeFrequency: string
+  priority: number
+}
+
+interface SitemapEntry {
+  loc: string
+  lastmod?: string
+}
+
+interface BlogArticle {
+  slug?: string
+  publishDate?: string
+  section?: {
+    fields?: {
+      slug?: string
+      title?: string
+    }
+  }
+  fields?: {
+    title?: string
+    slug?: string
+  }
+  title?: string
+}
+
+interface BlogSection {
+  slug?: string
+  title?: string
+  fields?: {
+    slug?: string
+    title?: string
+  }
+}
+
+interface FaqArticle {
+  fields?: {
+    title?: string
+  }
+  title?: string
+}
+
+interface Place {
+  slug?: string
+}
+
+interface Race {
+  slug?: string
+}
+
+interface Candidate {
+  slug?: string
+}
+
+/**
+ * Type guard for Place object
+ */
+function isPlace(item: object): item is Place {
+  return 'slug' in item || Object.keys(item).length === 0
+}
+
+/**
+ * Type guard for Race object
+ */
+function isRace(item: object): item is Race {
+  return 'slug' in item || Object.keys(item).length === 0
+}
+
+/**
+ * Type guard for Candidate object
+ */
+function isCandidate(item: object): item is Candidate {
+  return 'slug' in item || Object.keys(item).length === 0
+}
+
+interface ValidationOptions {
+  concurrency?: number
+  followRedirects?: boolean
+  maxRedirects?: number
+  redirectHandling?: string
+  deduplicateReplacements?: boolean
+}
+
+interface ValidationResult {
+  url: string
+  status?: number | null
+  statusText?: string
+  duration?: number
+}
+
+interface ValidationSummary {
+  total: number
+  valid: number
+  invalid: number
+  successRate: number
+  avgResponseTime: number
+  errors: ValidationResult[]
+}
+
+interface ValidationResults {
+  summary: ValidationSummary
+}
+
+interface ValidationReport {
+  summary: ValidationSummary
+  invalidUrls: ValidationResult[]
+}
+
+interface GenerateSitemapsOptions {
+  validate?: boolean
+  validationOptions?: ValidationOptions
+  mainOnly?: boolean
+  candidatesOnly?: boolean
+}
+
+type Environment = 'production' | 'development' | 'test'
+const VALID_ENVIRONMENTS: readonly string[] = ['production', 'development', 'test']
+
+function isValidEnvironment(value: string): value is Environment {
+  return VALID_ENVIRONMENTS.includes(value)
+}
+
+function getEnvironment(): Environment {
+  const env = process.env.NODE_ENV || 'production'
+  return isValidEnvironment(env) ? env : 'production'
+}
+
+interface GenerationReport {
+  timestamp: string
+  duration: string
+  environment: 'production' | 'development' | 'test'
+  appBase: string
+  sitemaps: {
+    total: number
+    main: number
+    states: number
+    candidates: number
+  }
+  urls: {
+    main: number
+    states: number
+    candidates: number
+    total: number
+  }
+  outputDirectory: string
+  validation?: {
+    enabled: boolean
+    summary: ValidationSummary
+    invalidUrls: number
+    avgResponseTime: number
+  }
+}
+
 // Environment variables
 const APP_BASE = process.env.NEXT_PUBLIC_APP_BASE || 'https://goodparty.org'
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api.goodparty.org'
@@ -30,10 +186,28 @@ const flatStates = [
 // Alphabet for political terms
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
+// JSON primitive and compound types for API responses
+type JSONPrimitive = string | number | boolean | null
+type JSONArray = JSONValue[]
+type JSONObject = { [key: string]: JSONValue | undefined }
+type JSONValue = JSONPrimitive | JSONArray | JSONObject
+
+/**
+ * Type guard to check if a value is a valid JSON value
+ */
+function isJSONValue(value: unknown): value is JSONValue {
+  if (value === null) return true
+  const type = typeof value
+  if (type === 'string' || type === 'number' || type === 'boolean') return true
+  if (Array.isArray(value)) return true
+  if (type === 'object') return true
+  return false
+}
+
 /**
  * Simple fetch implementation for Node.js with proper error handling
  */
-async function fetchData(url) {
+async function fetchData(url: string): Promise<JSONValue> {
   const fetch = (await import('node-fetch')).default
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' }
@@ -43,40 +217,83 @@ async function fetchData(url) {
     throw new Error(`HTTP ${response.status}: ${response.statusText} for ${url}`)
   }
   
-  return await response.json()
+  const data = await response.json()
+  if (!isJSONValue(data)) {
+    throw new Error(`Invalid JSON response from ${url}`)
+  }
+  return data
+}
+
+/**
+ * Build query string from params object
+ */
+function buildQueryString(params: Partial<Record<string, string>>): string {
+  const entries: [string, string][] = []
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined) {
+      entries.push([key, value])
+    }
+  }
+  return entries.length > 0 ? `?${new URLSearchParams(entries)}` : ''
 }
 
 /**
  * Fetch data from GP API
  */
-async function fetchGPData(path, params = {}) {
-  const queryString = Object.keys(params).length
-    ? `?${new URLSearchParams(params)}`
-    : ''
-  const url = `${API_BASE}${path}${queryString}`
+async function fetchGPData(apiPath: string, params: Partial<Record<string, string>> = {}): Promise<JSONValue> {
+  const queryString = buildQueryString(params)
+  const url = `${API_BASE}${apiPath}${queryString}`
   return await fetchData(url)
 }
 
 /**
  * Fetch data from Election API
  */
-async function fetchElectionData(path, params = {}) {
-  const queryString = Object.keys(params).length
-    ? `?${new URLSearchParams(params)}`
-    : ''
-  const url = `${ELECTION_API_BASE}/v1${path}${queryString}`
+async function fetchElectionData(apiPath: string, params: Partial<Record<string, string>> = {}): Promise<JSONValue> {
+  const queryString = buildQueryString(params)
+  const url = `${ELECTION_API_BASE}/v1${apiPath}${queryString}`
   return await fetchData(url)
+}
+
+/**
+ * Convert JSONValue to BlogArticle if valid
+ */
+function toBlogArticle(item: JSONValue): BlogArticle | null {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return null
+  const obj = item
+  return {
+    slug: typeof obj.slug === 'string' ? obj.slug : undefined,
+    publishDate: typeof obj.publishDate === 'string' ? obj.publishDate : undefined,
+    section: obj.section && typeof obj.section === 'object' && !Array.isArray(obj.section) ? {
+      fields: obj.section.fields && typeof obj.section.fields === 'object' && !Array.isArray(obj.section.fields) ? {
+        slug: typeof obj.section.fields.slug === 'string' ? obj.section.fields.slug : undefined,
+        title: typeof obj.section.fields.title === 'string' ? obj.section.fields.title : undefined
+      } : undefined
+    } : undefined,
+    fields: obj.fields && typeof obj.fields === 'object' && !Array.isArray(obj.fields) ? {
+      title: typeof obj.fields.title === 'string' ? obj.fields.title : undefined,
+      slug: typeof obj.fields.slug === 'string' ? obj.fields.slug : undefined
+    } : undefined,
+    title: typeof obj.title === 'string' ? obj.title : undefined
+  }
 }
 
 /**
  * Fetch blog articles
  */
-async function fetchBlogArticles() {
+async function fetchBlogArticles(): Promise<BlogArticle[]> {
   try {
-    const articles = await fetchGPData('/v1/content/type/blogArticle')
-    return Array.isArray(articles) ? articles : []
+    const data = await fetchGPData('/v1/content/type/blogArticle')
+    if (!Array.isArray(data)) return []
+    const articles: BlogArticle[] = []
+    for (const item of data) {
+      const article = toBlogArticle(item)
+      if (article) articles.push(article)
+    }
+    return articles
   } catch (error) {
-    console.error('Error fetching blog articles:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error fetching blog articles:', errorMessage)
     return []
   }
 }
@@ -84,13 +301,16 @@ async function fetchBlogArticles() {
 /**
  * Extract blog sections from blog articles
  */
-function extractBlogSections(blogArticles) {
-  const sectionsMap = new Map()
+function extractBlogSections(blogArticles: BlogArticle[]): BlogSection[] {
+  const sectionsMap = new Map<string, BlogSection>()
   
-  blogArticles.forEach(article => {
-    if (article.section?.fields?.slug) {
-      const section = article.section.fields
-      sectionsMap.set(section.slug, section)
+  blogArticles.forEach((article: BlogArticle) => {
+    const sectionSlug = article.section?.fields?.slug
+    if (sectionSlug) {
+      const section = article.section?.fields
+      if (section) {
+        sectionsMap.set(sectionSlug, section)
+      }
     }
   })
   
@@ -100,51 +320,108 @@ function extractBlogSections(blogArticles) {
 /**
  * Fetch blog sections
  */
-async function fetchBlogSections() {
+async function fetchBlogSections(): Promise<JSONArray> {
   try {
     const sections = await fetchGPData('/v1/content/blog-articles/by-section')
     return Array.isArray(sections) ? sections : []
   } catch (error) {
-    console.error('Error fetching blog sections:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error fetching blog sections:', errorMessage)
     return []
+  }
+}
+
+/**
+ * Convert JSONValue to FaqArticle if valid
+ */
+function toFaqArticle(item: JSONValue): FaqArticle | null {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return null
+  const obj = item
+  return {
+    fields: obj.fields && typeof obj.fields === 'object' && !Array.isArray(obj.fields) ? {
+      title: typeof obj.fields.title === 'string' ? obj.fields.title : undefined
+    } : undefined,
+    title: typeof obj.title === 'string' ? obj.title : undefined
   }
 }
 
 /**
  * Fetch FAQ articles
  */
-async function fetchFAQArticles() {
+async function fetchFAQArticles(): Promise<FaqArticle[]> {
   try {
-    const faqs = await fetchGPData('/v1/content/type/faqArticle')
-    return Array.isArray(faqs) ? faqs : []
+    const data = await fetchGPData('/v1/content/type/faqArticle')
+    if (!Array.isArray(data)) return []
+    const articles: FaqArticle[] = []
+    for (const item of data) {
+      const article = toFaqArticle(item)
+      if (article) articles.push(article)
+    }
+    return articles
   } catch (error) {
-    console.error('Error fetching FAQ articles:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error fetching FAQ articles:', errorMessage)
     return []
+  }
+}
+
+interface GlossaryItem {
+  slug?: string
+  title?: string
+  fields?: {
+    slug?: string
+    title?: string
+  }
+}
+
+/**
+ * Convert JSONValue to GlossaryItem if valid
+ */
+function toGlossaryItem(item: JSONValue): GlossaryItem | null {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return null
+  const obj = item
+  return {
+    slug: typeof obj.slug === 'string' ? obj.slug : undefined,
+    title: typeof obj.title === 'string' ? obj.title : undefined,
+    fields: obj.fields && typeof obj.fields === 'object' && !Array.isArray(obj.fields) ? {
+      slug: typeof obj.fields.slug === 'string' ? obj.fields.slug : undefined,
+      title: typeof obj.fields.title === 'string' ? obj.fields.title : undefined
+    } : undefined
   }
 }
 
 /**
  * Fetch glossary terms
  */
-async function fetchGlossaryTerms() {
+async function fetchGlossaryTerms(): Promise<Partial<Record<string, GlossaryItem>>> {
   try {
     const glossary = await fetchGPData('/v1/content/type/glossaryItem/by-slug')
     
-    // Validate that the response is a proper object (not an error response)
     if (!glossary || typeof glossary !== 'object' || Array.isArray(glossary)) {
       console.warn('Invalid glossary response format, using empty object')
       return {}
     }
     
-    // Check if this looks like an error response (has error-like properties)
-    if (glossary.hasOwnProperty('error') || glossary.hasOwnProperty('statusCode') || glossary.hasOwnProperty('message')) {
+    // Check it's not an error response
+    if ('error' in glossary || 'statusCode' in glossary || 'message' in glossary) {
       console.warn('Glossary response appears to be an error object, using empty object')
       return {}
     }
     
-    return glossary
+    // Convert each entry to GlossaryItem
+    const result: Partial<Record<string, GlossaryItem>> = {}
+    for (const [key, value] of Object.entries(glossary)) {
+      if (value !== undefined) {
+        const item = toGlossaryItem(value)
+        if (item) {
+          result[key] = item
+        }
+      }
+    }
+    return result
   } catch (error) {
-    console.error('Error fetching glossary terms:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error fetching glossary terms:', errorMessage)
     return {}
   }
 }
@@ -152,11 +429,11 @@ async function fetchGlossaryTerms() {
 /**
  * Generate FAQ article route (matches faqArticleRoute helper exactly)
  */
-function getFaqArticleRoute(article) {
+function getFaqArticleRoute(article: FaqArticle): string {
   try {
     // Match the helper function exactly: custom slugify wrapper + toLowerCase()
     const slugger = require('slugify')
-    const slugify = (text, lowercase) => {
+    const slugify = (text: string | undefined, lowercase: boolean): string => {
       if (!text) {
         return ''
       }
@@ -181,9 +458,9 @@ function getFaqArticleRoute(article) {
 /**
  * Generate main sitemap
  */
-async function generateMainSitemap() {
+async function generateMainSitemap(): Promise<SitemapUrl[]> {
   const now = new Date()
-  const mainSitemap = []
+  const mainSitemap: SitemapUrl[] = []
   
   // Static URLs
   const staticUrls = [
@@ -310,7 +587,7 @@ async function generateMainSitemap() {
 /**
  * Generate state election sitemap
  */
-async function generateStateSitemap(state, index) {
+async function generateStateSitemap(state: string, _index: number): Promise<SitemapUrl[]> {
   const now = new Date()
   
   try {
@@ -320,39 +597,40 @@ async function generateStateSitemap(state, index) {
       fetchElectionData('/races', { state, raceColumns: 'slug' })
     ])
     
-    const urls = []
+    const urls: SitemapUrl[] = []
     
     // Add place URLs
     if (Array.isArray(places)) {
-      places.forEach((place) => {
-        if (place.slug) {
+      for (const item of places) {
+        if (item && typeof item === 'object' && isPlace(item) && item.slug) {
           urls.push({
-            url: `${APP_BASE}/elections/${place.slug}`,
+            url: `${APP_BASE}/elections/${item.slug}`,
             lastModified: now,
             changeFrequency: 'monthly',
             priority: 0.6,
           })
         }
-      })
+      }
     }
     
     // Add race URLs
     if (Array.isArray(races)) {
-      races.forEach((race) => {
-        if (race.slug) {
+      for (const item of races) {
+        if (item && typeof item === 'object' && isRace(item) && item.slug) {
           urls.push({
-            url: `${APP_BASE}/elections/position/${race.slug}`,
+            url: `${APP_BASE}/elections/position/${item.slug}`,
             lastModified: now,
             changeFrequency: 'monthly',
             priority: 0.6,
           })
         }
-      })
+      }
     }
     
     return urls
   } catch (error) {
-    console.error(`Error generating state sitemap for ${state}:`, error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error(`Error generating state sitemap for ${state}:`, errorMessage)
     return []
   }
 }
@@ -360,7 +638,7 @@ async function generateStateSitemap(state, index) {
 /**
  * Generate candidate sitemap
  */
-async function generateCandidateSitemap(state, index) {
+async function generateCandidateSitemap(state: string, _index: number): Promise<SitemapUrl[]> {
   const now = new Date()
   
   try {
@@ -370,25 +648,26 @@ async function generateCandidateSitemap(state, index) {
       columns: 'slug' 
     })
     
-    const urls = []
+    const urls: SitemapUrl[] = []
     
     // Add candidate URLs
     if (Array.isArray(candidates)) {
-      candidates.forEach((candidate) => {
-        if (candidate.slug) {
+      for (const item of candidates) {
+        if (item && typeof item === 'object' && isCandidate(item) && item.slug) {
           urls.push({
-            url: `${APP_BASE}/candidate/${candidate.slug}`,
+            url: `${APP_BASE}/candidate/${item.slug}`,
             lastModified: now,
             changeFrequency: 'monthly',
             priority: 0.9,
           })
         }
-      })
+      }
     }
     
     return urls
   } catch (error) {
-    console.error(`Error generating candidate sitemap for ${state}:`, error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error(`Error generating candidate sitemap for ${state}:`, errorMessage)
     return []
   }
 }
@@ -396,7 +675,7 @@ async function generateCandidateSitemap(state, index) {
 /**
  * Main function to generate all sitemaps
  */
-async function generateSitemaps(options = {}) {
+async function generateSitemaps(options: GenerateSitemapsOptions = {}): Promise<void> {
   const { validate = false, validationOptions = {}, mainOnly = false, candidatesOnly = false } = options
   const startTime = Date.now()
   console.log('🚀 Starting sitemap generation...')
@@ -418,8 +697,7 @@ async function generateSitemaps(options = {}) {
     await ensureDirectoryExists(OUTPUT_DIR)
     
     // Track all generated sitemaps for the index
-    const sitemapIndex = []
-    const currentDate = new Date().toISOString().split('T')[0]
+    const sitemapIndex: SitemapEntry[] = []
     
     // Track all URLs for validation
     const allUrls = []
@@ -483,13 +761,15 @@ async function generateSitemaps(options = {}) {
     // Generate state sitemaps (skip if main-only or candidates-only mode)
     let stateCount = 0
     let stateUrlsTotal = 0
-    const stateUrlsForValidation = []
+    const stateUrlsForValidation: SitemapUrl[] = []
     
     if (!mainOnly && !candidatesOnly) {
       console.log('\n📝 Generating state sitemaps...')
       
       for (let index = 0; index < flatStates.length; index++) {
-      const state = flatStates[index].toLowerCase()
+      const stateCode = flatStates[index]
+      if (!stateCode) continue
+      const state = stateCode.toLowerCase()
       process.stdout.write(`  Processing ${state.toUpperCase()}... `)
       
       try {
@@ -525,7 +805,8 @@ async function generateSitemaps(options = {}) {
           console.log('⚠️  No data')
         }
       } catch (error) {
-        console.log(`❌ Error: ${error.message}`)
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        console.log(`❌ Error: ${errorMessage}`)
       }
       }
       console.log(`✅ Generated ${stateCount} state sitemaps with ${stateUrlsTotal} total URLs`)
@@ -541,10 +822,10 @@ async function generateSitemaps(options = {}) {
           validationReport.summary.total += stateValidationResults.summary.total
           validationReport.summary.valid += stateValidationResults.summary.valid
           validationReport.summary.invalid += stateValidationResults.summary.invalid
-          validationReport.invalidUrls.push(...stateValidationResults.summary.errors.map(e => ({
+          validationReport.invalidUrls.push(...stateValidationResults.summary.errors.map((e: ValidationResult) => ({
             url: e.url,
             status: e.status,
-            message: e.statusText,
+            statusText: e.statusText,
             duration: e.duration
           })))
         }
@@ -566,13 +847,15 @@ async function generateSitemaps(options = {}) {
     // Generate candidate sitemaps (skip if main-only mode)
     let candidateCount = 0
     let candidateUrlsTotal = 0
-    const candidateUrlsForValidation = []
+    const candidateUrlsForValidation: SitemapUrl[] = []
     
     if (!mainOnly) {
       console.log('\n📝 Generating candidate sitemaps...')
       
       for (let index = 0; index < flatStates.length; index++) {
-      const state = flatStates[index].toLowerCase()
+      const stateCode = flatStates[index]
+      if (!stateCode) continue
+      const state = stateCode.toLowerCase()
       process.stdout.write(`  Processing ${state.toUpperCase()}... `)
       
       try {
@@ -608,7 +891,8 @@ async function generateSitemaps(options = {}) {
           console.log('⚠️  No data')
         }
       } catch (error) {
-        console.log(`❌ Error: ${error.message}`)
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        console.log(`❌ Error: ${errorMessage}`)
       }
       }
       console.log(`✅ Generated ${candidateCount} candidate sitemaps with ${candidateUrlsTotal} total URLs`)
@@ -624,10 +908,10 @@ async function generateSitemaps(options = {}) {
           validationReport.summary.total += candidateValidationResults.summary.total
           validationReport.summary.valid += candidateValidationResults.summary.valid
           validationReport.summary.invalid += candidateValidationResults.summary.invalid
-          validationReport.invalidUrls.push(...candidateValidationResults.summary.errors.map(e => ({
+          validationReport.invalidUrls.push(...candidateValidationResults.summary.errors.map((e: ValidationResult) => ({
             url: e.url,
             status: e.status,
-            message: e.statusText,
+            statusText: e.statusText,
             duration: e.duration
           })))
         }
@@ -663,10 +947,10 @@ async function generateSitemaps(options = {}) {
     console.log(`   - Candidate sitemaps: ${candidateCount} files, ${candidateUrlsTotal} URLs`)
     
     // Generate summary report
-    const report = {
+    const report: GenerationReport = {
       timestamp: new Date().toISOString(),
       duration: `${duration}s`,
-      environment: process.env.NODE_ENV || 'production',
+      environment: getEnvironment(),
       appBase: APP_BASE,
       sitemaps: {
         total: sitemapIndex.length,
