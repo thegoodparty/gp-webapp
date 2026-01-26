@@ -1,5 +1,5 @@
 'use client'
-import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
+import { OUTREACH_TYPE_MAPPING, OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
 import { dateUsHelper } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { useMemo, useState } from 'react'
@@ -48,7 +48,7 @@ const isStatusKey = (key: string | null | undefined): key is StatusKey => {
 }
 
 const getP2pStatusLabel = (row: OutreachRow): string | null => {
-  // Only show status for P2P outreaches
+  // Only show status for P2P outreaches - check the outreach type directly
   if (row.outreachType !== OUTREACH_TYPES.p2p) {
     return null
   }
