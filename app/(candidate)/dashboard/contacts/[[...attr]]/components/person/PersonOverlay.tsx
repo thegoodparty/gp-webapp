@@ -1,15 +1,27 @@
 'use client'
-import { Sheet, SheetContent } from 'goodparty-styleguide'
-import { usePerson } from '../../hooks/PersonProvider'
-import { useRouter } from 'next/navigation'
+import { Sheet, SheetContent, SheetTitle } from 'goodparty-styleguide'
+import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import InfoSection from './InfoSection'
 import PersonMap from './PersonMap'
-import { useSearchParams } from 'next/navigation'
-import type { ComponentProps } from 'react'
 
-type InfoSectionProps = ComponentProps<typeof InfoSection>
+type PersonRecord = Record<string, unknown>
 
-const sections: InfoSectionProps['section'][] = [
+interface Field {
+  key: string
+  label: string
+  transform?: (
+    value: string | number | boolean | object | null | unknown,
+    person: PersonRecord,
+  ) => string | null
+  allowCopy?: boolean
+}
+
+interface Section {
+  title: string
+  fields: Field[]
+}
+
+const sections: Section[] = [
   {
     title: 'General Information',
     fields: [
@@ -121,58 +133,85 @@ const sections: InfoSectionProps['section'][] = [
   },
 ]
 
-const PersonOverlay = (): React.JSX.Element => {
-  const [person, setPerson] = usePerson()
-  const router = useRouter()
-  const searchParams = useSearchParams()
+export default function PersonOverlay(): React.JSX.Element {
+  const {
+    currentlySelectedPerson,
+    selectPerson,
+    isLoadingPerson,
+    isErrorPerson,
+    currentlySelectedPersonId,
+  } = useContactsTable()
 
   const handleClose = (open: boolean) => {
     if (!open) {
-      setPerson(null)
-      const queryString = searchParams!.toString()
-      router.push(`/dashboard/contacts${queryString ? `?${queryString}` : ''}`)
+      selectPerson(null)
     }
   }
-  const { firstName, lastName } = person || {}
-  const name = `${firstName} ${lastName}`
+
+  const firstNameValue = currentlySelectedPerson?.firstName
+  const lastNameValue = currentlySelectedPerson?.lastName
+  const firstName = typeof firstNameValue === 'string' ? firstNameValue : ''
+  const lastName = typeof lastNameValue === 'string' ? lastNameValue : ''
+  const name = `${firstName} ${lastName}`.trim()
+
+  const shouldShowOverlay = !!currentlySelectedPersonId
 
   return (
-    <Sheet open={!!person} onOpenChange={handleClose}>
-      <SheetContent
-        className="
-          w-[90vw]
-          max-w-xl
-          sm:max-w-xl
-          h-full
-          overflow-y-auto
-          z-[1301]
-        "
-      >
+    <Sheet open={shouldShowOverlay} onOpenChange={handleClose}>
+      <SheetTitle className="sr-only" aria-describedby="Contact Information">
+        <span id="contact-information-title">Contact Information</span>
+      </SheetTitle>
+      <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl h-full overflow-y-auto z-[1301]">
         <div className="p-4">
-          {person && (
-            <div>
-              <h2
-                className="
-                  text-3xl
-                  font-semibold
-                  lg:text-4xl
-                  py-4
-                  border-b
-                  border-gray-200
-                "
-              >
-                {name}
+          {isErrorPerson ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <h2 className="text-2xl font-semibold mb-4">
+                Error Loading Contact
               </h2>
+              <p className="text-muted-foreground mb-4">
+                We couldn&apos;t load this person&apos;s information. Please try
+                again.
+              </p>
+              <button
+                onClick={() => selectPerson(null)}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+              >
+                Close
+              </button>
+            </div>
+          ) : isLoadingPerson ? (
+            <div>
+              <div className="h-12 bg-gray-200 rounded animate-pulse mb-4 w-3/4"></div>
+              <div className="py-4 border-b border-gray-200">
+                <div className="h-10 bg-gray-200 rounded animate-pulse w-1/2"></div>
+              </div>
               {sections.map((section) => (
-                <InfoSection key={section.title} section={section} />
+                <section key={section.title} className="mt-8">
+                  <div className="h-8 bg-gray-200 rounded animate-pulse w-1/3 mb-4"></div>
+                  {section.fields.map((field) => (
+                    <div key={field.key} className="mt-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/4 mb-2"></div>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
+                    </div>
+                  ))}
+                </section>
               ))}
             </div>
+          ) : (
+            currentlySelectedPerson && (
+              <div>
+                <h2 className="text-3xl font-semibold lg:text-4xl py-4 border-b border-gray-200">
+                  {name || 'Contact'}
+                </h2>
+                {sections.map((section) => (
+                  <InfoSection key={section.title} section={section} />
+                ))}
+              </div>
+            )
           )}
         </div>
-        <PersonMap />
+        {currentlySelectedPerson && !isErrorPerson && <PersonMap />}
       </SheetContent>
     </Sheet>
   )
 }
-
-export default PersonOverlay
