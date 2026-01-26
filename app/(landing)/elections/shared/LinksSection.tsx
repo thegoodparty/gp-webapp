@@ -5,7 +5,7 @@ interface BaseEntity {
 }
 
 interface LinksSectionProps<T extends BaseEntity> {
-  entities: T[]
+  entities?: T[] | null
   linkFunc: (entity: T) => string
   title: string
 }

@@ -32,7 +32,7 @@ interface RenameActionProps {
   documentKey?: string
   showRename: boolean
   setShowRename: (show: boolean) => void
-  setDocumentName: (name: string) => void
+  setDocumentName?: (name: string) => void
   tableVersion?: boolean
   documentName?: string
 }
@@ -55,7 +55,7 @@ const RenameAction = ({
       if (tableVersion === true) {
         window.location.href = '/dashboard/content'
       } else {
-        setDocumentName(newName)
+        setDocumentName?.(newName)
       }
     } else {
       errorSnackbar('Error renaming document')

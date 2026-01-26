@@ -1,34 +1,44 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
 import ElectionsCityPage from './components/ElectionsCityPage'
 import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import fetchPlace from 'app/(landing)/elections/shared/fetchPlace'
 import PlaceSchema from 'app/(landing)/elections/shared/PlaceSchema'
+import { Article } from 'app/(landing)/elections/shared/types'
+
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
 const year = new Date().getFullYear()
 
-export async function generateMetadata({ params }) {
-  const { state, county, city } = params
-  const stateName = shortToLongState[state.toUpperCase()]
+interface PageParams {
+  state: string
+  county: string
+  city: string
+}
+
+export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+  const { state, county, city } = await params
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
   const place = await fetchPlace({
     slug: `${state}/${county}/${city}`,
     includeParent: true,
   })
 
   const meta = pageMetaData({
-    title: `Run for Office in ${place.name}, ${stateName} ${year}`,
-    description: `Learn about opportunities to run for office in ${place.name}, ${stateName} and a helpful tips for a successful campaign.`,
-    slug: `/elections/${place.slug}`,
+    title: `Run for Office in ${place?.name}, ${stateName} ${year}`,
+    description: `Learn about opportunities to run for office in ${place?.name}, ${stateName} and a helpful tips for a successful campaign.`,
+    slug: `/elections/${place?.slug}`,
   })
   return meta
 }
 
-export default async function Page({ params }) {
-  const { state, county, city } = params
-  if (!state || !shortToLongState[state.toUpperCase()]) {
+export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+  const { state, county, city } = await params
+  const upperState = state.toUpperCase()
+  if (!state || !isStateAbbreviation(upperState)) {
     notFound()
   }
 
@@ -60,7 +70,7 @@ export default async function Page({ params }) {
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = await Promise.all(
+  const articles: Article[] = await Promise.all(
     articleSlugs.map((slug) => fetchArticle(slug)),
   )
 

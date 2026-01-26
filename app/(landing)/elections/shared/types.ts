@@ -1,3 +1,5 @@
+export type { Article, ImageData } from 'helpers/types'
+
 export interface Race {
   id: number | string
   slug: string
@@ -23,21 +25,6 @@ export interface Race {
   positionNames?: string[]
   Place?: Place
   loc?: string
-}
-
-interface ImageData {
-  url: string
-  alt?: string
-}
-
-export interface Article {
-  id?: string
-  title: string
-  slug: string
-  summary?: string
-  mainImage?: ImageData
-  publishDate: string
-  contentId?: string
 }
 
 export interface City {

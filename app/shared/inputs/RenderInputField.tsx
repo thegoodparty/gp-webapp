@@ -15,7 +15,7 @@ interface RadioOption {
   value: string
 }
 
-interface FieldConfig {
+export interface FieldConfig {
   key: string
   label?: string
   type: string

@@ -1,7 +1,11 @@
+import { NextApiRequest, NextApiResponse } from 'next'
 import RSS from 'rss'
 import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection'
 
-export default async function feed(req, res) {
+export default async function feed(
+  _req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   try {
     const { news: articles } = await fetchArticlesBySection({
       sectionSlug: 'news',
@@ -17,28 +21,29 @@ export default async function feed(req, res) {
         'GoodParty.org is a movement bringing together voters and exciting independent candidates that can win.',
     })
 
-    articles.forEach((article) => {
-      const { title, mainImage, publishDate, slug, summary } = article
-      const url = `https://goodparty.org/blog/article/${slug}`
-      feed.item({
-        title,
-        description: summary,
-        date: publishDate,
-        url,
-        link: url,
-        guid: url,
-        enclosure: {
-          url: mainImage.url,
-        },
+    if (articles) {
+      articles.forEach((article) => {
+        const { title, mainImage, publishDate, slug, summary } = article
+        const url = `https://goodparty.org/blog/article/${slug}`
+        feed.item({
+          title,
+          description: summary,
+          date: publishDate,
+          url,
+          link: url,
+          guid: url,
+          enclosure: {
+            url: mainImage?.url,
+          },
+        })
       })
-    })
+    }
 
     res.writeHead(200, {
       'Content-Type': 'application/xml',
     })
-    return res.end(feed.xml({ indent: true }))
+    res.end(feed.xml({ indent: true }))
   } catch (e) {
     console.log('error at generateSiteMapXML', e)
-    return ''
   }
 }

@@ -7,7 +7,8 @@ import { kebabToCamel } from 'helpers/stringHelper'
 import LoadingContent from './LoadingContent'
 import { Campaign } from 'helpers/types'
 
-type Versions = ReturnType<typeof useVersions>
+// useVersions returns a loose type that we need to accept
+type Versions = Partial<Record<string, string | number | boolean | object | null>>
 
 interface EditContentPageProps {
   slug: string
@@ -19,7 +20,6 @@ const EditContentPage = ({
   campaign,
 }: EditContentPageProps): React.JSX.Element => {
   const section = kebabToCamel(slug)
-  const subSectionKey = 'aiContent'
 
   const versions = useVersions()
   const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(
@@ -39,7 +39,6 @@ const EditContentPage = ({
           campaign={campaign}
           versions={updatedVersions || versions}
           updateVersionsCallback={updateVersionsCallback}
-          subSectionKey={subSectionKey}
         />
       ) : (
         <LoadingContent

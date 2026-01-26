@@ -3,7 +3,8 @@ import { MdOutlineWorkOff } from 'react-icons/md'
 import { SlWallet } from 'react-icons/sl'
 import { TbHomeShare } from 'react-icons/tb'
 import { numberFormatter } from 'helpers/numberHelper'
-import { City, County } from 'app/(landing)/elections/shared/types'
+import { City } from 'app/(landing)/elections/shared/types'
+import { PlaceResult } from 'app/(landing)/elections/shared/fetchPlace'
 
 interface CityField {
   label: string
@@ -15,8 +16,8 @@ interface CityField {
 }
 
 interface CityFactsProps {
-  city: City
-  county?: County
+  city: City | PlaceResult
+  county?: string
 }
 
 const CityFacts = ({ city }: CityFactsProps): React.JSX.Element | null => {
@@ -27,8 +28,9 @@ const CityFacts = ({ city }: CityFactsProps): React.JSX.Element | null => {
     incomeHouseholdMedian,
     unemploymentRate,
     homeValue,
-    county_name,
   } = city
+  // Handle both City.county_name and PlaceResult.countyName
+  const county_name = 'county_name' in city ? city.county_name : ('countyName' in city ? city.countyName : undefined)
   const fields: CityField[] = [
     { label: 'County', value: county_name, icon: <FaCity /> },
     {

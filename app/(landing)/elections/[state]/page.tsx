@@ -1,18 +1,28 @@
 import pageMetaData from 'helpers/metadataHelper'
 import ElectionsStatePage from './components/ElectionsStatePage'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import { notFound } from 'next/navigation'
 import { fetchArticle } from 'app/blog/article/[slug]/utils'
 import fetchPlace from '../shared/fetchPlace'
+import { Article } from '../shared/types'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
 const year = new Date().getFullYear()
 
-export async function generateMetadata({ params }) {
-  const { state } = params
-  const stateName = shortToLongState[state.toUpperCase()]
+interface PageParams {
+  state: string
+}
+
+export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+  const { state } = await params
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
+
+  if (!stateName) {
+    return {}
+  }
 
   const meta = pageMetaData({
     title: `Run for Office in ${stateName} ${year}`,
@@ -22,26 +32,31 @@ export async function generateMetadata({ params }) {
   return meta
 }
 
-export default async function Page({ params }) {
-  const { state } = params
-  if (!state || !shortToLongState[state.toUpperCase()]) {
+export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+  const { state } = await params
+  const upperState = state.toUpperCase()
+  if (!state || !isStateAbbreviation(upperState)) {
+    notFound()
+  }
+
+  const place = await fetchPlace({ slug: state, categorizeChildren: true })
+
+  if (!place) {
     notFound()
   }
 
   const {
-    counties,
-    districts,
-    others,
+    categorizedChildren,
     children,
     Races: races,
-  } = await fetchPlace({ slug: state, categorizeChildren: true })
+  } = place
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = []
+  const articles: Article[] = []
   for (const slug of articleSlugs) {
     const content = await fetchArticle(slug)
     articles.push(content)
@@ -49,7 +64,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     state,
-    categorizedChildren: { counties, districts, others },
+    categorizedChildren: categorizedChildren || {},
     children,
     races,
     articles,

@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite'
 
 import { API_VERSION_PREFIX } from 'appEnv'
 
-const dbRedirects = {
+const dbRedirects: Partial<Record<string, string>> = {
   '/social': 'https://shor.by/goodpartyorg',
   '/pricing': '/run-for-office#pricing-section',
   '/iva': 'https://lp.goodparty.org/iva',
@@ -89,7 +89,7 @@ const dbRedirects = {
   '/elections/senate/me': '/',
 }
 
-export default async function middleware(req) {
+export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers)

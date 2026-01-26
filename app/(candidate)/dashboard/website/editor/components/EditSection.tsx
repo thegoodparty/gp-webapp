@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 import { Website, WebsiteIssue } from 'helpers/types'
 
 interface EditSectionProps {
-  editSection: string
+  editSection: string | null
   website: Website
   onLogoChange: (file: File | null) => void
   onThemeChange: (key: string) => void

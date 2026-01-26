@@ -5,7 +5,6 @@ import { Alert, AlertTitle, Button } from 'goodparty-styleguide'
 import Body2 from '@shared/typography/Body2'
 import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { isPollExpanding } from './poll-utils'
 import { PollStatus } from './poll-types'
@@ -18,9 +17,6 @@ import { districtStatsQueryOptions } from './queries'
 export default function ConfidenceAlert() {
   const queryClient = useQueryClient()
   const [poll] = usePoll()
-  const { ready: flagsReady, on: expandAccessEnabled } = useFlagOn(
-    'serve-polls-expansion',
-  )
   const { lowConfidence } = poll
 
   // Prefetch the district stats query if the poll has low confidence. We're going to need
@@ -32,10 +28,6 @@ export default function ConfidenceAlert() {
       )
     }
   }, [lowConfidence])
-
-  if (!flagsReady || !expandAccessEnabled) {
-    return null
-  }
 
   if (isPollExpanding(poll)) {
     const alertData =
