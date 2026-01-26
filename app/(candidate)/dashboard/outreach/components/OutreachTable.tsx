@@ -193,9 +193,9 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
   // Sort table data by date, placing entries without a date at the end
   const sortedTableData = useMemo(() => {
     return [...tableData].sort((a, b) => {
-      // Both have dates: sort by date (newest first)
+      // Both have dates: sort by date (oldest first)
       if (a.date && b.date) {
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
+        return new Date(a.date).getTime() - new Date(b.date).getTime()
       }
       // Only a has date: a comes first
       if (a.date) return -1
