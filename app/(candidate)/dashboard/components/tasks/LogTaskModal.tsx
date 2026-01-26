@@ -13,7 +13,14 @@ import {
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 
-type LogTaskFlowType = 'text' | 'robocall' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'events'
+export type LogTaskFlowType =
+  | 'text'
+  | 'p2pDisabledText'
+  | 'robocall'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
+  | 'events'
 
 interface LogTaskModalProps {
   onSubmit: (value: number) => void
@@ -23,6 +30,7 @@ interface LogTaskModalProps {
 
 export const TASK_TYPE_HEADINGS: { [K in LogTaskFlowType]: string } = {
   text: 'How many text messages did you schedule?',
+  p2pDisabledText: 'How many text messages did you schedule?',
   robocall: 'How many robocalls did you schedule?',
   doorKnocking: 'How many doors did you knock?',
   phoneBanking: 'How many calls did you make?',
@@ -32,6 +40,7 @@ export const TASK_TYPE_HEADINGS: { [K in LogTaskFlowType]: string } = {
 
 export const TASK_TYPE_LABELS: { [K in LogTaskFlowType]: string } = {
   text: 'Text Messages Scheduled',
+  p2pDisabledText: 'Text Messages Scheduled',
   robocall: 'Robocalls Scheduled',
   doorKnocking: 'Doors Knocked',
   phoneBanking: 'Calls Made',
@@ -39,9 +48,14 @@ export const TASK_TYPE_LABELS: { [K in LogTaskFlowType]: string } = {
   events: 'Voters Met',
 }
 
-export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskModalProps) {
+const LogTaskModal = ({
+  onSubmit,
+  onClose,
+  flowType,
+}: LogTaskModalProps): React.JSX.Element => {
   const modalTitle = TASK_TYPE_HEADINGS[flowType]
   const modalLabel = TASK_TYPE_LABELS[flowType]
+  const resolvedFlowType = flowType === 'p2pDisabledText' ? 'text' : flowType
   const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
   const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
   const [user] = useUser()
@@ -65,7 +79,8 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
 
     const nextGoals = {
       ...reportedVoterGoals,
-      [flowType]: (reportedVoterGoals[flowType] || 0) + newAddition,
+      [resolvedFlowType]:
+        (reportedVoterGoals[resolvedFlowType] || 0) + newAddition,
     }
 
     setReportedVoterGoals(nextGoals)
@@ -73,7 +88,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
     trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       recipientCount: newAddition,
       price: 0,
-      medium: flowType,
+      medium: resolvedFlowType,
       method: 'unknown',
       campaignName: 'null',
     })
@@ -85,7 +100,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
     })
 
     const newHistoryItem = await createUpdateHistory({
-      type: flowType,
+      type: resolvedFlowType,
       quantity: newAddition,
     })
 
@@ -132,3 +147,5 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }: LogTaskMod
     </div>
   )
 }
+
+export default LogTaskModal

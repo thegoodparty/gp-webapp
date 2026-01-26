@@ -11,6 +11,8 @@ interface Version {
   name?: string
   key?: string
   language?: string
+  text?: string
+  inputValues?: Partial<Record<string, string>>
 }
 
 interface PlanVersionProps {

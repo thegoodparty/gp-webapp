@@ -1,10 +1,11 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
 import { Place } from './types'
+import { PlaceResult } from './fetchPlace'
 import { Place as SchemaPlace, WithContext } from 'schema-dts'
 
 interface PlaceSchemaProps {
-  place: Place
+  place: Place | PlaceResult
 }
 
 const PlaceSchema = ({ place }: PlaceSchemaProps): React.JSX.Element => {

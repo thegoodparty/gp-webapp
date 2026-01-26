@@ -4,11 +4,11 @@ type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | '
 type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
 
 export interface Outreach {
-  id: number
-  createdAt: Date | string
-  updatedAt: Date | string
-  campaignId: number
-  outreachType: OutreachType
+  id: number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  campaignId?: number
+  outreachType?: OutreachType
   projectId?: string | null
   name?: string | null
   status?: OutreachStatus | null
