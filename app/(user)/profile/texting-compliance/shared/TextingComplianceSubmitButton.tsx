@@ -75,24 +75,6 @@ export const TextingComplianceSubmitButton = ({
     )
   }
 
-  const tooltipContent =
-    failingFields.length > 0 ? (
-      <div className="p-1">
-        <div className="font-medium mb-1">Please fix the following fields:</div>
-        <ul className="list-disc pl-4">
-          {failingFields.map((field) => (
-            <li key={field}>
-              <span className="font-medium">{fieldDisplayNames[field]}</span>
-              {' - '}
-              {getValidationMessage(field, officeLevel)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    ) : (
-      ''
-    )
-
   const button = (
     <Button
       {...{
@@ -109,6 +91,21 @@ export const TextingComplianceSubmitButton = ({
   )
 
   if (!isValid && failingFields.length > 0) {
+    const tooltipContent = (
+      <div className="p-1">
+        <div className="font-medium mb-1">Please fix the following fields:</div>
+        <ul className="list-disc pl-4">
+          {failingFields.map((field) => (
+            <li key={field}>
+              <span className="font-medium">{fieldDisplayNames[field]}</span>
+              {' - '}
+              {getValidationMessage(field, officeLevel)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+
     return (
       <Tooltip title={tooltipContent} arrow placement="top">
         <span>{button}</span>
