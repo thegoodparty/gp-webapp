@@ -6,19 +6,18 @@ import {
   Input,
   Sheet,
   SheetContent,
+  SheetTitle,
 } from 'goodparty-styleguide'
 import { useEffect, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
 import {
-  fetchContacts,
   saveCustomSegment,
   updateCustomSegment,
   type SegmentResponse,
-  type ListContactsResponse,
 } from '../shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
+import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { SHEET_MODES } from '../shared/constants'
 import DeleteSegment from './DeleteSegment'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -26,9 +25,6 @@ import {
   filterOnlyTrueValues,
   trimCustomSegmentName,
 } from '../shared/segments.util'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useContacts } from '../../hooks/ContactsProvider'
-import appendParam from '@shared/utils/appendParam'
 
 type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
 
@@ -59,23 +55,6 @@ interface FiltersSheetProps {
   afterSave?: (segmentId: number) => void
 }
 
-const refetchContacts = async ({
-  page,
-  resultsPerPage,
-  segment,
-}: {
-  page: number
-  resultsPerPage?: string | null
-  segment: number | string
-}): Promise<ListContactsResponse | null> => {
-  const response = await fetchContacts({
-    page,
-    resultsPerPage: resultsPerPage ? parseInt(resultsPerPage, 10) : undefined,
-    segment: typeof segment === 'number' ? segment.toString() : segment,
-  })
-  return response
-}
-
 const MAX_SEGMENT_NAME_LENGTH = 30
 
 export default function Filters({
@@ -92,10 +71,8 @@ export default function Filters({
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
-  const [customSegments, , refreshCustomSegments] = useCustomSegments()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [, setContacts] = useContacts()
+  const { customSegments, refreshCustomSegments, selectSegment } =
+    useContactsTable()
 
   const transformFiltersFromBackend = (
     backendFilters: BackendFilters,
@@ -226,19 +203,12 @@ export default function Filters({
       trackEvent(EVENTS.Contacts.SegmentUpdated, {
         filters: filterOnlyTrueValues(filters),
       })
-      const contactsResponse = await refetchContacts({
-        page: 1,
-        resultsPerPage: searchParams?.get('pageSize') ?? null,
-        segment: editSegment.id,
-      })
-      if (contactsResponse && searchParams) {
-        appendParam(router, searchParams, 'page', '1')
-        setContacts(contactsResponse)
-      }
+      await refreshCustomSegments()
+      selectSegment(editSegment.id.toString())
     } else {
       errorSnackbar('Failed to update segment')
+      await refreshCustomSegments()
     }
-    await refreshCustomSegments()
     setSaving(false)
     handleClose()
   }
@@ -298,6 +268,7 @@ export default function Filters({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTitle className="sr-only"> Filters </SheetTitle>
       <SheetContent className="w-[90vw] max-w-xl sm:max-w-xl  h-full overflow-y-auto p-4 lg:p-8 z-[1301]">
         <div className="flex items-center pb-6 border-b border-gray-200">
           {isEditingName ? (
