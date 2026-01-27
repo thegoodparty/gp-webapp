@@ -64,7 +64,7 @@ export default function ContactsStatsSection({
       {renderCard({
         key: 'totalConstituents',
         label: 'Total Constituents',
-        getValue: (stats) => stats.totalConstituents,
+        getValue: (stats) => stats.totalVisibleContacts,
         icon: <LuUserRound />,
       })}
       {onlyTotalVisibleContacts && (

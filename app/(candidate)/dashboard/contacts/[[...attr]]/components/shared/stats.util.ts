@@ -5,7 +5,8 @@ import {
 import { numberFormatter } from 'helpers/numberHelper'
 
 export interface ContactStatsRendered {
-  totalConstituents: string | null
+  totalConstituents: string
+  totalVisibleContacts: string
   homeownersPercent: string | null
   hasChildrenUnder18Percent: string | null
   medianIncomeRange: string | null
@@ -63,13 +64,11 @@ export const getContactStatsRendered = (
   const medianIncomeRange = getMedianIncomeRange(
     stats.buckets.estimatedIncomeRange,
   )
-  const visibleContactsPercent = totalConstituents
-    ? (totalVisibleContacts / totalConstituents) * 100
-    : 0
+  const visibleContactsPercent =
+    (totalVisibleContacts / totalConstituents) * 100
   return {
-    totalConstituents: totalConstituents
-      ? numberFormatter(totalConstituents)
-      : null,
+    totalConstituents: numberFormatter(totalConstituents),
+    totalVisibleContacts: numberFormatter(totalVisibleContacts),
     homeownersPercent: homeownersPercent ? `${homeownersPercent}%` : null,
     hasChildrenUnder18Percent: hasChildrenUnder18Percent
       ? `${hasChildrenUnder18Percent}%`
