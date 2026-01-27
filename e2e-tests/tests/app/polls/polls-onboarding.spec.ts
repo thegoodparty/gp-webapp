@@ -11,7 +11,7 @@ import { downloadSlackFile, waitForSlackMessage } from "tests/utils/slack";
 const district = {
 	zip: "82001",
 	office: "Cheyenne City Council - Ward 2",
-	constituents: 13500,
+	constituents: 13000,
 };
 
 const expectToBeWithin = (
