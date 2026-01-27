@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   DataTable,
   Select,
@@ -16,10 +17,9 @@ import {
   PaginationLink,
 } from 'goodparty-styleguide'
 import { clsx } from 'clsx'
-import { PAGE_SIZES } from './shared/constants'
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from './shared/constants'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type VisibilityState } from '@tanstack/react-table'
-import { useContactsTable } from '../hooks/ContactsTableProvider'
 
 interface Pagination {
   totalPages?: number
@@ -87,29 +87,42 @@ export default function ServerDataTable<TData, TValue>({
   onColumnVisibilityChange = () => {},
   initialColumnVisibility = {},
 }: ServerDataTableProps<TData, TValue>) {
-  const {
-    pagination: tablePagination,
-    goToPage,
-    setPageSize,
-  } = useContactsTable()
-
-  const effectivePagination = tablePagination || pagination
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const {
     totalPages = 1,
     hasNextPage = false,
     hasPreviousPage = false,
     currentPage = 1,
-    pageSize = 20,
-  } = effectivePagination
+    pageSize = DEFAULT_PAGE_SIZE,
+  } = pagination
+
+  const updateURL = (
+    newParams: Record<string, string | number | null | undefined>,
+  ): void => {
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
+
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value.toString())
+      } else {
+        params.delete(key)
+      }
+    })
+    router.replace(`?${params.toString()}`)
+  }
 
   const handlePageChange = (page: number): void => {
-    goToPage(page)
+    let newPage = page
+    if (newPage < 0) newPage = 1
+    if (newPage > totalPages) newPage = totalPages
+    updateURL({ page: newPage })
   }
 
   const handlePageSizeChange = (value: string): void => {
     const newPageSize = parseInt(value, 10)
-    setPageSize(newPageSize)
+    updateURL({ pageSize: newPageSize, page: 1 })
   }
 
   return (

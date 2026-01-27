@@ -22,9 +22,9 @@ const parseIncomeMin = (label: string): number => {
 const getMedianIncomeRange = (
   category?: ContactStatsCategory,
 ): string | null => {
-  if (!category?.length) return null
+  if (!category?.buckets?.length) return null
 
-  const sorted = category
+  const sorted = category.buckets
     .filter((b) => b.label !== 'Unknown' && b.percent > 0)
     .sort((a, b) => parseIncomeMin(a.label) - parseIncomeMin(b.label))
 
@@ -46,22 +46,22 @@ const getMedianIncomeRange = (
   return last ? `$${last.label.replace(/–/g, '-')}` : null
 }
 
-const getPercentForYes = (category: ContactStatsCategory): number | null => {
-  const yes = category?.find((b) => b.label === 'Yes')
-  return yes?.percent ? yes.percent : null
+const getPercentForYes = (category?: ContactStatsCategory): number | null => {
+  const yes = category?.buckets?.find((b) => b.label === 'Yes')
+  return yes?.percent ? Math.round(yes.percent * 100) : null
 }
 
 export const getContactStatsRendered = (
   stats: ContactsStats,
   totalVisibleContacts: number,
 ): ContactStatsRendered => {
-  const totalConstituents = stats.totalConstituents
-  const homeownersPercent = getPercentForYes(stats.buckets.homeowner)
+  const totalConstituents = stats?.meta?.totalConstituents
+  const homeownersPercent = getPercentForYes(stats?.categories?.homeowner)
   const hasChildrenUnder18Percent = getPercentForYes(
-    stats.buckets.presenceOfChildren,
+    stats?.categories?.presenceOfChildren,
   )
   const medianIncomeRange = getMedianIncomeRange(
-    stats.buckets.estimatedIncomeRange,
+    stats?.categories?.estimatedIncomeRange,
   )
   const visibleContactsPercent = totalConstituents
     ? (totalVisibleContacts / totalConstituents) * 100
@@ -76,7 +76,7 @@ export const getContactStatsRendered = (
       : null,
     medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : null,
     visibleContactsPercent: visibleContactsPercent
-      ? `${visibleContactsPercent.toFixed(2)}%`
-      : '--',
+      ? `${visibleContactsPercent}%`
+      : null,
   }
 }

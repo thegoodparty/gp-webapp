@@ -1,38 +1,49 @@
 'use client'
 
 import { Input } from 'goodparty-styleguide'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { LuSearch } from 'react-icons/lu'
 
 export const ContactSearch = () => {
   const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
-  const { searchTerm, searchContacts } = useContactsTable()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const [searchText, setSearchText] = useState<string>(searchTerm)
+  const [searchText, setSearchText] = useState<string>(
+    () => searchParams?.get('query') ?? '',
+  )
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    setSearchText(searchTerm)
-  }, [searchTerm])
+    setSearchText(searchParams?.get('query') ?? '')
+  }, [searchParams])
 
   const performSearch = useCallback(() => {
     if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
     }
-    searchContacts(searchText)
-  }, [campaign?.isPro, searchText, searchContacts, showProUpgradeModal])
+
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
+    if (searchText) {
+      params.set('query', searchText)
+    } else {
+      params.delete('query')
+    }
+    router.push(`?${params.toString()}`)
+  }, [campaign?.isPro, searchParams, searchText, router, showProUpgradeModal])
 
   useEffect(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
 
-    if (searchText === searchTerm) {
+    const currentQuery = searchParams?.get('query') ?? ''
+    if (searchText === currentQuery) {
       return
     }
 
@@ -45,7 +56,7 @@ export const ContactSearch = () => {
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [searchText, performSearch, searchTerm])
+  }, [searchText, performSearch, searchParams])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

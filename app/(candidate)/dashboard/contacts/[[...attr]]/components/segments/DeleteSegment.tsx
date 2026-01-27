@@ -11,7 +11,7 @@ import {
   Button,
 } from 'goodparty-styleguide'
 import { deleteCustomSegment } from '../shared/ajaxActions'
-import { useContactsTable } from '../../hooks/ContactsTableProvider'
+import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { useState } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { type SegmentResponse } from '../shared/ajaxActions'
@@ -26,7 +26,7 @@ export default function DeleteSegment({
   afterDeleteCallback,
 }: DeleteSegmentProps) {
   const { id } = segment
-  const { refreshCustomSegments } = useContactsTable()
+  const [, , refreshCustomSegments] = useCustomSegments()
 
   const [isDeleting, setIsDeleting] = useState(false)
 

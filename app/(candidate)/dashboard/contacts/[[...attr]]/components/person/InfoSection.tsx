@@ -1,20 +1,17 @@
 'use client'
 
-import { useContactsTable } from '../../hooks/ContactsTableProvider'
+import { usePerson } from '../../hooks/PersonProvider'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import CopyToClipboardButton from '@shared/utils/CopyToClipboardButton'
 import { Fragment } from 'react'
 
-type PersonRecord = Record<string, unknown>
+type PersonRecord = Partial<Record<string, string | number | boolean | object | null>>
 
 interface Field {
   key: string
   label: string
-  transform?: (
-    value: string | number | boolean | object | null | unknown,
-    person: PersonRecord,
-  ) => string | null
+  transform?: (value: string | number | boolean | object | null, person: PersonRecord) => string | null
   allowCopy?: boolean
 }
 
@@ -28,12 +25,10 @@ interface InfoSectionProps {
 }
 
 export default function InfoSection({ section }: InfoSectionProps) {
-  const { currentlySelectedPerson: person } = useContactsTable()
+  const [person] = usePerson()
   if (!person) return null
 
-  const getFieldValue = (
-    key: string,
-  ): string | number | boolean | object | null => {
+  const getFieldValue = (key: string): string | number | boolean | object | null => {
     const value = person[key]
     return value !== undefined ? value : null
   }
@@ -61,8 +56,7 @@ export default function InfoSection({ section }: InfoSectionProps) {
       return String(rawValue ?? '')
     }
 
-    const transformedValue =
-      rawValue !== null ? field.transform(rawValue, person) : null
+    const transformedValue = rawValue !== null ? field.transform(rawValue, person) : null
     return typeof transformedValue === 'string'
       ? transformedValue
       : String(rawValue ?? '')
@@ -77,9 +71,7 @@ export default function InfoSection({ section }: InfoSectionProps) {
           <Fragment key={field.key}>
             {field.key && fieldValue && (
               <div key={field.key} className="mt-4">
-                <Body2 className="font-medium text-gray-600">
-                  {field.label}
-                </Body2>
+                <Body2 className="font-medium text-gray-600">{field.label}</Body2>
                 <div className="flex items-center">
                   <Body1>
                     {field.transform

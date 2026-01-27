@@ -1,5 +1,5 @@
 'use client'
-import { useContactsTable } from '../../hooks/ContactsTableProvider'
+import { usePerson } from '../../hooks/PersonProvider'
 import Map from '@shared/utils/Map'
 
 interface Place {
@@ -10,31 +10,25 @@ interface Place {
 }
 
 export default function PersonMap(): React.JSX.Element | null {
-  const { currentlySelectedPerson: person } = useContactsTable()
+  const [person] = usePerson()
   if (!person) return null
 
   const places: Place[] = []
 
   const latValue = person.lat
   const lngValue = person.lng
-  const lat =
-    typeof latValue === 'string' || typeof latValue === 'number'
-      ? parseFloat(String(latValue))
-      : NaN
-  const lng =
-    typeof lngValue === 'string' || typeof lngValue === 'number'
-      ? parseFloat(String(lngValue))
-      : NaN
-
+  const lat = typeof latValue === 'string' || typeof latValue === 'number' ? parseFloat(String(latValue)) : NaN
+  const lng = typeof lngValue === 'string' || typeof lngValue === 'number' ? parseFloat(String(lngValue)) : NaN
+  
   if (!isNaN(lat) && !isNaN(lng)) {
     const firstNameValue = person.firstName
     const lastNameValue = person.lastName
     const addressValue = person.address
-
+    
     const firstName = typeof firstNameValue === 'string' ? firstNameValue : ''
     const lastName = typeof lastNameValue === 'string' ? lastNameValue : ''
     const address = typeof addressValue === 'string' ? addressValue : ''
-
+    
     places.push({
       lat,
       lng,

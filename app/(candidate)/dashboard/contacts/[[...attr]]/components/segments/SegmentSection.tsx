@@ -11,11 +11,19 @@ import {
   SelectValue,
 } from 'goodparty-styleguide'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import FiltersSheet from './FiltersSheet'
-import { useContactsTable } from '../../hooks/ContactsTableProvider'
+import defaultSegments from '../configs/defaultSegments.config'
+import { useCustomSegments } from '../../hooks/CustomSegmentsProvider'
 import { ALL_SEGMENTS, SHEET_MODES } from '../shared/constants'
 import {
+  useRouter,
+  useSearchParams,
+  ReadonlyURLSearchParams,
+} from 'next/navigation'
+import appendParam from '@shared/utils/appendParam'
+import {
+  isCustomSegment,
   isDefaultSegment,
   findCustomSegment,
   trimCustomSegmentName,
@@ -36,13 +44,9 @@ interface SheetState {
 }
 
 export default function SegmentSection() {
-  const {
-    segments,
-    customSegments,
-    currentSegment,
-    selectSegment,
-    refreshCustomSegments,
-  } = useContactsTable()
+  const [customSegments, , , querySegment] = useCustomSegments()
+  const [segment, setSegment] = useState<string>(ALL_SEGMENTS)
+  const isInitialLoad = useRef(true)
   const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
   const [sheetState, setSheetState] = useState<SheetState>({
@@ -51,13 +55,91 @@ export default function SegmentSection() {
     editSegment: null,
   })
 
-  const isCustom = !isDefaultSegment(segments, currentSegment)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const setSegmentAndTrack = (
+    segmentValue: string,
+    type: 'custom' | 'default',
+    shouldUpdateUrl = false,
+  ) => {
+    setSegment(segmentValue)
+    isInitialLoad.current = false
+
+    if (shouldUpdateUrl) {
+      appendParam(
+        router,
+        searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
+        'segment',
+        segmentValue,
+      )
+    }
+
+    const segmentName =
+      type === 'custom'
+        ? findCustomSegment(customSegments, segmentValue)?.name ?? segmentValue
+        : segmentValue
+
+    trackEvent(EVENTS.Contacts.SegmentViewed, {
+      segment: segmentName,
+      type,
+    })
+  }
+
+  const handleDefaultSegment = () => {
+    if (querySegment) {
+      setSegmentAndTrack(querySegment, 'default')
+    }
+  }
+
+  const handleCustomSegment = () => {
+    if (querySegment) {
+      setSegmentAndTrack(querySegment, 'custom')
+    }
+  }
+
+  const handleInvalidSegment = () => {
+    if (customSegments.length > 0) {
+      setSegmentAndTrack(ALL_SEGMENTS, 'default', true)
+    }
+  }
+
+  const handleNoQuerySegment = () => {
+    setSegmentAndTrack(ALL_SEGMENTS, 'default')
+  }
+
+  const initializeSegment = () => {
+    if (!querySegment) {
+      handleNoQuerySegment()
+      return
+    }
+
+    if (isDefaultSegment(defaultSegments, querySegment)) {
+      handleDefaultSegment()
+      return
+    }
+
+    if (isCustomSegment(customSegments, querySegment)) {
+      handleCustomSegment()
+      return
+    }
+
+    handleInvalidSegment()
+  }
+
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      initializeSegment()
+    }
+  }, [querySegment, customSegments, router, searchParams])
+
+  const isCustom = !isDefaultSegment(defaultSegments, segment)
 
   const handleEdit = () => {
     if (isCustom) {
       const customSegment = findCustomSegment(
         customSegments,
-        currentSegment,
+        segment,
       ) as SegmentResponse | null
       setSheetState({
         open: true,
@@ -84,19 +166,13 @@ export default function SegmentSection() {
       showProUpgradeModal(true)
       return
     }
-
-    const isCustomSegment = !isDefaultSegment(segments, selectedSegment)
-    const segmentName = isCustomSegment
-      ? findCustomSegment(customSegments, selectedSegment)?.name ??
-        selectedSegment
-      : selectedSegment
-
-    trackEvent(EVENTS.Contacts.SegmentViewed, {
-      segment: segmentName,
-      type: isCustomSegment ? 'custom' : 'default',
-    })
-
-    selectSegment(selectedSegment)
+    setSegment(selectedSegment)
+    appendParam(
+      router,
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
+      'segment',
+      selectedSegment,
+    )
   }
 
   const handleSheetClose = () => {
@@ -108,17 +184,35 @@ export default function SegmentSection() {
   }
 
   const resetSelect = () => {
-    selectSegment(ALL_SEGMENTS)
+    setSegment(ALL_SEGMENTS)
+    appendParam(
+      router,
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
+      'segment',
+      ALL_SEGMENTS,
+    )
   }
 
-  const handleAfterSave = async (segmentId: number) => {
-    await refreshCustomSegments()
-    selectSegment(segmentId.toString())
+  const query = searchParams?.get('query')
+  useEffect(() => {
+    if (query) {
+      resetSelect()
+    }
+  }, [query])
+
+  const handleAfterSave = (segmentId: number) => {
+    setSegment(segmentId.toString())
+    appendParam(
+      router,
+      searchParams ?? (new URLSearchParams() as ReadonlyURLSearchParams),
+      'segment',
+      segmentId.toString(),
+    )
   }
 
   return (
     <div className="flex items-center flex-col w-full md:w-auto md:flex-row">
-      <Select value={currentSegment} onValueChange={handleSelect}>
+      <Select value={segment} onValueChange={handleSelect}>
         <SelectTrigger className="w-full lg:w-[350px] justify-start">
           <label
             htmlFor="segment-select"
@@ -133,7 +227,7 @@ export default function SegmentSection() {
         <SelectContent className="max-h-[50vh]">
           <SelectGroup>
             <SelectLabel>Default Segments</SelectLabel>
-            {segments.map((segment) => (
+            {defaultSegments.map((segment) => (
               <SelectItem key={segment.value} value={segment.value}>
                 {segment.label}
               </SelectItem>
