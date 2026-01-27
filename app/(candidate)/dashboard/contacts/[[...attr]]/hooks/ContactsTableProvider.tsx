@@ -16,7 +16,6 @@ import {
 import { useQuery, queryOptions, useQueryClient } from '@tanstack/react-query'
 import {
   fetchContacts,
-  searchContacts,
   fetchCustomSegments,
   fetchPerson,
   type ListContactsResponse,
@@ -145,7 +144,7 @@ export const ContactsTableProvider = ({
     [params],
   )
 
-  const contactsQueryOptions = queryOptions({
+  const contactsQuery = useQuery({
     queryKey: [
       'contacts',
       {
@@ -160,29 +159,18 @@ export const ContactsTableProvider = ({
         people: [],
         pagination: createEmptyPagination(currentPage, pageSize),
       }
-
-      if (searchTerm) {
-        const data = await searchContacts({
-          page: currentPage,
-          resultsPerPage: pageSize,
-          query: searchTerm.trim(),
-        })
-        return data || emptyResponse
-      }
-
       const data = await fetchContacts({
         page: currentPage,
         resultsPerPage: pageSize,
         segment: currentSegment,
+        search: searchTerm,
       })
       return data || emptyResponse
     },
     refetchOnMount: false,
   })
 
-  const contactsQuery = useQuery(contactsQueryOptions)
-
-  const personQueryOptions = queryOptions({
+  const personQuery = useQuery({
     queryKey: ['person', currentlySelectedPersonId],
     queryFn: async () => {
       const id = currentlySelectedPersonId
@@ -191,10 +179,7 @@ export const ContactsTableProvider = ({
       return person as Person | null
     },
     enabled: Boolean(currentlySelectedPersonId),
-    initialData: undefined,
   })
-
-  const personQuery = useQuery(personQueryOptions)
 
   const customSegmentsQueryOptions = queryOptions({
     queryKey: ['custom-segments'],
@@ -312,7 +297,7 @@ export const ContactsTableProvider = ({
 
   const selectSegment = useCallback(
     (segment: string) => {
-      updateURL({ segment, page: 1, query: null })
+      updateURL({ segment, page: 1 })
     },
     [updateURL],
   )
@@ -320,7 +305,7 @@ export const ContactsTableProvider = ({
   const searchContactsAction = useCallback(
     (query: string) => {
       if (query.trim()) {
-        updateURL({ query: query, segment: null, page: 1 })
+        updateURL({ query: query, page: 1 })
       } else {
         updateURL({ query: null })
       }

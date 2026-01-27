@@ -48,9 +48,6 @@ export default function ContactsPage() {
             />
           </div>
 
-          <div className="flex align-right md:hidden sm:w-full">
-            <ContactSearch />
-          </div>
           <div className="relative mt-6 lg:mt-0">
             <ContactsTable />
           </div>
