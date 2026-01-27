@@ -115,6 +115,7 @@ export interface CampaignDetails {
   ballotLevel?: string
   electionDate?: string
   primaryElectionDate?: string
+  primaryResult?: 'won' | 'lost' | null
   zip?: string
   knowRun?: 'yes' | null
   runForOffice?: 'yes' | 'no' | null
@@ -159,6 +160,28 @@ export interface CampaignDetails {
   wonGeneral?: boolean
   launchStatus?: string
   filedStatement?: string
+}
+
+export type TcrComplianceStatus = 'submitted' | 'pending' | 'approved' | 'rejected' | 'error'
+
+export interface TcrCompliance {
+  id: string
+  ein: string
+  postalAddress: string
+  committeeName: string
+  websiteDomain: string
+  filingUrl: string
+  phone: string
+  email: string
+  status?: TcrComplianceStatus | null
+  tdlcNumber?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  campaignId: number
+  peerlyIdentityId?: string | null
+  peerlyRegistrationLink?: string | null
+  peerlyIdentityProfileLink?: string | null
+  peerly10DLCBrandSubmissionKey?: string | null
 }
 
 export interface ReportedVoterGoals {
@@ -298,12 +321,13 @@ export interface AiContentData {
 }
 
 export interface CampaignAiContent {
-  generationStatus?: Record<string, string>
-  campaignPlanAttempts?: Record<string, number>
+  generationStatus?: Partial<Record<string, { status?: string }>>
+  campaignPlanAttempts?: Partial<Record<string, number>>
   [key: string]:
     | AiContentData
     | Partial<Record<string, string>>
     | Partial<Record<string, number>>
+    | Partial<Record<string, { status?: string }>>
     | undefined
 }
 
@@ -355,12 +379,25 @@ export interface PathToVictory {
   data: PathToVictoryData
 }
 
+export interface IssuePosition {
+  id: number
+  name: string
+}
+
+export interface TopIssue {
+  id?: number
+  name?: string
+  positions?: IssuePosition[]
+}
+
 export interface CandidatePosition {
   id: number
   topIssueId: number
   positionId: number
   description: string
   order: number
+  topIssue?: TopIssue
+  position?: IssuePosition
 }
 
 export interface ClaimedCampaign {
@@ -370,6 +407,10 @@ export interface ClaimedCampaign {
   }
   details?: CampaignDetails
   campaignPositions?: CandidatePosition[]
+}
+
+export interface CampaignGoals {
+  electionDate?: string
 }
 
 export interface Campaign {
@@ -420,6 +461,7 @@ export interface Campaign {
   email?: string
   urls?: string[]
   Stances?: CandidateStance[]
+  goals?: CampaignGoals
 }
 
 export interface CandidateStance {
@@ -449,9 +491,7 @@ export interface WebsiteContent {
     issues?: WebsiteIssue[]
     committee?: string
   }
-  theme?: {
-    color?: string
-  }
+  theme?: string
   logo?: string
   createStep?: string
   main?: {
@@ -494,4 +534,194 @@ export interface WebsiteContact {
   phone?: string | null
   message?: string | null
   createdAt: Date | string
+}
+
+// ===== CMS Content Types =====
+
+export interface PledgeContent {
+  title?: string
+  body?: string
+}
+
+// ===== Blog/Article Types =====
+
+export interface ImageData {
+  url?: string
+  alt?: string
+}
+
+export interface Article {
+  id?: string
+  title: string
+  slug: string
+  summary?: string
+  mainImage?: ImageData
+  publishDate: string
+  contentId?: string
+}
+
+// ===== AI Content Generation Types =====
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string
+}
+
+export interface GenerateAIContentResponse {
+  success: boolean
+  chat?: ChatMessage[]
+  newChat?: ChatMessage[]
+  content?: string
+  error?: string
+  status?: string
+}
+
+export interface Version {
+  id?: string
+  date?: string
+  text?: string
+  inputValues?: Partial<Record<string, string>>
+}
+
+export type CampaignVersions = Partial<Record<string, Version[]>>
+
+// ===== Content Section Types =====
+
+export type ContentSectionKey =
+  | 'aiContent'
+  | 'slogan'
+  | 'campaignPlan'
+  | 'policyPlatform'
+  | 'candidateBio'
+  | 'pressRelease'
+  | 'socialMedia'
+  | 'emailTemplate'
+  | 'speechDraft'
+  | 'doorKnockScript'
+  | 'phoneScript'
+  | 'textScript'
+
+export interface ContentSection {
+  key: ContentSectionKey | string
+  title: string
+  icon?: string
+  type?: string
+  slug?: string
+  description?: string
+  prompt?: string
+}
+
+// ===== Form Field Types =====
+
+export interface PromptInputField {
+  key: string
+  label: string
+  type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'number'
+  placeholder?: string
+  required?: boolean
+  maxLength?: number
+  rows?: number
+  cols?: number
+  options?: string[] | RadioOption[]
+  defaultValue?: string
+  helperText?: string
+  disabled?: boolean
+}
+
+export interface RadioOption {
+  key: string
+  label: string
+  value?: string
+}
+
+// ===== API Response Types =====
+
+export interface ApiResponse<T> {
+  success?: boolean
+  data?: T
+  error?: string
+  message?: string
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  pageSize: number
+  hasMore: boolean
+}
+
+// ===== Outreach Types =====
+
+export type OutreachType = 'text' | 'email' | 'call' | 'directMail'
+
+export interface Outreach {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  name: string
+  type: OutreachType
+  campaignId: number
+  voterFileFilterId?: number | null
+  content?: string | null
+  subject?: string | null
+  status?: string | null
+  scheduledAt?: Date | string | null
+  sentAt?: Date | string | null
+  voterCount?: number | null
+}
+
+// ===== State Abbreviation Type =====
+
+export type StateAbbreviation =
+  | 'AL' | 'AK' | 'AZ' | 'AR' | 'CA' | 'CO' | 'CT' | 'DE' | 'DC' | 'FL'
+  | 'GA' | 'HI' | 'ID' | 'IL' | 'IN' | 'IA' | 'KS' | 'KY' | 'LA' | 'ME'
+  | 'MD' | 'MA' | 'MI' | 'MN' | 'MS' | 'MO' | 'MT' | 'NE' | 'NV' | 'NH'
+  | 'NJ' | 'NM' | 'NY' | 'NC' | 'ND' | 'OH' | 'OK' | 'OR' | 'PA' | 'RI'
+  | 'SC' | 'SD' | 'TN' | 'TX' | 'UT' | 'VT' | 'VA' | 'WA' | 'WV' | 'WI' | 'WY'
+
+// ===== Rich Editor Types =====
+
+export interface RichEditorProps {
+  initialContent?: string
+  onChange?: (content: string) => void
+  placeholder?: string
+  readOnly?: boolean
+  minHeight?: string
+}
+
+// ===== Copy To Clipboard Types =====
+
+export interface CopyToClipboardProps {
+  text: string
+  children?: React.ReactNode
+  onCopy?: () => void
+  onClick?: () => void
+}
+
+// ===== Purchase Types =====
+
+export type PurchaseType = 'pro' | 'texting' | 'domain' | 'voterData'
+
+export interface PurchaseIntentProviderProps {
+  children: React.ReactNode
+  type: PurchaseType
+}
+
+export interface DomainRegistrationMetadata {
+  domainName?: string
+  price?: number
+  years?: number
+}
+
+// ===== Ecanvasser Types =====
+
+export interface Ecanvasser {
+  id: number
+  createdAt: Date | string
+  updatedAt: Date | string
+  apiKey: string
+  campaignId: number
+  lastSync?: Date | string | null
+  error?: string | null
 }

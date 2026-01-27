@@ -7,22 +7,23 @@ import Guides from '../../../shared/Guides'
 import CountyFacts from './CountyFacts'
 import Hero from '../../../shared/Hero'
 import {
-  City,
   County,
   Race,
   Article,
   Municipality,
   Parent,
+  PlaceChild,
 } from '../../../shared/types'
+import { PlaceResult } from '../../../shared/fetchPlace'
 
 interface ElectionsCountyPageProps {
   state: string
-  childEntities: City[]
-  races: Race[]
-  articles: Article[]
-  county: County
-  municipality: Municipality
-  parent: Parent
+  childEntities?: PlaceChild[] | null
+  races?: Race[]
+  articles?: Article[]
+  county: County | PlaceResult
+  municipality?: Municipality
+  parent?: Parent
 }
 
 export default function ElectionsCountyPage(
@@ -35,8 +36,8 @@ export default function ElectionsCountyPage(
     ? shortToLongState[upperState]
     : state
 
-  const cityLink = (city: City): string => {
-    return `/elections/${city.slug}`
+  const cityLink = (city: PlaceChild): string => {
+    return `/elections/${city.slug || ''}`
   }
   return (
     <div className="bg-indigo-50 pb-20">

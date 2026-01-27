@@ -6,11 +6,13 @@ import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 import { redirect } from 'next/navigation'
+import type { Task } from './components/tasks/TaskItem'
+import type { TcrCompliance } from 'helpers/types'
 
-const fetchTasks = async () => {
+const fetchTasks = async (): Promise<Task[]> => {
   const currentDate = new Date().toISOString().split('T')[0]
 
-  const resp = await serverFetch(apiRoutes.campaign.tasks.list, {
+  const resp = await serverFetch<Task[]>(apiRoutes.campaign.tasks.list, {
     date: currentDate,
   })
   return resp.data
@@ -35,7 +37,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   const [campaign, tasks, tcrComplianceResponse] = await Promise.all([
     fetchUserCampaign(),
     fetchTasks(),
-    serverFetch(apiRoutes.campaign.tcrCompliance.fetch),
+    serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
   ])
 
   const tcrCompliance = tcrComplianceResponse.ok

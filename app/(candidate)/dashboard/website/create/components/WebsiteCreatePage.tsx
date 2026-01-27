@@ -5,7 +5,7 @@ import WebsiteCreateFlow from './WebsiteCreateFlow'
 
 interface WebsiteCreatePageProps {
   pathname: string
-  initialIssues?: []
+  initialIssues?: { title: string; description: string }[]
 }
 
 export default function WebsiteCreatePage({ pathname, initialIssues }: WebsiteCreatePageProps): React.JSX.Element {

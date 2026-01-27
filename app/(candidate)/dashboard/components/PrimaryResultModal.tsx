@@ -45,11 +45,13 @@ function LostMessage(): React.JSX.Element {
   )
 }
 
+type PrimaryResult = 'won' | 'lost'
+
 interface PrimaryResultModalProps {
   open: boolean
   officeName: string
   electionDate: string
-  onClose: (result?: string) => void
+  onClose: (result?: PrimaryResult) => void
 }
 
 export default function PrimaryResultModal({
@@ -59,7 +61,7 @@ export default function PrimaryResultModal({
   onClose,
 }: PrimaryResultModalProps): React.JSX.Element {
   const { errorSnackbar } = useSnackbar()
-  const [primaryResult, setPrimaryResult] = useState<string | null>(null)
+  const [primaryResult, setPrimaryResult] = useState<PrimaryResult | null>(null)
   const [requestState, setRequestState] = useState({
     loading: false,
     error: false,
@@ -70,6 +72,10 @@ export default function PrimaryResultModal({
     { key: 'won', label: 'I won my race' },
     { key: 'lost', label: 'I did not win my race' },
   ]
+
+  const handleSelect = (key: string) => {
+    setPrimaryResult(key === 'won' || key === 'lost' ? key : null)
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -125,7 +131,7 @@ export default function PrimaryResultModal({
             <RadioList
               options={options}
               selected={primaryResult || ''}
-              selectCallback={setPrimaryResult}
+              selectCallback={handleSelect}
             />
           ) : (
             <Body2 className="text-red text-center">

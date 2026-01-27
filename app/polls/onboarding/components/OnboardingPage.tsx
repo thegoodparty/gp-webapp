@@ -13,6 +13,7 @@ import { useOnboardingContext } from '../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { PickSendDateStep } from './steps/PickSendDateStep'
+import { format } from 'date-fns'
 
 interface Step {
   name: string
@@ -90,7 +91,7 @@ const maxStepperStepIndex = steps.reduce(
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const { submitOnboarding, isSubmitting, submitError, user, stepValidation } =
+  const { submitOnboarding, isSubmitting, submitError, user, stepValidation, formData } =
     useOnboardingContext()
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
@@ -137,7 +138,12 @@ export default function OnboardingPage() {
       setShowError(false)
       const poll = await submitOnboarding()
       await identifyUser(user?.id, { 'Serve Activated': true })
-      trackEvent(EVENTS.ServeOnboarding.SmsPollSent)
+      const sendDate = formData.scheduledDate
+        ? format(formData.scheduledDate, 'dd-MM-yyyy')
+        : undefined
+      trackEvent(EVENTS.ServeOnboarding.SmsPollSent, {
+        sendDate,
+      })
       router.push(
         `/polls/onboarding/success?pollId=${encodeURIComponent(poll.id)}`,
       )

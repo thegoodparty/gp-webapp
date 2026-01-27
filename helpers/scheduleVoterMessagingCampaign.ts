@@ -6,8 +6,8 @@ interface ScheduleResponse {
 }
 
 export const scheduleVoterMessagingCampaign = async (
-  outreachId: string,
-  audienceRequest: string = '',
+  outreachId: string | number,
+  audienceRequest: string | boolean = '',
 ): Promise<ScheduleResponse | false> => {
   try {
     const resp = await clientFetch<ScheduleResponse>(apiRoutes.voters.voterFile.schedule, {

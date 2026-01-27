@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 interface VwoVariableProps {
   race: {
-    normalizedPositionName: string
+    normalizedPositionName?: string
   }
 }
 
@@ -15,7 +15,7 @@ declare global {
 }
 
 export default function VwoVariable({ race }: VwoVariableProps): null {
-  const { normalizedPositionName } = race
+  const { normalizedPositionName = '' } = race
   useEffect(() => {
     window.positionName = normalizedPositionName
   }, [normalizedPositionName])

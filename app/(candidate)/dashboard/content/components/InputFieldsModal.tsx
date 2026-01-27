@@ -4,14 +4,11 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import H2 from '@shared/typography/H2'
 import Modal from '@shared/utils/Modal'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import type { PromptInputField } from 'helpers/fetchPromptInputFields'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 
-interface InputField {
-  title: string
-  helperText?: string
-  isDate?: boolean
-}
+type InputField = PromptInputField
 
 type InputState = Partial<Record<string, string>>
 
@@ -24,14 +21,14 @@ interface InputFieldsModalProps {
   selected?: string
 }
 
-export default function InputFieldsModal({
+const InputFieldsModal = ({
   onSelectCallback,
   closeModalCallback,
   showModal,
   inputFields,
   inputValues,
   selected,
-}: InputFieldsModalProps): React.JSX.Element {
+}: InputFieldsModalProps): React.JSX.Element => {
   const [inputState, setInputState] = useState<InputState>({})
 
   const trackingAttrs = useMemo(
@@ -99,7 +96,15 @@ export default function InputFieldsModal({
       preventBackdropClose={true}
     >
       <div className="lg:min-w-[400px] max-w-lg">
-        <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
+        <H2
+          className="
+            pb-5
+            mb-5
+            border-b
+            border-slate-500
+            text-center
+          "
+        >
           Additional Inputs
         </H2>
         {inputFields.map((field) => (
@@ -150,3 +155,5 @@ export default function InputFieldsModal({
     </Modal>
   )
 }
+
+export default InputFieldsModal

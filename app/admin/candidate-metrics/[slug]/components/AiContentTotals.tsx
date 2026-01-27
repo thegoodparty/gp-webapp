@@ -5,7 +5,7 @@ import H3 from '@shared/typography/H3'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import { Fragment } from 'react'
-import { Campaign } from 'helpers/types'
+import { AiContentData, Campaign, CampaignAiContent } from 'helpers/types'
 
 interface AiContentTotalsProps {
   campaign: Campaign
@@ -17,7 +17,21 @@ export default function AiContentTotals(props: AiContentTotalsProps): React.JSX.
   if (!aiContent) {
     return <div className="my-4 text-xl">No AI Content</div>
   }
-  const total = Object.keys(aiContent).length
+  const isAiContentData = (
+    value: CampaignAiContent[string],
+  ): value is AiContentData =>
+    Boolean(
+      value &&
+        typeof value === 'object' &&
+        'name' in value &&
+        'content' in value &&
+        'updatedAt' in value,
+    )
+  const entries = Object.entries(aiContent).filter(
+    (entry): entry is [string, AiContentData] =>
+      isAiContentData(entry[1]),
+  )
+  const total = entries.length
   return (
     <div className="">
       <div className="relative bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-blue-800 h-48 rounded-lg flex items-center justify-center flex-col text-center shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
@@ -29,11 +43,11 @@ export default function AiContentTotals(props: AiContentTotalsProps): React.JSX.
       </div>
       <H3 className="mt-4">Items Created:</H3>
       <div className="mt-2 grid grid-cols-12 gap-3">
-        {Object.keys(aiContent).map((key) => (
+        {entries.map(([key, value]) => (
           <Fragment key={key}>
-            <div className=" col-span-6">{aiContent[key]?.name}</div>
+            <div className=" col-span-6">{value.name}</div>
             <div className=" col-span-6">
-              updated at: {aiContent[key]?.updatedAt ? dateUsHelper(aiContent[key].updatedAt) : ''}
+              updated at: {value.updatedAt ? dateUsHelper(value.updatedAt) : ''}
             </div>
           </Fragment>
         ))}

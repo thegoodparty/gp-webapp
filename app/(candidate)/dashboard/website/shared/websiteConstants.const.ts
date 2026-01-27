@@ -1,4 +1,4 @@
-import Config from 'tailwind.config.js'
+import { theme } from 'tailwind.config'
 
 interface ThemeConfig {
   bg: string
@@ -18,7 +18,7 @@ export const WEBSITE_THEMES: Record<string, ThemeConfig> = {
     accentText: 'text-white',
     secondary: 'bg-gray-100',
     border: 'border-gray-200',
-    muiColor: Config.theme.extend.colors.gray[800],
+    muiColor: theme.extend.colors.gray[800],
   },
   dark: {
     bg: 'bg-gray-900',
@@ -36,7 +36,7 @@ export const WEBSITE_THEMES: Record<string, ThemeConfig> = {
     accentText: 'text-white',
     secondary: 'bg-amber-100',
     border: 'border-amber-200',
-    muiColor: Config.theme.extend.colors.yellow[900],
+    muiColor: theme.extend.colors.yellow[900],
   },
   professional: {
     bg: 'bg-slate-50',
@@ -45,7 +45,7 @@ export const WEBSITE_THEMES: Record<string, ThemeConfig> = {
     accentText: 'text-white',
     secondary: 'bg-slate-200',
     border: 'border-slate-300',
-    muiColor: Config.theme.extend.colors.gray[800],
+    muiColor: theme.extend.colors.gray[800],
   },
 }
 

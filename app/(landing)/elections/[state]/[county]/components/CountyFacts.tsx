@@ -4,6 +4,7 @@ import { SlWallet } from 'react-icons/sl'
 import { TbHomeShare } from 'react-icons/tb'
 import { numberFormatter } from 'helpers/numberHelper'
 import { County } from 'app/(landing)/elections/shared/types'
+import { PlaceResult } from 'app/(landing)/elections/shared/fetchPlace'
 
 interface CountyField {
   label: string
@@ -15,7 +16,7 @@ interface CountyField {
 }
 
 interface CountyFactsProps {
-  county: County
+  county: County | PlaceResult
 }
 
 const CountyFacts = ({ county }: CountyFactsProps): React.JSX.Element | null => {

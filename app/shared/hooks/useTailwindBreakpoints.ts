@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../../../tailwind.config.js'
+import tailwindConfig from 'tailwind.config'
 
 const fullConfig = resolveConfig(tailwindConfig)
 const breakpoints = fullConfig.theme.screens as Record<string, string>
