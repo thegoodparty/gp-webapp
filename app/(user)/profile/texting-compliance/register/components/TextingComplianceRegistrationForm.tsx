@@ -18,7 +18,7 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
-import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import { TextingComplianceSubmitButton, type ValidationField } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
@@ -46,7 +46,25 @@ const validateFECUrl = (url: string): boolean => {
   return /fec\.gov/i.test(url) && urlIncludesPath(url)
 }
 
-export const validateRegistrationForm = (data: FormDataState) => {
+type ValidationResult = {
+  validations: Record<ValidationField, boolean>
+  isValid: boolean
+}
+
+const getFailingFields = (
+  validations: Record<ValidationField, boolean>
+): ValidationField[] => {
+  const fields: ValidationField[] = []
+  let key: ValidationField
+  for (key in validations) {
+    if (!validations[key]) {
+      fields.push(key)
+    }
+  }
+  return fields
+}
+
+export const validateRegistrationForm = (data: FormDataState): ValidationResult => {
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -71,13 +89,13 @@ export const validateRegistrationForm = (data: FormDataState) => {
   const fecCommitteeIdValue = getStringValue(fecCommitteeId)
   const committeeTypeValue = getStringValue(committeeType)
 
-  const baseValidations = {
+  const baseValidations: Record<ValidationField, boolean> = {
     electionFilingLink:
       isURL(electionFilingLinkValue) &&
       urlIncludesPath(electionFilingLinkValue),
     campaignCommitteeName: isFilled(campaignCommitteeNameValue),
     officeLevel: ['federal', 'state', 'local'].includes(officeLevelValue),
-    ein: isValidEIN(einValue),
+    ein: Boolean(isValidEIN(einValue)),
     phone: isMobilePhone(phoneValue, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
@@ -86,6 +104,8 @@ export const validateRegistrationForm = (data: FormDataState) => {
     // Website must exist (official purchased domain)
     website: isFilled(websiteValue) && isURL(websiteValue),
     email: isEmail(emailValue),
+    fecCommitteeId: true, // Not required for non-federal
+    committeeType: true, // Not required for non-federal
   }
 
   // Add federal-specific validations
@@ -133,9 +153,7 @@ const TextingComplianceRegistrationForm = ({
   } = formData
   const formValidation = validateRegistrationForm(formData)
   const { isValid, validations } = formValidation
-  const failingFields = Object.entries(validations)
-    .filter(([, valid]) => !valid)
-    .map(([field]) => field)
+  const failingFields = getFailingFields(validations)
 
   const addressValue = isAddressValue(address) ? address : null
   const [addressInputValue, setAddressInputValue] = useState<string | undefined>(
@@ -282,7 +300,7 @@ const TextingComplianceRegistrationForm = ({
             isValid,
             hasSubmissionError,
             failingFields,
-            officeLevel,
+            officeLevel: getStringValue(officeLevel),
           }}
         />
 

@@ -2,7 +2,7 @@ import Button from '@shared/buttons/Button'
 import { Tooltip } from '@mui/material'
 import { MouseEvent } from 'react'
 
-type ValidationField =
+export type ValidationField =
   | 'electionFilingLink'
   | 'campaignCommitteeName'
   | 'officeLevel'
