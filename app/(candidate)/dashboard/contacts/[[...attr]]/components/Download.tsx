@@ -1,6 +1,6 @@
 'use client'
 import { IconButton } from 'goodparty-styleguide'
-import { useCustomSegments } from '../hooks/CustomSegmentsProvider'
+import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { fetchContactsCsv, type SegmentResponse } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -17,14 +17,14 @@ import { LuDownload } from 'react-icons/lu'
 export default function Download() {
   const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
-  const [customSegments, , , querySegment] = useCustomSegments()
+  const { customSegments, currentSegment } = useContactsTable()
 
   const handleDownload = async (): Promise<void> => {
     if (!campaign?.isPro) {
       showProUpgradeModal(true)
       return
     }
-    const res = await fetchContactsCsv(querySegment)
+    const res = await fetchContactsCsv(currentSegment)
 
     if (res.ok) {
       const blob = await res.blob()
@@ -50,12 +50,12 @@ export default function Download() {
     string,
     string | number | boolean | null | undefined
   > => {
-    if (!querySegment || !isCustomSegment(customSegments, querySegment)) {
+    if (!currentSegment || !isCustomSegment(customSegments, currentSegment)) {
       return {
         filters: null,
         isCustomSegment: false,
         isDefaultSegment: true,
-        segment: querySegment,
+        segment: currentSegment,
       }
     }
     const filterValues = filters()
@@ -67,13 +67,12 @@ export default function Download() {
   }
 
   const filters = (): string[] | null => {
-    if (!querySegment || !isCustomSegment(customSegments, querySegment)) {
+    if (!currentSegment || !isCustomSegment(customSegments, currentSegment)) {
       return null
     }
-    const allFilters = findCustomSegment(
-      customSegments,
-      querySegment,
-    ) as SegmentResponse | undefined
+    const allFilters = findCustomSegment(customSegments, currentSegment) as
+      | SegmentResponse
+      | undefined
     if (!allFilters) {
       return null
     }
@@ -103,4 +102,3 @@ export default function Download() {
     </>
   )
 }
-
