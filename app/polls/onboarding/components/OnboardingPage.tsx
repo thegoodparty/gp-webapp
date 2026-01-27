@@ -91,7 +91,7 @@ const maxStepperStepIndex = steps.reduce(
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const { submitOnboarding, isSubmitting, submitError, user, stepValidation, formData } =
+  const { submitOnboarding, isSubmitting, submitError, user, stepValidation, formData, demoMessageText } =
     useOnboardingContext()
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
@@ -143,6 +143,7 @@ export default function OnboardingPage() {
         : undefined
       trackEvent(EVENTS.ServeOnboarding.SmsPollSent, {
         sendDate,
+        message: demoMessageText,
       })
       router.push(
         `/polls/onboarding/success?pollId=${encodeURIComponent(poll.id)}`,
