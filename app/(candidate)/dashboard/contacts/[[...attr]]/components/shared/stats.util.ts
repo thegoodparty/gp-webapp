@@ -67,14 +67,14 @@ export const getContactStatsRendered = (
     ? (totalVisibleContacts / totalConstituents) * 100
     : 0
   return {
-    totalConstituents: totalConstituents
-      ? numberFormatter(totalConstituents)
-      : null,
-    homeownersPercent: homeownersPercent ? `${homeownersPercent}%` : null,
+    totalConstituents: totalVisibleContacts
+      ? numberFormatter(totalVisibleContacts)
+      : '--',
+    homeownersPercent: homeownersPercent ? `${homeownersPercent}%` : '--',
     hasChildrenUnder18Percent: hasChildrenUnder18Percent
       ? `${hasChildrenUnder18Percent}%`
-      : null,
-    medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : null,
+      : '--',
+    medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : '--',
     visibleContactsPercent: visibleContactsPercent
       ? `${visibleContactsPercent.toFixed(2)}%`
       : '--',

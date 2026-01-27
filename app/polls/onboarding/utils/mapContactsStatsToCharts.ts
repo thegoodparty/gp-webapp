@@ -17,7 +17,7 @@ interface ChartData {
 export const mapContactsStatsToCharts = (
   contactsStats: ContactsStats | undefined,
 ): ChartData => {
-  if (!contactsStats) {
+  if (!contactsStats || !contactsStats.buckets) {
     return {
       totalConstituents: 0,
       ageDistribution: [],
