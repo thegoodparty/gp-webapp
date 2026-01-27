@@ -29,9 +29,9 @@ export const FilingLinkInfoIcon = () => {
           This must be a url that includes a path to your election filing.
           <br />
           (e.g. <strong>https://www.example.com/election-filing</strong>, not
-          just <strong>https://www.example.com</strong>)        
+          just <strong>https://www.example.com</strong>)
           <br />
-          <br />          
+          <br />
           You can usually find this website link by searching for your local
           Supervisor of Elections Office. Sometimes it can be your town, city or
           county. Search for the list of candidates running for office including
@@ -44,7 +44,7 @@ export const FilingLinkInfoIcon = () => {
           <br />
           <strong>For federal campaigns:</strong> The website must be from{' '}
           <strong>fec.gov</strong> and point to your specific filing (e.g.{' '}
-            https://www.fec.gov/data/candidate/H0XX12345/
+          https://fec.gov/data/committee/C00123456
           ).
         </Body2>
         <Button

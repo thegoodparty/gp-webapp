@@ -42,7 +42,7 @@ const getValidationMessage = (field: ValidationField, officeLevel?: string): str
   const messages: ValidationMessages = {
     electionFilingLink:
       officeLevel === 'federal'
-        ? 'Must be from FEC.gov (e.g., https://fec.gov/data/committee/...)'
+        ? 'Must be from FEC.gov (e.g., https://fec.gov/data/committee/C00123456)'
         : 'Please enter a valid URL with a path',
     campaignCommitteeName: 'Required',
     officeLevel: 'Please select an option',
