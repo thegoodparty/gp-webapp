@@ -4,7 +4,7 @@ import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValid
 import React, { ChangeEvent } from 'react'
 
 // FEC Committee IDs are "C" followed by exactly 8 digits (e.g., C00123456)
-const FEC_PATTERN_PARTIAL = /^C?\d{0,8}$/
+const FEC_PATTERN_PARTIAL = /^C\d{0,8}$/
 const FEC_PATTERN_FULL = /^C\d{8}$/
 
 export const isValidFecCommitteeId = (value: string): boolean =>
