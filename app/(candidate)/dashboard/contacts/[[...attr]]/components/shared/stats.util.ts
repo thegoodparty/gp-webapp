@@ -55,6 +55,15 @@ export const getContactStatsRendered = (
   stats: ContactsStats,
   totalVisibleContacts: number,
 ): ContactStatsRendered => {
+  if (!stats || !stats.buckets) {
+    return {
+      totalConstituents: '--',
+      homeownersPercent: '--',
+      hasChildrenUnder18Percent: '--',
+      medianIncomeRange: '--',
+      visibleContactsPercent: '--',
+    }
+  }
   const totalConstituents = stats.totalConstituents
   const homeownersPercent = getPercentForYes(stats.buckets.homeowner)
   const hasChildrenUnder18Percent = getPercentForYes(
