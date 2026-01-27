@@ -55,6 +55,15 @@ export const getContactStatsRendered = (
   stats: ContactsStats,
   totalVisibleContacts: number,
 ): ContactStatsRendered => {
+  if (!stats || !stats.buckets) {
+    return {
+      totalConstituents: '--',
+      homeownersPercent: '--',
+      hasChildrenUnder18Percent: '--',
+      medianIncomeRange: '--',
+      visibleContactsPercent: '--',
+    }
+  }
   const totalConstituents = stats.totalConstituents
   const homeownersPercent = getPercentForYes(stats.buckets.homeowner)
   const hasChildrenUnder18Percent = getPercentForYes(
@@ -67,14 +76,14 @@ export const getContactStatsRendered = (
     ? (totalVisibleContacts / totalConstituents) * 100
     : 0
   return {
-    totalConstituents: totalConstituents
-      ? numberFormatter(totalConstituents)
-      : null,
-    homeownersPercent: homeownersPercent ? `${homeownersPercent}%` : null,
+    totalConstituents: totalVisibleContacts
+      ? numberFormatter(totalVisibleContacts)
+      : '--',
+    homeownersPercent: homeownersPercent ? `${homeownersPercent}%` : '--',
     hasChildrenUnder18Percent: hasChildrenUnder18Percent
       ? `${hasChildrenUnder18Percent}%`
-      : null,
-    medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : null,
+      : '--',
+    medianIncomeRange: medianIncomeRange ? `${medianIncomeRange}` : '--',
     visibleContactsPercent: visibleContactsPercent
       ? `${visibleContactsPercent.toFixed(2)}%`
       : '--',
