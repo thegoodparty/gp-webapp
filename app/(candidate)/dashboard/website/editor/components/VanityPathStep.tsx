@@ -37,17 +37,17 @@ export default function VanityPathStep({
       clearTimeout(timeoutRef.current)
     }
 
-      timeoutRef.current = setTimeout(async () => {
-        const resp = await validateVanityPath(value)
-        setLoading(false)
-        if (resp.ok && resp.data.available) {
-          setValidated(true)
-          validateCallback(true)
-        } else {
-          setValidated(false)
-          validateCallback(false)
-        }
-      }, DEBOUNCE_TIME)
+    timeoutRef.current = setTimeout(async () => {
+      const resp = await validateVanityPath(value)
+      setLoading(false)
+      if (resp.ok && resp.data.available) {
+        setValidated(true)
+        validateCallback(true)
+      } else {
+        setValidated(false)
+        validateCallback(false)
+      }
+    }, DEBOUNCE_TIME)
   }
 
   useEffect(() => {
