@@ -202,9 +202,6 @@ const DetailsForm: React.FC<{
     register,
     handleSubmit,
     control,
-    trigger,
-    setValue,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: details ?? {
@@ -214,18 +211,10 @@ const DetailsForm: React.FC<{
     },
   })
 
+  // Track bias analysis state for potential future analytics
   useEffect(() => {
     biasAnalysisStateRef.current = biasAnalysisState
-    const currentValue = getValues('question')
-    if (
-      biasAnalysisState !== null &&
-      currentValue.trim().length > 0 &&
-      currentValue.trim().length >= MIN_QUESTION_LENGTH
-    ) {
-      setValue('question', currentValue, { shouldTouch: true })
-      trigger('question')
-    }
-  }, [biasAnalysisState, trigger, setValue, getValues])
+  }, [biasAnalysisState])
 
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
@@ -330,22 +319,8 @@ const DetailsForm: React.FC<{
                 return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
               }
 
-              const state = biasAnalysisStateRef.current
-              if (!state) {
-                return true
-              }
-              if (state.hasServerError) {
-                return 'Unable to analyze for bias, please try again later.'
-              }
-              if (state.hasBias && state.hasGrammar) {
-                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasBias) {
-                return 'Biased language detected. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasGrammar) {
-                return 'Grammar issues found. Please use "Optimize message" to correct it.'
-              }
+              // Bias/grammar detection is now non-blocking - users can proceed
+              // with warnings shown in the UI via PollTextBiasInput component
               return true
             },
           }}
