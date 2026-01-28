@@ -64,8 +64,8 @@ export async function updateWebsite(
 
 export async function validateVanityPath(
   vanityPath: string,
-): Promise<ApiResponse<{ valid: boolean }>> {
-  const response: ApiResponse<{ valid: boolean }> = await clientFetch(
+): Promise<ApiResponse<{ available: boolean }>> {
+  const response: ApiResponse<{ available: boolean }> = await clientFetch(
     apiRoutes.website.validateVanityPath,
     {
       vanityPath,
