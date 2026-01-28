@@ -184,6 +184,10 @@ export const apiRoutes = {
       path: '/campaigns/slug/:slug',
       method: 'GET',
     },
+    einDocumentUrl: {
+      path: '/campaigns/slug/:slug/ein-document-url',
+      method: 'GET',
+    },
     list: {
       path: '/campaigns',
       method: 'GET',

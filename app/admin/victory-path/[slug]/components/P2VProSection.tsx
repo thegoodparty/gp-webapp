@@ -4,18 +4,17 @@ import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnl
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection'
 import Checkbox from '@shared/inputs/Checkbox'
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
-import Link from 'next/link'
 import { MdDelete, MdOpenInNew } from 'react-icons/md'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-
-const supportingDocsRootUrl =
-  'https://ein-supporting-documents.s3.us-west-2.amazonaws.com/'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 export const P2VProSection = (): React.JSX.Element => {
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { slug = '', details } = campaign || {}
   const [isPro, setIsPro] = useState(campaign?.isPro || false)
+  const [isLoadingDocument, setIsLoadingDocument] = useState(false)
 
   const onChangeIsPro = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const value = e.currentTarget.checked
@@ -40,6 +39,24 @@ export const P2VProSection = (): React.JSX.Element => {
     await refreshCampaign()
   }
 
+  const onViewDocument = async (): Promise<void> => {
+    if (!slug || isLoadingDocument) return
+    setIsLoadingDocument(true)
+    try {
+      const resp = await clientFetch<{ signedUrl: string }>(
+        apiRoutes.campaign.einDocumentUrl,
+        { slug },
+      )
+      if (resp.ok && resp.data?.signedUrl) {
+        window.open(resp.data.signedUrl, '_blank')
+      }
+    } catch (e) {
+      console.error('Error fetching document URL', e)
+    } finally {
+      setIsLoadingDocument(false)
+    }
+  }
+
   return (
     <P2VSection title="Pro Plan Information">
       <div className="flex items-center mb-2">
@@ -62,13 +79,14 @@ export const P2VProSection = (): React.JSX.Element => {
         {details?.einSupportingDocument ? (
           <>
             <span className="font-bold mr-2">EIN Supporting Document:</span>{' '}
-            <Link
-              target="_blank"
-              href={`${supportingDocsRootUrl}${details.einSupportingDocument}`}
+            <button
+              onClick={onViewDocument}
+              disabled={isLoadingDocument}
+              className="text-blue-600 hover:text-blue-800 underline inline-flex items-center disabled:opacity-50"
             >
-              View
+              {isLoadingDocument ? 'Loading...' : 'View'}
               <MdOpenInNew className="ml-1 inline" />
-            </Link>
+            </button>
             <SecondaryButton
               onClick={onDeleteSupportingDocument}
               size="small"
