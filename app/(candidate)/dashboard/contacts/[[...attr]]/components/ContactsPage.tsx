@@ -19,7 +19,8 @@ import { useContactsTable } from '../hooks/ContactsTableProvider'
 export default function ContactsPage() {
   const [showProModal, setShowProModal] = useState(false)
   const [campaign] = useCampaign()
-  const { isCustomSegment, totalSegmentContacts } = useContactsTable()
+  const { isCustomSegment, searchTerm, totalSegmentContacts } =
+    useContactsTable()
   return (
     <ContactProModalProvider value={setShowProModal}>
       <DashboardLayout campaign={campaign}>
@@ -44,7 +45,7 @@ export default function ContactsPage() {
           <div className="mt-6">
             <ContactsStatsSection
               totalVisibleContacts={totalSegmentContacts}
-              onlyTotalVisibleContacts={isCustomSegment}
+              onlyTotalVisibleContacts={isCustomSegment || !!searchTerm}
             />
           </div>
 
