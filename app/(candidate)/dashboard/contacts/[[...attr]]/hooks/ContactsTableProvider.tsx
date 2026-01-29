@@ -18,17 +18,13 @@ import {
   fetchContacts,
   fetchCustomSegments,
   fetchPerson,
+  Person,
   type ListContactsResponse,
   type SegmentResponse,
 } from '../components/shared/ajaxActions'
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
-
-interface Person {
-  id: number
-  [key: string]: unknown
-}
 
 const createEmptyPagination = (
   currentPage: number,
