@@ -17,6 +17,7 @@ interface FetchContactsParams {
   page?: number
   resultsPerPage?: number
   segment?: string
+  search?: string
 }
 
 export interface ListContactsResponse {
@@ -90,11 +91,15 @@ export async function fetchContacts({
   page,
   resultsPerPage,
   segment,
-}: FetchContactsParams = {}): Promise<ListContactsResponse | null> {
-  const payload = {
+  search,
+}: FetchContactsParams): Promise<ListContactsResponse | null> {
+  const payload: Record<string, unknown> = {
     page: page || 1,
     resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
     segment: segment || ALL_SEGMENTS,
+  }
+  if (search) {
+    payload.search = search
   }
   const response = await clientFetch<ListContactsResponse>(
     apiRoutes.contacts.list,
@@ -104,51 +109,6 @@ export async function fetchContacts({
     return response.data || null
   } else {
     console.error('Failed to fetch contacts', response)
-    return null
-  }
-}
-
-interface SearchContactsParams {
-  page?: number
-  resultsPerPage?: number
-  query?: string
-  name?: string
-  phone?: string
-}
-
-export async function searchContacts({
-  page,
-  resultsPerPage,
-  query,
-  name,
-  phone,
-}: SearchContactsParams = {}): Promise<ListContactsResponse | null> {
-  const payload: Record<string, unknown> = {
-    page: page || 1,
-    resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
-  }
-
-  if (phone) {
-    payload.phone = phone
-  } else if (name) {
-    payload.name = name
-  } else if (query) {
-    const isNumeric = /^\d+$/.test(query.trim())
-    if (isNumeric) {
-      payload.phone = query.trim()
-    } else {
-      payload.name = query.trim()
-    }
-  }
-
-  const response = await clientFetch<ListContactsResponse>(
-    apiRoutes.contacts.search,
-    payload,
-  )
-  if (response.ok) {
-    return response.data || null
-  } else {
-    console.error('Failed to search contacts', response)
     return null
   }
 }

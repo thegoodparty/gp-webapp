@@ -13,10 +13,6 @@ export const apiRoutes = {
       path: '/contacts',
       method: 'GET',
     },
-    search: {
-      path: '/contacts/search',
-      method: 'GET',
-    },
     get: {
       path: '/contacts/:id',
       method: 'GET',
@@ -799,4 +795,3 @@ export const electionApiRoutes = {
     },
   },
 } as const
-
