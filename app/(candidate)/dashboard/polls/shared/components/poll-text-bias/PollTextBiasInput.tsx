@@ -284,7 +284,7 @@ export default function PollTextBiasInput({
               variant="secondary"
               className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 disabled:opacity-100 font-normal ${
                 hasIssues
-                  ? 'text-red-500 bg-red-50 hover:!bg-red-100 active:!bg-red-50'
+                  ? 'text-warning bg-warning-background hover:!bg-orange-100 active:!bg-warning-background'
                   : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
               }`}
               size="small"
