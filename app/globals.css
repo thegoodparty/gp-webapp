@@ -1,10 +1,222 @@
-@import 'goodparty-styleguide/dist/design-tokens.css';
-@import 'goodparty-styleguide/dist/tailwind-theme.css';
-@import 'goodparty-styleguide/dist/typography.css';
+/* 
+ * CSS IMPORT ORDER (critical for styleguide scoping to work):
+ * 1. design-tokens.css - Raw Figma token values
+ * 2. tailwind-theme.css - Single @theme block with var() references
+ * 3. typography.css - Typography utilities
+ * 4. styleguide-scope.css - [data-slot] overrides for styleguide components
+ * 5. tailwindcss - Generates utilities from @theme
+ */
+@import '../styleguide/design-tokens.css';
+@import '../styleguide/tailwind-theme.css';
+@import '../styleguide/typography.css';
+@import '../styleguide/styleguide-scope.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* Dark mode variant for Tailwind v4 */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * =============================================================================
+ * WEBAPP DEFAULT CSS VARIABLES
+ * =============================================================================
+ * These define the default values for the webapp's color system.
+ * Styleguide components will override these via [data-slot] scoping.
+ * This enables the same Tailwind classes to resolve to different colors
+ * based on whether they're used in legacy webapp code or styleguide components.
+ */
+:root {
+  /* Primary scale (webapp's dark indigo) */
+  --primary: #242D3D;
+  --primary-dark: #0D1528;
+  --primary-main: #242D3D;
+  --primary-light: #484E55;
+  --primary-background: #F7FAFB;
+  --primary-contrast: #FFFFFF;
+  
+  /* Secondary scale (webapp's yellow) */
+  --secondary: #FFC523;
+  --secondary-dark: #DBA219;
+  --secondary-main: #FFC523;
+  --secondary-light: #FFE291;
+  --secondary-background: #FFFADF;
+  --secondary-contrast: #000000;
+  
+  /* Tertiary scale (webapp's purple) */
+  --tertiary: #6E37FF;
+  --tertiary-dark: #3D1BB7;
+  --tertiary-main: #6E37FF;
+  --tertiary-light: #AE86FF;
+  --tertiary-background: #F8F3FF;
+  --tertiary-contrast: #FFFFFF;
+  
+  /* Neutral scale (webapp's indigo-gray) */
+  --neutral: #B9C3CC;
+  --neutral-dark: #484E55;
+  --neutral-main: #B9C3CC;
+  --neutral-light: #E0E6EC;
+  --neutral-background: #F7FAFB;
+  --neutral-contrast: #000000;
+  
+  /* Error scale */
+  --error: #E00C30;
+  --error-dark: #93081F;
+  --error-main: #E00C30;
+  --error-light: #F56C6A;
+  --error-background: #FFE8E8;
+  --error-contrast: #FFFFFF;
+  
+  /* Success scale */
+  --success: #30A541;
+  --success-dark: #0F5F31;
+  --success-main: #30A541;
+  --success-light: #86E382;
+  --success-background: #EEFFE9;
+  --success-contrast: #FFFFFF;
+  
+  /* Info scale */
+  --info: #1B6AFC;
+  --info-dark: #0D3CB5;
+  --info-main: #1B6AFC;
+  --info-light: #75AFFE;
+  --info-background: #E3F1FF;
+  --info-contrast: #FFFFFF;
+  
+  /* Warning scale (aligned with Figma semantic colors) */
+  --warning: #FF9800;
+  --warning-dark: #DB7900;
+  --warning-main: #FF9800;
+  --warning-light: #FFCD66;
+  --warning-background: #FFF5D5;
+  --warning-contrast: #000000;
+  
+  /* Gray scale */
+  --gray-100: #F8F8F8;
+  --gray-200: #E8E8E8;
+  --gray-300: #B2B2B2;
+  --gray-400: #999999;
+  --gray-500: #7F7F7F;
+  --gray-600: #666666;
+  --gray-700: #4D4D4D;
+  --gray-800: #333333;
+  --gray-900: #1A1A1A;
+  
+  /* Indigo scale */
+  --indigo-50: #F7FAFB;
+  --indigo-100: #EEF3F6;
+  --indigo-200: #E0E6EC;
+  --indigo-300: #B9C3CC;
+  --indigo-400: #879099;
+  --indigo-500: #484E55;
+  --indigo-600: #343D49;
+  --indigo-700: #242D3D;
+  --indigo-800: #161F31;
+  --indigo-900: #0D1528;
+  
+  /* Blue scale */
+  --blue-50: #E3F1FF;
+  --blue-100: #D1E7FE;
+  --blue-200: #A3CDFE;
+  --blue-300: #75AFFE;
+  --blue-400: #2563EB;
+  --blue-500: #1B6AFC;
+  --blue-600: #1351D8;
+  --blue-700: #0D3CB5;
+  --blue-800: #082A92;
+  --blue-900: #051D78;
+  
+  /* Green scale */
+  --green-50: #EEFFE9;
+  --green-100: #DFFAD6;
+  --green-200: #B9F6B0;
+  --green-300: #86E382;
+  --green-400: #5EC963;
+  --green-500: #30A541;
+  --green-600: #187637;
+  --green-700: #0F5F31;
+  --green-800: #094F2D;
+  --green-900: #033A20;
+  
+  /* Red/Error scale (aligned with Figma error tokens) */
+  --red-50: #FFE8E8;
+  --red-100: #FDCDCD;
+  --red-200: #FFAEAE;
+  --red-300: #F56C6A;
+  --red-400: #EC4451;
+  --red-500: #E00C30;
+  --red-600: #B90A27;
+  --red-700: #93081F;
+  --red-800: #6C0617;
+  --red-900: #560311;
+  --red-950: #370009;
+  
+  /* Yellow scale */
+  --yellow-50: #FFFADF;
+  --yellow-100: #FFF1C9;
+  --yellow-200: #FFEDBA;
+  --yellow-300: #FFE291;
+  --yellow-400: #FFE06C;
+  --yellow-500: #FFD759;
+  --yellow-600: #FFC523;
+  --yellow-700: #DBA219;
+  --yellow-800: #B78211;
+  --yellow-900: #93640B;
+  
+  /* Orange/Warning scale (aligned with Figma warning tokens) */
+  --orange-50: #FFF5D5;
+  --orange-100: #FFEEB7;
+  --orange-200: #FDE19A;
+  --orange-300: #FFCD66;
+  --orange-400: #FFB93F;
+  --orange-500: #FF9800;
+  --orange-600: #DB7900;
+  --orange-700: #B75E00;
+  --orange-800: #934500;
+  --orange-900: #7A3400;
+  --orange-950: #471E00;
+  
+  /* Lime scale (webapp legacy - used by PromoBanner) */
+  --lime-50: #FEFFF2;
+  --lime-100: #FCFEE0;
+  --lime-200: #F8FDC2;
+  --lime-300: #F1FBA3;
+  --lime-400: #EAF78B;
+  --lime-500: #DFF265;
+  --lime-600: #C5D465;
+  --lime-700: #A6B649;
+  --lime-800: #889832;
+  --lime-900: #6A7A20;
+  
+  /* Purple scale */
+  --purple-50: #F8F3FF;
+  --purple-100: #E6D7FF;
+  --purple-200: #CBAFFF;
+  --purple-300: #AE86FF;
+  --purple-400: #9669FF;
+  --purple-500: #6E37FF;
+  --purple-600: #5428DB;
+  --purple-700: #3D1BB7;
+  --purple-800: #2A1193;
+  --purple-900: #1C0A7A;
+  
+  /* Misc */
+  --cream-500: #FCF8F3;
+  --cream: #FCF8F3;
+  
+  /* Chart/Data visualization colors (from Figma) */
+  --chart-1: #5975A6;
+  --chart-2: #CDA1FF;
+  --chart-3: #63D1A0;
+  --chart-4: #FFC523;
+  --chart-5: #FF9364;
+}
+
+/*
+ * TAILWIND THEME
+ * The @theme block is in styleguide/tailwind-theme.css
+ * This keeps globals.css focused on webapp-specific defaults and styles.
+ */
 
 @layer components {
   .button-primary {
@@ -283,84 +495,118 @@
   }
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
+/*
+ * Note: shadcn/ui HSL variables are intentionally NOT redefined here.
+ * The @theme block above maps Tailwind utilities to our hex CSS variables.
+ * Styleguide components use [data-slot] scoping to override these values.
+ * 
+ * The primary/secondary/etc variables defined in :root at the top of this file
+ * use hex values for webapp compatibility. We don't override them with HSL here
+ * to avoid conflicts between webapp and styleguide color systems.
+ */
 
 /* Fix for DataTableColumnHeader button border */
 .button-ghost {
   border: none !important;
 }
 
-* {
-  line-height: 1.3;
-  outline: none;
-}
+@layer base {
+  * {
+    outline: none;
+  }
 
-*:focus-visible {
-  outline: none  !important;
-  box-shadow: none !important;
-}
+  *:focus-visible {
+    outline: none  !important;
+    box-shadow: none !important;
+  }
 
+  /*
+   * Restore cursor: pointer and font-weight for interactive elements.
+   * Tailwind v4 preflight doesn't include these by default (unlike v3).
+   */
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  summary {
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  a {
+    font-weight: 500;
+  }
 
+  body { 
+    width: 100%;
+    height: 100%;
+    font-family: var(--outfit-font);
+  }
 
+  /*
+   * Restore heading letter-spacing from Tailwind v3 preflight.
+   * v4 preflight doesn't include this, causing headings to look different.
+   * -0.02em is the standard tight tracking for headings.
+   */
+  h1, h2 {
+    letter-spacing: -0.02em;
+  }
 
+  /*
+   * Normalize line-height for SVG icons inside inline containers.
+   * Prevents extra spacing around MUI icons when inside spans.
+   */
+  svg {
+    vertical-align: middle;
+  }
 
-body { 
-  width: 100%;
-  height: 100%;
-  font-family: var(--outfit-font);
-}
+  /*
+   * Match Tailwind v3's default line-height for general elements.
+   * v3 used 1.3 for most elements, v4 inherits from body (1.5).
+   */
+  div, span {
+    line-height: 1.3;
+  }
 
-a:hover {
-  text-decoration: underline;
+  /* 
+   * Restore correct typography for bullet lists (e.g. in Hero).
+   * These should be Outfit (500 weight) to match production, overriding
+   * any parent container styles (like Body1's SF Pro 400).
+   */
+  ul.list-disc {
+    font-family: var(--outfit-font);
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 a.no-underline:hover {
   text-decoration: none;
+}
+
+/*
+ * Fix for webapp flex buttons: Ensure proper horizontal layout when flex is 
+ * used on legacy button/link elements (those WITHOUT data-slot).
+ * 
+ * This fix is scoped to webapp components only, keeping styleguide components
+ * unaffected. Styleguide buttons use their own component (styleguide/button.tsx)
+ * which has proper flex handling built-in.
+ * 
+ * The webapp Button component has text-center and inline-block in base classes.
+ * When flex items-center is passed via className, we need to ensure:
+ * 1. Display is flex (not inline-block)
+ * 2. Direction is row (horizontal, not vertical stacking)
+ */
+a.flex.items-center:not([data-slot]),
+button.flex.items-center:not([data-slot]),
+a.inline-flex.items-center:not([data-slot]),
+button.inline-flex.items-center:not([data-slot]) {
+  display: flex;
+  flex-direction: row;
 }
 
 .rep-red {
@@ -390,7 +636,15 @@ strong {
   font-weight: 900;
 }
 
-ul {
+/*
+ * List styles - scoped to content areas only
+ * These styles apply to prose content (CMS, articles) and styleguide components.
+ * UI lists (like TasksList, navigation, etc.) should NOT have bullets.
+ */
+.prose ul,
+[data-slot] ul,
+article ul,
+.cms-content ul {
   display: block;
   list-style-type: disc;
   margin-block-start: 1em;
@@ -400,7 +654,10 @@ ul {
   padding-inline-start: 20px;
 }
 
-ul li {
+.prose ul li,
+[data-slot] ul li,
+article ul li,
+.cms-content ul li {
   display: list-item;
 }
 

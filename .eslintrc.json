@@ -6,8 +6,9 @@
   ],
   "extends": [
     "next/core-web-vitals",
-    "plugin:mdx/recommended"
+    "plugin:mdx/recommended",
     // "plugin:jsx-a11y/recommended" TODO: turn on when ready to enforce a11y rules
+    "plugin:storybook/recommended"
   ],
   "settings": {
     "mdx/code-blocks": true,
@@ -25,6 +26,9 @@
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "unused-imports/no-unused-imports": "error",
-    "@stylistic/semi": ["error", "never"]
+    "@stylistic/semi": [
+      "error",
+      "never"
+    ]
   }
 }

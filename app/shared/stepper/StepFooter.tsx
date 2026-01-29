@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { StepIndicator } from '@shared/stepper/StepIndicator'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 
 interface StepFooterProps {
   numberOfSteps: number

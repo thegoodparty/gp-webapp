@@ -17,6 +17,12 @@
     "paths": {
       "@shared/*": [
         "app/shared/*"
+      ],
+      "@styleguide": [
+        "styleguide"
+      ],
+      "@styleguide/*": [
+        "styleguide/*"
       ]
     },
     "jsx": "preserve",

@@ -8,7 +8,6 @@ import {
   DEFAULT_SLANT_SECTION_COLORS,
   SlantSection,
 } from '@shared/landing-pages/SlantSection'
-import { theme } from 'tailwind.config'
 
 export const LocalElectionsWebinarPage = () => (
   <AcademySignUpModalProvider>
@@ -18,7 +17,7 @@ export const LocalElectionsWebinarPage = () => (
     <SlantSection
       colors={[
         ...DEFAULT_SLANT_SECTION_COLORS.slice(0, 2),
-        theme.extend.colors.secondary.main,
+        'var(--color-secondary-main)',
       ]}
     >
       <CampaignExperts />

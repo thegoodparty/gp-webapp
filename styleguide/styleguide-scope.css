@@ -1,0 +1,284 @@
+/**
+ * Styleguide Scoped Variables
+ * 
+ * These variables only apply to elements with [data-slot] attribute.
+ * This enables the same Tailwind classes (e.g., bg-primary-dark) to resolve
+ * to different colors depending on whether they're used in:
+ * - Legacy webapp components → uses :root values (webapp's dark indigo)
+ * - Styleguide components [data-slot] → uses these values (styleguide's blue)
+ * 
+ * [data-slot] is automatically present on all shadcn/ui components.
+ */
+
+[data-slot],
+[data-slot] * {
+  /*
+   * ==========================================================================
+   * TAILWIND UTILITY TOKEN OVERRIDES (--color-*)
+   * These are the actual variables that Tailwind utilities reference.
+   * We override them directly to ensure scoping works with @theme.
+   * ==========================================================================
+   */
+  --color-primary: var(--theme-primary);              /* #2563EB */
+  --color-primary-dark: var(--semantic-primary-hover); /* #0D3CB5 */
+  --color-primary-main: var(--theme-primary);         /* #2563EB */
+  --color-primary-light: var(--color-blue-300);       /* #75AFFE */
+  --color-primary-background: var(--color-blue-50);   /* #E3F1FF */
+  --color-primary-contrast: var(--theme-primary-foreground); /* #FFFFFF */
+  --color-primary-foreground: var(--theme-primary-foreground); /* #FFFFFF */
+
+  --color-secondary: var(--theme-secondary);          /* #0B1529 */
+  --color-secondary-dark: var(--color-midnight-950);  /* #060B17 */
+  --color-secondary-main: var(--theme-secondary);     /* #0B1529 */
+  --color-secondary-light: var(--color-midnight-700); /* #1D305C */
+  --color-secondary-background: var(--color-midnight-50); /* #ECF5FF */
+  --color-secondary-contrast: var(--theme-secondary-foreground); /* #FFFFFF */
+  --color-secondary-foreground: var(--theme-secondary-foreground); /* #FFFFFF */
+
+  --color-tertiary: var(--brand-accent);              /* #63D1A0 */
+  --color-tertiary-dark: var(--color-halo-green-700); /* #257F68 */
+  --color-tertiary-main: var(--brand-accent);         /* #63D1A0 */
+  --color-tertiary-light: var(--color-halo-green-300); /* #7FDCB2 */
+  --color-tertiary-background: var(--color-halo-green-50); /* #DDF2E8 */
+  --color-tertiary-contrast: var(--theme-primary-foreground); /* #FFFFFF */
+
+  /*
+   * ==========================================================================
+   * PRIMARY COLOR SCALE (from Figma theme/primary)
+   * Webapp uses dark indigo (#242D3D), styleguide uses blue (#2563EB)
+   * ==========================================================================
+   */
+  --primary: var(--theme-primary);                    /* #2563EB */
+  --primary-dark: var(--semantic-primary-hover);      /* #0D3CB5 */
+  --primary-main: var(--theme-primary);               /* #2563EB */
+  --primary-light: var(--color-blue-300);             /* #75AFFE */
+  --primary-background: var(--color-blue-50);         /* #E3F1FF */
+  --primary-contrast: var(--theme-primary-foreground); /* #FFFFFF */
+  --primary-foreground: var(--theme-primary-foreground); /* #FFFFFF */
+
+  /*
+   * ==========================================================================
+   * SECONDARY COLOR SCALE (from Figma theme/secondary)
+   * Webapp uses yellow (#FFC523), styleguide uses midnight (#0B1529)
+   * ==========================================================================
+   */
+  --secondary: var(--theme-secondary);                /* #0B1529 */
+  --secondary-dark: var(--color-midnight-950);        /* #060B17 */
+  --secondary-main: var(--theme-secondary);           /* #0B1529 */
+  --secondary-light: var(--color-midnight-700);       /* #1D305C */
+  --secondary-background: var(--color-midnight-50);   /* #ECF5FF */
+  --secondary-contrast: var(--theme-secondary-foreground); /* #FFFFFF */
+  --secondary-foreground: var(--theme-secondary-foreground); /* #FFFFFF */
+
+  /*
+   * ==========================================================================
+   * TERTIARY COLOR SCALE (Styleguide Accent/Halo Green)
+   * ==========================================================================
+   */
+  --tertiary: var(--brand-accent);                    /* #63D1A0 */
+  --tertiary-dark: var(--color-halo-green-700);       /* #257F68 */
+  --tertiary-main: var(--brand-accent);               /* #63D1A0 */
+  --tertiary-light: var(--color-halo-green-300);      /* #7FDCB2 */
+  --tertiary-background: var(--color-halo-green-50);  /* #DDF2E8 */
+  --tertiary-contrast: var(--brand-text-inverse);     /* #FFFFFF */
+
+  /*
+   * ==========================================================================
+   * NEUTRAL COLOR SCALE (Styleguide Grayscale)
+   * ==========================================================================
+   */
+  --neutral: var(--color-grayscale-400);              /* #B9C3CC */
+  --neutral-dark: var(--color-grayscale-600);         /* #70757A */
+  --neutral-main: var(--color-grayscale-400);         /* #B9C3CC */
+  --neutral-light: var(--color-grayscale-200);        /* #E0E6EC */
+  --neutral-background: var(--color-grayscale-50);    /* #F7FAFB */
+  --neutral-contrast: var(--brand-text-primary);      /* #000000 */
+
+  /*
+   * ==========================================================================
+   * SEMANTIC COLOR SCALES (Error, Success, Info, Warning)
+   * These match between webapp and styleguide, but we define them for consistency
+   * ==========================================================================
+   */
+  /* Error */
+  --error: var(--semantic-danger-default);            /* #DC2626 */
+  --error-dark: var(--semantic-danger-hover);         /* #93081F */
+  --error-main: var(--semantic-danger-default);       /* #DC2626 */
+  --error-light: var(--color-red-300);                /* #FCA5A5 */
+  --error-background: var(--semantic-danger-subtle);  /* #FEF2F2 */
+  --error-contrast: var(--brand-text-inverse);        /* #FFFFFF */
+
+  /* Success */
+  --success: var(--semantic-success-default);         /* #30A541 */
+  --success-dark: var(--semantic-success-hover);      /* #0F5F31 */
+  --success-main: var(--semantic-success-default);    /* #30A541 */
+  --success-light: var(--color-green-300);            /* #86E382 */
+  --success-background: var(--semantic-success-subtle); /* #EEFFE9 */
+  --success-contrast: var(--brand-text-inverse);      /* #FFFFFF */
+
+  /* Info */
+  --info: var(--semantic-info-default);               /* #1B6AFC */
+  --info-dark: var(--semantic-info-hover);            /* #0D3CB5 */
+  --info-main: var(--semantic-info-default);          /* #1B6AFC */
+  --info-light: var(--color-blue-300);                /* #75AFFE */
+  --info-background: var(--semantic-info-subtle);     /* #E3F1FF */
+  --info-contrast: var(--brand-text-inverse);         /* #FFFFFF */
+
+  /* Warning (updated to new orange-based scale from Figma) */
+  --warning: var(--semantic-warning-default);         /* #FF9800 */
+  --warning-dark: var(--semantic-warning-hover);      /* #DB7900 */
+  --warning-main: var(--semantic-warning-default);    /* #FF9800 */
+  --warning-light: var(--color-warning-300);          /* #FFCD66 */
+  --warning-background: var(--semantic-warning-subtle); /* #FFF5D5 */
+  --warning-contrast: var(--brand-text-primary);      /* #000000 */
+
+  /*
+   * ==========================================================================
+   * SHADCN/UI SEMANTIC VARIABLES
+   * These are used by shadcn components for theming
+   * ==========================================================================
+   */
+  /* Background/Foreground */
+  --background: var(--brand-surface-primary);         /* #FFFFFF */
+  --foreground: var(--brand-text-primary);            /* #000000 */
+
+  /* Border & Input */
+  --border: var(--brand-border-primary);              /* #D1D8DF */
+  --input: var(--brand-surface-tertiary);             /* #EEF3F6 */
+
+  /* Ring (focus) */
+  --ring: var(--semantic-border-focus);               /* #1B6AFC */
+
+  /* Muted */
+  --muted: var(--brand-surface-secondary);            /* #F7FAFB */
+  --muted-foreground: var(--brand-text-secondary);    /* #70757A */
+
+  /* Accent */
+  --accent: var(--semantic-accent-default);           /* #63D1A0 */
+  --accent-foreground: var(--brand-text-primary);     /* #000000 */
+
+  /* Destructive (from Figma theme/destructive) */
+  --destructive: var(--theme-destructive);             /* #E00C30 */
+  --destructive-foreground: var(--theme-destructive-foreground); /* #FFFFFF */
+
+  /* Card */
+  --card: var(--brand-surface-primary);               /* #FFFFFF */
+  --card-foreground: var(--brand-text-primary);       /* #000000 */
+
+  /* Popover */
+  --popover: var(--brand-surface-primary);            /* #FFFFFF */
+  --popover-foreground: var(--brand-text-primary);    /* #000000 */
+
+  /* Radius */
+  --radius: 0.5rem;
+
+  /*
+   * ==========================================================================
+   * COLOR SCALES (for styleguide components using scale utilities)
+   * These override the webapp's scales with styleguide's design tokens
+   * ==========================================================================
+   */
+  /* Blue scale (styleguide primary) */
+  --blue-50: var(--color-blue-50);
+  --blue-100: var(--color-blue-100);
+  --blue-200: var(--color-blue-200);
+  --blue-300: var(--color-blue-300);
+  --blue-400: var(--color-blue-400);
+  --blue-500: var(--color-blue-500);
+  --blue-600: var(--color-blue-600);
+  --blue-700: var(--color-blue-700);
+  --blue-800: var(--color-blue-800);
+  --blue-900: var(--color-blue-900);
+
+  /* Grayscale (styleguide uses different scale than webapp's gray) */
+  --gray-100: var(--color-grayscale-100);
+  --gray-200: var(--color-grayscale-200);
+  --gray-300: var(--color-grayscale-300);
+  --gray-400: var(--color-grayscale-400);
+  --gray-500: var(--color-grayscale-500);
+  --gray-600: var(--color-grayscale-600);
+  --gray-700: var(--color-grayscale-700);
+  --gray-800: var(--color-grayscale-800);
+  --gray-900: var(--color-grayscale-900);
+
+  /* Indigo scale (styleguide uses grayscale, webapp uses custom indigo) */
+  --indigo-50: var(--color-grayscale-50);
+  --indigo-100: var(--color-grayscale-100);
+  --indigo-200: var(--color-grayscale-200);
+  --indigo-300: var(--color-grayscale-300);
+  --indigo-400: var(--color-grayscale-400);
+  --indigo-500: var(--color-grayscale-500);
+  --indigo-600: var(--color-grayscale-600);
+  --indigo-700: var(--color-grayscale-700);
+  --indigo-800: var(--color-grayscale-800);
+  --indigo-900: var(--color-grayscale-900);
+
+  /*
+   * ==========================================================================
+   * WARNING COLOR SCALE (override webapp's orange with Figma warning)
+   * ==========================================================================
+   */
+  --orange-50: var(--color-warning-50);
+  --orange-100: var(--color-warning-100);
+  --orange-200: var(--color-warning-200);
+  --orange-300: var(--color-warning-300);
+  --orange-400: var(--color-warning-400);
+  --orange-500: var(--color-warning-500);
+  --orange-600: var(--color-warning-600);
+  --orange-700: var(--color-warning-700);
+  --orange-800: var(--color-warning-800);
+  --orange-900: var(--color-warning-900);
+
+  /*
+   * ==========================================================================
+   * CHART/DATA COLORS (for styleguide charts and visualizations)
+   * ==========================================================================
+   */
+  --chart-1: var(--data-chart-1);
+  --chart-2: var(--data-chart-2);
+  --chart-3: var(--data-chart-3);
+  --chart-4: var(--data-chart-4);
+  --chart-5: var(--data-chart-5);
+
+  /*
+   * ==========================================================================
+   * FOCUS/RING COLORS (for accessibility and interactive states)
+   * ==========================================================================
+   */
+  --focus-ring: var(--base-focus-ring);
+  --ring-offset: var(--base-ring-offset);
+}
+
+/*
+ * =============================================================================
+ * DARK MODE SCOPED VARIABLES
+ * =============================================================================
+ */
+.dark [data-slot],
+.dark [data-slot] *,
+[data-slot].dark,
+[data-slot].dark * {
+  /* Primary */
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--brand-text-inverse);
+  
+  /* Background/Foreground */
+  --background: var(--brand-surface-inverse);
+  --foreground: var(--brand-text-inverse);
+  
+  /* Border & Input */
+  --border: var(--brand-border-inverse);
+  --input: var(--brand-surface-inverse);
+  
+  /* Muted */
+  --muted: var(--brand-surface-inverse);
+  --muted-foreground: var(--brand-text-tertiary);
+  
+  /* Card */
+  --card: var(--brand-surface-inverse);
+  --card-foreground: var(--brand-text-inverse);
+  
+  /* Popover */
+  --popover: var(--brand-surface-inverse);
+  --popover-foreground: var(--brand-text-inverse);
+}

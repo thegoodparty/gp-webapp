@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Input, Calendar } from 'goodparty-styleguide'
+import { Input, Calendar } from '@styleguide'
 import { DayPickerProps } from 'react-day-picker'
 import { parse, format, isValid } from 'date-fns'
 
