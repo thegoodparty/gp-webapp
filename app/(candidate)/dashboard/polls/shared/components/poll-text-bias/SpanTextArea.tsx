@@ -15,7 +15,7 @@ interface SpanTextAreaProps {
   showLoadingDots?: boolean
   isReadOnly?: boolean
   hidePlaceholder?: boolean
-  hasError?: boolean
+  hasWarning?: boolean
   loadingDots?: React.ReactNode
   minHeight?: string
   className?: string
@@ -34,7 +34,7 @@ export default function SpanTextArea({
   showLoadingDots = false,
   isReadOnly = false,
   hidePlaceholder = false,
-  hasError = false,
+  hasWarning = false,
   loadingDots,
   minHeight = '150px',
   className = '',
@@ -80,10 +80,10 @@ export default function SpanTextArea({
         focusRing: 'focus:ring-2 focus:ring-gray-300',
       }
     }
-    if (hasError) {
+    if (hasWarning) {
       return {
-        border: 'border-red-300',
-        focusRing: 'focus:ring-2 focus:ring-red-300',
+        border: 'border-warning-light',
+        focusRing: 'focus:ring-2 focus:ring-warning-light',
       }
     }
     if (isFocused) {
