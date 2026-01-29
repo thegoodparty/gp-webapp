@@ -36,6 +36,7 @@ const options: AgentOptions = {
       sampling_rate: 100.0,
       error_sampling_rate: 100.0,
       mask_all_inputs: true,
+      mask_text_selector: '',
       collect_fonts: true,
       inline_images: false,
       fix_stylesheets: true,
