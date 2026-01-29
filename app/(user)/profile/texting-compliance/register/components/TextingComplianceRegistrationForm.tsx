@@ -1,6 +1,11 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
 import { FilingLinkInfoIcon } from 'app/(user)/profile/texting-compliance/register/components/FilingLinkInfoIcon'
+import {
+  FecCommitteeIdInput,
+  isValidFecCommitteeId,
+  getFecCommitteeIdValidation,
+} from 'app/(user)/profile/texting-compliance/register/components/FecCommitteeIdInput'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
@@ -13,7 +18,7 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
-import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import { TextingComplianceSubmitButton, type ValidationField } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
@@ -35,7 +40,31 @@ const getStringValue = (value: FormValue): string =>
 const validateAddress = (address: AddressValue | null): boolean =>
   Boolean(address?.formatted_address)
 
-export const validateRegistrationForm = (data: FormDataState) => {
+const validateFECUrl = (url: string): boolean => {
+  if (!url) return false
+  // Must be from fec.gov AND include a path (not just the domain)
+  return /fec\.gov/i.test(url) && urlIncludesPath(url)
+}
+
+type ValidationResult = {
+  validations: Record<ValidationField, boolean>
+  isValid: boolean
+}
+
+const getFailingFields = (
+  validations: Record<ValidationField, boolean>
+): ValidationField[] => {
+  const fields: ValidationField[] = []
+  let key: ValidationField
+  for (key in validations) {
+    if (!validations[key]) {
+      fields.push(key)
+    }
+  }
+  return fields
+}
+
+export const validateRegistrationForm = (data: FormDataState): ValidationResult => {
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -45,7 +74,10 @@ export const validateRegistrationForm = (data: FormDataState) => {
     address,
     website,
     email,
+    fecCommitteeId,
+    committeeType,
   } = data
+
   const electionFilingLinkValue = getStringValue(electionFilingLink)
   const campaignCommitteeNameValue = getStringValue(campaignCommitteeName)
   const officeLevelValue = getStringValue(officeLevel)
@@ -54,14 +86,16 @@ export const validateRegistrationForm = (data: FormDataState) => {
   const addressValue = isAddressValue(address) ? address : null
   const websiteValue = getStringValue(website)
   const emailValue = getStringValue(email)
-  const validations = {
+  const fecCommitteeIdValue = getStringValue(fecCommitteeId)
+  const committeeTypeValue = getStringValue(committeeType)
+
+  const baseValidations: Record<ValidationField, boolean> = {
     electionFilingLink:
       isURL(electionFilingLinkValue) &&
       urlIncludesPath(electionFilingLinkValue),
     campaignCommitteeName: isFilled(campaignCommitteeNameValue),
-    // TODO(ENG-6192): Add federal and actually send the officeLevel to the backend.
-    officeLevel: officeLevelValue === 'state' || officeLevelValue === 'local',
-    ein: isValidEIN(einValue),
+    officeLevel: ['federal', 'state', 'local'].includes(officeLevelValue),
+    ein: Boolean(isValidEIN(einValue)),
     phone: isMobilePhone(phoneValue, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
@@ -70,10 +104,29 @@ export const validateRegistrationForm = (data: FormDataState) => {
     // Website must exist (official purchased domain)
     website: isFilled(websiteValue) && isURL(websiteValue),
     email: isEmail(emailValue),
+    fecCommitteeId: true, // Not required for non-federal
+    committeeType: true, // Not required for non-federal
   }
+
+  // Add federal-specific validations
+  if (officeLevelValue === 'federal') {
+    const validCommitteeTypes = ['HOUSE', 'SENATE', 'PRESIDENTIAL']
+    const federalValidations = {
+      ...baseValidations,
+      electionFilingLink: validateFECUrl(electionFilingLinkValue),
+      fecCommitteeId: isValidFecCommitteeId(fecCommitteeIdValue),
+      committeeType: validCommitteeTypes.includes(committeeTypeValue),
+    }
+
+    return {
+      validations: federalValidations,
+      isValid: Object.values(federalValidations).every(Boolean),
+    }
+  }
+
   return {
-    validations,
-    isValid: Object.values(validations).every(Boolean),
+    validations: baseValidations,
+    isValid: Object.values(baseValidations).every(Boolean),
   }
 }
 
@@ -84,7 +137,7 @@ interface TextingComplianceRegistrationFormProps {
 }
 
 const TextingComplianceRegistrationForm = ({
-  onSubmit = () => {},
+  onSubmit = () => { },
   loading = false,
   hasSubmissionError = false,
 }: TextingComplianceRegistrationFormProps): React.JSX.Element => {
@@ -99,7 +152,8 @@ const TextingComplianceRegistrationForm = ({
     email,
   } = formData
   const formValidation = validateRegistrationForm(formData)
-  const { isValid } = formValidation
+  const { isValid, validations } = formValidation
+  const failingFields = getFailingFields(validations)
 
   const addressValue = isAddressValue(address) ? address : null
   const [addressInputValue, setAddressInputValue] = useState<string | undefined>(
@@ -114,11 +168,25 @@ const TextingComplianceRegistrationForm = ({
     handleChange({ ein: value })
   }
 
+  const [validFecCommitteeId, setValidFecCommitteeId] = useState(
+    getFecCommitteeIdValidation(getStringValue(formData.fecCommitteeId)),
+  )
+  const handleFecCommitteeIdChange = (value: string) => {
+    setValidFecCommitteeId(getFecCommitteeIdValidation(value))
+    handleChange({ fecCommitteeId: value })
+  }
+
   const handleOnSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
       source: 'compliance_flow'
     })
-    return onSubmit(formData)
+    // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
+    // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
+    const { fecCommitteeId, committeeType, ...baseFormData } = formData
+    const submitData = officeLevel === 'federal'
+      ? formData
+      : { ...baseFormData, committeeType: 'CANDIDATE' }
+    return onSubmit(submitData)
   }
 
   const handleAddressOnChange = (value: string) => {
@@ -136,6 +204,7 @@ const TextingComplianceRegistrationForm = ({
             value={officeLevel || ''}
             onChange={(e) => handleChange({ officeLevel: e.target.value })}
           >
+            <MenuItem value="federal">Federal</MenuItem>
             <MenuItem value="state">State</MenuItem>
             <MenuItem value="local">Local</MenuItem>
           </Select>
@@ -158,6 +227,27 @@ const TextingComplianceRegistrationForm = ({
             label: 'EIN *',
           }}
         />
+        {officeLevel === 'federal' && (
+          <>
+            <FecCommitteeIdInput
+              value={getStringValue(formData.fecCommitteeId)}
+              validated={validFecCommitteeId}
+              onChange={handleFecCommitteeIdChange}
+            />
+            <FormControl fullWidth required variant="outlined">
+              <InputLabel>Committee Type</InputLabel>
+              <Select
+                label="Committee Type"
+                value={formData.committeeType || ''}
+                onChange={(e) => handleChange({ committeeType: e.target.value })}
+              >
+                <MenuItem value="HOUSE">House</MenuItem>
+                <MenuItem value="SENATE">Senate</MenuItem>
+                <MenuItem value="PRESIDENTIAL">Presidential</MenuItem>
+              </Select>
+            </FormControl>
+          </>
+        )}
         <StyledAlert severity="warning" className="mb-6">
           <Body2>
             A PIN is required to verify your identity. <br />
@@ -209,9 +299,11 @@ const TextingComplianceRegistrationForm = ({
             loading,
             isValid,
             hasSubmissionError,
+            failingFields,
+            officeLevel: getStringValue(officeLevel),
           }}
         />
-        
+
       </TextingComplianceFooter>
     </>
   )
