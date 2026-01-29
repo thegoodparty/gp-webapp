@@ -110,7 +110,7 @@ export const validateRegistrationForm = (data: FormDataState): ValidationResult 
 
   // Add federal-specific validations
   if (officeLevelValue === 'federal') {
-    const validCommitteeTypes = ['H', 'S', 'P']
+    const validCommitteeTypes = ['HOUSE', 'SENATE', 'PRESIDENTIAL']
     const federalValidations = {
       ...baseValidations,
       electionFilingLink: validateFECUrl(electionFilingLinkValue),
@@ -180,12 +180,12 @@ const TextingComplianceRegistrationForm = ({
     trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
       source: 'compliance_flow'
     })
-    // Federal: include fecCommitteeId and committeeType (H/S/P) as entered
-    // Non-federal: exclude fecCommitteeId, set committeeType to 'CA' (Candidate)
+    // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
+    // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId, committeeType, ...baseFormData } = formData
     const submitData = officeLevel === 'federal'
       ? formData
-      : { ...baseFormData, committeeType: 'CA' }
+      : { ...baseFormData, committeeType: 'CANDIDATE' }
     return onSubmit(submitData)
   }
 
@@ -241,9 +241,9 @@ const TextingComplianceRegistrationForm = ({
                 value={formData.committeeType || ''}
                 onChange={(e) => handleChange({ committeeType: e.target.value })}
               >
-                <MenuItem value="H">House</MenuItem>
-                <MenuItem value="S">Senate</MenuItem>
-                <MenuItem value="P">Presidential</MenuItem>
+                <MenuItem value="HOUSE">House</MenuItem>
+                <MenuItem value="SENATE">Senate</MenuItem>
+                <MenuItem value="PRESIDENTIAL">Presidential</MenuItem>
               </Select>
             </FormControl>
           </>
