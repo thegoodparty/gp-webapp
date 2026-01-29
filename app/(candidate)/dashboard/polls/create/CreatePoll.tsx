@@ -330,22 +330,8 @@ const DetailsForm: React.FC<{
                 return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
               }
 
-              const state = biasAnalysisStateRef.current
-              if (!state) {
-                return true
-              }
-              if (state.hasServerError) {
-                return 'Unable to analyze for bias, please try again later.'
-              }
-              if (state.hasBias && state.hasGrammar) {
-                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasBias) {
-                return 'Biased language detected. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasGrammar) {
-                return 'Grammar issues found. Please use "Optimize message" to correct it.'
-              }
+              // Bias detection is non-blocking (ENG-6403)
+              // Visual feedback and warning message still shown, but user can proceed
               return true
             },
           }}
@@ -361,6 +347,20 @@ const DetailsForm: React.FC<{
         {errors.question ? (
           <p className="mt-1 font-normal text-sm text-red-500">
             {errors.question.message}
+          </p>
+        ) : biasAnalysisState?.hasBias && biasAnalysisState?.hasGrammar ? (
+          <p className="mt-1.5 font-normal text-sm text-warning">
+            Biased language detected. Grammar issues found. Please use
+            "Optimize message" to correct it.
+          </p>
+        ) : biasAnalysisState?.hasBias ? (
+          <p className="mt-1.5 font-normal text-sm text-warning">
+            Biased language detected. Please use "Optimize message" to correct
+            it.
+          </p>
+        ) : biasAnalysisState?.hasGrammar ? (
+          <p className="mt-1.5 font-normal text-sm text-warning">
+            Grammar issues found. Please use "Optimize message" to correct it.
           </p>
         ) : (
           <p className="mt-1.5 font-normal text-sm text-muted-foreground">

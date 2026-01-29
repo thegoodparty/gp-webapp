@@ -82,8 +82,8 @@ export default function SpanTextArea({
     }
     if (hasError) {
       return {
-        border: 'border-red-300',
-        focusRing: 'focus:ring-2 focus:ring-red-300',
+        border: 'border-warning-light',
+        focusRing: 'focus:ring-2 focus:ring-warning-light',
       }
     }
     if (isFocused) {
