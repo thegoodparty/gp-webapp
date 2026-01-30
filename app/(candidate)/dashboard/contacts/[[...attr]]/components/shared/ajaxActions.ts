@@ -13,10 +13,10 @@ export interface SegmentResponse {
   [key: string]: unknown
 }
 
-interface FetchContactsParams {
-  page?: number
-  resultsPerPage?: number
-  segment?: string
+export interface FetchContactsParams {
+  page: number
+  resultsPerPage: number
+  segment: string
   search?: string
 }
 
