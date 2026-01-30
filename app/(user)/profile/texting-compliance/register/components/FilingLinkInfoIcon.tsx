@@ -40,6 +40,12 @@ export const FilingLinkInfoIcon = () => {
           <br />
           Search term example: “Palm Bay, Florida Supervisor of Elections
           Candidate List”
+          <br />
+          <br />
+          <strong>For federal campaigns:</strong> The website must be from{' '}
+          <strong>fec.gov</strong> and point to your specific filing (e.g.{' '}
+          https://fec.gov/data/committee/C00123456
+          ).
         </Body2>
         <Button
           {...{

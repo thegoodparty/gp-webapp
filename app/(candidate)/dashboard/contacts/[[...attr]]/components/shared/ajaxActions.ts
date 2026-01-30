@@ -17,6 +17,67 @@ interface FetchContactsParams {
   page?: number
   resultsPerPage?: number
   segment?: string
+  search?: string
+}
+
+export type Person = {
+  id: string
+  lalVoterId: string
+  firstName: string | null
+  middleName: string | null
+  lastName: string | null
+  nameSuffix: string | null
+  age: number | null
+  state: string
+  address: {
+    line1: string | null
+    line2: string | null
+    city: string | null
+    state: string | null
+    zip: string | null
+    zipPlus4: string | null
+    latitude: string | null
+    longitude: string | null
+  }
+  cellPhone: string | null
+  landline: string | null
+  gender: 'Male' | 'Female' | null
+  politicalParty: 'Independent' | 'Democratic' | 'Republican' | 'Other'
+  registeredVoter: 'Yes' | 'No'
+  estimatedIncomeAmount: number | null
+  voterStatus:
+    | 'Super'
+    | 'Likely'
+    | 'Unreliable'
+    | 'Unlikely'
+    | 'First Time'
+    | null
+  maritalStatus:
+    | 'Likely Married'
+    | 'Likely Single'
+    | 'Married'
+    | 'Single'
+    | null
+  hasChildrenUnder18: 'Yes' | 'No' | null
+  veteranStatus: 'Yes' | null
+  homeowner: 'Yes' | 'Likely' | 'No' | null
+  businessOwner: 'Yes' | null
+  levelOfEducation:
+    | 'None'
+    | 'High School Diploma'
+    | 'Technical School'
+    | 'Some College'
+    | 'College Degree'
+    | 'Graduate Degree'
+    | null
+  ethnicityGroup:
+    | 'Asian'
+    | 'European'
+    | 'Hispanic'
+    | 'African American'
+    | 'Other'
+    | null
+  language: 'English' | 'Spanish' | 'Other'
 }
 
 export interface ListContactsResponse {
@@ -90,11 +151,15 @@ export async function fetchContacts({
   page,
   resultsPerPage,
   segment,
-}: FetchContactsParams = {}): Promise<ListContactsResponse | null> {
-  const payload = {
+  search,
+}: FetchContactsParams): Promise<ListContactsResponse | null> {
+  const payload: Record<string, unknown> = {
     page: page || 1,
     resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
     segment: segment || ALL_SEGMENTS,
+  }
+  if (search) {
+    payload.search = search
   }
   const response = await clientFetch<ListContactsResponse>(
     apiRoutes.contacts.list,
@@ -104,51 +169,6 @@ export async function fetchContacts({
     return response.data || null
   } else {
     console.error('Failed to fetch contacts', response)
-    return null
-  }
-}
-
-interface SearchContactsParams {
-  page?: number
-  resultsPerPage?: number
-  query?: string
-  name?: string
-  phone?: string
-}
-
-export async function searchContacts({
-  page,
-  resultsPerPage,
-  query,
-  name,
-  phone,
-}: SearchContactsParams = {}): Promise<ListContactsResponse | null> {
-  const payload: Record<string, unknown> = {
-    page: page || 1,
-    resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
-  }
-
-  if (phone) {
-    payload.phone = phone
-  } else if (name) {
-    payload.name = name
-  } else if (query) {
-    const isNumeric = /^\d+$/.test(query.trim())
-    if (isNumeric) {
-      payload.phone = query.trim()
-    } else {
-      payload.name = query.trim()
-    }
-  }
-
-  const response = await clientFetch<ListContactsResponse>(
-    apiRoutes.contacts.search,
-    payload,
-  )
-  if (response.ok) {
-    return response.data || null
-  } else {
-    console.error('Failed to search contacts', response)
     return null
   }
 }
@@ -163,7 +183,8 @@ export async function fetchPerson(
   if (response.ok) {
     return response.data || null
   } else {
-    console.error('Failed to fetch person', response)
+    console.error('Failed to fetch person')
+    console.error(response)
     return null
   }
 }

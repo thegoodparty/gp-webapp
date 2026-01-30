@@ -15,6 +15,8 @@ interface RegistrationFormData {
   address: { formatted_address: string; place_id: string }
   website: string
   email: string
+  fecCommitteeId?: string
+  committeeType?: string
 }
 import { FormDataProvider, FormDataState } from '@shared/hooks/useFormData'
 import { useState } from 'react'
@@ -41,9 +43,9 @@ const isAddressValue = (
 ): value is RegistrationFormData['address'] =>
   Boolean(
     value &&
-      typeof value === 'object' &&
-      'formatted_address' in value &&
-      'place_id' in value,
+    typeof value === 'object' &&
+    'formatted_address' in value &&
+    'place_id' in value,
   )
 
 const toRegistrationFormData = (formData: FormDataState): RegistrationFormData => ({
@@ -57,6 +59,8 @@ const toRegistrationFormData = (formData: FormDataState): RegistrationFormData =
     : { formatted_address: '', place_id: '' },
   website: String(formData.website || ''),
   email: String(formData.email || ''),
+  fecCommitteeId: formData.fecCommitteeId ? String(formData.fecCommitteeId) : undefined,
+  committeeType: formData.committeeType ? String(formData.committeeType) : undefined,
 })
 
 const createTcrCompliance = async (formData: RegistrationFormData) => {
@@ -153,7 +157,7 @@ const TextingComplianceRegisterPage = ({
 
         <FormDataProvider
           initialState={initialFormState}
-      validator={validateRegistrationFormTyped}
+          validator={validateRegistrationFormTyped}
         >
           <TextingComplianceRegistrationForm
             {...{
