@@ -444,8 +444,6 @@ export const EVENTS = {
    *
    * HubSpot workflows listen for these events via the `pe21589597_segment___all_track`
    * custom event with `Name` property matching these exact strings.
-   *
-   * See: gp-api/src/vendors/segment/__tests__/segment-hubspot-events.test.ts
    */
   Outreach: {
     P2PCompliance: {
