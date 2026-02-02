@@ -24,10 +24,11 @@ export function validatePollQuestion(value: string): string | true {
 export function getWarningMessage(
   biasAnalysisState: BiasAnalysisState | null
 ): string | null {
-  if (!biasAnalysisState?.hasBeenChecked) return null
+  if (!biasAnalysisState) return null
   if (biasAnalysisState.hasServerError) {
     return 'Unable to check for bias. You can still proceed or try again later.'
   }
+  if (!biasAnalysisState.hasBeenChecked) return null
   const issues = []
   if (biasAnalysisState.hasBias) issues.push('Biased language detected')
   if (biasAnalysisState.hasGrammar) issues.push('Grammar issues found')

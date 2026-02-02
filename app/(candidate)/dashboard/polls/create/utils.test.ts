@@ -110,4 +110,15 @@ describe('getWarningMessage', () => {
       })
     ).toBe('Unable to check for bias. You can still proceed or try again later.')
   })
+
+  it('returns server error message even when hasBeenChecked is false (API failure leaves biasAnalysis null)', () => {
+    expect(
+      getWarningMessage({
+        hasBias: false,
+        hasGrammar: false,
+        hasServerError: true,
+        hasBeenChecked: false,
+      })
+    ).toBe('Unable to check for bias. You can still proceed or try again later.')
+  })
 })
