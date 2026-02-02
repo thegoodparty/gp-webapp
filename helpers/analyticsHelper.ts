@@ -430,11 +430,30 @@ export const EVENTS = {
       CancelDelete: 'Settings - Delete Account: Cancel Delete',
     },
   },
+  /**
+   * ⚠️  HUBSPOT INTEGRATION WARNING - USE CAUTION WHEN EDITING EVENT NAMES ⚠️
+   *
+   * These event names are used by HubSpot workflows to track 10DLC compliance status.
+   * Changing these names will break the Segment → HubSpot integration and cause users
+   * to receive incorrect email sequences.
+   *
+   * If you need to change an event name:
+   * 1. Update the corresponding HubSpot workflow trigger to match
+   * 2. Test the full flow: App → Segment → HubSpot → Workflow triggers
+   * 3. Verify the "10 DLC Compliance Status" field updates correctly
+   *
+   * HubSpot workflows listen for these events via the `pe21589597_segment___all_track`
+   * custom event with `Name` property matching these exact strings.
+   */
   Outreach: {
     P2PCompliance: {
       ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
+      // ⚠️  HUBSPOT INTEGRATION WARNING - DO NOT MODIFY - SEE ABOVE ⚠️
+      // Used in: https://app.hubspot.com/workflows/21589597/platform/flow/1739292528/edit
       ComplianceFormSubmitted:
         'Voter Outreach - 10DLC Compliance Form Submitted',
+      // ⚠️  HUBSPOT INTEGRATION WARNING - DO NOT MODIFY - SEE ABOVE ⚠️
+      // Used in: https://app.hubspot.com/workflows/21589597/platform/flow/1739202168/edit/triggers/event
       CvPinFormSubmitted: 'Voter Outreach - 10DLC Compliance PIN Submitted',
     },
     DlcCompliance: {
@@ -459,11 +478,15 @@ export const EVENTS = {
   CandidateWebsite: {
     Started: 'Candidate Website - Started',
     Continued: 'Candidate Website - Continued',
+    // ⚠️  HUBSPOT INTEGRATION WARNING - DO NOT MODIFY - SEE ABOVE ⚠️
+    // Used in: https://app.hubspot.com/workflows/21589597/platform/flow/1739355978/edit
     Published: 'Candidate Website - Published',
     Unpublished: 'Candidate Website - Unpublished',
     Edited: 'Candidate Website - Edited',
     StartedDomainSelection: 'Candidate Website - Started domain selection',
     SelectedDomain: 'Candidate Website - Selected domain',
+    // ⚠️  HUBSPOT INTEGRATION WARNING - DO NOT MODIFY - SEE ABOVE ⚠️
+    // Used in: https://app.hubspot.com/workflows/21589597/platform/flow/1739356013/edit
     PurchasedDomain: 'Candidate Website - Purchased domain',
   },
   Candidacy: {

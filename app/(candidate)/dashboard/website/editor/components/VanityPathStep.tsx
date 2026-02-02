@@ -40,7 +40,7 @@ export default function VanityPathStep({
     timeoutRef.current = setTimeout(async () => {
       const resp = await validateVanityPath(value)
       setLoading(false)
-      if (resp.ok && resp.data.valid) {
+      if (resp.ok && resp.data.available) {
         setValidated(true)
         validateCallback(true)
       } else {
