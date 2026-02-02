@@ -23,9 +23,7 @@ export default function ConfidenceAlert() {
   // this to calculate the recommended poll size, and this _can_ be a slow query.
   useEffect(() => {
     if (lowConfidence) {
-      queryClient.prefetchQuery(
-        districtStatsQueryOptions({ hasCellPhone: 'true' }),
-      )
+      queryClient.prefetchQuery(districtStatsQueryOptions)
     }
   }, [lowConfidence])
 

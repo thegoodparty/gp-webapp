@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
 
 export default function InsightsStep() {
-  const query = useQuery(districtStatsQueryOptions())
+  const query = useQuery(districtStatsQueryOptions)
 
   const isLoading = query.isPending
   const error = query.error?.message
