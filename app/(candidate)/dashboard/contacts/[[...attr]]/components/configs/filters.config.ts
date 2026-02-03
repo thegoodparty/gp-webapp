@@ -54,7 +54,6 @@ const filterSections = [
           { key: 'languageEnglish', label: 'English' },
           { key: 'languageSpanish', label: 'Spanish' },
           { key: 'languageOther', label: 'Other' },
-          { key: 'languageUnknown', label: 'Unknown' },
         ],
       },
     ],
