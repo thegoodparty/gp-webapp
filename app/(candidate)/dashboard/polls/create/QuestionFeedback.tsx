@@ -14,7 +14,7 @@ export function QuestionFeedback({ warningMessage, errorMessage }: QuestionFeedb
 
   return (
     <p
-      className={`mt-1 font-normal text-sm ${warningMessage ? 'text-warning' : 'text-muted-foreground'}`}
+      className={`mt-1 font-normal text-sm ${warningMessage ? 'text-warning-dark' : 'text-muted-foreground'}`}
     >
       {warningMessage ||
         'We recommend checking your message for clarity and bias using optimize message.'}

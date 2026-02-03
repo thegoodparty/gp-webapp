@@ -65,7 +65,7 @@ export default function PollTextInput({
           </div>
         ),
         underlineClassName:
-          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning text-warning',
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning-dark text-warning-dark',
       })
     })
 
@@ -87,7 +87,7 @@ export default function PollTextInput({
           </div>
         ),
         underlineClassName:
-          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning text-warning',
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning-dark text-warning-dark',
       })
     })
 
