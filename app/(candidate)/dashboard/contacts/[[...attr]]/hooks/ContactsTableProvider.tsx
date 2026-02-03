@@ -16,19 +16,16 @@ import {
 import { useQuery, queryOptions, useQueryClient } from '@tanstack/react-query'
 import {
   fetchContacts,
+  FetchContactsParams,
   fetchCustomSegments,
   fetchPerson,
+  Person,
   type ListContactsResponse,
   type SegmentResponse,
 } from '../components/shared/ajaxActions'
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
-
-interface Person {
-  id: number
-  [key: string]: unknown
-}
 
 const createEmptyPagination = (
   currentPage: number,
@@ -106,6 +103,20 @@ interface ContactsTableProviderProps {
   children: ReactNode
 }
 
+const contactTableQueryOptions = (params: FetchContactsParams) =>
+  queryOptions({
+    queryKey: ['contacts', params],
+    queryFn: async () => {
+      const emptyResponse = {
+        people: [],
+        pagination: createEmptyPagination(params.page, params.resultsPerPage),
+      }
+      const data = await fetchContacts(params)
+      return data || emptyResponse
+    },
+    refetchOnMount: false,
+  })
+
 export const ContactsTableProvider = ({
   children,
 }: ContactsTableProviderProps) => {
@@ -144,31 +155,24 @@ export const ContactsTableProvider = ({
     [params],
   )
 
-  const contactsQuery = useQuery({
-    queryKey: [
-      'contacts',
-      {
-        page: currentPage,
-        pageSize,
-        segment: currentSegment,
-        query: searchTerm,
-      },
-    ],
-    queryFn: async () => {
-      const emptyResponse = {
-        people: [],
-        pagination: createEmptyPagination(currentPage, pageSize),
-      }
-      const data = await fetchContacts({
-        page: currentPage,
-        resultsPerPage: pageSize,
-        segment: currentSegment,
-        search: searchTerm,
-      })
-      return data || emptyResponse
-    },
-    refetchOnMount: false,
-  })
+  const contactsQuery = useQuery(
+    contactTableQueryOptions({
+      page: currentPage,
+      resultsPerPage: pageSize,
+      segment: currentSegment,
+      search: searchTerm,
+    }),
+  )
+
+  // Prefetch the next page
+  useQuery(
+    contactTableQueryOptions({
+      page: currentPage + 1,
+      resultsPerPage: pageSize,
+      segment: currentSegment,
+      search: searchTerm,
+    }),
+  )
 
   const personQuery = useQuery({
     queryKey: ['person', currentlySelectedPersonId],
