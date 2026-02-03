@@ -43,16 +43,16 @@ const getValidationMessage = (field: ValidationField, officeLevel?: string): str
     electionFilingLink:
       officeLevel === 'federal'
         ? 'Must be from FEC.gov (e.g., https://fec.gov/data/committee/C00123456)'
-        : 'Please enter a valid URL with a path',
-    campaignCommitteeName: 'Required',
-    officeLevel: 'Please select an option',
-    ein: 'Must be valid format (XX-XXXXXXX)',
-    phone: 'Must be a valid US phone number',
-    address: 'Please select a valid address',
-    website: 'Must be a valid URL',
-    email: 'Must be a valid email address',
+        : 'Enter a valid URL with a path (e.g., https://example.com/candidates)',
+    campaignCommitteeName: 'Your official committee name (e.g., "Smith for Council")',
+    officeLevel: 'Select an option',
+    ein: 'Valid format (XX-XXXXXXX)',
+    phone: 'Valid US phone number as it appears on your election filing',
+    address: 'Select a valid address as it appears on your election filing',
+    website: 'Valid URL',
+    email: 'Valid email address as it appears on your election filing',
     fecCommitteeId: 'Must be "C" followed by 8 digits (e.g., C00123456)',
-    committeeType: 'Please select House, Senate, or Presidential',
+    committeeType: 'Select House, Senate, or Presidential',
   }
   return messages[field]
 }
