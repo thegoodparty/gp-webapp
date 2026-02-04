@@ -21,7 +21,6 @@ import {
   trimCustomSegmentName,
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
 import { LuPencil } from 'react-icons/lu'
@@ -42,8 +41,8 @@ export default function SegmentSection() {
     currentSegment,
     selectSegment,
     refreshCustomSegments,
+    canUseProFeatures,
   } = useContactsTable()
-  const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
   const [sheetState, setSheetState] = useState<SheetState>({
     open: false,
@@ -68,7 +67,7 @@ export default function SegmentSection() {
   }
 
   const handleCreateSegment = () => {
-    if (!campaign?.isPro) {
+    if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }
@@ -80,7 +79,7 @@ export default function SegmentSection() {
   }
 
   const handleSelect = (selectedSegment: string) => {
-    if (!campaign?.isPro) {
+    if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }
@@ -158,13 +157,14 @@ export default function SegmentSection() {
         onClick={handleCreateSegment}
         className="font-normal text-sm px-4 w-full mt-4 md:mt-0 mb-4 md:mb-0 md:w-auto md:ml-4"
       >
-        {!campaign?.isPro && <Lock />}
+        {!canUseProFeatures && <Lock />}
         Create list
       </Button>
 
       {isCustom && (
         <>
           <IconButton
+            data-testid="edit-list-button"
             variant="outline"
             onClick={handleEdit}
             className="ml-4 font-normal hidden md:flex"

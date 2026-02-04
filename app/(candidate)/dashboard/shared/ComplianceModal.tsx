@@ -46,9 +46,9 @@ export function ComplianceModal({
       ctaHref = 'mailto:support@goodparty.org'
       break
     default:
-      title = 'Complete texting registration'
+      title = 'Action required: register for texting compliance'
       description =
-        'To send text messages to voters, you need to complete 10DLC registration. This ensures compliance with carrier requirements and improves message delivery.'
+        "Federal requirements mean you must register before sending your first text. You'll need your Campaign EIN, your official filing link, and an active website purchased through GoodParty.org website. Don't have a site yet? You can build and launch one right from your dashboard before getting started."
       cta = 'Start Registration'
       ctaHref = '/profile#texting-compliance'
       break
