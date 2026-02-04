@@ -17,10 +17,11 @@ import { LuDownload } from 'react-icons/lu'
 export default function Download() {
   const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
-  const { customSegments, currentSegment } = useContactsTable()
+  const { customSegments, currentSegment, canUseProFeatures } =
+    useContactsTable()
 
   const handleDownload = async (): Promise<void> => {
-    if (!campaign?.isPro) {
+    if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }
@@ -97,7 +98,7 @@ export default function Download() {
         onClick={handleDownload}
         className="hidden md:flex"
       >
-        {!campaign?.isPro ? <Lock /> : <LuDownload />}
+        {!canUseProFeatures ? <Lock /> : <LuDownload />}
       </IconButton>
     </>
   )

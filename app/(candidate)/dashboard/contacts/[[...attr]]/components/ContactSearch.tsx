@@ -3,14 +3,12 @@
 import { Input } from 'goodparty-styleguide'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useShowContactProModal } from '../hooks/ContactProModal'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { LuSearch } from 'react-icons/lu'
 
 export const ContactSearch = () => {
-  const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
-  const { searchTerm, searchContacts } = useContactsTable()
+  const { searchTerm, searchContacts, canUseProFeatures } = useContactsTable()
 
   const [searchText, setSearchText] = useState<string>(searchTerm)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -20,12 +18,12 @@ export const ContactSearch = () => {
   }, [searchTerm])
 
   const performSearch = useCallback(() => {
-    if (!campaign?.isPro) {
+    if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }
     searchContacts(searchText)
-  }, [campaign?.isPro, searchText, searchContacts, showProUpgradeModal])
+  }, [canUseProFeatures, searchText, searchContacts, showProUpgradeModal])
 
   useEffect(() => {
     if (timeoutRef.current) {
