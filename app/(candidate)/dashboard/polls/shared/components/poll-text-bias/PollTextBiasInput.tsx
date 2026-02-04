@@ -261,10 +261,8 @@ export default function PollTextBiasInput({
   ])
 
   return (
-    <div className={className}>
-      <div className="relative">
-        <div className="relative">
-          <PollTextInput
+    <div className={`relative ${className}`}>
+      <PollTextInput
             value={displayValue}
             onChange={isProcessing ? () => {} : onChange}
             placeholder={placeholder}
@@ -278,43 +276,41 @@ export default function PollTextBiasInput({
             showLoadingDots={showLoadingState}
             isReadOnly={isProcessing}
             hidePlaceholder={isProcessing}
-          />
-          <div className="absolute bottom-3 right-3 z-10">
-            <Button
-              variant="secondary"
-              className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 disabled:opacity-100 font-normal ${
-                hasIssues
-                  ? 'text-red-500 bg-red-50 hover:!bg-red-100 active:!bg-red-50'
-                  : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
-              }`}
-              size="small"
-              onMouseDown={() => {
-                if (
-                  !biasAnalysis &&
-                  meetsLengthThreshold &&
-                  !isAnalyzing &&
-                  !isCheckingForBias
-                ) {
-                  shouldOptimizeAfterAnalysisRef.current = true
-                }
-              }}
-              onClick={handleOptimize}
-              disabled={!canOptimize}
-            >
-              {isProcessing ? (
-                <>
-                  <MdRotateRight className="size-4 animate-spin" />
-                  <span>Working...</span>
-                </>
-              ) : (
-                <>
-                  <MdAutoAwesome className="size-4" />
-                  <span>Optimize message</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
+        />
+      <div className="absolute bottom-3 right-3 z-10">
+        <Button
+          variant="secondary"
+          className={`border-0 shadow-sm disabled:text-gray-500 disabled:bg-gray-100 disabled:opacity-100 font-normal ${
+            hasIssues
+              ? 'text-warning-dark bg-warning-background hover:!bg-orange-100 active:!bg-warning-background'
+              : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
+          }`}
+          size="small"
+          onMouseDown={() => {
+            if (
+              !biasAnalysis &&
+              meetsLengthThreshold &&
+              !isAnalyzing &&
+              !isCheckingForBias
+            ) {
+              shouldOptimizeAfterAnalysisRef.current = true
+            }
+          }}
+          onClick={handleOptimize}
+          disabled={!canOptimize}
+        >
+          {isProcessing ? (
+            <>
+              <MdRotateRight className="size-4 animate-spin" />
+              <span>Working...</span>
+            </>
+          ) : (
+            <>
+              <MdAutoAwesome className="size-4" />
+              <span>Optimize message</span>
+            </>
+          )}
+        </Button>
       </div>
     </div>
   )

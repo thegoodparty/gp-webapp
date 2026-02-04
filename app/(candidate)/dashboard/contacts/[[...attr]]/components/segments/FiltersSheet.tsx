@@ -35,6 +35,7 @@ interface Filters {
 interface BackendFilters extends Record<string, unknown> {
   languageCodes?: string[]
   incomeRanges?: string[]
+  incomeUnknown?: boolean
   languageEnglish?: boolean
   languageSpanish?: boolean
   languageOther?: boolean
@@ -107,6 +108,7 @@ export default function Filters({
     Object.values(incomeMapping).forEach((key) => {
       transformed[key] = false
     })
+    transformed.incomeUnknown = false
 
     if (
       backendFilters.incomeRanges &&
@@ -118,6 +120,10 @@ export default function Filters({
           transformed[key] = true
         }
       })
+    }
+
+    if (backendFilters.incomeUnknown) {
+      transformed.incomeUnknown = true
     }
 
     return transformed as Filters
@@ -262,6 +268,8 @@ export default function Filters({
       delete transformed[key]
     })
     transformed.incomeRanges = incomeRanges
+
+    transformed.incomeUnknown = !!filters.incomeUnknown
 
     return transformed
   }
