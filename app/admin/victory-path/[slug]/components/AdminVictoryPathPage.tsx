@@ -16,7 +16,6 @@ import VoterFileSection from './VoterFileSection'
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
 import DistrictPicker from 'app/(candidate)/onboarding/[slug]/[step]/components/districts/DistrictPicker'
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
-import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -406,7 +405,6 @@ export default function AdminVictoryPathPage(
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
           <AdditionalFieldsSection />
-          <P2VProSection />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. City:{' '}
