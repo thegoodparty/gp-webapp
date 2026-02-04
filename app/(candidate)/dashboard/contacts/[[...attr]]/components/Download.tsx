@@ -9,13 +9,11 @@ import {
   findCustomSegment,
   filterOnlyTrueValues,
 } from './shared/segments.util'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
 import { LuDownload } from 'react-icons/lu'
 
 export default function Download() {
-  const [campaign] = useCampaign()
   const showProUpgradeModal = useShowContactProModal()
   const { customSegments, currentSegment, canUseProFeatures } =
     useContactsTable()
