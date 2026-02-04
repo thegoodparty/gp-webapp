@@ -174,7 +174,6 @@ export default function SegmentSection() {
             </div>
           </IconButton>
           <Button
-            data-testid="edit-list-button"
             variant="outline"
             onClick={handleEdit}
             className="flex md:hidden w-full"
