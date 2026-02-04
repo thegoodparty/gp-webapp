@@ -26,6 +26,8 @@ import {
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
 const createEmptyPagination = (
   currentPage: number,
@@ -70,6 +72,8 @@ interface ContactsTableState {
   isErrorPerson: boolean
   isCustomSegment: boolean
   totalSegmentContacts: number
+  canUseProFeatures: boolean
+  isElectedOfficial: boolean
 }
 
 interface ContactsTableActions {
@@ -121,11 +125,21 @@ export const ContactsTableProvider = ({
   children,
 }: ContactsTableProviderProps) => {
   const router = useRouter()
+
+  const [campaign] = useCampaign()
+  const { electedOffice } = useElectedOffice()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const params = useParams()
 
   const segments = defaultSegments
+
+  const canUseProFeatures = useMemo(() => {
+    return !!campaign?.isPro || !!electedOffice
+  }, [campaign, electedOffice])
+  const isElectedOfficial = useMemo(() => {
+    return !!electedOffice
+  }, [electedOffice])
 
   const urlQueryParams = useMemo(() => {
     return new URLSearchParams(searchParams?.toString() || '')
@@ -332,6 +346,8 @@ export const ContactsTableProvider = ({
     isErrorPerson,
     isCustomSegment: isCustomSegmentValue,
     totalSegmentContacts,
+    canUseProFeatures,
+    isElectedOfficial,
     pageUp,
     pageDown,
     goToPage,
