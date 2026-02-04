@@ -73,6 +73,7 @@ interface ContactsTableState {
   isCustomSegment: boolean
   totalSegmentContacts: number
   canUseProFeatures: boolean
+  isElectedOfficial: boolean
 }
 
 interface ContactsTableActions {
@@ -136,6 +137,9 @@ export const ContactsTableProvider = ({
   const canUseProFeatures = useMemo(() => {
     return !!campaign?.isPro || !!electedOffice
   }, [campaign, electedOffice])
+  const isElectedOfficial = useMemo(() => {
+    return !!electedOffice
+  }, [electedOffice])
 
   const urlQueryParams = useMemo(() => {
     return new URLSearchParams(searchParams?.toString() || '')
@@ -343,6 +347,7 @@ export const ContactsTableProvider = ({
     isCustomSegment: isCustomSegmentValue,
     totalSegmentContacts,
     canUseProFeatures,
+    isElectedOfficial,
     pageUp,
     pageDown,
     goToPage,

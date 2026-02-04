@@ -70,7 +70,10 @@ const getIncomeBucket = (income: number | null) => {
   )
 }
 
-const PersonContent: React.FC<{ person: Person }> = ({ person }) => {
+const PersonContent: React.FC<{
+  person: Person
+  hidePoliticalParty: boolean
+}> = ({ person, hidePoliticalParty }) => {
   const details = [person.gender, person.age ? `${person.age} years old` : null]
     .filter(isNotNil)
     .join(', ')
@@ -126,7 +129,9 @@ const PersonContent: React.FC<{ person: Person }> = ({ person }) => {
         >
           <Field label="Registered Voter" value={person.registeredVoter} />
           <Field label="Voter Status" value={person.voterStatus} />
-          <Field label="Political Party" value={person.politicalParty} />
+          {!hidePoliticalParty && (
+            <Field label="Political Party" value={person.politicalParty} />
+          )}
         </InfoSection>
 
         <InfoSection
@@ -161,6 +166,7 @@ export default function PersonOverlay(): React.JSX.Element {
     isLoadingPerson,
     isErrorPerson,
     currentlySelectedPersonId,
+    isElectedOfficial,
   } = useContactsTable()
 
   const handleClose = (open: boolean) => {
@@ -218,7 +224,12 @@ export default function PersonOverlay(): React.JSX.Element {
               </div>
             </div>
           ) : (
-            person && <PersonContent person={person} />
+            person && (
+              <PersonContent
+                person={person}
+                hidePoliticalParty={isElectedOfficial}
+              />
+            )
           )}
         </div>
       </SheetContent>

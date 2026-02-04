@@ -8,7 +8,7 @@ import {
   SheetContent,
   SheetTitle,
 } from 'goodparty-styleguide'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
 import {
@@ -72,8 +72,25 @@ export default function Filters({
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
   const [saving, setSaving] = useState(false)
-  const { customSegments, refreshCustomSegments, selectSegment } =
-    useContactsTable()
+  const {
+    customSegments,
+    refreshCustomSegments,
+    selectSegment,
+    isElectedOfficial,
+  } = useContactsTable()
+
+  const displayFilterSections = useMemo(
+    () =>
+      isElectedOfficial
+        ? filterSections.map((section) => ({
+            ...section,
+            fields: section.fields.filter(
+              (field) => field.key !== 'political_party',
+            ),
+          }))
+        : filterSections,
+    [isElectedOfficial],
+  )
 
   const transformFiltersFromBackend = (
     backendFilters: BackendFilters,
@@ -307,7 +324,7 @@ export default function Filters({
           )}
         </div>
 
-        {filterSections.map((section, index) => (
+        {displayFilterSections.map((section, index) => (
           <div key={section.title} className="mt-4">
             <h3 className="text-xl lg:text-2xl font-semibold">
               {section.title}
@@ -340,7 +357,7 @@ export default function Filters({
               </div>
             ))}
 
-            {index === filterSections.length - 1 && (
+            {index === displayFilterSections.length - 1 && (
               <>
                 {mode === SHEET_MODES.EDIT && editSegment && (
                   <DeleteSegment
