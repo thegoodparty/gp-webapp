@@ -2,16 +2,17 @@
 
 import { useState, FormEvent } from 'react'
 import {
-  Elements,
-  useStripe,
-  useElements,
+  CheckoutProvider,
+  useCheckout,
   PaymentElement,
-} from '@stripe/react-stripe-js'
-import { loadStripe, PaymentIntent, StripeError } from '@stripe/stripe-js'
+} from '@stripe/react-stripe-js/checkout'
+import { loadStripe, StripeError } from '@stripe/stripe-js'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import { numberFormatter } from 'helpers/numberHelper'
 import { NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY } from 'appEnv'
+import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
+import TextField from '@shared/inputs/TextField'
 
 const stripePromise = loadStripe(NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
@@ -19,7 +20,7 @@ interface PaymentFormProps {
   clientSecret: string
   domainName: string
   price: number
-  onSuccess: (paymentIntent: PaymentIntent) => void
+  onSuccess: (sessionId: string) => void
   onError: (error: StripeError) => void
 }
 
@@ -39,16 +40,10 @@ export default function PaymentForm({
   }
 
   return (
-    <Elements
+    <CheckoutProvider
       stripe={stripePromise}
       options={{
         clientSecret,
-        appearance: {
-          theme: 'stripe',
-          variables: {
-            colorPrimary: '#3b82f6',
-          },
-        },
       }}
     >
       <PaymentFormContent
@@ -57,53 +52,104 @@ export default function PaymentForm({
         onSuccess={onSuccess}
         onError={onError}
       />
-    </Elements>
+    </CheckoutProvider>
   )
 }
 
 interface PaymentFormContentProps {
   domainName: string
   price: number
-  onSuccess: (paymentIntent: PaymentIntent) => void
+  onSuccess: (sessionId: string) => void
   onError: (error: StripeError) => void
 }
 
 function PaymentFormContent({ domainName, price, onSuccess, onError }: PaymentFormContentProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [message, setMessage] = useState('')
+  const [promoCode, setPromoCode] = useState('')
+  const [promoError, setPromoError] = useState<string | null>(null)
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false)
   const { errorSnackbar, successSnackbar } = useSnackbar()
-  const stripe = useStripe()
-  const elements = useElements()
+  const checkoutResult = useCheckout()
+
+  // Handle loading and error states
+  if (checkoutResult.type === 'loading') {
+    return <LoadingAnimation />
+  }
+
+  if (checkoutResult.type === 'error') {
+    return (
+      <div className="text-red-600 text-center py-4">
+        {checkoutResult.error.message}
+      </div>
+    )
+  }
+
+  const { checkout } = checkoutResult
+
+  const handleApplyPromoCode = async () => {
+    if (!promoCode.trim()) return
+
+    setIsApplyingPromo(true)
+    setPromoError(null)
+
+    try {
+      const result = await checkout.applyPromotionCode(promoCode.trim())
+      if (result.type === 'error') {
+        setPromoError(result.error.message)
+      } else {
+        successSnackbar('Promo code applied!')
+        setPromoCode('')
+      }
+    } catch (err) {
+      setPromoError('Failed to apply promo code')
+    } finally {
+      setIsApplyingPromo(false)
+    }
+  }
+
+  const handleRemovePromoCode = async () => {
+    setIsApplyingPromo(true)
+    try {
+      await checkout.removePromotionCode()
+      successSnackbar('Promo code removed')
+    } catch (err) {
+      // Ignore removal errors
+    } finally {
+      setIsApplyingPromo(false)
+    }
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!stripe || !elements) {
-      errorSnackbar('Stripe failed to load')
-      return
-    }
-
     setIsProcessing(true)
     setMessage('')
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: 'if_required',
-    })
+    const result = await checkout.confirm({ redirect: 'if_required' })
 
-    if (error) {
+    if (result.type === 'error') {
+      const error = result.error
       setMessage(error.message || 'An unexpected error occurred.')
       errorSnackbar(error.message || 'Payment failed')
-      onError(error)
-    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      onError(error as unknown as StripeError)
+    } else if (result.type === 'success') {
       successSnackbar('Payment successful! Your domain is being registered.')
-      onSuccess(paymentIntent)
+      // Get the session ID from the checkout
+      onSuccess(checkout.id || '')
     } else {
       setMessage('Payment processing...')
     }
 
     setIsProcessing(false)
   }
+
+  // Check if ready to confirm
+  const canSubmit = checkout.canConfirm
+
+  // Check if a promo code is already applied
+  const appliedDiscount = checkout.discountAmounts?.[0]
+  const hasAppliedPromo = appliedDiscount && appliedDiscount.promotionCode
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -116,6 +162,60 @@ function PaymentFormContent({ domainName, price, onSuccess, onError }: PaymentFo
           <span className="font-medium">Price:</span>
           <span className="font-semibold">${numberFormatter(price)}</span>
         </div>
+        {hasAppliedPromo && appliedDiscount && (
+          <div className="flex justify-between items-center mt-2 text-green-600">
+            <span className="font-medium">Discount:</span>
+            <span className="font-semibold">
+              -${(appliedDiscount.minorUnitsAmount / 100).toFixed(2)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Promo Code Section */}
+      <div className="p-4 bg-gray-50 rounded-lg border">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Promo Code
+        </label>
+        {hasAppliedPromo ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-medium">
+                {appliedDiscount?.promotionCode}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleRemovePromoCode}
+              disabled={isApplyingPromo}
+              className="text-sm text-red-600 hover:text-red-800 disabled:opacity-50"
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <TextField
+              placeholder="Enter promo code"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              className="flex-1"
+            />
+            <Button
+              type="button"
+              onClick={handleApplyPromoCode}
+              disabled={!promoCode.trim() || isApplyingPromo}
+              loading={isApplyingPromo}
+              size="medium"
+              color="secondary"
+            >
+              Apply
+            </Button>
+          </div>
+        )}
+        {promoError && (
+          <p className="mt-2 text-sm text-red-600">{promoError}</p>
+        )}
       </div>
 
       <PaymentElement />
@@ -124,7 +224,7 @@ function PaymentFormContent({ domainName, price, onSuccess, onError }: PaymentFo
 
       <Button
         type="submit"
-        disabled={isProcessing || !stripe}
+        disabled={isProcessing || !canSubmit}
         loading={isProcessing}
         className="w-full"
       >

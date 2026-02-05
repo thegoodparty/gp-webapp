@@ -9,7 +9,7 @@ import { StripeError } from '@stripe/stripe-js'
 interface DomainPurchaseModalProps {
   open: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (sessionId: string) => void
   onError: (error: StripeError) => void
   domainName: string
   price: number

@@ -29,7 +29,7 @@ import {
   AudienceState,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { CheckoutSessionProvider } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
@@ -401,7 +401,7 @@ const TaskFlow = ({
           />
         )}
         {stepName === STEPS.purchase && (
-          <PurchaseIntentProvider
+          <CheckoutSessionProvider
             {...{
               type: PURCHASE_TYPES.TEXT,
               purchaseMetaData,
@@ -416,7 +416,7 @@ const TaskFlow = ({
                 pricePerContact: purchaseMetaData?.pricePerContact,
               }}
             />
-          </PurchaseIntentProvider>
+          </CheckoutSessionProvider>
         )}
         {stepName === STEPS.download && (
           <DownloadStep

@@ -539,6 +539,14 @@ export const apiRoutes = {
       path: '/payments/purchase/complete',
       method: 'POST',
     },
+    createCustomCheckoutSession: {
+      path: '/payments/purchase/create-checkout-session',
+      method: 'POST',
+    },
+    completeCheckoutSession: {
+      path: '/payments/purchase/complete-checkout-session',
+      method: 'POST',
+    },
   },
   jobs: {
     list: {
