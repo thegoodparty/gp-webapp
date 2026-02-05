@@ -37,7 +37,7 @@ export default function PurchaseCompletePage() {
           setStatus('success')
         } else {
           throw new Error(
-            (response.data as { message?: string })?.message ||
+            (response.data as { data?: { error?: string } })?.data?.error ||
               'Failed to complete purchase',
           )
         }

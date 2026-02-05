@@ -108,13 +108,17 @@ function CheckoutFormContent({
   const promo = usePromoCode(checkout)
   const mutation = useMutation({
     mutationFn: async () => {
+      if (!sessionId) {
+        throw new Error('Missing checkout session ID')
+      }
+
       const result = await checkout.confirm({ redirect: 'if_required' })
 
       if (result.type === 'error') {
         throw result.error
       }
 
-      return sessionId!
+      return sessionId
     },
     onError,
     onSuccess,
