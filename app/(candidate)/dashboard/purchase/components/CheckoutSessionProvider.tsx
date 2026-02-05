@@ -7,6 +7,7 @@ import {
   SetStateAction,
   ReactNode,
   useCallback,
+  useRef,
 } from 'react'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import {
@@ -50,6 +51,9 @@ export const CheckoutSessionProvider = ({
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
+  const purchaseMetaDataRef = useRef(purchaseMetaData)
+  purchaseMetaDataRef.current = purchaseMetaData
+
   const onError = (error: string) => {
     setError(error)
     reportErrorToNewRelic('CheckoutSessionProvider error', { message: error })
@@ -69,7 +73,7 @@ export const CheckoutSessionProvider = ({
     try {
       const response = await createCheckoutSession(
         type,
-        purchaseMetaData,
+        purchaseMetaDataRef.current,
         returnUrl,
       )
       if (response.ok) {
@@ -85,7 +89,7 @@ export const CheckoutSessionProvider = ({
     } finally {
       setIsLoading(false)
     }
-  }, [checkoutSession, type, purchaseMetaData, returnUrl])
+  }, [checkoutSession, type, returnUrl])
 
   return (
     <CheckoutSessionContext.Provider

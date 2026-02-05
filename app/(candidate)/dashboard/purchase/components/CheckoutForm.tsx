@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState, useEffect, useRef } from 'react'
+import { FormEvent, useEffect, useRef } from 'react'
 import {
   PaymentElement,
   useCheckout,
@@ -13,7 +13,7 @@ import { useMutation } from '@tanstack/react-query'
 import { StripeError } from '@stripe/stripe-js'
 import { useCheckoutSession } from './CheckoutSessionProvider'
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
-import TextField from '@shared/inputs/TextField'
+import PromoCodeSection, { usePromoCode } from './PromoCodeSection'
 
 interface CheckoutFormProps {
   onSuccess: (sessionId: string) => void
@@ -105,10 +105,7 @@ function CheckoutFormContent({
   onSuccess: (sessionId: string) => void
   onError: (error: Error | StripeError) => void
 }): React.JSX.Element {
-  const [promoCode, setPromoCode] = useState('')
-  const [promoError, setPromoError] = useState<string | null>(null)
-  const [isApplyingPromo, setIsApplyingPromo] = useState(false)
-  const { successSnackbar } = useSnackbar()
+  const promo = usePromoCode(checkout)
   const mutation = useMutation({
     mutationFn: async () => {
       const result = await checkout.confirm({ redirect: 'if_required' })
@@ -128,120 +125,30 @@ function CheckoutFormContent({
     mutation.mutate()
   }
 
-  const handleApplyPromoCode = async () => {
-    if (!promoCode.trim()) return
-
-    setIsApplyingPromo(true)
-    setPromoError(null)
-
-    try {
-      const result = await checkout.applyPromotionCode(promoCode.trim())
-      if (result.type === 'error') {
-        setPromoError(result.error.message)
-      } else {
-        successSnackbar('Promo code applied!')
-        setPromoCode('')
-      }
-    } catch (err) {
-      setPromoError('Failed to apply promo code')
-    } finally {
-      setIsApplyingPromo(false)
-    }
-  }
-
-  const handleRemovePromoCode = async () => {
-    setIsApplyingPromo(true)
-    try {
-      await checkout.removePromotionCode()
-      successSnackbar('Promo code removed')
-    } catch (err) {
-      // Ignore removal errors
-    } finally {
-      setIsApplyingPromo(false)
-    }
-  }
-
-  // Get checkout session state to determine if ready
   const canSubmit = checkout.canConfirm
-
-  // Check if a promo code is already applied
-  const appliedDiscount = checkout.discountAmounts?.[0]
-  const hasAppliedPromo = appliedDiscount && appliedDiscount.promotionCode
-
-  // All amounts come from Stripe (single source of truth)
-  // checkout.total is StripeCheckoutTotalSummary: { total, subtotal, discount, ... }
-  // Each sub-field is StripeCheckoutAmount: { minorUnitsAmount: number, amount: string }
   const currentTotal = checkout.total.total.minorUnitsAmount / 100
   const originalTotal = checkout.total.subtotal.minorUnitsAmount / 100
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Promo Code Section - only show if there's a payment to make */}
       {originalTotal > 0 && (
-        <>
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Promo Code
-            </label>
-            {hasAppliedPromo ? (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-green-600 font-medium">
-                    {appliedDiscount.promotionCode}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    (-${(appliedDiscount.minorUnitsAmount / 100).toFixed(2)})
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleRemovePromoCode}
-                  disabled={isApplyingPromo}
-                  className="text-sm text-red-600 hover:text-red-800 disabled:opacity-50"
-                >
-                  Remove
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <TextField
-                  placeholder="Enter promo code"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  onClick={handleApplyPromoCode}
-                  disabled={!promoCode.trim() || isApplyingPromo}
-                  loading={isApplyingPromo}
-                  size="medium"
-                  color="secondary"
-                >
-                  Apply
-                </Button>
-              </div>
-            )}
-            {promoError && (
-              <p className="mt-2 text-sm text-red-600">{promoError}</p>
-            )}
+        <div className="mb-6">
+          <PromoCodeSection {...promo} />
 
-            {/* Show updated total when promo is applied */}
-            {hasAppliedPromo && (
-              <div className="mt-3 pt-3 border-t flex justify-between items-center">
-                <span className="font-medium text-gray-700">Discounted Total</span>
-                <div className="text-right">
-                  <span className="text-sm text-gray-400 line-through mr-2">
-                    ${originalTotal.toFixed(2)}
-                  </span>
-                  <span className="font-semibold text-lg text-green-600">
-                    ${currentTotal.toFixed(2)}
-                  </span>
-                </div>
+          {promo.hasAppliedPromo && (
+            <div className="mt-3 pt-3 border-t flex justify-between items-center px-4">
+              <span className="font-medium text-gray-700">Discounted Total</span>
+              <div className="text-right">
+                <span className="text-sm text-gray-400 line-through mr-2">
+                  ${originalTotal.toFixed(2)}
+                </span>
+                <span className="font-semibold text-lg text-green-600">
+                  ${currentTotal.toFixed(2)}
+                </span>
               </div>
-            )}
-          </div>
-        </>
+            </div>
+          )}
+        </div>
       )}
 
       <PaymentElement

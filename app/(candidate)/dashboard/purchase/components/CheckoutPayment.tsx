@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { CheckoutProvider } from '@stripe/react-stripe-js/checkout'
 import { loadStripe } from '@stripe/stripe-js'
 import CheckoutForm from './CheckoutForm'
@@ -23,8 +24,10 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
 }) => {
   const { fetchClientSecret, checkoutSession } = useCheckoutSession()
 
-  // clientSecret can be a Promise<string> per Stripe types
-  const clientSecretPromise = fetchClientSecret()
+  const clientSecretPromise = useMemo(
+    () => fetchClientSecret(),
+    [fetchClientSecret],
+  )
 
   return (
     <CheckoutProvider
