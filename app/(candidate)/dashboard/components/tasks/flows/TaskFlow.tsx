@@ -275,12 +275,17 @@ const TaskFlow = ({
   )
 
   const handlePurchaseComplete = async () => {
+    const outreach = await onCreateOutreach()
+    if (!outreach?.id) {
+      errorSnackbar('Campaign could not be created. Please try again.')
+      return
+    }
     await handleScheduleOutreach(
       type,
       errorSnackbar,
       successSnackbar,
       state,
-    )(await onCreateOutreach())
+    )(outreach)
 
     const contactField = getVoterContactField(type)
     await updateVoterContacts((currentContacts) => ({

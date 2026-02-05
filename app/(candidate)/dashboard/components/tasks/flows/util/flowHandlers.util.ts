@@ -100,9 +100,16 @@ export const handleScheduleOutreach =
     { budget, audience }: ScheduleOutreachParams = {},
   ) =>
   async (outreach: Outreach = { id: '' }): Promise<void> => {
+    const rawId = outreach?.id
+    const outreachId =
+      typeof rawId === 'number' ? rawId : Number(rawId)
+    if (!Number.isFinite(outreachId) || outreachId <= 0) {
+      errorSnackbar('Cannot schedule: outreach was not created')
+      return
+    }
     const { audience_request: audienceRequest } = audience || {}
     const result = await scheduleVoterMessagingCampaign(
-      outreach.id,
+      outreachId,
       audienceRequest,
     )
     if (!result) {
@@ -136,13 +143,13 @@ export const handleCreateOutreach =
       {
         campaignId,
         outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
-        message,
+        message: typeof message === 'string' ? message : undefined,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
-        script,
-        ...(date ? { date } : {}),
-        ...(voterFileFilter ? { voterFileFilterId: voterFileFilter.id } : {}),
-        ...(audienceRequest ? { audienceRequest } : {}),
-        ...(p2pUxEnabled ? { phoneListId } : {}),
+        script: typeof script === 'string' ? script : undefined,
+        ...(date ? { date: typeof date === 'string' ? date : date.toISOString() } : {}),
+        ...(voterFileFilter ? { voterFileFilterId: Number(voterFileFilter.id) } : {}),
+        ...(typeof audienceRequest === 'string' ? { audienceRequest } : {}),
+        ...(p2pUxEnabled && typeof phoneListId === 'number' ? { phoneListId } : {}),
       },
       image || null,
     )
