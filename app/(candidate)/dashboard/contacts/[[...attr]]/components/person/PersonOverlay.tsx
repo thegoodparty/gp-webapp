@@ -155,7 +155,7 @@ const ActivitiesContent: React.FC = () => {
     return (
       <div className="flex flex-col items-center gap-3">
         <Image
-          src="/images/dashboard/no-search-results.svg"
+          src="/images/dashboard/no-search-result.svg"
           alt=""
           width={100}
           height={100}
