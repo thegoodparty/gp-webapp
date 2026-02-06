@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { StripeCheckoutValue } from '@stripe/react-stripe-js/checkout'
 import Button from '@shared/buttons/Button'
 import { useSnackbar } from '@shared/utils/Snackbar'
-import TextField from '@shared/inputs/TextField'
 
 export function usePromoCode(checkout: StripeCheckoutValue) {
   const [promoCode, setPromoCode] = useState('')
@@ -108,19 +107,20 @@ export default function PromoCodeSection({
           </button>
         </div>
       ) : (
-        <div className="flex gap-2">
-          <TextField
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
             placeholder="Enter promo code"
             value={promoCode}
             onChange={(e) => setPromoCode(e.target.value)}
-            className="flex-1"
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-base font-[var(--outfit-font)] outline-none focus:border-primary-main focus:ring-1 focus:ring-primary-main"
           />
           <Button
             type="button"
             onClick={handleApplyPromoCode}
             disabled={!promoCode.trim() || isApplyingPromo}
             loading={isApplyingPromo}
-            size="medium"
+            size="large"
             color="secondary"
           >
             Apply
