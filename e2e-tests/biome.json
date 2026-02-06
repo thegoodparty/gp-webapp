@@ -1,0 +1,29 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+	"files": {
+		"includes": [
+			"**",
+			"!!playwright/**/*",
+			"!!playwright-report/**/*",
+			"!!test-results/**/*"
+		]
+	},
+	"linter": {
+		"rules": {
+			"complexity": {
+				"useOptionalChain": "error",
+				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": "error"
+			},
+			"style": {
+				"noNonNullAssertion": "off",
+				"useNodejsImportProtocol": "error"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	}
+}
