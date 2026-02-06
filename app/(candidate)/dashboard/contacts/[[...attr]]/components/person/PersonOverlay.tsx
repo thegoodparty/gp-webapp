@@ -179,27 +179,17 @@ const ActivitiesContent: React.FC = () => {
       {activities.map((activity, idx) => (
         <div key={idx} className="flex flex-col gap-1 mb-3">
           <Link
-            className="font-medium text-info underline"
+            className="font-medium text-info underline mb-2"
             href={`/dashboard/polls/${activity.data.pollId}`}
             target="_blank"
           >
             {activity.data.pollTitle}
           </Link>
-          <p className="text-sm font-normal text-muted-foreground mb-2">
-            {activity.date ? formatDateTime(activity.date) : ''}
-          </p>
           {activity.data.events?.length ? (
             <div className="mt-1 flex flex-col text-sm font-normal text-muted-foreground">
               {activity.data.events.map((evt, i) => {
                 return (
                   <div key={i} className="flex flex-col">
-                    {i > 0 ? (
-                      <div className="flex items-center gap-2">
-                        <div className="flex w-4 shrink-0 justify-center">
-                          <div className="h-3 w-px bg-border my-1" />
-                        </div>
-                      </div>
-                    ) : null}
                     <div className="flex items-center gap-2">
                       {evt.type === 'SENT'&& (
                         <LuCircleCheck
@@ -223,6 +213,19 @@ const ActivitiesContent: React.FC = () => {
                       <p className="text-sm font-semibold text-foreground">
                         {ACTIVITY_EVENT_LABELS[evt.type] ?? evt.type}
                       </p>
+                    </div>
+
+                    <div className="flex gap-2 h-7">
+                      <div className="flex items-center gap-2">
+                            <div className="flex w-4 shrink-0 justify-center">
+                      {i < activity.data.events.length - 1 ? (
+                              <div className="h-5 w-px bg-border my-1" />
+                        ) : null}
+                        </div>
+                      </div>
+                        <p className="text-sm font-normal text-muted-foreground justify-self-start">
+                          {evt.date ? formatDateTime(evt.date) : ''}
+                        </p>
                     </div>
                   </div>
                 )
