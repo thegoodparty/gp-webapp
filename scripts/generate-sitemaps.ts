@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-
 /**
  * Generate static sitemap XML files at build time
  * This script generates all sitemaps and writes them to public/sitemaps/
  */
 
-const fs = require('fs').promises
+const fsPromises = require('fs').promises
 const path = require('path')
 const { generateRootIndex, convertToXML } = require('./lib/xml')
 const { ensureDirectoryExists, writeSitemapXML, writeSplitSitemaps } = require('./lib/sitemap-helpers')
@@ -982,7 +981,7 @@ async function generateSitemaps(options: GenerateSitemapsOptions = {}): Promise<
     const generationReportFilename = `generation-report-${timestamp}.json`
     const generationReportPath = path.join(OUTPUT_DIR, generationReportFilename)
     
-    await fs.writeFile(
+    await fsPromises.writeFile(
       generationReportPath,
       JSON.stringify(report, null, 2)
     )
@@ -996,7 +995,7 @@ async function generateSitemaps(options: GenerateSitemapsOptions = {}): Promise<
       const validationReportFilename = `validation-report-${timestamp}.json`
       const validationReportPath = path.join(OUTPUT_DIR, validationReportFilename)
       
-      await fs.writeFile(
+      await fsPromises.writeFile(
         validationReportPath,
         JSON.stringify(validationReport, null, 2)
       )

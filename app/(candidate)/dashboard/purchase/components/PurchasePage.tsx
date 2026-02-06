@@ -13,10 +13,7 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body1 from '@shared/typography/Body1'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { PurchaseHeader } from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
-import {
-  useCheckoutSession,
-  CheckoutSessionContextValue,
-} from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { completeCheckoutSession } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { PaymentInterstitials } from 'app/(candidate)/dashboard/purchase/components/PaymentInterstitials'
 import H1 from '@shared/typography/H1'

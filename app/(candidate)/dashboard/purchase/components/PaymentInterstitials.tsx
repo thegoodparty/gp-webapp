@@ -15,7 +15,7 @@ export const PaymentInterstitials = ({
   purchaseState,
   returnUrl,
 }: PaymentInterstitialsProps): React.JSX.Element | null => {
-  const { checkoutSession, error, isLoading } = useCheckoutSession()
+  const { error, isLoading } = useCheckoutSession()
   const inErrorState = purchaseState === PURCHASE_STATE.ERROR || error
   return isLoading ? (
     <LoadingAnimationModal title="Initializing purchase form..." />
