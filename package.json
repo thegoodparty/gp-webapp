@@ -18,9 +18,8 @@
     "lint:fix": "next lint --fix",
     "start": "next build && next start",
     "start-local": "cross-env NODE_ENV=production NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next start -p 4000",
-    "postinstall": "npm install --prefix e2e-tests",
     "test": "vitest run",
-    "test:e2e": "npm run test --prefix e2e-tests",
+    "test:e2e": "npm install --prefix e2e-tests && npm run test --prefix e2e-tests",
     "test:watch": "vitest",
     "types": "npx tsc"
   },
