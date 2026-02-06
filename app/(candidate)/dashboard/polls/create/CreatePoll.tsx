@@ -283,9 +283,9 @@ const DetailsForm: React.FC<{
               >
                 <SelectValue placeholder="Select your introduction" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-w-[calc(100vw-2rem)]">
                 {introductionOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <SelectItem key={option} value={option} className="whitespace-normal">
                     {option}
                   </SelectItem>
                 ))}
