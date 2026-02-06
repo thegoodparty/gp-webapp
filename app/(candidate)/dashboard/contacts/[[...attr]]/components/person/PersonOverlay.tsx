@@ -23,7 +23,7 @@ import {
 } from 'react-icons/lu'
 import { format } from 'date-fns'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
-import { Person, type ConstituentActivity } from '../shared/ajaxActions'
+import { Person } from '../shared/ajaxActions'
 import { isNotNil } from 'es-toolkit'
 import { ReactNode } from 'react'
 import Map from '@shared/utils/Map'
@@ -71,27 +71,18 @@ const Field: React.FC<{ label: string; value: ReactNode | string | null }> = ({
   </div>
 )
 
-const TopIssuesContent: React.FC<{
-  issues: Array<{
-    issueTitle: string
-    issueSummary: string
-    pollTitle: string
-    pollId: string
-    date: string
-  }>
-  isLoading: boolean
-  isError: boolean
-  hasNextPage: boolean
-  onViewMore: () => void
-  isFetchingNextPage: boolean
-}> = ({
-  issues,
-  isLoading,
-  isError,
-  hasNextPage,
-  onViewMore,
-  isFetchingNextPage,
-}) => {
+const TopIssuesContent: React.FC = () => {
+  const {
+    currentlySelectedPerson: {
+      issues,
+      isLoadingIssues: isLoading,
+      isErrorIssues: isError,
+      issuesHasNextPage: hasNextPage,
+      issuesFetchNextPage: onViewMore,
+      isFetchingNextIssues: isFetchingNextPage,
+    },
+  } = useContactsTable()
+
   if (isError || issues.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3">
@@ -148,22 +139,17 @@ const TopIssuesContent: React.FC<{
   )
 }
 
-const ActivitiesContent: React.FC<{
-  activities: ConstituentActivity[]
-  isLoading: boolean
-  isError: boolean
-  hasNextPage: boolean
-  onViewMore: () => void
-  isFetchingNextPage: boolean
-}> = ({
-  activities,
-  isLoading,
-  isError,
-  hasNextPage,
-  onViewMore,
-  isFetchingNextPage,
-}) => {
-
+const ActivitiesContent: React.FC = () => {
+  const {
+    currentlySelectedPerson: {
+      activities,
+      isLoadingActivities: isLoading,
+      isErrorActivities: isError,
+      activitiesHasNextPage: hasNextPage,
+      activitiesFetchNextPage: onViewMore,
+      isFetchingNextActivities: isFetchingNextPage,
+    },
+  } = useContactsTable()
 
   if (isError || activities.length === 0) {
     return (
@@ -288,40 +274,7 @@ const getIncomeBucket = (income: number | null) => {
 const PersonContent: React.FC<{
   person: Person
   hidePoliticalParty: boolean
-  issues: Array<{
-    issueTitle: string
-    issueSummary: string
-    pollTitle: string
-    pollId: string
-    date: string
-  }>
-  isLoadingIssues: boolean
-  isErrorIssues: boolean
-  issuesHasNextPage: boolean
-  issuesFetchNextPage: () => void
-  isFetchingNextIssues: boolean
-  activities: ConstituentActivity[]
-  isLoadingActivities: boolean
-  isErrorActivities: boolean
-  activitiesHasNextPage: boolean
-  activitiesFetchNextPage: () => void
-  isFetchingNextActivities: boolean
-}> = ({
-  person,
-  hidePoliticalParty,
-  issues,
-  isLoadingIssues,
-  isErrorIssues,
-  issuesHasNextPage,
-  issuesFetchNextPage,
-  isFetchingNextIssues,
-  activities,
-  isLoadingActivities,
-  isErrorActivities,
-  activitiesHasNextPage,
-  activitiesFetchNextPage,
-  isFetchingNextActivities,
-}) => {
+}> = ({ person, hidePoliticalParty }) => {
   const details = [person.gender, person.age ? `${person.age} years old` : null]
     .filter(isNotNil)
     .join(', ')
@@ -334,14 +287,7 @@ const PersonContent: React.FC<{
       <p className="text-xl font-semibold mb-6">{details}</p>
       <div className="flex flex-col gap-6">
         <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
-          <TopIssuesContent
-            issues={issues}
-            isLoading={isLoadingIssues}
-            isError={isErrorIssues}
-            hasNextPage={issuesHasNextPage}
-            onViewMore={issuesFetchNextPage}
-            isFetchingNextPage={isFetchingNextIssues}
-          />
+          <TopIssuesContent />
         </InfoSection>
 
         <InfoSection title="Contact Information" icon={<LuContact size={24} />}>
@@ -415,14 +361,7 @@ const PersonContent: React.FC<{
         </InfoSection>
 
         <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
-          <ActivitiesContent
-            activities={activities}
-            isLoading={isLoadingActivities}
-            isError={isErrorActivities}
-            hasNextPage={activitiesHasNextPage}
-            onViewMore={activitiesFetchNextPage}
-            isFetchingNextPage={isFetchingNextActivities}
-          />
+          <ActivitiesContent />
         </InfoSection>
       </div>
     </div>
@@ -436,23 +375,7 @@ export default function PersonOverlay(): React.JSX.Element {
     currentlySelectedPersonId,
     isElectedOfficial,
   } = useContactsTable()
-  const {
-    person,
-    isLoadingPerson,
-    isErrorPerson,
-    issues,
-    isLoadingIssues,
-    isErrorIssues,
-    issuesHasNextPage,
-    issuesFetchNextPage,
-    isFetchingNextIssues,
-    activities,
-    isLoadingActivities,
-    isErrorActivities,
-    activitiesHasNextPage,
-    activitiesFetchNextPage,
-    isFetchingNextActivities,
-  } = currentlySelectedPerson
+  const { person, isLoadingPerson, isErrorPerson } = currentlySelectedPerson
 
   const handleClose = (open: boolean) => {
     if (!open) {
@@ -513,18 +436,6 @@ export default function PersonOverlay(): React.JSX.Element {
               <PersonContent
                 person={person}
                 hidePoliticalParty={isElectedOfficial}
-                issues={issues}
-                isLoadingIssues={isLoadingIssues}
-                isErrorIssues={isErrorIssues}
-                issuesHasNextPage={issuesHasNextPage}
-                issuesFetchNextPage={issuesFetchNextPage}
-                isFetchingNextIssues={isFetchingNextIssues}
-                activities={activities}
-                isLoadingActivities={isLoadingActivities}
-                isErrorActivities={isErrorActivities}
-                activitiesHasNextPage={activitiesHasNextPage}
-                activitiesFetchNextPage={activitiesFetchNextPage}
-                isFetchingNextActivities={isFetchingNextActivities}
               />
             )
           )}
