@@ -188,3 +188,74 @@ export async function fetchPerson(
     return null
   }
 }
+
+export type ConstituentIssue = {
+  issueTitle: string
+  issueSummary: string
+  pollTitle: string
+  pollId: string
+  date: string
+}
+
+export type GetConstituentIssuesResponse = {
+  nextCursor: string | null
+  results: ConstituentIssue[]
+}
+
+export type ConstituentActivityEventType = 'SENT' | 'RESPONDED' | 'OPTED_OUT'
+
+export type ConstituentActivityEvent = {
+  type: ConstituentActivityEventType
+  date: string
+}
+
+export type ConstituentActivity = {
+  type: string
+  date: string
+  data: {
+    pollId: string
+    pollTitle: string
+    events: ConstituentActivityEvent[]
+  }
+}
+
+export type GetIndividualActivitiesResponse = {
+  nextCursor: string | null
+  results: ConstituentActivity[]
+}
+
+export async function fetchConstituentIssues(
+  personId: string,
+  options?: { take?: number; after?: string },
+): Promise<GetConstituentIssuesResponse | null> {
+  const payload: Record<string, unknown> = { id: personId }
+  if (options?.take != null) payload.take = options.take
+  if (options?.after != null) payload.after = options.after
+  const response = await clientFetch<GetConstituentIssuesResponse>(
+    apiRoutes.contactEngagement.issues,
+    payload,
+  )
+  if (response.ok) {
+    return response.data ?? null
+  }
+  console.error('Failed to fetch constituent issues', response)
+  return null
+}
+
+export async function fetchConstituentActivities(
+  personId: string,
+  options?: { take?: number; after?: string },
+): Promise<GetIndividualActivitiesResponse | null> {
+  const payload: Record<string, unknown> = { id: personId }
+  if (options?.take != null) payload.take = options.take
+  if (options?.after != null) payload.after = options.after
+  const response = await clientFetch<GetIndividualActivitiesResponse>(
+    apiRoutes.contactEngagement.activities,
+    payload,
+  )
+  if (response.ok) {
+    return response.data ?? null
+  }
+  console.error('Failed to fetch constituent activities', response)
+  return null
+}
