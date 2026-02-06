@@ -14,6 +14,9 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { PickSendDateStep } from './steps/PickSendDateStep'
 import { format } from 'date-fns'
+import { useQuery } from '@tanstack/react-query'
+import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
+import { Button } from 'goodparty-styleguide'
 
 interface Step {
   name: string
@@ -89,10 +92,53 @@ const maxStepperStepIndex = steps.reduce(
   0,
 )
 
+const NotEnoughConstituents: React.FC<{
+  totalConstituentsWithCellPhone: number
+}> = ({ totalConstituentsWithCellPhone }) => {
+  const router = useRouter()
+  useEffect(() => {
+    trackEvent(EVENTS.ServeOnboarding.NotEnoughConstituents, {
+      reachableConstituentCount: totalConstituentsWithCellPhone,
+    })
+  }, [])
+
+  return (
+    <div className="flex flex-col">
+      <main className="flex-1 pb-140 md:pb-0">
+        <section className="max-w-screen-md mx-auto bg-white md:border md:border-slate-200 md:rounded-xl md:mt-12 xs:pt-4 md:mb-16">
+          <div className="p-4 sm:p-8 lg:p-16 lg:pb-4">
+            <div className="flex flex-col items-center md:justify-center md:mb-4 gap-6">
+              <h1 className="text-left text-center font-semibold text-2xl md:text-4xl w-full">
+                Unfortunately, your constituency isn&apos;t large enough to
+                launch a poll and receive reliable feedback.
+              </h1>
+              <p className="text-left md:text-center ext-lg font-normal text-muted-foreground">
+                Visit Contacts to see your constituents
+              </p>
+              <Button onClick={() => router.push('/dashboard/contacts')}>
+                Visit Contacts
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}
+
 export default function OnboardingPage() {
   const router = useRouter()
-  const { submitOnboarding, isSubmitting, submitError, user, stepValidation, formData, demoMessageText } =
-    useOnboardingContext()
+  const {
+    submitOnboarding,
+    isSubmitting,
+    submitError,
+    user,
+    stepValidation,
+    formData,
+    demoMessageText,
+  } = useOnboardingContext()
+
+  const statsQuery = useQuery(districtStatsQueryOptions)
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [showError, setShowError] = useState(false)
@@ -172,6 +218,16 @@ export default function OnboardingPage() {
     if (backStepIndex !== -1 && currentStepIndex > 0) {
       setCurrentStepIndex(backStepIndex)
     }
+  }
+
+  if (statsQuery.data && statsQuery.data.totalConstituentsWithCellPhone < 500) {
+    return (
+      <NotEnoughConstituents
+        totalConstituentsWithCellPhone={
+          statsQuery.data.totalConstituentsWithCellPhone
+        }
+      />
+    )
   }
 
   return (
