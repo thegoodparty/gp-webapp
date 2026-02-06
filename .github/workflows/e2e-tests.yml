@@ -90,32 +90,27 @@ jobs:
           echo "Using deployment URL: $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
-      - name: Checkout test-automation Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          repository: thegoodparty/test-automation
-          token: ${{ secrets.GH_PAT_TEST }}
-          path: test-automation
-          ref: develop
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
           cache: "npm"
-          cache-dependency-path: test-automation/package-lock.json
+          cache-dependency-path: e2e-tests/package-lock.json
 
       - name: Install Dependencies
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npm ci
 
       - name: Install Playwright Browsers
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npx playwright install --with-deps
 
       - name: Run Stable Playwright Tests
         id: run-stable-tests
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npx playwright test --project=stable
         env:
           BASE_URL: ${{ env.BASE_URL }}
@@ -129,15 +124,15 @@ jobs:
         with:
           name: stable-playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            test-automation/playwright-report
-            test-automation/test-results
+            e2e-tests/playwright-report
+            e2e-tests/test-results
           retention-days: 30
 
       - name: Parse stable test results
         if: always()
         id: stable-test-results
         shell: bash
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: |
           if [ -f "test-results/results.json" ]; then
             echo "Found results.json, parsing stable test results..."
@@ -281,32 +276,27 @@ jobs:
           echo "Using deployment URL: $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
-      - name: Checkout test-automation Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          repository: thegoodparty/test-automation
-          token: ${{ secrets.GH_PAT_TEST }}
-          path: test-automation
-          ref: develop
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
           cache: "npm"
-          cache-dependency-path: test-automation/package-lock.json
+          cache-dependency-path: e2e-tests/package-lock.json
 
       - name: Install Dependencies
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npm ci
 
       - name: Install Playwright Browsers
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npx playwright install --with-deps
 
       - name: Run Experimental Playwright Tests
         id: run-experimental-tests
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: npx playwright test --project=experimental
         continue-on-error: true # Don't fail the workflow if experimental tests fail
         env:
@@ -321,15 +311,15 @@ jobs:
         with:
           name: experimental-playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            test-automation/playwright-report
-            test-automation/test-results
+            e2e-tests/playwright-report
+            e2e-tests/test-results
           retention-days: 30
 
       - name: Parse experimental test results
         if: always()
         id: experimental-test-results
         shell: bash
-        working-directory: test-automation
+        working-directory: e2e-tests
         run: |
           if [ -f "test-results/results.json" ]; then
             echo "Found results.json, parsing experimental test results..."
