@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { completeCheckoutSession } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { reportErrorToNewRelic } from '@shared/new-relic'
@@ -22,14 +22,19 @@ export default function PurchaseCompletePage() {
     'loading',
   )
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const hasCompleted = useRef(false)
 
   useEffect(() => {
+    if (hasCompleted.current) return
+
     const completePurchase = async () => {
       if (!sessionId) {
         setStatus('error')
         setErrorMessage('No session ID found')
         return
       }
+
+      hasCompleted.current = true
 
       try {
         const response = await completeCheckoutSession(sessionId)

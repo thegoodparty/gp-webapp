@@ -54,6 +54,11 @@ export const CheckoutSessionProvider = ({
   const purchaseMetaDataRef = useRef(purchaseMetaData)
   purchaseMetaDataRef.current = purchaseMetaData
 
+  // Store in-flight promise to deduplicate concurrent calls.
+  // This makes fetchClientSecret safe regardless of caller behavior —
+  // if two calls race before the first resolves, both return the same promise.
+  const pendingRequestRef = useRef<Promise<string> | null>(null)
+
   const onError = (error: string) => {
     setError(error)
     reportErrorToNewRelic('CheckoutSessionProvider error', { message: error })
@@ -64,31 +69,41 @@ export const CheckoutSessionProvider = ({
       return checkoutSession.clientSecret
     }
 
+    if (pendingRequestRef.current) {
+      return pendingRequestRef.current
+    }
+
     if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
       onError('Invalid purchase type')
       throw new Error('Invalid purchase type')
     }
 
     setIsLoading(true)
-    try {
-      const response = await createCheckoutSession(
-        type,
-        purchaseMetaDataRef.current,
-        returnUrl,
-      )
-      if (response.ok) {
-        setCheckoutSession(response.data)
-        return response.data.clientSecret
-      } else {
-        const errorMessage =
-          (response.data as { data?: { error?: string } })?.data?.error ||
-          'Failed to create checkout session'
-        onError(errorMessage)
-        throw new Error(errorMessage)
+    const request = (async () => {
+      try {
+        const response = await createCheckoutSession(
+          type,
+          purchaseMetaDataRef.current,
+          returnUrl,
+        )
+        if (response.ok) {
+          setCheckoutSession(response.data)
+          return response.data.clientSecret
+        } else {
+          const errorMessage =
+            (response.data as { data?: { error?: string } })?.data?.error ||
+            'Failed to create checkout session'
+          onError(errorMessage)
+          throw new Error(errorMessage)
+        }
+      } finally {
+        setIsLoading(false)
+        pendingRequestRef.current = null
       }
-    } finally {
-      setIsLoading(false)
-    }
+    })()
+
+    pendingRequestRef.current = request
+    return request
   }, [checkoutSession, type, returnUrl])
 
   return (
