@@ -1,31 +1,41 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import H1 from '@shared/typography/H1'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { CheckoutSessionProvider } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { completeCheckoutSession } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 
-import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
-import PurchasePayment from 'app/(candidate)/dashboard/purchase/components/PurchasePayment'
-import { PaymentIntent } from '@stripe/stripe-js'
+import CheckoutPayment from 'app/(candidate)/dashboard/purchase/components/CheckoutPayment'
 
 const PurchaseContent: React.FC<{
-  onPaymentSuccess: (paymentIntent: PaymentIntent) => void
+  onPaymentSuccess: (sessionId: string) => void
 }> = ({ onPaymentSuccess }) => {
-  const { purchaseIntent, error } = usePurchaseIntent()
+  const { checkoutSession, error, fetchClientSecret } = useCheckoutSession()
+  const hasFetchedSession = useRef(false)
+
+  useEffect(() => {
+    if (!hasFetchedSession.current) {
+      hasFetchedSession.current = true
+      fetchClientSecret().catch(() => {
+        // Error is handled by the provider
+      })
+    }
+  }, [fetchClientSecret])
 
   return (
     <div className="p-4 mx-auto w-[80vw] max-w-xl text-center">
       {error ? (
         <PurchaseError error={error} serverError={undefined} />
-      ) : !purchaseIntent ? (
+      ) : !checkoutSession ? (
         <LoadingAnimation />
       ) : (
-        <PurchasePayment onPaymentSuccess={onPaymentSuccess} />
+        <CheckoutPayment onPaymentSuccess={onPaymentSuccess} />
       )}
     </div>
   )
@@ -55,27 +65,27 @@ export type PollPaymentMetadata =
 
 export type PollPaymentProps = {
   purchaseMetaData: PollPaymentMetadata
-  onConfirmed: (paymentIntent: PaymentIntent) => void
+  onConfirmed: (sessionId: string) => void
 }
 
 export const PollPayment: React.FC<PollPaymentProps> = ({
   purchaseMetaData,
   onConfirmed,
 }) => {
-  const handlePurchaseComplete = async (paymentIntent: PaymentIntent) => {
-    await completePurchase(paymentIntent.id)
-    onConfirmed(paymentIntent)
+  const handlePurchaseComplete = async (sessionId: string) => {
+    await completeCheckoutSession(sessionId)
+    onConfirmed(sessionId)
   }
 
   return (
     <>
       <H1 className="text-center">SMS Poll Payment</H1>
-      <PurchaseIntentProvider
+      <CheckoutSessionProvider
         type={PURCHASE_TYPES.POLL}
         purchaseMetaData={purchaseMetaData}
       >
         <PurchaseContent onPaymentSuccess={handlePurchaseComplete} />
-      </PurchaseIntentProvider>
+      </CheckoutSessionProvider>
     </>
   )
 }

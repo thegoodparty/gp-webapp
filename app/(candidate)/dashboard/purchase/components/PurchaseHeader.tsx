@@ -1,6 +1,6 @@
 import H2 from '@shared/typography/H2'
 import Body1 from '@shared/typography/Body1'
-import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { ReactNode } from 'react'
 
 interface PurchaseHeaderProps {
@@ -14,8 +14,8 @@ export const PurchaseHeader = ({
   description,
   children = null,
 }: PurchaseHeaderProps): React.JSX.Element => {
-  const { purchaseIntent } = usePurchaseIntent()
-  const amount = purchaseIntent?.amount || 0
+  const { checkoutSession } = useCheckoutSession()
+  const amount = checkoutSession?.amount || 0
   return (
     <div className="bg-gray-50 p-4 rounded-lg mt-6 mb-8">
       {label && <H2>{label}</H2>}
