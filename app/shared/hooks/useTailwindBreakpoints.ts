@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
 /**
- * Tailwind v4 breakpoint values (matches @theme in globals.css)
- * These are standard Tailwind defaults and rarely change
+ * Tailwind v4 breakpoint values (matches @theme in styleguide/tailwind-theme.css)
+ * These are standard Tailwind defaults that rarely change.
+ * Hardcoded here since we can't read CSS @theme values at JS runtime.
  */
 const BREAKPOINTS: Record<Breakpoint, number> = {
   xs: 400,
@@ -45,4 +46,3 @@ export const useTailwindBreakpoints = (): Breakpoint => {
 
   return currentBreakpoint
 }
-

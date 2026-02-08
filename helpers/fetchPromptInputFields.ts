@@ -1,13 +1,17 @@
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-interface PromptInputFieldsContent {
-  [key: string]: unknown
+export interface PromptInputField {
+  title: string
+  helperText?: string
+  isDate?: boolean
 }
+
+type PromptInputFieldsContent = Partial<Record<string, PromptInputField[]>>
 
 export const fetchPromptInputFields = async (
   subKey: string,
-): Promise<unknown> => {
+): Promise<PromptInputField[] | undefined> => {
   const resp = await clientFetch<PromptInputFieldsContent>(
     apiRoutes.content.getByType,
     {
@@ -18,4 +22,3 @@ export const fetchPromptInputFields = async (
   const content = resp.data
   return content[subKey]
 }
-

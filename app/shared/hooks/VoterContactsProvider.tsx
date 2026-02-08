@@ -1,12 +1,11 @@
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-import { Campaign } from 'helpers/types'
 
-export const getVoterContactField = (outreachType: string): string => {
+export const getVoterContactField = (outreachType: string): keyof VoterContactsState => {
   switch (outreachType) {
     case 'text':
-    case 'p2p': 
+    case 'p2p':
       return 'text'
     case 'doorKnocking':
       return 'doorKnocking'
@@ -29,12 +28,13 @@ interface ReportedVoterGoals {
   digitalAds?: number
   text?: number
   events?: number
+  yardSigns?: number
   robocall?: number
   phoneBanking?: number
   socialMedia?: number
 }
 
-interface VoterContactsState {
+export interface VoterContactsState {
   doorKnocking: number
   calls: number
   digital: number
@@ -42,12 +42,15 @@ interface VoterContactsState {
   digitalAds: number
   text: number
   events: number
+  yardSigns: number
   robocall: number
   phoneBanking: number
   socialMedia: number
 }
 
-export const getFilteredListOfReportedVoterContacts = (reportedVoterGoals?: ReportedVoterGoals): VoterContactsState => ({
+export const getFilteredListOfReportedVoterContacts = (
+  reportedVoterGoals?: ReportedVoterGoals,
+): VoterContactsState => ({
   doorKnocking: reportedVoterGoals?.doorKnocking || 0,
   calls: reportedVoterGoals?.calls || 0,
   digital: reportedVoterGoals?.digital || 0,
@@ -55,6 +58,7 @@ export const getFilteredListOfReportedVoterContacts = (reportedVoterGoals?: Repo
   digitalAds: reportedVoterGoals?.digitalAds || 0,
   text: reportedVoterGoals?.text || 0,
   events: reportedVoterGoals?.events || 0,
+  yardSigns: reportedVoterGoals?.yardSigns || 0,
   robocall: reportedVoterGoals?.robocall || 0,
   phoneBanking: reportedVoterGoals?.phoneBanking || 0,
   socialMedia: reportedVoterGoals?.socialMedia || 0,
@@ -68,6 +72,7 @@ const INITIAL_VOTER_CONTACTS_STATE: VoterContactsState = {
   digitalAds: 0,
   text: 0,
   events: 0,
+  yardSigns: 0,
   robocall: 0,
   phoneBanking: 0,
   socialMedia: 0,
@@ -75,7 +80,11 @@ const INITIAL_VOTER_CONTACTS_STATE: VoterContactsState = {
 
 type VoterContactsContextValue = [
   VoterContactsState,
-  (next: VoterContactsState | ((prev: VoterContactsState) => VoterContactsState)) => Promise<void>
+  (
+    next:
+      | VoterContactsState
+      | ((prev: VoterContactsState) => VoterContactsState),
+  ) => Promise<void>,
 ]
 
 export const VoterContactsContext = createContext<VoterContactsContextValue>([
@@ -87,9 +96,11 @@ interface VoterContactsProviderProps {
   children: React.ReactNode
 }
 
-export const VoterContactsProvider = ({ children }: VoterContactsProviderProps): React.JSX.Element => {
+export const VoterContactsProvider = ({
+  children,
+}: VoterContactsProviderProps): React.JSX.Element => {
   const [campaign] = useCampaign()
-  const { data: campaignData } = (campaign as Campaign | null) || {}
+  const { data: campaignData } = campaign || {}
   const { reportedVoterGoals } = campaignData || {}
   const [state, setState] = useState(INITIAL_VOTER_CONTACTS_STATE)
 
@@ -100,7 +111,11 @@ export const VoterContactsProvider = ({ children }: VoterContactsProviderProps):
   }, [reportedVoterGoals])
 
   const updateState = useCallback(
-    async (next: VoterContactsState | ((prev: VoterContactsState) => VoterContactsState)) => {
+    async (
+      next:
+        | VoterContactsState
+        | ((prev: VoterContactsState) => VoterContactsState),
+    ) => {
       const newValues = typeof next === 'function' ? next(state) : next
       await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newValues },
@@ -117,4 +132,3 @@ export const VoterContactsProvider = ({ children }: VoterContactsProviderProps):
     </VoterContactsContext.Provider>
   )
 }
-

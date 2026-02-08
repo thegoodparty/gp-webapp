@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { isProductRoute } from './utils/isProductRoute'
+import { isSessionReplayRoute } from './utils/isSessionReplayRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
 import { getReadyAnalytics } from './utils/analytics'
@@ -27,7 +27,7 @@ const AmplitudeInit = (): null => {
       return
     }
 
-    const wantReplay = isProductRoute(pathname)
+    const wantReplay = isSessionReplayRoute(pathname)
 
     if (wantReplay && !replayActive.current) {
       ;(async () => {

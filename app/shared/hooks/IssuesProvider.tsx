@@ -3,7 +3,7 @@ import { createContext, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-enum IssueStatus {
+export enum IssueStatus {
   newIssue = 'newIssue',
   accepted = 'accepted',
   inProgress = 'inProgress',
@@ -11,7 +11,7 @@ enum IssueStatus {
   completed = 'completed',
 }
 
-enum IssueChannel {
+export enum IssueChannel {
   inPersonMeeting = 'inPersonMeeting',
   phoneCall = 'phoneCall',
   email = 'email',
@@ -20,7 +20,7 @@ enum IssueChannel {
   other = 'other',
 }
 
-interface Issue {
+export interface Issue {
   uuid: string
   createdAt: Date | string
   updatedAt: Date | string

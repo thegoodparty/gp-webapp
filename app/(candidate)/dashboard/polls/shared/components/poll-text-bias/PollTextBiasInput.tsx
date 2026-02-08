@@ -1,10 +1,11 @@
 'use client'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Button } from '@styleguide'
-import { MdAutoAwesome, MdRotateLeft } from 'react-icons/md'
+import { MdAutoAwesome, MdRotateRight } from 'react-icons/md'
 import { usePollBiasAnalysis } from './hooks/usePollBiasAnalysis'
 import { useTextStreaming } from './hooks/useTextStreaming'
 import PollTextInput from './PollTextInput'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export interface BiasAnalysisState {
   hasBias: boolean
@@ -35,6 +36,8 @@ export default function PollTextBiasInput({
     null,
   )
   const [lastAnalyzedText, setLastAnalyzedText] = useState<string | null>(null)
+  const [isCheckingForBias, setIsCheckingForBias] = useState(false)
+  const [isWaitingToOptimize, setIsWaitingToOptimize] = useState(false)
   const {
     biasAnalysis,
     isAnalyzing,
@@ -47,26 +50,63 @@ export default function PollTextBiasInput({
   const { isStreaming, streamingText, streamText } = useTextStreaming()
 
   const trimmedValue = value.trim()
-  const hasBias = biasAnalysis ? biasAnalysis.bias_spans.length > 0 : false
-  const hasGrammar = biasAnalysis
-    ? biasAnalysis.grammar_spans.length > 0
-    : false
+  const hasBias = (biasAnalysis?.bias_spans.length ?? 0) > 0
+  const hasGrammar = (biasAnalysis?.grammar_spans.length ?? 0) > 0
   const hasIssues = hasBias || hasGrammar
-  const matchesLastAnalyzed =
-    lastAnalyzedText !== null && trimmedValue === lastAnalyzedText
   const matchesLastOptimized =
     lastOptimizedText !== null && trimmedValue === lastOptimizedText.trim()
-  const hasBeenChecked =
-    matchesLastAnalyzed || matchesLastOptimized || !!biasAnalysis
-  const textChangedFromAnalyzed =
-    lastAnalyzedText !== null && trimmedValue !== lastAnalyzedText
   const textChangedFromOptimized =
     lastOptimizedText !== null && trimmedValue !== lastOptimizedText.trim()
-  const textChangedFromChecked =
-    textChangedFromAnalyzed || textChangedFromOptimized
   const meetsLengthThreshold = trimmedValue.length > analysisLengthThreshold
+  const hasBeenChecked =
+    matchesLastOptimized ||
+    (!!biasAnalysis && !isAnalyzing && !isCheckingForBias)
 
   const biasStateRef = React.useRef<BiasAnalysisState | null>(null)
+  const shouldOptimizeAfterAnalysisRef = React.useRef(false)
+
+  const resetStates = useCallback(() => {
+    setIsCheckingForBias(false)
+    setIsWaitingToOptimize(false)
+    shouldOptimizeAfterAnalysisRef.current = false
+  }, [])
+
+  useEffect(() => {
+    if (!isAnalyzing && isWaitingToOptimize && biasAnalysis) {
+      setIsWaitingToOptimize(false)
+      shouldOptimizeAfterAnalysisRef.current = false
+      optimizeText(value, true).then((rewrittenText) => {
+        if (!rewrittenText) return
+        streamText(rewrittenText, (finalText) => {
+          onChange(finalText)
+          setLastOptimizedText(finalText)
+          setLastAnalyzedText(finalText.trim())
+          clearAnalysis()
+          resetStates()
+        })
+      })
+    } else if (
+      !isAnalyzing &&
+      isCheckingForBias &&
+      biasAnalysis &&
+      !isWaitingToOptimize
+    ) {
+      setIsCheckingForBias(false)
+      setLastAnalyzedText(trimmedValue)
+    }
+  }, [
+    isAnalyzing,
+    isWaitingToOptimize,
+    isCheckingForBias,
+    biasAnalysis,
+    value,
+    trimmedValue,
+    optimizeText,
+    streamText,
+    onChange,
+    clearAnalysis,
+    resetStates,
+  ])
 
   React.useEffect(() => {
     const currentState: BiasAnalysisState = {
@@ -95,104 +135,130 @@ export default function PollTextBiasInput({
   ])
 
   const isProcessing = isAnalyzing || isOptimizing || isStreaming
-  const canAnalyze =
-    !biasAnalysis &&
-    meetsLengthThreshold &&
-    !isProcessing &&
-    !matchesLastOptimized &&
-    (lastAnalyzedText === null || textChangedFromAnalyzed)
   const canOptimize =
-    !!biasAnalysis &&
-    hasIssues &&
-    meetsLengthThreshold &&
-    !isProcessing &&
-    !matchesLastOptimized
-
-  const displayValue =
-    isOptimizing && !isStreaming ? '' : isStreaming ? streamingText : value
-
-  const handleFocus = useCallback(() => {
-    setIsFocused(true)
-  }, [])
+    meetsLengthThreshold && !isProcessing && !matchesLastOptimized
+  const showLoadingState =
+    (isOptimizing && !isStreaming) || (isWaitingToOptimize && isAnalyzing)
+  const displayValue = showLoadingState
+    ? ''
+    : isStreaming
+    ? streamingText
+    : value
+  const shouldShowHighlights =
+    !!biasAnalysis && hasIssues && !isProcessing && !isWaitingToOptimize
 
   const handleBlur = useCallback(() => {
     setIsFocused(false)
+    const textChangedFromAnalyzed =
+      lastAnalyzedText !== null && trimmedValue !== lastAnalyzedText
     if (
       trimmedValue.length > 0 &&
-      !matchesLastAnalyzed &&
-      !matchesLastOptimized
+      meetsLengthThreshold &&
+      !matchesLastOptimized &&
+      (!biasAnalysis || textChangedFromAnalyzed)
     ) {
-      analyzeBias(value).then(() => {
-        setLastAnalyzedText(trimmedValue)
-      })
+      if (textChangedFromAnalyzed && biasAnalysis) {
+        clearAnalysis()
+      }
+      setIsCheckingForBias(true)
+      if (shouldOptimizeAfterAnalysisRef.current) {
+        setIsWaitingToOptimize(true)
+        shouldOptimizeAfterAnalysisRef.current = false
+      }
+      analyzeBias(value)
     }
   }, [
     analyzeBias,
     value,
     trimmedValue,
-    matchesLastAnalyzed,
     matchesLastOptimized,
-  ])
-
-  const handleContentChange = useCallback(() => {
-    if (trimmedValue.length === 0) {
-      clearAnalysis()
-      setLastOptimizedText(null)
-      setLastAnalyzedText(null)
-      if (onBiasAnalysisChange) {
-        onBiasAnalysisChange({
-          hasBias: false,
-          hasGrammar: false,
-          hasServerError: false,
-          hasBeenChecked: false,
-        })
-      }
-      return
-    }
-
-    if (hasIssues) {
-      clearAnalysis()
-    }
-    if (textChangedFromOptimized) {
-      setLastOptimizedText(null)
-    }
-    if (textChangedFromAnalyzed) {
-      setLastAnalyzedText(null)
-    }
-    if (textChangedFromChecked && onBiasAnalysisChange) {
-      onBiasAnalysisChange({
-        hasBias: false,
-        hasGrammar: false,
-        hasServerError: false,
-        hasBeenChecked: false,
-      })
-    }
-  }, [
-    trimmedValue,
-    hasIssues,
+    meetsLengthThreshold,
+    biasAnalysis,
+    lastAnalyzedText,
     clearAnalysis,
-    textChangedFromOptimized,
-    textChangedFromAnalyzed,
-    textChangedFromChecked,
-    onBiasAnalysisChange,
   ])
 
-  const handleAnalyze = useCallback(async () => {
-    await analyzeBias(value)
-    setLastAnalyzedText(trimmedValue)
-  }, [analyzeBias, value, trimmedValue])
+  const resetBiasState = useCallback(() => {
+    onBiasAnalysisChange?.({
+      hasBias: false,
+      hasGrammar: false,
+      hasServerError: false,
+      hasBeenChecked: false,
+    })
+  }, [onBiasAnalysisChange])
+
+  const handleContentChange = useCallback(
+    (newValue: string) => {
+      const trimmedNewValue = newValue.trim()
+      if (trimmedNewValue.length === 0) {
+        clearAnalysis()
+        setLastOptimizedText(null)
+        setLastAnalyzedText(null)
+        resetStates()
+        resetBiasState()
+        return
+      }
+
+      const textChangedFromAnalyzed =
+        lastAnalyzedText !== null && trimmedNewValue !== lastAnalyzedText
+
+      if (textChangedFromOptimized || textChangedFromAnalyzed) {
+        if (textChangedFromOptimized) {
+          setLastOptimizedText(null)
+        }
+        if (textChangedFromAnalyzed) {
+          setLastAnalyzedText(null)
+        }
+        clearAnalysis()
+        resetStates()
+        resetBiasState()
+      }
+    },
+    [
+      clearAnalysis,
+      textChangedFromOptimized,
+      lastAnalyzedText,
+      resetStates,
+      resetBiasState,
+    ],
+  )
 
   const handleOptimize = useCallback(async () => {
-    const rewrittenText = await optimizeText(value)
-    if (!rewrittenText) return
-
-    streamText(rewrittenText, (finalText) => {
-      onChange(finalText)
-      setLastOptimizedText(finalText)
-      setLastAnalyzedText(finalText.trim())
-      clearAnalysis()
-    })
-  }, [optimizeText, value, onChange, clearAnalysis, streamText])
+    trackEvent(EVENTS.createPoll.pollQuestionOptimized)
+    if (biasAnalysis) {
+      const rewrittenText = await optimizeText(value)
+      if (!rewrittenText) return
+      streamText(rewrittenText, (finalText) => {
+        onChange(finalText)
+        setLastOptimizedText(finalText)
+        setLastAnalyzedText(finalText.trim())
+        clearAnalysis()
+        resetStates()
+      })
+    } else if (meetsLengthThreshold) {
+      if (isAnalyzing || isCheckingForBias) {
+        setIsWaitingToOptimize(true)
+        shouldOptimizeAfterAnalysisRef.current = false
+      } else {
+        shouldOptimizeAfterAnalysisRef.current = true
+        setIsCheckingForBias(true)
+        setIsWaitingToOptimize(true)
+        await analyzeBias(value)
+      }
+    }
+  }, [
+    isAnalyzing,
+    isCheckingForBias,
+    biasAnalysis,
+    meetsLengthThreshold,
+    analyzeBias,
+    value,
+    optimizeText,
+    streamText,
+    onChange,
+    clearAnalysis,
+    resetStates,
+  ])
 
   return (
     <div className={className}>
@@ -205,11 +271,11 @@ export default function PollTextBiasInput({
             biasSpans={biasAnalysis?.bias_spans || []}
             grammarSpans={biasAnalysis?.grammar_spans || []}
             isFocused={isFocused && !isProcessing}
-            onFocus={handleFocus}
+            onFocus={() => setIsFocused(true)}
             onBlur={handleBlur}
-            showHighlights={!!hasIssues && !isProcessing}
+            showHighlights={shouldShowHighlights}
             onContentChange={handleContentChange}
-            showLoadingDots={isOptimizing && !isStreaming}
+            showLoadingDots={showLoadingState}
             isReadOnly={isProcessing}
             hidePlaceholder={isProcessing}
           />
@@ -222,28 +288,28 @@ export default function PollTextBiasInput({
                   : 'text-blue-500 bg-blue-50 hover:!bg-blue-100 active:!bg-blue-50'
               }`}
               size="small"
-              onClick={biasAnalysis ? handleOptimize : handleAnalyze}
-              disabled={!canOptimize && !canAnalyze}
+              onMouseDown={() => {
+                if (
+                  !biasAnalysis &&
+                  meetsLengthThreshold &&
+                  !isAnalyzing &&
+                  !isCheckingForBias
+                ) {
+                  shouldOptimizeAfterAnalysisRef.current = true
+                }
+              }}
+              onClick={handleOptimize}
+              disabled={!canOptimize}
             >
-              {isOptimizing ? (
+              {isProcessing ? (
                 <>
-                  <MdRotateLeft className="size-4" />
+                  <MdRotateRight className="size-4 animate-spin" />
                   <span>Working...</span>
-                </>
-              ) : isAnalyzing ? (
-                <>
-                  <MdRotateLeft className="size-4" />
-                  <span>Checking for bias...</span>
-                </>
-              ) : biasAnalysis ? (
-                <>
-                  <MdAutoAwesome className="size-4" />
-                  <span>Optimize message</span>
                 </>
               ) : (
                 <>
                   <MdAutoAwesome className="size-4" />
-                  <span>Analyze for bias</span>
+                  <span>Optimize message</span>
                 </>
               )}
             </Button>

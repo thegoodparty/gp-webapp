@@ -109,36 +109,42 @@ shadcn/ui components automatically include `data-slot` on their root elements. T
 
 ---
 
-## CSS Import Order
+## Tailwind v4 CSS Setup
 
-The import order in `globals.css` is critical:
+We use **Tailwind CSS v4** with a pure CSS-first configuration — no `tailwind.config.js`. The import order in `globals.css` is critical:
 
 ```css
-/* 1. Design tokens - raw Figma values */
+/* 1. Raw CSS variables that @theme will reference */
 @import '../styleguide/design-tokens.css';
 
-/* 2. Tailwind theme - single @theme block with var() references */
-@import '../styleguide/tailwind-theme.css';
-
-/* 3. Typography utilities */
-@import '../styleguide/typography.css';
-
-/* 4. Styleguide scoping - overrides variables for [data-slot] */
-@import '../styleguide/styleguide-scope.css';
-
-/* 5. Tailwind - generates utilities from @theme */
+/* 2. Core Tailwind — MUST come before @theme, @plugin, @source */
 @import 'tailwindcss';
 
-/* 6. :root block - webapp default values (in globals.css) */
-:root { --primary: #242D3D; ... }
+/* 3. Plugin (replaces plugins[] in tailwind.config.js) */
+@plugin "@tailwindcss/typography";
+
+/* 4. Content sources (replaces content[] in tailwind.config.js) */
+@source "../app";
+@source "../components";
+@source "../styleguide";
+
+/* 5. @theme block — MUST come AFTER @import "tailwindcss" */
+@import '../styleguide/tailwind-theme.css';
+
+/* 6. Additional CSS */
+@import '../styleguide/typography.css';
+@import '../styleguide/styleguide-scope.css';
+@import 'tw-animate-css';
 ```
 
 **Why this order?**
-1. `design-tokens.css` - Raw values must exist first
-2. `tailwind-theme.css` - `@theme` block references variables with `var()`
-3. `styleguide-scope.css` - Overrides variables for `[data-slot]` elements
-4. `tailwindcss` - Generates utilities that resolve `var()` at runtime
-5. `:root` - Webapp defaults; can be overridden by `[data-slot]` scope
+1. `design-tokens.css` — Raw CSS variables must exist before `@theme` references them via `var()`
+2. `@import 'tailwindcss'` — Core framework must load first so it can process `@theme`, `@plugin`, and `@source`
+3. `@plugin` / `@source` — Replaces the old `tailwind.config.js` plugins and content arrays
+4. `tailwind-theme.css` — The `@theme` block that generates Tailwind utility classes. **Must come after `@import 'tailwindcss'`**
+5. Other CSS — Typography, scoping overrides, animations
+
+> **Important:** There is no `tailwind.config.js` file. Tailwind v4 uses `@plugin`, `@source`, and `@theme` CSS directives instead. See the [Tailwind v4 upgrade guide](https://tailwindcss.com/docs/upgrade-guide).
 
 ---
 
@@ -325,17 +331,19 @@ Update both light and dark sections when adding dark mode support.
 ## Troubleshooting
 
 ### Wrong colors on styleguide component
-1. Inspect element - verify `data-slot` attribute exists
+1. Inspect element — verify `data-slot` attribute exists
 2. Check DevTools computed styles for variable values
-3. Verify `styleguide-scope.css` is imported before `tailwindcss`
+3. Verify `styleguide-scope.css` is imported after `tailwindcss` in `globals.css`
 
 ### Legacy component colors changed unexpectedly
 1. Check no parent has `data-slot` attribute
 2. Verify `:root` values in `globals.css`
 
 ### Tailwind class not generating
-1. Verify color is in `@theme` block in `tailwind-theme.css`
-2. Check naming matches (e.g., `brand-midnight-500` not `midnight-500`)
+1. Verify the import order in `globals.css` — `@theme` must come AFTER `@import 'tailwindcss'`
+2. Verify color is in `@theme` block in `tailwind-theme.css`
+3. Check naming matches (e.g., `brand-midnight-500` not `midnight-500`)
+4. After config changes, clear cache: `rm -rf .next && npm run dev`
 
 ### CSS variables not working
 1. Check browser DevTools - inspect computed styles for resolved values
@@ -360,7 +368,8 @@ import { Button } from '@/styleguide'
 
 | Technology | Purpose |
 |------------|---------|
-| Tailwind CSS v4 | CSS-first config with `@theme` |
+| Tailwind CSS v4 | CSS-first config (`@theme`, `@plugin`, `@source`) — no JS config file |
+| `@tailwindcss/postcss` | PostCSS plugin for Tailwind v4 processing |
 | shadcn/ui | Component primitives with `data-slot` |
 | Radix UI | Accessible headless primitives |
 | Storybook 10 | Component documentation |
@@ -371,13 +380,21 @@ import { Button } from '@/styleguide'
 
 During the Tailwind v4 upgrade, several behavioral changes required fixes in `globals.css`:
 
-1. **Cursor pointer** - Tailwind v4 preflight no longer includes `cursor: pointer` for buttons. Added global rule to restore this.
+1. **Cursor pointer** — v4 preflight no longer includes `cursor: pointer` for buttons. Added `@layer base` rule.
 
-2. **Flex button alignment** - Cascade changes caused `inline-block` to sometimes override `flex` on button elements. Added scoped rule for `a.flex.items-center:not([data-slot])` etc.
+2. **Button/link font-weight** — v4 preflight doesn't set `font-weight: 500`. Added `@layer base` rule.
 
-3. **CSS variable references** - Converted `@theme` static hex values to `var()` references (e.g., `--color-primary: var(--primary)`) to enable runtime scoping.
+3. **Heading letter-spacing** — v4 preflight doesn't set `-0.02em` on headings. Added `@layer base` rule.
 
-These fixes are in `app/globals.css` and apply automatically.
+4. **Default line-height** — v4 uses `1.5` (inherited) vs v3's `1.3`. Set `1.3` on `div, span` in `@layer base`.
+
+5. **Flex button alignment** — Cascade changes caused `inline-block` to override `flex` on buttons. Added scoped rule for `a.flex.items-center:not([data-slot])`.
+
+6. **CSS variable references** — `@theme` uses `var()` references (e.g., `--color-primary: var(--primary)`) instead of static values, enabling runtime scoping.
+
+7. **Important modifier syntax** — v4 uses suffix `hidden!` instead of prefix `!hidden`. The old syntax still works but is deprecated.
+
+These fixes are in `app/globals.css` and apply automatically. See `styleguide/CHANGELOG.md` for details.
 
 ---
 

@@ -13,7 +13,7 @@ interface SimpleTableProps<T> {
   onRowClick?: ((row: T, e: React.MouseEvent<HTMLTableRowElement>) => void) | null
 }
 
-const SimpleTable = <T extends Record<string, never>>({
+const SimpleTable = <T extends object>({
   columns = [],
   data = [],
   onRowClick = null,
@@ -89,7 +89,7 @@ const SimpleTable = <T extends Record<string, never>>({
                   last:rounded-br-xl
                 "
               >
-                {column.cell ? column.cell({ row }) : (column.accessorKey ? row[column.accessorKey] : null)}
+                {column.cell ? column.cell({ row }) : (column.accessorKey ? String(row[column.accessorKey] ?? '') : null)}
               </td>
             ))}
           </tr>

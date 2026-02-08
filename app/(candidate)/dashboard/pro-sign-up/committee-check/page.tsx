@@ -14,24 +14,21 @@ export const metadata = meta
 
 export const dynamic = 'force-dynamic'
 
-interface CommitteeCheckCampaign {
-  details: {
-    [key: string]: string | number | boolean | null | undefined
-  }
-}
-
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
   await restrictDemoAccess()
 
   const fetchedCampaign = await fetchUserCampaign()
-  const campaign = fetchedCampaign === false ? undefined : fetchedCampaign as CommitteeCheckCampaign | undefined
   const user = await getServerUser()
 
-  const childProps = {
-    campaign,
-    user,
+  // Transform campaign to match component's expected type (convert null to undefined)
+  const campaign = fetchedCampaign === null ? undefined : {
+    details: {
+      campaignCommittee: fetchedCampaign.details?.campaignCommittee ?? undefined,
+      einNumber: fetchedCampaign.details?.einNumber ?? undefined,
+    },
+    isPro: fetchedCampaign.isPro ?? undefined,
   }
 
-  return <CommitteeCheckPage {...childProps} />
+  return <CommitteeCheckPage campaign={campaign} user={user} />
 }

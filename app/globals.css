@@ -1,20 +1,40 @@
-/* 
- * CSS IMPORT ORDER (critical for styleguide scoping to work):
- * 1. design-tokens.css - Raw Figma token values
- * 2. tailwind-theme.css - Single @theme block with var() references
- * 3. typography.css - Typography utilities
- * 4. styleguide-scope.css - [data-slot] overrides for styleguide components
- * 5. tailwindcss - Generates utilities from @theme
+/*
+ * TAILWIND CSS v4 SETUP
+ * =====================
+ * Per the official upgrade guide (https://tailwindcss.com/docs/upgrade-guide):
+ *
+ * 1. @import "tailwindcss" FIRST (replaces @tailwind directives)
+ * 2. @plugin for loading plugins (replaces JS config plugins array)
+ * 3. @source for content paths (replaces JS config content array)
+ * 4. @theme AFTER tailwindcss (replaces JS config theme object)
+ *
+ * CSS variable files (design-tokens, typography, etc.) come before or after
+ * as long as @theme comes AFTER @import "tailwindcss".
  */
+
+/* 1. Raw CSS variables that @theme will reference via var() */
 @import '../styleguide/design-tokens.css';
+
+/* 2. Core Tailwind - MUST come before @theme, @plugin, @source */
+@import 'tailwindcss';
+
+/* 3. Tailwind v4 plugin (replaces plugins[] in tailwind.config.js) */
+@plugin "@tailwindcss/typography";
+
+/* 4. Content sources (replaces content[] in tailwind.config.js) */
+@source "../app";
+@source "../components";
+@source "../styleguide";
+
+/* 5. Theme tokens - @theme MUST come AFTER @import "tailwindcss" */
 @import '../styleguide/tailwind-theme.css';
+
+/* 6. Additional CSS */
 @import '../styleguide/typography.css';
 @import '../styleguide/styleguide-scope.css';
-
-@import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Dark mode variant for Tailwind v4 */
+/* Dark mode variant */
 @custom-variant dark (&:is(.dark *));
 
 /*

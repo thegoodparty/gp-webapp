@@ -2,23 +2,23 @@ import { noop } from '@shared/utils/noop'
 import { useEffect, useRef } from 'react'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
-interface LongPollProps {
-  pollingMethod?: () => Promise<unknown>
+interface LongPollProps<T = void> {
+  pollingMethod?: () => Promise<T | void>
   pollingDelay?: number
-  onSuccess?: (result: unknown) => void
+  onSuccess?: (result: T | void) => void
   onError?: (error: unknown) => void
   limit?: number
   stopPolling?: boolean
 }
 
-export const LongPoll = ({
+export const LongPoll = <T = void,>({
   pollingMethod = async () => {},
   pollingDelay = 1000,
   onSuccess = noop,
   onError = noop,
   limit = 0,
   stopPolling = false,
-}: LongPollProps) => {
+}: LongPollProps<T>): null => {
   const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const countRef = useRef(0)
   const stopPollingRef = useRef(stopPolling)
@@ -75,5 +75,6 @@ export const LongPoll = ({
 
     poll()
   }, [])
-}
 
+  return null
+}

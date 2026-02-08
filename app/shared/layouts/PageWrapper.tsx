@@ -15,46 +15,48 @@ import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-import { Campaign } from 'helpers/types'
+import { NewRelicIdentifier } from '@shared/new-relic'
 
 interface PageWrapperProps {
   children: React.ReactNode
 }
 
-const PageWrapper = async ({ children }: PageWrapperProps): Promise<React.JSX.Element> => {
+const PageWrapper = async ({
+  children,
+}: PageWrapperProps): Promise<React.JSX.Element> => {
   const pathname = await getReqPathname()
-  const fetchedCampaign = await fetchUserCampaign()
-  const campaign = (fetchedCampaign === false ? null : fetchedCampaign) as Campaign | null
+  const campaign = await fetchUserCampaign()
 
   return (
     <UserProvider>
       <ImpersonateUserProvider>
         <CampaignProvider campaign={campaign}>
+          <NewRelicIdentifier />
           <ElectedOfficeProvider>
             <CampaignStatusProvider>
-            <P2pUxEnabledProvider>
-              <NavigationProvider>
-                <SnackbarProvider>
-                  <div className="overflow-x-hidden">
-                    <JsonLdSchema />
-                    <Nav />
-                    <Suspense>
-                      <PromoBanner initPathname={pathname || ''} />
-                    </Suspense>
-                    {children}
-                    <Suspense>
-                      <Footer initPathname={pathname || ''} />
-                    </Suspense>
-                    <Suspense>
-                      <CookiesSnackbar />
-                    </Suspense>
-                    <Suspense>
-                      <SegmentIdentify />
-                    </Suspense>
-                  </div>
-                </SnackbarProvider>
-              </NavigationProvider>
-            </P2pUxEnabledProvider>
+              <P2pUxEnabledProvider>
+                <NavigationProvider>
+                  <SnackbarProvider>
+                    <div className="overflow-x-hidden">
+                      <JsonLdSchema />
+                      <Nav />
+                      <Suspense>
+                        <PromoBanner initPathname={pathname || ''} />
+                      </Suspense>
+                      {children}
+                      <Suspense>
+                        <Footer initPathname={pathname || ''} />
+                      </Suspense>
+                      <Suspense>
+                        <CookiesSnackbar />
+                      </Suspense>
+                      <Suspense>
+                        <SegmentIdentify />
+                      </Suspense>
+                    </div>
+                  </SnackbarProvider>
+                </NavigationProvider>
+              </P2pUxEnabledProvider>
             </CampaignStatusProvider>
           </ElectedOfficeProvider>
         </CampaignProvider>
@@ -64,4 +66,3 @@ const PageWrapper = async ({ children }: PageWrapperProps): Promise<React.JSX.El
 }
 
 export default PageWrapper
-

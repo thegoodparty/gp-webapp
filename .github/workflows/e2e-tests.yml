@@ -2,7 +2,7 @@ name: E2E Tests
 
 on:
   deployment_status:
-    
+
 jobs:
   check-pr-status:
     name: Check if PR is open
@@ -67,7 +67,15 @@ jobs:
       actions: read
       contents: read
       pull-requests: write
+      id-token: write
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     steps:
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::333022194791:role/web-app-e2e-tests
+          aws-region: us-west-2
+
       - name: Debug deployment info
         run: |
           echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
@@ -93,8 +101,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: "lts/*"
+          cache: "npm"
           cache-dependency-path: test-automation/package-lock.json
 
       - name: Install Dependencies
@@ -172,33 +180,33 @@ jobs:
             const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.stable-test-results.outputs) }};
             const testStatus = failed_count > 0 ? '❌' : '✅';
             const deploymentUrl = '${{ env.BASE_URL }}';
-            
+
             // Find PR associated with this deployment
             const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.payload.deployment.sha
             });
-            
+
             if (prs.length === 0) {
               console.log('No PR found for this deployment, skipping comment');
               return;
             }
-            
+
             const prNumber = prs[0].number;
             console.log(`Found PR #${prNumber} for deployment`);
-            
+
             let body = `## ${testStatus} Stable E2E Test Results (Blocking)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
             body += `**Stable Test Results:**\n`;
             body += `- ✅ Passed: ${passed_count}\n`;
             body += `- ❌ Failed: ${failed_count}\n`;
             body += `- 📊 Total: ${total_tests}\n\n`;
-            
+
             if (failed_count > 0 && failed_tests) {
               body += `**Failed Stable Tests:**\n${failed_tests}\n\n`;
             }
-            
+
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.createComment({
@@ -250,7 +258,15 @@ jobs:
       actions: read
       contents: read
       pull-requests: write
+      id-token: write
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     steps:
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::333022194791:role/web-app-e2e-tests
+          aws-region: us-west-2
+
       - name: Debug deployment info
         run: |
           echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
@@ -276,8 +292,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'npm'
+          node-version: "lts/*"
+          cache: "npm"
           cache-dependency-path: test-automation/package-lock.json
 
       - name: Install Dependencies
@@ -292,7 +308,7 @@ jobs:
         id: run-experimental-tests
         working-directory: test-automation
         run: npx playwright test --project=experimental
-        continue-on-error: true  # Don't fail the workflow if experimental tests fail
+        continue-on-error: true # Don't fail the workflow if experimental tests fail
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Experimental E2E Tests - PR Preview"
@@ -356,35 +372,35 @@ jobs:
             const { failed_count, passed_count, total_tests, failed_tests } = ${{ toJSON(steps.experimental-test-results.outputs) }};
             const testStatus = failed_count > 0 ? '⚠️' : '✅';
             const deploymentUrl = '${{ env.BASE_URL }}';
-            
+
             // Find PR associated with this deployment
             const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: context.payload.deployment.sha
             });
-            
+
             if (prs.length === 0) {
               console.log('No PR found for this deployment, skipping comment');
               return;
             }
-            
+
             const prNumber = prs[0].number;
             console.log(`Found PR #${prNumber} for deployment`);
-            
+
             let body = `## ${testStatus} Experimental E2E Test Results (Non-blocking)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
             body += `**Experimental Test Results:**\n`;
             body += `- ✅ Passed: ${passed_count}\n`;
             body += `- ⚠️ Failed: ${failed_count}\n`;
             body += `- 📊 Total: ${total_tests}\n\n`;
-            
+
             if (total_tests === 0) {
               body += `*No experimental tests found - all tests are currently stable.*\n\n`;
             } else if (failed_count > 0 && failed_tests) {
               body += `**Failed Experimental Tests (non-blocking):**\n${failed_tests}\n\n`;
             }
-            
+
             body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.createComment({

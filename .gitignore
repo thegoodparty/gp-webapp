@@ -37,6 +37,7 @@ next-env.d.ts
 
 #service worker
 /public/sw.js
+/public/sw.js.map
 /public/workbox-*
 /workbox-*
 
@@ -55,6 +56,7 @@ invalid_urls.csv
 # AI Tools
 /.ai/
 /.cursor
+.claude
 
 *repomix*
 CLAUDE.md

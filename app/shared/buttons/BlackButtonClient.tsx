@@ -9,7 +9,10 @@ interface BlackButtonClientProps {
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
   className?: string
+  id?: string
 }
+
+export type { BlackButtonClientProps }
 
 const BlackButtonClient = ({
   children,
@@ -18,6 +21,7 @@ const BlackButtonClient = ({
   disabled,
   type,
   className,
+  id,
 }: BlackButtonClientProps) => {
   const backgroundColor = disabled ? '#b9b9b9' : '#000'
   const cursor = disabled ? 'not-allowed' : 'pointer'
@@ -29,6 +33,7 @@ const BlackButtonClient = ({
       disabled={disabled}
       type={type}
       className={className}
+      id={id}
     >
       {children}
     </BaseButtonClient>

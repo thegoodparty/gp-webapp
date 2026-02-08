@@ -8,8 +8,8 @@ import { PollsTable } from './PollsTable'
 import PollWelcomePage from 'app/polls/welcome/components/PollWelcomePage'
 import Button from '@shared/buttons/Button'
 import { LuPlus } from 'react-icons/lu'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
-import { Poll } from '../shared/serverApiCalls'
+import { Poll } from '../shared/poll-types'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 interface PollsPageProps {
   pathname: string
@@ -18,7 +18,8 @@ interface PollsPageProps {
 
 export default function PollsPage({ pathname, polls }: PollsPageProps) {
   const [campaign] = useCampaign()
-  const { on: pollCreationEnabled } = useFlagOn('serve-poll-creation')
+
+  const hasPolls = polls.length > 0
 
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
@@ -30,11 +31,14 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
               Manage your constituent engagement
             </Body1>
           </div>
-          {pollCreationEnabled && (
+          {hasPolls && (
             <Button
               href="/dashboard/polls/create"
               variant="contained"
               color="info"
+              onClick={() => {
+                trackEvent(EVENTS.createPoll.createPollClicked)
+              }}
             >
               <span className="flex items-center gap-2">
                 <LuPlus /> Create Poll
@@ -42,11 +46,7 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
             </Button>
           )}
         </div>
-        {polls.length > 0 ? (
-          <PollsTable polls={polls} />
-        ) : (
-          <PollWelcomePage />
-        )}
+        {hasPolls ? <PollsTable polls={polls} /> : <PollWelcomePage />}
       </Paper>
     </DashboardLayout>
   )

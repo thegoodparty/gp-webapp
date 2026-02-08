@@ -25,7 +25,10 @@ export interface UsePollBiasAnalysisReturn {
   isOptimizing: boolean
   hasServerError: boolean
   analyzeBias: (pollText: string) => Promise<void>
-  optimizeText: (pollText: string) => Promise<string | null>
+  optimizeText: (
+    pollText: string,
+    skipDelay?: boolean,
+  ) => Promise<string | null>
   clearAnalysis: () => void
 }
 
@@ -76,7 +79,7 @@ export function usePollBiasAnalysis(
   )
 
   const optimizeText = useCallback(
-    async (pollText: string): Promise<string | null> => {
+    async (pollText: string, skipDelay = false): Promise<string | null> => {
       if (!biasAnalysis) return null
 
       const contentChanged = pollText !== contentAtAnalysis
@@ -104,6 +107,13 @@ export function usePollBiasAnalysis(
         if (!rewrittenText) {
           setIsOptimizing(false)
           return null
+        }
+
+        if (skipDelay) {
+          setIsOptimizing(false)
+          setBiasAnalysis(null)
+          setContentAtAnalysis('')
+          return rewrittenText
         }
 
         return new Promise((resolve) => {

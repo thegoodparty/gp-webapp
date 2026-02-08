@@ -3,16 +3,33 @@ import { createContext, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-interface EcanvasserSurvey {
-  id: string
+interface AnswerType {
+  name: string
 }
 
-type EcanvasserSurveyContextValue = [
+interface Question {
+  id: number | string
+  name: string
+  answer_type: AnswerType
+  required: boolean
+}
+
+export interface EcanvasserSurvey {
+  id: string
+  name?: string
+  description?: string
+  status?: string
+  requires_signature?: boolean
+  questions?: Question[]
+}
+
+export type EcanvasserSurveyContextValue = [
   survey: EcanvasserSurvey,
   refreshSurvey: () => Promise<void>
 ]
 
-export const EcanvasserSurveyContext = createContext<EcanvasserSurveyContextValue>([{} as EcanvasserSurvey, async () => {}])
+const defaultSurvey: EcanvasserSurvey = { id: '' }
+export const EcanvasserSurveyContext = createContext<EcanvasserSurveyContextValue>([defaultSurvey, async () => {}])
 
 interface EcanvasserSurveyProviderProps {
   children: React.ReactNode
@@ -25,7 +42,7 @@ export const EcanvasserSurveyProvider = ({ children, survey: initialSurvey }: Ec
   const refreshSurvey = async () => {
     try {
       const resp = await clientFetch<EcanvasserSurvey>(apiRoutes.ecanvasser.surveys.find, {
-        id: (survey as EcanvasserSurvey)?.id,
+        id: survey?.id,
       })
 
       setSurvey(resp?.status === 404 ? { id: '' } : resp.data)

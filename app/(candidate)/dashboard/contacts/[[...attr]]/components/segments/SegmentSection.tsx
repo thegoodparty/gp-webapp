@@ -1,0 +1,198 @@
+'use client'
+import {
+  Button,
+  IconButton,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from 'goodparty-styleguide'
+
+import { useState } from 'react'
+import FiltersSheet from './FiltersSheet'
+import { useContactsTable } from '../../hooks/ContactsTableProvider'
+import { ALL_SEGMENTS, SHEET_MODES } from '../shared/constants'
+import {
+  isDefaultSegment,
+  findCustomSegment,
+  trimCustomSegmentName,
+} from '../shared/segments.util'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useShowContactProModal } from '../../hooks/ContactProModal'
+import { Lock } from '@mui/icons-material'
+import { LuPencil } from 'react-icons/lu'
+import { type SegmentResponse } from '../shared/ajaxActions'
+
+type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
+
+interface SheetState {
+  open: boolean
+  mode: SheetMode
+  editSegment: SegmentResponse | null
+}
+
+export default function SegmentSection() {
+  const {
+    segments,
+    customSegments,
+    currentSegment,
+    selectSegment,
+    refreshCustomSegments,
+  } = useContactsTable()
+  const [campaign] = useCampaign()
+  const showProUpgradeModal = useShowContactProModal()
+  const [sheetState, setSheetState] = useState<SheetState>({
+    open: false,
+    mode: SHEET_MODES.CREATE,
+    editSegment: null,
+  })
+
+  const isCustom = !isDefaultSegment(segments, currentSegment)
+
+  const handleEdit = () => {
+    if (isCustom) {
+      const customSegment = findCustomSegment(
+        customSegments,
+        currentSegment,
+      ) as SegmentResponse | null
+      setSheetState({
+        open: true,
+        mode: SHEET_MODES.EDIT,
+        editSegment: customSegment || null,
+      })
+    }
+  }
+
+  const handleCreateSegment = () => {
+    if (!campaign?.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
+    setSheetState({
+      open: true,
+      mode: SHEET_MODES.CREATE,
+      editSegment: null,
+    })
+  }
+
+  const handleSelect = (selectedSegment: string) => {
+    if (!campaign?.isPro) {
+      showProUpgradeModal(true)
+      return
+    }
+
+    const isCustomSegment = !isDefaultSegment(segments, selectedSegment)
+    const segmentName = isCustomSegment
+      ? findCustomSegment(customSegments, selectedSegment)?.name ??
+        selectedSegment
+      : selectedSegment
+
+    trackEvent(EVENTS.Contacts.SegmentViewed, {
+      segment: segmentName,
+      type: isCustomSegment ? 'custom' : 'default',
+    })
+
+    selectSegment(selectedSegment)
+  }
+
+  const handleSheetClose = () => {
+    setSheetState({
+      open: false,
+      mode: SHEET_MODES.CREATE,
+      editSegment: null,
+    })
+  }
+
+  const resetSelect = () => {
+    selectSegment(ALL_SEGMENTS)
+  }
+
+  const handleAfterSave = async (segmentId: number) => {
+    await refreshCustomSegments()
+    selectSegment(segmentId.toString())
+  }
+
+  return (
+    <div className="flex items-center flex-col w-full md:w-auto md:flex-row">
+      <Select value={currentSegment} onValueChange={handleSelect}>
+        <SelectTrigger className="w-full lg:w-[350px] justify-start">
+          <label
+            htmlFor="segment-select"
+            className="text-sm font-normal text-muted-foreground border-r pr-3 border-gray-200"
+          >
+            Current list
+          </label>
+          <div className="w-full text-left pl-1">
+            <SelectValue placeholder="All Contacts" />
+          </div>
+        </SelectTrigger>
+        <SelectContent className="max-h-[50vh]">
+          <SelectGroup>
+            <SelectLabel>Default Segments</SelectLabel>
+            {segments.map((segment) => (
+              <SelectItem key={segment.value} value={segment.value}>
+                {segment.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+          {customSegments && customSegments?.length > 0 && (
+            <SelectGroup>
+              <SelectLabel>Custom Segments</SelectLabel>
+              {customSegments.map((segment) => (
+                <SelectItem key={segment.id} value={segment.id.toString()}>
+                  {segment.name
+                    ? trimCustomSegmentName(segment.name)
+                    : 'Unnamed Segment'}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          )}
+        </SelectContent>
+      </Select>
+      <Button
+        variant="default"
+        onClick={handleCreateSegment}
+        className="font-normal text-sm px-4 w-full mt-4 md:mt-0 mb-4 md:mb-0 md:w-auto md:ml-4"
+      >
+        {!campaign?.isPro && <Lock />}
+        Create list
+      </Button>
+
+      {isCustom && (
+        <>
+          <IconButton
+            variant="outline"
+            onClick={handleEdit}
+            className="ml-4 font-normal hidden md:flex"
+          >
+            <div className="w-10 h-10 flex items-center justify-center">
+              <LuPencil />
+            </div>
+          </IconButton>
+          <Button
+            variant="outline"
+            onClick={handleEdit}
+            className="flex md:hidden w-full"
+          >
+            Edit list
+          </Button>
+        </>
+      )}
+      <FiltersSheet
+        open={sheetState.open}
+        handleClose={handleSheetClose}
+        handleOpenChange={(open) =>
+          setSheetState((prev) => ({ ...prev, open }))
+        }
+        mode={sheetState.mode}
+        editSegment={sheetState.editSegment}
+        resetSelect={resetSelect}
+        afterSave={handleAfterSave}
+      />
+    </div>
+  )
+}

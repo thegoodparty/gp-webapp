@@ -1,32 +1,21 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { shortToLongState } from 'helpers/statesHelper'
+import { shortToLongState, isStateAbbreviation } from 'helpers/statesHelper'
 import Hero from '../../shared/Hero'
 import LinksSection from '../../shared/LinksSection'
 import RacesSection from '../../shared/RacesSection'
 import LearnToRun from '../../shared/LearnToRun'
 import Guides from '../../shared/Guides'
-
-interface Place {
-  slug: string
-}
-
-interface Article {
-  [key: string]: string | number | boolean | null | undefined | object
-}
-
-interface Race {
-  [key: string]: string | number | boolean | null | undefined | object
-}
+import { Place, Article, Race, PlaceChild } from '../../shared/types'
 
 interface ElectionsStatePageProps {
   state: string
-  categorizedChildren: {
+  categorizedChildren?: {
     counties?: Place[]
     districts?: Place[]
     others?: Place[]
   }
-  children: Place[]
-  races: Race[]
+  children?: PlaceChild[] | null
+  races?: Race[]
   articles: Article[]
 }
 
@@ -34,20 +23,24 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
   const {
     state,
     categorizedChildren = {},
-    children = [],
+    children: rawChildren,
     races,
     articles,
   } = props
+  const children = rawChildren || []
 
   const { counties = [], districts = [], others = [] } = categorizedChildren
 
-  const stateName = (shortToLongState as Record<string, string>)[state.toUpperCase()]
+  const upperState = state.toUpperCase()
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : state
 
-  const placeLink = (place: Place) => `/elections/${place.slug}`
+  const placeLink = (place: PlaceChild | Place) => `/elections/${place.slug || ''}`
 
     return (
       <div className="bg-indigo-50 pb-20">
-        <Hero state={state} county={null} color1="#3EE996" color2="#31D3C8" level="state" municipality={null} parent={null} />
+        <Hero state={state} county={undefined} color1="#3EE996" color2="#31D3C8" level="state" municipality={undefined} parent={undefined} />
   
         <MaxWidth>
           <RacesSection races={races} />

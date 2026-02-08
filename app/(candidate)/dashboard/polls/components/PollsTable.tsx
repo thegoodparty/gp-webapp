@@ -10,7 +10,7 @@ import {
 import Link from 'next/link'
 import { StatusBadge } from './StatusBadge'
 import React from 'react'
-import { Poll } from '../shared/serverApiCalls'
+import { Poll } from '../shared/poll-types'
 
 const columns = [
   {

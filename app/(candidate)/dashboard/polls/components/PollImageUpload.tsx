@@ -90,9 +90,9 @@ export const PollImageUpload: React.FC<{
             <Image
               src={imageUrl}
               alt="Preview"
-              width={80}
-              height={80}
-              className="object-cover rounded"
+              width={200}
+              height={200}
+              className="object-cover rounded max-h-[100px] w-auto"
             />
             {selectedFile && (
               <p className="leading-normal text-sm font-normal mt-2 text-green-600">

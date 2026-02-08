@@ -149,12 +149,59 @@ article ul li,
 
 ---
 
+#### Issue 5: Task Checkbox Hover Shows Two Icons
+
+**Problem:** Hovering the task checkbox showed both the unchecked and checked icons side by side.
+
+**Root Cause:** In Tailwind CSS v4, JavaScript config files are **no longer auto-detected**. Our `tailwind.config.ts` contained the `content` paths for class scanning, but without the `@config` directive, Tailwind v4 didn't know where to scan for utility classes - resulting in NO utilities being generated.
+
+See: [Tailwind v4 Upgrade Guide - Using a JavaScript config file](https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file)
+
+**Fix:** Restructured CSS imports to follow proper Tailwind v4 order. The key issue was that `@theme` (in `tailwind-theme.css`) was imported BEFORE `@import "tailwindcss"`, but **`@theme` must come AFTER**.
+
+Correct Tailwind v4 setup:
+```css
+/* 1. CSS variables first */
+@import '../styleguide/design-tokens.css';
+
+/* 2. Core Tailwind */
+@import 'tailwindcss';
+
+/* 3. Plugins via @plugin (not JS config) */
+@plugin "@tailwindcss/typography";
+
+/* 4. Content sources */
+@source "../app";
+@source "../components";
+@source "../styleguide";
+
+/* 5. @theme block MUST come AFTER tailwindcss */
+@import '../styleguide/tailwind-theme.css';
+```
+
+Also:
+- Deleted `tailwind.config.js` - not needed in v4 (use `@plugin` and `@source` instead)
+- Added manual group-hover CSS rules as fallback
+- Updated component to use Tailwind v4's important modifier syntax (`hidden!` instead of `!hidden`)
+
+**Files Changed:** 
+- `app/globals.css` - Restructured imports, added `@plugin` and `@source` directives
+- Deleted `tailwind.config.js` - replaced with CSS directives
+- `app/(candidate)/dashboard/components/tasks/TaskCheck.tsx` - Updated important syntax to v4 format
+
+**Impact:** Tailwind v4 now properly processes the `@theme` block and generates utility classes.
+
+---
+
 ### Tailwind v4 Migration Notes
 
 These issues stem from differences between Tailwind CSS v3 and v4 preflight:
 
 | Feature | Tailwind v3 | Tailwind v4 | Our Fix |
 |---------|-------------|-------------|---------|
+| Config file | `tailwind.config.js` auto-detected | Use `@plugin`, `@source`, `@theme` in CSS | Deleted JS config, use CSS directives |
+| Import order | `@tailwind` directives | `@import "tailwindcss"` first, then `@theme` | Fixed import order |
+| Important modifier | `!hidden` (prefix) | `hidden!` (suffix) | Updated syntax |
 | Button cursor | `cursor: pointer` | Not set | Added in `@layer base` |
 | Button/link font-weight | `500` | Not set | Added in `@layer base` |
 | Heading letter-spacing | `-0.02em` | Not set | Added in `@layer base` |
