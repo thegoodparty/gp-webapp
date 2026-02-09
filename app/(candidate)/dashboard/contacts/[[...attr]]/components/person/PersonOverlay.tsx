@@ -27,6 +27,7 @@ import { Person } from '../shared/ajaxActions'
 import { isNotNil } from 'es-toolkit'
 import { ReactNode } from 'react'
 import Map from '@shared/utils/Map'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const formatPersonName = (person: Person) =>
   [person.firstName, person.lastName, person.nameSuffix]
@@ -278,6 +279,9 @@ const PersonContent: React.FC<{
   person: Person
   hidePoliticalParty: boolean
 }> = ({ person, hidePoliticalParty }) => {
+  const { on: showActivitiesAndIssues } = useFlagOn(
+    'serve-contacts-activities-and-issues',
+  )
   const details = [person.gender, person.age ? `${person.age} years old` : null]
     .filter(isNotNil)
     .join(', ')
@@ -289,9 +293,11 @@ const PersonContent: React.FC<{
       </h2>
       <p className="text-xl font-semibold mb-6">{details}</p>
       <div className="flex flex-col gap-6">
-        <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
-          <TopIssuesContent />
-        </InfoSection>
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
+            <TopIssuesContent />
+          </InfoSection>
+        ) : null}
 
         <InfoSection title="Contact Information" icon={<LuContact size={24} />}>
           <Field
@@ -363,9 +369,11 @@ const PersonContent: React.FC<{
           <Field label="Ethnicity Group" value={person.ethnicityGroup} />
         </InfoSection>
 
-        <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
-          <ActivitiesContent />
-        </InfoSection>
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
+            <ActivitiesContent />
+          </InfoSection>
+        ) : null}
       </div>
     </div>
   )
