@@ -47,25 +47,69 @@ interface BackendFilters extends Record<string, unknown> {
 }
 
 interface FiltersSheetProps {
-  open?: boolean
-  handleClose?: () => void
-  mode?: SheetMode
-  editSegment?: SegmentResponse | null
-  handleOpenChange?: (open: boolean) => void
-  resetSelect?: () => void
-  afterSave?: (segmentId: number) => void
+  open: boolean
+  handleClose: () => void
+  mode: SheetMode
+  editSegment: SegmentResponse | null
+  handleOpenChange: (open: boolean) => void
+  resetSelect: () => void
+  afterSave: (segmentId: number) => void
 }
 
 const MAX_SEGMENT_NAME_LENGTH = 30
 
+const transformFiltersForBackend = (filters: Filters): BackendFilters => {
+  const transformed: BackendFilters = { ...filters }
+
+  const languageCodes: string[] = []
+  if (transformed.languageEnglish) {
+    languageCodes.push('en')
+  }
+  if (transformed.languageSpanish) {
+    languageCodes.push('es')
+  }
+  if (transformed.languageOther) {
+    languageCodes.push('other')
+  }
+  delete transformed.languageEnglish
+  delete transformed.languageSpanish
+  delete transformed.languageOther
+  transformed.languageCodes = languageCodes
+
+  const incomeRanges: string[] = []
+  const incomeMapping: Record<string, string> = {
+    incomeUnder25k: 'Under $25k',
+    income25kTo35k: '$25k - $35k',
+    income35kTo50k: '$35k - $50k',
+    income50kTo75k: '$50k - $75k',
+    income75kTo100k: '$75k - $100k',
+    income100kTo125k: '$100k - $125k',
+    income125kTo150k: '$125k - $150k',
+    income150kTo200k: '$150k - $200k',
+    income200kPlus: '$200k+',
+  }
+
+  Object.entries(incomeMapping).forEach(([key, value]) => {
+    if (transformed[key]) {
+      incomeRanges.push(value)
+    }
+    delete transformed[key]
+  })
+  transformed.incomeRanges = incomeRanges
+
+  transformed.incomeUnknown = !!filters.incomeUnknown
+
+  return transformed
+}
+
 export default function Filters({
   open = false,
-  handleClose = () => {},
-  mode = SHEET_MODES.CREATE,
-  editSegment = null,
-  handleOpenChange = () => {},
-  resetSelect = () => {},
-  afterSave = () => {},
+  handleClose,
+  mode,
+  editSegment,
+  handleOpenChange,
+  resetSelect,
+  afterSave,
 }: FiltersSheetProps) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState<Filters>({})
@@ -175,6 +219,10 @@ export default function Filters({
     setFilters(updatedFilters)
   }
 
+  const _transformed = transformFiltersForBackend(filters)
+
+  console.log({ filters, transformed: _transformed })
+
   const handleSave = async () => {
     if (!canSave()) {
       errorSnackbar('Please select at least one filter')
@@ -245,50 +293,6 @@ export default function Filters({
     return (
       !!segmentName && Object.values(filters).some((value) => value === true)
     )
-  }
-
-  const transformFiltersForBackend = (filters: Filters): BackendFilters => {
-    const transformed: BackendFilters = { ...filters }
-
-    const languageCodes: string[] = []
-    if (transformed.languageEnglish) {
-      languageCodes.push('en')
-    }
-    if (transformed.languageSpanish) {
-      languageCodes.push('es')
-    }
-    if (transformed.languageOther) {
-      languageCodes.push('other')
-    }
-    delete transformed.languageEnglish
-    delete transformed.languageSpanish
-    delete transformed.languageOther
-    transformed.languageCodes = languageCodes
-
-    const incomeRanges: string[] = []
-    const incomeMapping: Record<string, string> = {
-      incomeUnder25k: 'Under $25k',
-      income25kTo35k: '$25k - $35k',
-      income35kTo50k: '$35k - $50k',
-      income50kTo75k: '$50k - $75k',
-      income75kTo100k: '$75k - $100k',
-      income100kTo125k: '$100k - $125k',
-      income125kTo150k: '$125k - $150k',
-      income150kTo200k: '$150k - $200k',
-      income200kPlus: '$200k+',
-    }
-
-    Object.entries(incomeMapping).forEach(([key, value]) => {
-      if (transformed[key]) {
-        incomeRanges.push(value)
-      }
-      delete transformed[key]
-    })
-    transformed.incomeRanges = incomeRanges
-
-    transformed.incomeUnknown = !!filters.incomeUnknown
-
-    return transformed
   }
 
   return (
