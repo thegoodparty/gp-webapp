@@ -39,9 +39,10 @@ interface OfficeStepProps {
 
 async function runP2V(slug: string): Promise<boolean> {
   try {
-    const resp = await clientFetch<boolean>(apiRoutes.campaign.pathToVictory.create, {
-      slug,
-    })
+    const resp = await clientFetch<boolean>(
+      apiRoutes.campaign.pathToVictory.create,
+      { slug },
+    )
 
     return !!resp.data
   } catch (e) {
@@ -54,11 +55,15 @@ interface CampaignResponse extends Campaign {
   error?: string
 }
 
-async function updateRaceTargetDetails(slug: string | undefined = undefined): Promise<Campaign | false> {
+async function updateRaceTargetDetails(params: {
+  officeName: string
+  slug?: string | undefined
+}): Promise<Campaign | false> {
   try {
-    const resp = await clientFetch<CampaignResponse>(apiRoutes.campaign.raceTargetDetails.update, {
-      slug,
-    })
+    const resp = await clientFetch<CampaignResponse>(
+      apiRoutes.campaign.raceTargetDetails.update,
+      params,
+    )
 
     if (resp.data && resp.data.error) {
       console.error('API error: ', resp.data)
@@ -76,11 +81,14 @@ interface UpdateAttr {
   value: string | number | boolean | undefined
 }
 
-async function runPostOfficeStepUpdates(attr: UpdateAttr[], slug: string | undefined = undefined): Promise<void> {
-  await updateCampaign(attr, slug)
-  const campaign = await updateRaceTargetDetails(slug)
+async function runPostOfficeStepUpdates(
+  attr: UpdateAttr[],
+  params: { officeName: string; slug?: string | undefined },
+): Promise<void> {
+  await updateCampaign(attr, params.slug)
+  const campaign = await updateRaceTargetDetails(params)
   if (campaign && !campaign?.pathToVictory?.data?.projectedTurnout) {
-    runP2V(slug!)
+    runP2V(params.slug!)
   }
 }
 
@@ -217,7 +225,10 @@ export default function OfficeStep({
     }
 
     if (adminMode) {
-      await runPostOfficeStepUpdates(attr, campaign.slug)
+      await runPostOfficeStepUpdates(attr, {
+        officeName: position.name,
+        slug: campaign.slug,
+      })
     } else {
       const trackingProperties = {
         officeState: position.state,
@@ -230,7 +241,10 @@ export default function OfficeStep({
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      await runPostOfficeStepUpdates(attr)
+      await runPostOfficeStepUpdates(attr, {
+        officeName: position.name,
+        slug: campaign.slug,
+      })
     }
 
     if (step) {
@@ -262,7 +276,12 @@ export default function OfficeStep({
     }
   }
 
-  const selectedOffice: { position: { id: string | number | undefined }; election: { id: string | number | null | undefined } } | false = campaign.details?.positionId
+  const selectedOffice:
+    | {
+        position: { id: string | number | undefined }
+        election: { id: string | number | null | undefined }
+      }
+    | false = campaign.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
         election: { id: campaign.details.electionId },
