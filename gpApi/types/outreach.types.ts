@@ -19,7 +19,7 @@ export type OutreachStatus =
 /** Payload for POST /outreach (create) */
 export interface CreateOutreachPayload {
   campaignId: number
-  outreachType: string
+  outreachType: OutreachType
   message?: string | null
   title?: string | null
   script?: string | null

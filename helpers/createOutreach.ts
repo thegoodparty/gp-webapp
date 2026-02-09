@@ -14,7 +14,7 @@ export async function createOutreach(
   image: File | null = null,
 ): Promise<CreateOutreachResponse | null> {
   try {
-    const resp = await createOutreachApi(payload, image ?? undefined)
+    const resp = await createOutreachApi(payload, image)
     if (!resp.ok) {
       console.error('Error creating outreach:', resp.statusText)
       return null

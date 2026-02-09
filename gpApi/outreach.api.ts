@@ -10,13 +10,23 @@ import type {
 export type {
   CreateOutreachPayload,
   CreateOutreachResponse,
-  VoterFileFilterInOutreach,
+  OutreachType,
 } from './types/outreach.types'
 
 /** API may return outreach at top level or under "outreach" */
 type CreateOutreachRawResponse =
   | CreateOutreachResponse
   | { outreach?: CreateOutreachResponse }
+
+/** API may return id as number or string; normalize to number for CreateOutreachResponse. */
+function normalizeOutreachId(id: unknown): number | null {
+  if (typeof id === 'number' && Number.isFinite(id)) return id
+  if (typeof id === 'string') {
+    const n = Number(id)
+    if (Number.isFinite(n)) return n
+  }
+  return null
+}
 
 function unwrapOutreachResponse(
   data: CreateOutreachRawResponse | null,
@@ -25,8 +35,10 @@ function unwrapOutreachResponse(
   const raw =
     'outreach' in data && data.outreach != null ? data.outreach : data
   if (typeof raw !== 'object' || raw == null) return null
-  const out = raw as CreateOutreachResponse
-  return typeof out.id === 'number' ? out : null
+  const out = raw as Record<string, unknown> & { id: unknown }
+  const id = normalizeOutreachId(out.id)
+  if (id == null) return null
+  return { ...out, id } as CreateOutreachResponse
 }
 
 /**

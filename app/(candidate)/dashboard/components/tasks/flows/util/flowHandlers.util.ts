@@ -139,6 +139,11 @@ export const handleCreateOutreach =
     const { audience_request: audienceRequest } = audience || {}
     const { message } = schedule || {}
     const date = schedule?.date
+    const rawVoterFilterId = voterFileFilter?.id
+    const voterFileFilterId =
+      typeof rawVoterFilterId === 'number'
+        ? rawVoterFilterId
+        : Number(rawVoterFilterId)
     const outreach = await createOutreach(
       {
         campaignId,
@@ -147,7 +152,9 @@ export const handleCreateOutreach =
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script: typeof script === 'string' ? script : undefined,
         ...(date ? { date: typeof date === 'string' ? date : date.toISOString() } : {}),
-        ...(voterFileFilter ? { voterFileFilterId: Number(voterFileFilter.id) } : {}),
+        ...(Number.isFinite(voterFileFilterId) && voterFileFilterId > 0
+          ? { voterFileFilterId }
+          : {}),
         ...(typeof audienceRequest === 'string' ? { audienceRequest } : {}),
         ...(p2pUxEnabled && typeof phoneListId === 'number' ? { phoneListId } : {}),
       },
