@@ -14,6 +14,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            e2e-tests/package-lock.json
       - run: npm ci
       - run: npm ci --prefix e2e-tests
       - run: npx tsc --noEmit --project e2e-tests/tsconfig.json
