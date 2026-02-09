@@ -37,7 +37,13 @@ export default function PollTextInput({
   isReadOnly = false,
   hidePlaceholder = false,
 }: PollTextInputProps) {
-  const hasError = biasSpans.length > 0 || grammarSpans.length > 0
+  const hasWarning = biasSpans.length > 0 || grammarSpans.length > 0
+
+  useEffect(() => {
+    if (hasWarning) {
+      trackEvent(EVENTS.createPoll.pollBiasDetectionShown)
+    }
+  }, [hasWarning])
 
   useEffect(() => {
     if (hasError) {
@@ -65,7 +71,7 @@ export default function PollTextInput({
           </div>
         ),
         underlineClassName:
-          'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error',
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning-dark text-warning-dark',
       })
     })
 
@@ -87,7 +93,7 @@ export default function PollTextInput({
           </div>
         ),
         underlineClassName:
-          'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error',
+          'underline decoration-1.5 decoration-dashed cursor-help decoration-warning-dark text-warning-dark',
       })
     })
 
@@ -108,7 +114,7 @@ export default function PollTextInput({
       showLoadingDots={showLoadingDots}
       isReadOnly={isReadOnly}
       hidePlaceholder={hidePlaceholder}
-      hasError={hasError}
+      hasWarning={hasWarning}
       loadingDots={
         showLoadingDots ? <LoadingDots dotColor="bg-blue-500" /> : undefined
       }

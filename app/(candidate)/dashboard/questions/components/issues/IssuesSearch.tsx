@@ -1,5 +1,6 @@
 import { useState, SyntheticEvent } from 'react'
 import { Autocomplete, InputAdornment, FilterOptionsState } from '@mui/material'
+import { theme } from 'tailwind.config'
 import TextField from '@shared/inputs/TextField'
 import IconButton from '@mui/material/IconButton'
 import { IoCloseSharp } from 'react-icons/io5'
@@ -57,7 +58,7 @@ export const IssuesSearch = ({
       className="office-autocomplete"
       sx={{
         '& fieldset': {
-          border: '2px solid var(--color-indigo-300)',
+          border: `2px solid ${theme.extend.colors.indigo[300]}`,
           borderRadius: '8px',
         },
       }}

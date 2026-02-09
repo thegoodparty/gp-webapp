@@ -11,15 +11,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@shared/*": [
-        "app/shared/*"
-      ],
-      "@styleguide": [
-        "styleguide"
-      ],
-      "@styleguide/*": [
-        "styleguide/*"
-      ]
+      "@shared/*": ["app/shared/*"],
+      "@styleguide": ["styleguide"],
+      "@styleguide/*": ["styleguide/*"]
     },
     "jsx": "preserve",
     "allowJs": true,
@@ -52,5 +46,5 @@
     ".next/types/**/*.ts",
     "types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next", "e2e-tests"]
 }

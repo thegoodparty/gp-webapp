@@ -1,7 +1,7 @@
 'use client'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { StepIndicator } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@styleguide'
+} from 'goodparty-styleguide'
 import PollTextBiasInput, {
   BiasAnalysisState,
 } from '../shared/components/poll-text-bias/PollTextBiasInput'
@@ -28,6 +28,8 @@ import {
 } from '../shared/audience-selection'
 import { PollImageUpload } from '../components/PollImageUpload'
 import { grammarizeOfficeName } from 'app/polls/onboarding/utils/grammarizeOfficeName'
+import { validatePollQuestion, getWarningMessage } from './utils'
+import { QuestionFeedback } from './QuestionFeedback'
 import { useUser } from '@shared/hooks/useUser'
 import { PollPayment, PollPurchaseType } from '../shared/components/PollPayment'
 import { uuidv7 } from 'uuidv7'
@@ -39,9 +41,6 @@ import {
 import { PollPreview } from '../components/PollPreview'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
-
-const MIN_QUESTION_LENGTH = 25
-const MAX_QUESTION_LENGTH = 1500
 
 type Details = {
   title: string
@@ -183,7 +182,12 @@ const DetailsForm: React.FC<{
   const router = useRouter()
   const [biasAnalysisState, setBiasAnalysisState] =
     useState<BiasAnalysisState | null>(null)
-  const biasAnalysisStateRef = useRef<BiasAnalysisState | null>(null)
+
+  const warningMessage = useMemo(
+    () => getWarningMessage(biasAnalysisState),
+    [biasAnalysisState]
+  )
+
   const [user] = useUser()
   const [campaign] = useCampaign()
   const office = grammarizeOfficeName(
@@ -202,9 +206,6 @@ const DetailsForm: React.FC<{
     register,
     handleSubmit,
     control,
-    trigger,
-    setValue,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Details>({
     defaultValues: details ?? {
@@ -213,19 +214,6 @@ const DetailsForm: React.FC<{
       question: '',
     },
   })
-
-  useEffect(() => {
-    biasAnalysisStateRef.current = biasAnalysisState
-    const currentValue = getValues('question')
-    if (
-      biasAnalysisState !== null &&
-      currentValue.trim().length > 0 &&
-      currentValue.trim().length >= MIN_QUESTION_LENGTH
-    ) {
-      setValue('question', currentValue, { shouldTouch: true })
-      trigger('question')
-    }
-  }, [biasAnalysisState, trigger, setValue, getValues])
 
   const onSubmit = async (data: Details) => {
     // TODO: perform async validation using LLM endpoint
@@ -317,37 +305,7 @@ const DetailsForm: React.FC<{
           control={control}
           rules={{
             required: 'Question is required',
-            validate: (value: string) => {
-              const trimmedValue = value.trim()
-              if (trimmedValue.length === 0) {
-                return true
-              }
-              if (trimmedValue.length < MIN_QUESTION_LENGTH) {
-                return `Question must be at least ${MIN_QUESTION_LENGTH} characters`
-              }
-
-              if (trimmedValue.length > MAX_QUESTION_LENGTH) {
-                return `Question must be less than ${MAX_QUESTION_LENGTH} characters`
-              }
-
-              const state = biasAnalysisStateRef.current
-              if (!state) {
-                return true
-              }
-              if (state.hasServerError) {
-                return 'Unable to analyze for bias, please try again later.'
-              }
-              if (state.hasBias && state.hasGrammar) {
-                return 'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasBias) {
-                return 'Biased language detected. Please use "Optimize message" to correct it.'
-              }
-              if (state.hasGrammar) {
-                return 'Grammar issues found. Please use "Optimize message" to correct it.'
-              }
-              return true
-            },
+            validate: validatePollQuestion,
           }}
           render={({ field }) => (
             <PollTextBiasInput
@@ -358,16 +316,10 @@ const DetailsForm: React.FC<{
             />
           )}
         />
-        {errors.question ? (
-          <p className="mt-1 font-normal text-sm text-red-500">
-            {errors.question.message}
-          </p>
-        ) : (
-          <p className="mt-1.5 font-normal text-sm text-muted-foreground">
-            We recommend checking your message for clarity and bias using
-            optimize message.
-          </p>
-        )}
+        <QuestionFeedback
+          warningMessage={warningMessage}
+          errorMessage={errors.question?.message}
+        />
 
         <label className="block mb-2 mt-4">Poll Closing</label>
         <Input
