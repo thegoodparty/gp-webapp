@@ -9,6 +9,7 @@ import {
   SheetTitle,
 } from 'goodparty-styleguide'
 import { useEffect, useMemo, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
 import {
@@ -36,42 +37,119 @@ interface BackendFilters extends Record<string, unknown> {
   languageCodes?: string[]
   incomeRanges?: string[]
   incomeUnknown?: boolean
-  languageEnglish?: boolean
-  languageSpanish?: boolean
-  languageOther?: boolean
-  id?: number
-  createdAt?: unknown
-  updatedAt?: unknown
-  name?: string
-  campaignId?: number
 }
 
 interface FiltersSheetProps {
-  open?: boolean
-  handleClose?: () => void
-  mode?: SheetMode
-  editSegment?: SegmentResponse | null
-  handleOpenChange?: (open: boolean) => void
-  resetSelect?: () => void
-  afterSave?: (segmentId: number) => void
+  open: boolean
+  handleClose: () => void
+  mode: SheetMode
+  editSegment: SegmentResponse | null
+  handleOpenChange: (open: boolean) => void
+  resetSelect: () => void
+  afterSave: (segmentId: number) => void
 }
 
 const MAX_SEGMENT_NAME_LENGTH = 30
 
+const INCOME_KEY_TO_RANGE: Record<string, string> = {
+  incomeUnder25k: 'Under $25k',
+  income25kTo35k: '$25k - $35k',
+  income35kTo50k: '$35k - $50k',
+  income50kTo75k: '$50k - $75k',
+  income75kTo100k: '$75k - $100k',
+  income100kTo125k: '$100k - $125k',
+  income125kTo150k: '$125k - $150k',
+  income150kTo200k: '$150k - $200k',
+  income200kPlus: '$200k+',
+}
+
+const RANGE_TO_INCOME_KEY: Record<string, string> = Object.fromEntries(
+  Object.entries(INCOME_KEY_TO_RANGE).map(([k, v]) => [v, k]),
+)
+
+const LANGUAGE_KEY_TO_CODE: Record<string, string> = {
+  languageEnglish: 'en',
+  languageSpanish: 'es',
+  languageOther: 'other',
+}
+
+const LANGUAGE_KEYS = new Set(Object.keys(LANGUAGE_KEY_TO_CODE))
+const INCOME_KEYS = new Set([
+  ...Object.keys(INCOME_KEY_TO_RANGE),
+  'incomeUnknown',
+])
+
+const ALL_FILTER_OPTION_KEYS = filterSections.flatMap((section) =>
+  section.fields.flatMap((field) => field.options.map((opt) => opt.key)),
+)
+
+const transformFiltersFromBackend = (backend: BackendFilters): Filters => {
+  const result: Filters = {}
+
+  for (const key of ALL_FILTER_OPTION_KEYS) {
+    if (LANGUAGE_KEYS.has(key) || INCOME_KEYS.has(key)) continue
+    result[key] = !!backend[key]
+  }
+
+  const languageCodes = Array.isArray(backend.languageCodes)
+    ? backend.languageCodes
+    : []
+  for (const [key, code] of Object.entries(LANGUAGE_KEY_TO_CODE)) {
+    result[key] = languageCodes.includes(code)
+  }
+
+  const incomeRanges = Array.isArray(backend.incomeRanges)
+    ? backend.incomeRanges
+    : []
+  for (const key of Object.keys(INCOME_KEY_TO_RANGE)) {
+    result[key] = false
+  }
+  for (const range of incomeRanges) {
+    const key = RANGE_TO_INCOME_KEY[range]
+    if (key) result[key] = true
+  }
+  result.incomeUnknown = !!backend.incomeUnknown
+
+  return result
+}
+
+const transformFiltersForBackend = (filters: Filters): BackendFilters => {
+  const result: BackendFilters = {}
+
+  for (const key of ALL_FILTER_OPTION_KEYS) {
+    if (LANGUAGE_KEYS.has(key) || INCOME_KEYS.has(key)) continue
+    result[key] = !!filters[key]
+  }
+
+  const languageCodes: string[] = []
+  for (const [key, code] of Object.entries(LANGUAGE_KEY_TO_CODE)) {
+    if (filters[key]) languageCodes.push(code)
+  }
+  result.languageCodes = languageCodes
+
+  const incomeRanges: string[] = []
+  for (const [key, range] of Object.entries(INCOME_KEY_TO_RANGE)) {
+    if (filters[key]) incomeRanges.push(range)
+  }
+  result.incomeRanges = incomeRanges
+  result.incomeUnknown = !!filters.incomeUnknown
+
+  return result
+}
+
 export default function Filters({
   open = false,
-  handleClose = () => {},
-  mode = SHEET_MODES.CREATE,
-  editSegment = null,
-  handleOpenChange = () => {},
-  resetSelect = () => {},
-  afterSave = () => {},
+  handleClose,
+  mode,
+  editSegment,
+  handleOpenChange,
+  resetSelect,
+  afterSave,
 }: FiltersSheetProps) {
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const [filters, setFilters] = useState<Filters>({})
   const [isEditingName, setIsEditingName] = useState(false)
   const [segmentName, setSegmentName] = useState('')
-  const [saving, setSaving] = useState(false)
   const {
     customSegments,
     refreshCustomSegments,
@@ -92,64 +170,9 @@ export default function Filters({
     [isElectedOfficial],
   )
 
-  const transformFiltersFromBackend = (
-    backendFilters: BackendFilters,
-  ): Filters => {
-    const transformed = { ...backendFilters }
-
-    transformed.languageEnglish = false
-    transformed.languageSpanish = false
-    transformed.languageOther = false
-
-    if (
-      backendFilters.languageCodes &&
-      Array.isArray(backendFilters.languageCodes)
-    ) {
-      transformed.languageEnglish = backendFilters.languageCodes.includes('en')
-      transformed.languageSpanish = backendFilters.languageCodes.includes('es')
-      transformed.languageOther = backendFilters.languageCodes.includes('other')
-    }
-
-    const incomeMapping: Record<string, string> = {
-      'Under $25k': 'incomeUnder25k',
-      '$25k - $35k': 'income25kTo35k',
-      '$35k - $50k': 'income35kTo50k',
-      '$50k - $75k': 'income50kTo75k',
-      '$75k - $100k': 'income75kTo100k',
-      '$100k - $125k': 'income100kTo125k',
-      '$125k - $150k': 'income125kTo150k',
-      '$150k - $200k': 'income150kTo200k',
-      '$200k+': 'income200kPlus',
-    }
-
-    Object.values(incomeMapping).forEach((key) => {
-      transformed[key] = false
-    })
-    transformed.incomeUnknown = false
-
-    if (
-      backendFilters.incomeRanges &&
-      Array.isArray(backendFilters.incomeRanges)
-    ) {
-      backendFilters.incomeRanges.forEach((range) => {
-        const key = incomeMapping[range as string]
-        if (key) {
-          transformed[key] = true
-        }
-      })
-    }
-
-    if (backendFilters.incomeUnknown) {
-      transformed.incomeUnknown = true
-    }
-
-    return transformed as Filters
-  }
-
   useEffect(() => {
     if (mode === SHEET_MODES.EDIT && editSegment) {
-      const transformedSegment = transformFiltersFromBackend(editSegment)
-      setFilters(transformedSegment)
+      setFilters(transformFiltersFromBackend(editSegment))
       setSegmentName(editSegment.name || '')
       setIsEditingName(false)
     } else {
@@ -161,6 +184,56 @@ export default function Filters({
       setIsEditingName(false)
     }
   }, [mode, editSegment, open, customSegments])
+
+  const saveMutation = useMutation({
+    mutationFn: async (payload: { name: string } & BackendFilters) => {
+      const response = await saveCustomSegment(payload)
+      if (!response) throw new Error('Failed to create segment')
+      return response
+    },
+    onSuccess: async (response) => {
+      successSnackbar('Segment created successfully')
+      trackEvent(EVENTS.Contacts.SegmentCreated, {
+        filters: filterOnlyTrueValues(filters),
+      })
+      await refreshCustomSegments()
+      afterSave(response.id)
+      handleClose()
+    },
+    onError: async () => {
+      errorSnackbar('Failed to create segment')
+      await refreshCustomSegments()
+      handleClose()
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      ...payload
+    }: { id: number; name: string } & BackendFilters) => {
+      const response = await updateCustomSegment(id, payload)
+      if (!response) throw new Error('Failed to update segment')
+      return response
+    },
+    onSuccess: async (_data, variables) => {
+      successSnackbar('Segment updated successfully')
+      trackEvent(EVENTS.Contacts.SegmentUpdated, {
+        filters: filterOnlyTrueValues(filters),
+      })
+      await refreshCustomSegments()
+      selectSegment(variables.id.toString())
+      handleClose()
+    },
+    onError: async () => {
+      errorSnackbar('Failed to update segment')
+      await refreshCustomSegments()
+      handleClose()
+    },
+    onSettled: () => {},
+  })
+
+  const isSaving = saveMutation.isPending || updateMutation.isPending
 
   const handleCheckedChange = (checked: boolean, key: string) => {
     setFilters({ ...filters, [key]: checked })
@@ -175,65 +248,27 @@ export default function Filters({
     setFilters(updatedFilters)
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!canSave()) {
       errorSnackbar('Please select at least one filter')
       return
     }
-    setSaving(true)
-    const transformedFilters = transformFiltersForBackend(filters)
-    const response = await saveCustomSegment({
+    saveMutation.mutate({
       name: segmentName,
-      ...transformedFilters,
+      ...transformFiltersForBackend(filters),
     })
-    if (response) {
-      successSnackbar('Segment created successfully')
-      trackEvent(EVENTS.Contacts.SegmentCreated, {
-        filters: filterOnlyTrueValues(filters),
-      })
-      await refreshCustomSegments()
-      afterSave(response.id)
-    } else {
-      await refreshCustomSegments()
-      errorSnackbar('Failed to create segment')
-    }
-    setSaving(false)
-    handleClose()
   }
 
-  const handleUpdate = async () => {
+  const handleUpdate = () => {
     if (!canSave() || !editSegment) {
-      if (!canSave()) {
-        errorSnackbar('Please select at least one filter')
-      }
+      if (!canSave()) errorSnackbar('Please select at least one filter')
       return
     }
-    setSaving(true)
-    const cleanFilters = { ...filters }
-    delete cleanFilters.id
-    delete cleanFilters.createdAt
-    delete cleanFilters.updatedAt
-    delete cleanFilters.name
-    delete cleanFilters.campaignId
-
-    const transformedFilters = transformFiltersForBackend(cleanFilters)
-    const response = await updateCustomSegment(editSegment.id, {
+    updateMutation.mutate({
+      id: editSegment.id,
       name: segmentName,
-      ...transformedFilters,
+      ...transformFiltersForBackend(filters),
     })
-    if (response) {
-      successSnackbar('Segment updated successfully')
-      trackEvent(EVENTS.Contacts.SegmentUpdated, {
-        filters: filterOnlyTrueValues(filters),
-      })
-      await refreshCustomSegments()
-      selectSegment(editSegment.id.toString())
-    } else {
-      errorSnackbar('Failed to update segment')
-      await refreshCustomSegments()
-    }
-    setSaving(false)
-    handleClose()
   }
 
   const handleAfterDelete = () => {
@@ -245,50 +280,6 @@ export default function Filters({
     return (
       !!segmentName && Object.values(filters).some((value) => value === true)
     )
-  }
-
-  const transformFiltersForBackend = (filters: Filters): BackendFilters => {
-    const transformed: BackendFilters = { ...filters }
-
-    const languageCodes: string[] = []
-    if (transformed.languageEnglish) {
-      languageCodes.push('en')
-    }
-    if (transformed.languageSpanish) {
-      languageCodes.push('es')
-    }
-    if (transformed.languageOther) {
-      languageCodes.push('other')
-    }
-    delete transformed.languageEnglish
-    delete transformed.languageSpanish
-    delete transformed.languageOther
-    transformed.languageCodes = languageCodes
-
-    const incomeRanges: string[] = []
-    const incomeMapping: Record<string, string> = {
-      incomeUnder25k: 'Under $25k',
-      income25kTo35k: '$25k - $35k',
-      income35kTo50k: '$35k - $50k',
-      income50kTo75k: '$50k - $75k',
-      income75kTo100k: '$75k - $100k',
-      income100kTo125k: '$100k - $125k',
-      income125kTo150k: '$125k - $150k',
-      income150kTo200k: '$150k - $200k',
-      income200kPlus: '$200k+',
-    }
-
-    Object.entries(incomeMapping).forEach(([key, value]) => {
-      if (transformed[key]) {
-        incomeRanges.push(value)
-      }
-      delete transformed[key]
-    })
-    transformed.incomeRanges = incomeRanges
-
-    transformed.incomeUnknown = !!filters.incomeUnknown
-
-    return transformed
   }
 
   return (
@@ -378,7 +369,7 @@ export default function Filters({
           <Button
             variant="default"
             onClick={mode === SHEET_MODES.EDIT ? handleUpdate : handleSave}
-            disabled={saving || !canSave()}
+            disabled={isSaving || !canSave()}
           >
             {mode === SHEET_MODES.EDIT ? 'Update Segment' : 'Create Segment'}
           </Button>
