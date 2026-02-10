@@ -8,6 +8,26 @@
 # testing
 /coverage
 
+# e2e tests (playwright)
+/test-results/
+/playwright-report/
+/e2e-tests/node_modules/
+/e2e-tests/test-results/
+/e2e-tests/playwright-report/
+/e2e-tests/blob-report/
+/e2e-tests/playwright/.cache/
+/e2e-tests/playwright/.auth
+/e2e-tests/screenshots/
+/e2e-tests/auth.json
+/e2e-tests/admin-auth.json
+/e2e-tests/testAccount.json
+/e2e-tests/playwright-results.json
+/e2e-tests/helpers/sample.pdf
+/e2e-tests/.env
+/e2e-tests/testRunId.txt
+/e2e-tests/reported-test-cases.json
+/e2e-tests/admin-session-error.png
+
 # next.js
 /.next/
 /out/

@@ -14,13 +14,11 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            e2e-tests/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm ci --prefix e2e-tests
       - run: npx tsc --noEmit --project e2e-tests/tsconfig.json
-      - run: npm run lint --prefix e2e-tests
+      - run: npx biome check --diagnostic-level=error
+        working-directory: e2e-tests
       - run: npx next typegen
       - run: npx tsc --noEmit
       - run: npm run test
