@@ -36,11 +36,13 @@ const updateDistrict = (
   slug: string,
   L2DistrictType: string,
   L2DistrictName: string,
+  allowMissingTurnout?: boolean,
 ) =>
   clientFetch(apiRoutes.campaign.district, {
     slug,
     L2DistrictType,
     L2DistrictName,
+    allowMissingTurnout,
   })
 
 type FormFieldKey =
@@ -385,6 +387,7 @@ export default function AdminVictoryPathPage(
         campaign?.slug || '',
         typeObj.L2DistrictType,
         nameObj.L2DistrictName,
+        excludeInvalidOverride,
       )
       await refreshCampaign()
       successSnackbar('District updated')
