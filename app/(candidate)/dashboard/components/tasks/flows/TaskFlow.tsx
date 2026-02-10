@@ -123,10 +123,17 @@ const TaskFlow = ({
   const [stopPolling, setStopPolling] = useState(false)
 
   const contactCount = leadsLoaded ?? undefined
+  let effectiveOutreachType: ReturnType<typeof getEffectiveOutreachType>
+  try {
+    effectiveOutreachType = getEffectiveOutreachType(type, p2pUxEnabled)
+  } catch (e) {
+    console.error(e)
+    effectiveOutreachType = type as ReturnType<typeof getEffectiveOutreachType>
+  }
   const purchaseMetaData = {
     contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
-    outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
+    outreachType: effectiveOutreachType,
     campaignId,
   }
 

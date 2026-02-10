@@ -15,16 +15,16 @@ export type {
 
 /**
  * Create an outreach (POST /outreach). Returns the created Outreach with voterFileFilter.
- * API returns the outreach object at the top level.
+ * Pass payload + optional image; body is built as FormData when image is present, else JSON.
  */
 export async function createOutreach(
-  payload: CreateOutreachPayload | FormData,
+  payload: CreateOutreachPayload,
   image: File | null = null,
 ): Promise<ApiResponse<CreateOutreachResponse | null>> {
   type FormDataInput = Parameters<typeof packageFormData>[0]
   const body =
-    image != null && !(payload instanceof FormData)
-      ? packageFormData((payload as unknown) as FormDataInput, image)
+    image != null
+      ? packageFormData(payload as unknown as FormDataInput, image)
       : payload
   const resp = await clientFetch<CreateOutreachResponse>(
     apiRoutes.outreach.create,

@@ -144,10 +144,22 @@ export const handleCreateOutreach =
       typeof rawVoterFilterId === 'number'
         ? rawVoterFilterId
         : Number(rawVoterFilterId)
+    const normalizedPhoneListId =
+      typeof phoneListId === 'number'
+        ? phoneListId
+        : Number(phoneListId)
+    let outreachType
+    try {
+      outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
+    } catch {
+      errorSnackbar('Invalid outreach type')
+      return
+    }
+
     const outreach = await createOutreach(
       {
         campaignId,
-        outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
+        outreachType,
         message: typeof message === 'string' ? message : undefined,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script: typeof script === 'string' ? script : undefined,
@@ -156,7 +168,9 @@ export const handleCreateOutreach =
           ? { voterFileFilterId }
           : {}),
         ...(typeof audienceRequest === 'string' ? { audienceRequest } : {}),
-        ...(p2pUxEnabled && typeof phoneListId === 'number' ? { phoneListId } : {}),
+        ...(p2pUxEnabled && Number.isFinite(normalizedPhoneListId) && normalizedPhoneListId > 0
+          ? { phoneListId: normalizedPhoneListId }
+          : {}),
       },
       image || null,
     )
