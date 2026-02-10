@@ -27,6 +27,7 @@ const testFilterField = async (
       has: page.getByRole('button', { name: /update segment/i }),
     })
     .first()
+
   await expect(sheet).toBeVisible()
   await sheet.getByRole('button', { name: /clear filters/i }).click()
 
