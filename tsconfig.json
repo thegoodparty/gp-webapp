@@ -11,7 +11,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["app/shared/*"]
+      "@shared/*": ["app/shared/*"],
+      "@styleguide": ["styleguide"],
+      "@styleguide/*": ["styleguide/*"]
     },
     "jsx": "preserve",
     "allowJs": true,

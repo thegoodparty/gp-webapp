@@ -1,8 +1,6 @@
-import { theme } from 'tailwind.config'
-
 export const DEFAULT_SLANT_SECTION_COLORS = [
   'rgba(0,0,0,0)',
-  theme.extend.colors.primary.dark,
+  'var(--color-primary-dark)',
   'rgba(0,0,0,0)',
 ]
 

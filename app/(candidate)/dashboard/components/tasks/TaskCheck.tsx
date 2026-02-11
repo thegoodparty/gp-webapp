@@ -25,8 +25,8 @@ export default function TaskCheck({ checked, onClick, trackingAttrs }: TaskCheck
     >
       {!checked ? (
         <>
-          <CircleOutlined className="group-hover:hidden" />
-          <CheckCircleOutlineRounded className="!hidden group-hover:!inline" />
+          <CircleOutlined className="group-hover:hidden!" />
+          <CheckCircleOutlineRounded className="hidden! group-hover:inline!" />
         </>
       ) : (
         <TaskAltRounded className="text-indigo-400" />
