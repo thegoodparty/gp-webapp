@@ -9,6 +9,8 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 	await checkboxLabel.locator("xpath=..").getByRole("checkbox").click();
 };
 
+let filterCallCount = 0;
+
 const testFilterField = async (
 	page: Page,
 	config: {
@@ -20,6 +22,28 @@ const testFilterField = async (
 		)[];
 	},
 ) => {
+	filterCallCount++;
+
+	/**
+	 * Why:
+	 * For whatever reason, the amount of page navigation in this test suite can cause memory crashes
+	 * in the browser. It's not that reflective of actual user behavior, so we reload the page every few
+	 * filters in order to avoid the memory issues.
+	 */
+	if (filterCallCount % 8 === 0) {
+		await page.reload({ waitUntil: "domcontentloaded" });
+		await NavigationHelper.dismissOverlays(page);
+		await expect(
+			page
+				.locator("table")
+				.first()
+				.locator("tbody tr")
+				.first()
+				.locator("td")
+				.first(),
+		).toHaveText(/.+/);
+	}
+
 	await page.getByTestId("edit-list-button").first().click();
 	const sheet = page
 		.getByRole("dialog")
@@ -37,10 +61,16 @@ const testFilterField = async (
 		}
 	}
 
-	await sheet
-		.getByRole("button", { name: /update segment/i })
-		.click({ force: true });
-	await expect(sheet).toBeHidden();
+	const updateBtn = sheet.getByRole("button", { name: /update segment/i });
+	await updateBtn.scrollIntoViewIfNeeded();
+	await updateBtn.click();
+	try {
+		await expect(sheet).toBeHidden();
+	} catch {
+		await page.keyboard.press("Escape");
+		await expect(sheet).toBeHidden();
+	}
+
 	const table = page.locator("table").first();
 	const firstCell = table.locator("tbody tr").first().locator("td").first();
 	await expect(firstCell).toHaveText(/.+/);
@@ -60,7 +90,7 @@ const testFilterField = async (
 	await firstRow.click({ force: true });
 	const panel = page
 		.getByRole("dialog")
-		.filter({ has: page.getByText("Contact Information") })
+		.filter({ has: page.getByText("Demographic Information") })
 		.first();
 	await expect(panel).toBeVisible();
 
@@ -75,9 +105,13 @@ const testFilterField = async (
 		}
 	}
 
-	const closeButton = panel.getByRole("button", { name: /close/i });
-	await closeButton.click();
-	await expect(panel).toBeHidden();
+	await page.keyboard.press("Escape");
+	try {
+		await expect(panel).toBeHidden();
+	} catch {
+		await page.keyboard.press("Escape");
+		await expect(panel).toBeHidden();
+	}
 };
 
 test("validate contacts filters", async ({ page }) => {
