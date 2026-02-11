@@ -30,7 +30,7 @@ export default async function Page({
   if (!poll) {
     redirect('/dashboard/polls')
   }
-  const issues = (await getPollTopIssues(id))?.results || []
+  const issues = (await getPollTopIssues(id)).results
 
   return (
     <PollProvider poll={poll}>

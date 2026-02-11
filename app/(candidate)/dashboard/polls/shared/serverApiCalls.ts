@@ -1,6 +1,7 @@
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { Poll, PollIssue } from './poll-types'
+import { serverRequest } from 'gpApi/server-request'
 
 export type GetPollsResponse = {
   results: Poll[]
@@ -23,28 +24,20 @@ export const hasPolls = async () => {
   return null
 }
 
-export const getPolls = async () => {
-  const res = await serverFetch<GetPollsResponse>(apiRoutes.polls.list)
-  if (res.ok) {
-    return res.data
-  }
-  return null
-}
+export const getPolls = async () =>
+  serverRequest('GET /v1/polls', {}).then((res) => res.data)
+
 export const getPoll = async (pollId: string) => {
-  const res = await serverFetch<Poll>(apiRoutes.polls.get, { pollId })
-  if (res.ok) {
-    return res.data
-  }
-  return null
+  const result = await serverRequest(
+    'GET /v1/polls/:pollId',
+    { pollId },
+    { ignoreResponseError: true },
+  )
+
+  return result.status === 404 ? undefined : result.data
 }
 
-export const getPollTopIssues = async (pollId: string) => {
-  const res = await serverFetch<GetPollIssuesResponse>(
-    apiRoutes.polls.topIssues,
-    { pollId },
+export const getPollTopIssues = async (pollId: string) =>
+  serverRequest('GET /v1/polls/:pollId/top-issues', { pollId }).then(
+    (res) => res.data,
   )
-  if (res.ok) {
-    return res.data
-  }
-  return null
-}
