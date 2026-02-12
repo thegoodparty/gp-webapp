@@ -32,7 +32,11 @@ export default function RunningAgainstForm({
   onCancel,
   className = '',
 }: RunningAgainstFormProps): React.JSX.Element {
-  const [state, setState] = useState<RunningAgainst>({ name, party, description })
+  const [state, setState] = useState<RunningAgainst>({
+    name,
+    party,
+    description,
+  })
   const isNew = useMemo(
     () => name === '' && party === '' && description === '',
     [name, party, description],
@@ -54,7 +58,10 @@ export default function RunningAgainstForm({
     onCancel()
   }
 
-  function handleChangeField(fieldName: keyof RunningAgainst, fieldValue: string): void {
+  function handleChangeField(
+    fieldName: keyof RunningAgainst,
+    fieldValue: string,
+  ): void {
     setState((current) => ({
       ...current,
       [fieldName]: fieldValue,

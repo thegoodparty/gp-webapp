@@ -66,11 +66,7 @@ export const OutreachPurchaseForm = ({
       </div>
 
       {isFree ? (
-        <Button
-          size="large"
-          className="w-full"
-          onClick={handleFreeComplete}
-        >
+        <Button size="large" className="w-full" onClick={handleFreeComplete}>
           Schedule text
         </Button>
       ) : (

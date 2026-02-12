@@ -13,7 +13,9 @@ export interface DomainSearchResults {
   suggestions?: DomainSuggestion[]
 }
 
-export function searchDomains(domain: string): Promise<ApiResponse<DomainSearchResults>> {
+export function searchDomains(
+  domain: string,
+): Promise<ApiResponse<DomainSearchResults>> {
   return clientFetch<DomainSearchResults>(apiRoutes.domain.search, { domain })
 }
 

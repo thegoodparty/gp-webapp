@@ -1,6 +1,6 @@
-import { trackEvent } from "helpers/analyticsHelper"
-import { useDebounceEffect } from "./useDebounceEffect"
-import { EVENTS } from "helpers/analyticsHelper"
+import { trackEvent } from 'helpers/analyticsHelper'
+import { useDebounceEffect } from './useDebounceEffect'
+import { EVENTS } from 'helpers/analyticsHelper'
 
 interface UseTrackOfficeSearchParams {
   zip?: string
@@ -8,7 +8,11 @@ interface UseTrackOfficeSearchParams {
   officeName?: string
 }
 
-export const useTrackOfficeSearch = ({ zip, level, officeName }: UseTrackOfficeSearchParams): void => {
+export const useTrackOfficeSearch = ({
+  zip,
+  level,
+  officeName,
+}: UseTrackOfficeSearchParams): void => {
   useDebounceEffect(
     () => {
       const props = {
@@ -21,7 +25,6 @@ export const useTrackOfficeSearch = ({ zip, level, officeName }: UseTrackOfficeS
       }
     },
     400,
-    [zip, level, officeName]
+    [zip, level, officeName],
   )
 }
-

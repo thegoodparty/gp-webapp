@@ -108,7 +108,12 @@ interface StepItemProps {
   forceColumn?: boolean
 }
 
-function StepItem({ icon, title, description, forceColumn = false }: StepItemProps): React.JSX.Element {
+function StepItem({
+  icon,
+  title,
+  description,
+  forceColumn = false,
+}: StepItemProps): React.JSX.Element {
   return (
     <div
       className={`flex ${!forceColumn ? 'md:flex-col' : ''} items-center gap-4`}
@@ -127,7 +132,10 @@ interface StepListProps {
   forceColumn?: boolean
 }
 
-export default function StepList({ type = 'intro', forceColumn = false }: StepListProps): React.JSX.Element {
+export default function StepList({
+  type = 'intro',
+  forceColumn = false,
+}: StepListProps): React.JSX.Element {
   const steps = STEPS[type] || STEPS.intro
 
   return (

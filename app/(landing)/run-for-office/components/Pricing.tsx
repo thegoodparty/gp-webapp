@@ -27,7 +27,13 @@ interface PricingCardProps {
   color?: string
 }
 
-function PricingCard({ heading, subheading, price, points, color }: PricingCardProps): React.JSX.Element {
+function PricingCard({
+  heading,
+  subheading,
+  price,
+  points,
+  color,
+}: PricingCardProps): React.JSX.Element {
   const bgColor = color === 'lime' ? 'bg-lime-400' : 'bg-white'
   const bulletColor =
     color === 'lime'

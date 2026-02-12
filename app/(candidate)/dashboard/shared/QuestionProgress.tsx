@@ -10,7 +10,10 @@ interface AnswersResult {
   totalQuestions: number
 }
 
-export const calcAnswers = (campaign: Campaign | null, candidatePositions: CandidatePosition[] | null): AnswersResult => {
+export const calcAnswers = (
+  campaign: Campaign | null,
+  candidatePositions: CandidatePosition[] | null,
+): AnswersResult => {
   const totalQuestions = 6
   let answeredQuestions = 0
   const {
@@ -51,7 +54,10 @@ interface QuestionProgressProps {
   candidatePositions: CandidatePosition[] | null
 }
 
-const QuestionProgress = ({ campaign, candidatePositions }: QuestionProgressProps): React.JSX.Element | null => {
+const QuestionProgress = ({
+  campaign,
+  candidatePositions,
+}: QuestionProgressProps): React.JSX.Element | null => {
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
     candidatePositions,

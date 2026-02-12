@@ -202,8 +202,6 @@ export default function Filters({
     },
     onError: async () => {
       errorSnackbar('Failed to create segment')
-      await refreshCustomSegments()
-      handleClose()
     },
   })
 
@@ -227,10 +225,7 @@ export default function Filters({
     },
     onError: async () => {
       errorSnackbar('Failed to update segment')
-      await refreshCustomSegments()
-      handleClose()
     },
-    onSettled: () => {},
   })
 
   const isSaving = saveMutation.isPending || updateMutation.isPending

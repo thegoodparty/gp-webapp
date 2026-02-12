@@ -19,7 +19,7 @@ declare module 'p-limit' {
      * Adds a new promise to the queue.
      */
     <ReturnType>(
-      fn: () => PromiseLike<ReturnType> | ReturnType
+      fn: () => PromiseLike<ReturnType> | ReturnType,
     ): Promise<ReturnType>
   }
 

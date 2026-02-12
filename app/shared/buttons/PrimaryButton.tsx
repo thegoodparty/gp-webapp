@@ -1,5 +1,10 @@
 'use client'
-import React, { ReactNode, CSSProperties, MouseEvent, HTMLAttributes } from 'react'
+import React, {
+  ReactNode,
+  CSSProperties,
+  MouseEvent,
+  HTMLAttributes,
+} from 'react'
 import ButtonLoading from './ButtonLoading'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
@@ -28,7 +33,8 @@ export const setSize = (
   }
 }
 
-interface PrimaryButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+interface PrimaryButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'
@@ -142,4 +148,3 @@ const PrimaryButton = ({
 }
 
 export default PrimaryButton
-

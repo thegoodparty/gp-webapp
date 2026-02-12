@@ -1,12 +1,17 @@
 import { ReactNode, CSSProperties, ButtonHTMLAttributes } from 'react'
 import BaseButton from './BaseButton'
 
-interface PurpleButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'style'> {
+interface PurpleButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'style'> {
   children?: ReactNode
   style?: CSSProperties
 }
 
-const PurpleButton = ({ children, style = {}, ...props }: PurpleButtonProps) => (
+const PurpleButton = ({
+  children,
+  style = {},
+  ...props
+}: PurpleButtonProps) => (
   <BaseButton
     style={{
       backgroundColor: '#46002E',
@@ -23,4 +28,3 @@ const PurpleButton = ({ children, style = {}, ...props }: PurpleButtonProps) => 
 )
 
 export default PurpleButton
-

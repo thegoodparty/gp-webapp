@@ -130,8 +130,8 @@ const TopIssuesContent: React.FC = () => {
           type="button"
           onClick={() => onViewMore()}
           disabled={isFetchingNextPage}
-           variant="outline"
-           className="mt-4"
+          variant="outline"
+          className="mt-4"
         >
           {isFetchingNextPage ? 'Loading...' : 'View more'}
         </Button>
@@ -192,7 +192,7 @@ const ActivitiesContent: React.FC = () => {
                 return (
                   <div key={i} className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      {evt.type === 'SENT'&& (
+                      {evt.type === 'SENT' && (
                         <LuCircleCheck
                           size={16}
                           className="shrink-0 text-foreground"
@@ -210,7 +210,7 @@ const ActivitiesContent: React.FC = () => {
                           className="shrink-0 text-foreground"
                         />
                       )}
-                      
+
                       <p className="text-sm font-semibold text-foreground">
                         {ACTIVITY_EVENT_LABELS[evt.type] ?? evt.type}
                       </p>
@@ -218,15 +218,15 @@ const ActivitiesContent: React.FC = () => {
 
                     <div className="flex gap-2 h-7">
                       <div className="flex items-center gap-2">
-                            <div className="flex w-4 shrink-0 justify-center">
-                      {i < activity.data.events.length - 1 ? (
-                              <div className="h-5 w-px bg-border my-1" />
-                        ) : null}
+                        <div className="flex w-4 shrink-0 justify-center">
+                          {i < activity.data.events.length - 1 ? (
+                            <div className="h-5 w-px bg-border my-1" />
+                          ) : null}
                         </div>
                       </div>
-                        <p className="text-sm font-normal text-muted-foreground justify-self-start">
-                          {evt.date ? formatDateTime(evt.date) : ''}
-                        </p>
+                      <p className="text-sm font-normal text-muted-foreground justify-self-start">
+                        {evt.date ? formatDateTime(evt.date) : ''}
+                      </p>
                     </div>
                   </div>
                 )
@@ -237,14 +237,14 @@ const ActivitiesContent: React.FC = () => {
       ))}
       {hasNextPage ? (
         <Button
-        type="button"
-        onClick={() => onViewMore()}
-        disabled={isFetchingNextPage}
-         variant="outline"
-         className="mt-2"
-      >
-        {isFetchingNextPage ? 'Loading...' : 'View more'}
-      </Button>
+          type="button"
+          onClick={() => onViewMore()}
+          disabled={isFetchingNextPage}
+          variant="outline"
+          className="mt-2"
+        >
+          {isFetchingNextPage ? 'Loading...' : 'View more'}
+        </Button>
       ) : null}
     </div>
   )

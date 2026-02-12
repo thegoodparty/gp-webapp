@@ -39,9 +39,12 @@ interface OfficeStepProps {
 
 async function runP2V(slug: string): Promise<boolean> {
   try {
-    const resp = await clientFetch<boolean>(apiRoutes.campaign.pathToVictory.create, {
-      slug,
-    })
+    const resp = await clientFetch<boolean>(
+      apiRoutes.campaign.pathToVictory.create,
+      {
+        slug,
+      },
+    )
 
     return !!resp.data
   } catch (e) {
@@ -54,11 +57,16 @@ interface CampaignResponse extends Campaign {
   error?: string
 }
 
-async function updateRaceTargetDetails(slug: string | undefined = undefined): Promise<Campaign | false> {
+async function updateRaceTargetDetails(
+  slug: string | undefined = undefined,
+): Promise<Campaign | false> {
   try {
-    const resp = await clientFetch<CampaignResponse>(apiRoutes.campaign.raceTargetDetails.update, {
-      slug,
-    })
+    const resp = await clientFetch<CampaignResponse>(
+      apiRoutes.campaign.raceTargetDetails.update,
+      {
+        slug,
+      },
+    )
 
     if (resp.data && resp.data.error) {
       console.error('API error: ', resp.data)
@@ -76,7 +84,10 @@ interface UpdateAttr {
   value: string | number | boolean | undefined
 }
 
-async function runPostOfficeStepUpdates(attr: UpdateAttr[], slug: string | undefined = undefined): Promise<void> {
+async function runPostOfficeStepUpdates(
+  attr: UpdateAttr[],
+  slug: string | undefined = undefined,
+): Promise<void> {
   await updateCampaign(attr, slug)
   const campaign = await updateRaceTargetDetails(slug)
   if (campaign && !campaign?.pathToVictory?.data?.projectedTurnout) {
@@ -262,7 +273,12 @@ export default function OfficeStep({
     }
   }
 
-  const selectedOffice: { position: { id: string | number | undefined }; election: { id: string | number | null | undefined } } | false = campaign.details?.positionId
+  const selectedOffice:
+    | {
+        position: { id: string | number | undefined }
+        election: { id: string | number | null | undefined }
+      }
+    | false = campaign.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
         election: { id: campaign.details.electionId },

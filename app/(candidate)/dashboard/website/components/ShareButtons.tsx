@@ -19,7 +19,10 @@ interface ShareButtonsProps {
   className?: string
 }
 
-export default function ShareButtons({ url, className = '' }: ShareButtonsProps): React.JSX.Element {
+export default function ShareButtons({
+  url,
+  className = '',
+}: ShareButtonsProps): React.JSX.Element {
   const encodedUrl = encodeURIComponent(url)
   const message = 'Check out my campaign website!'
   const emailSubject = 'Check out my campaign website!'

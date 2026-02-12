@@ -42,7 +42,12 @@ const RightSideMobile = (): React.JSX.Element => {
   const [isOpen, setOpen] = useState(false)
   const [user] = useUser() as [User | null, (user: User | null) => void]
   const [campaignStatus] = useCampaignStatus()
-  const { status, slug, step } = (campaignStatus as { status?: boolean | string; slug?: string; step?: string | number }) || {}
+  const { status, slug, step } =
+    (campaignStatus as {
+      status?: boolean | string
+      slug?: string
+      step?: string | number
+    }) || {}
   const pathname = usePathname()
   const isDashboardPath =
     pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile')
@@ -81,10 +86,7 @@ const RightSideMobile = (): React.JSX.Element => {
           onOpen={() => {}}
         >
           {user && isDashboardPath ? (
-            <DashboardMobile
-              user={user as User}
-              pathname={pathname || ''}
-            />
+            <DashboardMobile user={user as User} pathname={pathname || ''} />
           ) : (
             <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
               <div
@@ -184,4 +186,3 @@ const RightSideMobile = (): React.JSX.Element => {
 }
 
 export default RightSideMobile
-

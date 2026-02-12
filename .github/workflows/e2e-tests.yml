@@ -100,15 +100,14 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "npm"
-          cache-dependency-path: e2e-tests/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        working-directory: e2e-tests
         run: npm ci
 
       - name: Install Playwright Browsers
         working-directory: e2e-tests
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Run Stable Playwright Tests
         id: run-stable-tests
@@ -288,15 +287,14 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "npm"
-          cache-dependency-path: e2e-tests/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        working-directory: e2e-tests
         run: npm ci
 
       - name: Install Playwright Browsers
         working-directory: e2e-tests
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Run Experimental Playwright Tests
         id: run-experimental-tests

@@ -17,7 +17,9 @@ interface EmptyStateProps {
   campaign: Campaign
 }
 
-export default function EmptyState({ campaign }: EmptyStateProps): React.JSX.Element {
+export default function EmptyState({
+  campaign,
+}: EmptyStateProps): React.JSX.Element {
   const { office, otherOffice } = campaign?.details || {}
   const resolvedOffice = office === 'Other' ? otherOffice : office
   return (

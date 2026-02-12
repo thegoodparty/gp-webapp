@@ -14,7 +14,9 @@ interface ProfilePageProps {
   tcrCompliance?: TcrCompliance | null
 }
 
-export default function ProfilePage(props: ProfilePageProps): React.JSX.Element {
+export default function ProfilePage(
+  props: ProfilePageProps,
+): React.JSX.Element {
   const { user, isPro, website, domainStatus, tcrCompliance } = props
   return (
     <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">

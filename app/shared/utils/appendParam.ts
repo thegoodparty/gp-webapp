@@ -14,4 +14,3 @@ const appendParam = (
 }
 
 export default appendParam
-

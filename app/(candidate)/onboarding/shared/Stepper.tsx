@@ -39,4 +39,3 @@ export default function Stepper(props: StepperProps): React.JSX.Element {
     </div>
   )
 }
-

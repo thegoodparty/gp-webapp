@@ -7,7 +7,10 @@ import DeleteDomain from './DeleteDomain'
 export default function DomainError(): React.JSX.Element {
   const { status } = useDomainStatus()
 
-  const { message, paymentStatus } = (status || {}) as { message?: string; paymentStatus?: string }
+  const { message, paymentStatus } = (status || {}) as {
+    message?: string
+    paymentStatus?: string
+  }
 
   return (
     <div className="max-w-2xl mx-auto mt-8 text-center">
@@ -38,4 +41,3 @@ export default function DomainError(): React.JSX.Element {
     </div>
   )
 }
-

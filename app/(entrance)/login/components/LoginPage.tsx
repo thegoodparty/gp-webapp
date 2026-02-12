@@ -38,13 +38,19 @@ export const validateZip = (zip: string): boolean => {
   return validZip.test(zip)
 }
 
-async function login(email: string, password: string): Promise<LoginResponse | false> {
+async function login(
+  email: string,
+  password: string,
+): Promise<LoginResponse | false> {
   try {
     const payload = {
       email,
       password,
     }
-    const resp = await clientFetch<LoginResponse>(apiRoutes.authentication.login, payload)
+    const resp = await clientFetch<LoginResponse>(
+      apiRoutes.authentication.login,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -75,12 +81,12 @@ export default function LoginPage(): React.JSX.Element {
         setUserCookie(user)
         setUser(user)
         const { id, email: userEmail, firstName, lastName, phone, zip } = user
-        await identifyUser(id, { 
-          email: userEmail, 
-          firstName: firstName ?? undefined, 
-          lastName: lastName ?? undefined, 
-          phone: phone ?? undefined, 
-          zip: zip ?? undefined 
+        await identifyUser(id, {
+          email: userEmail,
+          firstName: firstName ?? undefined,
+          lastName: lastName ?? undefined,
+          phone: phone ?? undefined,
+          zip: zip ?? undefined,
         })
 
         await doLoginRedirect(router, user, campaign)
@@ -127,7 +133,9 @@ export default function LoginPage(): React.JSX.Element {
           >
             <div className="flex mt-5">
               <EmailInput
-                onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) => onChangeField(e.target.value, 'email')}
+                onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChangeField(e.target.value, 'email')
+                }
                 value={state.email}
                 shrink
                 placeholder="hello@email.com"

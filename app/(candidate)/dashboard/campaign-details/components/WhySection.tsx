@@ -53,9 +53,9 @@ const WhySection = (props: WhySectionProps): React.JSX.Element => {
         const pe = campaign.details.pastExperience
         newState.pastExperience = `Achievements: ${
           pe.achievements || ''
-        }\nResponsibilities: ${
-          pe.responsibility || ''
-        }\nSkills: ${pe.skills || ''}`
+        }\nResponsibilities: ${pe.responsibility || ''}\nSkills: ${
+          pe.skills || ''
+        }`
       } else {
         newState.pastExperience = ''
       }

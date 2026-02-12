@@ -65,9 +65,13 @@ const fetchRaces = async (zipcode: string, level?: string): Promise<Race[]> => {
       : {}),
   }
 
-  const resp = await clientFetch<Race[]>(apiRoutes.elections.racesByYear, payload, {
-    revalidate: 3600,
-  })
+  const resp = await clientFetch<Race[]>(
+    apiRoutes.elections.racesByYear,
+    payload,
+    {
+      revalidate: 3600,
+    },
+  )
 
   return resp.data
 }
@@ -132,7 +136,9 @@ export default function BallotRaces({
     query.data && fuzzyFilter
       ? query.data.fuse.search(fuzzyFilter).map((result) => result.item)
       : query.data?.sortedRaces || []
-  const [selected, setSelected] = useState<Race | SelectedOffice | false>(selectedOffice || false)
+  const [selected, setSelected] = useState<Race | SelectedOffice | false>(
+    selectedOffice || false,
+  )
   const [showHelpModal, setShowHelpModal] = useState(false)
 
   const router = useRouter()
@@ -143,7 +149,10 @@ export default function BallotRaces({
 
   const handleSelect = (race: { id: string }) => {
     const matchedRace = races.find(({ id }) => id === race.id)
-    const selectedRace = race?.id === (selected && 'id' in selected ? selected.id : undefined) ? false : matchedRace || false
+    const selectedRace =
+      race?.id === (selected && 'id' in selected ? selected.id : undefined)
+        ? false
+        : matchedRace || false
     setSelected(selectedRace)
     onSelect(selectedRace)
   }
@@ -157,7 +166,9 @@ export default function BallotRaces({
     setShowHelpModal(false)
   }
 
-  const handleSaveCustomOffice = async (updated: Campaign & { currentStep?: number }) => {
+  const handleSaveCustomOffice = async (
+    updated: Campaign & { currentStep?: number },
+  ) => {
     updated.details.positionId = null
     updated.details.electionId = null
     if (step) {
@@ -254,7 +265,10 @@ export default function BallotRaces({
                     ),
                   },
                 }}
-                selected={race?.id === (selected && 'id' in selected ? selected.id : undefined)}
+                selected={
+                  race?.id ===
+                  (selected && 'id' in selected ? selected.id : undefined)
+                }
                 selectCallback={handleSelect}
               />
             ))

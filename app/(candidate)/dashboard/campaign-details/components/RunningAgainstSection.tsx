@@ -23,7 +23,8 @@ export default function RunningAgainstSection({
   const [isSaving, setIsSaving] = useState(false)
   const [showNew, setShowNew] = useState(false)
   const initialOpponents = campaign?.details?.runningAgainst || []
-  const [runningAgainst, setRunningAgainst] = useState<RunningAgainst[]>(initialOpponents)
+  const [runningAgainst, setRunningAgainst] =
+    useState<RunningAgainst[]>(initialOpponents)
 
   const handleSave = async (): Promise<void> => {
     trackEvent(EVENTS.Profile.RunningAgainst.ClickSave)
@@ -45,7 +46,10 @@ export default function RunningAgainstSection({
     setRunningAgainst((current) => current.toSpliced(index, 1))
   }
 
-  const handleUpdate = (index: number | null, newValues: RunningAgainst): void => {
+  const handleUpdate = (
+    index: number | null,
+    newValues: RunningAgainst,
+  ): void => {
     setShowNew(false)
     setRunningAgainst((current) => {
       const updatedRunningAgainst = [...current]

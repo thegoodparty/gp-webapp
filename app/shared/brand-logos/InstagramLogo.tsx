@@ -4,7 +4,9 @@ interface InstagramLogoProps {
   size?: number
 }
 
-export default function InstagramLogo({ size = 18 }: InstagramLogoProps): React.JSX.Element {
+export default function InstagramLogo({
+  size = 18,
+}: InstagramLogoProps): React.JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

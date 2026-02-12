@@ -7,7 +7,9 @@ interface TextingComplianceHeaderProps {
   children: React.ReactNode
 }
 
-export default function TextingComplianceHeader({ children }: TextingComplianceHeaderProps): React.JSX.Element {
+export default function TextingComplianceHeader({
+  children,
+}: TextingComplianceHeaderProps): React.JSX.Element {
   return (
     <header
       className="

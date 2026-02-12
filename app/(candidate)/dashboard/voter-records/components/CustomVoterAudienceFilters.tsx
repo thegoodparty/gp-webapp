@@ -235,7 +235,10 @@ const CustomVoterAudienceFilters = ({
   const handleChangeAudience = (option: string, val: boolean | string) => {
     if (readOnly) return
 
-    if (trackingKey && (trackingKey === 'scheduleCampaign' || trackingKey === 'customVoterFile')) {
+    if (
+      trackingKey &&
+      (trackingKey === 'scheduleCampaign' || trackingKey === 'customVoterFile')
+    ) {
       const trackingEvents = TRACKING_EVENT_MAP[trackingKey]
       if (option.startsWith('audience_')) {
         if (option === 'audience_request') {

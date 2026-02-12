@@ -201,7 +201,8 @@ const PartyStep = ({ campaign, step }: PartyStepProps): React.JSX.Element => {
       }
 
       await updateCampaign(attr)
-      const affiliation = state.otherParty === '' ? state.party : state.otherParty
+      const affiliation =
+        state.otherParty === '' ? state.party : state.otherParty
       trackEvent(EVENTS.Onboarding.PartyStep.Completed, {
         affiliation,
       })

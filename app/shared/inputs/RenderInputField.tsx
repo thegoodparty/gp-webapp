@@ -40,7 +40,11 @@ export interface FieldConfig {
 interface RenderInputFieldProps {
   field: FieldConfig
   value: string | boolean
-  onChangeCallback: (key: string, value: string | boolean, invalidOptions?: string[]) => void
+  onChangeCallback: (
+    key: string,
+    value: string | boolean,
+    invalidOptions?: string[],
+  ) => void
   error?: boolean
 }
 
@@ -106,7 +110,9 @@ const RenderInputField = ({
       {field.type === 'email' && (
         <EmailInput
           value={value as string}
-          onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) => onChangeCallback(field.key, e.target.value)}
+          onChangeCallback={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChangeCallback(field.key, e.target.value)
+          }
           variant="outlined"
           shrink
           disabled={field.disabled}
@@ -206,4 +212,3 @@ const RenderInputField = ({
 }
 
 export default RenderInputField
-

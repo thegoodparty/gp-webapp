@@ -278,14 +278,12 @@ export const ContactsTableProvider = ({
   )
 
   const issuesFlattened = useMemo(
-    () =>
-      issuesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
+    () => issuesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
     [issuesInfiniteQuery.data?.pages],
   )
 
   const activitiesFlattened = useMemo(
-    () =>
-      activitiesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
+    () => activitiesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
     [activitiesInfiniteQuery.data?.pages],
   )
 

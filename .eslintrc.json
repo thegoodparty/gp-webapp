@@ -1,9 +1,6 @@
 {
-  "plugins": [
-    "react",
-    "unused-imports",
-    "@stylistic"
-  ],
+  "ignorePatterns": ["e2e-tests/playwright-report"],
+  "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
     "next/core-web-vitals",
     "plugin:mdx/recommended"

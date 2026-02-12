@@ -39,4 +39,3 @@ const pageMetaData = ({
 }
 
 export default pageMetaData
-

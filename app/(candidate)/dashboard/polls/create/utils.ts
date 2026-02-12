@@ -7,7 +7,7 @@ export function validatePollQuestion(value: string): string | true {
   const trimmedValue = value.trim()
 
   if (trimmedValue.length === 0) {
-    return true 
+    return true
   }
 
   if (trimmedValue.length < MIN_QUESTION_LENGTH) {
@@ -22,7 +22,7 @@ export function validatePollQuestion(value: string): string | true {
 }
 
 export function getWarningMessage(
-  biasAnalysisState: BiasAnalysisState | null
+  biasAnalysisState: BiasAnalysisState | null,
 ): string | null {
   if (!biasAnalysisState) return null
   if (biasAnalysisState.hasServerError) {

@@ -10,12 +10,19 @@ interface UploadAvatarResponse {
   avatar?: string
 }
 
-const fileSelectCallback = async (image: File, uploadCallback: (result: string | false) => void): Promise<void> => {
+const fileSelectCallback = async (
+  image: File,
+  uploadCallback: (result: string | false) => void,
+): Promise<void> => {
   const formData = new FormData()
   formData.append('file', image, image.name)
-  const resp = await clientFetch<UploadAvatarResponse>(apiRoutes.user.uploadAvatar, formData, {
-    revalidate: 3600,
-  })
+  const resp = await clientFetch<UploadAvatarResponse>(
+    apiRoutes.user.uploadAvatar,
+    formData,
+    {
+      revalidate: 3600,
+    },
+  )
   if (resp.data?.avatar) {
     uploadCallback(resp.data.avatar)
   } else {
@@ -41,7 +48,9 @@ const ImageUploadWrapper = ({
   const handleUploadImage = async (): Promise<void> => {
     loadingStatusCallback(true)
     setFileSizeError(false)
-    const node = document.getElementById('file-uploader') as HTMLInputElement | null
+    const node = document.getElementById(
+      'file-uploader',
+    ) as HTMLInputElement | null
     const file = node?.files?.[0]
     if (file) {
       if (file.size > maxFileSize) {
@@ -89,4 +98,3 @@ const ImageUploadWrapper = ({
 }
 
 export default ImageUploadWrapper
-

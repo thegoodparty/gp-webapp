@@ -15,10 +15,16 @@ interface PageParams {
   state: string
 }
 
-export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PageParams>
+}) {
   const { state } = await params
   const upperState = state.toUpperCase()
-  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : undefined
 
   if (!stateName) {
     return {}
@@ -32,7 +38,11 @@ export async function generateMetadata({ params }: { params: Promise<PageParams>
   return meta
 }
 
-export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>
+}): Promise<React.JSX.Element> {
   const { state } = await params
   const upperState = state.toUpperCase()
   if (!state || !isStateAbbreviation(upperState)) {
@@ -45,11 +55,7 @@ export default async function Page({ params }: { params: Promise<PageParams> }):
     notFound()
   }
 
-  const {
-    categorizedChildren,
-    children,
-    Races: races,
-  } = place
+  const { categorizedChildren, children, Races: races } = place
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',

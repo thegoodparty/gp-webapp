@@ -19,7 +19,9 @@ interface FaqsArticlePageProps {
   article: Article
 }
 
-export default function FaqsArticlePage({ article }: FaqsArticlePageProps): React.JSX.Element {
+export default function FaqsArticlePage({
+  article,
+}: FaqsArticlePageProps): React.JSX.Element {
   const breadcrumbsLinks = [
     { href: '/', label: 'GoodParty.org' },
     {

@@ -8,7 +8,10 @@ interface SignaturesProps {
   tangerine: NextFont
 }
 
-export default function Signatures({ signatures, tangerine }: SignaturesProps): React.JSX.Element {
+export default function Signatures({
+  signatures,
+  tangerine,
+}: SignaturesProps): React.JSX.Element {
   let [signer, setSigner] = useState('')
   let modalProps = { tangerine, setSigner }
 

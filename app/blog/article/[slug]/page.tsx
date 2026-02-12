@@ -20,7 +20,9 @@ const isRedirectSlug = (slug: string): slug is RedirectSlug => {
   return slug in redirectList
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { slug } = await params
   const content = await fetchArticle(slug)
 
@@ -43,7 +45,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   })
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element> {
   const { slug } = await params
   if (!slug) {
     redirect('/blog')

@@ -32,8 +32,7 @@ const PasswordSection = ({
   const [user, setUser] = useState<User>(initUser)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [, setPasswordChangeSuccessful] =
-    useState(false)
+  const [, setPasswordChangeSuccessful] = useState(false)
 
   const initialState: PasswordState = {
     oldPassword: '',
@@ -96,11 +95,14 @@ const PasswordSection = ({
     const { password, oldPassword } = state
     setLoading(true)
     try {
-      const result = await clientFetch<{ message?: string }>(apiRoutes.user.changePassword, {
-        id: user.id,
-        newPassword: password,
-        oldPassword,
-      })
+      const result = await clientFetch<{ message?: string }>(
+        apiRoutes.user.changePassword,
+        {
+          id: user.id,
+          newPassword: password,
+          oldPassword,
+        },
+      )
 
       await handleReqResult({
         ok: result.ok,
@@ -146,9 +148,7 @@ const PasswordSection = ({
                   }}
                   label="Old Password"
                   helperText=""
-                  error={
-                    errorMessage === CURRENT_PASSWORD_INCORRECT
-                  }
+                  error={errorMessage === CURRENT_PASSWORD_INCORRECT}
                 />
               </div>
             )}

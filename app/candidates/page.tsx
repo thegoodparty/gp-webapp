@@ -23,7 +23,9 @@ interface PageProps {
   searchParams: SearchParams
 }
 
-const Page = async ({ searchParams }: PageProps): Promise<React.JSX.Element> => {
+const Page = async ({
+  searchParams,
+}: PageProps): Promise<React.JSX.Element> => {
   const childProps = {
     count: WINNER_COUNT,
     searchParams,

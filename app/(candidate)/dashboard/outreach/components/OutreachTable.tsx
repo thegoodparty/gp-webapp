@@ -11,7 +11,10 @@ import { ActualViewAudienceFiltersModal } from 'app/(candidate)/dashboard/voter-
 import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outreach/util/convertAudienceFiltersForModal.util'
 import Popover from '@mui/material/Popover'
 import { OutreachActions } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
-import { useOutreach, Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import {
+  useOutreach,
+  Outreach,
+} from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { VoterFileFilters } from 'helpers/types'
@@ -32,7 +35,13 @@ interface PopoverPosition {
 
 const NotApplicableLabel = () => <span className="text-gray-500">n/a</span>
 
-type StatusKey = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
+type StatusKey =
+  | 'pending'
+  | 'approved'
+  | 'denied'
+  | 'paid'
+  | 'in_progress'
+  | 'completed'
 
 const statusLabels: { [K in StatusKey]: string } = {
   pending: 'Draft',
@@ -62,7 +71,8 @@ const getP2pStatusLabel = (row: OutreachRow): string | null => {
   }
 
   // If P2P job is active, show as completed; otherwise use the outreach status
-  const displayStatus: StatusKey = p2pJob.status === 'active' ? 'completed' : status
+  const displayStatus: StatusKey =
+    p2pJob.status === 'active' ? 'completed' : status
   return statusLabels[displayStatus]
 }
 
@@ -93,11 +103,17 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
 
   const getChannelLabel = (outreachType?: string): string => {
     if (!outreachType) return ''
-    const mappedLabel = OUTREACH_TYPE_MAPPING[outreachType as keyof typeof OUTREACH_TYPE_MAPPING]
-    return mappedLabel || outreachType.charAt(0).toUpperCase() + outreachType.slice(1)
+    const mappedLabel =
+      OUTREACH_TYPE_MAPPING[outreachType as keyof typeof OUTREACH_TYPE_MAPPING]
+    return (
+      mappedLabel ||
+      outreachType.charAt(0).toUpperCase() + outreachType.slice(1)
+    )
   }
 
-  const formatVoterCount = (count: number | null | undefined): string | null => {
+  const formatVoterCount = (
+    count: number | null | undefined,
+  ): string | null => {
     if (count == null) return null
     return Number(count).toLocaleString()
   }
@@ -111,7 +127,8 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
       },
       {
         header: 'Channel',
-        cell: ({ row }: { row: OutreachRow }) => getChannelLabel(row.outreachType),
+        cell: ({ row }: { row: OutreachRow }) =>
+          getChannelLabel(row.outreachType),
       },
       {
         header: 'Audience',
@@ -150,7 +167,9 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
       {
         header: 'Voters',
         cell: ({ row }: { row: OutreachRow }) => {
-          const formattedCount = formatVoterCount(row.voterFileFilter?.voterCount)
+          const formattedCount = formatVoterCount(
+            row.voterFileFilter?.voterCount,
+          )
           return formattedCount ? formattedCount : <NotApplicableLabel />
         },
       },
@@ -164,7 +183,10 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
     [viewFilters],
   )
 
-  const calculatePopoverPosition = (clientX?: number, clientY?: number): PopoverPosition => ({
+  const calculatePopoverPosition = (
+    clientX?: number,
+    clientY?: number,
+  ): PopoverPosition => ({
     top: (clientY ?? 0) + 10,
     left: (clientX ?? 0) + 10,
   })

@@ -15,9 +15,13 @@ interface CampaignFilters {
 
 const fetchCampaigns = async (filters: CampaignFilters | null) => {
   try {
-    const resp = await clientFetch<Campaign[]>(apiRoutes.campaign.map.list, filters || undefined, {
-      revalidate: 3600,
-    })
+    const resp = await clientFetch<Campaign[]>(
+      apiRoutes.campaign.map.list,
+      filters || undefined,
+      {
+        revalidate: 3600,
+      },
+    )
 
     return resp.data
   } catch (err) {
@@ -32,7 +36,9 @@ interface UseMapCampaignsReturn {
   setIsCampaignsLoading: (loading: boolean) => void
 }
 
-export const useMapCampaigns = (filters: CampaignFilters): UseMapCampaignsReturn => {
+export const useMapCampaigns = (
+  filters: CampaignFilters,
+): UseMapCampaignsReturn => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false)
 
@@ -51,4 +57,3 @@ export const useMapCampaigns = (filters: CampaignFilters): UseMapCampaignsReturn
 
   return { campaigns, isCampaignsLoading, setIsCampaignsLoading }
 }
-
