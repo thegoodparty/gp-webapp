@@ -34,7 +34,11 @@ interface FormSectionProps {
   token: string
 }
 
-async function setPasswordApi(email: string, password: string, token: string): Promise<SetPasswordResponse | false> {
+async function setPasswordApi(
+  email: string,
+  password: string,
+  token: string,
+): Promise<SetPasswordResponse | false> {
   try {
     const payload = {
       email,
@@ -53,16 +57,20 @@ async function setPasswordApi(email: string, password: string, token: string): P
   }
 }
 
-export default function FormSection({ email, token }: FormSectionProps): React.JSX.Element {
+export default function FormSection({
+  email,
+  token,
+}: FormSectionProps): React.JSX.Element {
   const [_, setUser] = useUser()
   const [{ value: password, isValid }, setPassword] = useState<PasswordState>({
     value: '',
     isValid: true,
   })
-  const [{ value: confirmPassword, isMatch }, setConfirmPassword] = useState<ConfirmPasswordState>({
-    value: '',
-    isMatch: true,
-  })
+  const [{ value: confirmPassword, isMatch }, setConfirmPassword] =
+    useState<ConfirmPasswordState>({
+      value: '',
+      isMatch: true,
+    })
   const [resetSuccessful, setResetSuccesful] = useState(false)
   const { errorSnackbar, successSnackbar } = useSnackbar()
 

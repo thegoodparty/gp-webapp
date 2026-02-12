@@ -9,7 +9,10 @@ interface DefinedTermSchemaProps {
   slug: string
 }
 
-export default function DefinedTermSchema({ item, slug }: DefinedTermSchemaProps): React.JSX.Element {
+export default function DefinedTermSchema({
+  item,
+  slug,
+}: DefinedTermSchemaProps): React.JSX.Element {
   const { title, description } = item
 
   return (

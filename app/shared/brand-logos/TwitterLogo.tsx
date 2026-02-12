@@ -5,6 +5,8 @@ interface TwitterLogoProps {
   size?: number
 }
 
-export default function TwitterLogo({ size = 18 }: TwitterLogoProps): React.JSX.Element {
+export default function TwitterLogo({
+  size = 18,
+}: TwitterLogoProps): React.JSX.Element {
   return <FaSquareXTwitter size={size} />
 }

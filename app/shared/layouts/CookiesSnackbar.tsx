@@ -47,4 +47,3 @@ const CookiesSnackbar = (): React.JSX.Element | null => {
 }
 
 export default CookiesSnackbar
-

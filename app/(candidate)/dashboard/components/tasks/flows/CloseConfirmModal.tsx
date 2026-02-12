@@ -11,7 +11,12 @@ interface CloseConfirmModalProps {
   onCancel: () => void
 }
 
-export default function CloseConfirmModal({ open, type, onConfirm, onCancel }: CloseConfirmModalProps): React.JSX.Element {
+export default function CloseConfirmModal({
+  open,
+  type,
+  onConfirm,
+  onCancel,
+}: CloseConfirmModalProps): React.JSX.Element {
   const continueTrackingAttrs = useMemo(
     () => buildTrackingAttrs('Continue Task', { type }),
     [type],
@@ -23,7 +28,13 @@ export default function CloseConfirmModal({ open, type, onConfirm, onCancel }: C
   )
 
   return (
-    <Modal open={open} closeCallback={() => {}} preventBackdropClose preventEscClose hideClose>
+    <Modal
+      open={open}
+      closeCallback={() => {}}
+      preventBackdropClose
+      preventEscClose
+      hideClose
+    >
       <div className="p-6 text-center">
         <H1 className="mb-10">
           Do you want to exit and lose the changes you made?

@@ -62,10 +62,19 @@ interface ClaimedCandidateDetails {
 interface ClaimedCandidateResponse {
   statusCode?: number
   details?: ClaimedCandidateDetails
-  campaignPositions?: { id: number; topIssueId: number; positionId: number; description: string }[]
+  campaignPositions?: {
+    id: number
+    topIssueId: number
+    positionId: number
+    description: string
+  }[]
 }
 
-const fetchClaimedCandidate = async ({ raceId, firstName, lastName }: ClaimedCandidateParams): Promise<ClaimedCandidateResponse | false> => {
+const fetchClaimedCandidate = async ({
+  raceId,
+  firstName,
+  lastName,
+}: ClaimedCandidateParams): Promise<ClaimedCandidateResponse | false> => {
   try {
     if (!raceId) {
       return false
@@ -83,7 +92,9 @@ const fetchClaimedCandidate = async ({ raceId, firstName, lastName }: ClaimedCan
   }
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
   const candidate = await fetchCandidate({ slug })
@@ -103,7 +114,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return meta
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element> {
   const { name, office } = await params
   const slug = `${slugify(name)}/${slugify(office)}`
   const candidate = await fetchCandidate({

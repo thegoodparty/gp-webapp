@@ -20,6 +20,5 @@ export const unAuthFetch = async <T = unknown>(
     next: { revalidate },
   })
 
-  return await resp.json() as T
+  return (await resp.json()) as T
 }
-

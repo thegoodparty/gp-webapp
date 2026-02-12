@@ -8,5 +8,3 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
   const response = NextResponse.json({ message: 'Cookie set' })
   return setTokenCookie(response, token)
 }
-
-

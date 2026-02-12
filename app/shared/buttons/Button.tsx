@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import ButtonLoading from './ButtonLoading'
-import { forwardRef, ReactNode, Ref, ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react'
+import {
+  forwardRef,
+  ReactNode,
+  Ref,
+  ButtonHTMLAttributes,
+  AnchorHTMLAttributes,
+} from 'react'
 import clsx from 'clsx'
 
 export const COLOR_CLASSES = {
@@ -93,7 +99,10 @@ type ButtonAsLink = BaseButtonProps & {
   href: string
   target?: string
   nativeLink?: boolean
-} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseButtonProps | 'href' | 'target'>
+} & Omit<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    keyof BaseButtonProps | 'href' | 'target'
+  >
 
 type ButtonAsButton = BaseButtonProps & {
   href?: never
@@ -185,4 +194,3 @@ const Button = (
 }
 
 export default forwardRef(Button)
-

@@ -6,9 +6,15 @@ import { isValidEmail } from 'helpers/validations'
 
 export { isValidEmail }
 
-interface EmailInputProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onBlur' | 'error' | 'label' | 'name'> {
+interface EmailInputProps
+  extends Omit<
+    TextFieldProps<'outlined'>,
+    'value' | 'onChange' | 'onBlur' | 'error' | 'label' | 'name'
+  > {
   value: string
-  onChangeCallback: ((value: string, isValid: boolean) => void) | ((e: ChangeEvent<HTMLInputElement>) => void)
+  onChangeCallback:
+    | ((value: string, isValid: boolean) => void)
+    | ((e: ChangeEvent<HTMLInputElement>) => void)
   onBlurCallback?: (e: FocusEvent<HTMLInputElement>) => void
   shrink?: boolean
   className?: string
@@ -40,9 +46,12 @@ export default function EmailInput({
     setIsValid(emailValid)
 
     if (newCallbackSignature) {
-      (onChangeCallback as (value: string, isValid: boolean) => void)(newValue, emailValid)
+      ;(onChangeCallback as (value: string, isValid: boolean) => void)(
+        newValue,
+        emailValid,
+      )
     } else {
-      (onChangeCallback as (e: ChangeEvent<HTMLInputElement>) => void)(e)
+      ;(onChangeCallback as (e: ChangeEvent<HTMLInputElement>) => void)(e)
     }
   }
 
@@ -73,4 +82,3 @@ export default function EmailInput({
     />
   )
 }
-

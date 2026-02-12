@@ -1,5 +1,12 @@
 'use client'
-import { memo, useCallback, useEffect, useRef, useState, createContext } from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  createContext,
+} from 'react'
 import Map from './Map'
 import Results from './Results'
 import Filters from './Filters'
@@ -22,7 +29,14 @@ interface MapFilters {
 }
 
 interface MapRef {
-  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | google.maps.LatLngLiteral | google.maps.LatLng | 'full') => void
+  moveMapWithHistory: (
+    boundsOrPoint:
+      | google.maps.LatLngBounds
+      | google.maps.LatLngBoundsLiteral
+      | google.maps.LatLngLiteral
+      | google.maps.LatLng
+      | 'full',
+  ) => void
 }
 
 interface MapSearchParams {
@@ -50,9 +64,15 @@ export default memo(function MapSection({
   count,
 }: MapSectionProps): React.JSX.Element {
   const router = useRouter()
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null)
-  const [visibleCampaigns, setVisibleCampaigns] = useState<Campaign[] | null>(null)
-  const [mapBounds, setMapBounds] = useState<google.maps.LatLngBounds | undefined>()
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
+    null,
+  )
+  const [visibleCampaigns, setVisibleCampaigns] = useState<Campaign[] | null>(
+    null,
+  )
+  const [mapBounds, setMapBounds] = useState<
+    google.maps.LatLngBounds | undefined
+  >()
   const mapRef = useRef<MapRef | null>(null)
   const [filters, setFilters] = useState<MapFilters>({
     party: searchParams?.party || '',
@@ -86,8 +106,9 @@ export default memo(function MapSection({
   useEffect(() => {
     // filter visible campaigns
     if (mapBounds) {
-      const visibleCampaigns = campaigns.filter((camp) =>
-        camp.globalPosition && mapBounds.contains(camp.globalPosition),
+      const visibleCampaigns = campaigns.filter(
+        (camp) =>
+          camp.globalPosition && mapBounds.contains(camp.globalPosition),
       )
       setVisibleCampaigns(visibleCampaigns)
       return
@@ -151,11 +172,14 @@ export default memo(function MapSection({
     })
   }, [])
 
-  const onClusterClick = useCallback((cluster: { bounds: google.maps.LatLngBounds }) => {
-    if (!mapRef.current) return
+  const onClusterClick = useCallback(
+    (cluster: { bounds: google.maps.LatLngBounds }) => {
+      if (!mapRef.current) return
 
-    mapRef.current.moveMapWithHistory(cluster.bounds)
-  }, [])
+      mapRef.current.moveMapWithHistory(cluster.bounds)
+    },
+    [],
+  )
 
   const onZoomOut = useCallback((): void => {
     if (!mapRef.current) return

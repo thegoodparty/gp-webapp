@@ -10,4 +10,3 @@ export const useIssues = () => {
 
   return context
 }
-

@@ -9,7 +9,10 @@ interface PositionFaqProps {
   a: string
 }
 
-export default function PositionFaq({ q, a }: PositionFaqProps): React.JSX.Element {
+export default function PositionFaq({
+  q,
+  a,
+}: PositionFaqProps): React.JSX.Element {
   const [open, setOpen] = useState(false)
   return (
     <>

@@ -1,7 +1,11 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { PURCHASE_TYPE_LABELS, PURCHASE_TYPES, PurchaseType } from 'helpers/purchaseTypes'
+import {
+  PURCHASE_TYPE_LABELS,
+  PURCHASE_TYPES,
+  PurchaseType,
+} from 'helpers/purchaseTypes'
 import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import { useEffect } from 'react'
@@ -11,7 +15,10 @@ interface PurchaseSuccessProps {
   returnUrl?: string
 }
 
-export default function PurchaseSuccess({ type, returnUrl }: PurchaseSuccessProps): React.JSX.Element {
+export default function PurchaseSuccess({
+  type,
+  returnUrl,
+}: PurchaseSuccessProps): React.JSX.Element {
   const router = useRouter()
 
   useEffect(() => {
@@ -38,10 +45,3 @@ export default function PurchaseSuccess({ type, returnUrl }: PurchaseSuccessProp
     </div>
   )
 }
-
-
-
-
-
-
-

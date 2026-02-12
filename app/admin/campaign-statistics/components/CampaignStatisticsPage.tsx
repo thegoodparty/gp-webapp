@@ -43,9 +43,8 @@ const CampaignStatisticsPage = (
   const [showForm, setShowForm] = useState(true)
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
-  const searchParamsAreEmpty = !searchParams || !Object.keys(
-    URLSearchParamsToObject(searchParams),
-  ).length
+  const searchParamsAreEmpty =
+    !searchParams || !Object.keys(URLSearchParamsToObject(searchParams)).length
 
   useEffect(() => {
     if (fireHose) {

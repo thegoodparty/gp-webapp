@@ -13,7 +13,11 @@ interface ImageCropPreviewProps {
   onClear: () => void
 }
 
-const ImageCropPreview = ({ file, onCrop, onClear }: ImageCropPreviewProps): React.JSX.Element => {
+const ImageCropPreview = ({
+  file,
+  onCrop,
+  onClear,
+}: ImageCropPreviewProps): React.JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null)
   const [imgUrl, setImgUrl] = useState<string>()
   const [loading, setLoading] = useState(true)
@@ -138,4 +142,3 @@ const ImageCropPreview = ({ file, onCrop, onClear }: ImageCropPreviewProps): Rea
 }
 
 export default ImageCropPreview
-

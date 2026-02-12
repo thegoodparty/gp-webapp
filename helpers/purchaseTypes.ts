@@ -4,7 +4,7 @@ export const PURCHASE_TYPES = {
   POLL: 'POLL',
 } as const
 
-export type PurchaseType = typeof PURCHASE_TYPES[keyof typeof PURCHASE_TYPES]
+export type PurchaseType = (typeof PURCHASE_TYPES)[keyof typeof PURCHASE_TYPES]
 
 export const PURCHASE_TYPE_LABELS: Record<PurchaseType, string> = {
   [PURCHASE_TYPES.DOMAIN_REGISTRATION]: 'Domain Registration',
@@ -13,7 +13,8 @@ export const PURCHASE_TYPE_LABELS: Record<PurchaseType, string> = {
 }
 
 export const PURCHASE_TYPE_DESCRIPTIONS: Record<PurchaseType, string> = {
-  [PURCHASE_TYPES.DOMAIN_REGISTRATION]: 'Register a custom domain for your website',
+  [PURCHASE_TYPES.DOMAIN_REGISTRATION]:
+    'Register a custom domain for your website',
   [PURCHASE_TYPES.POLL]: 'Expand your SMS poll',
   [PURCHASE_TYPES.TEXT]: '',
 }
@@ -24,5 +25,4 @@ export const PURCHASE_STATE = {
   ERROR: 'error',
 } as const
 
-export type PurchaseState = typeof PURCHASE_STATE[keyof typeof PURCHASE_STATE]
-
+export type PurchaseState = (typeof PURCHASE_STATE)[keyof typeof PURCHASE_STATE]

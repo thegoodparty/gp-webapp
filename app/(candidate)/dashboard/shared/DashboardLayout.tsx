@@ -36,9 +36,17 @@ const DashboardLayout = ({
 
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
-  const goals = activeCampaign && 'goals' in activeCampaign ? activeCampaign.goals : undefined
+  const goals =
+    activeCampaign && 'goals' in activeCampaign
+      ? activeCampaign.goals
+      : undefined
   const goalsObj = goals && typeof goals === 'object' ? goals : null
-  const goalsElectionDate = goalsObj && 'electionDate' in goalsObj && typeof goalsObj.electionDate === 'string' ? goalsObj.electionDate : undefined
+  const goalsElectionDate =
+    goalsObj &&
+    'electionDate' in goalsObj &&
+    typeof goalsObj.electionDate === 'string'
+      ? goalsObj.electionDate
+      : undefined
   const electionDate = details?.electionDate || goalsElectionDate
 
   useEffect(() => {
@@ -57,7 +65,13 @@ const DashboardLayout = ({
     if (shouldRedirect) {
       router.push('/dashboard/election-result')
     }
-  }, [currentPath, details?.primaryElectionDate, details?.wonGeneral, electionDate, router])
+  }, [
+    currentPath,
+    details?.primaryElectionDate,
+    details?.wonGeneral,
+    electionDate,
+    router,
+  ])
 
   return (
     <EcanvasserProvider>
@@ -73,7 +87,11 @@ const DashboardLayout = ({
           className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
         >
           {campaign && showAlert && <AlertSection campaign={campaign} />}
-          <ProUpgradePrompt campaign={campaign} user={user} pathname={currentPath || undefined} />
+          <ProUpgradePrompt
+            campaign={campaign}
+            user={user}
+            pathname={currentPath || undefined}
+          />
           {children}
         </main>
       </div>

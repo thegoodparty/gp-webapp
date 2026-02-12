@@ -2,7 +2,10 @@ import { useMemo } from 'react'
 import Button from '@shared/buttons/Button'
 import IconButton from '@shared/buttons/IconButton'
 import Modal from '@shared/utils/Modal'
-import CustomVoterAudienceFilters, { AudienceFiltersState, AudienceFilterKey } from './CustomVoterAudienceFilters'
+import CustomVoterAudienceFilters, {
+  AudienceFiltersState,
+  AudienceFilterKey,
+} from './CustomVoterAudienceFilters'
 
 const VALID_AUDIENCE_FILTER_KEYS: Set<string> = new Set([
   'audience_superVoters',

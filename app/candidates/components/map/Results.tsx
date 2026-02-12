@@ -74,7 +74,9 @@ export default memo(function Results({
               </Body1>
 
               <a
-                href={`mailto:?subject=Question about your campaign&body=Hi there,%0A%0AI ran across this site when researching candidates running for office in my area that are running people-powered, non-partisan campaigns.%0A%0AI didn't notice your name on here, and think your campaign would be a great fit alongside other community powered candidates. If you'd like to be featured on the map, this organization (GoodParty.org) noted that you can get in touch by creating an account at goodparty.org/sign-up.%0A%0AThank you for stepping up to serve our community. I hope to celebrate your victory on election night!%0A%0ABest,${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
+                href={`mailto:?subject=Question about your campaign&body=Hi there,%0A%0AI ran across this site when researching candidates running for office in my area that are running people-powered, non-partisan campaigns.%0A%0AI didn't notice your name on here, and think your campaign would be a great fit alongside other community powered candidates. If you'd like to be featured on the map, this organization (GoodParty.org) noted that you can get in touch by creating an account at goodparty.org/sign-up.%0A%0AThank you for stepping up to serve our community. I hope to celebrate your victory on election night!%0A%0ABest,${
+                  user?.firstName ?? ''
+                } ${user?.lastName ?? ''}`}
               >
                 <Button>Invite a Candidate</Button>
               </a>

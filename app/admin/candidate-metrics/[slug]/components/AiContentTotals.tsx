@@ -11,7 +11,9 @@ interface AiContentTotalsProps {
   campaign: Campaign
 }
 
-export default function AiContentTotals(props: AiContentTotalsProps): React.JSX.Element {
+export default function AiContentTotals(
+  props: AiContentTotalsProps,
+): React.JSX.Element {
   const { campaign } = props
   const { aiContent } = campaign
   if (!aiContent) {
@@ -28,8 +30,7 @@ export default function AiContentTotals(props: AiContentTotalsProps): React.JSX.
         'updatedAt' in value,
     )
   const entries = Object.entries(aiContent).filter(
-    (entry): entry is [string, AiContentData] =>
-      isAiContentData(entry[1]),
+    (entry): entry is [string, AiContentData] => isAiContentData(entry[1]),
   )
   const total = entries.length
   return (

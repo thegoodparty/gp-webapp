@@ -1,35 +1,35 @@
 .imessage {
-    margin: 0.5rem 0;
-    width: fit-content;
-    align-items: flex-start;
-    background-color: #E5E7EB;
-    color: #000;
-    border-radius: 1.15rem;
-    line-height: 1;
-    padding: 12px;
-    position: relative;
-    word-wrap: break-word;
+  margin: 0.5rem 0;
+  width: fit-content;
+  align-items: flex-start;
+  background-color: #e5e7eb;
+  color: #000;
+  border-radius: 1.15rem;
+  line-height: 1;
+  padding: 12px;
+  position: relative;
+  word-wrap: break-word;
 }
 
 .imessage::before,
 .imessage::after {
-    bottom: -0.1rem;
-    content: "";
-    height: 1rem;
-    position: absolute;
+  bottom: -0.1rem;
+  content: '';
+  height: 1rem;
+  position: absolute;
 }
 
 .imessage::before {
-    border-bottom-right-radius: 0.8rem 0.7rem;
-    border-left: 1rem solid #e5e5ea;
-    left: -0.35rem;
-    transform: translate(0, -0.1rem);
+  border-bottom-right-radius: 0.8rem 0.7rem;
+  border-left: 1rem solid #e5e5ea;
+  left: -0.35rem;
+  transform: translate(0, -0.1rem);
 }
 
 .imessage::after {
-    background-color: #fff;
-    border-bottom-right-radius: 0.5rem;
-    left: 20px;
-    transform: translate(-30px, -2px);
-    width: 10px;
+  background-color: #fff;
+  border-bottom-right-radius: 0.5rem;
+  left: 20px;
+  transform: translate(-30px, -2px);
+  width: 10px;
 }

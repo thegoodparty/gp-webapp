@@ -14,7 +14,10 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body1 from '@shared/typography/Body1'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { PurchaseHeader } from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
-import { usePurchaseIntent, PurchaseIntentResponse } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import {
+  usePurchaseIntent,
+  PurchaseIntentResponse,
+} from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { PaymentInterstitials } from 'app/(candidate)/dashboard/purchase/components/PaymentInterstitials'
 import H1 from '@shared/typography/H1'
@@ -33,23 +36,42 @@ interface ErrorResponseData {
   }
 }
 
-function isErrorResponseData(data: { success: boolean } | ErrorResponseData): data is ErrorResponseData {
-  return 'data' in data && data.data !== undefined && typeof data.data === 'object' && data.data !== null && 'error' in data.data
+function isErrorResponseData(
+  data: { success: boolean } | ErrorResponseData,
+): data is ErrorResponseData {
+  return (
+    'data' in data &&
+    data.data !== undefined &&
+    typeof data.data === 'object' &&
+    data.data !== null &&
+    'error' in data.data
+  )
 }
 
-function getErrorMessage(data: { success: boolean } | ErrorResponseData): string | undefined {
+function getErrorMessage(
+  data: { success: boolean } | ErrorResponseData,
+): string | undefined {
   if (isErrorResponseData(data)) {
     return data.data?.error
   }
   return undefined
 }
 
-export default function PurchasePage({ type, domain, returnUrl }: PurchasePageProps): React.JSX.Element {
+export default function PurchasePage({
+  type,
+  domain,
+  returnUrl,
+}: PurchasePageProps): React.JSX.Element {
   const { setError, purchaseIntent } = usePurchaseIntent()
-  const [purchaseState, setPurchaseState] = useState<PurchaseState>(PURCHASE_STATE.PAYMENT)
+  const [purchaseState, setPurchaseState] = useState<PurchaseState>(
+    PURCHASE_STATE.PAYMENT,
+  )
 
-  const handlePaymentSuccess = async (paymentIntent: PaymentIntent | PurchaseIntentResponse) => {
-    const intentId = 'id' in paymentIntent ? paymentIntent.id : paymentIntent.paymentIntentId
+  const handlePaymentSuccess = async (
+    paymentIntent: PaymentIntent | PurchaseIntentResponse,
+  ) => {
+    const intentId =
+      'id' in paymentIntent ? paymentIntent.id : paymentIntent.paymentIntentId
     try {
       const response = await completePurchase(intentId)
 
@@ -66,7 +88,9 @@ export default function PurchasePage({ type, domain, returnUrl }: PurchasePagePr
 
         setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
-        setError(getErrorMessage(response.data) || 'Failed to complete purchase')
+        setError(
+          getErrorMessage(response.data) || 'Failed to complete purchase',
+        )
         setPurchaseState(PURCHASE_STATE.ERROR)
       }
     } catch (error) {

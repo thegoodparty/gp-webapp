@@ -13,7 +13,10 @@ interface IssuesSelectListProps {
   handleSelectIssue?: (issue: IssueForSelect) => void
 }
 
-export const IssuesSelectList = ({ issues = [], handleSelectIssue = () => {} }: IssuesSelectListProps): React.JSX.Element[] =>
+export const IssuesSelectList = ({
+  issues = [],
+  handleSelectIssue = () => {},
+}: IssuesSelectListProps): React.JSX.Element[] =>
   issues.map((issue) => (
     <IssueSelectItem
       key={issue.id}
@@ -21,4 +24,3 @@ export const IssuesSelectList = ({ issues = [], handleSelectIssue = () => {} }: 
       handleSelectIssue={handleSelectIssue}
     />
   ))
-

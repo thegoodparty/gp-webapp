@@ -10,7 +10,9 @@ interface ArticleTagsProps {
   tags?: Tag[]
 }
 
-export default function ArticleTags({ tags }: ArticleTagsProps): React.JSX.Element | null {
+export default function ArticleTags({
+  tags,
+}: ArticleTagsProps): React.JSX.Element | null {
   if (!tags) {
     return null
   }

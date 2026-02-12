@@ -9,7 +9,13 @@ import { MdLockOutline } from 'react-icons/md'
 import { OUTREACH_TYPES } from '../constants'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 
-type OutreachType = 'text' | 'p2p' | 'robocall' | 'doorKnocking' | 'phoneBanking' | 'socialMedia'
+type OutreachType =
+  | 'text'
+  | 'p2p'
+  | 'robocall'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
 
 interface OutreachCreateCardProps {
   type: OutreachType
@@ -36,10 +42,10 @@ export const OutreachCreateCard = ({
   const [campaign] = useCampaign()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const { isPro, hasFreeTextsOffer } = campaign || {}
-  
+
   const isTextType = type === OUTREACH_TYPES.text || type === OUTREACH_TYPES.p2p
   const showFreeOffer = p2pUxEnabled && isTextType && hasFreeTextsOffer
-  
+
   return (
     <Card
       onClick={() => onClick(type)}

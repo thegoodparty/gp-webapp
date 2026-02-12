@@ -21,7 +21,11 @@ const getWebsite = async ({ vanityPath }: Params): Promise<Website | null> => {
 
 export const dynamic = 'force-dynamic'
 
-export default async function CandidateWebsitePage({ params }: { params: Promise<Params> }): Promise<null> {
+export default async function CandidateWebsitePage({
+  params,
+}: {
+  params: Promise<Params>
+}): Promise<null> {
   const website = await getWebsite(await params)
 
   if (!website) {

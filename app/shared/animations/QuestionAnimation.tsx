@@ -8,6 +8,8 @@ interface QuestionAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function QuestionAnimation(props: QuestionAnimationProps): React.JSX.Element {
+export default function QuestionAnimation(
+  props: QuestionAnimationProps,
+): React.JSX.Element {
   return <LottieAnimation animationData={data} {...props} />
 }

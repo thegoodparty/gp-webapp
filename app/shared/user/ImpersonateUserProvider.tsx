@@ -16,18 +16,21 @@ interface ImpersonateUserContextValue {
   clear: () => void
 }
 
-export const ImpersonateUserContext = createContext<ImpersonateUserContextValue>({
-  user: null,
-  token: null,
-  impersonate: () => Promise.resolve(false),
-  clear: () => {},
-})
+export const ImpersonateUserContext =
+  createContext<ImpersonateUserContextValue>({
+    user: null,
+    token: null,
+    impersonate: () => Promise.resolve(false),
+    clear: () => {},
+  })
 
 interface ImpersonateUserProviderProps {
   children: React.ReactNode
 }
 
-export const ImpersonateUserProvider = ({ children }: ImpersonateUserProviderProps): React.JSX.Element => {
+export const ImpersonateUserProvider = ({
+  children,
+}: ImpersonateUserProviderProps): React.JSX.Element => {
   const [user, setUser] = useState<ImpersonateUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
@@ -64,7 +67,9 @@ export const ImpersonateUserProvider = ({ children }: ImpersonateUserProviderPro
       const resp = await clientFetch(apiRoutes.admin.user.impersonate, {
         email,
       })
-      const data = resp.data as { token?: string; user?: ImpersonateUser } | undefined
+      const data = resp.data as
+        | { token?: string; user?: ImpersonateUser }
+        | undefined
       const { token, user } = data || {}
       if (token && user) {
         set(token, user)
@@ -84,4 +89,3 @@ export const ImpersonateUserProvider = ({ children }: ImpersonateUserProviderPro
     </ImpersonateUserContext.Provider>
   )
 }
-

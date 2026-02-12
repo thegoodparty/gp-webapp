@@ -4,9 +4,9 @@ import styles from './Why.module.scss'
 const points = [
   'Be part of a mission to solve the biggest problem of our time – fixing our democracy, so all other problems can be solved.',
 
-  'We\'re a Public Benefit Corporation that prioritizes social impact over profit.',
+  "We're a Public Benefit Corporation that prioritizes social impact over profit.",
 
-  'Fully funded for our mission. No stressing over whether the next round of funding will come through. Focus on making an impact. That\'s what matters here.',
+  "Fully funded for our mission. No stressing over whether the next round of funding will come through. Focus on making an impact. That's what matters here.",
 
   'Work where and how you like, on a fully remote team spread across the country.',
 
@@ -32,4 +32,3 @@ const Why = (): React.JSX.Element => {
 }
 
 export default Why
-

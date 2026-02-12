@@ -92,13 +92,21 @@ const Hero = (props: HeroProps): React.JSX.Element => {
             />
           </div>
         )}
-        <DownloadFile {...props} isCustom={isCustom || false} index={index || 0} />
+        <DownloadFile
+          {...props}
+          isCustom={isCustom || false}
+          index={index || 0}
+        />
       </div>
       <div className="mt-6 grid grid-cols-12 gap-4">
         <div className=" col-span-12">
           <Paper>
             <Overline className="mb-2"># of Records</Overline>
-            <RecordCount {...props} isCustom={isCustom || false} index={index || 0} />
+            <RecordCount
+              {...props}
+              isCustom={isCustom || false}
+              index={index || 0}
+            />
           </Paper>
         </div>
       </div>

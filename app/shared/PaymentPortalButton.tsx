@@ -6,18 +6,23 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-interface PaymentPortalStyledButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
+interface PaymentPortalStyledButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
   children: ReactNode
   disabled?: boolean
 }
 
-const PaymentPortalStyledButton = ({ children, ...restProps }: PaymentPortalStyledButtonProps): React.JSX.Element => (
+const PaymentPortalStyledButton = ({
+  children,
+  ...restProps
+}: PaymentPortalStyledButtonProps): React.JSX.Element => (
   <PrimaryButton className="flex items-center" {...restProps}>
     {children}
   </PrimaryButton>
 )
 
-interface PaymentPortalButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
+interface PaymentPortalButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
   redirectUrl?: string | null
   children: ReactNode
 }
@@ -33,7 +38,9 @@ export const PaymentPortalButton = ({
     e.preventDefault()
     trackEvent(EVENTS.Settings.Account.ClickManageSubscription)
     setLoading(true)
-    const resp = await clientFetch<{ redirectUrl: string }>(apiRoutes.payments.createPortalSession)
+    const resp = await clientFetch<{ redirectUrl: string }>(
+      apiRoutes.payments.createPortalSession,
+    )
     const portalRedirectUrl = resp.data?.redirectUrl
     if (!portalRedirectUrl) {
       throw new Error('No portal redirect url found')

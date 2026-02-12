@@ -12,7 +12,9 @@ interface ScriptCardProps {
   type: string
 }
 
-export default function ScriptCard({ type }: ScriptCardProps): React.JSX.Element {
+export default function ScriptCard({
+  type,
+}: ScriptCardProps): React.JSX.Element {
   let typeText = ''
   if (type === 'sms') {
     typeText = 'text'
@@ -55,4 +57,3 @@ export default function ScriptCard({ type }: ScriptCardProps): React.JSX.Element
     </Paper>
   )
 }
-

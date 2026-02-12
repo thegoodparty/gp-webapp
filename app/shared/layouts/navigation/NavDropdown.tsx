@@ -68,10 +68,7 @@ const NavDropdown = ({
               rel={link.external ? 'noopener noreferrer nofollow' : ''}
               target={link.external ? '_blank' : ''}
             >
-              <div
-                className="flex items-center"
-                data-testid={link.dataTestId}
-              >
+              <div className="flex items-center" data-testid={link.dataTestId}>
                 {link.icon}
                 <div className="ml-3">{link.label}</div>
               </div>
@@ -85,13 +82,3 @@ const NavDropdown = ({
 )
 
 export default memo(NavDropdown)
-
-
-
-
-
-
-
-
-
-

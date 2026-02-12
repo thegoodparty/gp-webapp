@@ -78,4 +78,3 @@ export default function Markers(): React.JSX.Element {
     </MarkerClusterer>
   )
 }
-

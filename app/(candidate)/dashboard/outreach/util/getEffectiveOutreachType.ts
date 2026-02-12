@@ -1,4 +1,4 @@
-import { OUTREACH_TYPES } from "app/(candidate)/dashboard/outreach/constants"
+import { OUTREACH_TYPES } from 'app/(candidate)/dashboard/outreach/constants'
 
 /**
  * Normalizes an outreach type based on p2pUxEnabled flag.
@@ -13,12 +13,11 @@ import { OUTREACH_TYPES } from "app/(candidate)/dashboard/outreach/constants"
  * @returns The normalized outreach type
  */
 export const getEffectiveOutreachType = (
-    type: string,
-    p2pUxEnabled: boolean,
-  ): string => {
-    if (p2pUxEnabled && type === OUTREACH_TYPES.text) {
-      return OUTREACH_TYPES.p2p
-    }
-    return type
+  type: string,
+  p2pUxEnabled: boolean,
+): string => {
+  if (p2pUxEnabled && type === OUTREACH_TYPES.text) {
+    return OUTREACH_TYPES.p2p
   }
-  
+  return type
+}

@@ -67,7 +67,9 @@ const CARD_COMPETITORS: PricingCardConfig = {
   sub: 'Based on 10,000 records',
 }
 
-export default function DetailsPage(props: UpdateToProPageProps): React.JSX.Element {
+export default function DetailsPage(
+  props: UpdateToProPageProps,
+): React.JSX.Element {
   const [user] = useUser()
   const { metaData: userMetaData } = user || {}
   const { demoPersona } = userMetaData || {}
@@ -78,7 +80,9 @@ export default function DetailsPage(props: UpdateToProPageProps): React.JSX.Elem
     trackEvent(EVENTS.ProUpgrade.SplashPage.Exit)
   })
 
-  const handleJoinProOnClick = (e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void => {
+  const handleJoinProOnClick = (
+    e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+  ): void => {
     if (demoPersona) {
       e.preventDefault()
       e.stopPropagation()

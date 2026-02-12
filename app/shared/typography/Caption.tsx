@@ -12,4 +12,3 @@ const Caption = ({ children, className = '' }: CaptionProps) => (
 )
 
 export default Caption
-

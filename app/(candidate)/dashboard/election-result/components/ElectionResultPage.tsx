@@ -46,7 +46,12 @@ export default function ElectionResultPage(): React.JSX.Element {
   const details = campaign?.details
   const goals = campaign && 'goals' in campaign ? campaign.goals : undefined
   const goalsObj = goals && typeof goals === 'object' ? goals : null
-  const goalsElectionDate = goalsObj && 'electionDate' in goalsObj && typeof goalsObj.electionDate === 'string' ? goalsObj.electionDate : undefined
+  const goalsElectionDate =
+    goalsObj &&
+    'electionDate' in goalsObj &&
+    typeof goalsObj.electionDate === 'string'
+      ? goalsObj.electionDate
+      : undefined
   const electionDate = details?.electionDate || goalsElectionDate
   const officeName =
     details?.office?.toLowerCase() === 'other'
