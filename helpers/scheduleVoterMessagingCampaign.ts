@@ -6,17 +6,16 @@ interface ScheduleResponse {
 }
 
 export const scheduleVoterMessagingCampaign = async (
-  outreachId: string | number,
+  outreachId: number,
   audienceRequest: string | boolean = '',
 ): Promise<ScheduleResponse | false> => {
-  const id = Number(outreachId)
-  if (!Number.isFinite(id) || id <= 0) {
+  if (outreachId <= 0) {
     console.error('scheduleVoterMessagingCampaign: invalid outreachId', outreachId)
     return false
   }
   try {
     const resp = await clientFetch<ScheduleResponse>(apiRoutes.voters.voterFile.schedule, {
-      outreachId: id,
+      outreachId,
       audienceRequest,
     })
     if (!resp.ok) {

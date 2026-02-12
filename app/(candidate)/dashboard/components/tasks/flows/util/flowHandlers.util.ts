@@ -42,7 +42,7 @@ export interface FlowState {
   script?: string | false | null
   schedule?: ScheduleState
   image?: File | null
-  voterFileFilter?: (PhoneListInput & { id?: string }) | null
+  voterFileFilter?: (PhoneListInput & { id?: number }) | null
   audience?: AudienceState
   phoneListId?: number | null
 }
@@ -101,10 +101,9 @@ export const handleScheduleOutreach =
     successSnackbar: (message: string) => void = () => {},
     { budget, audience }: ScheduleOutreachParams = {},
   ) =>
-  async (outreach: Outreach = { id: '' }): Promise<void> => {
-    const rawId = outreach?.id
-    const outreachId = Number(rawId)
-    if (!Number.isFinite(outreachId) || outreachId <= 0) {
+  async (outreach: Outreach = { id: 0 }): Promise<void> => {
+    const outreachId = outreach?.id
+    if (!outreachId || outreachId <= 0) {
       errorSnackbar('Cannot schedule: outreach was not created')
       return
     }
@@ -140,9 +139,7 @@ export const handleCreateOutreach =
     const { audience_request: audienceRequest } = audience || {}
     const { message } = schedule || {}
     const date = schedule?.date
-    const rawVoterFilterId = voterFileFilter?.id
-    const voterFileFilterId = Number(rawVoterFilterId)
-    const normalizedPhoneListId = Number(phoneListId)
+    const voterFileFilterId = voterFileFilter?.id
     const outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
 
     const outreach = await createOutreach(
@@ -153,12 +150,12 @@ export const handleCreateOutreach =
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script: typeof script === 'string' ? script : undefined,
         ...(date ? { date: date instanceof Date ? date.toISOString() : date } : {}),
-        ...(Number.isFinite(voterFileFilterId) && voterFileFilterId > 0
+        ...(voterFileFilterId && voterFileFilterId > 0
           ? { voterFileFilterId }
           : {}),
         ...(typeof audienceRequest === 'string' && audienceRequest ? { audienceRequest } : {}),
-        ...(p2pUxEnabled && Number.isFinite(normalizedPhoneListId) && normalizedPhoneListId > 0
-          ? { phoneListId: normalizedPhoneListId }
+        ...(p2pUxEnabled && phoneListId && phoneListId > 0
+          ? { phoneListId }
           : {}),
       },
       image || null,

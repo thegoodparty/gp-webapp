@@ -13,7 +13,7 @@ export const packageFormData = (
 ): FormData => {
   const formData = new FormData()
   for (const key in data) {
-    const value = data[key] as FormDataValue
+    const value = data[key]
     const coerced =
       value instanceof Date
         ? value.toISOString()

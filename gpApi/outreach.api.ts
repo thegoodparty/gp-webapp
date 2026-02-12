@@ -24,13 +24,13 @@ export async function createOutreach(
     const formData = new FormData()
     formData.append('data', JSON.stringify(payload))
     formData.append('file', image)
-    return clientFetch<CreateOutreachResponse>(apiRoutes.outreach.create, {
-      method: 'POST',
-      body: formData,
-    })
+    return clientFetch<CreateOutreachResponse>(
+      apiRoutes.outreach.create,
+      formData,
+    )
   }
-  return clientFetch<CreateOutreachResponse>(apiRoutes.outreach.create, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  })
+  return clientFetch<CreateOutreachResponse>(
+    apiRoutes.outreach.create,
+    payload,
+  )
 }

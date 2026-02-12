@@ -3,7 +3,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { VoterFileFilters } from 'helpers/types'
 
 interface VoterFileFilterResponse extends VoterFileFilters {
-  id: string
+  id: number
   name?: string
 }
 
