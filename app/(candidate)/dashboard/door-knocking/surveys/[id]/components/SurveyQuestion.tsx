@@ -17,7 +17,10 @@ interface SurveyQuestionProps {
   isEven: boolean
 }
 
-export default function SurveyQuestion({ question, isEven }: SurveyQuestionProps): React.JSX.Element {
+export default function SurveyQuestion({
+  question,
+  isEven,
+}: SurveyQuestionProps): React.JSX.Element {
   const { name, answer_type, required } = question
   const rowClass = `grid grid-cols-12 col-span-12 py-3 items-center ${
     isEven ? 'bg-white' : 'bg-gray-50'

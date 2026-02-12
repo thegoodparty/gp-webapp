@@ -9,4 +9,3 @@ export const requireAuth = async (): Promise<User> => {
   }
   return user
 }
-

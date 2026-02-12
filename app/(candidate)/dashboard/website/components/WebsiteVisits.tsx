@@ -54,7 +54,9 @@ function processVisitsData(visits: Visit[]): ChartDataPoint[] {
   return result
 }
 
-export default function WebsiteVisits({ className = '' }: WebsiteVisitsProps): React.JSX.Element {
+export default function WebsiteVisits({
+  className = '',
+}: WebsiteVisitsProps): React.JSX.Element {
   const [visits, setVisits] = useState<Visit[]>([])
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -119,7 +121,11 @@ export default function WebsiteVisits({ className = '' }: WebsiteVisitsProps): R
                 }}
                 labelStyle={{ color: '#374151', fontWeight: '600' }}
                 labelFormatter={(_, payload) => {
-                  if (payload && payload.length > 0 && payload[0]?.payload?.date) {
+                  if (
+                    payload &&
+                    payload.length > 0 &&
+                    payload[0]?.payload?.date
+                  ) {
                     const date = payload[0].payload.date
                     return format(date, 'MMM d, yyyy')
                   }

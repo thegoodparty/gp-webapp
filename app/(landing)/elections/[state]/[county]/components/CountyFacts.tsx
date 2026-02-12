@@ -19,7 +19,9 @@ interface CountyFactsProps {
   county: County | PlaceResult
 }
 
-const CountyFacts = ({ county }: CountyFactsProps): React.JSX.Element | null => {
+const CountyFacts = ({
+  county,
+}: CountyFactsProps): React.JSX.Element | null => {
   if (!county) return null
   const {
     cityLargest,

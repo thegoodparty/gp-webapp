@@ -14,8 +14,7 @@ const issueAlreadySelected = (
   }
   return Boolean(
     candidatePositions.find(
-      (candidatePosition) =>
-        candidatePosition.position?.id === position.id,
+      (candidatePosition) => candidatePosition.position?.id === position.id,
     ),
   )
 }

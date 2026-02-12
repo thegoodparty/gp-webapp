@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 import React, { ReactNode, HTMLAttributes } from 'react'
 
-interface PaperProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface PaperProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
   children?: ReactNode
   className?: string
 }
@@ -19,4 +20,3 @@ const Paper = ({ children, className, ...rest }: PaperProps) => (
 )
 
 export default Paper
-

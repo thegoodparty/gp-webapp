@@ -44,7 +44,11 @@ interface ProfileDropdownProps {
   user: User
 }
 
-const ProfileDropdown = ({ open, toggleCallback, user }: ProfileDropdownProps): React.JSX.Element => {
+const ProfileDropdown = ({
+  open,
+  toggleCallback,
+  user,
+}: ProfileDropdownProps): React.JSX.Element => {
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -192,9 +196,9 @@ const ProfileDropdown = ({ open, toggleCallback, user }: ProfileDropdownProps): 
               onClick={handleLogOutClick}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleLogOutClick({ 
+                  handleLogOutClick({
                     preventDefault: e.preventDefault.bind(e),
-                    currentTarget: e.currentTarget as HTMLElement 
+                    currentTarget: e.currentTarget as HTMLElement,
                   } as React.MouseEvent<HTMLElement>)
                 }
               }}
@@ -214,4 +218,3 @@ const ProfileDropdown = ({ open, toggleCallback, user }: ProfileDropdownProps): 
 }
 
 export default memo(ProfileDropdown)
-

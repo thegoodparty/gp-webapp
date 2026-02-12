@@ -29,7 +29,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   })
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { slug } = await params
   const itemsBySlug = await fetchGlossaryItemsBySlug()
   const item = itemsBySlug[slug]
@@ -55,7 +57,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return meta
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element> {
   const { slug } = await params
   const itemsBySlug = await fetchGlossaryItemsBySlug()
   const itemsByLetter = await fetchGlossaryByLetter()

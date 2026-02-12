@@ -21,13 +21,19 @@ interface MessageResponse {
   success?: boolean
 }
 
-export async function sendMessage(type: string, message: string): Promise<boolean> {
+export async function sendMessage(
+  type: string,
+  message: string,
+): Promise<boolean> {
   try {
     const payload: MessagePayload = {
       type,
       message,
     }
-    await clientFetch<MessageResponse>(apiRoutes.voters.voterFile.helpMessage, payload)
+    await clientFetch<MessageResponse>(
+      apiRoutes.voters.voterFile.helpMessage,
+      payload,
+    )
     return true
   } catch (e) {
     console.error('error', e)

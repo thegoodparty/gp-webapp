@@ -6,16 +6,25 @@ import Link from 'next/link'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import SurveyHeader from './SurveyHeader'
 import SurveyQuestions from './SurveyQuestions'
-import { EcanvasserSurveyProvider, EcanvasserSurvey } from '@shared/hooks/EcanvasserSurveyProvider'
+import {
+  EcanvasserSurveyProvider,
+  EcanvasserSurvey,
+} from '@shared/hooks/EcanvasserSurveyProvider'
 interface DoorKnockingSurveyPageProps {
   pathname?: string
   survey: EcanvasserSurvey
 }
 
-export default function DoorKnockingSurveyPage(props: DoorKnockingSurveyPageProps): React.JSX.Element {
+export default function DoorKnockingSurveyPage(
+  props: DoorKnockingSurveyPageProps,
+): React.JSX.Element {
   return (
     <EcanvasserSurveyProvider survey={props.survey}>
-      <DashboardLayout pathname={props.pathname} campaign={undefined} showAlert={false}>
+      <DashboardLayout
+        pathname={props.pathname}
+        campaign={undefined}
+        showAlert={false}
+      >
         <Link
           href="/dashboard/door-knocking/surveys"
           className="my-2 flex items-center text-gray-500 "

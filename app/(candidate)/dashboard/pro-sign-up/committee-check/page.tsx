@@ -22,13 +22,17 @@ export default async function Page(): Promise<React.JSX.Element> {
   const user = await getServerUser()
 
   // Transform campaign to match component's expected type (convert null to undefined)
-  const campaign = fetchedCampaign === null ? undefined : {
-    details: {
-      campaignCommittee: fetchedCampaign.details?.campaignCommittee ?? undefined,
-      einNumber: fetchedCampaign.details?.einNumber ?? undefined,
-    },
-    isPro: fetchedCampaign.isPro ?? undefined,
-  }
+  const campaign =
+    fetchedCampaign === null
+      ? undefined
+      : {
+          details: {
+            campaignCommittee:
+              fetchedCampaign.details?.campaignCommittee ?? undefined,
+            einNumber: fetchedCampaign.details?.einNumber ?? undefined,
+          },
+          isPro: fetchedCampaign.isPro ?? undefined,
+        }
 
   return <CommitteeCheckPage campaign={campaign} user={user} />
 }

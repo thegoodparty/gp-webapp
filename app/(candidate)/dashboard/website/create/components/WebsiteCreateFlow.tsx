@@ -49,7 +49,9 @@ export const cantSaveReasons = (website: Website | null): string => {
   return cantSaveReason
 }
 
-export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowProps): React.JSX.Element {
+export default function WebsiteCreateFlow({
+  initialIssues,
+}: WebsiteCreateFlowProps): React.JSX.Element {
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const { website, setWebsite } = useWebsite()
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -121,10 +123,14 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
   }
 
   function handleVanityPathChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      vanityPath: value,
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            vanityPath: value,
+          }
+        : null,
+    )
   }
 
   function handleLogoChange(file: File | null): void {
@@ -136,47 +142,66 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
       setLogo(null, undefined)
     }
 
-    function setLogo(url: string | ArrayBuffer | null, file: File | undefined): void {
-      setWebsite((current) => current ? {
-        ...current,
-        content: {
-          ...current.content,
-          logo: typeof url === 'string' ? url : undefined,
-          logoFile: file,
-        },
-      } : null)
+    function setLogo(
+      url: string | ArrayBuffer | null,
+      file: File | undefined,
+    ): void {
+      setWebsite((current) =>
+        current
+          ? {
+              ...current,
+              content: {
+                ...current.content,
+                logo: typeof url === 'string' ? url : undefined,
+                logoFile: file,
+              },
+            }
+          : null,
+      )
     }
   }
 
   function handleThemeChange(color: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        theme: color,
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              theme: color,
+            },
+          }
+        : null,
+    )
   }
 
   function handleTitleChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        main: { ...current.content?.main, title: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              main: { ...current.content?.main, title: value },
+            },
+          }
+        : null,
+    )
     setIsValid(value.length > 0)
   }
 
   function handleTaglineChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        main: { ...current.content?.main, tagline: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              main: { ...current.content?.main, tagline: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleHeroChange(file: File | null): void {
@@ -188,49 +213,71 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
       setHero(null, undefined)
     }
 
-    function setHero(url: string | ArrayBuffer | null, file: File | undefined): void {
-      setWebsite((current) => current ? {
-        ...current,
-        content: {
-          ...current.content,
-          main: { ...current.content?.main, image: typeof url === 'string' ? url : undefined },
-          heroFile: file,
-        },
-      } : null)
+    function setHero(
+      url: string | ArrayBuffer | null,
+      file: File | undefined,
+    ): void {
+      setWebsite((current) =>
+        current
+          ? {
+              ...current,
+              content: {
+                ...current.content,
+                main: {
+                  ...current.content?.main,
+                  image: typeof url === 'string' ? url : undefined,
+                },
+                heroFile: file,
+              },
+            }
+          : null,
+      )
     }
   }
 
   function handleBioChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, bio: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, bio: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleIssuesChange(issues: WebsiteIssue[]): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, issues },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, issues },
+            },
+          }
+        : null,
+    )
   }
 
   async function handleAddressSelect(place: GooglePlace): Promise<void> {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: {
-          ...current.content?.contact,
-          address: place.formatted_address,
-        },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: {
+                ...current.content?.contact,
+                address: place.formatted_address,
+              },
+            },
+          }
+        : null,
+    )
 
     if (place.formatted_address && place.place_id) {
       setUpdatedPlace(place)
@@ -238,35 +285,47 @@ export default function WebsiteCreateFlow({ initialIssues }: WebsiteCreateFlowPr
   }
 
   function handleEmailChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content?.contact, email: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: { ...current.content?.contact, email: value },
+            },
+          }
+        : null,
+    )
     setIsValid(isValidEmail(value))
   }
 
   function handlePhoneChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content?.contact, phone: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: { ...current.content?.contact, phone: value },
+            },
+          }
+        : null,
+    )
     setIsValid(isValidPhone(value))
   }
 
   function handleCommitteeChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, committee: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, committee: value },
+            },
+          }
+        : null,
+    )
   }
 
   const initialBio = useMemo(

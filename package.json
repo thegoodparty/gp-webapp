@@ -14,14 +14,12 @@
     "deploy-prod": "git checkout master  && eb deploy",
     "detect-circular-dependencies": "npx madge --circular --warning app",
     "format": "prettier -c .",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint . --quiet && prettier --check .",
+    "lint:fix": "eslint . --quiet --fix && prettier --write .",
     "start": "next build && next start",
     "start-local": "cross-env NODE_ENV=production NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next start -p 4000",
-    "//postinstall": "Install e2e-tests deps locally but skip in CI",
-    "postinstall": "[ -z \"$CI\" ] && npm install --prefix e2e-tests || true",
     "test": "vitest run",
-    "test:e2e": "npm run test --prefix e2e-tests",
+    "test:e2e": "cd e2e-tests && npx playwright install chromium && npx playwright test tests/ --reporter=list",
     "test:watch": "vitest",
     "types": "npx tsc"
   },
@@ -115,6 +113,10 @@
     "validator": "^13.15.22"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.948.0",
+    "@aws-sdk/client-sqs": "^3.968.0",
+    "@playwright/test": "^1.48.1",
+    "@slack/web-api": "^7.13.0",
     "@stylistic/eslint-plugin": "^3.1.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -125,10 +127,14 @@
     "@types/react-slick": "^0.23.13",
     "@types/sanitize-html": "^2.16.0",
     "@types/validator": "^13.15.4",
+    "@types/xml2js": "^0.4.14",
     "@vitejs/plugin-react": "^5.1.3",
     "autoprefixer": "^10.4.14",
+    "axios": "^1.7.7",
     "cross-env": "^7.0.3",
+    "csv-parse": "^6.1.0",
     "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.2.4",
     "eslint-plugin-mdx": "^2.1.0",
@@ -138,10 +144,12 @@
     "madge": "^8.0.0",
     "node-fetch": "^3.3.2",
     "p-limit": "^6.2.0",
+    "p-retry": "^7.1.1",
     "postcss": "^8.4.23",
     "prettier": "^2.7.1",
     "vite-tsconfig-paths": "^6.0.5",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "xml2js": "^0.6.2"
   },
   "engines": {
     "node": "22.x"

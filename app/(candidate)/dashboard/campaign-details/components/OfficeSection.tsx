@@ -32,14 +32,16 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   useEffect(() => {
     if (campaign?.details) {
       const details = campaign.details
-      setState(campaignOfficeFields({
-        office: details.office,
-        otherOffice: details.otherOffice,
-        state: details.state,
-        electionDate: details.electionDate,
-        primaryElectionDate: details.primaryElectionDate,
-        officeTermLength: details.officeTermLength,
-      }))
+      setState(
+        campaignOfficeFields({
+          office: details.office,
+          otherOffice: details.otherOffice,
+          state: details.state,
+          electionDate: details.electionDate,
+          primaryElectionDate: details.primaryElectionDate,
+          officeTermLength: details.officeTermLength,
+        }),
+      )
     }
   }, [campaign])
 

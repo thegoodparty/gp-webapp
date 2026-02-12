@@ -5,5 +5,3 @@ export const colors = [
   'bg-violet-400',
   'bg-rose-700',
 ]
-
-

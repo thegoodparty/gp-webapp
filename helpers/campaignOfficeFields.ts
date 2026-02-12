@@ -1,4 +1,9 @@
-type OfficeFieldKey = 'office' | 'state' | 'electionDate' | 'primaryElectionDate' | 'officeTermLength'
+type OfficeFieldKey =
+  | 'office'
+  | 'state'
+  | 'electionDate'
+  | 'primaryElectionDate'
+  | 'officeTermLength'
 
 interface OfficeInputField {
   key: OfficeFieldKey
@@ -53,7 +58,9 @@ interface CampaignDetailsInput {
   officeTermLength?: string
 }
 
-export const campaignOfficeFields = (campaignDetails: CampaignDetailsInput = {}): OfficeFieldState => {
+export const campaignOfficeFields = (
+  campaignDetails: CampaignDetailsInput = {},
+): OfficeFieldState => {
   return {
     office: campaignDetails.otherOffice || campaignDetails.office || '',
     state: campaignDetails.state || '',
@@ -62,4 +69,3 @@ export const campaignOfficeFields = (campaignDetails: CampaignDetailsInput = {})
     officeTermLength: campaignDetails.officeTermLength || '',
   }
 }
-

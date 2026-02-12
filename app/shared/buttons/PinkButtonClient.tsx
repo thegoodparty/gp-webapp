@@ -33,4 +33,3 @@ const PinkButtonClient = ({
 )
 
 export default PinkButtonClient
-

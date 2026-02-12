@@ -87,7 +87,9 @@ interface AdminCandidatesTableProps {
   campaigns?: Campaign[]
 }
 
-const getDateCellContents = (origDate: Date | string | undefined): string | undefined => {
+const getDateCellContents = (
+  origDate: Date | string | undefined,
+): string | undefined => {
   let date: string | undefined
   if (origDate) {
     date = dateUsHelper(origDate)
@@ -312,10 +314,9 @@ export default function AdminCandidatesTable({
         knowRun: runningForOffice,
         isPro: isPro ? 'Yes' : 'No',
         isVerified: getIsVerifiedDisplay(isVerified),
-        dateVerified:
-          campaign.dateVerified
-            ? new Date(campaign.dateVerified)
-            : 'N/A',
+        dateVerified: campaign.dateVerified
+          ? new Date(campaign.dateVerified)
+          : 'N/A',
         tier: getTierDisplay(tier),
         didWin: didWinDisplay,
         filingPeriodsStart: filingPeriodsStart,

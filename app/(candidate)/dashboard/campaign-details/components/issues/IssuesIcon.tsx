@@ -23,7 +23,9 @@ interface IssuesIconProps {
   issueName?: string
 }
 
-export default function IssuesIcon({ issueName = '' }: IssuesIconProps): React.JSX.Element {
+export default function IssuesIcon({
+  issueName = '',
+}: IssuesIconProps): React.JSX.Element {
   const name = issueName.toLowerCase().trim()
   if (name === 'transportation') {
     return <RiTrainLine />

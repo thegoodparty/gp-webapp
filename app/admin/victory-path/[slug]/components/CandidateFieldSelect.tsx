@@ -18,11 +18,12 @@ export const CandidateFieldSelect = ({
 }: CandidateFieldSelectProps): React.JSX.Element => (
   <FormControl size="small">
     <Select displayEmpty value={value} onChange={onChange}>
-      {valueMapping && Object.entries(valueMapping).map(([display, val]) => (
-        <MenuItem key={display} value={val}>
-          {display}
-        </MenuItem>
-      ))}
+      {valueMapping &&
+        Object.entries(valueMapping).map(([display, val]) => (
+          <MenuItem key={display} value={val}>
+            {display}
+          </MenuItem>
+        ))}
     </Select>
   </FormControl>
 )

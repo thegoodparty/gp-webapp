@@ -10,7 +10,10 @@ import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'
 import { Campaign, CustomVoterFile } from 'helpers/types'
 
-const getCustomVoterFile = (customVoterFiles: CustomVoterFile[] = [], type: string): CustomVoterFile | undefined =>
+const getCustomVoterFile = (
+  customVoterFiles: CustomVoterFile[] = [],
+  type: string,
+): CustomVoterFile | undefined =>
   customVoterFiles.find(
     (file) => `custom-${slugify(file.name || '', true)}` === type,
   )
@@ -21,7 +24,9 @@ interface VoterFileDetailPageProps {
   isCustom: boolean
 }
 
-const VoterFileDetailPage = (props: VoterFileDetailPageProps): React.JSX.Element => {
+const VoterFileDetailPage = (
+  props: VoterFileDetailPageProps,
+): React.JSX.Element => {
   const { type, campaign, isCustom } = props
   const customFile = isCustom
     ? getCustomVoterFile(campaign.data?.customVoterFiles, type) || null

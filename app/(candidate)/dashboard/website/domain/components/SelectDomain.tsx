@@ -9,7 +9,9 @@ interface SelectDomainProps {
   onRegisterSuccess?: () => void
 }
 
-export default function SelectDomain({ onRegisterSuccess: _onRegisterSuccess }: SelectDomainProps): React.JSX.Element {
+export default function SelectDomain({
+  onRegisterSuccess: _onRegisterSuccess,
+}: SelectDomainProps): React.JSX.Element {
   const { website } = useWebsite()
   const vanityPath = website?.vanityPath || ''
 

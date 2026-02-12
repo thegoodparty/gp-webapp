@@ -43,5 +43,3 @@ const BuildWithUsSection = (): React.JSX.Element => (
 )
 
 export default BuildWithUsSection
-
-

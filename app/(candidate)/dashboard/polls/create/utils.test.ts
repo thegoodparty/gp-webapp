@@ -15,14 +15,14 @@ describe('validatePollQuestion', () => {
   it('returns error when question is too short', () => {
     const shortQuestion = 'Too short'
     expect(validatePollQuestion(shortQuestion)).toBe(
-      `Question must be at least ${MIN_QUESTION_LENGTH} characters`
+      `Question must be at least ${MIN_QUESTION_LENGTH} characters`,
     )
   })
 
   it('returns error when question exceeds max length', () => {
     const longQuestion = 'a'.repeat(MAX_QUESTION_LENGTH + 1)
     expect(validatePollQuestion(longQuestion)).toBe(
-      `Question must be less than ${MAX_QUESTION_LENGTH} characters`
+      `Question must be less than ${MAX_QUESTION_LENGTH} characters`,
     )
   })
 
@@ -50,7 +50,7 @@ describe('getWarningMessage', () => {
         hasGrammar: false,
         hasServerError: false,
         hasBeenChecked: false,
-      })
+      }),
     ).toBeNull()
   })
 
@@ -61,7 +61,7 @@ describe('getWarningMessage', () => {
         hasGrammar: false,
         hasServerError: false,
         hasBeenChecked: true,
-      })
+      }),
     ).toBeNull()
   })
 
@@ -72,8 +72,10 @@ describe('getWarningMessage', () => {
         hasGrammar: false,
         hasServerError: false,
         hasBeenChecked: true,
-      })
-    ).toBe('Biased language detected. Please use "Optimize message" to correct it.')
+      }),
+    ).toBe(
+      'Biased language detected. Please use "Optimize message" to correct it.',
+    )
   })
 
   it('returns grammar message when only grammar issues found', () => {
@@ -83,7 +85,7 @@ describe('getWarningMessage', () => {
         hasGrammar: true,
         hasServerError: false,
         hasBeenChecked: true,
-      })
+      }),
     ).toBe('Grammar issues found. Please use "Optimize message" to correct it.')
   })
 
@@ -94,9 +96,9 @@ describe('getWarningMessage', () => {
         hasGrammar: true,
         hasServerError: false,
         hasBeenChecked: true,
-      })
+      }),
     ).toBe(
-      'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.'
+      'Biased language detected. Grammar issues found. Please use "Optimize message" to correct it.',
     )
   })
 
@@ -107,8 +109,10 @@ describe('getWarningMessage', () => {
         hasGrammar: false,
         hasServerError: true,
         hasBeenChecked: true,
-      })
-    ).toBe('Unable to check for bias. You can still proceed or try again later.')
+      }),
+    ).toBe(
+      'Unable to check for bias. You can still proceed or try again later.',
+    )
   })
 
   it('returns server error message even when hasBeenChecked is false (API failure leaves biasAnalysis null)', () => {
@@ -118,7 +122,9 @@ describe('getWarningMessage', () => {
         hasGrammar: false,
         hasServerError: true,
         hasBeenChecked: false,
-      })
-    ).toBe('Unable to check for bias. You can still proceed or try again later.')
+      }),
+    ).toBe(
+      'Unable to check for bias. You can still proceed or try again later.',
+    )
   })
 })

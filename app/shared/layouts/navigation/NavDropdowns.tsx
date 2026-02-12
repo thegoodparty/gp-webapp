@@ -6,21 +6,22 @@ interface NavDropdownsProps {
   dropdownIndices?: number[] | null
 }
 
-export const NavDropdowns = ({ dropdownIndices = null }: NavDropdownsProps): React.JSX.Element[] => {
+export const NavDropdowns = ({
+  dropdownIndices = null,
+}: NavDropdownsProps): React.JSX.Element[] => {
   const { dropdowns, openStates, toggle } = useNav()
 
-  const filteredDropdowns = dropdownIndices 
+  const filteredDropdowns = dropdownIndices
     ? dropdowns.filter((_dropdown, index) => dropdownIndices.includes(index))
     : dropdowns
 
-  const getOriginalIndex = (filteredIndex: number) => (
+  const getOriginalIndex = (filteredIndex: number) =>
     dropdownIndices ? dropdownIndices[filteredIndex] : filteredIndex
-  )
 
   return filteredDropdowns.map((dropdown: Dropdown, filteredIndex: number) => {
     const originalIndex = getOriginalIndex(filteredIndex)
     const { id, label, links, dataTestId = '' } = dropdown
-    
+
     return (
       <NavDropdown
         key={originalIndex}
@@ -34,4 +35,3 @@ export const NavDropdowns = ({ dropdownIndices = null }: NavDropdownsProps): Rea
     )
   })
 }
-

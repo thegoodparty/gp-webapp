@@ -21,10 +21,14 @@ interface ElectedOffice {
 type ElectedOfficeContextValue = [
   electedOffice: ElectedOffice | null,
   setElectedOffice: (office: ElectedOffice | null) => void,
-  refreshElectedOffice: () => Promise<void>
+  refreshElectedOffice: () => Promise<void>,
 ]
 
-export const ElectedOfficeContext = createContext<ElectedOfficeContextValue>([null, () => {}, async () => {}])
+export const ElectedOfficeContext = createContext<ElectedOfficeContextValue>([
+  null,
+  () => {},
+  async () => {},
+])
 
 interface ElectedOfficeProviderProps {
   children: React.ReactNode
@@ -35,12 +39,16 @@ export const ElectedOfficeProvider = ({
   children,
   electedOffice: initElectedOffice,
 }: ElectedOfficeProviderProps): React.JSX.Element => {
-  const [electedOffice, setElectedOffice] = useState<ElectedOffice | null>(initElectedOffice || null)
+  const [electedOffice, setElectedOffice] = useState<ElectedOffice | null>(
+    initElectedOffice || null,
+  )
   const [user] = useUser()
 
   const fetchUserElectedOffice = useCallback(async () => {
     try {
-      const response = await clientFetch<ElectedOffice>(apiRoutes.electedOffice.current)
+      const response = await clientFetch<ElectedOffice>(
+        apiRoutes.electedOffice.current,
+      )
       if (response.ok && response.data) {
         setElectedOffice(response.data)
       } else {
@@ -70,4 +78,3 @@ export const ElectedOfficeProvider = ({
     </ElectedOfficeContext.Provider>
   )
 }
-

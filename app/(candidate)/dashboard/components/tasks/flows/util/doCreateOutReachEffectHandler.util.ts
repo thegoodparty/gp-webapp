@@ -1,8 +1,7 @@
-export const doCreateOutReachEffectHandler = (onCreateOutreach: () => Promise<void>) => () => {
-  const doOutreachPersistence = async () => {
-    await onCreateOutreach()
+export const doCreateOutReachEffectHandler =
+  (onCreateOutreach: () => Promise<void>) => () => {
+    const doOutreachPersistence = async () => {
+      await onCreateOutreach()
+    }
+    doOutreachPersistence()
   }
-  doOutreachPersistence()
-}
-
-

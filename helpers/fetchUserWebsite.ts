@@ -11,4 +11,3 @@ export async function fetchUserWebsite(): Promise<Website | null> {
     return null
   }
 }
-

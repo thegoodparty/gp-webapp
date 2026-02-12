@@ -8,7 +8,9 @@ interface UserInfoCardProps {
   user?: User | null
 }
 
-export default function UserInfoCard({ user }: UserInfoCardProps): React.JSX.Element {
+export default function UserInfoCard({
+  user,
+}: UserInfoCardProps): React.JSX.Element {
   return (
     <Paper>
       <H2>User Information</H2>

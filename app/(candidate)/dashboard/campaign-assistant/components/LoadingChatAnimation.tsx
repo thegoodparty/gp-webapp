@@ -23,9 +23,7 @@ const LoadingChatAnimation = (): React.JSX.Element | null => {
       setFade(false)
       scrollDown()
       setTimeout(() => {
-        setCurrentMessageIndex(
-          (prevIndex) => (prevIndex + 1) % messages.length,
-        )
+        setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length)
         setFade(true)
       }, 500)
     }, 3000)

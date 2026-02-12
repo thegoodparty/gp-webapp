@@ -1,4 +1,6 @@
-export const isProductRoute = (pathname: string | null | undefined): boolean => {
+export const isProductRoute = (
+  pathname: string | null | undefined,
+): boolean => {
   const isOnboardingPath = pathname?.startsWith('/onboarding')
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
@@ -12,4 +14,3 @@ export const isProductRoute = (pathname: string | null | undefined): boolean => 
     isOnboardingPath || isDashboardPath || isProfilePath || isServePath,
   )
 }
-

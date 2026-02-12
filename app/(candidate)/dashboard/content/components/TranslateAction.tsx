@@ -24,7 +24,10 @@ const TranslateAction = ({
 
   return (
     <>
-      <Modal closeCallback={() => setShowTranslate?.(false)} open={showTranslate ?? false}>
+      <Modal
+        closeCallback={() => setShowTranslate?.(false)}
+        open={showTranslate ?? false}
+      >
         <div className="lg:min-w-[400px] max-w-md">
           <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
             Translate document

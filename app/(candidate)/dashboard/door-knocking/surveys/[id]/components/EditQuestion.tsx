@@ -63,20 +63,22 @@ const fields: FieldConfig[] = [
 ]
 
 const getQuestion = async (questionId: string | number): Promise<Question> => {
-  const resp = await clientFetch<Question>(apiRoutes.ecanvasser.surveys.questions.find, {
-    questionId,
-  })
+  const resp = await clientFetch<Question>(
+    apiRoutes.ecanvasser.surveys.questions.find,
+    {
+      questionId,
+    },
+  )
   return resp.data
 }
 
 const editQuestion = async (payload: EditQuestionPayload): Promise<void> => {
-  await clientFetch(
-    apiRoutes.ecanvasser.surveys.questions.update,
-    payload,
-  )
+  await clientFetch(apiRoutes.ecanvasser.surveys.questions.update, payload)
 }
 
-export default function EditQuestion(props: EditQuestionProps): React.JSX.Element {
+export default function EditQuestion(
+  props: EditQuestionProps,
+): React.JSX.Element {
   const [survey, refreshSurvey] = useEcanvasserSurvey()
   const [question, setQuestion] = useState<Question>(props.question)
   const [isOpen, setIsOpen] = useState(false)
@@ -139,9 +141,7 @@ export default function EditQuestion(props: EditQuestionProps): React.JSX.Elemen
   }
 
   const canSubmit =
-    !isLoading &&
-    formData.question &&
-    (withOptions ? answers.length > 0 : true)
+    !isLoading && formData.question && (withOptions ? answers.length > 0 : true)
 
   return (
     <>

@@ -10,10 +10,13 @@ export const scheduleVoterMessagingCampaign = async (
   audienceRequest: string | boolean = '',
 ): Promise<ScheduleResponse | false> => {
   try {
-    const resp = await clientFetch<ScheduleResponse>(apiRoutes.voters.voterFile.schedule, {
-      outreachId,
-      audienceRequest,
-    })
+    const resp = await clientFetch<ScheduleResponse>(
+      apiRoutes.voters.voterFile.schedule,
+      {
+        outreachId,
+        audienceRequest,
+      },
+    )
     if (!resp.ok) {
       console.error(
         'Error scheduling voter messaging campaign:',
@@ -27,4 +30,3 @@ export const scheduleVoterMessagingCampaign = async (
     return false
   }
 }
-

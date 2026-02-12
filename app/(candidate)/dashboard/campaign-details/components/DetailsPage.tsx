@@ -6,7 +6,12 @@ import OfficeSection from './OfficeSection'
 import RunningAgainstSection from './RunningAgainstSection'
 import WhySection from './WhySection'
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
-import { Campaign, User, PathToVictoryData, CandidatePosition } from 'helpers/types'
+import {
+  Campaign,
+  User,
+  PathToVictoryData,
+  CandidatePosition,
+} from 'helpers/types'
 
 interface TopIssue {
   id: number
@@ -23,7 +28,9 @@ interface DetailsPageProps {
   user?: User | null
 }
 
-export default function DetailsPage(props: DetailsPageProps): React.JSX.Element {
+export default function DetailsPage(
+  props: DetailsPageProps,
+): React.JSX.Element {
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>

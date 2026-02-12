@@ -13,7 +13,7 @@ export interface Task {
   description: string
   cta?: string
   proRequired?: boolean
-  flowType: typeof TASK_TYPES[keyof typeof TASK_TYPES]
+  flowType: (typeof TASK_TYPES)[keyof typeof TASK_TYPES]
   week: number
   deadline: number
   link?: string

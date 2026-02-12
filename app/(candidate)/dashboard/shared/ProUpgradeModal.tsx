@@ -12,7 +12,11 @@ import { useUser } from '@shared/hooks/useUser'
 
 export const VIABILITY_SCORE_THRESHOLD = 2
 
-export type VariantType = 'First' | 'Second_NonViable' | 'Second_Viable' | 'Third'
+export type VariantType =
+  | 'First'
+  | 'Second_NonViable'
+  | 'Second_Viable'
+  | 'Third'
 
 export const VARIANTS: { [K in VariantType]: K } = {
   First: 'First',

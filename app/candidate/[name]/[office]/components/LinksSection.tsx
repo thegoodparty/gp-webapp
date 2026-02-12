@@ -60,7 +60,8 @@ export default function LinksSection(): React.JSX.Element | null {
   const urls = candidate?.urls
   const email = candidate?.email
   const claimed = candidate?.claimed
-  const claimedObj = typeof claimed === 'object' && claimed !== null ? claimed : undefined
+  const claimedObj =
+    typeof claimed === 'object' && claimed !== null ? claimed : undefined
 
   const { website, details } = claimedObj || {}
   const { website: campaignWebsite } = details || {}

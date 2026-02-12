@@ -5,7 +5,7 @@ import { Campaign } from 'helpers/types'
 type UseAdminCampaignReturn = [
   campaign: Campaign | null,
   setCampaign: (campaign: Campaign) => void,
-  refreshCampaign: () => Promise<void>
+  refreshCampaign: () => Promise<void>,
 ]
 
 export const useAdminCampaign = (): UseAdminCampaignReturn => {
@@ -18,4 +18,3 @@ export const useAdminCampaign = (): UseAdminCampaignReturn => {
   }
   return [campaign, setCampaign, refreshCampaign]
 }
-

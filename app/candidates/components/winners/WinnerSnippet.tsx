@@ -9,7 +9,9 @@ interface WinnerSnippetProps {
   campaign: Campaign
 }
 
-export default function WinnerSnippet({ campaign }: WinnerSnippetProps): React.JSX.Element {
+export default function WinnerSnippet({
+  campaign,
+}: WinnerSnippetProps): React.JSX.Element {
   const { firstName, lastName, office, state, avatar } = campaign
   const [imageError, setImageError] = useState(false)
   return (

@@ -25,7 +25,9 @@ const dtrOptions: Options = {
   },
 }
 
-const isDocument = (obj: Document | string | null | undefined): obj is Document => {
+const isDocument = (
+  obj: Document | string | null | undefined,
+): obj is Document => {
   return (
     typeof obj === 'object' &&
     obj !== null &&
@@ -82,4 +84,3 @@ export const cmsToPlainText = (
     return ''
   }
 }
-

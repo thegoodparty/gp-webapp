@@ -23,7 +23,9 @@ interface FetchCandidatesResponse {
   candidates: CandidateData[]
 }
 
-const fetchCandidates = async (): Promise<FetchCandidatesResponse | Response | false> => {
+const fetchCandidates = async (): Promise<
+  FetchCandidatesResponse | Response | false
+> => {
   const api = gpApi.admin.candidates
   const token = await getServerToken()
   return await gpFetch<FetchCandidatesResponse>(api, undefined, 0, token)
@@ -32,7 +34,10 @@ const fetchCandidates = async (): Promise<FetchCandidatesResponse | Response | f
 export default async function Page() {
   await adminAccessOnly()
   const response = await fetchCandidates()
-  const candidates = response && typeof response === 'object' && 'candidates' in response ? response.candidates : []
+  const candidates =
+    response && typeof response === 'object' && 'candidates' in response
+      ? response.candidates
+      : []
 
   const childProps = {
     pathname: '/admin/candidates',

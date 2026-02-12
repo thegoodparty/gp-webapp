@@ -78,7 +78,11 @@ interface PageParams {
   title: string
 }
 
-export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PageParams>
+}) {
   const { title } = await params
   const id = await findArticleIdByTitle(title)
 
@@ -96,7 +100,11 @@ export async function generateMetadata({ params }: { params: Promise<PageParams>
   return meta
 }
 
-export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>
+}): Promise<React.JSX.Element> {
   const { title } = await params
   const id = await findArticleIdByTitle(title)
 

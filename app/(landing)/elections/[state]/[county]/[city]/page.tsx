@@ -18,10 +18,16 @@ interface PageParams {
   city: string
 }
 
-export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PageParams>
+}) {
   const { state, county, city } = await params
   const upperState = state.toUpperCase()
-  const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
+  const stateName = isStateAbbreviation(upperState)
+    ? shortToLongState[upperState]
+    : undefined
   const place = await fetchPlace({
     slug: `${state}/${county}/${city}`,
     includeParent: true,
@@ -35,7 +41,11 @@ export async function generateMetadata({ params }: { params: Promise<PageParams>
   return meta
 }
 
-export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>
+}): Promise<React.JSX.Element> {
   const { state, county, city } = await params
   const upperState = state.toUpperCase()
   if (!state || !isStateAbbreviation(upperState)) {

@@ -34,7 +34,9 @@ interface ContactColumn {
   cell?: (context: { row: WebsiteContact }) => React.ReactNode
 }
 
-const fetchContacts = async (pageNum = 1): Promise<{ ok: boolean; data: ContactsResponse }> => {
+const fetchContacts = async (
+  pageNum = 1,
+): Promise<{ ok: boolean; data: ContactsResponse }> => {
   return await clientFetch<ContactsResponse>(apiRoutes.website.getContacts, {
     page: pageNum,
     sortBy: 'createdAt',
@@ -94,7 +96,10 @@ export default function WebsiteInbox(): React.JSX.Element {
         header: 'Message',
         accessorKey: 'message',
         cell: ({ row }) => (
-          <span title={row.message || ''} className="truncate block max-w-[200px]">
+          <span
+            title={row.message || ''}
+            className="truncate block max-w-[200px]"
+          >
             {row.message}
           </span>
         ),
@@ -157,7 +162,10 @@ interface ContactModalProps {
   onClose: () => void
 }
 
-function ContactModal({ contact, onClose }: ContactModalProps): React.JSX.Element {
+function ContactModal({
+  contact,
+  onClose,
+}: ContactModalProps): React.JSX.Element {
   return (
     <ResponsiveModal open={!!contact} onClose={onClose}>
       {contact && (
@@ -188,7 +196,12 @@ interface ContactInfoProps {
   divider?: boolean
 }
 
-function ContactInfo({ label, value, copyButton = true, divider = true }: ContactInfoProps): React.JSX.Element {
+function ContactInfo({
+  label,
+  value,
+  copyButton = true,
+  divider = true,
+}: ContactInfoProps): React.JSX.Element {
   return (
     <>
       <div className="flex justify-between gap-2">

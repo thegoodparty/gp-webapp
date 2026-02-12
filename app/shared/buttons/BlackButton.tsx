@@ -10,10 +10,12 @@ interface BlackButtonProps {
 export type { BlackButtonProps }
 
 const BlackButton = ({ children, style = {}, className }: BlackButtonProps) => (
-  <BaseButton style={{ backgroundColor: '#000', color: '#FFF', ...style }} className={className}>
+  <BaseButton
+    style={{ backgroundColor: '#000', color: '#FFF', ...style }}
+    className={className}
+  >
     {children}
   </BaseButton>
 )
 
 export default BlackButton
-

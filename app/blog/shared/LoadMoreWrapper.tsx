@@ -8,7 +8,10 @@ interface LoadMoreWrapperProps {
   className?: string
 }
 
-export default function LoadMoreWrapper({ children, className }: LoadMoreWrapperProps): React.JSX.Element {
+export default function LoadMoreWrapper({
+  children,
+  className,
+}: LoadMoreWrapperProps): React.JSX.Element {
   const [showMore, setShowMore] = useState(false)
 
   return (

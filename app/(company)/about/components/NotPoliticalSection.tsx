@@ -1,6 +1,10 @@
 import { IncludedPartiesList } from './IncludedPartiesList'
 import Button from '@shared/buttons/Button'
-import type { ButtonSize, ButtonVariant, ButtonColor } from '@shared/buttons/Button'
+import type {
+  ButtonSize,
+  ButtonVariant,
+  ButtonColor,
+} from '@shared/buttons/Button'
 
 interface LearnAboutOurTeamButtonProps {
   className?: string
@@ -10,7 +14,10 @@ interface LearnAboutOurTeamButtonProps {
   disabled?: boolean
 }
 
-const LearnAboutOurTeamButton = ({ className, ...restProps }: LearnAboutOurTeamButtonProps): React.JSX.Element => (
+const LearnAboutOurTeamButton = ({
+  className,
+  ...restProps
+}: LearnAboutOurTeamButtonProps): React.JSX.Element => (
   <Button
     href="/team"
     className={'w-full md:w-auto ' + className}
@@ -41,9 +48,9 @@ const NotPoliticalSection = (): React.JSX.Element => (
           GoodParty.org is not a political party. We provide the structure,
           grassroots support, and tools to make it possible to run a winning
           campaign without the baggage and habits of the two major parties.
-          We&apos;re organizing the 135 million of us without a political home to
-          reject big money in politics and support candidates pledging to serve
-          their community, not big money interests.
+          We&apos;re organizing the 135 million of us without a political home
+          to reject big money in politics and support candidates pledging to
+          serve their community, not big money interests.
         </p>
         <LearnAboutOurTeamButton className="hidden absolute bottom-0 xl:block" />
       </div>

@@ -50,7 +50,7 @@ const fetchPlace = async ({
   includeParent = false,
   includeChildren = true,
   categorizeChildren = false,
-  placeColumns = ''
+  placeColumns = '',
 }: FetchPlaceParams): Promise<PlaceResult | null> => {
   const api = electionApiRoutes.places.find.path
   const payload = {
@@ -61,7 +61,7 @@ const fetchPlace = async ({
       'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
     includeParent,
     categorizeChildren,
-    ...(placeColumns ? { placeColumns } : {})
+    ...(placeColumns ? { placeColumns } : {}),
   }
 
   const res = await unAuthElectionFetch(api, payload, 3600)

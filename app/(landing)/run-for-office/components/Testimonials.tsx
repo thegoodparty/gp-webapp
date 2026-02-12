@@ -68,8 +68,8 @@ export default function Testimonials({
         windowWidth > LG_MIN
           ? LG_PAGE_SIZE
           : windowWidth <= MD_MIN
-            ? SM_PAGE_SIZE
-            : MD_PAGE_SIZE
+          ? SM_PAGE_SIZE
+          : MD_PAGE_SIZE
 
       if (pageSize !== newPageSize) {
         setPageSize(newPageSize)

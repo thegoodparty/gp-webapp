@@ -1,4 +1,7 @@
-export const dateColumnSort = (dateA: string | number | Date | null | undefined, dateB: string | number | Date | null | undefined): number => {
+export const dateColumnSort = (
+  dateA: string | number | Date | null | undefined,
+  dateB: string | number | Date | null | undefined,
+): number => {
   const a = dateA
   const b = dateB
   let errorA = false
@@ -33,4 +36,3 @@ export const dateColumnSort = (dateA: string | number | Date | null | undefined,
   else if (aDate > bDate) return 1
   else return 0
 }
-
