@@ -149,11 +149,15 @@ export const handleCreateOutreach =
         message,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script: typeof script === 'string' ? script : undefined,
-        ...(date ? { date: date instanceof Date ? date.toISOString() : date } : {}),
+        ...(date
+          ? { date: date instanceof Date ? date.toISOString() : date }
+          : {}),
         ...(voterFileFilterId && voterFileFilterId > 0
           ? { voterFileFilterId }
           : {}),
-        ...(typeof audienceRequest === 'string' && audienceRequest ? { audienceRequest } : {}),
+        ...(typeof audienceRequest === 'string' && audienceRequest
+          ? { audienceRequest }
+          : {}),
         ...(p2pUxEnabled && phoneListId && phoneListId > 0
           ? { phoneListId }
           : {}),
@@ -257,7 +261,11 @@ export const handleCreatePhoneList =
   }
 
 export const handleCreateVoterFileFilter =
-  ({ type, state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
+  ({
+    type,
+    state: { audience, voterCount },
+    errorSnackbar = noop,
+  }: CreateVoterFileFilterParams) =>
   async (): Promise<PhoneListInput | undefined> => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 

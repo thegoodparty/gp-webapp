@@ -1,5 +1,8 @@
 import { createOutreach as createOutreachApi } from 'gpApi/outreach.api'
-import type { CreateOutreachPayload, CreateOutreachResponse } from 'gpApi/outreach.api'
+import type {
+  CreateOutreachPayload,
+  CreateOutreachResponse,
+} from 'gpApi/outreach.api'
 
 /** Same shape as CreateOutreachResponse for backward compatibility (id as number). */
 export type { CreateOutreachResponse as OutreachResponse } from 'gpApi/outreach.api'

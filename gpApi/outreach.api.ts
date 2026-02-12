@@ -29,8 +29,5 @@ export async function createOutreach(
       formData,
     )
   }
-  return clientFetch<CreateOutreachResponse>(
-    apiRoutes.outreach.create,
-    payload,
-  )
+  return clientFetch<CreateOutreachResponse>(apiRoutes.outreach.create, payload)
 }
