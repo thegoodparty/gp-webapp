@@ -21,10 +21,6 @@ interface CheckoutFormProps {
   sessionId?: string
 }
 
-/**
- * Checkout form that uses Stripe's Custom Checkout with promo code support.
- * Uses useCheckout hook instead of useStripe/useElements.
- */
 export default function CheckoutForm({
   onSuccess,
   onError,
@@ -35,7 +31,6 @@ export default function CheckoutForm({
   const { errorSnackbar } = useSnackbar()
   const errorHandledRef = useRef(false)
 
-  // Handle error state with useEffect to avoid side effects during render
   useEffect(() => {
     if (checkoutResult.type === 'error' && !errorHandledRef.current) {
       errorHandledRef.current = true
@@ -51,12 +46,10 @@ export default function CheckoutForm({
     }
   }, [checkoutResult, errorSnackbar, setError, onError])
 
-  // Handle loading state
   if (checkoutResult.type === 'loading') {
     return <LoadingAnimation />
   }
 
-  // Handle error state display (side effects handled in useEffect above)
   if (checkoutResult.type === 'error') {
     return (
       <div className="text-red-600 text-center py-4">

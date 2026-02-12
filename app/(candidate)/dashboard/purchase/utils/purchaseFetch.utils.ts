@@ -11,9 +11,6 @@ export interface CheckoutSessionResponse {
   amount: number
 }
 
-/**
- * Creates a Custom Checkout Session for one-time payments with promo code support.
- */
 export function createCheckoutSession(
   type: string,
   metadata: Record<string, string | number | boolean | undefined>,
@@ -28,9 +25,6 @@ export function createCheckoutSession(
   })
 }
 
-/**
- * Completes a purchase made via Checkout Session.
- */
 export function completeCheckoutSession(
   checkoutSessionId: string,
 ): Promise<ApiResponse<CompletePurchaseResponse>> {
