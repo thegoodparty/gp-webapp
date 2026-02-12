@@ -1,7 +1,14 @@
-type FormDataValue = string | number | boolean | Date | object | null | undefined
+type FormDataValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | object
+  | null
+  | undefined
 
-export const packageFormData = <T extends object>(
-  data: T,
+export const packageFormData = (
+  data: Record<string, FormDataValue>,
   file: File | null = null,
 ): FormData => {
   const formData = new FormData()
@@ -23,4 +30,3 @@ export const packageFormData = <T extends object>(
   }
   return formData
 }
-

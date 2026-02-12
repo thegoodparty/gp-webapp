@@ -30,7 +30,9 @@ interface LoginResponse {
   token: string
 }
 
-async function login(payload: SocialLoginPayload): Promise<LoginResponse | false> {
+async function login(
+  payload: SocialLoginPayload,
+): Promise<LoginResponse | false> {
   try {
     const resp = await clientFetch<LoginResponse>(
       apiRoutes.authentication.socialLogin,
@@ -87,12 +89,12 @@ export default function SocialLoginButtons(): React.JSX.Element {
       await saveToken(token)
       setUser(user)
       const { id, email: userEmail, firstName, lastName, phone, zip } = user
-      await identifyUser(id, { 
-        email: userEmail, 
-        firstName: firstName ?? undefined, 
-        lastName: lastName ?? undefined, 
-        phone: phone ?? undefined, 
-        zip: zip ?? undefined 
+      await identifyUser(id, {
+        email: userEmail,
+        firstName: firstName ?? undefined,
+        lastName: lastName ?? undefined,
+        phone: phone ?? undefined,
+        zip: zip ?? undefined,
       })
       successSnackbar('Welcome back to GoodParty.org!')
       await doLoginRedirect(router, user, undefined)

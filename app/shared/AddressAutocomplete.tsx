@@ -13,7 +13,8 @@ interface GooglePlace {
   name?: string
 }
 
-interface AddressAutocompleteProps extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onSelect'> {
+interface AddressAutocompleteProps
+  extends Omit<TextFieldProps<'outlined'>, 'value' | 'onChange' | 'onSelect'> {
   value?: string
   onChange?: (inputValue: string) => void
   onSelect?: (place: GooglePlace) => void

@@ -4,7 +4,9 @@ interface TeamMemberNameProps {
   children: React.ReactNode
 }
 
-const TeamMemberName = ({ children }: TeamMemberNameProps): React.JSX.Element => (
+const TeamMemberName = ({
+  children,
+}: TeamMemberNameProps): React.JSX.Element => (
   <div className="font-medium mb-1 text-xl" data-cy="member-name">
     {children}
   </div>
@@ -14,7 +16,9 @@ interface TeamMemberRoleProps {
   children: React.ReactNode
 }
 
-const TeamMemberRole = ({ children }: TeamMemberRoleProps): React.JSX.Element => (
+const TeamMemberRole = ({
+  children,
+}: TeamMemberRoleProps): React.JSX.Element => (
   <div className="font-sfpro" data-cy="member-role">
     {children}
   </div>

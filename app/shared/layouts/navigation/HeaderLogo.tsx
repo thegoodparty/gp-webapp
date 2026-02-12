@@ -57,4 +57,3 @@ export const HeaderLogo = (): React.JSX.Element => {
     </>
   )
 }
-

@@ -10,4 +10,3 @@ const H6 = ({ children, className = '' }: H6Props) => (
 )
 
 export default H6
-

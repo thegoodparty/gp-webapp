@@ -68,7 +68,12 @@ interface PaymentFormContentProps {
   onError: (error: StripeError) => void
 }
 
-function PaymentFormContent({ domainName, price, onSuccess, onError }: PaymentFormContentProps) {
+function PaymentFormContent({
+  domainName,
+  price,
+  onSuccess,
+  onError,
+}: PaymentFormContentProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [message, setMessage] = useState('')
   const { errorSnackbar, successSnackbar } = useSnackbar()

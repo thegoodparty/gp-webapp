@@ -11,7 +11,13 @@ interface ResourceCardProps {
   imageUrl?: string
 }
 
-const ResourceCard = ({ id, title, url, category, imageUrl }: ResourceCardProps): React.JSX.Element => {
+const ResourceCard = ({
+  id,
+  title,
+  url,
+  category,
+  imageUrl,
+}: ResourceCardProps): React.JSX.Element => {
   const handleClick = (): void => {
     trackEvent(EVENTS.Resources.ResourceClicked, {
       resourceName: title,

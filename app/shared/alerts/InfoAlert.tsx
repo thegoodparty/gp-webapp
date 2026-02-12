@@ -7,7 +7,11 @@ interface InfoAlertProps extends Omit<AlertProps, 'severity'> {
   className?: string
 }
 
-export const InfoAlert = ({ children, className = '', ...restProps }: InfoAlertProps): React.JSX.Element => (
+export const InfoAlert = ({
+  children,
+  className = '',
+  ...restProps
+}: InfoAlertProps): React.JSX.Element => (
   <StyledAlert severity="info" className={className} {...restProps}>
     {children}
   </StyledAlert>

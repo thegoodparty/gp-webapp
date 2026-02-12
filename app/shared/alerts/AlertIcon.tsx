@@ -8,7 +8,10 @@ interface AlertIconProps {
   className?: string
 }
 
-export const AlertIcon = ({ severity, className }: AlertIconProps): React.JSX.Element | null => {
+export const AlertIcon = ({
+  severity,
+  className,
+}: AlertIconProps): React.JSX.Element | null => {
   switch (severity) {
     case 'error':
       return <MdError className={className} />

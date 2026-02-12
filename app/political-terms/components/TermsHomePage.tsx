@@ -13,7 +13,9 @@ interface TermsHomePageProps {
   glossaryItems: string[]
 }
 
-export default function TermsHomePage(props: TermsHomePageProps): React.JSX.Element {
+export default function TermsHomePage(
+  props: TermsHomePageProps,
+): React.JSX.Element {
   const { items, activeLetter, glossaryItems } = props
 
   return (

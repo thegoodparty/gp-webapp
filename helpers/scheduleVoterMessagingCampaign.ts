@@ -32,4 +32,3 @@ export const scheduleVoterMessagingCampaign = async (
     return false
   }
 }
-

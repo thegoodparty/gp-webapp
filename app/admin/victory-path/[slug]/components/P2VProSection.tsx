@@ -10,14 +10,16 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const supportingDocsRootUrl =
-  'https://ein-supporting-documents.s3.us-west-2.amazonaws.com/'
+  'https://assets.goodparty.org/ein-supporting-documents/'
 
 export const P2VProSection = (): React.JSX.Element => {
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { slug = '', details } = campaign || {}
   const [isPro, setIsPro] = useState(campaign?.isPro || false)
 
-  const onChangeIsPro = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const onChangeIsPro = async (
+    e: ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
     const value = e.currentTarget.checked
     setIsPro(value)
     await updateCampaignAdminOnly({
@@ -80,7 +82,9 @@ export const P2VProSection = (): React.JSX.Element => {
           </>
         ) : (
           <CommitteeSupportingFilesUpload
-            campaign={campaign ? { id: campaign.id, slug: campaign.slug } : undefined}
+            campaign={
+              campaign ? { id: campaign.id, slug: campaign.slug } : undefined
+            }
             onUploadSuccess={refreshCampaign}
           />
         )}

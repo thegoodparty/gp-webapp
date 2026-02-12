@@ -9,7 +9,11 @@ interface LogoStepProps {
   noHeading?: boolean
 }
 
-export default function LogoStep({ logo, onChange, noHeading = false }: LogoStepProps): React.JSX.Element {
+export default function LogoStep({
+  logo,
+  onChange,
+  noHeading = false,
+}: LogoStepProps): React.JSX.Element {
   return (
     <div>
       {!noHeading && (

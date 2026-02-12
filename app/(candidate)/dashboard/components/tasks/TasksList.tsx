@@ -50,12 +50,14 @@ const TasksList = ({
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
-  const [p2pTrackingAttrs, setP2PTrackingAttrs] =
-    useState<ReturnType<typeof buildTrackingAttrs>>({})
+  const [p2pTrackingAttrs, setP2PTrackingAttrs] = useState<
+    ReturnType<typeof buildTrackingAttrs>
+  >({})
   const [deadlineModalTask, setDeadlineModalTask] = useState<Task | null>(null)
   const [flowModalTask, setFlowModalTask] = useState<Task | null>(null)
-  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] =
-    useState<ReturnType<typeof buildTrackingAttrs>>({})
+  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState<
+    ReturnType<typeof buildTrackingAttrs>
+  >({})
   const { errorSnackbar } = useSnackbar()
 
   const { details, pathToVictory, hasFreeTextsOffer } = campaign
@@ -184,12 +186,12 @@ const TasksList = ({
       {completeModalTask &&
         ((value: Task['flowType']): value is LogTaskFlowType =>
           value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
-        <LogTaskModal
-          onSubmit={handleCompleteSubmit}
-          onClose={handleCompleteCancel}
-          flowType={completeModalTask.flowType}
-        />
-      )}
+          <LogTaskModal
+            onSubmit={handleCompleteSubmit}
+            onClose={handleCompleteCancel}
+            flowType={completeModalTask.flowType}
+          />
+        )}
       {deadlineModalTask && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
@@ -211,7 +213,8 @@ const TasksList = ({
         open={showP2PModal}
         variant={(() => {
           if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
-          const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+          const isTextCompliant =
+            tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
           if (p2pUxEnabled && hasFreeTextsOffer && !isTextCompliant) {
             return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
           }

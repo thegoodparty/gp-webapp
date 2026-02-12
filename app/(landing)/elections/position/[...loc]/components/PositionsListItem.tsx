@@ -7,7 +7,9 @@ interface PositionsListItemProps {
   positions?: string[]
 }
 
-export const PositionsListItem = ({ positions = [] }: PositionsListItemProps): React.JSX.Element => {
+export const PositionsListItem = ({
+  positions = [],
+}: PositionsListItemProps): React.JSX.Element => {
   const [expandPositions, setExpandPositions] = useState(false)
   const enableShowMore = positions.length > 5
   return (

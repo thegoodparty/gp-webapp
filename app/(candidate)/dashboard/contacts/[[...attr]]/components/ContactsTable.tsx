@@ -2,7 +2,6 @@
 import { DataTableColumnHeader } from 'goodparty-styleguide'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import ServerDataTable from './ServerDataTable'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type ReactNode } from 'react'
@@ -14,8 +13,8 @@ interface MaybeBlurredContentProps {
 }
 
 const MaybeBlurredContent = ({ children }: MaybeBlurredContentProps) => {
-  const [campaign] = useCampaign()
-  if (campaign?.isPro) {
+  const { canUseProFeatures } = useContactsTable()
+  if (canUseProFeatures) {
     return <>{children}</>
   }
   return <span className="blur-[6px]">{children}</span>
@@ -163,13 +162,17 @@ const createSkeletonData = (count: number): Partial<Person>[] => {
 }
 
 export default function ContactsTable() {
-  const { filteredContacts, pagination, selectPerson, isLoading } =
-    useContactsTable()
-  const [campaign] = useCampaign()
+  const {
+    filteredContacts,
+    pagination,
+    selectPerson,
+    isLoading,
+    canUseProFeatures,
+  } = useContactsTable()
   const showProUpgradeModal = useShowContactProModal()
 
   const onRowClick = (row: Person): void => {
-    if (!campaign?.isPro) {
+    if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }

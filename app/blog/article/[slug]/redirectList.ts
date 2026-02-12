@@ -154,8 +154,10 @@ const redirectList: RedirectList = {
   'running-as-an-independent-in-tennessee': true,
   'independent-candidates-running-in-north-carolina': true,
   'the-rise-of-the-entitlement-of-the-thin-skinned-modern-politician': true,
-  'the-destructive-threat-oppenheimer-warns-us-about-isnt-nuclear-bombs-its': true,
-  'threads-doesnt-want-news-and-politics-on-its-platform-and-thats-a-huge': true,
+  'the-destructive-threat-oppenheimer-warns-us-about-isnt-nuclear-bombs-its':
+    true,
+  'threads-doesnt-want-news-and-politics-on-its-platform-and-thats-a-huge':
+    true,
   'tackling-voter-apathy-engaging-and-empowering-younger-voters': true,
   'how-to-craft-a-compelling-message-for-your-independent-campaign': true,
   'free-tools-for-candidates': true,

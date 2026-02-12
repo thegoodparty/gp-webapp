@@ -97,6 +97,7 @@ export const EVENTS = {
     PollPreviewViewed: 'Serve Onboarding - Poll Preview Viewed',
     SmsPollSent: 'Serve Onboarding - SMS Poll Sent',
     SuccessPageViewed: 'Serve Onboarding - Success Page Viewed',
+    NotEnoughConstituents: 'Serve Onboarding - SMS Poll Creation Failed',
   },
   Navigation: {
     Top: {

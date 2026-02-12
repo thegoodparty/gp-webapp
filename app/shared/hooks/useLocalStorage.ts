@@ -1,7 +1,10 @@
 'use client'
 import { useState } from 'react'
 
-export const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] => {
+export const useLocalStorage = <T>(
+  key: string,
+  initialValue: T,
+): [T, (value: T | ((val: T) => T)) => void] => {
   const localStorage =
     typeof window !== 'undefined' ? window.localStorage : null
   const [state, setState] = useState<T>(() => {
@@ -26,4 +29,3 @@ export const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T 
 
   return [state, setValue]
 }
-

@@ -13,7 +13,9 @@ interface Field {
   value: number | string
 }
 
-const InteractionsSummary = ({ summary }: InteractionsSummaryProps): React.JSX.Element => {
+const InteractionsSummary = ({
+  summary,
+}: InteractionsSummaryProps): React.JSX.Element => {
   const { totalInteractions, interactions, averageRating } = summary || {}
   const {
     answered,

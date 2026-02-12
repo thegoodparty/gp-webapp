@@ -1,4 +1,7 @@
-import { AUDIENCE_LABELS_MAPPING, AudienceLabelKey } from 'app/(candidate)/dashboard/outreach/constants'
+import {
+  AUDIENCE_LABELS_MAPPING,
+  AudienceLabelKey,
+} from 'app/(candidate)/dashboard/outreach/constants'
 import { VoterFileFilters } from 'helpers/types'
 
 const AUDIENCE_KEYS: AudienceLabelKey[] = [
@@ -50,8 +53,7 @@ export const formatAudienceLabels = ({
     genderMale,
     genderFemale,
   }
-  return AUDIENCE_KEYS
-    .filter((k) => Boolean(filtersFields[k]))
+  return AUDIENCE_KEYS.filter((k) => Boolean(filtersFields[k]))
     .map((k) => AUDIENCE_LABELS_MAPPING[k])
     .filter((label): label is string => Boolean(label))
 }

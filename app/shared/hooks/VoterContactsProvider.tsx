@@ -2,7 +2,9 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
-export const getVoterContactField = (outreachType: string): keyof VoterContactsState => {
+export const getVoterContactField = (
+  outreachType: string,
+): keyof VoterContactsState => {
   switch (outreachType) {
     case 'text':
     case 'p2p':

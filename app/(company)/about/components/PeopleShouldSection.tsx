@@ -41,8 +41,8 @@ const PeopleShouldSection = (): React.JSX.Element => (
               <h1 className="text-tertiary-main text-6xl leading-snug">355M</h1>
               <hr className="border-2 border-tertiary-main w-12 my-1.5" />
               <p className="font-sfpro leading-normal">
-                voters either vote for the lesser of two evils or don&apos;t vote at
-                all
+                voters either vote for the lesser of two evils or don&apos;t
+                vote at all
               </p>
             </div>
           </section>

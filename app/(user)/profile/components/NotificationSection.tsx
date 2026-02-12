@@ -71,9 +71,12 @@ const NotificationSection = (): React.JSX.Element => {
     updatedMeta: NotificationSettings,
   ): Promise<void> => {
     try {
-      const response = await clientFetch<import('helpers/types').User>(apiRoutes.user.updateMeta, {
-        meta: updatedMeta,
-      })
+      const response = await clientFetch<import('helpers/types').User>(
+        apiRoutes.user.updateMeta,
+        {
+          meta: updatedMeta,
+        },
+      )
       if (response.data && response.data.id) {
         setUser(response.data)
       }

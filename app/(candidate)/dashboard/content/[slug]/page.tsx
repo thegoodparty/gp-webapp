@@ -32,7 +32,9 @@ const parsePrompts = (promptsRaw: Record<string, string>): Prompt[] => {
   return prompts
 }
 
-export default async function Page({ params }: PageProps): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageProps): Promise<React.JSX.Element> {
   const { slug } = params
   await candidateAccess()
 
@@ -49,5 +51,3 @@ export default async function Page({ params }: PageProps): Promise<React.JSX.Ele
 
   return <EditContentPage {...childProps} />
 }
-
-

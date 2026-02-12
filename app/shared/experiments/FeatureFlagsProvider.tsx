@@ -10,7 +10,11 @@ import React, {
   useMemo,
   useCallback,
 } from 'react'
-import { Experiment, ExperimentClient, Variant } from '@amplitude/experiment-js-client'
+import {
+  Experiment,
+  ExperimentClient,
+  Variant,
+} from '@amplitude/experiment-js-client'
 import { getReadyAnalytics } from '@shared/utils/analytics'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 
@@ -38,13 +42,16 @@ const defaultContextValue: FeatureFlagsContextValue = {
   clear: () => {},
 }
 
-export const FeatureFlagsContext = createContext<FeatureFlagsContextValue>(defaultContextValue)
+export const FeatureFlagsContext =
+  createContext<FeatureFlagsContextValue>(defaultContextValue)
 
 interface FeatureFlagsProviderProps {
   children: ReactNode
 }
 
-export const FeatureFlagsProvider = ({ children }: FeatureFlagsProviderProps): React.JSX.Element => {
+export const FeatureFlagsProvider = ({
+  children,
+}: FeatureFlagsProviderProps): React.JSX.Element => {
   const clientRef = useRef<ExperimentClient | null>(null)
   const [ready, setReady] = useState<boolean>(false)
   const [rev, setRev] = useState<number>(0)
@@ -76,7 +83,12 @@ export const FeatureFlagsProvider = ({ children }: FeatureFlagsProviderProps): R
             zip: traits.zip,
           }
           Object.entries(rawProps).forEach(([key, value]) => {
-            if (value != null && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')) {
+            if (
+              value != null &&
+              (typeof value === 'string' ||
+                typeof value === 'number' ||
+                typeof value === 'boolean')
+            ) {
               userProperties[key] = value
             }
           })
@@ -133,7 +145,9 @@ export const FeatureFlagsProvider = ({ children }: FeatureFlagsProviderProps): R
     return {
       ready,
       variant: (key: string, fallback?: Variant): Variant =>
-        client ? client.variant(key, fallback) : fallback ?? { value: undefined },
+        client
+          ? client.variant(key, fallback)
+          : fallback ?? { value: undefined },
       all: (): Record<string, Variant> => (client ? client.all() : {}),
       exposure: (key: string): void => client?.exposure(key),
       refresh,
@@ -148,7 +162,8 @@ export const FeatureFlagsProvider = ({ children }: FeatureFlagsProviderProps): R
   )
 }
 
-export const useFeatureFlags = (): FeatureFlagsContextValue => useContext(FeatureFlagsContext)
+export const useFeatureFlags = (): FeatureFlagsContextValue =>
+  useContext(FeatureFlagsContext)
 
 interface UseFlagOnResult {
   ready: boolean

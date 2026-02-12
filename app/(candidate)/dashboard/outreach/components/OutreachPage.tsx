@@ -5,7 +5,10 @@ import { OutreachHeader } from './OutreachHeader'
 import FreeTextsBanner from './FreeTextsBanner'
 import OutreachCreateCards from './OutreachCreateCards'
 import { OutreachTable } from 'app/(candidate)/dashboard/outreach/components/OutreachTable'
-import { OutreachProvider, Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import {
+  OutreachProvider,
+  Outreach,
+} from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { Campaign, TcrCompliance } from 'helpers/types'

@@ -12,7 +12,10 @@ interface ChatHistoryThreadProps {
   closeDrawer: () => void
 }
 
-const ChatHistoryThread = ({ chat, closeDrawer }: ChatHistoryThreadProps): React.JSX.Element => {
+const ChatHistoryThread = ({
+  chat,
+  closeDrawer,
+}: ChatHistoryThreadProps): React.JSX.Element => {
   const { loadChatByThreadId } = useChat()
   const handleClick = () => {
     loadChatByThreadId(chat.threadId)

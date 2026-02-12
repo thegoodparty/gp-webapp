@@ -34,7 +34,7 @@ interface FecCommitteeIdInputProps {
 export const FecCommitteeIdInput = ({
   value = '',
   validated,
-  onChange = () => { },
+  onChange = () => {},
 }: FecCommitteeIdInputProps): React.JSX.Element => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     let newVal = e.currentTarget.value.toUpperCase()
@@ -61,7 +61,10 @@ export const FecCommitteeIdInput = ({
       maxLength={9}
       InputProps={{
         endAdornment: (
-          <AsyncValidationIcon message={FEC_HELP_MESSAGE} validated={validated} />
+          <AsyncValidationIcon
+            message={FEC_HELP_MESSAGE}
+            validated={validated}
+          />
         ),
       }}
       fullWidth

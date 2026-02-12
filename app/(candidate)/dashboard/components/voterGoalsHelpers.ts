@@ -82,7 +82,9 @@ const WEEK_PERCENTAGES: ContactGoals = {
   week1: { total: 13.51, doorKnocking: 0, calls: 0, digital: 0 },
 }
 
-const createContactGoalBreakdown = (weekTotal: number): ContactGoalBreakdown => ({
+const createContactGoalBreakdown = (
+  weekTotal: number,
+): ContactGoalBreakdown => ({
   total: weekTotal,
   doorKnocking: parseInt(String(weekTotal * 0.2), 10),
   calls: parseInt(String(weekTotal * 0.35), 10),
@@ -94,18 +96,54 @@ export function calculateContactGoals(total: number): ContactGoals | false {
     return false
   }
 
-  const week12Total = parseInt(String((total * WEEK_PERCENTAGES.week12.total) / 100), 10)
-  const week11Total = parseInt(String((total * WEEK_PERCENTAGES.week11.total) / 100), 10)
-  const week10Total = parseInt(String((total * WEEK_PERCENTAGES.week10.total) / 100), 10)
-  const week9Total = parseInt(String((total * WEEK_PERCENTAGES.week9.total) / 100), 10)
-  const week8Total = parseInt(String((total * WEEK_PERCENTAGES.week8.total) / 100), 10)
-  const week7Total = parseInt(String((total * WEEK_PERCENTAGES.week7.total) / 100), 10)
-  const week6Total = parseInt(String((total * WEEK_PERCENTAGES.week6.total) / 100), 10)
-  const week5Total = parseInt(String((total * WEEK_PERCENTAGES.week5.total) / 100), 10)
-  const week4Total = parseInt(String((total * WEEK_PERCENTAGES.week4.total) / 100), 10)
-  const week3Total = parseInt(String((total * WEEK_PERCENTAGES.week3.total) / 100), 10)
-  const week2Total = parseInt(String((total * WEEK_PERCENTAGES.week2.total) / 100), 10)
-  const week1Total = parseInt(String((total * WEEK_PERCENTAGES.week1.total) / 100), 10)
+  const week12Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week12.total) / 100),
+    10,
+  )
+  const week11Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week11.total) / 100),
+    10,
+  )
+  const week10Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week10.total) / 100),
+    10,
+  )
+  const week9Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week9.total) / 100),
+    10,
+  )
+  const week8Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week8.total) / 100),
+    10,
+  )
+  const week7Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week7.total) / 100),
+    10,
+  )
+  const week6Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week6.total) / 100),
+    10,
+  )
+  const week5Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week5.total) / 100),
+    10,
+  )
+  const week4Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week4.total) / 100),
+    10,
+  )
+  const week3Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week3.total) / 100),
+    10,
+  )
+  const week2Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week2.total) / 100),
+    10,
+  )
+  const week1Total = parseInt(
+    String((total * WEEK_PERCENTAGES.week1.total) / 100),
+    10,
+  )
 
   return {
     week12: createContactGoalBreakdown(week12Total),

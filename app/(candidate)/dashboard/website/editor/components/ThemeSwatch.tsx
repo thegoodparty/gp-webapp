@@ -23,7 +23,9 @@ interface DisplaySwatchProps {
   theme: string
 }
 
-export const DisplaySwatch = ({ theme }: DisplaySwatchProps): React.JSX.Element => {
+export const DisplaySwatch = ({
+  theme,
+}: DisplaySwatchProps): React.JSX.Element => {
   const themeObj = WEBSITE_THEMES[theme] ?? WEBSITE_THEMES['light']!
   return (
     <ThemeSwatch

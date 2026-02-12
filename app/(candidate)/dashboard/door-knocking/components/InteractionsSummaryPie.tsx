@@ -27,7 +27,9 @@ interface Field {
   color: string
 }
 
-const InteractionsSummaryPie = ({ summary }: InteractionsSummaryPieProps): React.JSX.Element => {
+const InteractionsSummaryPie = ({
+  summary,
+}: InteractionsSummaryPieProps): React.JSX.Element => {
   const { totalInteractions, interactions } = summary || {}
   const {
     answered,
@@ -101,7 +103,10 @@ const InteractionsSummaryPie = ({ summary }: InteractionsSummaryPieProps): React
         callbacks: {
           label: (context: TooltipItem<'doughnut'>) => {
             const value = context.raw
-            const percentage = ((Number(value) / (totalInteractions || 1)) * 100).toFixed(1)
+            const percentage = (
+              (Number(value) / (totalInteractions || 1)) *
+              100
+            ).toFixed(1)
             return `${context.label}: ${percentage}% (${value})`
           },
         },
@@ -142,7 +147,10 @@ const InteractionsSummaryPie = ({ summary }: InteractionsSummaryPieProps): React
                       {numberFormatter(field.value)}
                     </div>
                     <div className="col-span-2 px-4 py-2 text-right border-b">
-                      {((field.value / (totalInteractions || 1)) * 100).toFixed(1)}%
+                      {((field.value / (totalInteractions || 1)) * 100).toFixed(
+                        1,
+                      )}
+                      %
                     </div>
                   </Fragment>
                 ))}

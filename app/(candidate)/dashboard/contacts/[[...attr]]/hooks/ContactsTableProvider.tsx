@@ -13,19 +13,30 @@ import {
   usePathname,
   useParams,
 } from 'next/navigation'
-import { useQuery, queryOptions, useQueryClient } from '@tanstack/react-query'
+import {
+  useQuery,
+  useInfiniteQuery,
+  queryOptions,
+  useQueryClient,
+} from '@tanstack/react-query'
 import {
   fetchContacts,
   FetchContactsParams,
   fetchCustomSegments,
   fetchPerson,
+  fetchConstituentIssues,
+  fetchConstituentActivities,
   Person,
+  type ConstituentIssue,
+  type ConstituentActivity,
   type ListContactsResponse,
   type SegmentResponse,
 } from '../components/shared/ajaxActions'
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 
 const createEmptyPagination = (
   currentPage: number,
@@ -55,10 +66,28 @@ const extractPersonIdFromParams = (
   return null
 }
 
+export interface CurrentlySelectedPerson {
+  person: Person | null
+  isLoadingPerson: boolean
+  isErrorPerson: boolean
+  issues: ConstituentIssue[]
+  isLoadingIssues: boolean
+  isErrorIssues: boolean
+  issuesHasNextPage: boolean
+  issuesFetchNextPage: () => void
+  isFetchingNextIssues: boolean
+  activities: ConstituentActivity[]
+  isLoadingActivities: boolean
+  isErrorActivities: boolean
+  activitiesHasNextPage: boolean
+  activitiesFetchNextPage: () => void
+  isFetchingNextActivities: boolean
+}
+
 interface ContactsTableState {
   filteredContacts: Person[]
   currentlySelectedPersonId: string | null
-  currentlySelectedPerson: Person | null
+  currentlySelectedPerson: CurrentlySelectedPerson
   segments: typeof defaultSegments
   customSegments: SegmentResponse[]
   currentSegment: string
@@ -66,10 +95,10 @@ interface ContactsTableState {
   urlQueryParams: URLSearchParams
   pagination: ListContactsResponse['pagination'] | null
   isLoading: boolean
-  isLoadingPerson: boolean
-  isErrorPerson: boolean
   isCustomSegment: boolean
   totalSegmentContacts: number
+  canUseProFeatures: boolean
+  isElectedOfficial: boolean
 }
 
 interface ContactsTableActions {
@@ -121,11 +150,21 @@ export const ContactsTableProvider = ({
   children,
 }: ContactsTableProviderProps) => {
   const router = useRouter()
+
+  const [campaign] = useCampaign()
+  const { electedOffice } = useElectedOffice()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const params = useParams()
 
   const segments = defaultSegments
+
+  const canUseProFeatures = useMemo(() => {
+    return !!campaign?.isPro || !!electedOffice
+  }, [campaign, electedOffice])
+  const isElectedOfficial = useMemo(() => {
+    return !!electedOffice
+  }, [electedOffice])
 
   const urlQueryParams = useMemo(() => {
     return new URLSearchParams(searchParams?.toString() || '')
@@ -185,6 +224,38 @@ export const ContactsTableProvider = ({
     enabled: Boolean(currentlySelectedPersonId),
   })
 
+  const issuesInfiniteQuery = useInfiniteQuery({
+    queryKey: ['contact-engagement', 'issues', currentlySelectedPersonId],
+    queryFn: async ({ pageParam }) => {
+      const id = currentlySelectedPersonId
+      if (!id) return { nextCursor: null, results: [] }
+      const data = await fetchConstituentIssues(id, {
+        take: 3,
+        after: pageParam as string | undefined,
+      })
+      return data ?? { nextCursor: null, results: [] }
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+    enabled: Boolean(currentlySelectedPersonId),
+  })
+
+  const activitiesInfiniteQuery = useInfiniteQuery({
+    queryKey: ['contact-engagement', 'activities', currentlySelectedPersonId],
+    queryFn: async ({ pageParam }) => {
+      const id = currentlySelectedPersonId
+      if (!id) return { nextCursor: null, results: [] }
+      const data = await fetchConstituentActivities(id, {
+        take: 2,
+        after: pageParam as string | undefined,
+      })
+      return data ?? { nextCursor: null, results: [] }
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+    enabled: Boolean(currentlySelectedPersonId),
+  })
+
   const customSegmentsQueryOptions = queryOptions({
     queryKey: ['custom-segments'],
     queryFn: async () => {
@@ -206,9 +277,60 @@ export const ContactsTableProvider = ({
     [contactsQuery.data],
   )
 
-  const currentlySelectedPerson = useMemo(
-    () => personQuery.data || null,
-    [personQuery.data],
+  const issuesFlattened = useMemo(
+    () => issuesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
+    [issuesInfiniteQuery.data?.pages],
+  )
+
+  const activitiesFlattened = useMemo(
+    () => activitiesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
+    [activitiesInfiniteQuery.data?.pages],
+  )
+
+  const currentlySelectedPerson = useMemo<CurrentlySelectedPerson>(
+    () => ({
+      person: personQuery.data ?? null,
+      isLoadingPerson: personQuery.isLoading || personQuery.isFetching,
+      isErrorPerson: personQuery.isError ?? false,
+      issues: issuesFlattened,
+      isLoadingIssues:
+        issuesInfiniteQuery.isLoading ||
+        (issuesInfiniteQuery.isFetching && issuesFlattened.length === 0),
+      isErrorIssues: issuesInfiniteQuery.isError ?? false,
+      issuesHasNextPage: issuesInfiniteQuery.hasNextPage ?? false,
+      issuesFetchNextPage: issuesInfiniteQuery.fetchNextPage,
+      isFetchingNextIssues: issuesInfiniteQuery.isFetchingNextPage ?? false,
+      activities: activitiesFlattened,
+      isLoadingActivities:
+        activitiesInfiniteQuery.isLoading ||
+        (activitiesInfiniteQuery.isFetching &&
+          activitiesFlattened.length === 0),
+      isErrorActivities: activitiesInfiniteQuery.isError ?? false,
+      activitiesHasNextPage: activitiesInfiniteQuery.hasNextPage ?? false,
+      activitiesFetchNextPage: activitiesInfiniteQuery.fetchNextPage,
+      isFetchingNextActivities:
+        activitiesInfiniteQuery.isFetchingNextPage ?? false,
+    }),
+    [
+      personQuery.data,
+      personQuery.isLoading,
+      personQuery.isFetching,
+      personQuery.isError,
+      issuesFlattened,
+      issuesInfiniteQuery.isLoading,
+      issuesInfiniteQuery.isFetching,
+      issuesInfiniteQuery.isError,
+      issuesInfiniteQuery.hasNextPage,
+      issuesInfiniteQuery.fetchNextPage,
+      issuesInfiniteQuery.isFetchingNextPage,
+      activitiesFlattened,
+      activitiesInfiniteQuery.isLoading,
+      activitiesInfiniteQuery.isFetching,
+      activitiesInfiniteQuery.isError,
+      activitiesInfiniteQuery.hasNextPage,
+      activitiesInfiniteQuery.fetchNextPage,
+      activitiesInfiniteQuery.isFetchingNextPage,
+    ],
   )
 
   const customSegments = useMemo(
@@ -225,8 +347,6 @@ export const ContactsTableProvider = ({
   }, [pagination])
 
   const isLoading = contactsQuery.isLoading || contactsQuery.isFetching
-  const isLoadingPerson = personQuery.isLoading || personQuery.isFetching
-  const isErrorPerson = personQuery.isError || false
 
   const updateURL = useCallback(
     (updates: Record<string, string | number | null | undefined>) => {
@@ -328,10 +448,10 @@ export const ContactsTableProvider = ({
     urlQueryParams,
     pagination,
     isLoading,
-    isLoadingPerson,
-    isErrorPerson,
     isCustomSegment: isCustomSegmentValue,
     totalSegmentContacts,
+    canUseProFeatures,
+    isElectedOfficial,
     pageUp,
     pageDown,
     goToPage,

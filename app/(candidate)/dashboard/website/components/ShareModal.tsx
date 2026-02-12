@@ -9,7 +9,11 @@ interface ShareModalProps {
   url: string
 }
 
-export default function ShareModal({ open, onClose, url }: ShareModalProps): React.JSX.Element {
+export default function ShareModal({
+  open,
+  onClose,
+  url,
+}: ShareModalProps): React.JSX.Element {
   return (
     <ResponsiveModal open={open} onClose={onClose}>
       <div className="text-center w-auto md:w-[600px]">

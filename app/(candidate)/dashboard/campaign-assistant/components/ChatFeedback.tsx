@@ -49,10 +49,7 @@ const ChatFeedback = (): React.JSX.Element => {
       >
         <IoMdThumbsDown size={18} />
       </div>
-      <Modal
-        open={showModal}
-        closeCallback={() => setShowModal(false)}
-      >
+      <Modal open={showModal} closeCallback={() => setShowModal(false)}>
         <div className="w-[80vw] max-w-lg p-2">
           <H1 className="text-center mb-4">How can we improve?</H1>
           <Body1 className="mb-4">
@@ -66,7 +63,9 @@ const ChatFeedback = (): React.JSX.Element => {
             required
             rows={6}
             value={feedback}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setFeedback(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setFeedback(e.target.value)
+            }
           />
           <div className="flex justify-between mt-8">
             <Button color="neutral" onClick={() => setShowModal(false)}>

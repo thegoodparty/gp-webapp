@@ -139,4 +139,3 @@ const FileDropZone = ({
 }
 
 export default FileDropZone
-

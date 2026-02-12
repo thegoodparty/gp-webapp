@@ -1,5 +1,12 @@
 'use client'
-import { createContext, useContext, useState, useCallback, ReactNode, forwardRef } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+  forwardRef,
+} from 'react'
 import MuiSnackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
@@ -11,9 +18,19 @@ interface SnackbarState {
 }
 
 interface SnackbarContextValue {
-  displaySnackbar: (message: string, isError?: boolean, optionalProps?: Partial<SnackbarState>) => void
-  errorSnackbar: (message: string, optionalProps?: Partial<SnackbarState>) => void
-  successSnackbar: (message: string, optionalProps?: Partial<SnackbarState>) => void
+  displaySnackbar: (
+    message: string,
+    isError?: boolean,
+    optionalProps?: Partial<SnackbarState>,
+  ) => void
+  errorSnackbar: (
+    message: string,
+    optionalProps?: Partial<SnackbarState>,
+  ) => void
+  successSnackbar: (
+    message: string,
+    optionalProps?: Partial<SnackbarState>,
+  ) => void
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | null>(null)
@@ -30,40 +47,48 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
     autoHideDuration: 4000,
   })
 
-  const displaySnackbar = useCallback((
-    message: string,
-    isError: boolean = false,
-    optionalProps: Partial<SnackbarState> = {},
-  ): void => {
-    setSnackbarState({
-      isOpen: true,
-      message,
-      isError,
-      autoHideDuration: 4000,
-      ...optionalProps,
-    })
-  }, [])
+  const displaySnackbar = useCallback(
+    (
+      message: string,
+      isError: boolean = false,
+      optionalProps: Partial<SnackbarState> = {},
+    ): void => {
+      setSnackbarState({
+        isOpen: true,
+        message,
+        isError,
+        autoHideDuration: 4000,
+        ...optionalProps,
+      })
+    },
+    [],
+  )
 
-  const handleClose = useCallback((_event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setSnackbarState(prev => ({
-      ...prev,
-      isOpen: false,
-    }))
-  }, [])
+  const handleClose = useCallback(
+    (_event?: React.SyntheticEvent | Event, reason?: string): void => {
+      if (reason === 'clickaway') {
+        return
+      }
+      setSnackbarState((prev) => ({
+        ...prev,
+        isOpen: false,
+      }))
+    },
+    [],
+  )
 
   const value: SnackbarContextValue = {
     displaySnackbar,
-    errorSnackbar: (message, optionalProps) => displaySnackbar(message, true, optionalProps),
-    successSnackbar: (message, optionalProps) => displaySnackbar(message, false, optionalProps),
+    errorSnackbar: (message, optionalProps) =>
+      displaySnackbar(message, true, optionalProps),
+    successSnackbar: (message, optionalProps) =>
+      displaySnackbar(message, false, optionalProps),
   }
 
   return (
     <SnackbarContext.Provider value={value}>
       {children}
-      <SnackbarComponent 
+      <SnackbarComponent
         open={snackbarState.isOpen}
         message={snackbarState.message}
         isError={snackbarState.isError}
@@ -125,4 +150,3 @@ export const useSnackbar = (): SnackbarContextValue => {
 const Snackbar = () => null
 
 export default Snackbar
-

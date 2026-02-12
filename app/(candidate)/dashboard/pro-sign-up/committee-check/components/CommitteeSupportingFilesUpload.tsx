@@ -25,14 +25,20 @@ interface SignedUploadUrlResponse {
   signedUploadUrl: string
 }
 
-const uploadFileToS3 = async (file: File, bucket: string): Promise<Response> => {
+const uploadFileToS3 = async (
+  file: File,
+  bucket: string,
+): Promise<Response> => {
   const { name: fileName, type: fileType } = file
 
-  const resp = await clientFetch<SignedUploadUrlResponse>(apiRoutes.user.files.generateSignedUploadUrl, {
-    fileType,
-    fileName,
-    bucket,
-  })
+  const resp = await clientFetch<SignedUploadUrlResponse>(
+    apiRoutes.user.files.generateSignedUploadUrl,
+    {
+      fileType,
+      fileName,
+      bucket,
+    },
+  )
 
   const { signedUploadUrl } = resp.data
   const formData = new FormData()
@@ -76,7 +82,10 @@ export const CommitteeSupportingFilesUpload = ({
     fileInputRef.current?.click()
   }
 
-  const handleFileChoose = async (_fileData: string | ArrayBuffer | null, file: File) => {
+  const handleFileChoose = async (
+    _fileData: string | ArrayBuffer | null,
+    file: File,
+  ) => {
     setErrorMessage(``)
     const fileSizeMb = file?.size / 1e6
     if (fileSizeMb > FILE_LIMIT_MB) {

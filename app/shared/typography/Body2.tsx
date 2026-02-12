@@ -12,4 +12,3 @@ const Body2 = ({ children, className = '' }: Body2Props) => (
 )
 
 export default Body2
-

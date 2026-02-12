@@ -13,7 +13,10 @@ import { LuClipboard } from 'react-icons/lu'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import InputFieldsModal from '../../components/InputFieldsModal'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
-import { fetchPromptInputFields, PromptInputField } from 'helpers/fetchPromptInputFields'
+import {
+  fetchPromptInputFields,
+  PromptInputField,
+} from 'helpers/fetchPromptInputFields'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -49,7 +52,9 @@ export interface Version {
   inputValues?: Partial<Record<string, string>>
 }
 
-export type Versions = Partial<Record<string, string | number | boolean | object | null>>
+export type Versions = Partial<
+  Record<string, string | number | boolean | object | null>
+>
 
 interface ContentEditorProps {
   section?: string
@@ -64,7 +69,9 @@ interface GenerateAIResponse {
 }
 
 // Type guard to check if aiContent value is actual content data
-function isAiContentData(value: CampaignAiContentValue): value is AiContentData {
+function isAiContentData(
+  value: CampaignAiContentValue,
+): value is AiContentData {
   if (typeof value !== 'object' || value === null) {
     return false
   }
@@ -87,7 +94,9 @@ export default function ContentEditor({
   const [documentName, setDocumentName] = useState('Untitled Document')
   const [saved, setSaved] = useState('Saved')
   const [inputFields, setInputFields] = useState<PromptInputField[]>([])
-  const [initialInputValues, setInitialInputValues] = useState<Partial<Record<string, string>>>({})
+  const [initialInputValues, setInitialInputValues] = useState<
+    Partial<Record<string, string>>
+  >({})
   const [showModal, setShowModal] = useState(false)
   const [showTranslate, setShowTranslate] = useState(false)
 
@@ -117,14 +126,22 @@ export default function ContentEditor({
   }
 
   const loadInputValues = async () => {
-    if (sectionData && isAiContentData(sectionData) && sectionData.inputValues) {
+    if (
+      sectionData &&
+      isAiContentData(sectionData) &&
+      sectionData.inputValues
+    ) {
       setInitialInputValues(sectionData.inputValues)
     }
   }
 
   const handleEdit = async (editedPlan: string, debounceTime = 5000) => {
     setPlan(editedPlan)
-    if (sectionData && isAiContentData(sectionData) && sectionData.content != plan) {
+    if (
+      sectionData &&
+      isAiContentData(sectionData) &&
+      sectionData.content != plan
+    ) {
       debounce(handleTypingComplete, debounceTime)
     }
   }
@@ -174,13 +191,16 @@ export default function ContentEditor({
     inputValues: Partial<Record<string, string>> = {},
   ): Promise<GenerateAIResponse | false> {
     try {
-      const resp = await clientFetch<GenerateAIResponse>(apiRoutes.campaign.ai.create, {
-        key: aiKey,
-        regenerate,
-        chat,
-        editMode,
-        inputValues,
-      })
+      const resp = await clientFetch<GenerateAIResponse>(
+        apiRoutes.campaign.ai.create,
+        {
+          key: aiKey,
+          regenerate,
+          chat,
+          editMode,
+          inputValues,
+        },
+      )
       return resp.data || false
     } catch (e) {
       console.error('error', e)
@@ -241,7 +261,10 @@ export default function ContentEditor({
     }
   }
 
-  const handleAdditionalInput = async (additionalPrompt: string, inputValues: Partial<Record<string, string>>) => {
+  const handleAdditionalInput = async (
+    additionalPrompt: string,
+    inputValues: Partial<Record<string, string>>,
+  ) => {
     trackEvent(EVENTS.ContentBuilder.Editor.SubmitRegenerate, {
       name: documentName,
       key,
@@ -275,7 +298,10 @@ export default function ContentEditor({
   }
 
   const initialText = useMemo(
-    () => (sectionData && isAiContentData(sectionData) ? sectionData.content : '') || '',
+    () =>
+      (sectionData && isAiContentData(sectionData)
+        ? sectionData.content
+        : '') || '',
     [sectionData],
   )
 

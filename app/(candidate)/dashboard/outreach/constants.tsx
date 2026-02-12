@@ -42,13 +42,13 @@ export const IMPACT_LEVELS_LABELS: ImpactLevelLabels = {
 
 export const NUM_OF_MOCK_OUTREACHES = 5
 
-type OutreachTypeKey = 
-  | 'text' 
-  | 'p2p' 
-  | 'p2pTexting' 
-  | 'doorKnocking' 
-  | 'phoneBanking' 
-  | 'socialMedia' 
+type OutreachTypeKey =
+  | 'text'
+  | 'p2p'
+  | 'p2pTexting'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
   | 'robocall'
 
 type OutreachTypeMapping = {

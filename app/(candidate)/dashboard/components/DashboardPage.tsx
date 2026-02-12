@@ -40,11 +40,12 @@ const DashboardPage = ({
     modalDismissed: boolean
     primaryResult: PrimaryResult | null | undefined
   }
-  const [primaryResultState, setPrimaryResultState] = useState<PrimaryResultState>({
-    modalOpen: false,
-    modalDismissed: false,
-    primaryResult: campaignProp?.details?.primaryResult,
-  })
+  const [primaryResultState, setPrimaryResultState] =
+    useState<PrimaryResultState>({
+      modalOpen: false,
+      modalDismissed: false,
+      primaryResult: campaignProp?.details?.primaryResult,
+    })
 
   const officeName =
     details?.office?.toLowerCase() === 'other'
@@ -92,35 +93,37 @@ const DashboardPage = ({
 
   const primaryResultCloseCallback = useCallback(
     (selectedResult?: PrimaryResult) => {
-    if (selectedResult) {
-      // user selected their primary election result
-      setPrimaryResultState((state) => ({
-        ...state,
-        modalOpen: false,
-        primaryResult: selectedResult,
-      }))
+      if (selectedResult) {
+        // user selected their primary election result
+        setPrimaryResultState((state) => ({
+          ...state,
+          modalOpen: false,
+          primaryResult: selectedResult,
+        }))
 
-      //update local campaign object
-      setCampaign((campaign) =>
-        campaign
-          ? {
-              ...campaign,
-              details: {
-                ...campaign.details,
-                primaryResult: selectedResult,
-              },
-            }
-          : campaign,
-      )
-    } else {
-      // user pressed Cancel to dismiss modal for now
-      setPrimaryResultState({
-        modalOpen: false,
-        modalDismissed: true,
-        primaryResult: undefined,
-      })
-    }
-  }, [])
+        //update local campaign object
+        setCampaign((campaign) =>
+          campaign
+            ? {
+                ...campaign,
+                details: {
+                  ...campaign.details,
+                  primaryResult: selectedResult,
+                },
+              }
+            : campaign,
+        )
+      } else {
+        // user pressed Cancel to dismiss modal for now
+        setPrimaryResultState({
+          modalOpen: false,
+          modalDismissed: true,
+          primaryResult: undefined,
+        })
+      }
+    },
+    [],
+  )
 
   trackEvent(EVENTS.Dashboard.Viewed, {
     p2vCompleted: `${

@@ -10,7 +10,11 @@ interface ThemeStepProps {
   noHeading?: boolean
 }
 
-export default function ThemeStep({ theme, onChange, noHeading = false }: ThemeStepProps): React.JSX.Element {
+export default function ThemeStep({
+  theme,
+  onChange,
+  noHeading = false,
+}: ThemeStepProps): React.JSX.Element {
   const themeOptions = useMemo(() => Object.entries(WEBSITE_THEMES), [])
 
   return (
