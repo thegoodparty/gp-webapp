@@ -16,9 +16,8 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npx tsc --noEmit --project e2e-tests/tsconfig.json
-      - run: npx biome check --diagnostic-level=error
-        working-directory: e2e-tests
       - run: npx next typegen
       - run: npx tsc --noEmit
+      - run: npx tsc --noEmit --project e2e-tests/tsconfig.json
+      - run: npm run lint
       - run: npm run test
