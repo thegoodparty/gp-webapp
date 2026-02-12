@@ -1,12 +1,7 @@
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
-import { Poll, PollIssue } from './poll-types'
+import { PollIssue } from './poll-types'
 import { serverRequest } from 'gpApi/server-request'
-
-export type GetPollsResponse = {
-  results: Poll[]
-  pagination: { nextCursor: string | undefined }
-}
 
 export type GetPollIssuesResponse = {
   results: PollIssue[]
