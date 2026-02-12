@@ -7,6 +7,7 @@ import { noop } from '@shared/utils/noop'
 import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { VoterFileFilters } from 'helpers/types'
 import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import { OutreachType } from 'gpApi/types/outreach.types'
 
 const PEERLY_DEFAULT_IMAGE_TITLE = `P2P Outreach - Campaign`
 
@@ -52,7 +53,7 @@ interface ScheduleOutreachParams {
 }
 
 interface CreateOutreachParams {
-  type?: string
+  type: OutreachType
   state: FlowState
   campaignId: number
   outreaches?: Outreach[]
@@ -63,7 +64,7 @@ interface CreateOutreachParams {
 }
 
 interface CreateVoterFileFilterParams {
-  type?: string
+  type: OutreachType
   state: {
     audience?: AudienceState
     voterCount?: number
@@ -94,15 +95,14 @@ type MappedAudienceKey = keyof MappedAudience
 
 export const handleScheduleOutreach =
   (
-    type = '',
+    type: OutreachType,
     errorSnackbar: (message: string) => void = () => {},
     successSnackbar: (message: string) => void = () => {},
     { budget, audience }: ScheduleOutreachParams = {},
   ) =>
   async (outreach: Outreach = { id: '' }): Promise<void> => {
     const rawId = outreach?.id
-    const outreachId =
-      typeof rawId === 'number' ? rawId : Number(rawId)
+    const outreachId = Number(rawId)
     if (!Number.isFinite(outreachId) || outreachId <= 0) {
       errorSnackbar('Cannot schedule: outreach was not created')
       return
@@ -126,7 +126,7 @@ export const handleScheduleOutreach =
 
 export const handleCreateOutreach =
   ({
-    type = '',
+    type,
     state: { script, schedule, image, voterFileFilter, audience, phoneListId },
     campaignId,
     outreaches = [],
@@ -140,34 +140,22 @@ export const handleCreateOutreach =
     const { message } = schedule || {}
     const date = schedule?.date
     const rawVoterFilterId = voterFileFilter?.id
-    const voterFileFilterId =
-      typeof rawVoterFilterId === 'number'
-        ? rawVoterFilterId
-        : Number(rawVoterFilterId)
-    const normalizedPhoneListId =
-      typeof phoneListId === 'number'
-        ? phoneListId
-        : Number(phoneListId)
-    let outreachType
-    try {
-      outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
-    } catch {
-      errorSnackbar('Invalid outreach type')
-      return
-    }
+    const voterFileFilterId = Number(rawVoterFilterId)
+    const normalizedPhoneListId = Number(phoneListId)
+    const outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
 
     const outreach = await createOutreach(
       {
         campaignId,
         outreachType,
-        message: typeof message === 'string' ? message : undefined,
+        message,
         title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
         script: typeof script === 'string' ? script : undefined,
-        ...(date ? { date: typeof date === 'string' ? date : date.toISOString() } : {}),
+        ...(date ? { date: date instanceof Date ? date.toISOString() : date } : {}),
         ...(Number.isFinite(voterFileFilterId) && voterFileFilterId > 0
           ? { voterFileFilterId }
           : {}),
-        ...(typeof audienceRequest === 'string' ? { audienceRequest } : {}),
+        ...(typeof audienceRequest === 'string' && audienceRequest ? { audienceRequest } : {}),
         ...(p2pUxEnabled && Number.isFinite(normalizedPhoneListId) && normalizedPhoneListId > 0
           ? { phoneListId: normalizedPhoneListId }
           : {}),
@@ -269,7 +257,7 @@ export const handleCreatePhoneList =
   }
 
 export const handleCreateVoterFileFilter =
-  ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
+  ({ type, state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
   async (): Promise<PhoneListInput | undefined> => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 

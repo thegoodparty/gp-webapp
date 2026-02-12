@@ -31,6 +31,7 @@ import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
+import { isValidOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 
 interface TasksListProps {
   campaign: Campaign
@@ -122,10 +123,10 @@ const TasksList = ({
       return
     }
 
-    if (Object.values(TASK_TYPES).includes(flowType)) {
+    if (isValidOutreachType(flowType)) {
       setFlowModalTask(task)
     } else {
-      console.error('Unknown flow type:', flowType)
+      console.error('Unknown or unsupported outreach type:', flowType)
       setFlowModalTask(null)
     }
   }
@@ -227,7 +228,7 @@ const TasksList = ({
           onClose={() => setShowComplianceModal(false)}
         />
       )}
-      {flowModalTask && (
+      {flowModalTask && isValidOutreachType(flowModalTask.flowType) && (
         <TaskFlow
           forceOpen
           type={flowModalTask.flowType}

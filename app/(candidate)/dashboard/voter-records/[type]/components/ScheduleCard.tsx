@@ -8,6 +8,7 @@ import {
   TASK_TYPES,
 } from 'app/(candidate)/dashboard/shared/constants/tasks.const'
 import { Campaign } from 'helpers/types'
+import type { OutreachType } from 'gpApi/types/outreach.types'
 
 interface ScheduleCardProps {
   type: string
@@ -19,14 +20,14 @@ interface ScheduleCardProps {
 const ScheduleCard = (props: ScheduleCardProps): React.JSX.Element => {
   const { type } = props
   let typeText = ''
-  let taskType = ''
+  let taskType: OutreachType = 'text' // Default value
   if (type === LEGACY_TASK_TYPES.sms) {
     typeText = 'text'
-    taskType = TASK_TYPES.text
+    taskType = TASK_TYPES.text as OutreachType
   }
   if (type === LEGACY_TASK_TYPES.telemarketing) {
     typeText = 'robocall'
-    taskType = TASK_TYPES.robocall
+    taskType = TASK_TYPES.robocall as OutreachType
   }
 
   return (

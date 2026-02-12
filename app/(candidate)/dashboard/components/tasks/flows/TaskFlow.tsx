@@ -42,6 +42,7 @@ import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/f
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
+import { OutreachType } from 'gpApi/types/outreach.types'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -72,7 +73,7 @@ const DEFAULT_STATE: TaskFlowState = {
 
 /**
  * @typedef {Object} TaskFlowProps
- * @property {string} type
+ * @property {OutreachType} type
  * @property {React.ReactElement} [customButton] Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
  * @property {boolean} [isCustom]
@@ -85,7 +86,7 @@ const DEFAULT_STATE: TaskFlowState = {
  * @param {TaskFlowProps} props
  */
 type TaskFlowProps = {
-  type: string
+  type: OutreachType
   customButton?: ReactElement
   campaign: Campaign
   isCustom?: boolean
@@ -123,12 +124,7 @@ const TaskFlow = ({
   const [stopPolling, setStopPolling] = useState(false)
 
   const contactCount = leadsLoaded ?? undefined
-  let effectiveOutreachType: string = type
-  try {
-    effectiveOutreachType = getEffectiveOutreachType(type, p2pUxEnabled)
-  } catch (e) {
-    console.error(e)
-  }
+  const effectiveOutreachType = getEffectiveOutreachType(type, p2pUxEnabled)
   const purchaseMetaData = {
     contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
