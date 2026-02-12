@@ -539,6 +539,14 @@ export const apiRoutes = {
       path: '/payments/purchase/complete',
       method: 'POST',
     },
+    getPaymentIntentStatus: {
+      path: '/payments/purchase/status/payment-intent/:paymentIntentId',
+      method: 'GET',
+    },
+    getCheckoutSessionStatus: {
+      path: '/payments/purchase/status/checkout-session/:sessionId',
+      method: 'GET',
+    },
   },
   jobs: {
     list: {

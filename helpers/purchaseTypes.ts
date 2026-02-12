@@ -20,6 +20,7 @@ export const PURCHASE_TYPE_DESCRIPTIONS: Record<PurchaseType, string> = {
 
 export const PURCHASE_STATE = {
   PAYMENT: 'payment',
+  PROCESSING: 'processing',
   SUCCESS: 'success',
   ERROR: 'error',
 } as const

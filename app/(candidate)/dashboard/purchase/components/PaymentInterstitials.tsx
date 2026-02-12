@@ -21,6 +21,8 @@ export const PaymentInterstitials = ({
     <LoadingAnimationModal title="Initializing purchase form..." />
   ) : inErrorState ? (
     <PurchaseError error={error || undefined} />
+  ) : purchaseState === PURCHASE_STATE.PROCESSING ? (
+    <LoadingAnimationModal title="Processing your purchase..." />
   ) : purchaseState === PURCHASE_STATE.SUCCESS ? (
     <PurchaseSuccess type={type} returnUrl={returnUrl} />
   ) : null

@@ -4,19 +4,33 @@ import H1 from '@shared/typography/H1'
 import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
-
 import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { usePurchaseStatusStream } from 'app/(candidate)/dashboard/purchase/hooks/usePurchaseStatusStream'
 
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 import PurchasePayment from 'app/(candidate)/dashboard/purchase/components/PurchasePayment'
 import { PaymentIntent } from '@stripe/stripe-js'
+import { useState } from 'react'
 
 const PurchaseContent: React.FC<{
   onPaymentSuccess: (paymentIntent: PaymentIntent) => void
-}> = ({ onPaymentSuccess }) => {
+  onComplete: () => void
+  onError: (error: Error) => void
+}> = ({ onPaymentSuccess, onComplete, onError }) => {
   const { purchaseIntent, error } = usePurchaseIntent()
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
+
+  // Use SSE to stream purchase status updates in real-time
+  usePurchaseStatusStream(paymentIntentId, {
+    onComplete,
+    onError,
+  })
+
+  const handlePaymentSuccess = (paymentIntent: PaymentIntent) => {
+    setPaymentIntentId(paymentIntent.id)
+    onPaymentSuccess(paymentIntent)
+  }
 
   return (
     <div className="p-4 mx-auto w-[80vw] max-w-xl text-center">
@@ -25,7 +39,7 @@ const PurchaseContent: React.FC<{
       ) : !purchaseIntent ? (
         <LoadingAnimation />
       ) : (
-        <PurchasePayment onPaymentSuccess={onPaymentSuccess} />
+        <PurchasePayment onPaymentSuccess={handlePaymentSuccess} />
       )}
     </div>
   )
@@ -62,9 +76,20 @@ export const PollPayment: React.FC<PollPaymentProps> = ({
   purchaseMetaData,
   onConfirmed,
 }) => {
-  const handlePurchaseComplete = async (paymentIntent: PaymentIntent) => {
-    await completePurchase(paymentIntent.id)
-    onConfirmed(paymentIntent)
+  const [savedPaymentIntent, setSavedPaymentIntent] = useState<PaymentIntent | null>(null)
+
+  const handlePaymentSuccess = (paymentIntent: PaymentIntent) => {
+    setSavedPaymentIntent(paymentIntent)
+  }
+
+  const handleComplete = () => {
+    if (savedPaymentIntent) {
+      onConfirmed(savedPaymentIntent)
+    }
+  }
+
+  const handleError = (error: Error) => {
+    console.error('Failed to complete poll purchase:', error)
   }
 
   return (
@@ -74,7 +99,11 @@ export const PollPayment: React.FC<PollPaymentProps> = ({
         type={PURCHASE_TYPES.POLL}
         purchaseMetaData={purchaseMetaData}
       >
-        <PurchaseContent onPaymentSuccess={handlePurchaseComplete} />
+        <PurchaseContent
+          onPaymentSuccess={handlePaymentSuccess}
+          onComplete={handleComplete}
+          onError={handleError}
+        />
       </PurchaseIntentProvider>
     </>
   )

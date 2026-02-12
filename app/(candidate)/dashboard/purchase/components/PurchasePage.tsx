@@ -15,7 +15,8 @@ import Body1 from '@shared/typography/Body1'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { PurchaseHeader } from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
 import { usePurchaseIntent, PurchaseIntentResponse } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { PurchaseStatus } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { usePurchaseStatusStream } from 'app/(candidate)/dashboard/purchase/hooks/usePurchaseStatusStream'
 import { PaymentInterstitials } from 'app/(candidate)/dashboard/purchase/components/PaymentInterstitials'
 import H1 from '@shared/typography/H1'
 import Paper from '@shared/utils/Paper'
@@ -47,32 +48,39 @@ function getErrorMessage(data: { success: boolean } | ErrorResponseData): string
 export default function PurchasePage({ type, domain, returnUrl }: PurchasePageProps): React.JSX.Element {
   const { setError, purchaseIntent } = usePurchaseIntent()
   const [purchaseState, setPurchaseState] = useState<PurchaseState>(PURCHASE_STATE.PAYMENT)
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
+  const [processingStatus, setProcessingStatus] = useState<PurchaseStatus | null>(null)
+
+  // Use SSE to stream purchase status updates in real-time
+  const { status: streamStatus } = usePurchaseStatusStream(paymentIntentId, {
+    onStatusChange: (status) => {
+      setProcessingStatus(status)
+    },
+    onComplete: (data) => {
+      if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
+        const eventData = {
+          domainSelected: domain,
+          priceOfSelectedDomain: purchaseIntent?.amount
+            ? purchaseIntent.amount / 100
+            : null,
+        }
+        trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
+      }
+      setPurchaseState(PURCHASE_STATE.SUCCESS)
+    },
+    onError: (error) => {
+      setError(error.message || 'Failed to complete purchase. Please contact support.')
+      setPurchaseState(PURCHASE_STATE.ERROR)
+    },
+  })
 
   const handlePaymentSuccess = async (paymentIntent: PaymentIntent | PurchaseIntentResponse) => {
     const intentId = 'id' in paymentIntent ? paymentIntent.id : paymentIntent.paymentIntentId
-    try {
-      const response = await completePurchase(intentId)
 
-      if (response.ok) {
-        if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
-          const eventData = {
-            domainSelected: domain,
-            priceOfSelectedDomain: paymentIntent?.amount
-              ? paymentIntent.amount / 100
-              : null,
-          }
-          trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
-        }
-
-        setPurchaseState(PURCHASE_STATE.SUCCESS)
-      } else {
-        setError(getErrorMessage(response.data) || 'Failed to complete purchase')
-        setPurchaseState(PURCHASE_STATE.ERROR)
-      }
-    } catch (error) {
-      setError('Failed to complete purchase')
-      setPurchaseState(PURCHASE_STATE.ERROR)
-    }
+    // Set to processing state and start SSE stream
+    setPurchaseState(PURCHASE_STATE.PROCESSING)
+    setProcessingStatus('processing')
+    setPaymentIntentId(intentId)
   }
 
   const handlePaymentError = () => {
