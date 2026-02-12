@@ -34,7 +34,7 @@ export const getPoll = async (pollId: string) => {
     { ignoreResponseError: true },
   )
 
-  return result.status === 404 ? undefined : result.data
+  return result.ok ? result.data : undefined
 }
 
 export const getPollTopIssues = async (pollId: string) =>

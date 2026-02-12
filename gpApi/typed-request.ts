@@ -78,6 +78,7 @@ const removePathParamsFromRequestPayload = (route: string, payload: object) =>
 export type RequestOptions = FetchOptions<'json'>
 
 export type Response<T> = {
+  ok: boolean
   data: T
   status: number
   headers: Headers
@@ -115,6 +116,7 @@ export const createRequest =
     )
 
     return {
+      ok: result.ok,
       status: result.status,
       data: result._data!,
       headers: result.headers,

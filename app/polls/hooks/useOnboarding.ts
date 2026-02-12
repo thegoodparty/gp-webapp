@@ -169,12 +169,13 @@ export const useOnboarding = (): UseOnboardingReturn => {
         throw new Error('Missing required fields')
       }
 
-      return clientRequest('POST /v1/polls/initial-poll', {
+      const res = await clientRequest('POST /v1/polls/initial-poll', {
         message: formData.textMessage,
         imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
-        scheduledDate: formData.scheduledDate?.toISOString(),
-      }).then((res) => res.data)
+        scheduledDate: formData.scheduledDate?.toISOString() ?? null,
+      })
+      return res.data
     } catch (error) {
       console.error(error)
       setSubmitError(
