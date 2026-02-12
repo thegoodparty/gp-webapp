@@ -24,7 +24,9 @@ interface BlogArticlePageProps {
   article: ArticleContent
 }
 
-export default async function BlogArticlePage({ article }: BlogArticlePageProps): Promise<React.JSX.Element> {
+export default async function BlogArticlePage({
+  article,
+}: BlogArticlePageProps): Promise<React.JSX.Element> {
   const {
     section,
     author,

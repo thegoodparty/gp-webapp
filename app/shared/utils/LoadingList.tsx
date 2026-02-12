@@ -45,4 +45,3 @@ const LoadingList = () => (
 )
 
 export default LoadingList
-

@@ -32,13 +32,21 @@ interface DoorKnockingPageProps {
   summary?: EcanvasserSummary
 }
 
-async function fetchEcanvasserSummary(): Promise<EcanvasserSummary | undefined> {
-  const response = await clientFetch<EcanvasserSummary>(apiRoutes.ecanvasser.mySummary)
+async function fetchEcanvasserSummary(): Promise<
+  EcanvasserSummary | undefined
+> {
+  const response = await clientFetch<EcanvasserSummary>(
+    apiRoutes.ecanvasser.mySummary,
+  )
   return response.data
 }
 
-export default function DoorKnockingPage(props: DoorKnockingPageProps): React.JSX.Element {
-  const [summary, setSummary] = useState<EcanvasserSummary | undefined>(props.summary)
+export default function DoorKnockingPage(
+  props: DoorKnockingPageProps,
+): React.JSX.Element {
+  const [summary, setSummary] = useState<EcanvasserSummary | undefined>(
+    props.summary,
+  )
   const [isSynching, setIsSynching] = useState(false)
 
   const fetchSummary = async () => {

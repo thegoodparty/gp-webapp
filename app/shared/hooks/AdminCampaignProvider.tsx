@@ -7,17 +7,24 @@ import { Campaign } from 'helpers/types'
 type AdminCampaignContextValue = [
   campaign: Campaign | null,
   setCampaign: (campaign: Campaign) => void,
-  refreshCampaign: () => Promise<void>
+  refreshCampaign: () => Promise<void>,
 ]
 
-export const AdminCampaignContext = createContext<AdminCampaignContextValue>([null, () => {}, async () => {}])
+export const AdminCampaignContext = createContext<AdminCampaignContextValue>([
+  null,
+  () => {},
+  async () => {},
+])
 
 interface AdminCampaignProviderProps {
   children: React.ReactNode
   campaign: Campaign
 }
 
-export const AdminCampaignProvider = ({ children, campaign: initCampaign }: AdminCampaignProviderProps): React.JSX.Element => {
+export const AdminCampaignProvider = ({
+  children,
+  campaign: initCampaign,
+}: AdminCampaignProviderProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign | null>(initCampaign)
   const refreshCampaign = async () => {
     if (!campaign) return
@@ -38,4 +45,3 @@ export const AdminCampaignProvider = ({ children, campaign: initCampaign }: Admi
     </AdminCampaignContext.Provider>
   )
 }
-

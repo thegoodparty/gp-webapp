@@ -4,4 +4,3 @@ import gpApi from 'gpApi'
 export const deleteDemoCampaign = async (): Promise<void> => {
   await gpFetch(gpApi.campaign.deleteDemoCampaign)
 }
-

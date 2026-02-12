@@ -122,9 +122,14 @@ interface ConflictResponse {
   exists: true
 }
 
-async function register(payload: RegisterPayload): Promise<RegisterResponse | ConflictResponse | false> {
+async function register(
+  payload: RegisterPayload,
+): Promise<RegisterResponse | ConflictResponse | false> {
   try {
-    const resp = await clientFetch<RegisterResponse>(apiRoutes.authentication.register, payload)
+    const resp = await clientFetch<RegisterResponse>(
+      apiRoutes.authentication.register,
+      payload,
+    )
 
     if (resp.status === 409) {
       return { exists: true }

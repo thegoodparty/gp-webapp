@@ -35,17 +35,24 @@ export interface Issue {
 type IssuesContextValue = [
   issues: Issue[],
   setIssues: (issues: Issue[]) => void,
-  refreshIssues: () => Promise<void>
+  refreshIssues: () => Promise<void>,
 ]
 
-export const IssuesContext = createContext<IssuesContextValue>([[], () => {}, async () => {}])
+export const IssuesContext = createContext<IssuesContextValue>([
+  [],
+  () => {},
+  async () => {},
+])
 
 interface IssuesProviderProps {
   children: React.ReactNode
   issues: Issue[]
 }
 
-export const IssuesProvider = ({ children, issues: initialIssues }: IssuesProviderProps): React.JSX.Element => {
+export const IssuesProvider = ({
+  children,
+  issues: initialIssues,
+}: IssuesProviderProps): React.JSX.Element => {
   const [issues, setIssues] = useState<Issue[]>(initialIssues)
 
   const refreshIssues = async () => {
@@ -66,4 +73,3 @@ export const IssuesProvider = ({ children, issues: initialIssues }: IssuesProvid
     </IssuesContext.Provider>
   )
 }
-

@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useState, Dispatch, SetStateAction } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 
 export interface DomainStatus {
   status?: string

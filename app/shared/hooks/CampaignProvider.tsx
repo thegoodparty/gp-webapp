@@ -7,17 +7,24 @@ import { Campaign } from 'helpers/types'
 type CampaignContextValue = [
   campaign: Campaign | null,
   setCampaign: (campaign: Campaign | null) => void,
-  refreshCampaign: () => Promise<void>
+  refreshCampaign: () => Promise<void>,
 ]
 
-export const CampaignContext = createContext<CampaignContextValue>([null, () => {}, async () => {}])
+export const CampaignContext = createContext<CampaignContextValue>([
+  null,
+  () => {},
+  async () => {},
+])
 
 interface CampaignProviderProps {
   children: React.ReactNode
   campaign: Campaign | null
 }
 
-export const CampaignProvider = ({ children, campaign: initCampaign }: CampaignProviderProps): React.JSX.Element => {
+export const CampaignProvider = ({
+  children,
+  campaign: initCampaign,
+}: CampaignProviderProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign | null>(initCampaign)
   const [user] = useUser()
 

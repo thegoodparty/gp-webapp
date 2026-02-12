@@ -18,7 +18,9 @@ interface SurveyListProps {
 }
 
 const fetchSurveys = async (): Promise<EcanvasserSurvey[]> => {
-  const resp = await clientFetch<EcanvasserSurvey[]>(apiRoutes.ecanvasser.surveys.list)
+  const resp = await clientFetch<EcanvasserSurvey[]>(
+    apiRoutes.ecanvasser.surveys.list,
+  )
   return resp.data
 }
 

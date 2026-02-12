@@ -44,8 +44,7 @@ export const FilingLinkInfoIcon = () => {
           <br />
           <strong>For federal campaigns:</strong> The website must be from{' '}
           <strong>fec.gov</strong> and point to your specific filing (e.g.{' '}
-          https://fec.gov/data/committee/C00123456
-          ).
+          https://fec.gov/data/committee/C00123456 ).
         </Body2>
         <Button
           {...{

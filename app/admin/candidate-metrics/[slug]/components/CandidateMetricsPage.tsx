@@ -42,7 +42,11 @@ export default function CandidateMetricsPage(
       >
         <div className="absolute left-1/2 -top-24 -ml-24">
           <CandidateAvatar
-            candidate={{ firstName: firstName || '', lastName: lastName || '', image }}
+            candidate={{
+              firstName: firstName || '',
+              lastName: lastName || '',
+              image,
+            }}
           />
         </div>
         <H1 className="text-center mb-12">

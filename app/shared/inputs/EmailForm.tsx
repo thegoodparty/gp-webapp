@@ -14,7 +14,9 @@ interface SubscribeEmailPayload extends Record<string, string> {
   pageName: string
 }
 
-export const subscribeEmail = async (payload: SubscribeEmailPayload): Promise<boolean> => {
+export const subscribeEmail = async (
+  payload: SubscribeEmailPayload,
+): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
     return true
@@ -104,9 +106,7 @@ const EmailForm = ({
               className="py-4 pl-4 border-slate-300 border-2 rounded-lg w-full text-black placeholder-black"
             />
 
-            <div
-              className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0"
-            >
+            <div className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0">
               <PrimaryButton
                 id={submitButtonId || 'submit-email'}
                 onClick={submitForm}
@@ -128,4 +128,3 @@ const EmailForm = ({
 }
 
 export default EmailForm
-

@@ -103,4 +103,3 @@ export const trackPage = async (
     return false
   }
 }
-

@@ -18,7 +18,12 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { CircularProgress } from '@mui/material'
-import { Campaign, CampaignAiContent, AiContentData, CandidatePosition } from 'helpers/types'
+import {
+  Campaign,
+  CampaignAiContent,
+  AiContentData,
+  CandidatePosition,
+} from 'helpers/types'
 
 // Type for values in CampaignAiContent index signature
 type CampaignAiContentValue =
@@ -67,16 +72,30 @@ const excludedKeys = [
 export default function MyContent(props: MyContentProps): React.JSX.Element {
   const [loading, setLoading] = useState(true)
   const [section, setSection] = useState('')
-  const [sections, setSections] = useState<CampaignAiContent | undefined>(undefined)
-  const [initialChat, setInitialChat] = useState<ChatMessage[] | undefined>(undefined)
-  const [initialValues, setInitialValues] = useState<Partial<Record<string, string>>>({})
-  const [campaign, setCampaign] = useState<Campaign | null | undefined>(undefined)
-  const [campaignPlan, setCampaignPlan] = useState<CampaignAiContent | undefined>(undefined)
+  const [sections, setSections] = useState<CampaignAiContent | undefined>(
+    undefined,
+  )
+  const [initialChat, setInitialChat] = useState<ChatMessage[] | undefined>(
+    undefined,
+  )
+  const [initialValues, setInitialValues] = useState<
+    Partial<Record<string, string>>
+  >({})
+  const [campaign, setCampaign] = useState<Campaign | null | undefined>(
+    undefined,
+  )
+  const [campaignPlan, setCampaignPlan] = useState<
+    CampaignAiContent | undefined
+  >(undefined)
   const [jobStarting, setJobStarting] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
-  const onSelectPrompt = (key: string, additionalPrompts?: ChatMessage[], inputValues?: Partial<Record<string, string>>) => {
+  const onSelectPrompt = (
+    key: string,
+    additionalPrompts?: ChatMessage[],
+    inputValues?: Partial<Record<string, string>>,
+  ) => {
     setJobStarting(true)
     trackEvent('ai_content_generation_start', { key })
     if (additionalPrompts) {
@@ -169,7 +188,9 @@ export default function MyContent(props: MyContentProps): React.JSX.Element {
   ]
 
   // Type guard to check if a value is AiContentData
-  const isAiContentData = (value: CampaignAiContentValue): value is AiContentData => {
+  const isAiContentData = (
+    value: CampaignAiContentValue,
+  ): value is AiContentData => {
     return (
       typeof value === 'object' &&
       value !== null &&
@@ -183,7 +204,10 @@ export default function MyContent(props: MyContentProps): React.JSX.Element {
     if (!sections) return []
 
     return Object.entries(sections)
-      .filter(([key, value]) => !excludedKeys.includes(key) && isAiContentData(value) && value.name)
+      .filter(
+        ([key, value]) =>
+          !excludedKeys.includes(key) && isAiContentData(value) && value.name,
+      )
       .map(([key, section]) => {
         // After filtering with isAiContentData, section is typed as AiContentData
         if (!isAiContentData(section)) return null

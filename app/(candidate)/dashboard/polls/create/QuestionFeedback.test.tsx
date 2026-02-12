@@ -9,7 +9,7 @@ describe('QuestionFeedback', () => {
       <QuestionFeedback
         warningMessage="Biased language detected"
         errorMessage="Question is required"
-      />
+      />,
     )
 
     expect(screen.getByText('Question is required')).toBeInTheDocument()

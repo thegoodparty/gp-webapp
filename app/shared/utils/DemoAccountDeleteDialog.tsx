@@ -20,4 +20,3 @@ export const DemoAccountDeleteDialog = ({
     handleProceed={handleProceed}
   />
 )
-

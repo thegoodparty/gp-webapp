@@ -15,24 +15,33 @@ interface Ecanvasser {
 
 type EcanvasserContextValue = [
   ecanvasser: Ecanvasser | null,
-  setEcanvasser: (ecanvasser: Ecanvasser | null) => void
+  setEcanvasser: (ecanvasser: Ecanvasser | null) => void,
 ]
 
-export const EcanvasserContext = createContext<EcanvasserContextValue>([null, () => {}])
+export const EcanvasserContext = createContext<EcanvasserContextValue>([
+  null,
+  () => {},
+])
 
 interface EcanvasserProviderProps {
   children: React.ReactNode
 }
 
-export const EcanvasserProvider = ({ children }: EcanvasserProviderProps): React.JSX.Element => {
+export const EcanvasserProvider = ({
+  children,
+}: EcanvasserProviderProps): React.JSX.Element => {
   const [ecanvasser, setEcanvasser] = useState<Ecanvasser | null>(null)
 
   useEffect(() => {
     const fetchEcanvasser = async () => {
       try {
-        const ecanvasser = await clientFetch<Ecanvasser>(apiRoutes.ecanvasser.mine, undefined, {
-          revalidate: 100,
-        })
+        const ecanvasser = await clientFetch<Ecanvasser>(
+          apiRoutes.ecanvasser.mine,
+          undefined,
+          {
+            revalidate: 100,
+          },
+        )
         setEcanvasser(ecanvasser?.status === 404 ? null : ecanvasser.data)
       } catch (e) {
         console.log('error fetching ecanvasser', e)
@@ -48,4 +57,3 @@ export const EcanvasserProvider = ({ children }: EcanvasserProviderProps): React
     </EcanvasserContext.Provider>
   )
 }
-

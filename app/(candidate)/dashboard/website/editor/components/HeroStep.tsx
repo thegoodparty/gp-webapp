@@ -34,13 +34,17 @@ export default function HeroStep({
       </Label>
       <TextField
         value={title}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onTitleChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onTitleChange(e.target.value)
+        }
         fullWidth
       />
       <Label className="mt-4">Tagline</Label>
       <TextField
         value={tagline}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onTaglineChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onTaglineChange(e.target.value)
+        }
         fullWidth
       />
       <Label className="mt-4">Main Image</Label>

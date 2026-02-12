@@ -7,7 +7,9 @@ interface ForgotPasswordSuccessProps {
   email: string
 }
 
-export default function ForgotPasswordSuccess({ email }: ForgotPasswordSuccessProps): React.JSX.Element {
+export default function ForgotPasswordSuccess({
+  email,
+}: ForgotPasswordSuccessProps): React.JSX.Element {
   return (
     <>
       <hgroup className="text-center">

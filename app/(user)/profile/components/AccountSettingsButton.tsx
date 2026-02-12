@@ -13,7 +13,10 @@ interface AccountSettingsButtonProps {
   isDemo: boolean
 }
 
-export const AccountSettingsButton = ({ isPro, isDemo }: AccountSettingsButtonProps): React.JSX.Element => {
+export const AccountSettingsButton = ({
+  isPro,
+  isDemo,
+}: AccountSettingsButtonProps): React.JSX.Element => {
   const [showModal, setShowModal] = useState(false)
   const { errorSnackbar } = useSnackbar()
 

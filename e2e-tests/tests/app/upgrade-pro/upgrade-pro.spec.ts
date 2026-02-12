@@ -1,24 +1,24 @@
-import { expect, test } from "@playwright/test";
-import { AccountHelper } from "src/helpers/account.helper";
-import { NavigationHelper } from "src/helpers/navigation.helper";
-import { WaitHelper } from "src/helpers/wait.helper";
+import { expect, test } from '@playwright/test'
+import { AccountHelper } from 'src/helpers/account.helper'
+import { NavigationHelper } from 'src/helpers/navigation.helper'
+import { WaitHelper } from 'src/helpers/wait.helper'
 
-test.describe("Upgrade Pro Candidate Test Account @experimental", () => {
-	test.use({ storageState: "playwright/.auth/user2.json" });
+test.describe('Upgrade Pro Candidate Test Account @experimental', () => {
+  test.use({ storageState: 'playwright/.auth/user2.json' })
 
-	test.beforeEach(async ({ page }) => {
-		await NavigationHelper.navigateToPage(page, "/dashboard/upgrade-to-pro");
-		await NavigationHelper.dismissOverlays(page);
-	});
+  test.beforeEach(async ({ page }) => {
+    await NavigationHelper.navigateToPage(page, '/dashboard/upgrade-to-pro')
+    await NavigationHelper.dismissOverlays(page)
+  })
 
-	// Skipped due to CORS restrictions; will re-enable once file uploads are supported in Vercel test environments
-	test.skip("Should upgrade pro candidate test account", async ({ page }) => {
-		await AccountHelper.upgradeToPro(page);
-		await page.goto("/dashboard");
-		await WaitHelper.waitForPageReady(page);
-		// Header should display "GoodParty.org PRO" logo
-		await expect(
-			page.getByRole("link", { name: "GoodParty.org PRO" }),
-		).toBeVisible({ timeout: 30000 });
-	});
-});
+  // Skipped due to CORS restrictions; will re-enable once file uploads are supported in Vercel test environments
+  test.skip('Should upgrade pro candidate test account', async ({ page }) => {
+    await AccountHelper.upgradeToPro(page)
+    await page.goto('/dashboard')
+    await WaitHelper.waitForPageReady(page)
+    // Header should display "GoodParty.org PRO" logo
+    await expect(
+      page.getByRole('link', { name: 'GoodParty.org PRO' }),
+    ).toBeVisible({ timeout: 30000 })
+  })
+})

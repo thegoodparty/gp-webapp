@@ -39,10 +39,15 @@ export type CreateCampaignUpdateHistoryPayload = {
   quantity: number
 }
 
-export const deleteUpdateHistory = async (id: number): Promise<CampaignUpdateHistory> => {
-  const resp = await clientFetch<CampaignUpdateHistory>(apiRoutes.campaign.updateHistory.delete, {
-    id,
-  })
+export const deleteUpdateHistory = async (
+  id: number,
+): Promise<CampaignUpdateHistory> => {
+  const resp = await clientFetch<CampaignUpdateHistory>(
+    apiRoutes.campaign.updateHistory.delete,
+    {
+      id,
+    },
+  )
   return resp.data
 }
 
@@ -68,4 +73,3 @@ export const createIrresponsiblyMassagedHistoryItem = (
     ...(user.avatar ? { avatar: user.avatar } : {}),
   },
 })
-

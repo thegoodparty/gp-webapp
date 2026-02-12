@@ -7,13 +7,22 @@ interface OutreachResponse {
   [key: string]: unknown
 }
 
-type FormDataValue = string | number | boolean | Date | object | null | undefined
+type FormDataValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | object
+  | null
+  | undefined
 
 export const createOutreach = async (
   outreachData: Record<string, unknown>,
   image: File | null = null,
 ): Promise<OutreachResponse | null> => {
-  const formData = image ? packageFormData(outreachData as Record<string, FormDataValue>, image) : null
+  const formData = image
+    ? packageFormData(outreachData as Record<string, FormDataValue>, image)
+    : null
   try {
     const resp = await clientFetch<OutreachResponse>(
       apiRoutes.outreach.create,
@@ -29,4 +38,3 @@ export const createOutreach = async (
     return null
   }
 }
-

@@ -113,4 +113,3 @@ const RightSide = (): React.JSX.Element => {
 }
 
 export default RightSide
-

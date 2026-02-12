@@ -32,7 +32,9 @@ interface StatusChipProps {
   status: string
 }
 
-export default function StatusChip({ status }: StatusChipProps): React.JSX.Element {
+export default function StatusChip({
+  status,
+}: StatusChipProps): React.JSX.Element {
   const validStatus = isWebsiteStatus(status) ? status : 'unpublished'
   const { dot, text, label } = STATUS_STYLES[validStatus]
 

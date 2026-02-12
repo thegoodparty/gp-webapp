@@ -13,4 +13,3 @@ const RadioGroup = (props: RadioGroupProps): React.JSX.Element => {
 }
 
 export default RadioGroup
-

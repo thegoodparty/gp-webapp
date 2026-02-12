@@ -38,13 +38,17 @@ const fieldDisplayNames: ValidationMessages = {
   committeeType: 'Committee Type',
 }
 
-const getValidationMessage = (field: ValidationField, officeLevel?: string): string => {
+const getValidationMessage = (
+  field: ValidationField,
+  officeLevel?: string,
+): string => {
   const messages: ValidationMessages = {
     electionFilingLink:
       officeLevel === 'federal'
         ? 'Must be from FEC.gov (e.g., https://fec.gov/data/committee/C00123456)'
         : 'Enter a valid URL with a path (e.g., https://example.com/candidates)',
-    campaignCommitteeName: 'Your official committee name (e.g., "Smith for Council")',
+    campaignCommitteeName:
+      'Your official committee name (e.g., "Smith for Council")',
     officeLevel: 'Select an option',
     ein: 'Valid format (XX-XXXXXXX)',
     phone: 'Valid US phone number as it appears on your election filing',
@@ -58,7 +62,7 @@ const getValidationMessage = (field: ValidationField, officeLevel?: string): str
 }
 
 export const TextingComplianceSubmitButton = ({
-  onClick = () => { },
+  onClick = () => {},
   loading = false,
   isValid = true,
   hasSubmissionError = false,
@@ -69,7 +73,8 @@ export const TextingComplianceSubmitButton = ({
     return (
       <div className="py-4 px-4 bg-red-50 border border-red-200 rounded-lg">
         <p className="text-red-600">
-          Form submission failed. Contact your Political Assistant to complete this process or report the issue.
+          Form submission failed. Contact your Political Assistant to complete
+          this process or report the issue.
         </p>
       </div>
     )

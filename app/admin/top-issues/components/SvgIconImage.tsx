@@ -8,5 +8,3 @@ interface SvgIconImageProps {
 export const SvgIconImage = ({ src }: SvgIconImageProps): React.JSX.Element => (
   <Image alt="Issue icon" width={40} height={40} src={src} />
 )
-
-

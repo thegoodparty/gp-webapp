@@ -7,7 +7,12 @@ interface FooterButtonLinkProps {
   buttonStyle: ButtonColor
 }
 
-export const FooterButtonLink = ({ link, id, label, buttonStyle }: FooterButtonLinkProps): React.JSX.Element => (
+export const FooterButtonLink = ({
+  link,
+  id,
+  label,
+  buttonStyle,
+}: FooterButtonLinkProps): React.JSX.Element => (
   <Button
     id={id}
     href={link}
@@ -17,4 +22,3 @@ export const FooterButtonLink = ({ link, id, label, buttonStyle }: FooterButtonL
     {label}
   </Button>
 )
-

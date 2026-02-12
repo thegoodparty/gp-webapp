@@ -41,4 +41,3 @@ export const IssueSelectItem = ({
     <FaChevronRight size={14} />
   </div>
 )
-

@@ -15,7 +15,9 @@ export const SubscriptionPendingCancellationAlert = ({
       <div className="p-2 mr-2 lg:max-w-[73%]">
         <Body2 className="">
           Your subscription will end on{' '}
-          <strong>{dateUSClientLocaleHelper(new Date(subscriptionCancelAt).getTime())}</strong>
+          <strong>
+            {dateUSClientLocaleHelper(new Date(subscriptionCancelAt).getTime())}
+          </strong>
         </Body2>
       </div>
     </div>

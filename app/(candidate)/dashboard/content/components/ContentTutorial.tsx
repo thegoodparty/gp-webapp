@@ -63,7 +63,6 @@ const steps: StepItem[] = [
   },
 ]
 
-
 interface ContentTutorialProps {
   newContentCallback: () => void
   onCompleteCallback?: (template: string) => void

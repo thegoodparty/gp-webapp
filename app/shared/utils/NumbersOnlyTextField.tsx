@@ -5,7 +5,10 @@ const digitsOnlyRegex = /^\d+$/
 const getDigitsOnlyWithMaxLengthRegex = (maxLength: number): RegExp =>
   new RegExp(`^\\d{1,${maxLength}}$`)
 
-type NumbersOnlyTextFieldProps = Omit<TextFieldProps<'standard'>, 'value' | 'onChange'> & {
+type NumbersOnlyTextFieldProps = Omit<
+  TextFieldProps<'standard'>,
+  'value' | 'onChange'
+> & {
   value: string
   onChange: (e: { target: { value: string } }) => void
   maxLength?: number
@@ -36,4 +39,3 @@ export const NumbersOnlyTextField = ({
     />
   )
 }
-

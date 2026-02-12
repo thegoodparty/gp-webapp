@@ -6,7 +6,9 @@ export const LegalStatements = (): React.JSX.Element => (
       I will abide by a{' '}
       <a
         className="underline"
-        href={`${faqArticleRoute('what-is-good-partys-minimum-standard-of-civility')}`}
+        href={`${faqArticleRoute(
+          'what-is-good-partys-minimum-standard-of-civility',
+        )}`}
         target="_blank"
       >
         minimum standard of civility

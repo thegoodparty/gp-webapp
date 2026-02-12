@@ -21,7 +21,9 @@ interface ContentPageData {
 }
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const contentArray = await fetchContentByType<ContentPageData[]>('privacyPage')
+  const contentArray = await fetchContentByType<ContentPageData[]>(
+    'privacyPage',
+  )
   const content = contentArray[0]
   return <FullContentPage content={content} />
 }

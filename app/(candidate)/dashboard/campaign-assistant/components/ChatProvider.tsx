@@ -1,5 +1,12 @@
 'use client'
-import { createContext, useEffect, useRef, useState, ReactNode, RefObject } from 'react'
+import {
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+  RefObject,
+} from 'react'
 import {
   createInitialChat,
   fetchChatHistory,
@@ -14,13 +21,19 @@ import { trackEvent } from 'helpers/analyticsHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-export async function updateChat(threadId: string, input: string): Promise<{ message: ChatMessage } | false> {
+export async function updateChat(
+  threadId: string,
+  input: string,
+): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = {
       threadId,
       message: input,
     }
-    const resp = await clientFetch<{ message: ChatMessage }>(apiRoutes.campaign.chat.update, payload)
+    const resp = await clientFetch<{ message: ChatMessage }>(
+      apiRoutes.campaign.chat.update,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -72,7 +85,9 @@ interface ChatProviderProps {
   children: ReactNode
 }
 
-export const ChatProvider = ({ children }: ChatProviderProps): React.JSX.Element => {
+export const ChatProvider = ({
+  children,
+}: ChatProviderProps): React.JSX.Element => {
   const [chat, setChat] = useState<ChatMessage[]>([])
   const [chats, setChats] = useState<Chat[]>([])
   const [loading, setLoading] = useState(false)

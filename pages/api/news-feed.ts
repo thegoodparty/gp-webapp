@@ -4,7 +4,7 @@ import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection'
 
 export default async function feed(
   _req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void> {
   try {
     const { news: articles } = await fetchArticlesBySection({

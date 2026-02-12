@@ -168,15 +168,13 @@ export default function AdminUsersPage(
         id: 'zip',
         header: 'Zip',
         accessorKey: 'zip',
-        cell: ({ row }) =>
-          row.original.zip || 'N/A',
+        cell: ({ row }) => row.original.zip || 'N/A',
       },
       {
         id: 'userType',
         header: 'User Type',
         accessorKey: 'userType',
-        cell: ({ row }) =>
-          row.original.userType || 'N/A',
+        cell: ({ row }) => row.original.userType || 'N/A',
       },
       {
         id: 'id',
