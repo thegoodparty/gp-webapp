@@ -1,9 +1,12 @@
 type FormDataValue = string | number | boolean | Date | object | null | undefined
 
-export const packageFormData = (data: Record<string, FormDataValue>, file: File | null = null): FormData => {
+export const packageFormData = <T extends object>(
+  data: T,
+  file: File | null = null,
+): FormData => {
   const formData = new FormData()
   for (const key in data) {
-    const value = data[key]
+    const value = data[key] as FormDataValue
     const coerced =
       value instanceof Date
         ? value.toISOString()

@@ -1,6 +1,5 @@
 import { clientFetch } from './clientFetch'
 import { apiRoutes } from './routes'
-import { packageFormData } from 'helpers/packageFormData'
 import type { ApiResponse } from './clientFetch'
 import type {
   CreateOutreachPayload,
@@ -21,14 +20,17 @@ export async function createOutreach(
   payload: CreateOutreachPayload,
   image: File | null = null,
 ): Promise<ApiResponse<CreateOutreachResponse | null>> {
-  type FormDataInput = Parameters<typeof packageFormData>[0]
-  const body =
-    image != null
-      ? packageFormData(payload as unknown as FormDataInput, image)
-      : payload
-  const resp = await clientFetch<CreateOutreachResponse>(
-    apiRoutes.outreach.create,
-    body,
-  )
-  return { ...resp, data: resp.data }
+  if (image) {
+    const formData = new FormData()
+    formData.append('data', JSON.stringify(payload))
+    formData.append('file', image)
+    return clientFetch<CreateOutreachResponse>(apiRoutes.outreach.create, {
+      method: 'POST',
+      body: formData,
+    })
+  }
+  return clientFetch<CreateOutreachResponse>(apiRoutes.outreach.create, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
 }
