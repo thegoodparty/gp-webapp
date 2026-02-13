@@ -37,22 +37,6 @@ interface OfficeStepProps {
   adminMode?: boolean
 }
 
-async function runP2V(slug: string): Promise<boolean> {
-  try {
-    const resp = await clientFetch<boolean>(
-      apiRoutes.campaign.pathToVictory.create,
-      {
-        slug,
-      },
-    )
-
-    return !!resp.data
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
-}
-
 interface CampaignResponse extends Campaign {
   error?: string
 }
@@ -89,12 +73,10 @@ async function runPostOfficeStepUpdates(
   slug: string | undefined = undefined,
 ): Promise<void> {
   await updateCampaign(attr, slug)
-  const campaign = await updateRaceTargetDetails(slug)
-  // If gold flow failed (!campaign) or succeeded but found no turnout,
-  // enqueue silver (LLM-based matching) as fallback.
-  if (!campaign || !campaign?.pathToVictory?.data?.projectedTurnout) {
-    runP2V(slug!)
-  }
+  // The API handles P2V record creation and silver enqueue in all cases
+  // (gold failure, gold success without turnout, etc.), so the webapp
+  // does not need to enqueue separately.
+  await updateRaceTargetDetails(slug)
 }
 
 export default function OfficeStep({
