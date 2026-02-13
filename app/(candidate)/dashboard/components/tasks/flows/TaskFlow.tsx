@@ -42,6 +42,7 @@ import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/f
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
+import { OutreachType } from 'gpApi/types/outreach.types'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -71,7 +72,7 @@ const DEFAULT_STATE: TaskFlowState = {
 }
 
 type TaskFlowProps = {
-  type: string
+  type: OutreachType
   customButton?: ReactElement
   campaign: Campaign
   isCustom?: boolean
@@ -109,10 +110,11 @@ const TaskFlow = ({
   const [stopPolling, setStopPolling] = useState(false)
 
   const contactCount = leadsLoaded ?? undefined
+  const effectiveOutreachType = getEffectiveOutreachType(type, p2pUxEnabled)
   const purchaseMetaData = {
     contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
-    outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
+    outreachType: effectiveOutreachType,
     campaignId,
   }
 
@@ -257,12 +259,17 @@ const TaskFlow = ({
   )
 
   const handlePurchaseComplete = async () => {
+    const outreach = await onCreateOutreach()
+    if (!outreach?.id) {
+      errorSnackbar('Campaign could not be created. Please try again.')
+      return
+    }
     await handleScheduleOutreach(
       type,
       errorSnackbar,
       successSnackbar,
       state,
-    )(await onCreateOutreach())
+    )(outreach)
 
     const contactField = getVoterContactField(type)
     await updateVoterContacts((currentContacts) => ({

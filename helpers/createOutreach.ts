@@ -1,38 +1,30 @@
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-import { packageFormData } from 'helpers/packageFormData'
+import { createOutreach as createOutreachApi } from 'gpApi/outreach.api'
+import type {
+  CreateOutreachPayload,
+  CreateOutreachResponse,
+} from 'gpApi/outreach.api'
 
-interface OutreachResponse {
-  id: string
-  [key: string]: unknown
-}
+/** Same shape as CreateOutreachResponse for backward compatibility (id as number). */
+export type { CreateOutreachResponse as OutreachResponse } from 'gpApi/outreach.api'
 
-type FormDataValue =
-  | string
-  | number
-  | boolean
-  | Date
-  | object
-  | null
-  | undefined
+export type { CreateOutreachPayload } from 'gpApi/outreach.api'
 
-export const createOutreach = async (
-  outreachData: Record<string, unknown>,
+/**
+ * Create an outreach via the typed API. Returns the created outreach or null.
+ */
+export async function createOutreach(
+  payload: CreateOutreachPayload,
   image: File | null = null,
-): Promise<OutreachResponse | null> => {
-  const formData = image
-    ? packageFormData(outreachData as Record<string, FormDataValue>, image)
-    : null
+): Promise<CreateOutreachResponse | null> {
   try {
-    const resp = await clientFetch<OutreachResponse>(
-      apiRoutes.outreach.create,
-      formData || outreachData,
-    )
+    const resp = await createOutreachApi(payload, image)
     if (!resp.ok) {
       console.error('Error creating outreach:', resp.statusText)
       return null
     }
-    return resp.data
+    const data = resp.data
+    if (data == null) return null
+    return data
   } catch (e) {
     console.error('error creating outreach', e)
     return null
