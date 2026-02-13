@@ -90,7 +90,9 @@ async function runPostOfficeStepUpdates(
 ): Promise<void> {
   await updateCampaign(attr, slug)
   const campaign = await updateRaceTargetDetails(slug)
-  if (campaign && !campaign?.pathToVictory?.data?.projectedTurnout) {
+  // If gold flow failed (!campaign) or succeeded but found no turnout,
+  // enqueue silver (LLM-based matching) as fallback.
+  if (!campaign || !campaign?.pathToVictory?.data?.projectedTurnout) {
     runP2V(slug!)
   }
 }
