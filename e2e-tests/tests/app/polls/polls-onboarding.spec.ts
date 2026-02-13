@@ -342,19 +342,27 @@ test('poll onboarding and expansion', async ({ page }) => {
     .frameLocator('iframe[title="Secure payment input frame"]')
     .first()
 
-  // customize timeout here to 10 seconds
-  await stripeFrame
-    .getByLabel('Card number')
-    .fill('4242424242424242', { timeout: 10000 })
-  await stripeFrame.getByLabel('Expiration date').fill('01/35')
-  await stripeFrame.getByLabel('Security code').fill('123')
-  await stripeFrame.getByLabel('ZIP code').fill('82001')
+  const cardNumber = stripeFrame.getByLabel('Card number')
+  await expect(cardNumber).toBeEditable({ timeout: 30_000 })
+  await cardNumber.pressSequentially('4242424242424242')
 
-  // Wait for Stripe Custom Checkout to enable the submit button
+  const expiry = stripeFrame.getByLabel('Expiration date')
+  await expect(expiry).toBeEditable({ timeout: 5_000 })
+  await expiry.pressSequentially('0135')
+
+  const cvc = stripeFrame.getByLabel('Security code')
+  await expect(cvc).toBeEditable({ timeout: 5_000 })
+  await cvc.pressSequentially('123')
+
+  const zip = stripeFrame.getByLabel('ZIP code')
+  await expect(zip).toBeEditable({ timeout: 5_000 })
+  await zip.pressSequentially('82001')
+
+  // Wait for Stripe Custom Checkout to enable the submit button (canConfirm = true)
   const purchaseButton = page.getByRole('button', {
     name: 'Complete Purchase',
   })
-  await expect(purchaseButton).toBeEnabled({ timeout: 15000 })
+  await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
   await purchaseButton.click()
 
   // Confirm API resource updates.
