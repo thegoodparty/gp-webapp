@@ -337,41 +337,46 @@ test('poll onboarding and expansion', async ({ page }) => {
     .getByRole('button', { name: 'Go to payment' })
     .click({ force: true })
 
+  const stripeIframe = page
+    .locator('iframe[title="Secure payment input frame"]')
+    .first()
+  await expect(stripeIframe).toBeVisible({ timeout: 30_000 })
+
   const stripeFrame = page
     .frameLocator('iframe[title="Secure payment input frame"]')
     .first()
 
   const cardNumber = stripeFrame.getByLabel('Card number')
+  await expect(cardNumber).toBeVisible({ timeout: 30_000 })
   await expect(cardNumber).toBeEditable({ timeout: 30_000 })
   await page.waitForTimeout(2_000)
 
   await cardNumber.click()
-  await cardNumber.fill('4242424242424242')
+  await cardNumber.pressSequentially('4242424242424242', { delay: 35 })
+  await cardNumber.press('Tab')
 
   const expiry = stripeFrame.getByLabel('Expiration date')
   await expiry.click()
-  await expiry.fill('01/35')
+  await expiry.pressSequentially('0135', { delay: 35 })
+  await expiry.press('Tab')
 
   const cvc = stripeFrame.getByLabel('Security code')
   await cvc.click()
-  await cvc.fill('123')
+  await cvc.pressSequentially('123', { delay: 35 })
+  await cvc.press('Tab')
 
   const zip = stripeFrame.getByLabel('ZIP code')
   await zip.click()
-  await zip.fill('82001')
+  await zip.pressSequentially('82001', { delay: 35 })
+  await zip.press('Tab')
 
-  await page.waitForTimeout(3_000)
+  await page.waitForTimeout(1_500)
 
   const purchaseButton = page.getByRole('button', {
     name: 'Complete Purchase',
   })
 
-  try {
-    await expect(purchaseButton).toBeEnabled({ timeout: 10_000 })
-  } catch {
-    await purchaseButton.evaluate((btn) => btn.removeAttribute('disabled'))
-  }
-
+  await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
   await purchaseButton.click()
 
   // Confirm API resource updates.
