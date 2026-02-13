@@ -337,6 +337,15 @@ test('poll onboarding and expansion', async ({ page }) => {
     .getByRole('button', { name: 'Go to payment' })
     .click({ force: true })
 
+  // Capture browser console messages for debugging Stripe issues in CI
+  const consoleLogs: string[] = []
+  page.on('console', (msg) => {
+    consoleLogs.push(`[${msg.type()}] ${msg.text()}`)
+  })
+  page.on('pageerror', (err) => {
+    consoleLogs.push(`[PAGE_ERROR] ${err.message}`)
+  })
+
   const stripeIframe = page
     .locator('iframe[title="Secure payment input frame"]')
     .first()
@@ -353,38 +362,87 @@ test('poll onboarding and expansion', async ({ page }) => {
 
   await cardNumber.click()
   await cardNumber.pressSequentially('4242424242424242', { delay: 35 })
-  await cardNumber.press('Tab')
 
   const expiry = stripeFrame.getByLabel('Expiration date')
+  await expect(expiry).toBeVisible({ timeout: 30_000 })
   await expiry.click()
   await expiry.pressSequentially('0135', { delay: 35 })
-  await expiry.press('Tab')
 
   const cvc = stripeFrame.getByLabel('Security code')
+  await expect(cvc).toBeVisible({ timeout: 30_000 })
   await cvc.click()
   await cvc.pressSequentially('123', { delay: 35 })
-  await cvc.press('Tab')
 
   const zip = stripeFrame.getByLabel('ZIP code')
+  await expect(zip).toBeVisible({ timeout: 30_000 })
   await zip.click()
   await zip.pressSequentially('82001', { delay: 35 })
-  await zip.press('Tab')
 
-  await page.waitForTimeout(1_500)
+  await page.waitForTimeout(2_000)
+  await page.screenshot({ path: 'test-results/stripe-after-fill.png', fullPage: true })
+  console.log('[DEBUG] Screenshot taken after filling Stripe fields')
+
+  // Log the current field values inside the iframe
+  const cardValue = await cardNumber.inputValue().catch(() => 'N/A')
+  const expiryValue = await expiry.inputValue().catch(() => 'N/A')
+  const cvcValue = await cvc.inputValue().catch(() => 'N/A')
+  const zipValue = await zip.inputValue().catch(() => 'N/A')
+  console.log(`[DEBUG] Stripe field values - Card: ${cardValue}, Expiry: ${expiryValue}, CVC: ${cvcValue}, ZIP: ${zipValue}`)
 
   const purchaseButton = page.getByRole('button', {
     name: 'Complete Purchase',
   })
 
-  await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
+  // Check button state before waiting
+  const isDisabled = await purchaseButton.isDisabled()
+  console.log(`[DEBUG] Purchase button disabled: ${isDisabled}`)
+
+  // Poll button state every 3 seconds so we can see if it ever changes
+  const pollInterval = setInterval(async () => {
+    try {
+      const disabled = await purchaseButton.isDisabled()
+      const buttonText = await purchaseButton.textContent()
+      console.log(`[DEBUG] Button state - disabled: ${disabled}, text: ${buttonText}`)
+    } catch { /* page may have navigated */ }
+  }, 3_000)
+
+  const completeCheckoutResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().includes('/payments/purchase/complete-checkout-session') &&
+      response.request().method() === 'POST',
+    { timeout: 45_000 },
+  )
+
+  try {
+    await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
+  } catch (err) {
+    clearInterval(pollInterval)
+    // Take a failure screenshot and dump console logs
+    await page.screenshot({ path: 'test-results/stripe-button-timeout.png', fullPage: true })
+    console.log('[DEBUG] Console logs captured:')
+    consoleLogs.forEach((log) => console.log(`  ${log}`))
+    console.log(`[DEBUG] Button HTML: ${await purchaseButton.evaluate((el) => el.outerHTML).catch(() => 'N/A')}`)
+    throw err
+  }
+  clearInterval(pollInterval)
   await purchaseButton.click()
+
+  const completeCheckoutResponse = await completeCheckoutResponsePromise
+  expect(completeCheckoutResponse.ok()).toBeTruthy()
+
+  await page.waitForURL(
+    (url) => new URL(url).pathname.includes('/expand-payment-success'),
+    {
+      timeout: 45_000,
+    },
+  )
 
   // Confirm API resource updates.
   const { newAudienceSize } = await eventually(
     {
       that: 'the poll is marked as expanding',
       minTimeout: 500,
-      maxTimeout: 5000,
+      maxTimeout: 15_000,
     },
     async () => {
       const res = await client.get(`/v1/polls/${pollId}`)
