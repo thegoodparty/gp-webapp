@@ -44,5 +44,5 @@
     ".next/types/**/*.ts",
     "types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", ".next", "e2e-tests", "**/*.test.ts", "**/*.test.tsx", "vitest.config.ts", "vitest.setup.ts"]
+  "exclude": ["node_modules", ".next", "e2e-tests"]
 }
