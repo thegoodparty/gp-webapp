@@ -20,6 +20,8 @@ export type OutreachStatus =
 export interface CreateOutreachPayload {
   campaignId: number
   outreachType: OutreachType
+  contactCount: number
+  audienceSize: number
   message?: string | null
   title?: string | null
   script?: string | null
@@ -27,6 +29,7 @@ export interface CreateOutreachPayload {
   voterFileFilterId?: number
   audienceRequest?: string | null
   phoneListId?: number
+  pricePerContact?: number
 }
 
 /** VoterFileFilter as returned when included on Outreach (scalars only, from Prisma) */
