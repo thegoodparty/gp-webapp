@@ -16,7 +16,7 @@ type OutreachStatus =
   | 'completed'
 
 export interface Outreach {
-  id: number | string
+  id: number
   createdAt?: Date | string
   updatedAt?: Date | string
   campaignId?: number
