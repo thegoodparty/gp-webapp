@@ -21,7 +21,9 @@ const DomainResult = memo(function DomainResult({
 }: DomainResultProps): React.JSX.Element {
   const isInteractive = available && !loading
   const displayText = available
-    ? price !== undefined ? `$${numberFormatter(price, 2)}` : 'Price unavailable'
+    ? price !== undefined
+      ? `$${numberFormatter(price, 2)}`
+      : 'Price unavailable'
     : 'Unavailable'
 
   return (

@@ -185,7 +185,7 @@ const DetailsForm: React.FC<{
 
   const warningMessage = useMemo(
     () => getWarningMessage(biasAnalysisState),
-    [biasAnalysisState]
+    [biasAnalysisState],
   )
 
   const [user] = useUser()

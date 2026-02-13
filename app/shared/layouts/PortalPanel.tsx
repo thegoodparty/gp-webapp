@@ -4,7 +4,12 @@ interface PortalPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   smWhite?: boolean
 }
 
-const PortalPanel = ({ children, color, smWhite, ...props }: PortalPanelProps): React.JSX.Element => {
+const PortalPanel = ({
+  children,
+  color,
+  smWhite,
+  ...props
+}: PortalPanelProps): React.JSX.Element => {
   return (
     <div
       className={`bg-white w-full relative mb-3 ${
@@ -28,4 +33,3 @@ const PortalPanel = ({ children, color, smWhite, ...props }: PortalPanelProps): 
 }
 
 export default PortalPanel
-

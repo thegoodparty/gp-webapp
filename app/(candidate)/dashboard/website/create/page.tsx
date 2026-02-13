@@ -33,7 +33,10 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   const issues = await serverLoadCandidatePosition(campaign.id)
 
-  const combinedIssues = combineIssues(issues || [], campaign?.details?.customIssues)
+  const combinedIssues = combineIssues(
+    issues || [],
+    campaign?.details?.customIssues,
+  )
 
   return (
     <WebsiteProvider website={website} contacts={null}>

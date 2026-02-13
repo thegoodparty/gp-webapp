@@ -18,7 +18,9 @@ interface WebsiteCardProps {
   className?: string
 }
 
-function WebsiteCard({ className = '' }: WebsiteCardProps): React.JSX.Element | null {
+function WebsiteCard({
+  className = '',
+}: WebsiteCardProps): React.JSX.Element | null {
   const { website } = useWebsite()
   const [shareModalOpen, setShareModalOpen] = useState(false)
 

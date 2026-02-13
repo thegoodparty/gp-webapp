@@ -72,7 +72,8 @@ interface CreateVoterFileFilterParams {
 }
 
 // MappedAudience is the subset of VoterFileFilters used for audience mapping
-type MappedAudience = Pick<VoterFileFilters,
+type MappedAudience = Pick<
+  VoterFileFilters,
   | 'audienceSuperVoters'
   | 'audienceLikelyVoters'
   | 'audienceUnreliableVoters'
@@ -227,7 +228,9 @@ export const mapAudienceForPersistence = ({
 
 export const handleCreatePhoneList =
   (errorSnackbar: (message: string) => void = noop) =>
-  async (voterFileFilter: PhoneListInput | undefined): Promise<string | undefined> => {
+  async (
+    voterFileFilter: PhoneListInput | undefined,
+  ): Promise<string | undefined> => {
     const result = await createP2pPhoneList(voterFileFilter)
     const phoneListToken = result ? result.token : undefined
 
@@ -241,7 +244,11 @@ export const handleCreatePhoneList =
   }
 
 export const handleCreateVoterFileFilter =
-  ({ type = '', state: { audience, voterCount }, errorSnackbar = noop }: CreateVoterFileFilterParams) =>
+  ({
+    type = '',
+    state: { audience, voterCount },
+    errorSnackbar = noop,
+  }: CreateVoterFileFilterParams) =>
   async (): Promise<PhoneListInput | undefined> => {
     const chosenAudiences = mapAudienceForPersistence(audience)
 

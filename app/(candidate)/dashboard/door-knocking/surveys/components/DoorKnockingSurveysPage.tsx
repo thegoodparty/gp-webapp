@@ -21,7 +21,11 @@ export default function DoorKnockingSurveysPage(
   props: DoorKnockingSurveysPageProps,
 ): React.JSX.Element {
   return (
-    <DashboardLayout pathname={props.pathname} campaign={undefined} showAlert={false}>
+    <DashboardLayout
+      pathname={props.pathname}
+      campaign={undefined}
+      showAlert={false}
+    >
       <div>
         <H1>Door Knocking Scripts</H1>
         <Body2 className="text-gray-500 mb-4">

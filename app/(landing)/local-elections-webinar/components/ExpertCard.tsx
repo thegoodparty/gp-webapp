@@ -10,7 +10,12 @@ interface ExpertCardProps {
   }
 }
 
-export const ExpertCard = ({ name, role, desc, img: { src, alt } }: ExpertCardProps): React.JSX.Element => (
+export const ExpertCard = ({
+  name,
+  role,
+  desc,
+  img: { src, alt },
+}: ExpertCardProps): React.JSX.Element => (
   <div className="expert-card last:mb-0">
     <Image
       className="mb-4 mx-auto max-w-[60%]"

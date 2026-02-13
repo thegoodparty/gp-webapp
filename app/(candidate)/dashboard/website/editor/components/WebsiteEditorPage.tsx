@@ -7,7 +7,9 @@ interface WebsiteEditorPageProps {
   pathname: string
 }
 
-export default function WebsiteEditorPage({ pathname }: WebsiteEditorPageProps): React.JSX.Element {
+export default function WebsiteEditorPage({
+  pathname,
+}: WebsiteEditorPageProps): React.JSX.Element {
   const [campaign] = useCampaign()
 
   return (

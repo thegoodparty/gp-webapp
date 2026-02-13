@@ -20,7 +20,11 @@ interface TopDashboardMenuProps {
   pathname: string
 }
 
-const TopDashboardMenu = ({ open, toggleCallback, pathname }: TopDashboardMenuProps): React.JSX.Element => {
+const TopDashboardMenu = ({
+  open,
+  toggleCallback,
+  pathname,
+}: TopDashboardMenuProps): React.JSX.Element => {
   useEffect(() => {
     if (open) {
       disableScroll()
@@ -51,4 +55,3 @@ const TopDashboardMenu = ({ open, toggleCallback, pathname }: TopDashboardMenuPr
 }
 
 export default TopDashboardMenu
-

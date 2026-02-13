@@ -1,7 +1,4 @@
-import {
-  CheckOutlined,
-  RemoveCircleOutlineOutlined,
-} from '@mui/icons-material'
+import { CheckOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material'
 import H3 from '@shared/typography/H3'
 
 interface ProPricingCardProps {

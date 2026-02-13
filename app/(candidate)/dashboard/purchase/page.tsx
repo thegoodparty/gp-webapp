@@ -20,7 +20,10 @@ interface PurchaseParams {
   websiteId: string | undefined
 }
 
-const buildMetadata = (type: PurchaseType, params: PurchaseParams): Partial<Record<string, string | number | boolean | undefined>> => {
+const buildMetadata = (
+  type: PurchaseType,
+  params: PurchaseParams,
+): Partial<Record<string, string | number | boolean | undefined>> => {
   switch (type) {
     case PURCHASE_TYPES.DOMAIN_REGISTRATION:
       return {
@@ -42,7 +45,9 @@ interface PageProps {
   searchParams: Promise<SearchParams>
 }
 
-export default async function Page({ searchParams }: PageProps): Promise<React.JSX.Element> {
+export default async function Page({
+  searchParams,
+}: PageProps): Promise<React.JSX.Element> {
   await candidateAccess()
   const { type, domain, websiteId, returnUrl } = await searchParams
 
@@ -62,11 +67,7 @@ export default async function Page({ searchParams }: PageProps): Promise<React.J
         websiteId: websiteIdStr,
       })}
     >
-      <PurchasePage
-        type={type}
-        domain={domainStr}
-        returnUrl={returnUrlStr}
-      />
+      <PurchasePage type={type} domain={domainStr} returnUrl={returnUrlStr} />
     </CheckoutSessionProvider>
   )
 }

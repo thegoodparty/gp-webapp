@@ -15,7 +15,9 @@ interface TermsByLetterProps {
   recentGlossaryItems?: TermItem[]
 }
 
-export default function TermsByLetter(props: TermsByLetterProps): React.JSX.Element {
+export default function TermsByLetter(
+  props: TermsByLetterProps,
+): React.JSX.Element {
   const { items, activeLetter } = props
 
   return (

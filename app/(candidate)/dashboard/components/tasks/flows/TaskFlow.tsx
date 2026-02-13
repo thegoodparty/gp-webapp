@@ -122,10 +122,7 @@ const TaskFlow = ({
   )
 
   const handleChange = (
-    changeSetOrKey:
-      | Partial<TaskFlowState>
-      | keyof TaskFlowState
-      | string,
+    changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
     value?: TaskFlowState[keyof TaskFlowState],
   ) => {
     if (typeof changeSetOrKey === 'object') {
@@ -200,8 +197,7 @@ const TaskFlow = ({
     const scriptKeyValue = String(scriptKeyOrText)
     handleChange('script', scriptKeyOrText)
 
-    const content =
-      scriptContent ?? aiContent?.[scriptKeyValue]?.content
+    const content = scriptContent ?? aiContent?.[scriptKeyValue]?.content
     const scriptText = content
       ? sanitizeHtml(String(content), {
           allowedTags: [],
@@ -361,7 +357,11 @@ const TaskFlow = ({
           />
         )}
         {stepName === STEPS.image && (
-          <ImageStep type={type} image={state.image ?? null} {...callbackProps} />
+          <ImageStep
+            type={type}
+            image={state.image ?? null}
+            {...callbackProps}
+          />
         )}
         {stepName === STEPS.schedule && (
           <ScheduleStep

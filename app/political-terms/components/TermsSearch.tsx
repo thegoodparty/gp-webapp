@@ -10,7 +10,9 @@ interface TermsSearchProps {
   glossaryItems?: string[]
 }
 
-export default function TermsSearch(props: TermsSearchProps): React.JSX.Element {
+export default function TermsSearch(
+  props: TermsSearchProps,
+): React.JSX.Element {
   const { glossaryItems } = props
   const router = useRouter()
 

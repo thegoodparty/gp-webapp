@@ -62,4 +62,3 @@ const Carousel = ({ sections }: CarouselProps): React.JSX.Element => {
 }
 
 export default Carousel
-

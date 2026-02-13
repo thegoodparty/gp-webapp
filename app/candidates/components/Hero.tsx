@@ -8,7 +8,10 @@ interface HeroProps {
   longState?: string
 }
 
-export default memo(function Hero({ count = 0, longState }: HeroProps): React.JSX.Element {
+export default memo(function Hero({
+  count = 0,
+  longState,
+}: HeroProps): React.JSX.Element {
   return (
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>

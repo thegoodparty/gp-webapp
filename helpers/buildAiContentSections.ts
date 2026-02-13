@@ -44,4 +44,3 @@ export const buildAiContentSections = (
   }
   return [sectionsObj, jobsProcessing]
 }
-

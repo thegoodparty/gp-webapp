@@ -15,7 +15,9 @@ interface OnboardingPageProps {
   pledge?: PledgeContent
 }
 
-export default function OnboardingPage(props: OnboardingPageProps): React.JSX.Element {
+export default function OnboardingPage(
+  props: OnboardingPageProps,
+): React.JSX.Element {
   const { step, campaign, updateCallback, adminMode } = props
   return (
     <OnboardingLayout>

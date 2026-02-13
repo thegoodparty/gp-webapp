@@ -34,20 +34,37 @@ interface ErrorResponseData {
   }
 }
 
-function isErrorResponseData(data: { success: boolean } | ErrorResponseData): data is ErrorResponseData {
-  return 'data' in data && data.data !== undefined && typeof data.data === 'object' && data.data !== null && 'error' in data.data
+function isErrorResponseData(
+  data: { success: boolean } | ErrorResponseData,
+): data is ErrorResponseData {
+  return (
+    'data' in data &&
+    data.data !== undefined &&
+    typeof data.data === 'object' &&
+    data.data !== null &&
+    'error' in data.data
+  )
 }
 
-function getErrorMessage(data: { success: boolean } | ErrorResponseData): string | undefined {
+function getErrorMessage(
+  data: { success: boolean } | ErrorResponseData,
+): string | undefined {
   if (isErrorResponseData(data)) {
     return data.data?.error
   }
   return undefined
 }
 
-export default function PurchasePage({ type, domain, returnUrl }: PurchasePageProps): React.JSX.Element {
-  const { checkoutSession, error, setError, fetchClientSecret } = useCheckoutSession()
-  const [purchaseState, setPurchaseState] = useState<PurchaseState>(PURCHASE_STATE.PAYMENT)
+export default function PurchasePage({
+  type,
+  domain,
+  returnUrl,
+}: PurchasePageProps): React.JSX.Element {
+  const { checkoutSession, error, setError, fetchClientSecret } =
+    useCheckoutSession()
+  const [purchaseState, setPurchaseState] = useState<PurchaseState>(
+    PURCHASE_STATE.PAYMENT,
+  )
   const hasFetchedSession = useRef(false)
 
   useEffect(() => {
@@ -74,7 +91,9 @@ export default function PurchasePage({ type, domain, returnUrl }: PurchasePagePr
 
         setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
-        setError(getErrorMessage(response.data) || 'Failed to complete purchase')
+        setError(
+          getErrorMessage(response.data) || 'Failed to complete purchase',
+        )
         setPurchaseState(PURCHASE_STATE.ERROR)
       }
     } catch (err) {

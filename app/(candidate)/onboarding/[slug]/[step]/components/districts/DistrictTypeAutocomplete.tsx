@@ -27,7 +27,11 @@ async function fetchDistrictTypes(
   try {
     const { data = [] } = await clientFetch<DistrictType[]>(
       apiRoutes.elections.districts.types,
-      { state, electionYear, ...(excludeInvalidOverride ? { excludeInvalid: false } : {}) },
+      {
+        state,
+        electionYear,
+        ...(excludeInvalidOverride ? { excludeInvalid: false } : {}),
+      },
     )
     return data
   } catch (e) {
@@ -51,7 +55,11 @@ export default function DistrictTypeAutocomplete({
     setLoading(true)
 
     async function load() {
-      const data = await fetchDistrictTypes(state, electionYear, excludeInvalidOverride)
+      const data = await fetchDistrictTypes(
+        state,
+        electionYear,
+        excludeInvalidOverride,
+      )
       setOptions(
         data.map((d) => ({
           ...d,
@@ -62,8 +70,7 @@ export default function DistrictTypeAutocomplete({
     }
 
     load()
-    return () => {
-    }
+    return () => {}
   }, [state, electionYear, excludeInvalidOverride])
 
   return (

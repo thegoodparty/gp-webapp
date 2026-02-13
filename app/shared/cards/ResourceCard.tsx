@@ -3,7 +3,8 @@ import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import Link from 'next/link'
 
-interface ResourceCardProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
+interface ResourceCardProps
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   title: string
   description: string
   link: string

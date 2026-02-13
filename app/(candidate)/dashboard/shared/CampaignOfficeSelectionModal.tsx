@@ -9,7 +9,9 @@ interface PartialCampaign {
   details?: Partial<CampaignDetails>
 }
 
-function isFullCampaign(campaign: Campaign | PartialCampaign): campaign is Campaign {
+function isFullCampaign(
+  campaign: Campaign | PartialCampaign,
+): campaign is Campaign {
   return (
     'createdAt' in campaign &&
     'updatedAt' in campaign &&

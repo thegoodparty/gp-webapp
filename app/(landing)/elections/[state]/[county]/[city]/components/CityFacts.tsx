@@ -30,7 +30,12 @@ const CityFacts = ({ city }: CityFactsProps): React.JSX.Element | null => {
     homeValue,
   } = city
   // Handle both City.county_name and PlaceResult.countyName
-  const county_name = 'county_name' in city ? city.county_name : ('countyName' in city ? city.countyName : undefined)
+  const county_name =
+    'county_name' in city
+      ? city.county_name
+      : 'countyName' in city
+      ? city.countyName
+      : undefined
   const fields: CityField[] = [
     { label: 'County', value: county_name, icon: <FaCity /> },
     {

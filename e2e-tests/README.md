@@ -75,32 +75,32 @@ test-automation/
 
 ```typescript
 // ✅ Use user-facing locators
-await page.getByRole("button", { name: "Login" });
-await page.getByLabel("Email");
-await page.getByText("Welcome");
+await page.getByRole('button', { name: 'Login' })
+await page.getByLabel('Email')
+await page.getByText('Welcome')
 
 // ✅ Web-first assertions with auto-waiting
-await expect(page.getByText("Success")).toBeVisible();
-await expect(page).toHaveURL(/\/dashboard$/);
+await expect(page.getByText('Success')).toBeVisible()
+await expect(page).toHaveURL(/\/dashboard$/)
 
 // ✅ State-based waiting (never use waitForTimeout)
-await page.waitForLoadState("domcontentloaded");
-await page.waitForSelector("[data-testid='content']");
+await page.waitForLoadState('domcontentloaded')
+await page.waitForSelector("[data-testid='content']")
 ```
 
 ### Test Structure
 
 ```typescript
-test("should [expected behavior] when [condition]", async ({ page }) => {
+test('should [expected behavior] when [condition]', async ({ page }) => {
   // Arrange
-  await setupTestCondition();
+  await setupTestCondition()
 
   // Act
-  await performAction();
+  await performAction()
 
   // Assert
-  await verifyResult();
-});
+  await verifyResult()
+})
 ```
 
 ## 🔧 Configuration
@@ -130,22 +130,22 @@ Following [Playwright's authentication recommendations](https://playwright.dev/d
 
 ```typescript
 // Setup project creates fully onboarded user once
-setup("authenticate with onboarded user", async ({ page }) => {
+setup('authenticate with onboarded user', async ({ page }) => {
   // Create account
-  const testUser = TestDataHelper.generateTestUser();
-  await page.goto("/sign-up");
+  const testUser = TestDataHelper.generateTestUser()
+  await page.goto('/sign-up')
   // ... fill signup form ...
-  
+
   // Complete full 4-step onboarding flow
-  await completeOnboardingFlow(page);
+  await completeOnboardingFlow(page)
   // Step 1: Office Selection (Henderson County, NC - zip 28739)
   // Step 2: Party Selection (Independent)
   // Step 3: Pledge Agreement
   // Step 4: Dashboard Access
 
   // Save fully onboarded browser state
-  await page.context().storageState({ path: authFile });
-});
+  await page.context().storageState({ path: authFile })
+})
 ```
 
 ### Test Execution Flow
@@ -166,28 +166,28 @@ setup("authenticate with onboarded user", async ({ page }) => {
 
 ```typescript
 // 🔐 Pre-authenticated tests (app features) - START AT DASHBOARD
-test.describe("AI Assistant", () => {
+test.describe('AI Assistant', () => {
   test.beforeEach(async ({ page }) => {
     // User is already fully onboarded via storageState
-    await page.goto('/dashboard');
+    await page.goto('/dashboard')
     // Verify we're at dashboard (should be immediate)
     if (!page.url().includes('/dashboard')) {
-      throw new Error(`Expected dashboard but got: ${page.url()}`);
+      throw new Error(`Expected dashboard but got: ${page.url()}`)
     }
-  });
-});
+  })
+})
 
 // 🌐 No authentication tests (public pages)
-test.use({ storageState: { cookies: [], origins: [] } });
-test.describe("Login Functionality", () => {
+test.use({ storageState: { cookies: [], origins: [] } })
+test.describe('Login Functionality', () => {
   // Resets auth state - starts unauthenticated
-});
+})
 
 // 🚀 Custom authentication tests (onboarding)
-test.use({ storageState: { cookies: [], origins: [] } });
-test.describe("Onboarding Flow", () => {
+test.use({ storageState: { cookies: [], origins: [] } })
+test.describe('Onboarding Flow', () => {
   // Creates own users to test the onboarding process
-});
+})
 ```
 
 ## 🚨 Anti-Patterns Avoided
@@ -196,32 +196,34 @@ test.describe("Onboarding Flow", () => {
 
 ```typescript
 // ❌ Hardcoded waits
-await page.waitForTimeout(5000);
+await page.waitForTimeout(5000)
 
 // ❌ CSS selectors
-await page.locator('.btn-primary.submit');
+await page.locator('.btn-primary.submit')
 
 // ❌ Non-web-first assertions
-expect(await element.isVisible()).toBe(true);
+expect(await element.isVisible()).toBe(true)
 
 // ❌ Page Object Models
-class LoginPage { ... }
+class LoginPage {
+  /* ... */
+}
 ```
 
 ### ✅ Do This Instead
 
 ```typescript
 // ✅ State-based waiting
-await page.waitForSelector("[data-testid='content']");
+await page.waitForSelector("[data-testid='content']")
 
 // ✅ User-facing locators
-await page.getByRole("button", { name: "Submit" });
+await page.getByRole('button', { name: 'Submit' })
 
 // ✅ Web-first assertions
-await expect(element).toBeVisible();
+await expect(element).toBeVisible()
 
 // ✅ Direct Playwright usage
-await page.getByLabel("Email").fill("test@example.com");
+await page.getByLabel('Email').fill('test@example.com')
 ```
 
 ## 🔍 Debugging
@@ -313,35 +315,35 @@ Place tests in `tests/core/pages/` for public-facing pages that don't require au
 **Example: Public Blog Page**
 
 ```typescript
-import { test, expect } from "@playwright/test";
-import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { WaitHelper } from "../../../src/helpers/wait.helper";
+import { test, expect } from '@playwright/test'
+import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import { WaitHelper } from '../../../src/helpers/wait.helper'
 
-test.describe("Blog Page", () => {
+test.describe('Blog Page', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the public page
-    await NavigationHelper.navigateToPage(page, "/blog");
+    await NavigationHelper.navigateToPage(page, '/blog')
     // Dismiss any overlays (cookie banners, modals, etc.)
-    await NavigationHelper.dismissOverlays(page);
-  });
+    await NavigationHelper.dismissOverlays(page)
+  })
 
-  test("should display page elements", async ({ page }) => {
+  test('should display page elements', async ({ page }) => {
     // Assert - verify page content using user-facing locators
-    await expect(page.getByRole("heading", { name: "Blog" })).toBeVisible();
-    await expect(page.getByText(/Insights into politics/)).toBeVisible();
-  });
+    await expect(page.getByRole('heading', { name: 'Blog' })).toBeVisible()
+    await expect(page.getByText(/Insights into politics/)).toBeVisible()
+  })
 
-  test("should navigate to content", async ({ page }) => {
+  test('should navigate to content', async ({ page }) => {
     // Wait for dynamic content to load
-    await WaitHelper.waitForPageReady(page);
+    await WaitHelper.waitForPageReady(page)
 
     // Act - interact with page elements
-    await page.getByRole("button", { name: "Read More" }).first().click();
+    await page.getByRole('button', { name: 'Read More' }).first().click()
 
     // Assert - verify navigation occurred
-    await expect(page).toHaveURL(/.*\/article/);
-  });
-});
+    await expect(page).toHaveURL(/.*\/article/)
+  })
+})
 ```
 
 **Key Points for Guest Pages:**
@@ -358,46 +360,46 @@ Place tests in `tests/app/` for features that require authentication. Tests auto
 **Example: Authenticated Dashboard Feature**
 
 ```typescript
-import { test, expect } from "@playwright/test";
-import { NavigationHelper } from "../../../src/helpers/navigation.helper";
-import { WaitHelper } from "../../../src/helpers/wait.helper";
+import { test, expect } from '@playwright/test'
+import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import { WaitHelper } from '../../../src/helpers/wait.helper'
 
-test.describe("Content Builder", () => {
+test.describe('Content Builder', () => {
   test.beforeEach(async ({ page }) => {
     // Page is already authenticated and fully onboarded via storageState from auth.setup.ts
-    await page.goto('/dashboard');
-    await page.waitForLoadState('domcontentloaded');
-    
+    await page.goto('/dashboard')
+    await page.waitForLoadState('domcontentloaded')
+
     // Verify we're at dashboard (should be immediate since user is fully onboarded)
     if (!page.url().includes('/dashboard')) {
-      throw new Error(`Expected dashboard but got: ${page.url()}`);
+      throw new Error(`Expected dashboard but got: ${page.url()}`)
     }
-    
-    await NavigationHelper.dismissOverlays(page);
-  });
 
-  test("should access feature page", async ({ page }) => {
+    await NavigationHelper.dismissOverlays(page)
+  })
+
+  test('should access feature page', async ({ page }) => {
     // Navigate to authenticated feature
-    await page.goto("/dashboard/content");
-    await WaitHelper.waitForPageReady(page);
-    await WaitHelper.waitForLoadingToComplete(page);
+    await page.goto('/dashboard/content')
+    await WaitHelper.waitForPageReady(page)
+    await WaitHelper.waitForLoadingToComplete(page)
 
     // Assert - verify page loads correctly
     await expect(
-      page.getByRole("heading", { name: "Content Builder" })
-    ).toBeVisible();
-    await expect(page).toHaveURL(/\/dashboard\/content$/);
-  });
+      page.getByRole('heading', { name: 'Content Builder' }),
+    ).toBeVisible()
+    await expect(page).toHaveURL(/\/dashboard\/content$/)
+  })
 
-  test("should interact with feature", async ({ page }) => {
-    await page.goto("/dashboard/content");
-    await WaitHelper.waitForLoadingToComplete(page);
+  test('should interact with feature', async ({ page }) => {
+    await page.goto('/dashboard/content')
+    await WaitHelper.waitForLoadingToComplete(page)
 
     // Test feature-specific functionality
-    await page.getByRole("button", { name: "Create New" }).click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-  });
-});
+    await page.getByRole('button', { name: 'Create New' }).click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+  })
+})
 ```
 
 **Key Points for Authenticated Pages:**
@@ -415,22 +417,22 @@ Place tests in `tests/onboarding/` or `tests/core/auth/` for flows that create n
 **Example: User Registration Flow**
 
 ```typescript
-import { test, expect } from "@playwright/test";
-import { AccountHelper } from "../../../src/helpers/account.helper";
+import { test, expect } from '@playwright/test'
+import { AccountHelper } from '../../../src/helpers/account.helper'
 
 // Reset storage state to start unauthenticated
-test.use({ storageState: { cookies: [], origins: [] } });
+test.use({ storageState: { cookies: [], origins: [] } })
 
-test.describe("Registration Flow", () => {
-  test("should create new account", async ({ page }) => {
+test.describe('Registration Flow', () => {
+  test('should create new account', async ({ page }) => {
     // Create a test account (automatically tracked for cleanup)
-    const testUser = await AccountHelper.createTestAccount(page);
+    const testUser = await AccountHelper.createTestAccount(page)
 
     // Assert - verify account creation succeeded
-    await expect(page).toHaveURL(/\/onboarding/);
-    console.log(`✅ Test account created: ${testUser.email}`);
-  });
-});
+    await expect(page).toHaveURL(/\/onboarding/)
+    console.log(`✅ Test account created: ${testUser.email}`)
+  })
+})
 ```
 
 **Key Points for Registration Tests:**
@@ -444,25 +446,25 @@ test.describe("Registration Flow", () => {
 **NavigationHelper** - Page navigation and overlay management
 
 ```typescript
-import { NavigationHelper } from "../../../src/helpers/navigation.helper";
+import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 
 // Navigate to a page (handles base URL automatically)
-await NavigationHelper.navigateToPage(page, "/blog");
+await NavigationHelper.navigateToPage(page, '/blog')
 
 // Dismiss cookie banners, modals, and overlays
-await NavigationHelper.dismissOverlays(page);
+await NavigationHelper.dismissOverlays(page)
 ```
 
 **WaitHelper** - Smart waiting for dynamic content
 
 ```typescript
-import { WaitHelper } from "../../../src/helpers/wait.helper";
+import { WaitHelper } from '../../../src/helpers/wait.helper'
 
 // Wait for page to be fully ready
-await WaitHelper.waitForPageReady(page);
+await WaitHelper.waitForPageReady(page)
 
 // Wait for loading spinners to disappear
-await WaitHelper.waitForLoadingToComplete(page);
+await WaitHelper.waitForLoadingToComplete(page)
 ```
 
 ### General Guidelines

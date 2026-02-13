@@ -5,7 +5,9 @@ interface TextingComplianceFooterProps {
   children: React.ReactNode
 }
 
-export default function TextingComplianceFooter({ children }: TextingComplianceFooterProps): React.JSX.Element {
+export default function TextingComplianceFooter({
+  children,
+}: TextingComplianceFooterProps): React.JSX.Element {
   useFormData()
   return (
     <div

@@ -1,4 +1,4 @@
-# **Good Party Open Source License (GPOSL) v1.0** 
+# **Good Party Open Source License (GPOSL) v1.0**
 
 Copyright (c) \[2025\] \[GoodParty.org\]
 
@@ -12,7 +12,7 @@ GoodParty.org, candidates commit to a simple but powerful pledge rooted in four 
 
 “License” refers to this Good Party Open Source License.  
 “You” refers to the licensee using or redistributing the Software.  
-“Ethical Use” means use consistent with internationally recognized human rights principles and the Good Party Pledge:   
+“Ethical Use” means use consistent with internationally recognized human rights principles and the Good Party Pledge:  
 “Unethical Use” includes but is not limited to partisan political operations, disinformation, corruption, coercion, discrimination, or exploitation.
 
 ## **1\. Grant**
@@ -53,4 +53,3 @@ This License terminates automatically upon breach. The Licensor reserves the rig
 ## **7\. Disclaimer**
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM OR DAMAGE RESULTING FROM UNETHICAL OR UNAUTHORIZED USE.
-

@@ -12,10 +12,13 @@ declare module 'react-quill' {
     theme?: string
     value?: string
     onChange?: (value: string) => void
-    onBlur?: (previousRange: Range | null, source: Sources, editor: { getHTML: () => string }) => void
+    onBlur?: (
+      previousRange: Range | null,
+      source: Sources,
+      editor: { getHTML: () => string },
+    ) => void
   }
 
   const ReactQuill: React.ComponentType<ReactQuillProps>
   export default ReactQuill
 }
-

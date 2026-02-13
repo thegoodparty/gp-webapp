@@ -13,7 +13,11 @@ interface TermsItemPageProps {
   activeLetter: string
 }
 
-export default function TermsItemPage({ item, items, activeLetter }: TermsItemPageProps): React.JSX.Element {
+export default function TermsItemPage({
+  item,
+  items,
+  activeLetter,
+}: TermsItemPageProps): React.JSX.Element {
   const letter = activeLetter
   const breadcrumbsLinks = [
     { href: '/', label: 'GoodParty.org' },

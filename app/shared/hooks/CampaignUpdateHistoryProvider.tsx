@@ -17,20 +17,31 @@ const INITIAL_UPDATE_HISTORY_STATE: CampaignUpdateHistoryWithUser[] = []
 
 type CampaignUpdateHistoryContextValue = [
   state: CampaignUpdateHistoryWithUser[],
-  updateState: (next: CampaignUpdateHistoryWithUser[] | ((prev: CampaignUpdateHistoryWithUser[]) => CampaignUpdateHistoryWithUser[])) => void
+  updateState: (
+    next:
+      | CampaignUpdateHistoryWithUser[]
+      | ((
+          prev: CampaignUpdateHistoryWithUser[],
+        ) => CampaignUpdateHistoryWithUser[]),
+  ) => void,
 ]
 
-export const CampaignUpdateHistoryContext = createContext<CampaignUpdateHistoryContextValue>([
-  INITIAL_UPDATE_HISTORY_STATE,
-  () => [],
-])
+export const CampaignUpdateHistoryContext =
+  createContext<CampaignUpdateHistoryContextValue>([
+    INITIAL_UPDATE_HISTORY_STATE,
+    () => [],
+  ])
 
 interface CampaignUpdateHistoryProviderProps {
   children: React.ReactNode
 }
 
-export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistoryProviderProps): React.JSX.Element => {
-  const [state, setState] = useState<CampaignUpdateHistoryWithUser[]>(INITIAL_UPDATE_HISTORY_STATE)
+export const CampaignUpdateHistoryProvider = ({
+  children,
+}: CampaignUpdateHistoryProviderProps): React.JSX.Element => {
+  const [state, setState] = useState<CampaignUpdateHistoryWithUser[]>(
+    INITIAL_UPDATE_HISTORY_STATE,
+  )
 
   const loadHistory = async () => {
     try {
@@ -51,7 +62,13 @@ export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistor
   }, [])
 
   const updateState = useCallback(
-    (next: CampaignUpdateHistoryWithUser[] | ((prev: CampaignUpdateHistoryWithUser[]) => CampaignUpdateHistoryWithUser[])) => {
+    (
+      next:
+        | CampaignUpdateHistoryWithUser[]
+        | ((
+            prev: CampaignUpdateHistoryWithUser[],
+          ) => CampaignUpdateHistoryWithUser[]),
+    ) => {
       const newValues = typeof next === 'function' ? next(state) : next
       setState(newValues)
     },
@@ -64,4 +81,3 @@ export const CampaignUpdateHistoryProvider = ({ children }: CampaignUpdateHistor
     </CampaignUpdateHistoryContext.Provider>
   )
 }
-

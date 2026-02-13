@@ -10,7 +10,11 @@ import { isValidUrl } from 'helpers/linkhelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 
-type CampaignDetailKey = 'campaignCommittee' | 'occupation' | 'party' | 'website'
+type CampaignDetailKey =
+  | 'campaignCommittee'
+  | 'occupation'
+  | 'party'
+  | 'website'
 
 interface FieldConfig {
   key: CampaignDetailKey
@@ -73,7 +77,9 @@ const fields: FieldConfig[] = [
   },
 ]
 
-export default function CampaignSection(props: CampaignSectionProps): React.JSX.Element {
+export default function CampaignSection(
+  props: CampaignSectionProps,
+): React.JSX.Element {
   const initialState: FieldState = {
     campaignCommittee: '',
     occupation: '',
@@ -104,7 +110,12 @@ export default function CampaignSection(props: CampaignSectionProps): React.JSX.
         able = false
       }
 
-      if (field.validateFn && value != '' && typeof value === 'string' && !field.validateFn(value)) {
+      if (
+        field.validateFn &&
+        value != '' &&
+        typeof value === 'string' &&
+        !field.validateFn(value)
+      ) {
         able = false
       }
     })
@@ -125,7 +136,12 @@ export default function CampaignSection(props: CampaignSectionProps): React.JSX.
   }
 
   const isFieldStateKey = (key: string): key is CampaignDetailKey => {
-    return key === 'campaignCommittee' || key === 'occupation' || key === 'party' || key === 'website'
+    return (
+      key === 'campaignCommittee' ||
+      key === 'occupation' ||
+      key === 'party' ||
+      key === 'website'
+    )
   }
 
   const onChangeField = (key: string, val: string | boolean): void => {
@@ -151,7 +167,10 @@ export default function CampaignSection(props: CampaignSectionProps): React.JSX.
                   value={value}
                   onChangeCallback={onChangeField}
                   error={
-                    field.validateFn && value != '' && typeof value === 'string' && !field.validateFn(value)
+                    field.validateFn &&
+                    value != '' &&
+                    typeof value === 'string' &&
+                    !field.validateFn(value)
                   }
                 />
               </div>

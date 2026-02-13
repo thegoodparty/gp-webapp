@@ -20,7 +20,9 @@ interface SubscribeEmailPayload extends Record<string, string> {
   pageName: string
 }
 
-export const subscribeEmail = async (payload: SubscribeEmailPayload): Promise<boolean> => {
+export const subscribeEmail = async (
+  payload: SubscribeEmailPayload,
+): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
     return true
@@ -166,61 +168,60 @@ const SignupForm = ({
     }
   }
   return showForm ? (
-      <form
-        noValidate
-        onSubmit={(e) => e.preventDefault()}
-        id={labelId}
-        className="w-full"
-      >
-        <>
-          <div
-            className={`grid grid-cols-12 ${
-              horizontal ? 'md:grid-cols-10' : ''
-            }  w-full mb-1 mt-1`}
-          >
-            {fields.map((field) => (
-              <Fragment key={field.key}>
-                <div
-                  className={`col-span-12 ${
-                    horizontal ? 'lg:col-span-2' : 'lg:col-span-12'
-                  } w-full`}
-                >
-                  <div className="mt-5 lg:ml-5 max-w-sm">
-                    <span className="text-sm">{field.label}</span>
-                    {field.required && (
-                      <span className="text-sm text-red-600 ml-1">*</span>
-                    )}
-                    {field.field}
-                  </div>
-                </div>
-              </Fragment>
-            ))}
-
-            <div className="col-span-12 w-full">
+    <form
+      noValidate
+      onSubmit={(e) => e.preventDefault()}
+      id={labelId}
+      className="w-full"
+    >
+      <>
+        <div
+          className={`grid grid-cols-12 ${
+            horizontal ? 'md:grid-cols-10' : ''
+          }  w-full mb-1 mt-1`}
+        >
+          {fields.map((field) => (
+            <Fragment key={field.key}>
               <div
-                onClick={submitForm}
-                className="mt-10 lg:ml-5 whitespace-nowrap"
+                className={`col-span-12 ${
+                  horizontal ? 'lg:col-span-2' : 'lg:col-span-12'
+                } w-full`}
               >
-                <PrimaryButton
-                  id="submit-email"
-                  type="submit"
-                  className="bg-black w-full text-white font-bold cursor-pointer"
-                >
-                  {label}
-                </PrimaryButton>
+                <div className="mt-5 lg:ml-5 max-w-sm">
+                  <span className="text-sm">{field.label}</span>
+                  {field.required && (
+                    <span className="text-sm text-red-600 ml-1">*</span>
+                  )}
+                  {field.field}
+                </div>
               </div>
-            </div>
+            </Fragment>
+          ))}
 
-            {!!showError && (
-              <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
-                {showError}
-              </div>
-            )}
+          <div className="col-span-12 w-full">
+            <div
+              onClick={submitForm}
+              className="mt-10 lg:ml-5 whitespace-nowrap"
+            >
+              <PrimaryButton
+                id="submit-email"
+                type="submit"
+                className="bg-black w-full text-white font-bold cursor-pointer"
+              >
+                {label}
+              </PrimaryButton>
+            </div>
           </div>
-        </>
-      </form>
+
+          {!!showError && (
+            <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
+              {showError}
+            </div>
+          )}
+        </div>
+      </>
+    </form>
   ) : null
 }
 
 export default SignupForm
-

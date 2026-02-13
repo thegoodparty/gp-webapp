@@ -41,9 +41,3 @@ export default function PaginationButtons({
     </div>
   )
 }
-
-
-
-
-
-

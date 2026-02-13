@@ -31,13 +31,3 @@ export const usePageExit = (callback: (isWindowClose: boolean) => void) => {
     }
   }, [callback, pathname])
 }
-
-
-
-
-
-
-
-
-
-

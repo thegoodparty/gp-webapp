@@ -6,7 +6,11 @@ interface CardProgressPillProps {
   weeksUntil?: { weeks: number }
 }
 
-export default function CardProgressPill({ total, progress, weeksUntil }: CardProgressPillProps): React.JSX.Element | null {
+export default function CardProgressPill({
+  total,
+  progress,
+  weeksUntil,
+}: CardProgressPillProps): React.JSX.Element | null {
   if (progress >= total) {
     return null
   }

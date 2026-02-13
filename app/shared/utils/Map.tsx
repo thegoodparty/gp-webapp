@@ -205,8 +205,7 @@ const Map = memo(
             />
           )}
           <div className="relative" style={{ height }}>
-            <div ref={mapContainerRef} style={containerStyle}>
-            </div>
+            <div ref={mapContainerRef} style={containerStyle}></div>
           </div>
         </>
       )

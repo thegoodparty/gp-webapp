@@ -20,7 +20,10 @@ interface SurveyQuestionsChipProps {
   className?: string
 }
 
-export default function SurveyQuestionsChip({ survey, className = '' }: SurveyQuestionsChipProps): React.JSX.Element {
+export default function SurveyQuestionsChip({
+  survey,
+  className = '',
+}: SurveyQuestionsChipProps): React.JSX.Element {
   const { questions } = survey || {}
   return (
     <Chip

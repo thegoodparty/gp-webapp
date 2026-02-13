@@ -22,4 +22,3 @@ export const fireGTMButtonClickEvent = (target: TargetWithId = {}): void => {
       formId: target.id,
     })
 }
-

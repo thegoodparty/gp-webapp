@@ -8,6 +8,16 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  contactEngagement: {
+    issues: {
+      path: '/contact-engagement/:id/issues',
+      method: 'GET',
+    },
+    activities: {
+      path: '/contact-engagement/:id/activities',
+      method: 'GET',
+    },
+  },
   contacts: {
     list: {
       path: '/contacts',

@@ -1,5 +1,9 @@
 import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
-import { PURCHASE_STATE, PurchaseType, PurchaseState } from 'helpers/purchaseTypes'
+import {
+  PURCHASE_STATE,
+  PurchaseType,
+  PurchaseState,
+} from 'helpers/purchaseTypes'
 import LoadingAnimationModal from '@shared/utils/LoadingAnimationModal'
 import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 import PurchaseSuccess from 'app/(candidate)/dashboard/purchase/components/PurchaseSuccess'
