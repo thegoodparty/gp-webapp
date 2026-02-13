@@ -342,10 +342,8 @@ test('poll onboarding and expansion', async ({ page }) => {
     .frameLocator('iframe[title="Secure payment input frame"]')
     .first()
 
-
   const cardNumber = stripeFrame.getByLabel('Card number')
   await expect(cardNumber).toBeEditable({ timeout: 30_000 })
-
 
   await page.waitForTimeout(2_000)
 
