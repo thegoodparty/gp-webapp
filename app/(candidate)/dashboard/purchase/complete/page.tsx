@@ -9,10 +9,6 @@ import H2 from '@shared/typography/H2'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { CircularProgress } from '@mui/material'
 
-/**
- * Page that handles the return from Stripe Checkout.
- * Completes the purchase by calling the backend and displays a success/error message.
- */
 export default function PurchaseCompletePage() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -26,6 +22,7 @@ export default function PurchaseCompletePage() {
 
   useEffect(() => {
     if (hasCompleted.current) return
+    hasCompleted.current = true
 
     const completePurchase = async () => {
       if (!sessionId) {
@@ -33,8 +30,6 @@ export default function PurchaseCompletePage() {
         setErrorMessage('No session ID found')
         return
       }
-
-      hasCompleted.current = true
 
       try {
         const response = await completeCheckoutSession(sessionId)

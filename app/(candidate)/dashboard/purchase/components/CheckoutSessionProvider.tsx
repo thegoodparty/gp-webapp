@@ -36,10 +36,6 @@ interface CheckoutSessionProviderProps {
   returnUrl?: string
 }
 
-/**
- * Provider for Custom Checkout Sessions with promo code support.
- * Uses Stripe's Custom Checkout integration with ui_mode: 'custom'.
- */
 export const CheckoutSessionProvider = ({
   children,
   type = '',
@@ -59,11 +55,6 @@ export const CheckoutSessionProvider = ({
   // if two calls race before the first resolves, both return the same promise.
   const pendingRequestRef = useRef<Promise<string> | null>(null)
 
-  const onError = (error: string) => {
-    setError(error)
-    reportErrorToNewRelic('CheckoutSessionProvider error', { message: error })
-  }
-
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     if (checkoutSession?.clientSecret) {
       return checkoutSession.clientSecret
@@ -74,7 +65,10 @@ export const CheckoutSessionProvider = ({
     }
 
     if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
-      onError('Invalid purchase type')
+      setError('Invalid purchase type')
+      reportErrorToNewRelic('CheckoutSessionProvider error', {
+        message: 'Invalid purchase type',
+      })
       throw new Error('Invalid purchase type')
     }
 
@@ -93,7 +87,10 @@ export const CheckoutSessionProvider = ({
           const errorMessage =
             (response.data as { data?: { error?: string } })?.data?.error ||
             'Failed to create checkout session'
-          onError(errorMessage)
+          setError(errorMessage)
+          reportErrorToNewRelic('CheckoutSessionProvider error', {
+            message: errorMessage,
+          })
           throw new Error(errorMessage)
         }
       } finally {

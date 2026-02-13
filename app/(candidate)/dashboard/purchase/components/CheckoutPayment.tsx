@@ -1,6 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
 import { CheckoutProvider } from '@stripe/react-stripe-js/checkout'
 import { loadStripe } from '@stripe/stripe-js'
 import CheckoutForm from './CheckoutForm'
@@ -14,30 +13,23 @@ export type CheckoutPaymentProps = {
   onPaymentError?: (errorMessage: string) => void
 }
 
-/**
- * Payment component that uses Stripe's Custom Checkout with promo code support.
- * This replaces PurchasePayment for flows that need to support promo codes.
- */
 const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
   onPaymentSuccess,
   onPaymentError,
 }) => {
-  const { fetchClientSecret, checkoutSession } = useCheckoutSession()
+  const { checkoutSession } = useCheckoutSession()
 
-  const clientSecretPromise = useMemo(
-    () => fetchClientSecret(),
-    [fetchClientSecret],
-  )
+  if (!checkoutSession) return null
 
   return (
     <CheckoutProvider
       stripe={stripePromise}
-      options={{ clientSecret: clientSecretPromise }}
+      options={{ clientSecret: checkoutSession.clientSecret }}
     >
       <CheckoutForm
         onSuccess={onPaymentSuccess}
         onError={onPaymentError}
-        sessionId={checkoutSession?.id}
+        sessionId={checkoutSession.id}
       />
     </CheckoutProvider>
   )
