@@ -350,9 +350,12 @@ test('poll onboarding and expansion', async ({ page }) => {
   await stripeFrame.getByLabel('Security code').fill('123')
   await stripeFrame.getByLabel('ZIP code').fill('82001')
 
-  // The button takes a second to become enabled.
-  await wait(500)
-  await page.getByRole('button', { name: 'Complete Purchase' }).click()
+  // Wait for Stripe Custom Checkout to enable the submit button
+  const purchaseButton = page.getByRole('button', {
+    name: 'Complete Purchase',
+  })
+  await expect(purchaseButton).toBeEnabled({ timeout: 15000 })
+  await purchaseButton.click()
 
   // Confirm API resource updates.
   const { newAudienceSize } = await eventually(

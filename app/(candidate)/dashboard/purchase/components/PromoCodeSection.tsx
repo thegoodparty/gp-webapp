@@ -64,7 +64,10 @@ interface PromoCodeSectionProps {
   setPromoCode: (value: string) => void
   promoError: string | null
   isApplyingPromo: boolean
-  appliedDiscount?: { promotionCode?: string | null; minorUnitsAmount: number } | null
+  appliedDiscount?: {
+    promotionCode?: string | null
+    minorUnitsAmount: number
+  } | null
   hasAppliedPromo: boolean
   handleApplyPromoCode: () => void
   handleRemovePromoCode: () => void
@@ -127,9 +130,7 @@ export default function PromoCodeSection({
           </Button>
         </div>
       )}
-      {promoError && (
-        <p className="mt-2 text-sm text-red-600">{promoError}</p>
-      )}
+      {promoError && <p className="mt-2 text-sm text-red-600">{promoError}</p>}
     </div>
   )
 }

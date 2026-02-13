@@ -55,7 +55,11 @@ const Modal = ({
     closeCallback()
   }
   return (
-    <MuiModal open={open} onClose={handleClose} disableEnforceFocus={disableEnforceFocus}>
+    <MuiModal
+      open={open}
+      onClose={handleClose}
+      disableEnforceFocus={disableEnforceFocus}
+    >
       <Box
         className={`!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 ${boxClassName}`}
         sx={style}

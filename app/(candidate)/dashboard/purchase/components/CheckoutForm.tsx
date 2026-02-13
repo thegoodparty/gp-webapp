@@ -134,7 +134,9 @@ function CheckoutFormContent({
 
           {promo.hasAppliedPromo && (
             <div className="mt-3 pt-3 border-t flex justify-between items-center px-4">
-              <span className="font-medium text-gray-700">Discounted Total</span>
+              <span className="font-medium text-gray-700">
+                Discounted Total
+              </span>
               <div className="text-right">
                 <span className="text-sm text-gray-400 line-through mr-2">
                   ${originalTotal.toFixed(2)}

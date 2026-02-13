@@ -308,7 +308,11 @@ const TaskFlow = ({
         onCancel={handleCloseCancel}
         onConfirm={handleCloseConfirm}
       />
-      <Modal open={open} closeCallback={handleClose} disableEnforceFocus={stepName === STEPS.purchase}>
+      <Modal
+        open={open}
+        closeCallback={handleClose}
+        disableEnforceFocus={stepName === STEPS.purchase}
+      >
         {p2pUxEnabled && phoneListToken && (
           <LongPoll<PhoneListStatusResponse | false>
             {...{
