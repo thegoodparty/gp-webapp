@@ -337,22 +337,6 @@ test('poll onboarding and expansion', async ({ page }) => {
     .getByRole('button', { name: 'Go to payment' })
     .click({ force: true })
 
-  // Capture browser console messages and failing network requests
-  const consoleLogs: string[] = []
-  const failedRequests: string[] = []
-  page.on('console', (msg) => {
-    consoleLogs.push(`[${msg.type()}] ${msg.text()}`)
-  })
-  page.on('pageerror', (err) => {
-    consoleLogs.push(`[PAGE_ERROR] ${err.message}`)
-  })
-  page.on('response', (response) => {
-    const status = response.status()
-    if (status >= 400) {
-      failedRequests.push(`[${status}] ${response.url()}`)
-    }
-  })
-
   const stripeIframe = page
     .locator('iframe[title="Secure payment input frame"]')
     .first()
@@ -362,147 +346,28 @@ test('poll onboarding and expansion', async ({ page }) => {
     .frameLocator('iframe[title="Secure payment input frame"]')
     .first()
 
-  // Log all input labels inside the Stripe iframe for debugging
-  const allLabels = await stripeFrame
-    .locator('label')
-    .allTextContents()
-    .catch(() => ['(could not read labels)'])
-  console.log(`[DEBUG] Stripe iframe labels: ${JSON.stringify(allLabels)}`)
+  // Target Stripe inputs directly by their stable IDs
+  const cardInput = stripeFrame.locator('#payment-numberInput')
+  const expiryInput = stripeFrame.locator('#payment-expiryInput')
+  const cvcInput = stripeFrame.locator('#payment-cvcInput')
+  const zipInput = stripeFrame.locator('#payment-postalCodeInput')
 
-  const allInputs = await stripeFrame
-    .locator('input')
-    .evaluateAll((els) =>
-      els.map((el) => ({
-        name: el.getAttribute('name'),
-        'aria-label': el.getAttribute('aria-label'),
-        placeholder: el.getAttribute('placeholder'),
-        id: el.id,
-      })),
-    )
-    .catch(() => [{ error: 'could not read inputs' }])
-  console.log(`[DEBUG] Stripe iframe inputs: ${JSON.stringify(allInputs)}`)
-
-  const cardNumber = stripeFrame.getByLabel('Card number')
-  await expect(cardNumber).toBeVisible({ timeout: 30_000 })
-  await expect(cardNumber).toBeEditable({ timeout: 30_000 })
+  await expect(cardInput).toBeVisible({ timeout: 30_000 })
+  await expect(cardInput).toBeEditable({ timeout: 30_000 })
   await page.waitForTimeout(2_000)
 
-  await cardNumber.click()
-  await cardNumber.pressSequentially('4242424242424242', { delay: 35 })
+  await cardInput.fill('4242424242424242')
   await page.waitForTimeout(500)
-
-  // Try multiple selectors for expiry field
-  let expiry = stripeFrame.getByLabel('Expiration date')
-  let expiryVisible = await expiry.isVisible().catch(() => false)
-  console.log(`[DEBUG] "Expiration date" label visible: ${expiryVisible}`)
-
-  if (!expiryVisible) {
-    expiry = stripeFrame.getByLabel('Expiration')
-    expiryVisible = await expiry.isVisible().catch(() => false)
-    console.log(`[DEBUG] "Expiration" label visible: ${expiryVisible}`)
-  }
-  if (!expiryVisible) {
-    expiry = stripeFrame.getByLabel('Expiry')
-    expiryVisible = await expiry.isVisible().catch(() => false)
-    console.log(`[DEBUG] "Expiry" label visible: ${expiryVisible}`)
-  }
-  if (!expiryVisible) {
-    expiry = stripeFrame.getByPlaceholder('MM / YY')
-    expiryVisible = await expiry.isVisible().catch(() => false)
-    console.log(`[DEBUG] "MM / YY" placeholder visible: ${expiryVisible}`)
-  }
-
-  await expect(expiry).toBeVisible({ timeout: 10_000 })
-  await expect(expiry).toBeEditable({ timeout: 10_000 })
-  await expiry.click()
-  await expiry.pressSequentially('0135', { delay: 50 })
+  await expiryInput.fill('0135')
   await page.waitForTimeout(500)
-
-  // Verify expiry field actually has content
-  const expiryCheck = await expiry.inputValue().catch(() => 'N/A')
-  console.log(`[DEBUG] Expiry value after fill: "${expiryCheck}"`)
-  if (expiryCheck === 'N/A' || expiryCheck === '') {
-    console.log('[DEBUG] Expiry field empty, trying fill() with 01/35')
-    await expiry.click()
-    await expiry.fill('01/35')
-    await page.waitForTimeout(500)
-    const retryVal = await expiry.inputValue().catch(() => 'N/A')
-    console.log(`[DEBUG] Expiry value after fill() retry: "${retryVal}"`)
-  }
-
-  const cvc = stripeFrame.getByLabel('Security code')
-  await expect(cvc).toBeVisible({ timeout: 30_000 })
-  await cvc.click()
-  await cvc.pressSequentially('123', { delay: 35 })
+  await cvcInput.fill('123')
   await page.waitForTimeout(500)
-
-  // Try multiple selectors for ZIP
-  let zip = stripeFrame.getByLabel('ZIP code')
-  let zipVisible = await zip.isVisible().catch(() => false)
-  if (!zipVisible) {
-    zip = stripeFrame.getByLabel('ZIP')
-    zipVisible = await zip.isVisible().catch(() => false)
-    console.log(`[DEBUG] "ZIP" label visible: ${zipVisible}`)
-  }
-  if (!zipVisible) {
-    zip = stripeFrame.getByLabel('Postal code')
-    zipVisible = await zip.isVisible().catch(() => false)
-    console.log(`[DEBUG] "Postal code" label visible: ${zipVisible}`)
-  }
-  await expect(zip).toBeVisible({ timeout: 10_000 })
-  await zip.click()
-  await zip.pressSequentially('82001', { delay: 35 })
-
-  await page.waitForTimeout(2_000)
-  await page.screenshot({
-    path: 'test-results/stripe-after-fill.png',
-    fullPage: true,
-  })
-  console.log('[DEBUG] Screenshot taken after filling Stripe fields')
-
-  const cardValue = await cardNumber.inputValue().catch(() => 'N/A')
-  const expiryValue = await expiry.inputValue().catch(() => 'N/A')
-  const cvcValue = await cvc.inputValue().catch(() => 'N/A')
-  const zipValue = await zip.inputValue().catch(() => 'N/A')
-  console.log(
-    `[DEBUG] Stripe field values - Card: ${cardValue}, Expiry: ${expiryValue}, CVC: ${cvcValue}, ZIP: ${zipValue}`,
-  )
-
-  // Log failed requests
-  console.log(`[DEBUG] Failed requests (${failedRequests.length}):`)
-  const uniqueFailedDomains = [
-    ...new Set(
-      failedRequests.map((r) => {
-        try {
-          return new URL(r.split('] ')[1] ?? r).hostname
-        } catch {
-          return r
-        }
-      }),
-    ),
-  ]
-  console.log(
-    `[DEBUG] Failed request domains: ${JSON.stringify(uniqueFailedDomains)}`,
-  )
-  failedRequests
-    .filter((r) => r.includes('stripe') || r.includes('checkout'))
-    .forEach((r) => console.log(`  ${r}`))
+  await zipInput.fill('82001')
+  await page.waitForTimeout(1_500)
 
   const purchaseButton = page.getByRole('button', {
     name: 'Complete Purchase',
   })
-
-  const isDisabled = await purchaseButton.isDisabled()
-  console.log(`[DEBUG] Purchase button disabled: ${isDisabled}`)
-
-  const pollInterval = setInterval(async () => {
-    try {
-      const disabled = await purchaseButton.isDisabled()
-      console.log(`[DEBUG] Button state - disabled: ${disabled}`)
-    } catch {
-      /* page may have navigated */
-    }
-  }, 3_000)
 
   const completeCheckoutResponsePromise = page.waitForResponse(
     (response) =>
@@ -511,24 +376,7 @@ test('poll onboarding and expansion', async ({ page }) => {
     { timeout: 45_000 },
   )
 
-  try {
-    await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
-  } catch (err) {
-    clearInterval(pollInterval)
-    await page.screenshot({
-      path: 'test-results/stripe-button-timeout.png',
-      fullPage: true,
-    })
-    console.log('[DEBUG] Console logs captured:')
-    consoleLogs.slice(-20).forEach((log) => console.log(`  ${log}`))
-    console.log(
-      `[DEBUG] Button HTML: ${await purchaseButton
-        .evaluate((el) => el.outerHTML)
-        .catch(() => 'N/A')}`,
-    )
-    throw err
-  }
-  clearInterval(pollInterval)
+  await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
   await purchaseButton.click()
 
   const completeCheckoutResponse = await completeCheckoutResponsePromise
