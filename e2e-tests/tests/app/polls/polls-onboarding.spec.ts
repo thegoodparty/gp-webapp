@@ -363,7 +363,17 @@ test('poll onboarding and expansion', async ({ page }) => {
   await cvcInput.fill('123')
   await page.waitForTimeout(500)
   await zipInput.fill('82001')
-  await page.waitForTimeout(1_500)
+  await page.waitForTimeout(500)
+
+  // Uncheck "Save my information for faster checkout" (Stripe Link) —
+  // when checked, it requires a phone number which blocks canConfirm.
+  const saveCheckbox = stripeFrame.getByLabel(
+    'Save my information for faster checkout',
+  )
+  if (await saveCheckbox.isChecked().catch(() => false)) {
+    await saveCheckbox.uncheck()
+  }
+  await page.waitForTimeout(1_000)
 
   const purchaseButton = page.getByRole('button', {
     name: 'Complete Purchase',
