@@ -767,11 +767,6 @@ export interface CopyToClipboardProps {
 
 export type PurchaseType = 'pro' | 'texting' | 'domain' | 'voterData'
 
-export interface PurchaseIntentProviderProps {
-  children: React.ReactNode
-  type: PurchaseType
-}
-
 export interface DomainRegistrationMetadata {
   domainName?: string
   price?: number

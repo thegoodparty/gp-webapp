@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { centsToDollars } from 'helpers/numberHelper'
 
@@ -22,12 +22,23 @@ export const PurchaseStep = ({
   pricePerContact = 0,
   phoneListId,
 }: PurchaseStepProps) => {
-  const { purchaseIntent, error } = usePurchaseIntent()
+  const { checkoutSession, error, fetchClientSecret } = useCheckoutSession()
   const hasTrackedPaymentStarted = useRef(false)
+  const hasFetchedSession = useRef(false)
+
+  // Fetch the checkout session when the component mounts
+  useEffect(() => {
+    if (phoneListId && !hasFetchedSession.current) {
+      hasFetchedSession.current = true
+      fetchClientSecret().catch(() => {
+        // Error is handled by the provider
+      })
+    }
+  }, [phoneListId, fetchClientSecret])
 
   useEffect(() => {
     if (
-      purchaseIntent &&
+      checkoutSession &&
       contactCount > 0 &&
       !hasTrackedPaymentStarted.current
     ) {
@@ -41,13 +52,13 @@ export const PurchaseStep = ({
 
       hasTrackedPaymentStarted.current = true
     }
-  }, [purchaseIntent, contactCount, type, pricePerContact])
+  }, [checkoutSession, contactCount, type, pricePerContact])
 
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       {error ? (
         <PurchaseError {...{}} />
-      ) : !phoneListId || !purchaseIntent ? (
+      ) : !phoneListId || !checkoutSession ? (
         <LoadingAnimation {...{}} />
       ) : (
         <OutreachPurchaseForm
