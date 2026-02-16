@@ -33,7 +33,7 @@ const isAudienceFilterKey = (
   return key in audience
 }
 
-type VoterFileFilterResult = PhoneListInput & { id?: string }
+type VoterFileFilterResult = PhoneListInput & { id?: number }
 
 interface AudienceStepProps {
   onChangeCallback: (
