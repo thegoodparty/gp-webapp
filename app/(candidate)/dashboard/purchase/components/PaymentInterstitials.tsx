@@ -1,4 +1,4 @@
-import { usePurchaseIntent } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import {
   PURCHASE_STATE,
   PurchaseType,
@@ -19,9 +19,9 @@ export const PaymentInterstitials = ({
   purchaseState,
   returnUrl,
 }: PaymentInterstitialsProps): React.JSX.Element | null => {
-  const { purchaseIntent, error } = usePurchaseIntent()
+  const { error, isLoading } = useCheckoutSession()
   const inErrorState = purchaseState === PURCHASE_STATE.ERROR || error
-  return !purchaseIntent && !inErrorState ? (
+  return isLoading ? (
     <LoadingAnimationModal title="Initializing purchase form..." />
   ) : inErrorState ? (
     <PurchaseError error={error || undefined} />

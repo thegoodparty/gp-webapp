@@ -6,6 +6,7 @@ import TaskFlow from '../../components/tasks/flows/TaskFlow'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import type { TcrCompliance } from 'helpers/types'
+import type { OutreachType } from 'gpApi/types/outreach.types'
 
 interface FreeTextsBannerProps {
   className?: string
@@ -13,7 +14,7 @@ interface FreeTextsBannerProps {
 }
 
 interface FlowModalTask {
-  flowType: string
+  flowType: OutreachType
 }
 
 export const FreeTextsBanner = ({

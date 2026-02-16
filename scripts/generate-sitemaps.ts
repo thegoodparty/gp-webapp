@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /**
  * Generate static sitemap XML files at build time
  * This script generates all sitemaps and writes them to public/sitemaps/

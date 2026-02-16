@@ -5,7 +5,7 @@ import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
-import { eventually, wait } from 'tests/utils/eventually'
+import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
 const district = {
@@ -333,33 +333,78 @@ test('poll onboarding and expansion', async ({ page }) => {
     ),
   ).toBeVisible()
 
-  // Simulate payment
   await page
     .getByRole('button', { name: 'Go to payment' })
     .click({ force: true })
+
+  const stripeIframe = page
+    .locator('iframe[title="Secure payment input frame"]')
+    .first()
+  await expect(stripeIframe).toBeVisible({ timeout: 30_000 })
 
   const stripeFrame = page
     .frameLocator('iframe[title="Secure payment input frame"]')
     .first()
 
-  // customize timeout here to 10 seconds
-  await stripeFrame
-    .getByLabel('Card number')
-    .fill('4242424242424242', { timeout: 10000 })
-  await stripeFrame.getByLabel('Expiration date').fill('01/35')
-  await stripeFrame.getByLabel('Security code').fill('123')
-  await stripeFrame.getByLabel('ZIP code').fill('82001')
+  // Target Stripe inputs directly by their stable IDs
+  const cardInput = stripeFrame.locator('#payment-numberInput')
+  const expiryInput = stripeFrame.locator('#payment-expiryInput')
+  const cvcInput = stripeFrame.locator('#payment-cvcInput')
+  const zipInput = stripeFrame.locator('#payment-postalCodeInput')
 
-  // The button takes a second to become enabled.
-  await wait(500)
-  await page.getByRole('button', { name: 'Complete Purchase' }).click()
+  await expect(cardInput).toBeVisible({ timeout: 30_000 })
+  await expect(cardInput).toBeEditable({ timeout: 30_000 })
+  await page.waitForTimeout(2_000)
+
+  await cardInput.fill('4242424242424242')
+  await page.waitForTimeout(500)
+  await expiryInput.fill('0135')
+  await page.waitForTimeout(500)
+  await cvcInput.fill('123')
+  await page.waitForTimeout(500)
+  await zipInput.fill('82001')
+  await page.waitForTimeout(500)
+
+  // Uncheck "Save my information for faster checkout" (Stripe Link) —
+  // when checked, it requires a phone number which blocks canConfirm.
+  const saveCheckbox = stripeFrame.getByLabel(
+    'Save my information for faster checkout',
+  )
+  if (await saveCheckbox.isChecked().catch(() => false)) {
+    await saveCheckbox.uncheck()
+  }
+  await page.waitForTimeout(1_000)
+
+  const purchaseButton = page.getByRole('button', {
+    name: 'Complete Purchase',
+  })
+
+  const completeCheckoutResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().includes('/payments/purchase/complete-checkout-session') &&
+      response.request().method() === 'POST',
+    { timeout: 45_000 },
+  )
+
+  await expect(purchaseButton).toBeEnabled({ timeout: 30_000 })
+  await purchaseButton.click()
+
+  const completeCheckoutResponse = await completeCheckoutResponsePromise
+  expect(completeCheckoutResponse.ok()).toBeTruthy()
+
+  await page.waitForURL(
+    (url) => new URL(url).pathname.includes('/expand-payment-success'),
+    {
+      timeout: 45_000,
+    },
+  )
 
   // Confirm API resource updates.
   const { newAudienceSize } = await eventually(
     {
       that: 'the poll is marked as expanding',
       minTimeout: 500,
-      maxTimeout: 5000,
+      maxTimeout: 15_000,
     },
     async () => {
       const res = await client.get(`/v1/polls/${pollId}`)

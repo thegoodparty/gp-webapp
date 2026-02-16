@@ -541,12 +541,12 @@ export const apiRoutes = {
       path: '/payments/purchase/portal-session',
       method: 'POST',
     },
-    createPurchaseIntent: {
-      path: '/payments/purchase/create-intent',
+    createCustomCheckoutSession: {
+      path: '/payments/purchase/create-checkout-session',
       method: 'POST',
     },
-    completePurchase: {
-      path: '/payments/purchase/complete',
+    completeCheckoutSession: {
+      path: '/payments/purchase/complete-checkout-session',
       method: 'POST',
     },
   },
