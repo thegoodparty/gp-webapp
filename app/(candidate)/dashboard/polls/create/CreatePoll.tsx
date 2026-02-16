@@ -240,7 +240,7 @@ const DetailsForm: React.FC<{
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
         >
-          Select Audience
+          Continue
         </Button>
       }
     >
@@ -362,7 +362,7 @@ const DateSelectionForm: React.FC<{
             onChange(scheduledDate)
           }}
         >
-          Next
+          Continue
         </Button>
       }
     >
@@ -430,7 +430,7 @@ const AudienceSelectionForm: React.FC<{
             onChange(selectedAudience)
           }}
         >
-          Next
+          Continue
         </Button>
       }
     >
@@ -479,7 +479,7 @@ const ImageSelectionForm: React.FC<{
             onChange(imageUrl)
           }}
         >
-          Next
+          Continue
         </Button>
       }
     >
