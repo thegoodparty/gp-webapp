@@ -73,6 +73,10 @@ export const apiRoutes = {
       path: '/polls/has-polls',
       method: 'GET',
     },
+    downloadResponses: {
+      path: '/polls/:pollId/download-responses',
+      method: 'GET',
+    },
   },
   electedOffice: {
     current: {
