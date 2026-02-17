@@ -52,7 +52,7 @@ export const FreeTextsBanner = ({
       >
         <div className="flex items-center">
           <span className="text-blue-800 font-medium">
-            Send your 5,000 free texts
+            Send up to 5,000 texts for free in your first campaign
           </span>
         </div>
         <span
