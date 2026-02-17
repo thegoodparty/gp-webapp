@@ -13,14 +13,16 @@ import {
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
 interface OutreachPurchaseFormProps {
-  onComplete?: () => void
+  onComplete?: () => void | Promise<void>
   contactCount?: number
+  pricePerContact?: number
   onError?: () => void
 }
 
 export const OutreachPurchaseForm = ({
   onComplete = () => {},
   contactCount = 0,
+  pricePerContact = 0,
   onError = () => {},
 }: OutreachPurchaseFormProps) => {
   const [campaign] = useCampaign()
@@ -32,7 +34,9 @@ export const OutreachPurchaseForm = ({
   const discount = hasFreeTextsOffer
     ? Math.min(contactCount, FREE_TEXTS_OFFER.COUNT)
     : 0
-  const isFree = hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT
+  const isFree =
+    checkoutSession?.amount === 0 ||
+    (hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT)
   const totalCost = isFree ? 0 : checkoutSession?.amount ?? 0
 
   const handleFreeComplete = async () => {
@@ -40,13 +44,14 @@ export const OutreachPurchaseForm = ({
     try {
       const response = await completeFreePurchase(PURCHASE_TYPES.TEXT, {
         contactCount,
+        pricePerContact,
         outreachType: 'p2p',
       })
       if (!response.ok) {
         onError()
         return
       }
-      onComplete()
+      await onComplete()
     } catch {
       onError()
     } finally {
@@ -61,7 +66,7 @@ export const OutreachPurchaseForm = ({
         onError()
         return
       }
-      onComplete()
+      await onComplete()
     } catch {
       onError()
     }
@@ -102,8 +107,9 @@ export const OutreachPurchaseForm = ({
           className="w-full"
           onClick={handleFreeComplete}
           disabled={isRedeeming}
+          loading={isRedeeming}
         >
-          {isRedeeming ? 'Scheduling...' : 'Schedule text'}
+          Schedule text
         </Button>
       ) : (
         <CheckoutPayment

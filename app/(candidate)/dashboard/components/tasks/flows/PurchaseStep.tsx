@@ -64,6 +64,7 @@ export const PurchaseStep = ({
         <OutreachPurchaseForm
           {...{
             contactCount,
+            pricePerContact,
             onComplete,
           }}
         />
