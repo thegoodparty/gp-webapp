@@ -1,10 +1,8 @@
 'use client'
 import WandAnimation from '@shared/animations/WandAnimation'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
-import Link from 'next/link'
 
 interface Campaign {
   details?: {
@@ -34,15 +32,19 @@ export default function EmptyState({
             <strong>{resolvedOffice}.</strong>
           </H3>
           <Body1 className="mt-4">
-            Please check back soon, and we&apos;ll have the information ready
-            for you. It takes up to 72 hours.
+            While you wait, we suggest you check out our educational content on
+            making the most of your account{' '}
+            <a
+              href="https://goodpartyorg.circle.so/c/start-here"
+              target="_blank"
+            >
+              here
+            </a>
+            .
             <br />
-            If you need assistance in the meantime, feel free to contact our
-            support team.
+            If you need assistance, email us at{' '}
+            <a href="mailto:support@goodparty.org">support@goodparty.org</a>
           </Body1>
-          <Link href="/contact">
-            <PrimaryButton className="mt-8">Contact Us</PrimaryButton>
-          </Link>
         </div>
       </div>
     </Paper>
