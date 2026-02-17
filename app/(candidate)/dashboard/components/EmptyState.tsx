@@ -37,6 +37,7 @@ export default function EmptyState({
             <a
               href="https://goodpartyorg.circle.so/c/start-here"
               target="_blank"
+              rel="noopener noreferrer"
             >
               here
             </a>
