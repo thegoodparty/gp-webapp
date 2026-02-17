@@ -29,7 +29,7 @@ import {
   AudienceState,
 } from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 import { OUTREACH_OPTIONS } from 'app/(candidate)/dashboard/outreach/components/OutreachCreateCards'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { CheckoutSessionProvider } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 import { dollarsToCents } from 'helpers/numberHelper'
 import { PurchaseStep } from 'app/(candidate)/dashboard/components/tasks/flows/PurchaseStep'
@@ -42,6 +42,7 @@ import { getFlowStepsByType } from 'app/(candidate)/dashboard/components/tasks/f
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { getEffectiveOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
+import { OutreachType } from 'gpApi/types/outreach.types'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -70,22 +71,8 @@ const DEFAULT_STATE: TaskFlowState = {
   leadsLoaded: null,
 }
 
-/**
- * @typedef {Object} TaskFlowProps
- * @property {string} type
- * @property {React.ReactElement} [customButton] Pass a custom element to use instead of "Schedule Today" link
- * @property {Object} campaign
- * @property {boolean} [isCustom]
- * @property {boolean} [forceOpen]
- * @property {function} [onClose]
- * @property {string} [defaultAiTemplateId]
- */
-
-/**
- * @param {TaskFlowProps} props
- */
 type TaskFlowProps = {
-  type: string
+  type: OutreachType
   customButton?: ReactElement
   campaign: Campaign
   isCustom?: boolean
@@ -123,10 +110,11 @@ const TaskFlow = ({
   const [stopPolling, setStopPolling] = useState(false)
 
   const contactCount = leadsLoaded ?? undefined
+  const effectiveOutreachType = getEffectiveOutreachType(type, p2pUxEnabled)
   const purchaseMetaData = {
     contactCount,
     pricePerContact: dollarsToCents(outreachOption?.cost || 0) || 0,
-    outreachType: getEffectiveOutreachType(type, p2pUxEnabled),
+    outreachType: effectiveOutreachType,
     campaignId,
   }
 
@@ -136,10 +124,7 @@ const TaskFlow = ({
   )
 
   const handleChange = (
-    changeSetOrKey:
-      | Partial<TaskFlowState>
-      | keyof TaskFlowState
-      | string,
+    changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
     value?: TaskFlowState[keyof TaskFlowState],
   ) => {
     if (typeof changeSetOrKey === 'object') {
@@ -214,8 +199,7 @@ const TaskFlow = ({
     const scriptKeyValue = String(scriptKeyOrText)
     handleChange('script', scriptKeyOrText)
 
-    const content =
-      scriptContent ?? aiContent?.[scriptKeyValue]?.content
+    const content = scriptContent ?? aiContent?.[scriptKeyValue]?.content
     const scriptText = content
       ? sanitizeHtml(String(content), {
           allowedTags: [],
@@ -275,12 +259,17 @@ const TaskFlow = ({
   )
 
   const handlePurchaseComplete = async () => {
+    const outreach = await onCreateOutreach()
+    if (!outreach?.id) {
+      errorSnackbar('Campaign could not be created. Please try again.')
+      return
+    }
     await handleScheduleOutreach(
       type,
       errorSnackbar,
       successSnackbar,
       state,
-    )(await onCreateOutreach())
+    )(outreach)
 
     const contactField = getVoterContactField(type)
     await updateVoterContacts((currentContacts) => ({
@@ -326,7 +315,11 @@ const TaskFlow = ({
         onCancel={handleCloseCancel}
         onConfirm={handleCloseConfirm}
       />
-      <Modal open={open} closeCallback={handleClose}>
+      <Modal
+        open={open}
+        closeCallback={handleClose}
+        disableEnforceFocus={stepName === STEPS.purchase}
+      >
         {p2pUxEnabled && phoneListToken && (
           <LongPoll<PhoneListStatusResponse | false>
             {...{
@@ -375,7 +368,11 @@ const TaskFlow = ({
           />
         )}
         {stepName === STEPS.image && (
-          <ImageStep type={type} image={state.image ?? null} {...callbackProps} />
+          <ImageStep
+            type={type}
+            image={state.image ?? null}
+            {...callbackProps}
+          />
         )}
         {stepName === STEPS.schedule && (
           <ScheduleStep
@@ -401,7 +398,7 @@ const TaskFlow = ({
           />
         )}
         {stepName === STEPS.purchase && (
-          <PurchaseIntentProvider
+          <CheckoutSessionProvider
             {...{
               type: PURCHASE_TYPES.TEXT,
               purchaseMetaData,
@@ -416,7 +413,7 @@ const TaskFlow = ({
                 pricePerContact: purchaseMetaData?.pricePerContact,
               }}
             />
-          </PurchaseIntentProvider>
+          </CheckoutSessionProvider>
         )}
         {stepName === STEPS.download && (
           <DownloadStep

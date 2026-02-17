@@ -11,6 +11,7 @@ Candidates can create/manage their campaign websites here.
 ## Key Files
 
 ### Pages
+
 - `page.js` - Main dashboard (handles empty/draft/published states)
 - `create/page.js` - Website creation flow
 - `editor/page.js` - Website editor
@@ -18,6 +19,7 @@ Candidates can create/manage their campaign websites here.
 ## Dashboard Page (`website/`)
 
 **Components**
+
 - `WebsiteProvider.js` - Context for website/contacts state **used for all of these pages**
 - `WebsitePage.js` - Main page component, renders different states depending on website status
 - `WebsiteCard.js` - Website info display
@@ -25,6 +27,7 @@ Candidates can create/manage their campaign websites here.
 - `WebsiteInbox.js` - Table of contact form submissions
 
 **Utils**
+
 - `website.util.js` - API calls and helpers
 
 ## Create Flow (`website/create`)
@@ -32,10 +35,12 @@ Candidates can create/manage their campaign websites here.
 **Purpose**: Step-by-step website creation for new candidates
 
 **Components**:
+
 - `WebsiteCreatePage.js` - Page component with dashboard layout
 - `WebsiteCreateFlow.js` - Main creation flow entry
 
 **Steps** (6 total):
+
 1. **Vanity Path** - Custom URL path selection
 2. **Logo** - Upload campaign logo
 3. **Theme** - Color scheme selection (themes are hardcoded in `WEBSITE_THEMES` constant)
@@ -49,10 +54,12 @@ Candidates can create/manage their campaign websites here.
 **Purpose**: Edit existing website content
 
 **Components**:
-- `WebsiteEditorPage.js` -  Page component with dashboard layout
+
+- `WebsiteEditorPage.js` - Page component with dashboard layout
 - `WebsiteEditFlow.js` - Main editor flow entry
 
 **Editable Sections**:
+
 - **Link** - Custom URL (read-only)
 - **Logo** - Campaign logo upload
 - **Theme** - Color scheme
@@ -65,33 +72,40 @@ Candidates can create/manage their campaign websites here.
 The create and editor flows share these Step components from the editor folder:
 
 ### `VanityPathStep.js`
+
 - **Purpose**: Custom URL path selection and validation
 
 ### `LogoStep.js`
+
 - **Purpose**: Campaign logo upload
 - **Notes**:
   - Uses new `ImageInput` component (see shared folder)
 
 ### `ThemeStep.js`
+
 - **Purpose**: Color theme selection
 - **Notes**:
   - Uses hardcoded `WEBSITE_THEMES` constant, these came from the original Lovable mock
 
 ### `HeroStep.js`
+
 - **Purpose**: Title, tagline, and hero image setup
 - **Notes**:
-  - Also uses `ImageInput` component 
+  - Also uses `ImageInput` component
 
 ### `AboutStep.js`
+
 - **Purpose**: Bio and key issues setup
 
 ### `ContactStep.js`
+
 - **Purpose**: Contact information setup
 - **Notes**
-  - Uses `AddressAutocomplete` component that has simple google API searching. 
+  - Uses `AddressAutocomplete` component that has simple google API searching.
   - Easy to replace with pre-packaged component at some point.
 
 ### `CompleteStep.js`
+
 - **Purpose**: Success view after publishing
 
 ## Published Website (`(candidateWebsite)/c/[vanityPath]/`)
@@ -99,6 +113,7 @@ The create and editor flows share these Step components from the editor folder:
 **Purpose**: Publicly accessible campaign website
 
 **Components**:
+
 - `page.js` - Main published website page
 - `WebsiteContent.js` - Renders website sections
 - `WebsiteViewTracker.js` - Tracks page views
@@ -116,10 +131,8 @@ The create and editor flows share these Step components from the editor folder:
 **Purpose**: Authenticated preview for unpublished websites
 
 **Components**:
+
 - `page.js` - Preview page (no tracking)
 - Uses same `WebsiteContent.js` as published site
 
 **URL Structure**: `/c/{vanityPath}/preview`
-
-
-

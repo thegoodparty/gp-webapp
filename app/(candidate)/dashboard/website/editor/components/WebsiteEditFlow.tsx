@@ -93,46 +93,65 @@ export default function WebsiteEditFlow(): React.JSX.Element {
     } else {
       setLogo(null, undefined)
     }
-    function setLogo(url: string | ArrayBuffer | null, file: File | undefined): void {
-      setWebsite((current) => current ? {
-        ...current,
-        content: {
-          ...current.content,
-          logo: typeof url === 'string' ? url : undefined,
-          logoFile: file,
-        },
-      } : null)
+    function setLogo(
+      url: string | ArrayBuffer | null,
+      file: File | undefined,
+    ): void {
+      setWebsite((current) =>
+        current
+          ? {
+              ...current,
+              content: {
+                ...current.content,
+                logo: typeof url === 'string' ? url : undefined,
+                logoFile: file,
+              },
+            }
+          : null,
+      )
     }
   }
 
   function handleThemeChange(color: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        theme: color,
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              theme: color,
+            },
+          }
+        : null,
+    )
   }
 
   function handleTitleChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        main: { ...current.content?.main, title: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              main: { ...current.content?.main, title: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleTaglineChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        main: { ...current.content?.main, tagline: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              main: { ...current.content?.main, tagline: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleHeroChange(file: File | null): void {
@@ -144,80 +163,114 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       setHero(null, undefined)
     }
 
-    function setHero(url: string | ArrayBuffer | null, file: File | undefined): void {
-      setWebsite((current) => current ? {
-        ...current,
-        content: {
-          ...current.content,
-          main: { ...current.content?.main, image: typeof url === 'string' ? url : undefined },
-          heroFile: file,
-        },
-      } : null)
+    function setHero(
+      url: string | ArrayBuffer | null,
+      file: File | undefined,
+    ): void {
+      setWebsite((current) =>
+        current
+          ? {
+              ...current,
+              content: {
+                ...current.content,
+                main: {
+                  ...current.content?.main,
+                  image: typeof url === 'string' ? url : undefined,
+                },
+                heroFile: file,
+              },
+            }
+          : null,
+      )
     }
   }
 
   function handleBioChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, bio: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, bio: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleCommitteeChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, committee: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, committee: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handleIssuesChange(issues: WebsiteIssue[]): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        about: { ...current.content?.about, issues },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              about: { ...current.content?.about, issues },
+            },
+          }
+        : null,
+    )
   }
 
   function handleAddressSelect(place: GooglePlace): void {
     setUpdatedPlace(place)
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: {
-          ...current.content?.contact,
-          address: place.formatted_address,
-        },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: {
+                ...current.content?.contact,
+                address: place.formatted_address,
+              },
+            },
+          }
+        : null,
+    )
   }
 
   function handleEmailChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content?.contact, email: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: { ...current.content?.contact, email: value },
+            },
+          }
+        : null,
+    )
   }
 
   function handlePhoneChange(value: string): void {
-    setWebsite((current) => current ? {
-      ...current,
-      content: {
-        ...current.content,
-        contact: { ...current.content?.contact, phone: value },
-      },
-    } : null)
+    setWebsite((current) =>
+      current
+        ? {
+            ...current,
+            content: {
+              ...current.content,
+              contact: { ...current.content?.contact, phone: value },
+            },
+          }
+        : null,
+    )
   }
 
   if (!website) {
@@ -285,7 +338,11 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       <ResponsiveModal
         open={!!editSection && !isLgUp}
         onClose={handleEditSectionClose}
-        title={editSection ? SECTION_BTN_CONTENT[editSection]?.title || 'Edit Content' : 'Edit Content'}
+        title={
+          editSection
+            ? SECTION_BTN_CONTENT[editSection]?.title || 'Edit Content'
+            : 'Edit Content'
+        }
       >
         <EditSection
           editSection={editSection}

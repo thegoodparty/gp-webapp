@@ -7,5 +7,3 @@ export const PositionLevel = {
   STATE: 'STATE',
   TOWNSHIP: 'TOWNSHIP',
 }
-
-

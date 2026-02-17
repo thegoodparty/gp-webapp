@@ -29,7 +29,9 @@ const breadcrumbsLinks = [
   },
 ]
 
-export default function FaqsPage({ content }: FaqsPageProps): React.JSX.Element {
+export default function FaqsPage({
+  content,
+}: FaqsPageProps): React.JSX.Element {
   return (
     <>
       <MaxWidth>

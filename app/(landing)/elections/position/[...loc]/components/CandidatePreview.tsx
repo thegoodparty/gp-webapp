@@ -15,7 +15,9 @@ interface CandidatePreviewProps {
   candidate: Candidate
 }
 
-export default function CandidatePreview({ candidate }: CandidatePreviewProps): React.JSX.Element {
+export default function CandidatePreview({
+  candidate,
+}: CandidatePreviewProps): React.JSX.Element {
   const { firstName, lastName, image, party } = candidate
   return (
     <div>

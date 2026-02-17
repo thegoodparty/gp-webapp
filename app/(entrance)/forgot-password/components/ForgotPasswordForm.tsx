@@ -36,7 +36,9 @@ export default function ForgotPasswordForm({
         placeholder="hello@email.com"
         newCallbackSignature
         onChangeCallback={onEmailChange}
-        helperText={showError ? 'Please enter a valid email address' : undefined}
+        helperText={
+          showError ? 'Please enter a valid email address' : undefined
+        }
         endAdornments={showError ? ['error'] : undefined}
         variant="outlined"
       />

@@ -30,8 +30,9 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign | undefined>(props.campaign)
   const [candidatePositions, setCandidatePositions] = useCandidatePositions()
   const [combinedIssues, setCombinedIssues] = useState<EditIssuePosition[]>([])
-  const [editIssuePosition, setEditIssuePosition] =
-    useState<EditIssuePosition | false | null>(false)
+  const [editIssuePosition, setEditIssuePosition] = useState<
+    EditIssuePosition | false | null
+  >(false)
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     useState<EditIssuePosition | null>(null)
   const { errorSnackbar } = useSnackbar()
@@ -92,13 +93,18 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
             ...campaign,
             details: {
               ...campaign.details,
-              customIssues: await handleDeleteCustomIssue(customIssueToDelete, campaign),
+              customIssues: await handleDeleteCustomIssue(
+                customIssueToDelete,
+                campaign,
+              ),
             },
           })
         }
       } else if (issue.id && campaign?.id) {
         await deleteCandidatePosition(Number(issue.id), campaign.id)
-        const filteredPositions = (candidatePositions || []).filter((position: CandidatePosition) => position.id !== issue.id)
+        const filteredPositions = (candidatePositions || []).filter(
+          (position: CandidatePosition) => position.id !== issue.id,
+        )
         setCandidatePositions(filteredPositions)
       } else {
         throw new Error('issue malformed, cannot delete.')
@@ -156,7 +162,11 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                   <>
                     <div className="opacity-40 p-4 mb-4">
                       <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
-                      <div className="ml-5">{typeof issue.position === 'object' ? issue.position?.name : issue.position}</div>
+                      <div className="ml-5">
+                        {typeof issue.position === 'object'
+                          ? issue.position?.name
+                          : issue.position}
+                      </div>
                     </div>
                     <TextField
                       disabled
@@ -172,7 +182,11 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                 ) : (
                   <div className="opacity-40 p-4">
                     <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
-                    <div className="ml-5">{typeof issue.position === 'string' ? issue.position : issue.position?.name}</div>
+                    <div className="ml-5">
+                      {typeof issue.position === 'string'
+                        ? issue.position
+                        : issue.position?.name}
+                    </div>
                   </div>
                 )}
                 <div className="flex justify-end mt-8">

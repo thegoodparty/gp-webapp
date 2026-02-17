@@ -56,11 +56,16 @@ export default function Race({ race }: RaceProps): React.JSX.Element {
   } = race
 
   const levelUppercase = positionLevel?.toUpperCase() || ''
-  const colors: Partial<PositionLevelColors> = levelUppercase === 'STATE' ? positionLevelColors.STATE :
-                 levelUppercase === 'COUNTY' ? positionLevelColors.COUNTY :
-                 levelUppercase === 'CITY' ? positionLevelColors.CITY :
-                 levelUppercase === 'LOCAL' ? positionLevelColors.LOCAL :
-                 {}
+  const colors: Partial<PositionLevelColors> =
+    levelUppercase === 'STATE'
+      ? positionLevelColors.STATE
+      : levelUppercase === 'COUNTY'
+      ? positionLevelColors.COUNTY
+      : levelUppercase === 'CITY'
+      ? positionLevelColors.CITY
+      : levelUppercase === 'LOCAL'
+      ? positionLevelColors.LOCAL
+      : {}
 
   return (
     <Link

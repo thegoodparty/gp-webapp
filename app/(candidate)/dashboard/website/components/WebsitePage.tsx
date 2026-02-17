@@ -16,7 +16,9 @@ interface WebsitePageProps {
   pathname: string
 }
 
-export default function WebsitePage({ pathname }: WebsitePageProps): React.JSX.Element {
+export default function WebsitePage({
+  pathname,
+}: WebsitePageProps): React.JSX.Element {
   const router = useRouter()
   const [campaign] = useCampaign()
   const { website, setWebsite } = useWebsite()

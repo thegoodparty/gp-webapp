@@ -263,20 +263,20 @@ export default function PollTextBiasInput({
   return (
     <div className={`relative ${className}`}>
       <PollTextInput
-            value={displayValue}
-            onChange={isProcessing ? () => {} : onChange}
-            placeholder={placeholder}
-            biasSpans={biasAnalysis?.bias_spans || []}
-            grammarSpans={biasAnalysis?.grammar_spans || []}
-            isFocused={isFocused && !isProcessing}
-            onFocus={() => setIsFocused(true)}
-            onBlur={handleBlur}
-            showHighlights={shouldShowHighlights}
-            onContentChange={handleContentChange}
-            showLoadingDots={showLoadingState}
-            isReadOnly={isProcessing}
-            hidePlaceholder={isProcessing}
-        />
+        value={displayValue}
+        onChange={isProcessing ? () => {} : onChange}
+        placeholder={placeholder}
+        biasSpans={biasAnalysis?.bias_spans || []}
+        grammarSpans={biasAnalysis?.grammar_spans || []}
+        isFocused={isFocused && !isProcessing}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+        showHighlights={shouldShowHighlights}
+        onContentChange={handleContentChange}
+        showLoadingDots={showLoadingState}
+        isReadOnly={isProcessing}
+        hidePlaceholder={isProcessing}
+      />
       <div className="absolute bottom-3 right-3 z-10">
         <Button
           variant="secondary"

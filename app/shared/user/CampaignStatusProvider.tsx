@@ -11,24 +11,35 @@ interface CampaignStatus {
 
 type CampaignStatusContextValue = [
   campaignStatus: CampaignStatus | null,
-  setCampaignStatus: (status: CampaignStatus | null) => void
+  setCampaignStatus: (status: CampaignStatus | null) => void,
 ]
 
-export const CampaignStatusContext = createContext<CampaignStatusContextValue>([null, () => {}])
+export const CampaignStatusContext = createContext<CampaignStatusContextValue>([
+  null,
+  () => {},
+])
 
 interface CampaignStatusProviderProps {
   children: React.ReactNode
 }
 
-export const CampaignStatusProvider = ({ children }: CampaignStatusProviderProps): React.JSX.Element => {
-  const [campaignStatus, setCampaignStatus] = useState<CampaignStatus | null>(null)
+export const CampaignStatusProvider = ({
+  children,
+}: CampaignStatusProviderProps): React.JSX.Element => {
+  const [campaignStatus, setCampaignStatus] = useState<CampaignStatus | null>(
+    null,
+  )
   const [campaign] = useCampaign()
   const [user] = useUser()
 
   useEffect(() => {
     const getStatus = async () => {
       const status = await fetchCampaignStatus()
-      setCampaignStatus((status as { ok?: boolean }).ok === false ? null : status as CampaignStatus)
+      setCampaignStatus(
+        (status as { ok?: boolean }).ok === false
+          ? null
+          : (status as CampaignStatus),
+      )
     }
     if (user) {
       getStatus()
@@ -41,4 +52,3 @@ export const CampaignStatusProvider = ({ children }: CampaignStatusProviderProps
     </CampaignStatusContext.Provider>
   )
 }
-

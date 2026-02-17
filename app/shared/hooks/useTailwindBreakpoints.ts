@@ -23,7 +23,7 @@ export const useTailwindBreakpoints = (): Breakpoint => {
   useEffect(() => {
     const getCurrentBreakpoint = (): void => {
       const width = window.innerWidth
-      
+
       if (width >= BREAKPOINTS['2xl']) {
         setCurrentBreakpoint('2xl')
       } else if (width >= BREAKPOINTS.xl) {

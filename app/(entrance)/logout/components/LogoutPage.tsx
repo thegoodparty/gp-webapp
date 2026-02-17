@@ -27,5 +27,3 @@ export default function LogoutPage(): React.JSX.Element {
 
   return <></>
 }
-
-

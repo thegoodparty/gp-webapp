@@ -40,21 +40,21 @@ Our E2E test suite uses a tag-based system to control which tests run in differe
 ### Stable Test (Default)
 
 ```typescript
-test.describe("Login Flow", () => {
-  test("should login successfully", async ({ page }) => {
+test.describe('Login Flow', () => {
+  test('should login successfully', async ({ page }) => {
     // This test runs in the stable suite (blocking)
-  });
-});
+  })
+})
 ```
 
 ### Experimental Test
 
 ```typescript
-test.describe("New Feature @experimental", () => {
-  test("should handle new feature", async ({ page }) => {
+test.describe('New Feature @experimental', () => {
+  test('should handle new feature', async ({ page }) => {
     // This test runs in the experimental suite (non-blocking)
-  });
-});
+  })
+})
 ```
 
 ## Test Promotion Process

@@ -29,6 +29,9 @@ interface ModalProps {
   preventBackdropClose?: boolean
   preventEscClose?: boolean
   hideClose?: boolean
+  /** Disable MUI's focus-enforcement trap. Required when the modal contains
+   *  third-party iframes (e.g. Stripe PaymentElement) that need to receive focus. */
+  disableEnforceFocus?: boolean
 }
 
 const Modal = ({
@@ -40,6 +43,7 @@ const Modal = ({
   preventBackdropClose = false,
   preventEscClose = false,
   hideClose = false,
+  disableEnforceFocus = false,
 }: ModalProps): React.JSX.Element => {
   const handleClose = (_e: React.SyntheticEvent, reason: string) => {
     if (
@@ -51,7 +55,11 @@ const Modal = ({
     closeCallback()
   }
   return (
-    <MuiModal open={open} onClose={handleClose}>
+    <MuiModal
+      open={open}
+      onClose={handleClose}
+      disableEnforceFocus={disableEnforceFocus}
+    >
       <Box
         className={`!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 ${boxClassName}`}
         sx={style}
@@ -72,4 +80,3 @@ const Modal = ({
 }
 
 export default Modal
-

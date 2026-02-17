@@ -37,28 +37,20 @@ interface OfficeStepProps {
   adminMode?: boolean
 }
 
-async function runP2V(slug: string): Promise<boolean> {
-  try {
-    const resp = await clientFetch<boolean>(apiRoutes.campaign.pathToVictory.create, {
-      slug,
-    })
-
-    return !!resp.data
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
-}
-
 interface CampaignResponse extends Campaign {
   error?: string
 }
 
-async function updateRaceTargetDetails(slug: string | undefined = undefined): Promise<Campaign | false> {
+async function updateRaceTargetDetails(
+  slug: string | undefined = undefined,
+): Promise<Campaign | false> {
   try {
-    const resp = await clientFetch<CampaignResponse>(apiRoutes.campaign.raceTargetDetails.update, {
-      slug,
-    })
+    const resp = await clientFetch<CampaignResponse>(
+      apiRoutes.campaign.raceTargetDetails.update,
+      {
+        slug,
+      },
+    )
 
     if (resp.data && resp.data.error) {
       console.error('API error: ', resp.data)
@@ -76,12 +68,15 @@ interface UpdateAttr {
   value: string | number | boolean | undefined
 }
 
-async function runPostOfficeStepUpdates(attr: UpdateAttr[], slug: string | undefined = undefined): Promise<void> {
+async function runPostOfficeStepUpdates(
+  attr: UpdateAttr[],
+  slug: string | undefined = undefined,
+): Promise<void> {
   await updateCampaign(attr, slug)
-  const campaign = await updateRaceTargetDetails(slug)
-  if (campaign && !campaign?.pathToVictory?.data?.projectedTurnout) {
-    runP2V(slug!)
-  }
+  // The API handles P2V record creation and silver enqueue in all cases
+  // (gold failure, gold success without turnout, etc.), so the webapp
+  // does not need to enqueue separately.
+  await updateRaceTargetDetails(slug)
 }
 
 export default function OfficeStep({
@@ -262,7 +257,12 @@ export default function OfficeStep({
     }
   }
 
-  const selectedOffice: { position: { id: string | number | undefined }; election: { id: string | number | null | undefined } } | false = campaign.details?.positionId
+  const selectedOffice:
+    | {
+        position: { id: string | number | undefined }
+        election: { id: string | number | null | undefined }
+      }
+    | false = campaign.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
         election: { id: campaign.details.electionId },

@@ -8,6 +8,8 @@ import {
   TASK_TYPES,
 } from 'app/(candidate)/dashboard/shared/constants/tasks.const'
 import { Campaign } from 'helpers/types'
+import type { OutreachType } from 'gpApi/types/outreach.types'
+import { isValidOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
 
 interface ScheduleCardProps {
   type: string
@@ -18,16 +20,34 @@ interface ScheduleCardProps {
 
 const ScheduleCard = (props: ScheduleCardProps): React.JSX.Element => {
   const { type } = props
+
+  // Normalize legacy task types to modern outreach types
+  let normalizedType = type
   let typeText = ''
-  let taskType = ''
+
   if (type === LEGACY_TASK_TYPES.sms) {
+    normalizedType = TASK_TYPES.text
     typeText = 'text'
-    taskType = TASK_TYPES.text
-  }
-  if (type === LEGACY_TASK_TYPES.telemarketing) {
+  } else if (type === LEGACY_TASK_TYPES.telemarketing) {
+    normalizedType = TASK_TYPES.robocall
     typeText = 'robocall'
-    taskType = TASK_TYPES.robocall
   }
+
+  // Validate the normalized type
+  if (!isValidOutreachType(normalizedType)) {
+    console.error('Invalid outreach type for ScheduleCard:', type)
+    return (
+      <Paper className="h-full flex flex-col justify-between">
+        <div>
+          <H3>Schedule a campaign</H3>
+          <Body2>Invalid campaign type</Body2>
+        </div>
+      </Paper>
+    )
+  }
+
+  // After validation, normalizedType is narrowed to OutreachType
+  const taskType: OutreachType = normalizedType
 
   return (
     <Paper className="h-full flex flex-col justify-between">

@@ -15,4 +15,3 @@ export const AnimatedEllipsis = () => {
 
   return <span>{dots}</span>
 }
-

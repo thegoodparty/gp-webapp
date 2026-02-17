@@ -13,11 +13,7 @@ export default function Cta(): React.JSX.Element {
             without a party.
           </h2>
           <div>
-            <Button
-              href="/sign-up"
-              id="prefooter_get_started"
-              size="large"
-            >
+            <Button href="/sign-up" id="prefooter_get_started" size="large">
               <span className="tracking-wide">Get started</span>
             </Button>
           </div>

@@ -26,11 +26,14 @@ const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
 const CALL_W_VOICEMAIL_PRICE = 0.055
 
-const isAudienceFilterKey = (key: string, audience: AudienceFiltersState): key is AudienceFilterKey => {
+const isAudienceFilterKey = (
+  key: string,
+  audience: AudienceFiltersState,
+): key is AudienceFilterKey => {
   return key in audience
 }
 
-type VoterFileFilterResult = PhoneListInput & { id?: string }
+type VoterFileFilterResult = PhoneListInput & { id?: number }
 
 interface AudienceStepProps {
   onChangeCallback: (
@@ -49,7 +52,9 @@ interface AudienceStepProps {
   audience: AudienceFiltersState
   isCustom?: boolean
   onCreateVoterFileFilter?: () => Promise<VoterFileFilterResult | undefined>
-  onCreatePhoneList?: (voterFileFilter: VoterFileFilterResult | undefined) => Promise<string | null | undefined>
+  onCreatePhoneList?: (
+    voterFileFilter: VoterFileFilterResult | undefined,
+  ) => Promise<string | null | undefined>
 }
 
 export default function AudienceStep({

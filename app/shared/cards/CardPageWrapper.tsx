@@ -6,7 +6,9 @@ interface CardPageWrapperProps {
   children: ReactNode
 }
 
-export default function CardPageWrapper({ children }: CardPageWrapperProps): React.JSX.Element {
+export default function CardPageWrapper({
+  children,
+}: CardPageWrapperProps): React.JSX.Element {
   return (
     <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
       <MaxWidth>

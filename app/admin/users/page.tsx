@@ -41,24 +41,21 @@ interface TableFilter {
 }
 
 const buildDefaultTableFilters = (searchParams: SearchParams): TableFilter[] =>
-  Object.keys(searchParams).reduce<TableFilter[]>(
-    (accumulator, key) => {
-      const paramValue = searchParams[key]
-      if (!paramValue) return accumulator
-      
-      const stringValue = Array.isArray(paramValue) ? paramValue[0] : paramValue
-      if (!stringValue) return accumulator
-      
-      return [
-        ...accumulator,
-        {
-          id: key,
-          value: stringValue,
-        },
-      ]
-    },
-    [],
-  )
+  Object.keys(searchParams).reduce<TableFilter[]>((accumulator, key) => {
+    const paramValue = searchParams[key]
+    if (!paramValue) return accumulator
+
+    const stringValue = Array.isArray(paramValue) ? paramValue[0] : paramValue
+    if (!stringValue) return accumulator
+
+    return [
+      ...accumulator,
+      {
+        id: key,
+        value: stringValue,
+      },
+    ]
+  }, [])
 
 export default async function Page({
   searchParams,

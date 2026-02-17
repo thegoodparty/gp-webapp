@@ -6,6 +6,7 @@ import TaskFlow from '../../components/tasks/flows/TaskFlow'
 import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/components/ComplianceSteps'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import type { TcrCompliance } from 'helpers/types'
+import type { OutreachType } from 'gpApi/types/outreach.types'
 
 interface FreeTextsBannerProps {
   className?: string
@@ -13,10 +14,13 @@ interface FreeTextsBannerProps {
 }
 
 interface FlowModalTask {
-  flowType: string
+  flowType: OutreachType
 }
 
-export const FreeTextsBanner = ({ className = '', tcrCompliance }: FreeTextsBannerProps) => {
+export const FreeTextsBanner = ({
+  className = '',
+  tcrCompliance,
+}: FreeTextsBannerProps) => {
   const [campaign] = useCampaign()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [flowModalTask, setFlowModalTask] = useState<FlowModalTask | null>(null)
@@ -25,7 +29,8 @@ export const FreeTextsBanner = ({ className = '', tcrCompliance }: FreeTextsBann
     return null
   }
 
-  const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+  const isTextCompliant =
+    tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
   if (!isTextCompliant) {
     return null
   }
@@ -42,13 +47,15 @@ export const FreeTextsBanner = ({ className = '', tcrCompliance }: FreeTextsBann
 
   return (
     <>
-      <div className={`bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between ${className}`}>
+      <div
+        className={`bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between ${className}`}
+      >
         <div className="flex items-center">
           <span className="text-blue-800 font-medium">
-            Send your 5,000 free texts
+            Send up to 5,000 texts for free in your first campaign
           </span>
         </div>
-        <span 
+        <span
           className="font-bold text-blue-800 cursor-pointer hover:underline"
           onClick={handleSendClick}
         >

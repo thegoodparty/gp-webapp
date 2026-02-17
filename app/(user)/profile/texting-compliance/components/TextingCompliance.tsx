@@ -34,8 +34,12 @@ export default function TextingCompliance({
   tcrCompliance,
 }: TextingComplianceProps): React.JSX.Element {
   const { status: tcrComplianceStatus, tdlcNumber } = tcrCompliance || {}
-  const { websiteComplete, domainComplete, registrationComplete, pinComplete: _pinComplete } =
-    getTcrComplianceStepCompletions(website, domainStatus, tcrCompliance)
+  const {
+    websiteComplete,
+    domainComplete,
+    registrationComplete,
+    pinComplete: _pinComplete,
+  } = getTcrComplianceStepCompletions(website, domainStatus, tcrCompliance)
   const pendingCompliance =
     websiteComplete &&
     domainComplete &&

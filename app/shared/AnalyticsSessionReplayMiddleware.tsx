@@ -35,9 +35,12 @@ export default function AnalyticsSessionReplayMiddleware(): null {
           analyticsInstance.addSourceMiddleware(({ payload, next }) => {
             try {
               const storedSessionId = getStoredSessionId()
-              const amplitudeIntegration = payload.obj.integrations?.['Actions Amplitude']
+              const amplitudeIntegration =
+                payload.obj.integrations?.['Actions Amplitude']
               const nextSessionId =
-                (amplitudeIntegration && typeof amplitudeIntegration === 'object' && 'session_id' in amplitudeIntegration
+                (amplitudeIntegration &&
+                typeof amplitudeIntegration === 'object' &&
+                'session_id' in amplitudeIntegration
                   ? (amplitudeIntegration as AmplitudeIntegration).session_id
                   : undefined) || 0
 
@@ -92,11 +95,19 @@ export default function AnalyticsSessionReplayMiddleware(): null {
                       if (!payload.obj.integrations) {
                         payload.obj.integrations = {}
                       }
-                      if (!payload.obj.integrations['Actions Amplitude'] || typeof payload.obj.integrations['Actions Amplitude'] !== 'object') {
-                        payload.obj.integrations['Actions Amplitude'] = { device_id: anonymousId }
+                      if (
+                        !payload.obj.integrations['Actions Amplitude'] ||
+                        typeof payload.obj.integrations['Actions Amplitude'] !==
+                          'object'
+                      ) {
+                        payload.obj.integrations['Actions Amplitude'] = {
+                          device_id: anonymousId,
+                        }
                       } else {
                         payload.obj.integrations['Actions Amplitude'] = {
-                          ...(payload.obj.integrations['Actions Amplitude'] as AmplitudeIntegration),
+                          ...(payload.obj.integrations[
+                            'Actions Amplitude'
+                          ] as AmplitudeIntegration),
                           device_id: anonymousId,
                         }
                       }

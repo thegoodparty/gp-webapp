@@ -1,6 +1,10 @@
 import { useEffect } from 'react'
 
-export const useDebounceEffect = (fn: () => void, waitTime: number, deps: (string | number | boolean | null | undefined)[]) => {
+export const useDebounceEffect = (
+  fn: () => void,
+  waitTime: number,
+  deps: (string | number | boolean | null | undefined)[],
+) => {
   useEffect(() => {
     const t = setTimeout(() => {
       fn()
@@ -11,4 +15,3 @@ export const useDebounceEffect = (fn: () => void, waitTime: number, deps: (strin
     }
   }, [fn, waitTime, ...deps])
 }
-

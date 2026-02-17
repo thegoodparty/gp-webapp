@@ -1,7 +1,12 @@
-import { AudienceFiltersState, AudienceFilterKey } from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
+import {
+  AudienceFiltersState,
+  AudienceFilterKey,
+} from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
 import { VoterFileFilters } from 'helpers/types'
 
-const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<Record<keyof VoterFileFilters, AudienceFilterKey>> = {
+const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<
+  Record<keyof VoterFileFilters, AudienceFilterKey>
+> = {
   audienceSuperVoters: 'audience_superVoters',
   audienceLikelyVoters: 'audience_likelyVoters',
   audienceUnreliableVoters: 'audience_unreliableVoters',
@@ -18,11 +23,13 @@ const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<Record<keyof VoterFileF
   genderFemale: 'gender_female',
 }
 
-const isConvertibleFilterKey = (key: string): key is keyof typeof VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING =>
+const isConvertibleFilterKey = (
+  key: string,
+): key is keyof typeof VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING =>
   key in VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING
 
 export const convertAudienceFiltersForModal = (
-  filters: VoterFileFilters = {}
+  filters: VoterFileFilters = {},
 ): AudienceFiltersState => {
   const result: AudienceFiltersState = {}
   for (const key of Object.keys(filters)) {

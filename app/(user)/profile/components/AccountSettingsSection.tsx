@@ -20,11 +20,7 @@ export const AccountSettingsSection = (): React.JSX.Element => {
   const [campaign] = useCampaign()
   const { isPro, details = {} } = campaign || {}
   const { subscriptionCancelAt, subscriptionId } = details || {}
-  const plan = isPro
-    ? 'Candidate PRO'
-    : demoPersona
-    ? 'Demo'
-    : 'Candidate FREE'
+  const plan = isPro ? 'Candidate PRO' : demoPersona ? 'Demo' : 'Candidate FREE'
   const hideButtonForLimboProUsers = isPro && !Boolean(subscriptionId)
 
   useEffect(() => {

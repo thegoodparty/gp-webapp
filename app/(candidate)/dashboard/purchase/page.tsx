@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import PurchasePage from './components/PurchasePage'
 import candidateAccess from '../shared/candidateAccess'
 import { PURCHASE_TYPES, PurchaseType } from 'helpers/purchaseTypes'
-import { PurchaseIntentProvider } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
+import { CheckoutSessionProvider } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { notFound } from 'next/navigation'
 import type { SearchParams } from 'next/dist/server/request/search-params'
 
@@ -20,7 +20,10 @@ interface PurchaseParams {
   websiteId: string | undefined
 }
 
-const buildMetadata = (type: PurchaseType, params: PurchaseParams): Partial<Record<string, string | number | boolean | undefined>> => {
+const buildMetadata = (
+  type: PurchaseType,
+  params: PurchaseParams,
+): Partial<Record<string, string | number | boolean | undefined>> => {
   switch (type) {
     case PURCHASE_TYPES.DOMAIN_REGISTRATION:
       return {
@@ -42,7 +45,9 @@ interface PageProps {
   searchParams: Promise<SearchParams>
 }
 
-export default async function Page({ searchParams }: PageProps): Promise<React.JSX.Element> {
+export default async function Page({
+  searchParams,
+}: PageProps): Promise<React.JSX.Element> {
   await candidateAccess()
   const { type, domain, websiteId, returnUrl } = await searchParams
 
@@ -55,18 +60,14 @@ export default async function Page({ searchParams }: PageProps): Promise<React.J
   const returnUrlStr = typeof returnUrl === 'string' ? returnUrl : undefined
 
   return (
-    <PurchaseIntentProvider
+    <CheckoutSessionProvider
       type={type}
       purchaseMetaData={buildMetadata(type, {
         domainName: domainStr,
         websiteId: websiteIdStr,
       })}
     >
-      <PurchasePage
-        type={type}
-        domain={domainStr}
-        returnUrl={returnUrlStr}
-      />
-    </PurchaseIntentProvider>
+      <PurchasePage type={type} domain={domainStr} returnUrl={returnUrlStr} />
+    </CheckoutSessionProvider>
   )
 }

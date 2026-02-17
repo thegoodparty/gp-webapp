@@ -2,7 +2,10 @@
 import { useState, useEffect } from 'react'
 import type { ComponentType } from 'react'
 import data from './highFive.json'
-import type { IPlayerProps, PlayerEvent as PlayerEventType } from '@lottiefiles/react-lottie-player'
+import type {
+  IPlayerProps,
+  PlayerEvent as PlayerEventType,
+} from '@lottiefiles/react-lottie-player'
 
 interface HighFiveAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
@@ -19,7 +22,9 @@ export default function HighFiveAnimation({
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const [isMounted, setIsMounted] = useState<boolean>(false)
   const [Player, setPlayer] = useState<ComponentType<IPlayerProps> | null>(null)
-  const [PlayerEvent, setPlayerEvent] = useState<typeof PlayerEventType | null>(null)
+  const [PlayerEvent, setPlayerEvent] = useState<typeof PlayerEventType | null>(
+    null,
+  )
 
   useEffect(() => {
     setIsMounted(true)

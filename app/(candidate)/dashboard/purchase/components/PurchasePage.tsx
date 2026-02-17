@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import PurchasePayment from './PurchasePayment'
+import { useEffect, useRef, useState } from 'react'
 import {
   PURCHASE_STATE,
   PURCHASE_TYPE_DESCRIPTIONS,
@@ -14,12 +13,14 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body1 from '@shared/typography/Body1'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { PurchaseHeader } from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
-import { usePurchaseIntent, PurchaseIntentResponse } from 'app/(candidate)/dashboard/purchase/components/PurchaseIntentProvider'
-import { completePurchase } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
+import { completeCheckoutSession } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
 import { PaymentInterstitials } from 'app/(candidate)/dashboard/purchase/components/PaymentInterstitials'
 import H1 from '@shared/typography/H1'
 import Paper from '@shared/utils/Paper'
-import { PaymentIntent } from '@stripe/stripe-js'
+import CheckoutPayment from 'app/(candidate)/dashboard/purchase/components/CheckoutPayment'
+import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
+import PurchaseError from 'app/(candidate)/dashboard/purchase/components/PurchaseError'
 
 interface PurchasePageProps {
   type: PurchaseType
@@ -33,43 +34,69 @@ interface ErrorResponseData {
   }
 }
 
-function isErrorResponseData(data: { success: boolean } | ErrorResponseData): data is ErrorResponseData {
-  return 'data' in data && data.data !== undefined && typeof data.data === 'object' && data.data !== null && 'error' in data.data
+function isErrorResponseData(
+  data: { success: boolean } | ErrorResponseData,
+): data is ErrorResponseData {
+  return (
+    'data' in data &&
+    data.data !== undefined &&
+    typeof data.data === 'object' &&
+    data.data !== null &&
+    'error' in data.data
+  )
 }
 
-function getErrorMessage(data: { success: boolean } | ErrorResponseData): string | undefined {
+function getErrorMessage(
+  data: { success: boolean } | ErrorResponseData,
+): string | undefined {
   if (isErrorResponseData(data)) {
     return data.data?.error
   }
   return undefined
 }
 
-export default function PurchasePage({ type, domain, returnUrl }: PurchasePageProps): React.JSX.Element {
-  const { setError, purchaseIntent } = usePurchaseIntent()
-  const [purchaseState, setPurchaseState] = useState<PurchaseState>(PURCHASE_STATE.PAYMENT)
+export default function PurchasePage({
+  type,
+  domain,
+  returnUrl,
+}: PurchasePageProps): React.JSX.Element {
+  const { checkoutSession, error, setError, fetchClientSecret } =
+    useCheckoutSession()
+  const [purchaseState, setPurchaseState] = useState<PurchaseState>(
+    PURCHASE_STATE.PAYMENT,
+  )
+  const hasFetchedSession = useRef(false)
 
-  const handlePaymentSuccess = async (paymentIntent: PaymentIntent | PurchaseIntentResponse) => {
-    const intentId = 'id' in paymentIntent ? paymentIntent.id : paymentIntent.paymentIntentId
+  useEffect(() => {
+    if (!hasFetchedSession.current) {
+      hasFetchedSession.current = true
+      fetchClientSecret().catch(() => {
+        // Error is handled by the provider
+      })
+    }
+  }, [fetchClientSecret])
+
+  const handlePaymentSuccess = async (sessionId: string) => {
     try {
-      const response = await completePurchase(intentId)
+      const response = await completeCheckoutSession(sessionId)
 
       if (response.ok) {
         if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
           const eventData = {
             domainSelected: domain,
-            priceOfSelectedDomain: paymentIntent?.amount
-              ? paymentIntent.amount / 100
-              : null,
+            priceOfSelectedDomain: checkoutSession?.amount ?? null,
           }
           trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
         }
 
         setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
-        setError(getErrorMessage(response.data) || 'Failed to complete purchase')
+        setError(
+          getErrorMessage(response.data) || 'Failed to complete purchase',
+        )
         setPurchaseState(PURCHASE_STATE.ERROR)
       }
-    } catch (error) {
+    } catch (err) {
       setError('Failed to complete purchase')
       setPurchaseState(PURCHASE_STATE.ERROR)
     }
@@ -79,38 +106,34 @@ export default function PurchasePage({ type, domain, returnUrl }: PurchasePagePr
     setPurchaseState(PURCHASE_STATE.ERROR)
   }
 
-  useEffect(() => {
-    if (
-      purchaseIntent?.status === 'succeeded' &&
-      purchaseState === PURCHASE_STATE.PAYMENT
-    ) {
-      handlePaymentSuccess(purchaseIntent)
-    }
-  }, [purchaseIntent])
-
   return (
     <DashboardLayout hideMenu showAlert={false}>
       <PaymentInterstitials {...{ type, purchaseState, returnUrl }} />
-      {purchaseState === PURCHASE_STATE.PAYMENT &&
-        purchaseIntent?.clientSecret && (
-          <Paper className="max-w-2xl mx-auto mt-8">
-            <H1>Complete Your Purchase</H1>
-            <PurchaseHeader
-              {...{
-                label: PURCHASE_TYPE_LABELS[type],
-                description: PURCHASE_TYPE_DESCRIPTIONS[type],
-              }}
-            >
-              {type === PURCHASE_TYPES.DOMAIN_REGISTRATION && (
-                <Body1 className="font-semibold mt-2">Domain: {domain}</Body1>
-              )}
-            </PurchaseHeader>
-            <PurchasePayment
+      {purchaseState === PURCHASE_STATE.PAYMENT && (
+        <Paper className="max-w-2xl mx-auto mt-8">
+          <H1>Complete Your Purchase</H1>
+          <PurchaseHeader
+            {...{
+              label: PURCHASE_TYPE_LABELS[type],
+              description: PURCHASE_TYPE_DESCRIPTIONS[type],
+            }}
+          >
+            {type === PURCHASE_TYPES.DOMAIN_REGISTRATION && (
+              <Body1 className="font-semibold mt-2">Domain: {domain}</Body1>
+            )}
+          </PurchaseHeader>
+          {error ? (
+            <PurchaseError error={error} serverError={undefined} />
+          ) : !checkoutSession ? (
+            <LoadingAnimation />
+          ) : (
+            <CheckoutPayment
               onPaymentSuccess={handlePaymentSuccess}
               onPaymentError={handlePaymentError}
             />
-          </Paper>
-        )}
+          )}
+        </Paper>
+      )}
     </DashboardLayout>
   )
 }

@@ -13,7 +13,11 @@ interface DeadlineModalProps {
   onClose: () => void
 }
 
-export default function DeadlineModal({ type, deadline, onClose }: DeadlineModalProps): React.JSX.Element {
+export default function DeadlineModal({
+  type,
+  deadline,
+  onClose,
+}: DeadlineModalProps): React.JSX.Element {
   const trackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Deadline Missed Email Button', {

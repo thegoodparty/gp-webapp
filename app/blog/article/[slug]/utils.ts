@@ -74,5 +74,3 @@ export const fetchArticle = async (slug: string): Promise<ArticleContent> => {
     slug,
   })
 }
-
-

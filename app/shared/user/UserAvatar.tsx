@@ -14,7 +14,11 @@ interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: UserAvatarSize
 }
 
-const UserAvatar = ({ user, size = 'small', ...restProps }: UserAvatarProps): React.JSX.Element => {
+const UserAvatar = ({
+  user,
+  size = 'small',
+  ...restProps
+}: UserAvatarProps): React.JSX.Element => {
   const className = restProps?.className || ''
   if (!user) {
     return <></>
@@ -52,4 +56,3 @@ const UserAvatar = ({ user, size = 'small', ...restProps }: UserAvatarProps): Re
 }
 
 export default UserAvatar
-

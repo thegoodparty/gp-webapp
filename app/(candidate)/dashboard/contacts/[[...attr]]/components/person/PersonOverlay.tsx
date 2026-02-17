@@ -27,6 +27,7 @@ import { Person } from '../shared/ajaxActions'
 import { isNotNil } from 'es-toolkit'
 import { ReactNode } from 'react'
 import Map from '@shared/utils/Map'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const formatPersonName = (person: Person) =>
   [person.firstName, person.lastName, person.nameSuffix]
@@ -129,8 +130,8 @@ const TopIssuesContent: React.FC = () => {
           type="button"
           onClick={() => onViewMore()}
           disabled={isFetchingNextPage}
-           variant="outline"
-           className="mt-4"
+          variant="outline"
+          className="mt-4"
         >
           {isFetchingNextPage ? 'Loading...' : 'View more'}
         </Button>
@@ -191,7 +192,7 @@ const ActivitiesContent: React.FC = () => {
                 return (
                   <div key={i} className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      {evt.type === 'SENT'&& (
+                      {evt.type === 'SENT' && (
                         <LuCircleCheck
                           size={16}
                           className="shrink-0 text-foreground"
@@ -209,7 +210,7 @@ const ActivitiesContent: React.FC = () => {
                           className="shrink-0 text-foreground"
                         />
                       )}
-                      
+
                       <p className="text-sm font-semibold text-foreground">
                         {ACTIVITY_EVENT_LABELS[evt.type] ?? evt.type}
                       </p>
@@ -217,15 +218,15 @@ const ActivitiesContent: React.FC = () => {
 
                     <div className="flex gap-2 h-7">
                       <div className="flex items-center gap-2">
-                            <div className="flex w-4 shrink-0 justify-center">
-                      {i < activity.data.events.length - 1 ? (
-                              <div className="h-5 w-px bg-border my-1" />
-                        ) : null}
+                        <div className="flex w-4 shrink-0 justify-center">
+                          {i < activity.data.events.length - 1 ? (
+                            <div className="h-5 w-px bg-border my-1" />
+                          ) : null}
                         </div>
                       </div>
-                        <p className="text-sm font-normal text-muted-foreground justify-self-start">
-                          {evt.date ? formatDateTime(evt.date) : ''}
-                        </p>
+                      <p className="text-sm font-normal text-muted-foreground justify-self-start">
+                        {evt.date ? formatDateTime(evt.date) : ''}
+                      </p>
                     </div>
                   </div>
                 )
@@ -236,14 +237,14 @@ const ActivitiesContent: React.FC = () => {
       ))}
       {hasNextPage ? (
         <Button
-        type="button"
-        onClick={() => onViewMore()}
-        disabled={isFetchingNextPage}
-         variant="outline"
-         className="mt-2"
-      >
-        {isFetchingNextPage ? 'Loading...' : 'View more'}
-      </Button>
+          type="button"
+          onClick={() => onViewMore()}
+          disabled={isFetchingNextPage}
+          variant="outline"
+          className="mt-2"
+        >
+          {isFetchingNextPage ? 'Loading...' : 'View more'}
+        </Button>
       ) : null}
     </div>
   )
@@ -278,6 +279,9 @@ const PersonContent: React.FC<{
   person: Person
   hidePoliticalParty: boolean
 }> = ({ person, hidePoliticalParty }) => {
+  const { on: showActivitiesAndIssues } = useFlagOn(
+    'serve-contacts-activities-and-issues',
+  )
   const details = [person.gender, person.age ? `${person.age} years old` : null]
     .filter(isNotNil)
     .join(', ')
@@ -289,9 +293,11 @@ const PersonContent: React.FC<{
       </h2>
       <p className="text-xl font-semibold mb-6">{details}</p>
       <div className="flex flex-col gap-6">
-        <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
-          <TopIssuesContent />
-        </InfoSection>
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
+            <TopIssuesContent />
+          </InfoSection>
+        ) : null}
 
         <InfoSection title="Contact Information" icon={<LuContact size={24} />}>
           <Field
@@ -363,9 +369,11 @@ const PersonContent: React.FC<{
           <Field label="Ethnicity Group" value={person.ethnicityGroup} />
         </InfoSection>
 
-        <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
-          <ActivitiesContent />
-        </InfoSection>
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
+            <ActivitiesContent />
+          </InfoSection>
+        ) : null}
       </div>
     </div>
   )

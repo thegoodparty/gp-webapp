@@ -61,11 +61,15 @@ const PositionFaqs = ({ race }: PositionFaqsProps): React.JSX.Element => {
     },
     {
       q: `Where is the filing office?`,
-      a: filingOfficeAddress ? `${filingOfficeAddress}.` : 'Filing office address is not available.',
+      a: filingOfficeAddress
+        ? `${filingOfficeAddress}.`
+        : 'Filing office address is not available.',
     },
     {
       q: `How can I get in touch with the filing office?`,
-      a: filingPhoneNumber ? `You can contact the filing office by calling ${filingPhoneNumber}.` : 'Filing office phone number is not available.',
+      a: filingPhoneNumber
+        ? `You can contact the filing office by calling ${filingPhoneNumber}.`
+        : 'Filing office phone number is not available.',
     },
     {
       q: `How do I get started running for ${normalizedPositionName}?`,

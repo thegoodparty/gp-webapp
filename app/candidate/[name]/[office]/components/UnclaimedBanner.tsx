@@ -10,7 +10,9 @@ interface UnclaimedBannerProps {
   className?: string
 }
 
-export default function UnclaimedBanner({ className }: UnclaimedBannerProps): React.JSX.Element | null {
+export default function UnclaimedBanner({
+  className,
+}: UnclaimedBannerProps): React.JSX.Element | null {
   const [candidate] = usePublicCandidate()
   const [user] = useUser()
   const { claimed } = candidate || {}

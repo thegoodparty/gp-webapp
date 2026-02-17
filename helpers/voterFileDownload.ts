@@ -31,4 +31,3 @@ export const voterFileDownload = async (
   }
   return Promise.reject(res)
 }
-

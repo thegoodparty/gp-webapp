@@ -49,4 +49,3 @@ export const WEBSITE_THEMES: Record<string, ThemeConfig> = {
     muiColor: 'var(--gray-800)',
   },
 }
-

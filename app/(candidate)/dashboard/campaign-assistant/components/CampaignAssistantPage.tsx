@@ -13,7 +13,9 @@ interface CampaignAssistantPageProps {
   campaign: Campaign
 }
 
-const CampaignAssistantPage = (props: CampaignAssistantPageProps): React.JSX.Element => (
+const CampaignAssistantPage = (
+  props: CampaignAssistantPageProps,
+): React.JSX.Element => (
   <DashboardLayout {...props} wrapperClassName="w-full" showAlert={false}>
     <ChatProvider>
       <Paper className="h-[calc(100vh-72px)] flex flex-col">

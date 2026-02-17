@@ -18,7 +18,10 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
-import { TextingComplianceSubmitButton, type ValidationField } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import {
+  TextingComplianceSubmitButton,
+  type ValidationField,
+} from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
@@ -52,7 +55,7 @@ type ValidationResult = {
 }
 
 const getFailingFields = (
-  validations: Record<ValidationField, boolean>
+  validations: Record<ValidationField, boolean>,
 ): ValidationField[] => {
   const fields: ValidationField[] = []
   let key: ValidationField
@@ -64,7 +67,9 @@ const getFailingFields = (
   return fields
 }
 
-export const validateRegistrationForm = (data: FormDataState): ValidationResult => {
+export const validateRegistrationForm = (
+  data: FormDataState,
+): ValidationResult => {
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -137,7 +142,7 @@ interface TextingComplianceRegistrationFormProps {
 }
 
 const TextingComplianceRegistrationForm = ({
-  onSubmit = () => { },
+  onSubmit = () => {},
   loading = false,
   hasSubmissionError = false,
 }: TextingComplianceRegistrationFormProps): React.JSX.Element => {
@@ -156,9 +161,9 @@ const TextingComplianceRegistrationForm = ({
   const failingFields = getFailingFields(validations)
 
   const addressValue = isAddressValue(address) ? address : null
-  const [addressInputValue, setAddressInputValue] = useState<string | undefined>(
-    addressValue?.formatted_address || '',
-  )
+  const [addressInputValue, setAddressInputValue] = useState<
+    string | undefined
+  >(addressValue?.formatted_address || '')
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
   //  components to support signature change
@@ -178,14 +183,15 @@ const TextingComplianceRegistrationForm = ({
 
   const handleOnSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
-      source: 'compliance_flow'
+      source: 'compliance_flow',
     })
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId, committeeType, ...baseFormData } = formData
-    const submitData = officeLevel === 'federal'
-      ? formData
-      : { ...baseFormData, committeeType: 'CANDIDATE' }
+    const submitData =
+      officeLevel === 'federal'
+        ? formData
+        : { ...baseFormData, committeeType: 'CANDIDATE' }
     return onSubmit(submitData)
   }
 
@@ -239,7 +245,9 @@ const TextingComplianceRegistrationForm = ({
               <Select
                 label="Committee Type"
                 value={formData.committeeType || ''}
-                onChange={(e) => handleChange({ committeeType: e.target.value })}
+                onChange={(e) =>
+                  handleChange({ committeeType: e.target.value })
+                }
               >
                 <MenuItem value="HOUSE">House</MenuItem>
                 <MenuItem value="SENATE">Senate</MenuItem>
@@ -251,7 +259,10 @@ const TextingComplianceRegistrationForm = ({
         <StyledAlert severity="warning" className="mb-6">
           <Body2>
             A PIN is required to verify your identity. <br />
-            It will only be sent if your email, phone, or address matches your election filing.
+            It will only be sent if your email, phone, or address matches your
+            election filing. Please review your campaign filing link to ensure
+            the email, phone number, or address matches exactly before
+            submitting.
           </Body2>
         </StyledAlert>
         <TextField
@@ -303,7 +314,6 @@ const TextingComplianceRegistrationForm = ({
             officeLevel: getStringValue(officeLevel),
           }}
         />
-
       </TextingComplianceFooter>
     </>
   )
