@@ -549,6 +549,10 @@ export const apiRoutes = {
       path: '/payments/purchase/complete-checkout-session',
       method: 'POST',
     },
+    completeFreePurchase: {
+      path: '/payments/purchase/complete-free-purchase',
+      method: 'POST',
+    },
   },
   jobs: {
     list: {

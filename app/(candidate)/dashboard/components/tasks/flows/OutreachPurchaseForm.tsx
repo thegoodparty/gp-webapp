@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import H1 from '@shared/typography/H1'
 import CheckoutPayment from 'app/(candidate)/dashboard/purchase/components/CheckoutPayment'
 import Button from '@shared/buttons/Button'
@@ -5,6 +6,11 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { useCheckoutSession } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
+import {
+  completeCheckoutSession,
+  completeFreePurchase,
+} from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
+import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
 
 interface OutreachPurchaseFormProps {
   onComplete?: () => void
@@ -20,6 +26,7 @@ export const OutreachPurchaseForm = ({
   const [campaign] = useCampaign()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const { checkoutSession } = useCheckoutSession()
+  const [isRedeeming, setIsRedeeming] = useState(false)
 
   const hasFreeTextsOffer = p2pUxEnabled && campaign?.hasFreeTextsOffer
   const discount = hasFreeTextsOffer
@@ -28,8 +35,36 @@ export const OutreachPurchaseForm = ({
   const isFree = hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT
   const totalCost = isFree ? 0 : checkoutSession?.amount ?? 0
 
-  const handleFreeComplete = () => {
-    onComplete()
+  const handleFreeComplete = async () => {
+    setIsRedeeming(true)
+    try {
+      const response = await completeFreePurchase(PURCHASE_TYPES.TEXT, {
+        contactCount,
+        outreachType: 'p2p',
+      })
+      if (!response.ok) {
+        onError()
+        return
+      }
+      onComplete()
+    } catch {
+      onError()
+    } finally {
+      setIsRedeeming(false)
+    }
+  }
+
+  const handlePaidComplete = async (sessionId: string) => {
+    try {
+      const response = await completeCheckoutSession(sessionId)
+      if (!response.ok) {
+        onError()
+        return
+      }
+      onComplete()
+    } catch {
+      onError()
+    }
   }
 
   return (
@@ -62,12 +97,17 @@ export const OutreachPurchaseForm = ({
       </div>
 
       {isFree ? (
-        <Button size="large" className="w-full" onClick={handleFreeComplete}>
-          Schedule text
+        <Button
+          size="large"
+          className="w-full"
+          onClick={handleFreeComplete}
+          disabled={isRedeeming}
+        >
+          {isRedeeming ? 'Scheduling...' : 'Schedule text'}
         </Button>
       ) : (
         <CheckoutPayment
-          onPaymentSuccess={onComplete}
+          onPaymentSuccess={handlePaidComplete}
           onPaymentError={onError}
         />
       )}

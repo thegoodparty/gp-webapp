@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useRef } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   PaymentElement,
   useCheckout,
@@ -99,10 +99,16 @@ function CheckoutFormContent({
   onError: (error: Error | StripeError) => void
 }): React.JSX.Element {
   const promo = usePromoCode(checkout)
+  const [hasConfirmedPayment, setHasConfirmedPayment] = useState(false)
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!sessionId) {
         throw new Error('Missing checkout session ID')
+      }
+
+      if (hasConfirmedPayment) {
+        return sessionId
       }
 
       const result = await checkout.confirm({ redirect: 'if_required' })
@@ -111,10 +117,12 @@ function CheckoutFormContent({
         throw result.error
       }
 
+      setHasConfirmedPayment(true)
+      await onSuccess(sessionId)
+
       return sessionId
     },
     onError,
-    onSuccess,
   })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -160,9 +168,9 @@ function CheckoutFormContent({
       />
       <Button
         type="submit"
-        disabled={!canSubmit || mutation.isPending}
-        loading={mutation.isPending}
-        className="mt-6 w-full"
+        disabled={!canSubmit || mutation.isPending || hasConfirmedPayment}
+        loading={mutation.isPending || hasConfirmedPayment}
+        className="mt-6 w-full whitespace-nowrap"
         color="primary"
         size="large"
       >
