@@ -107,17 +107,16 @@ function CheckoutFormContent({
         throw new Error('Missing checkout session ID')
       }
 
-      if (hasConfirmedPayment) {
-        return sessionId
+      if (!hasConfirmedPayment) {
+        const result = await checkout.confirm({ redirect: 'if_required' })
+
+        if (result.type === 'error') {
+          throw result.error
+        }
+
+        setHasConfirmedPayment(true)
       }
 
-      const result = await checkout.confirm({ redirect: 'if_required' })
-
-      if (result.type === 'error') {
-        throw result.error
-      }
-
-      setHasConfirmedPayment(true)
       await onSuccess(sessionId)
 
       return sessionId
@@ -130,7 +129,7 @@ function CheckoutFormContent({
     mutation.mutate()
   }
 
-  const canSubmit = checkout.canConfirm
+  const canSubmit = hasConfirmedPayment || checkout.canConfirm
   const currentTotal = checkout.total.total.minorUnitsAmount / 100
   const originalTotal = checkout.total.subtotal.minorUnitsAmount / 100
 
@@ -168,8 +167,8 @@ function CheckoutFormContent({
       />
       <Button
         type="submit"
-        disabled={!canSubmit || mutation.isPending || hasConfirmedPayment}
-        loading={mutation.isPending || hasConfirmedPayment}
+        disabled={!canSubmit || mutation.isPending}
+        loading={mutation.isPending}
         className="mt-6 w-full whitespace-nowrap"
         color="primary"
         size="large"

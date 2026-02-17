@@ -60,16 +60,12 @@ export const OutreachPurchaseForm = ({
   }
 
   const handlePaidComplete = async (sessionId: string) => {
-    try {
-      const response = await completeCheckoutSession(sessionId)
-      if (!response.ok) {
-        onError()
-        return
-      }
-      await onComplete()
-    } catch {
-      onError()
+    const response = await completeCheckoutSession(sessionId)
+    if (!response.ok) {
+      throw new Error('Failed to complete purchase')
     }
+
+    await onComplete()
   }
 
   return (
