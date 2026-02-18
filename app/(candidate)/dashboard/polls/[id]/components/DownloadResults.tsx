@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Button } from 'goodparty-styleguide'
-import { LuDownload } from 'react-icons/lu'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { usePoll } from '../../shared/hooks/PollProvider'
@@ -40,7 +39,6 @@ export default function DownloadResults() {
 
   return (
     <Button onClick={handleDownload} disabled={loading}>
-      <LuDownload className="mr-2" />
       {loading ? 'Downloading...' : 'Download results'}
     </Button>
   )
