@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import { visualSnapshot, visualSnapshotElement } from '../../../src/helpers/visual.helper'
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,6 +17,8 @@ test.describe('Navigation Bar', () => {
     await expect(page.getByTestId('nav-product')).toBeVisible()
     await expect(page.getByTestId('nav-resources')).toBeVisible()
     await expect(page.getByTestId('nav-about-us')).toBeVisible()
+
+    await visualSnapshotElement(page.getByTestId('navbar'), 'navbar-default.png')
   })
 
   test('should expand product dropdown menu', async ({ page }) => {
@@ -28,6 +31,10 @@ test.describe('Navigation Bar', () => {
     await expect(page.getByTestId('nav-serve').first()).toBeVisible()
     await expect(page.getByTestId('nav-pricing').first()).toBeVisible()
     await expect(page.getByTestId('nav-good-party-pro').first()).toBeVisible()
+
+    await visualSnapshot(page, 'navbar-product-dropdown.png', {
+      clip: { x: 0, y: 0, width: 1280, height: 400 },
+    })
   })
 
   test('should expand resources dropdown menu', async ({ page }) => {
@@ -36,6 +43,10 @@ test.describe('Navigation Bar', () => {
     await expect(page.getByTestId('nav-blog')).toBeVisible()
     await expect(page.getByTestId('nav-community')).toBeVisible()
     await expect(page.getByTestId('nav-case-studies')).toBeVisible()
+
+    await visualSnapshot(page, 'navbar-resources-dropdown.png', {
+      clip: { x: 0, y: 0, width: 1280, height: 400 },
+    })
   })
 
   test('should expand about us dropdown menu', async ({ page }) => {
@@ -44,6 +55,10 @@ test.describe('Navigation Bar', () => {
     await expect(page.getByTestId('nav-team')).toBeVisible()
     await expect(page.getByTestId('nav-find-candidates')).toBeVisible()
     await expect(page.getByTestId('nav-contact-us')).toBeVisible()
+
+    await visualSnapshot(page, 'navbar-about-dropdown.png', {
+      clip: { x: 0, y: 0, width: 1280, height: 400 },
+    })
   })
 
   test('should navigate to campaign tools page', async ({ page }) => {
