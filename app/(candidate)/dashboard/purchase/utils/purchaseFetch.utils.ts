@@ -32,3 +32,13 @@ export function completeCheckoutSession(
     checkoutSessionId,
   })
 }
+
+export function completeFreePurchase(
+  purchaseType: string,
+  metadata: Record<string, string | number | boolean | undefined>,
+): Promise<ApiResponse<CompletePurchaseResponse>> {
+  return clientFetch(apiRoutes.payments.completeFreePurchase, {
+    purchaseType,
+    metadata,
+  })
+}
