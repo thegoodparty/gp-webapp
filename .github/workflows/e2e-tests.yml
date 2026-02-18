@@ -475,7 +475,7 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
           VISUAL_TESTS: "true"
-          UPDATE_VISUAL_BASELINES: "true"  # ← SET TO "false" AFTER COMMITTING BASELINES
+          UPDATE_VISUAL_BASELINES: "false"  # ← SET TO "false" AFTER COMMITTING BASELINES
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
