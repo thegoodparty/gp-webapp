@@ -1,6 +1,6 @@
 'use client'
 
-import { Input } from 'goodparty-styleguide'
+import { Input } from '@styleguide'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { useContactsTable } from '../hooks/ContactsTableProvider'

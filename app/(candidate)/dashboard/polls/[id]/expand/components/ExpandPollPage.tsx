@@ -18,7 +18,7 @@ import {
   POLLS_SCHEDULING_COPY,
   PollScheduledDateSelector,
 } from '../../../components/PollScheduledDateSelector'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 
 const AudienceSelectionForm: React.FC<{
   poll: Poll

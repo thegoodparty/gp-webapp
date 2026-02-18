@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import { deleteCustomSegment } from '../shared/ajaxActions'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { useState } from 'react'

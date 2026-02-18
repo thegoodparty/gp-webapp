@@ -10,7 +10,7 @@ import {
   LuDollarSign,
   LuPercent,
 } from 'react-icons/lu'
-import { Card } from 'goodparty-styleguide'
+import { Card } from '@styleguide'
 import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
 import { useQuery } from '@tanstack/react-query'
 
