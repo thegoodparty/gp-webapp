@@ -321,6 +321,10 @@ export const apiRoutes = {
         path: '/campaigns/mine/race-target-details',
         method: 'PUT',
       },
+      adminUpdate: {
+        path: '/campaigns/admin/:slug/race-target-details',
+        method: 'PUT',
+      },
     },
   },
   content: {
