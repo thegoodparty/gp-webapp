@@ -5,7 +5,10 @@ import type { MessageElement } from '@slack/web-api/dist/types/response/Conversa
 import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
-import { authenticateTestUser } from 'tests/utils/api-registration'
+import {
+  authenticateTestUser,
+  type AuthenticatedUser,
+} from 'tests/utils/api-registration'
 import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
@@ -293,13 +296,26 @@ const with11AmLocalTime = (date: Date) => {
   return copy
 }
 
-test('poll onboarding and expansion', async ({ page }) => {
-  // Set this test's timeout to 10 minutes
-  test.setTimeout(10 * 60 * 1000)
-  const { user, client } = await authenticateTestUser(page, {
-    isolated: true,
-    race: { zip: district.zip, office: district.office },
-  })
+test.describe.serial('poll onboarding', () => {
+  // Shared state between tests
+  let sharedUser: AuthenticatedUser
+  let sharedToken: string
+  let sharedPollId: string
+  let sharedContact: CsvRow
+
+  test('poll onboarding and expansion', async ({ page }) => {
+    // Set this test's timeout to 10 minutes
+    test.setTimeout(10 * 60 * 1000)
+    const { user, client } = await authenticateTestUser(page, {
+      isolated: true,
+      race: { zip: district.zip, office: district.office },
+    })
+
+    // Store for reuse in subsequent tests
+    sharedUser = user
+    sharedToken = (
+      client.defaults.headers.common.Authorization as string
+    ).replace('Bearer ', '')
   await page.goto('/polls/welcome')
   await NavigationHelper.dismissOverlays(page)
 
@@ -371,6 +387,10 @@ test('poll onboarding and expansion', async ({ page }) => {
   )
 
   console.log(`Found Poll ID: ${pollId}`)
+
+  // Store for reuse in subsequent tests
+  sharedPollId = pollId
+  sharedContact = csvRows[0] as CsvRow
 
   expect(csvRows).toHaveLength(500)
 
@@ -699,4 +719,103 @@ test('poll onboarding and expansion', async ({ page }) => {
 
   // Confirm that the removed issue is no longer visible.
   await expect(page.getByText('Crime')).toHaveCount(0)
+})
+
+test('person overlay shows constituent issues and activities', async ({
+  page,
+}) => {
+  test.setTimeout(2 * 60 * 1000)
+
+  // Re-authenticate with the same user by setting cookies on the new page context.
+  const baseURL = process.env.BASE_URL || 'http://localhost:4000'
+  const domain = baseURL.replace('http://', '').replace('https://', '')
+  await page.context().addCookies([
+    {
+      name: 'token',
+      value: sharedToken,
+      domain,
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Lax',
+    },
+    {
+      name: 'user',
+      value: JSON.stringify(sharedUser),
+      domain,
+      path: '/',
+      sameSite: 'Lax',
+    },
+  ])
+
+  // Navigate to contacts page
+  await page.goto('/dashboard/contacts')
+  await NavigationHelper.dismissOverlays(page)
+
+  // Wait for contacts table to load
+  const table = page.locator('table').first()
+  await expect(table).toBeVisible({ timeout: 20_000 })
+  await expect(table.locator('tbody tr').first()).toBeVisible({
+    timeout: 25_000,
+  })
+
+  // Search for the constituent who responded to the poll
+  const searchInput = page.getByPlaceholder('Search contacts').first()
+  await searchInput.fill(
+    `${sharedContact.firstName} ${sharedContact.lastName}`,
+  )
+  await searchInput.press('Enter')
+
+  // Wait for search results and click the matching row
+  const searchRow = table.locator('tbody tr').first()
+  await expect(searchRow).toBeVisible({ timeout: 20_000 })
+  await expect(searchRow).toContainText(sharedContact.firstName, {
+    ignoreCase: true,
+  })
+  await searchRow.click({ force: true })
+
+  // Wait for the person overlay to open
+  const personSheet = page
+    .getByRole('dialog')
+    .filter({ has: page.getByText('Contact Information') })
+    .first()
+  await expect(personSheet).toBeVisible({ timeout: 15_000 })
+
+  // Verify the correct person is displayed
+  await expect(
+    personSheet.getByText(sharedContact.firstName, { exact: false }),
+  ).toBeVisible({ timeout: 5_000 })
+
+  // Verify "Top Issues" section is visible and shows the poll issue.
+  // NOTE: Requires the 'serve-contacts-activities-and-issues' feature flag to be enabled.
+  await expect(personSheet.getByText('Top Issues')).toBeVisible({
+    timeout: 10_000,
+  })
+  // Use getByRole('link') to avoid strict mode violation — the summary
+  // paragraph also contains the text "Traffic congestion…" (lowercase).
+  const issueLink = personSheet
+    .getByRole('link', { name: 'Traffic Congestion' })
+    .first()
+  await expect(issueLink).toBeVisible()
+  await expect(issueLink).toHaveAttribute(
+    'href',
+    `/dashboard/polls/${sharedPollId}`,
+  )
+
+  // Verify "Activity Feed" section is visible with expected events
+  await expect(personSheet.getByText('Activity Feed')).toBeVisible({
+    timeout: 10_000,
+  })
+  await expect(personSheet.getByText('Sent').first()).toBeVisible()
+  await expect(personSheet.getByText('Responded').first()).toBeVisible()
+
+  // Verify the activity links to the poll
+  const activityLink = personSheet
+    .getByRole('link', { name: 'Top Community Issues' })
+    .first()
+  await expect(activityLink).toHaveAttribute(
+    'href',
+    `/dashboard/polls/${sharedPollId}`,
+  )
+})
 })
