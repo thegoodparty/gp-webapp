@@ -56,7 +56,6 @@ const DashboardLayout = ({
 
     const weeksResult = weeksTill(electionDate)
     const shouldRedirect =
-      !details?.primaryElectionDate &&
       typeof details?.wonGeneral !== 'boolean' &&
       weeksResult &&
       typeof weeksResult === 'object' &&
