@@ -3,7 +3,7 @@ import { WaitHelper } from './wait.helper'
 
 const VISUAL_TESTS_ENABLED = process.env.VISUAL_TESTS === 'true'
 
-type SnapshotOptions = Parameters<ReturnType<typeof expect<Page>>['toHaveScreenshot']>[1]
+type SnapshotOptions = Parameters<ReturnType<typeof expect<Page>>['toHaveScreenshot']>[0]
 
 /**
  * Takes a full-page screenshot and compares against the committed baseline.
@@ -24,7 +24,7 @@ export async function visualSnapshot(
   await expect(page).toHaveScreenshot(name, {
     animations: 'disabled',
     fullPage: false,
-    ...options,
+    ...(options ?? {}),
   })
 }
 
@@ -35,12 +35,12 @@ export async function visualSnapshot(
 export async function visualSnapshotElement(
   locator: Locator,
   name: string,
-  options?: Parameters<ReturnType<typeof expect<Locator>>['toHaveScreenshot']>[1],
+  options?: Parameters<ReturnType<typeof expect<Locator>>['toHaveScreenshot']>[0],
 ): Promise<void> {
   if (!VISUAL_TESTS_ENABLED) return
 
   await expect(locator).toHaveScreenshot(name, {
     animations: 'disabled',
-    ...options,
+    ...(options ?? {}),
   })
 }
