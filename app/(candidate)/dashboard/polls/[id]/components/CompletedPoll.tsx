@@ -6,7 +6,7 @@ export default function CompletedPoll(): React.JSX.Element {
   return (
     <div>
       <ConfidenceAlert />
-      <div className="flex flex-col md:flex-row md:justify-end my-4">
+      <div className="md:hidden my-4">
         <DownloadResults />
       </div>
       <PollsIssues />
