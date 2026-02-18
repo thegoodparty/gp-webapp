@@ -21,7 +21,11 @@ vi.mock('app/(candidate)/onboarding/shared/ajaxActions', () => ({
 
 vi.mock('helpers/analyticsHelper', () => ({
   buildTrackingAttrs: () => ({}),
-  EVENTS: { Onboarding: { OfficeStep: { ClickNext: '', OfficeSelected: '', OfficeCompleted: '' } } },
+  EVENTS: {
+    Onboarding: {
+      OfficeStep: { ClickNext: '', OfficeSelected: '', OfficeCompleted: '' },
+    },
+  },
   trackEvent: vi.fn(),
 }))
 
