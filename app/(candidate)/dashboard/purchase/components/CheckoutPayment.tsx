@@ -19,7 +19,7 @@ const CheckoutPayment: React.FC<CheckoutPaymentProps> = ({
 }) => {
   const { checkoutSession } = useCheckoutSession()
 
-  if (!checkoutSession) return null
+  if (!checkoutSession?.clientSecret) return null
 
   return (
     <CheckoutProvider
