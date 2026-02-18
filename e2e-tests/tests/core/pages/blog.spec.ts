@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Blog Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -27,6 +28,8 @@ test.describe('Blog Page', () => {
     await expect(
       page.getByRole('link', { name: 'Independent Cause' }).first(),
     ).toBeVisible()
+
+    await visualSnapshot(page, 'blog-listing.png')
   })
 
   test('should display blog articles', async ({ page }) => {
@@ -51,6 +54,8 @@ test.describe('Blog Page', () => {
 
     await expect(page).toHaveURL(/\/section\/news/i)
     await expect(page.getByTestId('articleTitle')).toHaveText('News')
+
+    await visualSnapshot(page, 'blog-news-category.png')
   })
 
   test('should filter blog by politics category', async ({ page }) => {
@@ -80,5 +85,7 @@ test.describe('Blog Page', () => {
     if (await faqSection.isVisible({ timeout: 5000 })) {
       await expect(faqSection).toBeVisible()
     }
+
+    await visualSnapshot(page, 'blog-article.png')
   })
 })
