@@ -8,7 +8,7 @@ import {
   Sheet,
   SheetContent,
   SheetTitle,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import Image from 'next/image'
 import Link from 'next/link'
 import {

@@ -1,4 +1,4 @@
-import { Card, CardContent } from 'goodparty-styleguide'
+import { Card, CardContent } from '@styleguide'
 import { LuLightbulb } from 'react-icons/lu'
 
 interface TextInsightProps {

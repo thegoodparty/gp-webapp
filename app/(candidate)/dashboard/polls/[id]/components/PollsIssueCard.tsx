@@ -1,5 +1,5 @@
 'use client'
-import { Button, Card } from 'goodparty-styleguide'
+import { Button, Card } from '@styleguide'
 import { MdArrowRightAlt } from 'react-icons/md'
 import Link from 'next/link'
 import { usePoll } from '../../shared/hooks/PollProvider'
