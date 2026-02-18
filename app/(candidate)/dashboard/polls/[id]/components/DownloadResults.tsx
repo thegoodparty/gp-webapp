@@ -38,7 +38,11 @@ export default function DownloadResults() {
   }
 
   return (
-    <Button className="w-full md:w-auto" onClick={handleDownload} disabled={loading}>
+    <Button
+      className="w-full md:w-auto"
+      onClick={handleDownload}
+      disabled={loading}
+    >
       {loading ? 'Downloading...' : 'Download results'}
     </Button>
   )
