@@ -478,6 +478,7 @@ jobs:
           UPDATE_VISUAL_BASELINES: "true"  # ← SET TO "false" AFTER COMMITTING BASELINES
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload visual baselines (for initial generation)
         if: ${{ !cancelled() }}
