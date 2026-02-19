@@ -127,8 +127,8 @@ export const BlockElements = () => (
     <div>
       <h3>Blockquote</h3>
       <blockquote>
-        "Design is not just what it looks like and feels like. Design is how it
-        works." — Steve Jobs
+        &quot;Design is not just what it looks like and feels like. Design is how it
+        works.&quot; — Steve Jobs
       </blockquote>
     </div>
 
@@ -253,8 +253,8 @@ export const CompleteExample = () => (
     </header>
 
     <p>
-      Good typography is <strong>invisible</strong>. When it's done well,
-      readers don't notice the typeface, margins, or line spacing. They simply{' '}
+      Good typography is <strong>invisible</strong>. When it&apos;s done well,
+      readers don&apos;t notice the typeface, margins, or line spacing. They simply{' '}
       <em>absorb the content</em>.
     </p>
 
@@ -267,7 +267,7 @@ export const CompleteExample = () => (
 
     <ol>
       <li>
-        <strong>Hierarchy</strong> - Guide the reader's eye
+        <strong>Hierarchy</strong> - Guide the reader&apos;s eye
       </li>
       <li>
         <strong>Consistency</strong> - Create predictable patterns
@@ -278,8 +278,8 @@ export const CompleteExample = () => (
     </ol>
 
     <blockquote>
-      "Typography is the craft of endowing human language with a durable visual
-      form." — Robert Bringhurst
+      &quot;Typography is the craft of endowing human language with a durable visual
+      form.&quot; — Robert Bringhurst
     </blockquote>
 
     <h3>Implementation Details</h3>

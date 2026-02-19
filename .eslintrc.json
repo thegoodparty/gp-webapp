@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["e2e-tests/playwright-report"],
+  "ignorePatterns": ["e2e-tests/playwright-report", "styleguide/*.md"],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
     "next/core-web-vitals",

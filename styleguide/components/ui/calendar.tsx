@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from "lucide-react";
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
+} from "lucide-react"
+import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 
-import { cn } from "@styleguide/lib/utils";
+import { cn } from "@styleguide/lib/utils"
 import {
   CalendarButton,
   calendarButtonVariants,
-} from "@styleguide/components/ui/calendar-button";
-import { Button } from "@styleguide/components/ui/button";
+} from "@styleguide/components/ui/calendar-button"
+import { Button } from "@styleguide/components/ui/button"
 
 function Calendar({
   className,
@@ -27,7 +27,7 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof CalendarButton>["variant"];
 }) {
-  const defaultClassNames = getDefaultClassNames();
+  const defaultClassNames = getDefaultClassNames()
 
   return (
     <DayPicker
@@ -141,13 +141,13 @@ function Calendar({
               className={cn(className)}
               {...props}
             />
-          );
+          )
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
               <ChevronLeftIcon className={cn("size-4", className)} {...props} />
-            );
+            )
           }
 
           if (orientation === "right") {
@@ -156,12 +156,12 @@ function Calendar({
                 className={cn("size-4", className)}
                 {...props}
               />
-            );
+            )
           }
 
           return (
             <ChevronDownIcon className={cn("size-4", className)} {...props} />
-          );
+          )
         },
         DayButton: CalendarDayButton,
         PreviousMonthButton: ({ className, ...props }) => {
@@ -172,7 +172,7 @@ function Calendar({
               className={cn(className)}
               {...props}
             />
-          );
+          )
         },
         NextMonthButton: ({ className, ...props }) => {
           return (
@@ -182,7 +182,7 @@ function Calendar({
               className={cn(className)}
               {...props}
             />
-          );
+          )
         },
         WeekNumber: ({ children, ...props }) => {
           return (
@@ -191,13 +191,13 @@ function Calendar({
                 {children}
               </div>
             </td>
-          );
+          )
         },
         ...components,
       }}
       {...props}
     />
-  );
+  )
 }
 
 function CalendarDayButton({
@@ -206,12 +206,12 @@ function CalendarDayButton({
   modifiers,
   ...props
 }: React.ComponentProps<typeof DayButton>) {
-  const defaultClassNames = getDefaultClassNames();
+  const defaultClassNames = getDefaultClassNames()
 
-  const ref = React.useRef<HTMLButtonElement>(null);
+  const ref = React.useRef<HTMLButtonElement>(null)
   React.useEffect(() => {
-    if (modifiers.focused) ref.current?.focus();
-  }, [modifiers.focused]);
+    if (modifiers.focused) ref.current?.focus()
+  }, [modifiers.focused])
 
   return (
     <CalendarButton
@@ -235,7 +235,7 @@ function CalendarDayButton({
       )}
       {...props}
     />
-  );
+  )
 }
 
-export { Calendar, CalendarDayButton };
+export { Calendar, CalendarDayButton }
