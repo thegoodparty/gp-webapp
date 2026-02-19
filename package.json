@@ -166,6 +166,7 @@
     "eslint-config-next": "^15.2.4",
     "eslint-plugin-mdx": "^2.1.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-storybook": "^10.2.10",
     "eslint-plugin-unused-imports": "^4.1.4",
     "jsdom": "^28.0.0",
     "madge": "^8.0.0",

@@ -56,6 +56,7 @@ interface DataTableProps<TData, TValue> {
   searchKey?: string
   searchPlaceholder?: string
   pagination?: boolean
+  columnVisibilityControls?: boolean
   onRowClick?: (row: TData) => void
   onColumnVisibilityChange?: (visibility: VisibilityState) => void
   initialColumnVisibility?: VisibilityState
@@ -67,6 +68,7 @@ function DataTable<TData, TValue>({
   searchKey,
   searchPlaceholder = 'Filter...',
   pagination = true,
+  columnVisibilityControls = true,
   onRowClick,
   onColumnVisibilityChange,
   initialColumnVisibility = {},
@@ -124,7 +126,7 @@ function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         )}
-        <DropdownMenu>
+        {columnVisibilityControls && <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
               Columns <ChevronDownIcon />
@@ -174,7 +176,7 @@ function DataTable<TData, TValue>({
                 )
               })}
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>}
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
