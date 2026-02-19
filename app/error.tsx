@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import Link from 'next/link'
+import { reportErrorToSentry } from '@shared/sentry'
 
 interface ErrorPayload {
   message?: string
@@ -32,6 +33,7 @@ export const sendError = async (payload: ErrorPayload): Promise<boolean> => {
 
 export default function Error({ error }: ErrorPageProps): React.JSX.Element {
   useEffect(() => {
+    reportErrorToSentry(error)
     logError()
     if (error?.message?.startsWith('Loading chunk')) {
       window.location.reload()
