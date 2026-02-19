@@ -1,21 +1,23 @@
 name: Visual Tests (On Demand)
 
-# Triggers when someone comments "/visual-test" on a PR.
-# Finds the latest successful Vercel deployment for that PR's branch — no push needed.
+# Two trigger methods:
+# 1. Comment "/visual-test" on a PR (works once this file is on the default branch)
+# 2. Manually via Actions UI → "Run workflow" → pick your branch (works from any branch)
+# Both find the latest Vercel deployment for the branch — no new commit needed.
 
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   visual-tests:
     name: Visual Diff Tests (On Demand)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Only fire on PR comments (not regular issue comments), with the exact command
     if: |
-      github.event.issue.pull_request != null &&
-      github.event.comment.body == '/visual-test'
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.issue.pull_request != null && github.event.comment.body == '/visual-test')
     continue-on-error: true
     permissions:
       actions: read
@@ -35,26 +37,36 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.payload.issue.number;
+            let headSha, branchRef, prNumber;
 
-            // Get the PR to find the head SHA and branch name
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
+            if (context.eventName === 'issue_comment') {
+              prNumber = context.payload.issue.number;
 
-            const headSha = pr.head.sha;
-            const branchRef = pr.head.ref;
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              });
+
+              headSha = pr.head.sha;
+              branchRef = pr.head.ref;
+
+              // React to the comment so the user knows it was received
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: 'eyes',
+              });
+            } else {
+              // workflow_dispatch — use the branch selected in the UI
+              branchRef = context.ref.replace('refs/heads/', '');
+              headSha = context.sha;
+            }
+
             core.setOutput('head-sha', headSha);
-
-            // React to the comment so the user knows it was received
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'eyes',
-            });
+            core.setOutput('pr-number', prNumber || '');
+            core.setOutput('event-name', context.eventName);
 
             // Look for a successful Vercel deployment on the head SHA first,
             // then fall back to the most recent successful deployment on the branch.
@@ -84,14 +96,20 @@ jobs:
               }
             }
 
-            // No deployment found — post a helpful comment and stop
+            // No deployment found
             core.setOutput('found', 'false');
-            await github.rest.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## ⚠️ Visual Diff Tests — No Deployment Found\n\nNo successful Vercel deployment was found for this branch. Push a commit to trigger a Vercel preview deployment, then comment \`/visual-test\` again.`,
-            });
+            const msg = `## ⚠️ Visual Diff Tests — No Deployment Found\n\nNo successful Vercel deployment was found for branch \`${branchRef}\`. Push a commit to trigger a Vercel preview deployment, then try again.`;
+
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: msg,
+              });
+            } else {
+              core.warning(msg);
+            }
 
       - name: Stop if no deployment found
         if: steps.find-deployment.outputs.found != 'true'
@@ -140,7 +158,7 @@ jobs:
           retention-days: 30
 
       - name: Comment PR with results
-        if: steps.find-deployment.outputs.found == 'true' && always()
+        if: steps.find-deployment.outputs.found == 'true' && steps.find-deployment.outputs.pr-number != '' && always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -148,7 +166,7 @@ jobs:
             const outcome = '${{ steps.run-visual-tests.outcome }}';
             const icon = outcome === 'success' ? '✅' : '⚠️';
             const deploymentUrl = '${{ steps.find-deployment.outputs.deployment-url }}';
-            const prNumber = context.payload.issue.number;
+            const prNumber = parseInt('${{ steps.find-deployment.outputs.pr-number }}', 10);
 
             let body = `## ${icon} Visual Diff Tests (On Demand)\n\n`;
             body += `**Preview Deployment:** ${deploymentUrl}\n\n`;
