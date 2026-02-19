@@ -321,6 +321,10 @@ export const apiRoutes = {
         path: '/campaigns/mine/race-target-details',
         method: 'PUT',
       },
+      adminUpdate: {
+        path: '/campaigns/admin/:slug/race-target-details',
+        method: 'PUT',
+      },
     },
   },
   content: {
@@ -547,6 +551,10 @@ export const apiRoutes = {
     },
     completeCheckoutSession: {
       path: '/payments/purchase/complete-checkout-session',
+      method: 'POST',
+    },
+    completeFreePurchase: {
+      path: '/payments/purchase/complete-free-purchase',
       method: 'POST',
     },
   },

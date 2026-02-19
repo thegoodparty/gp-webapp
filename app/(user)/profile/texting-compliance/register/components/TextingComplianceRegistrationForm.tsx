@@ -260,7 +260,9 @@ const TextingComplianceRegistrationForm = ({
           <Body2>
             A PIN is required to verify your identity. <br />
             It will only be sent if your email, phone, or address matches your
-            election filing.
+            election filing. Please review your campaign filing link to ensure
+            the email, phone number, or address matches exactly before
+            submitting.
           </Body2>
         </StyledAlert>
         <TextField
