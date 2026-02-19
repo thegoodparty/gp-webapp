@@ -23,9 +23,6 @@
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "unused-imports/no-unused-imports": "error",
-    "@stylistic/semi": [
-      "error",
-      "never"
-    ]
+    "@stylistic/semi": ["error", "never"]
   }
 }

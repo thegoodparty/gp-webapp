@@ -32,13 +32,13 @@ styleguide/
 
 ### Key Files
 
-| File | Purpose | When to Edit |
-|------|---------|--------------|
-| `design-tokens.css` | Raw Figma tokens (colors, spacing, typography) | Sync when Figma changes |
-| `tailwind-theme.css` | Single `@theme` block - generates Tailwind utilities | Add new Tailwind color utilities |
-| `styleguide-scope.css` | Overrides CSS variables for styleguide components | Add new color mappings |
-| `typography.css` | Typography utilities (`.text-lead`, `.button-text-*`) | Add typography classes |
-| `../app/globals.css` | Webapp `:root` defaults + webapp-specific styles | Add webapp color variables |
+| File                   | Purpose                                               | When to Edit                     |
+| ---------------------- | ----------------------------------------------------- | -------------------------------- |
+| `design-tokens.css`    | Raw Figma tokens (colors, spacing, typography)        | Sync when Figma changes          |
+| `tailwind-theme.css`   | Single `@theme` block - generates Tailwind utilities  | Add new Tailwind color utilities |
+| `styleguide-scope.css` | Overrides CSS variables for styleguide components     | Add new color mappings           |
+| `typography.css`       | Typography utilities (`.text-lead`, `.button-text-*`) | Add typography classes           |
+| `../app/globals.css`   | Webapp `:root` defaults + webapp-specific styles      | Add webapp color variables       |
 
 ---
 
@@ -56,8 +56,8 @@ We use a **CSS variable reference pattern** that allows the same Tailwind class 
 
 ```css
 :root {
-  --primary: #242D3D;        /* Webapp's dark indigo */
-  --secondary: #FFC523;      /* Webapp's yellow */
+  --primary: #242d3d; /* Webapp's dark indigo */
+  --secondary: #ffc523; /* Webapp's yellow */
 }
 ```
 
@@ -68,14 +68,17 @@ Tailwind v4's `@theme` block generates utility classes that **reference** CSS va
 ```css
 /* tailwind-theme.css */
 @theme {
-  --color-primary: var(--primary);      /* NOT a static hex value */
+  --color-primary: var(--primary); /* NOT a static hex value */
   --color-secondary: var(--secondary);
 }
 ```
 
 This generates:
+
 ```css
-.bg-primary { background-color: var(--primary); }
+.bg-primary {
+  background-color: var(--primary);
+}
 ```
 
 #### Step 3: Styleguide Overrides (`styleguide-scope.css`)
@@ -83,8 +86,9 @@ This generates:
 For elements with `[data-slot]`, we override the CSS variables:
 
 ```css
-[data-slot], [data-slot] * {
-  --primary: var(--theme-primary);       /* #2563EB (styleguide blue) */
+[data-slot],
+[data-slot] * {
+  --primary: var(--theme-primary); /* #2563EB (styleguide blue) */
   --color-primary: var(--theme-primary); /* Override Tailwind's reference too */
 }
 ```
@@ -103,6 +107,7 @@ For elements with `[data-slot]`, we override the CSS variables:
 ### Why `data-slot`?
 
 shadcn/ui components automatically include `data-slot` on their root elements. This means:
+
 - No extra work needed - components are automatically styled correctly
 - Legacy webapp code (without `data-slot`) keeps its original colors
 - Incremental adoption - migrate one component at a time
@@ -138,6 +143,7 @@ We use **Tailwind CSS v4** with a pure CSS-first configuration — no `tailwind.
 ```
 
 **Why this order?**
+
 1. `design-tokens.css` — Raw CSS variables must exist before `@theme` references them via `var()`
 2. `@import 'tailwindcss'` — Core framework must load first so it can process `@theme`, `@plugin`, and `@source`
 3. `@plugin` / `@source` — Replaces the old `tailwind.config.js` plugins and content arrays
@@ -154,61 +160,61 @@ Use Figma token names directly as Tailwind classes.
 
 ### Theme Colors (`theme/*`)
 
-| Figma Token | Value | Tailwind Class |
-|-------------|-------|----------------|
-| `theme/primary` | `#2563EB` | `bg-primary`, `text-primary` |
-| `theme/primary-foreground` | `#FFFFFF` | `text-primary-foreground` |
-| `theme/secondary` | `#0B1529` | `bg-secondary` |
-| `theme/destructive` | `#E00C30` | `bg-destructive` |
+| Figma Token                | Value     | Tailwind Class               |
+| -------------------------- | --------- | ---------------------------- |
+| `theme/primary`            | `#2563EB` | `bg-primary`, `text-primary` |
+| `theme/primary-foreground` | `#FFFFFF` | `text-primary-foreground`    |
+| `theme/secondary`          | `#0B1529` | `bg-secondary`               |
+| `theme/destructive`        | `#E00C30` | `bg-destructive`             |
 
 ### Brand Colors (`goodparty/*`)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
-| `goodparty/red` | `bg-brand-red` |
-| `goodparty/blue` | `bg-brand-blue` |
+| Figma Token       | Tailwind Class   |
+| ----------------- | ---------------- |
+| `goodparty/red`   | `bg-brand-red`   |
+| `goodparty/blue`  | `bg-brand-blue`  |
 | `goodparty/cream` | `bg-brand-cream` |
 
 ### Brand Scales (`midnight/*`, `halo green/*`, etc.)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
-| `midnight/500` | `bg-brand-midnight-500` |
-| `midnight/900` | `bg-brand-midnight-900` |
-| `halo green/400` | `bg-brand-halo-green-400` |
-| `lavender/600` | `bg-brand-lavender-600` |
-| `waxflower/400` | `bg-brand-waxflower-400` |
+| Figma Token         | Tailwind Class               |
+| ------------------- | ---------------------------- |
+| `midnight/500`      | `bg-brand-midnight-500`      |
+| `midnight/900`      | `bg-brand-midnight-900`      |
+| `halo green/400`    | `bg-brand-halo-green-400`    |
+| `lavender/600`      | `bg-brand-lavender-600`      |
+| `waxflower/400`     | `bg-brand-waxflower-400`     |
 | `bright yellow/600` | `bg-brand-bright-yellow-600` |
 
 ### Semantic Scales (`error/*`, `success/*`, etc.)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
-| `error/500` | `bg-error-500`, `text-error-500` |
-| `success/500` | `bg-success-500` |
-| `info/500` | `bg-info-500` |
-| `warning/500` | `bg-warning-500` |
+| Figma Token   | Tailwind Class                   |
+| ------------- | -------------------------------- |
+| `error/500`   | `bg-error-500`, `text-error-500` |
+| `success/500` | `bg-success-500`                 |
+| `info/500`    | `bg-info-500`                    |
+| `warning/500` | `bg-warning-500`                 |
 
 ### Base Tokens (`base/*`)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
+| Figma Token       | Tailwind Class         |
+| ----------------- | ---------------------- |
 | `base/foreground` | `text-base-foreground` |
-| `base/background` | `bg-base-background` |
-| `base/muted` | `bg-base-muted` |
-| `base/border` | `border-base-border` |
+| `base/background` | `bg-base-background`   |
+| `base/muted`      | `bg-base-muted`        |
+| `base/border`     | `border-base-border`   |
 
 ### Chart Colors (`data/chart-*`)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
+| Figma Token    | Tailwind Class    |
+| -------------- | ----------------- |
 | `data/chart-1` | `bg-data-chart-1` |
 | `data/chart-2` | `bg-data-chart-2` |
 
 ### Grayscale (`grayscale/*`)
 
-| Figma Token | Tailwind Class |
-|-------------|----------------|
+| Figma Token     | Tailwind Class       |
+| --------------- | -------------------- |
 | `grayscale/500` | `text-grayscale-500` |
 | `grayscale/900` | `text-grayscale-900` |
 
@@ -216,12 +222,12 @@ Use Figma token names directly as Tailwind classes.
 
 ## Color Reference (Webapp vs Styleguide)
 
-| Utility | Webapp (`:root`) | Styleguide (`[data-slot]`) |
-|---------|------------------|----------------------------|
-| `bg-primary` | `#242D3D` (dark indigo) | `#2563EB` (blue) |
-| `bg-secondary` | `#FFC523` (yellow) | `#0B1529` (midnight) |
-| `bg-tertiary` | `#6E37FF` (purple) | `#63D1A0` (halo green) |
-| `bg-destructive` | `#E00C30` | `#E00C30` |
+| Utility          | Webapp (`:root`)        | Styleguide (`[data-slot]`) |
+| ---------------- | ----------------------- | -------------------------- |
+| `bg-primary`     | `#242D3D` (dark indigo) | `#2563EB` (blue)           |
+| `bg-secondary`   | `#FFC523` (yellow)      | `#0B1529` (midnight)       |
+| `bg-tertiary`    | `#6E37FF` (purple)      | `#63D1A0` (halo green)     |
+| `bg-destructive` | `#E00C30`               | `#E00C30`                  |
 
 ---
 
@@ -236,12 +242,12 @@ When Figma tokens change:
 
 ### Figma Design System URLs
 
-| Section | Node ID |
-|---------|---------|
+| Section         | Node ID       |
+| --------------- | ------------- |
 | Branding Colors | `23364-36102` |
 | Semantic Colors | `24445-53631` |
 | Tailwind Colors | `24445-54212` |
-| Theme | `24452-18276` |
+| Theme           | `24452-18276` |
 
 Base URL: `https://www.figma.com/design/dmMrTWyBirANhArKs5mTmr/GoodParty-Design-System----shadcn-ui`
 
@@ -289,7 +295,7 @@ export function MyPage() {
     <div>
       {/* Legacy - uses webapp colors */}
       <button className="bg-primary">Legacy</button>
-      
+
       {/* Styleguide - uses styleguide colors */}
       <Button variant="default">Styleguide</Button>
     </div>
@@ -298,6 +304,7 @@ export function MyPage() {
 ```
 
 **Migration tips:**
+
 - Start with isolated components (buttons, inputs, badges)
 - Test visually in Storybook
 - Check responsive behavior - styleguide may use different breakpoints
@@ -308,22 +315,33 @@ export function MyPage() {
 ## Known Issues & Gotchas
 
 ### Multiple `@theme` Blocks
+
 Tailwind v4 doesn't handle multiple `@theme` blocks well - later blocks override earlier ones. **Never add `@theme` to other CSS files.** All theme config must go in `tailwind-theme.css`.
 
 ### Color Format Mismatch
+
 Webapp uses HSL format for some shadcn variables, styleguide uses hex. We provide HSL fallbacks in the `@theme` block:
+
 ```css
 --color-background: hsl(var(--background, 0 0% 100%));
 ```
 
 ### Typography Bleeding
+
 `typography.css` only contains utility classes (no element selectors). Typography is scoped via `[data-slot]` in `styleguide-scope.css`. Don't add `:root` or element selectors to `typography.css`.
 
 ### Dark Mode
+
 Dark mode scoping needs separate selectors. `styleguide-scope.css` includes:
+
 ```css
-.dark [data-slot], .dark [data-slot] *, [data-slot].dark { ... }
+.dark [data-slot],
+.dark [data-slot] *,
+[data-slot].dark {
+  ...;
+}
 ```
+
 Update both light and dark sections when adding dark mode support.
 
 ---
@@ -331,21 +349,25 @@ Update both light and dark sections when adding dark mode support.
 ## Troubleshooting
 
 ### Wrong colors on styleguide component
+
 1. Inspect element — verify `data-slot` attribute exists
 2. Check DevTools computed styles for variable values
 3. Verify `styleguide-scope.css` is imported after `tailwindcss` in `globals.css`
 
 ### Legacy component colors changed unexpectedly
+
 1. Check no parent has `data-slot` attribute
 2. Verify `:root` values in `globals.css`
 
 ### Tailwind class not generating
+
 1. Verify the import order in `globals.css` — `@theme` must come AFTER `@import 'tailwindcss'`
 2. Verify color is in `@theme` block in `tailwind-theme.css`
 3. Check naming matches (e.g., `brand-midnight-500` not `midnight-500`)
 4. After config changes, clear cache: `rm -rf .next && npm run dev`
 
 ### CSS variables not working
+
 1. Check browser DevTools - inspect computed styles for resolved values
 2. Check inheritance - variables might be blocked by a closer ancestor
 3. Variable names are case-sensitive
@@ -366,13 +388,13 @@ import { Button } from '@/styleguide'
 
 ## Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| Tailwind CSS v4 | CSS-first config (`@theme`, `@plugin`, `@source`) — no JS config file |
-| `@tailwindcss/postcss` | PostCSS plugin for Tailwind v4 processing |
-| shadcn/ui | Component primitives with `data-slot` |
-| Radix UI | Accessible headless primitives |
-| Storybook 10 | Component documentation |
+| Technology             | Purpose                                                               |
+| ---------------------- | --------------------------------------------------------------------- |
+| Tailwind CSS v4        | CSS-first config (`@theme`, `@plugin`, `@source`) — no JS config file |
+| `@tailwindcss/postcss` | PostCSS plugin for Tailwind v4 processing                             |
+| shadcn/ui              | Component primitives with `data-slot`                                 |
+| Radix UI               | Accessible headless primitives                                        |
+| Storybook 10           | Component documentation                                               |
 
 ---
 
@@ -398,4 +420,4 @@ These fixes are in `app/globals.css` and apply automatically. See `styleguide/CH
 
 ---
 
-*Last updated: January 2026*
+_Last updated: January 2026_

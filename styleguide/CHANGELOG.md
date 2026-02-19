@@ -15,10 +15,10 @@
 ul {
   display: block;
   list-style-type: disc;
-  ...
+  ...;
 }
 ul li {
-  display: list-item;  /* This overrode flex layouts! */
+  display: list-item; /* This overrode flex layouts! */
 }
 ```
 
@@ -32,7 +32,7 @@ article ul,
 .cms-content ul {
   display: block;
   list-style-type: disc;
-  ...
+  ...;
 }
 
 .prose ul li,
@@ -45,7 +45,8 @@ article ul li,
 
 **Files Changed:** `app/globals.css` (lines 609-632)
 
-**Impact:** 
+**Impact:**
+
 - TasksList, navigation menus, and other UI lists no longer have bullet points
 - Flex layouts on `<li>` elements now work correctly
 - Prose content and styleguide components still get proper list styling
@@ -68,17 +69,17 @@ article ul li,
 ```css
 @layer base {
   button,
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"],
+  [role='button'],
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'],
   summary {
     cursor: pointer;
-    font-weight: 500;  /* Added */
+    font-weight: 500; /* Added */
   }
-  
+
   a {
-    font-weight: 500;  /* Added */
+    font-weight: 500; /* Added */
   }
 }
 ```
@@ -105,7 +106,8 @@ article ul li,
 
 ```css
 @layer base {
-  h1, h2 {
+  h1,
+  h2 {
     letter-spacing: -0.02em;
   }
 }
@@ -133,10 +135,11 @@ article ul li,
 
 ```css
 @layer base {
-  div, span {
+  div,
+  span {
     line-height: 1.3;
   }
-  
+
   svg {
     vertical-align: middle;
   }
@@ -160,6 +163,7 @@ See: [Tailwind v4 Upgrade Guide - Using a JavaScript config file](https://tailwi
 **Fix:** Restructured CSS imports to follow proper Tailwind v4 order. The key issue was that `@theme` (in `tailwind-theme.css`) was imported BEFORE `@import "tailwindcss"`, but **`@theme` must come AFTER**.
 
 Correct Tailwind v4 setup:
+
 ```css
 /* 1. CSS variables first */
 @import '../styleguide/design-tokens.css';
@@ -180,11 +184,13 @@ Correct Tailwind v4 setup:
 ```
 
 Also:
+
 - Deleted `tailwind.config.js` - not needed in v4 (use `@plugin` and `@source` instead)
 - Added manual group-hover CSS rules as fallback
 - Updated component to use Tailwind v4's important modifier syntax (`hidden!` instead of `!hidden`)
 
-**Files Changed:** 
+**Files Changed:**
+
 - `app/globals.css` - Restructured imports, added `@plugin` and `@source` directives
 - Deleted `tailwind.config.js` - replaced with CSS directives
 - `app/(candidate)/dashboard/components/tasks/TaskCheck.tsx` - Updated important syntax to v4 format
@@ -197,16 +203,16 @@ Also:
 
 These issues stem from differences between Tailwind CSS v3 and v4 preflight:
 
-| Feature | Tailwind v3 | Tailwind v4 | Our Fix |
-|---------|-------------|-------------|---------|
-| Config file | `tailwind.config.js` auto-detected | Use `@plugin`, `@source`, `@theme` in CSS | Deleted JS config, use CSS directives |
-| Import order | `@tailwind` directives | `@import "tailwindcss"` first, then `@theme` | Fixed import order |
-| Important modifier | `!hidden` (prefix) | `hidden!` (suffix) | Updated syntax |
-| Button cursor | `cursor: pointer` | Not set | Added in `@layer base` |
-| Button/link font-weight | `500` | Not set | Added in `@layer base` |
-| Heading letter-spacing | `-0.02em` | Not set | Added in `@layer base` |
-| Default line-height | `1.3` | `1.5` (inherited) | Set `1.3` on div/span |
-| List styles | Reset to none | Reset to none | N/A |
+| Feature                 | Tailwind v3                        | Tailwind v4                                  | Our Fix                               |
+| ----------------------- | ---------------------------------- | -------------------------------------------- | ------------------------------------- |
+| Config file             | `tailwind.config.js` auto-detected | Use `@plugin`, `@source`, `@theme` in CSS    | Deleted JS config, use CSS directives |
+| Import order            | `@tailwind` directives             | `@import "tailwindcss"` first, then `@theme` | Fixed import order                    |
+| Important modifier      | `!hidden` (prefix)                 | `hidden!` (suffix)                           | Updated syntax                        |
+| Button cursor           | `cursor: pointer`                  | Not set                                      | Added in `@layer base`                |
+| Button/link font-weight | `500`                              | Not set                                      | Added in `@layer base`                |
+| Heading letter-spacing  | `-0.02em`                          | Not set                                      | Added in `@layer base`                |
+| Default line-height     | `1.3`                              | `1.5` (inherited)                            | Set `1.3` on div/span                 |
+| List styles             | Reset to none                      | Reset to none                                | N/A                                   |
 
 Our `@layer base` rules in `globals.css` restore v3-like behavior where needed.
 
@@ -215,34 +221,36 @@ Our `@layer base` rules in `globals.css` restore v3-like behavior where needed.
 ### Investigation Method
 
 Used Chrome DevTools MCP to compare computed styles between:
+
 - **Local:** `http://localhost:4000/dashboard`
 - **Production:** `https://dev.goodparty.org/dashboard`
 
 Key comparison script:
+
 ```javascript
 // Get computed styles for task items
-const li = document.querySelector('li');
-const button = li.querySelector('a[href]');
+const li = document.querySelector('li')
+const button = li.querySelector('a[href]')
 return {
   li: { listStyleType, display, flexDirection },
-  button: { fontWeight, fontSize, width }
-};
+  button: { fontWeight, fontSize, width },
+}
 ```
 
 ### Final Results
 
 All fixes verified via Chrome DevTools MCP:
 
-| Property | Before Fix | After Fix | Production |
-|----------|-----------|-----------|------------|
-| `li.listStyleType` | "disc" | "none" | "disc" (hidden by flex) |
-| `button.fontWeight` | "400" | "500" | "500" |
-| `h1.letterSpacing` | "normal" | "-0.72px" | "-0.72px" |
-| `checkboxWrapper.height` | 26.2px | 24.2px | 24.15px |
-| `checkboxWrapper.lineHeight` | "24px" | "20.8px" | "20.8px" |
+| Property                     | Before Fix | After Fix | Production              |
+| ---------------------------- | ---------- | --------- | ----------------------- |
+| `li.listStyleType`           | "disc"     | "none"    | "disc" (hidden by flex) |
+| `button.fontWeight`          | "400"      | "500"     | "500"                   |
+| `h1.letterSpacing`           | "normal"   | "-0.72px" | "-0.72px"               |
+| `checkboxWrapper.height`     | 26.2px     | 24.2px    | 24.15px                 |
+| `checkboxWrapper.lineHeight` | "24px"     | "20.8px"  | "20.8px"                |
 
 All local styles now match production (dev.goodparty.org).
 
 ---
 
-*Last updated: January 2026*
+_Last updated: January 2026_
