@@ -14,11 +14,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
   ChevronDownIcon,
   ChevronsUpDownIcon,
-  EyeIcon,
   MoreHorizontalIcon,
 } from './icons'
 
@@ -30,7 +27,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@styleguide/components/ui/dropdown-menu'
 import { Input } from '@styleguide/components/ui/input'
@@ -50,6 +46,15 @@ import {
   TableRow,
 } from '@styleguide/components/ui/table'
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@styleguide/components/ui/pagination'
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -60,6 +65,46 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData) => void
   onColumnVisibilityChange?: (visibility: VisibilityState) => void
   initialColumnVisibility?: VisibilityState
+  className?: string
+}
+
+type PageElement = number | 'ellipsis'
+
+function getPaginationRange(
+  pageIndex: number,
+  pageCount: number,
+): PageElement[] {
+  const totalPages = pageCount
+  const currentPage = pageIndex + 1
+
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_v, i) => i + 1)
+  }
+
+  const siblings = 1
+  const pages: PageElement[] = []
+  const left = Math.max(1, currentPage - siblings)
+  const right = Math.min(totalPages, currentPage + siblings)
+
+  if (left > 1) {
+    pages.push(1)
+    if (left > 2) {
+      pages.push('ellipsis')
+    }
+  }
+
+  for (let page = left; page <= right; page += 1) {
+    pages.push(page)
+  }
+
+  if (right < totalPages) {
+    if (right < totalPages - 1) {
+      pages.push('ellipsis')
+    }
+    pages.push(totalPages)
+  }
+
+  return pages
 }
 
 function DataTable<TData, TValue>({
@@ -72,6 +117,7 @@ function DataTable<TData, TValue>({
   onRowClick,
   onColumnVisibilityChange,
   initialColumnVisibility = {},
+  className,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -111,75 +157,81 @@ function DataTable<TData, TValue>({
     },
   })
 
+  const selectedRows = table.getFilteredSelectedRowModel().rows.length
+
   return (
-    <div data-slot="data-table" className="w-full">
-      <div className="flex items-center py-4">
-        {searchKey && (
-          <Input
-            placeholder={searchPlaceholder}
-            value={
-              (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) =>
-              table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        )}
-        {columnVisibilityControls && <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="max-h-[60vh] overflow-y-auto"
-          >
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    <span className="block px-2">
-                      {(() => {
-                        const header = column.columnDef.header
-                        if (typeof header === 'string') {
-                          return header
+    <div className={cn('w-full', className)}>
+      {(columnVisibilityControls || searchKey) && (
+        <div className="flex items-center py-4">
+          {searchKey && (
+            <Input
+              placeholder={searchPlaceholder}
+              value={
+                (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
+              }
+              onChange={(event) =>
+                table.getColumn(searchKey)?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          )}
+          {columnVisibilityControls && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDownIcon className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="max-h-[60vh] overflow-y-auto"
+              >
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
                         }
-                        if (typeof header === 'function') {
-                          try {
-                            const headerElement = header({
-                              column,
-                              header: column.columnDef as any,
-                              table,
-                            })
-                            if (headerElement?.props?.title) {
-                              return headerElement.props.title
+                      >
+                        <span className="block px-2">
+                          {(() => {
+                            const header = column.columnDef.header
+                            if (typeof header === 'string') {
+                              return header
                             }
-                          } catch (_e) {
-                            // If header function fails, fall back to column.id
-                          }
-                        }
-                        return column.id
-                      })()}
-                    </span>
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>}
-      </div>
+                            if (typeof header === 'function') {
+                              try {
+                                const headerElement = header({
+                                  column,
+                                  header: column.columnDef as any,
+                                  table,
+                                })
+                                if (headerElement?.props?.title) {
+                                  return headerElement.props.title
+                                }
+                              } catch (_e) {
+                                // If header function fails, fall back to column.id
+                              }
+                            }
+                            return column.id
+                          })()}
+                        </span>
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      )}
       <div className="overflow-hidden rounded-md border">
-        <Table>
+        <Table className="!m-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -207,9 +259,10 @@ function DataTable<TData, TValue>({
                   onClick={
                     onRowClick ? () => onRowClick(row.original) : undefined
                   }
-                  className={
-                    onRowClick ? 'cursor-pointer hover:bg-muted/50' : ''
-                  }
+                  className={cn(
+                    'h-12',
+                    onRowClick ? 'cursor-pointer hover:bg-slate-200/50' : '',
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -235,14 +288,10 @@ function DataTable<TData, TValue>({
         </Table>
       </div>
       {pagination && (
-        <div className="flex items-center justify-between space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="flex items-center space-x-6 lg:space-x-8">
-            <div className="flex items-center space-x-2">
-              <p className="text-sm font-medium">Rows per page</p>
+        <div className="flex flex-col md:flex-row items-center justify-between space-x-2 py-4">
+          <div className="flex items-center w-full justify-between md:justify-start md:space-x-10 mb-4 md:mb-0">
+            <div className="flex items-center justify-center space-x-4">
+              <p className=" text-sm !font-normal !mb-0 mr-1">Rows per page</p>
               <Select
                 value={`${table.getState().pagination.pageSize}`}
                 onValueChange={(value) => {
@@ -263,51 +312,77 @@ function DataTable<TData, TValue>({
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{' '}
-              {table.getPageCount()}
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <ArrowLeftIcon className="h-4 w-4" />
-                <ArrowLeftIcon className="h-4 w-4 -ml-2" />
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 p-0"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <ArrowLeftIcon className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 p-0"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <ArrowRightIcon className="h-4 w-4" />
-                <ArrowRightIcon className="h-4 w-4 -ml-2" />
-              </Button>
-            </div>
+
+            {selectedRows > 0 && (
+              <p className="text-sm !font-normal text-muted-foreground !mb-0">
+                {selectedRows} of {table.getFilteredRowModel().rows.length}{' '}
+                row(s) selected.
+              </p>
+            )}
           </div>
+          <Pagination className="w-auto !mb-0">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    if (table.getCanPreviousPage()) {
+                      table.previousPage()
+                    }
+                  }}
+                  className={cn(
+                    'h-8 px-2',
+                    !table.getCanPreviousPage() &&
+                      'pointer-events-none opacity-50',
+                  )}
+                />
+              </PaginationItem>
+
+              {getPaginationRange(
+                table.getState().pagination.pageIndex,
+                table.getPageCount(),
+              ).map((page, index) =>
+                page === 'ellipsis' ? (
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={
+                        table.getState().pagination.pageIndex + 1 === page
+                      }
+                      onClick={(event) => {
+                        event.preventDefault()
+                        table.setPageIndex(page - 1)
+                      }}
+                      size="small"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ),
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    if (table.getCanNextPage()) {
+                      table.nextPage()
+                    }
+                  }}
+                  className={cn(
+                    'h-8 px-2',
+                    !table.getCanNextPage() && 'pointer-events-none opacity-50',
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>
@@ -327,44 +402,51 @@ function DataTableColumnHeader({
   className,
 }: DataTableColumnHeaderProps) {
   if (!column.getCanSort()) {
-    return <div data-slot="data-table-column-header" className={cn(className)}>{title}</div>
+    return (
+      <div
+        className={cn(
+          'font-normal text-muted-foreground cursor-default',
+          className,
+        )}
+      >
+        {title}
+      </div>
+    )
   }
 
   return (
-    <div data-slot="data-table-column-header" className={cn('flex items-center space-x-2', className)}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="small"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
-          >
-            <span>{title}</span>
-            {column.getIsSorted() === 'desc' ? (
-              <ChevronDownIcon className="ml-2 h-4 w-4" />
-            ) : column.getIsSorted() === 'asc' ? (
-              <ChevronDownIcon className="ml-2 h-4 w-4 rotate-180" />
-            ) : (
-              <ChevronsUpDownIcon className="ml-2 h-4 w-4" />
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ChevronDownIcon className="mr-2 h-3.5 w-3.5 rotate-180" />
-            Asc
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ChevronDownIcon className="mr-2 h-3.5 w-3.5" />
-            Desc
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeIcon className="mr-2 h-3.5 w-3.5" />
-            Hide
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <div className={cn('flex items-center space-x-2', className)}>
+      <button
+        type="button"
+        className="group cursor-pointer flex items-center space-x-2 text-muted-foreground font-normal hover:bg-none data-[state=open]:bg-none focus-visible:outline-none focus-visible:none focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm disabled:pointer-events-none disabled:opacity-50"
+        aria-label={`Sort column ${title}`}
+        onClick={() => {
+          const sorted = column.getIsSorted()
+          if (!sorted) {
+            column.toggleSorting(false)
+          } else if (sorted === 'asc') {
+            column.toggleSorting(true)
+          } else {
+            column.clearSorting()
+          }
+        }}
+      >
+        <span>{title}</span>
+        {!column.getIsSorted() && (
+          <ChevronsUpDownIcon className="h-4 w-4 opacity-0 group-hover:opacity-30 transition-opacity" />
+        )}
+        {column.getIsSorted() === 'desc' ? (
+          <span className="flex items-center justify-center h-4 w-4">
+            <ChevronDownIcon className="h-3 w-3" />
+          </span>
+        ) : (
+          column.getIsSorted() === 'asc' && (
+            <span className="flex items-center justify-center h-4 w-4">
+              <ChevronDownIcon className="h-3 w-3 rotate-180" />
+            </span>
+          )
+        )}
+      </button>
     </div>
   )
 }
