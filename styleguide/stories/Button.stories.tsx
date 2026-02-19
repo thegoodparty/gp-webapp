@@ -254,10 +254,14 @@ export const StateMatrix: Story = {
         {variants.map(({ name, variant, darkBg }) => (
           <div
             key={variant}
-            className={`p-6 rounded-lg ${darkBg ? 'bg-gray-800' : 'bg-gray-50'}`}
+            className={`p-6 rounded-lg ${
+              darkBg ? 'bg-gray-800' : 'bg-gray-50'
+            }`}
           >
             <h3
-              className={`text-lg font-semibold mb-4 ${darkBg ? 'text-white' : 'text-gray-900'}`}
+              className={`text-lg font-semibold mb-4 ${
+                darkBg ? 'text-white' : 'text-gray-900'
+              }`}
             >
               {name}
             </h3>
@@ -266,7 +270,9 @@ export const StateMatrix: Story = {
             <div className="mb-4">
               <div className="grid grid-cols-5 gap-4 items-center">
                 <div
-                  className={`text-sm font-medium ${darkBg ? 'text-gray-300' : 'text-gray-600'}`}
+                  className={`text-sm font-medium ${
+                    darkBg ? 'text-gray-300' : 'text-gray-600'
+                  }`}
                 >
                   default
                 </div>
@@ -300,7 +306,9 @@ export const StateMatrix: Story = {
             <div className="mb-4">
               <div className="grid grid-cols-5 gap-4 items-center">
                 <div
-                  className={`text-sm font-medium ${darkBg ? 'text-gray-300' : 'text-gray-600'}`}
+                  className={`text-sm font-medium ${
+                    darkBg ? 'text-gray-300' : 'text-gray-600'
+                  }`}
                 >
                   icon
                 </div>
@@ -349,7 +357,9 @@ export const StateMatrix: Story = {
               <div key={sizeName} className="mb-4">
                 <div className="grid grid-cols-5 gap-4 items-center">
                   <div
-                    className={`text-sm font-medium ${darkBg ? 'text-gray-300' : 'text-gray-600'}`}
+                    className={`text-sm font-medium ${
+                      darkBg ? 'text-gray-300' : 'text-gray-600'
+                    }`}
                   >
                     {sizeName}
                   </div>

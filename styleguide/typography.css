@@ -32,7 +32,15 @@
 
 /* Button text styles */
 .button-text-large {
-  font-family: var(--font-outfit, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-family: var(
+    --font-outfit,
+    'Outfit',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif
+  );
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5;
@@ -40,7 +48,15 @@
 }
 
 .button-text-medium {
-  font-family: var(--font-outfit, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-family: var(
+    --font-outfit,
+    'Outfit',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif
+  );
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.25;
@@ -48,7 +64,15 @@
 }
 
 .button-text-small {
-  font-family: var(--font-outfit, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-family: var(
+    --font-outfit,
+    'Outfit',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif
+  );
   font-weight: 500;
   font-size: 0.75rem;
   line-height: 1;

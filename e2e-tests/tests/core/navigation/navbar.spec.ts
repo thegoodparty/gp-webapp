@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
-import { visualSnapshot, visualSnapshotElement } from '../../../src/helpers/visual.helper'
+import {
+  visualSnapshot,
+  visualSnapshotElement,
+} from '../../../src/helpers/visual.helper'
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
@@ -18,7 +21,10 @@ test.describe('Navigation Bar', () => {
     await expect(page.getByTestId('nav-resources')).toBeVisible()
     await expect(page.getByTestId('nav-about-us')).toBeVisible()
 
-    await visualSnapshotElement(page.getByTestId('navbar'), 'navbar-default.png')
+    await visualSnapshotElement(
+      page.getByTestId('navbar'),
+      'navbar-default.png',
+    )
   })
 
   test('should expand product dropdown menu', async ({ page }) => {
