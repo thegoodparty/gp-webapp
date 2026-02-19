@@ -203,7 +203,9 @@ jobs:
               body += `**Failed Stable Tests:**\n${failed_tests}\n\n`;
             }
 
-            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n`;
+            body += `---\n`;
+            body += `🔍 **Visual tests:** Comment \`/visual-test\` on this PR to compare screenshots against the UI baselines, or [run manually](https://github.com/${{ github.repository }}/actions/workflows/visual-tests-on-demand.yml).`;
 
             await github.rest.issues.createComment({
               issue_number: prNumber,
