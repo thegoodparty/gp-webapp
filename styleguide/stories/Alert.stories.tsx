@@ -187,7 +187,7 @@ export const WithAction: Story = {
     <Alert>
       <AlertTitle>New feature available!</AlertTitle>
       <AlertDescription>
-        Check out our new dashboard feature. It's now available for all users.
+        Check out our new dashboard feature. It&apos;s now available for all users.
       </AlertDescription>
       <button className="mt-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
         Learn more
