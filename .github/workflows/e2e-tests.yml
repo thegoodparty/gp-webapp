@@ -203,9 +203,7 @@ jobs:
               body += `**Failed Stable Tests:**\n${failed_tests}\n\n`;
             }
 
-            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n`;
-            body += `---\n`;
-            body += `🔍 **Visual tests:** Comment \`/visual-test\` on this PR to compare screenshots against the UI baselines, or [run manually](https://github.com/${{ github.repository }}/actions/workflows/visual-tests-on-demand.yml).`;
+            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.createComment({
               issue_number: prNumber,
@@ -419,4 +417,128 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  visual-tests:
+    name: Visual Diff Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: check-pr-status
+    if: needs.check-pr-status.outputs.pr-open == 'true'
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+      id-token: write
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::333022194791:role/web-app-e2e-tests
+          aws-region: us-west-2
+
+      - name: Set deployment URL
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        working-directory: e2e-tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Visual Diff Tests
+        id: run-visual-tests
+        working-directory: e2e-tests
+        run: |
+          if [ "${{ env.UPDATE_VISUAL_BASELINES }}" == "true" ]; then
+            echo "📸 Updating visual baselines..."
+            npx playwright test --project=visual --update-snapshots
+          else
+            echo "🔍 Comparing against committed baselines..."
+            npx playwright test --project=visual
+          fi
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          VISUAL_TESTS: "true"
+          UPDATE_VISUAL_BASELINES: "true"
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload visual baselines
+        if: env.UPDATE_VISUAL_BASELINES == 'true' && !cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-${{ github.run_id }}-${{ github.run_attempt }}
+          path: e2e-tests/tests/**/__visual_snapshots__/**
+          retention-days: 30
+
+      - name: Upload visual diff report
+        if: env.UPDATE_VISUAL_BASELINES != 'true' && !cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: e2e-tests/playwright-report
+          retention-days: 30
+
+      - name: Comment PR with visual test results
+        if: always() && needs.check-pr-status.outputs.pr-number != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const outcome = '${{ steps.run-visual-tests.outcome }}';
+            const isBaselining = '${{ env.UPDATE_VISUAL_BASELINES }}' === 'true';
+            const prNumber = parseInt('${{ needs.check-pr-status.outputs.pr-number }}', 10);
+
+            let body;
+            if (isBaselining) {
+              body = `## 📸 Visual Baselines Generated\n\n`;
+              body += `Visual baselines have been captured. Download the **visual-baselines** artifact from the Actions run and commit them:\n\n`;
+              body += "```bash\n";
+              body += "# Download and extract the artifact, then:\n";
+              body += "git add e2e-tests/tests/__visual_snapshots__/\n";
+              body += 'git commit -m "chore: add visual baselines"\n';
+              body += "```\n\n";
+            } else {
+              const icon = outcome === 'success' ? '✅' : '⚠️';
+              body = `## ${icon} Visual Diff Tests\n\n`;
+
+              if (outcome === 'success') {
+                body += `No visual regressions detected — UI matches the committed baselines.\n\n`;
+              } else {
+                body += `Visual differences were detected. Download the **visual-diff-report** artifact from the Actions run to review the screenshot diffs.\n\n`;
+                body += `If this is an **intentional** UI change, update the baselines and commit them:\n`;
+                body += "```bash\n";
+                body += `BASE_URL=${{ env.BASE_URL }} npm run test:visual:update\n`;
+                body += `git add e2e-tests/tests/__visual_snapshots__/\n`;
+                body += `git commit -m "chore: update visual baselines"\n`;
+                body += "```\n\n";
+              }
+            }
+
+            body += `[View full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body,
+            });
 
