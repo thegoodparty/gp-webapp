@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Get Demo Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -54,5 +55,10 @@ test.describe('Get Demo Page', () => {
 
     const mainContent = page.locator('body, div, section').first()
     await expect(mainContent).toBeVisible()
+
+    // Mask the HubSpot booking iframe — it's an external embed with dynamic content
+    await visualSnapshot(page, 'get-demo-page.png', {
+      mask: [page.locator('iframe[title="Book a Meeting"]')],
+    })
   })
 })

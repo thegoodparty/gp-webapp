@@ -5,7 +5,14 @@ export default defineConfig({
   testDir: './tests',
   // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
   timeout: 60000, // Increased from 30s to 60s for account creation
-  expect: { timeout: 15000 }, // Increased from 10s to 15s
+  expect: {
+    timeout: 15000, // Increased from 10s to 15s
+    toHaveScreenshot: {
+      maxDiffPixels: 150,     // allow minor antialiasing/rendering variation
+      animations: 'disabled', // freeze CSS animations for deterministic captures
+      scale: 'css',           // use CSS pixels, consistent across machines
+    },
+  },
 
   // Improved parallelization with better stability
   fullyParallel: true,
@@ -32,6 +39,16 @@ export default defineConfig({
       name: 'experimental',
       use: devices['Desktop Chrome'],
       grep: /@experimental/,
+    },
+    // Visual diff project - runs same stable tests with VISUAL_TESTS=true (non-blocking)
+    // Snapshots are stored in __visual_snapshots__ alongside each spec file.
+    // To generate/update baselines: VISUAL_TESTS=true npx playwright test --project=visual --update-snapshots
+    {
+      name: 'visual',
+      use: devices['Desktop Chrome'],
+      grep: /^(?!.*@experimental).*$/, // same scope as stable
+      snapshotPathTemplate:
+        '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
     },
   ],
 

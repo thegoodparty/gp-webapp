@@ -45,12 +45,10 @@ async function updateRaceTargetDetails(
   slug: string | undefined = undefined,
 ): Promise<Campaign | false> {
   try {
-    const resp = await clientFetch<CampaignResponse>(
-      apiRoutes.campaign.raceTargetDetails.update,
-      {
-        slug,
-      },
-    )
+    const endpoint = slug
+      ? apiRoutes.campaign.raceTargetDetails.adminUpdate
+      : apiRoutes.campaign.raceTargetDetails.update
+    const resp = await clientFetch<CampaignResponse>(endpoint, { slug })
 
     if (resp.data && resp.data.error) {
       console.error('API error: ', resp.data)

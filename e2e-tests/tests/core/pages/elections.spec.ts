@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Elections Pages', () => {
   test('should display explore offices page', async ({ page }) => {
@@ -20,6 +21,8 @@ test.describe('Elections Pages', () => {
     if (candidateCount > 0) {
       await expect(candidateImages.first()).toBeVisible()
     }
+
+    await visualSnapshot(page, 'elections-explore.png')
   })
 
   test('should display county-level election page', async ({ page }) => {
@@ -37,6 +40,8 @@ test.describe('Elections Pages', () => {
     }
 
     await expect(page.getByText(/Dublin Fast facts/)).toBeVisible()
+
+    await visualSnapshot(page, 'elections-county-dublin.png')
   })
 
   test('should display municipal-level election page', async ({ page }) => {
@@ -57,6 +62,8 @@ test.describe('Elections Pages', () => {
     }
 
     await expect(page.getByText(/Beverly township fast facts/)).toBeVisible()
+
+    await visualSnapshot(page, 'elections-municipal-beverly-township.png')
   })
 
   test('should have working navigation from elections page', async ({
