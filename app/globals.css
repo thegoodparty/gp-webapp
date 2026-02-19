@@ -580,27 +580,19 @@
   /*
    * Normalize line-height for SVG icons inside inline containers.
    * Prevents extra spacing around MUI icons when inside spans.
+   * Scoped to exclude styleguide components.
    */
-  svg {
+  svg:not([data-slot] *) {
     vertical-align: middle;
   }
 
   /*
-   * Match Tailwind v3's default line-height for general elements.
-   * v3 used 1.3 for most elements, v4 inherits from body (1.5).
+   * Restore Tailwind v3's default line-height (1.3) for all elements.
+   * v4 inherits 1.5 from body, causing widespread text/spacing diffs.
+   * Excluded from styleguide components which define their own line-heights.
    */
-  div, span {
+  *:not([data-slot] *):not([data-slot]) {
     line-height: 1.3;
-  }
-
-  /* 
-   * Restore correct typography for bullet lists (e.g. in Hero).
-   * These should be Outfit (500 weight) to match production, overriding
-   * any parent container styles (like Body1's SF Pro 400).
-   */
-  ul.list-disc {
-    font-family: var(--outfit-font);
-    font-weight: 500;
   }
 
   a:hover {
