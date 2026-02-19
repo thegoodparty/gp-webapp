@@ -45,12 +45,6 @@ export default function PollTextInput({
     }
   }, [hasWarning])
 
-  useEffect(() => {
-    if (hasError) {
-      trackEvent(EVENTS.createPoll.pollBiasDetectionShown)
-    }
-  }, [hasError])
-
   const spans: TextSpan[] = useMemo(() => {
     const allSpans: TextSpan[] = []
 
