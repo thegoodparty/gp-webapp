@@ -8,9 +8,9 @@ export default defineConfig({
   expect: {
     timeout: 15000, // Increased from 10s to 15s
     toHaveScreenshot: {
-      maxDiffPixels: 150, // allow minor antialiasing/rendering variation
-      animations: 'disabled', // freeze CSS animations for deterministic captures
-      scale: 'css', // use CSS pixels, consistent across machines
+      maxDiffPixels: 75,
+      animations: 'disabled',
+      scale: 'css',
     },
   },
 
@@ -39,20 +39,6 @@ export default defineConfig({
       name: 'experimental',
       use: devices['Desktop Chrome'],
       grep: /@experimental/,
-    },
-    // Visual diff project - runs same stable tests with VISUAL_TESTS=true (non-blocking)
-    // Snapshots are stored in __visual_snapshots__ alongside each spec file.
-    // To generate/update baselines: VISUAL_TESTS=true npx playwright test --project=visual --update-snapshots
-    {
-      name: 'visual',
-      use: {
-        ...devices['Desktop Chrome'],
-        trace: 'off',
-        video: 'off',
-      },
-      grep: /^(?!.*@experimental).*$/, // same scope as stable
-      snapshotPathTemplate:
-        '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
     },
   ],
 
