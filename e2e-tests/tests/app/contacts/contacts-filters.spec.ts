@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
+import pRetry from 'p-retry'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
@@ -10,6 +11,34 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 }
 
 let filterCallCount = 0
+
+const personPanelLocator = (page: Page) =>
+  page
+    .getByRole('dialog')
+    .filter({ has: page.getByText('Registered Voter') })
+    .first()
+
+const openPersonPanel = async (row: Locator, panel: Locator) => {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await row.click({ force: true })
+    try {
+      await expect(panel).toBeVisible({ timeout: 10000 })
+      return
+    } catch {
+      if (attempt === 2) await expect(panel).toBeVisible()
+    }
+  }
+}
+
+const closePanel = async (page: Page, panel: Locator) => {
+  await pRetry(
+    async () => {
+      await page.keyboard.press('Escape')
+      await expect(panel).toBeHidden({ timeout: 5000 })
+    },
+    { retries: 3 },
+  )
+}
 
 const testFilterField = async (
   page: Page,
@@ -87,12 +116,9 @@ const testFilterField = async (
   }
 
   const firstRow = table.locator('tbody tr').first()
-  await firstRow.click({ force: true })
-  const panel = page
-    .getByRole('dialog')
-    .filter({ has: page.getByText('Demographic Information') })
-    .first()
-  await expect(panel).toBeVisible()
+  const panel = personPanelLocator(page)
+
+  await openPersonPanel(firstRow, panel)
 
   for (const expectation of config.expectSheetValues) {
     if (typeof expectation === 'function') {
@@ -105,13 +131,7 @@ const testFilterField = async (
     }
   }
 
-  await page.keyboard.press('Escape')
-  try {
-    await expect(panel).toBeHidden()
-  } catch {
-    await page.keyboard.press('Escape')
-    await expect(panel).toBeHidden()
-  }
+  await closePanel(page, panel)
 }
 
 test('validate contacts filters', async ({ page }) => {

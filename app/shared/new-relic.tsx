@@ -8,6 +8,7 @@ import { isProductRoute } from './utils/isProductRoute'
 import type { AgentOptions } from '@newrelic/browser-agent/src/loaders/agent.js'
 import { IS_LOCAL } from 'appEnv'
 import { getUserCookie } from 'helpers/cookieHelper'
+import { reportErrorToSentry } from './sentry'
 
 let agent: BrowserAgent | undefined = undefined
 let started = false
@@ -82,9 +83,11 @@ const getNewRelic = async () => {
 }
 
 export const reportErrorToNewRelic = (
-  error: Error | string,
+  error: Error,
   customAttributes?: Record<string, any>,
 ): void => {
+  // TODO: remove this and replace call sites with `reportErrorToSentry` once migration is complete
+  reportErrorToSentry(error, customAttributes)
   void getNewRelic().then((newrelic) => {
     newrelic.noticeError(error, customAttributes)
   })
