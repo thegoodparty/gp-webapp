@@ -20,7 +20,6 @@
     "start-local": "cross-env NODE_ENV=production NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next start -p 4000",
     "test": "vitest run",
     "test:e2e": "cd e2e-tests && npx playwright install chromium && npx playwright test tests/ --reporter=list",
-    "test:visual": "cd e2e-tests && npx playwright install chromium && npx playwright test --project=stable --reporter=list",
     "test:visual:update": "cd e2e-tests && npx playwright install chromium && npx playwright test --project=stable --update-snapshots --reporter=list",
     "test:watch": "vitest",
     "types": "npx tsc"
