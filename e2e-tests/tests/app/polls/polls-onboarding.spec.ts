@@ -243,7 +243,9 @@ const completePoll = async (params: {
   })
 
   // Upload JSON to S3
-  const responsesLocation = `e2e-test/${params.pollId}/${crypto.randomUUID()}.json`
+  const responsesLocation = `e2e-test/${
+    params.pollId
+  }/${crypto.randomUUID()}.json`
   await s3.send(
     new PutObjectCommand({
       Bucket: params.bucketName,
@@ -377,12 +379,7 @@ test.describe.serial('poll onboarding', () => {
 
   console.log(`Poll created at ${new Date().toTimeString()}`)
 
-  const {
-    pollId,
-    csvRows,
-    queueName,
-    bucketName,
-  } = await waitForPollSlackData(
+  const { pollId, csvRows, queueName, bucketName } = await waitForPollSlackData(
     (message) => !!message.text?.includes(user.email),
   )
 
