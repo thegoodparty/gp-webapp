@@ -82,7 +82,7 @@ const buildPollResponseJson = (params: {
     ) {
       rows.push({
         atomicId: crypto.randomUUID(),
-        phoneNumber: phonesForJson[phoneIndex],
+        phoneNumber: phonesForJson[phoneIndex]!,
         receivedAt: new Date(now.getTime() + phoneIndex * 1000).toISOString(),
         originalMessage: `Response about ${issue.theme}`,
         atomicMessage: `Response about ${issue.theme}`,
@@ -105,7 +105,7 @@ const buildPollResponseJson = (params: {
   for (let i = 0; i < optOutCount && phoneIndex < phonesForJson.length; i++) {
     rows.push({
       atomicId: crypto.randomUUID(),
-      phoneNumber: phonesForJson[phoneIndex],
+      phoneNumber: phonesForJson[phoneIndex]!,
       receivedAt: new Date(now.getTime() + phoneIndex * 1000).toISOString(),
       originalMessage: 'STOP',
       atomicMessage: 'STOP',
