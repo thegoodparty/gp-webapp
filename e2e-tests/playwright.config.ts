@@ -3,6 +3,8 @@ import 'dotenv/config'
 
 export default defineConfig({
   testDir: './tests',
+  snapshotPathTemplate:
+    '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
   // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
   timeout: 60000, // Increased from 30s to 60s for account creation
   expect: {
