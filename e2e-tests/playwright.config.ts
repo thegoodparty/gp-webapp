@@ -45,7 +45,11 @@ export default defineConfig({
     // To generate/update baselines: VISUAL_TESTS=true npx playwright test --project=visual --update-snapshots
     {
       name: 'visual',
-      use: devices['Desktop Chrome'],
+      use: {
+        ...devices['Desktop Chrome'],
+        trace: 'off',
+        video: 'off',
+      },
       grep: /^(?!.*@experimental).*$/, // same scope as stable
       snapshotPathTemplate:
         '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
