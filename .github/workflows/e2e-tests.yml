@@ -494,7 +494,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visual-diff-report-${{ github.run_id }}-${{ github.run_attempt }}
-          path: e2e-tests/playwright-report
+          path: |
+            e2e-tests/playwright-report/index.html
+            e2e-tests/playwright-report/data/*.png
           retention-days: 30
 
       - name: Comment PR with visual test results
