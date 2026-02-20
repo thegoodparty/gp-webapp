@@ -244,6 +244,97 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+      - name: Run Visual Diff Tests
+        if: always()
+        id: run-visual-tests
+        continue-on-error: true
+        working-directory: e2e-tests
+        run: |
+          if [ "${{ env.UPDATE_VISUAL_BASELINES }}" == "true" ]; then
+            echo "📸 Updating visual baselines..."
+            npx playwright test --project=visual --update-snapshots
+          else
+            echo "🔍 Comparing against committed baselines..."
+            npx playwright test --project=visual
+          fi
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          VISUAL_TESTS: "true"
+          UPDATE_VISUAL_BASELINES: "true"
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload visual baselines
+        if: always() && env.UPDATE_VISUAL_BASELINES == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-${{ github.run_id }}-${{ github.run_attempt }}
+          path: e2e-tests/tests/**/__visual_snapshots__/**
+          retention-days: 30
+
+      - name: Upload visual diff report
+        if: always() && env.UPDATE_VISUAL_BASELINES != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            e2e-tests/playwright-report/index.html
+            e2e-tests/playwright-report/data/*.png
+          retention-days: 30
+
+      - name: Comment PR with visual test results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const outcome = '${{ steps.run-visual-tests.outcome }}';
+            const isBaselining = '${{ env.UPDATE_VISUAL_BASELINES }}' === 'true';
+
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment.sha
+            });
+
+            if (prs.length === 0) return;
+            const prNumber = prs[0].number;
+
+            let body;
+            if (isBaselining) {
+              body = `## 📸 Visual Baselines Generated\n\n`;
+              body += `Visual baselines have been captured. Download the **visual-baselines** artifact from the Actions run and commit them:\n\n`;
+              body += "```bash\n";
+              body += "# Download and extract the artifact, then:\n";
+              body += "git add e2e-tests/tests/__visual_snapshots__/\n";
+              body += 'git commit -m "chore: add visual baselines"\n';
+              body += "```\n\n";
+            } else {
+              const icon = outcome === 'success' ? '✅' : '⚠️';
+              body = `## ${icon} Visual Diff Tests\n\n`;
+
+              if (outcome === 'success') {
+                body += `No visual regressions detected — UI matches the committed baselines.\n\n`;
+              } else {
+                body += `Visual differences were detected. Download the **visual-diff-report** artifact from the Actions run to review the screenshot diffs.\n\n`;
+                body += `If this is an **intentional** UI change, update the baselines and commit them:\n`;
+                body += "```bash\n";
+                body += `BASE_URL=${{ env.BASE_URL }} npm run test:visual:update\n`;
+                body += `git add e2e-tests/tests/__visual_snapshots__/\n`;
+                body += `git commit -m "chore: update visual baselines"\n`;
+                body += "```\n\n";
+              }
+            }
+
+            body += `[View full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body,
+            });
+
   experimental-tests:
     name: Experimental E2E Tests (Non-blocking)
     runs-on: ubuntu-latest
@@ -417,4 +508,3 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
