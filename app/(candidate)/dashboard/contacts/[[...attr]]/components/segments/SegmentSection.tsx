@@ -25,7 +25,6 @@ import { useShowContactProModal } from '../../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
 import { LuPencil } from 'react-icons/lu'
 import { type SegmentResponse } from '../shared/ajaxActions'
-import { reportErrorToSentry } from '@shared/sentry'
 
 type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
 
