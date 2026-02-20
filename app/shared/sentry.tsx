@@ -9,7 +9,7 @@ import { isTestUser } from 'helpers/test-users'
 
 export const reportErrorToSentry = (
   error: Error,
-  customAttributes?: Record<string, any>,
+  customAttributes?: Partial<Record<string, unknown>>,
 ) => {
   Sentry.captureException(error, {
     extra: customAttributes,
