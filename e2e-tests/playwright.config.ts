@@ -8,7 +8,7 @@ export default defineConfig({
   expect: {
     timeout: 15000, // Increased from 10s to 15s
     toHaveScreenshot: {
-      maxDiffPixels: 150, // allow minor antialiasing/rendering variation
+      maxDiffPixels: 75, // allow minor antialiasing/rendering variation
       animations: 'disabled', // freeze CSS animations for deterministic captures
       scale: 'css', // use CSS pixels, consistent across machines
     },
