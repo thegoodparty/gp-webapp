@@ -246,8 +246,9 @@ const completePoll = async (params: {
   })
 
   // Upload JSON to S3
-  const responsesLocation = `e2e-test/${params.pollId
-    }/${crypto.randomUUID()}.json`
+  const responsesLocation = `e2e-test/${
+    params.pollId
+  }/${crypto.randomUUID()}.json`
   await s3.send(
     new PutObjectCommand({
       Bucket: params.bucketName,
@@ -419,7 +420,7 @@ test.describe.serial('poll onboarding', () => {
 
     const queueToUse =
       process.env.E2E_SQS_QUEUE_NAME !== undefined &&
-        process.env.E2E_SQS_QUEUE_NAME !== ''
+      process.env.E2E_SQS_QUEUE_NAME !== ''
         ? process.env.E2E_SQS_QUEUE_NAME
         : queueName
 
