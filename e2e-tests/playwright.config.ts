@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 import 'dotenv/config'
 
+process.env.TZ = 'UTC'
+
 export default defineConfig({
   testDir: './tests',
   snapshotPathTemplate:
