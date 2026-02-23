@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Mobile Navigation', () => {
   // Configure mobile viewport
@@ -22,6 +23,7 @@ test.describe('Mobile Navigation', () => {
     const anyHeading = page.locator('h1, h2, h3, h4').first()
     await expect(anyHeading).toBeVisible()
 
+    await visualSnapshot(page, 'mobile-dashboard.png')
     console.log('✅ Mobile dashboard accessible')
   })
 
@@ -50,6 +52,8 @@ test.describe('Mobile Navigation', () => {
       page.getByRole('heading', { name: 'AI Assistant' }),
     ).toBeVisible()
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
+
+    await visualSnapshot(page, 'mobile-ai-assistant.png')
   })
 
   test('should navigate to Content Builder on mobile', async ({ page }) => {
@@ -60,6 +64,8 @@ test.describe('Mobile Navigation', () => {
       page.getByRole('heading', { name: 'Content Builder' }),
     ).toBeVisible()
     await expect(page).toHaveURL(/\/dashboard\/content$/)
+
+    await visualSnapshot(page, 'mobile-content-builder.png')
   })
 
   test('should navigate to My Profile on mobile', async ({ page }) => {
@@ -72,6 +78,7 @@ test.describe('Mobile Navigation', () => {
     const bodyContent = page.locator('body')
     await expect(bodyContent).toBeVisible()
 
+    await visualSnapshot(page, 'mobile-profile.png')
     console.log('✅ Mobile profile page accessible')
   })
 })

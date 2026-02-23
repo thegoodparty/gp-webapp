@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('AI Assistant', () => {
   test('should access AI Assistant with authenticated user', async ({
@@ -27,5 +28,7 @@ test.describe('AI Assistant', () => {
     if (buttonCount > 0) {
       console.log(`✅ AI Assistant working - ${buttonCount} topics available`)
     }
+
+    await visualSnapshot(page, 'ai-assistant.png')
   })
 })
