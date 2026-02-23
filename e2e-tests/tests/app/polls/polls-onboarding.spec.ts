@@ -8,6 +8,7 @@ import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
+import { visualSnapshot } from 'src/helpers/visual.helper'
 
 type CsvRow = {
   id: string
@@ -305,6 +306,8 @@ test('poll onboarding and expansion', async ({ page }) => {
   await page.goto('/polls/welcome')
   await NavigationHelper.dismissOverlays(page)
 
+  await visualSnapshot(page, 'polls-welcome.png')
+
   await page.getByRole('button', { name: "Let's get started" }).click()
 
   // Confirm constituent count.
@@ -344,6 +347,15 @@ test('poll onboarding and expansion', async ({ page }) => {
 
   // Confirm the correct data shows up in the UI
   await expect(page.getByText('Top Community Issues')).toBeVisible()
+
+  // Mask date fields — they are relative to the current date and will differ between runs
+  await visualSnapshot(page, 'polls-created-scheduled.png', {
+    mask: [
+      page.getByText(/Scheduled Date:/),
+      page.getByText(/Estimated Completion Date:/),
+      page.getByText(/This poll is scheduled to send on/),
+    ],
+  })
 
   const scheduledDate = `${format(sendDate, 'MMM d, yyyy')} at 11:00 AM`
   await expect(page.getByText(`Scheduled Date: ${scheduledDate}`)).toBeVisible()
@@ -461,6 +473,8 @@ test('poll onboarding and expansion', async ({ page }) => {
   await expect(page.getByText('Poll Confidence: Low')).toBeVisible()
   await expect(page.getByText('Top Themes')).toBeVisible()
 
+  await visualSnapshot(page, 'polls-results-low-confidence.png')
+
   for (const issue of queuedEvent.data.issues) {
     await expect(page.getByText(issue.theme, { exact: true })).toBeVisible()
     await expect(page.getByText(issue.summary)).toBeVisible()
@@ -512,6 +526,11 @@ test('poll onboarding and expansion', async ({ page }) => {
     .locator('iframe[title="Secure payment input frame"]')
     .first()
   await expect(stripeIframe).toBeVisible({ timeout: 30_000 })
+
+  // Mask the Stripe iframe — external embed with dynamic content
+  await visualSnapshot(page, 'polls-expansion-payment.png', {
+    mask: [stripeIframe],
+  })
 
   const stripeFrame = page
     .frameLocator('iframe[title="Secure payment input frame"]')
@@ -684,6 +703,8 @@ test('poll onboarding and expansion', async ({ page }) => {
   await page.reload()
   await expect(page.getByText('Poll Confidence: High')).toBeVisible()
   await expect(page.getByText('Top Themes')).toBeVisible()
+
+  await visualSnapshot(page, 'polls-results-high-confidence.png')
 
   for (const issue of expansionIssues.data.issues) {
     await expect(page.getByText(issue.theme, { exact: true })).toBeVisible()

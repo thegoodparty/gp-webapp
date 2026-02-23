@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useRef } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   PaymentElement,
   useCheckout,
@@ -35,7 +35,7 @@ export default function CheckoutForm({
     if (checkoutResult.type === 'error' && !errorHandledRef.current) {
       errorHandledRef.current = true
       const msg = checkoutResult.error.message || 'Unexpected payment error'
-      reportErrorToNewRelic('checkout form initialization error', {
+      reportErrorToNewRelic(new Error('checkout form initialization error'), {
         stripeError: checkoutResult.error,
       })
       errorSnackbar(msg)
@@ -72,7 +72,7 @@ export default function CheckoutForm({
           reportErrorToNewRelic(error, { location: 'checkout-form' })
         } else {
           msg = error.message || 'Unexpected payment error'
-          reportErrorToNewRelic('checkout form stripe error', {
+          reportErrorToNewRelic(new Error('checkout form stripe error'), {
             stripeError: error,
           })
         }
@@ -99,22 +99,29 @@ function CheckoutFormContent({
   onError: (error: Error | StripeError) => void
 }): React.JSX.Element {
   const promo = usePromoCode(checkout)
+  const [hasConfirmedPayment, setHasConfirmedPayment] = useState(false)
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!sessionId) {
         throw new Error('Missing checkout session ID')
       }
 
-      const result = await checkout.confirm({ redirect: 'if_required' })
+      if (!hasConfirmedPayment) {
+        const result = await checkout.confirm({ redirect: 'if_required' })
 
-      if (result.type === 'error') {
-        throw result.error
+        if (result.type === 'error') {
+          throw result.error
+        }
+
+        setHasConfirmedPayment(true)
       }
+
+      await onSuccess(sessionId)
 
       return sessionId
     },
     onError,
-    onSuccess,
   })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -122,7 +129,7 @@ function CheckoutFormContent({
     mutation.mutate()
   }
 
-  const canSubmit = checkout.canConfirm
+  const canSubmit = hasConfirmedPayment || checkout.canConfirm
   const currentTotal = checkout.total.total.minorUnitsAmount / 100
   const originalTotal = checkout.total.subtotal.minorUnitsAmount / 100
 
@@ -162,7 +169,7 @@ function CheckoutFormContent({
         type="submit"
         disabled={!canSubmit || mutation.isPending}
         loading={mutation.isPending}
-        className="mt-6 w-full"
+        className="mt-6 w-full whitespace-nowrap"
         color="primary"
         size="large"
       >

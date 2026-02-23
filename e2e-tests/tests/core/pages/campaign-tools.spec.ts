@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Campaign Tools Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -13,6 +14,8 @@ test.describe('Campaign Tools Page', () => {
     await expect(
       page.getByText(/Supercharge your local campaign/),
     ).toBeVisible()
+
+    await visualSnapshot(page, 'campaign-tools-page.png')
   })
 
   test('should display call-to-action buttons', async ({ page }) => {
