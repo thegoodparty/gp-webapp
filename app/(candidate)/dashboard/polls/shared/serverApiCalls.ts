@@ -19,20 +19,19 @@ export const hasPolls = async () => {
   return null
 }
 
-export const getPolls = async () =>
-  serverRequest('GET /v1/polls', {}).then((res) => res.data)
-
-export const getPoll = async (pollId: string) => {
-  const result = await serverRequest(
-    'GET /v1/polls/:pollId',
-    { pollId },
-    { ignoreResponseError: true },
-  )
-
-  return result.ok ? result.data : undefined
+export const getPolls = async () => {
+  const res = await serverRequest('GET /v1/polls', {})
+  return res.ok ? res.data : null
 }
 
-export const getPollTopIssues = async (pollId: string) =>
-  serverRequest('GET /v1/polls/:pollId/top-issues', { pollId }).then(
-    (res) => res.data,
-  )
+export const getPoll = async (pollId: string) => {
+  const res = await serverRequest('GET /v1/polls/:pollId', { pollId })
+  return res.ok ? res.data : null
+}
+
+export const getPollTopIssues = async (pollId: string) => {
+  const res = await serverRequest('GET /v1/polls/:pollId/top-issues', {
+    pollId,
+  })
+  return res.ok ? res.data : null
+}

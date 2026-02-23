@@ -1,4 +1,3 @@
-import { ofetch, type FetchOptions } from 'ofetch'
 import { APIEndpoints } from './api-endpoints'
 
 /**
@@ -75,7 +74,12 @@ const removePathParamsFromRequestPayload = (route: string, payload: object) =>
       {},
     )
 
-export type RequestOptions = FetchOptions<'json'>
+export type RequestOptions = {
+  method?: string
+  headers?: Record<string, string>
+  baseURL?: string
+  credentials?: RequestCredentials
+}
 
 export type Response<T> = {
   ok: boolean
@@ -89,7 +93,6 @@ export const createRequest =
   async <Route extends keyof APIEndpoints>(
     route: Route,
     payload: RequestPayloadOf<Route>,
-    overrides?: RequestOptions,
   ): Promise<Response<APIEndpoints[Route]['Response']>> => {
     const [method, url] = route.split(' ')
 
@@ -97,29 +100,48 @@ export const createRequest =
       removePathParamsFromRequestPayload(url!, payload)
 
     let fetchOptions: RequestOptions = {
-      method: method as RequestOptions['method'],
-      responseType: 'json',
+      method,
       headers: {},
     }
 
+    const finalUrl = substitutePathParams(url!, payload)
+    let fullUrl: string
+
     if (['GET', 'DELETE'].includes(method!)) {
-      fetchOptions.query = requestPayload
+      const query = new URLSearchParams(
+        requestPayload as Record<string, string>,
+      ).toString()
+      fullUrl = query ? `${finalUrl}?${query}` : finalUrl
     } else {
-      fetchOptions.body = requestPayload
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        'Content-Type': 'application/json',
+      }
+      fullUrl = finalUrl
     }
 
     const options = await augment(fetchOptions)
+    fullUrl = `${options.baseURL ?? ''}${fullUrl}`
 
-    const result = await ofetch.raw<APIEndpoints[Route]['Response']>(
-      substitutePathParams(url!, payload),
-      { ...options, ...overrides },
-    )
+    const res = await fetch(fullUrl, {
+      method: options.method,
+      headers: options.headers,
+      credentials: options.credentials,
+      body: ['GET', 'DELETE'].includes(method!)
+        ? undefined
+        : JSON.stringify(requestPayload),
+    })
+
+    const isJson = res.headers
+      .get('Content-Type')
+      ?.includes('application/json')
+    const data = isJson ? await res.json() : await res.text()
 
     return {
-      ok: result.ok,
-      status: result.status,
-      data: result._data!,
-      headers: result.headers,
+      ok: res.ok,
+      status: res.status,
+      data,
+      headers: res.headers,
     }
   }
 
