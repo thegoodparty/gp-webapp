@@ -393,14 +393,10 @@ test.describe.serial('poll onboarding', () => {
       page.getByText(`This poll is scheduled to send on ${scheduledDate}.`),
     ).toBeVisible()
 
-    console.log(`Poll created at ${new Date().toTimeString()}`)
-
     const { pollId, csvRows, queueName, bucketName } =
       await waitForPollSlackData(
         (message) => !!message.text?.includes(user.email),
       )
-
-    console.log(`Found Poll ID: ${pollId}`)
 
     // Store for reuse in subsequent tests
     sharedPollId = pollId
@@ -471,8 +467,6 @@ test.describe.serial('poll onboarding', () => {
         },
       ],
     })
-
-    console.log('Send SQS event to complete poll')
 
     // Wait for results to come in.
     await eventually(
