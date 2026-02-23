@@ -2,6 +2,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test'
 import pRetry from 'p-retry'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
+import { visualSnapshot } from 'src/helpers/visual.helper'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -181,6 +182,11 @@ test('validate contacts filters', async ({ page }) => {
   await expect(
     table.locator('tbody tr').first().locator('td').first(),
   ).toHaveText(/.+/)
+
+  // Capture the contacts page with segment active — mask voter data rows
+  await visualSnapshot(page, 'contacts-with-segment.png', {
+    mask: [table.locator('tbody')],
+  })
 
   await test.step('Filter: Gender', async () => {
     await testFilterField(page, {
