@@ -383,11 +383,7 @@ test('poll onboarding and expansion', async ({ page }) => {
     audienceSize: 500,
   })
 
-  const queueToUse =
-    process.env.E2E_SQS_QUEUE_NAME !== undefined &&
-    process.env.E2E_SQS_QUEUE_NAME !== ''
-      ? process.env.E2E_SQS_QUEUE_NAME
-      : queueName
+  const queueToUse = process.env.E2E_SQS_QUEUE_NAME || queueName
 
   const bucketToUse = process.env.SERVE_ANALYZE_S3_BUCKET || bucketName
 
