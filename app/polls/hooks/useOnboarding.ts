@@ -170,37 +170,22 @@ export const useOnboarding = (): UseOnboardingReturn => {
         throw new Error('Missing required fields')
       }
 
-      const payload: Record<string, unknown> = {
+      const response = await clientFetch<Poll>(apiRoutes.polls.initialPoll, {
         message: formData.textMessage,
-        imageUrl: formData.imageUrl ?? undefined,
+        imageUrl: formData.imageUrl,
         swornInDate: format(formData.swornInDate, 'yyyy-MM-dd'),
-      }
-      if (formData.scheduledDate) {
-        payload.scheduledDate = formData.scheduledDate.toISOString()
-      }
-
-      const response = await clientFetch<Poll>(apiRoutes.polls.initialPoll, payload)
+        scheduledDate: formData.scheduledDate,
+      })
 
       if (!response.ok) {
-        const apiError = response.data as { message?: string | string[] } | undefined
-        const message =
-          typeof apiError?.message === 'string'
-            ? apiError.message
-            : Array.isArray(apiError?.message)
-              ? apiError.message[0]
-              : null
-        throw new Error(
-          message || 'Failed to submit onboarding data',
-        )
+        throw new Error('Failed to submit onboarding data')
       }
 
       return response.data
     } catch (error) {
       console.error(error)
-      const fallback =
-        'Try again in a few minutes or contact us if the issue persists'
       setSubmitError(
-        error instanceof Error && error.message ? error.message : fallback,
+        'Try again in a few minutes or contact us if the issue persists',
       )
       throw error
     } finally {
