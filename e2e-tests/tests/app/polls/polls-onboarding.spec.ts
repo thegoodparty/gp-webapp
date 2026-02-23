@@ -56,6 +56,7 @@ const buildPollResponseJson = (params: {
   csvRows: CsvRow[]
   issues: {
     rank: number
+    clusterId: number
     theme: string
     summary: string
     responseCount: number
@@ -88,7 +89,7 @@ const buildPollResponseJson = (params: {
         originalMessage: `Response about ${issue.theme}`,
         atomicMessage: `Response about ${issue.theme}`,
         pollId,
-        clusterId: issue.rank,
+        clusterId: issue.clusterId,
         theme: issue.theme,
         category: 'General',
         summary: issue.summary,
@@ -236,6 +237,7 @@ const completePoll = async (params: {
     csvRows: params.csvRows,
     issues: params.issues.map((issue) => ({
       rank: issue.rank,
+      clusterId: Math.floor(Math.random() * 10) + 1,
       theme: issue.theme,
       summary: issue.summary,
       responseCount: issue.responseCount,
@@ -244,9 +246,8 @@ const completePoll = async (params: {
   })
 
   // Upload JSON to S3
-  const responsesLocation = `e2e-test/${
-    params.pollId
-  }/${crypto.randomUUID()}.json`
+  const responsesLocation = `e2e-test/${params.pollId
+    }/${crypto.randomUUID()}.json`
   await s3.send(
     new PutObjectCommand({
       Bucket: params.bucketName,
@@ -259,7 +260,7 @@ const completePoll = async (params: {
   // Map quote phone_numbers to real phones from their respective clusters
   const issuesWithRealPhones = params.issues.map((issue) => {
     const clusterPhones = responseRows
-      .filter((r) => r.clusterId === issue.rank && !r.isOptOut)
+      .filter((r) => r.theme === issue.theme && !r.isOptOut)
       .map((r) => `+${r.phoneNumber}`)
 
     return {
@@ -418,7 +419,7 @@ test.describe.serial('poll onboarding', () => {
 
     const queueToUse =
       process.env.E2E_SQS_QUEUE_NAME !== undefined &&
-      process.env.E2E_SQS_QUEUE_NAME !== ''
+        process.env.E2E_SQS_QUEUE_NAME !== ''
         ? process.env.E2E_SQS_QUEUE_NAME
         : queueName
 
