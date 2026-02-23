@@ -66,7 +66,7 @@ export const CheckoutSessionProvider = ({
 
     if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
       setError('Invalid purchase type')
-      reportErrorToNewRelic('CheckoutSessionProvider error', {
+      reportErrorToNewRelic(new Error('CheckoutSessionProvider error'), {
         message: 'Invalid purchase type',
       })
       throw new Error('Invalid purchase type')
@@ -88,7 +88,7 @@ export const CheckoutSessionProvider = ({
             (response.data as { data?: { error?: string } })?.data?.error ||
             'Failed to create checkout session'
           setError(errorMessage)
-          reportErrorToNewRelic('CheckoutSessionProvider error', {
+          reportErrorToNewRelic(new Error('CheckoutSessionProvider error'), {
             message: errorMessage,
           })
           throw new Error(errorMessage)

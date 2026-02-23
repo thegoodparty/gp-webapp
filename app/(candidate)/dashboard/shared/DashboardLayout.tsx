@@ -56,7 +56,6 @@ const DashboardLayout = ({
 
     const weeksResult = weeksTill(electionDate)
     const shouldRedirect =
-      !details?.primaryElectionDate &&
       typeof details?.wonGeneral !== 'boolean' &&
       weeksResult &&
       typeof weeksResult === 'object' &&
@@ -65,13 +64,7 @@ const DashboardLayout = ({
     if (shouldRedirect) {
       router.push('/dashboard/election-result')
     }
-  }, [
-    currentPath,
-    details?.primaryElectionDate,
-    details?.wonGeneral,
-    electionDate,
-    router,
-  ])
+  }, [currentPath, details?.wonGeneral, electionDate, router])
 
   return (
     <EcanvasserProvider>

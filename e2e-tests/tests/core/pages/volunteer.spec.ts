@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Volunteer Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -29,6 +30,8 @@ test.describe('Volunteer Page', () => {
     if (buttonCount > 0) {
       await expect(involvementButtons.first()).toBeVisible()
     }
+
+    await visualSnapshot(page, 'volunteer-page.png')
   })
 
   test('should display volunteer images', async ({ page }) => {
@@ -65,6 +68,8 @@ test.describe('Volunteer Page', () => {
     await expect(
       page.getByText(/Thank you! we will be in touch soon./),
     ).toBeVisible({ timeout: 30000 })
+
+    await visualSnapshot(page, 'volunteer-form-success.png')
   })
 
   test('should display FAQ sections', async ({ page }) => {

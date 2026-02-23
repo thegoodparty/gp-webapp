@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  visualSnapshot,
+  visualSnapshotElement,
+} from '../../../src/helpers/visual.helper'
 
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,6 +20,12 @@ test.describe('Homepage', () => {
     await expect(
       page.getByText('Join the GoodParty.org Community'),
     ).toBeVisible()
+
+    await visualSnapshot(page, 'homepage.png')
+    await visualSnapshotElement(
+      page.getByTestId('navbar'),
+      'homepage-navbar.png',
+    )
   })
 
   test('should have working navigation links', async ({ page }) => {

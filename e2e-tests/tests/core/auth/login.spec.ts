@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,6 +15,8 @@ test.describe('Login Functionality', () => {
       page.getByPlaceholder("Please don't use your dog's"),
     ).toBeVisible() // More specific password field locator
     await expect(page.getByRole('button', { name: 'Login' })).toBeVisible()
+
+    await visualSnapshot(page, 'login-page.png')
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -32,5 +35,7 @@ test.describe('Login Functionality', () => {
         'Invalid login. Please check your credentials and try again.',
       ),
     ).toBeVisible()
+
+    await visualSnapshot(page, 'login-error-state.png')
   })
 })

@@ -9,7 +9,6 @@ import {
   MdFactCheck,
   MdFileOpen,
   MdFolderShared,
-  MdLibraryBooks,
   MdMessage,
   MdPeople,
   MdPoll,
@@ -100,13 +99,6 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
   },
 
-  {
-    label: 'Resources',
-    icon: <MdLibraryBooks />,
-    link: '/dashboard/resources',
-    id: 'resources-library',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickResources),
-  },
   {
     label: 'Community',
     icon: (
