@@ -15,6 +15,7 @@ test.describe('Website Management @experimental', () => {
       page.getByRole('heading', { name: 'Create your free website' }).first(),
     ).toBeVisible()
     await expect(page).toHaveURL(/\/website$/)
+
     await page
       .getByRole('button', { name: 'Create your website' })
       .first()
@@ -25,6 +26,7 @@ test.describe('Website Management @experimental', () => {
         name: 'What do you want your custom link to be?',
       }),
     ).toBeVisible()
+
     await page.getByRole('button', { name: 'Next' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
@@ -32,11 +34,13 @@ test.describe('Website Management @experimental', () => {
     ).toBeVisible()
     // Logo upload is skipped in CI due to CORS in test env; flow validation continues without file to verify progression. Will re-enable once file uploads are supported in Vercel test environments.
     // await page.locator('input[type="file"]').setInputFiles('src/fixtures/heart.png');
+
     await page.getByRole('button', { name: 'Next' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'Choose a color theme' }),
     ).toBeVisible()
+
     await page.getByText('dark').click()
     await page.getByRole('button', { name: 'Next' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
@@ -45,16 +49,19 @@ test.describe('Website Management @experimental', () => {
     ).toBeVisible()
     // Banner upload is skipped in CI due to CORS in test env; validate navigation only. Will re-enable once file uploads are supported in Vercel test environments.
     // await page.locator('input[type="file"]').setInputFiles('src/fixtures/heart.png');
+
     await page.getByRole('button', { name: 'Next' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'What is your campaign about?' }),
     ).toBeVisible()
+
     await page.getByRole('button', { name: 'Next' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'How can voters contact you?' }),
     ).toBeVisible()
+
     await page.getByRole('button', { name: 'Publish website' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
@@ -62,6 +69,7 @@ test.describe('Website Management @experimental', () => {
         name: 'Congratulations, your website is live!',
       }),
     ).toBeVisible()
+
     await expect(page.getByRole('link', { name: 'Add a domain' })).toBeVisible()
     await page.getByRole('link', { name: 'Done' }).click()
     await expect(

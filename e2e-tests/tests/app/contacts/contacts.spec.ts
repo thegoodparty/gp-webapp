@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
+import { visualSnapshot } from 'src/helpers/visual.helper'
 
 /**
  * E2E: Contacts page.
@@ -56,6 +57,11 @@ test.describe('Contacts Page', () => {
     expect(page1FirstPersonName).toBeTruthy()
     // Page 1 first person name captured
 
+    // Mask table body rows — voter data is real and varies; capture UI chrome only
+    await visualSnapshot(page, 'contacts-page.png', {
+      mask: [table.locator('tbody')],
+    })
+
     //
     //
     //
@@ -101,6 +107,12 @@ test.describe('Contacts Page', () => {
       personSheet.getByText(firstPersonName!, { exact: false }),
     ).toBeVisible({ timeout: 5000 })
     // Side panel loaded with person data
+
+    // Mask the person sheet content — PII data varies per test run
+    await visualSnapshot(page, 'contacts-person-overlay.png', {
+      mask: [personSheet],
+    })
+
     const closeButton = personSheet.getByRole('button', { name: /close/i })
     await closeButton.click()
     // Clicked Close button to close overlay
@@ -167,6 +179,9 @@ test.describe('Contacts Page', () => {
       .first()
     await expect(sheet).toBeVisible({ timeout: 10000 })
     // Filters sheet is visible
+
+    await visualSnapshot(page, 'contacts-filters-sheet.png')
+
     const age18_25Label = sheet.getByText('18-25', { exact: true })
     const age18_25Checkbox = age18_25Label
       .locator('xpath=..')

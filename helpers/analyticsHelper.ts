@@ -118,7 +118,6 @@ export const EVENTS = {
       ClickContentBuilder: 'Navigation - Dashboard: Click Content Builder',
       ClickMyProfile: 'Navigation - Dashboard: Click My Profile',
       ClickCampaignTeam: 'Navigation - Dashboard: Click Campaign Team',
-      ClickResources: 'Navigation - Dashboard: Click Resources',
       ClickCommunity: 'Navigation - Dashboard: Click Community',
       ClickWebsite: 'Navigation - Dashboard: Click Website',
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
@@ -126,9 +125,7 @@ export const EVENTS = {
       ClickPolls: 'Navigation - Dashboard: Click Polls',
     },
   },
-  Resources: {
-    ResourceClicked: 'Resources - Resource Clicked',
-  },
+
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
     PathToVictory: {

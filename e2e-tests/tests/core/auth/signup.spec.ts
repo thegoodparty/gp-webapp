@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 // Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } })
@@ -21,6 +22,8 @@ test.describe('Sign Up Functionality', () => {
     await expect(page.getByRole('textbox', { name: 'Zip Code' })).toBeVisible()
     await expect(page.getByRole('textbox', { name: 'password' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Join' })).toBeVisible()
+
+    await visualSnapshot(page, 'signup-page.png')
   })
 
   test('should validate and process form data correctly', async ({ page }) => {
@@ -76,5 +79,7 @@ test.describe('Sign Up Functionality', () => {
     expect(phone.trim()).toBe(phone)
     expect(phoneRegex.test(phone)).toBeTruthy()
     await expect(page).toHaveURL(/\/onboarding/)
+
+    await visualSnapshot(page, 'onboarding-step1.png')
   })
 })
