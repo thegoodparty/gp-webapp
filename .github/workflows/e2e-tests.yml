@@ -116,8 +116,6 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Stable E2E Tests - PR Preview"
-          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
-          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Upload stable test reports
         if: ${{ !cancelled() }}
@@ -304,8 +302,6 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Experimental E2E Tests - PR Preview"
-          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
-          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Upload experimental test reports
         if: ${{ !cancelled() }}
