@@ -1,3 +1,4 @@
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { SQS } from '@aws-sdk/client-sqs'
 import { expect, type Page, test } from '@playwright/test'
 import type { MessageElement } from '@slack/web-api/dist/types/response/ConversationsHistoryResponse'
@@ -8,6 +9,117 @@ import { authenticateTestUser } from 'tests/utils/api-registration'
 import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+
+type CsvRow = {
+  id: string
+  firstName: string
+  lastName: string
+  cellPhone: string
+}
+
+type PollResponseJsonRow = {
+  atomicId: string
+  phoneNumber: string
+  receivedAt: string
+  originalMessage: string
+  atomicMessage: string
+  pollId: string
+  clusterId: number | string
+  theme: string
+  category: string
+  summary: string
+  sentiment: string
+  isOptOut: boolean
+}
+
+const normalizePhoneNumber = (phoneNumber: string): string => {
+  let cleaned = phoneNumber
+    .replaceAll('+1', '')
+    .replaceAll(' ', '')
+    .replaceAll('-', '')
+    .replaceAll('(', '')
+    .replaceAll(')', '')
+  if (cleaned.length === 11 && cleaned.startsWith('1')) {
+    cleaned = cleaned.slice(1)
+  }
+  if (cleaned.length !== 10) {
+    throw new Error(`Phone number ${phoneNumber} could not be normalized`)
+  }
+  return `+1${cleaned}`
+}
+
+const buildPollResponseJson = (params: {
+  pollId: string
+  csvRows: CsvRow[]
+  issues: {
+    rank: number
+    theme: string
+    summary: string
+    responseCount: number
+  }[]
+  totalResponses: number
+}): PollResponseJsonRow[] => {
+  const { pollId, csvRows, issues, totalResponses } = params
+
+  // Deduplicate phones and convert to 1XXXXXXXXXX format (no +) for JSON
+  const uniquePhones = Array.from(
+    new Set(csvRows.map((row) => normalizePhoneNumber(row.cellPhone))),
+  )
+  const phonesForJson = uniquePhones.map((p) => p.replace('+', ''))
+
+  const rows: PollResponseJsonRow[] = []
+  let phoneIndex = 0
+  const now = new Date()
+
+  // Allocate phones to issues based on responseCount
+  for (const issue of issues) {
+    for (
+      let i = 0;
+      i < issue.responseCount && phoneIndex < phonesForJson.length;
+      i++
+    ) {
+      rows.push({
+        atomicId: crypto.randomUUID(),
+        phoneNumber: phonesForJson[phoneIndex]!,
+        receivedAt: new Date(now.getTime() + phoneIndex * 1000).toISOString(),
+        originalMessage: `Response about ${issue.theme}`,
+        atomicMessage: `Response about ${issue.theme}`,
+        pollId,
+        clusterId: issue.rank,
+        theme: issue.theme,
+        category: 'General',
+        summary: issue.summary,
+        sentiment: 'negative',
+        isOptOut: false,
+      })
+      phoneIndex++
+    }
+  }
+
+  // Remaining phones become opt-outs
+  const issueTotalPhones = issues.reduce((sum, i) => sum + i.responseCount, 0)
+  const optOutCount = Math.max(0, totalResponses - issueTotalPhones)
+
+  for (let i = 0; i < optOutCount && phoneIndex < phonesForJson.length; i++) {
+    rows.push({
+      atomicId: crypto.randomUUID(),
+      phoneNumber: phonesForJson[phoneIndex]!,
+      receivedAt: new Date(now.getTime() + phoneIndex * 1000).toISOString(),
+      originalMessage: 'STOP',
+      atomicMessage: 'STOP',
+      pollId,
+      clusterId: '',
+      theme: 'Opt Out Request',
+      category: '',
+      summary: '',
+      sentiment: '',
+      isOptOut: true,
+    })
+    phoneIndex++
+  }
+
+  return rows
+}
 
 const district = {
   zip: '82001',
@@ -45,6 +157,14 @@ const getQueueNameFromSlackMessage = (text: string) => {
   return queueName
 }
 
+const getBucketNameFromSlackMessage = (text: string) => {
+  const match = text.match(/serve-analyze-data-[a-z]+/)
+  if (!match) {
+    throw new Error('No S3 bucket name found in slack message')
+  }
+  return match[0]
+}
+
 const waitForPollSlackData = async (
   matching: (message: MessageElement) => boolean,
 ) => {
@@ -69,8 +189,9 @@ const waitForPollSlackData = async (
   const csvRows = parseCSV(csv.toString('utf8'), { columns: true })
 
   const queueName = getQueueNameFromSlackMessage(slackMessage.text || '')
+  const bucketName = getBucketNameFromSlackMessage(slackMessage.text || '')
 
-  return { pollId, csvRows, queueName }
+  return { pollId, csvRows, queueName, bucketName }
 }
 
 const pickDateOnCalendar = async (page: Page, date: Date) => {
@@ -88,6 +209,8 @@ const completePoll = async (params: {
   queueName: string
   pollId: string
   totalResponses: number
+  bucketName: string
+  csvRows: CsvRow[]
   issues: {
     rank: number
     theme: string
@@ -98,9 +221,53 @@ const completePoll = async (params: {
   }[]
 }) => {
   const sqs = new SQS({ region: 'us-west-2' })
+  const s3 = new S3Client({ region: 'us-west-2' })
 
   const { QueueUrl } = await sqs.getQueueUrl({
     QueueName: params.queueName,
+  })
+
+  // Build response JSON with real phone numbers from CSV
+  const responseRows = buildPollResponseJson({
+    pollId: params.pollId,
+    csvRows: params.csvRows,
+    issues: params.issues.map((issue) => ({
+      rank: issue.rank,
+      theme: issue.theme,
+      summary: issue.summary,
+      responseCount: issue.responseCount,
+    })),
+    totalResponses: params.totalResponses,
+  })
+
+  // Upload JSON to S3
+  const responsesLocation = `e2e-test/${
+    params.pollId
+  }/${crypto.randomUUID()}.json`
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: params.bucketName,
+      Key: responsesLocation,
+      Body: JSON.stringify(responseRows),
+      ContentType: 'application/json',
+    }),
+  )
+
+  // Map quote phone_numbers to real phones from their respective clusters
+  const issuesWithRealPhones = params.issues.map((issue) => {
+    const clusterPhones = responseRows
+      .filter((r) => r.clusterId === issue.rank && !r.isOptOut)
+      .map((r) => `+${r.phoneNumber}`)
+
+    return {
+      pollId: params.pollId,
+      ...issue,
+      quotes: issue.quotes.map((quote, idx) => ({
+        quote: quote.quote,
+        phone_number:
+          clusterPhones[idx % clusterPhones.length] || quote.phone_number,
+      })),
+    }
   })
 
   const queueEvent = {
@@ -108,10 +275,8 @@ const completePoll = async (params: {
     data: {
       pollId: params.pollId,
       totalResponses: params.totalResponses,
-      issues: params.issues.map((issue) => ({
-        pollId: params.pollId,
-        ...issue,
-      })),
+      responsesLocation,
+      issues: issuesWithRealPhones,
     },
   }
 
@@ -210,7 +375,7 @@ test('poll onboarding and expansion', async ({ page }) => {
 
   console.log(`Poll created at ${new Date().toTimeString()}`)
 
-  const { pollId, csvRows, queueName } = await waitForPollSlackData(
+  const { pollId, csvRows, queueName, bucketName } = await waitForPollSlackData(
     (message) => !!message.text?.includes(user.email),
   )
 
@@ -230,10 +395,16 @@ test('poll onboarding and expansion', async ({ page }) => {
     audienceSize: 500,
   })
 
+  const queueToUse = process.env.E2E_SQS_QUEUE_NAME || queueName
+
+  const bucketToUse = process.env.SERVE_ANALYZE_S3_BUCKET || bucketName
+
   const queuedEvent = await completePoll({
-    queueName,
+    queueName: queueToUse,
     pollId,
     totalResponses: 45,
+    bucketName: bucketToUse,
+    csvRows: csvRows as CsvRow[],
     issues: [
       {
         rank: 1,
@@ -246,11 +417,11 @@ test('poll onboarding and expansion', async ({ page }) => {
         quotes: [
           {
             quote: "I hate traffic. It's so frustrating.",
-            phone_number: '+15555555555',
+            phone_number: '',
           },
           {
             quote: "I'm always late for work because of traffic.",
-            phone_number: '+15555555556',
+            phone_number: '',
           },
         ],
       },
@@ -265,7 +436,7 @@ test('poll onboarding and expansion', async ({ page }) => {
         quotes: [
           {
             quote: "I'm scared to walk the streets at night.",
-            phone_number: '+15555555556',
+            phone_number: '',
           },
         ],
       },
@@ -467,10 +638,18 @@ test('poll onboarding and expansion', async ({ page }) => {
   }
 
   // Simulate high-confidence results.
+  // Combine original and expansion CSV rows since all have ELECTED_OFFICIAL records
+  const allCsvRows = [
+    ...(csvRows as CsvRow[]),
+    ...(expansionCsvRows as CsvRow[]),
+  ]
+
   const expansionIssues = await completePoll({
-    queueName,
+    queueName: queueToUse,
     pollId,
     totalResponses: 100,
+    bucketName: bucketToUse,
+    csvRows: allCsvRows,
     issues: [
       {
         rank: 1,
@@ -483,11 +662,11 @@ test('poll onboarding and expansion', async ({ page }) => {
         quotes: [
           {
             quote: "I hate traffic. It's so frustrating.",
-            phone_number: '+15555555555',
+            phone_number: '',
           },
           {
             quote: "I'm always late for work because of traffic.",
-            phone_number: '+15555555556',
+            phone_number: '',
           },
         ],
       },
