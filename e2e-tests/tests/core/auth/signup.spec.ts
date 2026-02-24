@@ -80,6 +80,10 @@ test.describe('Sign Up Functionality', () => {
     expect(phoneRegex.test(phone)).toBeTruthy()
     await expect(page).toHaveURL(/\/onboarding/)
 
-    await visualSnapshot(page, 'onboarding-step1.png')
+    await visualSnapshot(page, 'onboarding-step1.png', {
+      mask: [
+        page.getByRole('heading', { name: /welcome/i }),
+      ],
+    })
   })
 })

@@ -31,7 +31,11 @@ test('authenticate with onboarded user', async ({ page }) => {
   })
   console.log('📝 User created, now completing onboarding...')
 
-  await visualSnapshot(page, 'onboarding-step1-office-selection.png')
+  await visualSnapshot(page, 'onboarding-step1-office-selection.png', {
+    mask: [
+      page.getByRole('heading', { name: /welcome/i }),
+    ],
+  })
 
   await completeOnboardingFlow(page)
 

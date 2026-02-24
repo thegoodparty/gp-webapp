@@ -36,6 +36,14 @@ test.describe('Dashboard Functionality', () => {
       page.getByRole('heading', { name: 'Personal Information' }).first(),
     ).toBeVisible()
     console.log('✅ Profile accessible')
-    await visualSnapshot(page, 'profile.png')
+    await visualSnapshot(page, 'profile.png', {
+      mask: [
+        page.getByTestId('personal-first-name'),
+        page.getByTestId('personal-last-name'),
+        page.getByTestId('personal-email'),
+        page.getByTestId('personal-phone'),
+        page.getByTestId('personal-zip'),
+      ],
+    })
   })
 })

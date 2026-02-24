@@ -78,7 +78,15 @@ test.describe('Mobile Navigation', () => {
     const bodyContent = page.locator('body')
     await expect(bodyContent).toBeVisible()
 
-    await visualSnapshot(page, 'mobile-profile.png')
+    await visualSnapshot(page, 'mobile-profile.png', {
+      mask: [
+        page.getByTestId('personal-first-name'),
+        page.getByTestId('personal-last-name'),
+        page.getByTestId('personal-email'),
+        page.getByTestId('personal-phone'),
+        page.getByTestId('personal-zip'),
+      ],
+    })
     console.log('✅ Mobile profile page accessible')
   })
 })
