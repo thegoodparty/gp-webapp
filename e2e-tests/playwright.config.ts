@@ -1,11 +1,25 @@
 import { defineConfig, devices } from '@playwright/test'
 import 'dotenv/config'
 
+process.env.TZ = 'UTC'
+if (!process.env.BASE_URL) {
+  throw new Error('BASE_URL is not set')
+}
+
 export default defineConfig({
   testDir: './tests',
+  snapshotPathTemplate:
+    '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
   // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
   timeout: 60000, // Increased from 30s to 60s for account creation
-  expect: { timeout: 15000 }, // Increased from 10s to 15s
+  expect: {
+    timeout: 15000, // Increased from 10s to 15s
+    toHaveScreenshot: {
+      maxDiffPixels: 75,
+      animations: 'disabled',
+      scale: 'css',
+    },
+  },
 
   // Improved parallelization with better stability
   fullyParallel: true,
@@ -36,7 +50,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4000',
+    baseURL: process.env.BASE_URL,
 
     // Increased timeouts for better reliability
     actionTimeout: 15000, // Increased from 10s

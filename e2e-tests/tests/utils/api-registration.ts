@@ -4,7 +4,12 @@ import axios, { type AxiosInstance } from 'axios'
 import { uniqBy } from 'es-toolkit'
 import { TestDataHelper } from 'src/helpers/data.helper'
 
-const baseURL = process.env.BASE_URL || 'http://localhost:4000'
+const baseURL = process.env.BASE_URL
+
+if (!baseURL) {
+  throw new Error('BASE_URL is not set')
+}
+
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
