@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 export class TestDataHelper {
   /**
    * Generate test user data (does NOT create actual user)
@@ -10,7 +12,7 @@ export class TestDataHelper {
       lastName: 'User',
       email: `test-${timestamp}@test.goodparty.org`,
       phone: `5105${timestamp.toString().slice(-6)}`,
-      password: process.env.TEST_DEFAULT_PASSWORD || 'TestPassword123!',
+      password: randomUUID(),
       zipCode: '28739',
     }
   }

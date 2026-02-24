@@ -35,7 +35,7 @@ export default function CheckoutForm({
     if (checkoutResult.type === 'error' && !errorHandledRef.current) {
       errorHandledRef.current = true
       const msg = checkoutResult.error.message || 'Unexpected payment error'
-      reportErrorToNewRelic('checkout form initialization error', {
+      reportErrorToNewRelic(new Error('checkout form initialization error'), {
         stripeError: checkoutResult.error,
       })
       errorSnackbar(msg)
@@ -72,7 +72,7 @@ export default function CheckoutForm({
           reportErrorToNewRelic(error, { location: 'checkout-form' })
         } else {
           msg = error.message || 'Unexpected payment error'
-          reportErrorToNewRelic('checkout form stripe error', {
+          reportErrorToNewRelic(new Error('checkout form stripe error'), {
             stripeError: error,
           })
         }

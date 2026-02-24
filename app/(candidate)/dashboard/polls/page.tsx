@@ -15,7 +15,7 @@ export default async function Page() {
   await serveAccess()
   const getPollsResponse = await getPolls()
 
-  const polls = getPollsResponse?.results || []
+  const polls = getPollsResponse.results
 
   return <PollsPage pathname="/dashboard/polls" polls={polls} />
 }

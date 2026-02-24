@@ -1,6 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 import 'dotenv/config'
 
+process.env.TZ = 'UTC'
+if (!process.env.BASE_URL) {
+  throw new Error('BASE_URL is not set')
+}
+
 export default defineConfig({
   testDir: './tests',
   snapshotPathTemplate:
@@ -45,7 +50,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4000',
+    baseURL: process.env.BASE_URL,
 
     // Increased timeouts for better reliability
     actionTimeout: 15000, // Increased from 10s

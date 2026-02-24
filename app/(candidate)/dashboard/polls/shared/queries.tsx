@@ -1,6 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { clientRequest } from 'gpApi/typed-request'
 
 export type ContactStatsBucket = {
   label: string
@@ -26,11 +25,5 @@ export type ContactsStats = {
 export const districtStatsQueryOptions = queryOptions({
   queryKey: ['contacts-stats'],
   queryFn: () =>
-    clientFetch<ContactsStats>(apiRoutes.contacts.stats).then((res) => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch contacts stats')
-      }
-
-      return res.data
-    }),
+    clientRequest('GET /v1/contacts/stats', {}).then((res) => res.data),
 })

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import { withSentryConfig } from '@sentry/nextjs'
 import { newRelicSourceMapPlugin } from 'utils/upload-sourcemaps'
 
 const withPWA = require('next-pwa')({
@@ -49,4 +50,12 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPWA(nextConfig)
+export default withSentryConfig(withPWA(nextConfig), {
+  org: 'goodparty',
+  project: 'gp-webapp',
+  silent: !process.env.CI,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  widenClientFileUpload: true,
+  tunnelRoute: '/monitoring',
+  disableLogger: true,
+})
