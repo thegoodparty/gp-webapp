@@ -5,11 +5,6 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { ProPricingCard } from 'app/(candidate)/dashboard/upgrade-to-pro/components/ProPricingCard'
-import { useUser } from '@shared/hooks/useUser'
-import AlertDialog from '@shared/utils/AlertDialog'
-import { useState, MouseEvent } from 'react'
-import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion'
-import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePageExit } from '@shared/hooks/usePageExit'
 import { Campaign, CandidatePosition } from 'helpers/types'
@@ -70,29 +65,12 @@ const CARD_COMPETITORS: PricingCardConfig = {
 export default function DetailsPage(
   props: UpdateToProPageProps,
 ): React.JSX.Element {
-  const [user] = useUser()
-  const { metaData: userMetaData } = user || {}
-  const { demoPersona } = userMetaData || {}
-  const [showDialog, setShowDialog] = useState(false)
-  const { errorSnackbar } = useSnackbar()
-
   usePageExit(() => {
     trackEvent(EVENTS.ProUpgrade.SplashPage.Exit)
   })
 
-  const handleJoinProOnClick = (
-    e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
-  ): void => {
-    if (demoPersona) {
-      e.preventDefault()
-      e.stopPropagation()
-      setShowDialog(true)
-    }
+  const handleJoinProOnClick = (): void => {
     trackEvent(EVENTS.ProUpgrade.SplashPage.ClickUpgrade)
-  }
-
-  const handleDialogClose = (): void => {
-    setShowDialog(false)
   }
 
   return (
@@ -113,30 +91,12 @@ export default function DetailsPage(
 
           <Button
             size="large"
-            href={demoPersona ? '#' : '/dashboard/pro-sign-up'}
+            href={'/dashboard/pro-sign-up'}
             onClick={handleJoinProOnClick}
             className="!block md:w-[300px] mx-auto mt-12"
           >
             Start today for just $10/month.
           </Button>
-          <AlertDialog
-            open={showDialog}
-            handleProceed={handleDialogClose}
-            handleClose={handleDialogClose}
-            title="End Demo & Upgrade?"
-            ariaLabel="End Demo & Upgrade"
-            description={
-              <>
-                You are currently on a demo account.
-                <br />
-                To upgrade, you must first create a candidate account.
-              </>
-            }
-            onCancel={handleDemoAccountDeletion(errorSnackbar)}
-            cancelLabel="Create Account"
-            proceedLabel="Continue Demo"
-            redButton={false}
-          />
         </div>
       </CandidatePositionsProvider>
     </DashboardLayout>
