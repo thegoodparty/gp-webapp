@@ -15,12 +15,10 @@ import { identifyUser } from '@shared/utils/analytics'
 
 export const AccountSettingsSection = (): React.JSX.Element => {
   const [user] = useUser()
-  const userMetaData = user?.metaData || {}
-  const { demoPersona } = userMetaData
   const [campaign] = useCampaign()
   const { isPro, details = {} } = campaign || {}
   const { subscriptionCancelAt, subscriptionId } = details || {}
-  const plan = isPro ? 'Candidate PRO' : demoPersona ? 'Demo' : 'Candidate FREE'
+  const plan = isPro ? 'Candidate PRO' : 'Candidate FREE'
   const hideButtonForLimboProUsers = isPro && !Boolean(subscriptionId)
 
   useEffect(() => {
@@ -69,10 +67,7 @@ export const AccountSettingsSection = (): React.JSX.Element => {
             </Body2>
           </div>
           {hideButtonForLimboProUsers ? null : (
-            <AccountSettingsButton
-              isPro={Boolean(isPro)}
-              isDemo={Boolean(demoPersona)}
-            />
+            <AccountSettingsButton isPro={Boolean(isPro)} />
           )}
         </div>
       </Paper>

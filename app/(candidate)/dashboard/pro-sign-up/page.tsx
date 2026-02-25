@@ -3,7 +3,6 @@ import pageMetaData from 'helpers/metadataHelper'
 import candidateAccess from '../shared/candidateAccess'
 import { getServerUser } from 'helpers/userServerHelper'
 import ProSignUpPage from 'app/(candidate)/dashboard/pro-sign-up/components/ProSignUpPage'
-import { restrictDemoAccess } from 'app/(candidate)/dashboard/shared/restrictDemoAccess'
 
 const meta = pageMetaData({
   title: 'Pro Sign Up | GoodParty.org',
@@ -16,7 +15,6 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
-  await restrictDemoAccess()
 
   const campaign = await fetchUserCampaign()
   const user = await getServerUser()
