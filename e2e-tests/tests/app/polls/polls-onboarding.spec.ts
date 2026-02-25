@@ -372,12 +372,21 @@ test.describe.serial('poll onboarding', () => {
     await visualSnapshot(page, 'polls-created-scheduled.png', {
       mask: [
         // Date values in poll details — target the second span (the value), not the label
-        page.locator('li', { hasText: 'Scheduled Date:' }).locator('span').nth(1),
-        page.locator('li', { hasText: 'Estimated Completion Date:' }).locator('span').nth(1),
+        page
+          .locator('li', { hasText: 'Scheduled Date:' })
+          .locator('span')
+          .nth(1),
+        page
+          .locator('li', { hasText: 'Estimated Completion Date:' })
+          .locator('span')
+          .nth(1),
         // Status alert — mask entire alert for stable width regardless of date text
         page.getByRole('alert'),
         // Message section — content includes test-specific usernames
-        page.getByRole('heading', { name: 'Message', level: 3 }).locator('..').locator('..'),
+        page
+          .getByRole('heading', { name: 'Message', level: 3 })
+          .locator('..')
+          .locator('..'),
       ],
     })
 
