@@ -368,12 +368,16 @@ test.describe.serial('poll onboarding', () => {
     // Confirm the correct data shows up in the UI
     await expect(page.getByText('Top Community Issues')).toBeVisible()
 
-    // Mask date fields — they are relative to the current date and will differ between runs
+    // Mask dynamic content — dates change between runs, message contains test usernames
     await visualSnapshot(page, 'polls-created-scheduled.png', {
       mask: [
-        page.getByText(/Scheduled Date:/),
-        page.getByText(/Estimated Completion Date:/),
-        page.getByText(/This poll is scheduled to send on/),
+        // Date values in poll details — target the second span (the value), not the label
+        page.locator('li', { hasText: 'Scheduled Date:' }).locator('span').nth(1),
+        page.locator('li', { hasText: 'Estimated Completion Date:' }).locator('span').nth(1),
+        // Status alert — mask entire alert for stable width regardless of date text
+        page.getByRole('alert'),
+        // Message section — content includes test-specific usernames
+        page.getByRole('heading', { name: 'Message', level: 3 }).locator('..').locator('..'),
       ],
     })
 

@@ -20,7 +20,12 @@ test.describe('Dashboard Functionality', () => {
     const dashboardContent = page.locator('h1, h2, h3, main')
     await expect(dashboardContent.first()).toBeVisible()
     console.log('✅ Dashboard accessible')
-    await visualSnapshot(page, 'dashboard.png')
+    await visualSnapshot(page, 'dashboard.png', {
+      mask: [
+        // The election countdown changes weekly (e.g. "35 weeks until Election Day!")
+        page.getByRole('heading', { name: /until Election Day/ }),
+      ],
+    })
 
     await page.goto('/dashboard/campaign-assistant')
     await WaitHelper.waitForPageReady(page)
