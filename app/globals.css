@@ -10,6 +10,9 @@
  *
  * CSS variable files (design-tokens, typography, etc.) come before or after
  * as long as @theme comes AFTER @import "tailwindcss".
+ *
+ * NOTE: All @import statements must come before @plugin/@source/@custom-variant
+ * to satisfy PostCSS parsing rules (required by Storybook's Vite pipeline).
  */
 
 /* 1. Raw CSS variables that @theme will reference via var() */
@@ -18,21 +21,21 @@
 /* 2. Core Tailwind - MUST come before @theme, @plugin, @source */
 @import 'tailwindcss';
 
-/* 3. Tailwind v4 plugin (replaces plugins[] in tailwind.config.js) */
-@plugin "@tailwindcss/typography";
-
-/* 4. Content sources (replaces content[] in tailwind.config.js) */
-@source "../app";
-@source "../components";
-@source "../styleguide";
-
-/* 5. Theme tokens - @theme MUST come AFTER @import "tailwindcss" */
+/* 3. Theme tokens - @theme MUST come AFTER @import "tailwindcss" */
 @import '../styleguide/tailwind-theme.css';
 
-/* 6. Additional CSS */
+/* 4. Additional CSS */
 @import '../styleguide/typography.css';
 @import '../styleguide/styleguide-scope.css';
 @import 'tw-animate-css';
+
+/* 5. Tailwind v4 plugin (replaces plugins[] in tailwind.config.js) */
+@plugin "@tailwindcss/typography";
+
+/* 6. Content sources (replaces content[] in tailwind.config.js) */
+@source "../app";
+@source "../components";
+@source "../styleguide";
 
 /* Dark mode variant */
 @custom-variant dark (&:is(.dark *));
