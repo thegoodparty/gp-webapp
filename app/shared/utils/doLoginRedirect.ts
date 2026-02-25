@@ -24,9 +24,11 @@ export const doLoginRedirect = async (
     ? router.push(returnCookie)
     : status?.status === 'candidate'
     ? '/dashboard'
+    : status?.status === 'onboarding' && status?.step && status?.slug
+    ? `/onboarding/${status.slug}/${status.step}`
     : status?.status === 'volunteer'
     ? '/volunteer-dashboard'
-    : '/'
+    : '/onboarding/office-selection'
 
   router.push(redirectRoute as string)
 }
