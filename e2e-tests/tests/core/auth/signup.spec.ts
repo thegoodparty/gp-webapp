@@ -81,9 +81,7 @@ test.describe('Sign Up Functionality', () => {
     await expect(page).toHaveURL(/\/onboarding/)
 
     await visualSnapshot(page, 'onboarding-step1.png', {
-      mask: [
-        page.getByRole('heading', { name: /welcome/i }),
-      ],
+      mask: [page.getByRole('heading', { name: /welcome/i })],
     })
   })
 })
