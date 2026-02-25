@@ -2,7 +2,6 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper'
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
 import PurchaseRedirectPage from 'app/(candidate)/dashboard/pro-sign-up/purchase-redirect/components/PurchaseRedirectPage'
-import { restrictDemoAccess } from 'app/(candidate)/dashboard/shared/restrictDemoAccess'
 
 const REDIRECT_COUNTDOWN_SECONDS = process.env.PAYMENT_REDIRECT_DELAY || 5
 
@@ -17,7 +16,6 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
-  await restrictDemoAccess()
 
   const fetchedCampaign = await fetchUserCampaign()
   const campaign = (fetchedCampaign === null ? {} : fetchedCampaign) as {

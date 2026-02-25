@@ -32,7 +32,6 @@ export interface UserMetaData {
   hubspotId?: string
   profile_updated_count?: number
   textNotifications?: boolean
-  demoPersona?: boolean
 }
 
 export interface User {
