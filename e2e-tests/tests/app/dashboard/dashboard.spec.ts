@@ -20,7 +20,12 @@ test.describe('Dashboard Functionality', () => {
     const dashboardContent = page.locator('h1, h2, h3, main')
     await expect(dashboardContent.first()).toBeVisible()
     console.log('✅ Dashboard accessible')
-    await visualSnapshot(page, 'dashboard.png')
+    await visualSnapshot(page, 'dashboard.png', {
+      mask: [
+        // The election countdown changes weekly (e.g. "35 weeks until Election Day!")
+        page.getByRole('heading', { name: /until Election Day/ }),
+      ],
+    })
 
     await page.goto('/dashboard/campaign-assistant')
     await WaitHelper.waitForPageReady(page)
@@ -36,6 +41,14 @@ test.describe('Dashboard Functionality', () => {
       page.getByRole('heading', { name: 'Personal Information' }).first(),
     ).toBeVisible()
     console.log('✅ Profile accessible')
-    await visualSnapshot(page, 'profile.png')
+    await visualSnapshot(page, 'profile.png', {
+      mask: [
+        page.getByTestId('personal-first-name'),
+        page.getByTestId('personal-last-name'),
+        page.getByTestId('personal-email'),
+        page.getByTestId('personal-phone'),
+        page.getByTestId('personal-zip'),
+      ],
+    })
   })
 })
