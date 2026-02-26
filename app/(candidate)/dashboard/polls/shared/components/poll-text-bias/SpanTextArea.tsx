@@ -114,7 +114,7 @@ export default function SpanTextArea({
       {showHighlightedView ? (
         <div
           key="highlighted-view"
-          className={`text-sm font-normal w-full bg-white px-4 py-3 border rounded-lg cursor-text ${borderClasses.border}`}
+          className={`text-base md:text-sm font-normal w-full bg-white px-4 py-3 border rounded-lg cursor-text ${borderClasses.border}`}
           style={{ ...commonStyles, minHeight }}
           onMouseDown={(e) => {
             e.preventDefault()
@@ -137,7 +137,7 @@ export default function SpanTextArea({
             onBlur={onBlur}
             onFocus={onFocus}
             suppressContentEditableWarning
-            className={`text-sm font-normal bg-white w-full px-4 py-3 border rounded-md focus:outline-none ${
+            className={`text-base md:text-sm font-normal bg-white w-full px-4 py-3 border rounded-md focus:outline-none ${
               borderClasses.border
             } ${borderClasses.focusRing} ${
               isReadOnly ? 'cursor-default' : 'cursor-text'
@@ -150,14 +150,7 @@ export default function SpanTextArea({
             </div>
           )}
           {!value && !showLoadingDots && !hidePlaceholder && (
-            <div
-              className="text-sm font-normal absolute top-3 left-4 pointer-events-none text-gray-400 pr-2"
-              style={{
-                fontFamily: 'var(--outfit-font)',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-              }}
-            >
+            <div className="text-base md:text-sm font-normal absolute top-3 left-4 pointer-events-none text-gray-400 pr-2 font-outfit leading-normal">
               {placeholder}
             </div>
           )}
