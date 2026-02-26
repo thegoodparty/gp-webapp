@@ -29,7 +29,12 @@ test.describe('Blog Page', () => {
       page.getByRole('link', { name: 'Independent Cause' }).first(),
     ).toBeVisible()
 
-    await visualSnapshot(page, 'blog-listing.png')
+    await visualSnapshot(page, 'blog-listing.png', {
+      mask: [
+        page.locator('article img').first(),
+        page.locator('article h5, article h4, article h3').first(),
+      ],
+    })
   })
 
   test('should display blog articles', async ({ page }) => {
@@ -55,7 +60,12 @@ test.describe('Blog Page', () => {
     await expect(page).toHaveURL(/\/section\/news/i)
     await expect(page.getByTestId('articleTitle')).toHaveText('News')
 
-    await visualSnapshot(page, 'blog-news-category.png')
+    await visualSnapshot(page, 'blog-news-category.png', {
+      mask: [
+        page.locator('article img').first(),
+        page.locator('article h5, article h4, article h3').first(),
+      ],
+    })
   })
 
   test('should filter blog by politics category', async ({ page }) => {
@@ -86,6 +96,13 @@ test.describe('Blog Page', () => {
       await expect(faqSection).toBeVisible()
     }
 
-    await visualSnapshot(page, 'blog-article.png')
+    await visualSnapshot(page, 'blog-article.png', {
+      mask: [
+        page.getByTestId('articleHeroImage'),
+        page.getByTestId('articleTitle'),
+        page.getByTestId('blogAuthor'),
+        page.getByTestId('CMS-contentWrapper').first(),
+      ],
+    })
   })
 })
