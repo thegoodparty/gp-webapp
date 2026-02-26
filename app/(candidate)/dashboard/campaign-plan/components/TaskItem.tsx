@@ -32,7 +32,12 @@ export default function TaskItem({
   const [hovered, setHovered] = useState(false)
 
   const formattedDate =
-    typeof date === 'string' ? date : format(date, 'MMM d')
+    typeof date === 'string'
+      ? date
+      : format(
+          new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+          'MMM d',
+        )
 
   return (
     <div
