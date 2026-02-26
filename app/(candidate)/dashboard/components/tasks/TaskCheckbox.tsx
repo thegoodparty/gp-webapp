@@ -10,7 +10,11 @@ interface TaskCheckboxProps {
   className?: string
 }
 
-export default function TaskCheckbox({ checked = false, onCheckedChange, className }: TaskCheckboxProps) {
+export default function TaskCheckbox({
+  checked = false,
+  onCheckedChange,
+  className,
+}: TaskCheckboxProps) {
   const [hovered, setHovered] = useState(false)
 
   const Icon = checked ? CircleCheckBig : hovered ? CircleCheck : Circle
@@ -24,7 +28,10 @@ export default function TaskCheckbox({ checked = false, onCheckedChange, classNa
       onClick={() => onCheckedChange?.(!checked)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={cn('inline-flex cursor-pointer items-center justify-center bg-transparent border-none p-0 base-foreground', className)}
+      className={cn(
+        'inline-flex cursor-pointer items-center justify-center bg-transparent border-none p-0 base-foreground',
+        className,
+      )}
     >
       <Icon size={20} strokeWidth={1.5} />
     </button>
