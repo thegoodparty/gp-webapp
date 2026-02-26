@@ -112,7 +112,7 @@ jobs:
       - name: Run Stable Playwright Tests
         id: run-stable-tests
         working-directory: e2e-tests
-        run: npx playwright test --project=stable --update-snapshots
+        run: npx playwright test --project=stable
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Stable E2E Tests - PR Preview"
@@ -125,7 +125,6 @@ jobs:
           path: |
             e2e-tests/playwright-report
             e2e-tests/test-results
-            e2e-tests/tests/__visual_snapshots__
           retention-days: 30
 
       - name: Parse stable test results
