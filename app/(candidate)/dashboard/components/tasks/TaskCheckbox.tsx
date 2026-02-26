@@ -24,7 +24,7 @@ export default function TaskCheckbox({ checked = false, onCheckedChange, classNa
       onClick={() => onCheckedChange?.(!checked)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={cn('inline-flex cursor-pointer items-center justify-center bg-transparent border-none p-0 text-foreground', className)}
+      className={cn('inline-flex cursor-pointer items-center justify-center bg-transparent border-none p-0 base-foreground', className)}
     >
       <Icon size={20} strokeWidth={1.5} />
     </button>
