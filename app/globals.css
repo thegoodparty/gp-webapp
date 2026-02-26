@@ -532,6 +532,10 @@
  * to avoid conflicts between webapp and styleguide color systems.
  */
 
+* {
+  line-height: 1.3;
+}
+
 /* Fix for DataTableColumnHeader button border */
 .button-ghost {
   border: none !important;
@@ -540,6 +544,7 @@
 @layer base {
   * {
     outline: none;
+    border-color: var(--gray-200);
   }
 
   *:focus-visible {
@@ -588,15 +593,6 @@
    */
   svg:not([data-slot] *) {
     vertical-align: middle;
-  }
-
-  /*
-   * Restore Tailwind v3's default line-height (1.3) for all elements.
-   * v4 inherits 1.5 from body, causing widespread text/spacing diffs.
-   * Excluded from styleguide components which define their own line-heights.
-   */
-  *:not([data-slot] *):not([data-slot]) {
-    line-height: 1.3;
   }
 
   a:hover {
