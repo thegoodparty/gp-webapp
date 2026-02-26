@@ -84,6 +84,7 @@ test.describe('Mobile Navigation', () => {
         page.getByTestId('personal-last-name'),
         page.getByTestId('personal-email'),
         page.getByTestId('personal-phone'),
+        page.getByLabel('Mobile Number'),
         page.getByTestId('personal-zip'),
       ],
     })

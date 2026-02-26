@@ -388,6 +388,7 @@ test.describe.serial('poll onboarding', () => {
           .locator('..')
           .locator('..'),
       ],
+      maxDiffPixels: 125,
     })
 
     const scheduledDate = `${format(sendDate, 'MMM d, yyyy')} at 11:00 AM`

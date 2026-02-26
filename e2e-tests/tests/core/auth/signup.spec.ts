@@ -80,6 +80,14 @@ test.describe('Sign Up Functionality', () => {
     expect(phoneRegex.test(phone)).toBeTruthy()
     await expect(page).toHaveURL(/\/onboarding/)
 
+    await page.waitForFunction(
+      () => {
+        const text = document.body.textContent || ''
+        return text.includes('offices found') || text.includes('office found')
+      },
+      { timeout: 15000 },
+    )
+
     await visualSnapshot(page, 'onboarding-step1.png', {
       mask: [page.getByRole('heading', { name: /welcome/i })],
     })
