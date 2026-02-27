@@ -45,7 +45,11 @@ export const fetchGlossaryItemsBySlug = async (): Promise<GlossaryBySlug> => {
 }
 
 export const fetchGlossaryByLetter = async (): Promise<GlossaryByLetter> =>
-  await unAuthFetch<GlossaryByLetter>(`${apiRoutes.content.byType.path}/glossaryItem/by-letter`)
+  await unAuthFetch<GlossaryByLetter>(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-letter`,
+  )
 
 export const fetchGlossaryByTitle = async (): Promise<GlossaryBySlug> =>
-  await unAuthFetch<GlossaryBySlug>(`${apiRoutes.content.byType.path}/glossaryItem/by-slug`)
+  await unAuthFetch<GlossaryBySlug>(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+  )

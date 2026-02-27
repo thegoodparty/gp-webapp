@@ -43,14 +43,15 @@ describe('PollTextBiasInput', () => {
   })
 
   it('triggers bias analysis on blur when text meets threshold', async () => {
-    const longText = 'This is a question that is long enough to trigger analysis'
+    const longText =
+      'This is a question that is long enough to trigger analysis'
 
     render(
       <PollTextBiasInput
         value={longText}
         onChange={vi.fn()}
         analysisLengthThreshold={20}
-      />
+      />,
     )
 
     const input = document.querySelector('[contenteditable]')
@@ -84,14 +85,14 @@ describe('PollTextBiasInput', () => {
         value="Test text here"
         onChange={vi.fn()}
         onBiasAnalysisChange={handleBiasChange}
-      />
+      />,
     )
 
     expect(handleBiasChange).toHaveBeenCalledWith(
       expect.objectContaining({
         hasBias: true,
         hasGrammar: false,
-      })
+      }),
     )
   })
 })

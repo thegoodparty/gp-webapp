@@ -17,7 +17,8 @@ declare module 'hamburger-react/dist-esm/Burger' {
     margin: number
   }
 
-  interface BurgerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onToggle'> {
+  interface BurgerProps
+    extends Omit<HTMLAttributes<HTMLDivElement>, 'onToggle'> {
     size?: number
     color?: string
     direction?: 'left' | 'right'
@@ -36,4 +37,3 @@ declare module 'hamburger-react/dist-esm/Burger' {
 
   export const Burger: (props: BurgerProps) => JSX.Element
 }
-

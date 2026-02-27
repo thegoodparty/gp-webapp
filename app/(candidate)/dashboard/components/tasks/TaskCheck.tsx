@@ -10,7 +10,11 @@ interface TaskCheckProps {
   trackingAttrs?: Record<string, string>
 }
 
-export default function TaskCheck({ checked, onClick, trackingAttrs }: TaskCheckProps): React.JSX.Element {
+export default function TaskCheck({
+  checked,
+  onClick,
+  trackingAttrs,
+}: TaskCheckProps): React.JSX.Element {
   const handleClick = () => {
     if (!checked) {
       onClick()

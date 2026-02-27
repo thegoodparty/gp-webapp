@@ -42,7 +42,7 @@ export const TextingComplianceSubmitPinForm = ({
 
   const handleSubmit = () => {
     trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted, {
-      source: 'compliance_flow'
+      source: 'compliance_flow',
     })
     return onSubmit({ pin })
   }

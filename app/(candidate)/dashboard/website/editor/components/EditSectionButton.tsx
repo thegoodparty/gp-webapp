@@ -17,7 +17,14 @@ export const SECTIONS = {
 
 export type SectionKey = keyof typeof SECTIONS
 
-export const SECTION_KEYS: SectionKey[] = ['link', 'logo', 'theme', 'title', 'about', 'contact']
+export const SECTION_KEYS: SectionKey[] = [
+  'link',
+  'logo',
+  'theme',
+  'title',
+  'about',
+  'contact',
+]
 
 interface SectionContent {
   title: string

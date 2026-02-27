@@ -17,7 +17,9 @@ interface PageProps {
   params: { slug: string }
 }
 
-export default async function Page({ params }: PageProps): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: PageProps): Promise<React.JSX.Element> {
   await adminAccessOnly()
   const { slug } = params
   const fetchedCampaign = (await fetchCampaignBySlugAdminOnly(slug)) as Campaign
@@ -33,4 +35,3 @@ export default async function Page({ params }: PageProps): Promise<React.JSX.Ele
     </AdminCampaignProvider>
   )
 }
-

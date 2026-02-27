@@ -49,7 +49,11 @@ export function isDomainStatusActive(status: string | null): boolean {
   )
 }
 
-export const sendToPurchaseDomainFlow = ({ websiteId, domainName, router }: PurchaseDomainFlowParams): void => {
+export const sendToPurchaseDomainFlow = ({
+  websiteId,
+  domainName,
+  router,
+}: PurchaseDomainFlowParams): void => {
   const purchaseUrl = `/dashboard/purchase?type=${
     PURCHASE_TYPES.DOMAIN_REGISTRATION
   }&domain=${encodeURIComponent(

@@ -8,7 +8,11 @@ interface BlogAuthorFooterProps {
   summary: string
 }
 
-export default function BlogAuthorFooter({ name, imageUrl, summary }: BlogAuthorFooterProps): React.JSX.Element {
+export default function BlogAuthorFooter({
+  name,
+  imageUrl,
+  summary,
+}: BlogAuthorFooterProps): React.JSX.Element {
   return (
     <div className="flex items-center gap-x-3 py-8">
       <div>

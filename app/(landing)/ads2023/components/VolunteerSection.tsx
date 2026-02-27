@@ -48,4 +48,3 @@ export default function VolunteerSection(): React.JSX.Element {
     </section>
   )
 }
-

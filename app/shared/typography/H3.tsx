@@ -10,4 +10,3 @@ const H3 = ({ children, className = '' }: H3Props) => (
 )
 
 export default H3
-

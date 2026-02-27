@@ -12,7 +12,10 @@ interface SurveySignatureChipProps {
   className?: string
 }
 
-export default function SurveySignatureChip({ survey, className = '' }: SurveySignatureChipProps): React.JSX.Element {
+export default function SurveySignatureChip({
+  survey,
+  className = '',
+}: SurveySignatureChipProps): React.JSX.Element {
   const { requires_signature } = survey || {}
   return (
     <>

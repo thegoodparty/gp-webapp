@@ -35,8 +35,12 @@ export async function serverLoadCandidatePosition(
 }
 
 export const serverFetchIssues = async (): Promise<TopIssue[]> => {
-  const resp = await serverFetch<TopIssue[]>(apiRoutes.topIssue.list, undefined, {
-    revalidate: 3600,
-  })
+  const resp = await serverFetch<TopIssue[]>(
+    apiRoutes.topIssue.list,
+    undefined,
+    {
+      revalidate: 3600,
+    },
+  )
   return resp.data || []
 }

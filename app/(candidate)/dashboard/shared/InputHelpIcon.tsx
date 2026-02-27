@@ -10,7 +10,11 @@ interface InputHelpIconProps {
   onOpen?: () => void
 }
 
-export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }: InputHelpIconProps): React.JSX.Element => (
+export const InputHelpIcon = ({
+  message,
+  showOnFocus = false,
+  onOpen,
+}: InputHelpIconProps): React.JSX.Element => (
   <InputAdornment position="end">
     <Tooltip
       disableFocusListener={!showOnFocus}

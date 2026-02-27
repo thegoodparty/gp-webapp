@@ -11,7 +11,9 @@ interface SurveyStatusChipProps {
   survey?: Survey
 }
 
-export default function SurveyStatusChip({ survey }: SurveyStatusChipProps): React.JSX.Element {
+export default function SurveyStatusChip({
+  survey,
+}: SurveyStatusChipProps): React.JSX.Element {
   const { status } = survey || {}
   return (
     <>
@@ -27,4 +29,3 @@ export default function SurveyStatusChip({ survey }: SurveyStatusChipProps): Rea
     </>
   )
 }
-

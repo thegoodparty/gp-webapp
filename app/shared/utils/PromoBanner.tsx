@@ -86,4 +86,3 @@ const PromoBanner = ({ initPathname }: PromoBannerProps) => {
 }
 
 export default PromoBanner
-

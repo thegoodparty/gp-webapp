@@ -14,7 +14,10 @@ export default function VoterFileSection(): React.JSX.Element {
           </div>
         ) : null}
 
-        <strong>You can rerun path to victory, but this WILL override the district set above in the District Picker</strong>
+        <strong>
+          You can rerun path to victory, but this WILL override the district set
+          above in the District Picker
+        </strong>
         {campaign?.details?.raceId ? <RerunP2V /> : null}
       </div>
     </div>

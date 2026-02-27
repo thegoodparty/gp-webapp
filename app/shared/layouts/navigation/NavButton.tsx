@@ -9,7 +9,14 @@ interface NavButtonProps {
   onClick?: () => void
 }
 
-const NavButton = ({ children, className = '', href, id, 'data-testid': dataTestId, onClick }: NavButtonProps): React.JSX.Element => {
+const NavButton = ({
+  children,
+  className = '',
+  href,
+  id,
+  'data-testid': dataTestId,
+  onClick,
+}: NavButtonProps): React.JSX.Element => {
   const buttonProps = {
     variant: 'text' as const,
     ...(href ? { href } : {}),
@@ -20,13 +27,8 @@ const NavButton = ({ children, className = '', href, id, 'data-testid': dataTest
       '!py-2 hover:!bg-primary-dark focus-visible:hover:!bg-primary-dark hover:!text-white focus-visible:!bg-white focus-visible:!outline-primary-dark/30 ' +
       className,
   }
-  
-  return (
-    <Button {...buttonProps}>
-      {children}
-    </Button>
-  )
+
+  return <Button {...buttonProps}>{children}</Button>
 }
 
 export default NavButton
-

@@ -28,9 +28,7 @@ export const getSmsScriptSelectOptions = (
     delete nonDefaultScripts[script]
   })
   let arr: ScriptOption[] = []
-  const hasName = (
-    value: CampaignAiContent[string],
-  ): value is AiContentData =>
+  const hasName = (value: CampaignAiContent[string]): value is AiContentData =>
     typeof value === 'object' && value !== null && 'name' in value
   for (const [key, value] of Object.entries(nonDefaultScripts)) {
     if (value && hasName(value)) {

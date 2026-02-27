@@ -44,7 +44,13 @@ const mapOptions = {
 }
 
 interface MapHandle {
-  moveMapWithHistory: (boundsOrPoint: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | google.maps.LatLng | 'full') => void
+  moveMapWithHistory: (
+    boundsOrPoint:
+      | google.maps.LatLngBounds
+      | google.maps.LatLngBoundsLiteral
+      | google.maps.LatLng
+      | 'full',
+  ) => void
 }
 
 interface MapProps {
@@ -112,7 +118,10 @@ const Map = memo(
               ) {
                 // bounds object
                 mapRef.current.fitBounds(boundsOrPoint)
-              } else if (typeof boundsOrPoint === 'object' && 'lat' in boundsOrPoint) {
+              } else if (
+                typeof boundsOrPoint === 'object' &&
+                'lat' in boundsOrPoint
+              ) {
                 // point object (LatLng or LatLngLiteral)
                 mapRef.current.setZoom(ZOOMED_IN)
                 mapRef.current.setCenter(boundsOrPoint)

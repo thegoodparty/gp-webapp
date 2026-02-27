@@ -24,4 +24,3 @@ const CopyToClipboard = ({ children, text, onCopy }: CopyToClipboardProps) => {
 }
 
 export default CopyToClipboard
-

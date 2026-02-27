@@ -5,7 +5,8 @@ import { setSize } from './PrimaryButton'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
 
-interface InfoButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+interface InfoButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'
@@ -118,4 +119,3 @@ const InfoButton = ({
 }
 
 export default InfoButton
-

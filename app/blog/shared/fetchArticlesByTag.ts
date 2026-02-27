@@ -6,5 +6,3 @@ export const fetchArticlesByTag = async (tag: string): Promise<Article[]> =>
   await unAuthFetch(`${apiRoutes.content.blogArticle.getByTag.path}`, {
     tag,
   })
-
-

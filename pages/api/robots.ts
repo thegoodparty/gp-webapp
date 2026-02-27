@@ -3,7 +3,7 @@ import { IS_PROD } from 'appEnv'
 
 export default async function sitemap(
   _req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void> {
   try {
     let robots: string

@@ -26,11 +26,17 @@ const fetchCounty = async (state: string, county: string) => {
 
 const year = new Date().getFullYear()
 
-export async function generateMetadata({ params }: { params: Promise<PageParams> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PageParams>
+}) {
   const { state } = await params
   if (state.length === 2) {
     const upperState = state.toUpperCase()
-    const stateName = isStateAbbreviation(upperState) ? shortToLongState[upperState] : undefined
+    const stateName = isStateAbbreviation(upperState)
+      ? shortToLongState[upperState]
+      : undefined
     const county = await fetchCounty(state, (await params).county)
 
     const meta = pageMetaData({
@@ -47,13 +53,14 @@ export async function generateMetadata({ params }: { params: Promise<PageParams>
   return {}
 }
 
-export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>
+}): Promise<React.JSX.Element> {
   const { state } = await params
   const upperState = state.toUpperCase()
-  if (
-    !state ||
-    (state.length === 2 && !isStateAbbreviation(upperState))
-  ) {
+  if (!state || (state.length === 2 && !isStateAbbreviation(upperState))) {
     notFound()
   }
   const articleSlugs = [

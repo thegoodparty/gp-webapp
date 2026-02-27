@@ -88,4 +88,3 @@ const AmplitudeInit = (): null => {
 }
 
 export default AmplitudeInit
-

@@ -1,4 +1,6 @@
-export const URLSearchParamsToObject = (params: URLSearchParams): Record<string, string | string[]> => {
+export const URLSearchParamsToObject = (
+  params: URLSearchParams,
+): Record<string, string | string[]> => {
   const obj: Record<string, string | string[]> = {}
   for (const [key, value] of params) {
     obj[key] = Object.hasOwn(obj, key)
@@ -9,4 +11,3 @@ export const URLSearchParamsToObject = (params: URLSearchParams): Record<string,
   }
   return obj
 }
-

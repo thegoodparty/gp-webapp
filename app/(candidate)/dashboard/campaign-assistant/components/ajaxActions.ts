@@ -41,10 +41,15 @@ export async function fetchChatHistory(): Promise<ChatHistory | false> {
   }
 }
 
-export async function createInitialChat(message: string): Promise<ChatResponse | false> {
+export async function createInitialChat(
+  message: string,
+): Promise<ChatResponse | false> {
   try {
     const payload = { message, initial: true }
-    const resp = await clientFetch<ChatResponse>(apiRoutes.campaign.chat.create, payload)
+    const resp = await clientFetch<ChatResponse>(
+      apiRoutes.campaign.chat.create,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -52,10 +57,17 @@ export async function createInitialChat(message: string): Promise<ChatResponse |
   }
 }
 
-export async function getChatThread({ threadId }: { threadId: string }): Promise<ChatThread | false> {
+export async function getChatThread({
+  threadId,
+}: {
+  threadId: string
+}): Promise<ChatThread | false> {
   try {
     const payload = { threadId }
-    const resp = await clientFetch<ChatThread>(apiRoutes.campaign.chat.get, payload)
+    const resp = await clientFetch<ChatThread>(
+      apiRoutes.campaign.chat.get,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -63,10 +75,15 @@ export async function getChatThread({ threadId }: { threadId: string }): Promise
   }
 }
 
-export async function regenerateChatThread(threadId: string): Promise<{ message: ChatMessage } | false> {
+export async function regenerateChatThread(
+  threadId: string,
+): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId, regenerate: true }
-    const resp = await clientFetch<{ message: ChatMessage }>(apiRoutes.campaign.chat.update, payload)
+    const resp = await clientFetch<{ message: ChatMessage }>(
+      apiRoutes.campaign.chat.update,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -74,10 +91,15 @@ export async function regenerateChatThread(threadId: string): Promise<{ message:
   }
 }
 
-export async function deleteThread(threadId: string): Promise<{ message: ChatMessage } | false> {
+export async function deleteThread(
+  threadId: string,
+): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId }
-    const resp = await clientFetch<{ message: ChatMessage }>(apiRoutes.campaign.chat.delete, payload)
+    const resp = await clientFetch<{ message: ChatMessage }>(
+      apiRoutes.campaign.chat.delete,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -85,10 +107,17 @@ export async function deleteThread(threadId: string): Promise<{ message: ChatMes
   }
 }
 
-export async function chatFeedback(threadId: string, type: string, message: string): Promise<{ message: ChatMessage } | false> {
+export async function chatFeedback(
+  threadId: string,
+  type: string,
+  message: string,
+): Promise<{ message: ChatMessage } | false> {
   try {
     const payload = { threadId, message, type }
-    const resp = await clientFetch<{ message: ChatMessage }>(apiRoutes.campaign.chat.feedback, payload)
+    const resp = await clientFetch<{ message: ChatMessage }>(
+      apiRoutes.campaign.chat.feedback,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)

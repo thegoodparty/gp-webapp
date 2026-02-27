@@ -1,6 +1,16 @@
-type FormDataValue = string | number | boolean | Date | object | null | undefined
+type FormDataValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | object
+  | null
+  | undefined
 
-export const packageFormData = (data: Record<string, FormDataValue>, file: File | null = null): FormData => {
+export const packageFormData = (
+  data: Record<string, FormDataValue>,
+  file: File | null = null,
+): FormData => {
   const formData = new FormData()
   for (const key in data) {
     const value = data[key]
@@ -20,4 +30,3 @@ export const packageFormData = (data: Record<string, FormDataValue>, file: File 
   }
   return formData
 }
-

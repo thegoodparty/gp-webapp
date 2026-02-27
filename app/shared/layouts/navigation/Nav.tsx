@@ -26,4 +26,3 @@ const Nav = async (): Promise<React.JSX.Element> => (
 )
 
 export default Nav
-

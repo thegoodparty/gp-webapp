@@ -29,7 +29,10 @@ const Tabs = ({
 }: TabsProps) => {
   const [value, setValue] = useState(0)
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number): void => {
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    newValue: number,
+  ): void => {
     if (activeTab !== false) {
       changeCallback(newValue)
     } else {
@@ -68,7 +71,9 @@ const Tabs = ({
                 <SecondaryButton
                   variant="text"
                   size={size}
-                  ariaLabel={typeof label === 'string' ? label : `Tab ${index + 1}`}
+                  ariaLabel={
+                    typeof label === 'string' ? label : `Tab ${index + 1}`
+                  }
                 >
                   <span
                     style={isSelected(index) ? { color } : { color: '#ADB6C8' }}
@@ -96,4 +101,3 @@ const Tabs = ({
 }
 
 export default Tabs
-

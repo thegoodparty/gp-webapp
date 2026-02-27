@@ -12,4 +12,4 @@ const HubSpotChatWidgetScript = (): React.JSX.Element => {
   )
 }
 
-export default HubSpotChatWidgetScript 
+export default HubSpotChatWidgetScript

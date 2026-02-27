@@ -47,7 +47,10 @@ interface DownloadFilters {
   filters?: string[]
 }
 
-export async function fetchVoterFile(type: string, customFilters?: DownloadFilters): Promise<VoterFileResponse | false> {
+export async function fetchVoterFile(
+  type: string,
+  customFilters?: DownloadFilters,
+): Promise<VoterFileResponse | false> {
   try {
     const payload: { type: string; customFilters?: string } = {
       type,
@@ -75,7 +78,9 @@ async function wakeUp() {
   }
 }
 
-export default function VoterRecordsPage(props: VoterRecordsPageProps): React.JSX.Element {
+export default function VoterRecordsPage(
+  props: VoterRecordsPageProps,
+): React.JSX.Element {
   const [campaign, setCampaign] = useState<Campaign | null>(props.campaign)
   const [modalFileKey, setModalFileKey] = useState<string | number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -236,7 +241,9 @@ export default function VoterRecordsPage(props: VoterRecordsPageProps): React.JS
                                   file.name,
                                   true,
                                 )}`
-                              : `/dashboard/voter-records/${String(file.key).toLowerCase()}`
+                              : `/dashboard/voter-records/${String(
+                                  file.key,
+                                ).toLowerCase()}`
                           }
                           onClick={() => {
                             trackEvent(EVENTS.VoterData.ClickDetail, {

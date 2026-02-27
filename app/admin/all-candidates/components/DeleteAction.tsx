@@ -25,7 +25,9 @@ interface DeleteActionProps {
   id: number
 }
 
-export default function DeleteAction({ id }: DeleteActionProps): React.JSX.Element {
+export default function DeleteAction({
+  id,
+}: DeleteActionProps): React.JSX.Element {
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
 

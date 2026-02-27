@@ -10,7 +10,10 @@ interface EmailFormBannerProps {
   formId: string
 }
 
-const EmailFormBanner = ({ pageName, formId }: EmailFormBannerProps): React.JSX.Element => {
+const EmailFormBanner = ({
+  pageName,
+  formId,
+}: EmailFormBannerProps): React.JSX.Element => {
   const [email, setEmail] = useState('')
   const [success, setSuccess] = useState(false)
   const [showError, setShowError] = useState<string | false>(false)
@@ -79,4 +82,3 @@ const EmailFormBanner = ({ pageName, formId }: EmailFormBannerProps): React.JSX.
 }
 
 export default EmailFormBanner
-

@@ -8,7 +8,9 @@ import LoadingContent from './LoadingContent'
 import { Campaign } from 'helpers/types'
 
 // useVersions returns a loose type that we need to accept
-type Versions = Partial<Record<string, string | number | boolean | object | null>>
+type Versions = Partial<
+  Record<string, string | number | boolean | object | null>
+>
 
 interface EditContentPageProps {
   slug: string

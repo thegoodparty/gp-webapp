@@ -52,9 +52,7 @@ const AlertDialog = ({
         >
           <H1 className="mb-4 text-center w-full">{title}</H1>
         </div>
-        <Body2 className="mx-0 mb-8 text-center">
-          {description}
-        </Body2>
+        <Body2 className="mx-0 mb-8 text-center">{description}</Body2>
         <div className="flex items-center justify-center">
           <Button
             className="mr-2"
@@ -78,4 +76,3 @@ const AlertDialog = ({
 }
 
 export default AlertDialog
-

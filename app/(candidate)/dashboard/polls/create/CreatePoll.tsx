@@ -185,7 +185,7 @@ const DetailsForm: React.FC<{
 
   const warningMessage = useMemo(
     () => getWarningMessage(biasAnalysisState),
-    [biasAnalysisState]
+    [biasAnalysisState],
   )
 
   const [user] = useUser()
@@ -277,7 +277,7 @@ const DetailsForm: React.FC<{
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
                 className={clsx(
-                  'w-full',
+                  'text-base md:text-sm w-full',
                   errors.introduction ? 'border-red-500' : '',
                 )}
               >
@@ -285,7 +285,11 @@ const DetailsForm: React.FC<{
               </SelectTrigger>
               <SelectContent>
                 {introductionOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <SelectItem
+                    className="text-base md:text-sm"
+                    key={option}
+                    value={option}
+                  >
                     {option}
                   </SelectItem>
                 ))}

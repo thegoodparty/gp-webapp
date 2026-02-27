@@ -22,7 +22,12 @@ interface CreateSurveyPayload {
   requiresSignature: boolean
 }
 
-type FormDataKey = 'name' | 'description' | 'team' | 'status' | 'requiresSignature'
+type FormDataKey =
+  | 'name'
+  | 'description'
+  | 'team'
+  | 'status'
+  | 'requiresSignature'
 
 interface FormData {
   name: string
@@ -50,10 +55,11 @@ const createSurvey = async (payload: CreateSurveyPayload): Promise<void> => {
   await clientFetch(apiRoutes.ecanvasser.surveys.create, payload)
 }
 
-export default function CreateSurvey({ teams = [], createCallback }: CreateSurveyProps): React.JSX.Element {
-  const teamOptions = Array.isArray(teams)
-    ? teams.map((team) => team.name)
-    : []
+export default function CreateSurvey({
+  teams = [],
+  createCallback,
+}: CreateSurveyProps): React.JSX.Element {
+  const teamOptions = Array.isArray(teams) ? teams.map((team) => team.name) : []
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 

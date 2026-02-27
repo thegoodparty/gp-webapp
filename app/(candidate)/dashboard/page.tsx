@@ -47,7 +47,12 @@ export default async function Page(): Promise<React.JSX.Element> {
   return (
     <>
       <HubSpotChatWidgetScript />
-      <DashboardPage pathname="/dashboard" campaign={campaign} tasks={tasks} tcrCompliance={tcrCompliance} />
+      <DashboardPage
+        pathname="/dashboard"
+        campaign={campaign}
+        tasks={tasks}
+        tcrCompliance={tcrCompliance}
+      />
     </>
   )
 }

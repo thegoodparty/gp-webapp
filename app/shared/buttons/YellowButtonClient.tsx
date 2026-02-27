@@ -37,4 +37,3 @@ const YellowButtonClient = ({
 }
 
 export default YellowButtonClient
-

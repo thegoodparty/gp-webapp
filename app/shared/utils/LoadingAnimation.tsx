@@ -43,4 +43,3 @@ export const LoadingAnimation = ({ title, label }: LoadingAnimationProps) => (
     </div>
   </div>
 )
-

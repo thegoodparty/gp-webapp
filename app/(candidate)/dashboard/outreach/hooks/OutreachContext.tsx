@@ -1,10 +1,22 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'robocall' | 'p2p'
-type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
+type OutreachType =
+  | 'text'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
+  | 'robocall'
+  | 'p2p'
+type OutreachStatus =
+  | 'pending'
+  | 'approved'
+  | 'denied'
+  | 'paid'
+  | 'in_progress'
+  | 'completed'
 
 export interface Outreach {
-  id: number | string
+  id: number
   createdAt?: Date | string
   updatedAt?: Date | string
   campaignId?: number
@@ -25,10 +37,7 @@ export interface Outreach {
   title?: string | null
 }
 
-type OutreachContextValue = [
-  Outreach[],
-  (outreaches: Outreach[]) => void,
-]
+type OutreachContextValue = [Outreach[], (outreaches: Outreach[]) => void]
 
 export const outreachContext = createContext<OutreachContextValue>([
   [],

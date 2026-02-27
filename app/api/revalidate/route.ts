@@ -7,5 +7,3 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
   revalidatePath(path, 'page')
   return NextResponse.json({ revalidated: true, now: Date.now() })
 }
-
-

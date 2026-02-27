@@ -8,6 +8,8 @@ interface SurveyAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function SurveyAnimation(props: SurveyAnimationProps): React.JSX.Element {
+export default function SurveyAnimation(
+  props: SurveyAnimationProps,
+): React.JSX.Element {
   return <LottieAnimation animationData={data} {...props} />
 }

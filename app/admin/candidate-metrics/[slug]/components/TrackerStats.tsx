@@ -36,9 +36,12 @@ const cards: TrackerCard[] = [
   },
 ]
 
-export default function TrackerStats(props: TrackerStatsProps): React.JSX.Element {
+export default function TrackerStats(
+  props: TrackerStatsProps,
+): React.JSX.Element {
   const { campaign } = props
-  const reportedVoterGoals: ReportedVoterGoals = campaign.data?.reportedVoterGoals || {}
+  const reportedVoterGoals: ReportedVoterGoals =
+    campaign.data?.reportedVoterGoals || {}
 
   if (Object.keys(reportedVoterGoals).length === 0) {
     return <div className="my-4 text-xl">No reported voter goals</div>

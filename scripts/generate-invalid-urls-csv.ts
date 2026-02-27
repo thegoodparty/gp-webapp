@@ -37,7 +37,7 @@ interface ValidationReport {
   byStatus?: ValidationReportByStatus
 }
 
-const createCsvWriter: (options: CreateCsvWriterOptions) => CsvWriter = 
+const createCsvWriter: (options: CreateCsvWriterOptions) => CsvWriter =
   require('csv-writer').createObjectCsvWriter
 
 const inputFile = process.argv[2]
@@ -57,12 +57,17 @@ try {
     .filter(([status]) => [301, 302, 307, 308].includes(Number(status)))
     .flatMap(([_status, urls]) => urls || [])
 
-  const allProblematicUrls: InvalidUrlEntry[] = [...invalidUrls, ...redirectUrls]
+  const allProblematicUrls: InvalidUrlEntry[] = [
+    ...invalidUrls,
+    ...redirectUrls,
+  ]
 
   if (allProblematicUrls.length === 0) {
     console.log('No problematic URLs found')
   } else {
-    console.log(`Found ${invalidUrls.length} invalid URLs and ${redirectUrls.length} redirect URLs`)
+    console.log(
+      `Found ${invalidUrls.length} invalid URLs and ${redirectUrls.length} redirect URLs`,
+    )
 
     const csvWriter = createCsvWriter({
       path: outputFile,
@@ -72,15 +77,14 @@ try {
         { id: 'duration', title: 'Duration' },
         { id: 'finalUrl', title: 'Final URL' },
         { id: 'finalStatus', title: 'Final Status' },
-        { id: 'redirectType', title: 'Redirect Type' }
-      ]
+        { id: 'redirectType', title: 'Redirect Type' },
+      ],
     })
 
     console.log(`Writing to ${outputFile}`)
-    csvWriter.writeRecords(allProblematicUrls)
-      .then(() => {
-        console.log('CSV file written successfully')
-      })
+    csvWriter.writeRecords(allProblematicUrls).then(() => {
+      console.log('CSV file written successfully')
+    })
   }
 } catch (error) {
   const errorMessage = error instanceof Error ? error.message : 'Unknown error'

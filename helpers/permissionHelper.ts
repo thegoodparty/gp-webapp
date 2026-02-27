@@ -7,7 +7,7 @@ import { UserResponse } from './types'
 
 const checkIsAdmin = async (): Promise<boolean> => {
   try {
-    const resp = await serverFetch(apiRoutes.user.getUser) as UserResponse
+    const resp = (await serverFetch(apiRoutes.user.getUser)) as UserResponse
 
     return userIsAdmin(resp.data)
   } catch (e) {
@@ -40,4 +40,3 @@ export const portalAccessOnly = (role: string | null | undefined): void => {
     redirect('/login')
   }
 }
-

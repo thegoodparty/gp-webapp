@@ -68,7 +68,11 @@ export default function EditSection({
         )}
         {editSection === SECTIONS.theme && (
           <ThemeStep
-            theme={typeof website.content?.theme === 'string' ? website.content.theme : ''}
+            theme={
+              typeof website.content?.theme === 'string'
+                ? website.content.theme
+                : ''
+            }
             onChange={onThemeChange}
             noHeading
           />

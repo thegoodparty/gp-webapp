@@ -22,7 +22,9 @@ interface RunForOfficePageProps {
   testimonials: Testimonial[]
 }
 
-export default function RunForOfficePage({ testimonials }: RunForOfficePageProps): React.JSX.Element {
+export default function RunForOfficePage({
+  testimonials,
+}: RunForOfficePageProps): React.JSX.Element {
   return (
     <div className="bg-indigo-50">
       <Hero />

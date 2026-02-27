@@ -1,5 +1,6 @@
 'use client'
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -8,12 +9,25 @@ import {
   SheetContent,
   SheetTitle,
 } from 'goodparty-styleguide'
-import { LuClipboardList, LuContact, LuFolderOpen } from 'react-icons/lu'
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  LuCircleCheck,
+  LuCircleX,
+  LuClipboardList,
+  LuContact,
+  LuFolderOpen,
+  LuFrown,
+  LuMessageSquareMore,
+  LuSmile,
+} from 'react-icons/lu'
+import { format } from 'date-fns'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { Person } from '../shared/ajaxActions'
 import { isNotNil } from 'es-toolkit'
 import { ReactNode } from 'react'
 import Map from '@shared/utils/Map'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const formatPersonName = (person: Person) =>
   [person.firstName, person.lastName, person.nameSuffix]
@@ -21,12 +35,25 @@ export const formatPersonName = (person: Person) =>
     .map((n) => n!.trim())
     .join(' ')
 
+const formatDateTime = (dateStr: string): string => {
+  const d = new Date(dateStr)
+  return format(d, "EEEE, MMMM d, yyyy, 'at' h:mm a")
+    .replace(' AM', ' a.m.')
+    .replace(' PM', ' p.m.')
+}
+
+const ACTIVITY_EVENT_LABELS: Record<string, string> = {
+  SENT: 'Sent',
+  RESPONDED: 'Responded',
+  OPTED_OUT: 'Opted Out',
+}
+
 const InfoSection: React.FC<{
   title: string
   icon: React.ReactNode
   children: React.ReactNode
 }> = ({ title, icon, children }) => (
-  <Card className="p-6">
+  <Card className="p-4">
     <div className="flex items-center justify-between">
       <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       {icon}
@@ -44,6 +71,184 @@ const Field: React.FC<{ label: string; value: ReactNode | string | null }> = ({
     <div className="text-md">{value ?? 'Unknown'}</div>
   </div>
 )
+
+const TopIssuesContent: React.FC = () => {
+  const {
+    currentlySelectedPerson: {
+      issues,
+      isLoadingIssues: isLoading,
+      isErrorIssues: isError,
+      issuesHasNextPage: hasNextPage,
+      issuesFetchNextPage: onViewMore,
+      isFetchingNextIssues: isFetchingNextPage,
+    },
+  } = useContactsTable()
+
+  if (isError || issues.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <Image
+          src="/images/dashboard/no-documents.svg"
+          alt=""
+          width={100}
+          height={100}
+          className="h-15 w-auto"
+        />
+        <p className="text-sm text-muted-foreground">Data not available.</p>
+      </div>
+    )
+  }
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-16 bg-muted rounded animate-pulse" />
+        ))}
+      </div>
+    )
+  }
+  return (
+    <div className="flex flex-col gap-6">
+      {issues.map((issue, idx) => (
+        <div key={idx} className="flex flex-col gap-1">
+          <Link
+            className="font-medium text-info underline"
+            href={`/dashboard/polls/${issue.pollId}`}
+            target="_blank"
+          >
+            {issue.issueTitle}
+          </Link>
+          {issue.issueSummary ? (
+            <p className="text-sm font-normal text-muted-foreground">
+              {issue.issueSummary}
+            </p>
+          ) : null}
+        </div>
+      ))}
+      {hasNextPage ? (
+        <Button
+          type="button"
+          onClick={() => onViewMore()}
+          disabled={isFetchingNextPage}
+          variant="outline"
+          className="mt-4"
+        >
+          {isFetchingNextPage ? 'Loading...' : 'View more'}
+        </Button>
+      ) : null}
+    </div>
+  )
+}
+
+const ActivitiesContent: React.FC = () => {
+  const {
+    currentlySelectedPerson: {
+      activities,
+      isLoadingActivities: isLoading,
+      isErrorActivities: isError,
+      activitiesHasNextPage: hasNextPage,
+      activitiesFetchNextPage: onViewMore,
+      isFetchingNextActivities: isFetchingNextPage,
+    },
+  } = useContactsTable()
+
+  if (isError || activities.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <Image
+          src="/images/dashboard/no-search-result.svg"
+          alt=""
+          width={100}
+          height={100}
+          className="h-15 w-auto"
+        />
+        <p className="text-sm text-muted-foreground">Data not available.</p>
+      </div>
+    )
+  }
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-16 bg-muted rounded animate-pulse" />
+        ))}
+      </div>
+    )
+  }
+  return (
+    <div className="flex flex-col gap-3">
+      {activities.map((activity, idx) => (
+        <div key={idx} className="flex flex-col gap-1 mb-3">
+          <Link
+            className="font-medium text-info underline mb-2"
+            href={`/dashboard/polls/${activity.data.pollId}`}
+            target="_blank"
+          >
+            {activity.data.pollTitle}
+          </Link>
+          {activity.data.events?.length ? (
+            <div className="mt-1 flex flex-col text-sm font-normal text-muted-foreground">
+              {activity.data.events.map((evt, i) => {
+                return (
+                  <div key={i} className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      {evt.type === 'SENT' && (
+                        <LuCircleCheck
+                          size={16}
+                          className="shrink-0 text-foreground"
+                        />
+                      )}
+                      {evt.type === 'RESPONDED' && (
+                        <LuMessageSquareMore
+                          size={16}
+                          className="shrink-0 text-foreground"
+                        />
+                      )}
+                      {evt.type === 'OPTED_OUT' && (
+                        <LuCircleX
+                          size={16}
+                          className="shrink-0 text-foreground"
+                        />
+                      )}
+
+                      <p className="text-sm font-semibold text-foreground">
+                        {ACTIVITY_EVENT_LABELS[evt.type] ?? evt.type}
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2 h-7">
+                      <div className="flex items-center gap-2">
+                        <div className="flex w-4 shrink-0 justify-center">
+                          {i < activity.data.events.length - 1 ? (
+                            <div className="h-5 w-px bg-border my-1" />
+                          ) : null}
+                        </div>
+                      </div>
+                      <p className="text-sm font-normal text-muted-foreground justify-self-start">
+                        {evt.date ? formatDateTime(evt.date) : ''}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : null}
+        </div>
+      ))}
+      {hasNextPage ? (
+        <Button
+          type="button"
+          onClick={() => onViewMore()}
+          disabled={isFetchingNextPage}
+          variant="outline"
+          className="mt-2"
+        >
+          {isFetchingNextPage ? 'Loading...' : 'View more'}
+        </Button>
+      ) : null}
+    </div>
+  )
+}
 
 const INCOME_BUCKETS = [
   { label: 'Less than $1k', min: 0, max: 1000 },
@@ -74,17 +279,26 @@ const PersonContent: React.FC<{
   person: Person
   hidePoliticalParty: boolean
 }> = ({ person, hidePoliticalParty }) => {
+  const { on: showActivitiesAndIssues } = useFlagOn(
+    'serve-contacts-activities-and-issues',
+  )
   const details = [person.gender, person.age ? `${person.age} years old` : null]
     .filter(isNotNil)
     .join(', ')
 
   return (
     <div>
-      <h2 className="text-3xl font-semibold py-4">
+      <h2 className="text-3xl font-semibold pt-4 pb-2">
         {formatPersonName(person)}
       </h2>
-      <p className="text-xl font-semibold mb-4">{details}</p>
+      <p className="text-xl font-semibold mb-6">{details}</p>
       <div className="flex flex-col gap-6">
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Top Issues" icon={<LuFrown size={24} />}>
+            <TopIssuesContent />
+          </InfoSection>
+        ) : null}
+
         <InfoSection title="Contact Information" icon={<LuContact size={24} />}>
           <Field
             label="Address"
@@ -154,6 +368,12 @@ const PersonContent: React.FC<{
           <Field label="Language" value={person.language} />
           <Field label="Ethnicity Group" value={person.ethnicityGroup} />
         </InfoSection>
+
+        {showActivitiesAndIssues ? (
+          <InfoSection title="Activity Feed" icon={<LuSmile size={24} />}>
+            <ActivitiesContent />
+          </InfoSection>
+        ) : null}
       </div>
     </div>
   )
@@ -161,13 +381,12 @@ const PersonContent: React.FC<{
 
 export default function PersonOverlay(): React.JSX.Element {
   const {
-    currentlySelectedPerson: person,
+    currentlySelectedPerson,
     selectPerson,
-    isLoadingPerson,
-    isErrorPerson,
     currentlySelectedPersonId,
     isElectedOfficial,
   } = useContactsTable()
+  const { person, isLoadingPerson, isErrorPerson } = currentlySelectedPerson
 
   const handleClose = (open: boolean) => {
     if (!open) {

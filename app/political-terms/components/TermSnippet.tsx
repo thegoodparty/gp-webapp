@@ -18,7 +18,10 @@ interface TermSnippetProps {
   last?: boolean
 }
 
-export default function TermSnippet({ item, last }: TermSnippetProps): React.JSX.Element {
+export default function TermSnippet({
+  item,
+  last,
+}: TermSnippetProps): React.JSX.Element {
   const { title, description } = item
 
   return (

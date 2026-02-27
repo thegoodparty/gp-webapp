@@ -1,4 +1,7 @@
-export const getNewAiContentSectionKey = (sections: Record<string, unknown>, selected: string): string => {
+export const getNewAiContentSectionKey = (
+  sections: Record<string, unknown>,
+  selected: string,
+): string => {
   if (!sections[selected]) {
     return selected
   }
@@ -9,4 +12,3 @@ export const getNewAiContentSectionKey = (sections: Record<string, unknown>, sel
   }
   return `${selected}101`
 }
-

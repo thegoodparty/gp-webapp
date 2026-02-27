@@ -21,12 +21,16 @@ interface PageProps {
   searchParams: { generate?: string }
 }
 
-export default async function Page({ searchParams }: PageProps): Promise<React.JSX.Element> {
+export default async function Page({
+  searchParams,
+}: PageProps): Promise<React.JSX.Element> {
   await candidateAccess()
   const { generate } = searchParams
 
   const campaign = await fetchUserCampaign()
-  const candidatePositions = campaign ? await serverLoadCandidatePosition(campaign.id) : []
+  const candidatePositions = campaign
+    ? await serverLoadCandidatePosition(campaign.id)
+    : []
   const topIssues = await serverFetchIssues()
 
   const childProps = {
@@ -38,4 +42,3 @@ export default async function Page({ searchParams }: PageProps): Promise<React.J
 
   return <QuestionsPage {...childProps} />
 }
-

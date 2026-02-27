@@ -12,7 +12,9 @@ interface TcrComplianceData {
 }
 
 const fetchTcrCompliance = async (): Promise<TcrComplianceData> => {
-  const response = await serverFetch<TcrComplianceData>(apiRoutes.campaign.tcrCompliance.fetch)
+  const response = await serverFetch<TcrComplianceData>(
+    apiRoutes.campaign.tcrCompliance.fetch,
+  )
   if (!response.ok) {
     throw new Error('Failed to fetch TCR Compliance data')
   }
@@ -42,4 +44,3 @@ const Page = async (): Promise<React.JSX.Element> => {
 }
 
 export default Page
-

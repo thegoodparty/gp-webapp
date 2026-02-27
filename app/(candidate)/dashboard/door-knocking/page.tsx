@@ -12,8 +12,12 @@ interface EcanvasserSummary {
   lastSync?: string
 }
 
-async function fetchEcanvasserSummary(): Promise<EcanvasserSummary | undefined> {
-  const response = await serverFetch<EcanvasserSummary>(apiRoutes.ecanvasser.mySummary)
+async function fetchEcanvasserSummary(): Promise<
+  EcanvasserSummary | undefined
+> {
+  const response = await serverFetch<EcanvasserSummary>(
+    apiRoutes.ecanvasser.mySummary,
+  )
   return response.data
 }
 

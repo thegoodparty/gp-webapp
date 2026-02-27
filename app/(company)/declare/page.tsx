@@ -22,7 +22,9 @@ interface SignaturesResponse {
 }
 
 async function fetchSignatures() {
-  return await unAuthFetch<SignaturesResponse>(apiRoutes.homepage.declarationSignatures.list.path)
+  return await unAuthFetch<SignaturesResponse>(
+    apiRoutes.homepage.declarationSignatures.list.path,
+  )
 }
 
 const meta = pageMetaData({

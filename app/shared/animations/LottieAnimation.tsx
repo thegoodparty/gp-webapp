@@ -1,7 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import type { ComponentType } from 'react'
-import type { IPlayerProps, PlayerEvent as PlayerEventType } from '@lottiefiles/react-lottie-player'
+import type {
+  IPlayerProps,
+  PlayerEvent as PlayerEventType,
+} from '@lottiefiles/react-lottie-player'
 
 interface LottieAnimationProps extends Omit<IPlayerProps, 'src'> {
   animationData?: object | string
@@ -15,7 +18,9 @@ export default function LottieAnimation({
   ...restProps
 }: LottieAnimationProps) {
   const [Player, setPlayer] = useState<ComponentType<IPlayerProps> | null>(null)
-  const [PlayerEvent, setPlayerEvent] = useState<typeof PlayerEventType | null>(null)
+  const [PlayerEvent, setPlayerEvent] = useState<typeof PlayerEventType | null>(
+    null,
+  )
 
   useEffect(() => {
     const loadPlayer = async (): Promise<void> => {

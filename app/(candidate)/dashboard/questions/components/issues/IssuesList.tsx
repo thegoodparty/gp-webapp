@@ -12,7 +12,13 @@ import {
 import { IssuesSearch } from './IssuesSearch'
 import { IssuesSelectList } from './IssuesSelectList'
 import { AddNewIssueTrigger } from './AddNewIssueTrigger'
-import type { Campaign, CandidatePosition, CustomIssue, IssuePosition, TopIssue } from 'helpers/types'
+import type {
+  Campaign,
+  CandidatePosition,
+  CustomIssue,
+  IssuePosition,
+  TopIssue,
+} from 'helpers/types'
 
 export type IssueOption = TopIssue
 
@@ -45,13 +51,14 @@ const IssuesList = ({
 }: IssuesListProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign>(incomingCampaign)
   const [filterValue, setFilterValue] = useState('')
-  const [selectedIssue, setSelectedIssue] = useState<IssueOption | 'custom' | null | false>(null)
+  const [selectedIssue, setSelectedIssue] = useState<
+    IssueOption | 'custom' | null | false
+  >(null)
   const activeEditIssuePosition =
     typeof editIssuePosition === 'object' && editIssuePosition !== null
       ? editIssuePosition
       : null
-  const editingCustomIssue =
-    activeEditIssuePosition?.type === 'custom'
+  const editingCustomIssue = activeEditIssuePosition?.type === 'custom'
   const showSelectList = !selectedIssue
 
   useEffect(() => {
@@ -64,7 +71,9 @@ const IssuesList = ({
     }
   }, [activeEditIssuePosition])
 
-  const selectIssueCallback = (issue: IssueOption | 'custom' | null | false) => {
+  const selectIssueCallback = (
+    issue: IssueOption | 'custom' | null | false,
+  ) => {
     setSelectedIssue(issue)
     setFilterValue('')
   }

@@ -4,7 +4,11 @@ interface FooterExternalLinkProps {
   id: string
 }
 
-export const FooterExternalLink = ({ link, label, id }: FooterExternalLinkProps): React.JSX.Element => (
+export const FooterExternalLink = ({
+  link,
+  label,
+  id,
+}: FooterExternalLinkProps): React.JSX.Element => (
   <a
     id={id}
     href={link}
@@ -17,4 +21,3 @@ export const FooterExternalLink = ({ link, label, id }: FooterExternalLinkProps)
     {label}
   </a>
 )
-

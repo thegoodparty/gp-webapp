@@ -12,4 +12,3 @@ const materialTheme = createTheme({
 })
 
 export default materialTheme
-

@@ -19,7 +19,9 @@ interface ElectionsStatePageProps {
   articles: Article[]
 }
 
-export default function ElectionsStatePage(props: ElectionsStatePageProps): React.JSX.Element {
+export default function ElectionsStatePage(
+  props: ElectionsStatePageProps,
+): React.JSX.Element {
   const {
     state,
     categorizedChildren = {},
@@ -36,58 +38,65 @@ export default function ElectionsStatePage(props: ElectionsStatePageProps): Reac
     ? shortToLongState[upperState]
     : state
 
-  const placeLink = (place: PlaceChild | Place) => `/elections/${place.slug || ''}`
+  const placeLink = (place: PlaceChild | Place) =>
+    `/elections/${place.slug || ''}`
 
-    return (
-      <div className="bg-indigo-50 pb-20">
-        <Hero state={state} county={undefined} color1="#3EE996" color2="#31D3C8" level="state" municipality={undefined} parent={undefined} />
-  
-        <MaxWidth>
-          <RacesSection races={races} />
-        </MaxWidth>
-  
-        <div className="bg-primary-dark pt-1 pb-20 mt-10">
-          <div className="max-w-screen-xl mx-auto mt-20">
-            <div className="rounded-2xl bg-white px-8 py-10 space-y-16">
+  return (
+    <div className="bg-indigo-50 pb-20">
+      <Hero
+        state={state}
+        county={undefined}
+        color1="#3EE996"
+        color2="#31D3C8"
+        level="state"
+        municipality={undefined}
+        parent={undefined}
+      />
 
-              {children.length > 0 && (
-                <LinksSection
-                  entities={children}
-                  linkFunc={placeLink}
-                  title={`Explore elections in ${stateName}`}
-                />
-              )}
+      <MaxWidth>
+        <RacesSection races={races} />
+      </MaxWidth>
 
-              {counties.length > 0 && (
-                <LinksSection
-                  entities={counties}
-                  linkFunc={placeLink}
-                  title={`Explore county elections in ${stateName}`}
-                />
-              )}
-  
-              {districts.length > 0 && (
-                <LinksSection
-                  entities={districts}
-                  linkFunc={placeLink}
-                  title={`Explore district elections in ${stateName}`}
-                />
-              )}
-  
-              {others.length > 0 && (
-                <LinksSection
-                  entities={others}
-                  linkFunc={placeLink}
-                  title={`Explore other elections in ${stateName}`}
-                />
-              )}
-  
-            </div>
+      <div className="bg-primary-dark pt-1 pb-20 mt-10">
+        <div className="max-w-screen-xl mx-auto mt-20">
+          <div className="rounded-2xl bg-white px-8 py-10 space-y-16">
+            {children.length > 0 && (
+              <LinksSection
+                entities={children}
+                linkFunc={placeLink}
+                title={`Explore elections in ${stateName}`}
+              />
+            )}
+
+            {counties.length > 0 && (
+              <LinksSection
+                entities={counties}
+                linkFunc={placeLink}
+                title={`Explore county elections in ${stateName}`}
+              />
+            )}
+
+            {districts.length > 0 && (
+              <LinksSection
+                entities={districts}
+                linkFunc={placeLink}
+                title={`Explore district elections in ${stateName}`}
+              />
+            )}
+
+            {others.length > 0 && (
+              <LinksSection
+                entities={others}
+                linkFunc={placeLink}
+                title={`Explore other elections in ${stateName}`}
+              />
+            )}
           </div>
         </div>
-  
-        <LearnToRun stateName={stateName} />
-        <Guides articles={articles} />
       </div>
-    )
-  }
+
+      <LearnToRun stateName={stateName} />
+      <Guides articles={articles} />
+    </div>
+  )
+}

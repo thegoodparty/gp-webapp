@@ -18,4 +18,3 @@ declare module 'react-csv' {
   export const CSVLink: React.FC<CSVLinkProps>
   export const CSVDownload: React.FC<CSVLinkProps>
 }
-

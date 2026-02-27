@@ -13,7 +13,10 @@ interface HopeStatProps {
   blurb: React.ReactNode
 }
 
-export const HopeStat = ({ percentage, blurb }: HopeStatProps): React.JSX.Element => (
+export const HopeStat = ({
+  percentage,
+  blurb,
+}: HopeStatProps): React.JSX.Element => (
   <HopeStatCard>
     <h1 className="text-secondary-light text-6xl leading-snug md:text-8xl">
       {percentage}%

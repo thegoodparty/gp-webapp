@@ -8,7 +8,9 @@ interface TermTitleLinkProps {
   title: string
 }
 
-export const TermTitleLink = ({ title }: TermTitleLinkProps): React.JSX.Element => (
+export const TermTitleLink = ({
+  title,
+}: TermTitleLinkProps): React.JSX.Element => (
   <Link
     id={`terms-${slugify(title, true)}`}
     onClick={() => {

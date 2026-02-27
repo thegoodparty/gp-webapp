@@ -19,10 +19,13 @@ interface DomainSearchProps {
   prefillSearch?: string
 }
 
-export default function DomainSearch({ prefillSearch }: DomainSearchProps): React.JSX.Element {
+export default function DomainSearch({
+  prefillSearch,
+}: DomainSearchProps): React.JSX.Element {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(prefillSearch || '')
-  const [searchResults, setSearchResults] = useState<DomainSearchResults | null>(null)
+  const [searchResults, setSearchResults] =
+    useState<DomainSearchResults | null>(null)
   const [searchLoading, setSearchLoading] = useState(false)
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
@@ -119,7 +122,9 @@ export default function DomainSearch({ prefillSearch }: DomainSearchProps): Reac
             placeholder="yourdomain.com"
             fullWidth
             value={searchTerm}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
             onKeyPress={handleEnter}
             InputLabelProps={{ shrink: true }}
             error={!isValidDomain}
@@ -157,21 +162,22 @@ export default function DomainSearch({ prefillSearch }: DomainSearchProps): Reac
             selected={selectedDomain === searchResults.domainName}
           />
 
-          {searchResults.suggestions && searchResults.suggestions.length > 0 && (
-            <div className="mt-8 space-y-3">
-              <H3>Suggestions</H3>
-              {searchResults.suggestions.map((suggestion, index) => (
-                <DomainResult
-                  key={index}
-                  domain={suggestion.DomainName}
-                  price={suggestion.price}
-                  loading={false}
-                  onClick={() => handleToggleDomain(suggestion.DomainName)}
-                  selected={selectedDomain === suggestion.DomainName}
-                />
-              ))}
-            </div>
-          )}
+          {searchResults.suggestions &&
+            searchResults.suggestions.length > 0 && (
+              <div className="mt-8 space-y-3">
+                <H3>Suggestions</H3>
+                {searchResults.suggestions.map((suggestion, index) => (
+                  <DomainResult
+                    key={index}
+                    domain={suggestion.DomainName}
+                    price={suggestion.price}
+                    loading={false}
+                    onClick={() => handleToggleDomain(suggestion.DomainName)}
+                    selected={selectedDomain === suggestion.DomainName}
+                  />
+                ))}
+              </div>
+            )}
         </div>
       )}
       <div className="h-24"></div>

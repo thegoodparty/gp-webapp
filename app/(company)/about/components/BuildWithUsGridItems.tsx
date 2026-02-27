@@ -38,7 +38,11 @@ interface BuildWithUsImageProps {
   className?: string
 }
 
-const BuildWithUsImage = ({ src, alt, className }: BuildWithUsImageProps): React.JSX.Element => (
+const BuildWithUsImage = ({
+  src,
+  alt,
+  className,
+}: BuildWithUsImageProps): React.JSX.Element => (
   <Image
     className={`w-full rounded-3xl mb-4 last:mb-0 md:mb-0 ${
       className ? className : ''

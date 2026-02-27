@@ -20,7 +20,9 @@ interface CampaignProgressProps {
   pathToVictory: PathToVictoryData | undefined
 }
 
-export const CampaignProgress = ({ pathToVictory }: CampaignProgressProps): React.JSX.Element => {
+export const CampaignProgress = ({
+  pathToVictory,
+}: CampaignProgressProps): React.JSX.Element => {
   const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
     pathToVictory,

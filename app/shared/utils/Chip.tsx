@@ -1,13 +1,20 @@
 import React, { ReactNode, HTMLAttributes } from 'react'
 
-interface ChipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface ChipProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
   children?: ReactNode
   icon?: ReactNode
   label?: string
   className?: string
 }
 
-const Chip = ({ children, icon, label, className = '', ...rest }: ChipProps) => (
+const Chip = ({
+  children,
+  icon,
+  label,
+  className = '',
+  ...rest
+}: ChipProps) => (
   <div
     className={`p-2 rounded inline-flex items-center font-medium ${className}`}
     {...rest}
@@ -18,4 +25,3 @@ const Chip = ({ children, icon, label, className = '', ...rest }: ChipProps) => 
 )
 
 export default Chip
-

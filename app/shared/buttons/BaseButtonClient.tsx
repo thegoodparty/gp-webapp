@@ -33,4 +33,3 @@ const BaseButtonClient = ({
 )
 
 export default BaseButtonClient
-

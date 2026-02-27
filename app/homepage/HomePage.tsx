@@ -11,17 +11,11 @@ export default function HomePage(): React.JSX.Element {
       <Hero />
       <FactsSection />
       <P2VSection />
-      <SlantSection
-        colors={['#FCF8F3', '#0D1528', '#0D1528']}
-        reverseDirection
-      >
+      <SlantSection colors={['#FCF8F3', '#0D1528', '#0D1528']} reverseDirection>
         <div />
       </SlantSection>
       <ToolsSection />
-      <SlantSection
-        colors={['#0D1528', '#FCF8F3', '#FCF8F3']}
-        reverseDirection
-      >
+      <SlantSection colors={['#0D1528', '#FCF8F3', '#FCF8F3']} reverseDirection>
         <div />
       </SlantSection>
       <Cta />

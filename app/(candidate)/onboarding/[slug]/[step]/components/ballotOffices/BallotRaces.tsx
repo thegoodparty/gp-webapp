@@ -2,7 +2,11 @@
 import RaceCard from './RaceCard'
 import { useState, ReactNode } from 'react'
 import { CircularProgress } from '@mui/material'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import {
+  createCampaignWithOffice,
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions'
 import H3 from '@shared/typography/H3'
 import CantFindRaceModal from './CantFindRaceModal'
 import { useRouter } from 'next/navigation'
@@ -25,7 +29,7 @@ interface SelectedOffice {
 }
 
 interface BallotRacesProps {
-  campaign: BallotRacesCampaign
+  campaign?: BallotRacesCampaign
   onSelect: (race: Race | false) => void
   selectedOffice?: SelectedOffice | false
   step?: number
@@ -65,9 +69,13 @@ const fetchRaces = async (zipcode: string, level?: string): Promise<Race[]> => {
       : {}),
   }
 
-  const resp = await clientFetch<Race[]>(apiRoutes.elections.racesByYear, payload, {
-    revalidate: 3600,
-  })
+  const resp = await clientFetch<Race[]>(
+    apiRoutes.elections.racesByYear,
+    payload,
+    {
+      revalidate: 3600,
+    },
+  )
 
   return resp.data
 }
@@ -132,7 +140,9 @@ export default function BallotRaces({
     query.data && fuzzyFilter
       ? query.data.fuse.search(fuzzyFilter).map((result) => result.item)
       : query.data?.sortedRaces || []
-  const [selected, setSelected] = useState<Race | SelectedOffice | false>(selectedOffice || false)
+  const [selected, setSelected] = useState<Race | SelectedOffice | false>(
+    selectedOffice || false,
+  )
   const [showHelpModal, setShowHelpModal] = useState(false)
 
   const router = useRouter()
@@ -143,7 +153,10 @@ export default function BallotRaces({
 
   const handleSelect = (race: { id: string }) => {
     const matchedRace = races.find(({ id }) => id === race.id)
-    const selectedRace = race?.id === (selected && 'id' in selected ? selected.id : undefined) ? false : matchedRace || false
+    const selectedRace =
+      race?.id === (selected && 'id' in selected ? selected.id : undefined)
+        ? false
+        : matchedRace || false
     setSelected(selectedRace)
     onSelect(selectedRace)
   }
@@ -157,56 +170,56 @@ export default function BallotRaces({
     setShowHelpModal(false)
   }
 
-  const handleSaveCustomOffice = async (updated: Campaign & { currentStep?: number }) => {
+  const handleSaveCustomOffice = async (
+    updated: Campaign & { currentStep?: number },
+  ) => {
     updated.details.positionId = null
     updated.details.electionId = null
-    if (step) {
+
+    const baseAttr = [
+      { key: 'details.otherOffice', value: '' },
+      { key: 'details.positionId', value: null },
+      { key: 'details.electionId', value: null },
+      { key: 'details.office', value: updated.details.office },
+      { key: 'details.city', value: updated.details.city },
+      { key: 'details.district', value: updated.details.district },
+      {
+        key: 'details.electionDate',
+        value: updated.details.electionDate,
+      },
+      {
+        key: 'details.officeTermLength',
+        value: updated.details.officeTermLength,
+      },
+      { key: 'details.state', value: updated.details.state },
+    ]
+
+    if (step && !campaign) {
+      const currentStep = onboardingStep(undefined, step)
+      const attr = [
+        { key: 'data.currentStep', value: currentStep },
+        ...baseAttr,
+      ]
+      const newCampaign = await createCampaignWithOffice(attr)
+      if (newCampaign) {
+        router.push(`/onboarding/${newCampaign.slug}/${step + 1}`)
+      }
+    } else if (step && campaign) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step
 
       const attr = [
         { key: 'data.currentStep', value: updated.currentStep },
-        { key: 'details.otherOffice', value: '' },
-        { key: 'details.positionId', value: null },
-        { key: 'details.electionId', value: null },
-        { key: 'details.office', value: updated.details.office },
-        { key: 'details.city', value: updated.details.city },
-        { key: 'details.district', value: updated.details.district },
-        {
-          key: 'details.electionDate',
-          value: updated.details.electionDate,
-        },
-        {
-          key: 'details.officeTermLength',
-          value: updated.details.officeTermLength,
-        },
-        { key: 'details.state', value: updated.details.state },
+        ...baseAttr,
       ]
       await updateCampaign(attr)
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     } else {
-      const attr = [
-        { key: 'details.otherOffice', value: '' },
-        { key: 'details.positionId', value: null },
-        { key: 'details.electionId', value: null },
-        { key: 'details.office', value: updated.details.office },
-        { key: 'details.city', value: updated.details.city },
-        { key: 'details.district', value: updated.details.district },
-        {
-          key: 'details.electionDate',
-          value: updated.details.electionDate,
-        },
-        {
-          key: 'details.officeTermLength',
-          value: updated.details.officeTermLength,
-        },
-        { key: 'details.state', value: updated.details.state },
-      ]
-      if (adminMode) {
-        await updateCampaign(attr, campaign.slug)
+      if (adminMode && campaign) {
+        await updateCampaign(baseAttr, campaign.slug)
       } else {
-        await updateCampaign(attr)
+        await updateCampaign(baseAttr)
       }
       if (updateCallback) {
         updateCallback()
@@ -254,7 +267,10 @@ export default function BallotRaces({
                     ),
                   },
                 }}
-                selected={race?.id === (selected && 'id' in selected ? selected.id : undefined)}
+                selected={
+                  race?.id ===
+                  (selected && 'id' in selected ? selected.id : undefined)
+                }
                 selectCallback={handleSelect}
               />
             ))

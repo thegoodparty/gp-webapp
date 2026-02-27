@@ -10,7 +10,10 @@ interface SignModalProps {
   setSigner: (signature: string) => void
 }
 
-export default function SignModal({ tangerine, setSigner }: SignModalProps): React.JSX.Element {
+export default function SignModal({
+  tangerine,
+  setSigner,
+}: SignModalProps): React.JSX.Element {
   const [showModal, setShowModal] = useState(false)
 
   return (

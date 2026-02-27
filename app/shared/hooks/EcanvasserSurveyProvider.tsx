@@ -25,25 +25,32 @@ export interface EcanvasserSurvey {
 
 export type EcanvasserSurveyContextValue = [
   survey: EcanvasserSurvey,
-  refreshSurvey: () => Promise<void>
+  refreshSurvey: () => Promise<void>,
 ]
 
 const defaultSurvey: EcanvasserSurvey = { id: '' }
-export const EcanvasserSurveyContext = createContext<EcanvasserSurveyContextValue>([defaultSurvey, async () => {}])
+export const EcanvasserSurveyContext =
+  createContext<EcanvasserSurveyContextValue>([defaultSurvey, async () => {}])
 
 interface EcanvasserSurveyProviderProps {
   children: React.ReactNode
   survey: EcanvasserSurvey
 }
 
-export const EcanvasserSurveyProvider = ({ children, survey: initialSurvey }: EcanvasserSurveyProviderProps): React.JSX.Element => {
+export const EcanvasserSurveyProvider = ({
+  children,
+  survey: initialSurvey,
+}: EcanvasserSurveyProviderProps): React.JSX.Element => {
   const [survey, setSurvey] = useState<EcanvasserSurvey>(initialSurvey)
 
   const refreshSurvey = async () => {
     try {
-      const resp = await clientFetch<EcanvasserSurvey>(apiRoutes.ecanvasser.surveys.find, {
-        id: survey?.id,
-      })
+      const resp = await clientFetch<EcanvasserSurvey>(
+        apiRoutes.ecanvasser.surveys.find,
+        {
+          id: survey?.id,
+        },
+      )
 
       setSurvey(resp?.status === 404 ? { id: '' } : resp.data)
     } catch (e) {
@@ -58,4 +65,3 @@ export const EcanvasserSurveyProvider = ({ children, survey: initialSurvey }: Ec
     </EcanvasserSurveyContext.Provider>
   )
 }
-

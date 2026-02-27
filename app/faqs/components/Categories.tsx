@@ -21,7 +21,9 @@ interface CategoriesProps {
   content?: Category[]
 }
 
-export default function Categories({ content }: CategoriesProps): React.JSX.Element {
+export default function Categories({
+  content,
+}: CategoriesProps): React.JSX.Element {
   return (
     <div>
       <H1 className="my-6 lg:my-8" data-cy="faqs-page-title">

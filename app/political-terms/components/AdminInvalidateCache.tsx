@@ -28,5 +28,3 @@ export default function AdminInvalidateCache(): React.JSX.Element | null {
     </div>
   )
 }
-
-

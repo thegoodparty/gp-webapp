@@ -17,14 +17,14 @@ export const CANDIDATE_TIERS: CandidateTiers = {
 type CandidateTiersReversedKey = 'null' | 'WIN' | 'TOSSUP' | 'LOSE'
 
 interface CandidateTiersReversed {
-  'null': 'Review'
+  null: 'Review'
   WIN: 'Likely to Win'
   TOSSUP: 'Hard to Call'
   LOSE: 'Likely to Lose'
 }
 
 export const CANDIDATE_TIERS_REVERSED: CandidateTiersReversed = {
-  'null': 'Review',
+  null: 'Review',
   WIN: 'Likely to Win',
   TOSSUP: 'Hard to Call',
   LOSE: 'Likely to Lose',

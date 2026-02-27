@@ -19,7 +19,10 @@ interface DomainPageProps {
   campaign: Campaign | null
 }
 
-export default function DomainPage({ pathname, campaign }: DomainPageProps): React.JSX.Element {
+export default function DomainPage({
+  pathname,
+  campaign,
+}: DomainPageProps): React.JSX.Element {
   const router = useRouter()
   const { status } = useDomainStatus()
   const { website } = useWebsite()
@@ -59,7 +62,12 @@ export default function DomainPage({ pathname, campaign }: DomainPageProps): Rea
     ].includes(message)
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false} hideMenu>
+    <DashboardLayout
+      pathname={pathname}
+      campaign={campaign}
+      showAlert={false}
+      hideMenu
+    >
       {showDomainSelection && <SelectDomain />}
       {showError && <DomainError />}
       {isSuccessfulPurchase && <DomainPurchaseSuccess />}

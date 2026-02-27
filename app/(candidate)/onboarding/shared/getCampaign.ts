@@ -1,20 +1,22 @@
 import { redirect } from 'next/navigation'
-import { apiRoutes } from 'gpApi/routes'
-import { serverFetch } from 'gpApi/serverFetch'
 import type { Campaign } from 'helpers/types'
+import { serverRequest } from 'gpApi/server-request'
 
 interface GetCampaignParams {
   slug: string
 }
 
 export async function fetchUserCampaign(): Promise<Campaign | null> {
-  try {
-    const resp = await serverFetch<Campaign>(apiRoutes.campaign.get)
-    return resp.data
-  } catch (e) {
-    console.error('error', e)
+  const result = await serverRequest(
+    'GET /v1/campaigns/mine',
+    {},
+    { ignoreResponseError: true },
+  )
+
+  if (!result.ok) {
     return null
   }
+  return result.data
 }
 
 export default async function getCampaign(

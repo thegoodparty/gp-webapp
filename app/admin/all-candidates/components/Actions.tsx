@@ -26,7 +26,11 @@ interface ActionsProps {
   isActive: boolean
 }
 
-export default function Actions({ id, campaignOnboardingSlug, isActive }: ActionsProps): React.JSX.Element {
+export default function Actions({
+  id,
+  campaignOnboardingSlug,
+  isActive,
+}: ActionsProps): React.JSX.Element {
   const [showMenu, setShowMenu] = useState(false)
   const { successSnackbar } = useSnackbar()
 

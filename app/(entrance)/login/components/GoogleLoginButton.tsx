@@ -19,7 +19,9 @@ interface GoogleLoginButtonProps {
   loginSuccessCallback: (socialUser: SocialUser) => void
 }
 
-const GoogleLoginButton = ({ loginSuccessCallback }: GoogleLoginButtonProps): React.JSX.Element => {
+const GoogleLoginButton = ({
+  loginSuccessCallback,
+}: GoogleLoginButtonProps): React.JSX.Element => {
   const performGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const accessToken = tokenResponse.access_token

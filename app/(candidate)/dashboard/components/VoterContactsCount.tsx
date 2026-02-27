@@ -30,7 +30,9 @@ export const VoterContactsCount = ({
       out of{' '}
       <span className="font-bold">
         {numberFormatter(
-          getVoterContactsGoal(pathToVictory as { voterContactGoal: number; voteGoal: number }),
+          getVoterContactsGoal(
+            pathToVictory as { voterContactGoal: number; voteGoal: number },
+          ),
         )}{' '}
         needed to win
       </span>

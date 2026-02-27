@@ -5,7 +5,8 @@ import { setSize } from './PrimaryButton'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
 
-interface SuccessButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+interface SuccessButtonProps
+  extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'
@@ -107,4 +108,3 @@ const SuccessButton = ({
 }
 
 export default SuccessButton
-

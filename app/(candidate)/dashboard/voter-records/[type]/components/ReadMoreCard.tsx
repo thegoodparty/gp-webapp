@@ -12,7 +12,9 @@ interface ReadMoreCardProps {
   type: string
 }
 
-export default function ReadMoreCard({ type }: ReadMoreCardProps): React.JSX.Element {
+export default function ReadMoreCard({
+  type,
+}: ReadMoreCardProps): React.JSX.Element {
   let link = '#'
   let typeText = ''
   if (type === 'sms') {

@@ -19,7 +19,11 @@ interface ChatMessageProps {
   isLastMessage: boolean
 }
 
-const ChatMessage = ({ message, type, isLastMessage }: ChatMessageProps): React.JSX.Element => {
+const ChatMessage = ({
+  message,
+  type,
+  isLastMessage,
+}: ChatMessageProps): React.JSX.Element => {
   const [copied, setCopied] = useState(false)
   const { handleRegenerate, finishTyping } = useChat()
   let { content, role } = message

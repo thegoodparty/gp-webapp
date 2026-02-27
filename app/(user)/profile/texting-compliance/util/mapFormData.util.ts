@@ -59,7 +59,9 @@ export const extractPostalAddress = (address: Address): PostalAddress => {
 
   const { address_components } = address
 
-  const extractAddressComponent = (types: string | string[]): AddressComponent => {
+  const extractAddressComponent = (
+    types: string | string[],
+  ): AddressComponent => {
     const typeArray = Array.isArray(types) ? types : [types]
     const component = address_components.find((comp) =>
       typeArray.some((type) => comp.types.includes(type)),

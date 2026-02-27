@@ -29,9 +29,7 @@ interface Category {
 }
 
 const fetchContent = async (): Promise<Category[]> => {
-  return await unAuthFetch(
-    `${apiRoutes.content.byType.path}/articleCategories`,
-  )
+  return await unAuthFetch(`${apiRoutes.content.byType.path}/articleCategories`)
 }
 
 export default async function Page(): Promise<React.JSX.Element> {

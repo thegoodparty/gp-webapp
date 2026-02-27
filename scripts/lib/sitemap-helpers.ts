@@ -20,7 +20,10 @@ export const ensureDirectoryExists = async (dirPath: string): Promise<void> => {
 /**
  * Write sitemap XML to file
  */
-export const writeSitemapXML = async (filePath: string, xmlContent: string): Promise<void> => {
+export const writeSitemapXML = async (
+  filePath: string,
+  xmlContent: string,
+): Promise<void> => {
   await fs.writeFile(filePath, xmlContent, 'utf8')
 }
 
@@ -29,11 +32,11 @@ export const writeSitemapXML = async (filePath: string, xmlContent: string): Pro
  */
 export const normalizeUrl = (url: string): string => {
   let normalized = url.replace(/\/$/, '')
-  
+
   if (!normalized.startsWith('http://') && !normalized.startsWith('https://')) {
     normalized = 'https://' + normalized
   }
-  
+
   return normalized
 }
 
@@ -44,11 +47,11 @@ export const formatSitemapDate = (date?: Date | string): string => {
   if (!date) {
     return new Date().toISOString()
   }
-  
+
   if (typeof date === 'string') {
     return new Date(date).toISOString()
   }
-  
+
   return date.toISOString()
 }
 
@@ -88,12 +91,12 @@ export const needsSplitting = (urls: SitemapUrl[]): boolean => {
   if (urls.length > MAX_URLS) {
     return true
   }
-  
+
   if (urls.length > 40000) {
     const estimatedSize = urls.length * 180
     return estimatedSize > MAX_SIZE_BYTES
   }
-  
+
   return false
 }
 
@@ -102,18 +105,18 @@ export const needsSplitting = (urls: SitemapUrl[]): boolean => {
  */
 export const splitUrlsForSitemap = (
   urls: SitemapUrl[],
-  xmlConverter: (urls: SitemapUrl[]) => string
+  xmlConverter: (urls: SitemapUrl[]) => string,
 ): SitemapUrl[][] => {
   if (!needsSplitting(urls)) {
     return [urls]
   }
-  
+
   const chunks: SitemapUrl[][] = []
   let currentChunk: SitemapUrl[] = []
-  
+
   for (const url of urls) {
     currentChunk.push(url)
-    
+
     if (currentChunk.length >= MAX_URLS) {
       chunks.push(currentChunk)
       currentChunk = []
@@ -125,11 +128,11 @@ export const splitUrlsForSitemap = (
       }
     }
   }
-  
+
   if (currentChunk.length > 0) {
     chunks.push(currentChunk)
   }
-  
+
   return chunks
 }
 
@@ -141,24 +144,24 @@ export const writeSplitSitemaps = async (
   baseDir: string,
   baseName: string,
   xmlConverter: (urls: SitemapUrl[]) => string,
-  baseUrl: string
+  baseUrl: string,
 ): Promise<SitemapIndexEntry[]> => {
   await ensureDirectoryExists(baseDir)
-  
+
   const chunks = splitUrlsForSitemap(urls, xmlConverter)
   const sitemapEntries: SitemapIndexEntry[] = []
   const currentDate = new Date().toISOString().split('T')[0]
-  
+
   if (chunks.length === 1) {
     const firstChunk = chunks[0]
     if (firstChunk) {
       const xml = xmlConverter(firstChunk)
       const filePath = path.join(baseDir, `${baseName}.xml`)
       await writeSitemapXML(filePath, xml)
-      
+
       sitemapEntries.push({
         loc: `${baseUrl}/${baseName}.xml`,
-        lastmod: currentDate
+        lastmod: currentDate,
       })
     }
   } else {
@@ -169,14 +172,14 @@ export const writeSplitSitemaps = async (
       const fileName = `${baseName}-${i + 1}.xml`
       const filePath = path.join(baseDir, fileName)
       await writeSitemapXML(filePath, xml)
-      
+
       sitemapEntries.push({
         loc: `${baseUrl}/${fileName}`,
-        lastmod: currentDate
+        lastmod: currentDate,
       })
     }
   }
-  
+
   return sitemapEntries
 }
 
@@ -190,5 +193,5 @@ module.exports = {
   exceedsSizeLimit,
   needsSplitting,
   splitUrlsForSitemap,
-  writeSplitSitemaps
+  writeSplitSitemaps,
 }

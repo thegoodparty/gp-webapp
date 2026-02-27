@@ -13,14 +13,7 @@ import {
 } from 'chart.js'
 import { EcanvasserSummary } from './DoorKnockingPage'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 type RatingKey = 'unrated' | '1' | '2' | '3' | '4' | '5'
 

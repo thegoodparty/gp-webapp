@@ -1,14 +1,20 @@
 'use client'
 import React from 'react'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import MuiCheckbox, { CheckboxProps as MuiCheckboxProps } from '@mui/material/Checkbox'
+import MuiCheckbox, {
+  CheckboxProps as MuiCheckboxProps,
+} from '@mui/material/Checkbox'
 
 interface CheckboxProps extends MuiCheckboxProps {
   label?: React.ReactNode
   name?: string
 }
 
-const Checkbox = ({ label, name, ...restProps }: CheckboxProps): React.JSX.Element => {
+const Checkbox = ({
+  label,
+  name,
+  ...restProps
+}: CheckboxProps): React.JSX.Element => {
   return label ? (
     <FormControlLabel
       label={label}
@@ -20,4 +26,3 @@ const Checkbox = ({ label, name, ...restProps }: CheckboxProps): React.JSX.Eleme
 }
 
 export default Checkbox
-

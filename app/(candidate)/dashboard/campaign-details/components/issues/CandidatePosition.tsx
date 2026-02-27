@@ -22,7 +22,10 @@ interface CandidatePositionProps {
   previewMode?: boolean
 }
 
-export default function CandidatePosition({ candidatePosition, previewMode }: CandidatePositionProps): React.JSX.Element {
+export default function CandidatePosition({
+  candidatePosition,
+  previewMode,
+}: CandidatePositionProps): React.JSX.Element {
   const { topIssue, position, description } = candidatePosition
   return (
     <div

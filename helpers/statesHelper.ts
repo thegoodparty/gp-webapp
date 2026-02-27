@@ -52,11 +52,60 @@ export const flatStates: readonly string[] = [
   'WY',
 ]
 
-export type StateAbbreviation = 'AK' | 'AL' | 'AR' | 'AZ' | 'CA' | 'CO' | 'CT' | 'DE' | 'DC' | 'FL' | 'GA' | 'HI' | 'IA' | 'ID' | 'IL' | 'IN' | 'KS' | 'KY' | 'LA' | 'MA' | 'MD' | 'ME' | 'MI' | 'MN' | 'MO' | 'MS' | 'MT' | 'NC' | 'ND' | 'NE' | 'NH' | 'NJ' | 'NM' | 'NV' | 'NY' | 'OH' | 'OK' | 'OR' | 'PA' | 'RI' | 'SC' | 'SD' | 'TN' | 'TX' | 'UT' | 'VA' | 'VT' | 'WA' | 'WI' | 'WV' | 'WY'
+export type StateAbbreviation =
+  | 'AK'
+  | 'AL'
+  | 'AR'
+  | 'AZ'
+  | 'CA'
+  | 'CO'
+  | 'CT'
+  | 'DE'
+  | 'DC'
+  | 'FL'
+  | 'GA'
+  | 'HI'
+  | 'IA'
+  | 'ID'
+  | 'IL'
+  | 'IN'
+  | 'KS'
+  | 'KY'
+  | 'LA'
+  | 'MA'
+  | 'MD'
+  | 'ME'
+  | 'MI'
+  | 'MN'
+  | 'MO'
+  | 'MS'
+  | 'MT'
+  | 'NC'
+  | 'ND'
+  | 'NE'
+  | 'NH'
+  | 'NJ'
+  | 'NM'
+  | 'NV'
+  | 'NY'
+  | 'OH'
+  | 'OK'
+  | 'OR'
+  | 'PA'
+  | 'RI'
+  | 'SC'
+  | 'SD'
+  | 'TN'
+  | 'TX'
+  | 'UT'
+  | 'VA'
+  | 'VT'
+  | 'WA'
+  | 'WI'
+  | 'WV'
+  | 'WY'
 
-export function isStateAbbreviation(
-  value: string,
-): value is StateAbbreviation {
+export function isStateAbbreviation(value: string): value is StateAbbreviation {
   return flatStates.includes(value)
 }
 

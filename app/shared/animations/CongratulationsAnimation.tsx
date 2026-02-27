@@ -8,6 +8,9 @@ interface CongratulationsAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function CongratulationsAnimation({ loop = false, ...restProps }: CongratulationsAnimationProps): React.JSX.Element {
+export default function CongratulationsAnimation({
+  loop = false,
+  ...restProps
+}: CongratulationsAnimationProps): React.JSX.Element {
   return <LottieAnimation animationData={data} loop={loop} {...restProps} />
 }

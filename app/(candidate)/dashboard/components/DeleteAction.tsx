@@ -22,7 +22,11 @@ export default function DeleteAction({
   const [showDelete, setShowDelete] = useState(false)
   const { successSnackbar } = useSnackbar()
 
-  const deleteDescription = description || (actionName ? `Are you sure you want to delete this ${actionName}?` : 'Are you sure you want to delete this?')
+  const deleteDescription =
+    description ||
+    (actionName
+      ? `Are you sure you want to delete this ${actionName}?`
+      : 'Are you sure you want to delete this?')
 
   const handleDelete = async () => {
     if (setShowMenu) {

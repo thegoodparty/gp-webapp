@@ -30,7 +30,9 @@ export default function P2VStatsPage(
 
   const getP2VStats = async () => {
     try {
-      const resp = await clientFetch<P2VStats>(apiRoutes.admin.campaign.p2vStats)
+      const resp = await clientFetch<P2VStats>(
+        apiRoutes.admin.campaign.p2vStats,
+      )
       const statsResponse = resp.data
 
       if (statsResponse) {

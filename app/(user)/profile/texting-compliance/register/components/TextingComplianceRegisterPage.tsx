@@ -43,12 +43,14 @@ const isAddressValue = (
 ): value is RegistrationFormData['address'] =>
   Boolean(
     value &&
-    typeof value === 'object' &&
-    'formatted_address' in value &&
-    'place_id' in value,
+      typeof value === 'object' &&
+      'formatted_address' in value &&
+      'place_id' in value,
   )
 
-const toRegistrationFormData = (formData: FormDataState): RegistrationFormData => ({
+const toRegistrationFormData = (
+  formData: FormDataState,
+): RegistrationFormData => ({
   electionFilingLink: String(formData.electionFilingLink || ''),
   campaignCommitteeName: String(formData.campaignCommitteeName || ''),
   officeLevel: String(formData.officeLevel || ''),
@@ -59,8 +61,12 @@ const toRegistrationFormData = (formData: FormDataState): RegistrationFormData =
     : { formatted_address: '', place_id: '' },
   website: String(formData.website || ''),
   email: String(formData.email || ''),
-  fecCommitteeId: formData.fecCommitteeId ? String(formData.fecCommitteeId) : undefined,
-  committeeType: formData.committeeType ? String(formData.committeeType) : undefined,
+  fecCommitteeId: formData.fecCommitteeId
+    ? String(formData.fecCommitteeId)
+    : undefined,
+  committeeType: formData.committeeType
+    ? String(formData.committeeType)
+    : undefined,
 })
 
 const createTcrCompliance = async (formData: RegistrationFormData) => {

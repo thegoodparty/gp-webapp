@@ -10,7 +10,11 @@ interface RaceCardProps {
   selectCallback: (race: { id: string }) => void
 }
 
-export default function RaceCard({ race, selected, selectCallback }: RaceCardProps): React.JSX.Element | null {
+export default function RaceCard({
+  race,
+  selected,
+  selectCallback,
+}: RaceCardProps): React.JSX.Element | null {
   const { position, election } = race
   if (!position) {
     return null
@@ -58,4 +62,3 @@ export default function RaceCard({ race, selected, selectCallback }: RaceCardPro
     </div>
   )
 }
-

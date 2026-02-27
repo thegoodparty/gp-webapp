@@ -16,7 +16,9 @@ import CandidatePreview from './CandidatePreview'
 import type { ComponentProps } from 'react'
 import type { Article, Race } from 'app/(landing)/elections/shared/types'
 
-type CandidatePreviewCandidate = ComponentProps<typeof CandidatePreview>['candidate']
+type CandidatePreviewCandidate = ComponentProps<
+  typeof CandidatePreview
+>['candidate']
 
 type Candidate = CandidatePreviewCandidate & {
   slug: string

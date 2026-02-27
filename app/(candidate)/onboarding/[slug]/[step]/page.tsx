@@ -19,7 +19,11 @@ interface PageParams {
   step: string
 }
 
-export default async function Page({ params }: { params: Promise<PageParams> }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>
+}): Promise<React.JSX.Element> {
   const { slug, step } = await params
   const campaign = await getCampaign({ slug })
 

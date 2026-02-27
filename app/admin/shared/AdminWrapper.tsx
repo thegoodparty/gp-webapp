@@ -7,7 +7,11 @@ interface AdminWrapperProps {
   title: string
 }
 
-export default function AdminWrapper({ children, pathname, title }: AdminWrapperProps): React.JSX.Element {
+export default function AdminWrapper({
+  children,
+  pathname,
+  title,
+}: AdminWrapperProps): React.JSX.Element {
   return (
     <div className="bg-zinc-100 px-4 ">
       <div
@@ -24,4 +28,3 @@ export default function AdminWrapper({ children, pathname, title }: AdminWrapper
     </div>
   )
 }
-

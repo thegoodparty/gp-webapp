@@ -47,7 +47,11 @@ export async function generateMetadata({ params }: { params: Params }) {
   return meta
 }
 
-export default async function Page({ params }: { params: Params }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Params
+}): Promise<React.JSX.Element> {
   const { slug } = params
   if (!slug) {
     notFound()

@@ -17,7 +17,7 @@ export const debounce = <TArgs extends unknown[]>(
 
 export const debounce2 = <TArgs extends unknown[]>(
   func: (...args: TArgs) => void,
-  delay: number
+  delay: number,
 ): ((...args: TArgs) => void) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   return (...args: TArgs): void => {
@@ -30,4 +30,3 @@ export const debounce2 = <TArgs extends unknown[]>(
     }, delay)
   }
 }
-

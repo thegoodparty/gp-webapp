@@ -12,11 +12,16 @@ interface MoreMenuProps {
   menuItems?: MoreMenuItem[]
 }
 
-export const MoreMenu = ({ onClose = () => {}, menuItems = [] }: MoreMenuProps): React.JSX.Element => {
+export const MoreMenu = ({
+  onClose = () => {},
+  menuItems = [],
+}: MoreMenuProps): React.JSX.Element => {
   const [menuAnchor, setMenuAnchor] = useState<Element | null>(null)
   const showMenu = Boolean(menuAnchor)
 
-  const handleMenuAnchorClick = ({ currentTarget }: React.MouseEvent<SVGElement> | React.KeyboardEvent<SVGElement>) => {
+  const handleMenuAnchorClick = ({
+    currentTarget,
+  }: React.MouseEvent<SVGElement> | React.KeyboardEvent<SVGElement>) => {
     setMenuAnchor(currentTarget)
   }
 
@@ -71,4 +76,3 @@ export const MoreMenu = ({ onClose = () => {}, menuItems = [] }: MoreMenuProps):
     </>
   )
 }
-

@@ -21,7 +21,6 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.admin.campaign.victoryMail, { id })
@@ -466,7 +465,6 @@ export default function AdminVictoryPathPage(
             />
             {!notNeeded && <VoterFileSection />}
           </div>
-
           {sections.map((section) => (
             <div className="mb-12" key={section.title}>
               <h2 className="font-black text-2xl mb-8">{section.title}</h2>

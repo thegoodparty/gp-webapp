@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
 import { fetchCampaignVersions } from '../../onboarding/shared/ajaxActions'
 
-export default function useVersions(): Partial<Record<string, string | number | boolean | object | null>> {
-  const [versions, setVersions] = useState<Partial<Record<string, string | number | boolean | object | null>>>({})
+export default function useVersions(): Partial<
+  Record<string, string | number | boolean | object | null>
+> {
+  const [versions, setVersions] = useState<
+    Partial<Record<string, string | number | boolean | object | null>>
+  >({})
 
   useEffect(() => {
     loadVersions()

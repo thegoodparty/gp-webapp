@@ -10,7 +10,10 @@ export const loadSuggestedIssues = async (zip: string) => {
       zip,
     }
 
-    const resp = await clientFetch<string[]>(apiRoutes.topIssue.byLocation, payload)
+    const resp = await clientFetch<string[]>(
+      apiRoutes.topIssue.byLocation,
+      payload,
+    )
 
     return resp.data
   } catch (e) {
@@ -30,7 +33,10 @@ interface SuggestedIssuesProps {
   suggestedCallback: (issue: string) => void
 }
 
-export default function SuggestedIssues({ campaign, suggestedCallback }: SuggestedIssuesProps): React.JSX.Element | null {
+export default function SuggestedIssues({
+  campaign,
+  suggestedCallback,
+}: SuggestedIssuesProps): React.JSX.Element | null {
   const [suggested, setSuggested] = useState<string[]>([])
   useEffect(() => {
     loadIssues()

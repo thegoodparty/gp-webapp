@@ -15,7 +15,9 @@ interface SubscribeEmailPayload extends Record<string, string> {
   pageName: string
 }
 
-export const subscribeEmail = async (payload: SubscribeEmailPayload): Promise<boolean> => {
+export const subscribeEmail = async (
+  payload: SubscribeEmailPayload,
+): Promise<boolean> => {
   try {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
     return true
@@ -148,4 +150,3 @@ const EmailFormV2 = ({
 }
 
 export default EmailFormV2
-

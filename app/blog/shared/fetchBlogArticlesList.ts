@@ -6,10 +6,10 @@ interface FetchOptions {
   limit?: number
 }
 
-export const fetchBlogArticlesList = async ({ limit }: FetchOptions = {}): Promise<Article[]> => {
+export const fetchBlogArticlesList = async ({
+  limit,
+}: FetchOptions = {}): Promise<Article[]> => {
   return await unAuthFetch(apiRoutes.content.blogArticle.getList.path, {
     ...(limit ? { limit } : {}),
   })
 }
-
-

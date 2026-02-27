@@ -4,9 +4,9 @@ interface OnboardingLayoutProps {
   children: React.ReactNode
 }
 
-export default function OnboardingLayout(props: OnboardingLayoutProps): React.JSX.Element {
+export default function OnboardingLayout(
+  props: OnboardingLayoutProps,
+): React.JSX.Element {
   const { children } = props
   return <CardPageWrapper>{children}</CardPageWrapper>
 }
-
-

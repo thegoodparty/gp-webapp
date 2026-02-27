@@ -1,5 +1,12 @@
 'use client'
-import { createContext, useMemo, useState, useContext, useEffect, ReactNode } from 'react'
+import {
+  createContext,
+  useMemo,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from 'react'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   isP2pUxEnabled,
@@ -27,7 +34,9 @@ interface P2pUxEnabledProviderProps {
   children: ReactNode
 }
 
-export const P2pUxEnabledProvider = ({ children }: P2pUxEnabledProviderProps) => {
+export const P2pUxEnabledProvider = ({
+  children,
+}: P2pUxEnabledProviderProps) => {
   const [campaign] = useCampaign()
   const [tcrCompliant] = useTcrComplianceCheck()
   const { details: campaignDetails } = campaign || {}

@@ -230,14 +230,13 @@ interface NavigationProviderProps {
   children: React.ReactNode
 }
 
-export const NavigationProvider = ({ children }: NavigationProviderProps): React.JSX.Element => {
+export const NavigationProvider = ({
+  children,
+}: NavigationProviderProps): React.JSX.Element => {
   const [openStates, setOpenStates] = useState(INITIAL_OPEN_STATES)
   const pathname = usePathname()
 
-  const closeAll = useCallback(
-    () => setOpenStates(INITIAL_OPEN_STATES),
-    [],
-  )
+  const closeAll = useCallback(() => setOpenStates(INITIAL_OPEN_STATES), [])
 
   const makeNewOpenStates = (index: number) => [
     ...openStates.slice(0, index).fill(false),
@@ -264,4 +263,3 @@ export const NavigationProvider = ({ children }: NavigationProviderProps): React
     </NavContext.Provider>
   )
 }
-

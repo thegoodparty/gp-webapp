@@ -4,14 +4,12 @@ import Body2 from '@shared/typography/Body2'
 import H1 from '@shared/typography/H1'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
-import {
-  buildTrackingAttrs,
-  trackEvent,
-  EVENTS,
-} from 'helpers/analyticsHelper'
+import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 import { useState } from 'react'
-import CustomVoterAudienceFilters, { AudienceFiltersState } from './CustomVoterAudienceFilters'
+import CustomVoterAudienceFilters, {
+  AudienceFiltersState,
+} from './CustomVoterAudienceFilters'
 import { Campaign, CustomVoterFile } from 'helpers/types'
 
 interface PrevStepValues {

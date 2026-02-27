@@ -13,9 +13,12 @@ interface Params {
 
 const fetchSurvey = async (id: string): Promise<EcanvasserSurvey | false> => {
   try {
-    const resp = await serverFetch<EcanvasserSurvey>(apiRoutes.ecanvasser.surveys.find, {
-      id,
-    })
+    const resp = await serverFetch<EcanvasserSurvey>(
+      apiRoutes.ecanvasser.surveys.find,
+      {
+        id,
+      },
+    )
     return resp.data
   } catch (e) {
     console.error('error', e)
@@ -30,7 +33,11 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page({ params }: { params: Params }): Promise<React.JSX.Element> {
+export default async function Page({
+  params,
+}: {
+  params: Params
+}): Promise<React.JSX.Element> {
   await candidateAccess()
 
   const { id } = params

@@ -12,7 +12,7 @@ const STEPS = {
 }
 
 interface CantFindRaceModalProps {
-  campaign: Campaign
+  campaign?: Campaign
   onClose: () => void
   onSaveCustomOffice: (campaign: Campaign) => void
 }
@@ -37,9 +37,7 @@ export default function CantFindRaceModal({
           </>
         ) : (
           <>
-            <H1 className="text-center">
-              Troubleshooting
-            </H1>
+            <H1 className="text-center">Troubleshooting</H1>
             <div className="mt-8">
               <Body2 className="bg-white rounded-lg p-6 border border-gray-200">
                 <ol className="space-y-4 list-decimal pl-5">

@@ -8,7 +8,11 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch, ApiResponse } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-async function resetPassword(email: string, password: string, token: string): Promise<ApiResponse | false> {
+async function resetPassword(
+  email: string,
+  password: string,
+  token: string,
+): Promise<ApiResponse | false> {
   try {
     const payload = {
       email,
@@ -27,7 +31,10 @@ interface ResetPasswordPageProps {
   token: string
 }
 
-export default function ResetPasswordPage({ email, token }: ResetPasswordPageProps): React.JSX.Element {
+export default function ResetPasswordPage({
+  email,
+  token,
+}: ResetPasswordPageProps): React.JSX.Element {
   const [{ value: password, isValid }, setPassword] = useState({
     value: '',
     isValid: true,
@@ -66,14 +73,17 @@ export default function ResetPasswordPage({ email, token }: ResetPasswordPagePro
 
       if (res && res.ok) {
         setResetSuccessful(true)
-        
+
         // Forgot password flow
         trackEvent(EVENTS.Password.PasswordResetCompleted)
 
         successSnackbar(`Your password has been updated`)
       } else {
         const data = res ? res.data : null
-        const message = data && typeof data === 'object' && 'message' in data ? data.message : 'Unknown error'
+        const message =
+          data && typeof data === 'object' && 'message' in data
+            ? data.message
+            : 'Unknown error'
         errorSnackbar(`Error updating password: ${message}`)
       }
     }

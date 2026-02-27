@@ -8,6 +8,8 @@ interface WandAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function WandAnimation(props: WandAnimationProps): React.JSX.Element {
+export default function WandAnimation(
+  props: WandAnimationProps,
+): React.JSX.Element {
   return <LottieAnimation animationData={data} {...props} />
 }

@@ -8,7 +8,11 @@ interface ErrorAlertProps extends Omit<AlertProps, 'severity'> {
   className?: string
 }
 
-export const ErrorAlert = ({ children, className = '', ...restProps }: ErrorAlertProps): React.JSX.Element => (
+export const ErrorAlert = ({
+  children,
+  className = '',
+  ...restProps
+}: ErrorAlertProps): React.JSX.Element => (
   <StyledAlert
     severity="error"
     icon={<MdError />}

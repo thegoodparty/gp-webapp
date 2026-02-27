@@ -8,6 +8,16 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  contactEngagement: {
+    issues: {
+      path: '/contact-engagement/:id/issues',
+      method: 'GET',
+    },
+    activities: {
+      path: '/contact-engagement/:id/activities',
+      method: 'GET',
+    },
+  },
   contacts: {
     list: {
       path: '/contacts',
@@ -61,6 +71,10 @@ export const apiRoutes = {
     },
     hasPolls: {
       path: '/polls/has-polls',
+      method: 'GET',
+    },
+    downloadResponses: {
+      path: '/polls/:pollId/download-responses',
       method: 'GET',
     },
   },
@@ -311,6 +325,10 @@ export const apiRoutes = {
         path: '/campaigns/mine/race-target-details',
         method: 'PUT',
       },
+      adminUpdate: {
+        path: '/campaigns/admin/:slug/race-target-details',
+        method: 'PUT',
+      },
     },
   },
   content: {
@@ -531,12 +549,16 @@ export const apiRoutes = {
       path: '/payments/purchase/portal-session',
       method: 'POST',
     },
-    createPurchaseIntent: {
-      path: '/payments/purchase/create-intent',
+    createCustomCheckoutSession: {
+      path: '/payments/purchase/create-checkout-session',
       method: 'POST',
     },
-    completePurchase: {
-      path: '/payments/purchase/complete',
+    completeCheckoutSession: {
+      path: '/payments/purchase/complete-checkout-session',
+      method: 'POST',
+    },
+    completeFreePurchase: {
+      path: '/payments/purchase/complete-free-purchase',
       method: 'POST',
     },
   },

@@ -23,7 +23,9 @@ interface DeleteQuestionProps {
   question: Question
 }
 
-export default function DeleteQuestion({ question }: DeleteQuestionProps): React.JSX.Element {
+export default function DeleteQuestion({
+  question,
+}: DeleteQuestionProps): React.JSX.Element {
   const { id } = question
   const [_, refreshSurvey] = useEcanvasserSurvey()
 

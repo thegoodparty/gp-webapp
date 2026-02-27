@@ -1,10 +1,35 @@
 import { faker } from '@faker-js/faker'
 import { Outreach } from '../hooks/OutreachContext'
 
-type OutreachType = 'text' | 'doorKnocking' | 'phoneBanking' | 'socialMedia' | 'robocall' | 'p2p'
-type OutreachStatus = 'pending' | 'approved' | 'denied' | 'paid' | 'in_progress' | 'completed'
-const OUTREACH_TYPES: OutreachType[] = ['text', 'doorKnocking', 'phoneBanking', 'socialMedia', 'robocall', 'p2p']
-const OUTREACH_STATUSES: OutreachStatus[] = ['pending', 'approved', 'in_progress', 'completed', 'paid']
+type OutreachType =
+  | 'text'
+  | 'doorKnocking'
+  | 'phoneBanking'
+  | 'socialMedia'
+  | 'robocall'
+  | 'p2p'
+type OutreachStatus =
+  | 'pending'
+  | 'approved'
+  | 'denied'
+  | 'paid'
+  | 'in_progress'
+  | 'completed'
+const OUTREACH_TYPES: OutreachType[] = [
+  'text',
+  'doorKnocking',
+  'phoneBanking',
+  'socialMedia',
+  'robocall',
+  'p2p',
+]
+const OUTREACH_STATUSES: OutreachStatus[] = [
+  'pending',
+  'approved',
+  'in_progress',
+  'completed',
+  'paid',
+]
 
 export const createOutreach = (campaignId: number): Outreach => {
   const outreachType = faker.helpers.arrayElement(OUTREACH_TYPES)

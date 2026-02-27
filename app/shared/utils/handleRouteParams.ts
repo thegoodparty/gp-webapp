@@ -10,8 +10,7 @@ export const handleRouteParams = (
   const { tokens } = parse(path)
   const hasRouteParams = tokens.some((token) => typeof token !== 'string')
 
-  if (!data || (data && !Object.keys(data).length))
-    return stripPathTokens(path)
+  if (!data || (data && !Object.keys(data).length)) return stripPathTokens(path)
   if (!hasRouteParams) return path
 
   const paramTokens: Record<string, string> = {}
@@ -38,4 +37,3 @@ export const handleRouteParams = (
 }
 
 const stripPathTokens = (path: string): string => path.replace(/\/:[^/]+/g, '')
-

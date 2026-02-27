@@ -25,4 +25,3 @@ export const AsyncValidationIcon = ({
   ) : (
     <InputHelpIcon showOnFocus message={message} onOpen={onTooltipOpen} />
   )
-

@@ -31,11 +31,10 @@ export const getServerUser = async (): Promise<User | null> => {
         resolve(userJSON as User)
         return
       }
-      resolve(userJSON ? JSON.parse(userJSON) as User : null)
+      resolve(userJSON ? (JSON.parse(userJSON) as User) : null)
     } catch (e) {
       console.log('Error in getServerUser', e)
       resolve(null)
     }
   })
 }
-

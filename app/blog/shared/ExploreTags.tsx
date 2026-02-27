@@ -13,7 +13,9 @@ interface ExploreTagsProps {
   tags: Tag[]
 }
 
-export default function ExploreTags({ tags }: ExploreTagsProps): React.JSX.Element | null {
+export default function ExploreTags({
+  tags,
+}: ExploreTagsProps): React.JSX.Element | null {
   const params = useParams<{ tag?: string }>()
   const selectedTag = params?.tag
 

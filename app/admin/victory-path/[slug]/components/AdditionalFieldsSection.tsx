@@ -59,7 +59,9 @@ export default function AdditionalFieldsSection(): React.JSX.Element {
                 handleChange(field.key, e.target.value)
               }
               valueMapping={
-                field.key === 'isVerified' ? IS_VERIFIED_OPTIONS : CANDIDATE_TIERS
+                field.key === 'isVerified'
+                  ? IS_VERIFIED_OPTIONS
+                  : CANDIDATE_TIERS
               }
             />
           ) : (

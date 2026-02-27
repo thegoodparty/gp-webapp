@@ -6,7 +6,10 @@ interface LayoutWithAlphabetProps {
   children: React.ReactNode
 }
 
-export default function LayoutWithAlphabet({ activeLetter = 'A', children }: LayoutWithAlphabetProps): React.JSX.Element {
+export default function LayoutWithAlphabet({
+  activeLetter = 'A',
+  children,
+}: LayoutWithAlphabetProps): React.JSX.Element {
   return (
     <div className="flex lg:block mt-4 lg:mt-16">
       <div className="text-zinc-500">

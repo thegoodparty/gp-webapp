@@ -5,9 +5,7 @@ import H1 from '@shared/typography/H1'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo, useState, ChangeEvent } from 'react'
 import Button from '@shared/buttons/Button'
-import {
-  TASK_TYPES,
-} from '../../../shared/constants/tasks.const'
+import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
 import { Outreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
@@ -95,27 +93,40 @@ export default function ScheduleStep({
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
-        <H1>{isRobocall ? 'Request robocall' : isTextMessage ? 'Schedule text message' : 'Schedule campaign'}</H1> {/* Dynamic header: "Request" for robocall, "Schedule text message" for text, "Schedule campaign" for others */}
-        <Body1 className="mt-4 mb-8"> {/* Description text with margin spacing */}
+        <H1>
+          {isRobocall
+            ? 'Request robocall'
+            : isTextMessage
+            ? 'Schedule text message'
+            : 'Schedule campaign'}
+        </H1>{' '}
+        {/* Dynamic header: "Request" for robocall, "Schedule text message" for text, "Schedule campaign" for others */}
+        <Body1 className="mt-4 mb-8">
+          {' '}
+          {/* Description text with margin spacing */}
           {isRobocall ? (
             <>
-              Your Political Assistant will need an audio recording. Look out for an email with detailed instructions. This is required. {/* Robocall-specific messaging */}
+              Your Political Assistant will need an audio recording. Look out
+              for an email with detailed instructions. This is required.{' '}
+              {/* Robocall-specific messaging */}
               <br />
-              <strong>Requires 3 days to process.</strong> {/* Processing time requirement */}
+              <strong>Requires 3 days to process.</strong>{' '}
+              {/* Processing time requirement */}
             </>
           ) : (
             <>
-              Use the form below to schedule your campaign. {/* Default messaging for non-robocall types */}
+              Use the form below to schedule your campaign.{' '}
+              {/* Default messaging for non-robocall types */}
               <br />
-              <strong>Requires 3 days to process.</strong> {/* Processing time requirement */}
+              <strong>Requires 3 days to process.</strong>{' '}
+              {/* Processing time requirement */}
             </>
           )}
         </Body1>
-
         <div className="mt-4">
           <TextField
             fullWidth
-            label={isRobocall ? "Call date" : "Send date"} // Dynamic label: "Call date" for robocall, "Send date" for others
+            label={isRobocall ? 'Call date' : 'Send date'} // Dynamic label: "Call date" for robocall, "Send date" for others
             type="date"
             required
             value={dateTextFieldValue}
@@ -146,7 +157,6 @@ export default function ScheduleStep({
             }}
           />
         </div>
-
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
             <Button size="large" color="neutral" onClick={backCallback}>
@@ -162,7 +172,8 @@ export default function ScheduleStep({
               disabled={!canSubmit() || isLoading}
               {...trackingAttrs}
             >
-              {isLastStep ? (isRobocall ? 'Send' : 'Schedule') : 'Next'} {/* Dynamic button text: Request for robocall, Schedule for others, Next for non-last steps */}
+              {isLastStep ? (isRobocall ? 'Send' : 'Schedule') : 'Next'}{' '}
+              {/* Dynamic button text: Request for robocall, Schedule for others, Next for non-last steps */}
             </Button>
           </div>
         </div>

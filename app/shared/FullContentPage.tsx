@@ -33,4 +33,3 @@ export const FullContentPage = ({ content = {} }: FullContentPageProps) => (
     </div>
   </MaxWidth>
 )
-

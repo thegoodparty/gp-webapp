@@ -18,7 +18,9 @@ interface CarouselProps {
   sections: CarouselSection[]
 }
 
-export default function Carousel({ sections }: CarouselProps): React.JSX.Element {
+export default function Carousel({
+  sections,
+}: CarouselProps): React.JSX.Element {
   const settings = {
     dots: true,
     infinite: true,
@@ -65,4 +67,3 @@ export default function Carousel({ sections }: CarouselProps): React.JSX.Element
     </div>
   )
 }
-

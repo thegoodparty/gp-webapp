@@ -31,7 +31,11 @@ interface WinnerFiltersProps {
   offices: string[]
 }
 
-export default function WinnerFilters({ filters, onChangeFilters, offices }: WinnerFiltersProps): React.JSX.Element {
+export default function WinnerFilters({
+  filters,
+  onChangeFilters,
+  offices,
+}: WinnerFiltersProps): React.JSX.Element {
   const [localFilters, setLocalFlters] = useState<Filters>(filters)
 
   const handleLocalChange = (key: string, val: string) => {
@@ -55,7 +59,9 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }: Win
               fullWidth
               variant="outlined"
               value={localFilters?.state || ''}
-              onChange={(e: SelectChangeEvent) => handleLocalChange('state', e.target.value)}
+              onChange={(e: SelectChangeEvent) =>
+                handleLocalChange('state', e.target.value)
+              }
               style={{ paddingTop: '4px' }}
             >
               <option value="">All States</option>
@@ -72,7 +78,9 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }: Win
               fullWidth
               variant="outlined"
               value={localFilters?.office || ''}
-              onChange={(e: SelectChangeEvent) => handleLocalChange('office', e.target.value)}
+              onChange={(e: SelectChangeEvent) =>
+                handleLocalChange('office', e.target.value)
+              }
               style={{ paddingTop: '4px' }}
             >
               <option value="">All Offices</option>
@@ -89,7 +97,9 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }: Win
               fullWidth
               variant="outlined"
               value={localFilters?.level || ''}
-              onChange={(e: SelectChangeEvent) => handleLocalChange('level', e.target.value)}
+              onChange={(e: SelectChangeEvent) =>
+                handleLocalChange('level', e.target.value)
+              }
               style={{ paddingTop: '4px' }}
             >
               <option value="">All Levels</option>

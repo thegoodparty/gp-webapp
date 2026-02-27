@@ -37,11 +37,10 @@ interface FieldConfig {
   options?: string[]
 }
 
-const createQuestion = async (payload: CreateQuestionPayload): Promise<void> => {
-  await clientFetch(
-    apiRoutes.ecanvasser.surveys.questions.create,
-    payload,
-  )
+const createQuestion = async (
+  payload: CreateQuestionPayload,
+): Promise<void> => {
+  await clientFetch(apiRoutes.ecanvasser.surveys.questions.create, payload)
 }
 
 export default function CreateQuestion(): React.JSX.Element {

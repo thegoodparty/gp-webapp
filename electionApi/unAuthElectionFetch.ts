@@ -3,7 +3,7 @@ import { ELECTION_API_ROOT } from 'appEnv'
 export function unAuthElectionFetch<T>(
   path: string,
   data?: object,
-  revalidate?: number
+  revalidate?: number,
 ): Promise<T>
 export async function unAuthElectionFetch<T>(
   path: string,

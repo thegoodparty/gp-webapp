@@ -86,8 +86,7 @@ const QuestionsPage = (props: QuestionsPageProps): React.JSX.Element => {
   const combinedIssuedCount =
     (Array.isArray(answers.candidatePositions)
       ? answers.candidatePositions.length
-      : 0) +
-    (campaign?.details?.customIssues?.length || 0)
+      : 0) + (campaign?.details?.customIssues?.length || 0)
 
   for (let i = 0; i < flow.length; i++) {
     nextStep = i

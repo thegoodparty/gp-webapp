@@ -22,7 +22,9 @@ interface DefaultColumnFilterProps<T> {
   column: Column<T, string>
 }
 
-const DefaultColumnFilter = <T,>({ column }: DefaultColumnFilterProps<T>): React.JSX.Element => {
+const DefaultColumnFilter = <T,>({
+  column,
+}: DefaultColumnFilterProps<T>): React.JSX.Element => {
   const count = column.getFacetedRowModel?.()?.rows?.length ?? 0
   return (
     <input
@@ -33,7 +35,11 @@ const DefaultColumnFilter = <T,>({ column }: DefaultColumnFilterProps<T>): React
   )
 }
 
-const fuzzyTextFilterFn = <T,>(row: Row<T>, columnId: string, filterValue: string): boolean => {
+const fuzzyTextFilterFn = <T,>(
+  row: Row<T>,
+  columnId: string,
+  filterValue: string,
+): boolean => {
   return (
     matchSorter([row], filterValue, { keys: [(row) => row.getValue(columnId)] })
       .length > 0
@@ -120,7 +126,9 @@ const Table = <T,>({
 
   const initialState = useMemo(
     () => ({
-      sorting: (initialSortById ? [{ id: initialSortById, desc: true }] : []) as SortingState,
+      sorting: (initialSortById
+        ? [{ id: initialSortById, desc: true }]
+        : []) as SortingState,
       filters: defaultFilters,
     }),
     [initialSortById, defaultFilters],
@@ -134,9 +142,10 @@ const Table = <T,>({
       pagination: { pageIndex, pageSize },
     },
     onPaginationChange: (updater) => {
-      const newPagination = typeof updater === 'function'
-        ? updater({ pageIndex, pageSize })
-        : updater
+      const newPagination =
+        typeof updater === 'function'
+          ? updater({ pageIndex, pageSize })
+          : updater
       setPageIndex(newPagination.pageIndex)
       setPageSize(newPagination.pageSize)
     },
@@ -158,7 +167,9 @@ const Table = <T,>({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(
                 (header) =>
-                  Boolean(!(header.column.columnDef as { hide?: boolean }).hide) && (
+                  Boolean(
+                    !(header.column.columnDef as { hide?: boolean }).hide,
+                  ) && (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
@@ -184,7 +195,11 @@ const Table = <T,>({
                       </div>
                       {header.column.getCanFilter() && filterColumns
                         ? flexRender(
-                            (header.column.columnDef as { Filter?: React.ComponentType }).Filter,
+                            (
+                              header.column.columnDef as {
+                                Filter?: React.ComponentType
+                              }
+                            ).Filter,
                             header.getContext(),
                           )
                         : null}
@@ -201,7 +216,9 @@ const Table = <T,>({
                 .getVisibleCells()
                 .map(
                   (cell) =>
-                    Boolean(!(cell.column.columnDef as { hide?: boolean }).hide) && (
+                    Boolean(
+                      !(cell.column.columnDef as { hide?: boolean }).hide,
+                    ) && (
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,

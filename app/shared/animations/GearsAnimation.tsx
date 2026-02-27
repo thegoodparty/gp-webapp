@@ -8,7 +8,9 @@ interface GearsAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function GearsAnimation(props: GearsAnimationProps): React.JSX.Element {
+export default function GearsAnimation(
+  props: GearsAnimationProps,
+): React.JSX.Element {
   return (
     <LottieAnimation
       style={{

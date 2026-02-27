@@ -5,7 +5,10 @@ interface GradientOverlayProps {
   className?: string
 }
 
-export const GradientOverlay = ({ children, className = '' }: GradientOverlayProps): React.JSX.Element => (
+export const GradientOverlay = ({
+  children,
+  className = '',
+}: GradientOverlayProps): React.JSX.Element => (
   <div className={`relative ${className} h-auto`}>
     <div className="relative overflow-auto">
       {children}

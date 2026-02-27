@@ -5,8 +5,17 @@ import RacesSection from 'app/(landing)/elections/shared/RacesSection'
 import LearnToRun from 'app/(landing)/elections/shared/LearnToRun'
 import Guides from 'app/(landing)/elections/shared/Guides'
 import Hero from '../../../../shared/Hero'
-import { Article, City, Municipality, Parent, Race } from 'app/(landing)/elections/shared/types'
-import { PlaceResult, PlaceParent } from 'app/(landing)/elections/shared/fetchPlace'
+import {
+  Article,
+  City,
+  Municipality,
+  Parent,
+  Race,
+} from 'app/(landing)/elections/shared/types'
+import {
+  PlaceResult,
+  PlaceParent,
+} from 'app/(landing)/elections/shared/fetchPlace'
 
 interface ElectionsCityPageProps {
   state: string
@@ -17,7 +26,9 @@ interface ElectionsCityPageProps {
   parent?: Parent | PlaceParent
 }
 
-const ElectionsCountyPage = (props: ElectionsCityPageProps): React.JSX.Element => {
+const ElectionsCountyPage = (
+  props: ElectionsCityPageProps,
+): React.JSX.Element => {
   const { state, municipality, races, articles, county, parent } = props
   const upperState = state.toUpperCase()
   const stateName = isStateAbbreviation(upperState)

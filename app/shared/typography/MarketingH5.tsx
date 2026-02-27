@@ -10,4 +10,3 @@ const MarketingH5 = ({ children, className = '' }: MarketingH5Props) => (
 )
 
 export default MarketingH5
-

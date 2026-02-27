@@ -5,7 +5,9 @@ import type { EditIssuePosition } from './IssuesList'
 
 interface AddIssuesProps {
   completeCallback?: (value: string) => void
-  updatePositionsCallback?: (value: CandidatePosition[] | false) => Promise<void>
+  updatePositionsCallback?: (
+    value: CandidatePosition[] | false,
+  ) => Promise<void>
   campaign: Campaign
   editIssuePosition?: EditIssuePosition | false
   topIssues?: TopIssue[]

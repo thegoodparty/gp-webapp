@@ -3,7 +3,6 @@
 import { useUser } from '@shared/hooks/useUser'
 import { CompleteProSignUpAlert } from './CompleteProSignUpAlert'
 import { PendingProSubscriptionAlert } from './PendingProSignUpAlert'
-import { DemoAccountWarningAlert } from '../shared/DemoAccountWarningAlert'
 import { Campaign } from 'helpers/types'
 
 interface AlertSectionProps {
@@ -15,7 +14,7 @@ export default function AlertSection(
 ): React.JSX.Element {
   const [user] = useUser()
   const { metaData: userMetaData } = user || {}
-  const { checkoutSessionId, customerId, demoPersona } = userMetaData || {}
+  const { checkoutSessionId, customerId } = userMetaData || {}
 
   const { campaign } = props
   const { isPro, details } = campaign
@@ -29,13 +28,12 @@ export default function AlertSection(
 
   return (
     <div>
-      {!isPro && !demoPersona && (
+      {!isPro && (
         <>
           {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}
           {showSubscriptionPendingAlert && <PendingProSubscriptionAlert />}
         </>
       )}
-      {demoPersona && <DemoAccountWarningAlert />}
     </div>
   )
 }

@@ -46,9 +46,9 @@ export default function Funding(): React.JSX.Element {
           <p className="text-xl mb-8 text-gray-600 mb-8 lg:text-2xl  font-medium">
             GoodParty.org is a Public Benefit Company receiving its seed funding
             from our founder, Farhad Mohit, a serial entrepreneur and full-time
-            volunteer for the movement. We&apos;re neither affiliated with nor funded
-            by any outside political party, special interest group, Super PAC,
-            non-profit, NGO, or advocacy group.
+            volunteer for the movement. We&apos;re neither affiliated with nor
+            funded by any outside political party, special interest group, Super
+            PAC, non-profit, NGO, or advocacy group.
           </p>
           <Link href="/about">
             <SecondaryButton

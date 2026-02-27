@@ -13,9 +13,7 @@ import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
 import { Campaign } from 'helpers/types'
 
-type ContentCategoryList = Awaited<
-  ReturnType<typeof fetchAiContentCategories>
->
+type ContentCategoryList = Awaited<ReturnType<typeof fetchAiContentCategories>>
 
 type AddScriptStepProps = {
   type?: string
@@ -108,8 +106,7 @@ const AddScriptStep = ({
         {...{
           campaign,
           aiTemplateKey,
-          onBack: () =>
-            onBack(ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE),
+          onBack: () => onBack(ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE),
           onNext: (aiScriptKey) => {
             setAiScriptKey(aiScriptKey)
             onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)
@@ -132,9 +129,7 @@ const AddScriptStep = ({
     ),
   }
 
-  return (
-    <div className="p-4 w-[80vw] max-w-xl">{Screens[currentScreen!]}</div>
-  )
+  return <div className="p-4 w-[80vw] max-w-xl">{Screens[currentScreen!]}</div>
 }
 
 export default AddScriptStep

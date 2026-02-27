@@ -9,7 +9,10 @@ interface BackToAllFilesProps {
   fileName: string
 }
 
-export default function BackToAllFiles({ type, fileName }: BackToAllFilesProps): React.JSX.Element {
+export default function BackToAllFiles({
+  type,
+  fileName,
+}: BackToAllFilesProps): React.JSX.Element {
   return (
     <>
       <Button

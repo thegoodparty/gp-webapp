@@ -31,6 +31,8 @@ import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
+import { isValidOutreachType } from 'app/(candidate)/dashboard/outreach/util/getEffectiveOutreachType'
+import type { OutreachType } from 'gpApi/outreach.api'
 
 interface TasksListProps {
   campaign: Campaign
@@ -49,12 +51,17 @@ const TasksList = ({
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
-  const [p2pTrackingAttrs, setP2PTrackingAttrs] =
-    useState<ReturnType<typeof buildTrackingAttrs>>({})
+  const [p2pTrackingAttrs, setP2PTrackingAttrs] = useState<
+    ReturnType<typeof buildTrackingAttrs>
+  >({})
   const [deadlineModalTask, setDeadlineModalTask] = useState<Task | null>(null)
-  const [flowModalTask, setFlowModalTask] = useState<Task | null>(null)
-  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] =
-    useState<ReturnType<typeof buildTrackingAttrs>>({})
+  const [flowModalTask, setFlowModalTask] = useState<{
+    task: Task
+    resolvedType: OutreachType
+  } | null>(null)
+  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState<
+    ReturnType<typeof buildTrackingAttrs>
+  >({})
   const { errorSnackbar } = useSnackbar()
 
   const { details, pathToVictory, hasFreeTextsOffer } = campaign
@@ -88,13 +95,17 @@ const TasksList = ({
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    if (flowType === TASK_TYPES.text) {
+    // Normalize p2pDisabledText to text before validation/rendering
+    const resolvedFlowType =
+      flowType === TASK_TYPES.p2pDisabledText ? TASK_TYPES.text : flowType
+
+    if (resolvedFlowType === TASK_TYPES.text) {
       if (!isPro) {
         setShowP2PModal(true)
         setP2PTrackingAttrs(
           buildTrackingAttrs('Upgrade to Pro', {
             viabilityScore,
-            type: flowType,
+            type: resolvedFlowType,
           }),
         )
         return
@@ -111,7 +122,7 @@ const TasksList = ({
       setProUpgradeTrackingAttrs(
         buildTrackingAttrs('Upgrade to Pro', {
           viabilityScore,
-          type: flowType,
+          type: resolvedFlowType,
         }),
       )
       return
@@ -122,10 +133,10 @@ const TasksList = ({
       return
     }
 
-    if (Object.values(TASK_TYPES).includes(flowType)) {
-      setFlowModalTask(task)
+    if (isValidOutreachType(resolvedFlowType)) {
+      setFlowModalTask({ task, resolvedType: resolvedFlowType })
     } else {
-      console.error('Unknown flow type:', flowType)
+      console.error('Unknown or unsupported outreach type:', resolvedFlowType)
       setFlowModalTask(null)
     }
   }
@@ -183,12 +194,12 @@ const TasksList = ({
       {completeModalTask &&
         ((value: Task['flowType']): value is LogTaskFlowType =>
           value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
-        <LogTaskModal
-          onSubmit={handleCompleteSubmit}
-          onClose={handleCompleteCancel}
-          flowType={completeModalTask.flowType}
-        />
-      )}
+          <LogTaskModal
+            onSubmit={handleCompleteSubmit}
+            onClose={handleCompleteCancel}
+            flowType={completeModalTask.flowType}
+          />
+        )}
       {deadlineModalTask && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
@@ -210,7 +221,8 @@ const TasksList = ({
         open={showP2PModal}
         variant={(() => {
           if (!isPro) return P2P_MODAL_VARIANTS.NonProUpgrade
-          const isTextCompliant = tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+          const isTextCompliant =
+            tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
           if (p2pUxEnabled && hasFreeTextsOffer && !isTextCompliant) {
             return P2P_MODAL_VARIANTS.ProFreeTextsNonCompliant
           }
@@ -230,10 +242,10 @@ const TasksList = ({
       {flowModalTask && (
         <TaskFlow
           forceOpen
-          type={flowModalTask.flowType}
+          type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
-          defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
+          defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
     </>

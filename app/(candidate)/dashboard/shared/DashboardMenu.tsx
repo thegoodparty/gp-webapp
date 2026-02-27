@@ -9,7 +9,6 @@ import {
   MdFactCheck,
   MdFileOpen,
   MdFolderShared,
-  MdLibraryBooks,
   MdMessage,
   MdPeople,
   MdPoll,
@@ -101,13 +100,6 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   },
 
   {
-    label: 'Resources',
-    icon: <MdLibraryBooks />,
-    link: '/dashboard/resources',
-    id: 'resources-library',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickResources),
-  },
-  {
     label: 'Community',
     icon: (
       <Image
@@ -166,7 +158,7 @@ const getDashboardMenuItems = (
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
   const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
-  if (serveAccessEnabled) {
+  if (serveAccessEnabled && electedOffice) {
     menuItems[voterDataIndex] = CONTACTS_MENU_ITEM
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM

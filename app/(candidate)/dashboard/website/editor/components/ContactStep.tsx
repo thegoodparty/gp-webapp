@@ -65,7 +65,9 @@ export default function ContactStep({
         fullWidth
         required
         value={committee}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onCommitteeChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onCommitteeChange(e.target.value)
+        }
         slotProps={{ inputLabel: { shrink: true } }}
       />
     </div>

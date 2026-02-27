@@ -22,7 +22,9 @@ export default function IssuesForm({
   initialIssues, // top issues and custom issues from the campaign
 }: IssuesFormProps) {
   const [editingIssue, setEditingIssue] = useState<WebsiteIssue | null>(null)
-  const [editingIssueIndex, setEditingIssueIndex] = useState<number | null>(null)
+  const [editingIssueIndex, setEditingIssueIndex] = useState<number | null>(
+    null,
+  )
 
   const currentIssues =
     websiteIssues.length > 0 ? websiteIssues : initialIssues || []
@@ -113,7 +115,11 @@ export default function IssuesForm({
           required
           value={editingIssue?.title || ''}
           onChange={(e) =>
-            setEditingIssue((prev) => prev ? { ...prev, title: e.target.value } : { title: e.target.value, description: '' })
+            setEditingIssue((prev) =>
+              prev
+                ? { ...prev, title: e.target.value }
+                : { title: e.target.value, description: '' },
+            )
           }
           InputLabelProps={{ shrink: true }}
         />
@@ -125,7 +131,11 @@ export default function IssuesForm({
           rows={3}
           value={editingIssue?.description || ''}
           onChange={(e) =>
-            setEditingIssue((prev) => prev ? { ...prev, description: e.target.value } : { title: '', description: e.target.value })
+            setEditingIssue((prev) =>
+              prev
+                ? { ...prev, description: e.target.value }
+                : { title: '', description: e.target.value },
+            )
           }
           InputLabelProps={{ shrink: true }}
         />

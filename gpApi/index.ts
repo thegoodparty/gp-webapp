@@ -7,9 +7,6 @@ interface GpApiEndpoint {
 }
 
 interface GpApiRoutes {
-  campaign: {
-    deleteDemoCampaign: GpApiEndpoint
-  }
   admin: {
     deactivateCandidate: GpApiEndpoint
     candidates: GpApiEndpoint
@@ -21,14 +18,6 @@ interface GpApiRoutes {
 const base = `${OLD_API_ROOT}/api/v1/`
 
 const gpApi: GpApiRoutes = {
-  campaign: {
-    deleteDemoCampaign: {
-      url: `${base}campaign/demo`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-  },
-
   admin: {
     deactivateCandidate: {
       url: `${base}admin/deactivate-candidate-by-campaign`,

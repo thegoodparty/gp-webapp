@@ -10,4 +10,3 @@ const H5 = ({ children, className = '' }: H5Props) => (
 )
 
 export default H5
-

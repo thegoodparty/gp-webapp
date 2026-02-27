@@ -9,7 +9,9 @@ interface TrackCantDownloadProps {
   } | null
 }
 
-export default function TrackCantDownload({ campaign }: TrackCantDownloadProps): null {
+export default function TrackCantDownload({
+  campaign,
+}: TrackCantDownloadProps): null {
   useEffect(() => {
     trackEvent('Pro user can not download voter file page', {
       slug: campaign?.slug,

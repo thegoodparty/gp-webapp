@@ -34,4 +34,3 @@ const JsonLdSchema = (): React.JSX.Element => {
 }
 
 export default JsonLdSchema
-

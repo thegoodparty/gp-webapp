@@ -27,7 +27,10 @@ interface BannerProps {
   idIndex?: string
 }
 
-export default function Banner({ banner, idIndex = '1' }: BannerProps): React.JSX.Element {
+export default function Banner({
+  banner,
+  idIndex = '1',
+}: BannerProps): React.JSX.Element {
   const {
     title,
     description,

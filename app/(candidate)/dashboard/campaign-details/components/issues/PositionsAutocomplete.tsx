@@ -32,7 +32,10 @@ const comparePositions = (a: Position, b: Position) => {
   return a.topIssue?.name.localeCompare(b.topIssue?.name)
 }
 
-export default function PositionsAutocomplete({ positions, updateCallback }: PositionsAutocompleteProps): React.JSX.Element {
+export default function PositionsAutocomplete({
+  positions,
+  updateCallback,
+}: PositionsAutocompleteProps): React.JSX.Element {
   const sorted = positions.sort(comparePositions)
   const [inputValue, setInputValue] = useState('')
 

@@ -8,7 +8,10 @@ interface WebsiteCreatePageProps {
   initialIssues?: { title: string; description: string }[]
 }
 
-export default function WebsiteCreatePage({ pathname, initialIssues }: WebsiteCreatePageProps): React.JSX.Element {
+export default function WebsiteCreatePage({
+  pathname,
+  initialIssues,
+}: WebsiteCreatePageProps): React.JSX.Element {
   const [campaign] = useCampaign()
 
   return (

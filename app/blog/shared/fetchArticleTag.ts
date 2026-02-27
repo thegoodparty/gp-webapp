@@ -8,5 +8,3 @@ interface Tag {
 
 export const fetchArticleTag = async (tag: string): Promise<Tag> =>
   await unAuthFetch(`${apiRoutes.content.articleTags.path}`, { tag })
-
-

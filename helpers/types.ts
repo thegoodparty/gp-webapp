@@ -32,7 +32,6 @@ export interface UserMetaData {
   hubspotId?: string
   profile_updated_count?: number
   textNotifications?: boolean
-  demoPersona?: boolean
 }
 
 export interface User {
@@ -162,7 +161,12 @@ export interface CampaignDetails {
   filedStatement?: string
 }
 
-export type TcrComplianceStatus = 'submitted' | 'pending' | 'approved' | 'rejected' | 'error'
+export type TcrComplianceStatus =
+  | 'submitted'
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'error'
 
 export interface TcrCompliance {
   id: string
@@ -471,7 +475,13 @@ export interface CandidateStance {
 
 export interface VendorTsData {
   pathToVictory?: PathToVictoryData
-  [key: string]: PathToVictoryData | string | number | boolean | object | undefined
+  [key: string]:
+    | PathToVictoryData
+    | string
+    | number
+    | boolean
+    | object
+    | undefined
 }
 
 export interface WebsiteIssue {
@@ -616,7 +626,14 @@ export interface ContentSection {
 export interface PromptInputField {
   key: string
   label: string
-  type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'number'
+  type:
+    | 'text'
+    | 'textarea'
+    | 'select'
+    | 'radio'
+    | 'checkbox'
+    | 'date'
+    | 'number'
   placeholder?: string
   required?: boolean
   maxLength?: number
@@ -674,11 +691,57 @@ export interface Outreach {
 // ===== State Abbreviation Type =====
 
 export type StateAbbreviation =
-  | 'AL' | 'AK' | 'AZ' | 'AR' | 'CA' | 'CO' | 'CT' | 'DE' | 'DC' | 'FL'
-  | 'GA' | 'HI' | 'ID' | 'IL' | 'IN' | 'IA' | 'KS' | 'KY' | 'LA' | 'ME'
-  | 'MD' | 'MA' | 'MI' | 'MN' | 'MS' | 'MO' | 'MT' | 'NE' | 'NV' | 'NH'
-  | 'NJ' | 'NM' | 'NY' | 'NC' | 'ND' | 'OH' | 'OK' | 'OR' | 'PA' | 'RI'
-  | 'SC' | 'SD' | 'TN' | 'TX' | 'UT' | 'VT' | 'VA' | 'WA' | 'WV' | 'WI' | 'WY'
+  | 'AL'
+  | 'AK'
+  | 'AZ'
+  | 'AR'
+  | 'CA'
+  | 'CO'
+  | 'CT'
+  | 'DE'
+  | 'DC'
+  | 'FL'
+  | 'GA'
+  | 'HI'
+  | 'ID'
+  | 'IL'
+  | 'IN'
+  | 'IA'
+  | 'KS'
+  | 'KY'
+  | 'LA'
+  | 'ME'
+  | 'MD'
+  | 'MA'
+  | 'MI'
+  | 'MN'
+  | 'MS'
+  | 'MO'
+  | 'MT'
+  | 'NE'
+  | 'NV'
+  | 'NH'
+  | 'NJ'
+  | 'NM'
+  | 'NY'
+  | 'NC'
+  | 'ND'
+  | 'OH'
+  | 'OK'
+  | 'OR'
+  | 'PA'
+  | 'RI'
+  | 'SC'
+  | 'SD'
+  | 'TN'
+  | 'TX'
+  | 'UT'
+  | 'VT'
+  | 'VA'
+  | 'WA'
+  | 'WV'
+  | 'WI'
+  | 'WY'
 
 // ===== Rich Editor Types =====
 
@@ -702,11 +765,6 @@ export interface CopyToClipboardProps {
 // ===== Purchase Types =====
 
 export type PurchaseType = 'pro' | 'texting' | 'domain' | 'voterData'
-
-export interface PurchaseIntentProviderProps {
-  children: React.ReactNode
-  type: PurchaseType
-}
 
 export interface DomainRegistrationMetadata {
   domainName?: string

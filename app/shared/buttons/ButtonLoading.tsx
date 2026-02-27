@@ -14,7 +14,10 @@ interface ButtonLoadingProps {
   className?: string
 }
 
-const ButtonLoading = ({ size = 'medium', className = '' }: ButtonLoadingProps) => (
+const ButtonLoading = ({
+  size = 'medium',
+  className = '',
+}: ButtonLoadingProps) => (
   <CircularProgress
     size={SIZES[size] || SIZES.medium}
     className={`mr-2 ${className}`}
@@ -23,4 +26,3 @@ const ButtonLoading = ({ size = 'medium', className = '' }: ButtonLoadingProps) 
 )
 
 export default ButtonLoading
-

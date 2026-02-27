@@ -19,7 +19,10 @@ interface DistrictPickerProps {
   state: string
   electionYear: number
   buttonText?: string
-  onSubmit?: (type: DistrictType | null, name: DistrictName | null) => Promise<void>
+  onSubmit?: (
+    type: DistrictType | null,
+    name: DistrictName | null,
+  ) => Promise<void>
   className?: string
   initialType?: DistrictType | null
   initialName?: DistrictName | null
@@ -36,9 +39,9 @@ export default function DistrictPicker({
   initialName = null,
   excludeInvalidOverride = false,
 }: DistrictPickerProps): React.JSX.Element {
-  const [type, setType]   = useState<DistrictType | null>(initialType)
-  const [name, setName]   = useState<DistrictName | null>(initialName)
-  const [busy, setBusy]   = useState(false)
+  const [type, setType] = useState<DistrictType | null>(initialType)
+  const [name, setName] = useState<DistrictName | null>(initialName)
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     setType(initialType || null)

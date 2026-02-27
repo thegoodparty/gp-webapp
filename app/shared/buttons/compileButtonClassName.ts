@@ -16,4 +16,3 @@ export const compileButtonClassName = (
 
   return result
 }
-

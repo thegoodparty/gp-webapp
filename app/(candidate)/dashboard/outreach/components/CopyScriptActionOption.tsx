@@ -18,10 +18,15 @@ export const CopyScriptActionOption = ({
   const [campaign] = useCampaign()
 
   const scriptKey = outreach?.script
-  const aiContentEntry = scriptKey && campaign?.aiContent ? campaign.aiContent[scriptKey] : null
-  
+  const aiContentEntry =
+    scriptKey && campaign?.aiContent ? campaign.aiContent[scriptKey] : null
+
   let text = outreach?.script || ''
-  if (aiContentEntry && typeof aiContentEntry === 'object' && 'content' in aiContentEntry) {
+  if (
+    aiContentEntry &&
+    typeof aiContentEntry === 'object' &&
+    'content' in aiContentEntry
+  ) {
     const content = aiContentEntry.content
     if (typeof content === 'string') {
       text = stripHtml(content).result

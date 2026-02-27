@@ -31,7 +31,9 @@ interface FormState {
 
 type FormStateKey = keyof FormState
 
-const FORM_KEY_TO_HISTORY_TYPE: Partial<Record<FormStateKey, CampaignUpdateHistoryType>> = {
+const FORM_KEY_TO_HISTORY_TYPE: Partial<
+  Record<FormStateKey, CampaignUpdateHistoryType>
+> = {
   text: 'text',
   robocall: 'robocall',
   doorKnocking: 'doorKnocking',
@@ -40,11 +42,16 @@ const FORM_KEY_TO_HISTORY_TYPE: Partial<Record<FormStateKey, CampaignUpdateHisto
   events: 'events',
 }
 
-const getEditedFields = (
-  formState: FormState,
-): Partial<VoterContactsState> => {
+const getEditedFields = (formState: FormState): Partial<VoterContactsState> => {
   const result: Partial<VoterContactsState> = {}
-  const keys: FormStateKey[] = ['text', 'robocall', 'doorKnocking', 'phoneBanking', 'socialMedia', 'events']
+  const keys: FormStateKey[] = [
+    'text',
+    'robocall',
+    'doorKnocking',
+    'phoneBanking',
+    'socialMedia',
+    'events',
+  ]
   for (const key of keys) {
     if (formState[key]) {
       result[key] = parseInt(formState[key], 10)
@@ -125,24 +132,36 @@ export const RecordVoterContactsModal = ({
     const updatedFields = getEditedFields(formState)
     const historyItemPromises: Promise<CampaignUpdateHistoryWithUser>[] = []
 
-    const keys: FormStateKey[] = ['text', 'robocall', 'doorKnocking', 'phoneBanking', 'socialMedia', 'events']
+    const keys: FormStateKey[] = [
+      'text',
+      'robocall',
+      'doorKnocking',
+      'phoneBanking',
+      'socialMedia',
+      'events',
+    ]
     for (const key of keys) {
       const value = updatedFields[key]
       const historyType = FORM_KEY_TO_HISTORY_TYPE[key]
       if (value !== undefined && value > 0 && historyType) {
         historyItemPromises.push(
-          createUpdateHistory({ type: historyType, quantity: value }).then((item) => {
-            if (!user) {
-              throw new Error('User is required')
-            }
-            return createIrresponsiblyMassagedHistoryItem(item, user)
-          }),
+          createUpdateHistory({ type: historyType, quantity: value }).then(
+            (item) => {
+              if (!user) {
+                throw new Error('User is required')
+              }
+              return createIrresponsiblyMassagedHistoryItem(item, user)
+            },
+          ),
         )
       }
     }
 
     const newHistoryItems = await Promise.all(historyItemPromises)
-    const newContactTotals = calculateIncrementedFields(recordedVoterGoals, updatedFields)
+    const newContactTotals = calculateIncrementedFields(
+      recordedVoterGoals,
+      updatedFields,
+    )
 
     for (const key of keys) {
       const recipientCount = updatedFields[key]

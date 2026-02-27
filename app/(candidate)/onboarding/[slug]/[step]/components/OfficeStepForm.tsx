@@ -32,7 +32,7 @@ const fields: OfficeStepField[] = [
     type: 'number',
     required: true,
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -41,7 +41,7 @@ const fields: OfficeStepField[] = [
     type: 'select',
     options: ['Local/Township/City', 'County/Regional', 'State', 'Federal'],
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
   {
@@ -49,12 +49,17 @@ const fields: OfficeStepField[] = [
     label: 'Office Name',
     type: 'text',
     dataAttributes: {
-      'data-amplitude-unmask': 'true'
+      'data-amplitude-unmask': 'true',
     },
   },
 ]
 
-export default function OfficeStepForm({ onChange, level, zip, adminMode }: OfficeStepFormProps): React.JSX.Element {
+export default function OfficeStepForm({
+  onChange,
+  level,
+  zip,
+  adminMode,
+}: OfficeStepFormProps): React.JSX.Element {
   const [state, setState] = useState<OfficeStepFormState>({
     zip: zip || '',
     level: level || '',

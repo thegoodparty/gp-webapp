@@ -10,7 +10,12 @@ import RenderInputField from '@shared/inputs/RenderInputField'
 import { getUserCookie } from 'helpers/cookieHelper'
 import { useEffect, useState } from 'react'
 
-type FormFieldKey = 'firstName' | 'lastName' | 'phone' | 'email' | 'sms_opt_in_out'
+type FormFieldKey =
+  | 'firstName'
+  | 'lastName'
+  | 'phone'
+  | 'email'
+  | 'sms_opt_in_out'
 
 interface FormField {
   key: FormFieldKey
@@ -61,7 +66,9 @@ const fields: FormField[] = [
   },
 ]
 export default function HeroForm(): React.JSX.Element {
-  const [submitSuccess, setSubmitSuccess] = useState<'success' | 'error' | false>(false)
+  const [submitSuccess, setSubmitSuccess] = useState<
+    'success' | 'error' | false
+  >(false)
   const [state, setState] = useState<FormState>({
     firstName: '',
     lastName: '',
@@ -81,7 +88,13 @@ export default function HeroForm(): React.JSX.Element {
   }, [])
 
   const isFormFieldKey = (key: string): key is FormFieldKey => {
-    return ['firstName', 'lastName', 'phone', 'email', 'sms_opt_in_out'].includes(key)
+    return [
+      'firstName',
+      'lastName',
+      'phone',
+      'email',
+      'sms_opt_in_out',
+    ].includes(key)
   }
 
   const onChangeField = (key: string, value: string | boolean): void => {

@@ -15,5 +15,3 @@ export interface BlogSection {
 export const fetchSections = async (): Promise<BlogSection[]> => {
   return await unAuthFetch(apiRoutes.content.blogArticle.getSections.path)
 }
-
-

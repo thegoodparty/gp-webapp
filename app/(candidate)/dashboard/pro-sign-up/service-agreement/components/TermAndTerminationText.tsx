@@ -34,8 +34,8 @@ export const TermAndTerminationText = (): React.JSX.Element => (
               Good Party may terminate the applicable Services Agreement either
               (i) upon 7 day prior written notice, with or without cause; or
               (ii) immediately in the case of material breach by Customer,
-              including Customer&apos;s failure to timely pay Fees when due. For the
-              avoidance of doubt, Good Party expressly reserves the right to
+              including Customer&apos;s failure to timely pay Fees when due. For
+              the avoidance of doubt, Good Party expressly reserves the right to
               terminate the applicable Services Agreement in the event that
               Customer utilizes the services for purposes that Good Party, in
               its sole discretion, deems objectionable.

@@ -14,7 +14,9 @@ const apiRewriteUrl = (ReqNextUrl: URL): string => {
   return newUrl.toString()
 }
 
-export const handleApiRequestRewrite = async (req: NextRequest): Promise<NextResponse> => {
+export const handleApiRequestRewrite = async (
+  req: NextRequest,
+): Promise<NextResponse> => {
   const impersonateToken = req.cookies.get('impersonateToken')?.value
   const token = req.cookies.get('token')?.value
 
@@ -26,4 +28,3 @@ export const handleApiRequestRewrite = async (req: NextRequest): Promise<NextRes
     request: req,
   })
 }
-

@@ -42,8 +42,14 @@ export const TeamMemberCards = ({
               fullName,
               role,
               partyRole,
-              goodPhoto: { url: goodPhotoUrl, alt: goodAlt } = { url: '', alt: '' },
-              partyPhoto: { url: partyPhotoUrl, alt: partyAlt } = { url: '', alt: '' },
+              goodPhoto: { url: goodPhotoUrl, alt: goodAlt } = {
+                url: '',
+                alt: '',
+              },
+              partyPhoto: { url: partyPhotoUrl, alt: partyAlt } = {
+                url: '',
+                alt: '',
+              },
             },
             index,
           ) => (

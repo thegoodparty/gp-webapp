@@ -14,8 +14,15 @@ interface RadioListProps {
   selectCallback: (key: string) => void
 }
 
-const RadioList = ({ options, selected, selectCallback }: RadioListProps): React.JSX.Element => {
-  const handleKeyPress = (e: React.KeyboardEvent, option: RadioOption): void => {
+const RadioList = ({
+  options,
+  selected,
+  selectCallback,
+}: RadioListProps): React.JSX.Element => {
+  const handleKeyPress = (
+    e: React.KeyboardEvent,
+    option: RadioOption,
+  ): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       selectCallback(option.key)
     }
@@ -57,4 +64,3 @@ const RadioList = ({ options, selected, selectCallback }: RadioListProps): React
 }
 
 export default RadioList
-

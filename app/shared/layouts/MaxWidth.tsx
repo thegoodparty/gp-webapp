@@ -22,4 +22,3 @@ const MaxWidth = ({
 }
 
 export default MaxWidth
-

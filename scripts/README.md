@@ -13,6 +13,7 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 **Purpose**: Main sitemap generation script that creates all XML sitemap files at build time.
 
 **What it does**:
+
 - Generates main sitemap with static pages, blog articles, FAQs, and glossary terms
 - Creates state-specific sitemaps with places and races data (51 states)
 - Creates candidate sitemaps with candidate profile data (where available)
@@ -22,6 +23,7 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 - Creates timestamped generation reports
 
 **Usage**:
+
 ```bash
 # Generate all sitemaps (production URLs by default)
 npx tsx scripts/generate-sitemaps.ts
@@ -40,8 +42,9 @@ npx tsx scripts/generate-sitemaps.ts --main-only --validate
 ```
 
 **Output**:
+
 - `public/sitemap.xml` - Main sitemap index (root entry point)
-- `public/sitemaps/sitemap.xml` - Main sitemap with core pages  
+- `public/sitemaps/sitemap.xml` - Main sitemap with core pages
 - `public/sitemaps/state/{state}/sitemap/{index}.xml` - State-specific sitemaps
 - `public/sitemaps/candidates/{state}/sitemap/{index}.xml` - Candidate sitemaps
 - `public/sitemaps/generation-report-{timestamp}.json` - Generation report
@@ -54,6 +57,7 @@ npx tsx scripts/generate-sitemaps.ts --main-only --validate
 **Purpose**: Enhanced URL validation that follows redirects and provides multiple strategies for handling them in sitemaps according to SEO best practices.
 
 **What it does**:
+
 - Makes HEAD requests to validate each URL (with GET fallback for 405/501 responses)
 - Follows redirect chains up to a configurable depth (default: 5)
 - Validates the final destination URL after following redirects
@@ -65,6 +69,7 @@ npx tsx scripts/generate-sitemaps.ts --main-only --validate
 - Provides progress reporting during validation
 
 **Features**:
+
 - **Concurrency Control**: Limits parallel requests (default: 20)
 - **Intelligent Requests**: Uses HEAD first, falls back to GET when needed
 - **Redirect Following**: Validates the entire redirect chain
@@ -86,22 +91,24 @@ npx tsx scripts/generate-sitemaps.ts --main-only --validate
 
 The validation supports three different approaches for managing redirects in sitemaps:
 
-
-
 1. **`remove` (Recommended for SEO)**:
+
    ```bash
    # Remove all redirects from sitemap
    npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
    ```
+
    - Removes all URLs that redirect (even successful ones)
    - Cleanest sitemap with only direct 200 OK responses
    - Best for SEO as search engines prefer canonical URLs
 
 2. **`replace` (Alternative SEO approach)**:
+
    ```bash
    # Replace redirects with their final destinations
    npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling replace
    ```
+
    - Replaces redirect URLs with their final destinations
    - Includes deduplication to prevent multiple URLs pointing to same page
    - Good for preserving URL coverage while maintaining SEO quality
@@ -116,6 +123,7 @@ The validation supports three different approaches for managing redirects in sit
    - Maintains backward compatibility
 
 **Usage Examples**:
+
 ```bash
 # Recommended: Remove all redirects (cleanest for SEO)
 npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
@@ -134,12 +142,13 @@ npx tsx scripts/generate-sitemaps.ts --validate --no-follow-redirects
 ```
 
 **Example Redirect Validation Results**:
+
 ```
 # With redirect-handling=remove
 /old-page → 301 → /new-page → 200
 Result: URL removed from sitemap (redirect)
 
-# With redirect-handling=replace  
+# With redirect-handling=replace
 /old-page → 301 → /new-page → 200
 Result: URL replaced with /new-page in sitemap
 
@@ -158,6 +167,7 @@ Result: URL removed from sitemap (circular redirect)
 
 **Enhanced Report Output**:
 The validation report now includes:
+
 - `redirectStats`: Detailed statistics about redirect patterns
   - `successfulRedirects`: Redirects that lead to 200 OK
   - `brokenRedirects`: Redirects that lead to 404s or errors
@@ -170,19 +180,21 @@ The validation report now includes:
 
 **Deduplication Logic**:
 When using `replace` mode, the system automatically handles deduplication:
+
 ```
 /old-url-1 → 301 → /final-page → 200
 /old-url-2 → 301 → /final-page → 200
 /old-url-3 → 301 → /final-page → 200
 
 Result: Only one /final-page entry in sitemap
-Actions: 
+Actions:
 - /old-url-1 → replaced with /final-page
 - /old-url-2 → removed (duplicate)
 - /old-url-3 → removed (duplicate)
 ```
 
 **Performance Impact**:
+
 - `remove` mode: Fastest (no deduplication needed)
 - `replace` mode: Moderate (includes deduplication processing)
 - `keep` mode: Fastest (legacy behavior)
@@ -197,6 +209,7 @@ Use `remove` mode for optimal SEO performance. This ensures your sitemap only co
 **Purpose**: Removes invalid URLs from existing sitemaps using validation reports (much faster than re-validation).
 
 **What it does**:
+
 - Reads existing validation reports to identify invalid URLs
 - Parses XML sitemap files to extract current URLs
 - Filters out invalid URLs (404s, timeouts, network errors)
@@ -205,6 +218,7 @@ Use `remove` mode for optimal SEO performance. This ensures your sitemap only co
 - Creates detailed pruning reports
 
 **Usage**:
+
 ```bash
 # Preview what would be removed (safe dry-run)
 npx tsx scripts/prune-invalid-urls.ts --dry-run
@@ -220,12 +234,14 @@ npx tsx scripts/prune-invalid-urls.ts --report path/to/report.json --dry-run
 ```
 
 **Key Benefits**:
+
 - **Lightning Fast**: ~0.6 seconds vs ~7 minutes for full validation
 - **Reuse Work**: Leverages existing validation reports
 - **Safe**: Dry-run mode to preview changes
 - **Quality**: Dramatically improves sitemap quality (removes 404s)
 
 **Output**:
+
 - Updates existing sitemap XML files (removes invalid URLs)
 - Regenerates main sitemap index (`public/sitemap.xml`)
 - Creates `public/sitemaps/pruning-report-{timestamp}.json`
@@ -237,12 +253,14 @@ npx tsx scripts/prune-invalid-urls.ts --report path/to/report.json --dry-run
 **Purpose**: Converts validation report JSON to CSV format for easier analysis of invalid URLs and redirects.
 
 **What it does**:
+
 - Reads validation report JSON files
 - Extracts both invalid URLs (404s, timeouts, etc.) and redirect URLs
 - Exports data to CSV format for spreadsheet analysis
 - Provides detailed information about URL status, response times, and redirect chains
 
 **Usage**:
+
 ```bash
 # Generate CSV from validation report
 npx tsx scripts/generate-invalid-urls-csv.ts public/sitemaps/validation-report-2025-07-08T00-47-10.json
@@ -252,6 +270,7 @@ npx tsx scripts/generate-invalid-urls-csv.ts validation-report.json custom-outpu
 ```
 
 **CSV Output Format**:
+
 ```csv
 URL,Status,Duration,Final URL,Final Status,Redirect Type
 https://example.com/404,404,100,,,
@@ -259,6 +278,7 @@ https://example.com/redirect,308,200,https://example.com/,200,successful
 ```
 
 **Key Benefits**:
+
 - **Spreadsheet Analysis**: Easy to filter, sort, and analyze in Excel/Google Sheets
 - **Team Collaboration**: Share CSV files with non-technical team members
 - **Pattern Recognition**: Identify common redirect patterns and broken URL types
@@ -266,6 +286,7 @@ https://example.com/redirect,308,200,https://example.com/,200,successful
 - **Reporting**: Generate reports for stakeholders on sitemap quality
 
 **Use Cases**:
+
 - Analyze redirect patterns to improve SEO strategy
 - Identify broken URL patterns for content team fixes
 - Generate reports for stakeholders on sitemap health
@@ -279,11 +300,13 @@ This CSV format allows your team to easily analyze both invalid URLs and redirec
 ## Library Files (`lib/`)
 
 ### `xml.ts`
+
 - **`convertToXML(urls)`**: Converts URL objects to XML sitemap format
 - **`generateRootIndex(sitemaps)`**: Creates sitemap index XML
 - **Character escaping**: Handles XML special characters (&, <, >, ", ')
 
 ### `sitemap-helpers.ts`
+
 - **`writeSplitSitemaps()`**: Handles large sitemaps that exceed size/URL limits
 - **`needsSplitting()`**: Checks if sitemap should be split
 - **`ensureDirectoryExists()`**: Creates directories as needed
@@ -310,6 +333,7 @@ rm -rf public/sitemaps
 ## Recommended Workflow
 
 ### 🚀 **Initial Setup / Full Regeneration**
+
 ```bash
 # Clean any existing sitemaps
 rm -rf public/sitemaps
@@ -321,6 +345,7 @@ npx tsx scripts/generate-sitemaps.ts --validate --redirect-handling remove
 ```
 
 ### ⚡ **Regular Maintenance**
+
 ```bash
 # Quick regeneration (main sitemap only - great for testing content changes)
 npx tsx scripts/generate-sitemaps.ts --main-only
@@ -333,6 +358,7 @@ npx tsx scripts/prune-invalid-urls.ts
 ```
 
 ### 🔍 **Quality Assurance**
+
 ```bash
 # Preview what URLs would be removed
 npx tsx scripts/prune-invalid-urls.ts --dry-run
@@ -360,6 +386,7 @@ The scripts use the following environment variables (all default to production v
 All generated files are saved to `public/sitemaps/` and include timestamps to avoid conflicts:
 
 ### 📋 **Sitemap Files**
+
 - `sitemap.xml` - Root sitemap linking to main, state-specific, and candidate sitemaps
 - `sitemaps/sitemap.xml` - Main sitemap with core pages
 - `sitemaps/state/{state}/sitemap/{index}.xml` - State-specific sitemaps
@@ -368,6 +395,7 @@ All generated files are saved to `public/sitemaps/` and include timestamps to av
 **Note**: The main sitemap index is served from the root as `public/sitemap.xml`
 
 ### 📊 **Report Files**
+
 - `generation-report-{timestamp}.json` - Generation statistics and metadata
 - `validation-report-{timestamp}.json` - URL validation results (when validation run)
 - `pruning-report-{timestamp}.json` - URL pruning results (when pruning run)
@@ -375,11 +403,13 @@ All generated files are saved to `public/sitemaps/` and include timestamps to av
 ## Performance & Quality Metrics
 
 ### **Generation Performance**
+
 - **Time**: ~30-50 seconds for full generation
 - **Output**: 69+ sitemaps with 190,000+ URLs
 - **Size**: Individual sitemaps stay under 50MB limit
 
-### **Validation Performance**  
+### **Validation Performance**
+
 - **Full validation**: ~6 minutes for 195K URLs (skips main sitemap's static URLs)
 - **Main sitemap only**: Skipped automatically (static URLs don't need validation)
 - **Concurrency**: 20 parallel requests
@@ -388,7 +418,8 @@ All generated files are saved to `public/sitemaps/` and include timestamps to av
 - **Retry Success**: Automatically recovers from ~60% of transient network errors
 
 ### **Pruning Performance**
-- **Time**: ~0.6 seconds for 71 files  
+
+- **Time**: ~0.6 seconds for 71 files
 - **Efficiency**: 700x faster than re-validation
 - **Quality Gain**: Removes 15,000+ invalid URLs
 - **Success Rate**: Nearly 100% after pruning
@@ -406,7 +437,9 @@ The scripts include comprehensive error handling:
 ## Integration
 
 ### **Build Process**
+
 Add sitemap generation to your build process:
+
 ```bash
 # In your CI/CD pipeline (production URLs by default)
 npx tsx scripts/generate-sitemaps.ts
@@ -419,12 +452,15 @@ npx tsx scripts/generate-sitemaps.ts --main-only
 ```
 
 ### **Deployment**
+
 Static files in `public/sitemaps/` are automatically served by Next.js with proper caching headers.
 
 ### **Monitoring**
+
 Check generation and validation reports to monitor:
+
 - URL count trends
-- Invalid URL patterns  
+- Invalid URL patterns
 - Generation performance
 - API response times
 
@@ -433,22 +469,26 @@ Check generation and validation reports to monitor:
 ### **Common Issues**
 
 **Generation fails with API errors**:
+
 - Check environment variables
 - Verify API endpoints are accessible
 - Check network connectivity
 
 **Validation takes too long**:
+
 - Use `--main-only` flag for faster testing (6 seconds vs 7 minutes)
 - Use pruning instead of re-validation when possible
 - Adjust concurrency limit if overwhelming servers
 - Consider validating subsets of URLs
 
 **Network connection errors during validation**:
+
 - Automatic retry logic handles most transient errors (ECONNECT, ETIMEDOUT)
 - Check retry statistics in validation reports for success rates
 - Reduce concurrency if network is unstable
 
 **Out of memory errors**:
+
 - Large sitemaps are automatically split
 - Ensure sufficient system memory
 - Consider running in production environment
@@ -474,7 +514,7 @@ jq '.summary' public/sitemaps/validation-report-*.json
 The static system replaces the previous dynamic sitemap generation (`app/sitemaps/`). Key improvements:
 
 - **Performance**: No server-side generation overhead
-- **Caching**: Static files with optimal cache headers  
+- **Caching**: Static files with optimal cache headers
 - **Quality**: Enhanced URL validation with redirect following and automatic retry
 - **SEO Optimization**: Configurable redirect handling (remove/replace/keep strategies)
 - **Reliability**: Transient error recovery with retry logic

@@ -12,4 +12,3 @@ const H1 = ({ children, className = '' }: H1Props) => (
 )
 
 export default H1
-

@@ -5,8 +5,13 @@ interface RevalidateResponse {
   success: boolean
 }
 
-export const revalidatePage = async (path: string): Promise<RevalidateResponse> => {
-  const resp = await clientFetch<RevalidateResponse>(apiRoutes.admin.bustCache, { path })
+export const revalidatePage = async (
+  path: string,
+): Promise<RevalidateResponse> => {
+  const resp = await clientFetch<RevalidateResponse>(
+    apiRoutes.admin.bustCache,
+    { path },
+  )
   return resp.data
 }
 
@@ -16,4 +21,3 @@ export const revalidateCandidates = async (): Promise<void> => {
   // const editPath = '/candidate/[slug]/edit';
   // return await revalidatePage(editPath);
 }
-

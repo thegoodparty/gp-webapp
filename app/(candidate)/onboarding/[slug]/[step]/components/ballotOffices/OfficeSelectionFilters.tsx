@@ -13,7 +13,10 @@ interface OfficeSelectionFiltersProps {
   onChange: (filters: FilterValues) => void
 }
 
-export const OfficeSelectionFilters = ({ electionYears = [], onChange }: OfficeSelectionFiltersProps) => {
+export const OfficeSelectionFilters = ({
+  electionYears = [],
+  onChange,
+}: OfficeSelectionFiltersProps) => {
   const [inputValue, setInputValue] = useState('')
   const [level, setLevel] = useState('')
   const [yearFilter, setYearFilter] = useState<string | null>(null)

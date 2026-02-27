@@ -8,6 +8,8 @@ interface CheckmarkAnimationProps extends Omit<IPlayerProps, 'src'> {
   callback?: () => void
 }
 
-export default function CheckmarkAnimation(props: CheckmarkAnimationProps): React.JSX.Element {
+export default function CheckmarkAnimation(
+  props: CheckmarkAnimationProps,
+): React.JSX.Element {
   return <LottieAnimation animationData={checkmarkData} {...props} />
 }

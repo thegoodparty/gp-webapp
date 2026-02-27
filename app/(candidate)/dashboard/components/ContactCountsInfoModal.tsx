@@ -24,11 +24,7 @@ export const ContactCountsInfoModal = ({
   setOpen = () => {},
   pathToVictory = {},
 }: ContactCountsInfoModalProps): React.JSX.Element => {
-  const {
-    projectedTurnout,
-    voterContactGoal,
-    winNumber,
-  } = pathToVictory
+  const { projectedTurnout, voterContactGoal, winNumber } = pathToVictory
 
   return (
     <Modal
@@ -67,7 +63,8 @@ export const ContactCountsInfoModal = ({
               <span className="font-semibold">
                 {numberFormatter(projectedTurnout)}
               </span>{' '}
-              people to vote on trends from similar previous elections in this district.
+              people to vote on trends from similar previous elections in this
+              district.
             </li>
             <li>
               You need{' '}

@@ -31,7 +31,11 @@ const BASE_CLASSES =
 type ColorType = keyof typeof COLOR_CLASSES
 type SizeType = keyof typeof SIZE_CLASSES
 
-interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> {
+interface IconButtonProps
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    'children' | 'className'
+  > {
   size?: SizeType
   color?: ColorType
   children?: ReactNode
@@ -59,4 +63,3 @@ const IconButton = ({
 }
 
 export default IconButton
-

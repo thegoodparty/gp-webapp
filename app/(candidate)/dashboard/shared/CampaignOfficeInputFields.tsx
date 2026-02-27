@@ -16,7 +16,10 @@ interface CampaignOfficeInputFieldsProps {
   fieldWrapClassName?: string
 }
 
-const getFieldValue = (values: CampaignOfficeValues, key: string): string | Date | undefined => {
+const getFieldValue = (
+  values: CampaignOfficeValues,
+  key: string,
+): string | Date | undefined => {
   if (key === 'office') return values.office
   if (key === 'state') return values.state
   if (key === 'electionDate') return values.electionDate

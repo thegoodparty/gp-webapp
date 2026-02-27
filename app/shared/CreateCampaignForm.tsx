@@ -140,19 +140,33 @@ export const CreateCampaignForm = (): React.JSX.Element => {
   const disableCreate =
     Boolean(newCampaign) ||
     isLoading ||
-    (values.party === 'Other' && (!values.otherParty || values.otherParty === '')) ||
+    (values.party === 'Other' &&
+      (!values.otherParty || values.otherParty === '')) ||
     !fields.every((field) => values[field.key as keyof FormValues])
 
   const handleCreateCampaign = async () => {
     setIsLoading(true)
     const campaignResponse = await createCampaign(values)
-    if (campaignResponse && typeof campaignResponse === 'object' && 'ok' in campaignResponse && campaignResponse.ok) {
+    if (
+      campaignResponse &&
+      typeof campaignResponse === 'object' &&
+      'ok' in campaignResponse &&
+      campaignResponse.ok
+    ) {
       setNewCampaign(campaignResponse.data as CampaignResponse)
       successSnackbar('Created!')
     } else {
-      const errorData = campaignResponse && typeof campaignResponse === 'object' && 'data' in campaignResponse ? campaignResponse.data : null
+      const errorData =
+        campaignResponse &&
+        typeof campaignResponse === 'object' &&
+        'data' in campaignResponse
+          ? campaignResponse.data
+          : null
       console.error('Campaign creation error', errorData)
-      const errorMessage = errorData && typeof errorData === 'object' && 'message' in errorData ? errorData.message : 'Unknown error'
+      const errorMessage =
+        errorData && typeof errorData === 'object' && 'message' in errorData
+          ? errorData.message
+          : 'Unknown error'
       errorSnackbar(`Creation failed: ${errorMessage}`)
     }
     setIsLoading(false)
@@ -235,4 +249,3 @@ export const CreateCampaignForm = (): React.JSX.Element => {
     </PortalPanel>
   )
 }
-

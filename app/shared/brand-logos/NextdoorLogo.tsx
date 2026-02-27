@@ -4,7 +4,9 @@ interface NextdoorLogoProps {
   size?: number
 }
 
-export default function NextdoorLogo({ size = 18 }: NextdoorLogoProps): React.JSX.Element {
+export default function NextdoorLogo({
+  size = 18,
+}: NextdoorLogoProps): React.JSX.Element {
   return (
     <svg
       width={size}

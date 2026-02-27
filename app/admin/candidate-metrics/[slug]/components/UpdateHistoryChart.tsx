@@ -82,9 +82,7 @@ const transformedData = (input: CampaignUpdateHistory[]): ChartDataItem[] => {
 
   const allDates = getDatesBetween(minDate, maxDate)
 
-  const allUsers = [
-    ...new Set(input.map((item) => item.user.firstName || '')),
-  ]
+  const allUsers = [...new Set(input.map((item) => item.user.firstName || ''))]
 
   return allDates.map((date) => {
     const dateData: ChartDataItem = { name: date }

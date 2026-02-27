@@ -63,16 +63,20 @@ const InputFieldsModal = ({
       newInputValues[field.title] = inputState[field.title] || ''
     })
 
-    additionalPrompt += Object.prototype.hasOwnProperty.call(inputState, 'Additional instructions')
-      ? (inputState['Additional instructions'] || '')
-      : ''
-
-    newInputValues['Additional instructions'] = Object.prototype.hasOwnProperty.call(
+    additionalPrompt += Object.prototype.hasOwnProperty.call(
       inputState,
       'Additional instructions',
     )
-      ? (inputState['Additional instructions'] || '')
+      ? inputState['Additional instructions'] || ''
       : ''
+
+    newInputValues['Additional instructions'] =
+      Object.prototype.hasOwnProperty.call(
+        inputState,
+        'Additional instructions',
+      )
+        ? inputState['Additional instructions'] || ''
+        : ''
 
     onSelectCallback(additionalPrompt, newInputValues)
     closeModalCallback()
@@ -82,7 +86,11 @@ const InputFieldsModal = ({
   const canCreate = (): boolean => {
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i]
-      if (!field || !inputState[field.title] || inputState[field.title] === '') {
+      if (
+        !field ||
+        !inputState[field.title] ||
+        inputState[field.title] === ''
+      ) {
         return false
       }
     }

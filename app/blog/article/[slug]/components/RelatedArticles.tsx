@@ -24,7 +24,9 @@ interface RelatedArticlesProps {
   articles?: RelatedArticle[]
 }
 
-export default function RelatedArticles({ articles }: RelatedArticlesProps): React.JSX.Element | null {
+export default function RelatedArticles({
+  articles,
+}: RelatedArticlesProps): React.JSX.Element | null {
   const [currentPage, setCurrentPage] = useState(0)
 
   if (!articles || articles.length <= 0) return null

@@ -8,7 +8,7 @@ interface AcknowledgementTitleBarProps {
 
 const AcknowledgementTitleBar = (
   { emoticon, title }: AcknowledgementTitleBarProps,
-  ref: ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>,
 ): React.JSX.Element => (
   <div
     ref={ref}

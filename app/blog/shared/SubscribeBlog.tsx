@@ -6,7 +6,9 @@ interface SubscribeBlogProps {
   className?: string
 }
 
-export default function SubscribeBlog({ className }: SubscribeBlogProps): React.JSX.Element {
+export default function SubscribeBlog({
+  className,
+}: SubscribeBlogProps): React.JSX.Element {
   return (
     <div className={`bg-indigo-100 rounded-xl p-8 ${className}`}>
       <div className="max-w-md mx-auto text-center">

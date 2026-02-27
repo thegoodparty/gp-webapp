@@ -23,9 +23,9 @@ export default function RouteTracker(): null {
   useEffect(() => {
     const clids = getPersistedClids()
     const filteredClids = Object.fromEntries(
-      Object.entries(clids).filter(([, value]) => value !== null)
+      Object.entries(clids).filter(([, value]) => value !== null),
     ) as Record<string, string>
-    
+
     trackPage(undefined, {
       ...getPersistedUtms(),
       ...filteredClids,

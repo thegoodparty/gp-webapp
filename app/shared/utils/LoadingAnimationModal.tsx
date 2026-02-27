@@ -29,4 +29,3 @@ const LoadingAnimationModal = ({
 )
 
 export default LoadingAnimationModal
-

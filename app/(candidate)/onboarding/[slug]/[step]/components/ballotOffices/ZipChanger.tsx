@@ -13,7 +13,11 @@ interface ZipChangerProps {
   count: number
 }
 
-export default function ZipChanger({ zip, updateZipCallback, count }: ZipChangerProps) {
+export default function ZipChanger({
+  zip,
+  updateZipCallback,
+  count,
+}: ZipChangerProps) {
   const [editMode, setEditMode] = useState(false)
   const [updatedZip, setUpdatedZip] = useState(zip)
   const isValid = validateZip(updatedZip)

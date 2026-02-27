@@ -8,7 +8,7 @@ export interface SearchFilters {
 
 type SearchFiltersContextValue = [
   filters: SearchFilters,
-  setFilters: (filters: SearchFilters) => void
+  setFilters: (filters: SearchFilters) => void,
 ]
 
 export const SearchFiltersContext = createContext<SearchFiltersContextValue>([
@@ -21,7 +21,10 @@ interface SearchFiltersProviderProps {
   initFilters?: SearchFilters
 }
 
-export const SearchFiltersProvider = ({ children, initFilters = {} }: SearchFiltersProviderProps): React.JSX.Element => {
+export const SearchFiltersProvider = ({
+  children,
+  initFilters = {},
+}: SearchFiltersProviderProps): React.JSX.Element => {
   const [filters, setFilters] = useState<SearchFilters>(initFilters)
 
   const contextValue: SearchFiltersContextValue = [filters, setFilters]
@@ -32,4 +35,3 @@ export const SearchFiltersProvider = ({ children, initFilters = {} }: SearchFilt
     </SearchFiltersContext.Provider>
   )
 }
-

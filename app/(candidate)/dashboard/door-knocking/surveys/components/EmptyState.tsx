@@ -13,7 +13,10 @@ interface EmptyStateProps {
   createCallback: () => void
 }
 
-export default function EmptyState({ teams = [], createCallback }: EmptyStateProps): React.JSX.Element {
+export default function EmptyState({
+  teams = [],
+  createCallback,
+}: EmptyStateProps): React.JSX.Element {
   return (
     <div className=" flex flex-col items-center justify-center my-12">
       <div className="w-96 relative">

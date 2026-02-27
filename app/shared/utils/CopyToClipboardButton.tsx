@@ -52,20 +52,21 @@ const CopyToClipboardButton = ({
           items-center
           ${className}
         `.trim()}
-        {...{ children: (
-          <>
-            {copied ? (
-              <CheckRounded className="mr-2" />
-            ) : (
-              <ContentCopyRounded className="mr-2" />
-            )}
-            {children}
-          </>
-        ) }}
+        {...{
+          children: (
+            <>
+              {copied ? (
+                <CheckRounded className="mr-2" />
+              ) : (
+                <ContentCopyRounded className="mr-2" />
+              )}
+              {children}
+            </>
+          ),
+        }}
       />
     </CopyToClipboard>
   )
 }
 
 export default CopyToClipboardButton
-

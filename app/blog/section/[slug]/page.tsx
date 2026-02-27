@@ -15,7 +15,9 @@ interface PageParams {
   params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { slug } = await params
   const section = await fetchSection(slug)
   const sectionTitle = section?.fields?.title || ''
@@ -28,7 +30,9 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return meta
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element | null> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element | null> {
   const { slug } = await params
 
   if (!slug) {
@@ -43,7 +47,9 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 
   const articles = articlesBySection[slug] || []
   const hero = articles[0]
-  const currentSection = sections.find((section: BlogSection) => section.fields?.slug === slug)
+  const currentSection = sections.find(
+    (section: BlogSection) => section.fields?.slug === slug,
+  )
 
   const sectionTitle = currentSection?.fields?.title
   if (!currentSection || !sectionTitle) {
@@ -69,9 +75,11 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 export async function generateStaticParams(): Promise<{ slug?: string }[]> {
   const sections = await fetchSections()
 
-  return sections?.map((section: BlogSection) => {
-    return {
-      slug: section.fields?.slug,
-    }
-  }) || []
+  return (
+    sections?.map((section: BlogSection) => {
+      return {
+        slug: section.fields?.slug,
+      }
+    }) || []
+  )
 }

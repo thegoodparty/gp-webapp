@@ -30,7 +30,8 @@ function Hero(): React.JSX.Element {
         <br />
         <br />
         If creatively disrupting politics for good sounds like a challenge
-        you&apos;re up for, check out the roles we&apos;re looking to fill right now!
+        you&apos;re up for, check out the roles we&apos;re looking to fill right
+        now!
       </div>
     </section>
   )

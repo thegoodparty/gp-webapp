@@ -5,7 +5,10 @@ interface NewInfoAlertProps {
   className?: string
 }
 
-export default function NewInfoAlert({ children, className = '' }: NewInfoAlertProps): React.JSX.Element {
+export default function NewInfoAlert({
+  children,
+  className = '',
+}: NewInfoAlertProps): React.JSX.Element {
   return (
     <div
       className={`
@@ -21,4 +24,4 @@ export default function NewInfoAlert({ children, className = '' }: NewInfoAlertP
       {children}
     </div>
   )
-} 
+}

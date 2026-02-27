@@ -18,7 +18,7 @@ export const useTailwindBreakpoints = (): Breakpoint => {
       }
 
       const width = window.innerWidth
-      
+
       if (breakpoints['2xl'] && width >= parseInt(breakpoints['2xl'])) {
         setCurrentBreakpoint('2xl')
       } else if (breakpoints.xl && width >= parseInt(breakpoints.xl)) {
@@ -38,9 +38,9 @@ export const useTailwindBreakpoints = (): Breakpoint => {
 
     window.addEventListener('resize', getCurrentBreakpoint)
 
-    return (): void => window.removeEventListener('resize', getCurrentBreakpoint)
+    return (): void =>
+      window.removeEventListener('resize', getCurrentBreakpoint)
   }, [])
 
   return currentBreakpoint
 }
-

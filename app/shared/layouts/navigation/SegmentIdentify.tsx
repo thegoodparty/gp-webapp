@@ -10,7 +10,11 @@ import { identifyUser } from '@shared/utils/analytics'
 import { useFeatureFlags } from '@shared/experiments/FeatureFlagsProvider'
 import { User } from 'helpers/types'
 
-const identify = async (user: User | null, searchParams: ReturnType<typeof useSearchParams>, refreshFeatureFlags?: () => void) => {
+const identify = async (
+  user: User | null,
+  searchParams: ReturnType<typeof useSearchParams>,
+  refreshFeatureFlags?: () => void,
+) => {
   persistUtmsOnce()
 
   const traits = {
@@ -47,4 +51,3 @@ const SegmentIdentify = (): null => {
 }
 
 export default SegmentIdentify
-

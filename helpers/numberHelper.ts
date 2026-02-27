@@ -1,4 +1,7 @@
-export const percHelper = (num: number | string | null | undefined, significant: boolean = false): number | string | null | undefined => {
+export const percHelper = (
+  num: number | string | null | undefined,
+  significant: boolean = false,
+): number | string | null | undefined => {
   if (!num) return num
   let numValue = num
   if (typeof num !== 'number') {
@@ -10,7 +13,9 @@ export const percHelper = (num: number | string | null | undefined, significant:
   return ((numValue as number) * 100).toFixed(2)
 }
 
-export const numberNth = (number: number | string | null | undefined): string => {
+export const numberNth = (
+  number: number | string | null | undefined,
+): string => {
   if (!number) {
     return ''
   }
@@ -32,7 +37,10 @@ export const numberNth = (number: number | string | null | undefined): string =>
   return `${num}th`
 }
 
-export const numberFormatter = (num: number | string | undefined, fixed: number = 0): string => {
+export const numberFormatter = (
+  num: number | string | undefined,
+  fixed: number = 0,
+): string => {
   if (num === undefined || isNaN(Number(num))) {
     return '0'
   }
@@ -48,9 +56,12 @@ export const numberFormatter = (num: number | string | undefined, fixed: number 
     )}`
 }
 
-export const formatCurrency = (dollars: number) => `${numberFormatter(dollars, 2)}`
+export const formatCurrency = (dollars: number) =>
+  `${numberFormatter(dollars, 2)}`
 
-export const toPrecision = (num: number | null | undefined): number | null | undefined => {
+export const toPrecision = (
+  num: number | null | undefined,
+): number | null | undefined => {
   if (!num) {
     return num
   }
@@ -62,7 +73,9 @@ export const kFormatter = (num: number | null | undefined): string | number => {
     return 0
   }
   if (Math.abs(num) > 999999) {
-    return Math.sign(num) * parseFloat((Math.abs(num) / 1000000).toFixed(1)) + 'M'
+    return (
+      Math.sign(num) * parseFloat((Math.abs(num) / 1000000).toFixed(1)) + 'M'
+    )
   }
   return Math.abs(num) > 999
     ? Math.sign(num) * parseFloat((Math.abs(num) / 1000).toFixed(1)) + 'K'
@@ -94,10 +107,13 @@ export const formatPhoneNumber = (value: string | null | undefined): string => {
   return ''
 }
 
-export const dollarsToCents = (dollarsDecimal: number = 0): number => dollarsDecimal * 100
+export const dollarsToCents = (dollarsDecimal: number = 0): number =>
+  dollarsDecimal * 100
 export const centsToDollars = (cents: number = 0): number => cents / 100
 
-export const formatDisplayPhoneNumber = (value: string | null | undefined): string => {
+export const formatDisplayPhoneNumber = (
+  value: string | null | undefined,
+): string => {
   if (!value) return ''
 
   const digits = value.replace(/\D/g, '').slice(-10)
@@ -106,4 +122,3 @@ export const formatDisplayPhoneNumber = (value: string | null | undefined): stri
 
   return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
 }
-

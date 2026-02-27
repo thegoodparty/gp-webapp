@@ -3,12 +3,17 @@ const ONE_HOUR = 60 * 60 * 1000
 export type DateInput = Date | string | number | null | undefined
 
 const invalidDateFormat = (date: DateInput): boolean =>
-  !date || (typeof date === 'string' && [' ', '', 'null', 'N/A', 'n/a', 'Invalid Date'].includes(date))
+  !date ||
+  (typeof date === 'string' &&
+    [' ', '', 'null', 'N/A', 'n/a', 'Invalid Date'].includes(date))
 
 export const isInvalidDateObject = (date: DateInput): boolean =>
   typeof date === 'object' && date !== null && isNaN(date.getTime())
 
-export const dateUsHelper = (orgDate: DateInput, monthFormat: 'short' | 'long' = 'short'): string => {
+export const dateUsHelper = (
+  orgDate: DateInput,
+  monthFormat: 'short' | 'long' = 'short',
+): string => {
   if (invalidDateFormat(orgDate)) {
     return String(orgDate ?? '')
   } else if (isInvalidDateObject(orgDate)) {
@@ -61,7 +66,9 @@ export const daysTill = (date: DateInput): string | number => {
   return Math.ceil(daysDiff)
 }
 
-export const weeksTill = (date: DateInput): { weeks: number; days: number } | string | false => {
+export const weeksTill = (
+  date: DateInput,
+): { weeks: number; days: number } | string | false => {
   if (invalidDateFormat(date)) {
     return false
   } else if (isInvalidDateObject(date)) {
@@ -74,7 +81,10 @@ export const weeksTill = (date: DateInput): { weeks: number; days: number } | st
   return { weeks, days: remainder }
 }
 
-export const weekRangeFromDate = (dateStr: string | null | undefined, weeks: number | null | undefined): string => {
+export const weekRangeFromDate = (
+  dateStr: string | null | undefined,
+  weeks: number | null | undefined,
+): string => {
   if (invalidDateFormat(dateStr) || !weeks) {
     return ''
   }
@@ -92,11 +102,15 @@ export const dateUSClientLocaleHelper = (utcTimeSecs: number): string =>
     dateStyle: 'long',
   }).format(new Date(utcTimeSecs * 1000))
 
-export const dateFromNonStandardUSFormatString = (dateStr: string | null | undefined): Date | string => {
+export const dateFromNonStandardUSFormatString = (
+  dateStr: string | null | undefined,
+): Date | string => {
   if (invalidDateFormat(dateStr)) {
     return dateStr ?? ''
   }
-  const [year = 0, month = 1, day = 1] = (dateStr as string).split('-').map(Number)
+  const [year = 0, month = 1, day = 1] = (dateStr as string)
+    .split('-')
+    .map(Number)
   return new Date(year, month - 1, day)
 }
 
@@ -104,4 +118,3 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getFullYear() === date2.getFullYear() &&
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate()
-

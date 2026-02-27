@@ -6,7 +6,9 @@ interface RacesSectionProps {
   races?: Race[]
 }
 
-export default function RacesSection({ races }: RacesSectionProps): React.JSX.Element {
+export default function RacesSection({
+  races,
+}: RacesSectionProps): React.JSX.Element {
   if (!races || races.length === 0) {
     return <section>No elections to show for this location</section>
   }
@@ -22,14 +24,10 @@ export default function RacesSection({ races }: RacesSectionProps): React.JSX.El
         <div className="col-span-12 md:col-span-1">&nbsp;</div>
       </div>
       {races.map((race) => (
-        <div
-          key={race.id}
-          className="col-span-12 md:col-span-6 lg:col-span-4"
-        >
+        <div key={race.id} className="col-span-12 md:col-span-6 lg:col-span-4">
           <RaceComponent race={race} />
         </div>
       ))}
     </section>
   )
 }
-

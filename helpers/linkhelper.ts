@@ -10,4 +10,3 @@ export const isValidUrl = (str: string): boolean => {
   )
   return !!pattern.test(str)
 }
-

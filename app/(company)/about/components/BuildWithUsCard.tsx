@@ -8,7 +8,12 @@ interface BuildWithUsCardProps {
   linkText: string
 }
 
-export const BuildWithUsCard = ({ header, blurb, href, linkText }: BuildWithUsCardProps): React.JSX.Element => (
+export const BuildWithUsCard = ({
+  header,
+  blurb,
+  href,
+  linkText,
+}: BuildWithUsCardProps): React.JSX.Element => (
   <section
     className="rounded-3xl
   bg-tertiary-background

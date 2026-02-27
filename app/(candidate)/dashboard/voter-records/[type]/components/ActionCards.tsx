@@ -10,7 +10,10 @@ interface ActionCardsProps {
   fileName?: string
 }
 
-const cardsByType = (type: string, props: ActionCardsProps): React.JSX.Element[] => {
+const cardsByType = (
+  type: string,
+  props: ActionCardsProps,
+): React.JSX.Element[] => {
   let cards: React.JSX.Element[] = []
   if (type === 'sms' || type === 'telemarketing') {
     cards = [

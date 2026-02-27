@@ -5,7 +5,9 @@ interface HopeChangeCardProps {
   children: React.ReactNode
 }
 
-const HopeChangeCard = ({ children }: HopeChangeCardProps): React.JSX.Element => (
+const HopeChangeCard = ({
+  children,
+}: HopeChangeCardProps): React.JSX.Element => (
   <section
     className="bg-primary-dark
     p-5

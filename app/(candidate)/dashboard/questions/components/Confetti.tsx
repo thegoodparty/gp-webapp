@@ -17,7 +17,14 @@ interface ConfettiOptions {
   scalar?: number
 }
 
-type ConfettiInstance = ((options: ConfettiOptions & { origin: { y: number }; particleCount: number }) => void) | null
+type ConfettiInstance =
+  | ((
+      options: ConfettiOptions & {
+        origin: { y: number }
+        particleCount: number
+      },
+    ) => void)
+  | null
 
 export default function Confetti(): React.JSX.Element {
   useEffect(() => {
@@ -30,14 +37,17 @@ export default function Confetti(): React.JSX.Element {
     refAnimationInstance.current = instance
   }, [])
 
-  const makeShot = useCallback((particleRatio: number, opts: ConfettiOptions) => {
-    refAnimationInstance.current &&
-      refAnimationInstance.current({
-        ...opts,
-        origin: { y: 0.7 },
-        particleCount: Math.floor(200 * particleRatio),
-      })
-  }, [])
+  const makeShot = useCallback(
+    (particleRatio: number, opts: ConfettiOptions) => {
+      refAnimationInstance.current &&
+        refAnimationInstance.current({
+          ...opts,
+          origin: { y: 0.7 },
+          particleCount: Math.floor(200 * particleRatio),
+        })
+    },
+    [],
+  )
 
   const fire = useCallback(() => {
     makeShot(0.25, {

@@ -7,4 +7,3 @@ export const segregateItemFromList = <T>(
       segregator(item) ? [item, rest] : [found, [...rest, item]],
     [null, []],
   )
-

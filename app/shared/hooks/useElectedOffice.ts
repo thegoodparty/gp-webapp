@@ -7,4 +7,3 @@ export const useElectedOffice = () => {
     useContext(ElectedOfficeContext)
   return { electedOffice, setElectedOffice, refreshElectedOffice }
 }
-

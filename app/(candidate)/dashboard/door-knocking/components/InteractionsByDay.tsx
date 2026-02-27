@@ -16,20 +16,15 @@ import {
 import slugify from 'slugify'
 import { EcanvasserSummary } from './DoorKnockingPage'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface InteractionsByDayProps {
   summary?: EcanvasserSummary
 }
 
-const InteractionsByDay = ({ summary }: InteractionsByDayProps): React.JSX.Element => {
+const InteractionsByDay = ({
+  summary,
+}: InteractionsByDayProps): React.JSX.Element => {
   const { interactionsByDay } = summary || {}
 
   const processChartData = () => {
@@ -64,7 +59,9 @@ const InteractionsByDay = ({ summary }: InteractionsByDayProps): React.JSX.Eleme
         const dayData = interactionsByDay[date]
         return dayData ? dayData[interactionType] || 0 : 0
       }),
-      backgroundColor: interactionsColors[slugify(interactionType, { lower: true })] || '#CBD5E1',
+      backgroundColor:
+        interactionsColors[slugify(interactionType, { lower: true })] ||
+        '#CBD5E1',
     }))
 
     return {

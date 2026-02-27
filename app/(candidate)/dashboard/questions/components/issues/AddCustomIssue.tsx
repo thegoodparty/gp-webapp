@@ -42,8 +42,7 @@ export default function AddCustomIssue({
                 : '',
           }
         : undefined,
-      (value) =>
-        selectIssueCallback(value === 'custom' ? 'custom' : null),
+      (value) => selectIssueCallback(value === 'custom' ? 'custom' : null),
     ),
   )
 

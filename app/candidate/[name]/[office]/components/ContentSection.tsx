@@ -15,7 +15,8 @@ export default function ContentSection(): React.JSX.Element {
   const Stances = candidate?.Stances
   const party = candidate?.party
   const claimed = candidate?.claimed
-  const claimedObj = typeof claimed === 'object' && claimed !== null ? claimed : undefined
+  const claimedObj =
+    typeof claimed === 'object' && claimed !== null ? claimed : undefined
   const { details, campaignPositions } = claimedObj || {}
   const {
     occupation,
@@ -31,7 +32,9 @@ export default function ContentSection(): React.JSX.Element {
     description: 'Candidate has not filled out this section yet.',
   }
 
-  const runningAgainstArr: RunningAgainst[] = Array.isArray(runningAgainst) ? runningAgainst : []
+  const runningAgainstArr: RunningAgainst[] = Array.isArray(runningAgainst)
+    ? runningAgainst
+    : []
   const runningAgainstItems = runningAgainstArr.map((item: RunningAgainst) => {
     return {
       title: `${item.name} (${item.party})`,
@@ -48,9 +51,12 @@ export default function ContentSection(): React.JSX.Element {
       description: stance.stanceStatement || '',
     })
   })
-  const toDescriptionString = (value: string | object | null | undefined): string | undefined => {
+  const toDescriptionString = (
+    value: string | object | null | undefined,
+  ): string | undefined => {
     if (typeof value === 'string') return value
-    if (typeof value === 'object' && value !== null) return JSON.stringify(value)
+    if (typeof value === 'object' && value !== null)
+      return JSON.stringify(value)
     return undefined
   }
 
@@ -64,10 +70,16 @@ export default function ContentSection(): React.JSX.Element {
     { title: 'Occupation', description: toDescriptionString(occupation) },
   ]
   if (funFact) {
-    aboutMeItems.push({ title: 'Fun Fact', description: toDescriptionString(funFact) })
+    aboutMeItems.push({
+      title: 'Fun Fact',
+      description: toDescriptionString(funFact),
+    })
   }
   if (pastExperience) {
-    aboutMeItems.push({ title: 'Past Experience', description: toDescriptionString(pastExperience) })
+    aboutMeItems.push({
+      title: 'Past Experience',
+      description: toDescriptionString(pastExperience),
+    })
   }
 
   const cards = [

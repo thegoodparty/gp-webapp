@@ -16,4 +16,3 @@ const Body1 = ({ children, className = '', style = {} }: Body1Props) => (
 )
 
 export default Body1
-

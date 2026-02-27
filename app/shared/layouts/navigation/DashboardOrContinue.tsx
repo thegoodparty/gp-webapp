@@ -7,9 +7,16 @@ interface DashboardOrContinueProps {
   isDashboardPath?: boolean
 }
 
-const DashboardOrContinue = ({ closeAll }: DashboardOrContinueProps): React.JSX.Element => {
+const DashboardOrContinue = ({
+  closeAll,
+}: DashboardOrContinueProps): React.JSX.Element => {
   const [campaignStatus] = useCampaignStatus()
-  const { status, slug, step } = (campaignStatus as { status?: boolean | string; slug?: string; step?: string | number }) || {}
+  const { status, slug, step } =
+    (campaignStatus as {
+      status?: boolean | string
+      slug?: string
+      step?: string | number
+    }) || {}
 
   if (!status) {
     return (
@@ -52,4 +59,3 @@ const DashboardOrContinue = ({ closeAll }: DashboardOrContinueProps): React.JSX.
 }
 
 export default DashboardOrContinue
-

@@ -20,22 +20,15 @@ import { TCR_COMPLIANCE_STATUS } from 'app/(user)/profile/texting-compliance/com
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import type { TcrCompliance } from 'helpers/types'
+import type { OutreachType } from 'gpApi/types/outreach.types'
 
 interface OutreachCreateCardsProps {
   tcrCompliance?: TcrCompliance
 }
 
 interface FlowModalTask {
-  flowType: string
+  flowType: OutreachType
 }
-
-type OutreachType =
-  | 'text'
-  | 'p2p'
-  | 'robocall'
-  | 'doorKnocking'
-  | 'phoneBanking'
-  | 'socialMedia'
 
 interface OutreachOption {
   title: string

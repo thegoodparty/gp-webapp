@@ -14,8 +14,9 @@ interface InstructionsStepProps {
   closeCallback: () => void
 }
 
-type TaskTypeValue = typeof TASK_TYPES[keyof typeof TASK_TYPES]
-type LegacyTaskTypeValue = typeof LEGACY_TASK_TYPES[keyof typeof LEGACY_TASK_TYPES]
+type TaskTypeValue = (typeof TASK_TYPES)[keyof typeof TASK_TYPES]
+type LegacyTaskTypeValue =
+  (typeof LEGACY_TASK_TYPES)[keyof typeof LEGACY_TASK_TYPES]
 type InstructionsByTypeMap = {
   [K in TaskTypeValue | LegacyTaskTypeValue]?: string[]
 }

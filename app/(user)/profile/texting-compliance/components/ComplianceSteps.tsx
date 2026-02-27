@@ -43,7 +43,8 @@ export const getTcrComplianceStepCompletions = (
   tcrCompliance: TcrCompliance | null | undefined,
 ): StepCompletions => {
   const websiteComplete = website?.status === WEBSITE_STATUS.published
-  const domainMessage = typeof domainStatus === 'string' ? domainStatus : domainStatus?.message
+  const domainMessage =
+    typeof domainStatus === 'string' ? domainStatus : domainStatus?.message
   const domainComplete = isDomainStatusActive(domainMessage ?? null)
 
   const tcrStatus = tcrCompliance?.status
@@ -56,7 +57,8 @@ export const getTcrComplianceStepCompletions = (
     TCR_COMPLIANCE_STATUS.PENDING,
     TCR_COMPLIANCE_STATUS.APPROVED,
   ]
-  const registrationComplete = tcrStatus != null && registrationStatuses.includes(tcrStatus)
+  const registrationComplete =
+    tcrStatus != null && registrationStatuses.includes(tcrStatus)
   const pinComplete = tcrStatus != null && pinStatuses.includes(tcrStatus)
 
   return {
@@ -71,7 +73,7 @@ interface Step {
   title: string
   description: string
   route: string
-  status: typeof STEP_STATUS[keyof typeof STEP_STATUS]
+  status: (typeof STEP_STATUS)[keyof typeof STEP_STATUS]
 }
 
 const getSteps = (
@@ -142,7 +144,11 @@ interface ComplianceStepsProps {
   tcrCompliance: TcrCompliance | null | undefined
 }
 
-const ComplianceSteps = ({ website, domainStatus, tcrCompliance }: ComplianceStepsProps): React.JSX.Element => (
+const ComplianceSteps = ({
+  website,
+  domainStatus,
+  tcrCompliance,
+}: ComplianceStepsProps): React.JSX.Element => (
   <div className="border border-gray-200 rounded-lg overflow-hidden">
     {getSteps(website, domainStatus, tcrCompliance).map((step, index) => (
       <ComplianceStep key={index} number={index + 1} {...step} />

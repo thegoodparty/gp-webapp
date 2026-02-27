@@ -5,7 +5,6 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 import styles from './GoalsChart.module.scss'
 
-
 interface RGB {
   r: number
   g: number
@@ -35,7 +34,11 @@ interface GoalsChartProps {
   additionalVotes?: number
 }
 
-const GoalsChart = ({ candidate, color, additionalVotes = 0 }: GoalsChartProps): React.JSX.Element => {
+const GoalsChart = ({
+  candidate,
+  color,
+  additionalVotes = 0,
+}: GoalsChartProps): React.JSX.Element => {
   let { voterProjection, voteGoal, finalVotes } = candidate
   voteGoal = voteGoal || 100
   let voters = additionalVotes + (voterProjection || 0)
@@ -50,7 +53,8 @@ const GoalsChart = ({ candidate, color, additionalVotes = 0 }: GoalsChartProps):
     { name: 'To Win', value: voteGoal - cappedLikely },
     { name: 'So Far', value: cappedLikely },
   ]
-  let perc = voteGoal !== 0 ? parseInt(((voters * 100) / voteGoal).toString(), 10) : 0
+  let perc =
+    voteGoal !== 0 ? parseInt(((voters * 100) / voteGoal).toString(), 10) : 0
   if (perc > 100) {
     perc = 100
   }
@@ -97,4 +101,3 @@ const GoalsChart = ({ candidate, color, additionalVotes = 0 }: GoalsChartProps):
 }
 
 export default GoalsChart
-

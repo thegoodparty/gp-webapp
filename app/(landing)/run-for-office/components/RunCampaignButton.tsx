@@ -8,7 +8,11 @@ interface WrapperProps {
   fullWidth?: boolean
 }
 
-const Wrapper = ({ children, color, ...props }: WrapperProps): React.JSX.Element => {
+const Wrapper = ({
+  children,
+  color,
+  ...props
+}: WrapperProps): React.JSX.Element => {
   if (color === 'primary') {
     return <PrimaryButton {...props}>{children}</PrimaryButton>
   }

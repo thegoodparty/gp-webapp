@@ -15,7 +15,11 @@ export const getCookie = (name: string): string | false => {
   return false
 }
 
-export const setCookie = (name: string, value: string, days: number = 120): void => {
+export const setCookie = (
+  name: string,
+  value: string,
+  days: number = 120,
+): void => {
   if (typeof window === 'undefined') {
     return
   }
@@ -65,7 +69,9 @@ export const setUserCookie = (value: string | object): void => {
 
 export function getUserCookie(withParse: false): string | false
 export function getUserCookie(withParse: true): User | false
-export function getUserCookie(withParse: boolean = false): string | User | false {
+export function getUserCookie(
+  withParse: boolean = false,
+): string | User | false {
   if (typeof window === 'undefined') {
     return false
   }
@@ -97,4 +103,3 @@ export function getUserCookie(withParse: boolean = false): string | User | false
     return false
   }
 }
-

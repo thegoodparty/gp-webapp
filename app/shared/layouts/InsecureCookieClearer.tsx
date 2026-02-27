@@ -16,7 +16,9 @@ interface InsecureCookieCleanerProps {
   children: React.ReactNode
 }
 
-export const InsecureCookieClearer = ({ children }: InsecureCookieCleanerProps): React.JSX.Element => {
+export const InsecureCookieClearer = ({
+  children,
+}: InsecureCookieCleanerProps): React.JSX.Element => {
   useEffect(() => {
     const insecureTokenCookie = getInsecureTokenCookie()
 
@@ -26,4 +28,3 @@ export const InsecureCookieClearer = ({ children }: InsecureCookieCleanerProps):
   }, [])
   return <>{children}</>
 }
-

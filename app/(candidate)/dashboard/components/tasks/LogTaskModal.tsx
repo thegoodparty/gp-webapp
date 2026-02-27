@@ -62,7 +62,11 @@ const LogTaskModal = ({
   const [value, setValue] = useState<string>()
 
   const trackingAttrs = useMemo(
-    () => buildTrackingAttrs('Log Task Contacts', { type: flowType, value: value || '' }),
+    () =>
+      buildTrackingAttrs('Log Task Contacts', {
+        type: flowType,
+        value: value || '',
+      }),
     [flowType, value],
   )
 

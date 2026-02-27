@@ -5,5 +5,3 @@ export const ONBOARDING_STEPS = {
   STEP_3: 'onboarding-3',
   COMPLETE: 'onboarding-complete',
 }
-
-

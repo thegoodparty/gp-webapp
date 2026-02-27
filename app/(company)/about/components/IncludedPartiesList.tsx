@@ -5,7 +5,10 @@ interface PartyLogoProps {
   name: string
 }
 
-const PartyLogo = ({ logoFileName, name }: PartyLogoProps): React.JSX.Element => (
+const PartyLogo = ({
+  logoFileName,
+  name,
+}: PartyLogoProps): React.JSX.Element => (
   <Image
     className="inline-block mr-4 max-h-[48px] object-contain"
     height={48}

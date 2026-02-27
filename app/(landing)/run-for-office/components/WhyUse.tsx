@@ -49,4 +49,3 @@ export default function WhyUse(): React.JSX.Element {
     </section>
   )
 }
-

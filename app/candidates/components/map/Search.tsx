@@ -6,7 +6,10 @@ interface SearchProps {
   isLoaded?: boolean
 }
 
-export default function Search({ onPlacesChanged, isLoaded }: SearchProps = {}): React.JSX.Element | null {
+export default function Search({
+  onPlacesChanged,
+  isLoaded,
+}: SearchProps = {}): React.JSX.Element | null {
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null)
 
   const handleChange = () => {

@@ -12,7 +12,10 @@ const TOKEN_CONFIG: TokenConfig = {
   sameSite: 'lax',
 }
 
-export const setTokenCookie = (resp: NextResponse, token: string): NextResponse => {
+export const setTokenCookie = (
+  resp: NextResponse,
+  token: string,
+): NextResponse => {
   const expires = new Date()
   expires.setTime(expires.getTime() + 120 * 24 * 60 * 60 * 1000)
   resp.cookies.set('token', token, {
@@ -33,4 +36,3 @@ export const deleteTokenCookie = (resp: NextResponse): NextResponse => {
   })
   return resp
 }
-

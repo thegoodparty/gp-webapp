@@ -21,9 +21,13 @@ const fetchFaqs = async (): Promise<FaqsResponse> => {
     type: 'blogHome',
   }
 
-  const resp = await serverFetch<FaqsResponse>(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  })
+  const resp = await serverFetch<FaqsResponse>(
+    apiRoutes.content.getByType,
+    payload,
+    {
+      revalidate: 3600,
+    },
+  )
 
   return resp.data
 }

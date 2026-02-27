@@ -24,19 +24,31 @@ interface DistrictStepProps {
   [key: string]: string | number | boolean | Campaign | undefined
 }
 
-const updateDistrict = (L2DistrictType: string, L2DistrictName: string, slug?: string) =>
+const updateDistrict = (
+  L2DistrictType: string,
+  L2DistrictName: string,
+  slug?: string,
+) =>
   clientFetch(apiRoutes.campaign.district, {
     slug,
     L2DistrictType,
     L2DistrictName,
   })
 
-export default function DistrictStep({ campaign, step, adminMode, ...props }: DistrictStepProps): React.JSX.Element {
+export default function DistrictStep({
+  campaign,
+  step,
+  adminMode,
+  ...props
+}: DistrictStepProps): React.JSX.Element {
   const router = useRouter()
   const electionYear = new Date(campaign.details.electionDate).getFullYear()
   const { state } = campaign.details
 
-  const handleContinue = async (typeObj: { L2DistrictType: string } | null, nameObj: { L2DistrictName: string } | null) => {
+  const handleContinue = async (
+    typeObj: { L2DistrictType: string } | null,
+    nameObj: { L2DistrictName: string } | null,
+  ) => {
     if (!typeObj || !nameObj) return
     await updateDistrict(
       typeObj.L2DistrictType,

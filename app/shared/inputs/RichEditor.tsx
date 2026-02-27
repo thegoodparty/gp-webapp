@@ -26,7 +26,11 @@ const RichEditor = ({
     }
   }
 
-  const handleBlur = (_previousRange: { index: number; length: number } | null, _source: 'api' | 'user' | 'silent', editor: { getHTML: () => string }) => {
+  const handleBlur = (
+    _previousRange: { index: number; length: number } | null,
+    _source: 'api' | 'user' | 'silent',
+    editor: { getHTML: () => string },
+  ) => {
     const value = editor.getHTML()
     if (value) {
       setContent(value)
@@ -47,4 +51,3 @@ const RichEditor = ({
 }
 
 export default RichEditor
-

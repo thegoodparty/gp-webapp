@@ -51,7 +51,10 @@ export default function BlogSectionPage({
   const firstPageArticles = articles.slice(0, FIRST_PAGE_SIZE)
   const loadMoreArticles = articles.slice(FIRST_PAGE_SIZE)
 
-  const renderArticles = (items: Article[], showSubscribe: boolean): React.JSX.Element[] => {
+  const renderArticles = (
+    items: Article[],
+    showSubscribe: boolean,
+  ): React.JSX.Element[] => {
     return items.map((item, index) => (
       <Fragment key={item.id || item.slug}>
         <ArticleSnippet article={item} section={currentSection} />
@@ -75,7 +78,9 @@ export default function BlogSectionPage({
       {slug && articles.length > 1 && (
         <div className="border-t border-gray-200 py-16">
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
-          {hero && <ArticleSnippet article={hero} heroMode section={currentSection} />}
+          {hero && (
+            <ArticleSnippet article={hero} heroMode section={currentSection} />
+          )}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">
             {renderArticles(firstPageArticles, true)}
           </div>

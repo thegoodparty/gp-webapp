@@ -16,7 +16,10 @@ interface CompleteStepProps {
   domain?: Domain | null
 }
 
-const CompleteStep = ({ vanityPath, domain }: CompleteStepProps): React.JSX.Element => {
+const CompleteStep = ({
+  vanityPath,
+  domain,
+}: CompleteStepProps): React.JSX.Element => {
   const suggestedUrl = `${vanityPath}.com`
   const url = getWebsiteUrl(vanityPath, false)
   const [shareModalOpen, setShareModalOpen] = useState(false)

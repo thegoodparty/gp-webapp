@@ -13,7 +13,10 @@ interface CandidateAvatarProps {
   priority?: boolean
 }
 
-const CandidateAvatar = ({ candidate, priority = false }: CandidateAvatarProps): React.JSX.Element => {
+const CandidateAvatar = ({
+  candidate,
+  priority = false,
+}: CandidateAvatarProps): React.JSX.Element => {
   const { firstName, lastName, image } = candidate
 
   return (
@@ -37,4 +40,3 @@ const CandidateAvatar = ({ candidate, priority = false }: CandidateAvatarProps):
 }
 
 export default CandidateAvatar
-

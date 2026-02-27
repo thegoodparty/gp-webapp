@@ -7,5 +7,3 @@ export const ADD_SCRIPT_FLOW = {
   DO_SMS_GENERATE: 'generate',
   CREATE_SMS: 'create',
 }
-
-

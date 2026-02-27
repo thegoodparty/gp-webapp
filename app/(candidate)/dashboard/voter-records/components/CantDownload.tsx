@@ -13,7 +13,9 @@ interface CantDownloadProps {
   campaign: Campaign | null
 }
 
-export default function CantDownload(props: CantDownloadProps): React.JSX.Element {
+export default function CantDownload(
+  props: CantDownloadProps,
+): React.JSX.Element {
   return (
     <div className="py-20 w-full">
       <div className="max-w-screen-md mx-auto">

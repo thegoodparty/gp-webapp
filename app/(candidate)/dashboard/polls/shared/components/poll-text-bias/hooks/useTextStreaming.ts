@@ -58,4 +58,3 @@ export function useTextStreaming(delayMs: number = 30): UseTextStreamingReturn {
     reset,
   }
 }
-

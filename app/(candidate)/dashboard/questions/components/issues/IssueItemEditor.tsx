@@ -10,8 +10,9 @@ import type { ComponentProps } from 'react'
 import type { EditIssuePosition, IssueOption } from './IssuesList'
 import type { CandidatePosition } from 'helpers/types'
 
-type IssuePositionData =
-  ComponentProps<typeof IssuePositionsList>['positions'][number]
+type IssuePositionData = ComponentProps<
+  typeof IssuePositionsList
+>['positions'][number]
 
 interface IssueItemEditorProps {
   issue?: IssueOption
@@ -83,9 +84,9 @@ const IssueItemEditor = ({
   }
 
   return (
-      <>
-        <div
-          className="
+    <>
+      <div
+        className="
             flex
             my-2
             items-center
@@ -93,46 +94,46 @@ const IssueItemEditor = ({
             text-sm
             cursor-pointer
           "
-          onClick={handleAnotherIssue}
-        >
-          <FaChevronLeft />
-          <div className="ml-2 ">Choose another issue</div>
-        </div>
-        <div
-          className="
+        onClick={handleAnotherIssue}
+      >
+        <FaChevronLeft />
+        <div className="ml-2 ">Choose another issue</div>
+      </div>
+      <div
+        className="
             p-4
             rounded-lg
             mt-2
             bg-tertiary-light
           "
-        >
-          <IssueItemLabel name={name || ''} numPositions={positions?.length} />
+      >
+        <IssueItemLabel name={name || ''} numPositions={positions?.length} />
+      </div>
+      <div>
+        <div className="my-4 font-semibold">
+          Select your positions on this issue
         </div>
-        <div>
-          <div className="my-4 font-semibold">
-            Select your positions on this issue
-          </div>
-          <IssuePositionsList
-            positions={positions!}
-            selectedPosition={selectedPosition}
-            handleSelectPosition={handleSelectPosition}
-          />
-          <div className="mt-10">
-            <CandidatePositionStatement
-              candidatePosition={candidatePosition}
-              setCandidatePosition={setCandidatePosition}
-            />
-          </div>
-        </div>
-        <div className="mt-10 flex justify-center">
-          <IssueEditorButtons
-            disableSave={!saveAllowed}
-            editIssuePosition={Boolean(editIssuePosition)}
-            onSave={handleSave}
-            onCancel={onCancel}
+        <IssuePositionsList
+          positions={positions!}
+          selectedPosition={selectedPosition}
+          handleSelectPosition={handleSelectPosition}
+        />
+        <div className="mt-10">
+          <CandidatePositionStatement
+            candidatePosition={candidatePosition}
+            setCandidatePosition={setCandidatePosition}
           />
         </div>
-      </>
+      </div>
+      <div className="mt-10 flex justify-center">
+        <IssueEditorButtons
+          disableSave={!saveAllowed}
+          editIssuePosition={Boolean(editIssuePosition)}
+          onSave={handleSave}
+          onCancel={onCancel}
+        />
+      </div>
+    </>
   )
 }
 

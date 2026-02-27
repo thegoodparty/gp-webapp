@@ -42,7 +42,9 @@ const submitCvPin = async (tcrComplianceId: number, formData: PinFormData) => {
   return response.data
 }
 
-const TextingComplianceSubmitPinPage = ({ tcrCompliance }: TextingComplianceSubmitPinPageProps): React.JSX.Element => {
+const TextingComplianceSubmitPinPage = ({
+  tcrCompliance,
+}: TextingComplianceSubmitPinPageProps): React.JSX.Element => {
   const [loading, setLoading] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const router = useRouter()
@@ -53,13 +55,13 @@ const TextingComplianceSubmitPinPage = ({ tcrCompliance }: TextingComplianceSubm
     setLoading(true)
     try {
       await submitCvPin(tcrCompliance.id, formData)
-      
+
       // Track 10 DLC compliance status change to Yes
       trackEvent(EVENTS.Outreach.DlcCompliance.PinVerificationCompleted, {
         email: user?.email,
         dlcComplianceStatus: 'Yes',
       })
-      
+
       successSnackbar('Successfully submitted Campaign Verify PIN')
       router.push('/profile')
     } catch {

@@ -8,5 +8,3 @@ export default async function serveAccess(): Promise<void> {
     return redirect('/dashboard')
   }
 }
-
-

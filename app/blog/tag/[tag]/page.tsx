@@ -15,7 +15,9 @@ interface PageParams {
   params: Promise<{ tag: string }>
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { tag } = await params
 
   const tagData = await fetchArticleTag(tag)
@@ -28,19 +30,20 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return meta
 }
 
-export default async function Page({ params }: PageParams): Promise<React.JSX.Element | null> {
+export default async function Page({
+  params,
+}: PageParams): Promise<React.JSX.Element | null> {
   const { tag } = await params
   if (!tag) {
     notFound()
   }
-  const [sections, tagData, articles, tags, titles] =
-    await Promise.all([
-      fetchSections(),
-      fetchArticleTag(tag),
-      fetchArticlesByTag(tag),
-      fetchArticleTags(),
-      fetchArticlesTitles(),
-    ])
+  const [sections, tagData, articles, tags, titles] = await Promise.all([
+    fetchSections(),
+    fetchArticleTag(tag),
+    fetchArticlesByTag(tag),
+    fetchArticleTags(),
+    fetchArticlesTitles(),
+  ])
 
   if (!articles || articles.length === 0) {
     return null
@@ -61,9 +64,11 @@ export default async function Page({ params }: PageParams): Promise<React.JSX.El
 export async function generateStaticParams(): Promise<{ tag: string }[]> {
   const tags = await fetchArticleTags()
 
-  return tags?.map((tagItem) => {
-    return {
-      tag: tagItem.slug,
-    }
-  }) || []
+  return (
+    tags?.map((tagItem) => {
+      return {
+        tag: tagItem.slug,
+      }
+    }) || []
+  )
 }

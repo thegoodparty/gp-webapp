@@ -212,7 +212,7 @@ const PersonalSection = ({ user }: PersonalSectionProps): React.JSX.Element => {
                     shrink
                     required
                     label={field.label}
-                    data-testid={field.dataTestId}
+                    data-testid={field.dataTestid}
                   />
                 </div>
               ) : (

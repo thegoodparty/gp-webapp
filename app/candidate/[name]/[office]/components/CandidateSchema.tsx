@@ -23,7 +23,10 @@ interface CandidateSchemaProps {
   slug: string
 }
 
-export default function CandidateSchema({ candidate, slug }: CandidateSchemaProps): React.JSX.Element {
+export default function CandidateSchema({
+  candidate,
+  slug,
+}: CandidateSchemaProps): React.JSX.Element {
   const {
     firstName,
     lastName,
@@ -40,7 +43,11 @@ export default function CandidateSchema({ candidate, slug }: CandidateSchemaProp
     ? urls.map((u) => (typeof u === 'string' ? u : u?.url)).filter(Boolean)
     : []
 
-  const address: { '@type': 'PostalAddress'; addressRegion: string; addressLocality?: string } = {
+  const address: {
+    '@type': 'PostalAddress'
+    addressRegion: string
+    addressLocality?: string
+  } = {
     '@type': 'PostalAddress',
     addressRegion: state,
   }

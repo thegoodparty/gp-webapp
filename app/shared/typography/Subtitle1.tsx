@@ -12,4 +12,3 @@ const Subtitle1 = ({ children, className = '' }: Subtitle1Props) => (
 )
 
 export default Subtitle1
-
