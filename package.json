@@ -42,8 +42,6 @@
     "@lottiefiles/react-lottie-player": "^3.6.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "@newrelic/browser-agent": "^1.306.0",
-    "@newrelic/publish-sourcemap": "^5.1.4",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.11.0",
     "@segment/analytics-next": "^1.81.1",
