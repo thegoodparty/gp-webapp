@@ -21,21 +21,21 @@
 /* 2. Core Tailwind - MUST come before @theme, @plugin, @source */
 @import 'tailwindcss';
 
-/* 3. Theme tokens - @theme MUST come AFTER @import "tailwindcss" */
-@import '../styleguide/tailwind-theme.css';
-
-/* 4. Additional CSS */
-@import '../styleguide/typography.css';
-@import '../styleguide/styleguide-scope.css';
-@import 'tw-animate-css';
-
-/* 5. Tailwind v4 plugin (replaces plugins[] in tailwind.config.js) */
+/* 3. Tailwind v4 plugin (replaces plugins[] in tailwind.config.js) */
 @plugin "@tailwindcss/typography";
 
-/* 6. Content sources (replaces content[] in tailwind.config.js) */
+/* 4. Content sources (replaces content[] in tailwind.config.js) */
 @source "../app";
 @source "../components";
 @source "../styleguide";
+
+/* 5. Theme tokens - @theme MUST come AFTER @import "tailwindcss" */
+@import '../styleguide/tailwind-theme.css';
+
+/* 6. Additional CSS */
+@import '../styleguide/typography.css';
+@import '../styleguide/styleguide-scope.css';
+@import 'tw-animate-css';
 
 /* Dark mode variant */
 @custom-variant dark (&:is(.dark *));
