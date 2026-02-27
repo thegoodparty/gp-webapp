@@ -532,26 +532,33 @@
  * to avoid conflicts between webapp and styleguide color systems.
  */
 
-* {
-  line-height: 1.3;
-}
-
 /* Fix for DataTableColumnHeader button border */
 .button-ghost {
   border: none !important;
 }
 
+* {
+  line-height: 1.3;
+  outline: none;
+  border-color: var(--gray-200);
+}
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-family: var(--outfit-font);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 @layer base {
-  * {
-    outline: none;
-    border-color: var(--gray-200);
-  }
-
-  *:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
   /*
    * Restore cursor: pointer and font-weight for interactive elements.
    * Tailwind v4 preflight doesn't include these by default (unlike v3).
@@ -568,12 +575,6 @@
 
   a {
     font-weight: 500;
-  }
-
-  body {
-    width: 100%;
-    height: 100%;
-    font-family: var(--outfit-font);
   }
 
   /*
@@ -593,10 +594,6 @@
    */
   svg:not([data-slot] *) {
     vertical-align: middle;
-  }
-
-  a:hover {
-    text-decoration: underline;
   }
 }
 
