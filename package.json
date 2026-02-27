@@ -137,7 +137,7 @@
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^15.2.4",
+    "eslint-config-next": "^16.1.6",
     "eslint-plugin-mdx": "^2.1.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unused-imports": "^4.1.4",
