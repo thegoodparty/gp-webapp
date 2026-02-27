@@ -1,5 +1,5 @@
 'use client'
-import { DataTableColumnHeader } from 'goodparty-styleguide'
+import { DataTableColumnHeader } from '@styleguide'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import ServerDataTable from './ServerDataTable'
 import { useShowContactProModal } from '../hooks/ContactProModal'

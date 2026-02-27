@@ -9,7 +9,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 
 import { useState } from 'react'
 import FiltersSheet from './FiltersSheet'

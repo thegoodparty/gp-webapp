@@ -32,7 +32,7 @@ export default async function Hero(): Promise<React.JSX.Element> {
             </h1>
             <Body1 className="mt-8">
               See how our campaign platform empowers you with:
-              <ul className="list-disc list-inside">
+              <ul className="list-disc list-inside font-outfit font-medium">
                 <li>Personalized Voter Data</li>
                 <li>Voter Outreach Tools</li>
                 <li>Customized content and marketing services</li>

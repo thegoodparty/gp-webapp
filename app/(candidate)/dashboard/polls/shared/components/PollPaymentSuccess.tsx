@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import CongratulationsAnimation from '@shared/animations/CongratulationsAnimation'
 import H1 from '@shared/typography/H1'
-import { Card, CardContent } from 'goodparty-styleguide'
+import { Card, CardContent } from '@styleguide'
 import { LuSmartphone } from 'react-icons/lu'
 import Body1 from '@shared/typography/Body1'
 import { numberFormatter } from 'helpers/numberHelper'

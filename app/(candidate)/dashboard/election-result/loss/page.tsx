@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 
 export default function LossPage(): React.JSX.Element {
   const router = useRouter()

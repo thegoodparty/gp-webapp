@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { usePoll } from '../../shared/hooks/PollProvider'

@@ -1,5 +1,5 @@
 'use client'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 import Link from 'next/link'
 import { LuMoveRight } from 'react-icons/lu'
 

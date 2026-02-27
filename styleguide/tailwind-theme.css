@@ -1,0 +1,448 @@
+/**
+ * Tailwind Theme Configuration
+ * 
+ * This file contains the single @theme block for Tailwind v4.
+ * 
+ * IMPORTANT: Tailwind v4 only supports ONE @theme block per project.
+ * All theme token definitions must be in this file.
+ * 
+ * HOW IT WORKS:
+ * 1. Most tokens use var() references instead of static values
+ * 2. This allows the same utility (e.g., bg-primary) to resolve to different
+ *    colors based on context:
+ *    - Webapp components: use :root values from globals.css
+ *    - Styleguide components [data-slot]: use overrides from styleguide-scope.css
+ * 3. Figma brand tokens use static values since they don't need scoping
+ */
+
+@theme {
+  /* ==========================================================================
+   * LAYOUT & TYPOGRAPHY
+   * ========================================================================== */
+
+  /* Custom screens */
+  --breakpoint-xs: 400px;
+
+  /* Font families */
+  --font-outfit: var(--outfit-font);
+  --font-sfpro: var(--sfpro-font);
+  --font-opensans: 'Open Sans', sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* Border radius */
+  --radius-lg: var(--radius, 0.5rem);
+  --radius-md: calc(var(--radius, 0.5rem) - 2px);
+  --radius-sm: calc(var(--radius, 0.5rem) - 4px);
+
+  /* ==========================================================================
+   * SHADCN/UI COMPONENT TOKENS
+   * These use HSL format with fallbacks for shadcn/ui compatibility
+   * ========================================================================== */
+  --color-border: hsl(var(--border, 214.3 31.8% 91.4%));
+  --color-input: hsl(var(--input, 214.3 31.8% 91.4%));
+  --color-ring: hsl(var(--ring, 222.2 84% 4.9%));
+  --color-background: hsl(var(--background, 0 0% 100%));
+  --color-foreground: hsl(var(--foreground, 222.2 84% 4.9%));
+  --color-muted: hsl(var(--muted, 210 40% 98%));
+  --color-muted-foreground: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
+  --color-accent: hsl(var(--accent, 210 40% 98%));
+  --color-accent-foreground: hsl(var(--accent-foreground, 222.2 84% 4.9%));
+  --color-card: hsl(var(--card, 0 0% 100%));
+  --color-card-foreground: hsl(var(--card-foreground, 222.2 84% 4.9%));
+  --color-popover: hsl(var(--popover, 0 0% 100%));
+  --color-popover-foreground: hsl(var(--popover-foreground, 222.2 84% 4.9%));
+  --color-destructive: hsl(var(--destructive, 0 84.2% 60.2%));
+  --color-destructive-foreground: hsl(
+    var(--destructive-foreground, 210 40% 98%)
+  );
+
+  /* ==========================================================================
+   * SEMANTIC COLOR SCALES (with var() references for scoping)
+   * These allow webapp vs styleguide to have different colors
+   * ========================================================================== */
+
+  /* Primary scale */
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-main: var(--primary-main);
+  --color-primary-light: var(--primary-light);
+  --color-primary-background: var(--primary-background);
+  --color-primary-contrast: var(--primary-contrast);
+  --color-primary-foreground: hsl(var(--primary-foreground, 210 40% 98%));
+
+  /* Secondary scale */
+  --color-secondary: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-secondary-main: var(--secondary-main);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-background: var(--secondary-background);
+  --color-secondary-contrast: var(--secondary-contrast);
+  --color-secondary-foreground: hsl(
+    var(--secondary-foreground, 222.2 84% 4.9%)
+  );
+
+  /* Tertiary scale */
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-dark: var(--tertiary-dark);
+  --color-tertiary-main: var(--tertiary-main);
+  --color-tertiary-light: var(--tertiary-light);
+  --color-tertiary-background: var(--tertiary-background);
+  --color-tertiary-contrast: var(--tertiary-contrast);
+
+  /* Neutral scale */
+  --color-neutral: var(--neutral);
+  --color-neutral-dark: var(--neutral-dark);
+  --color-neutral-main: var(--neutral-main);
+  --color-neutral-light: var(--neutral-light);
+  --color-neutral-background: var(--neutral-background);
+  --color-neutral-contrast: var(--neutral-contrast);
+
+  /* Error scale */
+  --color-error: var(--error);
+  --color-error-dark: var(--error-dark);
+  --color-error-main: var(--error-main);
+  --color-error-light: var(--error-light);
+  --color-error-background: var(--error-background);
+  --color-error-contrast: var(--error-contrast);
+
+  /* Success scale */
+  --color-success: var(--success);
+  --color-success-dark: var(--success-dark);
+  --color-success-main: var(--success-main);
+  --color-success-light: var(--success-light);
+  --color-success-background: var(--success-background);
+  --color-success-contrast: var(--success-contrast);
+
+  /* Info scale */
+  --color-info: var(--info);
+  --color-info-dark: var(--info-dark);
+  --color-info-main: var(--info-main);
+  --color-info-light: var(--info-light);
+  --color-info-background: var(--info-background);
+  --color-info-contrast: var(--info-contrast);
+
+  /* Warning scale */
+  --color-warning: var(--warning);
+  --color-warning-dark: var(--warning-dark);
+  --color-warning-main: var(--warning-main);
+  --color-warning-light: var(--warning-light);
+  --color-warning-background: var(--warning-background);
+  --color-warning-contrast: var(--warning-contrast);
+
+  /* ==========================================================================
+   * STANDARD COLOR SCALES (with var() references for scoping)
+   * ========================================================================== */
+
+  /* Gray scale */
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+
+  /* Indigo scale */
+  --color-indigo-50: var(--indigo-50);
+  --color-indigo-100: var(--indigo-100);
+  --color-indigo-200: var(--indigo-200);
+  --color-indigo-300: var(--indigo-300);
+  --color-indigo-400: var(--indigo-400);
+  --color-indigo-500: var(--indigo-500);
+  --color-indigo-600: var(--indigo-600);
+  --color-indigo-700: var(--indigo-700);
+  --color-indigo-800: var(--indigo-800);
+  --color-indigo-900: var(--indigo-900);
+
+  /* Blue scale */
+  --color-blue-50: var(--blue-50);
+  --color-blue-100: var(--blue-100);
+  --color-blue-200: var(--blue-200);
+  --color-blue-300: var(--blue-300);
+  --color-blue-400: var(--blue-400);
+  --color-blue-500: var(--blue-500);
+  --color-blue-600: var(--blue-600);
+  --color-blue-700: var(--blue-700);
+  --color-blue-800: var(--blue-800);
+  --color-blue-900: var(--blue-900);
+
+  /* Green scale */
+  --color-green-50: var(--green-50);
+  --color-green-100: var(--green-100);
+  --color-green-200: var(--green-200);
+  --color-green-300: var(--green-300);
+  --color-green-400: var(--green-400);
+  --color-green-500: var(--green-500);
+  --color-green-600: var(--green-600);
+  --color-green-700: var(--green-700);
+  --color-green-800: var(--green-800);
+  --color-green-900: var(--green-900);
+
+  /* Red scale */
+  --color-red-50: var(--red-50);
+  --color-red-100: var(--red-100);
+  --color-red-200: var(--red-200);
+  --color-red-300: var(--red-300);
+  --color-red-400: var(--red-400);
+  --color-red-500: var(--red-500);
+  --color-red-600: var(--red-600);
+  --color-red-700: var(--red-700);
+  --color-red-800: var(--red-800);
+  --color-red-900: var(--red-900);
+  --color-red-950: var(--red-950);
+
+  /* Yellow scale */
+  --color-yellow-50: var(--yellow-50);
+  --color-yellow-100: var(--yellow-100);
+  --color-yellow-200: var(--yellow-200);
+  --color-yellow-300: var(--yellow-300);
+  --color-yellow-400: var(--yellow-400);
+  --color-yellow-500: var(--yellow-500);
+  --color-yellow-600: var(--yellow-600);
+  --color-yellow-700: var(--yellow-700);
+  --color-yellow-800: var(--yellow-800);
+  --color-yellow-900: var(--yellow-900);
+
+  /* Orange scale */
+  --color-orange-50: var(--orange-50);
+  --color-orange-100: var(--orange-100);
+  --color-orange-200: var(--orange-200);
+  --color-orange-300: var(--orange-300);
+  --color-orange-400: var(--orange-400);
+  --color-orange-500: var(--orange-500);
+  --color-orange-600: var(--orange-600);
+  --color-orange-700: var(--orange-700);
+  --color-orange-800: var(--orange-800);
+  --color-orange-900: var(--orange-900);
+  --color-orange-950: var(--orange-950);
+
+  /* Purple scale */
+  --color-purple-50: var(--purple-50);
+  --color-purple-100: var(--purple-100);
+  --color-purple-200: var(--purple-200);
+  --color-purple-300: var(--purple-300);
+  --color-purple-400: var(--purple-400);
+  --color-purple-500: var(--purple-500);
+  --color-purple-600: var(--purple-600);
+  --color-purple-700: var(--purple-700);
+  --color-purple-800: var(--purple-800);
+  --color-purple-900: var(--purple-900);
+
+  /* Lime scale */
+  --color-lime-50: var(--lime-50);
+  --color-lime-100: var(--lime-100);
+  --color-lime-200: var(--lime-200);
+  --color-lime-300: var(--lime-300);
+  --color-lime-400: var(--lime-400);
+  --color-lime-500: var(--lime-500);
+  --color-lime-600: var(--lime-600);
+  --color-lime-700: var(--lime-700);
+  --color-lime-800: var(--lime-800);
+  --color-lime-900: var(--lime-900);
+
+  /* Cream */
+  --color-cream-500: var(--cream-500);
+  --color-cream: var(--cream);
+
+  /* ==========================================================================
+   * FIGMA BRAND COLORS (static values - no scoping needed)
+   * Use: bg-brand-red, text-brand-blue, bg-brand-cream
+   * ========================================================================== */
+  --color-brand-red: #dc1438;
+  --color-brand-red-light: #f7bac5;
+  --color-brand-blue: #0048c2;
+  --color-brand-blue-light: #a4c2f5;
+  --color-brand-cream: #fcf8f3;
+
+  /* ==========================================================================
+   * FIGMA BRAND SCALES (static values - no scoping needed)
+   * Use: bg-brand-midnight-500, text-brand-halo-green-400
+   * ========================================================================== */
+
+  /* brand-midnight (Figma: midnight/50-950) */
+  --color-brand-midnight-50: #ecf5ff;
+  --color-brand-midnight-100: #d8e7f7;
+  --color-brand-midnight-200: #b4cef0;
+  --color-brand-midnight-300: #84a3d2;
+  --color-brand-midnight-400: #5975a6;
+  --color-brand-midnight-500: #3e527c;
+  --color-brand-midnight-600: #293f6c;
+  --color-brand-midnight-700: #1d305c;
+  --color-brand-midnight-800: #14234d;
+  --color-brand-midnight-900: #0b1529;
+  --color-brand-midnight-950: #060b17;
+
+  /* brand-halo-green (Figma: halo green/50-950) */
+  --color-brand-halo-green-50: #ddf2e8;
+  --color-brand-halo-green-100: #cceadd;
+  --color-brand-halo-green-200: #b2e1cc;
+  --color-brand-halo-green-300: #7fdcb2;
+  --color-brand-halo-green-400: #63d1a0;
+  --color-brand-halo-green-500: #55bc8e;
+  --color-brand-halo-green-600: #3a9d7b;
+  --color-brand-halo-green-700: #257f68;
+  --color-brand-halo-green-800: #16695c;
+  --color-brand-halo-green-900: #115449;
+  --color-brand-halo-green-950: #043630;
+
+  /* brand-lavender (Figma: lavender/50-950) */
+  --color-brand-lavender-50: #f8ecff;
+  --color-brand-lavender-100: #f1e5ff;
+  --color-brand-lavender-200: #eddcff;
+  --color-brand-lavender-300: #e5cdff;
+  --color-brand-lavender-400: #dcbcff;
+  --color-brand-lavender-500: #d7b2ff;
+  --color-brand-lavender-600: #cda1ff;
+  --color-brand-lavender-700: #9e6beb;
+  --color-brand-lavender-800: #783dde;
+  --color-brand-lavender-900: #441e9f;
+  --color-brand-lavender-950: #200b6a;
+
+  /* brand-waxflower (Figma: waxflower/50-950) */
+  --color-brand-waxflower-50: #ffebd8;
+  --color-brand-waxflower-100: #ffe0c1;
+  --color-brand-waxflower-200: #ffcaa2;
+  --color-brand-waxflower-300: #ffb67f;
+  --color-brand-waxflower-400: #ff9364;
+  --color-brand-waxflower-500: #f27e4b;
+  --color-brand-waxflower-600: #db6b49;
+  --color-brand-waxflower-700: #b74932;
+  --color-brand-waxflower-800: #ae3920;
+  --color-brand-waxflower-900: #932b1f;
+  --color-brand-waxflower-950: #511508;
+
+  /* brand-bright-yellow (Figma: bright yellow/50-950) */
+  --color-brand-bright-yellow-50: #fffadf;
+  --color-brand-bright-yellow-100: #fff1c9;
+  --color-brand-bright-yellow-200: #ffedba;
+  --color-brand-bright-yellow-300: #ffe291;
+  --color-brand-bright-yellow-400: #ffe06c;
+  --color-brand-bright-yellow-500: #ffd759;
+  --color-brand-bright-yellow-600: #ffc523;
+  --color-brand-bright-yellow-700: #dba219;
+  --color-brand-bright-yellow-800: #b78211;
+  --color-brand-bright-yellow-900: #93640b;
+  --color-brand-bright-yellow-950: #7a4f06;
+
+  /* ==========================================================================
+   * FIGMA GRAYSCALE (static values)
+   * Use: bg-grayscale-50, text-grayscale-900
+   * ========================================================================== */
+  --color-grayscale-50: #f7fafb;
+  --color-grayscale-100: #eef3f6;
+  --color-grayscale-200: #e0e6ec;
+  --color-grayscale-300: #d1d8df;
+  --color-grayscale-400: #b9c3cc;
+  --color-grayscale-500: #879099;
+  --color-grayscale-600: #70757a;
+  --color-grayscale-700: #595c5f;
+  --color-grayscale-800: #3e4042;
+  --color-grayscale-900: #2d2e30;
+  --color-grayscale-950: #1e1f20;
+  --color-grayscale-black: #000000;
+  --color-grayscale-white: #ffffff;
+
+  /* ==========================================================================
+   * FIGMA SEMANTIC SCALES (static Figma values)
+   * Use: bg-error-50, text-success-500, border-warning-700
+   * ========================================================================== */
+
+  /* Error scale (Figma: error/50-950) */
+  --color-error-50: #ffe8e8;
+  --color-error-100: #fdcdcd;
+  --color-error-200: #ffaeae;
+  --color-error-300: #f56c6a;
+  --color-error-400: #ec4451;
+  --color-error-500: #e00c30;
+  --color-error-600: #b90a27;
+  --color-error-700: #93081f;
+  --color-error-800: #6c0617;
+  --color-error-900: #560311;
+  --color-error-950: #370009;
+
+  /* Success scale (Figma: success/50-950) */
+  --color-success-50: #eeffe9;
+  --color-success-100: #dffad6;
+  --color-success-200: #b9f6b0;
+  --color-success-300: #86e382;
+  --color-success-400: #5ec963;
+  --color-success-500: #30a541;
+  --color-success-600: #187637;
+  --color-success-700: #0f5f31;
+  --color-success-800: #094f2d;
+  --color-success-900: #033a20;
+  --color-success-950: #002212;
+
+  /* Info scale (Figma: info/50-950) */
+  --color-info-50: #e3f1ff;
+  --color-info-100: #d1e7fe;
+  --color-info-200: #a3cdfe;
+  --color-info-300: #75affe;
+  --color-info-400: #5395fd;
+  --color-info-500: #1b6afc;
+  --color-info-600: #1351d8;
+  --color-info-700: #0d3cb5;
+  --color-info-800: #082a92;
+  --color-info-900: #051d78;
+  --color-info-950: #01114d;
+
+  /* Warning scale (Figma: warning/50-950) */
+  --color-warning-50: #fff5d5;
+  --color-warning-100: #ffeeb7;
+  --color-warning-200: #fde19a;
+  --color-warning-300: #ffcd66;
+  --color-warning-400: #ffb93f;
+  --color-warning-500: #ff9800;
+  --color-warning-600: #db7900;
+  --color-warning-700: #b75e00;
+  --color-warning-800: #934500;
+  --color-warning-900: #7a3400;
+  --color-warning-950: #471e00;
+
+  /* ==========================================================================
+   * FIGMA BASE TOKENS (static values)
+   * Use: bg-base-background, text-base-foreground
+   * ========================================================================== */
+  --color-base-foreground: #0a0a0a;
+  --color-base-background: #ffffff;
+  --color-base-muted-foreground: #737373;
+  --color-base-muted: #f5f5f5;
+  --color-base-border: #d4d4d4;
+  --color-base-accent: #f5f5f5;
+  --color-base-accent-foreground: #0a0a0a;
+  --color-base-surface: #ffffff;
+  --color-base-surface-foreground: #0a0a0a;
+  --color-base-focus-ring: #a3a3a3;
+  --color-base-ring-offset: #ffffff;
+  --color-base-foreground-focus: rgba(163, 163, 163, 0.5);
+  --color-base-foreground-dark: #ffffff;
+  --color-base-foreground-dark-focus: rgba(255, 255, 255, 0.5);
+  --color-base-background-dark: #0a0a0a;
+
+  /* ==========================================================================
+   * FIGMA DATA/CHART TOKENS (static values)
+   * Use: bg-data-chart-1, text-data-chart-2
+   * ========================================================================== */
+  --color-data-chart-1: #5975a6;
+  --color-data-chart-2: #cda1ff;
+  --color-data-chart-3: #63d1a0;
+  --color-data-chart-4: #ffc523;
+  --color-data-chart-5: #ff9364;
+
+  /* ==========================================================================
+   * FIGMA COMPONENT TOKENS (static values)
+   * Use: bg-components-card-base, border-components-input-border
+   * ========================================================================== */
+  --color-components-card-base: #ffffff;
+  --color-components-card-foreground: #0a0a0a;
+  --color-components-input-active: #2563eb;
+  --color-components-input-foreground: #ffffff;
+  --color-components-input-base: #ffffff;
+  --color-components-input-border: #d4d4d4;
+  --color-components-input-focus: rgba(37, 99, 235, 0.3);
+  --color-components-tooltip-base: #262626;
+  --color-components-tooltip-foreground: #ffffff;
+}

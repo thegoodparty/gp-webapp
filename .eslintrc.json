@@ -1,10 +1,11 @@
 {
-  "ignorePatterns": ["e2e-tests/playwright-report"],
+  "ignorePatterns": ["e2e-tests/playwright-report", "styleguide/*.md"],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
     "next/core-web-vitals",
-    "plugin:mdx/recommended"
+    "plugin:mdx/recommended",
     // "plugin:jsx-a11y/recommended" TODO: turn on when ready to enforce a11y rules
+    "plugin:storybook/recommended"
   ],
   "settings": {
     "mdx/code-blocks": true,
