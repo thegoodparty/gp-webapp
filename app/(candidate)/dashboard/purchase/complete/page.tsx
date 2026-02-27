@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { completeCheckoutSession } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
-import { reportErrorToNewRelic } from '@shared/new-relic'
+import { reportErrorToSentry } from 'app/shared/sentry'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
@@ -46,7 +46,7 @@ export default function PurchaseCompletePage() {
         setErrorMessage(
           error instanceof Error ? error.message : 'An error occurred',
         )
-        reportErrorToNewRelic(error as Error, {
+        reportErrorToSentry(error as Error, {
           location: 'purchase-complete',
           sessionId,
         })
