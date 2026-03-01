@@ -14,7 +14,7 @@ import {
   createCheckoutSession,
   CheckoutSessionResponse,
 } from 'app/(candidate)/dashboard/purchase/utils/purchaseFetch.utils'
-import { reportErrorToNewRelic } from '@shared/new-relic'
+import { reportErrorToSentry } from 'app/shared/sentry'
 
 export interface CheckoutSessionContextValue {
   checkoutSession: CheckoutSessionResponse | null
@@ -66,7 +66,7 @@ export const CheckoutSessionProvider = ({
 
     if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
       setError('Invalid purchase type')
-      reportErrorToNewRelic(new Error('CheckoutSessionProvider error'), {
+      reportErrorToSentry(new Error('CheckoutSessionProvider error'), {
         message: 'Invalid purchase type',
       })
       throw new Error('Invalid purchase type')
@@ -88,7 +88,7 @@ export const CheckoutSessionProvider = ({
             (response.data as { data?: { error?: string } })?.data?.error ||
             'Failed to create checkout session'
           setError(errorMessage)
-          reportErrorToNewRelic(new Error('CheckoutSessionProvider error'), {
+          reportErrorToSentry(new Error('CheckoutSessionProvider error'), {
             message: errorMessage,
           })
           throw new Error(errorMessage)

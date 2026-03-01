@@ -109,7 +109,7 @@ interface CustomOfficeFormState {
 }
 
 interface CustomOfficeFormProps {
-  campaign: Campaign
+  campaign?: Campaign
   onSave: (campaign: Campaign) => void
   onBack: () => void
 }
@@ -120,14 +120,14 @@ export default function CustomOfficeForm({
   onBack,
 }: CustomOfficeFormProps): React.JSX.Element {
   const [state, setState] = useState<CustomOfficeFormState>({
-    state: campaign.details?.state || '',
-    office: campaign.details?.office || '',
-    officeTermLength: campaign.details?.officeTermLength || '',
-    otherOffice: campaign.details?.otherOffice || '',
-    district: campaign.details?.district || '',
-    city: campaign.details?.city || '',
-    electionDate: campaign.details?.electionDate || '',
-    ballotOffice: campaign.details?.ballotOffice || false,
+    state: campaign?.details?.state || '',
+    office: campaign?.details?.office || '',
+    officeTermLength: campaign?.details?.officeTermLength || '',
+    otherOffice: campaign?.details?.otherOffice || '',
+    district: campaign?.details?.district || '',
+    city: campaign?.details?.city || '',
+    electionDate: campaign?.details?.electionDate || '',
+    ballotOffice: campaign?.details?.ballotOffice || false,
   })
   const [user] = useUser()
   const now = new Date()
@@ -157,10 +157,10 @@ export default function CustomOfficeForm({
     if (disableSubmit) {
       return
     }
-    const updated = campaign
+    const updated = campaign ? { ...campaign } : ({ details: {} } as Campaign)
 
     updated.details = {
-      ...campaign.details,
+      ...campaign?.details,
       ...state,
       positionId: null,
       electionId: null,

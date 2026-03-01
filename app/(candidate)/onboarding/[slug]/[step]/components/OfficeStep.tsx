@@ -1,6 +1,7 @@
 'use client'
 import React, { useMemo, useState } from 'react'
 import {
+  createCampaignWithOffice,
   onboardingStep,
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
@@ -31,7 +32,7 @@ interface OfficeStepState {
 }
 
 interface OfficeStepProps {
-  campaign: Campaign
+  campaign?: Campaign
   step?: number
   updateCallback?: () => void | Promise<void>
   adminMode?: boolean
@@ -86,7 +87,7 @@ export default function OfficeStep({
   const router = useRouter()
   const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
-    originalPosition: campaign.details?.positionId,
+    originalPosition: campaign?.details?.positionId,
   })
   const [user] = useUser()
 
@@ -108,9 +109,9 @@ export default function OfficeStep({
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
-    const orgPosition = campaign.details?.positionId
-    const orgElection = campaign.details?.electionId
-    const orgRace = campaign.details?.raceId
+    const orgPosition = campaign?.details?.positionId
+    const orgElection = campaign?.details?.electionId
+    const orgRace = campaign?.details?.raceId
     if (!state.ballotOffice) {
       return false
     }
@@ -209,25 +210,41 @@ export default function OfficeStep({
       attr.push({ key: 'data.currentStep', value: currentStep })
     }
 
-    if (adminMode) {
+    const trackingProperties = {
+      officeState: position.state,
+      officeMunicipality: 'Unavailable',
+      officeName: position.name,
+      officeElectionDate: election.electionDay,
+    }
+
+    if (adminMode && campaign) {
       await runPostOfficeStepUpdates(attr, campaign.slug)
-    } else {
-      const trackingProperties = {
-        officeState: position.state,
-        officeMunicipality: 'Unavailable',
-        officeName: position.name,
-        officeElectionDate: election.electionDay,
-      }
+    } else if (campaign) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,
       })
       await runPostOfficeStepUpdates(attr)
+    } else {
+      await identifyUser(user?.id, trackingProperties)
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+        ...trackingProperties,
+        officeManuallyInput: false,
+      })
+      const newCampaign = await createCampaignWithOffice(attr)
+      if (!newCampaign) {
+        setProcessing(false)
+        return
+      }
+      await updateRaceTargetDetails()
+      router.push(`/onboarding/${newCampaign.slug}/2`)
+      setProcessing(false)
+      return
     }
 
     if (step) {
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`)
+      router.push(`/onboarding/${campaign?.slug}/${step + 1}`)
     }
     if (updateCallback) {
       await updateCallback()
@@ -260,7 +277,7 @@ export default function OfficeStep({
         position: { id: string | number | undefined }
         election: { id: string | number | null | undefined }
       }
-    | false = campaign.details?.positionId
+    | false = campaign?.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
         election: { id: campaign.details.electionId },
@@ -274,12 +291,15 @@ export default function OfficeStep({
     })
   }
 
+  const zip =
+    ballotSearch?.zip || campaign?.details?.zip || user?.zip || undefined
+
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col">
         <OfficeStepForm
           onChange={updateState}
-          zip={ballotSearch?.zip || campaign.details?.zip}
+          zip={zip}
           level={ballotSearch?.level || ''}
           adminMode={adminMode}
         />
@@ -291,7 +311,7 @@ export default function OfficeStep({
               selectedOffice={selectedOffice}
               updateCallback={updateCallback}
               step={step}
-              zip={ballotSearch?.zip || campaign.details?.zip}
+              zip={zip}
               level={ballotSearch?.level}
               adminMode={adminMode}
               fuzzyFilter={ballotSearch?.fuzzyFilter}
