@@ -38,10 +38,12 @@ export const mapContactsStatsToCharts = (
   const toChartData = (
     buckets: { label: string; percent: number }[],
   ): ChartDataPoint[] =>
-    buckets.map((bucket) => ({
-      name: bucket.label,
-      value: toPercent(bucket.percent),
-    }))
+    buckets
+      .map((bucket) => ({
+        name: bucket.label,
+        value: toPercent(bucket.percent),
+      }))
+      .filter((item) => item.value > 0)
 
   const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
     const buckets = categories.estimatedIncomeRange
