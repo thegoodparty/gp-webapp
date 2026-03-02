@@ -30,11 +30,13 @@ export default function PollsDetailPage({ pathname }: { pathname: string }) {
 
   const pollStatus = poll.status
   // Show low confidence modal if:
-  // - Poll has results (responseCount > 0)
+  // - Poll is completed
   // - Poll is marked as low confidence
   // - Poll is NOT currently expanding (scheduled or in progress expansion)
   const shouldShowLowConfidenceModal =
-    !!poll.responseCount && poll.lowConfidence && !isPollExpanding(poll)
+    pollStatus === PollStatus.COMPLETED &&
+    poll.lowConfidence &&
+    !isPollExpanding(poll)
 
   useEffect(() => {
     // Track the results viewed event with lowConfidenceModalShown property
