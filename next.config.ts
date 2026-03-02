@@ -1,6 +1,5 @@
 import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
-import { newRelicSourceMapPlugin } from 'utils/upload-sourcemaps'
 
 const withPWA = require('next-pwa')({
   dest: 'public',
@@ -40,14 +39,6 @@ const nextConfig: NextConfig = {
     ]
   },
   productionBrowserSourceMaps: true,
-  webpack: (config, { isServer }) => {
-    // Only upload sourcemaps on the client build (not server)
-    // and only in production builds
-    if (!isServer && process.env.NODE_ENV === 'production') {
-      config.plugins.push(newRelicSourceMapPlugin)
-    }
-    return config
-  },
 }
 
 export default withSentryConfig(withPWA(nextConfig), {
