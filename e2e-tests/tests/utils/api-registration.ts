@@ -119,7 +119,7 @@ const bootstrapTestUser = async (
     throw new Error('No race found for the specific office selector')
   }
 
-  await client.put('/v1/campaigns/mine', {
+  await client.post('/v1/campaigns', {
     details: {
       positionId: race.position.id,
       electionId: race.election.id,
@@ -134,20 +134,12 @@ const bootstrapTestUser = async (
       filingPeriodsStart: race.filingPeriods[0]?.startOn,
       filingPeriodsEnd: race.filingPeriods[0]?.endOn,
     },
-    pathToVictory: {},
     data: { currentStep: 'onboarding-1' },
   })
   await client.put('/v1/campaigns/mine/race-target-details', {})
   await client.put('/v1/campaigns/mine', {
-    data: { currentStep: 'onboarding-2' },
-    details: { otherParty: 'Independent' },
-  })
-  await client.put('/v1/campaigns/mine', {
-    data: { currentStep: 'onboarding-3' },
-    details: { pledged: true },
-  })
-  await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
+    details: { otherParty: 'Independent', pledged: true },
   })
   await client.post('/v1/campaigns/launch', {})
 
