@@ -106,7 +106,9 @@ describe('LowConfidenceModal', () => {
     it('calls onButtonClick with "viewPartialResults" when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /view partial results/i })
+      const button = screen.getByRole('button', {
+        name: /view partial results/i,
+      })
       fireEvent.click(button)
 
       expect(defaultProps.onButtonClick).toHaveBeenCalledWith(
@@ -117,7 +119,9 @@ describe('LowConfidenceModal', () => {
     it('calls onClose when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /view partial results/i })
+      const button = screen.getByRole('button', {
+        name: /view partial results/i,
+      })
       fireEvent.click(button)
 
       expect(defaultProps.onClose).toHaveBeenCalled()
@@ -126,7 +130,9 @@ describe('LowConfidenceModal', () => {
     it('does not navigate when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /view partial results/i })
+      const button = screen.getByRole('button', {
+        name: /view partial results/i,
+      })
       fireEvent.click(button)
 
       expect(mockPush).not.toHaveBeenCalled()
@@ -137,7 +143,9 @@ describe('LowConfidenceModal', () => {
     it('calls onButtonClick with "gatherMoreFeedback" when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /gather more feedback/i })
+      const button = screen.getByRole('button', {
+        name: /gather more feedback/i,
+      })
       fireEvent.click(button)
 
       expect(defaultProps.onButtonClick).toHaveBeenCalledWith(
@@ -148,7 +156,9 @@ describe('LowConfidenceModal', () => {
     it('navigates to the expand poll page when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /gather more feedback/i })
+      const button = screen.getByRole('button', {
+        name: /gather more feedback/i,
+      })
       fireEvent.click(button)
 
       expect(mockPush).toHaveBeenCalledWith(
@@ -156,13 +166,15 @@ describe('LowConfidenceModal', () => {
       )
     })
 
-    it('does not call onClose when clicked (navigation handles closing)', () => {
+    it('calls onClose when clicked', () => {
       render(<LowConfidenceModal {...defaultProps} />)
 
-      const button = screen.getByRole('button', { name: /gather more feedback/i })
+      const button = screen.getByRole('button', {
+        name: /gather more feedback/i,
+      })
       fireEvent.click(button)
 
-      expect(defaultProps.onClose).not.toHaveBeenCalled()
+      expect(defaultProps.onClose).toHaveBeenCalled()
     })
   })
 
@@ -175,8 +187,12 @@ describe('LowConfidenceModal', () => {
 
     render(<LowConfidenceModal {...propsWithoutCallback} />)
 
-    const viewButton = screen.getByRole('button', { name: /view partial results/i })
-    const gatherButton = screen.getByRole('button', { name: /gather more feedback/i })
+    const viewButton = screen.getByRole('button', {
+      name: /view partial results/i,
+    })
+    const gatherButton = screen.getByRole('button', {
+      name: /gather more feedback/i,
+    })
 
     // Should not throw when clicking buttons without callback
     expect(() => fireEvent.click(viewButton)).not.toThrow()

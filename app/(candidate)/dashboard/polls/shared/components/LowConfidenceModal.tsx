@@ -6,7 +6,9 @@ import { Button } from 'goodparty-styleguide'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import Body1 from '@shared/typography/Body1'
 
-export type LowConfidenceModalButtonClick = 'gatherMoreFeedback' | 'viewPartialResults'
+export type LowConfidenceModalButtonClick =
+  | 'gatherMoreFeedback'
+  | 'viewPartialResults'
 
 interface LowConfidenceModalProps {
   open: boolean
@@ -30,6 +32,7 @@ export default function LowConfidenceModal({
 
   const handleGatherMoreFeedback = () => {
     onButtonClick?.('gatherMoreFeedback')
+    onClose()
     router.push(`/dashboard/polls/${pollId}/expand`)
   }
 
