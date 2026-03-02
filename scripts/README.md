@@ -12,6 +12,8 @@ The sitemap system has evolved from dynamic on-demand generation to a static bui
 
 **Purpose**: Main sitemap generation script that creates all XML sitemap files at build time.
 
+
+
 **What it does**:
 
 - Generates main sitemap with static pages, blog articles, FAQs, and glossary terms
