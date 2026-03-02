@@ -56,7 +56,7 @@ export default function TeamMembersSection({
       <MaxWidth>
         <div className="py-8 lg:py-24">
           <h2
-            className="text-4xl font-medium leading-tight mb-4 lg:text-6xl leading-snug"
+            className="text-4xl font-medium leading-tight mb-4 lg:text-6xl lg:leading-none"
             data-cy="volunteer-section-title"
           >
             Meet the team
