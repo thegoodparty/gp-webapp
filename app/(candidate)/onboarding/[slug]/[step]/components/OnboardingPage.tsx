@@ -8,17 +8,35 @@ import { Campaign, PledgeContent } from 'helpers/types'
 
 interface OnboardingPageProps {
   step: number
-  campaign: Campaign
+  campaign?: Campaign
   totalSteps: number
   updateCallback?: () => Promise<void>
   adminMode?: boolean
   pledge?: PledgeContent
 }
 
+const content = (element: React.ReactNode) => (
+  <OnboardingLayout>
+    <div className="max-w-screen-sm mx-auto px-4 xl:p-0 ">{element}</div>
+    <UserSnapScript />
+  </OnboardingLayout>
+)
+
 export default function OnboardingPage(
   props: OnboardingPageProps,
 ): React.JSX.Element {
   const { step, campaign, updateCallback, adminMode } = props
+
+  if (!campaign) {
+    return content(
+      <OfficeStep
+        step={step}
+        updateCallback={updateCallback}
+        adminMode={adminMode}
+      />,
+    )
+  }
+
   return (
     <OnboardingLayout>
       <div className="max-w-screen-sm mx-auto px-4 xl:p-0 ">

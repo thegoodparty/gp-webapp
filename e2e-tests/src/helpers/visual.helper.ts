@@ -7,15 +7,17 @@ type SnapshotOptions = Parameters<
 
 /**
  * Takes a full-page screenshot and compares against the committed baseline.
- *
- * Baselines are stored alongside each spec file.
- * To update baselines: npx playwright test --project=stable --update-snapshots
  */
 export async function visualSnapshot(
   page: Page,
   name: string,
   options?: SnapshotOptions,
 ): Promise<void> {
+  // We only run visual snapshot testing in CI, because screenshots differ significantly
+  // between macOS and Linux.
+  if (!process.env.CI) {
+    return
+  }
   await WaitHelper.waitForPageReady(page)
 
   await expect(page).toHaveScreenshot(name, {
@@ -34,6 +36,11 @@ export async function visualSnapshotElement(
     ReturnType<typeof expect<Locator>>['toHaveScreenshot']
   >[0],
 ): Promise<void> {
+  // We only run visual snapshot testing in CI, because screenshots differ significantly
+  // between macOS and Linux.
+  if (!process.env.CI) {
+    return
+  }
   await expect(locator).toHaveScreenshot(name, {
     ...(options ?? {}),
   })
