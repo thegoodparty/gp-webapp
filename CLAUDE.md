@@ -109,6 +109,16 @@ Routes must match keys in `APIEndpoints` type (e.g., `'GET /v1/contacts/stats'`)
 - `helpers/test-utils/router-mocking.ts` - Mocked `useRouter()` (auto-applied in `vitest.setup.ts`)
 - `vitest.setup.ts` - Loads jest-dom matchers, clears React Query cache between tests, mocks `next/navigation`
 
+### AI Code Review
+
+The `ai-rules/` directory contains rule files for focused code review. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
+
+```
+Read each .md file in ai-rules/. For each rule file relevant to my changes,
+review the code I changed against those rules. For each violation, cite the
+rule number, quote the offending code, and explain what to change.
+```
+
 ## Code Style
 
 - No semicolons, single quotes, trailing commas (Prettier)
