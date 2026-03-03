@@ -445,6 +445,7 @@ export const EVENTS = {
    */
   Outreach: {
     P2PCompliance: {
+      ComplianceModalViewed: 'Voter Outreach - 10DLC Compliance Modal Viewed',
       ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
       // ⚠️  HUBSPOT INTEGRATION WARNING - DO NOT MODIFY - SEE ABOVE ⚠️
       // Used in: https://app.hubspot.com/workflows/21589597/platform/flow/1739292528/edit
