@@ -1,5 +1,4 @@
 import AdminLeftMenu from './AdminLeftMenu'
-import UserSnapScript from '@shared/scripts/UserSnapScript'
 
 interface AdminWrapperProps {
   children: React.ReactNode
@@ -24,7 +23,6 @@ export default function AdminWrapper({
           {children}
         </div>
       </div>
-      <UserSnapScript />
     </div>
   )
 }
