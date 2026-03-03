@@ -5,7 +5,6 @@ import isEmpty from 'validator/es/lib/isEmpty'
 import { NumbersOnlyTextField } from '@shared/utils/NumbersOnlyTextField'
 import TextingComplianceFooter from 'app/(user)/profile/texting-compliance/shared/TextingComplianceFooter'
 import { TextingComplianceSubmitButton } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export type PinFormData = FormDataState & {
   pin: string
@@ -41,9 +40,6 @@ export const TextingComplianceSubmitPinForm = ({
   const { isValid } = validatePinForm({ pin })
 
   const handleSubmit = () => {
-    trackEvent(EVENTS.Outreach.P2PCompliance.CvPinFormSubmitted, {
-      source: 'compliance_flow',
-    })
     return onSubmit({ pin })
   }
 
