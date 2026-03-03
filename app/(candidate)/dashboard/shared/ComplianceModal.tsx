@@ -19,7 +19,7 @@ export function ComplianceModal({
   onClose,
 }: ComplianceModalProps): React.JSX.Element {
   let title: string,
-    description: string,
+    description: string | React.ReactNode,
     cta: string,
     ctaHref: string | undefined
 
@@ -47,8 +47,30 @@ export function ComplianceModal({
       break
     default:
       title = 'Action required: register for texting compliance'
-      description =
-        "Federal requirements mean you must register before sending your first text. You'll need your Campaign EIN, your official filing link, and an active website purchased through GoodParty.org website. Don't have a site yet? You can build and launch one right from your dashboard before getting started."
+      description = (
+        <>
+          Carrier requirements mean you must register before sending your first
+          text. You&apos;ll need your Campaign EIN, your official filing link,
+          and an active website purchased through GoodParty.org. Don&apos;t have
+          a site yet? You can build and launch one right from your dashboard
+          before getting started.
+          <br />
+          <br />
+          Have questions? Visit{' '}
+          <a
+            href="https://support.goodparty.org/help-center/getting-text-compliant"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline"
+          >
+            our help center
+          </a>{' '}
+          for more information or send us an email at{' '}
+          <a href="mailto:campaignsuccess@goodparty.org" className="underline">
+            campaignsuccess@goodparty.org
+          </a>
+        </>
+      )
       cta = 'Start Registration'
       ctaHref = '/profile#texting-compliance'
       break
