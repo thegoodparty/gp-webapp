@@ -12,6 +12,7 @@ import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
+import { OrganizationPicker } from '@shared/organization-picker'
 
 const RightSide = (): React.JSX.Element => {
   const [user] = useUser() as [User | null, (user: User | null) => void]
@@ -64,6 +65,7 @@ const RightSide = (): React.JSX.Element => {
       {user ? (
         <>
           <ExitToDashboardButton />
+          <OrganizationPicker />
           <ProfileDropdown
             open={profileOpen}
             toggleCallback={toggleProfile}
