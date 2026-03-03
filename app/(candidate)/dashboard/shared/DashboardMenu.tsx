@@ -25,6 +25,7 @@ import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { Campaign } from 'helpers/types'
+import { OrganizationPicker } from '@shared/organization-picker'
 
 interface MenuItem {
   id: string
@@ -215,6 +216,9 @@ export default function DashboardMenu({
 
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
+      <div className="flex flex-col gap-2">
+        <OrganizationPicker />
+      </div>
       {menuItems.map((item) => {
         const { id, link, icon, label, target, isNew } = item
         return (

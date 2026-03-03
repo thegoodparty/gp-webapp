@@ -1,4 +1,5 @@
 import { getCookie } from 'helpers/cookieHelper'
+import { ORG_SLUG_COOKIE, ORG_SLUG_HEADER } from '@shared/organizations/constants'
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -76,6 +77,11 @@ const headersOptions = (
 
   if (token) {
     headers.Authorization = `Bearer ${token}`
+  }
+
+  const orgSlug = getCookie(ORG_SLUG_COOKIE)
+  if (orgSlug) {
+    headers[ORG_SLUG_HEADER] = orgSlug
   }
 
   return {
