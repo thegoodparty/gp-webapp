@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto'
+import { nanoid } from 'nanoid'
 
 export class TestDataHelper {
   /**
@@ -6,12 +7,12 @@ export class TestDataHelper {
    * Use this for form validation tests that don't submit
    */
   static generateTestUser() {
-    const timestamp = Date.now()
+    const timestamp = `${Date.now()}-${nanoid(5)}`
     return {
       firstName: `Test${timestamp}`,
       lastName: 'User',
       email: `test-${timestamp}@test.goodparty.org`,
-      phone: `5105${timestamp.toString().slice(-6)}`,
+      phone: `5105${Date.now().toString().slice(-6)}`,
       password: randomUUID(),
       zipCode: '28739',
     }

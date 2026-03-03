@@ -15,7 +15,6 @@ import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
-import { NewRelicIdentifier } from '@shared/new-relic'
 import { SentryIdentifier } from '@shared/sentry'
 
 interface PageWrapperProps {
@@ -32,7 +31,6 @@ const PageWrapper = async ({
     <UserProvider>
       <ImpersonateUserProvider>
         <CampaignProvider campaign={campaign}>
-          <NewRelicIdentifier />
           <SentryIdentifier />
           <ElectedOfficeProvider>
             <CampaignStatusProvider>
