@@ -1,6 +1,5 @@
 'use client'
 import { ReactNode, useEffect } from 'react'
-import UserSnapScript from '@shared/scripts/UserSnapScript'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
@@ -68,8 +67,6 @@ const DashboardLayout = ({
 
   return (
     <EcanvasserProvider>
-      <UserSnapScript />
-
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
         {!hideMenu && (
           <div className="hidden lg:block">
