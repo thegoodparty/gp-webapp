@@ -50,8 +50,8 @@ export function ComplianceModal({
       description = (
         <>
           Carrier requirements mean you must register before sending your first
-          text. You&apos;ll need your Campaign EIN, your official filing link,
-          and an active website purchased through GoodParty.org. Don&apos;t have
+          text. You'll need your Campaign EIN, your official filing link,
+          and an active website purchased through GoodParty.org. Don't have
           a site yet? You can build and launch one right from your dashboard
           before getting started.
           <br />
