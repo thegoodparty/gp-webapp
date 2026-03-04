@@ -2,12 +2,23 @@ import * as Sentry from '@sentry/nextjs'
 import type { ErrorEvent, TransactionEvent } from '@sentry/core'
 import { isProductRoute } from 'app/shared/utils/isProductRoute'
 
+function extractPathname(value: string): string {
+  // Strip HTTP method prefix, e.g. "GET /dashboard/settings" -> "/dashboard/settings"
+  const withoutMethod = value.replace(/^[A-Z]+\s+/, '')
+  try {
+    // Handle full URLs, e.g. "https://example.com/dashboard/settings" -> "/dashboard/settings"
+    return new URL(withoutMethod).pathname
+  } catch {
+    return withoutMethod
+  }
+}
+
 function getRouteFromEvent(
   event: ErrorEvent | TransactionEvent,
 ): string | undefined {
   const route =
     event.transaction ?? event.request?.url ?? event.tags?.['http.route']
-  return typeof route === 'string' ? route : undefined
+  return typeof route === 'string' ? extractPathname(route) : undefined
 }
 
 Sentry.init({
