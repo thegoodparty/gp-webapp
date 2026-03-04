@@ -1,15 +1,13 @@
 import * as Sentry from '@sentry/nextjs'
+import type { ErrorEvent, TransactionEvent } from '@sentry/core'
 import { isProductRoute } from 'app/shared/utils/isProductRoute'
 
 function getRouteFromEvent(
-  event: Sentry.ErrorEvent | Sentry.TransactionEvent,
+  event: ErrorEvent | TransactionEvent,
 ): string | undefined {
-  return (
-    event.transaction ??
-    event.request?.url ??
-    event.tags?.['http.route'] ??
-    undefined
-  )
+  const route =
+    event.transaction ?? event.request?.url ?? event.tags?.['http.route']
+  return typeof route === 'string' ? route : undefined
 }
 
 Sentry.init({
