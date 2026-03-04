@@ -111,6 +111,9 @@ const TasksList = ({
         return
       }
       if (p2pUxEnabled && !isTextCompliant) {
+        trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceModalViewed, {
+          source: 'task_list',
+        })
         setShowComplianceModal(true)
         return
       }
