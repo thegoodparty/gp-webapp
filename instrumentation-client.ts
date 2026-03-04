@@ -20,6 +20,9 @@ Sentry.init({
       maskAllInputs: true,
       blockAllMedia: false,
     }),
+    Sentry.consoleLoggingIntegration({
+      levels: ['warn', 'error'],
+    }),
   ],
 
   // We explicitly enable replays programmatically in the SentryIdentifier component
