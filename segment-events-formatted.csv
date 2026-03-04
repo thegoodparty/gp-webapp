@@ -1,0 +1,299 @@
+Object Type,Object Name,Object Description,Property Type,Event Property Name,Property Description
+Event,Sign Up: Click Login,User on the sign-up page clicked Login here to navigate to the login page.,,,
+Event,Sign In: Click Create Account,User on the login page clicked Create an account.,,,
+Event,Sign In: Click Forgot Password,User on the login page clicked Forgot your password?.,,,
+Event,Account - Password Reset Requested,User submitted a forgot-password request.,,,
+Event,Account - Password Reset Completed,User successfully reset their password via the reset link.,,,
+Event,Account - Password Set Completed,User finished setting a new password after registration or an invite.,,,
+Event,Set Password: Click Set Password,User clicked the submit button on the set-password form.,,,
+Event,Onboarding - Registration Completed,User completed account registration. signUpMethod defaults to email.,Property Name,signUpDate,ISO 8601 timestamp of when the user registered
+,,,Property Name,signUpMethod,"Registration method: 'email', 'google', or 'facebook'. Defaults to 'email'"
+Event,Onboarding: Click Finish Later,User bailed out of onboarding before completing all steps.,Property Name,step,Current onboarding step number
+Event,Onboarding - Candidate Office Searched,Debounced event fired as the user types in the office search box.,Property Name,zipCode,ZIP code entered in the office search field
+,,,Property Name,officeLevel,"Level of government filter selected (e.g. city, county, state, federal)"
+,,,Property Name,officeName,Name of office entered in the search field or selected
+Event,Onboarding - Office Step: Click Next,User clicked Next on the office selection step.,Property Name,step,Current onboarding step number
+Event,Onboarding - Office Step: Click Back,User clicked Back on the office step.,,,
+Event,Onboarding - Office Step: Office Selected,User clicked a specific office from the search results list.,Property Name,office,Name of the ballot office position selected from search results
+Event,Onboarding - Candidate Office Completed,Office was saved. officeManuallyInput true means the user typed in a custom office instead of selecting from ballot data.,Property Name,officeName,Name of office entered in the search field or selected
+,,,Property Name,officeState,State abbreviation where the office is located
+,,,Property Name,officeElectionDate,Date of the election for the selected office
+,,,Property Name,officeManuallyInput,True if the user typed a custom office; false if selected from ballot data
+Event,Onboarding - Office Step: Click Can't See Office,User clicked the link to open the manual office entry form.,,,
+Event,Onboarding - Party Step: Click Submit,User clicked Submit on the party affiliation step.,Property Name,step,Current onboarding step number
+Event,Invalid Party,User tried to submit an unsupported or invalid party name.,Property Name,party,Party name the user entered in the unsupported-party validation error
+Event,Onboarding - Candidate Affiliation Completed,Party affiliation was successfully saved.,Property Name,affiliation,Party affiliation saved (selected party or custom party name)
+Event,Onboarding - Pledge Step: Click Submit,User clicked Submit on the Good Party pledge step.,,,
+Event,Onboarding - Candidate Pledge Completed,Pledge was accepted and saved.,,,
+Event,Onboarding - Complete Step: Click Go to Dashboard,User clicked Go to Dashboard on the final onboarding screen.,,,
+Event,onboarding_complete,Campaign was successfully launched at the end of onboarding.,Property Name,type: candidate,Fixed value 'candidate'; identifies this as a candidate onboarding completion
+Event,Serve Onboarding - Getting Started Viewed,Elected official viewed step 1 of the serve onboarding flow.,,,
+Event,Serve Onboarding - Meet Your Constituents Viewed,Official saw the constituency insights loading screen.,,,
+Event,Serve Onboarding - Sworn In Viewed,Official viewed the sworn-in step.,,,
+Event,Serve Onboarding - Sworn In Completed,Official completed the sworn-in step.,,,
+Event,Serve Onboarding - Constituency Profile Viewed,Official viewed their constituency profile and demographic data.,,,
+Event,Serve Onboarding - Poll Value Props Viewed,Official saw the poll feature value proposition page.,,,
+Event,Serve Onboarding - Poll Strategy Viewed,Official viewed the poll strategy step.,,,
+Event,Serve Onboarding - Add Image Viewed,Official viewed the add-image step for their poll.,,,
+Event,Serve Onboarding - Poll Image Uploaded,Official uploaded an image for their poll.,,,
+Event,Serve Onboarding - Poll Preview Viewed,Official previewed their poll before sending.,,,
+Event,Serve Onboarding - SMS Poll Sent,Poll was sent to constituents via SMS.,Property Name,sendDate,Date the SMS poll was sent to constituents during serve onboarding
+,,,Property Name,message,Content of the demo message sent to constituents during serve onboarding
+Event,Serve Onboarding - Success Page Viewed,Official reached the success screen after completing serve onboarding.,,,
+Event,Serve Onboarding - SMS Poll Creation Failed,Poll creation failed because too few constituents have cell phone numbers.,Property Name,reachableConstituentCount,Number of constituents who have a cell phone number on file
+Event,Navigation - Top: Click Logo,User clicked the Good Party logo in the top navigation bar.,Property Name,pathname,Current URL path at the time the event fired
+Event,Navigation - Top: Click Avatar Dropdown,User clicked their avatar to open the profile dropdown.,,,
+Event,Navigation - Top - Avatar Dropdown: Close Dropdown,User closed the avatar dropdown menu.,,,
+Event,Navigation Top - Avatar Dropdown: Click Settings,User clicked Settings in the avatar dropdown.,,,
+Event,Navigation Top - Avatar Dropdown: Click Logout,User clicked Logout in the avatar dropdown.,,,
+Event,Navigation - Dashboard: Click Dashboard,User clicked Dashboard in the left sidebar.,,,
+Event,Navigation - Dashboard: Click AI Assistant,User clicked AI Assistant in the sidebar.,,,
+Event,Navigation - Dashboard: Click Voter Data,User clicked Voter Data in the sidebar.,,,
+Event,Navigation - Dashboard: Click Door Knocking,User clicked Door Knocking in the sidebar.,,,
+Event,Navigation - Dashboard: Click Content Builder,User clicked Content Builder in the sidebar.,,,
+Event,Navigation - Dashboard: Click My Profile,User clicked My Profile in the sidebar.,,,
+Event,Navigation - Dashboard: Click Community,User clicked Community in the sidebar.,,,
+Event,Navigation - Dashboard: Click Website,User clicked Website in the sidebar.,,,
+Event,Navigation - Dashboard: Click Voter Outreach,User clicked Voter Outreach in the sidebar.,,,
+Event,Navigation - Dashboard: Click Contacts,User clicked Contacts in the sidebar.,,,
+Event,Navigation - Dashboard: Click Polls,User clicked Polls in the sidebar.,,,
+Event,Dashboard - Candidate Dashboard Viewed,User loaded the main candidate dashboard.,Property Name,p2vCompleted,Whether the Path to Victory analysis is complete — the string 'true' or 'false'
+Event,Dashboard - Path to Victory: Exit Understand Path to Victory,User closed the Path to Victory info modal.,,,
+Event,Dashboard - Campaign Action History: Click Menu,User opened the overflow menu on a campaign action history entry.,Property Name,id,Database ID of the campaign action history entry
+Event,Voter Outreach - Campaign Completed,"A voter outreach campaign was logged as complete. medium is the channel type. Fired from manual log, record-contacts modal, and text campaign flow — property shapes differ slightly across callers.",Property Name,recipientCount,Number of voter contacts reached in the campaign
+,,,Property Name,price,Cost of the campaign in dollars (0 for free or manually logged activities)
+,,,Property Name,medium,"Outreach channel (e.g. texting, door_knocking, phone_banking, social_media)"
+,,,Property Name,method,How the campaign was logged — 'manual' (user entered) or 'unknown' (system-scheduled)
+,,,Property Name,campaignName,Name of the outreach campaign; literal string 'null' if not applicable
+Event,Schedule Text Campaign: Exit,User exited the schedule text campaign modal.,Property Name,step,Current onboarding step number
+Event,Schedule Text Campaign: Next,User advanced a step in the text campaign scheduling flow.,Property Name,step,Current onboarding step number
+Event,Schedule Text Campaign: Back,User went back a step in the text campaign scheduling flow.,Property Name,step,Current onboarding step number
+Event,Schedule Text Campaign: Submit,User submitted the text campaign for scheduling.,,,
+Event,Schedule Text Campaign: Complete - Return to Dashboard,User returned to the dashboard after completing text campaign setup.,,,
+Event,Schedule Text Campaign: Complete - Return to Voter File,User returned to the voter file after completing text campaign setup.,,,
+Event,Schedule Text Campaign - Audience: Check Audience,User selected an audience type filter in the scheduling flow.,,,
+Event,Schedule Text Campaign - Audience: Check Political Party,User filtered by political party in the audience step.,,,
+Event,Schedule Text Campaign - Audience: Check Age,User filtered by age range in the audience step.,,,
+Event,Schedule Text Campaign - Audience: Check Gender,User filtered by gender in the audience step.,,,
+Event,Schedule Text Campaign - Audience: Enter Audience Request,User entered a custom audience request in the scheduling flow.,,,
+Event,Schedule Text Campaign - Script: Click Use a saved script,User opted to use a previously saved script.,,,
+Event,Schedule Text Campaign - Script: Select Saved Script,User selected a specific saved script from the list.,,,
+Event,Schedule Text Campaign - Script: Click Generate a new script,User opted to generate a new AI script.,,,
+Event,Schedule Text Campaign - Script: Click Add your own script,User opted to write their own custom script.,,,
+Event,Schedule Text Campaign - Script: Submit added script,User submitted their manually written script.,,,
+Event,Outreach - View Accessed,User navigated to the Outreach section of the dashboard.,,,
+Event,Outreach - Click Create,User clicked Create to start a new outreach campaign.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Voter Outreach - 10DLC Compliance Modal Viewed,The 10DLC compliance modal was shown before the user could send text campaigns.,Property Name,source: outreach_page,Fixed value 'outreach_page'; indicates the modal was triggered from the Outreach page
+Event,Voter Outreach - 10DLC Compliance Started,User began the 10DLC compliance registration process.,Property Name,source: outreach_page,Fixed value 'outreach_page'; indicates the modal was triggered from the Outreach page
+Event,Voter Outreach - 10DLC Compliance Form Submitted,User submitted the compliance registration form. CAUTION: Used in HubSpot workflow 1739292528. Do not rename.,Property Name,source: compliance_flow,Fixed value 'compliance_flow'; indicates the form was submitted in the compliance registration flow
+Event,Voter Outreach - 10DLC Compliance PIN Submitted,User submitted their compliance PIN verification. CAUTION: Used in HubSpot workflow 1739202168. Do not rename.,Property Name,source: compliance_flow,Fixed value 'compliance_flow'; indicates the form was submitted in the compliance registration flow
+Event,10 DLC Compliance - Registration Submitted,Full DLC compliance registration was submitted via the profile compliance flow.,,,
+Event,10 DLC Compliance - PIN Verification Completed,PIN verification step was completed in the profile compliance flow.,,,
+Event,Voter Outreach - Payment Started,User reached the payment step for a voter outreach campaign.,Property Name,channel,Distribution channel for voter outreach or voter file creation
+,,,Property Name,units,Number of contacts or recipients selected for the campaign
+,,,Property Name,cost,Total cost in dollars
+Event,Outreach - Social Media: Complete,User completed a social media outreach task.,Property Name,medium: social_media,Fixed value 'social_media'; identifies the outreach channel
+,,,Property Name,price: 0,Fixed value 0; social media outreach has no direct cost
+,,,Property Name,voterContacts: 0,Fixed value 0; social media outreach does not directly contact voters
+Event,Outreach - Door Knocking: Complete,User completed a door-knocking outreach task.,,,
+Event,Outreach - Phone Banking: Complete,User completed a phone-banking outreach task.,,,
+Event,Outreach - Action Clicked,User clicked an action on an item in the outreach table.,Property Name,outreachId,Database ID of the outreach campaign item the action was performed on
+,,,Property Name,medium,"Outreach channel (e.g. texting, door_knocking, phone_banking, social_media)"
+,,,Property Name,action,"Specific action the user clicked on the outreach item (e.g. archive, view, delete)"
+Event,Polls - Create Poll Clicked,User clicked Create Poll on the polls list page.,,,
+Event,Polls - Poll Question Viewed,User viewed the question-writing step of poll creation.,,,
+Event,Polls - Poll Question Completed,User finished writing the poll question and moved to the next step.,Property Name,Introduction,1-based index of the poll question intro template the user selected
+Event,Polls - Poll Bias Detection Shown,The AI bias detection warning was surfaced for the user's question text.,,,
+Event,Polls - Poll Question Optimized,User accepted the AI-suggested optimized version of their question.,,,
+Event,Polls - Audience Selection Viewed,User viewed the audience selection step of poll creation.,,,
+Event,Polls - Audience Selection Completed,"User selected an audience. Captures reach, cost, and whether they chose the recommended option.",Property Name,Selection,Index of the audience tier option the user selected
+,,,Property Name,RecommendedSelection,Whether the user chose the platform-recommended audience option
+,,,Property Name,Count,Number of recipients in the selected poll audience
+,,,Property Name,Cost,Total cost calculated from recipient count multiplied by price per text
+Event,Polls - Schedule Poll Viewed,User viewed the scheduling step of poll creation.,,,
+Event,Polls - Schedule Poll Completed,User set a send date for their poll.,Property Name,ScheduledDate,Human-readable date string for when the poll is scheduled to send
+Event,Polls - Add Image Viewed,User viewed the add-image step of poll creation.,,,
+Event,Polls - Add Image Completed,User finished the image step. Captures whether an image was actually added.,Property Name,Image,Whether the user added an image to their poll (true/false)
+Event,Polls - Poll Preview Viewed,User previewed their poll before final submission.,,,
+Event,Polls - Poll Preview Completed,User proceeded past the preview step.,,,
+Event,Payment - Schedule and Pay Viewed,User reached the payment screen in the poll creation flow.,,,
+Event,Payment - Completed (create poll),User completed payment for a new poll.,Property Name,cost,Total cost in dollars
+,,,Property Name,count,Number of recipients for the poll expansion
+,,,Property Name,type: New Serve Poll,Fixed value 'New Serve Poll'; identifies this as a new serve poll payment (not an expansion)
+,,,Property Name,email,User's email address
+,,,Property Name,hubspotId,User's HubSpot CRM contact ID used for workflow integration
+Event,Polls - Poll Results Overview Viewed,User viewed the results overview for a poll.,Property Name,status,Current status of the poll or election result reported by the user
+Event,Polls - Poll Results Issue Details Viewed,User drilled into a specific issue breakdown from poll results.,,,
+Event,Polls - Expand Poll Recommendations Viewed,User viewed audience expansion recommendations for an existing poll.,,,
+Event,Polls - Expand Poll Recommendations Completed,User selected an expanded audience option.,Property Name,count,Number of recipients for the poll expansion
+,,,Property Name,recommended,Whether the user chose the platform-recommended expansion option (true/false)
+Event,Polls - Expand Poll Review Viewed,User viewed the review step before paying to expand the poll.,Property Name,count,Number of recipients for the poll expansion
+Event,Payment - Review and Pay Screen Viewed,User saw the payment review screen for a poll expansion.,,,
+Event,Payment - Completed (expand poll),User completed payment to expand an existing poll.,,,
+Event,AI Assistant: Click new chat,User clicked the button to start a new chat thread.,,,
+Event,AI Assistant: Ask a question,User submitted a message to the AI campaign assistant.,Property Name,text,The question or message text submitted by the user to the AI assistant
+Event,campaign_assistant_chatbot_input,Raw chatbot input event (inline string — not in the EVENTS constant).,Property Name,input,Raw input text submitted to the campaign assistant chatbot
+Event,AI Assistant: Click view chat history,User opened the chat history panel.,,,
+Event,AI Assistant - Chat History: Click menu,User opened the overflow menu on a chat thread.,,,
+Event,AI Assistant - Chat History: Click delete,User deleted a chat thread.,,,
+Event,AI Assistant - Chat: Click thumbs up,User gave a positive rating to an AI response.,,,
+Event,AI Assistant - Chat: Click thumbs down,User gave a negative rating to an AI response.,,,
+Event,AI Assistant - Chat: Click regenerate,User requested a new AI response for the same prompt.,,,
+Event,AI Assistant - Chat: Click copy,User copied an AI response to their clipboard.,,,
+Event,Content Builder: Click Continue Questions,User clicked to continue answering campaign questions that feed content generation.,,,
+Event,Content Builder: Click Generate,User clicked Generate to start AI content creation.,,,
+Event,Content Builder: Select Template,User chose a content template to generate from.,Property Name,category,Name of the content template category
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder: Close Additional Inputs,User dismissed the additional-input panel without submitting.,Property Name,fields,List of additional input field names presented to the user
+Event,Content Builder: Submit Additional Inputs,User submitted additional context fields required before generating.,Property Name,fields,List of additional input field names presented to the user
+,,,Property Name,values,Values the user submitted for each additional input field
+Event,Content Builder: Click Content,User clicked into a piece of content in their library.,Property Name,name,Title or name of the content document
+,,,Property Name,slug,URL slug identifier for the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,ai_content_generation_start,AI content generation job was kicked off (inline string — not in the EVENTS constant).,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Click Regenerate,User clicked to regenerate content in the editor.,Property Name,name,Title or name of the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Submit Regenerate,"User submitted the regenerate request, optionally with a custom prompt.",Property Name,name,Title or name of the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Click Copy,User copied the generated content to their clipboard.,Property Name,name,Title or name of the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Click Translate,User initiated translation of their content.,Property Name,name,Title or name of the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Submit Translate,User submitted the translation request.,,,
+Event,Content Builder - Editor: Open Version Picker,User opened the version history picker in the editor.,,,
+Event,Content Builder - Editor: Select Version,User selected a prior version of the content.,,,
+Event,Content Builder - Editor: Open Kebab Menu,User opened the three-dot overflow menu for a content item.,Property Name,name,Title or name of the content document
+,,,Property Name,slug,URL slug identifier for the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Click Rename,User clicked to rename a content item.,Property Name,name,Title or name of the content document
+,,,Property Name,slug,URL slug identifier for the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Content Builder - Editor: Click Delete,User clicked to delete a content item.,Property Name,name,Title or name of the content document
+,,,Property Name,slug,URL slug identifier for the content document
+,,,Property Name,key,Unique identifier key for the content template or document type
+Event,Pro Upgrade: Click exit top nav,User clicked the exit button in the top nav during the Pro upgrade flow.,Property Name,pathname,Current URL path at the time the event fired
+Event,Pro Upgrade: Edit office,User clicked to edit their office information on the Pro sign-up page.,,,
+Event,Pro Upgrade: Submit edit office,User submitted the office edit form.,,,
+Event,Pro Upgrade: Confirm office,User confirmed their office is correct and proceeded.,,,
+Event,Pro Upgrade: Exit edit office,User exited the office edit modal without saving.,,,
+Event,Pro Upgrade - Level Up Your Campaign Banner: Click upgrade,User clicked Upgrade from the Level Up dashboard banner.,,,
+Event,Pro Upgrade - Modal: Modal Shown,The Pro upgrade upsell modal was displayed to the user.,Property Name,sessionCount,Number of sessions the user has had in the application
+,,,Property Name,viabilityScore,Candidate viability score used to determine which modal variant to display
+,,,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,path,Current page URL path when the modal was shown
+Event,Pro Upgrade - Modal: Exit,User closed the Pro upgrade modal without proceeding.,Property Name,sessionCount,Number of sessions the user has had in the application
+,,,Property Name,viabilityScore,Candidate viability score used to determine which modal variant to display
+,,,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,path,Current page URL path when the modal was shown
+Event,Pro Upgrade - Modal: Click Button,User clicked the CTA button in the Pro upgrade modal.,Property Name,sessionCount,Number of sessions the user has had in the application
+,,,Property Name,viabilityScore,Candidate viability score used to determine which modal variant to display
+,,,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,path,Current page URL path when the modal was shown
+Event,P2P Upgrade - Modal: Modal Shown,The P2P texting upgrade modal appeared (shown to non-pro users who try to create text campaigns).,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,modalType,Type identifier for the modal shown (e.g. 'P2PUpgrade')
+Event,P2P Upgrade - Modal: Exit,User closed the P2P upgrade modal.,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,modalType,Type identifier for the modal shown (e.g. 'P2PUpgrade')
+Event,P2P Upgrade - Modal: Click Button,User clicked the CTA button in the P2P upgrade modal.,Property Name,variant,A/B test variant or version of the modal displayed to the user
+,,,Property Name,modalType,Type identifier for the modal shown (e.g. 'P2PUpgrade')
+,,,Property Name,buttonText,Text label of the CTA button the user clicked in the modal
+Event,Pro Upgrade - Splash Page: Click upgrade,User clicked Upgrade on the Pro upgrade splash page.,,,
+Event,Pro Upgrade - Splash Page: Exit,User exited the Pro upgrade splash page.,,,
+Event,Pro Upgrade - Committee Check Page: Click back,User went back from the committee check step.,,,
+Event,Pro Upgrade - Committee Check Page: Click next,User advanced past the committee check step.,,,
+Event,Pro Upgrade - Committee Check Page: Hover Name of Campaign Committee help,User hovered the help tooltip for the committee name field.,,,
+Event,Pro Upgrade - Committee Check Page: Toggle EIN requirement,User toggled whether their committee has an EIN.,Property Name,required,Whether the user's committee has an EIN — true means EIN is required
+Event,Pro Upgrade - Committee Check Page: Hover EIN number help,User hovered the help tooltip for the EIN field.,,,
+Event,Pro Upgrade - Committee Check Page: Click Upload,User clicked to upload supporting committee documents.,,,
+Event,Pro Upgrade - Committee Check Page: Hover Upload help,User hovered the help tooltip for the file upload field.,,,
+Event,Pro Upgrade - Service Agreement Page: Click back,User went back from the service agreement page.,,,
+Event,Pro Upgrade - Service Agreement Page: Click finish,User accepted the service agreement and finished the committee check flow.,,,
+Event,Pro Upgrade: Click Go to Stripe,User clicked to proceed to the Stripe payment page.,,,
+Event,pro_upgrade_complete,User successfully completed the Pro upgrade purchase.,Property Name,pro,Always true; confirms Pro upgrade purchase was completed
+Event,Contacts - Download,User downloaded their contacts list.,Property Name,dynamic (file type / format),Dynamically generated: includes file type and export format of the contacts download
+Event,Contacts - Segment Created,User created a new custom contact segment.,Property Name,filters,Object of active filter key-value pairs that define the segment audience
+Event,Contacts - Segment Updated,User modified an existing segment's filters.,Property Name,filters,Object of active filter key-value pairs that define the segment audience
+Event,Contacts - Segment Deleted,User deleted a custom segment.,,,
+Event,Contacts - Segment Viewed,User selected a segment to view in the contacts section.,Property Name,segment,Display name of the segment the user selected to view
+,,,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Contacts - Column Edited,User edited the visible columns in the contacts table.,,,
+Event,Voter Data: Click Need Help,User clicked Need Help on the voter records page.,,,
+Event,Voter Data - Need Help: Exit modal,User closed the help modal without submitting.,,,
+Event,Voter Data - Need Help: Select Voter File type,User selected which type of voter file they need help with.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Voter Data - Need Help: Submit,User submitted the Need Help request form.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+,,,Property Name,hasMessage,Whether the user included a free-text message in their help request (true/false)
+Event,Voter Data: Click Create Custom Voter File,User clicked to start creating a custom voter file.,Property Name,position,Identifies which Create Custom Voter File button on the page was clicked
+Event,Voter Data - Custom Voter File: Exit modal,User exited the custom voter file creation modal.,,,
+Event,Voter Data - Custom Voter File: Select Channel,User selected the distribution channel for the custom voter file.,Property Name,channel,Distribution channel for voter outreach or voter file creation
+Event,Voter Data - Custom Voter File: Select Purpose,User selected the campaign purpose for the custom voter file.,Property Name,purpose,Campaign purpose the user selected for the custom voter file
+Event,Voter Data - Custom Voter File: Click Next,User advanced to the next step in the custom voter file flow.,,,
+Event,Voter Data - Custom Voter File - Audience: Check Audience,User selected an audience type filter.,,,
+Event,Voter Data - Custom Voter File - Audience: Check Political Party,User applied a political party filter.,,,
+Event,Voter Data - Custom Voter File - Audience: Check Age,User applied an age range filter.,,,
+Event,Voter Data - Custom Voter File - Audience: Check Gender,User applied a gender filter.,,,
+Event,Voter Data - Custom Voter File - Audience: Click Back,User went back in the audience selection step.,,,
+Event,Voter Data - Custom Voter File: Click Create,User submitted the custom voter file creation with a filename.,Property Name,fileName,Name the user gave to their custom voter file
+Event,Voter Data: Click Detail View,User clicked to open a specific voter file's detail page.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+,,,Property Name,file,Name of the voter file being downloaded or viewed
+,,,Property Name,isCustom,Whether this is a user-created custom file (true) or a standard platform file (false)
+Event,Voter Data - File Detail: Click Back,User navigated back from a voter file detail page.,,,
+Event,Voter Data - File Detail: Click Download CSV,User initiated a CSV download of a voter file.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+,,,Property Name,file,Name of the voter file being downloaded or viewed
+Event,Voter Data - File Detail: Click View Audience Filters,User clicked to see the audience filters on a custom file.,,,
+Event,Voter Data - File Detail: Click Custom File Info Icon,User clicked the info icon on a custom voter file.,,,
+Event,Voter Data - File Detail - Learn & Take Action: Click Write Script,User clicked Write Script in the take-action section of the voter file detail page.,,,
+Event,Voter Data - File Detail - Learn & Take Action: Click Read More,User clicked Read More in the take-action section of the voter file detail page.,,,
+Event,Voter Data - File Detail - Learn & Take Action: Click Schedule,User clicked Schedule Today to set up a text campaign from the voter file detail page.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Voter Data - File Detail - Recommended Partners: Click Read More,User clicked Read More on a recommended vendor card.,,,
+Event,Download Voter File attempt,A voter file download was initiated.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Download Voter File Success,Voter file was downloaded successfully.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+Event,Download Voter File Failure,Voter file download failed.,Property Name,type,"Context-dependent: outreach channel, voter file type, download format, or template type"
+,,,Property Name,slug,URL slug identifier for the content document
+Event,Profile - Campaign Details: Click Save,User saved changes in the campaign details section.,,,
+Event,Profile - Office Details: Click Edit,User clicked to edit their office details.,,,
+Event,Profile - Office Details: Click Save,User saved updated office details.,,,
+Event,Profile - Running Against: Click Add New,User clicked to add a new opponent.,,,
+Event,Profile - Running Against: Submit Add New,User saved a new opponent entry.,,,
+Event,Profile - Running Against: Cancel Add New,User cancelled adding a new opponent.,,,
+Event,Profile - Running Against: Click Edit,User clicked to edit an existing opponent entry.,,,
+Event,Profile - Running Against: Submit Edit,User saved edits to an opponent entry.,,,
+Event,Profile - Running Against: Cancel Edit,User cancelled editing an opponent entry.,,,
+Event,Profile - Running Against: Click Delete,User clicked to delete an opponent.,,,
+Event,Profile - Running Against: Click Save,User clicked Save on the running against section.,,,
+Event,Profile - Why Section: Click Save,User saved the Why I'm Running section.,,,
+Event,Profile - Fun Fact: Click Save,User saved a fun fact about themselves.,,,
+Event,Profile - Top Issues: Click Finish Entering Issues,User clicked the button to finish adding issues and move to the questions flow.,,,
+Event,Profile - Top Issues: Click Edit,User clicked to edit an issue position.,,,
+Event,Profile - Top Issues: Submit Edit,User saved changes to an issue position.,,,
+Event,Profile - Top Issues: Cancel Edit,User cancelled editing an issue.,,,
+Event,Profile - Top Issues: Click Delete,User clicked to delete an issue.,,,
+Event,Profile - Top Issues: Submit Delete,User confirmed issue deletion.,,,
+Event,Profile - Top Issues: Cancel Delete,User cancelled the issue deletion.,,,
+Event,Settings - Personal Info: Click Upload,User clicked to upload a new profile photo.,,,
+Event,Settings - Personal Info: Click Save,"User saved their personal info including name, phone, and zip.",,,
+Event,Settings - Account Settings: Click Upgrade,User clicked Upgrade Plan in account settings.,,,
+Event,Settings - Account Settings: Click Send Email,User clicked the email support link in account settings.,,,
+Event,Settings - Account Settings: Click Manage Pro Subscription,User opened the Stripe billing portal to manage their subscription.,,,
+Event,Settings - Notifications: Toggle Email,User toggled an email notification preference on or off.,Property Name,email,User's email address
+,,,Property Name,enabled,Whether the notification type was toggled on (true) or off (false)
+Event,Settings - Password: Click Save,User submitted a password change request.,,,
+Event,Settings - Delete Account: Click Delete,"User clicked the Delete Account button, opening the confirmation dialog.",,,
+Event,Settings - Delete Account: Submit Delete,User confirmed account deletion in the dialog.,,,
+Event,Settings - Delete Account: Cancel Delete,User cancelled account deletion in the dialog.,,,
+Event,Account - Pro Subscription Canceled,Detected on page load when a Pro subscription has an upcoming scheduled cancellation date.,Property Name,cancellationDate,Date when the Pro subscription is scheduled to be canceled
+Event,Candidacy - Did You Win Modal Viewed,The Did You Win election result modal was displayed to the user.,,,
+Event,Candidacy - Did You Win Modal Completed,User submitted their election outcome via the Did You Win modal.,Property Name,status,Current status of the poll or election result reported by the user
+Event,Candidacy - Campaign Completed,User reported a primary election result.,Property Name,winner,Whether the candidate won the election (true/false)
+,,,Property Name,officeElectionDate,Date of the election for the selected office
+,,,Property Name,primary,Always true; indicates this is a primary election result rather than a general election
+Event,Candidate Website - Started,User created their first website and entered the build flow.,,,
+Event,Candidate Website - Continued,User returned to finish building a draft website.,,,
+Event,Candidate Website - Published,User published their website for the first time. CAUTION: Used in HubSpot workflow 1739355978. Do not rename.,,,
+Event,Candidate Website - Unpublished,User unpublished their candidate website.,,,
+Event,Candidate Website - Edited,User saved changes to an already-published website.,,,
+Event,Candidate Website - Started domain selection,User clicked to navigate to the domain selection page.,,,
+Event,Candidate Website - Selected domain,User selected a custom domain from the search results.,Property Name,domainSearchedFor,Domain name the user searched for during domain selection
+,,,Property Name,domainSelected,Domain name the user selected to purchase
+,,,Property Name,priceOfSelectedDomain,Price of the selected domain in dollars (null if unavailable)
+Event,Candidate Website - Purchased domain,User completed domain purchase. CAUTION: Used in HubSpot workflow 1739356013. Do not rename.,Property Name,domainSelected,Domain name the user selected to purchase
+,,,Property Name,priceOfSelectedDomain,Price of the selected domain in dollars (null if unavailable)
+Event,question_complete,User completed the campaign Q&A questionnaire.,Property Name,complete,Always true; confirms the campaign Q&A questionnaire was completed
