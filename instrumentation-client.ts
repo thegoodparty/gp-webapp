@@ -7,8 +7,6 @@ Sentry.init({
   enabled: !process.env.NEXT_PUBLIC_API_BASE?.includes('localhost'),
   enableLogs: true,
 
-  enableLogs: true,
-
   tracesSampler: ({ parentSampled }) => {
     if (parentSampled !== undefined) return parentSampled
     if (!isProductRoute(window.location.pathname)) return 0
