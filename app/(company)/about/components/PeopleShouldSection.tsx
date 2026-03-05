@@ -15,7 +15,7 @@ const PeopleShouldSection = (): React.JSX.Element => (
         font-medium"
       >
         <div className="mb-8 md:mb-16">
-          <h3 className="text-4xl mb-4 md:text-6xl leading-snug">
+          <h3 className="text-4xl leading-snug mb-4 md:text-6xl md:leading-none">
             Money shouldn&apos;t control <br className="hidden md:inline" />
             politics. <br className="md:hidden" />
             <span className="text-tertiary-main">People Should.</span>
@@ -50,7 +50,7 @@ const PeopleShouldSection = (): React.JSX.Element => (
             <h3 className="uppercase font-medium text-xs leading-4 mb-2 tracking-wider font-sfpro">
               Our solution:
             </h3>
-            <p className="font-medium text-xl md:text-2xl leading-7 xl:max-w-[85%]">
+            <p className="font-medium text-xl leading-7 md:text-2xl md:leading-8 xl:max-w-[85%]">
               Empower real people to run effective campaigns without dark money,
               and outside the two-party system. By making it possible to run a
               viable campaign without these corrupting influences, Americans

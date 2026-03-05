@@ -1,0 +1,18 @@
+<!-- Load fonts from Google Fonts CDN for Storybook previews.
+     In the Next.js app, fonts are loaded via next/font in layout.tsx. But
+     layout.tsx doesn't run in Storybook, so we load them here instead. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Set CSS variables that the Tailwind theme references via var().
+     In the Next.js app these are set by next/font on the <html> element. -->
+<style>
+  :root {
+    --outfit-font: 'Outfit', sans-serif;
+    --sfpro-font: 'Open Sans', sans-serif;
+  }
+</style>

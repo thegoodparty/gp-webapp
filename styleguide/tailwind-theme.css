@@ -26,6 +26,9 @@
   /* Font families */
   --font-outfit: var(--outfit-font);
   --font-sfpro: var(--sfpro-font);
+  --font-opensans: 'Open Sans', sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
 
   /* Border radius */
   --radius-lg: var(--radius, 0.5rem);

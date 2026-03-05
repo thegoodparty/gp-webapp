@@ -1,7 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
-import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test('authenticate with onboarded user', async ({ page }) => {
   console.log('🔐 Setting up authenticated user...')
@@ -32,10 +31,6 @@ test('authenticate with onboarded user', async ({ page }) => {
   console.log('📝 User created, now completing onboarding...')
 
   await waitForOfficesLoad(page)
-
-  await visualSnapshot(page, 'onboarding-step1-office-selection.png', {
-    mask: [page.getByRole('heading', { name: /welcome/i })],
-  })
 
   await completeOnboardingFlow(page)
 
@@ -280,7 +275,6 @@ async function completeStep3PledgeAgreement(page: Page): Promise<void> {
 async function acceptPledge(page: Page): Promise<void> {
   const agreeButton = page.getByRole('button', { name: 'I Agree' })
   await agreeButton.waitFor({ state: 'visible' })
-  await visualSnapshot(page, 'onboarding-step3-pledge.png')
   await agreeButton.click()
 }
 
@@ -304,7 +298,6 @@ async function navigateToDashboard(page: Page): Promise<void> {
     name: 'View Dashboard',
   })
   await viewDashboardButton.waitFor({ state: 'visible' })
-  await visualSnapshot(page, 'onboarding-step4-complete.png')
   await viewDashboardButton.click()
 }
 

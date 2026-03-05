@@ -82,6 +82,28 @@ export const fetchCampaignVersions = async (): Promise<CampaignVersions> => {
   }
 }
 
+export const createCampaignWithOffice = async (
+  attr: { key: string; value: string | number | boolean | undefined | null }[],
+): Promise<Campaign | false> => {
+  try {
+    const payload = attr.reduce<Record<string, Record<string, unknown>>>(
+      (acc, { key, value }) => {
+        const [section, field] = key.split('.')
+        if (!section || !field) return acc
+        if (!acc[section]) acc[section] = {}
+        acc[section][field] = value
+        return acc
+      },
+      {},
+    )
+    const resp = await clientFetch<Campaign>(apiRoutes.campaign.create, payload)
+    return resp.data
+  } catch (e) {
+    console.error('error creating campaign', e)
+    return false
+  }
+}
+
 export const parseNumericOnboardingStep = (currentStep = '') =>
   parseInt(`${currentStep || ''}`.replace(/\D/g, '') || '0')
 
@@ -98,15 +120,10 @@ export const onboardingStep = (
 // TODO: Refactor/break this up. It's doing WAY too much for one method and is
 //  VERY confusing and brittle.
 export const doPostAuthRedirect = async (
-  existingCampaign?: Campaign | null,
+  campaign: Campaign,
 ): Promise<string | false | undefined> => {
   try {
-    let campaign = existingCampaign
-    if (!campaign) {
-      const resp = await clientFetch<Campaign>(apiRoutes.campaign.create)
-      campaign = resp.data
-    }
-    const { slug, data: campaignData } = campaign || {}
+    const { slug, data: campaignData } = campaign
     const { currentStep } = campaignData || {}
 
     if (slug) {

@@ -25,6 +25,8 @@ export const Checked: Story = {
 export const Interactive: Story = {
   render: (args) => {
     const [checked, setChecked] = useState(false)
-    return <TaskCheckbox {...args} checked={checked} onCheckedChange={setChecked} />
+    return (
+      <TaskCheckbox {...args} checked={checked} onCheckedChange={setChecked} />
+    )
   },
 }

@@ -15,7 +15,6 @@ import saveToken from 'helpers/saveToken'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { doPostAuthRedirect } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
 import {
@@ -24,7 +23,7 @@ import {
   trackRegistrationCompleted,
 } from 'helpers/analyticsHelper'
 import { getReadyAnalytics } from '@shared/utils/analytics'
-import { User, Campaign } from 'helpers/types'
+import { User } from 'helpers/types'
 
 interface SignUpModes {
   CANDIDATE: 'candidate'
@@ -67,7 +66,6 @@ interface RegisterPayload {
 interface RegisterResponse {
   user: User
   token: string
-  campaign?: Campaign
   exists?: boolean
 }
 
@@ -189,7 +187,7 @@ export default function SignUpPage(): React.JSX.Element {
         return
       }
 
-      const { user, token, campaign } = result
+      const { user, token } = result
 
       await saveToken(token)
       setUser(user)
@@ -200,21 +198,7 @@ export default function SignUpPage(): React.JSX.Element {
         email: user.email || email,
       })
 
-      try {
-        const redirect = await doPostAuthRedirect(campaign)
-        setLoading(false)
-        if (redirect) {
-          router.push(redirect)
-        } else {
-          errorSnackbar('Failed to set up account. Please try logging in.')
-        }
-      } catch (error) {
-        console.error('Post-auth redirect error:', error)
-        setLoading(false)
-        errorSnackbar(
-          'Account created but failed to redirect. Please try logging in.',
-        )
-      }
+      router.push('/onboarding/office-selection')
     }
   }
 
