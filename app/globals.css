@@ -558,8 +558,8 @@ a:hover {
 
 @layer base {
   /*
-   * Restore cursor: pointer and font-weight for interactive elements.
-   * Tailwind v4 preflight doesn't include these by default (unlike v3).
+   * Restore cursor: pointer for interactive elements.
+   * Tailwind v4 preflight doesn't include this by default (unlike v3).
    */
   button,
   [role='button'],
@@ -568,11 +568,6 @@ a:hover {
   input[type='reset'],
   summary {
     cursor: pointer;
-    font-weight: 500;
-  }
-
-  a {
-    font-weight: 500;
   }
 
   /*
