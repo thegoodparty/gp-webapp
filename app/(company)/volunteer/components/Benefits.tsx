@@ -51,7 +51,7 @@ export default function Benefits(): React.JSX.Element {
               <div className="px-5">
                 <Image src={point.image} alt={point.title} />
                 <h4 className="my-7 text-2xl md:text-3xl">{point.title}</h4>
-                <div className=" font-sfpro md:text-lg leading-relaxed">
+                <div className=" font-sfpro leading-relaxed md:text-lg md:leading-relaxed">
                   {point.desc}
                 </div>
               </div>
