@@ -626,6 +626,15 @@ a.no-underline:hover {
 }
 
 /*
+ * Match develop's line-height (1.3) for navbar elements.
+ * On develop, the unlayered * { line-height: 1.3 } applied globally.
+ * We scope it here to just the navbar to avoid breaking other components.
+ */
+[data-testid='navbar'] * {
+  line-height: 1.3;
+}
+
+/*
  * Fix for webapp flex buttons: Ensure proper horizontal layout when flex is 
  * used on legacy button/link elements (those WITHOUT data-slot).
  * 
