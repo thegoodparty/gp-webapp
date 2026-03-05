@@ -2,7 +2,6 @@ import OnboardingLayout from 'app/(candidate)/onboarding/shared/OnboardingLayout
 import PartyStep from './PartyStep'
 import OfficeStep from './OfficeStep'
 import PledgeStep from './PledgeStep'
-import UserSnapScript from '@shared/scripts/UserSnapScript'
 import CompleteStep from './CompleteStep'
 import { Campaign, PledgeContent } from 'helpers/types'
 
@@ -18,7 +17,6 @@ interface OnboardingPageProps {
 const content = (element: React.ReactNode) => (
   <OnboardingLayout>
     <div className="max-w-screen-sm mx-auto px-4 xl:p-0 ">{element}</div>
-    <UserSnapScript />
   </OnboardingLayout>
 )
 
@@ -52,7 +50,6 @@ export default function OnboardingPage(
         {step === 3 && <PledgeStep campaign={campaign} step={step} />}
         {step === 4 && <CompleteStep />}
       </div>
-      <UserSnapScript />
     </OnboardingLayout>
   )
 }
