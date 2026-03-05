@@ -682,8 +682,6 @@ strong {
   font-weight: 900;
 }
 
-
-
 .row {
   @apply flex items-center;
 }

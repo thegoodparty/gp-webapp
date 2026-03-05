@@ -16,14 +16,17 @@ const sampleText = 'Aa'
 
 function Swatch({ name, hex, tailwindClass, dark }) {
   return (
-    <div className="flex flex-col items-start shrink-0 rounded overflow-hidden border border-gray-200 shadow-xs" style={{ width: 120 }}>
-      <div
-        style={{ backgroundColor: hex, height: 80, width: '100%' }}
-      />
+    <div
+      className="flex flex-col items-start shrink-0 rounded overflow-hidden border border-gray-200 shadow-xs"
+      style={{ width: 120 }}
+    >
+      <div style={{ backgroundColor: hex, height: 80, width: '100%' }} />
       <div className="p-2 w-full bg-white space-y-0.5">
         <p className="text-xs font-semibold text-gray-900 truncate">{name}</p>
         {tailwindClass && (
-          <p className="text-[10px] text-gray-500 truncate font-mono">{tailwindClass}</p>
+          <p className="text-[10px] text-gray-500 truncate font-mono">
+            {tailwindClass}
+          </p>
         )}
         <p className="text-[10px] text-gray-400 uppercase font-mono">{hex}</p>
       </div>
@@ -72,47 +75,115 @@ export const ThemeColors = () => (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Theme Colors</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Core theme tokens from Figma (theme/*). These define the application&apos;s primary palette and are scoped via CSS variables.
+        Core theme tokens from Figma (theme/*). These define the
+        application&apos;s primary palette and are scoped via CSS variables.
       </p>
     </div>
 
-    <Section title="Primary" description="Main brand action color — buttons, links, focus rings.">
+    <Section
+      title="Primary"
+      description="Main brand action color — buttons, links, focus rings."
+    >
       <SwatchRow>
         <Swatch name="primary" hex="#2563EB" tailwindClass="bg-primary" />
-        <Swatch name="primary-foreground" hex="#FFFFFF" tailwindClass="text-primary-foreground" />
-        <Swatch name="primary-dark" hex="#0D3CB5" tailwindClass="bg-primary-dark" />
-        <Swatch name="primary-light" hex="#75AFFE" tailwindClass="bg-primary-light" />
-        <Swatch name="primary-background" hex="#E3F1FF" tailwindClass="bg-primary-background" />
+        <Swatch
+          name="primary-foreground"
+          hex="#FFFFFF"
+          tailwindClass="text-primary-foreground"
+        />
+        <Swatch
+          name="primary-dark"
+          hex="#0D3CB5"
+          tailwindClass="bg-primary-dark"
+        />
+        <Swatch
+          name="primary-light"
+          hex="#75AFFE"
+          tailwindClass="bg-primary-light"
+        />
+        <Swatch
+          name="primary-background"
+          hex="#E3F1FF"
+          tailwindClass="bg-primary-background"
+        />
       </SwatchRow>
     </Section>
 
-    <Section title="Secondary" description="Supporting color — secondary actions, subtle emphasis.">
+    <Section
+      title="Secondary"
+      description="Supporting color — secondary actions, subtle emphasis."
+    >
       <SwatchRow>
         <Swatch name="secondary" hex="#0B1529" tailwindClass="bg-secondary" />
-        <Swatch name="secondary-foreground" hex="#FFFFFF" tailwindClass="text-secondary-foreground" />
-        <Swatch name="secondary-dark" hex="#060B17" tailwindClass="bg-secondary-dark" />
-        <Swatch name="secondary-light" hex="#1D305C" tailwindClass="bg-secondary-light" />
-        <Swatch name="secondary-background" hex="#ECF5FF" tailwindClass="bg-secondary-background" />
+        <Swatch
+          name="secondary-foreground"
+          hex="#FFFFFF"
+          tailwindClass="text-secondary-foreground"
+        />
+        <Swatch
+          name="secondary-dark"
+          hex="#060B17"
+          tailwindClass="bg-secondary-dark"
+        />
+        <Swatch
+          name="secondary-light"
+          hex="#1D305C"
+          tailwindClass="bg-secondary-light"
+        />
+        <Swatch
+          name="secondary-background"
+          hex="#ECF5FF"
+          tailwindClass="bg-secondary-background"
+        />
       </SwatchRow>
     </Section>
 
-    <Section title="Tertiary" description="Accent color — highlights, decorative elements.">
+    <Section
+      title="Tertiary"
+      description="Accent color — highlights, decorative elements."
+    >
       <SwatchRow>
         <Swatch name="tertiary" hex="#63D1A0" tailwindClass="bg-tertiary" />
-        <Swatch name="tertiary-dark" hex="#257F68" tailwindClass="bg-tertiary-dark" />
-        <Swatch name="tertiary-light" hex="#7FDCB2" tailwindClass="bg-tertiary-light" />
-        <Swatch name="tertiary-background" hex="#DDF2E8" tailwindClass="bg-tertiary-background" />
+        <Swatch
+          name="tertiary-dark"
+          hex="#257F68"
+          tailwindClass="bg-tertiary-dark"
+        />
+        <Swatch
+          name="tertiary-light"
+          hex="#7FDCB2"
+          tailwindClass="bg-tertiary-light"
+        />
+        <Swatch
+          name="tertiary-background"
+          hex="#DDF2E8"
+          tailwindClass="bg-tertiary-background"
+        />
       </SwatchRow>
     </Section>
 
-    <Section title="Destructive" description="Destructive actions — delete, remove, errors.">
+    <Section
+      title="Destructive"
+      description="Destructive actions — delete, remove, errors."
+    >
       <SwatchRow>
-        <Swatch name="destructive" hex="#E00C30" tailwindClass="bg-destructive" />
-        <Swatch name="destructive-foreground" hex="#FFFFFF" tailwindClass="text-destructive-foreground" />
+        <Swatch
+          name="destructive"
+          hex="#E00C30"
+          tailwindClass="bg-destructive"
+        />
+        <Swatch
+          name="destructive-foreground"
+          hex="#FFFFFF"
+          tailwindClass="text-destructive-foreground"
+        />
       </SwatchRow>
     </Section>
 
-    <Section title="Success" description="Positive outcomes — completed, saved, approved.">
+    <Section
+      title="Success"
+      description="Positive outcomes — completed, saved, approved."
+    >
       <SwatchRow>
         <Swatch name="success" hex="#30A541" tailwindClass="bg-success" />
         <Swatch name="success-foreground" hex="#FFFFFF" />
@@ -133,12 +204,23 @@ export const ThemeColors = () => (
       </SwatchRow>
     </Section>
 
-    <Section title="Base / Neutral" description="Foundational tokens — backgrounds, foregrounds, borders.">
+    <Section
+      title="Base / Neutral"
+      description="Foundational tokens — backgrounds, foregrounds, borders."
+    >
       <SwatchRow>
         <Swatch name="background" hex="#FFFFFF" tailwindClass="bg-background" />
-        <Swatch name="foreground" hex="#0A0A0A" tailwindClass="text-foreground" />
+        <Swatch
+          name="foreground"
+          hex="#0A0A0A"
+          tailwindClass="text-foreground"
+        />
         <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-muted" />
-        <Swatch name="muted-foreground" hex="#737373" tailwindClass="text-muted-foreground" />
+        <Swatch
+          name="muted-foreground"
+          hex="#737373"
+          tailwindClass="text-muted-foreground"
+        />
         <Swatch name="border" hex="#D4D4D4" tailwindClass="border-border" />
         <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-accent" />
         <Swatch name="card" hex="#FFFFFF" tailwindClass="bg-card" />
@@ -156,16 +238,28 @@ export const BrandingColors = () => (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Branding Colors</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Colors that represent GoodParty.org&apos;s visual identity. Defined as static values in tailwind-theme.css.
+        Colors that represent GoodParty.org&apos;s visual identity. Defined as
+        static values in tailwind-theme.css.
       </p>
     </div>
 
-    <Section title="Core Brand" description="Primary brand identifiers — logo, key surfaces.">
+    <Section
+      title="Core Brand"
+      description="Primary brand identifiers — logo, key surfaces."
+    >
       <SwatchRow>
         <Swatch name="Red" hex="#DC1438" tailwindClass="bg-brand-red" />
-        <Swatch name="Red Light" hex="#F7BAC5" tailwindClass="bg-brand-red-light" />
+        <Swatch
+          name="Red Light"
+          hex="#F7BAC5"
+          tailwindClass="bg-brand-red-light"
+        />
         <Swatch name="Blue" hex="#0048C2" tailwindClass="bg-brand-blue" />
-        <Swatch name="Blue Light" hex="#A4C2F5" tailwindClass="bg-brand-blue-light" />
+        <Swatch
+          name="Blue Light"
+          hex="#A4C2F5"
+          tailwindClass="bg-brand-blue-light"
+        />
         <Swatch name="Cream" hex="#FCF8F3" tailwindClass="bg-brand-cream" />
       </SwatchRow>
     </Section>
@@ -270,7 +364,8 @@ export const SemanticColors = () => (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Semantic Colors</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Colors that define logic used when applied to digital interfaces. Each scale runs from 50 (lightest) to 950 (darkest).
+        Colors that define logic used when applied to digital interfaces. Each
+        scale runs from 50 (lightest) to 950 (darkest).
       </p>
     </div>
 
@@ -356,7 +451,8 @@ export const TailwindColors = () => (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Tailwind Colors</h2>
       <p className="text-sm text-gray-500 mb-6">
-        An expertly-crafted, default color palette. Includes grayscale, base tokens, and chart colors.
+        An expertly-crafted, default color palette. Includes grayscale, base
+        tokens, and chart colors.
       </p>
     </div>
 
@@ -378,21 +474,51 @@ export const TailwindColors = () => (
       ]}
     />
 
-    <Section title="Base Tokens" description="Foundational color tokens used across all components.">
+    <Section
+      title="Base Tokens"
+      description="Foundational color tokens used across all components."
+    >
       <SwatchRow>
-        <Swatch name="foreground" hex="#0A0A0A" tailwindClass="text-base-foreground" />
-        <Swatch name="background" hex="#FFFFFF" tailwindClass="bg-base-background" />
-        <Swatch name="muted-foreground" hex="#737373" tailwindClass="text-base-muted-foreground" />
+        <Swatch
+          name="foreground"
+          hex="#0A0A0A"
+          tailwindClass="text-base-foreground"
+        />
+        <Swatch
+          name="background"
+          hex="#FFFFFF"
+          tailwindClass="bg-base-background"
+        />
+        <Swatch
+          name="muted-foreground"
+          hex="#737373"
+          tailwindClass="text-base-muted-foreground"
+        />
         <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-base-muted" />
-        <Swatch name="border" hex="#D4D4D4" tailwindClass="border-base-border" />
+        <Swatch
+          name="border"
+          hex="#D4D4D4"
+          tailwindClass="border-base-border"
+        />
         <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-base-accent" />
-        <Swatch name="accent-foreground" hex="#0A0A0A" tailwindClass="text-base-accent-foreground" />
+        <Swatch
+          name="accent-foreground"
+          hex="#0A0A0A"
+          tailwindClass="text-base-accent-foreground"
+        />
         <Swatch name="surface" hex="#FFFFFF" tailwindClass="bg-base-surface" />
-        <Swatch name="focus-ring" hex="#A3A3A3" tailwindClass="ring-base-focus-ring" />
+        <Swatch
+          name="focus-ring"
+          hex="#A3A3A3"
+          tailwindClass="ring-base-focus-ring"
+        />
       </SwatchRow>
     </Section>
 
-    <Section title="Data / Chart" description="Colors for data visualization and charts.">
+    <Section
+      title="Data / Chart"
+      description="Colors for data visualization and charts."
+    >
       <SwatchRow>
         <Swatch name="chart-1" hex="#5975A6" tailwindClass="bg-data-chart-1" />
         <Swatch name="chart-2" hex="#CDA1FF" tailwindClass="bg-data-chart-2" />
@@ -417,7 +543,12 @@ export const TailwindColors = () => (
           { step: '900', hex: '#051D78' },
           { step: '950', hex: '#01114D' },
         ].map(({ step, hex }) => (
-          <Swatch key={step} name={step} hex={hex} tailwindClass={`bg-blue-${step}`} />
+          <Swatch
+            key={step}
+            name={step}
+            hex={hex}
+            tailwindClass={`bg-blue-${step}`}
+          />
         ))}
       </SwatchRow>
     </Section>
@@ -437,7 +568,12 @@ export const TailwindColors = () => (
           { step: '900', hex: '#033A20' },
           { step: '950', hex: '#002212' },
         ].map(({ step, hex }) => (
-          <Swatch key={step} name={step} hex={hex} tailwindClass={`bg-green-${step}`} />
+          <Swatch
+            key={step}
+            name={step}
+            hex={hex}
+            tailwindClass={`bg-green-${step}`}
+          />
         ))}
       </SwatchRow>
     </Section>
@@ -457,7 +593,12 @@ export const TailwindColors = () => (
           { step: '900', hex: '#560311' },
           { step: '950', hex: '#370009' },
         ].map(({ step, hex }) => (
-          <Swatch key={step} name={step} hex={hex} tailwindClass={`bg-red-${step}`} />
+          <Swatch
+            key={step}
+            name={step}
+            hex={hex}
+            tailwindClass={`bg-red-${step}`}
+          />
         ))}
       </SwatchRow>
     </Section>

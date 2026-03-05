@@ -59,7 +59,9 @@ export const HopeChange = ({
       {...image}
     />
     <h3 className="text-2xl font-medium mb-4 md:text-4xl">{header}</h3>
-    <p className="font-sfpro text-sm leading-6 mb-4 md:text-base md:leading-normal">{blurb}</p>
+    <p className="font-sfpro text-sm leading-6 mb-4 md:text-base md:leading-normal">
+      {blurb}
+    </p>
     <Button
       className="md:absolute md:bottom-0"
       href={href}
