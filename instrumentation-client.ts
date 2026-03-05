@@ -1,5 +1,6 @@
 'use client'
 import * as Sentry from '@sentry/nextjs'
+import { browserProfilingIntegration } from '@sentry/browser'
 import { isProductRoute } from 'app/shared/utils/isProductRoute'
 
 Sentry.init({
@@ -12,12 +13,18 @@ Sentry.init({
     return 1.0
   },
 
+  profileSessionSampleRate: 0.1,
+  profileLifecycle: 'trace',
+  enableLogs: true,
+
   integrations: [
     Sentry.replayIntegration({
       maskAllText: false,
       maskAllInputs: true,
       blockAllMedia: false,
     }),
+    browserProfilingIntegration(),
+    Sentry.consoleLoggingIntegration(),
   ],
 
   // We explicitly enable replays programmatically in the SentryIdentifier component
@@ -35,6 +42,12 @@ Sentry.init({
       return null
     }
     return event
+  },
+  beforeSendLog: (log) => {
+    if (!isProductRoute(window.location.pathname)) {
+      return null
+    }
+    return log
   },
 })
 
