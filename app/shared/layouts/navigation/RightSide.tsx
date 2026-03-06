@@ -51,7 +51,7 @@ const RightSide = (): React.JSX.Element => {
           })
         }
         id="nav-onboarding-finish-later"
-        className="hidden lg:block relative z-[60] font-medium !text-base !py-2"
+        className="hidden lg:block relative z-60 font-medium text-base! py-2! leading-6!"
         variant="text"
       >
         Finish Later
@@ -101,7 +101,7 @@ const RightSide = (): React.JSX.Element => {
           <Button
             href="/run-for-office"
             id="nav-get-tools"
-            className="!py-2 border-none"
+            className="py-2! leading-6! border-none"
             data-testid="nav-get-tools"
           >
             <span className="font-medium text-base">Get Campaign Tools</span>
