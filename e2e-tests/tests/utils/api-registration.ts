@@ -29,6 +29,10 @@ export type TestUserOptions = {
     zip: string
     office: string | ((offices: string) => boolean)
   }
+  /**
+   * If true, automated campaign onboarding will be skipped.
+   */
+  skipCampaignCreation?: boolean
 }
 
 export type AuthenticatedUser = {
@@ -96,6 +100,23 @@ const bootstrapTestUser = async (
 
   client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
 
+  const user = registerResponse.data.user
+
+  const result: BootstrappedUser = {
+    user,
+    client,
+    token: registerResponse.data.token,
+  }
+
+  // Cache the user if not isolated
+  if (!options?.isolated) {
+    cachedUser = result
+  }
+
+  if (options?.skipCampaignCreation) {
+    return result
+  }
+
   const { data: races } = await client.get<Race[]>(
     '/v1/elections/races-by-year',
     {
@@ -142,20 +163,6 @@ const bootstrapTestUser = async (
     details: { otherParty: 'Independent', pledged: true },
   })
   await client.post('/v1/campaigns/launch', {})
-
-  const user = registerResponse.data.user
-
-  const result: BootstrappedUser = {
-    user,
-    client,
-    token: registerResponse.data.token,
-  }
-
-  // Cache the user if not isolated
-  if (!options?.isolated) {
-    cachedUser = result
-  }
-
   return result
 }
 
