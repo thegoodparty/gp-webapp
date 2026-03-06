@@ -2,12 +2,12 @@ import { BuildWithUsGridItems } from './BuildWithUsGridItems'
 
 const BuildWithUsHeaderAndBlurb = (): React.JSX.Element => (
   <div className="xl:col-span-2">
-    <h2 className="text-4xl mb-4 md:text-5xl leading-tight font-medium md:text-6xl leading-snug">
+    <h2 className="text-4xl mb-4 font-medium md:text-6xl md:leading-none leading-snug">
       Build a better <br className="hidden md:inline" />
       democracy <br className="md:hidden" />
       <span className="text-tertiary-main">with us</span>
     </h2>
-    <p className="text-xl font-medium leading-7 mb-8 md:max-w-[466px] md:text-2xl leading-8">
+    <p className="text-xl font-medium leading-7 mb-8 md:max-w-[466px] md:text-2xl md:leading-8">
       Ready to join the movement? Support candidates, run for office or join our
       community of like-minded individuals.
     </p>

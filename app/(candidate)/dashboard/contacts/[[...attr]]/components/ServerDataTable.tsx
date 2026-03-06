@@ -14,7 +14,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
   PaginationLink,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import { clsx } from 'clsx'
 import { PAGE_SIZES } from './shared/constants'
 import { type ColumnDef } from '@tanstack/react-table'

@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import PollTextBiasInput, {
   BiasAnalysisState,
 } from '../shared/components/poll-text-bias/PollTextBiasInput'

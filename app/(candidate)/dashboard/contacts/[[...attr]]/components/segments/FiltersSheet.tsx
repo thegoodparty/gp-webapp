@@ -7,7 +7,7 @@ import {
   Sheet,
   SheetContent,
   SheetTitle,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import filterSections from '../configs/filters.config'

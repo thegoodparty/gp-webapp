@@ -38,7 +38,7 @@ export function AnimatedProgressBar({
 
   return (
     <div
-      className={`bg-primary ${ANIMATED_PROGRESS_BAR_SIZE_MAP[size]} rounded-full relative bg-opacity-10`}
+      className={`bg-primary/10 ${ANIMATED_PROGRESS_BAR_SIZE_MAP[size]} rounded-full relative`}
     >
       <div
         className={`${calculateColor(
