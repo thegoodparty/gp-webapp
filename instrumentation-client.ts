@@ -15,7 +15,6 @@ Sentry.init({
 
   profileSessionSampleRate: 0.1,
   profileLifecycle: 'trace',
-  enableLogs: true,
 
   integrations: [
     Sentry.replayIntegration({
@@ -24,7 +23,6 @@ Sentry.init({
       blockAllMedia: false,
     }),
     browserProfilingIntegration(),
-    Sentry.consoleLoggingIntegration(),
   ],
 
   // We explicitly enable replays programmatically in the SentryIdentifier component
@@ -42,12 +40,6 @@ Sentry.init({
       return null
     }
     return event
-  },
-  beforeSendLog: (log) => {
-    if (!isProductRoute(window.location.pathname)) {
-      return null
-    }
-    return log
   },
 })
 
