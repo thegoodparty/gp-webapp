@@ -48,7 +48,11 @@ const DashboardOrContinue = ({
         </Button>
       ) : (
         <Button
-          href={slug ? `/onboarding/${slug}/${step || 1}` : '/onboarding/office-selection'}
+          href={
+            slug
+              ? `/onboarding/${slug}/${step || 1}`
+              : '/onboarding/office-selection'
+          }
           onClick={closeAll}
           id="nav-continue-onboarding"
           color="secondary"

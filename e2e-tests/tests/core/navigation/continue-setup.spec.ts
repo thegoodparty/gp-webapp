@@ -37,9 +37,13 @@ test.describe('Continue Setup button', () => {
     await NavigationHelper.dismissOverlays(page)
 
     // Assert takes you back to office selection
-
-    await page.getByRole('button', { name: 'Continue Setup' }).click()
-
+    const continueButton = page.getByText('Continue Setup')
+    await expect(continueButton).toBeVisible()
+    await expect(continueButton).toHaveAttribute(
+      'href',
+      '/onboarding/office-selection',
+    )
+    await continueButton.click()
     await expect(page.getByText("Let's find your office")).toBeVisible()
   })
 })
