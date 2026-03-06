@@ -37,6 +37,7 @@ const NavDropdown = ({
       onClick={toggleCallback}
       variant="text"
       size="medium"
+      className="leading-6!"
     >
       <div className="flex items-center">
         <div className="font-medium text-base" data-testid={dataTestId}>
