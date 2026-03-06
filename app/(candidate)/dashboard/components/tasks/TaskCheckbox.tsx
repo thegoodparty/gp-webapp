@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { Circle, CircleCheck, CircleCheckBig } from 'lucide-react'
 import { cn } from '@styleguide/lib/utils'
 
@@ -15,10 +14,6 @@ export default function TaskCheckbox({
   onCheckedChange,
   className,
 }: TaskCheckboxProps) {
-  const [hovered, setHovered] = useState(false)
-
-  const Icon = checked ? CircleCheckBig : hovered ? CircleCheck : Circle
-
   return (
     <button
       type="button"
@@ -26,14 +21,23 @@ export default function TaskCheckbox({
       aria-checked={checked}
       data-slot="task-checkbox"
       onClick={() => onCheckedChange?.(!checked)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       className={cn(
-        'inline-flex cursor-pointer items-center justify-center bg-transparent border-none p-0 base-foreground',
+        'group inline-flex cursor-pointer items-center justify-center border-none bg-transparent p-0 base-foreground',
         className,
       )}
     >
-      <Icon size={20} strokeWidth={1.5} />
+      {checked ? (
+        <CircleCheckBig size={20} strokeWidth={1.5} />
+      ) : (
+        <>
+          <Circle size={20} strokeWidth={1.5} className="group-hover:hidden" />
+          <CircleCheck
+            size={20}
+            strokeWidth={1.5}
+            className="hidden group-hover:block"
+          />
+        </>
+      )}
     </button>
   )
 }
