@@ -40,7 +40,10 @@ const NavDropdown = ({
       className="leading-6!"
     >
       <div className="flex items-center">
-        <div className="font-medium text-base" data-testid={dataTestId}>
+        <div
+          className="font-medium text-base leading-6!"
+          data-testid={dataTestId}
+        >
           {label}
         </div>
         <FaChevronDown

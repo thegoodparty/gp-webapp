@@ -27,7 +27,10 @@ const LeftSide = (): React.JSX.Element | null => {
         id="nav-pricing"
         className="lg:ml-3 xl:ml-6 inline-flex items-center justify-center"
       >
-        <span className="font-medium text-base" data-testid="nav-pricing">
+        <span
+          className="font-medium text-base leading-6!"
+          data-testid="nav-pricing"
+        >
           Pricing
         </span>
       </NavButton>

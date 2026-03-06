@@ -96,7 +96,7 @@ const RightSide = (): React.JSX.Element => {
             className="lg:mr-3 xl:mr-6 inline-flex items-center justify-center"
             data-testid="nav-sign-up"
           >
-            <span className="font-medium text-base">Sign up</span>
+            <span className="font-medium text-base leading-6!">Sign up</span>
           </NavButton>
           <Button
             href="/run-for-office"
@@ -104,7 +104,9 @@ const RightSide = (): React.JSX.Element => {
             className="inline-flex items-center justify-center py-2! leading-6! border-none"
             data-testid="nav-get-tools"
           >
-            <span className="font-medium text-base">Get Campaign Tools</span>
+            <span className="font-medium text-base leading-6!">
+              Get Campaign Tools
+            </span>
           </Button>
         </>
       )}
