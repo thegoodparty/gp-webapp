@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 import TaskItem from './TaskItem'
 
 const defaultProps = {
@@ -33,5 +33,43 @@ describe('TaskItem date display', () => {
     const newYearUTC = new Date('2025-01-01')
     render(<TaskItem {...defaultProps} date={newYearUTC} />)
     expect(screen.getByText('Jan 1')).toBeInTheDocument()
+  })
+})
+
+describe('TaskItem interactions', () => {
+  it('renders a lock instead of a checkbox when locked', () => {
+    const { container } = render(<TaskItem {...defaultProps} locked />)
+
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    expect(container.querySelectorAll('svg')).toHaveLength(1)
+  })
+
+  it('does not invoke onClick when locked', () => {
+    const handleClick = vi.fn()
+
+    render(<TaskItem {...defaultProps} locked onClick={handleClick} />)
+    fireEvent.click(screen.getByText('Test Task'))
+
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+
+  it('invokes onClick from the content area when unlocked', () => {
+    const handleClick = vi.fn()
+
+    render(<TaskItem {...defaultProps} onClick={handleClick} />)
+    fireEvent.click(screen.getByText('Test Task'))
+
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('forwards checkbox changes through onCheckedChange', () => {
+    const handleCheckedChange = vi.fn()
+
+    render(
+      <TaskItem {...defaultProps} onCheckedChange={handleCheckedChange} />,
+    )
+    fireEvent.click(screen.getByRole('checkbox'))
+
+    expect(handleCheckedChange).toHaveBeenCalledWith(true)
   })
 })

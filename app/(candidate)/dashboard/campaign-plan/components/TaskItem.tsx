@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { ChevronRight, Lock } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@styleguide/lib/utils'
@@ -29,7 +28,7 @@ export default function TaskItem({
   onClick,
   className,
 }: TaskItemProps) {
-  const [hovered, setHovered] = useState(false)
+  const isClickable = Boolean(onClick) && !locked
 
   const formattedDate =
     typeof date === 'string'
@@ -43,8 +42,6 @@ export default function TaskItem({
     <div
       data-slot="task-item"
       className={cn('flex w-full items-center', className)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <div className="flex shrink-0 items-start justify-center self-stretch pb-3 pl-4 pr-3 pt-3.5">
         {locked ? (
@@ -56,17 +53,20 @@ export default function TaskItem({
       <div
         className={cn(
           'flex min-w-0 flex-1 items-center overflow-hidden py-3 pr-4',
-          onClick && 'cursor-pointer',
+          isClickable && 'group cursor-pointer',
         )}
-        onClick={onClick}
+        onClick={isClickable ? onClick : undefined}
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
             <p className="min-w-0 flex-1 truncate text-base leading-[22px] font-medium text-base-foreground">
               {title}
             </p>
-            {hovered && onClick && (
-              <ChevronRight size={15} className="shrink-0 text-base-foreground" />
+            {isClickable && (
+              <ChevronRight
+                size={15}
+                className="shrink-0 text-base-foreground opacity-0 transition-opacity group-hover:opacity-100"
+              />
             )}
           </div>
           {description && (
