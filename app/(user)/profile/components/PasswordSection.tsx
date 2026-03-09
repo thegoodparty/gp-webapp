@@ -90,11 +90,15 @@ const PasswordSection = ({
     } catch (err: any) {
       setPasswordChangeSuccessful(false)
       const clerkError = err?.errors?.[0]
-      if (
-        clerkError?.code === CLERK_ERRORS.PASSWORD_INCORRECT ||
+      if (clerkError?.code === CLERK_ERRORS.PASSWORD_INCORRECT) {
+        setErrorMessage(CURRENT_PASSWORD_INCORRECT)
+      } else if (
         clerkError?.code === CLERK_ERRORS.PASSWORD_VALIDATION_FAILED
       ) {
-        setErrorMessage(CURRENT_PASSWORD_INCORRECT)
+        setErrorMessage(
+          clerkError?.longMessage ||
+            'New password does not meet security requirements',
+        )
       } else {
         setErrorMessage(
           clerkError?.longMessage || 'Failed to change password',
@@ -157,6 +161,10 @@ const PasswordSection = ({
                 onChangeField('password', pwd)
               }}
               label="New Password"
+              error={
+                errorMessage !== null &&
+                errorMessage !== CURRENT_PASSWORD_INCORRECT
+              }
             />
           </div>
 
