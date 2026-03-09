@@ -8,12 +8,19 @@ export default async function PostAuthRedirect() {
     redirect('/login')
   }
 
-  const { status, slug } = await fetchCampaignStatus()
-  if (status === 'candidate') {
-    redirect('/dashboard')
-  } else if (slug) {
-    redirect(`/onboarding/${slug}/1`)
-  } else {
+  try {
+    const { status, slug } = await fetchCampaignStatus()
+    if (status === 'candidate') {
+      redirect('/dashboard')
+    } else if (slug) {
+      redirect(`/onboarding/${slug}/1`)
+    } else {
+      redirect('/profile')
+    }
+  } catch (e) {
+    // Re-throw redirect errors (they're expected flow control in Next.js)
+    if (e && typeof e === 'object' && 'digest' in e) throw e
+    console.error('PostAuthRedirect: failed to fetch campaign status', e)
     redirect('/profile')
   }
 }

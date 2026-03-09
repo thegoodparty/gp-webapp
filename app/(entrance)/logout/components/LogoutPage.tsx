@@ -3,6 +3,7 @@
 import { useClerk } from '@clerk/nextjs'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { deleteCookie } from 'helpers/cookieHelper'
 
 export default function LogoutPage() {
   const { signOut } = useClerk()
@@ -10,8 +11,12 @@ export default function LogoutPage() {
 
   useEffect(() => {
     queryClient.clear()
-    signOut({ redirectUrl: '/' })
+    deleteCookie('impersonateToken')
+    deleteCookie('impersonateUser')
+    signOut({ redirectUrl: '/' }).catch(() => {
+      window.location.href = '/'
+    })
   }, [signOut, queryClient])
 
-  return null
+  return <p className="p-8 text-center">Signing out...</p>
 }

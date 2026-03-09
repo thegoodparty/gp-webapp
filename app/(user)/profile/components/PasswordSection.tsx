@@ -57,7 +57,10 @@ const PasswordSection = ({
       state.oldPassword.length > 7 &&
       state.password.match(passwordRegex) &&
       state.password.length > 7) ||
-    (!hasPassword && state.password !== '' && state.password.length > 7)
+    (!hasPassword &&
+      state.password !== '' &&
+      state.password.match(passwordRegex) &&
+      state.password.length > 7)
 
   const reset = (): void => {
     setState(initialState)
@@ -65,15 +68,19 @@ const PasswordSection = ({
 
   const doPasswordChange = async (): Promise<void> => {
     const { password, oldPassword } = state
+    if (!clerkUser) {
+      setErrorMessage('User session not found. Please refresh and try again.')
+      return
+    }
     setLoading(true)
     try {
       if (hasPassword) {
-        await clerkUser?.updatePassword({
+        await clerkUser.updatePassword({
           currentPassword: oldPassword,
           newPassword: password,
         })
       } else {
-        await clerkUser?.updatePassword({
+        await clerkUser.updatePassword({
           newPassword: password,
         })
       }

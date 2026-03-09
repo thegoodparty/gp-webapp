@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 
@@ -17,6 +18,7 @@ export async function fetchCampaignStatus(): Promise<CampaignStatus> {
     }
     return resp.data
   } catch (e) {
+    if (isRedirectError(e)) throw e
     console.log('error at fetchCampaignStatus', e)
     return { status: false }
   }
