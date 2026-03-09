@@ -13,7 +13,7 @@ if (!baseURL) {
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
-export type TestUserOptions = {
+type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
    * Otherwise, the user will be shared with other tests.
@@ -29,11 +29,18 @@ export type TestUserOptions = {
     zip: string
     office: string | ((offices: string) => boolean)
   }
-  /**
-   * If true, automated campaign onboarding will be skipped.
-   */
-  skipCampaignCreation?: boolean
 }
+
+export type TestUserOptions =
+  | (BaseTestUserOptions & { skipCampaignCreation?: false })
+  | (BaseTestUserOptions & {
+      /**
+       * If true, automated campaign onboarding will be skipped.
+       * Requires isolated: true to prevent caching an incomplete user.
+       */
+      skipCampaignCreation: true
+      isolated: true
+    })
 
 export type AuthenticatedUser = {
   id: number

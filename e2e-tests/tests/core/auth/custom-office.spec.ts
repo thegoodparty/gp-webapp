@@ -7,6 +7,7 @@ test.describe('Custom office flow', () => {
   }) => {
     const { client } = await authenticateTestUser(page, {
       skipCampaignCreation: true,
+      isolated: true,
     })
 
     await page.goto('/onboarding/office-selection')
