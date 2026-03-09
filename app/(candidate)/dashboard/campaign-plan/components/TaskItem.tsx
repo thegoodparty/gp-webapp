@@ -34,7 +34,11 @@ export default function TaskItem({
     typeof date === 'string'
       ? date
       : format(
-          new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+          new Date(
+            date.getUTCFullYear(),
+            date.getUTCMonth(),
+            date.getUTCDate(),
+          ),
           'MMM d',
         )
 

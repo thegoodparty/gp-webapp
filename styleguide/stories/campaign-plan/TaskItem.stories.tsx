@@ -11,7 +11,8 @@ const meta: Meta<typeof TaskItem> = {
   },
   args: {
     title: 'Borough Council Meeting',
-    description: 'Opportunity to address community concerns and observe local governance',
+    description:
+      'Opportunity to address community concerns and observe local governance',
     date: 'Sep 7',
     type: 'Event',
   },

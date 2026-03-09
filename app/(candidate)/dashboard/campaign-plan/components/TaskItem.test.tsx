@@ -65,9 +65,7 @@ describe('TaskItem interactions', () => {
   it('forwards checkbox changes through onCheckedChange', () => {
     const handleCheckedChange = vi.fn()
 
-    render(
-      <TaskItem {...defaultProps} onCheckedChange={handleCheckedChange} />,
-    )
+    render(<TaskItem {...defaultProps} onCheckedChange={handleCheckedChange} />)
     fireEvent.click(screen.getByRole('checkbox'))
 
     expect(handleCheckedChange).toHaveBeenCalledWith(true)
