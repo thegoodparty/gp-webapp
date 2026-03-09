@@ -48,7 +48,10 @@ export default function ContactsStatsSection({
           {query.status !== 'success' ? (
             <div className="h-8 bg-gray-100 rounded animate-pulse mt-1 w-full"></div>
           ) : (
-            <h4 className="font-bold text-2xl mt-1">
+            <h4
+              className="font-bold text-2xl mt-1"
+              data-testid={`contact-stats-${card.key}`}
+            >
               {card.getValue(
                 getContactStatsRendered(query.data, totalVisibleContacts),
               )}

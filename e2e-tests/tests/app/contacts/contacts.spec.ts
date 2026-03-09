@@ -58,8 +58,15 @@ test.describe('Contacts Page', () => {
     // Page 1 first person name captured
 
     // Mask table body rows — voter data is real and varies; capture UI chrome only
+    const statsCards = [
+      page.locator(`[data-testid="contact-stats-totalConstituents"]`),
+      page.locator(`[data-testid="contact-stats-visibleContactsPercent"]`),
+      page.locator(`[data-testid="contact-stats-homeowners"]`),
+      page.locator(`[data-testid="contact-stats-hasChildren"]`),
+      page.locator(`[data-testid="contact-stats-medianIncome"]`),
+    ]
     await visualSnapshot(page, 'contacts-page.png', {
-      mask: [table.locator('tbody')],
+      mask: [...statsCards, table.locator('tbody')],
     })
 
     //
@@ -110,7 +117,7 @@ test.describe('Contacts Page', () => {
 
     // Mask the person sheet content — PII data varies per test run
     await visualSnapshot(page, 'contacts-person-overlay.png', {
-      mask: [personSheet],
+      mask: [...statsCards, personSheet],
     })
 
     const closeButton = personSheet.getByRole('button', { name: /close/i })
@@ -180,7 +187,9 @@ test.describe('Contacts Page', () => {
     await expect(sheet).toBeVisible({ timeout: 10000 })
     // Filters sheet is visible
 
-    await visualSnapshot(page, 'contacts-filters-sheet.png')
+    await visualSnapshot(page, 'contacts-filters-sheet.png', {
+      mask: statsCards,
+    })
 
     const age18_25Label = sheet.getByText('18-25', { exact: true })
     const age18_25Checkbox = age18_25Label
