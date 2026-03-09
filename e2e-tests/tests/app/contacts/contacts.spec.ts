@@ -59,7 +59,14 @@ test.describe('Contacts Page', () => {
 
     // Mask table body rows — voter data is real and varies; capture UI chrome only
     await visualSnapshot(page, 'contacts-page.png', {
-      mask: [table.locator('tbody')],
+      mask: [
+        page.locator(`[data-testid="contact-stats-totalConstituents"]`),
+        page.locator(`[data-testid="contact-stats-visibleContactsPercent"]`),
+        page.locator(`[data-testid="contact-stats-homeowners"]`),
+        page.locator(`[data-testid="contact-stats-hasChildren"]`),
+        page.locator(`[data-testid="contact-stats-medianIncome"]`),
+        table.locator('tbody'),
+      ],
     })
 
     //
