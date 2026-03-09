@@ -13,7 +13,7 @@ if (!baseURL) {
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
-export type TestUserOptions = {
+type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
    * Otherwise, the user will be shared with other tests.
@@ -30,6 +30,17 @@ export type TestUserOptions = {
     office: string | ((offices: string) => boolean)
   }
 }
+
+export type TestUserOptions =
+  | (BaseTestUserOptions & { skipCampaignCreation?: false })
+  | (BaseTestUserOptions & {
+      /**
+       * If true, automated campaign onboarding will be skipped.
+       * Requires isolated: true to prevent caching an incomplete user.
+       */
+      skipCampaignCreation: true
+      isolated: true
+    })
 
 export type AuthenticatedUser = {
   id: number
@@ -96,6 +107,23 @@ const bootstrapTestUser = async (
 
   client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
 
+  const user = registerResponse.data.user
+
+  const result: BootstrappedUser = {
+    user,
+    client,
+    token: registerResponse.data.token,
+  }
+
+  // Cache the user if not isolated
+  if (!options?.isolated) {
+    cachedUser = result
+  }
+
+  if (options?.skipCampaignCreation) {
+    return result
+  }
+
   const { data: races } = await client.get<Race[]>(
     '/v1/elections/races-by-year',
     {
@@ -119,7 +147,7 @@ const bootstrapTestUser = async (
     throw new Error('No race found for the specific office selector')
   }
 
-  await client.put('/v1/campaigns/mine', {
+  await client.post('/v1/campaigns', {
     details: {
       positionId: race.position.id,
       electionId: race.election.id,
@@ -134,36 +162,14 @@ const bootstrapTestUser = async (
       filingPeriodsStart: race.filingPeriods[0]?.startOn,
       filingPeriodsEnd: race.filingPeriods[0]?.endOn,
     },
-    pathToVictory: {},
     data: { currentStep: 'onboarding-1' },
   })
   await client.put('/v1/campaigns/mine/race-target-details', {})
   await client.put('/v1/campaigns/mine', {
-    data: { currentStep: 'onboarding-2' },
-    details: { otherParty: 'Independent' },
-  })
-  await client.put('/v1/campaigns/mine', {
-    data: { currentStep: 'onboarding-3' },
-    details: { pledged: true },
-  })
-  await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
+    details: { otherParty: 'Independent', pledged: true },
   })
   await client.post('/v1/campaigns/launch', {})
-
-  const user = registerResponse.data.user
-
-  const result: BootstrappedUser = {
-    user,
-    client,
-    token: registerResponse.data.token,
-  }
-
-  // Cache the user if not isolated
-  if (!options?.isolated) {
-    cachedUser = result
-  }
-
   return result
 }
 

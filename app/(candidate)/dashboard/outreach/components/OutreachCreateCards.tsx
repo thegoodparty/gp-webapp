@@ -114,6 +114,9 @@ const OutreachCreateCards = ({
         return openP2PModal()
       }
       if (p2pUxEnabled && !isTextCompliant) {
+        trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceModalViewed, {
+          source: 'outreach_page',
+        })
         return openComplianceModal()
       }
     } else if (requiresPro && !isPro) {

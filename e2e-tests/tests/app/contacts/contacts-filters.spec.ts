@@ -185,7 +185,11 @@ test('validate contacts filters', async ({ page }) => {
 
   // Capture the contacts page with segment active — mask voter data rows
   await visualSnapshot(page, 'contacts-with-segment.png', {
-    mask: [table.locator('tbody')],
+    mask: [
+      page.locator(`[data-testid="contact-stats-totalConstituents"]`),
+      page.locator(`[data-testid="contact-stats-visibleContactsPercent"]`),
+      table.locator('tbody'),
+    ],
   })
 
   await test.step('Filter: Gender', async () => {

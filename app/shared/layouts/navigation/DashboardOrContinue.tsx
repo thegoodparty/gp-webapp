@@ -19,9 +19,12 @@ const DashboardOrContinue = ({
     }) || {}
 
   if (!status) {
+    const href = slug
+      ? `/onboarding/${slug}/${step || '1'}`
+      : '/onboarding/office-selection'
     return (
       <Button
-        href={`/onboarding/${slug || ''}/${step || '1'}`}
+        href={href}
         onClick={closeAll}
         id="nav-continue-setup"
         color="secondary"
@@ -45,7 +48,11 @@ const DashboardOrContinue = ({
         </Button>
       ) : (
         <Button
-          href={`/onboarding/${slug}/${step || 1}`}
+          href={
+            slug
+              ? `/onboarding/${slug}/${step || 1}`
+              : '/onboarding/office-selection'
+          }
           onClick={closeAll}
           id="nav-continue-onboarding"
           color="secondary"

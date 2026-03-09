@@ -23,7 +23,9 @@ test.describe('Mobile Navigation', () => {
     const anyHeading = page.locator('h1, h2, h3, h4').first()
     await expect(anyHeading).toBeVisible()
 
-    await visualSnapshot(page, 'mobile-dashboard.png')
+    await visualSnapshot(page, 'mobile-dashboard.png', {
+      mask: [page.locator('h1')],
+    })
     console.log('✅ Mobile dashboard accessible')
   })
 

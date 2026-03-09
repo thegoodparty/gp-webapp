@@ -1,4 +1,5 @@
 import { auth } from '@clerk/nextjs/server'
+import { decodeJwt } from 'jose'
 import { User } from './types'
 import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 
