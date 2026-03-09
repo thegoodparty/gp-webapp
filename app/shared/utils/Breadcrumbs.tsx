@@ -71,12 +71,9 @@ const Breadcrumbs = ({
           ))}
           <li>
             <div
-              className={clsx(
-                'text-base font-medium text-primary-dark',
-                {
-                  'whitespace-nowrap': !wrapText,
-                },
-              )}
+              className={clsx('text-base font-medium text-primary-dark', {
+                'whitespace-nowrap': !wrapText,
+              })}
             >
               {links[links.length - 1]?.label}
             </div>
