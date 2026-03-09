@@ -1,6 +1,6 @@
 'use client'
 import Modal from '@shared/utils/Modal'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
@@ -258,27 +258,35 @@ const TaskFlow = ({
     [errorSnackbar],
   )
 
+  const isPurchaseCompletingRef = useRef(false)
+
   const handlePurchaseComplete = async () => {
-    const outreach = await onCreateOutreach()
-    if (!outreach?.id) {
-      errorSnackbar('Campaign could not be created. Please try again.')
-      return
+    if (isPurchaseCompletingRef.current) return
+    isPurchaseCompletingRef.current = true
+    try {
+      const outreach = await onCreateOutreach()
+      if (!outreach?.id) {
+        errorSnackbar('Campaign could not be created. Please try again.')
+        return
+      }
+      await handleScheduleOutreach(
+        type,
+        errorSnackbar,
+        successSnackbar,
+        state,
+      )(outreach)
+
+      const contactField = getVoterContactField(type)
+      await updateVoterContacts((currentContacts) => ({
+        ...currentContacts,
+        [contactField]:
+          (currentContacts[contactField] || 0) + (state.voterCount || 0),
+      }))
+
+      handleNext()
+    } finally {
+      isPurchaseCompletingRef.current = false
     }
-    await handleScheduleOutreach(
-      type,
-      errorSnackbar,
-      successSnackbar,
-      state,
-    )(outreach)
-
-    const contactField = getVoterContactField(type)
-    await updateVoterContacts((currentContacts) => ({
-      ...currentContacts,
-      [contactField]:
-        (currentContacts[contactField] || 0) + (state.voterCount || 0),
-    }))
-
-    handleNext()
   }
 
   return (

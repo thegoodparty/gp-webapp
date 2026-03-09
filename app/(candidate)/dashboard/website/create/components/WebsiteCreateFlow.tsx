@@ -14,7 +14,7 @@ import CompleteStep from '../../editor/components/CompleteStep'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { updateWebsite, WEBSITE_STATUS } from '../../util/website.util'
 import { useWebsite } from '../../components/WebsiteProvider'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
@@ -84,7 +84,6 @@ export default function WebsiteCreateFlow({
     const saved = await handleSave(true)
 
     if (saved) {
-      trackEvent(EVENTS.CandidateWebsite.Published)
       setStep(COMPLETE_STEP)
       successSnackbar('Your website has been published')
     } else {
