@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import ResendPasswordEmailAction from './ResendPasswordEmailAction'
 
 interface User {
@@ -18,7 +17,7 @@ interface ActionsProps {
 }
 
 export default function Actions({ user }: ActionsProps): React.JSX.Element {
-  const { id, email } = user
+  const { id } = user
   const [showMenu, setShowMenu] = useState(false)
 
   return (
@@ -38,7 +37,6 @@ export default function Actions({ user }: ActionsProps): React.JSX.Element {
             }}
           />
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
-            <ImpersonateAction email={email} isCandidate={false} />
             <ResendPasswordEmailAction user={user} />
             <DeleteAction id={id} />
           </div>

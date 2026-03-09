@@ -1,5 +1,3 @@
-import { getCookie } from 'helpers/cookieHelper'
-
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
     typeof process !== 'undefined' &&
@@ -51,7 +49,7 @@ const gpFetch = async <T = Partial<Record<string, unknown>>>(
 
   let autoToken: string | false | undefined
   if (withAuth) {
-    autoToken = getCookie('impersonateToken') || token
+    autoToken = token
   }
 
   const requestOptions = headersOptions(body, endpoint.method, autoToken)

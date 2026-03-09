@@ -3,7 +3,6 @@ import Link from 'next/link'
 import {
   FaChevronDown,
   FaExternalLinkAlt,
-  FaTheaterMasks,
   FaToolbox,
   FaUserCircle,
 } from 'react-icons/fa'
@@ -12,7 +11,6 @@ import { RiLogoutBoxFill } from 'react-icons/ri'
 import { HiOutlineStar } from 'react-icons/hi'
 import UserAvatar from '@shared/user/UserAvatar'
 import { handleLogOut } from '@shared/user/handleLogOut'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { MdAdd } from 'react-icons/md'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -49,13 +47,6 @@ const ProfileDropdown = ({
   toggleCallback,
   user,
 }: ProfileDropdownProps): React.JSX.Element => {
-  const {
-    clear: clearImpersonation,
-    token: impersonateToken,
-    user: impersonateUser,
-  } = useImpersonateUser()
-  const impersonating = impersonateToken && impersonateUser
-
   useEffect(() => {
     if (user) {
       hubspotIntegration(user)
@@ -77,17 +68,8 @@ const ProfileDropdown = ({
     ])
   }
 
-  const handleEnterPress = (e: React.KeyboardEvent, cb: () => void) => {
-    if (e.key === 'Enter') cb()
-  }
-
   const handleKeyToggle = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || (e.key === 'Escape' && open)) toggleCallback()
-  }
-
-  const handleStopImpersonate = () => {
-    clearImpersonation()
-    window.location.href = '/admin'
   }
 
   const handleToggle = () => {
@@ -111,9 +93,7 @@ const ProfileDropdown = ({
         <div
           role="button"
           tabIndex={0}
-          className={`flex items-center  rounded-full px-2 py-1 ${
-            impersonating ? 'bg-orange-400' : 'bg-indigo-50'
-          }`}
+          className="flex items-center  rounded-full px-2 py-1 bg-indigo-50"
         >
           <div className="">
             {user?.avatar ? (
@@ -155,7 +135,7 @@ const ProfileDropdown = ({
                 {link.external && <FaExternalLinkAlt size={14} />}
               </Link>
             ))}
-            {userHasRole(user, USER_ROLES.SALES) && !impersonating && (
+            {userHasRole(user, USER_ROLES.SALES) && (
               <Link
                 href="/sales/add-campaign"
                 className="no-underline font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
@@ -164,7 +144,7 @@ const ProfileDropdown = ({
                 <div className="ml-3">Add Campaign</div>
               </Link>
             )}
-            {userIsAdmin(user) && !impersonating && (
+            {userIsAdmin(user) && (
               <>
                 <Link
                   href="/admin"
@@ -174,19 +154,6 @@ const ProfileDropdown = ({
                   <div className="ml-3">Admin</div>
                 </Link>
               </>
-            )}
-            {impersonating && (
-              <div
-                role="link"
-                tabIndex={0}
-                data-cy="header-link"
-                className="font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-                onClick={handleStopImpersonate}
-                onKeyDown={(e) => handleEnterPress(e, handleStopImpersonate)}
-              >
-                <FaTheaterMasks />
-                <div className="ml-3">Stop Impersonating</div>
-              </div>
             )}
             <div
               role="link"

@@ -457,10 +457,6 @@ export const apiRoutes = {
         path: '/admin/users/:id',
         method: 'DELETE',
       },
-      impersonate: {
-        path: '/admin/users/impersonate',
-        method: 'POST',
-      },
     },
     campaign: {
       create: {

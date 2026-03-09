@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import Button from '@shared/buttons/Button'
 
 interface ActionsProps {
@@ -55,11 +54,6 @@ export default function Actions({
             >
               Path to Victory
             </Button>
-            <ImpersonateAction
-              email={email}
-              isCandidate={true}
-              launched={launched}
-            />
             <DeleteAction id={id} slug={slug} isLive={isLive} />
           </div>
         </>

@@ -119,13 +119,8 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`)
   if (apiRewriteRequest) {
     try {
-      // Use impersonation token if present, otherwise use Clerk session token
-      const impersonateToken = req.cookies.get('impersonateToken')?.value
-      let token: string | null = impersonateToken || null
-      if (!token) {
-        const { getToken } = await auth()
-        token = await getToken()
-      }
+      const { getToken } = await auth()
+      const token = await getToken()
       return await handleApiRequestRewrite(req, token)
     } catch (error) {
       console.error('Error in handleApiRequestRewrite', error)

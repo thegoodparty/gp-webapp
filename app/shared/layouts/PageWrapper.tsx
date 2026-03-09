@@ -9,7 +9,7 @@ import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ElectedOfficeProvider } from '@shared/hooks/ElectedOfficeProvider'
-import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
+
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
@@ -29,38 +29,36 @@ const PageWrapper = async ({
 
   return (
     <UserProvider>
-      <ImpersonateUserProvider>
-        <CampaignProvider campaign={campaign}>
-          <SentryIdentifier />
-          <ElectedOfficeProvider>
-            <CampaignStatusProvider>
-              <P2pUxEnabledProvider>
-                <NavigationProvider>
-                  <SnackbarProvider>
-                    <div className="overflow-x-hidden">
-                      <JsonLdSchema />
-                      <Nav />
-                      <Suspense>
-                        <PromoBanner initPathname={pathname || ''} />
-                      </Suspense>
-                      {children}
-                      <Suspense>
-                        <Footer initPathname={pathname || ''} />
-                      </Suspense>
-                      <Suspense>
-                        <CookiesSnackbar />
-                      </Suspense>
-                      <Suspense>
-                        <SegmentIdentify />
-                      </Suspense>
-                    </div>
-                  </SnackbarProvider>
-                </NavigationProvider>
-              </P2pUxEnabledProvider>
-            </CampaignStatusProvider>
-          </ElectedOfficeProvider>
-        </CampaignProvider>
-      </ImpersonateUserProvider>
+      <CampaignProvider campaign={campaign}>
+        <SentryIdentifier />
+        <ElectedOfficeProvider>
+          <CampaignStatusProvider>
+            <P2pUxEnabledProvider>
+              <NavigationProvider>
+                <SnackbarProvider>
+                  <div className="overflow-x-hidden">
+                    <JsonLdSchema />
+                    <Nav />
+                    <Suspense>
+                      <PromoBanner initPathname={pathname || ''} />
+                    </Suspense>
+                    {children}
+                    <Suspense>
+                      <Footer initPathname={pathname || ''} />
+                    </Suspense>
+                    <Suspense>
+                      <CookiesSnackbar />
+                    </Suspense>
+                    <Suspense>
+                      <SegmentIdentify />
+                    </Suspense>
+                  </div>
+                </SnackbarProvider>
+              </NavigationProvider>
+            </P2pUxEnabledProvider>
+          </CampaignStatusProvider>
+        </ElectedOfficeProvider>
+      </CampaignProvider>
     </UserProvider>
   )
 }
