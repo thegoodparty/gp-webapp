@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import CheckoutPayment from 'app/(candidate)/dashboard/purchase/components/CheckoutPayment'
 import Button from '@shared/buttons/Button'
@@ -29,6 +29,7 @@ export const OutreachPurchaseForm = ({
   const { p2pUxEnabled } = useP2pUxEnabled()
   const { checkoutSession } = useCheckoutSession()
   const [isRedeeming, setIsRedeeming] = useState(false)
+  const isRedeemingRef = useRef(false)
 
   const hasFreeTextsOffer = p2pUxEnabled && campaign?.hasFreeTextsOffer
   const discount = hasFreeTextsOffer
@@ -40,6 +41,8 @@ export const OutreachPurchaseForm = ({
   const totalCost = isFree ? 0 : checkoutSession?.amount ?? 0
 
   const handleFreeComplete = async () => {
+    if (isRedeemingRef.current) return
+    isRedeemingRef.current = true
     setIsRedeeming(true)
     try {
       const response = await completeFreePurchase(PURCHASE_TYPES.TEXT, {
@@ -55,6 +58,7 @@ export const OutreachPurchaseForm = ({
     } catch {
       onError()
     } finally {
+      isRedeemingRef.current = false
       setIsRedeeming(false)
     }
   }
