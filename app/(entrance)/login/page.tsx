@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { SignIn } from '@clerk/nextjs'
-import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess'
+import { getPostAuthRedirectPath } from 'app/(candidate)/dashboard/shared/candidateAccess'
 import pageMetaData from 'helpers/metadataHelper'
 
 const meta = pageMetaData({
@@ -14,14 +14,7 @@ export const metadata = meta
 export default async function LoginPage() {
   const { userId } = await auth()
   if (userId) {
-    const { status, slug } = await fetchCampaignStatus()
-    if (status === 'candidate') {
-      redirect('/dashboard')
-    } else if (slug) {
-      redirect(`/onboarding/${slug}/1`)
-    } else {
-      redirect('/profile')
-    }
+    redirect(await getPostAuthRedirectPath())
   }
 
   return (
