@@ -2,7 +2,7 @@
 import { useUser } from '@shared/hooks/useUser'
 import { trackEvent } from 'helpers/analyticsHelper'
 import Script from 'next/script'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { isTestUser } from 'helpers/test-users'
 
 interface UsersnapApi {
@@ -49,43 +49,52 @@ export function waitForUsersnap(timeoutMs = 10000): Promise<UsersnapApi> {
 }
 
 export default function UserSnapScript(): React.JSX.Element {
-  const [user] = useUser()
+  const [user, , isUserLoading] = useUser()
+  const [usersnapApi, setUsersnapApi] = useState<UsersnapApi | null>(
+    () => window.Usersnap?.api ?? null,
+  )
+  const initializedRef = useRef(false)
 
   useEffect(() => {
     window.onUsersnapLoad = (api: UsersnapApi) => {
       window.Usersnap = { api }
+      setUsersnapApi(api)
 
       if (window.__usersnapResolve) {
         window.__usersnapResolve(api)
         window.__usersnapResolve = undefined
       }
-      // Disable Usersnap for test users -- the pop-ups cause problems in end-to-end tests.
-      if (user?.email && isTestUser({ email: user.email })) {
-        return
-      }
-
-      api.init({
-        custom: {
-          userEmail: user?.email ?? 'visitor',
-          userName: user?.firstName
-            ? `${user.firstName} ${user.lastName ?? ''}`
-            : 'visitor',
-        },
-      })
-
-      api.on('submit', () => {
-        trackEvent('usersnap_submission', {
-          isVisitor: !user?.email,
-        })
-      })
     }
 
     return () => {
-      if (window.onUsersnapLoad) {
-        window.onUsersnapLoad = undefined
-      }
+      window.onUsersnapLoad = undefined
     }
-  }, [user])
+  }, [])
+
+  useEffect(() => {
+    if (!usersnapApi || isUserLoading || initializedRef.current) return
+
+    initializedRef.current = true
+
+    if (user?.email && isTestUser({ email: user.email })) {
+      return
+    }
+
+    usersnapApi.init({
+      custom: {
+        userEmail: user?.email ?? 'visitor',
+        userName: user?.firstName
+          ? `${user.firstName} ${user.lastName ?? ''}`
+          : 'visitor',
+      },
+    })
+
+    usersnapApi.on('submit', () => {
+      trackEvent('usersnap_submission', {
+        isVisitor: !user?.email,
+      })
+    })
+  }, [usersnapApi, user, isUserLoading])
   return (
     <Script
       strategy="afterInteractive"

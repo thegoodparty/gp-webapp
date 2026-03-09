@@ -9,7 +9,7 @@ import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import { useUser } from '@shared/hooks/useUser'
-import { useEffect, useState, ChangeEvent, FormEvent } from 'react'
+import { useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 
 interface FormField {
   key: 'firstName' | 'lastName' | 'phone' | 'email'
@@ -66,8 +66,10 @@ export default function HeroForm(): React.JSX.Element {
     forOffice: false,
   })
 
+  const seededFromUser = useRef(false)
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !seededFromUser.current) {
+      seededFromUser.current = true
       setState((prev) => ({
         ...prev,
         email: currentUser.email || '',
