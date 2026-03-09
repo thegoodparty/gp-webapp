@@ -1,22 +1,13 @@
-import { setCookie } from 'helpers/cookieHelper'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-
+/**
+ * @deprecated Impersonation is being migrated to Clerk Actor Tokens.
+ * Use the `useImpersonateUser` hook from `@shared/hooks/useImpersonateUser` instead.
+ * This standalone helper previously set impersonation cookies directly.
+ */
 export const handleImpersonateUser = async (
-  email: string,
+  _email: string,
 ): Promise<boolean> => {
-  try {
-    const payload = {
-      email,
-    }
-    const resp = await clientFetch(apiRoutes.admin.user.impersonate, payload)
-    const token = (resp.data as { token?: string })?.token
-    if (token) {
-      setCookie('impersonateToken', token)
-      return true
-    }
-  } catch (e) {
-    console.error('error', e)
-  }
+  console.warn(
+    'Impersonation is not yet available with Clerk. Requires Actor Token setup.',
+  )
   return false
 }

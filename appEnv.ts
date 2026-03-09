@@ -53,3 +53,15 @@ export const NEXT_PUBLIC_CANDIDATES_SITE_BASE =
 
 export const NEXT_PUBLIC_P2P_CUTOFF_DATETIME =
   process.env.NEXT_PUBLIC_P2P_CUTOFF_DATETIME
+
+// Clerk Authentication
+// NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY are read directly by @clerk/nextjs
+export const CLERK_SIGN_IN_URL =
+  process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/login'
+export const CLERK_SIGN_UP_URL =
+  process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || '/sign-up'
+export const CLERK_AFTER_SIGN_IN_URL =
+  process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || '/dashboard'
+export const CLERK_AFTER_SIGN_UP_URL =
+  process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL ||
+  '/onboarding/office-selection'

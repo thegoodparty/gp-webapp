@@ -1,5 +1,5 @@
 'use client'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { trackEvent } from 'helpers/analyticsHelper'
 import Script from 'next/script'
 import React, { useEffect } from 'react'
@@ -49,10 +49,10 @@ export function waitForUsersnap(timeoutMs = 10000): Promise<UsersnapApi> {
 }
 
 export default function UserSnapScript(): React.JSX.Element {
+  const [user] = useUser()
+
   useEffect(() => {
     window.onUsersnapLoad = (api: UsersnapApi) => {
-      const user = getUserCookie(true)
-
       window.Usersnap = { api }
 
       if (window.__usersnapResolve) {
@@ -60,23 +60,22 @@ export default function UserSnapScript(): React.JSX.Element {
         window.__usersnapResolve = undefined
       }
       // Disable Usersnap for test users -- the pop-ups cause problems in end-to-end tests.
-      if (user && user.email && isTestUser({ email: user.email })) {
+      if (user?.email && isTestUser({ email: user.email })) {
         return
       }
 
       api.init({
         custom: {
-          userEmail: user && user.email ? user.email : 'visitor',
-          userName:
-            user && user.firstName
-              ? `${user.firstName} ${user.lastName ?? ''}`
-              : 'visitor',
+          userEmail: user?.email ?? 'visitor',
+          userName: user?.firstName
+            ? `${user.firstName} ${user.lastName ?? ''}`
+            : 'visitor',
         },
       })
 
       api.on('submit', () => {
         trackEvent('usersnap_submission', {
-          isVisitor: !(user && user.email),
+          isVisitor: !user?.email,
         })
       })
     }
@@ -86,7 +85,7 @@ export default function UserSnapScript(): React.JSX.Element {
         window.onUsersnapLoad = undefined
       }
     }
-  }, [])
+  }, [user])
   return (
     <Script
       strategy="afterInteractive"

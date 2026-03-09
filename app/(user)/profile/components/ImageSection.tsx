@@ -8,7 +8,6 @@
 import { useEffect, useState } from 'react'
 import UserAvatar from '@shared/user/UserAvatar'
 import ImageUpload from '@shared/utils/ImageUpload'
-import { getUserCookie } from 'helpers/cookieHelper'
 import Body2 from '@shared/typography/Body2'
 import { useUser } from '@shared/hooks/useUser'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -25,10 +24,8 @@ const ImageSection = (): React.JSX.Element => {
 
   useEffect(() => {
     if (uploadedImage) {
-      const updated = getUserCookie(true)
-      if (updated) {
-        setUser(updated)
-      }
+      // Invalidate the user query to refetch updated data from the API
+      setUser()
     }
   }, [uploadedImage])
 

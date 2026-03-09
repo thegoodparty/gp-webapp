@@ -1,6 +1,6 @@
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse, NextRequest } from 'next/server'
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite'
-
 import { API_VERSION_PREFIX } from 'appEnv'
 
 const dbRedirects: Partial<Record<string, string>> = {
@@ -89,12 +89,19 @@ const dbRedirects: Partial<Record<string, string>> = {
   '/elections/senate/me': '/',
 }
 
-export default async function middleware(req: NextRequest) {
+const isProtectedRoute = createRouteMatcher([
+  '/onboarding(.*)',
+  '/dashboard(.*)',
+  '/profile(.*)',
+])
+
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('x-pathname', pathname)
 
+  // Handle DB redirects (same as before)
   if (dbRedirects && dbRedirects[pathname]) {
     const url = dbRedirects[pathname]
     if (url.startsWith('http')) {
@@ -108,14 +115,27 @@ export default async function middleware(req: NextRequest) {
     )
   }
 
+  // Handle API request rewrites
   const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`)
   if (apiRewriteRequest) {
     try {
-      return await handleApiRequestRewrite(req)
+      // Use impersonation token if present, otherwise use Clerk session token
+      const impersonateToken = req.cookies.get('impersonateToken')?.value
+      let token: string | null = impersonateToken || null
+      if (!token) {
+        const { getToken } = await auth()
+        token = await getToken()
+      }
+      return await handleApiRequestRewrite(req, token)
     } catch (error) {
       console.error('Error in handleApiRequestRewrite', error)
       throw error
     }
+  }
+
+  // Protect authenticated routes
+  if (isProtectedRoute(req)) {
+    await auth.protect()
   }
 
   return NextResponse.next({
@@ -123,8 +143,13 @@ export default async function middleware(req: NextRequest) {
       headers: requestHeaders,
     },
   })
-}
+})
 
 export const config = {
-  matcher: '/:path*',
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 }

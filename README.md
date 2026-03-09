@@ -15,22 +15,43 @@ We are using [conventional commits](https://www.conventionalcommits.org/)
 
 ## Built With
 
-- [Next13](https://nextjs.org/) - React SSR Framework
+- [Next.js](https://nextjs.org/) - React SSR Framework
 - [Tailwind CSS](https://tailwindcss.com/) - CSS library
 - [Material UI](https://material-ui.com/) - UI Library
+- [Clerk](https://clerk.com/) - Authentication
 
 ## Get Started
 
+1. Copy the example env file and fill in your values:
+
+```bash
+cp .env.example .env.local
 ```
+
+2. Install dependencies and run:
+
+```bash
 npm install
 npm run dev
 ```
 
-To Run with dev api
+To run with dev API:
 
-```
+```bash
 npm run dev-dev
 ```
+
+### Environment Variables
+
+See `.env.example` for the full list. The required variables for local development are:
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key (from Clerk dashboard) |
+| `CLERK_SECRET_KEY` | Clerk secret key (from Clerk dashboard) |
+| `NEXT_PUBLIC_API_BASE` | gp-api URL (defaults to dev) |
+| `NEXT_PUBLIC_SEGMENT_WRITE_KEY` | Segment analytics write key |
+| `NEXT_PUBLIC_AMPLITUDE_API_KEY` | Amplitude analytics API key |
 
 ## Styleguide
 

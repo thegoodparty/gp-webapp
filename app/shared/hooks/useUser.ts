@@ -1,5 +1,5 @@
 'use client'
 import { useContext } from 'react'
-import { UserContext } from '@shared/user/UserProvider'
+import { UserContext, UserContextValue } from '@shared/user/UserProvider'
 
-export const useUser = () => useContext(UserContext)
+export const useUser = (): UserContextValue => useContext(UserContext)

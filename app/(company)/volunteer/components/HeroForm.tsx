@@ -7,7 +7,7 @@ import { isValidPhone } from '@shared/inputs/PhoneInput'
 import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import RenderInputField from '@shared/inputs/RenderInputField'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { useEffect, useState } from 'react'
 
 type FormFieldKey =
@@ -66,6 +66,7 @@ const fields: FormField[] = [
   },
 ]
 export default function HeroForm(): React.JSX.Element {
+  const [user] = useUser()
   const [submitSuccess, setSubmitSuccess] = useState<
     'success' | 'error' | false
   >(false)
@@ -77,15 +78,14 @@ export default function HeroForm(): React.JSX.Element {
   })
 
   useEffect(() => {
-    const user = getUserCookie(true)
     if (user) {
-      setState({
-        ...state,
+      setState((prev) => ({
+        ...prev,
         email: user.email || '',
         phone: user.phone || '',
-      })
+      }))
     }
-  }, [])
+  }, [user])
 
   const isFormFieldKey = (key: string): key is FormFieldKey => {
     return [

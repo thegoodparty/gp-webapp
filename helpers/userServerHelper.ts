@@ -1,40 +1,28 @@
-import { cookies } from 'next/headers'
+import { auth } from '@clerk/nextjs/server'
 import { User } from './types'
+import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 
-const determineImpersonateCookieOrNot = async (
-  cookieName: string,
-  impersonateCookieName: string,
-): Promise<string | false> => {
-  const nextCookies = await cookies()
-  const cookie = nextCookies.get(cookieName)
-  const impersonateCookie = nextCookies.get(impersonateCookieName)
-  if (impersonateCookie?.value) {
-    return decodeURIComponent(impersonateCookie.value)
+export async function getServerToken(): Promise<string | null> {
+  try {
+    const { getToken } = await auth()
+    return await getToken()
+  } catch {
+    return null
   }
-  if (cookie?.value) {
-    return decodeURIComponent(cookie.value)
-  }
-  return false
 }
 
-export const getServerToken = async (): Promise<string | false> =>
-  await determineImpersonateCookieOrNot('token', 'impersonateToken')
+export async function getServerUser(): Promise<User | null> {
+  const token = await getServerToken()
+  if (!token) return null
 
-export const getServerUser = async (): Promise<User | null> => {
-  const userJSON = await determineImpersonateCookieOrNot(
-    'user',
-    'impersonateUser',
-  )
-  return new Promise((resolve) => {
-    try {
-      if (userJSON && typeof userJSON === 'object') {
-        resolve(userJSON as User)
-        return
-      }
-      resolve(userJSON ? (JSON.parse(userJSON) as User) : null)
-    } catch (e) {
-      console.log('Error in getServerUser', e)
-      resolve(null)
-    }
-  })
+  try {
+    const res = await fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    return (await res.json()) as User
+  } catch {
+    return null
+  }
 }

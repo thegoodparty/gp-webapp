@@ -1,8 +1,8 @@
-import { getServerUser } from 'helpers/userServerHelper'
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import SignUpPage from './components/SignUpPage'
-import pageMetaData from 'helpers/metadataHelper'
+import { SignUp } from '@clerk/nextjs'
 import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess'
+import pageMetaData from 'helpers/metadataHelper'
 
 const meta = pageMetaData({
   title: 'Sign up to GoodParty.org',
@@ -11,9 +11,9 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const Page = async (): Promise<React.JSX.Element> => {
-  const user = await getServerUser()
-  if (user) {
+export default async function SignUpPage() {
+  const { userId } = await auth()
+  if (userId) {
     const { status, slug } = await fetchCampaignStatus()
     if (status === 'candidate') {
       redirect('/dashboard')
@@ -23,7 +23,10 @@ const Page = async (): Promise<React.JSX.Element> => {
       redirect('/profile')
     }
   }
-  return <SignUpPage />
-}
 
-export default Page
+  return (
+    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
+      <SignUp fallbackRedirectUrl="/onboarding/office-selection" routing="hash" />
+    </div>
+  )
+}

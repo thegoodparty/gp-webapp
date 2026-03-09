@@ -1,13 +1,13 @@
 'use client'
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { revalidatePage } from 'helpers/cacheHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { userIsAdmin } from 'helpers/userHelper'
 import { ALPHABET } from '@shared/utils/alphabet'
 
 export default function AdminInvalidateCache(): React.JSX.Element | null {
-  const user = getUserCookie(true)
+  const [user] = useUser()
   const { successSnackbar } = useSnackbar()
 
   if (!user || !userIsAdmin(user)) {

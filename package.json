@@ -27,6 +27,7 @@
   "dependencies": {
     "@amplitude/experiment-js-client": "^1.16.2",
     "@amplitude/session-replay-browser": "^1.27.0",
+    "@clerk/nextjs": "^6.39.0",
     "@contentful/rich-text-plain-text-renderer": "^16.0.1",
     "@contentful/rich-text-react-renderer": "^16.0.1",
     "@contentful/rich-text-types": "^16.0.1",
@@ -43,7 +44,6 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@react-google-maps/api": "^2.20.6",
-    "@react-oauth/google": "^0.11.0",
     "@segment/analytics-next": "^1.81.1",
     "@sentry/nextjs": "^10.39.0",
     "@stripe/react-stripe-js": "^5.6.0",

@@ -2,7 +2,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser as useClerkUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { apiRoutes } from 'gpApi/routes'
@@ -32,6 +32,8 @@ export const sendError = async (payload: ErrorPayload): Promise<boolean> => {
 }
 
 export default function Error({ error }: ErrorPageProps): React.JSX.Element {
+  const { user: clerkUser } = useClerkUser()
+
   useEffect(() => {
     reportErrorToSentry(error)
     logError()
@@ -41,11 +43,10 @@ export default function Error({ error }: ErrorPageProps): React.JSX.Element {
   }, [error])
 
   const logError = async (): Promise<void> => {
-    const user = getUserCookie(true)
     await sendError({
       message: error?.message,
       url: window.location.href,
-      userEmail: user && typeof user === 'object' ? user.email : undefined,
+      userEmail: clerkUser?.primaryEmailAddress?.emailAddress,
       userAgent: window?.navigator?.userAgent,
     })
   }

@@ -1,19 +1,11 @@
-import { clientFetch, ApiResponse } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-
+// DEPRECATED: Password management is now handled by Clerk.
+// This function is a no-op stub kept to avoid breaking the admin UI.
+// TODO: Remove this file and ResendPasswordEmailAction once confirmed unnecessary.
 export const sendSetPasswordEmail = async (
-  userId: string | number,
-): Promise<ApiResponse<{ success: boolean }> | false> => {
-  try {
-    const payload = {
-      userId,
-    }
-    return await clientFetch(
-      apiRoutes.authentication.sendSetPasswordEmail,
-      payload,
-    )
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
+  _userId: string | number,
+): Promise<false> => {
+  console.warn(
+    'sendSetPasswordEmail is deprecated. Password management is now handled by Clerk.',
+  )
+  return false
 }

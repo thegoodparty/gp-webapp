@@ -1,11 +1,12 @@
 'use client'
-import { createContext, useEffect, useState } from 'react'
-import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper'
-import { apiRoutes } from 'gpApi/routes'
+
+import { createContext, useState, useCallback } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { setCookie, deleteCookie } from 'helpers/cookieHelper'
 
 interface ImpersonateUser {
-  id: string
+  id: number
   email: string
 }
 
@@ -34,52 +35,30 @@ export const ImpersonateUserProvider = ({
   const [user, setUser] = useState<ImpersonateUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
-  useEffect(() => {
-    const token = getCookie('impersonateToken')
-    const impersonateUserCookie = getCookie('impersonateUser')
-    const user = impersonateUserCookie && JSON.parse(impersonateUserCookie)
-    if (token && user) {
-      setToken(token)
-      setUser(user)
+  const impersonate = useCallback(async (email: string): Promise<boolean> => {
+    try {
+      const resp = await clientFetch<{ user: ImpersonateUser; token: string }>(
+        apiRoutes.admin.user.impersonate,
+        { email },
+      )
+      if (resp.ok && resp.data?.token && resp.data?.user) {
+        setToken(resp.data.token)
+        setUser(resp.data.user)
+        setCookie('impersonateToken', resp.data.token)
+        return true
+      }
+      return false
+    } catch (err) {
+      console.error('Impersonation failed:', err)
+      return false
     }
   }, [])
 
-  const clear = () => {
+  const clear = useCallback(() => {
     setToken(null)
     setUser(null)
     deleteCookie('impersonateToken')
-    deleteCookie('impersonateUser')
-  }
-
-  const set = (token: string, user: ImpersonateUser) => {
-    if (!token || !user) {
-      console.error('Invalid token or user')
-      return
-    }
-    setToken(token)
-    setUser(user)
-    setCookie('impersonateToken', token)
-    setCookie('impersonateUser', JSON.stringify(user))
-  }
-
-  const impersonate = async (email: string) => {
-    try {
-      const resp = await clientFetch(apiRoutes.admin.user.impersonate, {
-        email,
-      })
-      const data = resp.data as
-        | { token?: string; user?: ImpersonateUser }
-        | undefined
-      const { token, user } = data || {}
-      if (token && user) {
-        set(token, user)
-        return true
-      }
-    } catch (e) {
-      console.error('error', e)
-    }
-    return false
-  }
+  }, [])
 
   return (
     <ImpersonateUserContext.Provider

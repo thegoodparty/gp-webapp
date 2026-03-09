@@ -11,6 +11,7 @@ import AmplitudeInit from '@shared/AmplitudeInit'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
@@ -53,8 +54,9 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
-    <head>
+  <ClerkProvider>
+    <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
+      <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="mobile-web-app-capable" content="yes" />
@@ -117,6 +119,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       strategy="afterInteractive"
       src="//js.hs-scripts.com/21589597.js"
     />
-  </html>
+    </html>
+  </ClerkProvider>
 )
 export default RootLayout

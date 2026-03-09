@@ -1,34 +1,60 @@
 'use client'
-import { createContext, useEffect, useState } from 'react'
-import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
-import { queryClient } from '@shared/query-client'
-import { User } from 'helpers/types'
 
-export const UserContext = createContext<[User | null, (user: User) => void]>([
+import { useUser as useClerkUser } from '@clerk/nextjs'
+import { createContext, useCallback } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { User } from 'helpers/types'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+
+export type UserContextValue = [
+  User | null,
+  (user?: User) => void,
+  boolean,
+]
+
+export const UserContext = createContext<UserContextValue>([
   null,
   () => {},
+  true,
 ])
+
+async function fetchCurrentUser(): Promise<User | null> {
+  try {
+    const resp = await clientFetch<User>(apiRoutes.user.getUser)
+    if (!resp.ok) return null
+    return resp.data
+  } catch {
+    return null
+  }
+}
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userState, setUserState] = useState<User | null>(null)
+  const { isSignedIn, isLoaded } = useClerkUser()
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const cookieUser = getUserCookie(true)
-    if (cookieUser && cookieUser?.id) {
-      setUserState(cookieUser)
-    }
-  }, [])
+  const { data: appUser, isLoading: isQueryLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: fetchCurrentUser,
+    enabled: isLoaded && !!isSignedIn,
+  })
 
-  const setUser = (updated: User) => {
-    queryClient.clear()
-    setUserCookie(updated)
-    setUserState(updated)
-  }
+  const updateUser = useCallback(
+    (_user?: User) => {
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+    },
+    [queryClient],
+  )
+
+  const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
+
+  const value: User | null =
+    isLoaded && !isSignedIn ? null : (appUser ?? null)
 
   return (
-    <UserContext.Provider value={[userState, setUser]}>
+    <UserContext.Provider value={[value, updateUser, isUserLoading]}>
       {children}
     </UserContext.Provider>
   )

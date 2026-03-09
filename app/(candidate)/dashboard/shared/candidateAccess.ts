@@ -1,4 +1,4 @@
-import { getServerUser } from 'helpers/userServerHelper'
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
@@ -23,12 +23,13 @@ export async function fetchCampaignStatus(): Promise<CampaignStatus> {
 }
 
 export default async function candidateAccess(): Promise<void> {
+  const { userId } = await auth()
+
+  if (!userId) {
+    return redirect('/sign-up')
+  }
+
   // don't remove this call. It prevents the build process to try to cache this page which should be dynamic
   // https://nextjs.org/docs/messages/dynamic-server-error
   await fetchCampaignStatus()
-  const user = await getServerUser()
-
-  if (!user) {
-    return redirect('/sign-up')
-  }
 }

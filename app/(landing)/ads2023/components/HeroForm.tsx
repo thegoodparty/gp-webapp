@@ -8,7 +8,7 @@ import { isValidPhone } from '@shared/inputs/PhoneInput'
 import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import RenderInputField from '@shared/inputs/RenderInputField'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react'
 
 interface FormField {
@@ -56,6 +56,7 @@ interface FormState {
 type SubmitStatus = false | 'success' | 'error'
 
 export default function HeroForm(): React.JSX.Element {
+  const [currentUser] = useUser()
   const [submitSuccess, setSubmitSuccess] = useState<SubmitStatus>(false)
   const [state, setState] = useState<FormState>({
     firstName: '',
@@ -66,15 +67,14 @@ export default function HeroForm(): React.JSX.Element {
   })
 
   useEffect(() => {
-    const user = getUserCookie(true)
-    if (user) {
-      setState({
-        ...state,
-        email: user.email || '',
-        phone: user.phone || '',
-      })
+    if (currentUser) {
+      setState((prev) => ({
+        ...prev,
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+      }))
     }
-  }, [])
+  }, [currentUser])
 
   const onChangeField = (key: string, value: string | boolean): void => {
     setState({

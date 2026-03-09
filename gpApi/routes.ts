@@ -100,37 +100,6 @@ export const apiRoutes = {
       },
     },
   },
-  authentication: {
-    register: {
-      path: '/authentication/register',
-      method: 'POST',
-    },
-    login: {
-      path: '/authentication/login',
-      method: 'POST',
-    },
-    logout: {
-      path: '/logout',
-      method: 'DELETE',
-      nextApiRoute: true,
-    },
-    forgotPassword: {
-      path: '/authentication/send-recover-password-email',
-      method: 'POST',
-    },
-    resetPassword: {
-      path: '/authentication/reset-password',
-      method: 'POST',
-    },
-    socialLogin: {
-      path: '/authentication/social-login/:socialProvider',
-      method: 'POST',
-    },
-    sendSetPasswordEmail: {
-      path: '/authentication/send-set-password-email',
-      method: 'POST',
-    },
-  },
   user: {
     updateUser: {
       path: '/users/me',
@@ -147,10 +116,6 @@ export const apiRoutes = {
     getUser: {
       path: '/users/me',
       method: 'GET',
-    },
-    changePassword: {
-      path: '/users/:id/password',
-      method: 'PUT',
     },
     deleteAccount: {
       path: '/users/:id',
@@ -575,11 +540,6 @@ export const apiRoutes = {
   logError: {
     path: '/error-logger',
     method: 'POST',
-  },
-  setCookie: {
-    path: '/set-cookie',
-    method: 'POST',
-    nextApiRoute: true,
   },
   publicCampaign: {
     find: {
