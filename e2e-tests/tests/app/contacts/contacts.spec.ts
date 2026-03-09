@@ -187,7 +187,9 @@ test.describe('Contacts Page', () => {
     await expect(sheet).toBeVisible({ timeout: 10000 })
     // Filters sheet is visible
 
-    await visualSnapshot(page, 'contacts-filters-sheet.png')
+    await visualSnapshot(page, 'contacts-filters-sheet.png', {
+      mask: statsCards,
+    })
 
     const age18_25Label = sheet.getByText('18-25', { exact: true })
     const age18_25Checkbox = age18_25Label
