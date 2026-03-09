@@ -508,6 +508,11 @@ test.describe.serial('poll onboarding', () => {
         await expect(page.getByText(quote.quote)).toBeVisible()
       }
       await page.goBack()
+
+      // Dismiss the low confidence modal that reappears on navigation back
+      await page
+        .getByRole('button', { name: 'View partial results' })
+        .click({ timeout: 10_000 })
     }
 
     // Expand the poll.
