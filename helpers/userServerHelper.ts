@@ -12,6 +12,15 @@ export async function getServerToken(): Promise<string | null> {
   }
 }
 
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const { exp } = decodeJwt(token)
+    return typeof exp === 'number' && exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
 export async function getServerUser(): Promise<User | null> {
   const token = await getServerToken()
   if (!token) return null
