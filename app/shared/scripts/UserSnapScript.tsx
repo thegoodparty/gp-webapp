@@ -85,6 +85,22 @@ export default function UserSnapScript(): React.JSX.Element {
         window.onUsersnapLoad = undefined
       }
     }
+  }, [])
+
+  useEffect(() => {
+    if (user && window.Usersnap?.api) {
+      if (user.email && isTestUser({ email: user.email })) {
+        return
+      }
+      window.Usersnap.api.init({
+        custom: {
+          userEmail: user.email ?? 'visitor',
+          userName: user.firstName
+            ? `${user.firstName} ${user.lastName ?? ''}`
+            : 'visitor',
+        },
+      })
+    }
   }, [user])
   return (
     <Script

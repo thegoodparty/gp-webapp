@@ -85,7 +85,7 @@ export default function HeroForm(): React.JSX.Element {
         phone: user.phone || '',
       }))
     }
-  }, [user])
+  }, [])
 
   const isFormFieldKey = (key: string): key is FormFieldKey => {
     return [

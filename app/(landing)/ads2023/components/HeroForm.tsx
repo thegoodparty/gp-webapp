@@ -74,7 +74,7 @@ export default function HeroForm(): React.JSX.Element {
         phone: currentUser.phone || '',
       }))
     }
-  }, [currentUser])
+  }, [])
 
   const onChangeField = (key: string, value: string | boolean): void => {
     setState({

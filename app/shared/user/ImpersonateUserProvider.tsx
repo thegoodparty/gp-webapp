@@ -1,9 +1,9 @@
 'use client'
 
-import { createContext, useState, useCallback } from 'react'
+import { createContext, useState, useCallback, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { setCookie, deleteCookie } from 'helpers/cookieHelper'
+import { setCookie, deleteCookie, getCookie } from 'helpers/cookieHelper'
 
 interface ImpersonateUser {
   id: number
@@ -35,6 +35,20 @@ export const ImpersonateUserProvider = ({
   const [user, setUser] = useState<ImpersonateUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
+  useEffect(() => {
+    const impersonateToken = getCookie('impersonateToken')
+    const impersonateUser = getCookie('impersonateUser')
+    if (impersonateToken && impersonateUser) {
+      try {
+        const parsedUser = JSON.parse(impersonateUser)
+        setToken(impersonateToken)
+        setUser(parsedUser)
+      } catch (err) {
+        console.error('Failed to parse impersonateUser cookie:', err)
+      }
+    }
+  }, [])
+
   const impersonate = useCallback(async (email: string): Promise<boolean> => {
     try {
       const resp = await clientFetch<{ user: ImpersonateUser; token: string }>(
@@ -45,6 +59,7 @@ export const ImpersonateUserProvider = ({
         setToken(resp.data.token)
         setUser(resp.data.user)
         setCookie('impersonateToken', resp.data.token)
+        setCookie('impersonateUser', JSON.stringify(resp.data.user))
         return true
       }
       return false
@@ -58,6 +73,7 @@ export const ImpersonateUserProvider = ({
     setToken(null)
     setUser(null)
     deleteCookie('impersonateToken')
+    deleteCookie('impersonateUser')
   }, [])
 
   return (
