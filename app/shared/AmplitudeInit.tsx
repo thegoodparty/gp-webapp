@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { useUser } from '@shared/hooks/useUser'
 import { isSessionReplayRoute } from './utils/isSessionReplayRoute'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
@@ -15,6 +16,7 @@ declare global {
 
 const AmplitudeInit = (): null => {
   const pathname = usePathname()
+  const [user] = useUser()
   const replayActive = useRef<boolean>(false)
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const AmplitudeInit = (): null => {
       return
     }
 
-    const wantReplay = isSessionReplayRoute(pathname)
+    const wantReplay = isSessionReplayRoute(pathname) && !!user
 
     if (wantReplay && !replayActive.current) {
       ;(async () => {
@@ -83,7 +85,7 @@ const AmplitudeInit = (): null => {
         window.sessionReplayInitialized = false
       })
     }
-  }, [pathname])
+  }, [pathname, user])
   return null
 }
 
