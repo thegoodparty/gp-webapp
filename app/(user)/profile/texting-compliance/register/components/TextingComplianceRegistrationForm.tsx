@@ -22,7 +22,7 @@ import {
   TextingComplianceSubmitButton,
   type ValidationField,
 } from 'app/(user)/profile/texting-compliance/shared/TextingComplianceSubmitButton'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
@@ -182,9 +182,6 @@ const TextingComplianceRegistrationForm = ({
   }
 
   const handleOnSubmit = () => {
-    trackEvent(EVENTS.Outreach.P2PCompliance.ComplianceFormSubmitted, {
-      source: 'compliance_flow',
-    })
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId, committeeType, ...baseFormData } = formData
