@@ -33,19 +33,10 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/results.json' }],
   ],
 
-  // Setup project for authentication + main testing project
   projects: [
-    // Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
     {
-      name: 'stable',
+      name: 'default',
       use: devices['Desktop Chrome'],
-      grep: /^(?!.*@experimental).*$/, // Negative lookahead: exclude @experimental
-    },
-    // Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
-    {
-      name: 'experimental',
-      use: devices['Desktop Chrome'],
-      grep: /@experimental/,
     },
   ],
 

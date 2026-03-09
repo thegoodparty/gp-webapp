@@ -3,7 +3,7 @@ import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { WaitHelper } from 'src/helpers/wait.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
-test.describe('Website Management @experimental', () => {
+test.describe('Website Management', () => {
   test('should create and publish website through complete flow', async ({
     page,
   }) => {
