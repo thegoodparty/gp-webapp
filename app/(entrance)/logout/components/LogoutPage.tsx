@@ -20,7 +20,7 @@ export default function LogoutPage(): React.JSX.Element {
       queryClient.clear()
       deleteUserCookies()
       await fetchLogout()
-      window.location.replace('/')
+      window.location.replace('/login')
     }
     logout()
   }, [])
