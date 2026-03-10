@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
 import H3 from '@shared/typography/H3'
-import DashboardMobile from '../DashboardMobile'
 import {
   ABOUT_US_LINKS,
   RESOURCES_LINKS,
@@ -57,6 +56,8 @@ const RightSideMobile = (): React.JSX.Element => {
     setOpen(false)
   }
 
+  if (isDashboardPath) return <></>
+
   return (
     <div className="lg:hidden">
       <div>
@@ -85,10 +86,7 @@ const RightSideMobile = (): React.JSX.Element => {
           anchor="right"
           onOpen={() => {}}
         >
-          {user && isDashboardPath ? (
-            <DashboardMobile user={user as User} pathname={pathname || ''} />
-          ) : (
-            <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
+          <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
               <div
                 className={`grow overflow-auto px-4 pt-24 ${
                   user ? 'pb-36' : 'pb-60'
@@ -178,7 +176,6 @@ const RightSideMobile = (): React.JSX.Element => {
                 </div>
               </div>
             </div>
-          )}
         </SwipeableDrawer>
       </div>
     </div>
