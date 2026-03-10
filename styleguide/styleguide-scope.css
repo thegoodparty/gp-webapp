@@ -191,10 +191,6 @@
   --color-popover: var(--brand-surface-primary);
   --color-popover-foreground: var(--brand-text-primary);
 
-  /* Primary/Secondary foreground */
-  --color-primary-foreground: var(--theme-primary-foreground);
-  --color-secondary-foreground: var(--theme-secondary-foreground);
-
   /* Radius */
   --radius: 0.5rem;
 
