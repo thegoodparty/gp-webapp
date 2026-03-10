@@ -6,14 +6,12 @@ import DeleteAction from './DeleteAction'
 interface ActionsProps {
   launched: string
   slug: string
-  email: string
   id: number
 }
 
 export default function Actions({
   launched,
   slug,
-  email,
   id,
 }: ActionsProps): React.JSX.Element {
   const [showMenu, setShowMenu] = useState(false)
