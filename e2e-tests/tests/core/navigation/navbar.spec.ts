@@ -7,7 +7,7 @@ import {
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
-    await NavigationHelper.navigateToPage(page, '/')
+    await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
   })
 
@@ -59,7 +59,6 @@ test.describe('Navigation Bar', () => {
     await page.getByTestId('nav-about-us').click()
     await expect(page.getByTestId('nav-about')).toBeVisible()
     await expect(page.getByTestId('nav-team')).toBeVisible()
-    await expect(page.getByTestId('nav-find-candidates')).toBeVisible()
     await expect(page.getByTestId('nav-contact-us')).toBeVisible()
 
     await visualSnapshot(page, 'navbar-about-dropdown.png', {
@@ -69,24 +68,26 @@ test.describe('Navigation Bar', () => {
 
   test('should navigate to campaign tools page', async ({ page }) => {
     await page.getByTestId('nav-product').click()
-    await page.getByTestId('nav-campaign-tools').first().click()
-    await expect(page).toHaveURL(/\/run-for-office$/)
-    await expect(page.getByTestId('articleTitle')).toHaveText(
-      /Supercharge your local campaign/,
-    )
+    const campaignToolsLink = page.getByTestId('nav-campaign-tools').first()
+    await expect(campaignToolsLink).toBeVisible()
+    await expect(campaignToolsLink).toHaveAttribute('href', /\/run-for-office$/)
+    await expect(campaignToolsLink).toHaveAttribute('target', '_blank')
   })
 
   test('should navigate to blog page', async ({ page }) => {
     await page.getByTestId('nav-resources').click()
-    await page.getByTestId('nav-blog').first().click()
-    await expect(page).toHaveURL(/\/blog$/)
-    await expect(page.getByRole('heading', { name: 'Blog' })).toBeVisible()
+    const blogLink = page.getByTestId('nav-blog').first()
+    await expect(blogLink).toBeVisible()
+    await expect(blogLink).toHaveAttribute('href', /\/blog$/)
+    await expect(blogLink).toHaveAttribute('target', '_blank')
   })
 
   test('should navigate to about page', async ({ page }) => {
     await page.getByTestId('nav-about-us').click()
-    await page.getByTestId('nav-about').click()
-    await expect(page).toHaveURL(/\/about$/)
+    const aboutLink = page.getByTestId('nav-about').first()
+    await expect(aboutLink).toBeVisible()
+    await expect(aboutLink).toHaveAttribute('href', /\/about$/)
+    await expect(aboutLink).toHaveAttribute('target', '_blank')
   })
 
   test('should close dropdown when clicking outside', async ({ page }) => {

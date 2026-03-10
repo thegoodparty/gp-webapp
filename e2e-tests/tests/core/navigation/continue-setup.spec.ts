@@ -33,7 +33,7 @@ test.describe('Continue Setup button', () => {
     })
 
     // Bail before selecting an office by navigating away
-    await NavigationHelper.navigateToPage(page, '/')
+    await NavigationHelper.navigateToPage(page, '/dashboard')
     await NavigationHelper.dismissOverlays(page)
 
     // Assert takes you back to office selection
