@@ -15,7 +15,6 @@ import {
   LuFileText,
   LuUsersRound,
   LuPhone,
-  LuUserSearch,
   LuSquarePlay,
   LuContactRound,
   LuHeart,
@@ -23,6 +22,7 @@ import {
 } from 'react-icons/lu'
 
 import { usePathname } from 'next/navigation'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 interface NavLink {
   label: string
@@ -36,14 +36,15 @@ interface NavLink {
 export const PRODUCT_LINKS: NavLink[] = [
   {
     label: 'Campaign Toolkit',
-    href: '/run-for-office',
+    href: getMarketingUrl('/run-for-office'),
     icon: <LuHammer />,
     id: 'nav-campaign-tools',
     dataTestId: 'nav-campaign-tools',
+    external: true,
   },
   {
     label: 'Template Library',
-    href: 'https://lp.goodparty.org/template-library',
+    href: getMarketingUrl('/templates'),
     icon: <LuFiles />,
     id: 'nav-template-library',
     dataTestId: 'nav-template-library',
@@ -51,7 +52,7 @@ export const PRODUCT_LINKS: NavLink[] = [
   },
   {
     label: 'Voter Data',
-    href: 'https://lp.goodparty.org/voter-data',
+    href: getMarketingUrl('/voter-data'),
     icon: <LuFolderHeart />,
     id: 'nav-voter-data',
     dataTestId: 'nav-voter-data',
@@ -59,7 +60,7 @@ export const PRODUCT_LINKS: NavLink[] = [
   },
   {
     label: 'Texting',
-    href: 'https://lp.goodparty.org/sms-tools',
+    href: getMarketingUrl('/sms-tools'),
     icon: <LuSmartphone />,
     id: 'nav-texting',
     dataTestId: 'nav-texting',
@@ -67,7 +68,7 @@ export const PRODUCT_LINKS: NavLink[] = [
   },
   {
     label: 'Yard Signs',
-    href: 'https://lp.goodparty.org/yard-signs',
+    href: getMarketingUrl('/yard-signs'),
     icon: <LuSignpost />,
     id: 'nav-yard-signs',
     dataTestId: 'nav-yard-signs',
@@ -75,7 +76,7 @@ export const PRODUCT_LINKS: NavLink[] = [
   },
   {
     label: 'Serve',
-    href: 'https://lp.goodparty.org/serve/',
+    href: getMarketingUrl('/serve'),
     icon: <LuMessageCircle />,
     id: 'nav-serve',
     dataTestId: 'nav-serve',
@@ -83,14 +84,15 @@ export const PRODUCT_LINKS: NavLink[] = [
   },
   {
     label: 'Pricing',
-    href: '/pricing',
+    href: getMarketingUrl('/pricing'),
     icon: <LuBanknote />,
     id: 'nav-pricing',
     dataTestId: 'nav-pricing',
+    external: true,
   },
   {
     label: 'GoodParty.org Pro',
-    href: 'https://lp.goodparty.org/pro-lp',
+    href: getMarketingUrl('/pro-lp'),
     icon: <LuTrophy />,
     id: 'nav-good-party-pro',
     dataTestId: 'nav-good-party-pro',
@@ -101,28 +103,31 @@ export const PRODUCT_LINKS: NavLink[] = [
 export const RESOURCES_LINKS: NavLink[] = [
   {
     label: 'Talk to an Expert',
-    href: '/get-a-demo',
+    href: getMarketingUrl('/get-a-demo'),
     icon: <LuContactRound />,
     id: 'nav-get-demo',
     dataTestId: 'nav-get-demo',
+    external: true,
   },
   {
     label: 'Product Tour',
-    href: '/product-tour',
+    href: getMarketingUrl('/product-tour'),
     icon: <LuSquarePlay />,
     id: 'nav-tour',
     dataTestId: 'nav-tour',
+    external: true,
   },
   {
     label: 'Find Offices to Run For',
-    href: '/elections',
+    href: getMarketingUrl('/elections'),
     icon: <LuLandmark />,
     id: 'nav-explore-offices',
     dataTestId: 'nav-explore-offices',
+    external: true,
   },
   {
     label: 'How to Run for Office',
-    href: 'https://lp.goodparty.org/e-book',
+    href: getMarketingUrl('/e-book'),
     icon: <LuBookOpen />,
     id: 'nav-how-to-run',
     dataTestId: 'nav-how-to-run',
@@ -130,10 +135,11 @@ export const RESOURCES_LINKS: NavLink[] = [
   },
   {
     label: 'Blog',
-    href: '/blog',
+    href: getMarketingUrl('/blog'),
     icon: <LuNewspaper />,
     id: 'nav-blog',
     dataTestId: 'nav-blog',
+    external: true,
   },
   {
     label: 'Candidate Community',
@@ -145,41 +151,38 @@ export const RESOURCES_LINKS: NavLink[] = [
   },
   {
     label: 'Case Studies',
-    href: '/blog/section/for-candidates',
+    href: getMarketingUrl('/blog/section/for-candidates'),
     icon: <LuFileText />,
     id: 'nav-case-studies',
     dataTestId: 'nav-case-studies',
+    external: true,
   },
 ]
 
 export const ABOUT_US_LINKS: NavLink[] = [
   {
     label: 'Our Mission',
-    href: '/about',
+    href: getMarketingUrl('/about'),
     icon: <LuHeart />,
     id: 'nav-about',
     dataTestId: 'nav-about',
+    external: true,
   },
   {
     label: 'Our Team',
-    href: '/team',
+    href: getMarketingUrl('/team'),
     icon: <LuUsersRound />,
     id: 'nav-team',
     dataTestId: 'nav-team',
-  },
-  {
-    label: 'Meet the Winners',
-    href: '/candidates',
-    icon: <LuUserSearch />,
-    id: 'nav-find-candidates',
-    dataTestId: 'nav-find-candidates',
+    external: true,
   },
   {
     label: 'Contact Us',
-    href: '/contact',
+    href: getMarketingUrl('/contact'),
     icon: <LuPhone />,
     id: 'nav-contact-us',
     dataTestId: 'nav-contact-us',
+    external: true,
   },
 ]
 

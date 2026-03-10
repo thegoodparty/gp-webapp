@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from 'react-icons/fa'
 import { HiUserGroup } from 'react-icons/hi'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 interface FooterLink {
   label: string
@@ -28,35 +29,45 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: 'Our Org',
     links: [
       {
-        label: 'Volunteer',
-        link: '/volunteer',
-        id: 'footer-org-volunteer',
-        buttonStyle: 'tertiary',
+        label: 'About Us',
+        link: getMarketingUrl('/about'),
+        id: 'footer-org-about-us',
+        isExternal: true,
       },
-      { label: 'About Us', link: '/about', id: 'footer-org-about-us' },
-      { label: 'Our Team', link: '/team', id: 'footer-org-our-team' },
       {
-        label: 'Find Candidates',
-        link: '/candidates',
-        id: 'footer-org-candidates',
+        label: 'Our Team',
+        link: getMarketingUrl('/team'),
+        id: 'footer-org-our-team',
+        isExternal: true,
       },
-      { label: 'Careers', link: '/work-with-us', id: 'footer-org-careers' },
+      {
+        label: 'Careers',
+        link: getMarketingUrl('/work-with-us'),
+        id: 'footer-org-careers',
+        isExternal: true,
+      },
     ],
   },
   {
     title: 'Support',
     links: [
-      { label: 'FAQs', link: '/faqs', id: 'footer-support-faqs' },
+      {
+        label: 'FAQs',
+        link: getMarketingUrl('/frequently-asked-questions'),
+        id: 'footer-support-faqs',
+        isExternal: true,
+      },
       {
         label: 'Contact Us',
-        link: '/contact',
+        link: getMarketingUrl('/contact'),
         id: 'footer-support-contact-us',
+        isExternal: true,
       },
       {
         label: 'Interactive Demo',
-        link: '/product-tour',
+        link: getMarketingUrl('/product-tour'),
         id: 'footer-support-demo',
-        useNativeLink: true,
+        isExternal: true,
       },
     ],
   },
@@ -65,30 +76,28 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       {
         label: 'Run for office',
-        link: '/run-for-office',
+        link: getMarketingUrl('/run-for-office'),
         id: 'footer-campaign-run',
         buttonStyle: 'secondary',
+        isExternal: true,
       },
       {
         label: 'Explore offices',
-        link: '/elections',
+        link: getMarketingUrl('/elections'),
         id: 'footer-campaign-office',
+        isExternal: true,
       },
       {
-        label: 'GoodParty.org Academy',
-        link: '/academy',
-        id: 'footer-campaign-academy',
+        label: 'Book a Demo',
+        link: getMarketingUrl('/get-a-demo'),
+        id: 'footer-campaign-demo',
+        isExternal: true,
       },
-      { label: 'Book a Demo', link: '/get-a-demo', id: 'footer-campaign-demo' },
       {
         label: 'Political Definitions',
-        link: '/political-terms',
+        link: getMarketingUrl('/political-terms'),
         id: 'footer-campaign-glossary',
-      },
-      {
-        label: 'Declare Independence',
-        link: '/declare',
-        id: 'footer-campaign-declare',
+        isExternal: true,
       },
       {
         label: 'GoodParty.org Community',
@@ -98,8 +107,9 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       },
       {
         label: 'Pricing',
-        link: '/run-for-office#pricing-section',
+        link: getMarketingUrl('/run-for-office#pricing-section'),
         id: 'footer-campaign-pricing',
+        isExternal: true,
       },
     ],
   },
