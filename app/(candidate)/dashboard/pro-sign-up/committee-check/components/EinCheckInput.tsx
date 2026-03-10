@@ -20,6 +20,7 @@ interface EinCheckInputProps {
   validated?: boolean | null
   setValidated?: (val: boolean | null) => void
   onChange?: (val: string) => void
+  helperText?: React.ReactNode
   name?: string
 }
 
@@ -28,6 +29,7 @@ export const EinCheckInput = ({
   validated,
   setValidated = () => {},
   onChange = () => {},
+  helperText,
   ...restProps
 }: EinCheckInputProps): React.JSX.Element => {
   const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,16 +54,7 @@ export const EinCheckInput = ({
       value={value}
       onChange={handleOnChange}
       maxLength={10}
-      helperText={
-        <a
-          href="https://sa.www4.irs.gov/applyein/legalStructure"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          Get a free EIN in 3-5 minutes (irs.gov)
-        </a>
-      }
+      helperText={helperText}
       InputProps={{
         endAdornment: (
           <AsyncValidationIcon

@@ -155,6 +155,16 @@ const CommitteeCheckPage = ({
             validated={validatedEin}
             setValidated={setValidatedEin}
             onChange={setEinInputValue}
+            helperText={
+              <a
+                href="https://sa.www4.irs.gov/applyein/legalStructure"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Get a free EIN in 3-5 minutes (irs.gov)
+              </a>
+            }
           />
           {validatedEin === false && (
             <Body2 className="text-error my-4 text-center">
