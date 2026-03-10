@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { useUser as useClerkUser } from '@clerk/nextjs'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import Link from 'next/link'
@@ -32,24 +32,28 @@ export const sendError = async (payload: ErrorPayload): Promise<boolean> => {
 }
 
 export default function Error({ error }: ErrorPageProps): React.JSX.Element {
-  const { user: clerkUser } = useClerkUser()
+  const { user: clerkUser, isLoaded } = useClerkUser()
+  const errorLoggedRef = useRef(false)
 
   useEffect(() => {
     reportErrorToSentry(error)
-    logError()
+    errorLoggedRef.current = false
     if (error?.message?.startsWith('Loading chunk')) {
       window.location.reload()
     }
   }, [error])
 
-  const logError = async (): Promise<void> => {
-    await sendError({
+  useEffect(() => {
+    if (!isLoaded || errorLoggedRef.current) return
+    errorLoggedRef.current = true
+    sendError({
       message: error?.message,
       url: window.location.href,
       userEmail: clerkUser?.primaryEmailAddress?.emailAddress,
       userAgent: window?.navigator?.userAgent,
     })
-  }
+  }, [isLoaded, error, clerkUser])
+  
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">
