@@ -16,6 +16,7 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { SentryIdentifier } from '@shared/sentry'
+import AmplitudeInit from '@shared/AmplitudeInit'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -29,6 +30,7 @@ const PageWrapper = async ({
 
   return (
     <UserProvider>
+      <AmplitudeInit />
       <ImpersonateUserProvider>
         <CampaignProvider campaign={campaign}>
           <SentryIdentifier />

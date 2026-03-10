@@ -9,7 +9,7 @@ import {
   PurchaseType,
   PurchaseState,
 } from 'helpers/purchaseTypes'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+
 import Body1 from '@shared/typography/Body1'
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
 import { PurchaseHeader } from 'app/(candidate)/dashboard/purchase/components/PurchaseHeader'
@@ -81,14 +81,6 @@ export default function PurchasePage({
       const response = await completeCheckoutSession(sessionId)
 
       if (response.ok) {
-        if (type === PURCHASE_TYPES.DOMAIN_REGISTRATION && domain) {
-          const eventData = {
-            domainSelected: domain,
-            priceOfSelectedDomain: checkoutSession?.amount ?? null,
-          }
-          trackEvent(EVENTS.CandidateWebsite.PurchasedDomain, eventData)
-        }
-
         setPurchaseState(PURCHASE_STATE.SUCCESS)
       } else {
         setError(

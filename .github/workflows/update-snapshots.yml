@@ -126,7 +126,7 @@ jobs:
 
       - name: Run tests with --update-snapshots
         working-directory: e2e-tests
-        run: npx playwright test --project=stable --update-snapshots --trace=off --video=off
+        run: npx playwright test --project=stable --update-snapshots
         env:
           BASE_URL: ${{ steps.preview.outputs.url }}
           TEST_RUN_NAME: "Update Visual Snapshots"
