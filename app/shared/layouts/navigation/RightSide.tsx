@@ -14,7 +14,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 
 const RightSide = (): React.JSX.Element => {
-  const [user] = useUser() as [User | null, (user: User | null) => void]
+  const [user] = useUser()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
