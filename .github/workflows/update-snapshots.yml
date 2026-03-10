@@ -130,6 +130,8 @@ jobs:
         env:
           BASE_URL: ${{ steps.preview.outputs.url }}
           TEST_RUN_NAME: "Update Visual Snapshots"
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Commit updated baselines
         run: |
