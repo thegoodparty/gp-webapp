@@ -57,7 +57,7 @@ export const EinCheckInput = ({
           href="https://sa.www4.irs.gov/applyein/legalStructure"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-black underline"
+          className="underline"
         >
           Get a free EIN in 3-5 minutes (irs.gov)
         </a>
