@@ -29,6 +29,7 @@ const AmplitudeInit = (): null => {
       return
     }
 
+    let cancelled = false
     const wantReplay = isSessionReplayRoute(pathname) && !!user
 
     if (wantReplay && !replayActive.current) {
@@ -71,6 +72,13 @@ const AmplitudeInit = (): null => {
             sampleRate: 1,
           }).promise
 
+          if (cancelled) {
+            ;(sessionReplay?.shutdown() as Promise<void> | undefined)?.catch(
+              () => {},
+            )
+            return
+          }
+
           replayActive.current = true
           window.sessionReplayInitialized = true
         } catch (error) {
@@ -84,6 +92,10 @@ const AmplitudeInit = (): null => {
         replayActive.current = false
         window.sessionReplayInitialized = false
       })
+    }
+
+    return () => {
+      cancelled = true
     }
   }, [pathname, user])
   return null
