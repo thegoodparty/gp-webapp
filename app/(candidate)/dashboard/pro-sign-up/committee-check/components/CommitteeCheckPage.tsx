@@ -11,8 +11,6 @@ import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValid
 import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt'
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
-import Overline from '@shared/typography/Overline'
-import { Switch } from '@mui/material'
 import Button from '@shared/buttons/Button'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
@@ -59,7 +57,6 @@ const CommitteeCheckPage = ({
   const [einInputValue, setEinInputValue] = useState(
     campaign?.details?.einNumber || '',
   )
-  const [skipEin, setSkipEin] = useState(false)
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false)
   const [validatedEin, setValidatedEin] = useState<boolean | null>(null)
 
@@ -108,18 +105,6 @@ const CommitteeCheckPage = ({
     doCampaignUpdate()
   }
 
-  const handleSkipEinToggle = (toggleValue: boolean) => {
-    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ToggleRequired, {
-      required: toggleValue,
-    })
-    setSkipEin(toggleValue)
-
-    if (toggleValue === true) {
-      setEinInputValue('')
-      setValidatedEin(null)
-    }
-  }
-
   const onUploadSuccess = (uploadedFilename = '') =>
     uploadedFilename && setUploadedFilename(uploadedFilename)
 
@@ -129,7 +114,7 @@ const CommitteeCheckPage = ({
   }
 
   const nextDisabled =
-    !((validatedEin || skipEin) && uploadedFilename) || loadingCampaignUpdate
+    !(validatedEin && uploadedFilename) || loadingCampaignUpdate
 
   return (
     <FocusedExperienceWrapper>
@@ -164,22 +149,13 @@ const CommitteeCheckPage = ({
             }}
             fullWidth
           />
-          <Overline className="flex items-center">
-            My race doesn&apos;t require an EIN
-            <Switch
-              onChange={(e) => handleSkipEinToggle(e.target.checked)}
-              checked={skipEin}
-            />
-          </Overline>
-          {!skipEin && (
-            <EinCheckInput
-              name="ein-number"
-              value={einInputValue}
-              validated={validatedEin}
-              setValidated={setValidatedEin}
-              onChange={setEinInputValue}
-            />
-          )}
+          <EinCheckInput
+            name="ein-number"
+            value={einInputValue}
+            validated={validatedEin}
+            setValidated={setValidatedEin}
+            onChange={setEinInputValue}
+          />
           {validatedEin === false && (
             <Body2 className="text-error my-4 text-center">
               The provided EIN does not appear to match the given registered
