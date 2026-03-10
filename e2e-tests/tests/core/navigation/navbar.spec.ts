@@ -68,24 +68,35 @@ test.describe('Navigation Bar', () => {
 
   test('should navigate to campaign tools page', async ({ page }) => {
     await page.getByTestId('nav-product').click()
-    const campaignToolsLink = page.getByTestId('nav-campaign-tools').first()
-    await expect(campaignToolsLink).toBeVisible()
-    await expect(campaignToolsLink).toHaveAttribute('href', /\/run-for-office$/)
+    await expect(page.getByTestId('nav-campaign-tools').first()).toBeVisible()
+    const campaignToolsLink = page
+      .locator('a', {
+        has: page.getByTestId('nav-campaign-tools'),
+      })
+      .first()
+    await expect(campaignToolsLink).toHaveAttribute(
+      'href',
+      /\/run-for-office$/,
+    )
     await expect(campaignToolsLink).toHaveAttribute('target', '_blank')
   })
 
   test('should navigate to blog page', async ({ page }) => {
     await page.getByTestId('nav-resources').click()
-    const blogLink = page.getByTestId('nav-blog').first()
-    await expect(blogLink).toBeVisible()
+    await expect(page.getByTestId('nav-blog').first()).toBeVisible()
+    const blogLink = page
+      .locator('a', { has: page.getByTestId('nav-blog') })
+      .first()
     await expect(blogLink).toHaveAttribute('href', /\/blog$/)
     await expect(blogLink).toHaveAttribute('target', '_blank')
   })
 
   test('should navigate to about page', async ({ page }) => {
     await page.getByTestId('nav-about-us').click()
-    const aboutLink = page.getByTestId('nav-about').first()
-    await expect(aboutLink).toBeVisible()
+    await expect(page.getByTestId('nav-about').first()).toBeVisible()
+    const aboutLink = page
+      .locator('a', { has: page.getByTestId('nav-about') })
+      .first()
     await expect(aboutLink).toHaveAttribute('href', /\/about$/)
     await expect(aboutLink).toHaveAttribute('target', '_blank')
   })

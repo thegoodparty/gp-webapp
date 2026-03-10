@@ -117,6 +117,8 @@ export const Footer = ({
                 href={getMarketingUrl('/privacy')}
                 data-cy="footer-privacy-link"
                 className="font-normal text-slate-200"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
               >
                 Privacy Policy.
               </a>{' '}
@@ -125,6 +127,8 @@ export const Footer = ({
                 href={getMarketingUrl('/terms-of-service')}
                 data-cy="footer-terms-of-service-link"
                 className="font-normal text-slate-200"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
               >
                 Terms of Service.
               </a>
