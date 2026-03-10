@@ -7,11 +7,7 @@ import { User } from 'helpers/types'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-export type UserContextValue = [
-  User | null,
-  (user?: User) => void,
-  boolean,
-]
+export type UserContextValue = [User | null, (user?: User) => void, boolean]
 
 export const UserContext = createContext<UserContextValue>([
   null,
@@ -50,8 +46,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
 
-  const value: User | null =
-    isLoaded && !isSignedIn ? null : (appUser ?? null)
+  const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
 
   return (
     <UserContext.Provider value={[value, updateUser, isUserLoading]}>

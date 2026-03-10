@@ -26,7 +26,10 @@ export default async function SignUpPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
-      <SignUp fallbackRedirectUrl="/onboarding/office-selection" routing="hash" />
+      <SignUp
+        fallbackRedirectUrl="/onboarding/office-selection"
+        routing="hash"
+      />
     </div>
   )
 }

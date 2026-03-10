@@ -53,7 +53,7 @@ export default function Error({ error }: ErrorPageProps): React.JSX.Element {
       userAgent: window?.navigator?.userAgent,
     })
   }, [isLoaded, error, clerkUser])
-  
+
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">

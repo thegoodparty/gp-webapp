@@ -24,9 +24,7 @@ interface PasswordSectionProps {
   user: User
 }
 
-const PasswordSection = ({
-  user,
-}: PasswordSectionProps): React.JSX.Element => {
+const PasswordSection = ({ user }: PasswordSectionProps): React.JSX.Element => {
   const { user: clerkUser } = useUser()
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -92,17 +90,13 @@ const PasswordSection = ({
       const clerkError = err?.errors?.[0]
       if (clerkError?.code === CLERK_ERRORS.PASSWORD_INCORRECT) {
         setErrorMessage(CURRENT_PASSWORD_INCORRECT)
-      } else if (
-        clerkError?.code === CLERK_ERRORS.PASSWORD_VALIDATION_FAILED
-      ) {
+      } else if (clerkError?.code === CLERK_ERRORS.PASSWORD_VALIDATION_FAILED) {
         setErrorMessage(
           clerkError?.longMessage ||
             'New password does not meet security requirements',
         )
       } else {
-        setErrorMessage(
-          clerkError?.longMessage || 'Failed to change password',
-        )
+        setErrorMessage(clerkError?.longMessage || 'Failed to change password')
       }
     } finally {
       setLoading(false)

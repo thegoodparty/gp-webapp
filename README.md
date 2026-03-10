@@ -45,13 +45,13 @@ npm run dev-dev
 
 See `.env.example` for the full list. The required variables for local development are:
 
-| Variable | Description |
-|---|---|
+| Variable                            | Description                                  |
+| ----------------------------------- | -------------------------------------------- |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key (from Clerk dashboard) |
-| `CLERK_SECRET_KEY` | Clerk secret key (from Clerk dashboard) |
-| `NEXT_PUBLIC_API_BASE` | gp-api URL (defaults to dev) |
-| `NEXT_PUBLIC_SEGMENT_WRITE_KEY` | Segment analytics write key |
-| `NEXT_PUBLIC_AMPLITUDE_API_KEY` | Amplitude analytics API key |
+| `CLERK_SECRET_KEY`                  | Clerk secret key (from Clerk dashboard)      |
+| `NEXT_PUBLIC_API_BASE`              | gp-api URL (defaults to dev)                 |
+| `NEXT_PUBLIC_SEGMENT_WRITE_KEY`     | Segment analytics write key                  |
+| `NEXT_PUBLIC_AMPLITUDE_API_KEY`     | Amplitude analytics API key                  |
 
 ## Styleguide
 
