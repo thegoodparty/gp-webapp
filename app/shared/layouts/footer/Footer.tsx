@@ -49,13 +49,13 @@ export const Footer = ({
               </div>
               {column.links.map((link, linkKey) => (
                 <FooterLinkWrapper key={linkKey}>
-                  {link.isExternal ? (
-                    <FooterExternalLink {...link} />
-                  ) : link.buttonStyle ? (
+                  {link.buttonStyle ? (
                     <FooterButtonLink
                       {...link}
                       buttonStyle={link.buttonStyle as 'tertiary' | 'secondary'}
                     />
+                  ) : link.isExternal ? (
+                    <FooterExternalLink {...link} />
                   ) : link.useNativeLink ? (
                     <a
                       id={link.id}
