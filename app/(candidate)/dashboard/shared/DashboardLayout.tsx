@@ -9,6 +9,14 @@ import { ProUpgradePrompt } from './ProUpgradePrompt'
 import { usePathname, useRouter } from 'next/navigation'
 import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
+import {
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  SidebarRail,
+  useSidebar,
+} from 'goodparty-styleguide'
+import { MdChevronLeft, MdChevronRight, MdMenu } from 'react-icons/md'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -67,25 +75,67 @@ const DashboardLayout = ({
 
   return (
     <EcanvasserProvider>
-      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
+      <SidebarProvider
+        style={{ '--sidebar-width': '16rem', '--sidebar-width-icon': '4rem' } as React.CSSProperties}
+      >
         {!hideMenu && (
-          <div className="hidden lg:block">
-            <DashboardMenu pathname={pathname || hookPathname} />
-          </div>
+          <>
+            <Sidebar collapsible="icon">
+              <DashboardMenu pathname={pathname || hookPathname} />
+              <SidebarRail />
+            </Sidebar>
+            <MobileMenuTrigger />
+            <DesktopCollapseTrigger />
+          </>
         )}
-        <main
-          className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
-        >
-          {campaign && showAlert && <AlertSection campaign={campaign} />}
-          <ProUpgradePrompt
-            campaign={campaign}
-            user={user}
-            pathname={currentPath || undefined}
-          />
-          {children}
-        </main>
-      </div>
+        <SidebarInset className="bg-indigo-100">
+          <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
+            {campaign && showAlert && <AlertSection campaign={campaign} />}
+            <ProUpgradePrompt
+              campaign={campaign}
+              user={user}
+              pathname={currentPath || undefined}
+            />
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </EcanvasserProvider>
+  )
+}
+
+const DesktopCollapseTrigger = () => {
+  const { toggleSidebar, state } = useSidebar()
+  return (
+    <button
+      onClick={toggleSidebar}
+      className="hidden md:flex fixed bottom-4 z-50 items-center justify-center size-8 rounded-full bg-white border border-zinc-200 shadow-sm hover:bg-zinc-50 transition-[left] duration-200"
+      style={{
+        left: state === 'collapsed'
+          ? 'calc(var(--sidebar-width-icon) - 1rem)'
+          : 'calc(var(--sidebar-width) - 1rem)',
+      }}
+      aria-label={state === 'collapsed' ? 'Expand sidebar' : 'Collapse sidebar'}
+    >
+      {state === 'collapsed' ? (
+        <MdChevronRight size={16} />
+      ) : (
+        <MdChevronLeft size={16} />
+      )}
+    </button>
+  )
+}
+
+const MobileMenuTrigger = () => {
+  const { setOpenMobile } = useSidebar()
+  return (
+    <button
+      onClick={() => setOpenMobile(true)}
+      className="fixed top-3 right-4 z-50 flex items-center justify-center rounded-full size-9 md:hidden"
+      aria-label="Open menu"
+    >
+      <MdMenu size={20} />
+    </button>
   )
 }
 

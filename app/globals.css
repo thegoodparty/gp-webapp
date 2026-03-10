@@ -309,6 +309,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 4%;
+    --sidebar-primary: 0 0% 9%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 9%;
   }
 
   .dark {
@@ -332,6 +341,154 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Sidebar: Tailwind v3 compatibility
+   The goodparty-styleguide sidebar uses Tailwind v4 syntax (w-(--var),
+   h-svh, size-8!, group-data-[…]:p-2!) that doesn't compile in v3.
+   These overrides replicate the missing styles.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Mobile: offset sidebar below the fixed nav bar (h-14 = 3.5rem) */
+[data-slot="sidebar-wrapper"] {
+  min-height: calc(100svh - 3.5rem);
+}
+
+/* Expanded: spacer takes up sidebar width in flow */
+[data-slot="sidebar-gap"] {
+  width: var(--sidebar-width);
+  transition: width 200ms linear;
+}
+
+/* Expanded: fixed container pinned below nav on mobile */
+[data-slot="sidebar-container"] {
+  width: var(--sidebar-width);
+  top: 3.5rem;
+  height: calc(100svh - 3.5rem);
+  transition: width 200ms linear, left 200ms linear, right 200ms linear;
+}
+
+/* Desktop: hide nav bar when sidebar is present, sidebar takes full height */
+@media (min-width: 768px) {
+  [data-slot="sidebar-wrapper"] {
+    min-height: 100svh;
+  }
+
+  [data-slot="sidebar-container"] {
+    top: 0;
+    height: 100svh;
+  }
+}
+
+/* Hide the top nav bar on desktop when dashboard sidebar is present */
+@media (min-width: 768px) {
+  body:has([data-slot="sidebar"]) #top-nav,
+  body:has([data-slot="sidebar"]) #top-nav-spacer {
+    display: none;
+  }
+}
+
+/* ── Icon-collapse mode ── */
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  > [data-slot="sidebar-gap"] {
+  width: var(--sidebar-width-icon);
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  > [data-slot="sidebar-container"] {
+  width: var(--sidebar-width-icon);
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-button"] {
+  width: auto !important;
+  margin: 0 0.25rem;
+  padding: 0.5rem !important;
+  overflow: hidden;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-button"]
+  > span:not(:first-child) {
+  display: none;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-button"]
+  > div {
+  display: none;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-group-label"] {
+  margin-top: -2rem;
+  opacity: 0;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-group-action"],
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-badge"],
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-sub"],
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-menu-action"] {
+  display: none;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-content"] {
+  overflow: hidden;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-header"],
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="icon"]
+  [data-slot="sidebar-footer"] {
+  overflow: hidden;
+}
+
+/* ── Offcanvas collapse mode ── */
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="offcanvas"]
+  > [data-slot="sidebar-gap"] {
+  width: 0;
+}
+
+[data-slot="sidebar"][data-state="collapsed"][data-collapsible="offcanvas"]
+  > [data-slot="sidebar-container"] {
+  left: calc(var(--sidebar-width) * -1);
+}
+
+/* ── Mobile sidebar sheet ── */
+[data-slot="sidebar"][data-mobile="true"] {
+  width: var(--sidebar-width);
+}
+
+/* ── Reset global ul styles inside sidebar menus ── */
+[data-slot="sidebar-menu"],
+[data-slot="sidebar-menu-sub"] {
+  list-style: none;
+  padding-inline-start: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  gap: 0;
+}
+
+/* ── Sidebar menu button padding to match Figma (px-4 py-3) ── */
+[data-slot="sidebar-menu-button"] {
+  padding: 0.75rem 1rem;
+}
+
+/* ── Sidebar menu badge: preserve text-white on hover/active ── */
+[data-slot="sidebar-menu-badge"].text-white {
+  color: white !important;
+}
+
+/* ── No underlines on sidebar links ── */
+[data-slot="sidebar"] a:hover,
+[data-slot="sidebar-inner"] a:hover {
+  text-decoration: none;
 }
 
 /* Fix for DataTableColumnHeader button border */

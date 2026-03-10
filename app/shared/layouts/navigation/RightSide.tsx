@@ -1,7 +1,6 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import TopDashboardMenu from './TopDashboardMenu'
 import Link from 'next/link'
 import ProfileDropdown from './ProfileDropdown'
 import DashboardOrContinue from './DashboardOrContinue'
@@ -18,7 +17,6 @@ const RightSide = (): React.JSX.Element => {
   const [user] = useUser() as [User | null, (user: User | null) => void]
 
   const [profileOpen, setProfileOpen] = useState(false)
-  const [dashboardOpen, setDashboardOpen] = useState(false)
 
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
@@ -30,11 +28,6 @@ const RightSide = (): React.JSX.Element => {
     }
     closeAll()
     setProfileOpen(!profileOpen)
-  }
-
-  const toggleDashboard = () => {
-    closeAll()
-    setDashboardOpen(!dashboardOpen)
   }
 
   const closeAll = () => {
@@ -70,19 +63,12 @@ const RightSide = (): React.JSX.Element => {
             toggleCallback={toggleProfile}
             user={user as User}
           />
-          {!userHasRole(user, USER_ROLES.SALES) &&
-            (isDashboardPath ? (
-              <TopDashboardMenu
-                open={dashboardOpen}
-                toggleCallback={toggleDashboard}
-                pathname={pathname || ''}
-              />
-            ) : (
-              <DashboardOrContinue
-                isDashboardPath={isDashboardPath}
-                closeAll={closeAll}
-              />
-            ))}
+          {!userHasRole(user, USER_ROLES.SALES) && !isDashboardPath && (
+            <DashboardOrContinue
+              isDashboardPath={isDashboardPath}
+              closeAll={closeAll}
+            />
+          )}
         </>
       ) : (
         <>
