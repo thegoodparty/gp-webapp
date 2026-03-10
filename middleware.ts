@@ -123,7 +123,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
 
     const token = await getToken()
-    const headers = token ? { Authorization: `Bearer ${token}` } : {}
+    const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
 
     try {
       const [userRes, statusRes] = await Promise.all([
