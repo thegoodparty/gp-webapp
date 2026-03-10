@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse, NextRequest } from 'next/server'
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite'
-import { API_VERSION_PREFIX } from 'appEnv'
+import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 
 const dbRedirects: Partial<Record<string, string>> = {
   '/social': 'https://shor.by/goodpartyorg',
@@ -113,6 +113,50 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
       { status: 301 },
     )
+  }
+
+  // Handle post-auth redirect in middleware (before page rendering)
+  if (pathname === '/post-auth-redirect') {
+    const { userId, getToken } = await auth()
+    if (!userId) {
+      return NextResponse.redirect(new URL('/login', req.url))
+    }
+
+    const token = await getToken()
+    const headers = token ? { Authorization: `Bearer ${token}` } : {}
+
+    try {
+      const [userRes, statusRes] = await Promise.all([
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
+          headers,
+          cache: 'no-store',
+        }),
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`, {
+          headers,
+          cache: 'no-store',
+        }),
+      ])
+
+      const user = userRes.ok ? await userRes.json() : null
+      const campaignStatus = statusRes.ok ? await statusRes.json() : null
+
+      let redirectPath = '/profile'
+      if (user?.roles?.includes('sales')) {
+        redirectPath = '/sales/add-campaign'
+      } else if (campaignStatus?.status === 'candidate') {
+        redirectPath = '/dashboard'
+      } else if (
+        campaignStatus?.status === 'onboarding' &&
+        campaignStatus?.slug
+      ) {
+        redirectPath = `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
+      }
+
+      return NextResponse.redirect(new URL(redirectPath, req.url))
+    } catch (e) {
+      console.error('post-auth-redirect middleware error', e)
+      return NextResponse.redirect(new URL('/dashboard', req.url))
+    }
   }
 
   // Handle API request rewrites

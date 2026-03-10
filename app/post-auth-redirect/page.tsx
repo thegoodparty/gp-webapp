@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { getPostAuthRedirectPath } from 'app/(candidate)/dashboard/shared/candidateAccess'
+import { ClientRedirect } from './ClientRedirect'
 
 export default async function PostAuthRedirect() {
   const { userId } = await auth()
@@ -9,11 +9,13 @@ export default async function PostAuthRedirect() {
     redirect('/login')
   }
 
+  let path: string
   try {
-    redirect(await getPostAuthRedirectPath())
+    path = await getPostAuthRedirectPath()
   } catch (e) {
-    if (isRedirectError(e)) throw e
     console.error('PostAuthRedirect: failed to determine redirect', e)
-    redirect('/profile')
+    path = '/profile'
   }
+
+  return <ClientRedirect path={path} />
 }
