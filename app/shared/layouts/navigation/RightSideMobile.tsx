@@ -111,6 +111,7 @@ const RightSideMobile = (): React.JSX.Element => {
                         id={`mobile-nav-${link.id}`}
                         key={link.id}
                         className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark rounded flex items-center justify-between"
+                        target={link.external ? '_blank' : undefined}
                         rel={
                           link.external ? 'noopener noreferrer nofollow' : ''
                         }
