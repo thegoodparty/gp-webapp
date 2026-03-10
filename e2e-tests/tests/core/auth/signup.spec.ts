@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 
@@ -7,82 +8,35 @@ test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('Sign Up Functionality', () => {
   test('should display sign up form elements', async ({ page }) => {
+    await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/sign-up')
     await NavigationHelper.dismissOverlays(page)
+
+    // Clerk's <SignUp /> renders its own UI
+    await expect(page.locator('.cl-signUp-root')).toBeVisible()
+    await expect(page.getByLabel(/first name/i).first()).toBeVisible()
+    await expect(page.getByLabel(/last name/i).first()).toBeVisible()
+    await expect(page.getByLabel(/email/i).first()).toBeVisible()
+    await expect(page.getByLabel(/password/i).first()).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'Join GoodParty.org' }),
+      page.getByRole('button', { name: /continue/i }),
     ).toBeVisible()
-    await expect(
-      page.getByRole('textbox', { name: 'First Name' }),
-    ).toBeVisible()
-    await expect(page.getByRole('textbox', { name: 'Last Name' })).toBeVisible()
-    await expect(page.getByRole('textbox', { name: 'email' })).toBeVisible()
-    await expect(page.getByRole('textbox', { name: 'phone' })).toBeVisible()
-    await expect(page.getByRole('textbox', { name: 'Zip Code' })).toBeVisible()
-    await expect(page.getByRole('textbox', { name: 'password' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Join' })).toBeVisible()
   })
 
   test('should validate and process form data correctly', async ({ page }) => {
+    await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/sign-up')
     await NavigationHelper.dismissOverlays(page)
 
-    const testZip = '94066'
-    const unique = TestDataHelper.generateTimestamp()
-    const { email: testEmail, phone: testPhone } =
-      TestDataHelper.generateTestUser()
-    await page
-      .getByRole('textbox', { name: 'First Name' })
-      .fill(` firstName-${unique}`)
-    await page
-      .getByRole('textbox', { name: 'Last Name' })
-      .fill(` lastName-${unique}`)
-    await page.getByRole('textbox', { name: 'email' }).fill(testEmail)
-    await page.getByRole('textbox', { name: 'phone' }).fill(testPhone)
-    await page.getByRole('textbox', { name: 'Zip Code' }).fill(testZip)
-    await page
-      .getByRole('textbox', { name: 'password' })
-      .fill('TestPassword123!')
-    await page.getByRole('button', { name: 'Join' }).click()
-    const registerResponse = await page.waitForResponse((resp) => {
-      return (
-        resp.url().includes('/register') &&
-        resp.request().method() === 'POST' &&
-        !!resp.headers()['content-type']?.includes('application/json')
-      )
-    })
+    const testUser = TestDataHelper.generateTestUser()
 
-    const body = await registerResponse.json()
-    // Handle possible response shapes: { user: {...} } or { data: { user: {...} } }
-    const user = (body?.user ?? body?.data?.user) as any
-    expect(
-      user,
-      `Unexpected registration response shape: ${JSON.stringify(body)}`,
-    ).toBeTruthy()
-    const firstName = user.firstName as string
-    const lastName = user.lastName as string
-    const email = user.email as string
-    const zip = user.zip as string
-    const phone = user.phone as string
-    expect(firstName).toBe(firstName.trim())
-    expect(lastName).toBe(lastName.trim())
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    expect(email.trim()).toBe(email)
-    expect(emailRegex.test(email)).toBeTruthy()
-    const zipRegex = /^\d{5}(?:-\d{4})?$/
-    expect(zip.trim()).toBe(zip)
-    expect(zipRegex.test(zip)).toBeTruthy()
-    const phoneRegex = /^\d{10}$/
-    expect(phone.trim()).toBe(phone)
-    expect(phoneRegex.test(phone)).toBeTruthy()
-    await expect(page).toHaveURL(/\/onboarding/)
+    await page.getByLabel(/first name/i).first().fill(` ${testUser.firstName}`)
+    await page.getByLabel(/last name/i).first().fill(` ${testUser.lastName}`)
+    await page.getByLabel(/email/i).first().fill(testUser.email)
+    await page.getByLabel(/password/i).first().fill(testUser.password)
+    await page.getByRole('button', { name: /continue/i }).click()
 
-    await page.waitForFunction(
-      () => {
-        const text = document.body.textContent || ''
-        return text.includes('offices found') || text.includes('office found')
-      },
-      { timeout: 15000 },
-    )
+    // After successful Clerk signup, user is redirected to onboarding
+    await expect(page).toHaveURL(/\/onboarding/, { timeout: 45000 })
   })
 })

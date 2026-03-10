@@ -119,6 +119,7 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.948.0",
     "@aws-sdk/client-sqs": "^3.968.0",
+    "@clerk/testing": "^2.0.2",
     "@playwright/test": "^1.48.1",
     "@slack/web-api": "^7.13.0",
     "@stylistic/eslint-plugin": "^3.1.0",

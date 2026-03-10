@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: './tests',
   snapshotPathTemplate:
     '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
-  // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
+  globalSetup: require.resolve('./global-setup'),
   timeout: 60000, // Increased from 30s to 60s for account creation
   expect: {
     timeout: 15000, // Increased from 10s to 15s
