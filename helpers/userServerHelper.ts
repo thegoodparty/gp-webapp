@@ -3,12 +3,12 @@ import { decodeJwt } from 'jose'
 import { User } from './types'
 import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 
-export async function getServerToken(): Promise<string | null> {
+export async function getServerToken(): Promise<string | undefined> {
   try {
     const { getToken } = await auth()
-    return await getToken()
+    return (await getToken()) ?? undefined
   } catch {
-    return null
+    return undefined
   }
 }
 

@@ -31,7 +31,7 @@ export async function serverFetch<T = unknown>(
   if (options.returnFullResponse) {
     return clientFetch<T>(endpoint, data, {
       revalidate: options.revalidate,
-      serverToken: token || undefined,
+      serverToken: token,
       returnFullResponse: true,
     })
   }
@@ -39,6 +39,6 @@ export async function serverFetch<T = unknown>(
   const { returnFullResponse: _, ...restOptions } = options
   return clientFetch<T>(endpoint, data, {
     ...restOptions,
-    serverToken: token || undefined,
+    serverToken: token,
   })
 }
