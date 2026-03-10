@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePathname } from 'next/navigation'
 import { Campaign } from 'helpers/types'
@@ -28,17 +27,15 @@ const ProBadge = (): React.JSX.Element => (
 
 export const HeaderLogo = (): React.JSX.Element => {
   const [campaign] = useCampaign()
-  const [campaignStatus] = useCampaignStatus()
   const pathname = usePathname()
 
   const { isPro } = (campaign as Campaign | null) || {}
-  const { status } = (campaignStatus as { status?: boolean | string }) || {}
-  const link = status && campaign ? '/dashboard' : '/'
+
   return (
     <>
       <Link
         className="flex items-center no-underline"
-        href={link}
+        href="/dashboard"
         id="nav-logo"
         onClick={() =>
           trackEvent(EVENTS.Navigation.Top.ClickLogo, { pathname })

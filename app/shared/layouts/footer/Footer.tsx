@@ -9,6 +9,7 @@ import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkW
 import { isProductRoute } from '@shared/utils/isProductRoute'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 const year = new Date().getFullYear()
 
@@ -48,13 +49,13 @@ export const Footer = ({
               </div>
               {column.links.map((link, linkKey) => (
                 <FooterLinkWrapper key={linkKey}>
-                  {link.isExternal ? (
-                    <FooterExternalLink {...link} />
-                  ) : link.buttonStyle ? (
+                  {link.buttonStyle ? (
                     <FooterButtonLink
                       {...link}
                       buttonStyle={link.buttonStyle as 'tertiary' | 'secondary'}
                     />
+                  ) : link.isExternal ? (
+                    <FooterExternalLink {...link} />
                   ) : link.useNativeLink ? (
                     <a
                       id={link.id}
@@ -112,21 +113,25 @@ export const Footer = ({
               data-cy="footer-copyright"
             >
               Copyright &copy; {year} GoodParty.org. All rights reserved. &nbsp;
-              <Link
-                href="/privacy"
+              <a
+                href={getMarketingUrl('/privacy')}
                 data-cy="footer-privacy-link"
                 className="font-normal text-slate-200"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
               >
                 Privacy Policy.
-              </Link>{' '}
+              </a>{' '}
               &nbsp;
-              <Link
-                href="/terms-of-service"
+              <a
+                href={getMarketingUrl('/terms-of-service')}
                 data-cy="footer-terms-of-service-link"
                 className="font-normal text-slate-200"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
               >
                 Terms of Service.
-              </Link>
+              </a>
             </div>
           </div>
           <div className="flex col-span-12 md:col-span-3 justify-start order-first md:order-last mb-10">
