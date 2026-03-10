@@ -30,8 +30,7 @@ const PasswordSection = ({ user }: PasswordSectionProps): React.JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [passwordChangeSuccessful, setPasswordChangeSuccessful] =
     useState(false)
-
-  const hasPassword = user.hasPassword
+  const [hasPassword, setHasPassword] = useState(!!user.hasPassword)
 
   const initialState: PasswordState = {
     oldPassword: '',
@@ -84,6 +83,7 @@ const PasswordSection = ({ user }: PasswordSectionProps): React.JSX.Element => {
       }
       setErrorMessage(null)
       setPasswordChangeSuccessful(true)
+      setHasPassword(true)
       reset()
     } catch (err: any) {
       setPasswordChangeSuccessful(false)
