@@ -74,10 +74,7 @@ test.describe('Navigation Bar', () => {
         has: page.getByTestId('nav-campaign-tools'),
       })
       .first()
-    await expect(campaignToolsLink).toHaveAttribute(
-      'href',
-      /\/run-for-office$/,
-    )
+    await expect(campaignToolsLink).toHaveAttribute('href', /\/run-for-office$/)
     await expect(campaignToolsLink).toHaveAttribute('target', '_blank')
   })
 
