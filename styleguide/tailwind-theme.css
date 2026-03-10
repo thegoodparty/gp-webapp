@@ -37,25 +37,25 @@
 
   /* ==========================================================================
    * SHADCN/UI COMPONENT TOKENS
-   * These use HSL format with fallbacks for shadcn/ui compatibility
+   * Note: @theme registers these with @property syntax: "<color>", which
+   * resolves var() at :root level. The [data-slot] scope in
+   * styleguide-scope.css overrides --color-* directly to bypass this.
    * ========================================================================== */
-  --color-border: hsl(var(--border, 214.3 31.8% 91.4%));
-  --color-input: hsl(var(--input, 214.3 31.8% 91.4%));
-  --color-ring: hsl(var(--ring, 222.2 84% 4.9%));
-  --color-background: hsl(var(--background, 0 0% 100%));
-  --color-foreground: hsl(var(--foreground, 222.2 84% 4.9%));
-  --color-muted: hsl(var(--muted, 210 40% 98%));
-  --color-muted-foreground: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
-  --color-accent: hsl(var(--accent, 210 40% 98%));
-  --color-accent-foreground: hsl(var(--accent-foreground, 222.2 84% 4.9%));
-  --color-card: hsl(var(--card, 0 0% 100%));
-  --color-card-foreground: hsl(var(--card-foreground, 222.2 84% 4.9%));
-  --color-popover: hsl(var(--popover, 0 0% 100%));
-  --color-popover-foreground: hsl(var(--popover-foreground, 222.2 84% 4.9%));
-  --color-destructive: hsl(var(--destructive, 0 84.2% 60.2%));
-  --color-destructive-foreground: hsl(
-    var(--destructive-foreground, 210 40% 98%)
-  );
+  --color-border: var(--border, #e2e8f0);
+  --color-input: var(--input, #e2e8f0);
+  --color-ring: var(--ring, #020817);
+  --color-background: var(--background, #ffffff);
+  --color-foreground: var(--foreground, #020817);
+  --color-muted: var(--muted, #f8fafc);
+  --color-muted-foreground: var(--muted-foreground, #64748b);
+  --color-accent: var(--accent, #f8fafc);
+  --color-accent-foreground: var(--accent-foreground, #020817);
+  --color-card: var(--card, #ffffff);
+  --color-card-foreground: var(--card-foreground, #020817);
+  --color-popover: var(--popover, #ffffff);
+  --color-popover-foreground: var(--popover-foreground, #020817);
+  --color-destructive: var(--destructive, #ef4444);
+  --color-destructive-foreground: var(--destructive-foreground, #f8fafc);
 
   /* ==========================================================================
    * SEMANTIC COLOR SCALES (with var() references for scoping)
@@ -69,7 +69,7 @@
   --color-primary-light: var(--primary-light);
   --color-primary-background: var(--primary-background);
   --color-primary-contrast: var(--primary-contrast);
-  --color-primary-foreground: hsl(var(--primary-foreground, 210 40% 98%));
+  --color-primary-foreground: var(--primary-foreground, #f8fafc);
 
   /* Secondary scale */
   --color-secondary: var(--secondary);
@@ -78,9 +78,7 @@
   --color-secondary-light: var(--secondary-light);
   --color-secondary-background: var(--secondary-background);
   --color-secondary-contrast: var(--secondary-contrast);
-  --color-secondary-foreground: hsl(
-    var(--secondary-foreground, 222.2 84% 4.9%)
-  );
+  --color-secondary-foreground: var(--secondary-foreground, #020817);
 
   /* Tertiary scale */
   --color-tertiary: var(--tertiary);
