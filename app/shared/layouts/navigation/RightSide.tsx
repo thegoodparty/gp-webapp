@@ -12,6 +12,7 @@ import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 const RightSide = (): React.JSX.Element => {
   const [user] = useUser() as [User | null, (user: User | null) => void]
@@ -99,10 +100,12 @@ const RightSide = (): React.JSX.Element => {
             <span className="font-medium text-base leading-6!">Sign up</span>
           </NavButton>
           <Button
-            href="/run-for-office"
+            href={getMarketingUrl('/run-for-office')}
             id="nav-get-tools"
             className="inline-flex items-center justify-center py-2! leading-6! border-none"
             data-testid="nav-get-tools"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
           >
             <span className="font-medium text-base leading-6!">
               Get Campaign Tools

@@ -20,6 +20,7 @@ interface EinCheckInputProps {
   validated?: boolean | null
   setValidated?: (val: boolean | null) => void
   onChange?: (val: string) => void
+  helperText?: React.ReactNode
   name?: string
 }
 
@@ -48,7 +49,7 @@ export const EinCheckInput = ({
   return (
     <TextField
       className="mb-3"
-      label="EIN Number"
+      label="Campaign EIN"
       value={value}
       onChange={handleOnChange}
       maxLength={10}
