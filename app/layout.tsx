@@ -8,7 +8,6 @@ import VwoScript from '@shared/scripts/VwoScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
-import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
@@ -95,9 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </Suspense>
       <AnalyticsSessionReplayMiddleware />
       <ReactQueryProvider>
-        <FeatureFlagsProvider>
-          <PageWrapper>{children}</PageWrapper>
-        </FeatureFlagsProvider>
+        <PageWrapper>{children}</PageWrapper>
       </ReactQueryProvider>
       <noscript>
         <iframe

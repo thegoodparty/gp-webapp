@@ -179,8 +179,7 @@ export default function DashboardMenu({
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
   const { electedOffice } = useElectedOffice()
-  const { ready: _flagsReady, on: serveAccessEnabled } =
-    useFlagOn('serve-access')
+  const serveAccessEnabled = useFlagOn('serve-access')
 
   const menuItems = useMemo(() => {
     const baseItems = getDashboardMenuItems(

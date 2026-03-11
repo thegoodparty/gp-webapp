@@ -279,7 +279,7 @@ const PersonContent: React.FC<{
   person: Person
   hidePoliticalParty: boolean
 }> = ({ person, hidePoliticalParty }) => {
-  const { on: showActivitiesAndIssues } = useFlagOn(
+  const showActivitiesAndIssues = useFlagOn(
     'serve-contacts-activities-and-issues',
   )
   const details = [person.gender, person.age ? `${person.age} years old` : null]

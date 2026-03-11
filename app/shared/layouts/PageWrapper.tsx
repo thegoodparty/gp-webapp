@@ -17,6 +17,8 @@ import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
+import { getServerFlags } from '@shared/experiments/serverFeatureFlags'
+import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -25,45 +27,50 @@ interface PageWrapperProps {
 const PageWrapper = async ({
   children,
 }: PageWrapperProps): Promise<React.JSX.Element> => {
-  const pathname = await getReqPathname()
-  const campaign = await fetchUserCampaign()
+  const [pathname, campaign, serverFlags] = await Promise.all([
+    getReqPathname(),
+    fetchUserCampaign(),
+    getServerFlags(),
+  ])
 
   return (
-    <UserProvider>
-      <AmplitudeInit />
-      <ImpersonateUserProvider>
-        <CampaignProvider campaign={campaign}>
-          <SentryIdentifier />
-          <ElectedOfficeProvider>
-            <CampaignStatusProvider>
-              <P2pUxEnabledProvider>
-                <NavigationProvider>
-                  <SnackbarProvider>
-                    <div className="overflow-x-hidden">
-                      <JsonLdSchema />
-                      <Nav />
-                      <Suspense>
-                        <PromoBanner initPathname={pathname || ''} />
-                      </Suspense>
-                      {children}
-                      <Suspense>
-                        <Footer initPathname={pathname || ''} />
-                      </Suspense>
-                      <Suspense>
-                        <CookiesSnackbar />
-                      </Suspense>
-                      <Suspense>
-                        <SegmentIdentify />
-                      </Suspense>
-                    </div>
-                  </SnackbarProvider>
-                </NavigationProvider>
-              </P2pUxEnabledProvider>
-            </CampaignStatusProvider>
-          </ElectedOfficeProvider>
-        </CampaignProvider>
-      </ImpersonateUserProvider>
-    </UserProvider>
+    <FeatureFlagsProvider flags={serverFlags}>
+      <UserProvider>
+        <AmplitudeInit />
+        <ImpersonateUserProvider>
+          <CampaignProvider campaign={campaign}>
+            <SentryIdentifier />
+            <ElectedOfficeProvider>
+              <CampaignStatusProvider>
+                <P2pUxEnabledProvider>
+                  <NavigationProvider>
+                    <SnackbarProvider>
+                      <div className="overflow-x-hidden">
+                        <JsonLdSchema />
+                        <Nav />
+                        <Suspense>
+                          <PromoBanner initPathname={pathname || ''} />
+                        </Suspense>
+                        {children}
+                        <Suspense>
+                          <Footer initPathname={pathname || ''} />
+                        </Suspense>
+                        <Suspense>
+                          <CookiesSnackbar />
+                        </Suspense>
+                        <Suspense>
+                          <SegmentIdentify />
+                        </Suspense>
+                      </div>
+                    </SnackbarProvider>
+                  </NavigationProvider>
+                </P2pUxEnabledProvider>
+              </CampaignStatusProvider>
+            </ElectedOfficeProvider>
+          </CampaignProvider>
+        </ImpersonateUserProvider>
+      </UserProvider>
+    </FeatureFlagsProvider>
   )
 }
 
