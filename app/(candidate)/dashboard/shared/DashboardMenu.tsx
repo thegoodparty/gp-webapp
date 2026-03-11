@@ -9,15 +9,28 @@ import {
   MdFactCheck,
   MdFileOpen,
   MdFolderShared,
-  MdAdd,
-  MdLogout,
   MdMessage,
   MdPeople,
   MdPoll,
   MdSensorDoor,
-  MdSettings,
   MdWeb,
 } from 'react-icons/md'
+import {
+  Circle,
+  CircleUserRound,
+  ExternalLink,
+  FileText,
+  Globe,
+  LayoutDashboard,
+  LogOut,
+  Plus,
+  Send,
+  Settings,
+  StopCircle,
+  UsersRound,
+  Wand,
+  type LucideIcon,
+} from 'lucide-react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
 import { useEffect, useMemo } from 'react'
@@ -33,7 +46,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem as DropdownMenuItemComponent,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   SidebarContent,
@@ -46,8 +58,7 @@ import {
   SidebarMenuItem as SidebarMenuItemComponent,
   useSidebar,
 } from '@styleguide'
-import { FaExternalLinkAlt, FaTheaterMasks, FaUserCircle } from 'react-icons/fa'
-import { HiOutlineStar } from 'react-icons/hi'
+import { FaUserCircle } from 'react-icons/fa'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 
@@ -56,6 +67,7 @@ interface MenuItem {
   label: string
   link: string
   icon: React.ReactNode
+  v2Icon: LucideIcon
   onClick?: () => void
   target?: string
   isNew?: boolean
@@ -76,19 +88,16 @@ interface DashboardMenuProps {
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
   label: 'Voter Data',
   icon: <MdFolderShared />,
+  v2Icon: UsersRound,
   link: '/dashboard/upgrade-to-pro',
   id: 'upgrade-pro-dashboard',
-}
-
-const VOTER_DATA_UPGRADE_ITEM_V2: MenuItem = {
-  ...VOTER_DATA_UPGRADE_ITEM,
-  icon: <MdFolderShared size={18} />,
 }
 
 const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'Dashboard',
     icon: <MdFactCheck />,
+    v2Icon: LayoutDashboard,
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
@@ -96,6 +105,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'Voter Outreach',
     icon: <MdMessage />,
+    v2Icon: Send,
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
@@ -104,6 +114,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'Website',
     icon: <MdWeb />,
+    v2Icon: Globe,
     link: '/dashboard/website',
     id: 'website-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
@@ -111,6 +122,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'My Profile',
     icon: <MdAccountCircle />,
+    v2Icon: Circle,
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
@@ -118,6 +130,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'AI Assistant',
     icon: <MdAutoAwesome />,
+    v2Icon: Circle,
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
@@ -125,6 +138,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'Content Builder',
     icon: <MdFileOpen />,
+    v2Icon: FileText,
     link: '/dashboard/content',
     id: 'my-content-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
@@ -141,68 +155,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
         className="opacity-70 hover:opacity-100 transition-opacity"
       />
     ),
-    link: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',
-    target: '_blank',
-    id: 'community-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickCommunity),
-  },
-]
-
-const DEFAULT_MENU_ITEMS_V2: MenuItem[] = [
-  {
-    label: 'Dashboard',
-    icon: <MdFactCheck size={18} />,
-    link: '/dashboard',
-    id: 'campaign-tracker-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
-  },
-  {
-    label: 'Voter Outreach',
-    icon: <MdMessage size={18} />,
-    link: '/dashboard/outreach',
-    id: 'outreach-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
-  },
-  VOTER_DATA_UPGRADE_ITEM_V2,
-  {
-    label: 'Website',
-    icon: <MdWeb size={18} />,
-    link: '/dashboard/website',
-    id: 'website-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
-  },
-  {
-    label: 'My Profile',
-    icon: <MdAccountCircle size={18} />,
-    link: '/dashboard/campaign-details',
-    id: 'campaign-details-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
-  },
-  {
-    label: 'AI Assistant',
-    icon: <MdAutoAwesome size={18} />,
-    link: '/dashboard/campaign-assistant',
-    id: 'campaign-assistant-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
-  },
-  {
-    label: 'Content Builder',
-    icon: <MdFileOpen size={18} />,
-    link: '/dashboard/content',
-    id: 'my-content-dashboard',
-    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
-  },
-
-  {
-    label: 'Community',
-    icon: (
-      <Image
-        src="/images/logo/heart.svg"
-        alt="Community"
-        width={18}
-        height={18}
-      />
-    ),
+    v2Icon: Circle,
     link: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',
     target: '_blank',
     id: 'community-dashboard',
@@ -215,12 +168,8 @@ const VOTER_RECORDS_MENU_ITEM: MenuItem = {
   label: 'Voter Data',
   link: '/dashboard/voter-records',
   icon: <MdFolderShared />,
+  v2Icon: UsersRound,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
-}
-
-const VOTER_RECORDS_MENU_ITEM_V2: MenuItem = {
-  ...VOTER_RECORDS_MENU_ITEM,
-  icon: <MdFolderShared size={18} />,
 }
 
 const ECANVASSER_MENU_ITEM: MenuItem = {
@@ -228,12 +177,8 @@ const ECANVASSER_MENU_ITEM: MenuItem = {
   label: 'Door Knocking',
   link: '/dashboard/door-knocking',
   icon: <MdSensorDoor />,
+  v2Icon: Circle,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
-}
-
-const ECANVASSER_MENU_ITEM_V2: MenuItem = {
-  ...ECANVASSER_MENU_ITEM,
-  icon: <MdSensorDoor size={18} />,
 }
 
 const CONTACTS_MENU_ITEM: MenuItem = {
@@ -241,12 +186,8 @@ const CONTACTS_MENU_ITEM: MenuItem = {
   label: 'Contacts',
   link: '/dashboard/contacts',
   icon: <MdPeople />,
+  v2Icon: UsersRound,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContacts),
-}
-
-const CONTACTS_MENU_ITEM_V2: MenuItem = {
-  ...CONTACTS_MENU_ITEM,
-  icon: <MdPeople size={18} />,
 }
 
 const POLLS_MENU_ITEM: MenuItem = {
@@ -254,41 +195,26 @@ const POLLS_MENU_ITEM: MenuItem = {
   label: 'Polls',
   link: '/dashboard/polls',
   icon: <MdPoll />,
+  v2Icon: Circle,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
   isNew: true,
-}
-
-const POLLS_MENU_ITEM_V2: MenuItem = {
-  ...POLLS_MENU_ITEM,
-  icon: <MdPoll size={18} />,
 }
 
 const getDashboardMenuItems = (
   campaign: Campaign | null,
   serveAccessEnabled: boolean,
   electedOffice: ElectedOffice | null,
-  isV2 = false,
 ): MenuItem[] => {
-  const defaults = isV2 ? DEFAULT_MENU_ITEMS_V2 : DEFAULT_MENU_ITEMS
-  const voterUpgrade = isV2
-    ? VOTER_DATA_UPGRADE_ITEM_V2
-    : VOTER_DATA_UPGRADE_ITEM
-  const voterRecords = isV2
-    ? VOTER_RECORDS_MENU_ITEM_V2
-    : VOTER_RECORDS_MENU_ITEM
-  const contacts = isV2 ? CONTACTS_MENU_ITEM_V2 : CONTACTS_MENU_ITEM
-  const polls = isV2 ? POLLS_MENU_ITEM_V2 : POLLS_MENU_ITEM
+  const menuItems = [...DEFAULT_MENU_ITEMS]
 
-  const menuItems = [...defaults]
-
-  const voterDataIndex = menuItems.indexOf(voterUpgrade)
+  const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
   if (serveAccessEnabled && electedOffice) {
-    menuItems[voterDataIndex] = contacts
+    menuItems[voterDataIndex] = CONTACTS_MENU_ITEM
   } else if (campaign?.isPro) {
-    menuItems[voterDataIndex] = voterRecords
+    menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (electedOffice) {
-    menuItems.splice(voterDataIndex + 1, 0, polls)
+    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
@@ -306,21 +232,18 @@ export default function DashboardMenu({
   const serveAccessEnabled = useFlagOn('serve-access')
 
   const menuItems = useMemo(() => {
-    const baseItems = getDashboardMenuItems(
+    const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
       electedOffice,
-      useNewNav,
     )
 
-    const items = [...baseItems]
-
     if (ecanvasser) {
-      items.push(useNewNav ? ECANVASSER_MENU_ITEM_V2 : ECANVASSER_MENU_ITEM)
+      items.push(ECANVASSER_MENU_ITEM)
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice, useNewNav])
+  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
@@ -425,7 +348,14 @@ const NewNavMenu = ({
               {menuItems
                 .filter((i) => !['My Profile', 'Community'].includes(i.label))
                 .map((item) => {
-                  const { id, link, icon, label, target, isNew } = item
+                  const {
+                    id,
+                    link,
+                    label,
+                    target,
+                    isNew,
+                    v2Icon: V2Icon,
+                  } = item
                   const isActive = pathname === link
                   return (
                     <SidebarMenuItemComponent key={id}>
@@ -440,9 +370,7 @@ const NewNavMenu = ({
                           target={target}
                           onClick={() => handleMenuItemClick(item)}
                         >
-                          <span className="flex size-4 shrink-0 items-center justify-center">
-                            {icon}
-                          </span>
+                          {V2Icon && <V2Icon size={16} />}
                           <span>{label}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -487,26 +415,6 @@ const NewNavMenu = ({
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="size-8 rounded-lg">
-                      <Avatar.Image
-                        src={user?.avatar || undefined}
-                        alt={user?.name || ''}
-                      />
-                      <Avatar.Fallback className="rounded-lg">
-                        <FaUserCircle className="h-full w-full" />
-                      </Avatar.Fallback>
-                    </Avatar>
-                    <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
-                      <span className="truncate text-sm font-semibold">
-                        {user?.firstName} {user?.lastName}
-                      </span>
-                      <span className="truncate text-xs">{user?.email}</span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItemComponent asChild>
                   <Link
                     href="/dashboard/campaign-details"
@@ -515,20 +423,20 @@ const NewNavMenu = ({
                       trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile)
                     }}
                   >
-                    <FaUserCircle className="h-full w-full" />
+                    <CircleUserRound size={16} />
                     Profile
                   </Link>
                 </DropdownMenuItemComponent>
                 <DropdownMenuItemComponent asChild>
                   <Link href="/profile" id="nav-dash-settings">
-                    <MdSettings />
+                    <Settings size={16} />
                     Settings
                   </Link>
                 </DropdownMenuItemComponent>
                 {userHasRole(user, USER_ROLES.SALES) && !impersonating && (
                   <DropdownMenuItemComponent asChild>
                     <Link href="/sales/add-campaign">
-                      <MdAdd className="h-full w-full" />
+                      <Plus size={16} />
                       Add Campaign
                     </Link>
                   </DropdownMenuItemComponent>
@@ -536,7 +444,7 @@ const NewNavMenu = ({
                 {userIsAdmin(user) && !impersonating && (
                   <DropdownMenuItemComponent asChild>
                     <Link href="/admin">
-                      <HiOutlineStar className="h-full w-full" />
+                      <Wand size={16} />
                       Admin
                     </Link>
                   </DropdownMenuItemComponent>
@@ -548,7 +456,7 @@ const NewNavMenu = ({
                       window.location.href = '/admin'
                     }}
                   >
-                    <FaTheaterMasks className="h-full w-full" />
+                    <StopCircle size={16} />
                     Stop Impersonating
                   </DropdownMenuItemComponent>
                 )}
@@ -563,7 +471,7 @@ const NewNavMenu = ({
                       trackEvent(EVENTS.Navigation.Dashboard.ClickCommunity)
                     }}
                   >
-                    <FaExternalLinkAlt className="h-full w-full" />
+                    <ExternalLink size={16} />
                     Community Forum
                   </Link>
                 </DropdownMenuItemComponent>
@@ -577,7 +485,7 @@ const NewNavMenu = ({
                   }
                   id="nav-log-out"
                 >
-                  <MdLogout className="h-full w-full" />
+                  <LogOut size={16} />
                   Logout
                 </DropdownMenuItemComponent>
               </DropdownMenuContent>

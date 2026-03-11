@@ -9,12 +9,7 @@ import { ProUpgradePrompt } from './ProUpgradePrompt'
 import { usePathname, useRouter } from 'next/navigation'
 import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
-import {
-  Sidebar,
-  SidebarInset,
-  SidebarProvider,
-  useSidebar,
-} from '@styleguide'
+import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 

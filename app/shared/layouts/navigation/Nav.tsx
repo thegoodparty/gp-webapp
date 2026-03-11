@@ -15,7 +15,9 @@ const Nav = async (): Promise<React.JSX.Element> => {
     <>
       <div
         id="top-nav"
-        className={`fixed w-screen h-14 z-50${dashboardNewNav ? ' hidden' : ''}`}
+        className={`fixed w-screen h-14 z-50${
+          dashboardNewNav ? ' hidden' : ''
+        }`}
       >
         <div className="relative bg-indigo-50 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 z-50 h-14">
           <div

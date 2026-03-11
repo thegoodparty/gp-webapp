@@ -566,10 +566,10 @@ a:hover {
   text-decoration: underline;
 }
 
-[data-slot="sidebar-wrapper"] a,
-[data-slot="sidebar-wrapper"] a:hover,
-[data-slot="dropdown-menu-content"] a,
-[data-slot="dropdown-menu-content"] a:hover {
+[data-slot='sidebar-wrapper'] a,
+[data-slot='sidebar-wrapper'] a:hover,
+[data-slot='dropdown-menu-content'] a,
+[data-slot='dropdown-menu-content'] a:hover {
   text-decoration: none;
 }
 
@@ -650,7 +650,6 @@ a:hover {
   li[data-sidebar] {
     display: flex;
   }
-
 }
 
 a.no-underline:hover {
