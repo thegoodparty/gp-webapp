@@ -20,6 +20,7 @@ interface EinCheckInputProps {
   validated?: boolean | null
   setValidated?: (val: boolean | null) => void
   onChange?: (val: string) => void
+  helperText?: React.ReactNode
   name?: string
 }
 
