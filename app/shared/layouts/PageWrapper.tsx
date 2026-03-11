@@ -16,6 +16,7 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/(candidate)/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { SentryIdentifier } from '@shared/sentry'
+import AmplitudeInit from '@shared/AmplitudeInit'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -29,36 +30,37 @@ const PageWrapper = async ({
 
   return (
     <UserProvider>
-      <CampaignProvider campaign={campaign}>
-        <SentryIdentifier />
-        <ElectedOfficeProvider>
-          <CampaignStatusProvider>
-            <P2pUxEnabledProvider>
-              <NavigationProvider>
-                <SnackbarProvider>
-                  <div className="overflow-x-hidden">
-                    <JsonLdSchema />
-                    <Nav />
-                    <Suspense>
-                      <PromoBanner initPathname={pathname || ''} />
-                    </Suspense>
-                    {children}
-                    <Suspense>
-                      <Footer initPathname={pathname || ''} />
-                    </Suspense>
-                    <Suspense>
-                      <CookiesSnackbar />
-                    </Suspense>
-                    <Suspense>
-                      <SegmentIdentify />
-                    </Suspense>
-                  </div>
-                </SnackbarProvider>
-              </NavigationProvider>
-            </P2pUxEnabledProvider>
-          </CampaignStatusProvider>
-        </ElectedOfficeProvider>
-      </CampaignProvider>
+        <AmplitudeInit />
+        <CampaignProvider campaign={campaign}>
+          <SentryIdentifier />
+          <ElectedOfficeProvider>
+            <CampaignStatusProvider>
+              <P2pUxEnabledProvider>
+                <NavigationProvider>
+                  <SnackbarProvider>
+                    <div className="overflow-x-hidden">
+                      <JsonLdSchema />
+                      <Nav />
+                      <Suspense>
+                        <PromoBanner initPathname={pathname || ''} />
+                      </Suspense>
+                      {children}
+                      <Suspense>
+                        <Footer initPathname={pathname || ''} />
+                      </Suspense>
+                      <Suspense>
+                        <CookiesSnackbar />
+                      </Suspense>
+                      <Suspense>
+                        <SegmentIdentify />
+                      </Suspense>
+                    </div>
+                  </SnackbarProvider>
+                </NavigationProvider>
+              </P2pUxEnabledProvider>
+            </CampaignStatusProvider>
+          </ElectedOfficeProvider>
+        </CampaignProvider>
     </UserProvider>
   )
 }

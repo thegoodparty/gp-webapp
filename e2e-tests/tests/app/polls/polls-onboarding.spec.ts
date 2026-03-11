@@ -480,6 +480,12 @@ test.describe.serial('poll onboarding', () => {
 
     // Confirm the UI is updated according to results.
     await page.reload()
+
+    // Dismiss the low confidence modal that appears on completed low-confidence polls
+    await page
+      .getByRole('button', { name: 'View partial results' })
+      .click({ timeout: 10_000 })
+
     await expect(page.getByText('Poll Confidence: Low')).toBeVisible()
     await expect(page.getByText('Top Themes')).toBeVisible()
 
@@ -499,11 +505,21 @@ test.describe.serial('poll onboarding', () => {
         await expect(page.getByText(quote.quote)).toBeVisible()
       }
       await page.goBack()
+
+      // Dismiss the low confidence modal that reappears on navigation back
+      await page
+        .getByRole('button', { name: 'View partial results' })
+        .click({ timeout: 10_000 })
     }
 
     // Expand the poll.
     await page.goto(`/dashboard/polls/${pollId}`)
-    await page.getByText('Gather More Feedback').click()
+
+    // The low confidence modal appears again — click "Gather more feedback"
+    // which dismisses the modal and navigates to the expansion flow
+    await page
+      .getByRole('button', { name: 'Gather more feedback' })
+      .click({ timeout: 10_000 })
 
     // Confirm recommendation.
     await page.getByText('Recommended').click()

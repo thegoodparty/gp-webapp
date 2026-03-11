@@ -51,7 +51,7 @@ test('authenticate with onboarded user', async ({ page }) => {
   await proceedButton.waitFor({ state: 'visible', timeout: 10000 })
   await proceedButton.click()
 
-  await page.waitForURL((url) => new URL(url).pathname === '/', {
+  await page.waitForURL((url) => new URL(url).pathname === '/login', {
     timeout: 15000,
   })
   console.log('Onboarded user account deleted')

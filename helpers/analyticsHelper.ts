@@ -17,6 +17,7 @@ export const EVENTS = {
   polls: {
     resultsViewed: 'Polls - Poll Results Overview Viewed',
     issueDetailsViewed: 'Polls - Poll Results Issue Details Viewed',
+    lowConfidenceModalClicked: 'Polls - Low Confidence Modal Clicked',
   },
   createPoll: {
     createPollClicked: 'Polls - Create Poll Clicked',

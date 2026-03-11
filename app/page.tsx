@@ -1,19 +1,9 @@
-import pageMetaData from 'helpers/metadataHelper'
-import './globals.css'
-import HomePage from './homepage/HomePage'
+import { getServerUser } from 'helpers/userServerHelper'
+import { redirect } from 'next/navigation'
 
-export const revalidate = 3600
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
-const meta = pageMetaData({
-  title: 'GoodParty.org | Empowering independents to run, win and serve.',
-  description:
-    "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",
-  slug: '/',
-})
-
-export const metadata = meta
-
-export default async function Page(): Promise<React.JSX.Element> {
-  return <HomePage />
+export default async function Page(): Promise<never> {
+  const user = await getServerUser()
+  return redirect(user ? '/dashboard' : '/login')
 }

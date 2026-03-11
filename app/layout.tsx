@@ -7,7 +7,6 @@ import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
-import AmplitudeInit from '@shared/AmplitudeInit'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
@@ -90,28 +89,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-M53W2ZV');
       `}
-        </Script>
-      </head>
-      <body>
-        <Suspense>
-          <RouteTracker />
-        </Suspense>
-        <AnalyticsSessionReplayMiddleware />
-        <AmplitudeInit />
-        <ReactQueryProvider>
-          <FeatureFlagsProvider>
-            <PageWrapper>{children}</PageWrapper>
-          </FeatureFlagsProvider>
-        </ReactQueryProvider>
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
-      </body>
+      </Script>
+    </head>
+    <body>
+      <Suspense>
+        <RouteTracker />
+      </Suspense>
+      <AnalyticsSessionReplayMiddleware />
+      <ReactQueryProvider>
+        <FeatureFlagsProvider>
+          <PageWrapper>{children}</PageWrapper>
+        </FeatureFlagsProvider>
+      </ReactQueryProvider>
+      <noscript>
+        <iframe
+          src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"
+          height="0"
+          width="0"
+          style={{ display: 'none', visibility: 'hidden' }}
+        />
+      </noscript>
+    </body>
 
       <Script
         type="text/javascript"

@@ -9,8 +9,8 @@ export default function LogoutPage() {
 
   useEffect(() => {
     queryClient.clear()
-    signOut({ redirectUrl: '/' }).catch(() => {
-      window.location.href = '/'
+    signOut({ redirectUrl: '/login' }).catch(() => {
+      window.location.href = '/login'
     })
   }, [signOut, queryClient])
 
