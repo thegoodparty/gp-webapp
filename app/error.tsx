@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { useUser as useClerkUser } from '@clerk/nextjs'
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import Link from 'next/link'
@@ -33,19 +33,16 @@ export const sendError = async (payload: ErrorPayload): Promise<boolean> => {
 
 export default function Error({ error }: ErrorPageProps): React.JSX.Element {
   const { user: clerkUser, isLoaded } = useClerkUser()
-  const errorLoggedRef = useRef(false)
 
   useEffect(() => {
     reportErrorToSentry(error)
-    errorLoggedRef.current = false
     if (error?.message?.startsWith('Loading chunk')) {
       window.location.reload()
     }
   }, [error])
 
   useEffect(() => {
-    if (!isLoaded || errorLoggedRef.current) return
-    errorLoggedRef.current = true
+    if (!isLoaded) return
     sendError({
       message: error?.message,
       url: window.location.href,

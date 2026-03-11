@@ -85,9 +85,11 @@ const PasswordSection = ({ user }: PasswordSectionProps): React.JSX.Element => {
       setPasswordChangeSuccessful(true)
       setHasPassword(true)
       reset()
-    } catch (err: any) {
+    } catch (err: unknown) {
       setPasswordChangeSuccessful(false)
-      const clerkError = err?.errors?.[0]
+      const clerkError = (
+        err as { errors?: Array<{ code?: string; longMessage?: string }> }
+      )?.errors?.[0]
       if (clerkError?.code === CLERK_ERRORS.PASSWORD_INCORRECT) {
         setErrorMessage(CURRENT_PASSWORD_INCORRECT)
       } else if (clerkError?.code === CLERK_ERRORS.PASSWORD_VALIDATION_FAILED) {

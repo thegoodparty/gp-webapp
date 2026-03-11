@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { auth } from '@clerk/nextjs/server'
 import { decodeJwt } from 'jose'
 import { User } from './types'
@@ -21,18 +22,20 @@ export const isTokenExpired = (token: string): boolean => {
   }
 }
 
-export async function getServerUser(): Promise<User | null> {
-  const token = await getServerToken()
-  if (!token) return null
+export const getServerUser = cache(
+  async (): Promise<User | null> => {
+    const token = await getServerToken()
+    if (!token) return null
 
-  try {
-    const res = await fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-    })
-    if (!res.ok) return null
-    return (await res.json()) as User
-  } catch {
-    return null
-  }
-}
+    try {
+      const res = await fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      })
+      if (!res.ok) return null
+      return (await res.json()) as User
+    } catch {
+      return null
+    }
+  },
+)

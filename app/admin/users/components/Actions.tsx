@@ -2,18 +2,9 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ResendPasswordEmailAction from './ResendPasswordEmailAction'
-
-interface User {
-  id: number
-  email: string
-  firstName?: string
-  lastName?: string
-  roles?: string[]
-}
 
 interface ActionsProps {
-  user: User
+  user: { id: number }
 }
 
 export default function Actions({ user }: ActionsProps): React.JSX.Element {
@@ -37,7 +28,6 @@ export default function Actions({ user }: ActionsProps): React.JSX.Element {
             }}
           />
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
-            <ResendPasswordEmailAction user={user} />
             <DeleteAction id={id} />
           </div>
         </>

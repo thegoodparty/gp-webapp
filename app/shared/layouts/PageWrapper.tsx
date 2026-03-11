@@ -30,37 +30,37 @@ const PageWrapper = async ({
 
   return (
     <UserProvider>
-        <AmplitudeInit />
-        <CampaignProvider campaign={campaign}>
-          <SentryIdentifier />
-          <ElectedOfficeProvider>
-            <CampaignStatusProvider>
-              <P2pUxEnabledProvider>
-                <NavigationProvider>
-                  <SnackbarProvider>
-                    <div className="overflow-x-hidden">
-                      <JsonLdSchema />
-                      <Nav />
-                      <Suspense>
-                        <PromoBanner initPathname={pathname || ''} />
-                      </Suspense>
-                      {children}
-                      <Suspense>
-                        <Footer initPathname={pathname || ''} />
-                      </Suspense>
-                      <Suspense>
-                        <CookiesSnackbar />
-                      </Suspense>
-                      <Suspense>
-                        <SegmentIdentify />
-                      </Suspense>
-                    </div>
-                  </SnackbarProvider>
-                </NavigationProvider>
-              </P2pUxEnabledProvider>
-            </CampaignStatusProvider>
-          </ElectedOfficeProvider>
-        </CampaignProvider>
+      <AmplitudeInit />
+      <CampaignProvider campaign={campaign}>
+        <SentryIdentifier />
+        <ElectedOfficeProvider>
+          <CampaignStatusProvider>
+            <P2pUxEnabledProvider>
+              <NavigationProvider>
+                <SnackbarProvider>
+                  <div className="overflow-x-hidden">
+                    <JsonLdSchema />
+                    <Nav />
+                    <Suspense>
+                      <PromoBanner initPathname={pathname || ''} />
+                    </Suspense>
+                    {children}
+                    <Suspense>
+                      <Footer initPathname={pathname || ''} />
+                    </Suspense>
+                    <Suspense>
+                      <CookiesSnackbar />
+                    </Suspense>
+                    <Suspense>
+                      <SegmentIdentify />
+                    </Suspense>
+                  </div>
+                </SnackbarProvider>
+              </NavigationProvider>
+            </P2pUxEnabledProvider>
+          </CampaignStatusProvider>
+        </ElectedOfficeProvider>
+      </CampaignProvider>
     </UserProvider>
   )
 }
