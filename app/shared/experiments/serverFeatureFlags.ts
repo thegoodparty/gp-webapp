@@ -2,6 +2,7 @@ import { Experiment } from '@amplitude/experiment-node-server'
 import { cookies } from 'next/headers'
 import { getServerUser } from 'helpers/userServerHelper'
 import { IS_LOCAL } from 'appEnv'
+import { reportErrorToSentry } from '@shared/sentry'
 
 let client: ReturnType<typeof Experiment.initializeRemote> | null = null
 
@@ -67,7 +68,12 @@ export const getServerFlags = async (): Promise<ServerFlags> => {
   }
 
   const userContext = await buildUserContext()
-  const variants = await experimentClient.fetchV2(userContext)
+  const variants = await experimentClient
+    .fetchV2(userContext)
+    .catch((error) => {
+      reportErrorToSentry(error)
+      return {}
+    })
 
   return Object.fromEntries(
     Object.entries(variants).map(([k, v]) => [k, v?.value]),

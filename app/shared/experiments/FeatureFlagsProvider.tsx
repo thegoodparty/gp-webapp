@@ -20,23 +20,21 @@ export const FeatureFlagsProvider = ({
 
 export const useFlagOn = (key: string) => {
   const flags = useContext(FeatureFlagsContext)
-  const flag = flags[key]
+  const value = flags[key] === 'on'
   const tracked = useRef(false)
 
   useEffect(() => {
-    if (flag === undefined || tracked.current) return
     tracked.current = true
 
     getReadyAnalytics().then((analytics) => {
       if (analytics) {
         analytics.track('$exposure', {
           flag_key: key,
-          variant: flag,
+          variant: value ? 'on' : 'off',
         })
       }
     })
-  }, [key, flag])
+  }, [key, value])
 
-  if (flag === undefined) return false
-  return flag === 'on'
+  return value
 }
