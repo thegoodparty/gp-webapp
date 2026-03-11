@@ -40,7 +40,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -404,7 +403,6 @@ const NewNavMenu = ({
   handleEnterPress: (e: KeyboardEvent<HTMLDivElement>) => void
 }) => {
   const [user] = useUser()
-  const [campaign] = useCampaign()
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -420,25 +418,6 @@ const NewNavMenu = ({
 
   return (
     <>
-      <SidebarHeader className="px-2 py-1 font-opensans">
-        <div className="flex items-center gap-2 p-2 rounded-md">
-          <Image
-            src="/images/logo/heart.svg"
-            alt="GoodParty.org"
-            width={32}
-            height={24}
-            className="shrink-0"
-          />
-          <div className="flex flex-1 flex-col gap-1 min-w-0 leading-none">
-            <span className="text-xs text-sidebar-foreground truncate">
-              GoodParty.org
-            </span>
-            <span className="text-sm font-semibold text-sidebar-foreground truncate">
-              {campaign?.details?.office || '2026 Campaign'}
-            </span>
-          </div>
-        </div>
-      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>

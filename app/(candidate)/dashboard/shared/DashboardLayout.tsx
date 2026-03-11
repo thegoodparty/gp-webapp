@@ -15,7 +15,7 @@ import {
   SidebarProvider,
   useSidebar,
 } from '@styleguide'
-import { MdMenu } from 'react-icons/md'
+import { MdClose, MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 interface DashboardLayoutProps {
@@ -81,14 +81,12 @@ const DashboardLayout = ({
       <EcanvasserProvider>
         <SidebarProvider>
           {!hideMenu && (
-            <>
-              <Sidebar>
-                <DashboardMenu pathname={menuPathname} useNewNav />
-              </Sidebar>
-              <MobileMenuTrigger />
-            </>
+            <Sidebar>
+              <DashboardMenu pathname={menuPathname} useNewNav />
+            </Sidebar>
           )}
           <SidebarInset className="bg-[#f5f5f5]">
+            {!hideMenu && <MobileMenuTrigger />}
             <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
               {campaign && showAlert && <AlertSection campaign={campaign} />}
               <ProUpgradePrompt
@@ -129,22 +127,33 @@ const DashboardLayout = ({
 }
 
 const MobileMenuTrigger = () => {
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, openMobile } = useSidebar()
   return (
-    <div className="flex md:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-      <img
-        src="/images/logo/heart.svg"
-        alt="GoodParty.org"
-        className="h-6 w-8 object-contain"
-      />
-      <button
-        onClick={() => setOpenMobile(true)}
-        className="flex items-center justify-center rounded-full size-9"
-        aria-label="Open menu"
-      >
-        <MdMenu size={16} />
-      </button>
-    </div>
+    <>
+      <div className="flex md:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
+        <img
+          src="/images/logo/heart.svg"
+          alt="GoodParty.org"
+          className="h-6 w-8 object-contain"
+        />
+        <button
+          onClick={() => setOpenMobile(true)}
+          className="flex items-center justify-center rounded-full size-9"
+          aria-label="Open menu"
+        >
+          <MdMenu size={16} />
+        </button>
+      </div>
+      {openMobile && (
+        <button
+          onClick={() => setOpenMobile(false)}
+          className="fixed z-[60] top-4 right-4 flex items-center justify-center size-10 rounded-full bg-white shadow-md"
+          aria-label="Close menu"
+        >
+          <MdClose size={16} />
+        </button>
+      )}
+    </>
   )
 }
 
