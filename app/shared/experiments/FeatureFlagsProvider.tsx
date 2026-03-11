@@ -24,6 +24,9 @@ export const useFlagOn = (key: string) => {
   const tracked = useRef(false)
 
   useEffect(() => {
+    if (tracked.current) {
+      return
+    }
     tracked.current = true
 
     getReadyAnalytics().then((analytics) => {
