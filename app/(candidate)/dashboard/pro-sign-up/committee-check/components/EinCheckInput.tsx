@@ -20,7 +20,6 @@ interface EinCheckInputProps {
   validated?: boolean | null
   setValidated?: (val: boolean | null) => void
   onChange?: (val: string) => void
-  helperText?: React.ReactNode
   name?: string
 }
 
@@ -29,7 +28,6 @@ export const EinCheckInput = ({
   validated,
   setValidated = () => {},
   onChange = () => {},
-  helperText,
   ...restProps
 }: EinCheckInputProps): React.JSX.Element => {
   const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +52,6 @@ export const EinCheckInput = ({
       value={value}
       onChange={handleOnChange}
       maxLength={10}
-      helperText={helperText}
       InputProps={{
         endAdornment: (
           <AsyncValidationIcon
