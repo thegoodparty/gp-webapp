@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useCallback, useEffect } from 'react'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 import { MdAutoAwesome, MdRotateRight } from 'react-icons/md'
 import { usePollBiasAnalysis } from './hooks/usePollBiasAnalysis'
 import { useTextStreaming } from './hooks/useTextStreaming'

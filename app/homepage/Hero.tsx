@@ -10,7 +10,7 @@ export default async function Hero(): Promise<React.JSX.Element> {
       <MaxWidth>
         <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-10 lg:pt-20 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0 ">
           <div className="col-span-12 lg:col-span-6">
-            <h1 className="text-4xl leading-tight font-semibold  md:text-5xl  xl:text-6xl">
+            <h1 className="text-4xl leading-tight font-semibold  md:text-5xl md:leading-none  xl:text-6xl">
               We{' '}
               <Image
                 src="/images/homepage/text-empower.svg"
@@ -32,7 +32,7 @@ export default async function Hero(): Promise<React.JSX.Element> {
             </h1>
             <Body1 className="mt-8">
               See how our campaign platform empowers you with:
-              <ul className="list-disc list-inside">
+              <ul className="list-disc list-inside font-outfit font-medium">
                 <li>Personalized Voter Data</li>
                 <li>Voter Outreach Tools</li>
                 <li>Customized content and marketing services</li>

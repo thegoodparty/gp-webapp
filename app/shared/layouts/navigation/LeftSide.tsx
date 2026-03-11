@@ -22,8 +22,15 @@ const LeftSide = (): React.JSX.Element | null => {
     <div className="items-center hidden lg:flex">
       <NavDropdowns dropdownIndices={[0, 1]} />
 
-      <NavButton href="/pricing" id="nav-pricing" className="lg:ml-3 xl:ml-6">
-        <span className="font-medium text-base" data-testid="nav-pricing">
+      <NavButton
+        href="/pricing"
+        id="nav-pricing"
+        className="lg:ml-3 xl:ml-6 inline-flex items-center justify-center"
+      >
+        <span
+          className="font-medium text-base leading-6!"
+          data-testid="nav-pricing"
+        >
           Pricing
         </span>
       </NavButton>

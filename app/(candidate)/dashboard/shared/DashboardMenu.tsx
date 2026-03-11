@@ -214,7 +214,7 @@ export default function DashboardMenu({
   }
 
   return (
-    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
+    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300 leading-[1.3]">
       {menuItems.map((item) => {
         const { id, link, icon, label, target, isNew } = item
         return (

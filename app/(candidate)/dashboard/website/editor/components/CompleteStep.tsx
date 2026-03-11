@@ -28,7 +28,7 @@ const CompleteStep = ({
       <div className="relative h-24 w-24 cursor-pointer">
         <HighFiveAnimation hover />
       </div>
-      <h3 className="text-3xl font-medium md:text-4xl lg:text-5xl leading-tight">
+      <h3 className="text-3xl font-medium leading-tight md:text-4xl md:leading-tight lg:text-5xl lg:leading-none">
         Congratulations,
         <br />
         your website is live!

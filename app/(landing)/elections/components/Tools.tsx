@@ -25,7 +25,7 @@ const Tools = ({ negativeMargin = true }: ToolsProps): React.JSX.Element => {
           />
           <div className="grid grid-cols-12 gap-4 md:gap-8  mt-10">
             <div className="col-span-12 md:col-span-6">
-              <h2 className="text-3xl md:text-5xl font-bold leading-relaxed">
+              <h2 className="text-3xl leading-relaxed md:text-5xl md:leading-none font-bold">
                 Free tools for independent candidates
               </h2>
               <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed">

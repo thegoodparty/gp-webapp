@@ -1,5 +1,5 @@
 'use client'
-import { IconButton } from 'goodparty-styleguide'
+import { IconButton } from '@styleguide'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { fetchContactsCsv, type SegmentResponse } from './shared/ajaxActions'
 import { dateUsHelper } from 'helpers/dateHelper'
