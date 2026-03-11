@@ -135,39 +135,61 @@
   /*
    * ==========================================================================
    * SHADCN/UI SEMANTIC VARIABLES
-   * These are used by shadcn components for theming
+   * These are used by shadcn components for theming.
+   *
+   * We override BOTH the base variables (--border, --input, etc.) AND the
+   * Tailwind --color-* versions. Tailwind v4's @theme uses @property with
+   * syntax: "<color>", which causes var() references to resolve at `:root`
+   * level rather than inheriting dynamically. Overriding --color-* directly
+   * ensures Tailwind utilities (border-border, bg-background, etc.) use
+   * the correct styleguide design tokens.
    * ==========================================================================
    */
   /* Background/Foreground */
   --background: var(--brand-surface-primary); /* #FFFFFF */
   --foreground: var(--brand-text-primary); /* #000000 */
+  --color-background: var(--brand-surface-primary);
+  --color-foreground: var(--brand-text-primary);
 
   /* Border & Input */
   --border: var(--brand-border-primary); /* #D1D8DF */
   --input: var(--brand-surface-tertiary); /* #EEF3F6 */
+  --color-border: var(--brand-border-primary);
+  --color-input: var(--brand-surface-tertiary);
 
   /* Ring (focus) */
   --ring: var(--semantic-border-focus); /* #1B6AFC */
+  --color-ring: var(--semantic-border-focus);
 
   /* Muted */
   --muted: var(--brand-surface-secondary); /* #F7FAFB */
   --muted-foreground: var(--brand-text-secondary); /* #70757A */
+  --color-muted: var(--brand-surface-secondary);
+  --color-muted-foreground: var(--brand-text-secondary);
 
   /* Accent */
   --accent: var(--semantic-accent-default); /* #63D1A0 */
   --accent-foreground: var(--brand-text-primary); /* #000000 */
+  --color-accent: var(--semantic-accent-default);
+  --color-accent-foreground: var(--brand-text-primary);
 
   /* Destructive (from Figma theme/destructive) */
   --destructive: var(--theme-destructive); /* #E00C30 */
   --destructive-foreground: var(--theme-destructive-foreground); /* #FFFFFF */
+  --color-destructive: var(--theme-destructive);
+  --color-destructive-foreground: var(--theme-destructive-foreground);
 
   /* Card */
   --card: var(--brand-surface-primary); /* #FFFFFF */
   --card-foreground: var(--brand-text-primary); /* #000000 */
+  --color-card: var(--brand-surface-primary);
+  --color-card-foreground: var(--brand-text-primary);
 
   /* Popover */
   --popover: var(--brand-surface-primary); /* #FFFFFF */
   --popover-foreground: var(--brand-text-primary); /* #000000 */
+  --color-popover: var(--brand-surface-primary);
+  --color-popover-foreground: var(--brand-text-primary);
 
   /* Radius */
   --radius: 0.5rem;
@@ -261,24 +283,36 @@
   /* Primary */
   --primary: var(--brand-primary);
   --primary-foreground: var(--brand-text-inverse);
+  --color-primary: var(--brand-primary);
+  --color-primary-foreground: var(--brand-text-inverse);
 
   /* Background/Foreground */
   --background: var(--brand-surface-inverse);
   --foreground: var(--brand-text-inverse);
+  --color-background: var(--brand-surface-inverse);
+  --color-foreground: var(--brand-text-inverse);
 
   /* Border & Input */
   --border: var(--brand-border-inverse);
   --input: var(--brand-surface-inverse);
+  --color-border: var(--brand-border-inverse);
+  --color-input: var(--brand-surface-inverse);
 
   /* Muted */
   --muted: var(--brand-surface-inverse);
   --muted-foreground: var(--brand-text-tertiary);
+  --color-muted: var(--brand-surface-inverse);
+  --color-muted-foreground: var(--brand-text-tertiary);
 
   /* Card */
   --card: var(--brand-surface-inverse);
   --card-foreground: var(--brand-text-inverse);
+  --color-card: var(--brand-surface-inverse);
+  --color-card-foreground: var(--brand-text-inverse);
 
   /* Popover */
   --popover: var(--brand-surface-inverse);
   --popover-foreground: var(--brand-text-inverse);
+  --color-popover: var(--brand-surface-inverse);
+  --color-popover-foreground: var(--brand-text-inverse);
 }

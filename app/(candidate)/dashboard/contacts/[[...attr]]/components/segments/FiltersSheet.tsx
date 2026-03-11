@@ -335,7 +335,6 @@ export default function Filters({
                       onCheckedChange={(checked) => {
                         handleCheckedChange(checked === true, option.key)
                       }}
-                      className="data-[state=checked]:!bg-purple-600 data-[state=checked]:!border-purple-600 data-[state=checked]:!text-white [&[data-state=checked]]:!bg-purple-600"
                     />
                     <Body2 className="font-medium ml-2">{option.label}</Body2>
                   </div>
