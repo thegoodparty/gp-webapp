@@ -18,9 +18,7 @@ test.describe('Sign Up Functionality', () => {
     await expect(page.getByLabel(/last name/i).first()).toBeVisible()
     await expect(page.getByLabel(/email/i).first()).toBeVisible()
     await expect(page.getByLabel(/password/i).first()).toBeVisible()
-    await expect(
-      page.getByRole('button', { name: /continue/i }),
-    ).toBeVisible()
+    await expect(page.getByRole('button', { name: /continue/i })).toBeVisible()
   })
 
   test('should validate and process form data correctly', async ({ page }) => {
@@ -30,10 +28,19 @@ test.describe('Sign Up Functionality', () => {
 
     const testUser = TestDataHelper.generateTestUser()
 
-    await page.getByLabel(/first name/i).first().fill(` ${testUser.firstName}`)
-    await page.getByLabel(/last name/i).first().fill(` ${testUser.lastName}`)
+    await page
+      .getByLabel(/first name/i)
+      .first()
+      .fill(` ${testUser.firstName}`)
+    await page
+      .getByLabel(/last name/i)
+      .first()
+      .fill(` ${testUser.lastName}`)
     await page.getByLabel(/email/i).first().fill(testUser.email)
-    await page.getByLabel(/password/i).first().fill(testUser.password)
+    await page
+      .getByLabel(/password/i)
+      .first()
+      .fill(testUser.password)
     await page.getByRole('button', { name: /continue/i }).click()
 
     // After successful Clerk signup, user is redirected to onboarding

@@ -13,12 +13,8 @@ test.describe('Login Functionality', () => {
   test('should display login form elements', async ({ page }) => {
     // Clerk's <SignIn /> renders its own UI
     await expect(page.locator('.cl-signIn-root')).toBeVisible()
-    await expect(
-      page.getByLabel(/email/i).first(),
-    ).toBeVisible()
-    await expect(
-      page.getByRole('button', { name: /continue/i }),
-    ).toBeVisible()
+    await expect(page.getByLabel(/email/i).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /continue/i })).toBeVisible()
 
     await visualSnapshot(page, 'login-page.png')
   })
@@ -28,9 +24,9 @@ test.describe('Login Functionality', () => {
     await page.getByRole('button', { name: /continue/i }).click()
 
     // Clerk shows an error for non-existent accounts
-    await expect(
-      page.locator('.cl-formFieldErrorText').first(),
-    ).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('.cl-formFieldErrorText').first()).toBeVisible({
+      timeout: 10000,
+    })
 
     await visualSnapshot(page, 'login-error-state.png')
   })

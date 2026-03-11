@@ -117,15 +117,11 @@ async function signInAndGetToken(
     },
   })
 
-  await page.waitForFunction(
-    () => !!window.Clerk?.session,
-    null,
-    { timeout: 10000 },
-  )
+  await page.waitForFunction(() => !!window.Clerk?.session, null, {
+    timeout: 10000,
+  })
 
-  const token = await page.evaluate(
-    () => window.Clerk!.session!.getToken(),
-  )
+  const token = await page.evaluate(() => window.Clerk!.session!.getToken())
 
   if (!token) {
     throw new Error('Failed to get Clerk session token after sign-in')

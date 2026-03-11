@@ -123,7 +123,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
 
     const token = await getToken()
-    const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
+    const headers: HeadersInit = token
+      ? { Authorization: `Bearer ${token}` }
+      : {}
 
     try {
       const [userRes, statusRes] = await Promise.all([
@@ -149,7 +151,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
         campaignStatus?.status === 'onboarding' &&
         campaignStatus?.slug
       ) {
-        redirectPath = `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
+        redirectPath = `/onboarding/${campaignStatus.slug}/${
+          campaignStatus.step ?? 1
+        }`
       }
 
       return NextResponse.redirect(new URL(redirectPath, req.url))

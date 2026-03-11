@@ -13,10 +13,19 @@ test('authenticate with onboarded user', async ({ page }) => {
   await NavigationHelper.dismissOverlays(page)
 
   // Fill Clerk's <SignUp /> form
-  await page.getByLabel(/first name/i).first().fill(testUser.firstName)
-  await page.getByLabel(/last name/i).first().fill(testUser.lastName)
+  await page
+    .getByLabel(/first name/i)
+    .first()
+    .fill(testUser.firstName)
+  await page
+    .getByLabel(/last name/i)
+    .first()
+    .fill(testUser.lastName)
   await page.getByLabel(/email/i).first().fill(testUser.email)
-  await page.getByLabel(/password/i).first().fill(testUser.password)
+  await page
+    .getByLabel(/password/i)
+    .first()
+    .fill(testUser.password)
   await page.getByRole('button', { name: /continue/i }).click()
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
