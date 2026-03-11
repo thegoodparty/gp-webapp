@@ -24,9 +24,9 @@ Next.js 15 App Router deployed on Vercel. Calls gp-api (NestJS backend on ECS) a
 ### Deployment
 
 Vercel auto-deploys on push. Branch mapping:
-- `develop` → dev (`gp-api-dev.goodparty.org`)
-- `qa` → QA (`gp-api-qa.goodparty.org`)
-- `master` → prod (`api.goodparty.org`)
+- `develop` → `dev.goodparty.org` (API: `gp-api-dev.goodparty.org`)
+- `qa` → `qa.goodparty.org` (API: `gp-api-qa.goodparty.org`)
+- `master` → `goodparty.org` (API: `api.goodparty.org`)
 - PR branches → Vercel preview environments
 
 ### Route Groups
