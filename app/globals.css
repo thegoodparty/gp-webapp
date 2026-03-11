@@ -566,6 +566,13 @@ a:hover {
   text-decoration: underline;
 }
 
+[data-slot="sidebar-wrapper"] a,
+[data-slot="sidebar-wrapper"] a:hover,
+[data-slot="dropdown-menu-content"] a,
+[data-slot="dropdown-menu-content"] a:hover {
+  text-decoration: none;
+}
+
 @layer base {
   /*
    * Restore cursor: pointer for interactive elements.
@@ -643,6 +650,7 @@ a:hover {
   li[data-sidebar] {
     display: flex;
   }
+
 }
 
 a.no-underline:hover {

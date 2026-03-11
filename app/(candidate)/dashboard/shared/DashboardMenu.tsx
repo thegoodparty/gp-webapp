@@ -420,7 +420,7 @@ const NewNavMenu = ({
 
   return (
     <>
-      <SidebarHeader className="px-2 py-1">
+      <SidebarHeader className="px-2 py-1 font-opensans">
         <div className="flex items-center gap-2 p-2 rounded-md">
           <Image
             src="/images/logo/heart.svg"
@@ -453,7 +453,7 @@ const NewNavMenu = ({
                       <SidebarMenuButton
                         asChild
                         isActive={isActive}
-                        className="px-4 py-3 h-auto text-sm gap-2 rounded-md"
+                        className="px-4 py-2.5 h-10 text-sm gap-2 rounded-md font-opensans"
                       >
                         <Link
                           href={link}
@@ -484,7 +484,7 @@ const NewNavMenu = ({
           <SidebarMenuItemComponent>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="h-auto gap-2 p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                <SidebarMenuButton className="h-auto gap-2 p-2 font-opensans data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                   <Avatar className="size-8 shrink-0 rounded-lg">
                     <Avatar.Image
                       src={user?.avatar || undefined}
@@ -503,7 +503,7 @@ const NewNavMenu = ({
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="min-w-56 rounded-lg"
+                className="min-w-56 rounded-lg font-opensans"
                 side={isMobile ? 'bottom' : 'right'}
                 align="end"
                 sideOffset={4}
