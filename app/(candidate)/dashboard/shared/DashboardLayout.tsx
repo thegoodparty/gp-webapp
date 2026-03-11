@@ -13,10 +13,9 @@ import {
   Sidebar,
   SidebarInset,
   SidebarProvider,
-  SidebarRail,
   useSidebar,
-} from 'goodparty-styleguide'
-import { MdChevronLeft, MdChevronRight, MdMenu } from 'react-icons/md'
+} from '@styleguide'
+import { MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 interface DashboardLayoutProps {
@@ -80,25 +79,16 @@ const DashboardLayout = ({
   if (navRefreshEnabled) {
     return (
       <EcanvasserProvider>
-        <SidebarProvider
-          style={
-            {
-              '--sidebar-width': '16rem',
-              '--sidebar-width-icon': '4rem',
-            } as React.CSSProperties
-          }
-        >
+        <SidebarProvider>
           {!hideMenu && (
             <>
-              <Sidebar collapsible="icon">
+              <Sidebar>
                 <DashboardMenu pathname={menuPathname} useNewNav />
-                <SidebarRail />
               </Sidebar>
               <MobileMenuTrigger />
-              <DesktopCollapseTrigger />
             </>
           )}
-          <SidebarInset className="bg-indigo-100">
+          <SidebarInset className="bg-[#f5f5f5]">
             <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
               {campaign && showAlert && <AlertSection campaign={campaign} />}
               <ProUpgradePrompt
@@ -138,39 +128,23 @@ const DashboardLayout = ({
   )
 }
 
-const DesktopCollapseTrigger = () => {
-  const { toggleSidebar, state } = useSidebar()
-  return (
-    <button
-      onClick={toggleSidebar}
-      className="hidden md:flex fixed bottom-4 z-50 items-center justify-center size-8 rounded-full bg-white border border-zinc-200 shadow-sm hover:bg-zinc-50 transition-[left] duration-200"
-      style={{
-        left:
-          state === 'collapsed'
-            ? 'calc(var(--sidebar-width-icon) - 1rem)'
-            : 'calc(var(--sidebar-width) - 1rem)',
-      }}
-      aria-label={state === 'collapsed' ? 'Expand sidebar' : 'Collapse sidebar'}
-    >
-      {state === 'collapsed' ? (
-        <MdChevronRight size={16} />
-      ) : (
-        <MdChevronLeft size={16} />
-      )}
-    </button>
-  )
-}
-
 const MobileMenuTrigger = () => {
   const { setOpenMobile } = useSidebar()
   return (
-    <button
-      onClick={() => setOpenMobile(true)}
-      className="fixed top-3 right-4 z-50 flex items-center justify-center rounded-full size-9 md:hidden"
-      aria-label="Open menu"
-    >
-      <MdMenu size={20} />
-    </button>
+    <div className="flex md:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
+      <img
+        src="/images/logo/heart.svg"
+        alt="GoodParty.org"
+        className="h-6 w-8 object-contain"
+      />
+      <button
+        onClick={() => setOpenMobile(true)}
+        className="flex items-center justify-center rounded-full size-9"
+        aria-label="Open menu"
+      >
+        <MdMenu size={16} />
+      </button>
+    </div>
   )
 }
 

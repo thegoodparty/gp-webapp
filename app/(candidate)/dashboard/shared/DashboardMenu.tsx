@@ -10,7 +10,6 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdAdd,
-  MdClose,
   MdLogout,
   MdMessage,
   MdPeople,
@@ -41,17 +40,17 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem as SidebarMenuItemComponent,
   useSidebar,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import { FaExternalLinkAlt, FaTheaterMasks, FaUserCircle } from 'react-icons/fa'
 import { HiOutlineStar } from 'react-icons/hi'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
-import { MdUnfoldMore } from 'react-icons/md'
 
 interface MenuItem {
   id: string
@@ -405,6 +404,7 @@ const NewNavMenu = ({
   handleEnterPress: (e: KeyboardEvent<HTMLDivElement>) => void
 }) => {
   const [user] = useUser()
+  const [campaign] = useCampaign()
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -420,15 +420,25 @@ const NewNavMenu = ({
 
   return (
     <>
-      {isMobile && (
-        <button
-          onClick={() => setOpenMobile(false)}
-          className="fixed top-4 right-4 z-[60] flex items-center justify-center size-10 rounded-full bg-white shadow-md"
-          aria-label="Close menu"
-        >
-          <MdClose size={16} />
-        </button>
-      )}
+      <SidebarHeader className="px-2 py-1">
+        <div className="flex items-center gap-2 p-2 rounded-md">
+          <Image
+            src="/images/logo/heart.svg"
+            alt="GoodParty.org"
+            width={32}
+            height={24}
+            className="shrink-0"
+          />
+          <div className="flex flex-1 flex-col gap-1 min-w-0 leading-none">
+            <span className="text-xs text-sidebar-foreground truncate">
+              GoodParty.org
+            </span>
+            <span className="text-sm font-semibold text-sidebar-foreground truncate">
+              {campaign?.details?.office || '2026 Campaign'}
+            </span>
+          </div>
+        </div>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -443,8 +453,7 @@ const NewNavMenu = ({
                       <SidebarMenuButton
                         asChild
                         isActive={isActive}
-                        size="lg"
-                        className="text-base"
+                        className="px-4 py-3 h-auto text-sm gap-2 rounded-md"
                       >
                         <Link
                           href={link}
@@ -452,14 +461,14 @@ const NewNavMenu = ({
                           target={target}
                           onClick={() => handleMenuItemClick(item)}
                         >
-                          <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                          <span className="flex size-4 shrink-0 items-center justify-center">
                             {icon}
                           </span>
                           <span>{label}</span>
                         </Link>
                       </SidebarMenuButton>
                       {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5">
                           NEW
                         </SidebarMenuBadge>
                       )}
@@ -475,11 +484,8 @@ const NewNavMenu = ({
           <SidebarMenuItemComponent>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="gap-3 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Avatar className="h-8 w-8 shrink-0 rounded-lg">
+                <SidebarMenuButton className="h-auto gap-2 p-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                  <Avatar className="size-8 shrink-0 rounded-lg">
                     <Avatar.Image
                       src={user?.avatar || undefined}
                       alt={user?.name || ''}
@@ -488,13 +494,12 @@ const NewNavMenu = ({
                       <FaUserCircle className="h-full w-full" />
                     </Avatar.Fallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
+                  <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
+                    <span className="truncate text-sm font-semibold">
                       {user?.firstName} {user?.lastName}
                     </span>
                     <span className="truncate text-xs">Manage account</span>
                   </div>
-                  <MdUnfoldMore className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -505,7 +510,7 @@ const NewNavMenu = ({
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
+                    <Avatar className="size-8 rounded-lg">
                       <Avatar.Image
                         src={user?.avatar || undefined}
                         alt={user?.name || ''}
@@ -514,8 +519,8 @@ const NewNavMenu = ({
                         <FaUserCircle className="h-full w-full" />
                       </Avatar.Fallback>
                     </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
+                    <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
+                      <span className="truncate text-sm font-semibold">
                         {user?.firstName} {user?.lastName}
                       </span>
                       <span className="truncate text-xs">{user?.email}</span>
