@@ -27,10 +27,10 @@ const AboutHero = (): React.JSX.Element => (
             alt="GoodParty Logo"
             priority
           />
-          <h1 className="text-5xl md:text-8xl leading-tight my-8">
+          <h1 className="text-5xl leading-tight md:text-8xl md:leading-none my-8">
             The GoodParty.org Mission
           </h1>
-          <h2 className="text-2xl md:text-4xl leading-tight mb-8 md:mb-16">
+          <h2 className="text-2xl leading-tight md:text-4xl md:leading-tight mb-8 md:mb-16">
             The movement and tools to disrupt the corrupt two-party system
           </h2>
           <EmailFormV2

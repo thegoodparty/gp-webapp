@@ -81,7 +81,7 @@ const Hero = ({
           backgroundImage: `linear-gradient(131deg, ${color1} 2.74%, ${color2} 55.07%)`,
         }}
       >
-        <div className="bg-white bg-opacity-60 py-5">
+        <div className="bg-white/60 py-5">
           <MaxWidth>
             <SearchLocation />
           </MaxWidth>

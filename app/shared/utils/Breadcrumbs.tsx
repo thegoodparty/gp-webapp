@@ -59,7 +59,7 @@ const Breadcrumbs = ({
                 <div className="flex items-center">
                   <a
                     href={link.href}
-                    className="whitespace-nowrap text-base text-primary-light hover:text-primary hover:underline"
+                    className="whitespace-nowrap text-base font-medium text-primary-light hover:text-primary hover:underline"
                   >
                     <div className="text-base">{link.label}</div>
                   </a>
@@ -71,7 +71,7 @@ const Breadcrumbs = ({
           ))}
           <li>
             <div
-              className={clsx('text-base text-primary-dark', {
+              className={clsx('text-base font-medium text-primary-dark', {
                 'whitespace-nowrap': !wrapText,
               })}
             >

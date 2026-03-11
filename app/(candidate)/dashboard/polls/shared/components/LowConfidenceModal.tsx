@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { LuInfo, LuMoveRight } from 'react-icons/lu'
-import { Button } from 'goodparty-styleguide'
+import { Button } from '@styleguide'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import Body1 from '@shared/typography/Body1'
 
