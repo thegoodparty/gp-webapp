@@ -79,3 +79,8 @@ export const getServerFlags = async (): Promise<ServerFlags> => {
     Object.entries(variants).map(([k, v]) => [k, v?.value]),
   )
 }
+
+export const getServerFlagOn = async (flagKey: string): Promise<boolean> => {
+  const flags = await getServerFlags()
+  return flags[flagKey] === 'on'
+}
