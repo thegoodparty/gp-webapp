@@ -103,6 +103,10 @@ async function signInAndGetToken(
   password: string,
 ): Promise<string> {
   await setupClerkTestingToken({ page })
+  await page.goto('/')
+  await page.waitForFunction(() => window.Clerk?.loaded, null, {
+    timeout: 15000,
+  })
 
   await clerk.signIn({
     page,
@@ -113,17 +117,15 @@ async function signInAndGetToken(
     },
   })
 
-  const token = await page.evaluate(async () => {
-    // Wait for Clerk session to be available
-    const w = window as unknown as {
-      Clerk?: { session?: { getToken: () => Promise<string> } }
-    }
-    if (!w.Clerk?.session) {
-      // Give Clerk a moment to initialize
-      await new Promise((r) => setTimeout(r, 1000))
-    }
-    return w.Clerk?.session?.getToken() ?? ''
-  })
+  await page.waitForFunction(
+    () => !!window.Clerk?.session,
+    null,
+    { timeout: 10000 },
+  )
+
+  const token = await page.evaluate(
+    () => window.Clerk!.session!.getToken(),
+  )
 
   if (!token) {
     throw new Error('Failed to get Clerk session token after sign-in')
