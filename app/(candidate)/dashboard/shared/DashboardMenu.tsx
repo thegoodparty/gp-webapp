@@ -319,7 +319,6 @@ type AccountManagementItem = {
   id: string
   href: string
   onClick?: () => void
-  analyticsEvent?: string
   _target?: string
 }
 

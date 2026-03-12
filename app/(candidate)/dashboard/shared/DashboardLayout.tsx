@@ -69,15 +69,13 @@ const DashboardLayout = ({
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
 
-  const menuPathname = pathname || hookPathname
-
   if (navRefreshEnabled) {
     return (
       <EcanvasserProvider>
         <SidebarProvider>
           {!hideMenu && (
             <Sidebar>
-              <DashboardMenu pathname={menuPathname} useNewNav />
+              <DashboardMenu pathname={currentPath} useNewNav />
             </Sidebar>
           )}
           <SidebarInset className="bg-[#f5f5f5]">
@@ -102,7 +100,7 @@ const DashboardLayout = ({
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
         {!hideMenu && (
           <div className="hidden lg:block">
-            <DashboardMenu pathname={menuPathname} />
+            <DashboardMenu pathname={currentPath} />
           </div>
         )}
         <main
