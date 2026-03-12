@@ -18,7 +18,7 @@ export const HopeStat = ({
   blurb,
 }: HopeStatProps): React.JSX.Element => (
   <HopeStatCard>
-    <h1 className="text-secondary-light text-6xl leading-snug md:text-8xl">
+    <h1 className="text-secondary-light text-6xl leading-snug md:text-8xl md:leading-none">
       {percentage}%
     </h1>
     <hr className="border-2 border-secondary-light w-12 my-1.5 ml-auto font-sfpro leading-normal" />

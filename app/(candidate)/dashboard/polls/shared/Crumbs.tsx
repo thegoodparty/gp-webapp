@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import { Fragment } from 'react'
 
 interface BreadcrumbLinkItem {

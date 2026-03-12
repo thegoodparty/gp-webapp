@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from 'goodparty-styleguide'
+} from '@styleguide'
 import Link from 'next/link'
 import { StatusBadge } from './StatusBadge'
 import React from 'react'

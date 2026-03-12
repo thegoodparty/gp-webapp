@@ -1,7 +1,7 @@
 'use client'
 
 import { BsExclamationCircle } from 'react-icons/bs'
-import { Alert, AlertTitle, Button } from 'goodparty-styleguide'
+import { Alert, AlertTitle, Button } from '@styleguide'
 import Body2 from '@shared/typography/Body2'
 import { usePoll } from './hooks/PollProvider'
 import Link from 'next/link'

@@ -23,7 +23,7 @@ export default function BlogSearch({
   if (!blogItems || blogItems.length <= 0) return null
 
   return (
-    <div className="w-full md:w-[715px] lg:w-auto mt-2 lg:mt-0">
+    <div className="blog-search-scope w-full md:w-[715px] lg:w-auto mt-2 lg:mt-0">
       <Autocomplete
         options={blogItems}
         getOptionLabel={(option) => option.title}

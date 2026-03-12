@@ -14,7 +14,7 @@ const IsNowYourTime = (): React.JSX.Element => (
           width={108}
           height={108}
         />
-        <h2 className="text-3xl font-semibold leading-9 mb-8 md:text-6xl">
+        <h2 className="text-3xl font-semibold leading-9 mb-8 md:text-6xl md:leading-none">
           70% of local elections <br />
           are uncontested... <br />
           is now your time?
