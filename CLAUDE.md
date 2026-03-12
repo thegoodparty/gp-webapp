@@ -113,7 +113,7 @@ Routes must match keys in `APIEndpoints` type (e.g., `'GET /v1/contacts/stats'`)
 
 ### AI Code Review
 
-The `ai-rules/` directory contains rule files for focused code review. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
+The `ai-rules/` directory is a git submodule with rule files for focused code review. Before using the critics, always pull the latest rules first: `npm run ai-rules:update`. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
 
 ```
 Read each .md file in ai-rules/. For each rule file relevant to my changes,
