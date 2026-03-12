@@ -23,7 +23,6 @@ const RightSide = (): React.JSX.Element => {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
   const isOnboardingPath = pathname?.startsWith('/onboarding')
-
   const toggleProfile = () => {
     if (profileOpen) {
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown)
