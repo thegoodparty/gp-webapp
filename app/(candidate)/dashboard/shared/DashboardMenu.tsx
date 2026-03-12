@@ -56,6 +56,7 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem as SidebarMenuItemComponent,
+  SidebarSeparator,
   useSidebar,
 } from '@styleguide'
 import { FaUserCircle } from 'react-icons/fa'
@@ -316,6 +317,15 @@ export default function DashboardMenu({
   )
 }
 
+type AccountManagementItem = {
+  label: string
+  icon: LucideIcon
+  id: string
+  href: string
+  analyticsEvent?: string
+  _target?: string
+}
+
 const NewNavMenu = ({
   menuItems,
   pathname,
@@ -339,6 +349,93 @@ const NewNavMenu = ({
     setOpenMobile(false)
   }
 
+  const accountManagementMenuItems = {
+    profile: {
+      label: 'Profile',
+      icon: CircleUserRound,
+      id: 'nav-dash-profile',
+      href: '/dashboard/campaign-details',
+      analyticsEvent: EVENTS.Navigation.Dashboard.ClickMyProfile,
+    },
+    settings: {
+      label: 'Settings',
+      icon: Settings,
+      id: 'nav-dash-settings',
+      href: '/profile',
+    },
+    addCampaign: {
+      label: 'Add Campaign',
+      icon: Plus,
+      id: 'nav-dash-add-campaign',
+      href: '/sales/add-campaign',
+    },
+    admin: {
+      label: 'Admin',
+      icon: Wand,
+      id: 'nav-dash-admin',
+      href: '/admin',
+    },
+    stopImpersonating: {
+      label: 'Stop Impersonating',
+      icon: StopCircle,
+      id: 'nav-dash-stop-impersonating',
+      href: '/admin',
+    },
+    community: {
+      label: 'Community',
+      icon: ExternalLink,
+      id: 'nav-dash-community',
+      href: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',
+      _target: '_blank',
+    },
+    logout: {
+      label: 'Logout',
+      icon: LogOut,
+      id: 'nav-log-out',
+      href: '/logout',
+      _target: '_self',
+    },
+  } satisfies Record<string, AccountManagementItem>
+
+  const sidebarItem = (item: AccountManagementItem) => (
+    <SidebarMenuItemComponent key={item.id}>
+      <SidebarMenuButton
+        asChild
+        isActive={pathname === item.href}
+        className="px-4 py-2.5 h-10 text-sm gap-2 rounded-md font-opensans"
+      >
+        <Link
+          href={item.href}
+          id={item.id}
+          target={item._target}
+          onClick={() => {
+            item.analyticsEvent && trackEvent(item.analyticsEvent)
+            setOpenMobile(false)
+          }}
+        >
+          <item.icon size={16} />
+          <span>{item.label}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItemComponent>
+  )
+
+  const dropDownItem = (item: AccountManagementItem) => (
+    <DropdownMenuItemComponent asChild>
+      <Link
+        href={item.href}
+        id={item.id}
+        target={item._target}
+        onClick={() => {
+          item.analyticsEvent && trackEvent(item.analyticsEvent)
+        }}
+      >
+        <item.icon size={16} />
+        <span>{item.label}</span>
+      </Link>
+    </DropdownMenuItemComponent>
+  )
+
   return (
     <>
       <SidebarContent>
@@ -356,12 +453,11 @@ const NewNavMenu = ({
                     isNew,
                     v2Icon: V2Icon,
                   } = item
-                  const isActive = pathname === link
                   return (
                     <SidebarMenuItemComponent key={id}>
                       <SidebarMenuButton
                         asChild
-                        isActive={isActive}
+                        isActive={pathname === link}
                         className="px-4 py-2.5 h-10 text-sm gap-2 rounded-md font-opensans"
                       >
                         <Link
@@ -382,117 +478,80 @@ const NewNavMenu = ({
                     </SidebarMenuItemComponent>
                   )
                 })}
+              {isMobile && (
+                <>
+                  <SidebarSeparator />
+                  {sidebarItem(accountManagementMenuItems.community)}
+                  <SidebarSeparator />
+                  {sidebarItem(accountManagementMenuItems.profile)}
+                  {sidebarItem(accountManagementMenuItems.settings)}
+                  {userHasRole(user, USER_ROLES.SALES) &&
+                    !impersonating &&
+                    sidebarItem(accountManagementMenuItems.addCampaign)}
+                  {userIsAdmin(user) &&
+                    !impersonating &&
+                    sidebarItem(accountManagementMenuItems.admin)}
+                  {!!impersonating &&
+                    sidebarItem(accountManagementMenuItems.stopImpersonating)}
+                  <SidebarSeparator />
+                  {sidebarItem(accountManagementMenuItems.logout)}
+                  <SidebarSeparator />
+                </>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItemComponent>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="h-auto gap-2 p-2 font-opensans data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  <Avatar className="size-8 shrink-0 rounded-lg">
-                    <Avatar.Image
-                      src={user?.avatar || undefined}
-                      alt={user?.name || ''}
-                    />
-                    <Avatar.Fallback className="rounded-lg">
-                      <FaUserCircle className="h-full w-full" />
-                    </Avatar.Fallback>
-                  </Avatar>
-                  <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
-                    <span className="truncate text-sm font-semibold">
-                      {user?.firstName} {user?.lastName}
-                    </span>
-                    <span className="truncate text-xs">Manage account</span>
-                  </div>
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="min-w-56 rounded-lg font-opensans"
-                side={isMobile ? 'bottom' : 'right'}
-                align="end"
-                sideOffset={4}
-              >
-                <DropdownMenuItemComponent asChild>
-                  <Link
-                    href="/dashboard/campaign-details"
-                    id="nav-dash-profile"
-                    onClick={() => {
-                      trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile)
-                    }}
-                  >
-                    <CircleUserRound size={16} />
-                    Profile
-                  </Link>
-                </DropdownMenuItemComponent>
-                <DropdownMenuItemComponent asChild>
-                  <Link href="/profile" id="nav-dash-settings">
-                    <Settings size={16} />
-                    Settings
-                  </Link>
-                </DropdownMenuItemComponent>
-                {userHasRole(user, USER_ROLES.SALES) && !impersonating && (
-                  <DropdownMenuItemComponent asChild>
-                    <Link href="/sales/add-campaign">
-                      <Plus size={16} />
-                      Add Campaign
-                    </Link>
-                  </DropdownMenuItemComponent>
-                )}
-                {userIsAdmin(user) && !impersonating && (
-                  <DropdownMenuItemComponent asChild>
-                    <Link href="/admin">
-                      <Wand size={16} />
-                      Admin
-                    </Link>
-                  </DropdownMenuItemComponent>
-                )}
-                {impersonating && (
-                  <DropdownMenuItemComponent
-                    onClick={() => {
-                      clearImpersonation()
-                      window.location.href = '/admin'
-                    }}
-                  >
-                    <StopCircle size={16} />
-                    Stop Impersonating
-                  </DropdownMenuItemComponent>
-                )}
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItemComponent asChild>
-                  <Link
-                    href="https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952"
-                    id="nav-dash-community"
-                    target="_blank"
-                    onClick={() => {
-                      trackEvent(EVENTS.Navigation.Dashboard.ClickCommunity)
-                    }}
-                  >
-                    <ExternalLink size={16} />
-                    Community Forum
-                  </Link>
-                </DropdownMenuItemComponent>
-                <DropdownMenuSeparator />
-                <DropdownMenuItemComponent
-                  onClick={handleLogOut}
-                  onKeyDown={(e) =>
-                    handleEnterPress(
-                      e as unknown as KeyboardEvent<HTMLDivElement>,
-                    )
-                  }
-                  id="nav-log-out"
+      {!isMobile && (
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItemComponent>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton className="h-auto gap-2 p-2 font-opensans data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                    <Avatar className="size-8 shrink-0 rounded-lg">
+                      <Avatar.Image
+                        src={user?.avatar || undefined}
+                        alt={user?.name || ''}
+                      />
+                      <Avatar.Fallback className="rounded-lg">
+                        <FaUserCircle className="h-full w-full" />
+                      </Avatar.Fallback>
+                    </Avatar>
+                    <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
+                      <span className="truncate text-sm font-semibold">
+                        {user?.firstName} {user?.lastName}
+                      </span>
+                      <span className="truncate text-xs">Manage account</span>
+                    </div>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="min-w-56 rounded-lg font-opensans"
+                  side={isMobile ? 'bottom' : 'right'}
+                  align="end"
+                  sideOffset={4}
                 >
-                  <LogOut size={16} />
-                  Logout
-                </DropdownMenuItemComponent>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItemComponent>
-        </SidebarMenu>
-      </SidebarFooter>
+                  {dropDownItem(accountManagementMenuItems.profile)}
+                  {dropDownItem(accountManagementMenuItems.settings)}
+                  {userHasRole(user, USER_ROLES.SALES) &&
+                    !impersonating &&
+                    dropDownItem(accountManagementMenuItems.addCampaign)}
+                  {userIsAdmin(user) &&
+                    !impersonating &&
+                    dropDownItem(accountManagementMenuItems.admin)}
+                  {!!impersonating &&
+                    dropDownItem(accountManagementMenuItems.stopImpersonating)}
+                  <DropdownMenuSeparator />
+                  {dropDownItem(accountManagementMenuItems.community)}
+                  <DropdownMenuSeparator />
+                  {dropDownItem(accountManagementMenuItems.logout)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItemComponent>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
     </>
   )
 }
