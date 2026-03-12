@@ -16,8 +16,10 @@ import {
   MdWeb,
 } from 'react-icons/md'
 import {
+  Bot,
   Circle,
   CircleUserRound,
+  DoorClosed,
   ExternalLink,
   FileText,
   Globe,
@@ -131,7 +133,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   {
     label: 'AI Assistant',
     icon: <MdAutoAwesome />,
-    v2Icon: Circle,
+    v2Icon: Bot,
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
@@ -178,7 +180,7 @@ const ECANVASSER_MENU_ITEM: MenuItem = {
   label: 'Door Knocking',
   link: '/dashboard/door-knocking',
   icon: <MdSensorDoor />,
-  v2Icon: Circle,
+  v2Icon: DoorClosed,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
 }
 
@@ -196,7 +198,7 @@ const POLLS_MENU_ITEM: MenuItem = {
   label: 'Polls',
   link: '/dashboard/polls',
   icon: <MdPoll />,
-  v2Icon: Circle,
+  v2Icon: Send,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
   isNew: true,
 }
@@ -382,7 +384,7 @@ const NewNavMenu = ({
       href: '/admin',
     },
     community: {
-      label: 'Community',
+      label: 'Community Forum',
       icon: ExternalLink,
       id: 'nav-dash-community',
       href: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',

@@ -568,9 +568,15 @@ a:hover {
 
 [data-slot='sidebar-wrapper'] a,
 [data-slot='sidebar-wrapper'] a:hover,
+[data-slot='sidebar'] a,
+[data-slot='sidebar'] a:hover,
 [data-slot='dropdown-menu-content'] a,
 [data-slot='dropdown-menu-content'] a:hover {
   text-decoration: none;
+}
+
+[data-mobile='true'] [data-slot='sidebar-separator'] {
+  margin-inline: -0.5rem;
 }
 
 @layer base {
