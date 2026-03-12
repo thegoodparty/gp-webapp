@@ -437,6 +437,9 @@ export interface Campaign {
   vendorTsData: VendorTsData
   pathToVictory?: PathToVictory
   user?: User
+  organization?: {
+    positionId?: string | null
+  } | null
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]
