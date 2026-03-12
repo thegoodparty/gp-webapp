@@ -31,7 +31,7 @@ const links: NavLink[] = [
   {
     id: 'nav-settings',
     label: 'Settings',
-    href: '/profile',
+    href: '/dashboard/profile',
     icon: <FaToolbox />,
     onClick: () =>
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickSettings),

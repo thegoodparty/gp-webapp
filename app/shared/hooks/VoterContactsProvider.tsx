@@ -1,6 +1,6 @@
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 
 export const getVoterContactField = (
   outreachType: string,

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { PollImageUpload } from 'app/(candidate)/dashboard/polls/components/PollImageUpload'
+import { PollImageUpload } from 'app/dashboard/polls/components/PollImageUpload'
 
 export default function AddImageStep() {
   const { setImageUrl } = useOnboardingContext()

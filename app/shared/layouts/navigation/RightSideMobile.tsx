@@ -49,8 +49,7 @@ const RightSideMobile = (): React.JSX.Element => {
       step?: string | number
     }) || {}
   const pathname = usePathname()
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile')
+  const isDashboardPath = pathname?.startsWith('/dashboard')
   const dashboardLink = '/dashboard'
 
   const closeMenu = () => {

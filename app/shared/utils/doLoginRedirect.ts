@@ -1,7 +1,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { getCookie } from 'helpers/cookieHelper'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
-import { doPostAuthRedirect } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { doPostAuthRedirect } from 'app/onboarding/shared/ajaxActions'
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { User, Campaign } from 'helpers/types'
 

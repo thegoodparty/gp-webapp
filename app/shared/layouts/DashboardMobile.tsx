@@ -1,5 +1,5 @@
 import H3 from '@shared/typography/H3'
-import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu'
+import DashboardMenu from 'app/dashboard/shared/DashboardMenu'
 import { User } from '../../../helpers/types'
 
 interface DashboardMobileProps {
