@@ -55,6 +55,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -64,6 +65,10 @@ import {
 } from '@styleguide'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
+import {
+  OrganizationPicker,
+  useOrganization,
+} from '@shared/organization-picker'
 
 interface MenuItem {
   id: string
@@ -71,6 +76,8 @@ interface MenuItem {
   link: string
   icon: React.ReactNode
   v2Icon: LucideIcon
+  v2Name?: string
+  v2Category: 'campaign' | 'elected-office' | null
   onClick?: () => void
   target?: string
   isNew?: boolean
@@ -91,6 +98,7 @@ const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
   label: 'Voter Data',
   icon: <MdFolderShared />,
   v2Icon: UsersRound,
+  v2Category: 'campaign',
   link: '/dashboard/upgrade-to-pro',
   id: 'upgrade-pro-dashboard',
 }
@@ -101,6 +109,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     icon: <MdFactCheck />,
     v2Icon: LayoutDashboard,
     link: '/dashboard',
+    v2Category: 'campaign',
     id: 'campaign-tracker-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
   },
@@ -108,6 +117,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     label: 'Voter Outreach',
     icon: <MdMessage />,
     v2Icon: Send,
+    v2Category: 'campaign',
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterOutreach),
@@ -117,6 +127,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     label: 'Website',
     icon: <MdWeb />,
     v2Icon: Globe,
+    v2Category: 'campaign',
     link: '/dashboard/website',
     id: 'website-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
@@ -125,6 +136,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     label: 'My Profile',
     icon: <MdAccountCircle />,
     v2Icon: Circle,
+    v2Category: null,
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
@@ -133,6 +145,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     label: 'AI Assistant',
     icon: <MdAutoAwesome />,
     v2Icon: Bot,
+    v2Category: 'campaign',
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
@@ -141,6 +154,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     label: 'Content Builder',
     icon: <MdFileOpen />,
     v2Icon: FileText,
+    v2Category: 'campaign',
     link: '/dashboard/content',
     id: 'my-content-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
@@ -158,6 +172,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
       />
     ),
     v2Icon: Circle,
+    v2Category: null,
     link: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',
     target: '_blank',
     id: 'community-dashboard',
@@ -171,6 +186,7 @@ const VOTER_RECORDS_MENU_ITEM: MenuItem = {
   link: '/dashboard/voter-records',
   icon: <MdFolderShared />,
   v2Icon: UsersRound,
+  v2Category: 'campaign',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
 }
 
@@ -180,15 +196,18 @@ const ECANVASSER_MENU_ITEM: MenuItem = {
   link: '/dashboard/door-knocking',
   icon: <MdSensorDoor />,
   v2Icon: DoorClosed,
+  v2Category: 'campaign',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
 }
 
 const CONTACTS_MENU_ITEM: MenuItem = {
   id: 'contacts-dashboard',
   label: 'Contacts',
+  v2Name: 'Constituents',
   link: '/dashboard/contacts',
   icon: <MdPeople />,
   v2Icon: UsersRound,
+  v2Category: 'elected-office',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContacts),
 }
 
@@ -198,6 +217,7 @@ const POLLS_MENU_ITEM: MenuItem = {
   link: '/dashboard/polls',
   icon: <MdPoll />,
   v2Icon: Send,
+  v2Category: 'elected-office',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
   isNew: true,
 }
@@ -339,6 +359,8 @@ const NewNavMenu = ({
   const impersonating = impersonateToken && impersonateUser
   const { setOpenMobile, isMobile } = useSidebar()
 
+  const organization = useOrganization()
+
   const handleMenuItemClick = (item: MenuItem) => {
     item?.onClick?.()
     setOpenMobile(false)
@@ -437,12 +459,19 @@ const NewNavMenu = ({
 
   return (
     <>
+      <SidebarHeader>
+        <OrganizationPicker />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems
-                .filter((i) => !['My Profile', 'Community'].includes(i.label))
+                .filter((i) =>
+                  organization.electedOfficeId
+                    ? i.v2Category === 'elected-office'
+                    : i.v2Category === 'campaign',
+                )
                 .map((item) => {
                   const {
                     id,
@@ -466,11 +495,11 @@ const NewNavMenu = ({
                           onClick={() => handleMenuItemClick(item)}
                         >
                           {V2Icon && <V2Icon size={16} />}
-                          <span>{label}</span>
+                          <span>{item.v2Name || label}</span>
                         </Link>
                       </SidebarMenuButton>
                       {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5">
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
                           NEW
                         </SidebarMenuBadge>
                       )}
