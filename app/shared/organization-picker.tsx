@@ -48,6 +48,12 @@ export const useOrganization = () => {
   return ctx.selected
 }
 
+// TODO: temporary thing while we're in feature-toggle mode. Remove this after
+// organizations are fully rolled out.
+export const useOptionalOrganization = () => {
+  return useContext(OrganizationContext)?.selected ?? null
+}
+
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]
