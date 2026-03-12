@@ -48,12 +48,14 @@ The codebase has two parallel fetch systems — a legacy one and a newer typed o
 - `unAuthFetch` - Public endpoints (no auth)
 - Routes defined in `gpApi/routes.ts` as `ApiRoute` objects with `path` and `method`
 - URL building via `@shared/utils/buildUrl` (replaces `:param` placeholders, appends query strings)
+- **Error handling:** Returns polymorphic types — parsed JSON on 2xx, raw `Response` on non-2xx, `false` on parse failure. Callers must check `ok`/status manually; errors are never thrown.
 
 **Typed system** (`gpApi/typed-request.ts`, `gpApi/api-endpoints.ts`):
 - `clientRequest<Route>(route, payload)` - Browser-side typed requests via `ofetch`
 - `serverRequest<Route>(route, payload)` - Server-side typed requests
 - Routes are string keys like `'GET /v1/polls/:pollId'` with typed `Request`/`Response` in `APIEndpoints`
 - Path params auto-extracted from route string via `PathParamsOf<Route>` type
+- **Error handling:** Returns a consistent `Response<T>` shape with `{ ok, status, data, headers }`. `ofetch` throws on 4xx/5xx by default, so callers should use try/catch.
 - This is the newer pattern — prefer it for new code
 
 ### State Management
