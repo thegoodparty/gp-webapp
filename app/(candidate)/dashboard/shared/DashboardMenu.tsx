@@ -29,6 +29,7 @@ import {
   Send,
   Settings,
   StopCircle,
+  UserRound,
   UsersRound,
   Wand,
   type LucideIcon,
@@ -61,7 +62,6 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { FaUserCircle } from 'react-icons/fa'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 
@@ -259,13 +259,7 @@ export default function DashboardMenu({
   }
 
   if (useNewNav) {
-    return (
-      <NewNavMenu
-        menuItems={menuItems}
-        pathname={pathname}
-        handleEnterPress={handleEnterPress}
-      />
-    )
+    return <NewNavMenu menuItems={menuItems} pathname={pathname} />
   }
 
   const handleMenuItemClick = (item: MenuItem) => {
@@ -324,6 +318,7 @@ type AccountManagementItem = {
   icon: LucideIcon
   id: string
   href: string
+  onClick?: () => void
   analyticsEvent?: string
   _target?: string
 }
@@ -331,11 +326,9 @@ type AccountManagementItem = {
 const NewNavMenu = ({
   menuItems,
   pathname,
-  handleEnterPress,
 }: {
   menuItems: MenuItem[]
   pathname: string | null
-  handleEnterPress: (e: KeyboardEvent<HTMLDivElement>) => void
 }) => {
   const [user] = useUser()
   const {
@@ -357,7 +350,7 @@ const NewNavMenu = ({
       icon: CircleUserRound,
       id: 'nav-dash-profile',
       href: '/dashboard/campaign-details',
-      analyticsEvent: EVENTS.Navigation.Dashboard.ClickMyProfile,
+      onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
     },
     settings: {
       label: 'Settings',
@@ -382,6 +375,10 @@ const NewNavMenu = ({
       icon: StopCircle,
       id: 'nav-dash-stop-impersonating',
       href: '/admin',
+      onClick: () => {
+        clearImpersonation()
+        window.location.href = '/admin'
+      },
     },
     community: {
       label: 'Community Forum',
@@ -411,7 +408,7 @@ const NewNavMenu = ({
           id={item.id}
           target={item._target}
           onClick={() => {
-            item.analyticsEvent && trackEvent(item.analyticsEvent)
+            item.onClick?.()
             setOpenMobile(false)
           }}
         >
@@ -429,7 +426,7 @@ const NewNavMenu = ({
         id={item.id}
         target={item._target}
         onClick={() => {
-          item.analyticsEvent && trackEvent(item.analyticsEvent)
+          item.onClick?.()
         }}
       >
         <item.icon size={16} />
@@ -511,13 +508,10 @@ const NewNavMenu = ({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton className="h-auto gap-2 p-2 font-opensans data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                    <Avatar className="size-8 shrink-0 rounded-lg">
-                      <Avatar.Image
-                        src={user?.avatar || undefined}
-                        alt={user?.name || ''}
-                      />
-                      <Avatar.Fallback className="rounded-lg">
-                        <FaUserCircle className="h-full w-full" />
+                    <Avatar className="size-8 shrink-0 rounded-lg border border-border">
+                      <Avatar.Image src={user?.avatar || undefined} />
+                      <Avatar.Fallback className="rounded-lg bg-white">
+                        <UserRound className="size-5 text-muted-foreground" />
                       </Avatar.Fallback>
                     </Avatar>
                     <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
