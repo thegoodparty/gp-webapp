@@ -420,7 +420,7 @@ const NewNavMenu = ({
   )
 
   const dropDownItem = (item: AccountManagementItem) => (
-    <DropdownMenuItemComponent asChild>
+    <DropdownMenuItemComponent asChild className="h-10">
       <Link
         href={item.href}
         id={item.id}
@@ -429,7 +429,7 @@ const NewNavMenu = ({
           item.onClick?.()
         }}
       >
-        <item.icon size={16} />
+        <item.icon size={16} className="text-foreground" />
         <span>{item.label}</span>
       </Link>
     </DropdownMenuItemComponent>
