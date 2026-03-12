@@ -29,6 +29,7 @@ import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { HeaderLogo } from './layouts/navigation/HeaderLogo'
 import { queryClient } from './query-client'
+import { useRouter } from 'next/navigation'
 
 const LS_KEY = 'selected-organization-slug'
 
@@ -82,10 +83,11 @@ export const OrganizationProvider = ({
       deleteCookie(ORG_SLUG_COOKIE)
       return
     }
-    if (selectedSlug) {
-      setCookie(ORG_SLUG_COOKIE, selectedSlug)
+    const slug = selectedSlug ?? organizations[0]?.slug
+    if (slug) {
+      setCookie(ORG_SLUG_COOKIE, slug)
     }
-  }, [enabled, selectedSlug])
+  }, [enabled, selectedSlug, organizations])
 
   const selectedOrganization = useMemo(
     () =>
@@ -121,12 +123,21 @@ export const OrganizationProvider = ({
 
 export const OrganizationPicker = () => {
   const ctx = useContext(OrganizationContext)
+  const router = useRouter()
 
   const isMobile = useIsMobile()
 
   if (!ctx || ctx.organizations.length === 0) return null
 
   const { organizations, selected, setSelectedSlug } = ctx
+
+  const handleOrgSwitch = (org: Organization) => {
+    if (org.slug === selected.slug) return
+    setSelectedSlug(org.slug)
+    router.push(
+      org.electedOfficeId ? '/dashboard/polls' : '/dashboard',
+    )
+  }
 
   return (
     <SidebarMenu>
@@ -161,7 +172,7 @@ export const OrganizationPicker = () => {
                 return (
                   <DropdownMenuItem
                     key={org.slug}
-                    onClick={() => setSelectedSlug(org.slug)}
+                    onClick={() => handleOrgSwitch(org)}
                     className="gap-2 px-2 py-2.5"
                   >
                     <span

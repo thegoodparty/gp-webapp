@@ -226,17 +226,17 @@ const POLLS_MENU_ITEM: MenuItem = {
 const getDashboardMenuItems = (
   campaign: Campaign | null,
   serveAccessEnabled: boolean,
-  electedOffice: ElectedOffice | null,
+  isElectedOffice: boolean,
 ): MenuItem[] => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
   const voterDataIndex = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
-  if (serveAccessEnabled && electedOffice) {
+  if (serveAccessEnabled && isElectedOffice) {
     menuItems[voterDataIndex] = CONTACTS_MENU_ITEM
   } else if (campaign?.isPro) {
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
-  if (electedOffice) {
+  if (isElectedOffice) {
     menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
   }
 
@@ -255,14 +255,15 @@ export default function DashboardMenu({
     useFlagOn('serve-access')
   const organization = useOptionalOrganization()
 
-  const menuItems = useMemo(() => {
-    const effectiveElectedOffice =
-      organization && !organization.electedOfficeId ? null : electedOffice
+  const isElectedOffice = organization
+    ? !!organization.electedOfficeId
+    : !!electedOffice
 
+  const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
-      effectiveElectedOffice,
+      isElectedOffice,
     )
 
     if (ecanvasser) {
@@ -270,7 +271,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice, organization])
+  }, [campaign, serveAccessEnabled, ecanvasser, isElectedOffice])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
