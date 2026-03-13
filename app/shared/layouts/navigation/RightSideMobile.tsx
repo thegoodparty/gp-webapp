@@ -18,7 +18,6 @@ import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import Button from '@shared/buttons/Button'
 import { User } from 'helpers/types'
-import { noop } from '@shared/utils/noop'
 
 interface NavLink {
   href: string
@@ -83,7 +82,7 @@ const RightSideMobile = (): React.JSX.Element => {
           open={isOpen}
           onClose={() => setOpen(false)}
           anchor="right"
-          onOpen={noop}
+          onOpen={() => {}}
         >
           {user && isDashboardPath ? (
             <DashboardMobile user={user as User} pathname={pathname || ''} />

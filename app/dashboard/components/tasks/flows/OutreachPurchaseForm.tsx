@@ -11,7 +11,6 @@ import {
   completeFreePurchase,
 } from 'app/dashboard/purchase/utils/purchaseFetch.utils'
 import { PURCHASE_TYPES } from 'helpers/purchaseTypes'
-import { noop } from '@shared/utils/noop'
 
 interface OutreachPurchaseFormProps {
   onComplete?: () => void | Promise<void>
@@ -21,10 +20,10 @@ interface OutreachPurchaseFormProps {
 }
 
 export const OutreachPurchaseForm = ({
-  onComplete = noop,
+  onComplete = () => {},
   contactCount = 0,
   pricePerContact = 0,
-  onError = noop,
+  onError = () => {},
 }: OutreachPurchaseFormProps) => {
   const [campaign] = useCampaign()
   const { p2pUxEnabled } = useP2pUxEnabled()

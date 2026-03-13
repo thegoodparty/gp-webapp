@@ -5,7 +5,6 @@ import type {
   IPlayerProps,
   PlayerEvent as PlayerEventType,
 } from '@lottiefiles/react-lottie-player'
-import { noop } from '@shared/utils/noop'
 
 interface LottieAnimationProps extends Omit<IPlayerProps, 'src'> {
   animationData?: object | string
@@ -14,7 +13,7 @@ interface LottieAnimationProps extends Omit<IPlayerProps, 'src'> {
 
 export default function LottieAnimation({
   style = {},
-  callback = noop,
+  callback = () => {},
   animationData = {},
   ...restProps
 }: LottieAnimationProps) {

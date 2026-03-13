@@ -12,4 +12,3 @@ package.json
 .storybook/
 .vscode/
 public/
-test-results/

@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { numberFormatter } from 'helpers/numberHelper'
 import Modal from '@shared/utils/Modal'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -22,7 +21,7 @@ interface ContactCountsInfoModalProps {
 
 export const ContactCountsInfoModal = ({
   open = true,
-  setOpen = noop,
+  setOpen = () => {},
   pathToVictory = {},
 }: ContactCountsInfoModalProps): React.JSX.Element => {
   const { projectedTurnout, voterContactGoal, winNumber } = pathToVictory

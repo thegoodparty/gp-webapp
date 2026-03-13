@@ -5,7 +5,6 @@ import { SmsScriptSelect } from './SmsScriptSelect'
 import { ModalFooter } from '@shared/ModalFooter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { CampaignAiContent } from 'helpers/types'
-import { noop } from '@shared/utils/noop'
 
 interface SelectScriptScreenProps {
   aiContent?: CampaignAiContent
@@ -15,8 +14,8 @@ interface SelectScriptScreenProps {
 
 export const SelectScriptScreen = ({
   aiContent,
-  onBack = noop,
-  onNext = noop,
+  onBack = () => {},
+  onNext = () => {},
 }: SelectScriptScreenProps): React.JSX.Element => {
   const [smsScript, setSmsScript] = useState<string | null>(null)
   const handleOnNext = () => {

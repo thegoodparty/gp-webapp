@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useState } from 'react'
-import { noop, noopAsync } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { Campaign } from 'helpers/types'
@@ -13,8 +12,8 @@ type AdminCampaignContextValue = [
 
 export const AdminCampaignContext = createContext<AdminCampaignContextValue>([
   null,
-  noop,
-  noopAsync,
+  () => {},
+  async () => {},
 ])
 
 interface AdminCampaignProviderProps {

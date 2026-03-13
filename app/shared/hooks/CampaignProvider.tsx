@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useEffect, useState, useCallback } from 'react'
-import { noop, noopAsync } from '@shared/utils/noop'
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { Campaign } from 'helpers/types'
@@ -13,8 +12,8 @@ type CampaignContextValue = [
 
 export const CampaignContext = createContext<CampaignContextValue>([
   null,
-  noop,
-  noopAsync,
+  () => {},
+  async () => {},
 ])
 
 interface CampaignProviderProps {

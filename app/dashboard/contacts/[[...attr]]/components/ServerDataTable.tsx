@@ -15,7 +15,6 @@ import {
   PaginationEllipsis,
   PaginationLink,
 } from '@styleguide'
-import { noop } from '@shared/utils/noop'
 import { clsx } from 'clsx'
 import { PAGE_SIZES } from './shared/constants'
 import { type ColumnDef } from '@tanstack/react-table'
@@ -84,8 +83,8 @@ export default function ServerDataTable<TData, TValue>({
   data,
   pagination = {},
   className,
-  onRowClick = noop,
-  onColumnVisibilityChange = noop,
+  onRowClick = () => {},
+  onColumnVisibilityChange = () => {},
   initialColumnVisibility = {},
 }: ServerDataTableProps<TData, TValue>) {
   const {

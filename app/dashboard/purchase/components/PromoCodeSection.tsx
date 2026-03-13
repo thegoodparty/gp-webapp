@@ -28,7 +28,7 @@ export function usePromoCode(checkout: StripeCheckoutValue) {
         successSnackbar('Promo code applied!')
         setPromoCode('')
       }
-    } catch {
+    } catch (err) {
       setPromoError('Failed to apply promo code')
     } finally {
       setIsApplyingPromo(false)
@@ -40,7 +40,7 @@ export function usePromoCode(checkout: StripeCheckoutValue) {
     try {
       await checkout.removePromotionCode()
       successSnackbar('Promo code removed')
-    } catch {
+    } catch (err) {
       // Ignore removal errors
     } finally {
       setIsApplyingPromo(false)

@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { TextField } from '@mui/material'
 
 interface CandidatePositionStatementProps {
@@ -8,7 +7,7 @@ interface CandidatePositionStatementProps {
 
 export const CandidatePositionStatement = ({
   candidatePosition = '',
-  setCandidatePosition = noop,
+  setCandidatePosition = () => {},
 }: CandidatePositionStatementProps): React.JSX.Element => (
   <TextField
     label="Your Position"

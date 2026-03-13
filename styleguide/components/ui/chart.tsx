@@ -1,10 +1,5 @@
 import * as React from 'react'
 import * as RechartsPrimitive from 'recharts'
-import type {
-  Payload,
-  ValueType,
-  NameType,
-} from 'recharts/types/component/DefaultTooltipContent'
 
 import { cn } from '@styleguide/lib/utils'
 
@@ -107,11 +102,6 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
-const getPayloadFill = (
-  item: Payload<ValueType, NameType>,
-): string | undefined =>
-  typeof item.payload?.fill === 'string' ? item.payload?.fill : undefined
-
 function ChartTooltipContent({
   active,
   payload,
@@ -190,8 +180,7 @@ function ChartTooltipContent({
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
-          const payloadFill = getPayloadFill(item)
-          const indicatorColor = color || payloadFill || item.color
+          const indicatorColor = color || item.payload.fill || item.color
 
           return (
             <div
@@ -290,7 +279,7 @@ function ChartLegendContent({
 
         return (
           <div
-            key={String(item.value)}
+            key={item.value}
             className={cn(
               '[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3',
             )}

@@ -13,7 +13,6 @@ import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { noop } from '@shared/utils/noop'
 
 type GenerateLoadingScreenProps = {
   aiTemplateKey?: string
@@ -23,7 +22,7 @@ type GenerateLoadingScreenProps = {
 
 export const GenerateLoadingScreen = ({
   aiTemplateKey = '',
-  onNext = noop,
+  onNext = () => {},
 }: GenerateLoadingScreenProps): React.JSX.Element => {
   const [campaign, setCampaign] = useCampaign()
   const [aiContentSections] = buildAiContentSections(

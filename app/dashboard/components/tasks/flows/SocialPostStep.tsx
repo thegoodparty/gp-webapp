@@ -13,7 +13,6 @@ import { useMemo } from 'react'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { doCreateOutReachEffectHandler } from 'app/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 import { OUTREACH_TYPES } from 'app/dashboard/outreach/constants'
-import { noopAsync } from '@shared/utils/noop'
 
 interface SocialPostStepProps {
   scriptText: string
@@ -22,7 +21,7 @@ interface SocialPostStepProps {
 
 export default function SocialPostStep({
   scriptText,
-  onCreateOutreach = noopAsync,
+  onCreateOutreach = async () => {},
 }: SocialPostStepProps): React.JSX.Element {
   useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
   const copyTrackingAttrs = useMemo(

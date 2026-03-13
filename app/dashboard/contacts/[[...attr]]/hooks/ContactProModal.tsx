@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react'
-import { noop } from '@shared/utils/noop'
 
-const Context = createContext<(show: boolean) => void>(noop)
+const Context = createContext<(show: boolean) => void>(() => {})
 
 export const useShowContactProModal = (): ((show: boolean) => void) =>
   useContext(Context)

@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { useMemo } from 'react'
 import Button from '@shared/buttons/Button'
 import IconButton from '@shared/buttons/IconButton'
@@ -109,7 +108,7 @@ interface ActualViewAudienceFiltersModalProps {
 
 export const ActualViewAudienceFiltersModal = ({
   open = false,
-  onClose = noop,
+  onClose = () => {},
   audienceFilters,
   fileName = '',
 }: ActualViewAudienceFiltersModalProps): React.JSX.Element => (

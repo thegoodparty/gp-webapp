@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/nextjs'
 import type { ErrorEvent, TransactionEvent } from '@sentry/core'
 import { isProductRoute } from 'app/shared/utils/isProductRoute'
-import { nodeProfilingIntegration } from '@sentry/profiling-node'
+const { nodeProfilingIntegration } = require('@sentry/profiling-node')
 
 const extractPathname = (value: string): string => {
   const withoutMethod = value.replace(/^[A-Z]+\s+/, '')

@@ -1,5 +1,4 @@
 'use client'
-import { noop } from '@shared/utils/noop'
 import IssueItemEditor from 'app/dashboard/questions/components/issues/IssueItemEditor'
 import { useEffect, useState } from 'react'
 import AddCustomIssue from './AddCustomIssue'
@@ -48,7 +47,7 @@ const IssuesList = ({
   editIssuePosition,
   campaign: incomingCampaign,
   topIssues,
-  setEditIssuePosition = noop,
+  setEditIssuePosition = () => {},
 }: IssuesListProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign>(incomingCampaign)
   const [filterValue, setFilterValue] = useState('')

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import TaskItem from '../../../app/dashboard/campaign-plan/components/TaskItem'
-import { noop } from '@shared/utils/noop'
 
 const meta: Meta<typeof TaskItem> = {
   title: 'Campaign Plan/TaskItem',
@@ -33,7 +32,7 @@ export const Default: Story = {}
 
 export const WithClick: Story = {
   args: {
-    onClick: noop,
+    onClick: () => {},
   },
 }
 
@@ -76,6 +75,6 @@ export const Interactive: Story = {
     description: 'Target cell phones with a text message.',
     date: 'Sep 10',
     type: 'Text',
-    onClick: noop,
+    onClick: () => {},
   },
 }

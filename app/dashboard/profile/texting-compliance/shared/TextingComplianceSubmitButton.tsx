@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import Button from '@shared/buttons/Button'
 import { Tooltip } from '@mui/material'
 import { MouseEvent } from 'react'
@@ -63,7 +62,7 @@ const getValidationMessage = (
 }
 
 export const TextingComplianceSubmitButton = ({
-  onClick = noop,
+  onClick = () => {},
   loading = false,
   isValid = true,
   hasSubmissionError = false,

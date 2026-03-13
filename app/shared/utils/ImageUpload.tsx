@@ -5,7 +5,6 @@ import { RiImageAddFill } from 'react-icons/ri'
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { noop } from './noop'
 
 interface UploadAvatarResponse {
   avatar?: string
@@ -42,7 +41,7 @@ const ImageUploadWrapper = ({
   uploadCallback,
   maxFileSize,
   customElement,
-  loadingStatusCallback = noop,
+  loadingStatusCallback = () => {},
 }: ImageUploadWrapperProps): React.JSX.Element => {
   const [fileSizeError, setFileSizeError] = useState(false)
 

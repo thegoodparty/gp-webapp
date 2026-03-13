@@ -14,10 +14,7 @@ export const metadata = pageMetaData({
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({
-  params,
-  searchParams,
-}: PageProps<'/dashboard/polls/[id]/expand-payment'>) {
+export default async function Page({ params, searchParams }: PageProps<any>) {
   await serveAccess()
   const { id } = await params
   const poll = await getPoll(id)

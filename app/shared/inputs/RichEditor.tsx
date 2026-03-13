@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
-import { noop } from '@shared/utils/noop'
 import 'react-quill/dist/quill.bubble.css'
 
 interface RichEditorProps {
@@ -11,7 +10,7 @@ interface RichEditorProps {
 
 const RichEditor = ({
   initialText = '',
-  onChangeCallback = noop,
+  onChangeCallback = () => {},
 }: RichEditorProps): React.JSX.Element => {
   const [content, setContent] = useState('')
   useEffect(() => {

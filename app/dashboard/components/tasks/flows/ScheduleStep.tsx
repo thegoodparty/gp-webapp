@@ -8,7 +8,6 @@ import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
 import { Outreach } from 'app/dashboard/outreach/hooks/OutreachContext'
-import { noopAsync } from '@shared/utils/noop'
 
 interface ScheduleState {
   date?: Date | string
@@ -31,7 +30,7 @@ export default function ScheduleStep({
   nextCallback,
   backCallback,
   onCreateOutreach = async () => undefined,
-  onScheduleOutreach = noopAsync,
+  onScheduleOutreach = async () => {},
   type,
   schedule,
   isLastStep,

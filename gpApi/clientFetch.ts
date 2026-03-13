@@ -14,7 +14,7 @@ interface FetchOptions {
   revalidate?: number
 }
 
-export async function clientFetch(
+export async function clientFetch<T = unknown>(
   endpoint: ApiRoute,
   data: Partial<Record<string, unknown>> | FormData | undefined,
   options: FetchOptions & { returnFullResponse: true },

@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import Modal from '@shared/utils/Modal'
 import OfficeStep from 'app/onboarding/[slug]/[step]/components/OfficeStep'
 import { Campaign, CampaignDetails } from 'helpers/types'
@@ -32,8 +31,8 @@ interface CampaignOfficeSelectionModalProps {
 export const CampaignOfficeSelectionModal = ({
   campaign,
   show = false,
-  onClose = noop,
-  onSelect = noop,
+  onClose = () => {},
+  onSelect = () => {},
   adminMode = false,
 }: CampaignOfficeSelectionModalProps): React.JSX.Element => (
   <Modal

@@ -4,7 +4,6 @@ import Body1 from '@shared/typography/Body1'
 import TextField from '@shared/inputs/TextField'
 import { ModalFooter } from '@shared/ModalFooter'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
-import { noop } from '@shared/utils/noop'
 
 const MAX_SMS_CHAR_COUNT = 1600
 
@@ -14,8 +13,8 @@ interface CreateSmSScriptScreenProps {
 }
 
 export const CreateSmSScriptScreen = ({
-  onNext = noop,
-  onBack = noop,
+  onNext = () => {},
+  onBack = () => {},
 }: CreateSmSScriptScreenProps): React.JSX.Element => {
   const [scriptText, setScriptText] = useState('')
   const overLimit = scriptText.length > MAX_SMS_CHAR_COUNT

@@ -67,11 +67,13 @@ const substitutePathParams = (route: string, params: object): string =>
  * console.log(result); // { message: 'something-else' }
  */
 const removePathParamsFromRequestPayload = (route: string, payload: object) =>
-  Object.fromEntries(
-    Object.entries(payload).filter(
-      ([name, value]) => value !== undefined && !route.includes(`:${name}`),
-    ),
-  )
+  Object.entries(payload)
+    .filter(([, value]) => value !== undefined)
+    .reduce(
+      (accum, [name, value]) =>
+        route.includes(`:${name}`) ? accum : { ...accum, [name]: value },
+      {},
+    )
 
 export type RequestOptions = FetchOptions<'json'>
 
@@ -91,7 +93,8 @@ export const createRequest =
   ): Promise<Response<APIEndpoints[Route]['Response']>> => {
     const [method, url] = route.split(' ')
 
-    const requestPayload = removePathParamsFromRequestPayload(url!, payload)
+    const requestPayload: APIEndpoints[Route]['Request'] =
+      removePathParamsFromRequestPayload(url!, payload)
 
     let fetchOptions: RequestOptions = {
       method: method as RequestOptions['method'],

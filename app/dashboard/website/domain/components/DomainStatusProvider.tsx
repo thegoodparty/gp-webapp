@@ -7,7 +7,6 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react'
-import { noop } from '@shared/utils/noop'
 
 export interface DomainStatus {
   status?: string
@@ -24,7 +23,7 @@ interface DomainStatusContextType {
 
 export const DomainStatusContext = createContext<DomainStatusContextType>({
   status: null,
-  setStatus: noop,
+  setStatus: () => {},
 })
 
 export const useDomainStatus = (): DomainStatusContextType =>

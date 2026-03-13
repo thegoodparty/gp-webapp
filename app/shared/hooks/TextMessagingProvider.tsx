@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useState } from 'react'
-import { noopAsync } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -13,7 +12,7 @@ type TextMessagingContextValue = [
 
 export const TextMessagingContext = createContext<TextMessagingContextValue>([
   {},
-  noopAsync,
+  async () => {},
 ])
 
 interface TextMessagingProviderProps {

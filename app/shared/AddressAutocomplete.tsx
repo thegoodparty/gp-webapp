@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import TextField, { TextFieldProps } from '@shared/inputs/TextField'
-import { noop } from '@shared/utils/noop'
 import { usePlacesWidget } from 'react-google-autocomplete'
 import { NEXT_PUBLIC_GOOGLE_MAPS_KEY } from 'appEnv'
 
@@ -23,8 +22,8 @@ interface AddressAutocompleteProps
 
 export default function AddressAutocomplete({
   value,
-  onChange = noop,
-  onSelect = noop,
+  onChange = () => {},
+  onSelect = () => {},
   ...restProps
 }: AddressAutocompleteProps): React.JSX.Element {
   const [inputValue, setInputValue] = useState(value || '')

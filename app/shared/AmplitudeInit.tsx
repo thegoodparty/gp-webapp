@@ -7,7 +7,6 @@ import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 import * as sessionReplay from '@amplitude/session-replay-browser'
 import { getReadyAnalytics } from './utils/analytics'
 import { getStoredSessionId, storeSessionId } from 'helpers/analyticsHelper'
-import { noop } from '@shared/utils/noop'
 
 declare global {
   interface Window {
@@ -75,7 +74,7 @@ const AmplitudeInit = (): null => {
 
           if (cancelled) {
             ;(sessionReplay?.shutdown() as Promise<void> | undefined)?.catch(
-              noop,
+              () => {},
             )
             return
           }

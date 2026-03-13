@@ -3,25 +3,14 @@
 import { JSX } from 'react'
 import {
   InputAdornment,
-  SxProps,
   TextField as MuiTextField,
   TextFieldProps as MuiTextFieldProps,
   TextFieldVariants,
-  Theme,
 } from '@mui/material'
 import { ErrorOutlineRounded } from '@mui/icons-material'
 
 const ADORNMENTS = {
   error: <ErrorOutlineRounded className="text-red" />,
-}
-
-const getInputPropsSx = (
-  inputProps: { sx?: SxProps<Theme> } | undefined,
-): SxProps<Theme>[] => {
-  const { sx } = inputProps ?? {}
-  if (Array.isArray(sx)) return sx
-  if (sx) return [sx]
-  return []
 }
 
 export type TextFieldProps<Variant extends TextFieldVariants> =
@@ -53,10 +42,10 @@ export default function TextField<Variant extends TextFieldVariants>({
         // Preserve any existing endAdornment from callers (e.g., Autocomplete)
         endAdornment: mergedEndAdornment ?? restProps.InputProps?.endAdornment,
         // Ensure font family styling is applied while preserving caller styles
-        sx: [
-          { fontFamily: 'var(--outfit-font)' },
-          ...getInputPropsSx(restProps.InputProps),
-        ],
+        sx: {
+          fontFamily: 'var(--outfit-font)',
+          ...(restProps.InputProps as any)?.sx,
+        },
         style: restProps.InputProps?.style,
       }}
     />

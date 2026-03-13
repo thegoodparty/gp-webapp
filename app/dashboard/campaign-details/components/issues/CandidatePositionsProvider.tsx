@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useState, Dispatch, SetStateAction } from 'react'
-import { noop } from '@shared/utils/noop'
 
 interface CandidatePosition {
   id: number
@@ -16,7 +15,7 @@ type CandidatePositionsContextType = [
 ]
 
 export const CandidatePositionsContext =
-  createContext<CandidatePositionsContextType>([[], noop])
+  createContext<CandidatePositionsContextType>([[], () => {}])
 
 interface CandidatePositionsProviderProps {
   children: React.ReactNode

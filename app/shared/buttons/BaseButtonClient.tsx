@@ -1,6 +1,5 @@
 'use client'
 import { ReactNode, CSSProperties, MouseEvent } from 'react'
-import { noop } from '@shared/utils/noop'
 
 interface BaseButtonClientProps {
   children?: ReactNode
@@ -15,7 +14,7 @@ interface BaseButtonClientProps {
 const BaseButtonClient = ({
   children,
   style,
-  onClick = noop,
+  onClick = () => {},
   disabled = false,
   type = 'button',
   className = '',

@@ -13,14 +13,14 @@ export const dateColumnSort = (
     if (a) {
       aDate = new Date(a).getTime()
     }
-  } catch {
+  } catch (e) {
     errorA = true
   }
   try {
     if (b) {
       bDate = new Date(b).getTime()
     }
-  } catch {
+  } catch (e) {
     errorB = true
   }
   if ((!a && !b) || (!aDate && !bDate) || (errorA && errorB)) {

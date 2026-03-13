@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { useState, SyntheticEvent } from 'react'
 import { Autocomplete, InputAdornment, FilterOptionsState } from '@mui/material'
 import TextField from '@shared/inputs/TextField'
@@ -29,7 +28,7 @@ interface IssuesSearchProps {
 
 export const IssuesSearch = ({
   issues,
-  onInputChange = noop,
+  onInputChange = () => {},
 }: IssuesSearchProps): React.JSX.Element => {
   const [value, setValue] = useState<IssueOption | null>(null)
   const [inputValue, setInputValue] = useState('')

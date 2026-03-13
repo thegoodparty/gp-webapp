@@ -94,16 +94,12 @@ const ContentTutorial = ({
       newContentCallback()
     }
   }
-  const getIntroTargetElement = (
-    ref: React.RefObject<Steps | null>,
-  ): Element | undefined => ref.current?.introJs?._targetElement
-
   const onBeforeChange = (nextStepIndex: number) => {
     stepsRef.current?.updateStepElement(nextStepIndex)
     setTimeout(() => {
-      const targetElement = getIntroTargetElement(stepsRef)
-      if (targetElement) {
-        const backButton = targetElement.querySelector<HTMLElement>(
+      const intro = stepsRef.current?.introJs
+      if (intro && intro._targetElement) {
+        const backButton = intro._targetElement.querySelector<HTMLElement>(
           '.introjs-prevbutton',
         )
         if (backButton) {

@@ -17,7 +17,6 @@ import {
   ChatThread,
   Feedback,
 } from 'app/dashboard/campaign-assistant/components/ajaxActions'
-import { noop, noopAsync } from '@shared/utils/noop'
 import { trackEvent } from 'helpers/analyticsHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -67,19 +66,19 @@ export const ChatContext = createContext<ChatContextValue>({
   chats: [],
   loading: false,
   shouldType: false,
-  loadInitialChats: noopAsync,
-  setShouldType: noop,
+  loadInitialChats: async () => {},
+  setShouldType: () => {},
   threadId: null,
-  setThreadId: noop,
-  setChat: noop,
-  scrollDown: noop,
-  scrollUp: noop,
-  loadChatByThreadId: noopAsync,
-  handleNewInput: noopAsync,
-  handleRegenerate: noopAsync,
+  setThreadId: () => {},
+  setChat: () => {},
+  scrollDown: () => {},
+  scrollUp: () => {},
+  loadChatByThreadId: async () => {},
+  handleNewInput: async () => {},
+  handleRegenerate: async () => {},
   feedback: null,
   scrollingThreadRef: { current: null },
-  finishTyping: noop,
+  finishTyping: () => {},
 })
 
 interface ChatProviderProps {

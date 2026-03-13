@@ -30,24 +30,20 @@ const GoogleLoginButton = ({
     },
   })
 
-  const parseGoogleUser = (res: Response): Promise<GoogleUser> => res.json()
-
   const fetchGoogleUser = async (accessToken: string): Promise<SocialUser> => {
     const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    const data = await parseGoogleUser(res)
+    const data: GoogleUser = await res.json()
 
-    return {
-      _profile: {
-        email: data.email,
-        profilePicURL: data.picture,
-      },
+    const socialUser: SocialUser = {
+      _profile: { email: data.email, profilePicURL: data.picture },
       _provider: 'google',
       _token: { idToken: accessToken },
     }
+    return socialUser
   }
 
   return (

@@ -60,7 +60,7 @@ export default function SocialLoginButtons(): React.JSX.Element {
     if (provider === 'facebook') {
       try {
         idToken = socialUser._token.accessToken
-      } catch {
+      } catch (e) {
         console.log('fb API error')
       }
     } else if (provider === 'google') {
@@ -71,7 +71,7 @@ export default function SocialLoginButtons(): React.JSX.Element {
           socialPic = largeImg
         }
         ;({ idToken } = socialUser._token)
-      } catch {
+      } catch (e) {
         console.log('large image error')
       }
     }

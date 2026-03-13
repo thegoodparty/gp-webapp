@@ -7,7 +7,6 @@ import { getCampaign, updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import dynamic from 'next/dynamic'
 import { AiContentData, CampaignAiContent } from 'helpers/types'
-import { noop } from '@shared/utils/noop'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
@@ -28,8 +27,8 @@ const isAiContentData = (
 
 export const GenerateReviewScreen = ({
   aiScriptKey = '',
-  onBack = noop,
-  onNext = noop,
+  onBack = () => {},
+  onNext = () => {},
 }: GenerateReviewScreenProps): React.JSX.Element => {
   const { errorSnackbar } = useSnackbar()
   const [aiContent, setAiContent] = useState<AiContentData | null>(null)

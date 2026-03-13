@@ -108,10 +108,10 @@ const fetchCall = async <T = Partial<Record<string, unknown>>>(
   }
   try {
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
-    if (isSuccessfulResponseStatus) {
-      return res.json()
-    }
-    return res
+    const jsonRes: T | Response = isSuccessfulResponseStatus
+      ? await res.json()
+      : res
+    return jsonRes
   } catch (e) {
     console.error('error in fetchCall catch', e)
     return false

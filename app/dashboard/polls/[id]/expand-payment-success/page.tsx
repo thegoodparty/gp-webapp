@@ -25,10 +25,7 @@ export const parseIntQueryParam = (param: string | string[] | undefined) => {
   return res
 }
 
-export default async function Page({
-  params,
-  searchParams,
-}: PageProps<'/dashboard/polls/[id]/expand-payment-success'>) {
+export default async function Page({ params, searchParams }: PageProps<any>) {
   await serveAccess()
   const { id } = await params
   const poll = await getPoll(id)

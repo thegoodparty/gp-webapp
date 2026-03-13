@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useState, useEffect } from 'react'
-import { noop } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -21,7 +20,7 @@ type EcanvasserContextValue = [
 
 export const EcanvasserContext = createContext<EcanvasserContextValue>([
   null,
-  noop,
+  () => {},
 ])
 
 interface EcanvasserProviderProps {

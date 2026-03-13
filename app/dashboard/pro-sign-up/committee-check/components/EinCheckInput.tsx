@@ -1,5 +1,4 @@
 'use client'
-import { noop } from '@shared/utils/noop'
 import TextField from '@shared/inputs/TextField'
 import { AsyncValidationIcon } from 'app/dashboard/shared/AsyncValidationIcon'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -28,8 +27,8 @@ interface EinCheckInputProps {
 export const EinCheckInput = ({
   value = '',
   validated,
-  setValidated = noop,
-  onChange = noop,
+  setValidated = () => {},
+  onChange = () => {},
   ...restProps
 }: EinCheckInputProps): React.JSX.Element => {
   const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {

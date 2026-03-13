@@ -5,7 +5,6 @@ import { FaCheck } from 'react-icons/fa'
 import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar'
 import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody'
 import Button from '@shared/buttons/Button'
-import { noop } from '@shared/utils/noop'
 
 interface AcknowledgementQuestionProps {
   emoticon?: ReactNode
@@ -25,7 +24,7 @@ export const AcknowledgementQuestion = ({
   buttonTexts = ['I Agree', 'Agreed'],
   show = false,
   acknowledged = false,
-  onAcknowledge = noop,
+  onAcknowledge = () => {},
   disableScrollTo = false,
 }: AcknowledgementQuestionProps): React.JSX.Element => {
   const [scrolledTo, setScrolledTo] = useState<boolean>(disableScrollTo)

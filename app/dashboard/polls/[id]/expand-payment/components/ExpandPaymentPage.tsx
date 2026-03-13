@@ -1,6 +1,5 @@
 'use client'
 
-import { noop } from '@shared/utils/noop'
 import { usePoll } from '../../../shared/hooks/PollProvider'
 import { useRouter } from 'next/navigation'
 import ExpandStepFooter from '../../expand/shared/ExpandStepFooter'
@@ -69,7 +68,7 @@ export default function ExpandPaymentPage({
         hideNext
         hideBack
         disabledNext
-        onNext={noop}
+        onNext={() => {}}
         onNextText=""
       />
     </ExpandPollLayout>

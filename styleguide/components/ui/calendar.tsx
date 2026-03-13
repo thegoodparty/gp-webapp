@@ -20,10 +20,13 @@ function Calendar({
   classNames,
   showOutsideDays = true,
   captionLayout = 'label',
+  buttonVariant = 'ghost',
   formatters,
   components,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof CalendarButton>['variant']
+}) {
   const defaultClassNames = getDefaultClassNames()
 
   return (

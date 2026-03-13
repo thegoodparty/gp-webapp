@@ -6,7 +6,6 @@ import { ModalFooter } from '@shared/ModalFooter'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { useState } from 'react'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
-import { noop } from '@shared/utils/noop'
 
 interface ChooseScriptAddFlowProps {
   onBack?: () => void
@@ -15,8 +14,8 @@ interface ChooseScriptAddFlowProps {
 }
 
 export const ChooseScriptAddFlow = ({
-  onBack = noop,
-  onNext = noop,
+  onBack = () => {},
+  onNext = () => {},
   hasSavedScripts = false,
 }: ChooseScriptAddFlowProps): React.JSX.Element => {
   const [selected, setSelected] = useState<string>()

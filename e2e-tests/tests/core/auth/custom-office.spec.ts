@@ -55,14 +55,7 @@ test.describe('Custom office flow', () => {
     })
     await expect(page).toHaveURL(/\/onboarding\/.*\/2/)
 
-    const { data } = await client.get<{
-      organizations: {
-        slug: string
-        campaignId: number
-        name: string
-        electedOfficeId: number | null
-      }[]
-    }>('/v1/organizations')
+    const { data } = await client.get('/v1/organizations')
     expect(data.organizations).toHaveLength(1)
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
@@ -71,21 +64,7 @@ test.describe('Custom office flow', () => {
       electedOfficeId: null,
     })
 
-    const { data: campaign } = await client.get<{
-      id: number
-      details: {
-        electionDate: string
-        city: string
-        district: string
-        office: string
-        officeTermLength: string
-        state: string
-        otherOffice: string
-        positionId: string | null
-        electionId: string | null
-        zip: string | null
-      }
-    }>('/v1/campaigns/mine')
+    const { data: campaign } = await client.get('/v1/campaigns/mine')
     expect(campaign).toMatchObject({
       id: expect.any(Number),
       details: {

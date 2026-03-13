@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useEffect, useState } from 'react'
-import { noop } from '@shared/utils/noop'
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
@@ -17,7 +16,7 @@ type CampaignStatusContextValue = [
 
 export const CampaignStatusContext = createContext<CampaignStatusContextValue>([
   null,
-  noop,
+  () => {},
 ])
 
 interface CampaignStatusProviderProps {

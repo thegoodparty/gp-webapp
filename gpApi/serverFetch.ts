@@ -7,7 +7,7 @@ interface ServerFetchOptions {
   returnFullResponse?: boolean
 }
 
-export async function serverFetch(
+export async function serverFetch<T = unknown>(
   endpoint: ApiRoute,
   data: Record<string, unknown> | FormData | undefined,
   options: ServerFetchOptions & { returnFullResponse: true },
@@ -29,7 +29,7 @@ export async function serverFetch<T = unknown>(
   const token = await getServerToken()
 
   if (options.returnFullResponse) {
-    return clientFetch(endpoint, data, {
+    return clientFetch<T>(endpoint, data, {
       revalidate: options.revalidate,
       serverToken: token || undefined,
       returnFullResponse: true,

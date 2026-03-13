@@ -3,7 +3,7 @@ import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
-import { noop, noopAsync } from '@shared/utils/noop'
+import { noop } from '@shared/utils/noop'
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import { VoterFileFilters } from 'helpers/types'
 import { Outreach } from 'app/dashboard/outreach/hooks/OutreachContext'
@@ -97,8 +97,8 @@ type MappedAudienceKey = keyof MappedAudience
 export const handleScheduleOutreach =
   (
     type: OutreachType,
-    errorSnackbar: (message: string) => void = noop,
-    successSnackbar: (message: string) => void = noop,
+    errorSnackbar: (message: string) => void = () => {},
+    successSnackbar: (message: string) => void = () => {},
     { budget, audience }: ScheduleOutreachParams = {},
   ) =>
   async (outreach: Outreach = { id: 0 }): Promise<void> => {
@@ -130,9 +130,9 @@ export const handleCreateOutreach =
     state: { script, schedule, image, voterFileFilter, audience, phoneListId },
     campaignId,
     outreaches = [],
-    setOutreaches = noop,
-    errorSnackbar = noop,
-    refreshCampaign = noopAsync,
+    setOutreaches = () => {},
+    errorSnackbar = () => {},
+    refreshCampaign = async () => {},
     p2pUxEnabled = true,
   }: CreateOutreachParams) =>
   async (): Promise<Outreach | undefined> => {

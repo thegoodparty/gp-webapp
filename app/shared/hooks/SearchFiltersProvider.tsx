@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useState } from 'react'
-import { noop } from '@shared/utils/noop'
 
 export interface SearchFilters {
   search?: string
@@ -14,7 +13,7 @@ type SearchFiltersContextValue = [
 
 export const SearchFiltersContext = createContext<SearchFiltersContextValue>([
   {},
-  noop,
+  () => {},
 ])
 
 interface SearchFiltersProviderProps {

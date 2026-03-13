@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { IssueSelectItem } from './IssueSelectItem'
 
 import type { IssuePosition } from 'helpers/types'
@@ -16,7 +15,7 @@ interface IssuesSelectListProps {
 
 export const IssuesSelectList = ({
   issues = [],
-  handleSelectIssue = noop,
+  handleSelectIssue = () => {},
 }: IssuesSelectListProps): React.JSX.Element[] =>
   issues.map((issue) => (
     <IssueSelectItem

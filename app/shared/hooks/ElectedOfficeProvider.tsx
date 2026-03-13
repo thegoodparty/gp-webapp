@@ -1,6 +1,5 @@
 'use client'
 import { createContext, useEffect, useState, useCallback } from 'react'
-import { noop, noopAsync } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useUser } from '@shared/hooks/useUser'
@@ -27,8 +26,8 @@ type ElectedOfficeContextValue = [
 
 export const ElectedOfficeContext = createContext<ElectedOfficeContextValue>([
   null,
-  noop,
-  noopAsync,
+  () => {},
+  async () => {},
 ])
 
 interface ElectedOfficeProviderProps {

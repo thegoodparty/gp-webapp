@@ -2,7 +2,6 @@
 import MuiTabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
-import { noop } from './noop'
 import { useState, ReactNode } from 'react'
 
 interface TabsProps {
@@ -26,7 +25,7 @@ const Tabs = ({
   activeTab = false,
   color = '#000',
   size = 'medium',
-  changeCallback = noop,
+  changeCallback = () => {},
 }: TabsProps) => {
   const [value, setValue] = useState(0)
 

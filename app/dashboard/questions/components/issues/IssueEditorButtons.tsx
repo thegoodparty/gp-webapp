@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 
@@ -12,8 +11,8 @@ interface IssueEditorButtonsProps {
 export const IssueEditorButtons = ({
   disableSave = false,
   editIssuePosition,
-  onSave = noop,
-  onCancel = noop,
+  onSave = () => {},
+  onCancel = () => {},
 }: IssueEditorButtonsProps): React.JSX.Element => (
   <>
     <PrimaryButton disabled={disableSave} onClick={onSave}>

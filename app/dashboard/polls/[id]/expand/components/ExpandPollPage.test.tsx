@@ -5,15 +5,10 @@ import ExpandPollPage from './ExpandPollPage'
 import { render } from 'helpers/test-utils/render'
 import { api } from 'helpers/test-utils/api-mocking'
 import { PollProvider } from '../../../shared/hooks/PollProvider'
-import { Poll, PollStatus } from '../../../shared/poll-types'
+import { Poll } from '../../../shared/poll-types'
 
-const poll: Poll = {
+const poll: Partial<Poll> = {
   id: '1234',
-  name: 'Test Poll',
-  status: PollStatus.SCHEDULED,
-  messageContent: '',
-  scheduledDate: new Date().toISOString(),
-  estimatedCompletionDate: new Date().toISOString(),
   audienceSize: 500,
   responseCount: 50,
   lowConfidence: true,
@@ -27,18 +22,12 @@ it('shows the audience selection form', async () => {
       totalConstituents: 30000,
       totalConstituentsWithCellPhone: 9000,
       computedAt: new Date().toISOString(),
-      buckets: {
-        age: [],
-        homeowner: [],
-        education: [],
-        presenceOfChildren: [],
-        estimatedIncomeRange: [],
-      },
+      buckets: {} as any,
     },
   })
 
   render(
-    <PollProvider poll={poll}>
+    <PollProvider poll={poll as any}>
       <ExpandPollPage scheduledDate={undefined} count={undefined} />
     </PollProvider>,
   )

@@ -1,13 +1,12 @@
 'use client'
 import { createContext, useEffect, useState } from 'react'
-import { noop } from '@shared/utils/noop'
 import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
 import { queryClient } from '@shared/query-client'
 import { User } from 'helpers/types'
 
 export const UserContext = createContext<[User | null, (user: User) => void]>([
   null,
-  noop,
+  () => {},
 ])
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({

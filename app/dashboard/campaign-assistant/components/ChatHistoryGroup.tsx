@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import Overline from '@shared/typography/Overline'
 import ChatHistoryThread from 'app/dashboard/campaign-assistant/components/ChatHistoryThread'
 import { Chat } from './ajaxActions'
@@ -12,7 +11,7 @@ interface ChatHistoryGroupProps {
 export const ChatHistoryGroup = ({
   title = '',
   chats = [],
-  closeDrawer = noop,
+  closeDrawer = () => {},
 }: ChatHistoryGroupProps): React.JSX.Element => {
   return (
     <>

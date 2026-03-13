@@ -2,24 +2,6 @@ import { expect, test } from '@playwright/test'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 
-interface RegistrationUser {
-  firstName: string
-  lastName: string
-  email: string
-  zip: string
-  phone: string
-}
-
-interface RegistrationResponseBody {
-  user?: RegistrationUser
-  data?: {
-    user?: RegistrationUser
-  }
-}
-
-const jsonAs = <T>(response: { json(): Promise<T> }): Promise<T> =>
-  response.json()
-
 // Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } })
 
@@ -70,19 +52,18 @@ test.describe('Sign Up Functionality', () => {
       )
     })
 
-    const body = await jsonAs<RegistrationResponseBody>(registerResponse)
+    const body = await registerResponse.json()
     // Handle possible response shapes: { user: {...} } or { data: { user: {...} } }
-    const user = body.user ?? body.data?.user
+    const user = (body?.user ?? body?.data?.user) as any
     expect(
       user,
       `Unexpected registration response shape: ${JSON.stringify(body)}`,
     ).toBeTruthy()
-    if (!user) {
-      throw new Error(
-        `Unexpected registration response shape: ${JSON.stringify(body)}`,
-      )
-    }
-    const { firstName, lastName, email, zip, phone } = user
+    const firstName = user.firstName as string
+    const lastName = user.lastName as string
+    const email = user.email as string
+    const zip = user.zip as string
+    const phone = user.phone as string
     expect(firstName).toBe(firstName.trim())
     expect(lastName).toBe(lastName.trim())
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

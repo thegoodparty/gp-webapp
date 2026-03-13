@@ -1,5 +1,4 @@
 import Chip from '@shared/utils/Chip'
-import { noop } from './noop'
 import React, { HTMLAttributes } from 'react'
 
 interface StackedChipsProps
@@ -12,7 +11,7 @@ interface StackedChipsProps
 export const StackedChips = ({
   labels,
   className = '',
-  onClick = noop,
+  onClick = () => {},
   ...restProps
 }: StackedChipsProps) => {
   const atMostThreeLabels = labels.slice(0, 3)

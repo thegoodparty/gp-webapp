@@ -1,6 +1,5 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { CampaignAiContent, AiContentData } from 'helpers/types'
-import { noop } from '@shared/utils/noop'
 
 const DEFAULT_SMS_SCRIPTS = [
   'why',
@@ -49,7 +48,7 @@ interface SmsScriptSelectProps {
 export const SmsScriptSelect = ({
   aiContent,
   selectedKey,
-  onSelect = noop,
+  onSelect = () => {},
 }: SmsScriptSelectProps): React.JSX.Element => {
   const handleOnChange = (e: SelectChangeEvent<string>) => {
     onSelect(e.target.value)

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
-import { noop } from '@shared/utils/noop'
 
 interface CopyScriptButtonProps {
   scriptText: string
@@ -14,7 +13,7 @@ interface CopyScriptButtonProps {
 export default function CopyScriptButton({
   scriptText,
   trackingAttrs = {},
-  onCopy = noop,
+  onCopy = () => {},
 }: CopyScriptButtonProps): React.JSX.Element {
   const [copied, setCopied] = useState(false)
 

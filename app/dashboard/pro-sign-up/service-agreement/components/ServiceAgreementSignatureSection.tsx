@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { useEffect, useRef, useState, ChangeEvent } from 'react'
 import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar'
 import { MdTask } from 'react-icons/md'
@@ -16,7 +15,7 @@ interface ServiceAgreementSignatureSectionProps {
 export const ServiceAgreementSignatureSection = ({
   show,
   signature,
-  onChange = noop,
+  onChange = () => {},
   disableScrollTo = false,
 }: ServiceAgreementSignatureSectionProps): React.JSX.Element => {
   const [scrolledTo, setScrolledTo] = useState(disableScrollTo)

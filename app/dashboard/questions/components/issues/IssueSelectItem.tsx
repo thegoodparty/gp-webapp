@@ -1,4 +1,3 @@
-import { noop } from '@shared/utils/noop'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IssueItemLabel } from './IssueItemLabel'
 import type { IssuePosition } from 'helpers/types'
@@ -16,7 +15,7 @@ interface IssueSelectItemProps {
 
 export const IssueSelectItem = ({
   issue = {},
-  handleSelectIssue = noop,
+  handleSelectIssue = (_v: Issue) => {},
 }: IssueSelectItemProps): React.JSX.Element => (
   <div
     className={`
