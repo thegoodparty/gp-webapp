@@ -98,6 +98,7 @@ export const OrganizationProvider = ({
   const setSelectedSlug = useCallback(
     (slug: string) => {
       _setSelectedSlug(slug)
+      setCookie(ORG_SLUG_COOKIE, slug)
       // When we change the org, we need to refetch just about everything.
       queryClient.invalidateQueries()
     },
