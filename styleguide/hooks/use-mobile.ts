@@ -1,20 +1,8 @@
-import * as React from 'react'
+'use client'
 
-// Kaylee picked this on Mar 12 2026 :)
-const MOBILE_BREAKPOINT = 1024
+import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
 
 export const useIsMobile = () => {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
-
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    }
-    mql.addEventListener('change', onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener('change', onChange)
-  }, [])
-
-  return !!isMobile
+  const breakpoint = useTailwindBreakpoints()
+  return breakpoint === 'xs' || breakpoint === 'sm' || breakpoint === 'md'
 }

@@ -228,14 +228,14 @@
   --cream: #fcf8f3;
 
   /* Sidebar */
-  --sidebar-background: #fafafa;
-  --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #171717;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f5f5;
-  --sidebar-accent-foreground: #171717;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #2563eb;
+  --sidebar-background: var(--component-sidebar-background);
+  --sidebar-foreground: var(--component-sidebar-foreground);
+  --sidebar-primary: var(--component-sidebar-primary);
+  --sidebar-primary-foreground: var(--component-sidebar-primary-foreground);
+  --sidebar-accent: var(--component-sidebar-accent);
+  --sidebar-accent-foreground: var(--component-sidebar-accent-foreground);
+  --sidebar-border: var(--component-sidebar-border);
+  --sidebar-ring: var(--component-sidebar-ring);
 
   /* Chart/Data visualization colors (from Figma) */
   --chart-1: #5975a6;
