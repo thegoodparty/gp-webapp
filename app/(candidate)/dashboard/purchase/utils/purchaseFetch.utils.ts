@@ -14,12 +14,14 @@ export interface CheckoutSessionResponse {
 export function createCheckoutSession(
   type: string,
   metadata: Record<string, string | number | boolean | undefined>,
+  receiptEmail?: string,
   returnUrl?: string,
   allowPromoCodes = true,
 ): Promise<ApiResponse<CheckoutSessionResponse>> {
   return clientFetch(apiRoutes.payments.createCustomCheckoutSession, {
     type,
     metadata,
+    ...(receiptEmail && { receiptEmail }),
     returnUrl,
     allowPromoCodes,
   })

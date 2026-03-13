@@ -33,6 +33,7 @@ interface CheckoutSessionProviderProps {
   children: ReactNode
   type?: string
   purchaseMetaData?: Record<string, string | number | boolean | undefined>
+  receiptEmail?: string
   returnUrl?: string
 }
 
@@ -40,6 +41,7 @@ export const CheckoutSessionProvider = ({
   children,
   type = '',
   purchaseMetaData = {},
+  receiptEmail,
   returnUrl,
 }: CheckoutSessionProviderProps) => {
   const [checkoutSession, setCheckoutSession] =
@@ -78,6 +80,7 @@ export const CheckoutSessionProvider = ({
         const response = await createCheckoutSession(
           type,
           purchaseMetaDataRef.current,
+          receiptEmail,
           returnUrl,
         )
         if (response.ok) {
@@ -101,7 +104,7 @@ export const CheckoutSessionProvider = ({
 
     pendingRequestRef.current = request
     return request
-  }, [checkoutSession, type, returnUrl])
+  }, [checkoutSession, type, receiptEmail, returnUrl])
 
   return (
     <CheckoutSessionContext.Provider

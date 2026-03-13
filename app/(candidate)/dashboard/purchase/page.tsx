@@ -5,6 +5,7 @@ import { PURCHASE_TYPES, PurchaseType } from 'helpers/purchaseTypes'
 import { CheckoutSessionProvider } from 'app/(candidate)/dashboard/purchase/components/CheckoutSessionProvider'
 import { notFound } from 'next/navigation'
 import type { SearchParams } from 'next/dist/server/request/search-params'
+import { getServerUser } from 'helpers/userServerHelper'
 
 const meta = pageMetaData({
   title: 'Purchase page | GoodParty.org',
@@ -49,7 +50,10 @@ export default async function Page({
   searchParams,
 }: PageProps): Promise<React.JSX.Element> {
   await candidateAccess()
-  const { type, domain, websiteId, returnUrl } = await searchParams
+  const [{ type, domain, websiteId, returnUrl }, user] = await Promise.all([
+    searchParams,
+    getServerUser(),
+  ])
 
   if (!type || typeof type !== 'string' || !isPurchaseType(type)) {
     return notFound()
@@ -66,6 +70,7 @@ export default async function Page({
         domainName: domainStr,
         websiteId: websiteIdStr,
       })}
+      receiptEmail={user?.email}
     >
       <PurchasePage type={type} domain={domainStr} returnUrl={returnUrlStr} />
     </CheckoutSessionProvider>
