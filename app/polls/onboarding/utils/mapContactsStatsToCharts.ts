@@ -1,4 +1,4 @@
-import { ContactsStats } from 'app/(candidate)/dashboard/polls/shared/queries'
+import { ContactsStats } from 'app/dashboard/polls/shared/queries'
 
 interface ChartDataPoint {
   name: string

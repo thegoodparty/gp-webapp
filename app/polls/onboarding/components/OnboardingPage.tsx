@@ -15,8 +15,8 @@ import { identifyUser } from '@shared/utils/analytics'
 import { PickSendDateStep } from './steps/PickSendDateStep'
 import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
-import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
-import { Button } from 'goodparty-styleguide'
+import { districtStatsQueryOptions } from 'app/dashboard/polls/shared/queries'
+import { Button } from '@styleguide'
 
 interface Step {
   name: string

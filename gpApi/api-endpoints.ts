@@ -1,6 +1,6 @@
-import type { Poll } from 'app/(candidate)/dashboard/polls/shared/poll-types'
-import type { ContactsStats } from 'app/(candidate)/dashboard/polls/shared/queries'
-import type { GetPollIssuesResponse } from 'app/(candidate)/dashboard/polls/shared/serverApiCalls'
+import type { Poll } from 'app/dashboard/polls/shared/poll-types'
+import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
+import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
 import { Campaign } from 'helpers/types'
 
 export type APIEndpoints = {
