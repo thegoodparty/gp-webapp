@@ -85,7 +85,6 @@ interface DashboardMenuProps {
   pathname: string | null
   toggleCallback?: () => void
   mobileMode?: boolean
-  useNewNav?: boolean
 }
 
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
@@ -227,7 +226,6 @@ export default function DashboardMenu({
   pathname,
   toggleCallback,
   mobileMode,
-  useNewNav,
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
@@ -258,6 +256,8 @@ export default function DashboardMenu({
   const handleEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key == 'Enter') handleLogOut()
   }
+
+  const { on: useNewNav } = useFlagOn('win-serve-split')
 
   if (useNewNav) {
     return <NewNavMenu menuItems={menuItems} pathname={pathname} />

@@ -75,7 +75,7 @@ const DashboardLayout = ({
         <SidebarProvider>
           {!hideMenu && (
             <Sidebar>
-              <DashboardMenu pathname={currentPath} useNewNav />
+              <DashboardMenu pathname={currentPath} />
             </Sidebar>
           )}
           <SidebarInset className="bg-[#f5f5f5]">
