@@ -5,6 +5,7 @@ import {
   type Column,
   type ColumnDef,
   type ColumnFiltersState,
+  type Header,
   type Row,
   type RowData,
   type SortingState,
@@ -210,23 +211,22 @@ function DataTable<TData, TValue>({
                               return header
                             }
                             if (typeof header === 'function') {
-                              const flatHeaders = table.getFlatHeaders()
-                              const matchingHeader = flatHeaders.find(
-                                (h) => h.column.id === column.id,
-                              )
-                              if (matchingHeader) {
-                                const rendered = flexRender(
-                                  header,
-                                  matchingHeader.getContext(),
-                                )
-                                if (
-                                  React.isValidElement<{
-                                    title?: string
-                                  }>(rendered) &&
-                                  rendered.props.title
-                                ) {
-                                  return rendered.props.title
+                              try {
+                                const headerElement = header({
+                                  column,
+                                  header: column.columnDef as Header<
+                                    TData,
+                                    TValue
+                                  >,
+                                  table,
+                                }) as React.ReactElement<{
+                                  title?: string
+                                }> | null
+                                if (headerElement?.props?.title) {
+                                  return headerElement.props.title
                                 }
+                              } catch {
+                                // If header function fails, fall back to column.id
                               }
                             }
                             return column.id
