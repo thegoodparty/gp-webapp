@@ -84,11 +84,6 @@ interface MenuItem {
   isNew?: boolean
 }
 
-interface ElectedOffice {
-  id: string
-  isActive: boolean
-}
-
 interface DashboardMenuProps {
   pathname: string | null
   toggleCallback?: () => void

@@ -134,9 +134,7 @@ export const OrganizationPicker = () => {
   const handleOrgSwitch = (org: Organization) => {
     if (org.slug === selected.slug) return
     setSelectedSlug(org.slug)
-    router.push(
-      org.electedOfficeId ? '/dashboard/polls' : '/dashboard',
-    )
+    router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
   }
 
   return (
