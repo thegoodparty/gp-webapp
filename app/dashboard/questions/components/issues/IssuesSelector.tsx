@@ -40,8 +40,12 @@ const IssuesSelector = (props: IssuesSelectorProps): React.JSX.Element => {
   const issueNum = combinedIssuedCount + 1
 
   const nextCallback = async () => {
-    await updatePositionsCallback(await updateCandidatePositions())
-    if (combinedIssuedCount >= 3) {
+    const freshPositions = await updateCandidatePositions()
+    await updatePositionsCallback(freshPositions)
+    const freshCount =
+      (Array.isArray(freshPositions) ? freshPositions.length : 0) +
+      (campaign?.details?.customIssues?.length || 0)
+    if (freshCount >= 3) {
       await completeCallback('issues')
     }
   }
