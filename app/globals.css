@@ -227,6 +227,16 @@
   --cream-500: #fcf8f3;
   --cream: #fcf8f3;
 
+  /* Sidebar */
+  --sidebar-background: var(--component-sidebar-background);
+  --sidebar-foreground: var(--component-sidebar-foreground);
+  --sidebar-primary: var(--component-sidebar-primary);
+  --sidebar-primary-foreground: var(--component-sidebar-primary-foreground);
+  --sidebar-accent: var(--component-sidebar-accent);
+  --sidebar-accent-foreground: var(--component-sidebar-accent-foreground);
+  --sidebar-border: var(--component-sidebar-border);
+  --sidebar-ring: var(--component-sidebar-ring);
+
   /* Chart/Data visualization colors (from Figma) */
   --chart-1: #5975a6;
   --chart-2: #cda1ff;
@@ -556,6 +566,19 @@ a:hover {
   text-decoration: underline;
 }
 
+[data-slot='sidebar-wrapper'] a,
+[data-slot='sidebar-wrapper'] a:hover,
+[data-slot='sidebar'] a,
+[data-slot='sidebar'] a:hover,
+[data-slot='dropdown-menu-content'] a,
+[data-slot='dropdown-menu-content'] a:hover {
+  text-decoration: none;
+}
+
+[data-mobile='true'] [data-slot='sidebar-separator'] {
+  margin-inline: -0.5rem;
+}
+
 @layer base {
   /*
    * Restore cursor: pointer for interactive elements.
@@ -618,6 +641,20 @@ a:hover {
 
   ul li {
     display: list-item;
+  }
+
+  [data-slot] ul,
+  ul[data-slot],
+  ul[data-sidebar] {
+    list-style-type: none;
+    margin-block: 0;
+    padding-inline-start: 0;
+  }
+
+  [data-slot] ul li,
+  [data-slot] li,
+  li[data-sidebar] {
+    display: flex;
   }
 }
 
