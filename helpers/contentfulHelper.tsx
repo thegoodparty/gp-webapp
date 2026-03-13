@@ -3,7 +3,6 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
 import { BLOCKS, Document } from '@contentful/rich-text-types'
 import type { Options } from '@contentful/rich-text-react-renderer'
-import * as z from 'zod'
 
 interface TextProps {
   children: React.ReactNode
@@ -13,43 +12,17 @@ const Text = ({ children }: TextProps) => (
   <p style={{ whiteSpace: 'pre-line' }}>{children}</p>
 )
 
-const embeddedAssetSchema = z.object({
-  target: z.object({
-    fields: z.object({
-      file: z.object({ url: z.string() }).optional(),
-      title: z.string().optional(),
-    }),
-  }),
-})
-
 const dtrOptions: Options = {
   renderNode: {
-    [BLOCKS.EMBEDDED_ASSET]: (node) => {
-      const result = embeddedAssetSchema.safeParse(node.data)
-      const fields = result.success ? result.data.target.fields : undefined
-      return (
-        <img
-          src={fields?.file?.url}
-          alt={fields?.title}
-          className="faq-image"
-        />
-      )
-    },
+    [BLOCKS.EMBEDDED_ASSET]: (node) => (
+      <img
+        src={node.data?.target?.fields?.file?.url as string}
+        alt={node.data?.target?.fields?.title as string}
+        className="faq-image"
+      />
+    ),
     [BLOCKS.PARAGRAPH]: (_node, children) => <Text>{children}</Text>,
   },
-}
-
-const documentSchema = z.custom<Document>(
-  (val) =>
-    typeof val === 'object' &&
-    val !== null &&
-    'nodeType' in val &&
-    'content' in val,
-)
-
-const parseJsonDocument = (raw: string): Document | null => {
-  const result = documentSchema.safeParse(JSON.parse(raw))
-  return result.success ? result.data : null
 }
 
 const isDocument = (
@@ -70,9 +43,7 @@ const contentfulHelper = (
   try {
     let doc: Document
     if (typeof rawRichTextField === 'string') {
-      const parsed = parseJsonDocument(rawRichTextField)
-      if (!parsed) return null
-      doc = parsed
+      doc = JSON.parse(rawRichTextField) as Document
     } else if (isDocument(rawRichTextField)) {
       doc = rawRichTextField
     } else {
@@ -98,9 +69,7 @@ export const cmsToPlainText = (
   try {
     let doc: Document
     if (typeof content === 'string') {
-      const parsed = parseJsonDocument(content)
-      if (!parsed) return ''
-      doc = parsed
+      doc = JSON.parse(content) as Document
     } else if (isDocument(content)) {
       doc = content
     } else {
