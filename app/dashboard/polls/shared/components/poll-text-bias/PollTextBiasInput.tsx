@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import React, { useState, useCallback, useEffect } from 'react'
 import { Button } from '@styleguide'
 import { MdAutoAwesome, MdRotateRight } from 'react-icons/md'
@@ -264,7 +265,7 @@ export default function PollTextBiasInput({
     <div className={`relative ${className}`}>
       <PollTextInput
         value={displayValue}
-        onChange={isProcessing ? () => {} : onChange}
+        onChange={isProcessing ? noop : onChange}
         placeholder={placeholder}
         biasSpans={biasAnalysis?.bias_spans || []}
         grammarSpans={biasAnalysis?.grammar_spans || []}

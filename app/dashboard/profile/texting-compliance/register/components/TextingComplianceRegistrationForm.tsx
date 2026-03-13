@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import TextField from '@shared/inputs/TextField'
 import { FilingLinkInfoIcon } from 'app/dashboard/profile/texting-compliance/register/components/FilingLinkInfoIcon'
 import {
@@ -142,7 +143,7 @@ interface TextingComplianceRegistrationFormProps {
 }
 
 const TextingComplianceRegistrationForm = ({
-  onSubmit = () => {},
+  onSubmit = noop,
   loading = false,
   hasSubmissionError = false,
 }: TextingComplianceRegistrationFormProps): React.JSX.Element => {
@@ -184,7 +185,7 @@ const TextingComplianceRegistrationForm = ({
   const handleOnSubmit = () => {
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
-    const { fecCommitteeId, committeeType, ...baseFormData } = formData
+    const { fecCommitteeId: _, committeeType: __, ...baseFormData } = formData
     const submitData =
       officeLevel === 'federal'
         ? formData

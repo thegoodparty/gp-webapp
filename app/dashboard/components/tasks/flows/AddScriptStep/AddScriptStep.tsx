@@ -12,6 +12,7 @@ import {
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
 import { Campaign } from 'helpers/types'
+import { noop } from '@shared/utils/noop'
 
 type ContentCategoryList = Awaited<ReturnType<typeof fetchAiContentCategories>>
 
@@ -25,7 +26,7 @@ type AddScriptStepProps = {
 
 const AddScriptStep = ({
   type,
-  onComplete = () => {},
+  onComplete = noop,
   backCallback,
   campaign,
   defaultAiTemplateId,

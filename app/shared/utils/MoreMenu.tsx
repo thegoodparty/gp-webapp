@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { noop } from './noop'
 import { MdMoreVert } from 'react-icons/md'
 import { Menu, MenuItem, MenuItemProps } from '@mui/material'
 
@@ -13,7 +14,7 @@ interface MoreMenuProps {
 }
 
 export const MoreMenu = ({
-  onClose = () => {},
+  onClose = noop,
   menuItems = [],
 }: MoreMenuProps): React.JSX.Element => {
   const [menuAnchor, setMenuAnchor] = useState<Element | null>(null)
@@ -58,7 +59,7 @@ export const MoreMenu = ({
         }}
       >
         {menuItems.map((menuItem, index) => {
-          const { onClick = () => {}, label = '', ...rest } = menuItem
+          const { onClick = noop, label = '', ...rest } = menuItem
           return (
             <MenuItem
               key={index}

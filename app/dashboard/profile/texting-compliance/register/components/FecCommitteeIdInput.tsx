@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import TextField from '@shared/inputs/TextField'
 import { AsyncValidationIcon } from 'app/dashboard/shared/AsyncValidationIcon'
 import React, { ChangeEvent } from 'react'
@@ -34,7 +35,7 @@ interface FecCommitteeIdInputProps {
 export const FecCommitteeIdInput = ({
   value = '',
   validated,
-  onChange = () => {},
+  onChange = noop,
 }: FecCommitteeIdInputProps): React.JSX.Element => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     let newVal = e.currentTarget.value.toUpperCase()

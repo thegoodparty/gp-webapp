@@ -1,4 +1,5 @@
 'use client'
+import { noop, noopAsync } from '@shared/utils/noop'
 import IssuesList from './IssuesList'
 import { useCandidatePositions } from 'app/dashboard/campaign-details/components/issues/useCandidatePositions'
 import { loadCandidatePosition } from 'app/dashboard/campaign-details/components/issues/issuesUtils'
@@ -19,8 +20,8 @@ interface IssuesSelectorProps
 
 const IssuesSelector = (props: IssuesSelectorProps): React.JSX.Element => {
   const {
-    completeCallback = () => {},
-    updatePositionsCallback = async () => {},
+    completeCallback = noop,
+    updatePositionsCallback = noopAsync,
     campaign,
     editIssuePosition,
     topIssues = [],

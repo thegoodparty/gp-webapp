@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -145,7 +146,7 @@ export async function loadCandidatePosition(
 export const findExistingCustomIssueIndex = (
   campaign: CampaignWithCustomIssues = {},
   issue: CustomIssue | undefined,
-  selectIssueCallback: (v: string) => void = () => {},
+  selectIssueCallback: (v: string) => void = noop,
 ): number => {
   const customIssues = campaign.details?.customIssues || []
   const index = customIssues.findIndex(

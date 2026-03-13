@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { CopyScriptActionOption } from 'app/dashboard/outreach/components/CopyScriptActionOption'
 import { DownloadAudienceActionOption } from 'app/dashboard/outreach/components/DownloadAudienceActionOption'
 import { OUTREACH_ACTIONS_TYPES } from 'app/dashboard/outreach/constants'
@@ -10,7 +11,7 @@ interface OutreachActionsProps {
 
 export const OutreachActions = ({
   outreach,
-  onClick = () => {},
+  onClick = noop,
 }: OutreachActionsProps): React.JSX.Element => (
   <div className="flex flex-col space-y-2">
     <CopyScriptActionOption

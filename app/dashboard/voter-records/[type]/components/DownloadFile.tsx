@@ -35,7 +35,7 @@ const DownloadFile = (props: DownloadFileProps): React.JSX.Element => {
     try {
       await voterFileDownload(downloadType, filters)
       trackEvent('Download Voter File Success', { type: downloadType })
-    } catch (error) {
+    } catch {
       trackEvent('Download Voter File Failure', {
         type: downloadType,
         slug: campaign.slug,

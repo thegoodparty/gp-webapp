@@ -1,10 +1,11 @@
 import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
 
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-})
+const applyPWA = (config: NextConfig): NextConfig =>
+  require('next-pwa')({
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
+  })(config)
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -54,7 +55,7 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
 }
 
-export default withSentryConfig(withPWA(nextConfig), {
+export default withSentryConfig(applyPWA(nextConfig), {
   org: 'goodparty',
   project: 'gp-webapp',
   silent: !process.env.CI,

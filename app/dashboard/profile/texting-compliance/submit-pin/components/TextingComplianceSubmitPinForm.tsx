@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import { FormDataState, useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceForm'
 import isEmpty from 'validator/es/lib/isEmpty'
@@ -31,7 +32,7 @@ interface TextingComplianceSubmitPinFormProps {
 }
 
 export const TextingComplianceSubmitPinForm = ({
-  onSubmit = () => {},
+  onSubmit = noop,
   loading = false,
   error = null,
 }: TextingComplianceSubmitPinFormProps): React.JSX.Element => {

@@ -7,6 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from 'react'
+import { noop } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   isP2pUxEnabled,
@@ -27,7 +28,7 @@ export const P2pUxEnabledContext = createContext<P2pUxEnabledContextValue>({
   proUpdatedAtDate: new Date(),
   p2pUxEnabled: false,
   tcrCompliant: false,
-  resetP2pUxEnabled: () => {},
+  resetP2pUxEnabled: noop,
 })
 
 interface P2pUxEnabledProviderProps {

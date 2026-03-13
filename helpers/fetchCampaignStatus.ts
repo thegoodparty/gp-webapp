@@ -17,7 +17,7 @@ export const fetchCampaignStatus =
         },
       )
       return resp.data
-    } catch (e) {
+    } catch {
       return { status: false }
     }
   }

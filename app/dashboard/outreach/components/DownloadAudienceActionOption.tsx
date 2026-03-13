@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { useState } from 'react'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import { downloadVoterList } from 'app/dashboard/outreach/util/downloadVoterList.util'
@@ -14,7 +15,7 @@ interface DownloadAudienceActionOptionProps {
 
 export const DownloadAudienceActionOption = ({
   outreach = {},
-  onClick = () => {},
+  onClick = noop,
   disabled = false,
 }: DownloadAudienceActionOptionProps) => {
   const [loading, setLoading] = useState(false)
@@ -29,7 +30,7 @@ export const DownloadAudienceActionOption = ({
   return (
     <OutreachActionWrapper
       {...{
-        onClick: !isDisabled ? handleClick : () => {},
+        onClick: !isDisabled ? handleClick : noop,
         className: `${isDisabled ? 'opacity-70 !cursor-not-allowed' : ''}`,
       }}
     >

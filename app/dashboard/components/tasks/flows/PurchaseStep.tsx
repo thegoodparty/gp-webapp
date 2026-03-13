@@ -6,6 +6,7 @@ import { centsToDollars } from 'helpers/numberHelper'
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PurchaseError from 'app/dashboard/purchase/components/PurchaseError'
 import { OutreachPurchaseForm } from 'app/dashboard/components/tasks/flows/OutreachPurchaseForm'
+import { noop } from '@shared/utils/noop'
 
 interface PurchaseStepProps {
   onComplete?: () => void
@@ -16,7 +17,7 @@ interface PurchaseStepProps {
 }
 
 export const PurchaseStep = ({
-  onComplete = () => {},
+  onComplete = noop,
   contactCount = 0,
   type,
   pricePerContact = 0,
