@@ -123,7 +123,7 @@ const MobileMenuTrigger = () => {
   const { setOpenMobile, openMobile } = useSidebar()
   return (
     <>
-      <div className="flex md:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
+      <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
         <img
           src="/images/logo/heart.svg"
           alt="GoodParty.org"
