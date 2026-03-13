@@ -2,7 +2,7 @@
 import {
   POLLS_SCHEDULING_COPY,
   PollScheduledDateSelector,
-} from 'app/(candidate)/dashboard/polls/components/PollScheduledDateSelector'
+} from 'app/dashboard/polls/components/PollScheduledDateSelector'
 import { useOnboardingContext } from 'app/polls/contexts'
 
 export const PickSendDateStep: React.FC = () => {

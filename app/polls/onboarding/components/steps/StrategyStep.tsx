@@ -8,7 +8,7 @@ import {
 } from 'react-icons/lu'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { PRICE_PER_POLL_TEXT } from 'app/(candidate)/dashboard/polls/shared/constants'
+import { PRICE_PER_POLL_TEXT } from 'app/dashboard/polls/shared/constants'
 
 export default function StrategyStep() {
   const { demoMessageText } = useOnboardingContext()

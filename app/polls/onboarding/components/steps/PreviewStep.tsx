@@ -2,7 +2,7 @@
 import { useOnboardingContext } from '../../../contexts/OnboardingContext'
 import { useEffect } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { PollPreview } from 'app/(candidate)/dashboard/polls/components/PollPreview'
+import { PollPreview } from 'app/dashboard/polls/components/PollPreview'
 
 export default function PreviewStep(): React.JSX.Element {
   const { demoMessageText, formData } = useOnboardingContext()

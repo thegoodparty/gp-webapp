@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import SuccessPage from './components/SuccessPage'
-import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import candidateAccess from 'app/dashboard/shared/candidateAccess'
 import { requireAuth } from 'helpers/authHelper'
 import { redirect } from 'next/navigation'
 

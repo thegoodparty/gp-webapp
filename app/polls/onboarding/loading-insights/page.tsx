@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import LoadingInsightsPage from './components/LoadingInsightsPage'
-import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import candidateAccess from 'app/dashboard/shared/candidateAccess'
 import { requireAuth } from 'helpers/authHelper'
-import { hasPolls } from 'app/(candidate)/dashboard/polls/shared/serverApiCalls'
+import { hasPolls } from 'app/dashboard/polls/shared/serverApiCalls'
 import { redirect } from 'next/navigation'
 
 const meta = pageMetaData({
