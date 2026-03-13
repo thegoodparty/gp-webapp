@@ -1,7 +1,7 @@
 import { adminAccessOnly } from 'helpers/permissionHelper'
 import AdminTopIssuesPage from './components/AdminTopIssuesPage'
 import pageMetaData from 'helpers/metadataHelper'
-import { serverFetchIssues } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
+import { serverFetchIssues } from 'app/dashboard/campaign-details/components/issues/serverIssuesUtils'
 
 const meta = pageMetaData({
   title: 'Top Issues | GoodParty.org',

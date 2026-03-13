@@ -1,5 +1,5 @@
 'use client'
-import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu'
+import DashboardMenu from 'app/dashboard/shared/DashboardMenu'
 import Hamburger from '@shared/utils/Hamburger'
 import { useEffect } from 'react'
 

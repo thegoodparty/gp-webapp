@@ -5,7 +5,12 @@ import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns'
 import { useMemo } from 'react'
 import NavButton from './NavButton'
 
-const HIDE_NAV_PATHS = ['/onboarding', '/dashboard', '/profile', '/polls']
+const HIDE_NAV_PATHS = [
+  '/onboarding',
+  '/dashboard',
+  '/dashboard/profile',
+  '/polls',
+]
 
 const LeftSide = (): React.JSX.Element | null => {
   const pathname = usePathname()

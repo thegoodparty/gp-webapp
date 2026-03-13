@@ -35,7 +35,7 @@ test.describe('Dashboard Functionality', () => {
     console.log('✅ AI Assistant accessible')
     await visualSnapshot(page, 'campaign-assistant.png')
 
-    await page.goto('/profile')
+    await page.goto('/dashboard/profile')
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Personal Information' }).first(),

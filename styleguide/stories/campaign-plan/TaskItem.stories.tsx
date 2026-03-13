@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
-import TaskItem from '../../../app/(candidate)/dashboard/campaign-plan/components/TaskItem'
+import TaskItem from '../../../app/dashboard/campaign-plan/components/TaskItem'
 
 const meta: Meta<typeof TaskItem> = {
   title: 'Campaign Plan/TaskItem',
