@@ -46,10 +46,12 @@ export default function AdminAllCandidatesPage(
   console.log('candidates', candidates)
 
   const inputData: TableRow[] = []
+  const parseCandidateData = (json: string): CandidateData => JSON.parse(json)
+
   if (candidates) {
     candidates.map((candidateObj) => {
       const { data } = candidateObj
-      const candidate: CandidateData = JSON.parse(data)
+      const candidate = parseCandidateData(data)
       const fields: TableRow = {
         id: candidateObj.id,
         isActive: candidateObj.isActive,

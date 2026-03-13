@@ -109,7 +109,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
       } else {
         throw new Error('issue malformed, cannot delete.')
       }
-    } catch (e) {
+    } catch {
       errorSnackbar('Could not delete issue')
     }
     setShowDeleteConfirmation(null)

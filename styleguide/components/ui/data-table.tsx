@@ -2,9 +2,13 @@
 
 import * as React from 'react'
 import {
+  type Column,
   type ColumnDef,
   type ColumnFiltersState,
+  type Row,
+  type RowData,
   type SortingState,
+  type Table as ReactTable,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -206,17 +210,23 @@ function DataTable<TData, TValue>({
                               return header
                             }
                             if (typeof header === 'function') {
-                              try {
-                                const headerElement = header({
-                                  column,
-                                  header: column.columnDef as any,
-                                  table,
-                                })
-                                if (headerElement?.props?.title) {
-                                  return headerElement.props.title
+                              const flatHeaders = table.getFlatHeaders()
+                              const matchingHeader = flatHeaders.find(
+                                (h) => h.column.id === column.id,
+                              )
+                              if (matchingHeader) {
+                                const rendered = flexRender(
+                                  header,
+                                  matchingHeader.getContext(),
+                                )
+                                if (
+                                  React.isValidElement<{
+                                    title?: string
+                                  }>(rendered) &&
+                                  rendered.props.title
+                                ) {
+                                  return rendered.props.title
                                 }
-                              } catch (_e) {
-                                // If header function fails, fall back to column.id
                               }
                             }
                             return column.id
@@ -390,17 +400,17 @@ function DataTable<TData, TValue>({
 }
 
 // Helper components for common column patterns
-interface DataTableColumnHeaderProps
+interface DataTableColumnHeaderProps<TData extends RowData>
   extends React.HTMLAttributes<HTMLDivElement> {
-  column: any
+  column: Column<TData>
   title: string
 }
 
-function DataTableColumnHeader({
+const DataTableColumnHeader = <TData extends RowData>({
   column,
   title,
   className,
-}: DataTableColumnHeaderProps) {
+}: DataTableColumnHeaderProps<TData>) => {
   if (!column.getCanSort()) {
     return (
       <div
@@ -452,8 +462,8 @@ function DataTableColumnHeader({
 }
 
 // Row actions component
-interface DataTableRowActionsProps<TData> {
-  row: any
+interface DataTableRowActionsProps<TData extends RowData> {
+  row: Row<TData>
   actions?: {
     label: string
     onClick: (row: TData) => void
@@ -461,10 +471,10 @@ interface DataTableRowActionsProps<TData> {
   }[]
 }
 
-function DataTableRowActions<TData>({
+const DataTableRowActions = <TData extends RowData>({
   row,
   actions = [],
-}: DataTableRowActionsProps<TData>) {
+}: DataTableRowActionsProps<TData>) => {
   if (actions.length === 0) {
     return null
   }
@@ -496,7 +506,11 @@ function DataTableRowActions<TData>({
 }
 
 // Selection checkbox component
-function DataTableSelectCheckbox({ table }: { table: any }) {
+const DataTableSelectCheckbox = <TData extends RowData>({
+  table,
+}: {
+  table: ReactTable<TData>
+}) => {
   return (
     <Checkbox
       checked={
@@ -509,7 +523,11 @@ function DataTableSelectCheckbox({ table }: { table: any }) {
   )
 }
 
-function DataTableSelectRowCheckbox({ row }: { row: any }) {
+const DataTableSelectRowCheckbox = <TData extends RowData>({
+  row,
+}: {
+  row: Row<TData>
+}) => {
   return (
     <Checkbox
       checked={row.getIsSelected()}

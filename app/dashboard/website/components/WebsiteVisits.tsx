@@ -126,8 +126,7 @@ export default function WebsiteVisits({
                     payload.length > 0 &&
                     payload[0]?.payload?.date
                   ) {
-                    const date = payload[0].payload.date
-                    return format(date, 'MMM d, yyyy')
+                    return format(payload[0].payload.date, 'MMM d, yyyy')
                   }
                   return ''
                 }}

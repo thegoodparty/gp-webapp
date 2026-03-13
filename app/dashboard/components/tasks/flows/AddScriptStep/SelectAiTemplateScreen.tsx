@@ -16,6 +16,7 @@ import { calcAnswers } from 'app/dashboard/shared/QuestionProgress'
 import { loadCandidatePosition } from 'app/dashboard/campaign-details/components/issues/issuesUtils'
 import { Campaign } from 'helpers/types'
 import { hasRequiredQuestions } from '../util/hasRequiredQuestions.util'
+import { noop } from '@shared/utils/noop'
 
 type TemplateCategoryList = NonNullable<
   Parameters<typeof getAiTemplatesFromCategories>[0]
@@ -71,8 +72,8 @@ export const fetchAiContentCategories = async (
 export const SelectAiTemplateScreen = ({
   flowType = '',
   categories,
-  onBack = () => {},
-  onNext = () => {},
+  onBack = noop,
+  onNext = noop,
 }: {
   flowType?: string
   categories?: TemplateCategoryList

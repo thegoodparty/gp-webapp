@@ -4,6 +4,7 @@ import { Autocomplete } from '@mui/material'
 import TextField from '@shared/inputs/TextField'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { noop } from '@shared/utils/noop'
 
 interface DistrictType {
   id?: string
@@ -70,7 +71,7 @@ export default function DistrictTypeAutocomplete({
     }
 
     load()
-    return () => {}
+    return noop
   }, [state, electionYear, excludeInvalidOverride])
 
   return (

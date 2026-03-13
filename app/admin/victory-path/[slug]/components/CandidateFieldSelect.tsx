@@ -5,6 +5,9 @@ import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant'
 type ValueMapping = typeof CANDIDATE_TIERS | typeof IS_VERIFIED_OPTIONS
 type SelectValue = string | boolean | null
 
+const getValueMappingEntries = (mapping: ValueMapping): [string, string][] =>
+  Object.entries(mapping).map(([display, val]) => [display, String(val)])
+
 interface CandidateFieldSelectProps {
   value: SelectValue
   onChange: (event: SelectChangeEvent<SelectValue>) => void
@@ -19,7 +22,7 @@ export const CandidateFieldSelect = ({
   <FormControl size="small">
     <Select displayEmpty value={value} onChange={onChange}>
       {valueMapping &&
-        Object.entries(valueMapping).map(([display, val]) => (
+        getValueMappingEntries(valueMapping).map(([display, val]) => (
           <MenuItem key={display} value={val}>
             {display}
           </MenuItem>

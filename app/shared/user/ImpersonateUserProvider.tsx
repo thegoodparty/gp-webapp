@@ -1,13 +1,17 @@
 'use client'
 import { createContext, useEffect, useState } from 'react'
+import * as z from 'zod'
 import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper'
+import { noop } from '@shared/utils/noop'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
-interface ImpersonateUser {
-  id: string
-  email: string
-}
+const impersonateUserSchema = z.object({
+  id: z.string(),
+  email: z.string().email(),
+})
+
+type ImpersonateUser = z.infer<typeof impersonateUserSchema>
 
 interface ImpersonateUserContextValue {
   user: ImpersonateUser | null
@@ -21,7 +25,7 @@ export const ImpersonateUserContext =
     user: null,
     token: null,
     impersonate: () => Promise.resolve(false),
-    clear: () => {},
+    clear: noop,
   })
 
 interface ImpersonateUserProviderProps {
@@ -37,10 +41,13 @@ export const ImpersonateUserProvider = ({
   useEffect(() => {
     const token = getCookie('impersonateToken')
     const impersonateUserCookie = getCookie('impersonateUser')
-    const user = impersonateUserCookie && JSON.parse(impersonateUserCookie)
-    if (token && user) {
+    if (!token || !impersonateUserCookie) return
+    const result = impersonateUserSchema.safeParse(
+      JSON.parse(impersonateUserCookie),
+    )
+    if (result.success) {
       setToken(token)
-      setUser(user)
+      setUser(result.data)
     }
   }, [])
 

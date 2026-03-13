@@ -43,6 +43,7 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
+import { noopAsync } from '@shared/utils/noop'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -400,7 +401,7 @@ const TaskFlow = ({
                     successSnackbar,
                     state,
                   )
-                : async () => {}
+                : noopAsync
             }
             isLastStep
           />

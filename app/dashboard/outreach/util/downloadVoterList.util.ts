@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { VoterFileFilters } from 'helpers/types'
 import { AudienceState } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -9,8 +10,8 @@ interface DownloadVoterListParams {
 
 export const downloadVoterList = async (
   { voterFileFilter = {}, outreachType = '' }: DownloadVoterListParams = {},
-  setLoading: (loading: boolean) => void = () => {},
-  errorSnackbar: (message: string) => void = () => {},
+  setLoading: (loading: boolean) => void = noop,
+  errorSnackbar: (message: string) => void = noop,
 ): Promise<void> => {
   setLoading(true)
   const resolvedFilter: VoterFileFilters =
@@ -58,7 +59,7 @@ export const downloadVoterList = async (
 
   try {
     await voterFileDownload(outreachType, { filters: selectedAudience })
-  } catch (error) {
+  } catch {
     errorSnackbar('Error downloading voter file')
   }
 

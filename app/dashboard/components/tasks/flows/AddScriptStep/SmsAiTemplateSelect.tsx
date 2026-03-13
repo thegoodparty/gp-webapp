@@ -1,5 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { hasRequiredQuestions } from '../util/hasRequiredQuestions.util'
+import { noop } from '@shared/utils/noop'
 
 export interface SmsTemplate {
   key: string
@@ -16,7 +17,7 @@ interface SmsAiTemplateSelectProps {
 export const SmsAiTemplateSelect = ({
   templates = [],
   selected = '',
-  onChange = () => {},
+  onChange = noop,
 }: SmsAiTemplateSelectProps): React.JSX.Element => {
   const handleOnChange = (e: SelectChangeEvent<string>) =>
     onChange(e.target.value)

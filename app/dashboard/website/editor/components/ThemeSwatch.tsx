@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import { useMemo } from 'react'
 import Body2 from '@shared/typography/Body2'
 import { LuCheck } from 'react-icons/lu'
@@ -32,7 +33,7 @@ export const DisplaySwatch = ({
       label={theme}
       theme={themeObj}
       selected={false}
-      onSelect={() => {}}
+      onSelect={noop}
       displayOnly
     />
   )
