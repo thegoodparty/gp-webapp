@@ -41,7 +41,7 @@ const IssuesSelector = (props: IssuesSelectorProps): React.JSX.Element => {
 
   const nextCallback = async () => {
     await updatePositionsCallback(await updateCandidatePositions())
-    if (Number(completeCallback) >= 3) {
+    if (combinedIssuedCount >= 3) {
       await completeCallback('issues')
     }
   }
