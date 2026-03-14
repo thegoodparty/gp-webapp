@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import { useEffect, useState } from 'react'
 import { FaChevronLeft } from 'react-icons/fa'
 import { IssuePositionsList } from 'app/dashboard/questions/components/issues/IssuePositionsList'
@@ -29,10 +30,10 @@ interface IssueItemEditorProps {
 
 const IssueItemEditor = ({
   issue,
-  selectIssueCallback = () => {},
-  saveCallback = () => {},
+  selectIssueCallback = noop,
+  saveCallback = noop,
   editIssuePosition,
-  setEditIssuePosition = () => {},
+  setEditIssuePosition = noop,
 }: IssueItemEditorProps): React.JSX.Element | null => {
   const [selectedPosition, setSelectedPosition] =
     useState<IssuePositionData | null>(null)

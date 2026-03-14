@@ -2,6 +2,7 @@
 import DashboardMenu from 'app/dashboard/shared/DashboardMenu'
 import Hamburger from '@shared/utils/Hamburger'
 import { useEffect } from 'react'
+import { noop } from '@shared/utils/noop'
 
 const disableScroll = () => {
   window.scrollTo(0, 0)
@@ -11,7 +12,7 @@ const disableScroll = () => {
 }
 
 const enableScroll = () => {
-  window.onscroll = () => {}
+  window.onscroll = noop
 }
 
 interface TopDashboardMenuProps {

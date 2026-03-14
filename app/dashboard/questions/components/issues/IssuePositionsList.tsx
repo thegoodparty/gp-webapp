@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { IssuePosition } from 'app/dashboard/questions/components/issues/IssuePosition'
 import { useCandidatePositions } from 'app/dashboard/campaign-details/components/issues/useCandidatePositions'
 import type { ComponentProps } from 'react'
@@ -22,7 +23,7 @@ const issueAlreadySelected = (
 export const IssuePositionsList = ({
   positions,
   selectedPosition,
-  handleSelectPosition = () => {},
+  handleSelectPosition = noop,
 }: {
   positions: IssuePositionData[]
   selectedPosition: IssuePositionData | null

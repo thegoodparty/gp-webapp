@@ -1,3 +1,4 @@
+import { noop } from '@shared/utils/noop'
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 
 interface Position {
@@ -15,7 +16,7 @@ interface IssuePositionProps {
 export const IssuePosition = ({
   position,
   selected = false,
-  handleSelectPosition = () => {},
+  handleSelectPosition = noop,
   disabled = false,
 }: IssuePositionProps): React.JSX.Element => (
   <div

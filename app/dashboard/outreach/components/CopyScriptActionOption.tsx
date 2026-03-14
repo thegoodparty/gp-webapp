@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { OutreachActionWrapper } from 'app/dashboard/outreach/components/OutreachActionWrapper'
@@ -13,7 +14,7 @@ interface CopyScriptActionOptionProps {
 
 export const CopyScriptActionOption = ({
   outreach = {},
-  onCopy = () => {},
+  onCopy = noop,
 }: CopyScriptActionOptionProps) => {
   const [campaign] = useCampaign()
 

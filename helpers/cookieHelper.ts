@@ -91,7 +91,7 @@ export function getUserCookie(
   if (user && withParse) {
     try {
       return JSON.parse(decodeURIComponent(user))
-    } catch (e) {
+    } catch {
       console.error('User cookie parse failed')
       deleteCookie(userCookieName)
       return false

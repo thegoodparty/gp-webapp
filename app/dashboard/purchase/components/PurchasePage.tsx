@@ -88,7 +88,7 @@ export default function PurchasePage({
         )
         setPurchaseState(PURCHASE_STATE.ERROR)
       }
-    } catch (err) {
+    } catch {
       setError('Failed to complete purchase')
       setPurchaseState(PURCHASE_STATE.ERROR)
     }

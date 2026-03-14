@@ -15,6 +15,7 @@ import {
   ExperimentClient,
   Variant,
 } from '@amplitude/experiment-js-client'
+import { noop, noopAsync } from '@shared/utils/noop'
 import { getReadyAnalytics } from '@shared/utils/analytics'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
 
@@ -37,9 +38,9 @@ const defaultContextValue: FeatureFlagsContextValue = {
   ready: false,
   variant: () => ({ value: undefined }),
   all: () => ({}),
-  exposure: () => {},
-  refresh: async () => {},
-  clear: () => {},
+  exposure: noop,
+  refresh: noopAsync,
+  clear: noop,
 }
 
 export const FeatureFlagsContext =
@@ -76,15 +77,14 @@ export const FeatureFlagsProvider = ({
       if (typeof amplitudeUser.traits === 'function') {
         const traits = amplitudeUser.traits()
         if (traits) {
-          const rawProps = {
-            email: traits.email,
-            name: traits.name,
-            phone: traits.phone,
-            zip: traits.zip,
-          }
-          Object.entries(rawProps).forEach(([key, value]) => {
+          const { email, name, phone } = traits
+          ;[
+            ['email', email],
+            ['name', name],
+            ['phone', phone],
+          ].forEach(([key, value]) => {
             if (
-              value != null &&
+              typeof key === 'string' &&
               (typeof value === 'string' ||
                 typeof value === 'number' ||
                 typeof value === 'boolean')
@@ -92,6 +92,13 @@ export const FeatureFlagsProvider = ({
               userProperties[key] = value
             }
           })
+          if (
+            typeof traits.zip === 'string' ||
+            typeof traits.zip === 'number' ||
+            typeof traits.zip === 'boolean'
+          ) {
+            userProperties.zip = traits.zip
+          }
         }
       }
     }

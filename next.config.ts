@@ -4,7 +4,7 @@ import { withSentryConfig } from '@sentry/nextjs'
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-})
+}) as (config: NextConfig) => NextConfig
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

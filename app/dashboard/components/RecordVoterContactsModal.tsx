@@ -177,10 +177,9 @@ export const RecordVoterContactsModal = ({
     }
 
     if (user) {
-      const totalContacts = Object.values(newContactTotals).reduce(
-        (sum, val) => sum + (val || 0),
-        0,
-      )
+      const totalContacts = (
+        Object.values(newContactTotals) as number[]
+      ).reduce((sum, val) => sum + (val || 0), 0)
       await identifyUser(user.id, { voterContacts: totalContacts })
     }
 

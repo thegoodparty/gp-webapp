@@ -1,4 +1,5 @@
 'use client'
+import { noop } from '@shared/utils/noop'
 import { useRef, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
@@ -67,8 +68,8 @@ interface CommitteeSupportingFilesUploadProps {
 export const CommitteeSupportingFilesUpload = ({
   campaign = {},
   inputValue = '',
-  onUploadSuccess = () => {},
-  onUploadError = () => {},
+  onUploadSuccess = noop,
+  onUploadError = noop,
 }: CommitteeSupportingFilesUploadProps): React.JSX.Element => {
   const [authenticatedCampaign] = useCampaign()
   const campaignId = campaign?.id || authenticatedCampaign?.id

@@ -10,6 +10,7 @@ import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { doCreateOutReachEffectHandler } from 'app/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 import { downloadVoterList } from 'app/dashboard/outreach/util/downloadVoterList.util'
 import { AudienceState } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
+import { noopAsync } from '@shared/utils/noop'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -28,7 +29,7 @@ export default function DownloadStep({
   type,
   audience,
   scriptText,
-  onCreateOutreach = async () => {},
+  onCreateOutreach = noopAsync,
   voterCount = 0,
 }: DownloadStepProps): React.JSX.Element {
   useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])

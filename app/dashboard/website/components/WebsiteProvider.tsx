@@ -7,6 +7,7 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react'
+import { noop } from '@shared/utils/noop'
 import type { Website, WebsiteContact } from 'helpers/types'
 
 interface WebsiteContextType {
@@ -18,9 +19,9 @@ interface WebsiteContextType {
 
 export const WebsiteContext = createContext<WebsiteContextType>({
   website: null,
-  setWebsite: () => {},
+  setWebsite: noop,
   contacts: null,
-  setContacts: () => {},
+  setContacts: noop,
 })
 
 export const useWebsite = (): WebsiteContextType => useContext(WebsiteContext)

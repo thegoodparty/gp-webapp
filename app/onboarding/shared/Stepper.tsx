@@ -12,7 +12,7 @@ export default function Stepper(props: StepperProps): React.JSX.Element {
 
   return (
     <div className="flex items-center justify-center py-8 lg:py-0 lg:fixed lg:top-5 lg:w-[calc(100vw-300px)] lg:left-[150px] lg:z-50">
-      {[...Array(totalSteps)].map((_e, i) => (
+      {Array.from({ length: totalSteps }, (_, i) => (
         <Fragment key={i}>
           <Link
             href={step > i + 1 ? `/onboarding/${campaign.slug}/${i + 1}` : '#'}

@@ -1,5 +1,6 @@
 'use client'
 import { createContext, useState } from 'react'
+import { noopAsync } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -30,7 +31,7 @@ export type EcanvasserSurveyContextValue = [
 
 const defaultSurvey: EcanvasserSurvey = { id: '' }
 export const EcanvasserSurveyContext =
-  createContext<EcanvasserSurveyContextValue>([defaultSurvey, async () => {}])
+  createContext<EcanvasserSurveyContextValue>([defaultSurvey, noopAsync])
 
 interface EcanvasserSurveyProviderProps {
   children: React.ReactNode

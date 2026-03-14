@@ -144,7 +144,7 @@ export const doPostAuthRedirect = async (
         : `/onboarding/${slug}/${parseNumericOnboardingStep(currentStep) + 1}`
     }
     return undefined
-  } catch (e) {
+  } catch {
     return false
   }
 }

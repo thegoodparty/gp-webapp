@@ -1,7 +1,6 @@
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
-
-const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md')
+import { MdAnalytics, MdPeople, MdAutoAwesome } from 'react-icons/md'
 
 interface Card {
   title: string
