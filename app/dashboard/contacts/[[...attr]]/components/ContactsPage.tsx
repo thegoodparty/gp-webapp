@@ -12,8 +12,10 @@ import { useState } from 'react'
 import { ProUpgradeModal, VARIANTS } from 'app/dashboard/shared/ProUpgradeModal'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export default function ContactsPage() {
+  const { on: useConstituents } = useFlagOn('win-serve-split')
   const [showProModal, setShowProModal] = useState(false)
   const [campaign] = useCampaign()
   const { isCustomSegment, searchTerm, totalSegmentContacts } =
@@ -23,7 +25,9 @@ export default function ContactsPage() {
       <DashboardLayout campaign={campaign}>
         <Paper className="h-full">
           <div className="flex flex-col">
-            <h1 className="text-3xl font-semibold">Contacts</h1>
+            <h1 className="text-3xl font-semibold">
+              {useConstituents ? 'Constituents' : 'Contacts'}
+            </h1>
             <p className="text-lg font-normal text-muted-foreground">
               Manage and filter on your constituent list
             </p>
