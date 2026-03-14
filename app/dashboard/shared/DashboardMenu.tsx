@@ -67,7 +67,6 @@ import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
-  useOptionalOrganization,
   useOrganization,
 } from '@shared/organization-picker'
 
@@ -248,17 +247,12 @@ export default function DashboardMenu({
   const { electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
-  const organization = useOptionalOrganization()
-
-  const isElectedOffice = organization
-    ? !!organization.electedOfficeId
-    : !!electedOffice
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
-      isElectedOffice,
+      !!electedOffice,
     )
 
     if (ecanvasser) {
@@ -266,7 +260,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, isElectedOffice])
+  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
