@@ -24,6 +24,25 @@ export type APIEndpoints = {
     Response: ContactsStats
   }
 
+  'GET /v1/contacts/count': {
+    Request: {
+      resultsPerPage?: number
+      page?: number
+      segment?: string
+      search?: string
+    }
+    Response: {
+      pagination: {
+        totalResults: number
+        currentPage: number
+        pageSize: number
+        totalPages: number
+        hasNextPage: boolean
+        hasPreviousPage: boolean
+      }
+    }
+  }
+
   'POST /v1/polls/initial-poll': {
     Request: {
       message: string

@@ -82,10 +82,10 @@ export type Person = {
 
 export interface ListContactsResponse {
   pagination: {
-    totalResults: number
+    totalResults?: number
     currentPage: number
     pageSize: number
-    totalPages: number
+    totalPages?: number
     hasNextPage: boolean
     hasPreviousPage: boolean
   }
@@ -169,6 +169,43 @@ export async function fetchContacts({
     return response.data || null
   } else {
     console.error('Failed to fetch contacts', response)
+    return null
+  }
+}
+
+export interface ContactsCountResponse {
+  pagination: {
+    totalResults: number
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
+}
+
+export async function fetchContactsCount({
+  page,
+  resultsPerPage,
+  segment,
+  search,
+}: FetchContactsParams): Promise<ContactsCountResponse | null> {
+  const payload: Record<string, unknown> = {
+    page: page || 1,
+    resultsPerPage: resultsPerPage || DEFAULT_PAGE_SIZE,
+    segment: segment || ALL_SEGMENTS,
+  }
+  if (search) {
+    payload.search = search
+  }
+  const response = await clientFetch<ContactsCountResponse>(
+    apiRoutes.contacts.count,
+    payload,
+  )
+  if (response.ok) {
+    return response.data || null
+  } else {
+    console.error('Failed to fetch contacts count', response)
     return null
   }
 }

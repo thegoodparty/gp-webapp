@@ -35,6 +35,10 @@ export const apiRoutes = {
       path: '/contacts/stats',
       method: 'GET',
     },
+    count: {
+      path: '/contacts/count',
+      method: 'GET',
+    },
     tevynApi: {
       path: '/contacts/tevyn-api',
       method: 'POST',

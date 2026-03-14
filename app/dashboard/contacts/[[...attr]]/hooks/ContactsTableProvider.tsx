@@ -21,6 +21,7 @@ import {
 } from '@tanstack/react-query'
 import {
   fetchContacts,
+  fetchContactsCount,
   FetchContactsParams,
   fetchCustomSegments,
   fetchPerson,
@@ -30,8 +31,10 @@ import {
   type ConstituentIssue,
   type ConstituentActivity,
   type ListContactsResponse,
+  type ContactsCountResponse,
   type SegmentResponse,
 } from '../components/shared/ajaxActions'
+import { districtStatsQueryOptions } from 'app/dashboard/polls/shared/queries'
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
@@ -93,7 +96,14 @@ interface ContactsTableState {
   currentSegment: string
   searchTerm: string
   urlQueryParams: URLSearchParams
-  pagination: ListContactsResponse['pagination'] | null
+  pagination: {
+    totalResults?: number
+    currentPage: number
+    pageSize: number
+    totalPages?: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  } | null
   isLoading: boolean
   isCustomSegment: boolean
   totalSegmentContacts: number
@@ -213,6 +223,30 @@ export const ContactsTableProvider = ({
     }),
   )
 
+  // When there's an active segment filter or search, fetch the count separately.
+  // For unfiltered views, use totalConstituents from the district stats query.
+  const isNoFilter = currentSegment === ALL_SEGMENTS && !searchTerm
+
+  const contactsCountQuery = useQuery({
+    queryKey: ['contacts-count', { page: currentPage, resultsPerPage: pageSize, segment: currentSegment, search: searchTerm }],
+    queryFn: async () => {
+      const data = await fetchContactsCount({
+        page: currentPage,
+        resultsPerPage: pageSize,
+        segment: currentSegment,
+        search: searchTerm,
+      })
+      return data
+    },
+    enabled: !isNoFilter,
+    refetchOnMount: false,
+  })
+
+  const districtStatsQuery = useQuery({
+    ...districtStatsQueryOptions,
+    enabled: isNoFilter,
+  })
+
   const personQuery = useQuery({
     queryKey: ['person', currentlySelectedPersonId],
     queryFn: async () => {
@@ -272,10 +306,29 @@ export const ContactsTableProvider = ({
     [contactsQuery.data],
   )
 
-  const pagination = useMemo(
-    () => contactsQuery.data?.pagination || null,
-    [contactsQuery.data],
-  )
+  const countPagination = useMemo(() => {
+    if (isNoFilter && districtStatsQuery.data) {
+      const totalResults = districtStatsQuery.data.totalConstituents
+      const totalPages = Math.max(1, Math.ceil(totalResults / pageSize))
+      return { totalResults, totalPages }
+    }
+    if (!isNoFilter && contactsCountQuery.data) {
+      return {
+        totalResults: contactsCountQuery.data.pagination.totalResults,
+        totalPages: contactsCountQuery.data.pagination.totalPages,
+      }
+    }
+    return null
+  }, [isNoFilter, districtStatsQuery.data, contactsCountQuery.data, pageSize])
+
+  const pagination = useMemo(() => {
+    if (!contactsQuery.data?.pagination) return null
+    return {
+      ...contactsQuery.data.pagination,
+      totalResults: countPagination?.totalResults,
+      totalPages: countPagination?.totalPages,
+    }
+  }, [contactsQuery.data, countPagination])
 
   const issuesFlattened = useMemo(
     () => issuesInfiniteQuery.data?.pages.flatMap((p) => p.results) ?? [],
@@ -343,8 +396,11 @@ export const ContactsTableProvider = ({
   }, [customSegments, currentSegment])
 
   const totalSegmentContacts = useMemo(() => {
-    return pagination?.totalResults || 0
-  }, [pagination])
+    if (isNoFilter) {
+      return districtStatsQuery.data?.totalConstituents || 0
+    }
+    return contactsCountQuery.data?.pagination.totalResults || 0
+  }, [isNoFilter, districtStatsQuery.data, contactsCountQuery.data])
 
   const isLoading = contactsQuery.isLoading || contactsQuery.isFetching
 
