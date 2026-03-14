@@ -41,6 +41,7 @@
     "@googlemaps/js-api-loader": "^1.16.8",
     "@googlemaps/markerclusterer": "^2.5.3",
     "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@react-google-maps/api": "^2.20.6",

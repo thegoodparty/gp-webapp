@@ -1,11 +1,12 @@
 'use client'
 
 import { useUser as useClerkUser } from '@clerk/nextjs'
-import { createContext, useCallback } from 'react'
+import { createContext, useCallback, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { User } from 'helpers/types'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { API_VERSION_PREFIX } from 'appEnv'
 
 export type UserContextValue = [User | null, (user?: User) => void, boolean]
 
@@ -43,6 +44,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     [queryClient],
   )
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return
+
+    const eventSource = new EventSource(
+      `/api${API_VERSION_PREFIX}/users/me/events`,
+    )
+
+    eventSource.addEventListener('user.updated', () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+    })
+
+    eventSource.onerror = () => {
+      eventSource.close()
+    }
+
+    return () => eventSource.close()
+  }, [isLoaded, isSignedIn, queryClient])
 
   const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
 
