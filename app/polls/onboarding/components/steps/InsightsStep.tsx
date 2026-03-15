@@ -7,7 +7,7 @@ import { mapContactsStatsToCharts } from '../../utils/mapContactsStatsToCharts'
 import { useEffect, useMemo } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useQuery } from '@tanstack/react-query'
-import { districtStatsQueryOptions } from 'app/(candidate)/dashboard/polls/shared/queries'
+import { districtStatsQueryOptions } from 'app/dashboard/polls/shared/queries'
 
 export default function InsightsStep() {
   const query = useQuery(districtStatsQueryOptions)

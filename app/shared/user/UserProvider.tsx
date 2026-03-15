@@ -7,12 +7,13 @@ import { User } from 'helpers/types'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { API_VERSION_PREFIX } from 'appEnv'
+import { noop } from '@shared/utils/noop'
 
 export type UserContextValue = [User | null, (user?: User) => void, boolean]
 
 export const UserContext = createContext<UserContextValue>([
   null,
-  () => {},
+  noop,
   true,
 ])
 

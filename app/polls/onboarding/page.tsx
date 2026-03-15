@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import pageMetaData from 'helpers/metadataHelper'
 import OnboardingPage from './components/OnboardingPage'
-import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess'
+import candidateAccess from 'app/dashboard/shared/candidateAccess'
 import { requireAuth } from 'helpers/authHelper'
 
 const meta = pageMetaData({

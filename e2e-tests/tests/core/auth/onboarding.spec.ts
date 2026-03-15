@@ -44,7 +44,7 @@ test('authenticate with onboarded user', async ({ page }) => {
   console.log(`Fully onboarded user created: ${testUser.email}`)
   console.log(`Final URL: ${page.url()}`)
 
-  await page.goto('/profile')
+  await page.goto('/dashboard/profile')
   await page.waitForLoadState('domcontentloaded')
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))

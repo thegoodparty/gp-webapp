@@ -8,7 +8,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { dateWithTime } from 'helpers/dateHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useState } from 'react'
-import { syncEcanvasser } from 'utils/syncEcanvasser'
+import { syncEcanvasser } from '@shared/utils/syncEcanvasser'
 
 interface Ecanvasser {
   campaignId: number

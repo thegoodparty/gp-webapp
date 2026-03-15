@@ -582,7 +582,7 @@ export const getPersistedUtms = (): Record<string, string> => {
       if (first) utms[`${key}_first`] = first
       if (last) utms[`${key}_last`] = last
     }
-  } catch (_e) {
+  } catch {
     return {}
   }
 
@@ -610,7 +610,7 @@ export const getPersistedClids = (): Record<string, string | null> => {
         clids[key] = window.sessionStorage.getItem(key)
       }
     }
-  } catch (_e) {
+  } catch {
     return {}
   }
   return clids

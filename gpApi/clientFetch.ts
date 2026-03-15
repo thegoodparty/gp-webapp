@@ -12,9 +12,10 @@ interface FetchOptions {
   serverToken?: string
   returnFullResponse?: boolean
   revalidate?: number
+  extraHeaders?: Record<string, string>
 }
 
-export async function clientFetch<T = unknown>(
+export async function clientFetch(
   endpoint: ApiRoute,
   data: Partial<Record<string, unknown>> | FormData | undefined,
   options: FetchOptions & { returnFullResponse: true },
@@ -34,11 +35,11 @@ export async function clientFetch<T = unknown>(
   options: FetchOptions = {},
 ): Promise<ApiResponse<T> | Response> {
   const { method } = endpoint
-  const { revalidate, serverToken, returnFullResponse } = options
+  const { revalidate, serverToken, returnFullResponse, extraHeaders } = options
 
   const url = buildUrl(endpoint, data)
 
-  const headers: Record<string, string> = {}
+  const headers: Record<string, string> = { ...extraHeaders }
   if (serverToken) {
     headers.Authorization = `Bearer ${serverToken}`
   }

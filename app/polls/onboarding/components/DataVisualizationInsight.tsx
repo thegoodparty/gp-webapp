@@ -1,4 +1,4 @@
-import { Card, CardContent } from 'goodparty-styleguide'
+import { Card, CardContent } from '@styleguide'
 import { LuChartLine } from 'react-icons/lu'
 import {
   InsightPieChart,

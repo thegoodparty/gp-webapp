@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Card, CardContent } from 'goodparty-styleguide'
+import { Card, CardContent } from '@styleguide'
 import { numberFormatter } from 'helpers/numberHelper'
 
 interface NumberInsightProps {

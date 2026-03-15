@@ -19,7 +19,7 @@ const fetchCampaignsNoVoter = async (): Promise<CampaignsResponse> => {
       },
     )
     return resp.data
-  } catch (e) {
+  } catch {
     return { campaigns: [] }
   }
 }

@@ -1,4 +1,4 @@
-import { Outfit } from 'next/font/google'
+import { Open_Sans, Outfit } from 'next/font/google'
 import localFont from 'next/font/local'
 import Script from 'next/script'
 import { Suspense } from 'react'
@@ -13,6 +13,7 @@ import { ReactQueryProvider } from '@shared/query-client'
 import { ClerkProvider } from '@clerk/nextjs'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
+const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
 
 const sfPro = localFont({
   // @ts-expect-error - localFont types are not correct

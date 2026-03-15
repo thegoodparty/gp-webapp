@@ -73,7 +73,7 @@ test.describe('Mobile Navigation', () => {
   test('should navigate to My Profile on mobile', async ({ page }) => {
     await WaitHelper.waitForPageReady(page)
 
-    await page.goto('/profile')
+    await page.goto('/dashboard/profile')
     await WaitHelper.waitForPageReady(page)
     await expect(page).toHaveURL(/\/profile$/)
 

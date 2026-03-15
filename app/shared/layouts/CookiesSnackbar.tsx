@@ -32,7 +32,7 @@ const CookiesSnackbar = (): React.JSX.Element | null => {
           By continuing to browse this site, you consent to the use of cookies.
         </Body2>
         <Button
-          className="ml-6 flex items-center inline self-center"
+          className="ml-6 inline-flex items-center self-center"
           color="white"
           onClick={handleAccept}
           size="medium"

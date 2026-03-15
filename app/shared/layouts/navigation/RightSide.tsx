@@ -23,7 +23,6 @@ const RightSide = (): React.JSX.Element => {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
   const isOnboardingPath = pathname?.startsWith('/onboarding')
-
   const toggleProfile = () => {
     if (profileOpen) {
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown)
@@ -52,7 +51,7 @@ const RightSide = (): React.JSX.Element => {
           })
         }
         id="nav-onboarding-finish-later"
-        className="hidden lg:block relative z-[60] font-medium !text-base !py-2"
+        className="hidden lg:block relative z-60 font-medium text-base! py-2! leading-6!"
         variant="text"
       >
         Finish Later
@@ -94,20 +93,22 @@ const RightSide = (): React.JSX.Element => {
           <NavButton
             href="/sign-up"
             id="nav-sign-up"
-            className="lg:mr-3 xl:mr-6"
+            className="lg:mr-3 xl:mr-6 inline-flex items-center justify-center"
             data-testid="nav-sign-up"
           >
-            <span className="font-medium text-base">Sign up</span>
+            <span className="font-medium text-base leading-6!">Sign up</span>
           </NavButton>
           <Button
             href={getMarketingUrl('/run-for-office')}
             id="nav-get-tools"
-            className="!py-2 border-none"
+            className="inline-flex items-center justify-center py-2! leading-6! border-none"
             data-testid="nav-get-tools"
             target="_blank"
             rel="noopener noreferrer nofollow"
           >
-            <span className="font-medium text-base">Get Campaign Tools</span>
+            <span className="font-medium text-base leading-6!">
+              Get Campaign Tools
+            </span>
           </Button>
         </>
       )}

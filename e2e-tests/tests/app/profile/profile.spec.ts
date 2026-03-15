@@ -10,7 +10,7 @@ test.describe('Profile Management', () => {
     await page.goto('/dashboard')
     await NavigationHelper.dismissOverlays(page)
 
-    await page.goto('/profile')
+    await page.goto('/dashboard/profile')
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Personal Information' }).first(),

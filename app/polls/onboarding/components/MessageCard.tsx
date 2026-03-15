@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Card, CardContent } from 'goodparty-styleguide'
+import { Card, CardContent } from '@styleguide'
 import { LuInbox } from 'react-icons/lu'
 
 export type MessageCardProps = {

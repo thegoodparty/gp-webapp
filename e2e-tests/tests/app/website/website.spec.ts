@@ -27,7 +27,7 @@ test.describe('Website Management @experimental', () => {
       }),
     ).toBeVisible()
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: /Upload your campaign logo/ }),
@@ -35,14 +35,14 @@ test.describe('Website Management @experimental', () => {
     // Logo upload is skipped in CI due to CORS in test env; flow validation continues without file to verify progression. Will re-enable once file uploads are supported in Vercel test environments.
     // await page.locator('input[type="file"]').setInputFiles('src/fixtures/heart.png');
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'Choose a color theme' }),
     ).toBeVisible()
 
     await page.getByText('dark').click()
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'Customize the content' }),
@@ -50,13 +50,13 @@ test.describe('Website Management @experimental', () => {
     // Banner upload is skipped in CI due to CORS in test env; validate navigation only. Will re-enable once file uploads are supported in Vercel test environments.
     // await page.locator('input[type="file"]').setInputFiles('src/fixtures/heart.png');
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'What is your campaign about?' }),
     ).toBeVisible()
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'How can voters contact you?' }),

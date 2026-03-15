@@ -3,6 +3,24 @@ import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import { NavigationHelper } from '../../../src/helpers/navigation.helper'
 
+interface RegistrationUser {
+  firstName: string
+  lastName: string
+  email: string
+  zip: string
+  phone: string
+}
+
+interface RegistrationResponseBody {
+  user?: RegistrationUser
+  data?: {
+    user?: RegistrationUser
+  }
+}
+
+const jsonAs = <T>(response: { json(): Promise<T> }): Promise<T> =>
+  response.json()
+
 // Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } })
 
