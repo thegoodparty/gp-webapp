@@ -48,13 +48,14 @@ export default function CompleteStep() {
       errorSnackbar('Error launching your campaign')
     }
   }
+  const {firstName} = user ?? {}
 
   return (
     <div className="text-center">
       <div className="max-w-xs m-auto mb-4">
         <PartyAnimation loop={true} />
       </div>
-      <H1>Congrats{user?.firstName ? `, ${user.firstName}` : ''}!</H1>
+      <H1>Congrats{firstName ? `, ${firstName}` : ''}!</H1>
       <Body1 className="mt-4 mb-8">
         You&apos;re officially part of the GoodParty.org community. Let&apos;s
         get started!

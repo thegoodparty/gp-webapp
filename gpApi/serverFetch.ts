@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { getServerToken } from 'helpers/userServerHelper'
+import { getServerToken } from 'helpers/tokenHelper'
 import {
   ORG_SLUG_COOKIE,
   ORG_SLUG_HEADER,

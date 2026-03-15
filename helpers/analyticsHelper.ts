@@ -616,8 +616,6 @@ export const getPersistedClids = (): Record<string, string | null> => {
   return clids
 }
 
-// User properties are now associated via Segment identify calls (see SegmentIdentify).
-// We no longer read user data from cookies.
 const getUserProperties = (): Record<string, string> => {
   return {}
 }
