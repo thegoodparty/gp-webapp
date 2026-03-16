@@ -3,11 +3,11 @@ import { useState, ChangeEvent } from 'react'
 import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly'
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection'
 import Checkbox from '@shared/inputs/Checkbox'
-import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
+import { CommitteeSupportingFilesUpload } from 'app/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
 import Link from 'next/link'
 import { MdDelete, MdOpenInNew } from 'react-icons/md'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 
 const supportingDocsRootUrl =
   'https://assets.goodparty.org/ein-supporting-documents/'

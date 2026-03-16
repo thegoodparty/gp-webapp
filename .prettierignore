@@ -13,3 +13,4 @@ package.json
 .vscode/
 public/
 CLAUDE.md
+test-results/

@@ -4,7 +4,7 @@ import { withSentryConfig } from '@sentry/nextjs'
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-})
+}) as (config: NextConfig) => NextConfig
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -21,6 +21,19 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Document-Policy',
+            value: 'js-profiling',
+          },
+        ],
+      },
+    ]
   },
   async rewrites() {
     return [

@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { decodeJwt } from 'jose'
 import { User } from './types'
 
 const determineImpersonateCookieOrNot = async (
@@ -19,6 +20,15 @@ const determineImpersonateCookieOrNot = async (
 
 export const getServerToken = async (): Promise<string | false> =>
   await determineImpersonateCookieOrNot('token', 'impersonateToken')
+
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const { exp } = decodeJwt(token)
+    return typeof exp === 'number' && exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
 
 export const getServerUser = async (): Promise<User | null> => {
   const userJSON = await determineImpersonateCookieOrNot(
