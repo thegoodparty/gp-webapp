@@ -4,12 +4,17 @@ import { useRouter } from 'next/navigation'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
-import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { LuTrophy, LuFrown } from 'react-icons/lu'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ResultOptionButton from './ResultOptionButton'
+import { clientRequest } from 'gpApi/typed-request'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { electedOfficeQueryOptions } from '@shared/hooks/useElectedOffice'
+import {
+  ORGANIZATIONS_QUERY_KEY,
+  useSetOrganizationSlug,
+} from '@shared/organization-picker'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -43,6 +48,8 @@ export default function ElectionResultPage(): React.JSX.Element {
   const router = useRouter()
   const [campaign, setCampaign] = useCampaign()
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
+
+  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const details = campaign?.details
   const goals = campaign && 'goals' in campaign ? campaign.goals : undefined
   const goalsObj = goals && typeof goals === 'object' ? goals : null
@@ -58,28 +65,46 @@ export default function ElectionResultPage(): React.JSX.Element {
       ? details?.otherOffice
       : details?.office
 
-  const { refreshElectedOffice } = useElectedOffice()
   const { errorSnackbar } = useSnackbar()
   const [requestState, setRequestState] = useState<RequestState>({
     submitting: false,
     error: false,
   })
+  const setSelectedSlug = useSetOrganizationSlug()
 
-  const createElectedOffice = async () => {
-    if (!electionDate) {
-      throw new Error('Invalid election date')
-    }
+  const queryClient = useQueryClient()
 
-    const response = await clientFetch(apiRoutes.electedOffice.create, {
-      electedDate: new Date(electionDate).toISOString().split('T')[0],
-    })
+  const createElectedOfficeMutation = useMutation({
+    mutationFn: async (electedDate: string) =>
+      clientRequest('POST /v1/elected-office', { electedDate }).then(
+        (res) => res.data,
+      ),
+    onSuccess: async (newOffice) => {
+      void queryClient.invalidateQueries({
+        queryKey: electedOfficeQueryOptions.queryKey,
+      })
+      if (winServeSplit) {
+        const organizations = await clientRequest(
+          'GET /v1/organizations',
+          {},
+        ).then((res) => res.data.organizations)
 
-    if (!response.ok) {
-      throw new Error('Failed to create elected office')
-    }
-    refreshElectedOffice()
-    return response.data
-  }
+        queryClient.setQueryData(ORGANIZATIONS_QUERY_KEY, organizations)
+
+        const newOrg = organizations.find(
+          (org) => org.electedOfficeId === newOffice.id,
+        )
+
+        if (!newOrg) {
+          throw new Error('New organization not found')
+        }
+
+        setSelectedSlug(newOrg.slug)
+      }
+
+      router.replace('/polls/welcome')
+    },
+  })
 
   async function handleSelection(selection: string) {
     setSelectedOption(selection)
@@ -104,8 +129,14 @@ export default function ElectionResultPage(): React.JSX.Element {
       })
       // Create ElectedOffice if the user won the election
       if (wonGeneral) {
-        await createElectedOffice()
-        router.replace('/polls/welcome')
+        if (!electionDate) {
+          throw new Error('Invalid election date')
+        }
+        const electedDate = new Date(electionDate).toISOString().split('T')[0]
+        if (!electedDate) {
+          throw new Error('Invalid elected date')
+        }
+        void createElectedOfficeMutation.mutate(electedDate)
       } else {
         router.replace('/dashboard/election-result/loss')
       }

@@ -41,6 +41,7 @@ import {
 import { PollPreview } from '../components/PollPreview'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
+import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 type Details = {
   title: string
@@ -155,15 +156,11 @@ const FormStep: React.FC<{
   )
 }
 
-const introOptions = (params: {
-  eoName: string
-  city: string
-  office: string
-}) => [
-  `Hi [Name]. I’m ${params.eoName}, your ${params.city} ${params.office}.`,
-  `Hello [Name], I am your ${params.city} ${params.office}, ${params.eoName}.`,
-  `${params.city} ${params.office} ${params.eoName} wants to hear from you, [Name].`,
-  `${params.city} ${params.office} ${params.eoName} needs your input, [Name].`,
+const introOptions = (params: { eoName: string; office: string }) => [
+  `Hi [Name]. I’m ${params.eoName}, your ${params.office}.`,
+  `Hello [Name], I am your ${params.office}, ${params.eoName}.`,
+  `${params.office} ${params.eoName} wants to hear from you, [Name].`,
+  `${params.office} ${params.eoName} needs your input, [Name].`,
 ]
 
 const STOP_MESSAGE = 'Text STOP to opt out'
@@ -190,15 +187,18 @@ const DetailsForm: React.FC<{
 
   const [user] = useUser()
   const [campaign] = useCampaign()
+  const organization = useOrganizationIfEnabled()
   const office = grammarizeOfficeName(
-    campaign?.details?.otherOffice || campaign?.details?.office || '',
+    organization?.name ||
+      campaign?.details?.otherOffice ||
+      campaign?.details?.office ||
+      '',
   )
 
   const introductionOptions = introOptions({
     eoName: `${user?.firstName?.trim() || ''} ${
       user?.lastName?.trim() || ''
     }`.trim(),
-    city: campaign?.details?.city || '',
     office: office || '',
   })
 
@@ -619,8 +619,6 @@ const SuccessForm: React.FC<{
   )
 }
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
-  const [campaign] = useCampaign()
-
   const [pollId] = useState(() => uuidv7())
 
   const [state, setState] = useState<State>({
@@ -628,7 +626,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   })
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} showAlert={false}>
       {state.step === Step.details && (
         <DetailsForm
           details={state.details}
