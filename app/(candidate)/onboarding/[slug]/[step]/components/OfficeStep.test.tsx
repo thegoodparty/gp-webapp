@@ -43,20 +43,31 @@ vi.mock('@shared/utils/analytics', () => ({
 
 // Stub child components to avoid deep dependency trees
 vi.mock('./ballotOffices/BallotRaces', () => ({
-  default: ({ onSelect }: { onSelect: (office: unknown) => void }) => (
-    <button
-      data-testid="select-office"
-      onClick={() =>
-        onSelect({
-          id: 'race-1',
-          position: { id: 'pos-1', name: 'Mayor', state: 'CA', level: 'local' },
-          election: { id: 'elec-1', state: 'CA', electionDay: '2026-11-03' },
-          filingPeriods: [],
-        })
-      }
-    >
-      Select Office
-    </button>
+  default: ({
+    onSelect,
+    selectedOffice,
+  }: {
+    onSelect: (office: unknown) => void
+    selectedOffice?: { id?: string | number } | false
+  }) => (
+    <>
+      <div data-testid="selected-race-id">
+        {selectedOffice && 'id' in selectedOffice ? selectedOffice.id : ''}
+      </div>
+      <button
+        data-testid="select-office"
+        onClick={() =>
+          onSelect({
+            id: 'race-1',
+            position: { id: 'pos-1', name: 'Mayor', state: 'CA', level: 'local' },
+            election: { id: 'elec-1', state: 'CA', electionDay: '2026-11-03' },
+            filingPeriods: [],
+          })
+        }
+      >
+        Select Office
+      </button>
+    </>
   ),
 }))
 
@@ -138,5 +149,24 @@ describe('OfficeStep', () => {
         { slug: 'test-campaign' },
       )
     })
+  })
+
+  it('uses raceId/electionId for unchanged comparison, not details.positionId', async () => {
+    const campaign = {
+      ...baseCampaign,
+      details: {
+        ...baseCampaign.details,
+        raceId: 'race-1',
+        electionId: 'elec-1',
+        positionId: 'legacy-pos-mismatch',
+      },
+    } as Campaign
+    render(<OfficeStep campaign={campaign} />)
+
+    expect(screen.getByTestId('selected-race-id').textContent).toBe('race-1')
+
+    fireEvent.click(screen.getByTestId('select-office'))
+    const saveButton = screen.getByRole('button', { name: /save/i })
+    expect(saveButton).toBeDisabled()
   })
 })

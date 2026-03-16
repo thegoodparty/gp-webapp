@@ -85,11 +85,13 @@ export default function OfficeStep({
   adminMode,
 }: OfficeStepProps): React.JSX.Element {
   const router = useRouter()
-  const orgRaceId = campaign?.details?.raceId
-  const orgElectionId = campaign?.details?.electionId
+  const existingRaceId = campaign?.details?.raceId
+  const existingElectionId = campaign?.details?.electionId
+  const hasOrgPositionMetadata = Boolean(campaign?.organization?.positionId)
   const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
-    originalPosition: orgRaceId ?? campaign?.organization?.positionId,
+    originalPosition:
+      existingRaceId ?? (hasOrgPositionMetadata ? 'org-position-set' : false),
   })
   const [user] = useUser()
 
@@ -114,14 +116,14 @@ export default function OfficeStep({
     if (!state.ballotOffice) {
       return false
     }
-    const { position, election, id } = state.ballotOffice
-    if (!position || !election) {
+    const { election, id } = state.ballotOffice
+    if (!election) {
       return false
     }
 
     return !(
-      election?.id === orgElectionId &&
-      id === orgRaceId
+      election?.id === existingElectionId &&
+      id === existingRaceId
     )
   }
 
@@ -147,6 +149,7 @@ export default function OfficeStep({
     const { position, election, id, filingPeriods } = state.ballotOffice
 
     const attr = [
+      // Legacy compatibility write only. Do not use details.positionId for reads.
       { key: 'details.positionId', value: position?.id },
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
@@ -275,10 +278,10 @@ export default function OfficeStep({
         id: string | number | undefined
         election: { id: string | number | null | undefined }
       }
-    | false = orgRaceId
+    | false = existingRaceId
     ? {
-        id: orgRaceId,
-        election: { id: orgElectionId },
+        id: existingRaceId,
+        election: { id: existingElectionId },
       }
     : false
 
