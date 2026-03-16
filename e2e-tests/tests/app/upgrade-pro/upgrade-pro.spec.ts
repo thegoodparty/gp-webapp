@@ -3,7 +3,7 @@ import { AccountHelper } from 'src/helpers/account.helper'
 import { NavigationHelper } from 'src/helpers/navigation.helper'
 import { WaitHelper } from 'src/helpers/wait.helper'
 
-test.describe('Upgrade Pro Candidate Test Account @experimental', () => {
+test.describe('Upgrade Pro Candidate Test Account', () => {
   test.use({ storageState: 'playwright/.auth/user2.json' })
 
   test.beforeEach(async ({ page }) => {

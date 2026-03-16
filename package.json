@@ -22,7 +22,7 @@
     "build-storybook": "storybook build",
     "test": "vitest run",
     "test:e2e": "cd e2e-tests && npx playwright install chromium && npx playwright test tests/ --reporter=list",
-    "test:visual:update": "cd e2e-tests && npx playwright install chromium && npx playwright test --project=stable --update-snapshots --reporter=list",
+    "test:visual:update": "cd e2e-tests && npx playwright install chromium && npx playwright test --update-snapshots --reporter=list",
     "test:watch": "vitest",
     "types": "npx tsc"
   },
