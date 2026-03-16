@@ -24,9 +24,9 @@ Next.js 15 App Router deployed on Vercel. Calls gp-api (NestJS backend on ECS) a
 ### Deployment
 
 Vercel auto-deploys on push. Branch mapping:
-- `develop` → dev (`gp-api-dev.goodparty.org`)
-- `qa` → QA (`gp-api-qa.goodparty.org`)
-- `master` → prod (`api.goodparty.org`)
+- `develop` → `dev.goodparty.org` (API: `gp-api-dev.goodparty.org`)
+- `qa` → `qa.goodparty.org` (API: `gp-api-qa.goodparty.org`)
+- `master` → `goodparty.org` (API: `api.goodparty.org`)
 - PR branches → Vercel preview environments
 
 ### Route Groups
@@ -48,12 +48,14 @@ The codebase has two parallel fetch systems — a legacy one and a newer typed o
 - `unAuthFetch` - Public endpoints (no auth)
 - Routes defined in `gpApi/routes.ts` as `ApiRoute` objects with `path` and `method`
 - URL building via `@shared/utils/buildUrl` (replaces `:param` placeholders, appends query strings)
+- **Error handling:** Returns polymorphic types — parsed JSON on 2xx, raw `Response` on non-2xx, `false` on parse failure. Callers must check `ok`/status manually; errors are never thrown.
 
 **Typed system** (`gpApi/typed-request.ts`, `gpApi/api-endpoints.ts`):
 - `clientRequest<Route>(route, payload)` - Browser-side typed requests via `ofetch`
 - `serverRequest<Route>(route, payload)` - Server-side typed requests
 - Routes are string keys like `'GET /v1/polls/:pollId'` with typed `Request`/`Response` in `APIEndpoints`
 - Path params auto-extracted from route string via `PathParamsOf<Route>` type
+- **Error handling:** Returns a consistent `Response<T>` shape with `{ ok, status, data, headers }`. `ofetch` throws on 4xx/5xx by default, so callers should use try/catch.
 - This is the newer pattern — prefer it for new code
 
 ### State Management
@@ -111,7 +113,7 @@ Routes must match keys in `APIEndpoints` type (e.g., `'GET /v1/contacts/stats'`)
 
 ### AI Code Review
 
-The `ai-rules/` directory contains rule files for focused code review. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
+The `ai-rules/` directory is a git submodule with rule files for focused code review. Before using the critics, always pull the latest rules first: `npm run ai-rules:update`. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
 
 ```
 Read each .md file in ai-rules/. For each rule file relevant to my changes,
