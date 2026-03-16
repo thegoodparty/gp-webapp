@@ -19,11 +19,13 @@ export const CandidateFieldSelect = ({
   <FormControl size="small">
     <Select displayEmpty value={value} onChange={onChange}>
       {valueMapping &&
-        Object.entries(valueMapping).map(([display, val]) => (
-          <MenuItem key={display} value={val}>
-            {display}
-          </MenuItem>
-        ))}
+        (Object.entries(valueMapping) as [string, SelectValue][]).map(
+          ([display, val]) => (
+            <MenuItem key={display} value={val as string}>
+              {display}
+            </MenuItem>
+          ),
+        )}
     </Select>
   </FormControl>
 )

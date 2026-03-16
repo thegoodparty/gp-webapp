@@ -11,7 +11,7 @@ import {
 import { format, isBefore } from 'date-fns'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
-import { Poll } from 'app/(candidate)/dashboard/polls/shared/poll-types'
+import { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { clientRequest } from 'gpApi/typed-request'
 
 interface FormData {

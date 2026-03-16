@@ -1,4 +1,4 @@
-import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
+import { fetchVoterFile } from 'app/dashboard/voter-records/components/VoterRecordsPage'
 import { format } from 'date-fns'
 import { VoterFileFilters } from 'helpers/types'
 

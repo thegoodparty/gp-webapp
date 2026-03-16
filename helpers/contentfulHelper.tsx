@@ -16,8 +16,8 @@ const dtrOptions: Options = {
   renderNode: {
     [BLOCKS.EMBEDDED_ASSET]: (node) => (
       <img
-        src={node.data?.target?.fields?.file?.url}
-        alt={node.data?.target?.fields?.title}
+        src={node.data?.target?.fields?.file?.url as string}
+        alt={node.data?.target?.fields?.title as string}
         className="faq-image"
       />
     ),
@@ -43,7 +43,7 @@ const contentfulHelper = (
   try {
     let doc: Document
     if (typeof rawRichTextField === 'string') {
-      doc = JSON.parse(rawRichTextField)
+      doc = JSON.parse(rawRichTextField) as Document
     } else if (isDocument(rawRichTextField)) {
       doc = rawRichTextField
     } else {
@@ -69,7 +69,7 @@ export const cmsToPlainText = (
   try {
     let doc: Document
     if (typeof content === 'string') {
-      doc = JSON.parse(content)
+      doc = JSON.parse(content) as Document
     } else if (isDocument(content)) {
       doc = content
     } else {

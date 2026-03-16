@@ -22,7 +22,7 @@
     "build-storybook": "storybook build",
     "test": "vitest run",
     "test:e2e": "cd e2e-tests && npx playwright install chromium && npx playwright test tests/ --reporter=list",
-    "test:visual:update": "cd e2e-tests && npx playwright install chromium && npx playwright test --project=stable --update-snapshots --reporter=list",
+    "test:visual:update": "cd e2e-tests && npx playwright install chromium && npx playwright test --update-snapshots --reporter=list",
     "test:watch": "vitest",
     "types": "npx tsc"
   },
@@ -161,6 +161,8 @@
     "@types/sanitize-html": "^2.16.0",
     "@types/validator": "^13.15.4",
     "@types/xml2js": "^0.4.14",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
     "@vitejs/plugin-react": "^5.1.3",
     "autoprefixer": "^10.4.14",
     "axios": "^1.7.7",

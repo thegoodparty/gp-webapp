@@ -315,6 +315,11 @@ test.describe.serial('poll onboarding', () => {
       race: { zip: district.zip, office: district.office },
     })
 
+    // Become a Serve user
+    await page.goto('/dashboard/election-result')
+    await page.getByRole('button', { name: 'I won my race' }).click()
+    await page.waitForTimeout(3000)
+
     // Store for reuse in subsequent tests
     sharedUser = user
     sharedToken = (

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import type { ComponentType } from 'react'
 import data from './highFive.json'
+import { noop } from '@shared/utils/noop'
 import type {
   IPlayerProps,
   PlayerEvent as PlayerEventType,
@@ -15,7 +16,7 @@ export default function HighFiveAnimation({
   loop = false,
   style = {},
   className = 'absolute bottom-0',
-  callback = () => {},
+  callback = noop,
   ...restProps
 }: HighFiveAnimationProps): React.JSX.Element | null {
   const [animationKey, setAnimationKey] = useState<number>(0)

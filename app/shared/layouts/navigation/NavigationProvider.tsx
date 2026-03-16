@@ -1,5 +1,6 @@
 'use client'
 import { createContext, useCallback, useEffect, useState } from 'react'
+import { noop } from '@shared/utils/noop'
 
 import {
   LuHammer,
@@ -213,7 +214,7 @@ const DROPDOWNS: Dropdown[] = [
     links: ABOUT_US_LINKS,
   },
 ]
-const INITIAL_OPEN_STATES = Array(DROPDOWNS.length).fill(false)
+const INITIAL_OPEN_STATES: boolean[] = DROPDOWNS.map(() => false)
 
 interface NavContextValue {
   dropdowns: Dropdown[]
@@ -225,8 +226,8 @@ interface NavContextValue {
 export const NavContext = createContext<NavContextValue>({
   dropdowns: DROPDOWNS,
   openStates: INITIAL_OPEN_STATES,
-  toggle: () => () => {},
-  closeAll: () => {},
+  toggle: () => noop,
+  closeAll: noop,
 })
 
 interface NavigationProviderProps {

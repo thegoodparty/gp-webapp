@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import PhoneIcon from '@mui/icons-material/Phone'
 import TextField, { TextFieldProps } from '@shared/inputs/TextField'
 import styles from './PhoneInput.module.scss'
+import { noop } from '@shared/utils/noop'
 
 export const isValidPhone = (phone: string): boolean => {
   if (!phone) {
@@ -38,7 +39,7 @@ interface PhoneInputProps
 const PhoneInput = ({
   value,
   onChangeCallback,
-  onBlurCallback = () => {},
+  onBlurCallback = noop,
   hideIcon,
   shrink,
   required = false,

@@ -1,5 +1,6 @@
 'use client'
 import { createContext, useState } from 'react'
+import { noop, noopAsync } from '@shared/utils/noop'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
@@ -40,8 +41,8 @@ type IssuesContextValue = [
 
 export const IssuesContext = createContext<IssuesContextValue>([
   [],
-  () => {},
-  async () => {},
+  noop,
+  noopAsync,
 ])
 
 interface IssuesProviderProps {
