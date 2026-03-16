@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
-import TaskCheckbox from '../../../app/(candidate)/dashboard/components/tasks/TaskCheckbox'
+import TaskCheckbox from '../../../app/dashboard/components/tasks/TaskCheckbox'
 
 const meta: Meta<typeof TaskCheckbox> = {
   title: 'Campaign Plan/TaskCheckbox',

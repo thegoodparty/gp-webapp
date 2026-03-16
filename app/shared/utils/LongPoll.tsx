@@ -1,4 +1,4 @@
-import { noop } from '@shared/utils/noop'
+import { noop, noopAsync } from './noop'
 import { useEffect, useRef } from 'react'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 
@@ -12,7 +12,7 @@ interface LongPollProps<T = void> {
 }
 
 export const LongPoll = <T = void,>({
-  pollingMethod = async () => {},
+  pollingMethod = noopAsync,
   pollingDelay = 1000,
   onSuccess = noop,
   onError = noop,

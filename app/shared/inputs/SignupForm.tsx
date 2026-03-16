@@ -9,6 +9,7 @@ import { Fragment } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { noop } from '@shared/utils/noop'
 
 interface SubscribeEmailPayload extends Record<string, string> {
   email: string
@@ -56,7 +57,7 @@ const SignupForm = ({
   labelId,
   horizontal = true,
   phoneField = true,
-  onSuccessCallback = () => {},
+  onSuccessCallback = noop,
 }: SignupFormProps): React.JSX.Element | null => {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')

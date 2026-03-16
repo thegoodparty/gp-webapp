@@ -1,9 +1,19 @@
-import type { Poll } from 'app/(candidate)/dashboard/polls/shared/poll-types'
-import type { ContactsStats } from 'app/(candidate)/dashboard/polls/shared/queries'
-import type { GetPollIssuesResponse } from 'app/(candidate)/dashboard/polls/shared/serverApiCalls'
+import type { Poll } from 'app/dashboard/polls/shared/poll-types'
+import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
+import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
 import { Campaign } from 'helpers/types'
 
 export type APIEndpoints = {
+  'GET /v1/organizations': {
+    Request: {}
+    Response: {
+      organizations: Organization[]
+    }
+  }
+  'GET /v1/organizations/:slug': {
+    Request: {}
+    Response: Organization
+  }
   'GET /v1/campaigns/mine': {
     Request: {}
     Response: Campaign
@@ -41,4 +51,11 @@ export type APIEndpoints = {
     Request: {}
     Response: GetPollIssuesResponse
   }
+}
+
+export type Organization = {
+  slug: string
+  name: string
+  electedOfficeId: string | null
+  campaignId: number | null
 }

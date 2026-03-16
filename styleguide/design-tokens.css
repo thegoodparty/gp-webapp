@@ -763,4 +763,16 @@
    * ========================================================================== */
   --component-tooltip-base: #262626;
   --component-tooltip-foreground: #ffffff;
+
+  /* ==========================================================================
+   * COMPONENT SIDEBAR TOKENS (from Figma)
+   * ========================================================================== */
+  --component-sidebar-background: #fafafa;
+  --component-sidebar-foreground: var(--base-foreground); /* #0a0a0a */
+  --component-sidebar-primary: #171717;
+  --component-sidebar-primary-foreground: var(--base-background); /* #ffffff */
+  --component-sidebar-accent: var(--base-accent); /* #f5f5f5 */
+  --component-sidebar-accent-foreground: #171717;
+  --component-sidebar-border: #e5e5e5;
+  --component-sidebar-ring: var(--theme-primary); /* #2563eb */
 }

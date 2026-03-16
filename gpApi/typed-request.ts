@@ -67,9 +67,9 @@ const substitutePathParams = (route: string, params: object): string =>
  * console.log(result); // { message: 'something-else' }
  */
 const removePathParamsFromRequestPayload = (route: string, payload: object) =>
-  Object.entries(payload)
+  (Object.entries(payload) as [string, string][])
     .filter(([, value]) => value !== undefined)
-    .reduce(
+    .reduce<Record<string, string>>(
       (accum, [name, value]) =>
         route.includes(`:${name}`) ? accum : { ...accum, [name]: value },
       {},

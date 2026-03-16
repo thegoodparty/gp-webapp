@@ -1,4 +1,4 @@
-import { TASK_TYPES } from 'app/(candidate)/dashboard/shared/constants/tasks.const'
+import { TASK_TYPES } from 'app/dashboard/shared/constants/tasks.const'
 
 interface AiTemplate {
   key: string

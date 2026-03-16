@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useQuill } from 'react-quilljs'
 import 'quill/dist/quill.bubble.css'
+import { noop } from './noop'
 
 interface RichEditorProps {
   initialText?: string
@@ -11,7 +12,7 @@ interface RichEditorProps {
 
 const RichEditor = ({
   initialText = '',
-  onChangeCallback = () => {},
+  onChangeCallback = noop,
 }: RichEditorProps): React.JSX.Element => {
   const { quill, quillRef } = useQuill({
     theme: 'bubble',
