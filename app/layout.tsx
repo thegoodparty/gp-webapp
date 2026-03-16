@@ -55,7 +55,7 @@ export const metadata = {
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ClerkProvider>
-    <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

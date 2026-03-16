@@ -49,7 +49,7 @@ export default function Error({ error }: ErrorPageProps): React.JSX.Element {
       userEmail: clerkUser?.primaryEmailAddress?.emailAddress,
       userAgent: window?.navigator?.userAgent,
     })
-  }, [isLoaded, error, clerkUser])
+  }, [isLoaded, error, clerkUser?.primaryEmailAddress?.emailAddress])
 
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">

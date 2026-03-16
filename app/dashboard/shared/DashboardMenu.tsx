@@ -28,7 +28,6 @@ import {
   Plus,
   Send,
   Settings,
-  StopCircle,
   UserRound,
   UsersRound,
   Wand,
@@ -63,7 +62,6 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
@@ -346,12 +344,6 @@ const NewNavMenu = ({
   pathname: string | null
 }) => {
   const [user] = useUser()
-  const {
-    clear: clearImpersonation,
-    token: impersonateToken,
-    user: impersonateUser,
-  } = useImpersonateUser()
-  const impersonating = impersonateToken && impersonateUser
   const { setOpenMobile, isMobile } = useSidebar()
 
   const organization = useOrganization()
@@ -386,16 +378,6 @@ const NewNavMenu = ({
       icon: Wand,
       id: 'nav-dash-admin',
       href: '/admin',
-    },
-    stopImpersonating: {
-      label: 'Stop Impersonating',
-      icon: StopCircle,
-      id: 'nav-dash-stop-impersonating',
-      href: '/admin',
-      onClick: () => {
-        clearImpersonation()
-        window.location.href = '/admin'
-      },
     },
     community: {
       label: 'Community Forum',
@@ -509,13 +491,9 @@ const NewNavMenu = ({
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
                   {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
                     sidebarItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
-                    !impersonating &&
                     sidebarItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    sidebarItem(accountManagementMenuItems.stopImpersonating)}
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.logout)}
                   <SidebarSeparator />
@@ -555,13 +533,9 @@ const NewNavMenu = ({
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
                   {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
                     dropDownItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
-                    !impersonating &&
                     dropDownItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    dropDownItem(accountManagementMenuItems.stopImpersonating)}
                   <DropdownMenuSeparator />
                   {dropDownItem(accountManagementMenuItems.community)}
                   <DropdownMenuSeparator />

@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser as useClerkUser } from '@clerk/nextjs'
-import { createContext, useCallback, useEffect } from 'react'
+import { createContext, useCallback, useEffect, useRef } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { User } from 'helpers/types'
 import { apiRoutes } from 'gpApi/routes'
@@ -46,22 +46,38 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     [queryClient],
   )
 
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return
 
-    const eventSource = new EventSource(
-      `/api${API_VERSION_PREFIX}/users/me/events`,
-    )
+    let disposed = false
+    let es: EventSource | null = null
 
-    eventSource.addEventListener('user.updated', () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
-    })
+    const connect = () => {
+      es = new EventSource(`/api${API_VERSION_PREFIX}/users/me/events`)
 
-    eventSource.onerror = () => {
-      eventSource.close()
+      es.addEventListener('user.updated', () => {
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+      })
+
+      es.onerror = () => {
+        es?.close()
+        if (!disposed) {
+          reconnectTimeoutRef.current = setTimeout(connect, 5000)
+        }
+      }
     }
 
-    return () => eventSource.close()
+    connect()
+
+    return () => {
+      disposed = true
+      es?.close()
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current)
+      }
+    }
   }, [isLoaded, isSignedIn, queryClient])
 
   const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)

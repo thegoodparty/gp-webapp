@@ -616,10 +616,6 @@ export const getPersistedClids = (): Record<string, string | null> => {
   return clids
 }
 
-const getUserProperties = (): Record<string, string> => {
-  return {}
-}
-
 export const trackEvent = (
   name: string,
   properties?: Record<
@@ -630,7 +626,6 @@ export const trackEvent = (
   try {
     const commonProperties = {
       ...getPersistedUtms(),
-      ...getUserProperties(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)

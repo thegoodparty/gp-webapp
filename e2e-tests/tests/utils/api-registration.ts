@@ -289,8 +289,10 @@ export const authenticateTestUser = async (
     user,
     cleanup: async () => {
       try {
+        // Delete Clerk user (which is the auth source of truth).
+        // The API backend should handle cascading cleanup via Clerk webhooks.
         await clerkBackend.users.deleteUser(clerkUserId)
-        console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+        console.log(`[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`)
       } catch (err) {
         console.error(`[${title}] Failed to delete user ${user.email}:`, err)
       }

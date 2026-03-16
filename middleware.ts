@@ -93,6 +93,8 @@ const isProtectedRoute = createRouteMatcher([
   '/onboarding(.*)',
   '/dashboard(.*)',
   '/profile(.*)',
+  '/admin(.*)',
+  '/sales(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -127,6 +129,8 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       ? { Authorization: `Bearer ${token}` }
       : {}
 
+    // NOTE: This redirect logic mirrors getPostAuthRedirectPath() in candidateAccess.ts.
+    // Keep both in sync when changing redirect rules.
     try {
       const [userRes, statusRes] = await Promise.all([
         fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {

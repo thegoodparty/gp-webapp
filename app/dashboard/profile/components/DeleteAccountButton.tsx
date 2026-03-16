@@ -6,24 +6,19 @@
  */
 import React, { useState } from 'react'
 import AlertDialog from '@shared/utils/AlertDialog'
-import { deleteCookies } from 'helpers/cookieHelper'
 import ErrorButton from '@shared/buttons/ErrorButton'
 import { FaTrash } from 'react-icons/fa'
-import { handleLogOut } from '@shared/user/handleLogOut'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { useClerk } from '@clerk/nextjs'
 
 const deleteAccountCallback = async (id: number): Promise<string | void> => {
   try {
     const resp = await clientFetch(apiRoutes.user.deleteAccount, { id })
 
-    if (resp.ok) {
-      await handleLogOut()
-      deleteCookies()
-      window.location.href = '/'
-    } else {
+    if (!resp.ok) {
       console.error('Error deleting account', resp.statusText)
       return 'Error deleting account'
     }
@@ -42,13 +37,21 @@ const DeleteAccountButton = ({
 }: DeleteAccountButtonProps): React.JSX.Element => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const { errorSnackbar } = useSnackbar()
+  const { user: clerkUser } = useClerk()
 
   const handleDeleteAccount = async (): Promise<void> => {
     trackEvent(EVENTS.Settings.DeleteAccount.SubmitDelete)
     const msg = await deleteAccountCallback(userId)
     if (msg) {
       errorSnackbar(msg)
+      return
     }
+    try {
+      await clerkUser?.delete()
+    } catch (error) {
+      console.error('Error deleting Clerk user', error)
+    }
+    window.location.href = '/'
   }
 
   return (
