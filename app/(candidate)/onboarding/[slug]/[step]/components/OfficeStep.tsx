@@ -85,10 +85,11 @@ export default function OfficeStep({
   adminMode,
 }: OfficeStepProps): React.JSX.Element {
   const router = useRouter()
-  const orgPositionId = campaign?.organization?.positionId
+  const orgRaceId = campaign?.details?.raceId
+  const orgElectionId = campaign?.details?.electionId
   const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
-    originalPosition: orgPositionId,
+    originalPosition: orgRaceId ?? campaign?.organization?.positionId,
   })
   const [user] = useUser()
 
@@ -110,9 +111,6 @@ export default function OfficeStep({
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
-    const orgPosition = orgPositionId
-    const orgElection = campaign?.details?.electionId
-    const orgRace = campaign?.details?.raceId
     if (!state.ballotOffice) {
       return false
     }
@@ -122,9 +120,8 @@ export default function OfficeStep({
     }
 
     return !(
-      position?.id === orgPosition &&
-      election?.id === orgElection &&
-      id === orgRace
+      election?.id === orgElectionId &&
+      id === orgRaceId
     )
   }
 
@@ -275,13 +272,13 @@ export default function OfficeStep({
 
   const selectedOffice:
     | {
-        position: { id: string | number | undefined }
+        id: string | number | undefined
         election: { id: string | number | null | undefined }
       }
-    | false = orgPositionId
+    | false = orgRaceId
     ? {
-        position: { id: orgPositionId },
-        election: { id: campaign.details.electionId },
+        id: orgRaceId,
+        election: { id: orgElectionId },
       }
     : false
 

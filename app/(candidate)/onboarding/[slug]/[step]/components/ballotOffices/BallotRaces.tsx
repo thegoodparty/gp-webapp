@@ -24,6 +24,7 @@ interface BallotRacesCampaign extends Campaign {
 }
 
 interface SelectedOffice {
+  id?: string | number
   position?: { id?: string | number }
   election?: { id?: string | number | null }
 }
