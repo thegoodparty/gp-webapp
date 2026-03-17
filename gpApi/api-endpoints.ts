@@ -19,6 +19,18 @@ export type APIEndpoints = {
     Response: Campaign
   }
 
+  'GET /v1/elected-office/current': {
+    Request: {}
+    Response: ElectedOffice
+  }
+
+  'POST /v1/elected-office': {
+    Request: {
+      electedDate: string
+    }
+    Response: ElectedOffice
+  }
+
   'GET /v1/contacts/stats': {
     Request: {}
     Response: ContactsStats
@@ -58,4 +70,12 @@ export type Organization = {
   name: string
   electedOfficeId: string | null
   campaignId: number | null
+}
+
+export type ElectedOffice = {
+  id: string
+  electedDate: string | null
+  swornInDate: string | null
+  termStartDate: string | null
+  termEndDate: string | null
 }
