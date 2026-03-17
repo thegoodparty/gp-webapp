@@ -51,6 +51,10 @@ export const leftMenuItems: MenuItem[] = [
     label: 'Ecanvasser',
     link: '/admin/ecanvasser',
   },
+  {
+    label: 'Organizations',
+    link: '/admin/organizations',
+  },
 ]
 
 export default function AdminLeftMenu({

@@ -11,6 +11,8 @@ import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { clientRequest } from 'gpApi/typed-request'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
@@ -36,6 +38,7 @@ interface OfficeStepProps {
   step?: number
   updateCallback?: () => void | Promise<void>
   adminMode?: boolean
+  organizationSlug?: string
 }
 
 interface CampaignResponse extends Campaign {
@@ -83,8 +86,10 @@ export default function OfficeStep({
   step,
   updateCallback,
   adminMode,
+  organizationSlug,
 }: OfficeStepProps): React.JSX.Element {
   const router = useRouter()
+  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
     originalPosition: campaign?.details?.positionId,
@@ -217,6 +222,13 @@ export default function OfficeStep({
       officeElectionDate: election.electionDay,
     }
 
+    if (winServeSplit && organizationSlug && position?.id) {
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: organizationSlug,
+        ballotReadyPositionId: String(position.id),
+      })
+    }
+
     if (adminMode && campaign) {
       await runPostOfficeStepUpdates(attr, campaign.slug)
     } else if (campaign) {
@@ -226,7 +238,7 @@ export default function OfficeStep({
         officeManuallyInput: false,
       })
       await runPostOfficeStepUpdates(attr)
-    } else {
+    } else if (!organizationSlug) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
