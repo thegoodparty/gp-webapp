@@ -184,12 +184,6 @@ export const apiRoutes = {
       path: '/campaigns/mine/district',
       method: 'PUT',
     },
-    map: {
-      list: {
-        path: '/campaigns/map',
-        method: 'GET',
-      },
-    },
     ai: {
       create: {
         path: '/campaigns/ai',
