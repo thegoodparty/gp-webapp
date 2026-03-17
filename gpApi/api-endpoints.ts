@@ -14,6 +14,16 @@ export type APIEndpoints = {
     Request: {}
     Response: Organization
   }
+
+  'PATCH /v1/organizations/:slug': {
+    Request: {
+      ballotReadyPositionId?: string | undefined
+      overrideDistrictId?: string | null | undefined
+      customOfficeName?: string | null | undefined
+    }
+    Response: Organization
+  }
+
   'GET /v1/campaigns/mine': {
     Request: {}
     Response: Campaign
@@ -62,6 +72,11 @@ export type APIEndpoints = {
   'GET /v1/polls/:pollId/top-issues': {
     Request: {}
     Response: GetPollIssuesResponse
+  }
+
+  'GET /v1/organizations/admin/list': {
+    Request: { filter?: string }
+    Response: { organizations: Organization[] }
   }
 }
 
