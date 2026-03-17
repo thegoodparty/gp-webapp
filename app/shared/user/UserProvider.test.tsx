@@ -1,14 +1,11 @@
 import { render } from '@testing-library/react'
 import { UserProvider } from './UserProvider'
 import { useUser } from '@shared/hooks/useUser'
+import { getUserCookie } from 'helpers/cookieHelper'
 import { User } from 'helpers/types'
 
-const { mockGetUserCookie } = vi.hoisted(() => ({
-  mockGetUserCookie: vi.fn(),
-}))
-
 vi.mock('helpers/cookieHelper', () => ({
-  getUserCookie: mockGetUserCookie,
+  getUserCookie: vi.fn(),
   setUserCookie: vi.fn(),
 }))
 
@@ -39,11 +36,11 @@ const FirstRenderCapture = ({
 
 describe('UserProvider', () => {
   beforeEach(() => {
-    mockGetUserCookie.mockReset()
+    vi.mocked(getUserCookie).mockReset()
   })
 
   it('provides user from cookie on first render without waiting for useEffect', () => {
-    mockGetUserCookie.mockReturnValue(mockUser)
+    vi.mocked(getUserCookie).mockReturnValue(mockUser)
 
     const renders: (User | null)[] = []
 
@@ -57,7 +54,7 @@ describe('UserProvider', () => {
   })
 
   it('returns null on first render when no cookie exists', () => {
-    mockGetUserCookie.mockReturnValue(false)
+    vi.mocked(getUserCookie).mockReturnValue(false)
 
     const renders: (User | null)[] = []
 

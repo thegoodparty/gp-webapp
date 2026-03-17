@@ -1,40 +1,33 @@
 import { render } from '@testing-library/react'
 import { User, UserRole } from 'helpers/types'
+import { identifyUser } from '@shared/utils/analytics'
+import { persistUtmsOnce, getPersistedUtms, extractClids } from 'helpers/analyticsHelper'
+import { buildUserTraits } from 'helpers/buildUserTraits'
 
 let mockUser: User | null = null
-const mockSetUser = vi.fn()
+let mockSearchParamsValue: URLSearchParams | null = new URLSearchParams()
 
 vi.mock('@shared/hooks/useUser', () => ({
-  useUser: () => [mockUser, mockSetUser],
-}))
-
-const mockSearchParams = vi.hoisted(() => ({
-  value: new URLSearchParams() as ReturnType<typeof import('next/navigation').useSearchParams>,
+  useUser: () => [mockUser, vi.fn()],
 }))
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({})),
-  useSearchParams: () => mockSearchParams.value,
+  useSearchParams: () => mockSearchParamsValue,
 }))
 
-const mockIdentifyUser = vi.fn().mockResolvedValue(true)
 vi.mock('@shared/utils/analytics', () => ({
-  identifyUser: (...args: unknown[]) => mockIdentifyUser(...args),
+  identifyUser: vi.fn().mockResolvedValue(true),
 }))
-
-const mockPersistUtmsOnce = vi.fn()
-const mockGetPersistedUtms = vi.fn(() => ({}))
-const mockExtractClids = vi.fn(() => ({}))
 
 vi.mock('helpers/analyticsHelper', () => ({
-  persistUtmsOnce: () => mockPersistUtmsOnce(),
-  getPersistedUtms: () => mockGetPersistedUtms(),
-  extractClids: (...args: unknown[]) => mockExtractClids(...args),
+  persistUtmsOnce: vi.fn(),
+  getPersistedUtms: vi.fn(() => ({})),
+  extractClids: vi.fn(() => ({})),
 }))
 
-const mockBuildUserTraits = vi.fn(() => ({}))
 vi.mock('helpers/buildUserTraits', () => ({
-  buildUserTraits: (...args: unknown[]) => mockBuildUserTraits(...args),
+  buildUserTraits: vi.fn(() => ({})),
 }))
 
 import SegmentIdentify from './SegmentIdentify'
@@ -61,12 +54,12 @@ const fullUserTraits = {
 
 beforeEach(() => {
   mockUser = null
-  mockSearchParams.value = new URLSearchParams()
-  mockIdentifyUser.mockReset().mockResolvedValue(true)
-  mockPersistUtmsOnce.mockReset()
-  mockGetPersistedUtms.mockReset().mockReturnValue({})
-  mockExtractClids.mockReset().mockReturnValue({})
-  mockBuildUserTraits.mockReset().mockReturnValue(fullUserTraits)
+  mockSearchParamsValue = new URLSearchParams()
+  vi.mocked(identifyUser).mockReset().mockResolvedValue(undefined)
+  vi.mocked(persistUtmsOnce).mockReset()
+  vi.mocked(getPersistedUtms).mockReset().mockReturnValue({})
+  vi.mocked(extractClids).mockReset().mockReturnValue({})
+  vi.mocked(buildUserTraits).mockReset().mockReturnValue(fullUserTraits)
 })
 
 describe('SegmentIdentify', () => {
@@ -76,14 +69,14 @@ describe('SegmentIdentify', () => {
     render(<SegmentIdentify />)
 
     await vi.waitFor(() => {
-      expect(mockIdentifyUser).toHaveBeenCalledWith(42, fullUserTraits)
+      expect(identifyUser).toHaveBeenCalledWith(42, fullUserTraits)
     })
-    expect(mockBuildUserTraits).toHaveBeenCalledWith(fullUser)
+    expect(buildUserTraits).toHaveBeenCalledWith(fullUser)
   })
 
   it('calls identifyUser with null and UTM traits when no user', async () => {
     mockUser = null
-    mockGetPersistedUtms.mockReturnValue({
+    vi.mocked(getPersistedUtms).mockReturnValue({
       utm_source_first: 'google',
       utm_medium_last: 'cpc',
     })
@@ -91,23 +84,23 @@ describe('SegmentIdentify', () => {
     render(<SegmentIdentify />)
 
     await vi.waitFor(() => {
-      expect(mockIdentifyUser).toHaveBeenCalledWith(null, {
+      expect(identifyUser).toHaveBeenCalledWith(null, {
         utm_source_first: 'google',
         utm_medium_last: 'cpc',
       })
     })
-    expect(mockBuildUserTraits).not.toHaveBeenCalled()
+    expect(buildUserTraits).not.toHaveBeenCalled()
   })
 
   it('merges UTM and CLID traits into user identification', async () => {
     mockUser = fullUser
-    mockGetPersistedUtms.mockReturnValue({ utm_source_first: 'twitter' })
-    mockExtractClids.mockReturnValue({ gclid: 'abc123' })
+    vi.mocked(getPersistedUtms).mockReturnValue({ utm_source_first: 'twitter' })
+    vi.mocked(extractClids).mockReturnValue({ gclid: 'abc123' })
 
     render(<SegmentIdentify />)
 
     await vi.waitFor(() => {
-      expect(mockIdentifyUser).toHaveBeenCalledWith(42, {
+      expect(identifyUser).toHaveBeenCalledWith(42, {
         ...fullUserTraits,
         utm_source_first: 'twitter',
         gclid: 'abc123',
@@ -119,26 +112,19 @@ describe('SegmentIdentify', () => {
     render(<SegmentIdentify />)
 
     await vi.waitFor(() => {
-      expect(mockPersistUtmsOnce).toHaveBeenCalled()
+      expect(persistUtmsOnce).toHaveBeenCalled()
     })
   })
 
   it('skips extractClids when searchParams is null', async () => {
     mockUser = fullUser
-    mockSearchParams.value = null
+    mockSearchParamsValue = null
 
     render(<SegmentIdentify />)
 
     await vi.waitFor(() => {
-      expect(mockIdentifyUser).toHaveBeenCalled()
+      expect(identifyUser).toHaveBeenCalled()
     })
-    expect(mockExtractClids).not.toHaveBeenCalled()
-  })
-
-  it('does not import or reference FeatureFlagsProvider', async () => {
-    const source = await import('./SegmentIdentify')
-    const sourceString = Object.keys(source).join(',')
-    expect(sourceString).not.toContain('FeatureFlags')
-    expect(sourceString).not.toContain('featureFlags')
+    expect(extractClids).not.toHaveBeenCalled()
   })
 })

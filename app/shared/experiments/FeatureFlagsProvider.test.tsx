@@ -1,25 +1,20 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { User, UserRole } from 'helpers/types'
-
-const mockFetch = vi.fn().mockResolvedValue(undefined)
-const mockVariant = vi.fn((_key: string, fallback?: unknown) => fallback ?? { value: undefined })
-const mockAll = vi.fn(() => ({}))
-const mockExposure = vi.fn()
-const mockClear = vi.fn()
+import { Experiment } from '@amplitude/experiment-js-client'
+import { reportErrorToSentry } from '@shared/sentry'
+import { buildUserTraits } from 'helpers/buildUserTraits'
 
 const mockExperimentClient = {
-  fetch: mockFetch,
-  variant: mockVariant,
-  all: mockAll,
-  exposure: mockExposure,
-  clear: mockClear,
+  fetch: vi.fn().mockResolvedValue(undefined),
+  variant: vi.fn((_key: string, fallback?: unknown) => fallback ?? { value: undefined }),
+  all: vi.fn(() => ({})),
+  exposure: vi.fn(),
+  clear: vi.fn(),
 }
-
-const mockInitialize = vi.fn(() => mockExperimentClient)
 
 vi.mock('@amplitude/experiment-js-client', () => ({
   Experiment: {
-    initialize: (...args: unknown[]) => mockInitialize(...args),
+    initialize: vi.fn(() => mockExperimentClient),
   },
 }))
 
@@ -27,21 +22,18 @@ vi.mock('@shared/utils/analytics', () => ({
   getReadyAnalytics: vi.fn().mockResolvedValue(null),
 }))
 
-const mockReportErrorToSentry = vi.fn()
 vi.mock('@shared/sentry', () => ({
-  reportErrorToSentry: (...args: unknown[]) => mockReportErrorToSentry(...args),
+  reportErrorToSentry: vi.fn(),
 }))
 
-const mockBuildUserTraits = vi.fn()
 vi.mock('helpers/buildUserTraits', () => ({
-  buildUserTraits: (...args: unknown[]) => mockBuildUserTraits(...args),
+  buildUserTraits: vi.fn(),
 }))
 
 let mockUser: User | null = null
-const mockSetUser = vi.fn()
 
 vi.mock('@shared/hooks/useUser', () => ({
-  useUser: () => [mockUser, mockSetUser],
+  useUser: () => [mockUser, vi.fn()],
 }))
 
 const mockApiKey = vi.hoisted(() => ({ value: 'test-amplitude-key' }))
@@ -86,16 +78,16 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 beforeEach(() => {
   mockUser = null
   mockApiKey.value = 'test-amplitude-key'
-  mockFetch.mockReset().mockResolvedValue(undefined)
-  mockVariant.mockReset().mockImplementation(
+  mockExperimentClient.fetch.mockReset().mockResolvedValue(undefined)
+  mockExperimentClient.variant.mockReset().mockImplementation(
     (_key: string, fallback?: unknown) => fallback ?? { value: undefined },
   )
-  mockAll.mockReset().mockReturnValue({})
-  mockExposure.mockReset()
-  mockClear.mockReset()
-  mockInitialize.mockReset().mockReturnValue(mockExperimentClient)
-  mockReportErrorToSentry.mockReset()
-  mockBuildUserTraits.mockReset().mockReturnValue(fullUserTraits)
+  mockExperimentClient.all.mockReset().mockReturnValue({})
+  mockExperimentClient.exposure.mockReset()
+  mockExperimentClient.clear.mockReset()
+  vi.mocked(Experiment.initialize).mockReset().mockReturnValue(mockExperimentClient as never)
+  vi.mocked(reportErrorToSentry).mockReset()
+  vi.mocked(buildUserTraits).mockReset().mockReturnValue(fullUserTraits)
 })
 
 describe('FeatureFlagsProvider', () => {
@@ -106,12 +98,12 @@ describe('FeatureFlagsProvider', () => {
       renderHook(() => useFeatureFlags(), { wrapper })
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith({
+        expect(mockExperimentClient.fetch).toHaveBeenCalledWith({
           user_id: '42',
           user_properties: fullUserTraits,
         })
       })
-      expect(mockBuildUserTraits).toHaveBeenCalledWith(fullUser)
+      expect(buildUserTraits).toHaveBeenCalledWith(fullUser)
     })
 
     it('fetches with empty ExperimentUser when no user is logged in', async () => {
@@ -120,9 +112,9 @@ describe('FeatureFlagsProvider', () => {
       renderHook(() => useFeatureFlags(), { wrapper })
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith({})
+        expect(mockExperimentClient.fetch).toHaveBeenCalledWith({})
       })
-      expect(mockBuildUserTraits).not.toHaveBeenCalled()
+      expect(buildUserTraits).not.toHaveBeenCalled()
     })
   })
 
@@ -136,7 +128,7 @@ describe('FeatureFlagsProvider', () => {
     })
 
     it('becomes ready even when fetch fails', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('network error'))
+      mockExperimentClient.fetch.mockRejectedValueOnce(new Error('network error'))
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -153,8 +145,8 @@ describe('FeatureFlagsProvider', () => {
       await waitFor(() => {
         expect(result.current.ready).toBe(true)
       })
-      expect(mockInitialize).not.toHaveBeenCalled()
-      expect(mockFetch).not.toHaveBeenCalled()
+      expect(Experiment.initialize).not.toHaveBeenCalled()
+      expect(mockExperimentClient.fetch).not.toHaveBeenCalled()
     })
   })
 
@@ -168,13 +160,13 @@ describe('FeatureFlagsProvider', () => {
         expect(result.current.ready).toBe(true)
       })
 
-      mockFetch.mockReset()
+      mockExperimentClient.fetch.mockReset()
 
       await act(async () => {
         await result.current.refresh()
       })
 
-      expect(mockFetch).not.toHaveBeenCalled()
+      expect(mockExperimentClient.fetch).not.toHaveBeenCalled()
     })
 
     it('calls client.clear() when user identity changes', async () => {
@@ -186,13 +178,13 @@ describe('FeatureFlagsProvider', () => {
       await waitFor(() => {
         expect(result.current.ready).toBe(true)
       })
-      mockClear.mockReset()
+      mockExperimentClient.clear.mockReset()
 
       mockUser = fullUser
       rerender()
 
       await waitFor(() => {
-        expect(mockClear).toHaveBeenCalled()
+        expect(mockExperimentClient.clear).toHaveBeenCalled()
       })
     })
 
@@ -203,13 +195,13 @@ describe('FeatureFlagsProvider', () => {
       await waitFor(() => {
         expect(result.current.ready).toBe(true)
       })
-      mockClear.mockReset()
+      mockExperimentClient.clear.mockReset()
 
       await act(async () => {
         await result.current.refresh()
       })
 
-      expect(mockClear).not.toHaveBeenCalled()
+      expect(mockExperimentClient.clear).not.toHaveBeenCalled()
     })
   })
 
@@ -223,16 +215,16 @@ describe('FeatureFlagsProvider', () => {
       await waitFor(() => {
         expect(result.current.ready).toBe(true)
       })
-      expect(mockFetch).toHaveBeenCalledTimes(1)
-      expect(mockFetch).toHaveBeenCalledWith({})
+      expect(mockExperimentClient.fetch).toHaveBeenCalledTimes(1)
+      expect(mockExperimentClient.fetch).toHaveBeenCalledWith({})
 
       mockUser = fullUser
       rerender()
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledTimes(2)
+        expect(mockExperimentClient.fetch).toHaveBeenCalledTimes(2)
       })
-      expect(mockFetch).toHaveBeenLastCalledWith({
+      expect(mockExperimentClient.fetch).toHaveBeenLastCalledWith({
         user_id: '42',
         user_properties: fullUserTraits,
       })
@@ -242,7 +234,7 @@ describe('FeatureFlagsProvider', () => {
   describe('error reporting', () => {
     it('reports fetch errors to Sentry', async () => {
       const error = new Error('network error')
-      mockFetch.mockRejectedValueOnce(error)
+      mockExperimentClient.fetch.mockRejectedValueOnce(error)
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -250,13 +242,13 @@ describe('FeatureFlagsProvider', () => {
         expect(result.current.ready).toBe(true)
       })
 
-      expect(mockReportErrorToSentry).toHaveBeenCalledWith(error, {
+      expect(reportErrorToSentry).toHaveBeenCalledWith(error, {
         context: 'FeatureFlagsProvider.refresh',
       })
     })
 
     it('wraps non-Error fetch failures in Error before reporting to Sentry', async () => {
-      mockFetch.mockRejectedValueOnce('string-error')
+      mockExperimentClient.fetch.mockRejectedValueOnce('string-error')
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -264,7 +256,7 @@ describe('FeatureFlagsProvider', () => {
         expect(result.current.ready).toBe(true)
       })
 
-      expect(mockReportErrorToSentry).toHaveBeenCalledWith(
+      expect(reportErrorToSentry).toHaveBeenCalledWith(
         expect.objectContaining({ message: 'string-error' }),
         { context: 'FeatureFlagsProvider.refresh' },
       )
@@ -286,16 +278,16 @@ describe('FeatureFlagsProvider', () => {
       rerender()
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledTimes(2)
+        expect(mockExperimentClient.fetch).toHaveBeenCalledTimes(2)
       })
 
-      expect(mockInitialize).toHaveBeenCalledTimes(1)
+      expect(Experiment.initialize).toHaveBeenCalledTimes(1)
     })
   })
 
   describe('context value delegation', () => {
     it('delegates variant() to the experiment client', async () => {
-      mockVariant.mockReturnValue({ value: 'treatment' })
+      mockExperimentClient.variant.mockReturnValue({ value: 'treatment' })
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -304,12 +296,12 @@ describe('FeatureFlagsProvider', () => {
       })
 
       const v = result.current.variant('my-flag')
-      expect(mockVariant).toHaveBeenCalledWith('my-flag', undefined)
+      expect(mockExperimentClient.variant).toHaveBeenCalledWith('my-flag', undefined)
       expect(v).toEqual({ value: 'treatment' })
     })
 
     it('delegates all() to the experiment client', async () => {
-      mockAll.mockReturnValue({ 'flag-a': { value: 'on' } })
+      mockExperimentClient.all.mockReturnValue({ 'flag-a': { value: 'on' } })
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -329,7 +321,7 @@ describe('FeatureFlagsProvider', () => {
       })
 
       result.current.exposure('my-flag')
-      expect(mockExposure).toHaveBeenCalledWith('my-flag')
+      expect(mockExperimentClient.exposure).toHaveBeenCalledWith('my-flag')
     })
 
     it('delegates clear() to the experiment client', async () => {
@@ -340,7 +332,7 @@ describe('FeatureFlagsProvider', () => {
       })
 
       result.current.clear()
-      expect(mockClear).toHaveBeenCalled()
+      expect(mockExperimentClient.clear).toHaveBeenCalled()
     })
 
     it('refresh() triggers a new fetch', async () => {
@@ -349,20 +341,20 @@ describe('FeatureFlagsProvider', () => {
       await waitFor(() => {
         expect(result.current.ready).toBe(true)
       })
-      expect(mockFetch).toHaveBeenCalledTimes(1)
+      expect(mockExperimentClient.fetch).toHaveBeenCalledTimes(1)
 
       await act(async () => {
         await result.current.refresh()
       })
 
-      expect(mockFetch).toHaveBeenCalledTimes(2)
+      expect(mockExperimentClient.fetch).toHaveBeenCalledTimes(2)
     })
   })
 })
 
 describe('useFlagOn', () => {
   it('returns on=true when variant value is "on" and provider is ready', async () => {
-    mockVariant.mockReturnValue({ value: 'on' })
+    mockExperimentClient.variant.mockReturnValue({ value: 'on' })
 
     const { result } = renderHook(() => useFlagOn('my-feature'), { wrapper })
 
@@ -374,7 +366,7 @@ describe('useFlagOn', () => {
   })
 
   it('returns on=false when variant value is "off"', async () => {
-    mockVariant.mockReturnValue({ value: 'off' })
+    mockExperimentClient.variant.mockReturnValue({ value: 'off' })
 
     const { result } = renderHook(() => useFlagOn('my-feature'), { wrapper })
 
@@ -386,7 +378,7 @@ describe('useFlagOn', () => {
   })
 
   it('returns on=false when variant value is undefined', async () => {
-    mockVariant.mockReturnValue({ value: undefined })
+    mockExperimentClient.variant.mockReturnValue({ value: undefined })
 
     const { result } = renderHook(() => useFlagOn('my-feature'), { wrapper })
 
@@ -398,7 +390,7 @@ describe('useFlagOn', () => {
   })
 
   it('returns on=false when provider is not ready', () => {
-    mockFetch.mockReturnValue(new Promise(() => {}))
+    mockExperimentClient.fetch.mockReturnValue(new Promise(() => { /* never resolves */ }))
 
     const { result } = renderHook(() => useFlagOn('my-feature'), { wrapper })
 
