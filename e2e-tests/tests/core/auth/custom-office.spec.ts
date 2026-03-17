@@ -67,8 +67,10 @@ test.describe('Custom office flow', () => {
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
       campaignId: expect.any(Number),
-      name: 'City Council',
+      name: '2030 Campaign',
       electedOfficeId: null,
+      district: null,
+      position: null,
     })
 
     const { data: campaign } = await client.get<{
