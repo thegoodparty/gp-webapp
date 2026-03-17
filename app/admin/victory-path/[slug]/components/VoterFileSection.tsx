@@ -7,7 +7,7 @@ export default function VoterFileSection(): React.JSX.Element {
   return (
     <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <div>
-        {campaign?.details?.raceId === undefined ? (
+        {campaign?.details?.raceId == null ? (
           <div className="my-4">
             This campaign is not eligible for an Automatic Path To Victory
             because the user manually selected an office.
