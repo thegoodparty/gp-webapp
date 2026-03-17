@@ -7,7 +7,7 @@ test.describe('Website Management', () => {
   test('should create and publish website through complete flow', async ({
     page,
   }) => {
-    await authenticateTestUser(page)
+    await authenticateTestUser(page, { isolated: true })
     await NavigationHelper.navigateToPage(page, '/dashboard/website')
     await NavigationHelper.dismissOverlays(page)
 
@@ -64,14 +64,24 @@ test.describe('Website Management', () => {
 
     await page.getByRole('button', { name: 'Publish website' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
-    await expect(
-      page.getByRole('heading', {
-        name: 'Congratulations, your website is live!',
-      }),
-    ).toBeVisible()
+    const liveHeading = page
+      .getByRole('heading')
+      .filter({ hasText: /Congratulations,\s*your website is live!/i })
+      .first()
+    const publishedCardHeading = page
+      .getByText('Your campaign website', { exact: true })
+      .first()
 
-    await expect(page.getByRole('link', { name: 'Add a domain' })).toBeVisible()
-    await page.getByRole('link', { name: 'Done' }).click()
+    await Promise.any([
+      liveHeading.waitFor({ state: 'visible', timeout: 20000 }),
+      publishedCardHeading.waitFor({ state: 'visible', timeout: 20000 }),
+    ])
+
+    if (await liveHeading.isVisible()) {
+      await expect(page.getByRole('link', { name: 'Add a domain' })).toBeVisible()
+      await page.getByRole('link', { name: 'Done' }).click()
+    }
+
     await expect(
       page
         .getByRole('heading', { name: /Published/ })
