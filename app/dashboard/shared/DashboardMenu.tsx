@@ -373,7 +373,7 @@ const NewNavMenu = ({
       label: 'Settings',
       icon: Settings,
       id: 'nav-dash-settings',
-      href: '/profile',
+      href: '/dashboard/profile',
     },
     addCampaign: {
       label: 'Add Campaign',

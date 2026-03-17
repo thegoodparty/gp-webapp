@@ -619,8 +619,6 @@ const SuccessForm: React.FC<{
   )
 }
 export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
-  const [campaign] = useCampaign()
-
   const [pollId] = useState(() => uuidv7())
 
   const [state, setState] = useState<State>({
@@ -628,7 +626,7 @@ export const CreatePoll: React.FC<{ pathname: string }> = ({ pathname }) => {
   })
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} showAlert={false}>
       {state.step === Step.details && (
         <DetailsForm
           details={state.details}

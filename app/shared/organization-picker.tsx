@@ -49,6 +49,16 @@ export const useOrganization = () => {
   return ctx.selected
 }
 
+export const useSetOrganizationSlug = () => {
+  const ctx = useContext(OrganizationContext)
+  if (!ctx) {
+    throw new Error(
+      'useSetOrganizationSlug must be used within OrganizationProvider',
+    )
+  }
+  return ctx.setSelectedSlug
+}
+
 export const useOrganizationIfEnabled = () => {
   const { on: enabled } = useFlagOn('win-serve-split')
 
