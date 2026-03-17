@@ -8,6 +8,7 @@ import ContactStep from './ContactStep'
 import { SECTIONS } from './EditSectionButton'
 import { useMemo } from 'react'
 import { Website, WebsiteIssue } from 'helpers/types'
+import { AboutStepErrors } from './AboutStep'
 
 interface EditSectionProps {
   editSection: string | null
@@ -29,6 +30,9 @@ interface EditSectionProps {
   saveLoading: boolean
   canSave: boolean
   cantSaveReason?: string
+  aboutErrors?: AboutStepErrors
+  bioCharCount?: number
+  onBioCharCountChange?: (length: number) => void
 }
 
 export default function EditSection({
@@ -51,6 +55,9 @@ export default function EditSection({
   saveLoading,
   canSave,
   cantSaveReason,
+  aboutErrors,
+  bioCharCount,
+  onBioCharCountChange,
 }: EditSectionProps) {
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
@@ -95,6 +102,9 @@ export default function EditSection({
             onBioChange={onBioChange}
             onIssuesChange={onIssuesChange}
             noHeading
+            errors={aboutErrors}
+            bioCharCount={bioCharCount}
+            onBioCharCountChange={onBioCharCountChange}
           />
         )}
         {editSection === SECTIONS.contact && (

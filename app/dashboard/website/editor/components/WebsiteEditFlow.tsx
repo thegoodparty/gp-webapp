@@ -23,6 +23,9 @@ import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
 import { cantSaveReasons } from '../../create/components/WebsiteCreateFlow'
 import { WebsiteIssue } from 'helpers/types'
+import { AboutStepErrors } from './AboutStep'
+
+const MIN_BIO_LENGTH = 100
 
 interface GooglePlace {
   formatted_address?: string
@@ -39,6 +42,9 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   const isLgUp = useMediaQuery('(min-width:1024px)')
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
+  const [bioCharCount, setBioCharCount] = useState(0)
+  const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
+  const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
 
   useEffect(() => {
     if (isLgUp && editSection === null) {
@@ -48,6 +54,7 @@ export default function WebsiteEditFlow(): React.JSX.Element {
 
   async function handleSaveAndPublish(): Promise<boolean> {
     if (!website) return false
+    if (editSection === SECTIONS.about && !validateAboutStep()) return false
     setSaveLoading(true)
     const resp = await updateWebsite({
       ...website.content,
@@ -185,6 +192,21 @@ export default function WebsiteEditFlow(): React.JSX.Element {
     }
   }
 
+  function validateAboutStep(): boolean {
+    const errors: AboutStepErrors = {}
+
+    if (bioCharCount < MIN_BIO_LENGTH) {
+      errors.bio = 'Please complete Your Bio'
+    }
+    if ((website?.content?.about?.issues?.length ?? 0) === 0) {
+      errors.issues = 'Please add a Key Issue'
+    }
+
+    setAboutErrors(errors)
+    setAboutErrorsShown(true)
+    return Object.keys(errors).length === 0
+  }
+
   function handleBioChange(value: string): void {
     setWebsite((current) =>
       current
@@ -197,6 +219,17 @@ export default function WebsiteEditFlow(): React.JSX.Element {
           }
         : null,
     )
+  }
+
+  function handleBioCharCountChange(length: number): void {
+    setBioCharCount(length)
+    if (aboutErrorsShown && length >= MIN_BIO_LENGTH) {
+      setAboutErrors((prev) => {
+        const next = { ...prev }
+        delete next.bio
+        return next
+      })
+    }
   }
 
   function handleCommitteeChange(value: string): void {
@@ -225,6 +258,13 @@ export default function WebsiteEditFlow(): React.JSX.Element {
           }
         : null,
     )
+    if (aboutErrorsShown && issues.length > 0) {
+      setAboutErrors((prev) => {
+        const next = { ...prev }
+        delete next.issues
+        return next
+      })
+    }
   }
 
   function handleAddressSelect(place: GooglePlace): void {
@@ -331,6 +371,9 @@ export default function WebsiteEditFlow(): React.JSX.Element {
               onClose={handleEditSectionClose}
               saveLoading={saveLoading}
               cantSaveReason={cantSaveReason}
+              aboutErrors={aboutErrorsShown ? aboutErrors : undefined}
+              bioCharCount={bioCharCount}
+              onBioCharCountChange={handleBioCharCountChange}
             />
           </div>
         )}
@@ -364,6 +407,9 @@ export default function WebsiteEditFlow(): React.JSX.Element {
           onClose={handleEditSectionClose}
           saveLoading={saveLoading}
           cantSaveReason={cantSaveReason}
+          aboutErrors={aboutErrorsShown ? aboutErrors : undefined}
+          bioCharCount={bioCharCount}
+          onBioCharCountChange={handleBioCharCountChange}
         />
       </ResponsiveModal>
       <ResponsiveModal
