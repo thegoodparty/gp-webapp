@@ -1,4 +1,5 @@
 import React, { MouseEvent, ButtonHTMLAttributes } from 'react'
+import { noop } from '@shared/utils/noop'
 import Button, {
   ButtonSize,
   ButtonVariant,
@@ -32,8 +33,8 @@ interface ModalFooterProps {
 }
 
 export const ModalFooter = ({
-  onBack = () => {},
-  onNext = () => {},
+  onBack = noop,
+  onNext = noop,
   disabled = false,
   nextText = 'Next',
   backText = 'Back',

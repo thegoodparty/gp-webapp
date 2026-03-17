@@ -10,5 +10,5 @@ export const handleLogOut = async (
   deleteUserCookies()
   e?.currentTarget && fireGTMButtonClickEvent(e.currentTarget)
   await clientFetch(apiRoutes.authentication.logout)
-  window.location.replace('/')
+  window.location.replace('/login')
 }

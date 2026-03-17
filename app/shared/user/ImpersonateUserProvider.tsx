@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useEffect, useState } from 'react'
 import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper'
+import { noop } from '@shared/utils/noop'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
@@ -21,7 +22,7 @@ export const ImpersonateUserContext =
     user: null,
     token: null,
     impersonate: () => Promise.resolve(false),
-    clear: () => {},
+    clear: noop,
   })
 
 interface ImpersonateUserProviderProps {
@@ -37,7 +38,9 @@ export const ImpersonateUserProvider = ({
   useEffect(() => {
     const token = getCookie('impersonateToken')
     const impersonateUserCookie = getCookie('impersonateUser')
-    const user = impersonateUserCookie && JSON.parse(impersonateUserCookie)
+    const user =
+      impersonateUserCookie &&
+      (JSON.parse(impersonateUserCookie) as ImpersonateUser)
     if (token && user) {
       setToken(token)
       setUser(user)

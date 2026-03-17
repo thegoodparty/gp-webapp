@@ -1,6 +1,6 @@
 import CandidateAvatar from '@shared/candidates/CandidateAvatar'
 import H3 from '@shared/typography/H3'
-import UpdateHistorySection from 'app/(candidate)/dashboard/components/UpdateHistorySection'
+import UpdateHistorySection from 'app/dashboard/components/UpdateHistorySection'
 import AdminWrapper from 'app/admin/shared/AdminWrapper'
 import UpdateHistoryChart from './UpdateHistoryChart'
 import TrackerStats from './TrackerStats'

@@ -18,6 +18,7 @@ import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import Button from '@shared/buttons/Button'
 import { User } from 'helpers/types'
+import { noop } from '@shared/utils/noop'
 
 interface NavLink {
   href: string
@@ -49,8 +50,7 @@ const RightSideMobile = (): React.JSX.Element => {
       step?: string | number
     }) || {}
   const pathname = usePathname()
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile')
+  const isDashboardPath = pathname?.startsWith('/dashboard')
   const dashboardLink = '/dashboard'
 
   const closeMenu = () => {
@@ -83,7 +83,7 @@ const RightSideMobile = (): React.JSX.Element => {
           open={isOpen}
           onClose={() => setOpen(false)}
           anchor="right"
-          onOpen={() => {}}
+          onOpen={noop}
         >
           {user && isDashboardPath ? (
             <DashboardMobile user={user as User} pathname={pathname || ''} />
@@ -111,6 +111,7 @@ const RightSideMobile = (): React.JSX.Element => {
                         id={`mobile-nav-${link.id}`}
                         key={link.id}
                         className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark rounded flex items-center justify-between"
+                        target={link.external ? '_blank' : undefined}
                         rel={
                           link.external ? 'noopener noreferrer nofollow' : ''
                         }

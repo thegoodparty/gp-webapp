@@ -1,6 +1,7 @@
+import { noopAsync } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 
 export const getVoterContactField = (
   outreachType: string,
@@ -91,7 +92,7 @@ type VoterContactsContextValue = [
 
 export const VoterContactsContext = createContext<VoterContactsContextValue>([
   INITIAL_VOTER_CONTACTS_STATE,
-  async () => {},
+  noopAsync,
 ])
 
 interface VoterContactsProviderProps {

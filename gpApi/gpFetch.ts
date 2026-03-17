@@ -1,4 +1,8 @@
 import { getCookie } from 'helpers/cookieHelper'
+import {
+  ORG_SLUG_COOKIE,
+  ORG_SLUG_HEADER,
+} from '@shared/organizations/constants'
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -78,6 +82,11 @@ const headersOptions = (
     headers.Authorization = `Bearer ${token}`
   }
 
+  const orgSlug = getCookie(ORG_SLUG_COOKIE)
+  if (orgSlug) {
+    headers[ORG_SLUG_HEADER] = orgSlug
+  }
+
   return {
     headers,
     method,
@@ -108,10 +117,7 @@ const fetchCall = async <T = Partial<Record<string, unknown>>>(
   }
   try {
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
-    const jsonRes: T | Response = isSuccessfulResponseStatus
-      ? await res.json()
-      : res
-    return jsonRes
+    return isSuccessfulResponseStatus ? await res.json() : res
   } catch (e) {
     console.error('error in fetchCall catch', e)
     return false

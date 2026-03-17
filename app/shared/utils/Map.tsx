@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import Script from 'next/script'
-import mapSkin from '../../candidates/components/map/mapSkin'
+import mapSkin from './mapSkin'
 import { NEXT_PUBLIC_GOOGLE_MAPS_KEY } from 'appEnv'
 
 const INITIAL_ZOOM = 5

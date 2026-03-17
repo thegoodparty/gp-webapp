@@ -1,4 +1,4 @@
-import { Outfit } from 'next/font/google'
+import { Open_Sans, Outfit } from 'next/font/google'
 import localFont from 'next/font/local'
 import Script from 'next/script'
 import { Suspense } from 'react'
@@ -7,12 +7,12 @@ import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
-import AmplitudeInit from '@shared/AmplitudeInit'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
+const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
 
 const sfPro = localFont({
   // @ts-expect-error - localFont types are not correct
@@ -53,7 +53,10 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
+  <html
+    lang="en"
+    className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}
+  >
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,7 +98,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <RouteTracker />
       </Suspense>
       <AnalyticsSessionReplayMiddleware />
-      <AmplitudeInit />
       <ReactQueryProvider>
         <FeatureFlagsProvider>
           <PageWrapper>{children}</PageWrapper>

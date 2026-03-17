@@ -1,3 +1,8 @@
+import { MARKETING_SITE_DOMAIN } from 'appEnv'
+
+export const getMarketingUrl = (path: string): string =>
+  `https://${MARKETING_SITE_DOMAIN}${path}`
+
 export const isValidUrl = (str: string): boolean => {
   const pattern = new RegExp(
     '^(https?:\\/\\/)' +

@@ -15,9 +15,9 @@ export default defineConfig({
   expect: {
     timeout: 15000, // Increased from 10s to 15s
     toHaveScreenshot: {
-      maxDiffPixels: 75,
-      animations: 'disabled',
-      scale: 'css',
+      maxDiffPixels: 75, // allow minor antialiasing/rendering variation
+      animations: 'disabled', // freeze CSS animations for deterministic captures
+      scale: 'css', // use CSS pixels, consistent across machines
     },
   },
 
@@ -33,19 +33,10 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/results.json' }],
   ],
 
-  // Setup project for authentication + main testing project
   projects: [
-    // Stable tests project - all tests EXCEPT @experimental (blocking PR checks)
     {
-      name: 'stable',
+      name: 'default',
       use: devices['Desktop Chrome'],
-      grep: /^(?!.*@experimental).*$/, // Negative lookahead: exclude @experimental
-    },
-    // Experimental tests project - only @experimental tagged tests (non-blocking PR checks)
-    {
-      name: 'experimental',
-      use: devices['Desktop Chrome'],
-      grep: /@experimental/,
     },
   ],
 

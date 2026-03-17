@@ -18,6 +18,7 @@ export const EVENTS = {
   polls: {
     resultsViewed: 'Polls - Poll Results Overview Viewed',
     issueDetailsViewed: 'Polls - Poll Results Issue Details Viewed',
+    lowConfidenceModalClicked: 'Polls - Low Confidence Modal Clicked',
   },
   createPoll: {
     createPollClicked: 'Polls - Create Poll Clicked',
@@ -588,7 +589,7 @@ export const getPersistedUtms = (): Record<string, string> => {
       if (first) utms[`${key}_first`] = first
       if (last) utms[`${key}_last`] = last
     }
-  } catch (_e) {
+  } catch {
     return {}
   }
 
@@ -616,7 +617,7 @@ export const getPersistedClids = (): Record<string, string | null> => {
         clids[key] = window.sessionStorage.getItem(key)
       }
     }
-  } catch (_e) {
+  } catch {
     return {}
   }
   return clids
