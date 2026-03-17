@@ -244,7 +244,7 @@ export default function DashboardMenu({
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
-  const { electedOffice } = useElectedOffice()
+  const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 

@@ -83,10 +83,6 @@ export const apiRoutes = {
       path: '/elected-office/current',
       method: 'GET',
     },
-    create: {
-      path: '/elected-office',
-      method: 'POST',
-    },
   },
   homepage: {
     subscribeEmail: {
