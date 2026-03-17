@@ -1,7 +1,7 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
-import { getUserCookie } from './cookieHelper'
+import { getUserCookie, isImpersonating } from './cookieHelper'
 import type { Analytics } from '@segment/analytics-next'
 
 const UTM_KEYS = [
@@ -654,6 +654,7 @@ export const trackEvent = (
       ...getPersistedUtms(),
       ...getUserProperties(),
       ...properties,
+      impersonation: isImpersonating(),
     }
     segmentTrackEvent(name, commonProperties)
   } catch (e) {
