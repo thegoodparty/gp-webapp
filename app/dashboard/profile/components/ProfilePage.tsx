@@ -1,6 +1,5 @@
 import NotificationSection from 'app/dashboard/profile/components/NotificationSection'
-import PasswordSection from './PasswordSection'
-import PersonalSection from './PersonalSection'
+import ContactInfoSection from './ContactInfoSection'
 import { AccountSettingsSection } from 'app/dashboard/profile/components/AccountSettingsSection'
 import TextingCompliance from 'app/dashboard/profile/texting-compliance/components/TextingCompliance'
 import { User, Website, TcrCompliance } from 'helpers/types'
@@ -21,7 +20,7 @@ export default function ProfilePage(
   return (
     <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
       <div className="max-w-screen-md mx-auto px-4 py-4 xl:p-0 xl:pt-4">
-        <PersonalSection user={user} />
+        <ContactInfoSection user={user} />
         <AccountSettingsSection />
         {isPro && (
           <TextingCompliance
@@ -33,7 +32,6 @@ export default function ProfilePage(
           />
         )}
         <NotificationSection />
-        <PasswordSection user={user} />
       </div>
     </div>
   )

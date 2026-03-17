@@ -27,7 +27,15 @@ interface NavLink {
 
 const links: NavLink[] = [
   {
-    id: 'nav-settings',
+    id: 'profile',
+    label: 'Profile',
+    href: '/dashboard/account',
+    icon: <FaUserCircle />,
+    onClick: () =>
+      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickProfile),
+  },
+  {
+    id: 'settings',
     label: 'Settings',
     href: '/dashboard/profile',
     icon: <FaToolbox />,

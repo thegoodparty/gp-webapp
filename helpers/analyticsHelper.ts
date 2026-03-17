@@ -106,6 +106,7 @@ export const EVENTS = {
       ClickAvatarDropdown: 'Navigation - Top: Click Avatar Dropdown',
       AvatarDropdown: {
         CloseDropdown: 'Navigation - Top - Avatar Dropdown: Close Dropdown',
+        ClickProfile: 'Navigation Top - Avatar Dropdown: Click Profile',
         ClickSettings: 'Navigation Top - Avatar Dropdown: Click Settings',
         ClickLogout: 'Navigation Top - Avatar Dropdown: Click Logout',
       },
