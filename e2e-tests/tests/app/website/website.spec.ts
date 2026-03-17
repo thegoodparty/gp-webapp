@@ -78,7 +78,9 @@ test.describe('Website Management', () => {
     ])
 
     if (await liveHeading.isVisible()) {
-      await expect(page.getByRole('link', { name: 'Add a domain' })).toBeVisible()
+      await expect(
+        page.getByRole('link', { name: 'Add a domain' }),
+      ).toBeVisible()
       await page.getByRole('link', { name: 'Done' }).click()
     }
 

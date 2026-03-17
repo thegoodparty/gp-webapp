@@ -76,7 +76,9 @@ test.describe('Custom office flow', () => {
       )
       .toBe(1)
 
-    const { data } = await client.get<OrganizationsResponse>('/v1/organizations')
+    const { data } = await client.get<OrganizationsResponse>(
+      '/v1/organizations',
+    )
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
       campaignId: expect.any(Number),
