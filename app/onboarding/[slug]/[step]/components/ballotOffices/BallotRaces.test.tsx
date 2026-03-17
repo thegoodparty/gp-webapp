@@ -5,7 +5,7 @@ import type { Campaign } from 'helpers/types'
 
 const mockUpdateCampaign = vi.fn().mockResolvedValue({})
 
-vi.mock('app/(candidate)/onboarding/shared/ajaxActions', () => ({
+vi.mock('app/onboarding/shared/ajaxActions', () => ({
   createCampaignWithOffice: vi.fn(),
   onboardingStep: vi.fn(),
   updateCampaign: (...args: unknown[]) => mockUpdateCampaign(...args),
