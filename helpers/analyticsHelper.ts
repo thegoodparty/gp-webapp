@@ -484,7 +484,7 @@ export const storeSessionId = (id: number): void => {
 }
 
 export const extractClids = (
-  searchParams: URLSearchParams,
+  searchParams: Pick<URLSearchParams, 'entries'>,
 ): Record<string, string> => {
   const clids: Record<string, string> = {}
 

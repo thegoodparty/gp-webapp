@@ -5,7 +5,6 @@ import JsonLdSchema from './JsonLdSchema'
 import Nav from './navigation/Nav'
 import CookiesSnackbar from './CookiesSnackbar'
 import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvider'
-import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ElectedOfficeProvider } from '@shared/hooks/ElectedOfficeProvider'
@@ -38,7 +37,7 @@ const PageWrapper = async ({
   ])
 
   return (
-    <UserProvider>
+    <>
       <AmplitudeInit />
       <ImpersonateUserProvider>
         <OrganizationProvider initialOrganizations={organizations}>
@@ -74,7 +73,7 @@ const PageWrapper = async ({
           </CampaignProvider>
         </OrganizationProvider>
       </ImpersonateUserProvider>
-    </UserProvider>
+    </>
   )
 }
 
