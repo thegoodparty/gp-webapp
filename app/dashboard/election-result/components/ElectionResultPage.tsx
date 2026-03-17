@@ -129,7 +129,7 @@ export default function ElectionResultPage(): React.JSX.Element {
         if (!electedDate) {
           throw new Error('Invalid elected date')
         }
-        void createElectedOfficeMutation.mutate(electedDate)
+        await createElectedOfficeMutation.mutateAsync(electedDate)
       } else {
         router.replace('/dashboard/election-result/loss')
       }
