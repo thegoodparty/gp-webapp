@@ -54,7 +54,7 @@ export default async function candidateAccess(): Promise<void> {
     return redirect('/sign-up')
   }
 
-  // don't remove this call. It prevents the build process to try to cache this page which should be dynamic
+  // don't remove this call. It prevents the build process from trying to to cache this page which should be dynamic
   // https://nextjs.org/docs/messages/dynamic-server-error
   await fetchCampaignStatus()
 }
