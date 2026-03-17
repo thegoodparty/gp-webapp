@@ -59,7 +59,12 @@ vi.mock('./ballotOffices/BallotRaces', () => ({
         onClick={() =>
           onSelect({
             id: 'race-1',
-            position: { id: 'pos-1', name: 'Mayor', state: 'CA', level: 'local' },
+            position: {
+              id: 'pos-1',
+              name: 'Mayor',
+              state: 'CA',
+              level: 'local',
+            },
             election: { id: 'elec-1', state: 'CA', electionDay: '2026-11-03' },
             filingPeriods: [],
           })

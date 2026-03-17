@@ -121,10 +121,7 @@ export default function OfficeStep({
       return false
     }
 
-    return !(
-      election?.id === existingElectionId &&
-      id === existingRaceId
-    )
+    return !(election?.id === existingElectionId && id === existingRaceId)
   }
 
   const calcTerm = (position: RacePosition | undefined): string | undefined => {
