@@ -14,6 +14,16 @@ export type APIEndpoints = {
     Request: {}
     Response: Organization
   }
+
+  'PATCH /v1/organizations/:slug': {
+    Request: {
+      ballotReadyPositionId?: string | undefined
+      overrideDistrictId?: string | null | undefined
+      customOfficeName?: string | null | undefined
+    }
+    Response: Organization
+  }
+
   'GET /v1/campaigns/mine': {
     Request: {}
     Response: Campaign
