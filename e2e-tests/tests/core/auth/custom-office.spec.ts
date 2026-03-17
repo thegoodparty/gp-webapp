@@ -55,15 +55,28 @@ test.describe('Custom office flow', () => {
     })
     await expect(page).toHaveURL(/\/onboarding\/.*\/2/)
 
-    const { data } = await client.get<{
+    type OrganizationsResponse = {
       organizations: {
         slug: string
         campaignId: number
         name: string
         electedOfficeId: number | null
       }[]
-    }>('/v1/organizations')
-    expect(data.organizations).toHaveLength(1)
+    }
+
+    await expect
+      .poll(
+        async () => {
+          const { data } = await client.get<OrganizationsResponse>(
+            '/v1/organizations',
+          )
+          return data.organizations.length
+        },
+        { timeout: 15000 },
+      )
+      .toBe(1)
+
+    const { data } = await client.get<OrganizationsResponse>('/v1/organizations')
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
       campaignId: expect.any(Number),
