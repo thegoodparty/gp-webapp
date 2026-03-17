@@ -9,8 +9,12 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import ResultOptionButton from './ResultOptionButton'
 import { clientRequest } from 'gpApi/typed-request'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ORGANIZATIONS_QUERY_KEY } from '@shared/organization-picker'
+import {
+  ORGANIZATIONS_QUERY_KEY,
+  useSetOrganizationSlug,
+} from '@shared/organization-picker'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -42,7 +46,7 @@ interface RequestState {
 
 export default function ElectionResultPage(): React.JSX.Element {
   const router = useRouter()
-  const [campaign, setCampaign] = useCampaign()
+  const [campaign] = useCampaign()
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
   const { on: winServeSplit } = useFlagOn('win-serve-split')
@@ -66,6 +70,7 @@ export default function ElectionResultPage(): React.JSX.Element {
     submitting: false,
     error: false,
   })
+  const setSelectedSlug = useSetOrganizationSlug()
 
   const queryClient = useQueryClient()
 
@@ -91,8 +96,7 @@ export default function ElectionResultPage(): React.JSX.Element {
           throw new Error('New organization not found')
         }
 
-        // TODO: coming in subsequent PR
-        // setSelectedSlug(newOrg.slug)
+        setSelectedSlug(newOrg.slug)
       }
 
       router.replace('/polls/welcome')
@@ -108,10 +112,10 @@ export default function ElectionResultPage(): React.JSX.Element {
       await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
 
       if (campaign) {
-        setCampaign({
+        queryClient.setQueryData(CAMPAIGN_QUERY_KEY, {
           ...campaign,
           details: {
-            ...campaign.details,
+            ...campaign.details!,
             wonGeneral: wonGeneral,
           },
         })

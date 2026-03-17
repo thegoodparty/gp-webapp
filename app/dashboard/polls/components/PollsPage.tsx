@@ -1,7 +1,6 @@
 'use client'
 import H1 from '@shared/typography/H1'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import Paper from '@shared/utils/Paper'
 import { PollsTable } from './PollsTable'
@@ -17,12 +16,10 @@ interface PollsPageProps {
 }
 
 export default function PollsPage({ pathname, polls }: PollsPageProps) {
-  const [campaign] = useCampaign()
-
   const hasPolls = polls.length > 0
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} showAlert={false}>
       <Paper className="min-h-full">
         <div className="flex justify-between items-center">
           <div>
