@@ -11,6 +11,7 @@ import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMidd
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
 import { ClerkProvider } from '@clerk/nextjs'
+import ImpersonationBanner from './shared/user/ImpersonationBanner'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
@@ -93,6 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </Script>
       </head>
       <body>
+        <ImpersonationBanner />
         <Suspense>
           <RouteTracker />
         </Suspense>
