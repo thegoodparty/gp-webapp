@@ -1,5 +1,4 @@
 'use client'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Paper from '@shared/utils/Paper'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 import PollHeader from './PollHeader'
@@ -15,7 +14,6 @@ import LowConfidenceModal, {
 
 export default function PollsDetailPage({ pathname }: { pathname: string }) {
   const [poll] = usePoll()
-  const [campaign] = useCampaign()
   const [showLowConfidenceModal, setShowLowConfidenceModal] = useState(false)
 
   const pollStatus = poll.status
@@ -51,7 +49,7 @@ export default function PollsDetailPage({ pathname }: { pathname: string }) {
   }
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} showAlert={false}>
       <Paper className="min-h-full">
         <PollHeader />
         <PollsContent />

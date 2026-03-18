@@ -71,10 +71,6 @@ export const apiRoutes = {
       path: '/elected-office/current',
       method: 'GET',
     },
-    create: {
-      path: '/elected-office',
-      method: 'POST',
-    },
   },
   homepage: {
     subscribeEmail: {
@@ -187,12 +183,6 @@ export const apiRoutes = {
     district: {
       path: '/campaigns/mine/district',
       method: 'PUT',
-    },
-    map: {
-      list: {
-        path: '/campaigns/map',
-        method: 'GET',
-      },
     },
     ai: {
       create: {

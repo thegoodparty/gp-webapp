@@ -41,6 +41,7 @@ const Page = async (): Promise<React.JSX.Element> => {
 
   const childProps: ProfilePageProps = {
     user,
+    campaign,
     isPro: Boolean(campaign?.isPro),
     subscriptionCancelAt,
     website,
