@@ -3,7 +3,8 @@
     "e2e-tests/playwright-report",
     "e2e-tests/**/*.md",
     "styleguide/*.md",
-    "public/"
+    "public/",
+    "ai-rules/"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
