@@ -180,5 +180,5 @@ interface UseFlagOnResult {
 export const useFlagOn = (key: string): UseFlagOnResult => {
   const { ready, variant } = useFeatureFlags()
   const v = variant(key, { value: 'off' })
-  return { ready, on: ready && v?.value === 'on' }
+  return { ready, on: v.value === 'on' }
 }

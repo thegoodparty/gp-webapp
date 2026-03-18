@@ -14,9 +14,31 @@ export type APIEndpoints = {
     Request: {}
     Response: Organization
   }
+
+  'PATCH /v1/organizations/:slug': {
+    Request: {
+      ballotReadyPositionId?: string | undefined
+      overrideDistrictId?: string | null | undefined
+      customOfficeName?: string | null | undefined
+    }
+    Response: Organization
+  }
+
   'GET /v1/campaigns/mine': {
     Request: {}
     Response: Campaign
+  }
+
+  'GET /v1/elected-office/current': {
+    Request: {}
+    Response: ElectedOffice
+  }
+
+  'POST /v1/elected-office': {
+    Request: {
+      electedDate: string
+    }
+    Response: ElectedOffice
   }
 
   'GET /v1/contacts/stats': {
@@ -58,4 +80,12 @@ export type Organization = {
   name: string
   electedOfficeId: string | null
   campaignId: number | null
+}
+
+export type ElectedOffice = {
+  id: string
+  electedDate: string | null
+  swornInDate: string | null
+  termStartDate: string | null
+  termEndDate: string | null
 }

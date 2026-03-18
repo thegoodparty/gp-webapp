@@ -12,12 +12,14 @@ import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeIn
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
+import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 interface OfficeSectionProps {
   campaign?: Campaign
 }
 
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
+  const organization = useOrganizationIfEnabled()
   const initialState: OfficeFieldState = {
     office: '',
     state: '',
@@ -74,6 +76,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSelect={handleUpdate}
+        organizationSlug={organization?.slug}
       />
     </section>
   )

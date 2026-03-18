@@ -81,9 +81,11 @@ const DashboardLayout = ({
           <SidebarInset className="bg-[#f5f5f5]">
             {!hideMenu && <MobileMenuTrigger />}
             <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
-              {campaign && showAlert && <AlertSection campaign={campaign} />}
+              {activeCampaign && showAlert && (
+                <AlertSection campaign={activeCampaign} />
+              )}
               <ProUpgradePrompt
-                campaign={campaign}
+                campaign={activeCampaign}
                 user={user}
                 pathname={currentPath || undefined}
               />
@@ -106,9 +108,11 @@ const DashboardLayout = ({
         <main
           className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
         >
-          {campaign && showAlert && <AlertSection campaign={campaign} />}
+          {activeCampaign && showAlert && (
+            <AlertSection campaign={activeCampaign} />
+          )}
           <ProUpgradePrompt
-            campaign={campaign}
+            campaign={activeCampaign}
             user={user}
             pathname={currentPath || undefined}
           />
