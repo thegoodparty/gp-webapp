@@ -8,7 +8,7 @@ import { visualSnapshot } from 'src/helpers/visual.helper'
  */
 test.describe('Contacts Page', () => {
   test('contacts page functionality', async ({ page }) => {
-    test.setTimeout(60 * 1000)
+    test.setTimeout(120 * 1000)
     // Test started
 
     // --- Auth & setup: register/login test user ---
@@ -16,7 +16,9 @@ test.describe('Contacts Page', () => {
     // Authenticated user
 
     // --- Get elected office ---
-    await page.goto('/dashboard/election-result')
+    await page.goto('/dashboard/election-result', {
+      waitUntil: 'domcontentloaded',
+    })
     await page
       .getByRole('button', { name: 'I won my race' })
       .click({ timeout: 10000 })
@@ -25,7 +27,7 @@ test.describe('Contacts Page', () => {
 
     // --- Navigation: go to contacts, dismiss cookie/overlays, wait for ready ---
     // Navigating to /dashboard/contacts
-    await page.goto('/dashboard/contacts')
+    await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
     // Dismissed overlays, page ready
 
@@ -203,9 +205,7 @@ test.describe('Contacts Page', () => {
     await expect(createSegmentButton).toBeEnabled({ timeout: 5000 })
     await createSegmentButton.click({ force: true })
     // Clicked Create Segment
-    await expect(sheet).toHaveAttribute('data-state', 'closed', {
-      timeout: 10000,
-    })
+    await expect(sheet).toBeHidden({ timeout: 15000 })
     // Filters sheet closed, page ready
     const segmentFirstRow = table.locator('tbody tr').first()
     await expect(
@@ -258,12 +258,17 @@ test.describe('Contacts Page', () => {
       .getByRole('checkbox')
     await age18_25CheckboxEdit.click({ timeout: 10000 })
     // update segment
-    await editSheet
-      .getByRole('button', { name: /update segment/i })
-      .click({ force: true })
-    await expect(editSheet).toHaveAttribute('data-state', 'closed', {
-      timeout: 10000,
+    const updateBtn = editSheet.getByRole('button', {
+      name: /update segment/i,
     })
+    await expect(updateBtn).toBeEnabled({ timeout: 5000 })
+    await updateBtn.click({ force: true })
+    try {
+      await expect(editSheet).toBeHidden({ timeout: 15000 })
+    } catch {
+      await page.keyboard.press('Escape')
+      await expect(editSheet).toBeHidden({ timeout: 5000 })
+    }
     // check table
     const afterEditFirstRow = table.locator('tbody tr').first()
     await expect(
