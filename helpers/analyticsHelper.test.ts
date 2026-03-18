@@ -39,8 +39,7 @@ describe('trackEvent', () => {
   })
 
   it('includes impersonation: true when impersonating', () => {
-    document.cookie =
-      'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
+    document.cookie = 'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
 
     trackEvent('Test Event', { foo: 'bar' })
 
@@ -54,8 +53,7 @@ describe('trackEvent', () => {
   })
 
   it('impersonation cannot be overridden by caller properties', () => {
-    document.cookie =
-      'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
+    document.cookie = 'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
 
     trackEvent('Test Event', { impersonation: false })
 

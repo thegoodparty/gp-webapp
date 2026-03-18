@@ -29,9 +29,5 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     [userState, setUser],
   )
 
-  return (
-    <UserContext.Provider value={value}>
-      {children}
-    </UserContext.Provider>
-  )
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

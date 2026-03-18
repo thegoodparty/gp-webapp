@@ -2,7 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { User, UserRole } from 'helpers/types'
 import { identifyUser } from '@shared/utils/analytics'
-import { persistUtmsOnce, getPersistedUtms, extractClids } from 'helpers/analyticsHelper'
+import {
+  persistUtmsOnce,
+  getPersistedUtms,
+  extractClids,
+} from 'helpers/analyticsHelper'
 import { buildUserTraits } from 'helpers/buildUserTraits'
 
 let mockUser: User | null = null

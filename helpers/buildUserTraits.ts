@@ -1,8 +1,6 @@
 import { User } from './types'
 
-export const buildUserTraits = (
-  user: User,
-): Record<string, string> => {
+export const buildUserTraits = (user: User): Record<string, string> => {
   const traits: Record<string, string> = {}
   if (user.email) traits.email = user.email
   if (user.firstName || user.lastName)

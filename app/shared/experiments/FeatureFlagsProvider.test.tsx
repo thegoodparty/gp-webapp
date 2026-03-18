@@ -7,7 +7,9 @@ import { buildUserTraits } from 'helpers/buildUserTraits'
 
 const mockExperimentClient = {
   fetch: vi.fn().mockResolvedValue(undefined),
-  variant: vi.fn((_key: string, fallback?: unknown) => fallback ?? { value: undefined }),
+  variant: vi.fn(
+    (_key: string, fallback?: unknown) => fallback ?? { value: undefined },
+  ),
   all: vi.fn(() => ({})),
   exposure: vi.fn(),
   clear: vi.fn(),
@@ -80,13 +82,17 @@ beforeEach(() => {
   mockUser = null
   mockApiKey.value = 'test-amplitude-key'
   mockExperimentClient.fetch.mockReset().mockResolvedValue(undefined)
-  mockExperimentClient.variant.mockReset().mockImplementation(
-    (_key: string, fallback?: unknown) => fallback ?? { value: undefined },
-  )
+  mockExperimentClient.variant
+    .mockReset()
+    .mockImplementation(
+      (_key: string, fallback?: unknown) => fallback ?? { value: undefined },
+    )
   mockExperimentClient.all.mockReset().mockReturnValue({})
   mockExperimentClient.exposure.mockReset()
   mockExperimentClient.clear.mockReset()
-  vi.mocked(Experiment.initialize).mockReset().mockReturnValue(mockExperimentClient as never)
+  vi.mocked(Experiment.initialize)
+    .mockReset()
+    .mockReturnValue(mockExperimentClient as never)
   vi.mocked(reportErrorToSentry).mockReset()
   vi.mocked(buildUserTraits).mockReset().mockReturnValue(fullUserTraits)
 })
@@ -129,7 +135,9 @@ describe('FeatureFlagsProvider', () => {
     })
 
     it('becomes ready even when fetch fails', async () => {
-      mockExperimentClient.fetch.mockRejectedValueOnce(new Error('network error'))
+      mockExperimentClient.fetch.mockRejectedValueOnce(
+        new Error('network error'),
+      )
 
       const { result } = renderHook(() => useFeatureFlags(), { wrapper })
 
@@ -297,7 +305,10 @@ describe('FeatureFlagsProvider', () => {
       })
 
       const v = result.current.variant('my-flag')
-      expect(mockExperimentClient.variant).toHaveBeenCalledWith('my-flag', undefined)
+      expect(mockExperimentClient.variant).toHaveBeenCalledWith(
+        'my-flag',
+        undefined,
+      )
       expect(v).toEqual({ value: 'treatment' })
     })
 
@@ -391,7 +402,11 @@ describe('useFlagOn', () => {
   })
 
   it('returns on=false when provider is not ready', () => {
-    mockExperimentClient.fetch.mockReturnValue(new Promise(() => { /* never resolves */ }))
+    mockExperimentClient.fetch.mockReturnValue(
+      new Promise(() => {
+        /* never resolves */
+      }),
+    )
 
     const { result } = renderHook(() => useFlagOn('my-feature'), { wrapper })
 

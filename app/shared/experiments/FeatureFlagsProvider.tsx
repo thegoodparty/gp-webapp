@@ -106,9 +106,7 @@ export const FeatureFlagsProvider = ({
               }
             } catch (error) {
               reportErrorToSentry(
-                error instanceof Error
-                  ? error
-                  : new Error(String(error)),
+                error instanceof Error ? error : new Error(String(error)),
                 { context: 'FeatureFlagsProvider.exposureTrack' },
               )
             }
