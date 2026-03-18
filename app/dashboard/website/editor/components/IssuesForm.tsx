@@ -5,11 +5,7 @@ import Label from './Label'
 import { LuPlus, LuPencil } from 'react-icons/lu'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import { FilledErrorAlert } from '@shared/alerts/FilledErrorAlert'
-
-interface WebsiteIssue {
-  title: string
-  description: string
-}
+import { WebsiteIssue } from 'helpers/types'
 
 interface IssueFormErrors {
   title?: string
