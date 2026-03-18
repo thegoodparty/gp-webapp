@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test'
+import { blockSlowScripts } from '../../../src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Custom office flow', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should allow user to submit a custom office via "I don\'t see my office"', async ({
     page,
   }) => {

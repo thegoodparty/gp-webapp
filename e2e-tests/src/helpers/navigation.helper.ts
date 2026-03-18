@@ -1,6 +1,13 @@
 import type { Page } from '@playwright/test'
 import { WaitHelper } from './wait.helper'
 
+// LinkedIn's analytics script (snap.licdn.com) intermittently stalls in CI,
+// which prevents the browser's `load` event from firing and causes Playwright's
+// `page.goto()` to time out at 45s. Blocking it has no effect on test coverage.
+export const blockSlowScripts = async (page: Page) => {
+  await page.route('**/snap.licdn.com/**', (route) => route.abort())
+}
+
 export class NavigationHelper {
   static async navigateToPage(page: Page, path: string): Promise<void> {
     await page.goto(path)

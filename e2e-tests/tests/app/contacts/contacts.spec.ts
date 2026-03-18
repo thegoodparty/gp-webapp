@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 
@@ -7,6 +10,10 @@ import { visualSnapshot } from 'src/helpers/visual.helper'
  * E2E: Contacts page.
  */
 test.describe('Contacts Page', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('contacts page functionality', async ({ page }) => {
     test.setTimeout(60 * 1000)
     // Test started
