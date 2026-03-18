@@ -1,0 +1,3 @@
+[submodule "ai-rules"]
+	path = ai-rules
+	url = https://github.com/thegoodparty/ai-rules.git
