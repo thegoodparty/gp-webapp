@@ -8,10 +8,6 @@ import VwoScript from '@shared/scripts/VwoScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
-import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
-import { ReactQueryProvider } from '@shared/query-client'
-import { ClerkProvider } from '@clerk/nextjs'
-import ImpersonationBanner from './shared/user/ImpersonationBanner'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
@@ -55,9 +51,8 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ClerkProvider>
-    <html lang="en" className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}>
-      <head>
+  <html lang="en" className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}>
+    <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -94,16 +89,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </Script>
       </head>
       <body>
-        <ImpersonationBanner />
         <Suspense>
           <RouteTracker />
         </Suspense>
         <AnalyticsSessionReplayMiddleware />
-        <ReactQueryProvider>
-          <FeatureFlagsProvider>
-            <PageWrapper>{children}</PageWrapper>
-          </FeatureFlagsProvider>
-        </ReactQueryProvider>
+        <PageWrapper>{children}</PageWrapper>
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"
@@ -121,6 +111,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         src="//js.hs-scripts.com/21589597.js"
       />
     </html>
-  </ClerkProvider>
 )
 export default RootLayout

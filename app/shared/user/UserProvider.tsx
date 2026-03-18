@@ -11,6 +11,8 @@ import { noop } from '@shared/utils/noop'
 
 export type UserContextValue = [User | null, (user?: User) => void, boolean]
 
+const CURRENT_USER_QUERY_KEY = 'currentUser'
+
 export const UserContext = createContext<UserContextValue>([
   null,
   noop,
@@ -34,14 +36,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const queryClient = useQueryClient()
 
   const { data: appUser, isLoading: isQueryLoading } = useQuery({
-    queryKey: ['currentUser'],
+    queryKey: [CURRENT_USER_QUERY_KEY],
     queryFn: fetchCurrentUser,
     enabled: isLoaded && !!isSignedIn,
   })
 
   const updateUser = useCallback(
     (_user?: User) => {
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+      queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY_KEY] })
     },
     [queryClient],
   )
@@ -58,7 +60,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       es = new EventSource(`/api${API_VERSION_PREFIX}/users/me/events`)
 
       es.addEventListener('user.updated', () => {
-        queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+        queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY_KEY] })
       })
 
       es.onerror = () => {
