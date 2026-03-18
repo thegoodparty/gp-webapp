@@ -12,6 +12,8 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ),
 })
 
+export const MIN_BIO_LENGTH = 100
+
 export interface AboutStepErrors {
   bio?: string
   issues?: string
@@ -55,7 +57,9 @@ export default function AboutStep({
       {alertMessage && (
         <FilledErrorAlert className="mb-4">{alertMessage}</FilledErrorAlert>
       )}
-      <Label>Your Bio <sup>*</sup></Label>
+      <Label>
+        Your Bio <sup>*</sup>
+      </Label>
       <RichEditor
         initialText={initialBio}
         onChangeCallback={(content) => {

@@ -19,9 +19,11 @@ import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
 import { Website, WebsiteIssue } from 'helpers/types'
-import { AboutStepErrors } from '../../editor/components/AboutStep'
-
-const MIN_BIO_LENGTH = 100
+import { stripHtml } from 'string-strip-html'
+import {
+  AboutStepErrors,
+  MIN_BIO_LENGTH,
+} from '../../editor/components/AboutStep'
 
 interface WebsiteCreateFlowProps {
   initialIssues?: WebsiteIssue[]
@@ -62,7 +64,11 @@ export default function WebsiteCreateFlow({
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
-  const [bioCharCount, setBioCharCount] = useState(0)
+  const [bioCharCount, setBioCharCount] = useState(() =>
+    website?.content?.about?.bio
+      ? stripHtml(website.content.about.bio).result.trim().length
+      : 0,
+  )
   const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
   const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
 

@@ -23,9 +23,8 @@ import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
 import { cantSaveReasons } from '../../create/components/WebsiteCreateFlow'
 import { WebsiteIssue } from 'helpers/types'
-import { AboutStepErrors } from './AboutStep'
-
-const MIN_BIO_LENGTH = 100
+import { stripHtml } from 'string-strip-html'
+import { AboutStepErrors, MIN_BIO_LENGTH } from './AboutStep'
 
 interface GooglePlace {
   formatted_address?: string
@@ -42,7 +41,11 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   const isLgUp = useMediaQuery('(min-width:1024px)')
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
-  const [bioCharCount, setBioCharCount] = useState(0)
+  const [bioCharCount, setBioCharCount] = useState(() =>
+    website?.content?.about?.bio
+      ? stripHtml(website.content.about.bio).result.trim().length
+      : 0,
+  )
   const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
   const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
 
@@ -54,7 +57,7 @@ export default function WebsiteEditFlow(): React.JSX.Element {
 
   async function handleSaveAndPublish(): Promise<boolean> {
     if (!website) return false
-    if (editSection === SECTIONS.about && !validateAboutStep()) return false
+    if (!validateAboutStep()) return false
     setSaveLoading(true)
     const resp = await updateWebsite({
       ...website.content,

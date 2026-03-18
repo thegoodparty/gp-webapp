@@ -149,7 +149,9 @@ export default function IssuesForm({
 
   return (
     <div className="mt-4">
-      <Label className="mb-2">Key Issues <sup>*</sup></Label>
+      <Label className="mb-2">
+        Key Issues <sup>*</sup>
+      </Label>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {currentIssues?.map((issue, index) => (
           <Button
@@ -215,7 +217,11 @@ export default function IssuesForm({
           InputLabelProps={{ shrink: true }}
           error={!!formErrors.description}
           helperText={
-            <span className={`flex justify-between ${formErrors.description ? '' : 'text-gray-500'}`}>
+            <span
+              className={`flex justify-between ${
+                formErrors.description ? '' : 'text-gray-500'
+              }`}
+            >
               <span>Your Policy Focus must have at least 50 characters</span>
               <span>{descriptionLength}</span>
             </span>
