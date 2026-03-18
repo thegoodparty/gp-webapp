@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { User, UserRole } from 'helpers/types'
 import { Experiment } from '@amplitude/experiment-js-client'

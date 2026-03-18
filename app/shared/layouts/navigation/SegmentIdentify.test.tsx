@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { User, UserRole } from 'helpers/types'
 import { identifyUser } from '@shared/utils/analytics'
@@ -55,7 +56,7 @@ const fullUserTraits = {
 beforeEach(() => {
   mockUser = null
   mockSearchParamsValue = new URLSearchParams()
-  vi.mocked(identifyUser).mockReset().mockResolvedValue(undefined)
+  vi.mocked(identifyUser).mockReset().mockResolvedValue(true)
   vi.mocked(persistUtmsOnce).mockReset()
   vi.mocked(getPersistedUtms).mockReset().mockReturnValue({})
   vi.mocked(extractClids).mockReset().mockReturnValue({})
