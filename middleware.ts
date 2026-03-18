@@ -8,12 +8,11 @@ import {
 } from 'app/dashboard/shared/candidateAccess'
 
 
-const isProtectedRoute = createRouteMatcher([
-  '/onboarding(.*)',
-  '/dashboard(.*)',
-  '/profile(.*)',
-  '/admin(.*)',
-  '/sales(.*)',
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/login(.*)',
+  '/logout(.*)',
+  '/sign-up(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -78,8 +77,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     }
   }
 
-  // Protect authenticated routes
-  if (isProtectedRoute(req)) {
+  if (!isPublicRoute(req)) {
     await auth.protect()
   }
 
