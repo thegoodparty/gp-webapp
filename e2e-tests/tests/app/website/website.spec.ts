@@ -1,9 +1,16 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
 import { WaitHelper } from 'src/helpers/wait.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Website Management', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should create and publish website through complete flow', async ({
     page,
   }) => {
