@@ -93,6 +93,7 @@ export default function WebsiteCreateFlow({
   }
 
   async function handleComplete(): Promise<void> {
+    if (!validateAboutStep()) return
     const saved = await handleSave(true)
 
     if (saved) {
@@ -369,7 +370,14 @@ export default function WebsiteCreateFlow({
   function validateAboutStep(): boolean {
     const errors: AboutStepErrors = {}
 
-    if (bioCharCount < MIN_BIO_LENGTH) {
+    const effectiveBioCharCount =
+      bioCharCount > 0
+        ? bioCharCount
+        : website?.content?.about?.bio
+        ? stripHtml(website.content.about.bio).result.trim().length
+        : 0
+
+    if (effectiveBioCharCount < MIN_BIO_LENGTH) {
       errors.bio = 'Please complete Your Bio'
     }
     if ((website?.content?.about?.issues?.length ?? 0) === 0) {

@@ -56,6 +56,12 @@ test.describe('Website Management', () => {
       page.getByRole('heading', { name: 'What is your campaign about?' }),
     ).toBeVisible()
 
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
+    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'What is your campaign about?' }),
+    ).toBeVisible()
+
     await page.locator('.ql-editor').click()
     await page
       .locator('.ql-editor')

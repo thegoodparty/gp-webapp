@@ -25,7 +25,7 @@ const RichEditor = ({
       quill.clipboard.dangerouslyPasteHTML(initialText)
       onTextLengthChange?.(quill.getText().trim().length)
     }
-  }, [quill, initialText])
+  }, [quill, initialText, onTextLengthChange])
 
   useEffect(() => {
     if (quill) {

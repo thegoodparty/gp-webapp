@@ -72,7 +72,7 @@ export default function AboutStep({
           errors?.bio ? 'text-error-main' : 'text-gray-500'
         }`}
       >
-        <span>Your Bio must have at least 100 characters</span>
+        <span>{`Your Bio must have at least ${MIN_BIO_LENGTH} characters`}</span>
         <span>{bioCharCount}</span>
       </div>
 

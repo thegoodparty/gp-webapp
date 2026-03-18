@@ -222,7 +222,10 @@ export default function IssuesForm({
                 formErrors.description ? '' : 'text-gray-500'
               }`}
             >
-              <span>Your Policy Focus must have at least 50 characters</span>
+              <span>
+                Your Policy Focus must have at least {MIN_POLICY_FOCUS_LENGTH}{' '}
+                characters
+              </span>
               <span>{descriptionLength}</span>
             </span>
           }

@@ -57,7 +57,11 @@ export default function WebsiteEditFlow(): React.JSX.Element {
 
   async function handleSaveAndPublish(): Promise<boolean> {
     if (!website) return false
-    if (!validateAboutStep()) return false
+    if (!validateAboutStep()) {
+      setEditSection(SECTIONS.about)
+      errorSnackbar('Please complete the About section before publishing.')
+      return false
+    }
     setSaveLoading(true)
     const resp = await updateWebsite({
       ...website.content,
@@ -198,7 +202,14 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   function validateAboutStep(): boolean {
     const errors: AboutStepErrors = {}
 
-    if (bioCharCount < MIN_BIO_LENGTH) {
+    const effectiveBioCharCount =
+      bioCharCount > 0
+        ? bioCharCount
+        : website?.content?.about?.bio
+        ? stripHtml(website.content.about.bio).result.trim().length
+        : 0
+
+    if (effectiveBioCharCount < MIN_BIO_LENGTH) {
       errors.bio = 'Please complete Your Bio'
     }
     if ((website?.content?.about?.issues?.length ?? 0) === 0) {
