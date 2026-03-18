@@ -203,7 +203,9 @@ test.describe('Contacts Page', () => {
     await expect(createSegmentButton).toBeEnabled({ timeout: 5000 })
     await createSegmentButton.click({ force: true })
     // Clicked Create Segment
-    await expect(sheet).toBeHidden({ timeout: 10000 })
+    await expect(sheet).toHaveAttribute('data-state', 'closed', {
+      timeout: 10000,
+    })
     // Filters sheet closed, page ready
     const segmentFirstRow = table.locator('tbody tr').first()
     await expect(
@@ -259,7 +261,9 @@ test.describe('Contacts Page', () => {
     await editSheet
       .getByRole('button', { name: /update segment/i })
       .click({ force: true })
-    await expect(editSheet).toBeHidden({ timeout: 10000 })
+    await expect(editSheet).toHaveAttribute('data-state', 'closed', {
+      timeout: 10000,
+    })
     // check table
     const afterEditFirstRow = table.locator('tbody tr').first()
     await expect(

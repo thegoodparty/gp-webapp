@@ -14,6 +14,8 @@ import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { noop } from '@shared/utils/noop'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
 type GenerateLoadingScreenProps = {
   aiTemplateKey?: string
@@ -25,7 +27,8 @@ export const GenerateLoadingScreen = ({
   aiTemplateKey = '',
   onNext = noop,
 }: GenerateLoadingScreenProps): React.JSX.Element => {
-  const [campaign, setCampaign] = useCampaign()
+  const [campaign] = useCampaign()
+  const queryClient = useQueryClient()
   const [aiContentSections] = buildAiContentSections(
     campaign,
     AI_CONTENT_SUB_SECTION_KEY,
@@ -58,7 +61,7 @@ export const GenerateLoadingScreen = ({
       AI_CONTENT_SUB_SECTION_KEY,
     )
 
-    setCampaign(campaign ? campaign : null)
+    queryClient.setQueryData(CAMPAIGN_QUERY_KEY, campaign ? campaign : null)
     if (jobsProcessing) {
       return debounce(() => generateContentPolling(aiScriptKey), 1000 * 3)
     } else {

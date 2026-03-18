@@ -51,6 +51,10 @@ export const getP2pPhoneListStatus = async (
         phoneListToken,
       },
     )
+    // Means the request was accepted but the phone list is still being processed and is not ready yet.
+    if (resp.status === 202) {
+      return false
+    }
     if (!resp.ok) {
       console.error('Error fetching phone list status:', resp.statusText)
       return false

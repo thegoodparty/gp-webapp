@@ -11,6 +11,7 @@ import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { clientRequest } from 'gpApi/typed-request'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 import { useUser } from '@shared/hooks/useUser'
@@ -36,6 +37,7 @@ interface OfficeStepProps {
   step?: number
   updateCallback?: () => void | Promise<void>
   adminMode?: boolean
+  organizationSlug?: string
 }
 
 interface CampaignResponse extends Campaign {
@@ -83,11 +85,16 @@ export default function OfficeStep({
   step,
   updateCallback,
   adminMode,
+  organizationSlug,
 }: OfficeStepProps): React.JSX.Element {
   const router = useRouter()
+  const existingRaceId = campaign?.details?.raceId
+  const existingElectionId = campaign?.details?.electionId
+  const hasOrgPositionMetadata = Boolean(campaign?.organization?.positionId)
   const [state, setState] = useState<OfficeStepState>({
     ballotOffice: false,
-    originalPosition: campaign?.details?.positionId,
+    originalPosition:
+      existingRaceId ?? (hasOrgPositionMetadata ? 'org-position-set' : false),
   })
   const [user] = useUser()
 
@@ -109,22 +116,15 @@ export default function OfficeStep({
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
-    const orgPosition = campaign?.details?.positionId
-    const orgElection = campaign?.details?.electionId
-    const orgRace = campaign?.details?.raceId
     if (!state.ballotOffice) {
       return false
     }
-    const { position, election, id } = state.ballotOffice
-    if (!position || !election) {
+    const { election, id } = state.ballotOffice
+    if (!election) {
       return false
     }
 
-    return !(
-      position?.id === orgPosition &&
-      election?.id === orgElection &&
-      id === orgRace
-    )
+    return !(election?.id === existingElectionId && id === existingRaceId)
   }
 
   const calcTerm = (position: RacePosition | undefined): string | undefined => {
@@ -149,6 +149,7 @@ export default function OfficeStep({
     const { position, election, id, filingPeriods } = state.ballotOffice
 
     const attr = [
+      // Legacy compatibility write only. Do not use details.positionId for reads.
       { key: 'details.positionId', value: position?.id },
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
@@ -217,6 +218,13 @@ export default function OfficeStep({
       officeElectionDate: election.electionDay,
     }
 
+    if (organizationSlug && position?.id) {
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: organizationSlug,
+        ballotReadyPositionId: position.id,
+      })
+    }
+
     if (adminMode && campaign) {
       await runPostOfficeStepUpdates(attr, campaign.slug)
     } else if (campaign) {
@@ -226,7 +234,7 @@ export default function OfficeStep({
         officeManuallyInput: false,
       })
       await runPostOfficeStepUpdates(attr)
-    } else {
+    } else if (!organizationSlug) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
@@ -274,13 +282,13 @@ export default function OfficeStep({
 
   const selectedOffice:
     | {
-        position: { id: string | number | undefined }
+        id: string | number | undefined
         election: { id: string | number | null | undefined }
       }
-    | false = campaign?.details?.positionId
+    | false = existingRaceId
     ? {
-        position: { id: campaign.details.positionId },
-        election: { id: campaign.details.electionId },
+        id: existingRaceId,
+        election: { id: existingElectionId },
       }
     : false
 

@@ -1,7 +1,6 @@
 'use client'
 
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Paper from '@shared/utils/Paper'
 import Crumbs from '../../../../shared/Crumbs'
 import Title from './Title'
@@ -17,7 +16,6 @@ export default function PollIssueDetailPage({
 }: {
   pathname: string
 }) {
-  const [campaign] = useCampaign()
   const { title } = useIssue()
   const [poll] = usePoll()
 
@@ -37,7 +35,7 @@ export default function PollIssueDetailPage({
   ]
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+    <DashboardLayout pathname={pathname} showAlert={false}>
       <Paper className="min-h-full">
         <Crumbs breadcrumbsLinks={breadcrumbsLinks} />
         <Title />
