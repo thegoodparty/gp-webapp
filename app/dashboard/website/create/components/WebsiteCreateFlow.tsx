@@ -93,7 +93,11 @@ export default function WebsiteCreateFlow({
   }
 
   async function handleComplete(): Promise<void> {
-    if (!validateAboutStep()) return
+    if (!validateAboutStep()) {
+      setStep(5)
+      errorSnackbar('Please complete the About section before publishing.')
+      return
+    }
     const saved = await handleSave(true)
 
     if (saved) {
