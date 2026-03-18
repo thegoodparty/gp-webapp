@@ -36,7 +36,7 @@ export default function ProfilePage({
             }}
           />
         )}
-       {!!campaign &&  <NotificationSection /> }
+        {!!campaign && <NotificationSection />}
       </div>
     </div>
   )
