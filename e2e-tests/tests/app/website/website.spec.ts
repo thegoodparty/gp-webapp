@@ -57,7 +57,9 @@ test.describe('Website Management', () => {
     ).toBeVisible()
 
     await page.getByRole('button', { name: 'Next', exact: true }).click()
-    await expect(page.getByRole('alert')).toBeVisible()
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Please complete Your Bio' }),
+    ).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'What is your campaign about?' }),
     ).toBeVisible()
