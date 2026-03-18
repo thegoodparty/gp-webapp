@@ -13,4 +13,5 @@ package.json
 .vscode/
 public/
 CLAUDE.md
+ai-rules/
 test-results/

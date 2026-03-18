@@ -4,7 +4,8 @@
     "e2e-tests/**/*.md",
     "styleguide/*.md",
     "public/",
-    "ai-rules/"
+    "ai-rules/",
+    "CLAUDE.md"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
