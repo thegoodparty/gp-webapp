@@ -162,6 +162,8 @@ export default function CustomOfficeForm({
     updated.details = {
       ...campaign?.details,
       ...state,
+      raceId: null,
+      // Legacy compatibility write only. Do not use details.positionId for reads.
       positionId: null,
       electionId: null,
       ballotOffice: null,
