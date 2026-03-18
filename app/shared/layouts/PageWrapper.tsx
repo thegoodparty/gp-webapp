@@ -20,6 +20,7 @@ import AmplitudeInit from '@shared/AmplitudeInit'
 import { OrganizationProvider } from '@shared/organization-picker'
 import { serverRequest } from 'gpApi/server-request'
 import { ClerkProvider } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
 import { ReactQueryProvider } from '@shared/query-client'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import ImpersonationBanner from '@shared/user/ImpersonationBanner'
@@ -31,8 +32,8 @@ interface PageWrapperProps {
 const PageWrapper = async ({
   children,
 }: PageWrapperProps): Promise<React.JSX.Element> => {
-  const token = await getServerToken()
-  const isAuthed = token && !isTokenExpired(token)
+  const { userId } = await auth()
+  const isAuthed = !!userId
 
   const [pathname, campaign, organizations] = await Promise.all([
     getReqPathname(),
