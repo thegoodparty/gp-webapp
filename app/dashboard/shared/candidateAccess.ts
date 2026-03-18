@@ -24,7 +24,7 @@ export function resolvePostAuthRedirectPath(
   if (campaignStatus?.status === 'onboarding' && campaignStatus?.slug) {
     return `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
   }
-  return '/profile'
+  return '/dashboard/profile'
 }
 
 export async function fetchCampaignStatus(): Promise<CampaignStatus> {
