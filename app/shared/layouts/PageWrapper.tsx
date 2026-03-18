@@ -31,14 +31,19 @@ interface PageWrapperProps {
 const PageWrapper = async ({
   children,
 }: PageWrapperProps): Promise<React.JSX.Element> => {
+  const token = await getServerToken()
+  const isAuthed = token && !isTokenExpired(token)
+
   const [pathname, campaign, organizations] = await Promise.all([
     getReqPathname(),
-    fetchUserCampaign(),
-    serverRequest(
-      'GET /v1/organizations',
-      {},
-      { ignoreResponseError: true },
-    ).then((res) => (res.ok ? res.data.organizations : [])),
+    isAuthed ? fetchUserCampaign() : Promise.resolve(null),
+    isAuthed
+      ? serverRequest(
+          'GET /v1/organizations',
+          {},
+          { ignoreResponseError: true },
+        ).then((res) => (res.ok ? res.data.organizations : []))
+      : Promise.resolve([]),
   ])
 
   return (

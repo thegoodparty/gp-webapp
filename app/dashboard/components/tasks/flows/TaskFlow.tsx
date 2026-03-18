@@ -1,6 +1,6 @@
 'use client'
 import Modal from '@shared/utils/Modal'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
@@ -19,7 +19,6 @@ import { useOutreach } from 'app/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   handleCreateOutreach,
   handleCreatePhoneList,
@@ -44,6 +43,8 @@ import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffecti
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
 import { noopAsync } from '@shared/utils/noop'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -102,7 +103,6 @@ const TaskFlow = ({
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [, updateVoterContacts] = useVoterContacts()
-  const [, , refreshCampaign] = useCampaign()
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
@@ -219,6 +219,11 @@ const TaskFlow = ({
     backCallback: handleBack,
     resetCallback: handleReset,
   }
+
+  const queryClient = useQueryClient()
+  const refreshCampaign = useCallback(async () => {
+    queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+  }, [queryClient])
 
   const onCreateOutreach = useMemo(
     () =>

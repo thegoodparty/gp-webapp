@@ -31,18 +31,6 @@ export const apiRoutes = {
       path: '/contacts/download',
       method: 'GET',
     },
-    stats: {
-      path: '/contacts/stats',
-      method: 'GET',
-    },
-    tevynApi: {
-      path: '/contacts/tevyn-api',
-      method: 'POST',
-    },
-    sample: {
-      path: '/contacts/sample',
-      method: 'GET',
-    },
   },
   polls: {
     list: {
@@ -82,10 +70,6 @@ export const apiRoutes = {
     current: {
       path: '/elected-office/current',
       method: 'GET',
-    },
-    create: {
-      path: '/elected-office',
-      method: 'POST',
     },
   },
   homepage: {
@@ -170,16 +154,6 @@ export const apiRoutes = {
     district: {
       path: '/campaigns/mine/district',
       method: 'PUT',
-    },
-    map: {
-      list: {
-        path: '/campaigns/map',
-        method: 'GET',
-      },
-      count: {
-        path: '/campaigns/map/count',
-        method: 'GET',
-      },
     },
     ai: {
       create: {
@@ -301,55 +275,9 @@ export const apiRoutes = {
       path: '/content/type/:type',
       method: 'GET',
     },
-    getById: {
-      path: '/content/:id',
-      method: 'GET',
-    },
-    byId: {
-      path: '/content',
-      method: 'GET',
-    },
-    glossaryBySlug: {
-      path: '/content/type/glossaryItem/by-slug',
-      method: 'GET',
-    },
-    glossaryByLetter: {
-      path: '/content/type/glossaryItem/by-letter',
-      method: 'GET',
-    },
-    articleTags: {
-      path: '/content/article-tags/:tag',
-      method: 'GET',
-    },
     byType: {
       path: '/content/type',
       method: 'GET',
-    },
-    blogArticle: {
-      getBySlug: {
-        path: '/content/blog-article/:slug',
-        method: 'GET',
-      },
-      getList: {
-        path: '/content/blog-articles',
-        method: 'GET',
-      },
-      bySection: {
-        path: '/content/blog-articles/by-section/:sectionSlug',
-        method: 'GET',
-      },
-      getByTag: {
-        path: '/content/blog-articles-by-tag/:tag',
-        method: 'GET',
-      },
-      getSections: {
-        path: '/content/blog-articles/sections',
-        method: 'GET',
-      },
-      getSection: {
-        path: '/content/blog-articles/sections/:sectionSlug',
-        method: 'GET',
-      },
     },
   },
   topIssue: {
@@ -389,10 +317,6 @@ export const apiRoutes = {
     },
   },
   voters: {
-    locations: {
-      path: '/voters/locations',
-      method: 'GET',
-    },
     voterFile: {
       get: {
         path: '/voters/voter-file',
@@ -523,25 +447,9 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
-  jobs: {
-    list: {
-      path: '/jobs',
-      method: 'GET',
-    },
-    find: {
-      path: '/jobs/:id',
-      method: 'GET',
-    },
-  },
   logError: {
     path: '/error-logger',
     method: 'POST',
-  },
-  publicCampaign: {
-    find: {
-      path: '/public-campaigns',
-      method: 'GET',
-    },
   },
   ecanvasser: {
     list: {
@@ -620,25 +528,9 @@ export const apiRoutes = {
     },
   },
   textMessaging: {
-    createProject: {
-      path: '/text-campaigns',
-      method: 'POST',
-    },
     list: {
       path: '/text-campaigns',
       method: 'GET',
-    },
-    submitCompliance: {
-      path: '/text-campaigns/compliance',
-      method: 'POST',
-    },
-    submitCompliancePin: {
-      path: '/text-campaigns/compliance/pin',
-      method: 'POST',
-    },
-    approveCompliance: {
-      path: '/text-campaigns/compliance/approve',
-      method: 'POST',
     },
   },
   issues: {
@@ -744,31 +636,6 @@ export const apiRoutes = {
     },
     status: {
       path: '/domains/status',
-      method: 'GET',
-    },
-  },
-} as const
-
-export const electionApiRoutes = {
-  places: {
-    find: {
-      path: '/places',
-      method: 'GET',
-    },
-    featuredCities: {
-      path: '/places/most-elections',
-      method: 'GET',
-    },
-  },
-  races: {
-    find: {
-      path: '/races',
-      method: 'GET',
-    },
-  },
-  candidacies: {
-    find: {
-      path: '/candidacies',
       method: 'GET',
     },
   },

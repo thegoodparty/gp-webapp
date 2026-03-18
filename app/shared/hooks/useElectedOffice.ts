@@ -1,9 +1,11 @@
 'use client'
-import { useContext } from 'react'
-import { ElectedOfficeContext } from '@shared/hooks/ElectedOfficeProvider'
+import { queryOptions, useQuery } from '@tanstack/react-query'
+import { clientRequest } from 'gpApi/typed-request'
 
-export const useElectedOffice = () => {
-  const [electedOffice, setElectedOffice, refreshElectedOffice] =
-    useContext(ElectedOfficeContext)
-  return { electedOffice, setElectedOffice, refreshElectedOffice }
-}
+export const electedOfficeQueryOptions = queryOptions({
+  queryKey: ['electedOffice'],
+  queryFn: () =>
+    clientRequest('GET /v1/elected-office/current', {}).then((res) => res.data),
+})
+
+export const useElectedOffice = () => useQuery(electedOfficeQueryOptions)

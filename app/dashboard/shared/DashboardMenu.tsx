@@ -242,7 +242,7 @@ export default function DashboardMenu({
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
-  const { electedOffice } = useElectedOffice()
+  const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
@@ -365,7 +365,7 @@ const NewNavMenu = ({
       label: 'Settings',
       icon: Settings,
       id: 'nav-dash-settings',
-      href: '/profile',
+      href: '/dashboard/profile',
     },
     addCampaign: {
       label: 'Add Campaign',

@@ -152,7 +152,7 @@ export const ContactsTableProvider = ({
   const router = useRouter()
 
   const [campaign] = useCampaign()
-  const { electedOffice } = useElectedOffice()
+  const { data: electedOffice } = useElectedOffice()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const params = useParams()
