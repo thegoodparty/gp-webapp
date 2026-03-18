@@ -8,7 +8,6 @@ import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvide
 import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
-import { ElectedOfficeProvider } from '@shared/hooks/ElectedOfficeProvider'
 
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
@@ -57,7 +56,6 @@ const PageWrapper = async ({
             <OrganizationProvider initialOrganizations={organizations}>
               <CampaignProvider campaign={campaign}>
                 <SentryIdentifier />
-                <ElectedOfficeProvider>
                   <CampaignStatusProvider>
                     <P2pUxEnabledProvider>
                       <NavigationProvider>
@@ -77,13 +75,12 @@ const PageWrapper = async ({
                             </Suspense>
                             <Suspense>
                               <SegmentIdentify />
-                            </Suspense>
+                            </Suspense> 
                           </div>
                         </SnackbarProvider>
                       </NavigationProvider>
                     </P2pUxEnabledProvider>
                   </CampaignStatusProvider>
-                </ElectedOfficeProvider>
               </CampaignProvider>
             </OrganizationProvider>
           </UserProvider>
