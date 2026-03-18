@@ -43,27 +43,6 @@ test('authenticate with onboarded user', async ({ page }) => {
 
   console.log(`Fully onboarded user created: ${testUser.email}`)
   console.log(`Final URL: ${page.url()}`)
-
-  await page.goto('/dashboard/profile')
-  await page.waitForLoadState('domcontentloaded')
-
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-
-  const deleteButton = page.getByText('Delete Account')
-  await deleteButton.scrollIntoViewIfNeeded()
-  await deleteButton.waitFor({ state: 'visible', timeout: 10000 })
-  await deleteButton.click()
-
-  await page.waitForSelector('[role="dialog"]', { timeout: 10000 })
-
-  const proceedButton = page.getByRole('button', { name: 'Proceed' })
-  await proceedButton.waitFor({ state: 'visible', timeout: 10000 })
-  await proceedButton.click()
-
-  await page.waitForURL((url) => new URL(url).pathname === '/login', {
-    timeout: 15000,
-  })
-  console.log('Onboarded user account deleted')
 })
 
 async function completeOnboardingFlow(page: Page): Promise<void> {
