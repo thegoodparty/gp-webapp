@@ -57,6 +57,30 @@ test.describe('Website Management', () => {
     ).toBeVisible()
 
     await page.getByRole('button', { name: 'Next', exact: true }).click()
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Please complete Your Bio' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'What is your campaign about?' }),
+    ).toBeVisible()
+
+    await page.locator('.ql-editor').click()
+    await page
+      .locator('.ql-editor')
+      .fill(
+        'As a lifelong resident of our community, I am committed to sustainable growth, public safety, and creating opportunities for all residents in our district.',
+      )
+
+    await page.getByRole('button', { name: 'Add issue' }).click()
+    await page.locator('input[required]').fill('Education')
+    await page
+      .locator('textarea[required]')
+      .fill(
+        'Our schools deserve leaders who prioritize student outcomes and teacher support.',
+      )
+    await page.getByRole('button', { name: 'Save' }).click()
+
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'How can voters contact you?' }),
