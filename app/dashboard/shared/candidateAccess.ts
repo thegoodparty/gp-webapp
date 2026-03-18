@@ -4,12 +4,27 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { getServerUser } from 'helpers/userServerHelper'
-import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 
-interface CampaignStatus {
+export interface CampaignStatus {
   status: string | boolean
   slug?: string
   step?: number
+}
+
+export function resolvePostAuthRedirectPath(
+  user: { roles?: string[] } | null,
+  campaignStatus: CampaignStatus | null,
+): string {
+  if (user?.roles?.includes('sales')) {
+    return '/sales/add-campaign'
+  }
+  if (campaignStatus?.status === 'candidate') {
+    return '/dashboard'
+  }
+  if (campaignStatus?.status === 'onboarding' && campaignStatus?.slug) {
+    return `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
+  }
+  return '/profile'
 }
 
 export async function fetchCampaignStatus(): Promise<CampaignStatus> {
@@ -32,19 +47,7 @@ export async function getPostAuthRedirectPath(): Promise<string> {
     fetchCampaignStatus(),
   ])
 
-  if (userHasRole(user, USER_ROLES.SALES)) {
-    return '/sales/add-campaign'
-  }
-
-  const { status, slug, step } = campaignStatus
-  if (status === 'candidate') {
-    return '/dashboard'
-  }
-  if (status === 'onboarding' && slug) {
-    return `/onboarding/${slug}/${step ?? 1}`
-  }
-
-  return '/profile'
+  return resolvePostAuthRedirectPath(user, campaignStatus)
 }
 
 export default async function candidateAccess(): Promise<void> {

@@ -2,6 +2,10 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse, NextRequest } from 'next/server'
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite'
 import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
+import {
+  resolvePostAuthRedirectPath,
+  CampaignStatus,
+} from 'app/dashboard/shared/candidateAccess'
 
 const dbRedirects: Partial<Record<string, string>> = {
   '/social': 'https://shor.by/goodpartyorg',
@@ -129,8 +133,6 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       ? { Authorization: `Bearer ${token}` }
       : {}
 
-    // NOTE: This redirect logic mirrors getPostAuthRedirectPath() in candidateAccess.ts.
-    // Keep both in sync when changing redirect rules.
     try {
       const [userRes, statusRes] = await Promise.all([
         fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
@@ -143,22 +145,16 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
         }),
       ])
 
-      const user = userRes.ok ? await userRes.json() : null
-      const campaignStatus = statusRes.ok ? await statusRes.json() : null
-
-      let redirectPath = '/profile'
-      if (user?.roles?.includes('sales')) {
-        redirectPath = '/sales/add-campaign'
-      } else if (campaignStatus?.status === 'candidate') {
-        redirectPath = '/dashboard'
-      } else if (
-        campaignStatus?.status === 'onboarding' &&
-        campaignStatus?.slug
-      ) {
-        redirectPath = `/onboarding/${campaignStatus.slug}/${
-          campaignStatus.step ?? 1
-        }`
-      }
+      const user = userRes.ok
+        ? ((await userRes.json()) as { roles?: string[] })
+        : null
+      const campaignStatus = statusRes.ok
+        ? ((await statusRes.json()) as CampaignStatus)
+        : null
+      const redirectPath = resolvePostAuthRedirectPath(
+        user,
+        campaignStatus,
+      )
 
       return NextResponse.redirect(new URL(redirectPath, req.url))
     } catch (e) {

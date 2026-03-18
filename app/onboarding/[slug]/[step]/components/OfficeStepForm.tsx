@@ -2,7 +2,7 @@
 import { useUser } from '@shared/hooks/useUser'
 import RenderInputField, { FieldConfig } from '@shared/inputs/RenderInputField'
 import H1 from '@shared/typography/H1'
-import { validateZip } from 'helpers/zipHelper'
+import isPostalCode from 'validator/lib/isPostalCode'
 import { Fragment, useEffect, useState } from 'react'
 import Body2 from '@shared/typography/Body2'
 
@@ -67,7 +67,7 @@ export default function OfficeStepForm({
   })
   const [user] = useUser()
 
-  const canSubmit = state.zip && validateZip(state.zip)
+  const canSubmit = state.zip && isPostalCode(state.zip, 'US')
 
   useEffect(() => {
     canSubmit && onChange({ ...state })
