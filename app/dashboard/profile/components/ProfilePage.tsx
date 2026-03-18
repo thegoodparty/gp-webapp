@@ -3,7 +3,6 @@ import ContactInfoSection from './ContactInfoSection'
 import { AccountSettingsSection } from 'app/dashboard/profile/components/AccountSettingsSection'
 import TextingCompliance from 'app/dashboard/profile/texting-compliance/components/TextingCompliance'
 import { User, Website, TcrCompliance, Campaign } from 'helpers/types'
-import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 
 interface ProfilePageProps {
   user: User
