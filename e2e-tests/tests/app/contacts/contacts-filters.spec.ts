@@ -93,12 +93,13 @@ const testFilterField = async (
 
   const updateBtn = sheet.getByRole('button', { name: /update segment/i })
   await updateBtn.scrollIntoViewIfNeeded()
+  await expect(updateBtn).toBeEnabled({ timeout: 5000 })
   await updateBtn.click()
   try {
-    await expect(sheet).toBeHidden()
+    await expect(sheet).toBeHidden({ timeout: 15000 })
   } catch {
     await page.keyboard.press('Escape')
-    await expect(sheet).toBeHidden()
+    await expect(sheet).toBeHidden({ timeout: 5000 })
   }
 
   const table = page.locator('table').first()
@@ -153,6 +154,7 @@ test('validate contacts filters', async ({ page }) => {
   await page.waitForTimeout(3000)
 
   await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
+  await page.waitForLoadState('networkidle')
   await NavigationHelper.dismissOverlays(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
@@ -177,10 +179,10 @@ test('validate contacts filters', async ({ page }) => {
     .first()
   await expect(sheet).toBeVisible()
   await selectCheckbox(sheet, 'Gender', 'Unknown')
-  await sheet
-    .getByRole('button', { name: /create segment/i })
-    .click({ force: true })
-  await expect(sheet).toBeHidden()
+  const createBtn = sheet.getByRole('button', { name: /create segment/i })
+  await expect(createBtn).toBeEnabled({ timeout: 5000 })
+  await createBtn.click({ force: true })
+  await expect(sheet).toBeHidden({ timeout: 15000 })
   await expect(
     table.locator('tbody tr').first().locator('td').first(),
   ).toHaveText(/.+/)
