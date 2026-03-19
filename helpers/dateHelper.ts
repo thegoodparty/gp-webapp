@@ -1,3 +1,5 @@
+import { Campaign } from './types'
+
 const ONE_HOUR = 60 * 60 * 1000
 
 export type DateInput = Date | string | number | null | undefined
@@ -118,3 +120,26 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getFullYear() === date2.getFullYear() &&
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate()
+
+export const timeToNextElection = (campaign: Campaign | null): string | false => {
+  if (!campaign) {
+    return false
+  }
+  const { electionDate, primaryElectionDate } = campaign.details ?? {}
+  let nextElectionDate = electionDate
+  const now = new Date()
+  if (primaryElectionDate) {
+    const primaryElectionDateObj = new Date(primaryElectionDate)
+    if (primaryElectionDateObj > now) {
+      nextElectionDate = primaryElectionDate
+    }
+  }
+  const weeksUntil = weeksTill(nextElectionDate)
+  if (!weeksUntil || typeof weeksUntil === 'string') {
+    return false
+  } else if (weeksUntil.weeks === 0) {
+    return `${weeksUntil.days} days away`
+  } else {
+    return `${weeksUntil.weeks} weeks away`
+  }
+}

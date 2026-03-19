@@ -4,8 +4,9 @@ import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import ProgressSection from './ProgressSection'
 
-export default function AiCampaignManager({ pathname }: { pathname: string }) {
+export default function CampaignManager({ pathname }: { pathname: string }) {
   const [campaign] = useCampaign()
   if (!campaign) {
     return null
@@ -13,6 +14,7 @@ export default function AiCampaignManager({ pathname }: { pathname: string }) {
   return (
     <DashboardLayout pathname={pathname} campaign={campaign}>
       <HeaderSection />
+      <ProgressSection />
       <LoadingState />
     </DashboardLayout>
   )

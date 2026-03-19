@@ -16,7 +16,7 @@ import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 interface DashboardLayoutProps {
   children: ReactNode
   pathname?: string
-  campaign: Campaign
+  campaign?: Campaign | null
   showAlert?: boolean
   wrapperClassName?: string
   hideMenu?: boolean
