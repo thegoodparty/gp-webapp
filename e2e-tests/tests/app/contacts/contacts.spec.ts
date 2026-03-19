@@ -265,17 +265,10 @@ test.describe('Contacts Page', () => {
       .getByRole('checkbox')
     await age18_25CheckboxEdit.click({ timeout: 10000 })
     // update segment
-    const updateBtn = editSheet.getByRole('button', {
-      name: /update segment/i,
-    })
-    await expect(updateBtn).toBeEnabled({ timeout: 5000 })
-    await updateBtn.click({ force: true })
-    try {
-      await expect(editSheet).toBeHidden({ timeout: 15000 })
-    } catch {
-      await page.keyboard.press('Escape')
-      await expect(editSheet).toBeHidden({ timeout: 5000 })
-    }
+    await editSheet
+      .getByRole('button', { name: /update segment/i })
+      .click({ force: true })
+    await expect(editSheet).toBeHidden({ timeout: 10000 })
     // check table
     const afterEditFirstRow = table.locator('tbody tr').first()
     await expect(
