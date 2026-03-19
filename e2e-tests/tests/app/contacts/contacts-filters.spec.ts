@@ -154,6 +154,7 @@ test('validate contacts filters', async ({ page }) => {
   await page.waitForTimeout(3000)
 
   await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
+  await page.waitForLoadState('networkidle')
   await NavigationHelper.dismissOverlays(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
