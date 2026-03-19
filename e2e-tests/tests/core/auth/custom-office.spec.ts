@@ -88,9 +88,9 @@ test.describe('Custom office flow', () => {
       slug: expect.any(String),
       campaignId: expect.any(Number),
       name: '2030 Campaign',
-      position: null,
-      district: null,
       electedOfficeId: null,
+      district: null,
+      position: null,
     })
 
     const { data: campaign } = await client.get<{
