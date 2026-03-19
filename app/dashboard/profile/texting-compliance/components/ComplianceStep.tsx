@@ -51,11 +51,7 @@ export default function ComplianceStep({
       <div className="flex-1">
         <h4
           className={`text-base font-normal ${
-            isCompleted
-              ? 'text-gray-500'
-              : isActive
-              ? 'text-gray-900'
-              : 'text-gray-900'
+            isCompleted ? 'text-gray-500' : 'text-gray-900'
           }`}
         >
           {title}
