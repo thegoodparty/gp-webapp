@@ -24,7 +24,7 @@ interface BallotRacesCampaign extends Campaign {
 }
 
 interface SelectedOffice {
-  position?: { id?: string | number }
+  id?: string | number
   election?: { id?: string | number | null }
 }
 
@@ -173,11 +173,9 @@ export default function BallotRaces({
   const handleSaveCustomOffice = async (
     updated: Campaign & { currentStep?: number },
   ) => {
-    updated.details.positionId = null
-    updated.details.electionId = null
-
     const baseAttr = [
       { key: 'details.otherOffice', value: '' },
+      { key: 'details.raceId', value: null },
       { key: 'details.positionId', value: null },
       { key: 'details.electionId', value: null },
       { key: 'details.office', value: updated.details.office },

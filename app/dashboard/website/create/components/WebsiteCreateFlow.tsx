@@ -19,6 +19,11 @@ import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { isValidEmail } from 'helpers/validations'
 import { isValidPhone } from '@shared/inputs/PhoneInput'
 import { Website, WebsiteIssue } from 'helpers/types'
+import { stripHtml } from 'string-strip-html'
+import {
+  AboutStepErrors,
+  MIN_BIO_LENGTH,
+} from '../../editor/components/AboutStep'
 
 interface WebsiteCreateFlowProps {
   initialIssues?: WebsiteIssue[]
@@ -59,6 +64,13 @@ export default function WebsiteCreateFlow({
   const [saveLoading, setSaveLoading] = useState(false)
   const [isValid, setIsValid] = useState(true)
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
+  const [bioCharCount, setBioCharCount] = useState(() =>
+    website?.content?.about?.bio
+      ? stripHtml(website.content.about.bio).result.trim().length
+      : 0,
+  )
+  const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
+  const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
 
   useEffect(() => {
     if (
@@ -81,6 +93,11 @@ export default function WebsiteCreateFlow({
   }
 
   async function handleComplete(): Promise<void> {
+    if (!validateAboutStep()) {
+      setStep(5)
+      errorSnackbar('Please complete the About section before publishing.')
+      return
+    }
     const saved = await handleSave(true)
 
     if (saved) {
@@ -248,6 +265,17 @@ export default function WebsiteCreateFlow({
     )
   }
 
+  function handleBioCharCountChange(length: number): void {
+    setBioCharCount(length)
+    if (aboutErrorsShown && length >= MIN_BIO_LENGTH) {
+      setAboutErrors((prev) => {
+        const next = { ...prev }
+        delete next.bio
+        return next
+      })
+    }
+  }
+
   function handleIssuesChange(issues: WebsiteIssue[]): void {
     setWebsite((current) =>
       current
@@ -260,6 +288,13 @@ export default function WebsiteCreateFlow({
           }
         : null,
     )
+    if (aboutErrorsShown && issues.length > 0) {
+      setAboutErrors((prev) => {
+        const next = { ...prev }
+        delete next.issues
+        return next
+      })
+    }
   }
 
   async function handleAddressSelect(place: GooglePlace): Promise<void> {
@@ -329,11 +364,33 @@ export default function WebsiteCreateFlow({
 
   const initialBio = useMemo(
     () => website?.content?.about?.bio || '',
-    [website?.id],
+    [website?.id, step],
   )
 
   function validateCallback(value: boolean): void {
     setIsValid(value)
+  }
+
+  function validateAboutStep(): boolean {
+    const errors: AboutStepErrors = {}
+
+    const effectiveBioCharCount =
+      bioCharCount > 0
+        ? bioCharCount
+        : website?.content?.about?.bio
+        ? stripHtml(website.content.about.bio).result.trim().length
+        : 0
+
+    if (effectiveBioCharCount < MIN_BIO_LENGTH) {
+      errors.bio = 'Please complete Your Bio'
+    }
+    if ((website?.content?.about?.issues?.length ?? 0) === 0) {
+      errors.issues = 'Please add a Key Issue'
+    }
+
+    setAboutErrors(errors)
+    setAboutErrorsShown(true)
+    return Object.keys(errors).length === 0
   }
 
   const canPublish =
@@ -417,6 +474,9 @@ export default function WebsiteCreateFlow({
                 onBioChange={handleBioChange}
                 onIssuesChange={handleIssuesChange}
                 initialIssues={initialIssues}
+                errors={aboutErrorsShown ? aboutErrors : undefined}
+                bioCharCount={bioCharCount}
+                onBioCharCountChange={handleBioCharCountChange}
               />
             )}
 
@@ -456,6 +516,7 @@ export default function WebsiteCreateFlow({
             nextDisabled={!isValid}
             canPublish={!!canPublish}
             cantSaveReason={cantSaveReason}
+            onBeforeNext={step === 5 ? validateAboutStep : undefined}
           />
         )}
       </div>
