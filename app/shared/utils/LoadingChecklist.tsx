@@ -4,23 +4,26 @@ import { FaRegHourglass } from 'react-icons/fa'
 import { FaCheck } from 'react-icons/fa6'
 import { LuLoaderCircle } from 'react-icons/lu'
 
-type Status = 'pending' | 'loading' | 'complete'
+export type Status = 'pending' | 'loading' | 'complete'
 const STATUS_PENDING: Status = 'pending'
 const STATUS_LOADING: Status = 'loading'
 const STATUS_COMPLETE: Status = 'complete'
 const LOADING_DELAY = 1250
 
-interface LoadingItem {
-  label?: string
-  status: string
+export interface LoadingItem {
+  label: string
+  status: Status
 }
 
-interface LoadingListProps {
+interface LoadingChecklistProps {
   items: LoadingItem[]
   onComplete: () => void
 }
 
-export default function LoadingList({ items, onComplete }: LoadingListProps) {
+export default function LoadingChecklist({
+  items,
+  onComplete,
+}: LoadingChecklistProps) {
   const [loadingItems, setLoadingItems] = useState(items)
 
   useEffect(() => {
@@ -38,13 +41,13 @@ export default function LoadingList({ items, onComplete }: LoadingListProps) {
         const newItems = [...prevItems]
 
         newItems[currentLoadingIndex] = {
-          ...newItems[currentLoadingIndex],
+          ...newItems[currentLoadingIndex]!,
           status: STATUS_COMPLETE,
         }
 
         if (currentLoadingIndex + 1 < newItems.length) {
           newItems[currentLoadingIndex + 1] = {
-            ...newItems[currentLoadingIndex + 1],
+            ...newItems[currentLoadingIndex + 1]!,
             status: STATUS_LOADING,
           }
         }

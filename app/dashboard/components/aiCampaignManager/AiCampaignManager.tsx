@@ -1,5 +1,8 @@
+'use client'
+
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import { Campaign } from 'helpers/types'
+import type { Campaign } from 'helpers/types'
+import LoadingState from './LoadingState'
 
 export default function AiCampaignManager({
   pathname,
@@ -10,7 +13,7 @@ export default function AiCampaignManager({
 }) {
   return (
     <DashboardLayout pathname={pathname} campaign={campaign}>
-      <div>AiCampaignManager</div>
+      <LoadingState campaignId={campaign?.id || 0} />
     </DashboardLayout>
   )
 }
