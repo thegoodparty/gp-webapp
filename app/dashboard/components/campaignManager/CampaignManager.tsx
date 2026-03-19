@@ -1,18 +1,18 @@
 'use client'
 
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import type { Campaign } from 'helpers/types'
 import LoadingState from './LoadingState'
+import HeaderSection from './HeaderSection'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
-export default function CampaignManager({
-  pathname,
-  campaign,
-}: {
-  pathname: string
-  campaign: Campaign | null
-}) {
+export default function AiCampaignManager({ pathname }: { pathname: string }) {
+  const [campaign] = useCampaign()
+  if (!campaign) {
+    return null
+  }
   return (
     <DashboardLayout pathname={pathname} campaign={campaign}>
+      <HeaderSection />
       <LoadingState />
     </DashboardLayout>
   )
