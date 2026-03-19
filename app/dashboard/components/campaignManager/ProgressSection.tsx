@@ -19,7 +19,7 @@ export default function ProgressSection() {
     p2vData,
     reportedVoterGoals,
   )
-  const progress = needed > 0 ? (contacted / needed) * 100 : 0
+  const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
   return (
     <Card className="p-6">
       <div className="flex w-full justify-between items-center mb-2 border-b border-primary/20 pb-6">
@@ -31,16 +31,16 @@ export default function ProgressSection() {
       <Progress value={progress} className="w-full" />
       <div className="flex w-full justify-between items-center text-sm">
         <div>{numberFormatter(contacted)} voters contacted</div>
-        <div onClick={toggleModalOpen}>
+        <div onClick={toggleModalOpen} className="cursor-pointer">
           {numberFormatter(needed)} voter contacts needed to win
           <InfoOutlined className="ml-2 !text-base" />
-          <ContactCountsInfoModal
-            pathToVictory={p2vData}
-            open={modalOpen}
-            setOpen={toggleModalOpen}
-          />
         </div>
       </div>
+      <ContactCountsInfoModal
+        pathToVictory={p2vData}
+        open={modalOpen}
+        setOpen={toggleModalOpen}
+      />
     </Card>
   )
 }

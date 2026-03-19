@@ -137,6 +137,8 @@ export const timeToNextElection = (campaign: Campaign | null): string | false =>
   const weeksUntil = weeksTill(nextElectionDate)
   if (!weeksUntil || typeof weeksUntil === 'string') {
     return false
+  } else if (weeksUntil.weeks < 0 || (weeksUntil.weeks === 0 && weeksUntil.days <= 0)) {
+    return false
   } else if (weeksUntil.weeks === 0) {
     return `${weeksUntil.days} days away`
   } else {
