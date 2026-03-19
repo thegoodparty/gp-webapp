@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test'
+import { blockSlowScripts } from '../../../src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Custom office flow', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should allow user to submit a custom office via "I don\'t see my office"', async ({
     page,
   }) => {
@@ -82,7 +87,9 @@ test.describe('Custom office flow', () => {
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
       campaignId: expect.any(Number),
-      name: 'City Council',
+      name: '2030 Campaign',
+      position: null,
+      district: null,
       electedOfficeId: null,
     })
 

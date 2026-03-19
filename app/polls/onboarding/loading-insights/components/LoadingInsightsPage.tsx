@@ -2,13 +2,10 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import LoadingFooter from '../../components/LoadingFooter'
-import LoadingList from '../../components/LoadingList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-
-interface LoadingItem {
-  label: string
-  status: 'loading' | 'pending' | 'complete'
-}
+import LoadingChecklist, {
+  type LoadingItem,
+} from '@shared/utils/LoadingChecklist'
 
 const loadingItems: LoadingItem[] = [
   {
@@ -67,7 +64,7 @@ export default function LoadingInsightsPage() {
             <p className="text-left md:text-center mt-2 text-lead w-full">
               Gathering key community insights...
             </p>
-            <LoadingList items={loadingItems} onComplete={onComplete} />
+            <LoadingChecklist items={loadingItems} onComplete={onComplete} />
           </div>
           <div className="hidden md:block w-full">
             <LoadingFooter />

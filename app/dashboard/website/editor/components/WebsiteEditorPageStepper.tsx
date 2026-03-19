@@ -14,6 +14,7 @@ interface WebsiteEditorPageStepperProps {
   nextDisabled?: boolean
   canPublish?: boolean
   cantSaveReason?: string
+  onBeforeNext?: () => boolean
 }
 
 const WebsiteEditorPageStepper = ({
@@ -28,11 +29,13 @@ const WebsiteEditorPageStepper = ({
   nextDisabled = false,
   canPublish = false,
   cantSaveReason,
+  onBeforeNext,
 }: WebsiteEditorPageStepperProps): React.JSX.Element => {
   const hasNext = currentStep < totalSteps
   const hasPrev = currentStep > 1
 
   const handleNextStep = () => {
+    if (onBeforeNext && !onBeforeNext()) return
     if (hasNext) onStepChange(currentStep + 1)
   }
 
