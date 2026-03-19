@@ -84,7 +84,8 @@ const CustomVoterAudience = ({
         <H1 className="mb-2">Select Your Filters</H1>
         <Body2>
           Make your selections to get custom election data for:{' '}
-          <span className=" font-bold">{positionName || 'your office'}</span>.<br />
+          <span className=" font-bold">{positionName || 'your office'}</span>.
+          <br />
           You must make a minimum of one selection.
         </Body2>
       </div>
