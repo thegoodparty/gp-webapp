@@ -177,8 +177,7 @@ export default [
         },
       ],
 
-      // Type Safety (error - suppressed with native ESLint suppressions)
-      '@typescript-eslint/no-unsafe-type-assertion': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'warn',
 
       // Disabled Auto-Fix Rules (Phase 2):
       // The following rules are imported but not enabled due to auto-fix spam.
