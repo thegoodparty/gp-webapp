@@ -165,6 +165,12 @@ export default [
           leadingUnderscore: 'allowSingleOrDouble',
         },
         {
+          // Destructured parameters often mirror external API or DB column names
+          selector: 'parameter',
+          modifiers: ['destructured'],
+          format: null,
+        },
+        {
           selector: 'parameter',
           format: ['camelCase'],
           leadingUnderscore: 'allow',

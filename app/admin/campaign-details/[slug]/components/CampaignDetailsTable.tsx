@@ -10,7 +10,7 @@ export default function CampaignDetailsTable({
   if (!campaign) return null
 
   const formatValue = (
-    value: string | number | boolean | object | null | undefined | string[],
+    value: unknown,
   ): React.ReactNode => {
     if (value === null || value === undefined) return '-'
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
@@ -75,7 +75,7 @@ export default function CampaignDetailsTable({
               Campaign Details
             </td>
           </tr>
-          {Object.entries(campaign.details || {}).map(([key, value]) => (
+          {Object.entries(campaign.details || {}).map(([key, value]: [string, unknown]) => (
             <tr key={key}>
               <td className="p-2 border font-medium">{key}</td>
               <td className="p-2 border font-mono text-sm">
@@ -90,7 +90,7 @@ export default function CampaignDetailsTable({
               Campaign Data
             </td>
           </tr>
-          {Object.entries(campaign.data || {}).map(([key, value]) => (
+          {Object.entries(campaign.data || {}).map(([key, value]: [string, unknown]) => (
             <tr key={key}>
               <td className="p-2 border font-medium">{key}</td>
               <td className="p-2 border font-mono text-sm">
