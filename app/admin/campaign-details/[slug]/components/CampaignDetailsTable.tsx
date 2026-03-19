@@ -18,7 +18,7 @@ export default function CampaignDetailsTable({
     if (typeof value === 'object') {
       return (
         <div className="space-y-2 py-2">
-          {Object.entries(value).map(([key, val]) => (
+          {Object.entries(value).map(([key, val]: [string, unknown]) => (
             <div key={key} className="pl-4 border-l-2 border-gray-200">
               <span className="font-medium">{key}:</span>{' '}
               {typeof val === 'object' ? JSON.stringify(val) : String(val)}
@@ -128,7 +128,7 @@ export default function CampaignDetailsTable({
               if (typeof value === 'object') {
                 return (
                   <div className="space-y-2 py-2">
-                    {Object.entries(value).map(([k, v]) => (
+                    {Object.entries(value).map(([k, v]: [string, unknown]) => (
                       <div key={k} className="pl-4 border-l-2 border-gray-200">
                         <span className="font-medium">{k}:</span>{' '}
                         {typeof v === 'object' ? JSON.stringify(v) : String(v)}

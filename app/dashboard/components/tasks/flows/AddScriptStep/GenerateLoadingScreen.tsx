@@ -8,7 +8,10 @@ import {
   buildAiContentSections,
 } from 'helpers/buildAiContentSections'
 import GearsAnimation from '@shared/animations/GearsAnimation'
-import { generateAIContent } from 'helpers/generateAIContent'
+import {
+  generateAIContent,
+  GenerationStatus,
+} from 'helpers/generateAIContent'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -78,7 +81,7 @@ export const GenerateLoadingScreen = ({
       const response = await generateAIContent(aiScriptKey)
       const { chatResponse, status } = response || {}
 
-      if (status === 'processing' && !chatResponse) {
+      if (status === GenerationStatus.processing && !chatResponse) {
         generateContentPolling(aiScriptKey)
       } else {
         setWaiting(false)

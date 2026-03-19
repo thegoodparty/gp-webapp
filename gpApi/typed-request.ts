@@ -45,7 +45,8 @@ export type RequestPayloadOf<Route extends keyof APIEndpoints> =
  */
 const substitutePathParams = (route: string, params: object): string =>
   Object.entries(params).reduce(
-    (url, [name, value]) => url.replace(':' + name, encodeURIComponent(value)),
+    (url, [name, value]: [string, string]) =>
+      url.replace(':' + name, encodeURIComponent(value)),
     route,
   )
 

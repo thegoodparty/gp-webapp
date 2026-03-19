@@ -7,12 +7,12 @@ import {
 
 const apiRootUrl = new URL(API_ROOT)
 
-const apiRewriteUrl = (ReqNextUrl: URL): string => {
-  const newUrl = new URL(ReqNextUrl.toString())
+const apiRewriteUrl = (reqNextUrl: URL): string => {
+  const newUrl = new URL(reqNextUrl.toString())
   newUrl.protocol = apiRootUrl.protocol
   newUrl.hostname = apiRootUrl.hostname
-  newUrl.pathname = ReqNextUrl.pathname.replace('/api', '')
-  newUrl.search = ReqNextUrl.search
+  newUrl.pathname = reqNextUrl.pathname.replace('/api', '')
+  newUrl.search = reqNextUrl.search
   newUrl.port = apiRootUrl.port
 
   return newUrl.toString()
