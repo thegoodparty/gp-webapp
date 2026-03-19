@@ -13,7 +13,7 @@ export default function AiCampaignManager({
 }) {
   return (
     <DashboardLayout pathname={pathname} campaign={campaign}>
-      <LoadingState campaignId={campaign?.id || 0} />
+      <LoadingState />
     </DashboardLayout>
   )
 }

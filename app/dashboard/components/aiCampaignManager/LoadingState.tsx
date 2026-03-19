@@ -7,7 +7,7 @@ import LoadingChecklist, {
 import { Card, CardHeader, CardTitle } from '@styleguide'
 import { getCookie, setCookie } from 'helpers/cookieHelper'
 
-const AI_CAMPAIGN_COOKIE_PREFIX = 'aiCampaignChecklistComplete'
+const AI_CAMPAIGN_COOKIE = 'aiCampaignChecklistComplete'
 
 const loadingItems: LoadingItem[] = [
   {
@@ -36,14 +36,13 @@ const loadingItems: LoadingItem[] = [
   },
 ]
 
-export default function LoadingState({ campaignId }: { campaignId: number }) {
-  const cookieName = `${AI_CAMPAIGN_COOKIE_PREFIX}_${campaignId}`
+export default function LoadingState() {
   const [showChecklist, setShowChecklist] = useState(
-    () => !getCookie(cookieName),
+    () => !getCookie(AI_CAMPAIGN_COOKIE),
   )
 
   const onComplete = () => {
-    setCookie(cookieName, 'true')
+    setCookie(AI_CAMPAIGN_COOKIE, 'true')
     setShowChecklist(false)
   }
 
