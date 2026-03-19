@@ -90,10 +90,14 @@ export default function AudienceStep({
   const handleOnNext = async () => {
     setLoading(true)
 
+    const isTextType =
+      type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
+
     const voterFileFilter = await onCreateVoterFileFilter()
-    const phoneListToken = p2pUxEnabled
-      ? await onCreatePhoneList(voterFileFilter)
-      : null
+    const phoneListToken =
+      p2pUxEnabled && isTextType
+        ? await onCreatePhoneList(voterFileFilter)
+        : null
     setLoading(false)
     onChangeCallback({
       voterFileFilter,
@@ -126,6 +130,7 @@ export default function AudienceStep({
     onChangeCallback('audience', newState)
   }
 
+  const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
   let price: number | undefined
   // TODO: confirm these prices are correct for new task types!!!
   if (
@@ -133,11 +138,9 @@ export default function AudienceStep({
     type === TASK_TYPES.robocall
   ) {
     price = withVoicemail ? CALL_W_VOICEMAIL_PRICE : CALL_PRICE
-  } else if (type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text) {
+  } else if (isTextType) {
     price = TEXT_PRICE
   }
-
-  const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
   const hasFreeTextsOffer =
     p2pUxEnabled && campaign?.hasFreeTextsOffer && isTextType
 
