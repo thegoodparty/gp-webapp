@@ -15,6 +15,7 @@ import TasksList from './tasks/TasksList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type { Task } from './tasks/TaskItem'
 import type { Campaign, TcrCompliance } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 interface DashboardPageProps {
   pathname: string
@@ -47,10 +48,7 @@ const DashboardPage = ({
       primaryResult: campaignProp?.details?.primaryResult,
     })
 
-  const officeName =
-    details?.office?.toLowerCase() === 'other'
-      ? details?.otherOffice
-      : details?.office
+  const positionName = usePositionName()
 
   useEffect(() => {
     // TODO: we're only having to do this, because we're caching the user object in the cookie and
@@ -169,7 +167,7 @@ const DashboardPage = ({
                     )}
                   </>
                 ) : (
-                  <EmptyState campaign={campaign} />
+                  <EmptyState />
                 )}
               </div>
               {primaryElectionDate && (
@@ -177,7 +175,7 @@ const DashboardPage = ({
                   open={primaryResultState.modalOpen}
                   onClose={primaryResultCloseCallback}
                   electionDate={electionDate!}
-                  officeName={officeName || ''}
+                  officeName={positionName}
                 />
               )}
             </>

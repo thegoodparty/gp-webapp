@@ -11,6 +11,7 @@ import CustomVoterAudienceFilters, {
   AudienceFiltersState,
 } from './CustomVoterAudienceFilters'
 import { Campaign, CustomVoterFile } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 interface PrevStepValues {
   channel: string
@@ -33,13 +34,11 @@ const CustomVoterAudience = ({
 }: CustomVoterAudienceProps): React.JSX.Element => {
   const [state, setState] = useState<AudienceFiltersState>({})
   const [loading, setLoading] = useState(false)
+  const positionName = usePositionName()
 
   const handleChangeAudience = (newState: AudienceFiltersState) => {
     setState(newState)
   }
-
-  const { office, otherOffice } = campaign?.details || {}
-  const resolvedOffice = office === 'Other' ? otherOffice : office
 
   const canSave = () => {
     return !loading && Object.values(state).some((v) => v)
@@ -85,7 +84,7 @@ const CustomVoterAudience = ({
         <H1 className="mb-2">Select Your Filters</H1>
         <Body2>
           Make your selections to get custom election data for:{' '}
-          <span className=" font-bold">{resolvedOffice}</span>.<br />
+          <span className=" font-bold">{positionName || 'your office'}</span>.<br />
           You must make a minimum of one selection.
         </Body2>
       </div>

@@ -20,6 +20,7 @@ import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSe
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
@@ -354,8 +355,7 @@ export default function AdminVictoryPathPage(
     }
   }
 
-  const office =
-    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office
+  const positionName = usePositionName()
 
   const handleNotNeeded = async (
     e: ChangeEvent<HTMLInputElement>,
@@ -407,7 +407,7 @@ export default function AdminVictoryPathPage(
           <AdditionalFieldsSection />
           <P2VProSection />
           <H4 className="my-8">
-            Office: <strong>{office || 'N/A'}</strong>. State:{' '}
+            Office: <strong>{positionName || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. City:{' '}
             <strong>{details?.city || 'N/A'}</strong>. ElectionDate:{' '}
             <strong>{dateUsHelper(details?.electionDate) || 'N/A'}</strong>.

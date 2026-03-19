@@ -10,8 +10,7 @@ if (!baseURL) {
   throw new Error('BASE_URL is not set')
 }
 
-const apiBaseURL = process.env.API_BASE_URL || baseURL
-const apiURL = `${apiBaseURL}/api`
+const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
 type BaseTestUserOptions = {
   /**
@@ -198,7 +197,7 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete('/logout')
+      await client.delete(`/v1/users/${user.id}`)
       console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
     },
   })

@@ -6,6 +6,7 @@ import H1 from '@shared/typography/H1'
 import H3 from '@shared/typography/H3'
 import { useState } from 'react'
 import { Campaign } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 type FieldKey = 'responsibility' | 'achievements' | 'skills'
 
@@ -78,8 +79,8 @@ export default function PastExperience({
       state.skills !== ''
     )
   }
-  const office =
-    campaign.details.otherOffice || campaign.office || 'your office'
+  const positionName = usePositionName()
+  const office = positionName || 'your office'
   return (
     <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>
