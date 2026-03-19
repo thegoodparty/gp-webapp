@@ -1,11 +1,16 @@
 {
   "ignorePatterns": [
+    "ai-rules/",
     "e2e-tests/playwright-report",
     "e2e-tests/**/*.md",
     "styleguide/*.md",
     "public/"
   ],
-  "plugins": ["react", "unused-imports", "@stylistic"],
+  "plugins": [
+    "react",
+    "unused-imports",
+    "@stylistic"
+  ],
   "extends": [
     "next/core-web-vitals",
     "plugin:mdx/recommended",
@@ -25,16 +30,26 @@
     }
   },
   "rules": {
-    "@stylistic/semi": ["error", "never"],
+    "@stylistic/semi": [
+      "error",
+      "never"
+    ],
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "unused-imports/no-unused-imports": "error"
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "excludedFiles": ["styleguide/stories/**"],
-      "plugins": ["@typescript-eslint"],
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
+      "excludedFiles": [
+        "styleguide/stories/**"
+      ],
+      "plugins": [
+        "@typescript-eslint"
+      ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": true
@@ -57,8 +72,13 @@
       }
     },
     {
-      "files": ["styleguide/stories/**/*.ts", "styleguide/stories/**/*.tsx"],
-      "plugins": ["@typescript-eslint"],
+      "files": [
+        "styleguide/stories/**/*.ts",
+        "styleguide/stories/**/*.tsx"
+      ],
+      "plugins": [
+        "@typescript-eslint"
+      ],
       "parser": "@typescript-eslint/parser",
       "rules": {
         "@typescript-eslint/no-unused-expressions": "off",
