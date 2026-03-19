@@ -12,7 +12,7 @@ export type APIMockerResponse<T> =
     }
   | {
       status: 400 | 401 | 403 | 404 | 500
-      data: any
+      data: string | Record<string, unknown>
       headers?: Record<string, string>
     }
 
@@ -80,7 +80,7 @@ export type APIMocker = {
   reset: () => void
 }
 
-const toMSWResponse = (response: APIMockerResponse<any>) =>
+const toMSWResponse = (response: APIMockerResponse<unknown>) =>
   HttpResponse.json(response.data, {
     status: response.status,
     headers: response.headers,

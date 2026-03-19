@@ -31,7 +31,7 @@ const blurredCell = ({
   return <MaybeBlurredContent>{valueFormatter(value)}</MaybeBlurredContent>
 }
 
-const valueFormatter = (value: any) => value || '--'
+const valueFormatter = (value: ReactNode) => value || '--'
 
 const columns: ColumnDef<Person>[] = [
   {

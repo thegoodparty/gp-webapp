@@ -130,7 +130,7 @@ describe('OrganizationProvider', () => {
 
   it('deletes the cookie when the feature flag is off', async () => {
     const { useFlagOn } = await import('./experiments/FeatureFlagsProvider')
-    vi.mocked(useFlagOn).mockReturnValue({ on: false } as any)
+    vi.mocked(useFlagOn).mockReturnValue({ on: false, ready: true })
 
     const Probe = () => <div>child</div>
 
@@ -144,7 +144,7 @@ describe('OrganizationProvider', () => {
       expect(mockDeleteCookie).toHaveBeenCalledWith('organization-slug')
     })
 
-    vi.mocked(useFlagOn).mockReturnValue({ on: true } as any)
+    vi.mocked(useFlagOn).mockReturnValue({ on: true, ready: true })
   })
 
   it('renders children without context when no organizations exist', () => {

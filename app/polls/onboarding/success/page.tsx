@@ -15,7 +15,7 @@ export const metadata = meta
 
 export default async function Page({
   searchParams,
-}: PageProps<any>): Promise<ReactNode> {
+}: PageProps<'/polls/onboarding/success'>): Promise<ReactNode> {
   await requireAuth()
   await candidateAccess()
 
