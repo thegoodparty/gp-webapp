@@ -1,6 +1,6 @@
 import { APIEndpoints } from 'gpApi/api-endpoints'
 import { PathParamsOf } from 'gpApi/typed-request'
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, type JsonBodyType } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, beforeAll, beforeEach } from 'vitest'
 
@@ -81,7 +81,7 @@ export type APIMocker = {
 }
 
 const toMSWResponse = (response: APIMockerResponse<unknown>) =>
-  HttpResponse.json(response.data, {
+  HttpResponse.json(response.data as JsonBodyType, {
     status: response.status,
     headers: response.headers,
   })
