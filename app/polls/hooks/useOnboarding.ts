@@ -1,6 +1,5 @@
 'use client'
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import {
   personElectDemoMessageText as personElectDemoMessageTextPolls,
@@ -43,7 +42,6 @@ export interface UseOnboardingReturn {
 }
 
 export const useOnboarding = (): UseOnboardingReturn => {
-  const [campaign] = useCampaign()
   const positionName = usePositionName()
   const [user] = useUser()
 

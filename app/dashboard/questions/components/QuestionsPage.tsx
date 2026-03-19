@@ -196,7 +196,6 @@ const QuestionsPage = (props: QuestionsPageProps): React.JSX.Element => {
         <PastExperience
           value={answers.pastExperience}
           saveCallback={handleSave}
-          campaign={campaign}
           campaignKey={nextKey}
         />
       )}
