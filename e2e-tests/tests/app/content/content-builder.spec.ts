@@ -1,10 +1,17 @@
 import { expect, test } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
 test.describe('Content Builder', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should access Content Builder page', async ({ page }) => {
     await authenticateTestUser(page)
     await page.goto('/dashboard')

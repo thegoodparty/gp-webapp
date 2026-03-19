@@ -1,5 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
-import DashboardPage from './components/DashboardPage'
+import DashboardContent from './components/DashboardContent'
 import candidateAccess from './shared/candidateAccess'
 import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
@@ -47,7 +47,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   return (
     <>
       <HubSpotChatWidgetScript />
-      <DashboardPage
+      <DashboardContent
         pathname="/dashboard"
         campaign={campaign}
         tasks={tasks}

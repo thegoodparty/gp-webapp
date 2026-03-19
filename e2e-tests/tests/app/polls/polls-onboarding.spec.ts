@@ -4,7 +4,10 @@ import { expect, type Page, test } from '@playwright/test'
 import type { MessageElement } from '@slack/web-api/dist/types/response/ConversationsHistoryResponse'
 import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
@@ -299,6 +302,10 @@ const with11AmLocalTime = (date: Date) => {
   copy.setHours(11, 0, 0, 0)
   return copy
 }
+
+test.beforeEach(async ({ page }) => {
+  await blockSlowScripts(page)
+})
 
 test.describe.serial('poll onboarding', () => {
   // Shared state between tests

@@ -1,5 +1,6 @@
 {
   "ignorePatterns": [
+    "ai-rules/",
     "e2e-tests/playwright-report",
     "e2e-tests/**/*.md",
     "styleguide/*.md",
