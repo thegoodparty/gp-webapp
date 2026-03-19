@@ -4,7 +4,7 @@ import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 import type { Campaign } from 'helpers/types'
 import LoadingState from './LoadingState'
 
-export default function AiCampaignManager({
+export default function CampaignManager({
   pathname,
   campaign,
 }: {

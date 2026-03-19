@@ -4,7 +4,7 @@ import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import DashboardPage from './DashboardPage'
 import type { Task } from './tasks/TaskItem'
 import type { Campaign, TcrCompliance } from 'helpers/types'
-import AiCampaignManager from './aiCampaignManager/AiCampaignManager'
+import CampaignManager from './campaignManager/CampaignManager'
 
 const AI_CAMPAIGN_MANAGER_FLAG_KEY = 'ai-campaign-manager'
 
@@ -26,7 +26,7 @@ export default function DashboardContent({
   )
 
   if (ready && aiCampaignManagerEnabled) {
-    return <AiCampaignManager pathname={pathname} campaign={campaign} />
+    return <CampaignManager pathname={pathname} campaign={campaign} />
   }
 
   return (
