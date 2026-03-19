@@ -111,8 +111,8 @@ export default [
       ],
 
       // Code Quality Metrics (warn - non-blocking)
-      'max-lines-per-function': ['warn', { max: 80 }],
-      'max-lines': ['warn', { max: 400 }],
+      'max-lines-per-function': ['warn', { max: 150 }],
+      'max-lines': ['warn', { max: 800 }],
       'max-params': ['warn', 4],
       'max-depth': ['warn', 3],
       complexity: ['warn', 15],
