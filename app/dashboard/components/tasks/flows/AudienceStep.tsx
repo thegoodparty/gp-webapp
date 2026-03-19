@@ -40,9 +40,9 @@ interface AudienceStepProps {
     keyOrData:
       | string
       | {
-        voterFileFilter?: VoterFileFilterResult
-        phoneListToken: string | null | undefined
-      },
+          voterFileFilter?: VoterFileFilterResult
+          phoneListToken: string | null | undefined
+        },
     value?: AudienceFiltersState | number,
   ) => void
   nextCallback: () => void
@@ -90,7 +90,8 @@ export default function AudienceStep({
   const handleOnNext = async () => {
     setLoading(true)
 
-    const isTextType = type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
+    const isTextType =
+      type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
 
     const voterFileFilter = await onCreateVoterFileFilter()
     const phoneListToken =
