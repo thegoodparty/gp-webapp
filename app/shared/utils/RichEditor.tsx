@@ -7,12 +7,14 @@ import { noop } from './noop'
 interface RichEditorProps {
   initialText?: string
   onChangeCallback?: (value: string, flag?: number) => void
+  onTextLengthChange?: (length: number) => void
   useOnChange?: boolean
 }
 
 const RichEditor = ({
   initialText = '',
   onChangeCallback = noop,
+  onTextLengthChange,
 }: RichEditorProps): React.JSX.Element => {
   const { quill, quillRef } = useQuill({
     theme: 'bubble',
@@ -21,6 +23,7 @@ const RichEditor = ({
   useEffect(() => {
     if (quill && initialText) {
       quill.clipboard.dangerouslyPasteHTML(initialText)
+      onTextLengthChange?.(quill.getText().trim().length)
     }
   }, [quill, initialText])
 
@@ -31,6 +34,7 @@ const RichEditor = ({
         if (value) {
           onChangeCallback(value)
         }
+        onTextLengthChange?.(quill.getText().trim().length)
       }
 
       const blurHandler = () => {
@@ -38,6 +42,7 @@ const RichEditor = ({
         if (value) {
           onChangeCallback(value, 1)
         }
+        onTextLengthChange?.(quill.getText().trim().length)
       }
 
       quill.on('text-change', textChangeHandler)
@@ -49,7 +54,7 @@ const RichEditor = ({
       }
     }
     return undefined
-  }, [quill, onChangeCallback])
+  }, [quill, onChangeCallback, onTextLengthChange])
 
   return (
     <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base">

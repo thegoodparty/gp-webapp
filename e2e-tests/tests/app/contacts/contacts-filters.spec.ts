@@ -1,6 +1,9 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
 import pRetry from 'p-retry'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 
@@ -134,6 +137,10 @@ const testFilterField = async (
 
   await closePanel(page, panel)
 }
+
+test.beforeEach(async ({ page }) => {
+  await blockSlowScripts(page)
+})
 
 test('validate contacts filters', async ({ page }) => {
   test.setTimeout(5 * 60 * 1000)

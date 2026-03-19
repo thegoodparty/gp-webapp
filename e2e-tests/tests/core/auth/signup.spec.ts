@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 
 interface RegistrationUser {
   firstName: string
@@ -24,6 +27,10 @@ const jsonAs = <T>(response: { json(): Promise<T> }): Promise<T> =>
 test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('Sign Up Functionality', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should display sign up form elements', async ({ page }) => {
     await NavigationHelper.navigateToPage(page, '/sign-up')
     await NavigationHelper.dismissOverlays(page)

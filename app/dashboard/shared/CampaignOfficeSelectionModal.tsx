@@ -27,6 +27,7 @@ interface CampaignOfficeSelectionModalProps {
   onClose?: () => void
   onSelect?: () => void
   adminMode?: boolean
+  organizationSlug?: string
 }
 
 export const CampaignOfficeSelectionModal = ({
@@ -35,6 +36,7 @@ export const CampaignOfficeSelectionModal = ({
   onClose = noop,
   onSelect = noop,
   adminMode = false,
+  organizationSlug,
 }: CampaignOfficeSelectionModalProps): React.JSX.Element => (
   <Modal
     open={show}
@@ -47,6 +49,7 @@ export const CampaignOfficeSelectionModal = ({
         step={undefined}
         updateCallback={onSelect}
         adminMode={adminMode}
+        organizationSlug={organizationSlug}
       />
     ) : (
       <div className="p-4 text-center">

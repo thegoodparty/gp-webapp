@@ -49,10 +49,40 @@ export const useOrganization = () => {
   return ctx.selected
 }
 
+export const useSetOrganizationSlug = () => {
+  const ctx = useContext(OrganizationContext)
+  if (!ctx) {
+    throw new Error(
+      'useSetOrganizationSlug must be used within OrganizationProvider',
+    )
+  }
+  return ctx.setSelectedSlug
+}
+
+export const useOrganizationIfEnabled = () => {
+  const { on: enabled } = useFlagOn('win-serve-split')
+
+  const ctx = useContext(OrganizationContext)
+
+  if (!enabled) {
+    return undefined
+  }
+
+  if (!ctx) {
+    console.warn(
+      'useOrganizationIfEnabled must be used within OrganizationProvider',
+    )
+    return undefined
+  }
+  return ctx.selected
+}
+
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]
 }
+
+export const ORGANIZATIONS_QUERY_KEY = ['organizations']
 
 export const OrganizationProvider = ({
   children,
@@ -61,7 +91,7 @@ export const OrganizationProvider = ({
   const { on: enabled } = useFlagOn('win-serve-split')
 
   const { data: organizations } = useQuery({
-    queryKey: ['organizations'],
+    queryKey: ORGANIZATIONS_QUERY_KEY,
     queryFn: async () =>
       clientRequest('GET /v1/organizations', {}).then(
         (res) => res.data.organizations,
@@ -99,15 +129,11 @@ export const OrganizationProvider = ({
     [_setSelectedSlug],
   )
 
-  if (!selectedOrganization) {
-    return <>{children}</>
-  }
-
   return (
     <OrganizationContext.Provider
       value={{
         organizations,
-        selected: selectedOrganization,
+        selected: selectedOrganization!,
         setSelectedSlug,
       }}
     >

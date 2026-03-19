@@ -1,0 +1,82 @@
+{
+  "ignorePatterns": [
+    "e2e-tests/playwright-report",
+    "e2e-tests/**/*.md",
+    "styleguide/*.md",
+    "public/",
+    "ai-rules/",
+    "CLAUDE.md"
+  ],
+  "plugins": ["react", "unused-imports", "@stylistic"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:mdx/recommended",
+    // "plugin:jsx-a11y/recommended" TODO: turn on when ready to enforce a11y rules
+    "plugin:storybook/recommended"
+  ],
+  "settings": {
+    "mdx/code-blocks": true,
+    "react-hooks/exhaustive-deps": false,
+    // optional, if you want to disable language mapper, set it to `false`
+    // if you want to override the default language mapper inside, you can provide your own
+    "mdx/language-mapper": {}
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "@stylistic/semi": ["error", "never"],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "unused-imports/no-unused-imports": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "excludedFiles": ["styleguide/stories/**"],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": true
+      },
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "error",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
+        "@typescript-eslint/no-empty-function": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "all",
+            "ignoreRestSiblings": false,
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["styleguide/stories/**/*.ts", "styleguide/stories/**/*.tsx"],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
+        "@typescript-eslint/no-empty-function": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "all",
+            "ignoreRestSiblings": false,
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ]
+      }
+    }
+  ]
+}

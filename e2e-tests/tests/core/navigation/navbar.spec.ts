@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import {
   visualSnapshot,
   visualSnapshotElement,
@@ -7,6 +10,7 @@ import {
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
     await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
   })

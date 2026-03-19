@@ -28,6 +28,8 @@ export default [
       'e2e-tests/**/*.md',
       'styleguide/*.md',
       'public/',
+      'ai-rules/',
+      'CLAUDE.md',
       '.next/**/*',
       'postcss.config.mjs',
       'eslint.config.mjs',
