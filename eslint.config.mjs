@@ -148,7 +148,10 @@ export default [
         { selector: 'interface', format: ['PascalCase'] },
         { selector: 'typeAlias', format: ['PascalCase'] },
         { selector: 'enum', format: ['PascalCase'] },
-        { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE', 'camelCase'] },
+        {
+          selector: 'enumMember',
+          format: ['PascalCase', 'UPPER_CASE', 'camelCase'],
+        },
         { selector: 'function', format: ['camelCase', 'PascalCase'] },
         {
           // Destructured variables often mirror external API or DB column names
