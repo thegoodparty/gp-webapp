@@ -81,6 +81,7 @@ export default [
       'react/jsx-uses-vars': 'error',
       '@stylistic/semi': ['error', 'never'],
       'unused-imports/no-unused-imports': 'error',
+      'no-unreachable': 'error',
 
       // TypeScript baseline rules (ported from coworker's .eslintrc.json changes)
       '@typescript-eslint/no-unused-expressions': 'off',
@@ -147,12 +148,18 @@ export default [
         { selector: 'interface', format: ['PascalCase'] },
         { selector: 'typeAlias', format: ['PascalCase'] },
         { selector: 'enum', format: ['PascalCase'] },
-        { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE'] },
+        { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE', 'camelCase'] },
         { selector: 'function', format: ['camelCase', 'PascalCase'] },
+        {
+          // Destructured variables often mirror external API or DB column names
+          selector: 'variable',
+          modifiers: ['destructured'],
+          format: null,
+        },
         {
           selector: 'variable',
           format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
-          leadingUnderscore: 'allow',
+          leadingUnderscore: 'allowSingleOrDouble',
         },
         {
           selector: 'parameter',
@@ -242,6 +249,7 @@ export default [
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-type-assertion': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       'max-lines-per-function': 'off',
       complexity: 'off',
     },
