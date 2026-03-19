@@ -231,6 +231,20 @@ export default [
     },
   },
 
+  // Override for shadcn UI vendored components
+  {
+    files: [
+      'styleguide/components/ui/**/*.ts',
+      'styleguide/components/ui/**/*.tsx',
+    ],
+    rules: {
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
+
   // Override for MDX files
   {
     files: ['**/*.md', '**/*.mdx'],

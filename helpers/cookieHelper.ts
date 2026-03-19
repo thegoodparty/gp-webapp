@@ -79,6 +79,7 @@ export function getUserCookie(
   const impersonateUser = getCookie('impersonateUser')
   if (impersonateUser) {
     if (withParse) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- JSON.parse returns `any`; cookie value is trusted to match User shape
       return JSON.parse(impersonateUser)
     } else {
       return impersonateUser
@@ -90,6 +91,7 @@ export function getUserCookie(
   const user = getCookie(userCookieName)
   if (user && withParse) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- JSON.parse returns `any`; cookie value is trusted to match User shape
       return JSON.parse(decodeURIComponent(user))
     } catch {
       console.error('User cookie parse failed')

@@ -124,8 +124,10 @@ export default function WebsiteVisits({
                   if (
                     payload &&
                     payload.length > 0 &&
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Recharts Tooltip payload type doesn't expose custom data properties
                     payload[0]?.payload?.date
                   ) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- Recharts Tooltip payload type doesn't expose custom data properties
                     return format(payload[0].payload.date, 'MMM d, yyyy')
                   }
                   return ''

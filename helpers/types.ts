@@ -522,6 +522,7 @@ export interface WebsiteContent {
   vanityPath?: string
   status?: string
   heroFile?: File | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- WebsiteContent has dynamic CMS-driven fields that can't be enumerated at compile time
   [key: string]: any
 }
 

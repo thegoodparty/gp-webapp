@@ -19,6 +19,7 @@ const getInputPropsSx = (
   inputProps: { sx?: SxProps<Theme> } | undefined,
 ): SxProps<Theme>[] => {
   const { sx } = inputProps ?? {}
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- MUI SxProps is a complex union type (object | array | function); narrowing further is impractical
   if (Array.isArray(sx)) return sx
   if (sx) return [sx]
   return []

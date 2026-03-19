@@ -10,6 +10,7 @@ export const useLocalStorage = <T>(
   const [state, setState] = useState<T>(() => {
     try {
       const value = localStorage?.getItem(key)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- JSON.parse returns `any`; runtime validation would require a schema per storage key
       return value ? JSON.parse(value) : initialValue
     } catch (error) {
       console.log(error)

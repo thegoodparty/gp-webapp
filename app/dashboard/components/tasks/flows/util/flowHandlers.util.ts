@@ -186,8 +186,11 @@ export const mapAudienceForPersistence = ({
   party_independent: partyIndependent,
   party_democrat: partyDemocrat,
   party_republican: partyRepublican,
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Renamed bindings preserve snake_case API key readability (see WEB-4277)
   age_18_25: age18_25,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   age_25_35: age25_35,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   age_35_50: age35_50,
   age_50_plus: age50Plus,
   gender_male: genderMale,

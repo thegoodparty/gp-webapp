@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call -- next-pwa uses require() and has no type declarations
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
