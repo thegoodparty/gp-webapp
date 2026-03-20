@@ -237,13 +237,13 @@ describe('OrganizationPicker', () => {
   it('fetches organizations from the API', async () => {
     const updatedOrgs: Organization[] = [
       {
-      slug: 'fetched',
-      name: 'Fetched Org',
-      positionName: null,
-      position: null,
-      district: null,
-      electedOfficeId: null,
-      campaignId: 10,
+        slug: 'fetched',
+        name: 'Fetched Org',
+        positionName: null,
+        position: null,
+        district: null,
+        electedOfficeId: null,
+        campaignId: 10,
       },
     ]
 
