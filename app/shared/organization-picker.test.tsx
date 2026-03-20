@@ -36,6 +36,7 @@ const orgs: Organization[] = [
   {
     slug: 'org-one',
     name: 'Organization One',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: null,
@@ -44,6 +45,7 @@ const orgs: Organization[] = [
   {
     slug: 'org-two',
     name: 'Organization Two',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: 'eo-1',
@@ -52,6 +54,7 @@ const orgs: Organization[] = [
   {
     slug: 'org-three',
     name: 'Organization Three',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: null,
@@ -234,12 +237,13 @@ describe('OrganizationPicker', () => {
   it('fetches organizations from the API', async () => {
     const updatedOrgs: Organization[] = [
       {
-        slug: 'fetched',
-        name: 'Fetched Org',
-        position: null,
-        district: null,
-        electedOfficeId: null,
-        campaignId: 10,
+      slug: 'fetched',
+      name: 'Fetched Org',
+      positionName: null,
+      position: null,
+      district: null,
+      electedOfficeId: null,
+      campaignId: 10,
       },
     ]
 
