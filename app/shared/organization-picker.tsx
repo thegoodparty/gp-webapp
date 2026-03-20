@@ -27,9 +27,10 @@ import {
 import { ChevronDown } from 'lucide-react'
 import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
-import { HeaderLogo } from './layouts/navigation/HeaderLogo'
 import { queryClient } from './query-client'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { useCampaign } from './hooks/useCampaign'
 
 const LS_KEY = 'selected-organization-slug'
 
@@ -148,6 +149,8 @@ export const OrganizationPicker = () => {
 
   const isMobile = useIsMobile()
 
+  const [campaign] = useCampaign()
+
   if (!ctx || ctx.organizations.length === 0) return null
 
   const { organizations, selected, setSelectedSlug } = ctx
@@ -167,11 +170,25 @@ export const OrganizationPicker = () => {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <HeaderLogo />
+              <Image
+                src="/images/logo/heart.svg"
+                data-cy="logo"
+                width={30}
+                height={24}
+                alt="GoodParty.org"
+                priority
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-xs font-opensans">
-                  GoodParty.org
-                </span>
+                <div className="flex items-center gap-1">
+                  <p className="truncate text-sm font-opensans">
+                    GoodParty.org
+                  </p>
+                  {campaign?.isPro && (
+                    <div className="bg-primary text-white text-[8px]/[12px] font-opensans font-bold rounded h-[12px] px-1">
+                      PRO
+                    </div>
+                  )}
+                </div>
                 <span className="truncate text-sm font-opensans font-semibold">
                   {selected.name}
                 </span>

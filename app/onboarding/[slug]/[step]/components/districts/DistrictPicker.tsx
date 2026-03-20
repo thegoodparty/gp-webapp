@@ -19,10 +19,7 @@ interface DistrictPickerProps {
   state: string
   electionYear: number
   buttonText?: string
-  onSubmit?: (
-    type: DistrictType | null,
-    name: DistrictName | null,
-  ) => Promise<void>
+  onSubmit: (type: DistrictType, name: DistrictName) => Promise<void>
   className?: string
   initialType?: DistrictType | null
   initialName?: DistrictName | null
@@ -33,7 +30,7 @@ export default function DistrictPicker({
   state,
   electionYear,
   buttonText = 'Save',
-  onSubmit = async () => Promise.resolve(),
+  onSubmit,
   className = '',
   initialType = null,
   initialName = null,
