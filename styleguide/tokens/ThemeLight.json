@@ -1,0 +1,721 @@
+{
+  "base": {
+    "accent": {
+      "value": "{tailwind colors.neutral.100}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Highlight color for active or focused elements"
+    },
+    "accent-foreground": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on accent-colored elements"
+    },
+    "background": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Main application background"
+    },
+    "border": {
+      "value": "{tailwind colors.neutral.300}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Default border color"
+    },
+    "foreground": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Primary text color on the background"
+    },
+    "muted": {
+      "value": "{tailwind colors.neutral.100}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Subdued background for less important elements"
+    },
+    "muted-foreground": {
+      "value": "{tailwind colors.neutral.500}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "De-emphasized text (captions, labels)"
+    },
+    "surface": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Background for dropdown menus and popovers"
+    },
+    "surface-foreground": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons within popovers"
+    },
+    "focus-ring": {
+      "value": "{tailwind colors.neutral.400}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Focus indicator color"
+    },
+    "ring-offset": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "The color of the space between a focused element and its ring outline"
+    },
+    "foreground-focus": {
+      "value": "#a3a3a380",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "foreground-dark-focus": {
+      "value": "#ffffff80",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "foreground-dark": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Primary text color on the background"
+    },
+    "background-dark": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Main application background"
+    }
+  },
+  "components": {
+    "card-base": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Card component background"
+    },
+    "card-foreground": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons within cards"
+    },
+    "input-border": {
+      "value": "{tailwind colors.neutral.300}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Form inputs and button borders"
+    },
+    "input-base": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
+    },
+    "input-active": {
+      "value": "{tailwind colors.blue.600}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
+    },
+    "input-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
+    },
+    "tooltip-base": {
+      "value": "{tailwind colors.neutral.800}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "tooltip-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "input-focus": {
+      "value": "#2563eb4d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    }
+  },
+  "theme": {
+    "destructive": {
+      "value": "{error.500}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Error and deletion action color"
+    },
+    "destructive-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on destructive-colored elements"
+    },
+    "primary": {
+      "value": "{tailwind colors.blue.600}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Brand color for primary actions (buttons, highlights)"
+    },
+    "primary-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on primary-colored elements"
+    },
+    "secondary": {
+      "value": "{midnight.900}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Less prominent action color"
+    },
+    "secondary-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on secondary-colored elements"
+    },
+    "destructive-focus": {
+      "value": "#e00c304d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in UI elements that have destructive/20 color variable in light mode and destructive/40 variable in dark mode"
+    },
+    "info": {
+      "value": "{info.500}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Error and deletion action color"
+    },
+    "info-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on destructive-colored elements"
+    },
+    "info-focus": {
+      "value": "#1b6afc4d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "primary-focus": {
+      "value": "#2563eb4d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "secondary-focus": {
+      "value": "#0b15294d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "success": {
+      "value": "{success.500}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Error and deletion action color"
+    },
+    "success-foreground": {
+      "value": "{tailwind colors.base.white}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on destructive-colored elements"
+    },
+    "success-focus": {
+      "value": "#30a5414d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Error and deletion action color"
+    },
+    "warning": {
+      "value": "{warning.600}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": ["ALL_SCOPES"],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Warning state color"
+    },
+    "warning-foreground": {
+      "value": "{tailwind colors.base.black}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": ["ALL_SCOPES"],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons on warning-colored elements"
+    },
+    "warning-focus": {
+      "value": "#db79004d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": ["ALL_SCOPES"],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Used in focus effect"
+    },
+    "link": {
+      "value": "{tailwind colors.blue.500}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    }
+  },
+  "alpha": {
+    "5": {
+      "value": "#fffffff2",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "10": {
+      "value": "#ffffffe6",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "20": {
+      "value": "#ffffffcc",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "30": {
+      "value": "#ffffffb3",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "40": {
+      "value": "#ffffff99",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "50": {
+      "value": "#ffffff80",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "60": {
+      "value": "#ffffff66",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "70": {
+      "value": "#ffffff4d",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "80": {
+      "value": "#ffffff33",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    },
+    "90": {
+      "value": "#ffffff1a",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      }
+    }
+  },
+  "data": {
+    "chart-1": {
+      "value": "{midnight.400}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Data visualization colors"
+    },
+    "chart-2": {
+      "value": "{lavender.600}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Data visualization colors"
+    },
+    "chart-3": {
+      "value": "{halo green.400}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Data visualization colors"
+    },
+    "chart-4": {
+      "value": "{bright yellow.600}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Data visualization colors"
+    },
+    "chart-5": {
+      "value": "{waxflower.400}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Data visualization colors"
+    }
+  },
+  "sidebar": {
+    "primary-foreground": {
+      "value": "{tailwind colors.neutral.50}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text on sidebar primary elements"
+    },
+    "primary": {
+      "value": "{tailwind colors.neutral.900}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Primary actions within sidebar"
+    },
+    "foreground": {
+      "value": "{tailwind colors.neutral.950}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text and icons within sidebar"
+    },
+    "background": {
+      "value": "{tailwind colors.neutral.50}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Sidebar background"
+    },
+    "accent": {
+      "value": "{tailwind colors.neutral.100}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Highlighted elements within sidebar"
+    },
+    "accent-foreground": {
+      "value": "{tailwind colors.neutral.900}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Text on sidebar accent elements"
+    },
+    "border": {
+      "value": "{tailwind colors.neutral.200}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Sidebar divider lines or borders"
+    },
+    "ring": {
+      "value": "{tailwind colors.neutral.400}",
+      "type": "color",
+      "$extensions": {
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.hiddenFromPublishing": false
+      },
+      "description": "Focus indicators within sidebar"
+    }
+  }
+}
