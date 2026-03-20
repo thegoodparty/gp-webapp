@@ -334,7 +334,7 @@ describe('X-Organization-Slug header attachment', () => {
       value: reqUrl,
     })
 
-    await handleApiRequestRewrite(request as any)
+    await handleApiRequestRewrite(request as any, null)
 
     expect(headersSpy).toHaveBeenCalledWith('X-Organization-Slug', 'org-two')
   })
@@ -359,7 +359,7 @@ describe('X-Organization-Slug header attachment', () => {
       value: reqUrl,
     })
 
-    await handleApiRequestRewrite(request as any)
+    await handleApiRequestRewrite(request as any, null)
 
     expect(headersSpy).not.toHaveBeenCalledWith(
       'X-Organization-Slug',

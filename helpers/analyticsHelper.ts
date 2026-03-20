@@ -1,7 +1,6 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
-import { getUserCookie } from './cookieHelper'
 import type { Analytics } from '@segment/analytics-next'
 
 const UTM_KEYS = [
@@ -51,6 +50,7 @@ export const EVENTS = {
   SignIn: {
     ClickCreateAccount: 'Sign In: Click Create Account',
     ClickForgotPassword: 'Sign In: Click Forgot Password',
+    LoginCompleted: 'Sign In: Login Completed',
   },
   Password: {
     PasswordResetRequested: 'Account - Password Reset Requested',
@@ -106,6 +106,7 @@ export const EVENTS = {
       ClickAvatarDropdown: 'Navigation - Top: Click Avatar Dropdown',
       AvatarDropdown: {
         CloseDropdown: 'Navigation - Top - Avatar Dropdown: Close Dropdown',
+        ClickProfile: 'Navigation Top - Avatar Dropdown: Click Profile',
         ClickSettings: 'Navigation Top - Avatar Dropdown: Click Settings',
         ClickLogout: 'Navigation Top - Avatar Dropdown: Click Logout',
       },
@@ -468,13 +469,6 @@ export const EVENTS = {
   },
 } as const
 
-interface UserCookie {
-  email?: string
-  metaData?: {
-    hubspotId?: string
-  }
-}
-
 export const getStoredSessionId = (): number => {
   return Number(cookie.get('analytics_session_id') ?? 0)
 }
@@ -623,25 +617,6 @@ export const getPersistedClids = (): Record<string, string | null> => {
   return clids
 }
 
-const getUserProperties = (): Record<string, string> => {
-  const userCookie = getUserCookie(true) as UserCookie | false
-  if (!userCookie) {
-    return {}
-  }
-
-  const properties: Record<string, string | undefined> = {
-    email: userCookie.email,
-    hubspotId: userCookie.metaData?.hubspotId,
-  }
-
-  return Object.entries(properties).reduce((acc, [key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      acc[key] = value
-    }
-    return acc
-  }, {} as Record<string, string>)
-}
-
 export const trackEvent = (
   name: string,
   properties?: Record<
@@ -652,7 +627,6 @@ export const trackEvent = (
   try {
     const commonProperties = {
       ...getPersistedUtms(),
-      ...getUserProperties(),
       ...properties,
     }
     segmentTrackEvent(name, commonProperties)

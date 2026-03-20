@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/nextjs'
 import { useUser } from './hooks/useUser'
 import { useCampaign } from './hooks/useCampaign'
 import { useEffect } from 'react'
-import { getUserCookie } from 'helpers/cookieHelper'
 import { isTestUser } from 'helpers/test-users'
 import { useOrganizationIfEnabled } from './organization-picker'
 
@@ -22,9 +21,8 @@ export const SentryIdentifier: React.FC = () => {
   const [campaign] = useCampaign()
   const organization = useOrganizationIfEnabled()
 
-  const cookieUser = getUserCookie(true)
-  const userId = user?.id ?? (cookieUser ? cookieUser?.id : undefined)
-  const email = user?.email ?? (cookieUser ? cookieUser?.email : undefined)
+  const userId = user?.id
+  const email = user?.email
 
   useEffect(() => {
     if (userId) {

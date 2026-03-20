@@ -56,3 +56,7 @@ export const NEXT_PUBLIC_P2P_CUTOFF_DATETIME =
 
 export const MARKETING_SITE_DOMAIN =
   process.env.NEXT_PUBLIC_MARKETING_SITE_DOMAIN || 'goodparty.org'
+
+// Clerk Authentication
+// NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY are read directly by @clerk/nextjs
+// Sign-in/sign-up URLs are configured via NEXT_PUBLIC_CLERK_* env vars (see .env.example)

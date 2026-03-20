@@ -1,10 +1,8 @@
 import NotificationSection from 'app/dashboard/profile/components/NotificationSection'
-import PasswordSection from './PasswordSection'
-import PersonalSection from './PersonalSection'
+import ContactInfoSection from './ContactInfoSection'
 import { AccountSettingsSection } from 'app/dashboard/profile/components/AccountSettingsSection'
 import TextingCompliance from 'app/dashboard/profile/texting-compliance/components/TextingCompliance'
 import { User, Website, TcrCompliance, Campaign } from 'helpers/types'
-import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 
 interface ProfilePageProps {
   user: User
@@ -25,24 +23,21 @@ export default function ProfilePage({
   tcrCompliance,
 }: ProfilePageProps): React.JSX.Element {
   return (
-    <DashboardLayout pathname="/dashboard/profile">
-      <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
-        <div className="max-w-screen-md mx-auto px-4 py-4 xl:p-0 xl:pt-4">
-          <PersonalSection user={user} />
-          {!!campaign && <AccountSettingsSection />}
-          {!!campaign && isPro && (
-            <TextingCompliance
-              {...{
-                website,
-                domainStatus,
-                tcrCompliance,
-              }}
-            />
-          )}
-          {!!campaign && <NotificationSection />}
-          <PasswordSection user={user} />
-        </div>
+    <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
+      <div className="max-w-screen-md mx-auto px-4 py-4 xl:p-0 xl:pt-4">
+        <ContactInfoSection user={user} />
+        {!!campaign && <AccountSettingsSection />}
+        {!!campaign && isPro && (
+          <TextingCompliance
+            {...{
+              website,
+              domainStatus,
+              tcrCompliance,
+            }}
+          />
+        )}
+        {!!campaign && <NotificationSection />}
       </div>
-    </DashboardLayout>
+    </div>
   )
 }

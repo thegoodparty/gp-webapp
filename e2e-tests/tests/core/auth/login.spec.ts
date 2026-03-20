@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -8,37 +9,28 @@ import { visualSnapshot } from '../../../src/helpers/visual.helper'
 test.describe('Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await blockSlowScripts(page)
+    await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
   })
 
   test('should display login form elements', async ({ page }) => {
-    await expect(page.getByText('Login to GoodParty.org')).toBeVisible()
-    await expect(page.getByLabel('Email')).toBeVisible()
-    await expect(
-      page.getByPlaceholder("Please don't use your dog's"),
-    ).toBeVisible() // More specific password field locator
-    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible()
+    // Clerk's <SignIn /> renders its own UI
+    await expect(page.locator('.cl-signIn-root')).toBeVisible()
+    await expect(page.getByLabel(/email/i).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /continue/i })).toBeVisible()
 
     await visualSnapshot(page, 'login-page.png')
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
-    const invalidEmail = 'nonexistent@example.com'
-    const invalidPassword = 'wrongpassword123'
-    await page.getByLabel('Email').fill(invalidEmail)
-    await page
-      .getByPlaceholder("Please don't use your dog's")
-      .fill(invalidPassword)
+    await page.getByLabel(/email/i).first().fill('nonexistent@example.com')
+    await page.getByRole('button', { name: /continue/i }).click()
 
-    const loginButton = page.getByRole('button', { name: 'Login' })
-    await expect(loginButton).toBeEnabled()
-    await loginButton.click()
-    await expect(
-      page.getByText(
-        'Invalid login. Please check your credentials and try again.',
-      ),
-    ).toBeVisible()
+    // Clerk shows an error for non-existent accounts
+    await expect(page.locator('.cl-formFieldErrorText').first()).toBeVisible({
+      timeout: 10000,
+    })
 
     await visualSnapshot(page, 'login-error-state.png')
   })

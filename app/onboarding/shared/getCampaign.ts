@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import type { Campaign } from 'helpers/types'
 import { serverRequest } from 'gpApi/server-request'
-import { getServerToken, isTokenExpired } from 'helpers/userServerHelper'
+import { getServerToken, isTokenExpired } from 'helpers/tokenHelper'
 
 interface GetCampaignParams {
   slug: string

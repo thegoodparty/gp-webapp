@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
@@ -13,27 +14,27 @@ test.describe('Continue Setup button', () => {
   test('should link to office selection when user bails before selecting an office', async ({
     page,
   }) => {
+    await setupClerkTestingToken({ page })
     const testUser = TestDataHelper.generateTestUser()
 
     await page.goto('/sign-up')
     await NavigationHelper.dismissOverlays(page)
 
+    // Fill Clerk's <SignUp /> form
     await page
-      .getByRole('textbox', { name: 'First Name' })
+      .getByLabel(/first name/i)
+      .first()
       .fill(testUser.firstName)
     await page
-      .getByRole('textbox', { name: 'Last Name' })
+      .getByLabel(/last name/i)
+      .first()
       .fill(testUser.lastName)
-    await page.getByRole('textbox', { name: 'email' }).fill(testUser.email)
-    await page.getByRole('textbox', { name: 'phone' }).fill(testUser.phone)
-    await page.getByRole('textbox', { name: 'Zip Code' }).fill(testUser.zipCode)
+    await page.getByLabel(/email/i).first().fill(testUser.email)
     await page
-      .getByPlaceholder("Please don't use your dog's name")
+      .getByLabel(/password/i)
+      .first()
       .fill(testUser.password)
-
-    const joinButton = page.getByRole('button', { name: 'Join' })
-    await joinButton.waitFor({ state: 'visible' })
-    await joinButton.click()
+    await page.getByRole('button', { name: /continue/i }).click()
 
     await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
       timeout: 45000,
