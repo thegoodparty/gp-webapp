@@ -41,9 +41,7 @@ export default async function globalTeardown() {
       try {
         await clerk.users.deleteUser(user.id)
         deletedCount++
-        console.log(
-          `[global-teardown] Deleted ${email ?? user.id}`,
-        )
+        console.log(`[global-teardown] Deleted ${email ?? user.id}`)
       } catch (err) {
         console.error(
           `[global-teardown] Failed to delete ${email ?? user.id}:`,

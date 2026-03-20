@@ -96,9 +96,7 @@ const ContactInfoSection = ({
   return (
     <Paper className="mt-4">
       <H2>Contact Information</H2>
-      <Body2 className="text-gray-600 mb-8">
-        Update your contact details.
-      </Body2>
+      <Body2 className="text-gray-600 mb-8">Update your contact details.</Body2>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-12 lg:col-span-6">

@@ -19,10 +19,7 @@ export default async function SignUpPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
-      <SignUp
-        fallbackRedirectUrl="/post-auth-redirect"
-        routing="hash"
-      />
+      <SignUp fallbackRedirectUrl="/post-auth-redirect" routing="hash" />
     </div>
   )
 }

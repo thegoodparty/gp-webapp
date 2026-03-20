@@ -7,7 +7,6 @@ import {
   CampaignStatus,
 } from 'app/dashboard/shared/candidateAccess'
 
-
 const isPublicRoute = createRouteMatcher([
   '/',
   '/login(.*)',
@@ -20,7 +19,6 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('x-pathname', pathname)
-
 
   // Handle post-auth redirect in middleware (before page rendering)
   if (pathname === '/post-auth-redirect') {
@@ -52,10 +50,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       const campaignStatus = statusRes.ok
         ? ((await statusRes.json()) as CampaignStatus)
         : null
-      const redirectPath = resolvePostAuthRedirectPath(
-        user,
-        campaignStatus,
-      )
+      const redirectPath = resolvePostAuthRedirectPath(user, campaignStatus)
 
       return NextResponse.redirect(new URL(redirectPath, req.url))
     } catch (e) {

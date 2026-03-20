@@ -48,7 +48,7 @@ export default function CompleteStep() {
       errorSnackbar('Error launching your campaign')
     }
   }
-  const {firstName} = user ?? {}
+  const { firstName } = user ?? {}
 
   return (
     <div className="text-center">

@@ -13,11 +13,7 @@ export type UserContextValue = [User | null, (user?: User) => void, boolean]
 
 const CURRENT_USER_QUERY_KEY = 'currentUser'
 
-export const UserContext = createContext<UserContextValue>([
-  null,
-  noop,
-  true,
-])
+export const UserContext = createContext<UserContextValue>([null, noop, true])
 
 async function fetchCurrentUser(): Promise<User | null> {
   try {
