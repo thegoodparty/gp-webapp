@@ -356,8 +356,7 @@ export default function AdminVictoryPathPage(
     }
   }
 
-  const office =
-    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office
+  const positionName = campaign?.positionName || null
 
   const handleNotNeeded = async (
     e: ChangeEvent<HTMLInputElement>,
@@ -409,7 +408,7 @@ export default function AdminVictoryPathPage(
           <AdditionalFieldsSection />
           <P2VProSection />
           <H4 className="my-8">
-            Office: <strong>{office || 'N/A'}</strong>. State:{' '}
+            Office: <strong>{positionName || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. City:{' '}
             <strong>{details?.city || 'N/A'}</strong>. ElectionDate:{' '}
             <strong>{dateUsHelper(details?.electionDate) || 'N/A'}</strong>.

@@ -91,6 +91,7 @@ test.describe('Custom office flow', () => {
       electedOfficeId: null,
       district: null,
       position: null,
+      positionName: 'City Council',
     })
 
     const { data: campaign } = await client.get<{
