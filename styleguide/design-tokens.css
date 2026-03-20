@@ -746,9 +746,9 @@
   --theme-info: var(--color-blue-500);
   --theme-info-foreground: #ffffff;
   --theme-info-focus: color-mix(in srgb, var(--color-blue-500) 30%, transparent);
-  --theme-warning: var(--color-warning-500);
+  --theme-warning: var(--color-warning-600);
   --theme-warning-foreground: #000000;
-  --theme-warning-focus: color-mix(in srgb, var(--color-warning-500) 30%, transparent);
+  --theme-warning-focus: color-mix(in srgb, var(--color-warning-600) 30%, transparent);
 
   /* ==========================================================================
    * DATA/CHART COLORS (from Figma)

@@ -48,7 +48,7 @@ function hexToHsla(hex) {
     else if (max === g) h = ((b - r) / d + 2) / 6
     else h = ((r - g) / d + 4) / 6
   }
-  return `hsla(${Math.round(h * 360)},${Math.round(s * 100)},${Math.round(l * 100)},${a})`
+  return `hsla(${Math.round(h * 360)},${Math.round(s * 100)}%,${Math.round(l * 100)}%,${a})`
 }
 
 function Swatch({ name, hex, alias, tailwindClass, isDark, cardBg, borderColor, foregroundColor, mutedForegroundColor, cardHeight }) {

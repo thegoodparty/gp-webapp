@@ -62,7 +62,7 @@ const TOKEN_REVERSE = buildReverseMap()
  * Resolves a single token value — either a reference like `{token.path}`
  * or a raw hex/rgba string.
  */
-export function resolveValue(value) {
+function resolveValue(value) {
   if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
     const ref = value.slice(1, -1)
     return TOKEN_REFS[ref] ?? value
