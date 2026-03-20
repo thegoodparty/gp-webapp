@@ -6,7 +6,7 @@ import ProgressSection from './ProgressSection'
 import { CampaignContext } from '@shared/hooks/CampaignProvider'
 import { VoterContactsContext } from '@shared/hooks/VoterContactsProvider'
 import type { Campaign } from 'helpers/types'
-import type { ReportedVoterGoals } from '../voterGoalsHelpers'
+import type { VoterContactsState } from '@shared/hooks/VoterContactsProvider'
 
 const makeCampaign = (
   voterContactGoal = 1000,
@@ -19,17 +19,25 @@ const makeCampaign = (
   }) as unknown as Campaign
 
 const makeVoterContacts = (
-  overrides: Partial<ReportedVoterGoals> = {},
-): ReportedVoterGoals => ({
+  overrides: Partial<VoterContactsState> = {},
+): VoterContactsState => ({
   doorKnocking: 0,
   calls: 0,
   digital: 0,
+  directMail: 0,
+  digitalAds: 0,
+  text: 0,
+  events: 0,
+  yardSigns: 0,
+  robocall: 0,
+  phoneBanking: 0,
+  socialMedia: 0,
   ...overrides,
 })
 
 const renderWithProviders = (
   campaign: Campaign,
-  voterContacts: ReportedVoterGoals = makeVoterContacts(),
+  voterContacts: VoterContactsState = makeVoterContacts(),
 ) =>
   render(
     <CampaignContext.Provider value={[campaign]}>
