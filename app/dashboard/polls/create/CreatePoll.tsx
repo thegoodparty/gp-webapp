@@ -127,7 +127,10 @@ const FormContent: React.FC<{
 
 const useEvent = (
   event: string,
-  props?: Record<string, string[] | string | number | boolean | object | null | undefined>,
+  props?: Record<
+    string,
+    string[] | string | number | boolean | object | null | undefined
+  >,
 ) => {
   useEffect(() => {
     trackEvent(event, props)

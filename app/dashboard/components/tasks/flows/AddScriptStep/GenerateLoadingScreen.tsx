@@ -8,10 +8,7 @@ import {
   buildAiContentSections,
 } from 'helpers/buildAiContentSections'
 import GearsAnimation from '@shared/animations/GearsAnimation'
-import {
-  generateAIContent,
-  GenerationStatus,
-} from 'helpers/generateAIContent'
+import { generateAIContent, GenerationStatus } from 'helpers/generateAIContent'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'

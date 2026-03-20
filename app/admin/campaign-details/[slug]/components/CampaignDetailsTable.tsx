@@ -9,9 +9,7 @@ export default function CampaignDetailsTable({
 }: CampaignDetailsTableProps): React.JSX.Element | null {
   if (!campaign) return null
 
-  const formatValue = (
-    value: unknown,
-  ): React.ReactNode => {
+  const formatValue = (value: unknown): React.ReactNode => {
     if (value === null || value === undefined) return '-'
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
     if (Array.isArray(value)) return JSON.stringify(value)
@@ -75,14 +73,16 @@ export default function CampaignDetailsTable({
               Campaign Details
             </td>
           </tr>
-          {Object.entries(campaign.details || {}).map(([key, value]: [string, unknown]) => (
-            <tr key={key}>
-              <td className="p-2 border font-medium">{key}</td>
-              <td className="p-2 border font-mono text-sm">
-                {formatValue(value)}
-              </td>
-            </tr>
-          ))}
+          {Object.entries(campaign.details || {}).map(
+            ([key, value]: [string, unknown]) => (
+              <tr key={key}>
+                <td className="p-2 border font-medium">{key}</td>
+                <td className="p-2 border font-mono text-sm">
+                  {formatValue(value)}
+                </td>
+              </tr>
+            ),
+          )}
 
           {/* Campaign Data */}
           <tr>
@@ -90,14 +90,16 @@ export default function CampaignDetailsTable({
               Campaign Data
             </td>
           </tr>
-          {Object.entries(campaign.data || {}).map(([key, value]: [string, unknown]) => (
-            <tr key={key}>
-              <td className="p-2 border font-medium">{key}</td>
-              <td className="p-2 border font-mono text-sm">
-                {formatValue(value)}
-              </td>
-            </tr>
-          ))}
+          {Object.entries(campaign.data || {}).map(
+            ([key, value]: [string, unknown]) => (
+              <tr key={key}>
+                <td className="p-2 border font-medium">{key}</td>
+                <td className="p-2 border font-mono text-sm">
+                  {formatValue(value)}
+                </td>
+              </tr>
+            ),
+          )}
 
           {/* AI Content */}
           <tr>

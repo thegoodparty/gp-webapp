@@ -9,10 +9,7 @@ import { IoDocumentText } from 'react-icons/io5'
 import LoadingList from '@shared/utils/LoadingList'
 import { debounce } from 'helpers/debounceHelper'
 import NewContentFlow from './NewContentFlow'
-import {
-  generateAIContent,
-  GenerationStatus,
-} from 'helpers/generateAIContent'
+import { generateAIContent, GenerationStatus } from 'helpers/generateAIContent'
 import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
