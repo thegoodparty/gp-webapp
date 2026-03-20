@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { KeyboardEvent } from 'react'
-import { handleLogOut } from '@shared/user/handleLogOut'
+import { useHandleLogOut } from '@shared/user/handleLogOut'
 import { DashboardMenuItem } from 'app/dashboard/shared/DashboardMenuItem'
 import {
   MdAccountCircle,
@@ -245,6 +245,7 @@ export default function DashboardMenu({
   const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
+  const handleLogOut = useHandleLogOut()
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(

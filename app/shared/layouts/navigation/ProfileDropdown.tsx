@@ -10,7 +10,7 @@ import { memo, useEffect } from 'react'
 import { RiLogoutBoxFill } from 'react-icons/ri'
 import { HiOutlineStar } from 'react-icons/hi'
 import UserAvatar from '@shared/user/UserAvatar'
-import { handleLogOut } from '@shared/user/handleLogOut'
+import { useHandleLogOut } from '@shared/user/handleLogOut'
 import { MdAdd } from 'react-icons/md'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -55,6 +55,8 @@ const ProfileDropdown = ({
   toggleCallback,
   user,
 }: ProfileDropdownProps): React.JSX.Element => {
+  const handleLogOut = useHandleLogOut()
+
   useEffect(() => {
     if (user) {
       hubspotIntegration(user)
