@@ -142,8 +142,8 @@ export const timeToNextElection = (campaign: Campaign | null): string | false =>
   } else if (weeksUntil.weeks < 0 || (weeksUntil.weeks === 0 && weeksUntil.days <= 0)) {
     return false
   } else if (weeksUntil.weeks === 0) {
-    return `${weeksUntil.days} days away`
+    return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'} away`
   } else {
-    return `${weeksUntil.weeks} weeks away`
+    return `${weeksUntil.weeks} ${weeksUntil.weeks === 1 ? 'week' : 'weeks'} away`
   }
 }

@@ -47,7 +47,7 @@ describe('timeToNextElection', () => {
     const result = timeToNextElection(
       makeCampaign({ electionDate: futureDate(8) }),
     )
-    expect(result).toMatch(/^\d+ weeks away$/)
+    expect(result).toMatch(/^\d+ weeks? away$/)
   })
 
   it('returns days string when election is less than a week away', () => {
@@ -58,7 +58,25 @@ describe('timeToNextElection', () => {
         electionDate: threeDaysOut.toISOString().split('T')[0],
       }),
     )
-    expect(result).toMatch(/^\d+ days away$/)
+    expect(result).toMatch(/^\d+ days? away$/)
+  })
+
+  it('uses singular "day" when election is 1 day away', () => {
+    const oneDayOut = new Date()
+    oneDayOut.setDate(oneDayOut.getDate() + 1)
+    const result = timeToNextElection(
+      makeCampaign({
+        electionDate: oneDayOut.toISOString().split('T')[0],
+      }),
+    )
+    expect(result).toBe('1 day away')
+  })
+
+  it('uses singular "week" when election is 1 week away', () => {
+    const result = timeToNextElection(
+      makeCampaign({ electionDate: futureDate(1) }),
+    )
+    expect(result).toBe('1 week away')
   })
 
   it('uses primary election date when it is in the future', () => {
@@ -78,7 +96,7 @@ describe('timeToNextElection', () => {
         primaryElectionDate: pastDate(2),
       }),
     )
-    expect(result).toMatch(/^\d+ weeks away$/)
+    expect(result).toMatch(/^\d+ weeks? away$/)
   })
 
   it('returns false when both elections are in the past', () => {
