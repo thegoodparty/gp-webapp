@@ -356,7 +356,7 @@ export default function AdminVictoryPathPage(
     }
   }
 
-  const positionName = campaign?.positionName
+  const positionName = campaign?.positionName || null
 
   const handleNotNeeded = async (
     e: ChangeEvent<HTMLInputElement>,
