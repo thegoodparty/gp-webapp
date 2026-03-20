@@ -1,7 +1,14 @@
 import { expect, type Page, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
+
+test.beforeEach(async ({ page }) => {
+  await blockSlowScripts(page)
+})
 
 test('authenticate with onboarded user', async ({ page }) => {
   console.log('Setting up authenticated user...')

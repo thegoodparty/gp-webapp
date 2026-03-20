@@ -5,6 +5,8 @@
   "author": "Tomer Almog",
   "license": "MIT",
   "scripts": {
+    "ai-rules:update": "git submodule update --remote ai-rules",
+    "postinstall": "git submodule update --init",
     "build": "next build",
     "build-local": "cross-env NODE_ENV=production NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next build",
     "dev": "cross-env NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:3000 next dev -p 4000 --turbo",
@@ -147,7 +149,7 @@
     "@aws-sdk/client-s3": "^3.948.0",
     "@aws-sdk/client-sqs": "^3.968.0",
     "@chromatic-com/storybook": "^5.0.1",
-    "@clerk/testing": "^2.0.2",
+    "@clerk/testing": "^2.0.6",
     "@playwright/test": "^1.48.1",
     "@slack/web-api": "^7.13.0",
     "@storybook/addon-docs": "^10.2.12",

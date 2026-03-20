@@ -1,9 +1,16 @@
 import { expect, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 
 test.describe('Continue Setup button', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should link to office selection when user bails before selecting an office', async ({
     page,
   }) => {

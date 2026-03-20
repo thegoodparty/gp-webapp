@@ -1,30 +1,19 @@
 import { expect, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from '../../../src/helpers/data.helper'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
-
-interface RegistrationUser {
-  firstName: string
-  lastName: string
-  email: string
-  zip: string
-  phone: string
-}
-
-interface RegistrationResponseBody {
-  user?: RegistrationUser
-  data?: {
-    user?: RegistrationUser
-  }
-}
-
-const jsonAs = <T>(response: { json(): Promise<T> }): Promise<T> =>
-  response.json()
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 
 // Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('Sign Up Functionality', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should display sign up form elements', async ({ page }) => {
     await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/sign-up')

@@ -1,7 +1,14 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 
 test.describe('Homepage', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should redirect unauthenticated users to login', async ({ page }) => {
     await page.goto('/')
     await page.waitForURL(/\/login/, { timeout: 15000 })
