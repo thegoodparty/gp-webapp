@@ -2,16 +2,14 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { timeToNextElection } from './dateHelper'
 import type { Campaign } from './types'
 
-const makeCampaign = (
-  details: Partial<Campaign['details']> = {},
-): Campaign =>
+const makeCampaign = (details: Partial<Campaign['details']> = {}): Campaign =>
   ({
     details: {
       electionDate: undefined,
       primaryElectionDate: undefined,
       ...details,
     },
-  }) as unknown as Campaign
+  } as unknown as Campaign)
 
 const futureDate = (weeks: number): string => {
   const d = new Date()

@@ -8,15 +8,12 @@ import { VoterContactsContext } from '@shared/hooks/VoterContactsProvider'
 import type { Campaign } from 'helpers/types'
 import type { VoterContactsState } from '@shared/hooks/VoterContactsProvider'
 
-const makeCampaign = (
-  voterContactGoal = 1000,
-  voteGoal = 200,
-): Campaign =>
+const makeCampaign = (voterContactGoal = 1000, voteGoal = 200): Campaign =>
   ({
     pathToVictory: {
       data: { voterContactGoal, voteGoal },
     },
-  }) as unknown as Campaign
+  } as unknown as Campaign)
 
 const makeVoterContacts = (
   overrides: Partial<VoterContactsState> = {},
@@ -72,9 +69,7 @@ describe('ProgressSection', () => {
 
   it('opens info modal on click', () => {
     renderWithProviders(makeCampaign())
-    fireEvent.click(
-      screen.getByText(/voter contacts needed to win/),
-    )
+    fireEvent.click(screen.getByText(/voter contacts needed to win/))
     expect(screen.getByText(/Voter contacts needed/)).toBeInTheDocument()
   })
 

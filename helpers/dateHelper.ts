@@ -121,7 +121,9 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate()
 
-export const timeToNextElection = (campaign: Campaign | null): string | false => {
+export const timeToNextElection = (
+  campaign: Campaign | null,
+): string | false => {
   if (!campaign) {
     return false
   }
@@ -139,11 +141,16 @@ export const timeToNextElection = (campaign: Campaign | null): string | false =>
   const weeksUntil = weeksTill(nextElectionDate)
   if (!weeksUntil || typeof weeksUntil === 'string') {
     return false
-  } else if (weeksUntil.weeks < 0 || (weeksUntil.weeks === 0 && weeksUntil.days <= 0)) {
+  } else if (
+    weeksUntil.weeks < 0 ||
+    (weeksUntil.weeks === 0 && weeksUntil.days <= 0)
+  ) {
     return false
   } else if (weeksUntil.weeks === 0) {
     return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'} away`
   } else {
-    return `${weeksUntil.weeks} ${weeksUntil.weeks === 1 ? 'week' : 'weeks'} away`
+    return `${weeksUntil.weeks} ${
+      weeksUntil.weeks === 1 ? 'week' : 'weeks'
+    } away`
   }
 }
