@@ -129,7 +129,9 @@ export const timeToNextElection = (campaign: Campaign | null): string | false =>
   let nextElectionDate = electionDate
   const now = new Date()
   if (primaryElectionDate) {
-    const primaryElectionDateObj = new Date(primaryElectionDate)
+    const primaryElectionDateObj = new Date(
+      String(primaryElectionDate).replace(/-/g, '/'),
+    )
     if (primaryElectionDateObj > now) {
       nextElectionDate = primaryElectionDate
     }
