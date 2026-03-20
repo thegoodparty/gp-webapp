@@ -5,8 +5,9 @@ import { Card, Progress } from '@styleguide'
 import { calculateVoterContactCounts } from '../voterGoalsHelpers'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useState } from 'react'
-import { InfoOutlined } from '@mui/icons-material'
+
 import { ContactCountsInfoModal } from '../ContactCountsInfoModal'
+import { Info } from 'lucide-react'
 
 export default function ProgressSection() {
   const [campaign] = useCampaign()
@@ -31,9 +32,12 @@ export default function ProgressSection() {
       <Progress value={progress} className="w-full" />
       <div className="flex w-full justify-between items-center text-sm">
         <div>{numberFormatter(contacted)} voters contacted</div>
-        <div onClick={toggleModalOpen} className="cursor-pointer">
-          {numberFormatter(needed)} voter contacts needed to win
-          <InfoOutlined className="ml-2 !text-base" />
+        <div
+          onClick={toggleModalOpen}
+          className="cursor-pointer flex items-center gap-2"
+        >
+          <div>{numberFormatter(needed)} voter contacts needed to win</div>
+          <Info className="inline-block" size={16} />
         </div>
       </div>
       <ContactCountsInfoModal
