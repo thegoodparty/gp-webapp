@@ -141,6 +141,8 @@ export const timeToNextElection = (
   const weeksUntil = weeksTill(nextElectionDate)
   if (!weeksUntil || typeof weeksUntil === 'string') {
     return false
+  } else if (isNaN(weeksUntil.weeks) || isNaN(weeksUntil.days)) {
+    return false
   } else if (
     weeksUntil.weeks < 0 ||
     (weeksUntil.weeks === 0 && weeksUntil.days <= 0)

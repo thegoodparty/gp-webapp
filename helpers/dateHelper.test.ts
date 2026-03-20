@@ -114,6 +114,21 @@ describe('timeToNextElection', () => {
     expect(result).toBe(false)
   })
 
+  it('returns false for unparseable election date like "TBD"', () => {
+    const result = timeToNextElection(makeCampaign({ electionDate: 'TBD' }))
+    expect(result).toBe(false)
+  })
+
+  it('returns false for unparseable primary election date', () => {
+    const result = timeToNextElection(
+      makeCampaign({
+        electionDate: 'TBD',
+        primaryElectionDate: 'Not yet scheduled',
+      }),
+    )
+    expect(result).toBe(false)
+  })
+
   it('returns false on election day itself (0 days away)', () => {
     const today = new Date().toISOString().split('T')[0]
     const result = timeToNextElection(makeCampaign({ electionDate: today }))
