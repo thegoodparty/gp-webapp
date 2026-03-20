@@ -4,15 +4,13 @@ import H3 from '@shared/typography/H3'
 import { useEffect, useState } from 'react'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
-import {
-  campaignOfficeFields,
-  OfficeFieldState,
-} from 'helpers/campaignOfficeFields'
+import { OfficeFieldState } from 'helpers/campaignOfficeFields'
 import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeInputFields'
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 import { useOrganizationIfEnabled } from '@shared/organization-picker'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 interface OfficeSectionProps {
   campaign?: Campaign
@@ -20,6 +18,7 @@ interface OfficeSectionProps {
 
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   const organization = useOrganizationIfEnabled()
+  const positionName = usePositionName()
   const initialState: OfficeFieldState = {
     office: '',
     state: '',
@@ -34,18 +33,15 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   useEffect(() => {
     if (campaign?.details) {
       const details = campaign.details
-      setState(
-        campaignOfficeFields({
-          office: details.office,
-          otherOffice: details.otherOffice,
-          state: details.state,
-          electionDate: details.electionDate,
-          primaryElectionDate: details.primaryElectionDate,
-          officeTermLength: details.officeTermLength,
-        }),
-      )
+      setState({
+        office: positionName,
+        state: details.state || '',
+        electionDate: details.electionDate || '',
+        primaryElectionDate: details.primaryElectionDate || '',
+        officeTermLength: details.officeTermLength || '',
+      })
     }
-  }, [campaign])
+  }, [campaign, positionName])
 
   const handleEdit = () => {
     trackEvent(EVENTS.Profile.OfficeDetails.ClickEdit)

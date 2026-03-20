@@ -441,6 +441,7 @@ export interface Campaign {
   user?: User
   organization?: {
     positionId?: string | null
+    customPositionName?: string | null
   } | null
   userId: number
   canDownloadFederal: boolean

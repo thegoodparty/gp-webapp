@@ -15,6 +15,7 @@ import {
 } from '@shared/organization-picker'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -60,10 +61,7 @@ export default function ElectionResultPage(): React.JSX.Element {
       ? goalsObj.electionDate
       : undefined
   const electionDate = details?.electionDate || goalsElectionDate
-  const officeName =
-    details?.office?.toLowerCase() === 'other'
-      ? details?.otherOffice
-      : details?.office
+  const positionName = usePositionName()
 
   const { errorSnackbar } = useSnackbar()
   const [requestState, setRequestState] = useState<RequestState>({
@@ -176,7 +174,7 @@ export default function ElectionResultPage(): React.JSX.Element {
                 >
                   Election Results:
                   <br />
-                  {officeName}
+                  {positionName || 'Your Office'}
                 </h1>
                 <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
                   It looks like your general election date has passed. Please

@@ -34,6 +34,7 @@ const DashboardLayout = ({
   const [hookCampaign] = useCampaign()
   const router = useRouter()
   const hookPathname = usePathname()
+
   const currentPath = pathname || hookPathname
   const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
 

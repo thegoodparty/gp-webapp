@@ -28,7 +28,6 @@ interface CandidateTableRow {
   launched: string
   lastVisited: string | number | undefined
   party: string
-  office: string | null | undefined
   officeTermLength: string | null | undefined
   level: string | null | undefined
   ballotLevel: string | null | undefined
@@ -129,7 +128,6 @@ export default function AdminCandidatesTable({
       'launched',
       'lastVisited',
       'party',
-      'office',
       'officeTermLength',
       'level',
       'ballotLevel',
@@ -210,8 +208,6 @@ export default function AdminCandidatesTable({
         level,
         website,
         ballotLevel,
-        office,
-        otherOffice,
         filingPeriodsStart,
         filingPeriodsEnd,
         primaryElectionDate,
@@ -281,7 +277,6 @@ export default function AdminCandidatesTable({
         launched: mapStatus(details?.launchStatus),
         lastVisited,
         party: partyResolver(details?.party),
-        office: office === 'Other' ? `${otherOffice}` : office,
         officeTermLength: details?.officeTermLength,
         level,
         ballotLevel,
@@ -672,11 +667,6 @@ export default function AdminCandidatesTable({
         id: 'party',
         header: 'Party',
         accessorKey: 'party',
-      },
-      {
-        id: 'office',
-        header: 'Office',
-        accessorKey: 'office',
       },
       {
         id: 'ballotLevel',
