@@ -20,7 +20,6 @@ import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSe
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { usePositionName } from '@shared/hooks/usePositionName'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
@@ -357,7 +356,7 @@ export default function AdminVictoryPathPage(
     }
   }
 
-  const positionName = usePositionName()
+  const positionName = campaign?.positionName
 
   const handleNotNeeded = async (
     e: ChangeEvent<HTMLInputElement>,
