@@ -59,19 +59,17 @@ export const CountsInfoModal = ({
           </li>
           <li>
             You need{' '}
-            <span className="font-semibold">
-              {numberFormatter(winNumber)}
-            </span>{' '}
-            votes to win with <span className="font-semibold">50%</span> of
-            the votes.
+            <span className="font-semibold">{numberFormatter(winNumber)}</span>{' '}
+            votes to win with <span className="font-semibold">50%</span> of the
+            votes.
           </li>
           <li>
             To do that, you need to make{' '}
             <span className="font-semibold">
               {numberFormatter(voterContactGoal)}
             </span>{' '}
-            voter contacts (<span className="font-semibold">5x</span> your
-            votes needed to win).
+            voter contacts (<span className="font-semibold">5x</span> your votes
+            needed to win).
           </li>
         </ol>
       </div>
