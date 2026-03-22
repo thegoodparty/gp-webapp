@@ -5,6 +5,7 @@ import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ProgressSection from './ProgressSection'
+import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 
 export default function CampaignManager({ pathname }: { pathname: string }) {
   const [campaign] = useCampaign()
@@ -13,9 +14,11 @@ export default function CampaignManager({ pathname }: { pathname: string }) {
   }
   return (
     <DashboardLayout pathname={pathname} campaign={campaign}>
-      <HeaderSection />
-      <ProgressSection />
-      <LoadingState />
+      <VoterContactsProvider>
+        <HeaderSection />
+        <ProgressSection />
+        <LoadingState />
+      </VoterContactsProvider>
     </DashboardLayout>
   )
 }
