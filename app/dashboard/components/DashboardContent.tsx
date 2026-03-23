@@ -29,7 +29,6 @@ export default function DashboardContent({
     return (
       <CampaignManager
         pathname={pathname}
-        tasks={tasks}
         tcrCompliance={tcrCompliance}
       />
     )

@@ -14,7 +14,8 @@ export interface Task {
   proRequired?: boolean
   flowType: (typeof TASK_TYPES)[keyof typeof TASK_TYPES]
   week: number
-  deadline: number
+  deadline?: number
+  date?: string | null
   link?: string
   completed: boolean
   defaultAiTemplateId?: string | number
@@ -42,12 +43,13 @@ export default function TaskItemTemp({
     description,
     flowType,
     deadline,
+    date,
     link,
     completed,
     proRequired,
   } = task
 
-  const isExpired = daysUntilElection < deadline
+  const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
   const locked = noLongerAvailable || Boolean(proRequired && !isPro)
 
@@ -62,9 +64,11 @@ export default function TaskItemTemp({
         title={title}
         description={description}
         date={
-          electionDate
-            ? dateUsHelper(subDays(new Date(electionDate), deadline))
-            : ''
+          date
+            ? dateUsHelper(new Date(date))
+            : electionDate && deadline
+              ? dateUsHelper(subDays(new Date(electionDate), deadline))
+              : ''
         }
         type={displayTaskType}
         checked={completed}
