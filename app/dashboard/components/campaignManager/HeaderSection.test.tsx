@@ -45,7 +45,7 @@ describe('HeaderSection', () => {
     mockTimeToNextElection.mockReturnValue('8 weeks')
     renderWithProviders()
     expect(
-      screen.getByText(/8 weeks until General Election Day!, Jane/),
+      screen.getByText(/8 weeks until General Election Day, Jane/),
     ).toBeInTheDocument()
   })
 
@@ -57,7 +57,7 @@ describe('HeaderSection', () => {
     mockTimeToNextElection.mockReturnValue('4 weeks')
     renderWithProviders()
     expect(
-      screen.getByText(/4 weeks until Primary Election Day!, Jane/),
+      screen.getByText(/4 weeks until Primary Election Day, Jane/),
     ).toBeInTheDocument()
   })
 

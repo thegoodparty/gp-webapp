@@ -17,7 +17,7 @@ export default function HeaderSection() {
   return (
     <h1 className="text-4xl font-semibold mb-8">
       {timeUntilElection
-        ? `${timeUntilElection} until ${electionLabel}!`
+        ? `${timeUntilElection} until ${electionLabel}`
         : 'Hello'}
       , {user?.firstName}
     </h1>

@@ -41,10 +41,6 @@ export default function CampaignPlanTaskItem({
     (Boolean(onClick) || Boolean(onAction) || isExternalLink)
 
   const handleClick = () => {
-    if (noLongerAvailable) {
-      onAction?.()
-      return
-    }
     if (isExternalLink && link) {
       window.open(link, '_blank')
       return
