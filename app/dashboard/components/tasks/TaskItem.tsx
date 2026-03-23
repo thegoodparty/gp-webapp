@@ -23,7 +23,7 @@ export interface Task {
 interface TaskItemProps {
   task: Task
   daysUntilElection: number
-  electionDate: string
+  electionDate: string | undefined
   isPro: boolean
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
@@ -61,7 +61,11 @@ export default function TaskItemTemp({
       <CampaignPlanTaskItem
         title={title}
         description={description}
-        date={dateUsHelper(subDays(new Date(electionDate), deadline))}
+        date={
+          electionDate
+            ? dateUsHelper(subDays(new Date(electionDate), deadline))
+            : ''
+        }
         type={displayTaskType}
         checked={completed}
         locked={locked}

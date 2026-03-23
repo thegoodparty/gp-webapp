@@ -78,7 +78,7 @@ const TasksList = ({
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = electionDate
     ? differenceInDays(electionDate, new Date())
-    : 0
+    : Infinity
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
@@ -211,7 +211,7 @@ const TasksList = ({
                 task={task}
                 isPro={isPro}
                 daysUntilElection={daysUntilElection}
-                electionDate={String(electionDate)}
+                electionDate={electionDate}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
               />
