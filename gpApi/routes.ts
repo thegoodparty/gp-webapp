@@ -283,6 +283,10 @@ export const apiRoutes = {
         path: '/campaigns/tasks/generate',
         method: 'POST',
       },
+      generateStream: {
+        path: '/campaigns/tasks/generate/stream',
+        method: 'GET',
+      },
       complete: {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',

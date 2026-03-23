@@ -8,6 +8,7 @@ export const TASK_TYPES = {
   socialMedia: 'socialMedia',
   events: 'events',
   education: 'education',
+  compliance: 'compliance',
 }
 
 // Legacy types, these were based on voter file types
@@ -39,6 +40,7 @@ export const DISPLAY_TASK_TYPES = {
   socialMedia: 'Social Media',
   events: 'Event',
   education: 'Education',
+  compliance: 'Compliance',
 }
 
 type TaskTypeKey = keyof typeof TASK_TYPES

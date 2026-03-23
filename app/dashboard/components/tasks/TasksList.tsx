@@ -85,7 +85,12 @@ const TasksList = ({
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
 
-    if (type === TASK_TYPES.education) {
+    const nonOutreachTypes = [
+      TASK_TYPES.education,
+      TASK_TYPES.events,
+      TASK_TYPES.compliance,
+    ]
+    if (nonOutreachTypes.includes(type)) {
       const ok = await completeTask(taskId)
       if (ok && task.link?.startsWith('/')) {
         router.push(task.link)
@@ -111,7 +116,12 @@ const TasksList = ({
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    if (flowType === TASK_TYPES.education) {
+    const nonOutreachTypes = [
+      TASK_TYPES.education,
+      TASK_TYPES.events,
+      TASK_TYPES.compliance,
+    ]
+    if (nonOutreachTypes.includes(flowType)) {
       void (async () => {
         const ok = await completeTask(task.id)
         if (ok && task.link?.startsWith('/')) {

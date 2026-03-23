@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
@@ -16,6 +16,7 @@ import TasksList from '../tasks/TasksList'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { useTaskGenerationStream } from './useTaskGenerationStream'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -39,16 +40,24 @@ export default function CampaignManager({
     enabled: !!campaign,
   })
 
+  const onTasksReceived = useCallback(
+    (generatedTasks: Task[]) => {
+      if (generatedTasks.length > 0) {
+        queryClient.setQueryData(TASKS_QUERY_KEY, generatedTasks)
+      }
+    },
+    [queryClient],
+  )
+
+  const { isGenerating, progress, startGeneration } =
+    useTaskGenerationStream(onTasksReceived)
+
   useEffect(() => {
     if (tasks.length > 0 || !campaign || generatingRef.current) return
 
     generatingRef.current = true
-    clientFetch<Task[]>(apiRoutes.campaign.tasks.generate).then((resp) => {
-      if (resp.ok && resp.data.length > 0) {
-        queryClient.setQueryData(TASKS_QUERY_KEY, resp.data)
-      }
-    })
-  }, [tasks, campaign, queryClient])
+    startGeneration()
+  }, [tasks, campaign, startGeneration])
 
   if (!campaign) {
     return null
@@ -63,6 +72,22 @@ export default function CampaignManager({
           <HeaderSection />
           <ProgressSection />
           <LoadingState />
+          {isGenerating && progress && (
+            <div className="mt-4 rounded-lg border bg-white p-4">
+              <p className="mb-2 text-sm font-medium text-gray-700">
+                {progress.message || 'Generating AI tasks...'}
+              </p>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  style={{ width: `${Math.min(progress.progress, 100)}%` }}
+                />
+              </div>
+              <p className="mt-1 text-xs text-gray-500">
+                {Math.round(progress.progress)}% complete
+              </p>
+            </div>
+          )}
         </CampaignUpdateHistoryProvider>
         {contactGoals ? (
           <TasksList
