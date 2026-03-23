@@ -7,32 +7,26 @@ import { getPersistedUtms } from 'helpers/analyticsHelper'
 import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
-import { useFeatureFlags } from '@shared/experiments/FeatureFlagsProvider'
+import { buildUserTraits } from 'helpers/buildUserTraits'
 import { User } from 'helpers/types'
 
 const identify = async (
   user: User | null,
   searchParams: ReturnType<typeof useSearchParams>,
-  refreshFeatureFlags?: () => void,
 ) => {
   persistUtmsOnce()
 
   const traits = {
     ...getPersistedUtms(),
-    ...extractClids(searchParams as URLSearchParams),
+    ...(searchParams ? extractClids(searchParams) : {}),
   }
 
   if (user?.id) {
     const userTraits = {
-      name: `${user.firstName} ${user.lastName}`,
-      email: user.email,
-      phone: user.phone || undefined,
-      zip: user.zip || undefined,
+      ...buildUserTraits(user),
       ...traits,
     }
     await identifyUser(user.id, userTraits)
-
-    setTimeout(() => refreshFeatureFlags?.(), 1000)
   } else {
     await identifyUser(null, traits)
   }
@@ -41,11 +35,10 @@ const identify = async (
 const SegmentIdentify = (): null => {
   const [user] = useUser()
   const searchParams = useSearchParams()
-  const { refresh } = useFeatureFlags()
 
   useEffect(() => {
-    identify(user, searchParams, refresh)
-  }, [user, searchParams, refresh])
+    identify(user, searchParams)
+  }, [user, searchParams])
 
   return null
 }

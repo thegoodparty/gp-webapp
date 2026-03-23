@@ -1,7 +1,7 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
-import { getUserCookie } from './cookieHelper'
+import { getUserCookie, isImpersonating } from './cookieHelper'
 import type { Analytics } from '@segment/analytics-next'
 
 const UTM_KEYS = [
@@ -484,7 +484,7 @@ export const storeSessionId = (id: number): void => {
 }
 
 export const extractClids = (
-  searchParams: URLSearchParams,
+  searchParams: Pick<URLSearchParams, 'entries'>,
 ): Record<string, string> => {
   const clids: Record<string, string> = {}
 
@@ -654,6 +654,7 @@ export const trackEvent = (
       ...getPersistedUtms(),
       ...getUserProperties(),
       ...properties,
+      impersonation: isImpersonating(),
     }
     segmentTrackEvent(name, commonProperties)
   } catch (e) {

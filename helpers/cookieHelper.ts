@@ -59,6 +59,11 @@ export const deleteCookie = (name: string): void => {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
 
+export function isImpersonating(): boolean {
+  if (typeof window === 'undefined') return false
+  return Boolean(getCookie('impersonateUser'))
+}
+
 export const setUserCookie = (value: string | object): void => {
   if (typeof window === 'undefined') {
     return
