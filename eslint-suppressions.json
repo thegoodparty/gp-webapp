@@ -271,11 +271,6 @@
       "count": 2
     }
   },
-  "app/shared/layouts/navigation/SegmentIdentify.tsx": {
-    "@typescript-eslint/no-unsafe-type-assertion": {
-      "count": 1
-    }
-  },
   "app/shared/scripts/RouteTrackerScript.tsx": {
     "@typescript-eslint/no-unsafe-type-assertion": {
       "count": 1
