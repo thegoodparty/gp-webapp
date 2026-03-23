@@ -21,10 +21,9 @@ describe('calculateContactGoalsFromCampaign', () => {
     )
     expect(result).not.toBe(false)
     if (result) {
-      const totalAcrossWeeks = Object.values(result).reduce(
-        (sum, week) => sum + week.total,
-        0,
-      )
+      const totalAcrossWeeks = (
+        Object.values(result) as { total: number }[]
+      ).reduce((sum, week) => sum + week.total, 0)
       expect(totalAcrossWeeks).toBeGreaterThan(0)
     }
   })
