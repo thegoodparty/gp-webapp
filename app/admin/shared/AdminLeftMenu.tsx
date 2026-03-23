@@ -19,6 +19,10 @@ export const leftMenuItems: MenuItem[] = [
     link: '/admin/campaign-statistics',
   },
   {
+    label: 'Organizations',
+    link: '/admin/organizations',
+  },
+  {
     label: 'Users',
     link: '/admin/users',
   },
