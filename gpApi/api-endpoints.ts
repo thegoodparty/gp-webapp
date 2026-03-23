@@ -1,7 +1,7 @@
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
 import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
-import { Campaign } from 'helpers/types'
+import { Campaign, CampaignDetails } from 'helpers/types'
 
 export type APIEndpoints = {
   'GET /v1/organizations': {
@@ -73,13 +73,40 @@ export type APIEndpoints = {
     Request: {}
     Response: GetPollIssuesResponse
   }
+
+  'GET /v1/organizations/admin/list': {
+    Request: { slug?: string; email?: string }
+    Response: { organizations: AdminOrganization[] }
+  }
 }
 
 export type Organization = {
   slug: string
-  name: string
+  name: string | null
+  positionName: string | null
+  position: null | { id: string; brPositionId: string }
+  district: null | { id: string; l2Type: string; l2Name: string }
   electedOfficeId: string | null
   campaignId: number | null
+}
+
+export type AdminOrganization = Organization & {
+  extra: {
+    positionName: string | null
+    hasDistrictOverride: boolean
+    owner: {
+      id: string
+      email: string
+      firstName: string | null | undefined
+      lastName: string | null | undefined
+      phone: string | null | undefined
+    }
+    campaign: {
+      id: number
+      slug: string
+      details: CampaignDetails | null
+    } | null
+  }
 }
 
 export type ElectedOffice = {
