@@ -30,7 +30,7 @@ test.describe('Dashboard Functionality', () => {
     await visualSnapshot(page, 'dashboard.png', {
       mask: [
         // The election countdown changes weekly (e.g. "35 weeks until Election Day!")
-        page.getByRole('heading', { name: /until Election Day/ }),
+        page.getByRole('heading', { name: /until .+ Election Day/ }),
       ],
     })
 

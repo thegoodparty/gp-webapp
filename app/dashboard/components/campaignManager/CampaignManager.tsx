@@ -42,7 +42,7 @@ export default function CampaignManager({
             campaign={campaign}
             tasks={tasks}
             tcrCompliance={tcrCompliance}
-            showDashboardHeader={false}
+            isLegacyList={false}
           />
         ) : (
           <div className="mt-4">

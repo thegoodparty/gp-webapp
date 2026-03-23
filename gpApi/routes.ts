@@ -260,6 +260,20 @@ export const apiRoutes = {
       path: '/campaigns/mine/plan-version',
       method: 'GET',
     },
+    legacyTasks: {
+      list: {
+        path: '/campaigns/legacy-tasks',
+        method: 'GET',
+      },
+      complete: {
+        path: '/campaigns/legacy-tasks/complete/:taskId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/legacy-tasks/:taskId',
+        method: 'DELETE',
+      },
+    },
     tasks: {
       list: {
         path: '/campaigns/tasks',

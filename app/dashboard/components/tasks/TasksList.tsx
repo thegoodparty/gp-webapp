@@ -39,14 +39,14 @@ interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
   tcrCompliance?: TcrCompliance | null
-  showDashboardHeader?: boolean
+  isLegacyList?: boolean
 }
 
 const TasksList = ({
   campaign,
   tasks: tasksProp = [],
   tcrCompliance,
-  showDashboardHeader = true,
+  isLegacyList = true,
 }: TasksListProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
@@ -162,7 +162,10 @@ const TasksList = ({
   }
 
   const completeTask = async (taskId: string) => {
-    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.complete, {
+    const route = isLegacyList
+      ? apiRoutes.campaign.legacyTasks.complete
+      : apiRoutes.campaign.tasks.complete
+    const resp = await clientFetch<Task>(route, {
       taskId,
     })
 
@@ -185,11 +188,9 @@ const TasksList = ({
 
   return (
     <>
-      {showDashboardHeader && (
-        <DashboardHeader campaign={campaign} tasks={tasks} />
-      )}
+      {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
       <Card className="p-6 mt-8 mb-32 gap-0">
-        {showDashboardHeader ? (
+        {isLegacyList ? (
           <>
             <H2>Tasks for this week</H2>
             <Body2 className="!font-outfit mt-1">
