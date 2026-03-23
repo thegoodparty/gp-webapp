@@ -235,7 +235,7 @@ const TasksList = ({
       {deadlineModalTask && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
-          deadline={deadlineModalTask.deadline}
+          deadline={deadlineModalTask.deadline!}
           onClose={() => setDeadlineModalTask(null)}
         />
       )}

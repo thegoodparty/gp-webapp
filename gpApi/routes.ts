@@ -265,6 +265,10 @@ export const apiRoutes = {
         path: '/campaigns/tasks',
         method: 'GET',
       },
+      generate: {
+        path: '/campaigns/tasks/generate',
+        method: 'POST',
+      },
       complete: {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
