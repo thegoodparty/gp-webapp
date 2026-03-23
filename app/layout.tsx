@@ -10,6 +10,7 @@ import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 import { ReactQueryProvider } from '@shared/query-client'
+import { UserProvider } from '@shared/user/UserProvider'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
@@ -99,9 +100,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </Suspense>
       <AnalyticsSessionReplayMiddleware />
       <ReactQueryProvider>
-        <FeatureFlagsProvider>
-          <PageWrapper>{children}</PageWrapper>
-        </FeatureFlagsProvider>
+        <UserProvider>
+          <FeatureFlagsProvider>
+            <PageWrapper>{children}</PageWrapper>
+          </FeatureFlagsProvider>
+        </UserProvider>
       </ReactQueryProvider>
       <noscript>
         <iframe
