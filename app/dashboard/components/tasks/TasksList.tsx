@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
@@ -48,6 +49,7 @@ const TasksList = ({
   tcrCompliance,
   isLegacyList = true,
 }: TasksListProps): React.JSX.Element => {
+  const router = useRouter()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
 
@@ -83,9 +85,11 @@ const TasksList = ({
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
 
-    // skip voter counts for education tasks
     if (type === TASK_TYPES.education) {
-      completeTask(taskId)
+      const ok = await completeTask(taskId)
+      if (ok && task.link?.startsWith('/')) {
+        router.push(task.link)
+      }
     } else {
       setCompleteModalTask(task)
     }
@@ -108,7 +112,12 @@ const TasksList = ({
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
     if (flowType === TASK_TYPES.education) {
-      completeTask(task.id)
+      void (async () => {
+        const ok = await completeTask(task.id)
+        if (ok && task.link?.startsWith('/')) {
+          router.push(task.link)
+        }
+      })()
       return
     }
 
@@ -161,14 +170,13 @@ const TasksList = ({
     }
   }
 
-  const completeTask = async (taskId: string) => {
+  const completeTask = async (taskId: string): Promise<boolean> => {
     const route = isLegacyList
       ? apiRoutes.campaign.legacyTasks.complete
       : apiRoutes.campaign.tasks.complete
     const resp = await clientFetch<Task>(route, {
       taskId,
     })
-
     if (resp.ok) {
       const updatedTask = resp.data
       setTasks((currentTasks) => {
@@ -177,13 +185,13 @@ const TasksList = ({
           currentTasks.splice(taskIndex, 1, updatedTask)
           return [...currentTasks]
         }
-        // Shouldn't happen
         console.error('Completed task not found')
         return currentTasks
       })
-    } else {
-      errorSnackbar('Failed to complete task')
+      return true
     }
+    errorSnackbar('Failed to complete task')
+    return false
   }
 
   return (

@@ -34,22 +34,21 @@ export default function CampaignPlanTaskItem({
   onAction,
   className,
 }: TaskItemProps) {
-  const isExternalLink = link !== undefined
+  const opensInNewTab = Boolean(link) && /^https?:\/\//i.test(link)
   const isClickable =
     !noLongerAvailable &&
     !locked &&
-    (Boolean(onClick) || Boolean(onAction) || isExternalLink)
+    (Boolean(onClick) || Boolean(onAction) || Boolean(link))
 
   const handleClick = () => {
-    if (isExternalLink && link) {
-      window.open(link, '_blank')
-      return
-    }
     if (onClick) {
       onClick()
-      return
+    } else {
+      onAction?.()
     }
-    onAction?.()
+    if (opensInNewTab && link) {
+      window.open(link, '_blank')
+    }
   }
 
   const formattedDate =

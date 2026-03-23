@@ -68,6 +68,42 @@ describe('TaskItem interactions', () => {
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
+  it('calls onClick then opens http(s) links in a new tab', () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+    const handleClick = vi.fn()
+
+    render(
+      <CampaignPlanTaskItem
+        {...defaultProps}
+        link="https://example.com/task"
+        onClick={handleClick}
+      />,
+    )
+    fireEvent.click(screen.getByText('Test Task'))
+
+    expect(handleClick).toHaveBeenCalledTimes(1)
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/task', '_blank')
+    openSpy.mockRestore()
+  })
+
+  it('invokes onClick for internal app paths instead of window.open', () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+    const handleClick = vi.fn()
+
+    render(
+      <CampaignPlanTaskItem
+        {...defaultProps}
+        link="/dashboard/campaign-details"
+        onClick={handleClick}
+      />,
+    )
+    fireEvent.click(screen.getByText('Test Task'))
+
+    expect(openSpy).not.toHaveBeenCalled()
+    expect(handleClick).toHaveBeenCalledTimes(1)
+    openSpy.mockRestore()
+  })
+
   it('forwards checkbox changes through onCheckedChange', () => {
     const handleCheckedChange = vi.fn()
 
