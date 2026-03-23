@@ -36,8 +36,7 @@ export default function CampaignPlanTaskItem({
 }: TaskItemProps) {
   const isExternalLink = link !== undefined
   const isClickable =
-    !noLongerAvailable &&
-    !locked &&
+    (!locked || noLongerAvailable) &&
     (Boolean(onClick) || Boolean(onAction) || isExternalLink)
 
   const handleClick = () => {

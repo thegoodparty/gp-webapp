@@ -211,7 +211,7 @@ const TasksList = ({
                 task={task}
                 isPro={isPro}
                 daysUntilElection={daysUntilElection}
-                electionDate={String(electionDate)}
+                electionDate={electionDate || ''}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
               />

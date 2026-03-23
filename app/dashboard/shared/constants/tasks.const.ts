@@ -32,6 +32,7 @@ export const STEPS = {
 
 export const DISPLAY_TASK_TYPES = {
   text: 'Texting',
+  p2pDisabledText: 'Texting',
   robocall: 'Robocall',
   doorKnocking: 'Door Knocking',
   phoneBanking: 'Phone Banking',
