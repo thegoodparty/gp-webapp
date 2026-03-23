@@ -12,7 +12,7 @@ const makeCampaign = (
         voteGoal: overrides.voteGoal,
       },
     },
-  }) as unknown as Campaign
+  } as unknown as Campaign)
 
 describe('calculateContactGoalsFromCampaign', () => {
   it('uses voterContactGoal when available', () => {
