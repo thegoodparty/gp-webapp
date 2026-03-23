@@ -12,23 +12,49 @@ interface TaskItemProps {
   type: string
   checked?: boolean
   locked?: boolean
+  noLongerAvailable?: boolean
+  link?: string
   onCheckedChange?: (checked: boolean) => void
   onClick?: () => void
+  onAction?: () => void
   className?: string
 }
 
-export default function TaskItem({
+export default function CampaignPlanTaskItem({
   title,
   description,
   date,
   type,
   checked = false,
   locked = false,
+  noLongerAvailable = false,
+  link,
   onCheckedChange,
   onClick,
+  onAction,
   className,
 }: TaskItemProps) {
-  const isClickable = Boolean(onClick) && !locked
+  const isExternalLink = link !== undefined
+  const isClickable =
+    !noLongerAvailable &&
+    !locked &&
+    (Boolean(onClick) || Boolean(onAction) || isExternalLink)
+
+  const handleClick = () => {
+    if (noLongerAvailable) {
+      onAction?.()
+      return
+    }
+    if (isExternalLink && link) {
+      window.open(link, '_blank')
+      return
+    }
+    if (onClick) {
+      onClick()
+      return
+    }
+    onAction?.()
+  }
 
   const formattedDate =
     typeof date === 'string'
@@ -59,28 +85,34 @@ export default function TaskItem({
           'flex min-w-0 flex-1 items-center overflow-hidden py-3 pr-4',
           isClickable && 'group cursor-pointer',
         )}
-        onClick={isClickable ? onClick : undefined}
+        onClick={isClickable ? handleClick : undefined}
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
-            <p className="min-w-0 flex-1 truncate text-base leading-[22px] font-medium text-base-foreground">
+            <p className="min-w-0 flex-1 text-base leading-[22px] font-medium text-base-foreground">
               {title}
             </p>
-            {isClickable && (
-              <ChevronRight
-                size={15}
-                className="shrink-0 text-base-foreground opacity-0 transition-opacity group-hover:opacity-100"
+            {noLongerAvailable ? (
+              <Lock
+                size={18}
+                strokeWidth={1.5}
+                className="shrink-0 text-base-foreground"
               />
+            ) : (
+              isClickable && (
+                <ChevronRight
+                  size={18}
+                  className="shrink-0 text-base-foreground md:opacity-0 transition-opacity group-hover:opacity-100"
+                />
+              )
             )}
           </div>
           {description && (
-            <p className="truncate text-sm text-base-muted-foreground">
-              {description}
-            </p>
+            <p className="text-sm text-base-muted-foreground">{description}</p>
           )}
           <div className="flex items-start gap-1 pt-1 text-xs text-base-muted-foreground">
             <span>{formattedDate}</span>
-            <span>•</span>
+            {date && type && <span>•</span>}
             <span>{type}</span>
           </div>
         </div>

@@ -1,11 +1,10 @@
-import { useMemo } from 'react'
-import Button from '@shared/buttons/Button'
-import Body2 from '@shared/typography/Body2'
-import { CheckRounded, LockRounded } from '@mui/icons-material'
-import TaskCheck from './TaskCheck'
-import H4 from '@shared/typography/H4'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { TASK_TYPES } from '../../shared/constants/tasks.const'
+import {
+  DISPLAY_TASK_TYPES,
+  TASK_TYPES,
+} from '../../shared/constants/tasks.const'
+import { dateUsHelper } from 'helpers/dateHelper'
+import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
+import { subDays } from 'date-fns'
 
 export interface Task {
   id: string
@@ -24,140 +23,53 @@ export interface Task {
 interface TaskItemProps {
   task: Task
   daysUntilElection: number
+  electionDate: string
   isPro: boolean
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
 }
 
-export default function TaskItem({
+export default function TaskItemTemp({
   task,
   daysUntilElection,
+  electionDate,
   isPro,
   onCheck,
   onAction,
 }: TaskItemProps): React.JSX.Element {
   const {
-    id: taskId,
     title,
     description,
-    cta,
-    proRequired,
     flowType,
-    week,
     deadline,
     link,
     completed,
+    proRequired,
   } = task
 
-  const isExternalLink = link !== undefined
   const isExpired = daysUntilElection < deadline
   const noLongerAvailable = isExpired && !completed
-  const proLocked = proRequired && !isPro
+  const locked = noLongerAvailable || Boolean(proRequired && !isPro)
 
-  const checkTrackingAttrs = useMemo(
-    () =>
-      buildTrackingAttrs('Task Checkmark', {
-        id: taskId,
-        type: flowType,
-        weekNumber: week,
-        daysUntilElection: daysUntilElection,
-        checked: completed,
-      }),
-    [taskId, flowType, week, daysUntilElection, completed],
-  )
-
-  const actionTrackingAttrs = useMemo(
-    () =>
-      buildTrackingAttrs('Task Button', {
-        id: taskId,
-        type: flowType,
-        weekNumber: week,
-        daysUntilElection: daysUntilElection,
-        state: noLongerAvailable
-          ? 'No Longer Available'
-          : completed
-          ? 'Completed'
-          : proLocked
-          ? 'Pro Locked'
-          : 'Available',
-      }),
-    [
-      taskId,
-      flowType,
-      week,
-      daysUntilElection,
-      noLongerAvailable,
-      completed,
-      proLocked,
-    ],
-  )
-  const handleAction = () => {
-    onAction(task)
-  }
-
-  const handleCheck = () => {
-    onCheck(task)
-  }
+  const displayTaskType =
+    flowType in DISPLAY_TASK_TYPES
+      ? DISPLAY_TASK_TYPES[flowType as keyof typeof DISPLAY_TASK_TYPES]
+      : flowType
 
   return (
-    <li className="flex flex-col sm:flex-row items-center p-4 mt-4 gap-x-4 bg-white rounded-lg border border-black/[0.12]">
-      <div className="flex items-center gap-x-2 gap-y-4 w-full sm:w-auto">
-        <div className="mt-1 self-start">
-          <TaskCheck
-            checked={completed}
-            onClick={handleCheck}
-            trackingAttrs={checkTrackingAttrs}
-          />
-        </div>
-        <div className={`${completed ? 'text-indigo-400' : ''}`}>
-          <H4 className="mb-1">{title}</H4>
-          <Body2>{description}</Body2>
-        </div>
-      </div>
-      {noLongerAvailable ? (
-        <Button
-          onClick={handleAction}
-          size="medium"
-          color="neutral"
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-        >
-          <LockRounded className="mr-1 text-base" />
-          No Longer Available
-        </Button>
-      ) : isExternalLink && link ? (
-        <Button
-          href={link}
-          target="_blank"
-          size="medium"
-          color={completed ? 'success' : 'secondary'}
-          disabled={completed}
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-          {...actionTrackingAttrs}
-        >
-          {completed ? (
-            <CheckRounded className="mr-1 text-base" />
-          ) : (
-            proLocked && <LockRounded className="mr-1 text-base" />
-          )}
-          {cta || 'Complete Task'}
-        </Button>
-      ) : (
-        <Button
-          onClick={handleAction}
-          size="medium"
-          color={completed ? 'success' : 'secondary'}
-          disabled={completed}
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-          {...actionTrackingAttrs}
-        >
-          {completed ? (
-            <CheckRounded className="mr-1 text-base" />
-          ) : (
-            proLocked && <LockRounded className="mr-1 text-base" />
-          )}
-          {cta || 'Complete Task'}
-        </Button>
-      )}
+    <li className="border-t border-black/12">
+      <CampaignPlanTaskItem
+        title={title}
+        description={description}
+        date={dateUsHelper(subDays(new Date(electionDate), deadline))}
+        type={displayTaskType}
+        checked={completed}
+        locked={locked}
+        onCheckedChange={() => onCheck(task)}
+        onClick={() => onAction(task)}
+        link={link}
+        noLongerAvailable={noLongerAvailable}
+      />
     </li>
   )
 }

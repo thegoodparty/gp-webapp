@@ -30,6 +30,16 @@ export const STEPS = {
   purchase: 'purchase',
 }
 
+export const DISPLAY_TASK_TYPES = {
+  text: 'Texting',
+  robocall: 'Robocall',
+  doorKnocking: 'Door Knocking',
+  phoneBanking: 'Phone Banking',
+  socialMedia: 'Social Media',
+  events: 'Event',
+  education: 'Education',
+}
+
 type TaskTypeKey = keyof typeof TASK_TYPES
 type LegacyTaskTypeKey = keyof typeof LEGACY_TASK_TYPES
 

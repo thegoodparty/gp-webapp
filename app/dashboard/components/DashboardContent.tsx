@@ -26,7 +26,13 @@ export default function DashboardContent({
   )
 
   if (ready && aiCampaignManagerEnabled) {
-    return <CampaignManager pathname={pathname} />
+    return (
+      <CampaignManager
+        pathname={pathname}
+        tasks={tasks}
+        tcrCompliance={tcrCompliance}
+      />
+    )
   }
 
   return (

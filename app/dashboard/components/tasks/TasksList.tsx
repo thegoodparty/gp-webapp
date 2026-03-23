@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
@@ -33,20 +33,28 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
+import { Card } from '@styleguide'
 
 interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
   tcrCompliance?: TcrCompliance | null
+  showDashboardHeader?: boolean
 }
 
 const TasksList = ({
   campaign,
   tasks: tasksProp = [],
   tcrCompliance,
+  showDashboardHeader = true,
 }: TasksListProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
+
+  useEffect(() => {
+    setTasks(tasksProp)
+  }, [tasksProp])
+
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
@@ -66,9 +74,11 @@ const TasksList = ({
 
   const { details, pathToVictory, hasFreeTextsOffer } = campaign
   const isPro = campaign.isPro ?? false
-  const { electionDate } = details
+  const { electionDate } = details ?? {}
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = differenceInDays(electionDate!, new Date())
+  const daysUntilElection = electionDate
+    ? differenceInDays(electionDate, new Date())
+    : 0
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
@@ -82,7 +92,9 @@ const TasksList = ({
   }
 
   const handleCompleteSubmit = (_count: number) => {
-    completeTask(completeModalTask!.id)
+    if (completeModalTask) {
+      completeTask(completeModalTask.id)
+    }
     setCompleteModalTask(null)
   }
 
@@ -94,6 +106,11 @@ const TasksList = ({
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
+    if (flowType === TASK_TYPES.education) {
+      completeTask(task.id)
+      return
+    }
 
     // Normalize p2pDisabledText to text before validation/rendering
     const resolvedFlowType =
@@ -168,14 +185,25 @@ const TasksList = ({
 
   return (
     <>
-      <DashboardHeader campaign={campaign} tasks={tasks} />
-      <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
-        <H2>Tasks for this week</H2>
-        <Body2 className="!font-outfit mt-1">
-          Election day: {dateUsHelper(electionDate!)}
-        </Body2>
+      {showDashboardHeader && (
+        <DashboardHeader campaign={campaign} tasks={tasks} />
+      )}
+      <Card className="p-6 mt-8 mb-32 gap-0">
+        {showDashboardHeader ? (
+          <>
+            <H2>Tasks for this week</H2>
+            <Body2 className="!font-outfit mt-1">
+              Election day: {electionDate ? dateUsHelper(electionDate) : ''}
+            </Body2>
+          </>
+        ) : (
+          <div className="flex justify-between items-center pb-6">
+            <div className="text-lg font-semibold">Campaign Plan</div>
+            <div className="text-sm text-primary">View Full Plan</div>
+          </div>
+        )}
 
-        <ul className="p-0 mt-4">
+        <ul>
           {tasks.length > 0 ? (
             tasks.map((task) => (
               <TaskItem
@@ -183,6 +211,7 @@ const TasksList = ({
                 task={task}
                 isPro={isPro}
                 daysUntilElection={daysUntilElection}
+                electionDate={String(electionDate)}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
               />
@@ -193,7 +222,7 @@ const TasksList = ({
             </li>
           )}
         </ul>
-      </div>
+      </Card>
       {completeModalTask &&
         ((value: Task['flowType']): value is LogTaskFlowType =>
           value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
