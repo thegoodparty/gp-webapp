@@ -6,8 +6,8 @@ import { calculateVoterContactCounts } from '../voterGoalsHelpers'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useState } from 'react'
 
-import { ContactCountsInfoModal } from '../ContactCountsInfoModal'
 import { Info } from 'lucide-react'
+import { CountsInfoModal } from './CountsInfoModal'
 
 export default function ProgressSection() {
   const [campaign] = useCampaign()
@@ -40,7 +40,7 @@ export default function ProgressSection() {
           <Info className="inline-block" size={16} />
         </div>
       </div>
-      <ContactCountsInfoModal
+      <CountsInfoModal
         pathToVictory={p2vData}
         open={modalOpen}
         setOpen={toggleModalOpen}
