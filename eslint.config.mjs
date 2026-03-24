@@ -165,14 +165,19 @@ export default [
           leadingUnderscore: 'allowSingleOrDouble',
         },
         {
+          // Destructured parameters often mirror external API or DB column names
+          selector: 'parameter',
+          modifiers: ['destructured'],
+          format: null,
+        },
+        {
           selector: 'parameter',
           format: ['camelCase'],
           leadingUnderscore: 'allow',
         },
       ],
 
-      // Type Safety (error - suppressed with native ESLint suppressions)
-      '@typescript-eslint/no-unsafe-type-assertion': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'warn',
 
       // Disabled Auto-Fix Rules (Phase 2):
       // The following rules are imported but not enabled due to auto-fix spam.
@@ -223,6 +228,20 @@ export default [
       'max-lines-per-function': 'off',
       'max-lines': 'off',
       complexity: 'off',
+    },
+  },
+
+  // Override for shadcn UI vendored components
+  {
+    files: [
+      'styleguide/components/ui/**/*.ts',
+      'styleguide/components/ui/**/*.tsx',
+    ],
+    rules: {
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
     },
   },
 

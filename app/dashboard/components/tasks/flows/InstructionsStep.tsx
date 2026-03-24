@@ -15,10 +15,8 @@ interface InstructionsStepProps {
 }
 
 type TaskTypeValue = (typeof TASK_TYPES)[keyof typeof TASK_TYPES]
-type LegacyTaskTypeValue =
-  (typeof LEGACY_TASK_TYPES)[keyof typeof LEGACY_TASK_TYPES]
 type InstructionsByTypeMap = {
-  [K in TaskTypeValue | LegacyTaskTypeValue]?: string[]
+  [K in TaskTypeValue]?: string[]
 }
 
 // TODO: these should just be "instructions" properties on each task STEP, not a

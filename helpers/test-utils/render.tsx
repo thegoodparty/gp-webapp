@@ -10,5 +10,5 @@ const TestProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const render = (
   ui: React.ReactNode,
-  options?: Omit<RenderOptions, 'queries' | 'wrapper'> | undefined,
+  options?: Omit<RenderOptions, 'queries' | 'wrapper'>,
 ) => _render(ui, { ...options, wrapper: TestProvider })

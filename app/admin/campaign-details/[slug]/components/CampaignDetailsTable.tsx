@@ -9,16 +9,14 @@ export default function CampaignDetailsTable({
 }: CampaignDetailsTableProps): React.JSX.Element | null {
   if (!campaign) return null
 
-  const formatValue = (
-    value: string | number | boolean | object | null | undefined | string[],
-  ): React.ReactNode => {
+  const formatValue = (value: unknown): React.ReactNode => {
     if (value === null || value === undefined) return '-'
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
     if (Array.isArray(value)) return JSON.stringify(value)
     if (typeof value === 'object') {
       return (
         <div className="space-y-2 py-2">
-          {Object.entries(value).map(([key, val]) => (
+          {Object.entries(value).map(([key, val]: [string, unknown]) => (
             <div key={key} className="pl-4 border-l-2 border-gray-200">
               <span className="font-medium">{key}:</span>{' '}
               {typeof val === 'object' ? JSON.stringify(val) : String(val)}
@@ -75,14 +73,16 @@ export default function CampaignDetailsTable({
               Campaign Details
             </td>
           </tr>
-          {Object.entries(campaign.details || {}).map(([key, value]) => (
-            <tr key={key}>
-              <td className="p-2 border font-medium">{key}</td>
-              <td className="p-2 border font-mono text-sm">
-                {formatValue(value)}
-              </td>
-            </tr>
-          ))}
+          {Object.entries(campaign.details || {}).map(
+            ([key, value]: [string, unknown]) => (
+              <tr key={key}>
+                <td className="p-2 border font-medium">{key}</td>
+                <td className="p-2 border font-mono text-sm">
+                  {formatValue(value)}
+                </td>
+              </tr>
+            ),
+          )}
 
           {/* Campaign Data */}
           <tr>
@@ -90,14 +90,16 @@ export default function CampaignDetailsTable({
               Campaign Data
             </td>
           </tr>
-          {Object.entries(campaign.data || {}).map(([key, value]) => (
-            <tr key={key}>
-              <td className="p-2 border font-medium">{key}</td>
-              <td className="p-2 border font-mono text-sm">
-                {formatValue(value)}
-              </td>
-            </tr>
-          ))}
+          {Object.entries(campaign.data || {}).map(
+            ([key, value]: [string, unknown]) => (
+              <tr key={key}>
+                <td className="p-2 border font-medium">{key}</td>
+                <td className="p-2 border font-mono text-sm">
+                  {formatValue(value)}
+                </td>
+              </tr>
+            ),
+          )}
 
           {/* AI Content */}
           <tr>
@@ -128,7 +130,7 @@ export default function CampaignDetailsTable({
               if (typeof value === 'object') {
                 return (
                   <div className="space-y-2 py-2">
-                    {Object.entries(value).map(([k, v]) => (
+                    {Object.entries(value).map(([k, v]: [string, unknown]) => (
                       <div key={k} className="pl-4 border-l-2 border-gray-200">
                         <span className="font-medium">{k}:</span>{' '}
                         {typeof v === 'object' ? JSON.stringify(v) : String(v)}

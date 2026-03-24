@@ -94,9 +94,11 @@ const ContentTutorial = ({
       newContentCallback()
     }
   }
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return -- intro.js lacks types for private _targetElement API */
   const getIntroTargetElement = (
     ref: React.RefObject<Steps | null>,
   ): Element | undefined => ref.current?.introJs?._targetElement
+  /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 
   const onBeforeChange = (nextStepIndex: number) => {
     stepsRef.current?.updateStepElement(nextStepIndex)

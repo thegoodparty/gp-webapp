@@ -34,7 +34,9 @@ export const sendVictoryMail = async (id: number): Promise<boolean> => {
 
 const updateDistrict = (
   slug: string,
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Matches L2 voter file API field names
   L2DistrictType: string,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   L2DistrictName: string,
 ) =>
   clientFetch(apiRoutes.campaign.district, {

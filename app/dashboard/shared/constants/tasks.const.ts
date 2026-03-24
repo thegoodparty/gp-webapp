@@ -31,12 +31,9 @@ export const STEPS = {
 }
 
 type TaskTypeKey = keyof typeof TASK_TYPES
-type LegacyTaskTypeKey = keyof typeof LEGACY_TASK_TYPES
 
 type StepsByTypeMap = {
-  [K in
-    | (typeof TASK_TYPES)[TaskTypeKey]
-    | (typeof LEGACY_TASK_TYPES)[LegacyTaskTypeKey]]?: string[]
+  [K in (typeof TASK_TYPES)[TaskTypeKey]]?: string[]
 }
 
 export const STEPS_BY_TYPE: StepsByTypeMap = {

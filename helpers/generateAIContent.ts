@@ -1,7 +1,7 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 
-enum GenerationStatus {
+export enum GenerationStatus {
   processing = 'processing',
   completed = 'completed',
 }
