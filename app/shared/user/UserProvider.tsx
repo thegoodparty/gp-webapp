@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useMemo, useState } from 'react'
 import { noop } from '@shared/utils/noop'
 import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
 import { queryClient } from '@shared/query-client'
@@ -13,24 +13,21 @@ export const UserContext = createContext<[User | null, (user: User) => void]>([
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userState, setUserState] = useState<User | null>(null)
-
-  useEffect(() => {
+  const [userState, setUserState] = useState<User | null>(() => {
     const cookieUser = getUserCookie(true)
-    if (cookieUser && cookieUser?.id) {
-      setUserState(cookieUser)
-    }
-  }, [])
+    return cookieUser && cookieUser.id ? cookieUser : null
+  })
 
-  const setUser = (updated: User) => {
+  const setUser = useCallback((updated: User) => {
     queryClient.clear()
     setUserCookie(updated)
     setUserState(updated)
-  }
+  }, [])
 
-  return (
-    <UserContext.Provider value={[userState, setUser]}>
-      {children}
-    </UserContext.Provider>
+  const value = useMemo<[User | null, (user: User) => void]>(
+    () => [userState, setUser],
+    [userState, setUser],
   )
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
