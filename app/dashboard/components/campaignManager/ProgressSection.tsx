@@ -6,14 +6,17 @@ import { calculateVoterContactCounts } from '../voterGoalsHelpers'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useState } from 'react'
 
-import { ContactCountsInfoModal } from '../ContactCountsInfoModal'
 import { Info } from 'lucide-react'
+import { CountsInfoModal } from './CountsInfoModal'
+import { RecordVoterContactsModal } from './RecordVoterContactsModal'
 
 export default function ProgressSection() {
   const [campaign] = useCampaign()
   const [modalOpen, setModalOpen] = useState(false)
-  const toggleModalOpen = () => setModalOpen(!modalOpen)
+  const [recordModalOpen, setRecordModalOpen] = useState(false)
   const p2vData = campaign?.pathToVictory?.data
+  const toggleModalOpen = () => setModalOpen(!modalOpen)
+  const toggleRecordModalOpen = () => setRecordModalOpen(!recordModalOpen)
 
   const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
@@ -25,7 +28,10 @@ export default function ProgressSection() {
     <Card className="p-6">
       <div className="flex w-full justify-between items-center mb-2 border-b border-primary/20 pb-6">
         <div className="text-lg font-semibold">Your campaign progress</div>
-        <div className="text-sm text-primary cursor-pointer hover:underline">
+        <div
+          className="text-sm text-primary cursor-pointer hover:underline"
+          onClick={toggleRecordModalOpen}
+        >
           Record voter contacts
         </div>
       </div>
@@ -40,10 +46,14 @@ export default function ProgressSection() {
           <Info className="inline-block" size={16} />
         </div>
       </div>
-      <ContactCountsInfoModal
+      <CountsInfoModal
         pathToVictory={p2vData}
         open={modalOpen}
         setOpen={toggleModalOpen}
+      />
+      <RecordVoterContactsModal
+        open={recordModalOpen}
+        setOpen={setRecordModalOpen}
       />
     </Card>
   )
