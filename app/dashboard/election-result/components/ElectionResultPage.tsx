@@ -73,10 +73,8 @@ export default function ElectionResultPage(): React.JSX.Element {
   const queryClient = useQueryClient()
 
   const createElectedOfficeMutation = useMutation({
-    mutationFn: async (electedDate: string) =>
-      clientRequest('POST /v1/elected-office', { electedDate }).then(
-        (res) => res.data,
-      ),
+    mutationFn: async () =>
+      clientRequest('POST /v1/elected-office', {}).then((res) => res.data),
     onSuccess: async (newOffice) => {
       if (winServeSplit) {
         const organizations = await clientRequest(
@@ -127,11 +125,7 @@ export default function ElectionResultPage(): React.JSX.Element {
         if (!electionDate) {
           throw new Error('Invalid election date')
         }
-        const electedDate = new Date(electionDate).toISOString().split('T')[0]
-        if (!electedDate) {
-          throw new Error('Invalid elected date')
-        }
-        await createElectedOfficeMutation.mutateAsync(electedDate)
+        await createElectedOfficeMutation.mutateAsync()
       } else {
         router.replace('/dashboard/election-result/loss')
       }
