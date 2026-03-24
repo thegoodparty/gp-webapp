@@ -31,7 +31,10 @@ export const STEPS = {
   purchase: 'purchase',
 }
 
-export const DISPLAY_TASK_TYPES = {
+export const DISPLAY_TASK_TYPES: Record<
+  (typeof TASK_TYPES)[keyof typeof TASK_TYPES],
+  string
+> = {
   text: 'Texting',
   p2pDisabledText: 'Texting',
   robocall: 'Robocall',

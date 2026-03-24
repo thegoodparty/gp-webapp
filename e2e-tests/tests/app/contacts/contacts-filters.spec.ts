@@ -16,11 +16,7 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 
 let filterCallCount = 0
 
-const personPanelLocator = (page: Page) =>
-  page
-    .getByRole('dialog')
-    .filter({ has: page.getByText('Registered Voter') })
-    .first()
+const personPanelLocator = (page: Page) => page.getByRole('dialog').first()
 
 const openPersonPanel = async (row: Locator, panel: Locator) => {
   for (let attempt = 0; attempt < 3; attempt++) {

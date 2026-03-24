@@ -49,7 +49,7 @@ export default function CampaignManager({
     [queryClient],
   )
 
-  const { isGenerating, progress, startGeneration } =
+  const { isGenerating, progress, error, startGeneration, cancelGeneration } =
     useTaskGenerationStream(onTasksReceived)
 
   useEffect(() => {
@@ -57,7 +57,17 @@ export default function CampaignManager({
 
     generatingRef.current = true
     startGeneration()
-  }, [tasks, campaign, startGeneration])
+
+    return () => {
+      cancelGeneration()
+    }
+  }, [tasks, campaign, startGeneration, cancelGeneration])
+
+  useEffect(() => {
+    if (error) {
+      generatingRef.current = false
+    }
+  }, [error])
 
   if (!campaign) {
     return null
@@ -88,19 +98,33 @@ export default function CampaignManager({
               </p>
             </div>
           )}
+          {error && !isGenerating && (
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
+              <p className="text-sm text-red-700">
+                Failed to generate tasks. Please try again later.
+              </p>
+              <button
+                type="button"
+                className="mt-2 text-sm font-medium text-primary underline"
+                onClick={() => startGeneration()}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+          {contactGoals ? (
+            <TasksList
+              campaign={campaign}
+              tasks={tasks}
+              tcrCompliance={tcrCompliance}
+              isLegacyList={false}
+            />
+          ) : (
+            <div className="mt-4">
+              <EmptyState />
+            </div>
+          )}
         </CampaignUpdateHistoryProvider>
-        {contactGoals ? (
-          <TasksList
-            campaign={campaign}
-            tasks={tasks}
-            tcrCompliance={tcrCompliance}
-            isLegacyList={false}
-          />
-        ) : (
-          <div className="mt-4">
-            <EmptyState />
-          </div>
-        )}
       </VoterContactsProvider>
     </DashboardLayout>
   )

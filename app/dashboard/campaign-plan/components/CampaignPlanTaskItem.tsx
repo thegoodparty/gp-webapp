@@ -34,7 +34,7 @@ export default function CampaignPlanTaskItem({
   onAction,
   className,
 }: TaskItemProps) {
-  const opensInNewTab = Boolean(link) && /^https?:\/\//i.test(link)
+  const opensInNewTab = typeof link === 'string' && /^https?:\/\//i.test(link)
   const isClickable =
     !noLongerAvailable &&
     !locked &&
@@ -47,7 +47,7 @@ export default function CampaignPlanTaskItem({
       onAction?.()
     }
     if (opensInNewTab && link) {
-      window.open(link, '_blank')
+      window.open(link, '_blank', 'noopener')
     }
   }
 

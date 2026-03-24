@@ -22,6 +22,15 @@ interface SSEEvent {
   tasks?: Task[]
 }
 
+function isSSEEvent(value: unknown): value is SSEEvent {
+  if (typeof value !== 'object' || value === null) return false
+  const obj = value as Record<string, unknown>
+  return (
+    typeof obj.type === 'string' &&
+    (obj.type === 'progress' || obj.type === 'complete' || obj.type === 'error')
+  )
+}
+
 function parseSSEEvents(text: string): SSEEvent[] {
   const events: SSEEvent[] = []
   const blocks = text.split('\n\n')
@@ -29,8 +38,10 @@ function parseSSEEvents(text: string): SSEEvent[] {
     const dataLine = block.split('\n').find((line) => line.startsWith('data: '))
     if (!dataLine) continue
     try {
-      const json = JSON.parse(dataLine.slice(6)) as SSEEvent
-      events.push(json)
+      const json: unknown = JSON.parse(dataLine.slice(6))
+      if (isSSEEvent(json)) {
+        events.push(json)
+      }
     } catch {
       // skip malformed events
     }
@@ -47,6 +58,12 @@ export function useTaskGenerationStream(
     error: null,
   })
   const abortRef = useRef<AbortController | null>(null)
+
+  const cancelGeneration = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
+    setState({ isGenerating: false, progress: null, error: null })
+  }, [])
 
   const startGeneration = useCallback(async () => {
     if (abortRef.current) return
@@ -78,11 +95,13 @@ export function useTaskGenerationStream(
 
         buffer += decoder.decode(value, { stream: true })
 
-        const events = parseSSEEvents(buffer)
         const lastComplete = buffer.lastIndexOf('\n\n')
-        if (lastComplete >= 0) {
-          buffer = buffer.slice(lastComplete + 2)
-        }
+        if (lastComplete < 0) continue
+
+        const completePortion = buffer.slice(0, lastComplete + 2)
+        buffer = buffer.slice(lastComplete + 2)
+
+        const events = parseSSEEvents(completePortion)
 
         for (const event of events) {
           if (event.type === 'progress') {
@@ -110,23 +129,16 @@ export function useTaskGenerationStream(
         }
       }
     } catch (err) {
-      if ((err as Error).name !== 'AbortError') {
-        setState({
-          isGenerating: false,
-          progress: null,
-          error: String(err),
-        })
-      }
+      if (err instanceof Error && err.name === 'AbortError') return
+      setState({
+        isGenerating: false,
+        progress: null,
+        error: err instanceof Error ? err.message : String(err),
+      })
     } finally {
       abortRef.current = null
     }
   }, [onTasksReceived])
-
-  const cancelGeneration = useCallback(() => {
-    abortRef.current?.abort()
-    abortRef.current = null
-    setState({ isGenerating: false, progress: null, error: null })
-  }, [])
 
   return {
     ...state,

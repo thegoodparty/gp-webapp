@@ -82,7 +82,11 @@ describe('TaskItem interactions', () => {
     fireEvent.click(screen.getByText('Test Task'))
 
     expect(handleClick).toHaveBeenCalledTimes(1)
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/task', '_blank')
+    expect(openSpy).toHaveBeenCalledWith(
+      'https://example.com/task',
+      '_blank',
+      'noopener',
+    )
     openSpy.mockRestore()
   })
 

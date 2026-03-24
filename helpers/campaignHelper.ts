@@ -5,6 +5,9 @@ export interface NextElection {
   isPrimary: boolean
 }
 
+const parseDateString = (date: string | number): Date =>
+  new Date(String(date).replace(/-/g, '/'))
+
 export const getNextElection = (
   campaign: Campaign | null,
 ): NextElection | null => {
@@ -12,9 +15,7 @@ export const getNextElection = (
   const { electionDate, primaryElectionDate } = campaign.details ?? {}
 
   if (primaryElectionDate) {
-    const primaryDateObj = new Date(
-      String(primaryElectionDate).replace(/-/g, '/'),
-    )
+    const primaryDateObj = parseDateString(primaryElectionDate)
     if (primaryDateObj > new Date()) {
       return { nextElectionDate: String(primaryElectionDate), isPrimary: true }
     }

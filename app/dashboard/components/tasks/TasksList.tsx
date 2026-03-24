@@ -36,6 +36,12 @@ import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOut
 import type { OutreachType } from 'gpApi/outreach.api'
 import { Card } from '@styleguide'
 
+const NON_OUTREACH_TYPES = [
+  TASK_TYPES.education,
+  TASK_TYPES.events,
+  TASK_TYPES.compliance,
+]
+
 interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
@@ -85,12 +91,7 @@ const TasksList = ({
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
 
-    const nonOutreachTypes = [
-      TASK_TYPES.education,
-      TASK_TYPES.events,
-      TASK_TYPES.compliance,
-    ]
-    if (nonOutreachTypes.includes(type)) {
+    if (NON_OUTREACH_TYPES.includes(type)) {
       const ok = await completeTask(taskId)
       if (ok && task.link?.startsWith('/')) {
         router.push(task.link)
@@ -251,10 +252,10 @@ const TasksList = ({
             flowType={completeModalTask.flowType}
           />
         )}
-      {deadlineModalTask && (
+      {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
-          deadline={deadlineModalTask.deadline!}
+          deadline={deadlineModalTask.deadline}
           onClose={() => setDeadlineModalTask(null)}
         />
       )}

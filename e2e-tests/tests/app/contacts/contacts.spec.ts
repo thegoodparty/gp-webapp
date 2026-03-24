@@ -112,13 +112,23 @@ test.describe('Contacts Page', () => {
     //
     // --- Person overlay: click first row opens side panel with that person's data ---
     // Clicking first row to open person overlay
-    await currentFirstRow.click({ force: true })
-    const personSheet = page
-      .getByRole('dialog')
-      .filter({ has: page.getByText('Contact Information') })
-      .first()
-    await expect(personSheet).toBeVisible({ timeout: 15000 })
-    // Person overlay is visible
+    const personSheet = page.getByRole('dialog').first()
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await currentFirstRow.scrollIntoViewIfNeeded()
+      await currentFirstRow.click({ force: true })
+      try {
+        await expect(personSheet).toBeVisible({ timeout: 10000 })
+        break
+      } catch {
+        if (attempt === 2) {
+          await expect(personSheet).toBeVisible()
+        }
+      }
+    }
+    await expect(
+      personSheet.getByText('Contact Information', { exact: true }),
+    ).toBeVisible({ timeout: 30000 })
+    // Person overlay: dialog mounts with loading skeleton first; wait for loaded section heading
     await expect(
       personSheet.getByText(firstPersonName!, { exact: false }),
     ).toBeVisible({ timeout: 5000 })

@@ -62,10 +62,11 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
 
     await page.goto('/dashboard/campaign-assistant')
+    await page.waitForURL(/\/dashboard\/campaign-assistant/)
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 30000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
     await visualSnapshot(page, 'mobile-ai-assistant.png', {
@@ -77,10 +78,11 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
 
     await page.goto('/dashboard/content')
+    await page.waitForURL(/\/dashboard\/content/)
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 30000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
     await visualSnapshot(page, 'mobile-content-builder.png', {

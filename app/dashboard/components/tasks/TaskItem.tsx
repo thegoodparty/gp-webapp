@@ -30,7 +30,7 @@ interface TaskItemProps {
   onAction: (task: Task) => void
 }
 
-export default function TaskItemTemp({
+export default function TaskItem({
   task,
   daysUntilElection,
   electionDate,
@@ -53,10 +53,7 @@ export default function TaskItemTemp({
   const noLongerAvailable = isExpired && !completed
   const locked = noLongerAvailable || Boolean(proRequired && !isPro)
 
-  const displayTaskType =
-    flowType in DISPLAY_TASK_TYPES
-      ? DISPLAY_TASK_TYPES[flowType as keyof typeof DISPLAY_TASK_TYPES]
-      : flowType
+  const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
 
   return (
     <li className="border-t border-black/12">
@@ -67,8 +64,8 @@ export default function TaskItemTemp({
           date
             ? dateUsHelper(new Date(date))
             : electionDate && deadline
-              ? dateUsHelper(subDays(new Date(electionDate), deadline))
-              : ''
+            ? dateUsHelper(subDays(new Date(electionDate), deadline))
+            : ''
         }
         type={displayTaskType}
         checked={completed}
