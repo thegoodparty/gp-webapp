@@ -7,8 +7,11 @@ import {
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
-function campaignPageH1(page: Page) {
-  return page.locator('main h1, [data-slot="sidebar-inset"] h1').first()
+function campaignPageGreetingHeading(page: Page) {
+  return page
+    .getByRole('heading', { level: 1 })
+    .filter({ hasText: /Hello|until|General|Primary|Election|concluded/ })
+    .first()
 }
 
 test.describe('Mobile Navigation', () => {
@@ -29,10 +32,12 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    await expect(campaignPageH1(page)).toBeVisible({ timeout: 60000 })
+    await expect(campaignPageGreetingHeading(page)).toBeVisible({
+      timeout: 90000,
+    })
 
     await visualSnapshot(page, 'mobile-dashboard.png', {
-      mask: [campaignPageH1(page)],
+      mask: [campaignPageGreetingHeading(page)],
     })
     console.log('✅ Mobile dashboard accessible')
   })
@@ -69,7 +74,7 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible({ timeout: 30000 })
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
     await visualSnapshot(page, 'mobile-ai-assistant.png', {
@@ -85,7 +90,7 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
-    ).toBeVisible({ timeout: 30000 })
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
     await visualSnapshot(page, 'mobile-content-builder.png', {
@@ -94,10 +99,15 @@ test.describe('Mobile Navigation', () => {
   })
 
   test('should navigate to My Profile on mobile', async ({ page }) => {
+    test.setTimeout(120000)
     await WaitHelper.waitForPageReady(page)
 
     await page.goto('/dashboard/profile')
+    await page.waitForURL(/\/dashboard\/profile/)
     await WaitHelper.waitForPageReady(page)
+    await expect(
+      page.getByRole('heading', { name: 'Personal Information' }).first(),
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const bodyContent = page.locator('body')

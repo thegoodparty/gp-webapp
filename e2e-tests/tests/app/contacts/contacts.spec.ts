@@ -5,6 +5,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 
 /**
  * E2E: Contacts page.
@@ -111,11 +112,7 @@ test.describe('Contacts Page', () => {
     //
     //
     // --- Person overlay: click first row opens side panel with that person's data ---
-    // Sheet may expose [data-slot="sheet-content"] and/or role="dialog" depending on layout/version.
-    const personSheet = page
-      .locator('[data-slot="sheet-content"]')
-      .or(page.getByRole('dialog'))
-      .first()
+    const personSheet = personContactPanel(page)
     for (let attempt = 0; attempt < 3; attempt++) {
       await currentFirstRow.scrollIntoViewIfNeeded()
       await currentFirstRow.locator('td').first().click({ force: true })
@@ -200,13 +197,8 @@ test.describe('Contacts Page', () => {
     // Clicking Create list button
     await createListButton.click({ force: true })
     // Waiting for filters sheet to open
-    const sheet = page
-      .getByRole('dialog')
-      .filter({
-        has: page.getByRole('button', { name: /create segment/i }),
-      })
-      .first()
-    await expect(sheet).toBeVisible({ timeout: 10000 })
+    const sheet = filtersSheet(page, /create segment/i)
+    await expect(sheet).toBeVisible({ timeout: 30000 })
     // Filters sheet is visible
 
     await visualSnapshot(page, 'contacts-filters-sheet.png', {

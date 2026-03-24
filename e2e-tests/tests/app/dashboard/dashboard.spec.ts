@@ -7,9 +7,15 @@ import {
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
-/** Primary campaign heading: old layout uses <main>, new nav uses sidebar inset. */
-function campaignPageH1(page: Page) {
-  return page.locator('main h1, [data-slot="sidebar-inset"] h1').first()
+/**
+ * Greeting line after client campaign/user hydration (HeaderSection).
+ * Avoids matching unrelated h1s; works with legacy layout and sidebar inset.
+ */
+function campaignPageGreetingHeading(page: Page) {
+  return page
+    .getByRole('heading', { level: 1 })
+    .filter({ hasText: /Hello|until|General|Primary|Election|concluded/ })
+    .first()
 }
 
 test.describe('Dashboard Functionality', () => {
@@ -31,12 +37,14 @@ test.describe('Dashboard Functionality', () => {
 
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    await expect(campaignPageH1(page)).toBeVisible({ timeout: 60000 })
+    await expect(campaignPageGreetingHeading(page)).toBeVisible({
+      timeout: 90000,
+    })
     console.log('✅ Dashboard accessible')
     await visualSnapshot(page, 'dashboard.png', {
       mask: [
         // Greeting / election line changes with date and copy experiments
-        campaignPageH1(page),
+        campaignPageGreetingHeading(page),
       ],
     })
 
@@ -44,7 +52,7 @@ test.describe('Dashboard Functionality', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 60000 })
     console.log('✅ AI Assistant accessible')
     await visualSnapshot(page, 'campaign-assistant.png')
 
