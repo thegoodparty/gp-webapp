@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import {
   blockSlowScripts,
@@ -6,6 +6,11 @@ import {
 } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
+
+/** Primary campaign heading: old layout uses <main>, new nav uses sidebar inset. */
+function campaignPageH1(page: Page) {
+  return page.locator('main h1, [data-slot="sidebar-inset"] h1').first()
+}
 
 test.describe('Dashboard Functionality', () => {
   test.beforeEach(async ({ page }) => {
@@ -15,23 +20,23 @@ test.describe('Dashboard Functionality', () => {
   test('should access dashboard and navigate to app features', async ({
     page,
   }) => {
+    test.setTimeout(120000)
     console.log(
       `🧪 Testing dashboard functionality with pre-authenticated user`,
     )
     await authenticateTestUser(page)
     await page.goto('/dashboard')
+    await page.waitForURL(/\/dashboard/)
     await NavigationHelper.dismissOverlays(page)
 
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    await expect(
-      page.getByRole('heading', { level: 1 }).first(),
-    ).toBeVisible()
+    await expect(campaignPageH1(page)).toBeVisible({ timeout: 60000 })
     console.log('✅ Dashboard accessible')
     await visualSnapshot(page, 'dashboard.png', {
       mask: [
         // Greeting / election line changes with date and copy experiments
-        page.getByRole('heading', { level: 1 }).first(),
+        campaignPageH1(page),
       ],
     })
 

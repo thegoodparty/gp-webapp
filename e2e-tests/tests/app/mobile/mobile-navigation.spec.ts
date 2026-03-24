@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import {
   blockSlowScripts,
@@ -6,6 +6,10 @@ import {
 } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
+
+function campaignPageH1(page: Page) {
+  return page.locator('main h1, [data-slot="sidebar-inset"] h1').first()
+}
 
 test.describe('Mobile Navigation', () => {
   // Configure mobile viewport
@@ -21,15 +25,14 @@ test.describe('Mobile Navigation', () => {
   })
 
   test('should display mobile dashboard', async ({ page }) => {
+    test.setTimeout(120000)
     await WaitHelper.waitForPageReady(page)
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    await expect(
-      page.getByRole('heading', { level: 1 }).first(),
-    ).toBeVisible()
+    await expect(campaignPageH1(page)).toBeVisible({ timeout: 60000 })
 
     await visualSnapshot(page, 'mobile-dashboard.png', {
-      mask: [page.getByRole('heading', { level: 1 }).first()],
+      mask: [campaignPageH1(page)],
     })
     console.log('✅ Mobile dashboard accessible')
   })

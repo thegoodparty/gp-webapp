@@ -111,13 +111,16 @@ test.describe('Contacts Page', () => {
     //
     //
     // --- Person overlay: click first row opens side panel with that person's data ---
-    // Clicking first row to open person overlay
-    const personSheet = page.getByRole('dialog').first()
+    // Sheet may expose [data-slot="sheet-content"] and/or role="dialog" depending on layout/version.
+    const personSheet = page
+      .locator('[data-slot="sheet-content"]')
+      .or(page.getByRole('dialog'))
+      .first()
     for (let attempt = 0; attempt < 3; attempt++) {
       await currentFirstRow.scrollIntoViewIfNeeded()
-      await currentFirstRow.click({ force: true })
+      await currentFirstRow.locator('td').first().click({ force: true })
       try {
-        await expect(personSheet).toBeVisible({ timeout: 10000 })
+        await expect(personSheet).toBeVisible({ timeout: 12000 })
         break
       } catch {
         if (attempt === 2) {

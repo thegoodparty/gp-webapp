@@ -16,11 +16,12 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 
 let filterCallCount = 0
 
-const personPanelLocator = (page: Page) => page.getByRole('dialog').first()
+const personPanelLocator = (page: Page) =>
+  page.locator('[data-slot="sheet-content"]').or(page.getByRole('dialog')).first()
 
 const openPersonPanel = async (row: Locator, panel: Locator) => {
   for (let attempt = 0; attempt < 3; attempt++) {
-    await row.click({ force: true })
+    await row.locator('td').first().click({ force: true })
     try {
       await expect(panel).toBeVisible({ timeout: 10000 })
       return
