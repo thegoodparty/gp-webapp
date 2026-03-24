@@ -1,5 +1,10 @@
 import { icons } from 'lucide-react'
 import { createElement, useState } from 'react'
+import {
+  PAGE_STYLE,
+  PageHeader,
+  STORY_PARAMS,
+} from './foundations-story-helpers'
 
 const meta = {
   title: 'Foundations/Icons',
@@ -15,18 +20,6 @@ const meta = {
 
 export default meta
 
-const PAGE_STYLE = { backgroundColor: '#ffffff', padding: 24, minHeight: '100vh' }
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#737373', marginTop: 4, fontFamily: "'Open Sans', sans-serif" }}>{description}</p>
-    </div>
-  )
-}
-
 // lucide-react's `icons` export is a plain object of { PascalCaseName: IconComponent }
 // This is more reliable than namespace imports in Vite's ESM bundler
 const ALL_ICONS = Object.entries(icons).sort(([a], [b]) => a.localeCompare(b))
@@ -34,6 +27,7 @@ const ALL_ICONS = Object.entries(icons).sort(([a], [b]) => a.localeCompare(b))
 function toKebabCase(name) {
   return name
     .replace(/([A-Z])/g, '-$1')
+    .replace(/([a-z])([0-9])/g, '$1-$2')
     .toLowerCase()
     .replace(/^-/, '')
 }
@@ -106,7 +100,10 @@ export const IconGallery = () => {
           ))}
         </div>
 
-        <p className="text-sm text-gray-400" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+        <p
+          className="text-sm text-gray-400"
+          style={{ fontFamily: "'Open Sans', sans-serif" }}
+        >
           {filtered.length === ALL_ICONS.length
             ? `${ALL_ICONS.length} icons`
             : `${filtered.length} of ${ALL_ICONS.length}`}
@@ -116,7 +113,10 @@ export const IconGallery = () => {
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="py-20 text-center">
-          <p className="text-gray-400 text-sm" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+          <p
+            className="text-gray-400 text-sm"
+            style={{ fontFamily: "'Open Sans', sans-serif" }}
+          >
             No icons match &ldquo;{search}&rdquo;
           </p>
         </div>
@@ -131,7 +131,15 @@ export const IconGallery = () => {
           {filtered.map(([name, Icon]) => {
             const isCopied = copied === name
             return (
-              <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div
+                key={name}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
                 <button
                   onClick={() => handleCopy(name)}
                   title={`Click to copy: ${name}`}
@@ -140,17 +148,28 @@ export const IconGallery = () => {
                       ? 'border-blue-200 bg-blue-50'
                       : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-white'
                   }`}
-                  style={{ aspectRatio: '1', cursor: 'pointer', background: undefined }}
+                  style={{
+                    aspectRatio: '1',
+                    cursor: 'pointer',
+                    background: undefined,
+                  }}
                 >
                   {isCopied ? (
                     <span
                       className="text-blue-600 font-medium"
-                      style={{ fontSize: 11, fontFamily: "'Open Sans', sans-serif" }}
+                      style={{
+                        fontSize: 11,
+                        fontFamily: "'Open Sans', sans-serif",
+                      }}
                     >
                       Copied!
                     </span>
                   ) : (
-                    createElement(Icon, { size, strokeWidth: 1.5, style: { color: 'var(--base-foreground, #0a0a0a)' } })
+                    createElement(Icon, {
+                      size,
+                      strokeWidth: 1.5,
+                      style: { color: 'var(--base-foreground, #0a0a0a)' },
+                    })
                   )}
                 </button>
                 <span

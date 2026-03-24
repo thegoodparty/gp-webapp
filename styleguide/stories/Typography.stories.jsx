@@ -1,5 +1,5 @@
 const meta = {
-  title: 'Design System/Typography',
+  title: 'Foundations/Typography',
   parameters: {
     docs: {
       description: {

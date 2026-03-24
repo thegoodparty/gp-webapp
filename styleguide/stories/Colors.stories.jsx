@@ -1,5 +1,5 @@
 const meta = {
-  title: 'Design System/Colors',
+  title: 'Foundations/Colors',
   parameters: {
     docs: {
       description: {
