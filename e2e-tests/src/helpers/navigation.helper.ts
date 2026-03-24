@@ -9,6 +9,38 @@ export const blockSlowScripts = async (page: Page) => {
 }
 
 export class NavigationHelper {
+  /**
+   * Opens the mobile nav drawer. New dashboard sidebar uses an "Open menu" button;
+   * legacy layouts use the Hamburger (`data-testid="tilt"`).
+   */
+  static async openMobileNavMenu(page: Page): Promise<void> {
+    const openMenu = page.getByRole('button', { name: /open menu/i })
+    if (await openMenu.isVisible().catch(() => false)) {
+      await openMenu.click()
+      return
+    }
+
+    const tilts = page.getByTestId('tilt')
+    const count = await tilts.count()
+    if (count === 0) {
+      throw new Error('No mobile menu trigger found (Open menu or tilt)')
+    }
+    for (let i = 0; i < count; i++) {
+      const t = tilts.nth(i)
+      if (await t.isVisible().catch(() => false)) {
+        await t.click()
+        return
+      }
+    }
+    // Legacy layouts sometimes attach two tilt nodes (e.g. desktop + mobile); the
+    // actionable one may only match index 1, or need force when CSS hides duplicates.
+    if (count >= 2) {
+      await tilts.nth(1).click({ force: true })
+      return
+    }
+    await tilts.first().click({ force: true })
+  }
+
   static async navigateToPage(page: Page, path: string): Promise<void> {
     await page.goto(path)
     await WaitHelper.waitForPageReady(page)
@@ -69,10 +101,17 @@ export class NavigationHelper {
     isMobile: boolean = false,
   ): Promise<void> {
     if (isMobile) {
-      // Open mobile menu
-      await page.getByTestId('tilt').nth(1).click()
+      await NavigationHelper.openMobileNavMenu(page)
       await page.getByRole('link', { name: navItem }).click()
-      await page.getByTestId('tilt').nth(1).click() // Close menu
+      const closeMenu = page.getByRole('button', { name: /close menu/i })
+      if (await closeMenu.isVisible().catch(() => false)) {
+        await closeMenu.click()
+      } else {
+        const tilt = page.getByTestId('tilt').first()
+        if (await tilt.isVisible().catch(() => false)) {
+          await tilt.click()
+        }
+      }
     } else {
       await page.getByRole('link', { name: navItem }).click()
     }

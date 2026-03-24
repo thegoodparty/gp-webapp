@@ -24,13 +24,14 @@ test.describe('Dashboard Functionality', () => {
 
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    const dashboardContent = page.locator('h1, h2, h3, main')
-    await expect(dashboardContent.first()).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 1 }).first(),
+    ).toBeVisible()
     console.log('✅ Dashboard accessible')
     await visualSnapshot(page, 'dashboard.png', {
       mask: [
-        // The election countdown changes weekly (e.g. "35 weeks until Election Day!")
-        page.getByRole('heading', { name: /until .+ Election Day/ }),
+        // Greeting / election line changes with date and copy experiments
+        page.getByRole('heading', { level: 1 }).first(),
       ],
     })
 
