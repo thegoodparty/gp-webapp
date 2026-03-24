@@ -15,6 +15,7 @@ import {
 } from '@shared/organization-picker'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -60,10 +61,7 @@ export default function ElectionResultPage(): React.JSX.Element {
       ? goalsObj.electionDate
       : undefined
   const electionDate = details?.electionDate || goalsElectionDate
-  const officeName =
-    details?.office?.toLowerCase() === 'other'
-      ? details?.otherOffice
-      : details?.office
+  const positionName = usePositionName()
 
   const { errorSnackbar } = useSnackbar()
   const [requestState, setRequestState] = useState<RequestState>({
@@ -75,10 +73,8 @@ export default function ElectionResultPage(): React.JSX.Element {
   const queryClient = useQueryClient()
 
   const createElectedOfficeMutation = useMutation({
-    mutationFn: async (electedDate: string) =>
-      clientRequest('POST /v1/elected-office', { electedDate }).then(
-        (res) => res.data,
-      ),
+    mutationFn: async () =>
+      clientRequest('POST /v1/elected-office', {}).then((res) => res.data),
     onSuccess: async (newOffice) => {
       if (winServeSplit) {
         const organizations = await clientRequest(
@@ -129,11 +125,7 @@ export default function ElectionResultPage(): React.JSX.Element {
         if (!electionDate) {
           throw new Error('Invalid election date')
         }
-        const electedDate = new Date(electionDate).toISOString().split('T')[0]
-        if (!electedDate) {
-          throw new Error('Invalid elected date')
-        }
-        await createElectedOfficeMutation.mutateAsync(electedDate)
+        await createElectedOfficeMutation.mutateAsync()
       } else {
         router.replace('/dashboard/election-result/loss')
       }
@@ -176,7 +168,7 @@ export default function ElectionResultPage(): React.JSX.Element {
                 >
                   Election Results:
                   <br />
-                  {officeName}
+                  {positionName || 'Your Office'}
                 </h1>
                 <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
                   It looks like your general election date has passed. Please
