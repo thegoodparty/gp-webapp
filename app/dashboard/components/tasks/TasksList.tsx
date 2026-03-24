@@ -114,12 +114,7 @@ const TasksList = ({
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
-    const nonOutreachTypes = [
-      TASK_TYPES.education,
-      TASK_TYPES.events,
-      TASK_TYPES.compliance,
-    ]
-    if (nonOutreachTypes.includes(flowType)) {
+    if (NON_OUTREACH_TYPES.includes(flowType)) {
       void (async () => {
         const ok = await completeTask(task.id)
         if (ok && task.link?.startsWith('/')) {
