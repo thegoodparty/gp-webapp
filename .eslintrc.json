@@ -60,6 +60,12 @@
       }
     },
     {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "off"
+      }
+    },
+    {
       "files": ["styleguide/stories/**/*.ts", "styleguide/stories/**/*.tsx"],
       "plugins": ["@typescript-eslint"],
       "parser": "@typescript-eslint/parser",
