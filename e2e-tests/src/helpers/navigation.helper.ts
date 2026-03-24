@@ -51,15 +51,24 @@ export class NavigationHelper {
       // Dismiss cookie banner
       await NavigationHelper.dismissCookieBanner(page)
 
-      // Dismiss promotional overlays
-      const promoOverlay = page.getByRole('heading', {
-        name: 'Win with GoodParty.org Pro!',
-      })
-      if (await promoOverlay.isVisible({ timeout: 2000 })) {
-        await page.getByRole('img').first().click() // Close button
-      }
+      // Dismiss any Pro upgrade modal variant
+      await NavigationHelper.dismissProUpgradeModal(page)
     } catch {
       // Overlays not present - continue
+    }
+  }
+
+  static async dismissProUpgradeModal(page: Page): Promise<void> {
+    try {
+      const proModal = page.getByRole('heading', {
+        name: /GoodParty\.org Pro|Pro voter data|campaign with Pro/i,
+      })
+      if (await proModal.isVisible({ timeout: 2000 })) {
+        await page.locator('.modal-close').click()
+        await proModal.waitFor({ state: 'hidden', timeout: 5000 })
+      }
+    } catch {
+      // Modal not present - continue
     }
   }
 

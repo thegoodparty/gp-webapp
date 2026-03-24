@@ -325,7 +325,7 @@ test.describe.serial('poll onboarding', () => {
     // Become a Serve user
     await page.goto('/dashboard/election-result')
     await page.getByRole('button', { name: 'I won my race' }).click()
-    await page.waitForTimeout(3000)
+    await page.waitForURL('/polls/welcome')
 
     // Store for reuse in subsequent tests
     sharedUser = user

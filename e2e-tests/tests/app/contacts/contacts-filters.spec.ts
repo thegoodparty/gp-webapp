@@ -77,7 +77,7 @@ const testFilterField = async (
     ).toHaveText(/.+/)
   }
 
-  await page.getByTestId('edit-list-button').first().click()
+  await page.getByTestId('edit-list-button').first().click({ force: true })
   const sheet = page
     .getByRole('dialog')
     .filter({
@@ -97,13 +97,8 @@ const testFilterField = async (
   const updateBtn = sheet.getByRole('button', { name: /update segment/i })
   await updateBtn.scrollIntoViewIfNeeded()
   await expect(updateBtn).toBeEnabled({ timeout: 5000 })
-  await updateBtn.click()
-  try {
-    await expect(sheet).toBeHidden({ timeout: 15000 })
-  } catch {
-    await page.keyboard.press('Escape')
-    await expect(sheet).toBeHidden({ timeout: 5000 })
-  }
+  await updateBtn.click({ force: true })
+  await expect(sheet).toBeHidden({ timeout: 15000 })
 
   const table = page.locator('table').first()
   const firstCell = table.locator('tbody tr').first().locator('td').first()
@@ -154,13 +149,12 @@ test('validate contacts filters', async ({ page }) => {
     },
   })
 
-  await page.goto('/dashboard/election-result', {
-    waitUntil: 'domcontentloaded',
-  })
-  await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForTimeout(3000)
+  await page.goto('/dashboard/election-result')
 
-  await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'I won my race' }).click()
+  await page.waitForURL('/polls/welcome')
+
+  await page.goto('/dashboard/contacts')
   await page.waitForLoadState('networkidle')
   await NavigationHelper.dismissOverlays(page)
 
@@ -190,6 +184,12 @@ test('validate contacts filters', async ({ page }) => {
   await expect(createBtn).toBeEnabled({ timeout: 5000 })
   await createBtn.click({ force: true })
   await expect(sheet).toBeHidden({ timeout: 15000 })
+
+  // Wait for the newly created segment to be selected in the dropdown
+  await expect(
+    page.getByTestId('edit-list-button').first(),
+  ).toBeVisible({ timeout: 15000 })
+
   await expect(
     table.locator('tbody tr').first().locator('td').first(),
   ).toHaveText(/.+/)

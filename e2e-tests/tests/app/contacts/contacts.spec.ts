@@ -23,18 +23,16 @@ test.describe('Contacts Page', () => {
     // Authenticated user
 
     // --- Get elected office ---
-    await page.goto('/dashboard/election-result', {
-      waitUntil: 'domcontentloaded',
-    })
+    await page.goto('/dashboard/election-result')
     await page
       .getByRole('button', { name: 'I won my race' })
       .click({ timeout: 10000 })
 
-    await page.waitForTimeout(3000)
+    await page.waitForURL('/polls/welcome')
 
     // --- Navigation: go to contacts, dismiss cookie/overlays, wait for ready ---
     // Navigating to /dashboard/contacts
-    await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
+    await page.goto('/dashboard/contacts')
     await NavigationHelper.dismissOverlays(page)
     // Dismissed overlays, page ready
 
@@ -89,10 +87,11 @@ test.describe('Contacts Page', () => {
       .first()
     await expect(nextLink).toBeVisible({ timeout: 5000 })
     // Clicking pagination next link
-    await nextLink.click()
+    await nextLink.click({ force: true })
+    await page.waitForURL(/page=2/, { timeout: 10000 })
     await expect(
       pagination.getByRole('link', { name: '2' }).first(),
-    ).toHaveAttribute('data-active', 'true', { timeout: 5000 })
+    ).toHaveAttribute('data-active', 'true', { timeout: 10000 })
     // Confirmed current page is 2
     const newTableRows = table.locator('tbody tr')
     const newRowCount = await newTableRows.count()
@@ -204,7 +203,8 @@ test.describe('Contacts Page', () => {
     const age18_25Checkbox = age18_25Label
       .locator('xpath=..')
       .getByRole('checkbox')
-    await age18_25Checkbox.click({ timeout: 10000 })
+    await age18_25Checkbox.scrollIntoViewIfNeeded()
+    await age18_25Checkbox.click({ force: true, timeout: 10000 })
     // Selected 18-25 age filter
     const createSegmentButton = sheet.getByRole('button', {
       name: /create segment/i,

@@ -16,6 +16,7 @@ import {
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { usePositionName } from '@shared/hooks/usePositionName'
+import { electedOfficeQueryOptions } from '@shared/hooks/useElectedOffice'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -78,6 +79,9 @@ export default function ElectionResultPage(): React.JSX.Element {
         (res) => res.data,
       ),
     onSuccess: async (newOffice) => {
+      queryClient.invalidateQueries({
+        queryKey: electedOfficeQueryOptions.queryKey,
+      })
       if (winServeSplit) {
         const organizations = await clientRequest(
           'GET /v1/organizations',
