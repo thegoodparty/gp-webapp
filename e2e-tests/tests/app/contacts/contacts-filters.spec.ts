@@ -6,10 +6,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
-import {
-  filtersSheet,
-  personContactPanel,
-} from 'src/helpers/contacts-e2e'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -154,7 +151,6 @@ test('validate contacts filters', async ({ page }) => {
   await page.waitForTimeout(3000)
 
   await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
-  await page.waitForLoadState('networkidle').catch(() => {})
   await NavigationHelper.dismissOverlays(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)

@@ -92,10 +92,7 @@ const TasksList = ({
     const { id: taskId, flowType: type } = task
 
     if (NON_OUTREACH_TYPES.includes(type)) {
-      const ok = await completeTask(taskId)
-      if (ok && task.link?.startsWith('/')) {
-        router.push(task.link)
-      }
+      await completeTask(taskId)
     } else {
       setCompleteModalTask(task)
     }
