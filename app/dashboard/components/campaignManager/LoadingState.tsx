@@ -36,7 +36,11 @@ const loadingItems: LoadingItem[] = [
   },
 ]
 
-export default function LoadingState() {
+export default function LoadingState({
+  hideCallback,
+}: {
+  hideCallback?: () => void
+}) {
   const [showChecklist, setShowChecklist] = useState(
     () => !getCookie(AI_CAMPAIGN_COOKIE),
   )
@@ -44,14 +48,20 @@ export default function LoadingState() {
   const onComplete = () => {
     setCookie(AI_CAMPAIGN_COOKIE, 'true')
     setShowChecklist(false)
+    if (hideCallback) {
+      hideCallback()
+    }
   }
 
   if (!showChecklist) {
+    if (hideCallback) {
+      hideCallback()
+    }
     return null
   }
 
   return (
-    <Card className="px-4 py-6">
+    <Card className="px-4 py-6 mt-4">
       <CardHeader>
         <CardTitle>Preparing your campaign plan...</CardTitle>
       </CardHeader>

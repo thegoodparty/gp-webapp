@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
 import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
@@ -30,6 +30,7 @@ export default function CampaignManager({
   const [campaign] = useCampaign()
   const queryClient = useQueryClient()
   const generatingRef = useRef(false)
+  const [showLoadingState, setShowLoadingState] = useState(true)
 
   const { data: tasks = [] } = useQuery({
     queryKey: TASKS_QUERY_KEY,
@@ -81,8 +82,8 @@ export default function CampaignManager({
         <CampaignUpdateHistoryProvider>
           <HeaderSection />
           <ProgressSection />
-          <LoadingState />
-          {isGenerating && progress && (
+          <LoadingState hideCallback={() => setShowLoadingState(false)} />
+          {isGenerating && progress && showLoadingState && (
             <div className="mt-4 rounded-lg border bg-white p-4">
               <p className="mb-2 text-sm font-medium text-gray-700">
                 {progress.message || 'Generating AI tasks...'}
@@ -98,7 +99,7 @@ export default function CampaignManager({
               </p>
             </div>
           )}
-          {error && !isGenerating && (
+          {error && !isGenerating && !showLoadingState && (
             <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
               <p className="text-sm text-red-700">
                 Failed to generate tasks. Please try again later.
@@ -112,17 +113,21 @@ export default function CampaignManager({
               </button>
             </div>
           )}
-          {contactGoals ? (
-            <TasksList
-              campaign={campaign}
-              tasks={tasks}
-              tcrCompliance={tcrCompliance}
-              isLegacyList={false}
-            />
-          ) : (
-            <div className="mt-4">
-              <EmptyState />
-            </div>
+          {!showLoadingState && (
+            <>
+              {contactGoals ? (
+                <TasksList
+                  campaign={campaign}
+                  tasks={tasks}
+                  tcrCompliance={tcrCompliance}
+                  isLegacyList={false}
+                />
+              ) : (
+                <div className="mt-4">
+                  <EmptyState />
+                </div>
+              )}
+            </>
           )}
         </CampaignUpdateHistoryProvider>
       </VoterContactsProvider>
