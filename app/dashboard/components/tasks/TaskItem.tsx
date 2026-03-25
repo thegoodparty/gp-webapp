@@ -52,6 +52,12 @@ export default function TaskItem({
   const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
   const locked = noLongerAvailable || Boolean(proRequired && !isPro)
+  let lockedReason = ''
+  if (noLongerAvailable) {
+    lockedReason = 'This task is no longer available'
+  } else if (proRequired && !isPro) {
+    lockedReason = 'This task is only available to Pro users'
+  }
 
   const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
 
@@ -70,6 +76,7 @@ export default function TaskItem({
         type={displayTaskType}
         checked={completed}
         locked={locked}
+        lockedReason={lockedReason}
         onCheckedChange={() => onCheck(task)}
         onClick={() => onAction(task)}
         link={link}

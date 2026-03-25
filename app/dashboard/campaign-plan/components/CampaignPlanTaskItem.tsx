@@ -4,6 +4,7 @@ import { ChevronRight, Lock } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@styleguide/lib/utils'
 import TaskCheckbox from '../../components/tasks/TaskCheckbox'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@styleguide'
 
 interface TaskItemProps {
   title: string
@@ -13,6 +14,7 @@ interface TaskItemProps {
   checked?: boolean
   locked?: boolean
   noLongerAvailable?: boolean
+  lockedReason?: string
   link?: string
   onCheckedChange?: (checked: boolean) => void
   onClick?: () => void
@@ -28,6 +30,7 @@ export default function CampaignPlanTaskItem({
   checked = false,
   locked = false,
   noLongerAvailable = false,
+  lockedReason = '',
   link,
   onCheckedChange,
   onClick,
@@ -101,39 +104,42 @@ export default function CampaignPlanTaskItem({
     </div>
   )
 
-  const mainArea =
-    !isClickable ? (
-      <div className={contentClassName}>{body}</div>
-    ) : opensInNewTab && link ? (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={interactiveClassName}
-        onClick={() => {
+  const mainArea = !isClickable ? (
+    <div className={contentClassName}>{body}</div>
+  ) : opensInNewTab && link ? (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={interactiveClassName}
+      onClick={() => {
+        runCallbacks()
+      }}
+    >
+      {body}
+    </a>
+  ) : link ? (
+    <a
+      href={link}
+      className={interactiveClassName}
+      onClick={(e) => {
+        if (onClick || onAction) {
+          e.preventDefault()
           runCallbacks()
-        }}
-      >
-        {body}
-      </a>
-    ) : link ? (
-      <a
-        href={link}
-        className={interactiveClassName}
-        onClick={(e) => {
-          if (onClick || onAction) {
-            e.preventDefault()
-            runCallbacks()
-          }
-        }}
-      >
-        {body}
-      </a>
-    ) : (
-      <button type="button" className={interactiveClassName} onClick={runCallbacks}>
-        {body}
-      </button>
-    )
+        }
+      }}
+    >
+      {body}
+    </a>
+  ) : (
+    <button
+      type="button"
+      className={interactiveClassName}
+      onClick={runCallbacks}
+    >
+      {body}
+    </button>
+  )
 
   return (
     <div
@@ -142,7 +148,16 @@ export default function CampaignPlanTaskItem({
     >
       <div className="flex shrink-0 items-start justify-center self-stretch pb-3 pl-4 pr-3 pt-3.5">
         {locked ? (
-          <Lock size={20} strokeWidth={1.5} className="text-base-foreground" />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Lock
+                size={20}
+                strokeWidth={1.5}
+                className="text-base-foreground"
+              />
+            </TooltipTrigger>
+            <TooltipContent>{lockedReason}</TooltipContent>
+          </Tooltip>
         ) : (
           <TaskCheckbox checked={checked} onCheckedChange={onCheckedChange} />
         )}
