@@ -35,6 +35,10 @@ export default function CampaignManager({
   const generatingRef = useRef(false)
   const [showLoadingState, setShowLoadingState] = useState(true)
 
+  const hideLoadingChecklist = useCallback(() => {
+    setShowLoadingState(false)
+  }, [])
+
   useEffect(() => {
     if (getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)) {
       setShowLoadingState(false)
@@ -91,7 +95,7 @@ export default function CampaignManager({
         <CampaignUpdateHistoryProvider>
           <HeaderSection />
           <ProgressSection />
-          <LoadingState hideCallback={() => setShowLoadingState(false)} />
+          <LoadingState hideCallback={hideLoadingChecklist} />
           {isGenerating && progress && showLoadingState && (
             <div className="mt-4 rounded-lg border bg-white p-4">
               <p className="mb-2 text-sm font-medium text-gray-700">
