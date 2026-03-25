@@ -70,7 +70,7 @@ describe('TaskItem interactions', () => {
     render(
       <CampaignPlanTaskItem {...defaultProps} locked onClick={handleClick} />,
     )
-    fireEvent.click(screen.getByText('Test Task'))
+    fireEvent.click(screen.getByRole('button', { name: /Test Task/i }))
 
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
@@ -79,13 +79,12 @@ describe('TaskItem interactions', () => {
     const handleClick = vi.fn()
 
     render(<CampaignPlanTaskItem {...defaultProps} onClick={handleClick} />)
-    fireEvent.click(screen.getByText('Test Task'))
+    fireEvent.click(screen.getByRole('button', { name: /Test Task/i }))
 
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
-  it('calls onClick then opens http(s) links in a new tab', () => {
-    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+  it('renders an external link and invokes onClick', () => {
     const handleClick = vi.fn()
 
     render(
@@ -95,18 +94,17 @@ describe('TaskItem interactions', () => {
         onClick={handleClick}
       />,
     )
-    fireEvent.click(screen.getByText('Test Task'))
+    const taskLink = screen.getByRole('link', { name: /Test Task/i })
+    expect(taskLink).toHaveAttribute('href', 'https://example.com/task')
+    expect(taskLink).toHaveAttribute('target', '_blank')
+    expect(taskLink).toHaveAttribute('rel', 'noopener noreferrer')
+
+    fireEvent.click(taskLink)
 
     expect(handleClick).toHaveBeenCalledTimes(1)
-    expect(openSpy).toHaveBeenCalledWith(
-      'https://example.com/task',
-      '_blank',
-      'noopener',
-    )
-    openSpy.mockRestore()
   })
 
-  it('invokes onClick for internal app paths instead of window.open', () => {
+  it('invokes onClick for internal app paths without using window.open', () => {
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
     const handleClick = vi.fn()
 
@@ -117,7 +115,10 @@ describe('TaskItem interactions', () => {
         onClick={handleClick}
       />,
     )
-    fireEvent.click(screen.getByText('Test Task'))
+    const taskLink = screen.getByRole('link', { name: /Test Task/i })
+    expect(taskLink).toHaveAttribute('href', '/dashboard/campaign-details')
+
+    fireEvent.click(taskLink)
 
     expect(openSpy).not.toHaveBeenCalled()
     expect(handleClick).toHaveBeenCalledTimes(1)
