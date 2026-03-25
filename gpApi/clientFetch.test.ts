@@ -25,10 +25,7 @@ describe('clientFetch org slug header', () => {
       return { status: 200, data: { organizations: [] } }
     })
 
-    await clientFetch(
-      { path: '/organizations', method: 'GET' },
-      undefined,
-    )
+    await clientFetch({ path: '/organizations', method: 'GET' }, undefined)
 
     expect(capturedHeader).toBe('my-org')
   })
@@ -40,10 +37,7 @@ describe('clientFetch org slug header', () => {
       return { status: 200, data: { organizations: [] } }
     })
 
-    await clientFetch(
-      { path: '/organizations', method: 'GET' },
-      undefined,
-    )
+    await clientFetch({ path: '/organizations', method: 'GET' }, undefined)
 
     expect(capturedHeader).toBeUndefined()
   })
