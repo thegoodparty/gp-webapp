@@ -103,22 +103,21 @@ export const OrganizationProvider = ({
 
   const [selectedSlug, _setSelectedSlug] = useLocalStorageValue(LS_KEY)
 
-  useEffect(() => {
-    if (!enabled) {
-      deleteCookie(ORG_SLUG_COOKIE)
-      return
-    }
-    const slug = selectedSlug ?? organizations[0]?.slug
-    if (slug) {
-      setCookie(ORG_SLUG_COOKIE, slug)
-    }
-  }, [enabled, selectedSlug, organizations])
-
   const selectedOrganization = useMemo(
     () =>
       organizations.find((o) => o.slug === selectedSlug) ?? organizations[0],
     [organizations, selectedSlug],
   )
+
+  useEffect(() => {
+    if (!enabled) {
+      deleteCookie(ORG_SLUG_COOKIE)
+      return
+    }
+    if (selectedOrganization) {
+      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
+    }
+  }, [enabled, selectedOrganization])
 
   const setSelectedSlug = useCallback(
     (slug: string) => {
