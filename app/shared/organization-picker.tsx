@@ -28,11 +28,12 @@ import { ChevronDown } from 'lucide-react'
 import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { queryClient } from './query-client'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCampaign } from './hooks/useCampaign'
 
 const LS_KEY = 'selected-organization-slug'
+const SHARED_PATHS = ['/dashboard/profile', '/dashboard/campaign-details']
 
 interface OrganizationContextValue {
   organizations: Organization[]
@@ -123,8 +124,12 @@ export const OrganizationProvider = ({
     (slug: string) => {
       _setSelectedSlug(slug)
       setCookie(ORG_SLUG_COOKIE, slug)
-      // When we change the org, we need to refetch just about everything.
-      queryClient.invalidateQueries()
+      // Exclude the organizations query from invalidation — the org list doesn't
+      // change when switching between orgs, and invalidating it causes a brief
+      // flash where nav items disappear while the list refetches.
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
+      })
     },
     [_setSelectedSlug],
   )
@@ -149,6 +154,7 @@ export const OrganizationPicker = () => {
   const isMobile = useIsMobile()
 
   const [campaign] = useCampaign()
+  const pathname = usePathname()
 
   if (!ctx || ctx.organizations.length === 0) return null
 
@@ -157,7 +163,11 @@ export const OrganizationPicker = () => {
   const handleOrgSwitch = (org: Organization) => {
     if (org.slug === selected.slug) return
     setSelectedSlug(org.slug)
-    router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+
+    const isOnSharedPage = SHARED_PATHS.some((p) => pathname?.startsWith(p))
+    if (!isOnSharedPage) {
+      router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+    }
   }
 
   return (

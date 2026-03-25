@@ -8,6 +8,7 @@ export const handleLogOut = async (
   e?: MouseEvent<HTMLElement>,
 ): Promise<void> => {
   deleteUserCookies()
+  localStorage.removeItem('selected-organization-slug')
   e?.currentTarget && fireGTMButtonClickEvent(e.currentTarget)
   await clientFetch(apiRoutes.authentication.logout)
   window.location.replace('/login')
