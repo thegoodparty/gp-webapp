@@ -48,7 +48,23 @@ describe('TaskItem interactions', () => {
     expect(container.querySelectorAll('svg')).toHaveLength(1)
   })
 
-  it('does not invoke onClick when locked', () => {
+  it('does not invoke onClick when noLongerAvailable', () => {
+    const handleClick = vi.fn()
+
+    render(
+      <CampaignPlanTaskItem
+        {...defaultProps}
+        locked
+        noLongerAvailable
+        onClick={handleClick}
+      />,
+    )
+    fireEvent.click(screen.getByText('Test Task'))
+
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+
+  it('invokes onClick when locked without noLongerAvailable (e.g. pro-only task)', () => {
     const handleClick = vi.fn()
 
     render(
@@ -56,7 +72,7 @@ describe('TaskItem interactions', () => {
     )
     fireEvent.click(screen.getByText('Test Task'))
 
-    expect(handleClick).not.toHaveBeenCalled()
+    expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
   it('invokes onClick from the content area when unlocked', () => {

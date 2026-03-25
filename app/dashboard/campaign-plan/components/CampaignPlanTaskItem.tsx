@@ -37,7 +37,6 @@ export default function CampaignPlanTaskItem({
   const opensInNewTab = typeof link === 'string' && /^https?:\/\//i.test(link)
   const isClickable =
     !noLongerAvailable &&
-    !locked &&
     (Boolean(onClick) || Boolean(onAction) || Boolean(link))
 
   const handleClick = () => {
