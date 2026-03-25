@@ -4,15 +4,14 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { useLocalStorageValue } from './utils/local-storage'
-import { setCookie, deleteCookie } from 'helpers/cookieHelper'
+import { setCookie, getCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import {
   DropdownMenu,
@@ -32,7 +31,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCampaign } from './hooks/useCampaign'
 
-const LS_KEY = 'selected-organization-slug'
 const SHARED_PATHS = ['/dashboard/profile', '/dashboard/campaign-details']
 
 interface OrganizationContextValue {
@@ -102,7 +100,15 @@ export const OrganizationProvider = ({
     enabled,
   })
 
-  const [selectedSlug, _setSelectedSlug] = useLocalStorageValue(LS_KEY)
+  const [selectedSlug, _setSelectedSlug] = useState(() => {
+    const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
+    const isValid = initialOrganizations.some((o) => o.slug === cookieSlug)
+    if (!isValid && initialOrganizations[0]) {
+      setCookie(ORG_SLUG_COOKIE, initialOrganizations[0].slug)
+      return initialOrganizations[0].slug
+    }
+    return cookieSlug
+  })
 
   const selectedOrganization = useMemo(
     () =>
@@ -110,29 +116,16 @@ export const OrganizationProvider = ({
     [organizations, selectedSlug],
   )
 
-  useEffect(() => {
-    if (!enabled) {
-      deleteCookie(ORG_SLUG_COOKIE)
-      return
-    }
-    if (selectedOrganization) {
-      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
-    }
-  }, [enabled, selectedOrganization])
-
-  const setSelectedSlug = useCallback(
-    (slug: string) => {
-      _setSelectedSlug(slug)
-      setCookie(ORG_SLUG_COOKIE, slug)
-      // Exclude the organizations query from invalidation — the org list doesn't
-      // change when switching between orgs, and invalidating it causes a brief
-      // flash where nav items disappear while the list refetches.
-      queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
-      })
-    },
-    [_setSelectedSlug],
-  )
+  const setSelectedSlug = useCallback((slug: string) => {
+    _setSelectedSlug(slug)
+    setCookie(ORG_SLUG_COOKIE, slug)
+    // Exclude the organizations query from invalidation — the org list doesn't
+    // change when switching between orgs, and invalidating it causes a brief
+    // flash where nav items disappear while the list refetches.
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
+    })
+  }, [])
 
   return (
     <OrganizationContext.Provider
