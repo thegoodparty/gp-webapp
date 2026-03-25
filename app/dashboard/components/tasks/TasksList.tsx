@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
-import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { DashboardHeader } from 'app/dashboard/components/DashboardHeader'
@@ -28,13 +27,14 @@ import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, startOfWeek, addWeeks } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import WeeklyTaskNavigator from './WeeklyTaskNavigator'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
-import { Card } from '@styleguide'
+import { Card, cn } from '@styleguide'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -63,6 +63,46 @@ const TasksList = ({
     setTasks(tasksProp)
   }, [tasksProp])
 
+  const { details, pathToVictory, hasFreeTextsOffer } = campaign
+  const isPro = campaign.isPro ?? false
+  const { electionDate } = details ?? {}
+  const viabilityScore = pathToVictory?.data?.viability?.score || 0
+  const daysUntilElection = electionDate
+    ? differenceInDays(electionDate, new Date())
+    : Infinity
+
+  const weeksUntilElection = Math.ceil(daysUntilElection / 7)
+
+  const weekNumbers = [...new Set(tasks.map((t) => t.week))].sort(
+    (a, b) => b - a,
+  )
+
+  const defaultIndex = Math.max(
+    0,
+    weekNumbers.findIndex((w) => w <= weeksUntilElection),
+  )
+  const [selectedWeekIndex, setSelectedWeekIndex] = useState(-1)
+
+  useEffect(() => {
+    setSelectedWeekIndex(-1)
+  }, [tasksProp])
+
+  const clampedIndex =
+    selectedWeekIndex === -1
+      ? defaultIndex
+      : Math.max(0, Math.min(selectedWeekIndex, weekNumbers.length - 1))
+  const selectedWeek = weekNumbers[clampedIndex] ?? 0
+  const canGoPrevious = clampedIndex < weekNumbers.length - 1
+  const canGoNext = clampedIndex > 0
+
+  const currentWeekStart = electionDate
+    ? startOfWeek(addWeeks(new Date(electionDate), -selectedWeek), {
+        weekStartsOn: 0,
+      })
+    : startOfWeek(new Date(), { weekStartsOn: 0 })
+
+  const filteredTasks = tasks.filter((t) => t.week === selectedWeek)
+
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
@@ -79,14 +119,6 @@ const TasksList = ({
     ReturnType<typeof buildTrackingAttrs>
   >({})
   const { errorSnackbar } = useSnackbar()
-
-  const { details, pathToVictory, hasFreeTextsOffer } = campaign
-  const isPro = campaign.isPro ?? false
-  const { electionDate } = details ?? {}
-  const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = electionDate
-    ? differenceInDays(electionDate, new Date())
-    : Infinity
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
@@ -200,7 +232,12 @@ const TasksList = ({
   return (
     <>
       {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
-      <Card className="p-6 mt-8 mb-32 gap-0">
+      <Card
+        className={cn(
+          'mt-8 mb-32 gap-0',
+          isLegacyList ? 'p-6' : 'pt-6 font-opensans',
+        )}
+      >
         {isLegacyList ? (
           <>
             <H2>Tasks for this week</H2>
@@ -209,15 +246,29 @@ const TasksList = ({
             </Body2>
           </>
         ) : (
-          <div className="flex justify-between items-center pb-6">
-            <div className="text-lg font-semibold">Campaign Plan</div>
-            <div className="text-sm text-primary">View Full Plan</div>
-          </div>
+          <>
+            <div className="flex justify-between items-baseline border-b px-6 pb-6">
+              <div className="text-lg font-semibold">Campaign plan</div>
+              <button
+                type="button"
+                className="text-sm font-semibold text-primary"
+              >
+                View full plan
+              </button>
+            </div>
+            <WeeklyTaskNavigator
+              currentWeekStart={currentWeekStart}
+              onPrevious={() => setSelectedWeekIndex(clampedIndex + 1)}
+              onNext={() => setSelectedWeekIndex(clampedIndex - 1)}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+            />
+          </>
         )}
 
         <ul>
-          {tasks.length > 0 ? (
-            tasks.map((task) => (
+          {(isLegacyList ? tasks : filteredTasks).length > 0 ? (
+            (isLegacyList ? tasks : filteredTasks).map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}
@@ -229,8 +280,8 @@ const TasksList = ({
               />
             ))
           ) : (
-            <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-              <H4 className="mt-1">No tasks for this week</H4>
+            <li className="flex items-center justify-center border-t border-border px-4 py-6">
+              <span className="text-sm">Nothing planned for this week</span>
             </li>
           )}
         </ul>
