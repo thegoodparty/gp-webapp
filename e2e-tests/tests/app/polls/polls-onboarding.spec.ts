@@ -8,6 +8,7 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { switchOrganization } from 'src/helpers/organizations'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
@@ -779,6 +780,8 @@ test.describe.serial('poll onboarding', () => {
     ])
 
     // Navigate to contacts page
+    await page.goto('/dashboard')
+    await switchOrganization(page, district.office)
     await page.goto('/dashboard/contacts')
     await NavigationHelper.dismissOverlays(page)
 
