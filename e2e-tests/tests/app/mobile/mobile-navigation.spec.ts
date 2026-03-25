@@ -35,7 +35,7 @@ test.describe('Mobile Navigation', () => {
 
   test('should have mobile navigation menu', async ({ page }) => {
     await WaitHelper.waitForPageReady(page)
-    const mobileMenuButton = page.getByTestId('tilt').first()
+    const mobileMenuButton = page.getByTestId('mobile-menu-trigger')
 
     await expect(mobileMenuButton).toBeAttached()
 
@@ -53,7 +53,8 @@ test.describe('Mobile Navigation', () => {
   test('should navigate to AI Assistant on mobile', async ({ page }) => {
     await WaitHelper.waitForPageReady(page)
 
-    await NavigationHelper.navigateToNavItem(page, 'AI Assistant', true)
+    await NavigationHelper.openMobileMenu(page)
+    await page.getByRole('link', { name: 'AI Assistant' }).click()
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
     ).toBeVisible()
@@ -65,7 +66,8 @@ test.describe('Mobile Navigation', () => {
   test('should navigate to Content Builder on mobile', async ({ page }) => {
     await WaitHelper.waitForPageReady(page)
 
-    await NavigationHelper.navigateToNavItem(page, 'Content Builder', true)
+    await NavigationHelper.openMobileMenu(page)
+    await page.getByRole('link', { name: 'Content Builder' }).click()
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
     ).toBeVisible()

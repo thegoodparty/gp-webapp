@@ -63,20 +63,7 @@ export class NavigationHelper {
     }
   }
 
-  static async navigateToNavItem(
-    page: Page,
-    navItem: string,
-    isMobile: boolean = false,
-  ): Promise<void> {
-    if (isMobile) {
-      // Open mobile menu
-      await page.getByTestId('tilt').nth(1).click()
-      await page.getByRole('link', { name: navItem }).click()
-      await page.getByTestId('tilt').nth(1).click() // Close menu
-    } else {
-      await page.getByRole('link', { name: navItem }).click()
-    }
-
-    await WaitHelper.waitForPageReady(page)
+  static async openMobileMenu(page: Page): Promise<void> {
+    await page.getByTestId('mobile-menu-trigger').click()
   }
 }

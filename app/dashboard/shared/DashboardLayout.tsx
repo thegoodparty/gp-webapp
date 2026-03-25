@@ -163,6 +163,7 @@ const MobileMenuTrigger = () => {
           className="h-6 w-8 object-contain"
         />
         <button
+          data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"
