@@ -9,8 +9,12 @@ import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeIn
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
-import { useOrganizationIfEnabled } from '@shared/organization-picker'
+import {
+  ORGANIZATIONS_QUERY_KEY,
+  useOrganizationIfEnabled,
+} from '@shared/organization-picker'
 import { usePositionName } from '@shared/hooks/usePositionName'
+import { queryClient } from '@shared/query-client'
 
 interface OfficeSectionProps {
   campaign?: Campaign
@@ -40,8 +44,16 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         primaryElectionDate: details.primaryElectionDate || '',
         officeTermLength: details.officeTermLength || '',
       })
+    } else if (organization) {
+      setState({
+        office: positionName,
+        state: organization.position?.state || '',
+        electionDate: '',
+        primaryElectionDate: '',
+        officeTermLength: '',
+      })
     }
-  }, [campaign, positionName])
+  }, [campaign, positionName, organization])
 
   const handleEdit = () => {
     trackEvent(EVENTS.Profile.OfficeDetails.ClickEdit)
@@ -50,19 +62,34 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
 
   const handleUpdate = async () => {
     trackEvent(EVENTS.Profile.OfficeDetails.ClickSave)
-    const updatedCampaign = await getCampaign()
-    if (updatedCampaign) {
-      setCampaign(updatedCampaign)
+    if (campaign) {
+      const updatedCampaign = await getCampaign()
+      if (updatedCampaign) {
+        setCampaign(updatedCampaign)
+      }
+    } else {
+      await queryClient.invalidateQueries({ queryKey: ORGANIZATIONS_QUERY_KEY })
     }
     setShowModal(false)
   }
 
   return (
-    <section className="border-t pt-6 border-gray-600">
+    <section
+      className={
+        organization?.electedOfficeId ? 'pt-6' : 'border-t pt-6 border-gray-600'
+      }
+    >
       <H3 className="pb-6">Office Details</H3>
 
       <div className="grid grid-cols-12 gap-3">
-        <CampaignOfficeInputFields values={state} />
+        <CampaignOfficeInputFields
+          values={state}
+          hiddenFields={
+            organization?.electedOfficeId
+              ? ['electionDate', 'primaryElectionDate', 'officeTermLength']
+              : []
+          }
+        />
       </div>
       <div className="flex justify-end mb-6 mt-2">
         <PrimaryButton onClick={handleEdit}>Edit Office Details</PrimaryButton>
