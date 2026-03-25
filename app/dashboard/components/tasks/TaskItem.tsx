@@ -68,9 +68,11 @@ export default function TaskItem({
         description={description}
         date={
           date
-            ? dateUsHelper(new Date(date))
+            ? dateUsHelper(new Date(date.replace(/-/g, '/')))
             : electionDate && deadline
-            ? dateUsHelper(subDays(new Date(electionDate), deadline))
+            ? dateUsHelper(
+                subDays(new Date(electionDate.replace(/-/g, '/')), deadline)
+              )
             : ''
         }
         type={displayTaskType}
