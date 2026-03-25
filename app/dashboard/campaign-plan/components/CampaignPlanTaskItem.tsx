@@ -66,7 +66,7 @@ export default function CampaignPlanTaskItem({
 
   const interactiveClassName = cn(
     contentClassName,
-    'w-full min-w-0 border-0 bg-transparent p-0 text-left font-inherit text-inherit no-underline outline-offset-2',
+    'w-full min-w-0 border-0 bg-transparent pl-0 text-left font-inherit text-inherit no-underline outline-offset-2',
   )
 
   const body = (
