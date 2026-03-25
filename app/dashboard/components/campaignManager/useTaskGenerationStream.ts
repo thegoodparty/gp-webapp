@@ -88,6 +88,7 @@ export function useTaskGenerationStream(
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
+      let generationFinished = false
 
       while (true) {
         const { done, value } = await reader.read()
@@ -113,6 +114,7 @@ export function useTaskGenerationStream(
               },
             }))
           } else if (event.type === 'complete' && event.tasks) {
+            generationFinished = true
             onTasksReceived(event.tasks)
             setState({
               isGenerating: false,
@@ -120,6 +122,7 @@ export function useTaskGenerationStream(
               error: null,
             })
           } else if (event.type === 'error') {
+            generationFinished = true
             setState({
               isGenerating: false,
               progress: null,
@@ -127,6 +130,14 @@ export function useTaskGenerationStream(
             })
           }
         }
+      }
+
+      if (!generationFinished) {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: 'Stream ended before completing task generation',
+        })
       }
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
