@@ -84,8 +84,14 @@ const TasksList = ({
   const isPro = campaign.isPro ?? false
   const { electionDate } = details ?? {}
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = electionDate
-    ? differenceInDays(electionDate, new Date())
+  const electionDateObj =
+    electionDate instanceof Date
+      ? electionDate
+      : typeof electionDate === 'string'
+        ? new Date(electionDate.replace(/-/g, '/'))
+        : null
+  const daysUntilElection = electionDateObj
+    ? differenceInDays(electionDateObj, new Date())
     : Infinity
 
   const handleCheckClick = async (task: Task) => {
