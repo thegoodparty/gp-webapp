@@ -85,11 +85,9 @@ const TasksList = ({
   const { electionDate } = details ?? {}
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
   const electionDateObj =
-    electionDate instanceof Date
-      ? electionDate
-      : typeof electionDate === 'string'
-        ? new Date(electionDate.replace(/-/g, '/'))
-        : null
+    typeof electionDate === 'string' && electionDate
+      ? new Date(electionDate.replace(/-/g, '/'))
+      : null
   const daysUntilElection = electionDateObj
     ? differenceInDays(electionDateObj, new Date())
     : Infinity
