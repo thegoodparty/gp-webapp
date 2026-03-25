@@ -35,6 +35,10 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   const [campaign, setCampaign] = useState<Campaign | undefined>(props.campaign)
 
   useEffect(() => {
+    setCampaign(props.campaign)
+  }, [props.campaign])
+
+  useEffect(() => {
     if (campaign?.details) {
       const details = campaign.details
       setState({
