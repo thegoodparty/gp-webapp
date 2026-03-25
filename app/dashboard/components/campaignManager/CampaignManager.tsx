@@ -2,9 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import LoadingState, {
-  AI_CAMPAIGN_CHECKLIST_COOKIE,
-} from './LoadingState'
+import LoadingState, { AI_CAMPAIGN_CHECKLIST_COOKIE } from './LoadingState'
 import { getCookie } from 'helpers/cookieHelper'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
@@ -120,7 +118,7 @@ export default function CampaignManager({
               <button
                 type="button"
                 className="mt-2 text-sm font-medium text-primary underline"
-                onClick={() => startGeneration()}
+                onClick={startGeneration}
               >
                 Retry
               </button>
