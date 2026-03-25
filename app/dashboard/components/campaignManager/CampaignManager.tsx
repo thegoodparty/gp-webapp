@@ -18,6 +18,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useTaskGenerationStream } from './useTaskGenerationStream'
+import { FailedToGenerate } from './FailedToGenerate'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -113,18 +114,7 @@ export default function CampaignManager({
             </div>
           )}
           {error && !isGenerating && !showLoadingState && (
-            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
-              <p className="text-sm text-red-700">
-                Failed to generate tasks. Please try again later.
-              </p>
-              <button
-                type="button"
-                className="mt-2 text-sm font-medium text-primary underline"
-                onClick={startGeneration}
-              >
-                Retry
-              </button>
-            </div>
+            <FailedToGenerate retryGeneration={startGeneration} />
           )}
           {!showLoadingState && (
             <>
