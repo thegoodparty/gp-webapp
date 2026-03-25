@@ -201,10 +201,7 @@ export const authenticateTestUser = async (
         await client.delete(`/v1/users/${user.id}`)
         console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
       } catch (e) {
-        console.warn(
-          `[${title}] Cleanup delete failed for user ${user.id}:`,
-          e,
-        )
+        console.warn(`[${title}] Cleanup delete failed for user ${user.id}:`, e)
       }
     },
   })
