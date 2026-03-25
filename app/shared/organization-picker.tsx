@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -11,7 +12,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { setCookie, getCookie } from 'helpers/cookieHelper'
+import { setCookie, getCookie, deleteCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import {
   DropdownMenu,
@@ -103,11 +104,7 @@ export const OrganizationProvider = ({
   const [selectedSlug, _setSelectedSlug] = useState(() => {
     const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
     const isValid = initialOrganizations.some((o) => o.slug === cookieSlug)
-    if (!isValid && initialOrganizations[0]) {
-      setCookie(ORG_SLUG_COOKIE, initialOrganizations[0].slug)
-      return initialOrganizations[0].slug
-    }
-    return cookieSlug
+    return isValid ? cookieSlug : initialOrganizations[0]?.slug ?? null
   })
 
   const selectedOrganization = useMemo(
@@ -115,6 +112,14 @@ export const OrganizationProvider = ({
       organizations.find((o) => o.slug === selectedSlug) ?? organizations[0],
     [organizations, selectedSlug],
   )
+
+  useEffect(() => {
+    if (!enabled) {
+      deleteCookie(ORG_SLUG_COOKIE)
+    } else if (selectedOrganization) {
+      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
+    }
+  }, [enabled, selectedOrganization])
 
   const setSelectedSlug = useCallback((slug: string) => {
     _setSelectedSlug(slug)
