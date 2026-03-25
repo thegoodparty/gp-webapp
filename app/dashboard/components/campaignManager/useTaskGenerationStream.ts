@@ -129,12 +129,19 @@ export function useTaskGenerationStream(
         }
       }
     } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') return
-      setState({
-        isGenerating: false,
-        progress: null,
-        error: err instanceof Error ? err.message : String(err),
-      })
+      if (err instanceof Error && err.name === 'AbortError') {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: null,
+        })
+      } else {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
     } finally {
       abortRef.current = null
     }
