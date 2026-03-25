@@ -62,12 +62,17 @@ export default function CampaignManager({
     useTaskGenerationStream(onTasksReceived)
 
   useEffect(() => {
-    if (tasks.length > 0 || !campaign || generatingRef.current) return
+    if (tasks.length > 0) {
+      generatingRef.current = false
+      return
+    }
+    if (!campaign || generatingRef.current) return
 
     generatingRef.current = true
-    startGeneration()
+    void startGeneration()
 
     return () => {
+      generatingRef.current = false
       cancelGeneration()
     }
   }, [tasks, campaign, startGeneration, cancelGeneration])
