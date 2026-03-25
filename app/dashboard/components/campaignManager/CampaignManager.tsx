@@ -31,16 +31,13 @@ export default function CampaignManager({
   const [campaign] = useCampaign()
   const queryClient = useQueryClient()
   const generatingRef = useRef(false)
-  const [showLoadingState, setShowLoadingState] = useState(true)
+  const showLoadingStateCookie = getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)
+  const [showLoadingState, setShowLoadingState] = useState(
+    () => !showLoadingStateCookie,
+  )
 
   const hideLoadingChecklist = useCallback(() => {
     setShowLoadingState(false)
-  }, [])
-
-  useEffect(() => {
-    if (getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)) {
-      setShowLoadingState(false)
-    }
   }, [])
 
   const { data: tasks = [] } = useQuery({
