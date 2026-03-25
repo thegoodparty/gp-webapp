@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import LoadingState from './LoadingState'
+import LoadingState, {
+  AI_CAMPAIGN_CHECKLIST_COOKIE,
+} from './LoadingState'
+import { getCookie } from 'helpers/cookieHelper'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ProgressSection from './ProgressSection'
@@ -31,6 +34,12 @@ export default function CampaignManager({
   const queryClient = useQueryClient()
   const generatingRef = useRef(false)
   const [showLoadingState, setShowLoadingState] = useState(true)
+
+  useEffect(() => {
+    if (getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)) {
+      setShowLoadingState(false)
+    }
+  }, [])
 
   const { data: tasks = [] } = useQuery({
     queryKey: TASKS_QUERY_KEY,

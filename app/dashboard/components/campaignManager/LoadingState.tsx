@@ -7,7 +7,7 @@ import LoadingChecklist, {
 import { Card, CardHeader, CardTitle } from '@styleguide'
 import { getCookie, setCookie } from 'helpers/cookieHelper'
 
-const AI_CAMPAIGN_COOKIE = 'aiCampaignChecklistComplete'
+export const AI_CAMPAIGN_CHECKLIST_COOKIE = 'aiCampaignChecklistComplete'
 
 const loadingItems: LoadingItem[] = [
   {
@@ -42,11 +42,11 @@ export default function LoadingState({
   hideCallback?: () => void
 }) {
   const [showChecklist, setShowChecklist] = useState(
-    () => !getCookie(AI_CAMPAIGN_COOKIE),
+    () => !getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE),
   )
 
   const onComplete = () => {
-    setCookie(AI_CAMPAIGN_COOKIE, 'true')
+    setCookie(AI_CAMPAIGN_CHECKLIST_COOKIE, 'true')
     setShowChecklist(false)
     if (hideCallback) {
       hideCallback()
@@ -54,9 +54,6 @@ export default function LoadingState({
   }
 
   if (!showChecklist) {
-    if (hideCallback) {
-      hideCallback()
-    }
     return null
   }
 
