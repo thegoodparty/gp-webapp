@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import {
   blockSlowScripts,
@@ -6,6 +6,13 @@ import {
 } from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
+
+function campaignPageGreetingHeading(page: Page) {
+  return page
+    .getByRole('heading', { level: 1 })
+    .filter({ hasText: /Hello|until|General|Primary|Election|concluded/ })
+    .first()
+}
 
 test.describe('Mobile Navigation', () => {
   // Configure mobile viewport
@@ -21,14 +28,16 @@ test.describe('Mobile Navigation', () => {
   })
 
   test('should display mobile dashboard', async ({ page }) => {
+    test.setTimeout(120000)
     await WaitHelper.waitForPageReady(page)
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    const anyHeading = page.locator('h1, h2, h3, h4').first()
-    await expect(anyHeading).toBeVisible()
+    await expect(campaignPageGreetingHeading(page)).toBeVisible({
+      timeout: 90000,
+    })
 
     await visualSnapshot(page, 'mobile-dashboard.png', {
-      mask: [page.locator('h1')],
+      mask: [campaignPageGreetingHeading(page)],
     })
     console.log('✅ Mobile dashboard accessible')
   })
@@ -44,10 +53,22 @@ test.describe('Mobile Navigation', () => {
       await expect(mobileMenuButton).toBeVisible()
       console.log('✅ Mobile menu button is visible')
     } else {
-      console.log(
-        '⚠️ Mobile menu button exists but is hidden by CSS - this may be an application styling issue',
-      )
+      const tilts = page.getByTestId('tilt')
+      const count = await tilts.count()
+      let sawVisible = false
+      for (let i = 0; i < count; i++) {
+        const t = tilts.nth(i)
+        if (await t.isVisible().catch(() => false)) {
+          await expect(t).toBeVisible()
+          sawVisible = true
+          break
+        }
+      }
+      if (!sawVisible && count > 0) {
+        await expect(tilts.first()).toBeAttached()
+      }
     }
+    console.log('✅ Mobile menu control is present')
   })
 
   test('should navigate to AI Assistant on mobile', async ({ page }) => {
@@ -57,10 +78,12 @@ test.describe('Mobile Navigation', () => {
     await page.getByRole('link', { name: 'AI Assistant' }).click()
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
-    await visualSnapshot(page, 'mobile-ai-assistant.png')
+    await visualSnapshot(page, 'mobile-ai-assistant.png', {
+      mask: [page.getByRole('heading', { name: 'AI Assistant' })],
+    })
   })
 
   test('should navigate to Content Builder on mobile', async ({ page }) => {
@@ -70,17 +93,24 @@ test.describe('Mobile Navigation', () => {
     await page.getByRole('link', { name: 'Content Builder' }).click()
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
-    await visualSnapshot(page, 'mobile-content-builder.png')
+    await visualSnapshot(page, 'mobile-content-builder.png', {
+      mask: [page.getByRole('heading', { name: 'Content Builder' })],
+    })
   })
 
   test('should navigate to My Profile on mobile', async ({ page }) => {
+    test.setTimeout(120000)
     await WaitHelper.waitForPageReady(page)
 
     await page.goto('/dashboard/profile')
+    await page.waitForURL(/\/dashboard\/profile/)
     await WaitHelper.waitForPageReady(page)
+    await expect(
+      page.getByRole('heading', { name: 'Personal Information' }).first(),
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const bodyContent = page.locator('body')

@@ -1,5 +1,3 @@
-import { Campaign } from './types'
-
 const ONE_HOUR = 60 * 60 * 1000
 
 export type DateInput = Date | string | number | null | undefined
@@ -121,24 +119,8 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate()
 
-export const timeToNextElection = (
-  campaign: Campaign | null,
-): string | false => {
-  if (!campaign) {
-    return false
-  }
-  const { electionDate, primaryElectionDate } = campaign.details ?? {}
-  let nextElectionDate = electionDate
-  const now = new Date()
-  if (primaryElectionDate) {
-    const primaryElectionDateObj = new Date(
-      String(primaryElectionDate).replace(/-/g, '/'),
-    )
-    if (primaryElectionDateObj > now) {
-      nextElectionDate = primaryElectionDate
-    }
-  }
-  const weeksUntil = weeksTill(nextElectionDate)
+export const timeToNextElection = (date: DateInput): string | false => {
+  const weeksUntil = weeksTill(date)
   if (!weeksUntil || typeof weeksUntil === 'string') {
     return false
   } else if (isNaN(weeksUntil.weeks) || isNaN(weeksUntil.days)) {
@@ -149,10 +131,8 @@ export const timeToNextElection = (
   ) {
     return false
   } else if (weeksUntil.weeks === 0) {
-    return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'} away`
+    return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'}`
   } else {
-    return `${weeksUntil.weeks} ${
-      weeksUntil.weeks === 1 ? 'week' : 'weeks'
-    } away`
+    return `${weeksUntil.weeks} ${weeksUntil.weeks === 1 ? 'week' : 'weeks'}`
   }
 }

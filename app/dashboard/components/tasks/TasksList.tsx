@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
@@ -33,20 +34,35 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
+import { Card } from '@styleguide'
+
+const NON_OUTREACH_TYPES = [
+  TASK_TYPES.education,
+  TASK_TYPES.events,
+  TASK_TYPES.compliance,
+]
 
 interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
   tcrCompliance?: TcrCompliance | null
+  isLegacyList?: boolean
 }
 
 const TasksList = ({
   campaign,
   tasks: tasksProp = [],
   tcrCompliance,
+  isLegacyList = true,
 }: TasksListProps): React.JSX.Element => {
+  const router = useRouter()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
+
+  useEffect(() => {
+    setTasks(tasksProp)
+  }, [tasksProp])
+
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
@@ -66,23 +82,30 @@ const TasksList = ({
 
   const { details, pathToVictory, hasFreeTextsOffer } = campaign
   const isPro = campaign.isPro ?? false
-  const { electionDate } = details
+  const { electionDate } = details ?? {}
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = differenceInDays(electionDate!, new Date())
+  const electionDateObj =
+    typeof electionDate === 'string' && electionDate
+      ? new Date(electionDate.replace(/-/g, '/'))
+      : null
+  const daysUntilElection = electionDateObj
+    ? differenceInDays(electionDateObj, new Date())
+    : Infinity
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type } = task
 
-    // skip voter counts for education tasks
-    if (type === TASK_TYPES.education) {
-      completeTask(taskId)
+    if (NON_OUTREACH_TYPES.includes(type)) {
+      await completeTask(taskId)
     } else {
       setCompleteModalTask(task)
     }
   }
 
   const handleCompleteSubmit = (_count: number) => {
-    completeTask(completeModalTask!.id)
+    if (completeModalTask) {
+      completeTask(completeModalTask.id)
+    }
     setCompleteModalTask(null)
   }
 
@@ -94,6 +117,16 @@ const TasksList = ({
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
+    if (NON_OUTREACH_TYPES.includes(flowType)) {
+      void (async () => {
+        const ok = await completeTask(task.id)
+        if (ok && task.link?.startsWith('/')) {
+          router.push(task.link)
+        }
+      })()
+      return
+    }
 
     // Normalize p2pDisabledText to text before validation/rendering
     const resolvedFlowType =
@@ -144,11 +177,13 @@ const TasksList = ({
     }
   }
 
-  const completeTask = async (taskId: string) => {
-    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.complete, {
+  const completeTask = async (taskId: string): Promise<boolean> => {
+    const route = isLegacyList
+      ? apiRoutes.campaign.legacyTasks.complete
+      : apiRoutes.campaign.tasks.complete
+    const resp = await clientFetch<Task>(route, {
       taskId,
     })
-
     if (resp.ok) {
       const updatedTask = resp.data
       setTasks((currentTasks) => {
@@ -157,25 +192,34 @@ const TasksList = ({
           currentTasks.splice(taskIndex, 1, updatedTask)
           return [...currentTasks]
         }
-        // Shouldn't happen
         console.error('Completed task not found')
         return currentTasks
       })
-    } else {
-      errorSnackbar('Failed to complete task')
+      return true
     }
+    errorSnackbar('Failed to complete task')
+    return false
   }
 
   return (
     <>
-      <DashboardHeader campaign={campaign} tasks={tasks} />
-      <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
-        <H2>Tasks for this week</H2>
-        <Body2 className="!font-outfit mt-1">
-          Election day: {dateUsHelper(electionDate!)}
-        </Body2>
+      {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
+      <Card className="p-6 mt-8 mb-32 gap-0">
+        {isLegacyList ? (
+          <>
+            <H2>Tasks for this week</H2>
+            <Body2 className="!font-outfit mt-1">
+              Election day: {electionDate ? dateUsHelper(electionDate) : ''}
+            </Body2>
+          </>
+        ) : (
+          <div className="flex justify-between items-center pb-6">
+            <div className="text-lg font-semibold">Campaign Plan</div>
+            <div className="text-sm text-primary">View Full Plan</div>
+          </div>
+        )}
 
-        <ul className="p-0 mt-4">
+        <ul>
           {tasks.length > 0 ? (
             tasks.map((task) => (
               <TaskItem
@@ -183,6 +227,7 @@ const TasksList = ({
                 task={task}
                 isPro={isPro}
                 daysUntilElection={daysUntilElection}
+                electionDate={electionDate}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
               />
@@ -193,7 +238,7 @@ const TasksList = ({
             </li>
           )}
         </ul>
-      </div>
+      </Card>
       {completeModalTask &&
         ((value: Task['flowType']): value is LogTaskFlowType =>
           value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
@@ -203,7 +248,7 @@ const TasksList = ({
             flowType={completeModalTask.flowType}
           />
         )}
-      {deadlineModalTask && (
+      {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
           deadline={deadlineModalTask.deadline}
