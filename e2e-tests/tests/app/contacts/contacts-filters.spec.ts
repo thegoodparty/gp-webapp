@@ -6,6 +6,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 import { wait } from 'tests/utils/eventually'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
