@@ -35,6 +35,7 @@ import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { Card } from '@styleguide'
+import UncompleteTaskDialog from './UncompleteTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -64,6 +65,8 @@ const TasksList = ({
   }, [tasksProp])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
+  const [uncompleteConfirmTask, setUncompleteConfirmTask] =
+    useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -93,7 +96,12 @@ const TasksList = ({
     : Infinity
 
   const handleCheckClick = async (task: Task) => {
-    const { id: taskId, flowType: type } = task
+    const { id: taskId, flowType: type, completed } = task
+
+    if (completed) {
+      setUncompleteConfirmTask(task)
+      return
+    }
 
     if (NON_OUTREACH_TYPES.includes(type)) {
       await completeTask(taskId)
@@ -109,11 +117,26 @@ const TasksList = ({
     setCompleteModalTask(null)
   }
 
+  const handleUncompleteOpenChange = (open: boolean) => {
+    if (!open) setUncompleteConfirmTask(null)
+  }
+
+  const handleUncompleteConfirm = () => {
+    if (uncompleteConfirmTask) {
+      uncompleteTask(uncompleteConfirmTask.id)
+    }
+  }
+
   const handleCompleteCancel = () => {
     setCompleteModalTask(null)
   }
 
   const handleActionClick = (task: Task) => {
+    if (task.completed) {
+      setUncompleteConfirmTask(task)
+      return
+    }
+
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
@@ -198,6 +221,27 @@ const TasksList = ({
       return true
     }
     errorSnackbar('Failed to complete task')
+    return false
+  }
+
+  const uncompleteTask = async (taskId: string): Promise<boolean> => {
+    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.uncomplete, {
+      taskId,
+    })
+    if (resp.ok) {
+      const updatedTask = resp.data
+      setTasks((currentTasks) => {
+        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
+        if (taskIndex !== -1) {
+          currentTasks.splice(taskIndex, 1, updatedTask)
+          return [...currentTasks]
+        }
+        console.error('Uncompleted task not found')
+        return currentTasks
+      })
+      return true
+    }
+    errorSnackbar('Failed to mark task as incomplete')
     return false
   }
 
@@ -296,6 +340,11 @@ const TasksList = ({
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
+      <UncompleteTaskDialog
+        open={!!uncompleteConfirmTask}
+        onOpenChange={handleUncompleteOpenChange}
+        onConfirm={handleUncompleteConfirm}
+      />
     </>
   )
 }

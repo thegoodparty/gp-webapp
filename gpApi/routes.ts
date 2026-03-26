@@ -291,6 +291,10 @@ export const apiRoutes = {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
       },
+      uncomplete: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'DELETE',
+      },
       delete: {
         path: '/campaigns/tasks/:taskId',
         method: 'DELETE',

@@ -81,7 +81,7 @@ export default function TaskItem({
         lockedReason={lockedReason}
         onCheckedChange={() => onCheck(task)}
         onClick={() => onAction(task)}
-        link={link}
+        link={completed ? undefined : link}
         noLongerAvailable={noLongerAvailable}
       />
     </li>
