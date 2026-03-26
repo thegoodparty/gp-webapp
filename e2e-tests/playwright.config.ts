@@ -1,5 +1,17 @@
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { config as loadEnv } from 'dotenv'
 import { defineConfig, devices } from '@playwright/test'
-import 'dotenv/config'
+
+const e2eRoot = __dirname
+const dotEnv = resolve(e2eRoot, '.env')
+const dotEnvLocal = resolve(e2eRoot, '.env.local')
+if (existsSync(dotEnv)) {
+  loadEnv({ path: dotEnv })
+}
+if (existsSync(dotEnvLocal)) {
+  loadEnv({ path: dotEnvLocal, override: true })
+}
 
 process.env.TZ = 'UTC'
 if (!process.env.BASE_URL) {

@@ -12,6 +12,76 @@ if (!baseURL) {
 
 const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
+
+/**
+ * When win-serve-split is on, the sidebar only shows campaign items if the
+ * selected org has no electedOfficeId. Prefer the campaign org cookie so nav
+ * tests (Content Builder, AI Assistant, etc.) see the same links as before
+ * multi-org filtering.
+ */
+const setOrganizationSlugCookie = async (
+  page: Page,
+  slug: string,
+): Promise<void> => {
+  const domain = cookieDomain()
+  await page.context().addCookies([
+    {
+      name: 'organization-slug',
+      value: slug,
+      domain,
+      path: '/',
+      sameSite: 'Lax',
+    },
+  ])
+}
+
+export const ensureCampaignOrganizationCookie = async (
+  page: Page,
+  client: AxiosInstance,
+): Promise<void> => {
+  const applyCampaignOrg = async (
+    organizations: { slug: string; electedOfficeId: string | null }[],
+  ): Promise<boolean> => {
+    const campaignOrg = organizations.find((o) => o.electedOfficeId == null)
+    if (!campaignOrg) {
+      return false
+    }
+    await setOrganizationSlugCookie(page, campaignOrg.slug)
+    return true
+  }
+
+  try {
+    const { data } = await client.get<{
+      organizations: { slug: string; electedOfficeId: string | null }[]
+    }>('/v1/organizations')
+    await applyCampaignOrg(data.organizations)
+    return
+  } catch {
+    // e.g. token vs API host mismatch; try same URL with browser cookies (BFF / same-site).
+  }
+
+  try {
+    const cookieHeader = (await page.context().cookies())
+      .map((c) => `${c.name}=${c.value}`)
+      .join('; ')
+    const url = `${apiURL.replace(/\/$/, '')}/v1/organizations`
+    const res = await page.request.get(url, {
+      headers: { Cookie: cookieHeader },
+    })
+    if (!res.ok()) {
+      return
+    }
+    const data = (await res.json()) as {
+      organizations: { slug: string; electedOfficeId: string | null }[]
+    }
+    await applyCampaignOrg(data.organizations)
+  } catch {
+    // Nav tests proceed without org cookie; may miss campaign-only links.
+  }
+}
+
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
@@ -197,9 +267,13 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete(`/v1/users/${user.id}`)
-      if (process.env.DEBUG) {
-        console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      try {
+        await client.delete(`/v1/users/${user.id}`)
+        if (process.env.DEBUG) {
+          console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+        }
+      } catch {
+        // Token may be invalid after long runs or user already removed.
       }
     },
   })
@@ -217,7 +291,7 @@ export const authenticateTestUser = async (
     }
   }
 
-  const domain = baseURL.replace('http://', '').replace('https://', '')
+  const domain = cookieDomain()
   await page.context().addCookies([
     {
       name: 'token',
