@@ -158,14 +158,16 @@ test('validate contacts filters', async ({ page }) => {
     waitUntil: 'domcontentloaded',
   })
   await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForTimeout(3000)
+  await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
   await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
   await page.waitForLoadState('networkidle')
   await NavigationHelper.dismissOverlays(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
-  await expect(page.getByRole('heading', { name: 'Contacts' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Constituents' }),
+  ).toBeVisible()
 
   const table = page.locator('table').first()
   await expect(table).toBeVisible()

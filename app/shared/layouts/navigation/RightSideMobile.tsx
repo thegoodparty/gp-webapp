@@ -1,6 +1,6 @@
 'use client'
 import Hamburger from '@shared/utils/Hamburger'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import Caption from '@shared/typography/Caption'
 import Link from 'next/link'
@@ -41,7 +41,10 @@ const sections: NavSection[] = [
 
 const RightSideMobile = (): React.JSX.Element => {
   const [isOpen, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [user] = useUser() as [User | null, (user: User | null) => void]
+
+  useEffect(() => setMounted(true), [])
   const [campaignStatus] = useCampaignStatus()
   const { status, slug, step } =
     (campaignStatus as {
@@ -65,7 +68,7 @@ const RightSideMobile = (): React.JSX.Element => {
             isOpen ? 'text-white' : ''
           }`}
         >
-          {!isOpen && user && (
+          {!isOpen && mounted && user && (
             <>
               <ExitToDashboardButton />
               <div></div>
@@ -85,16 +88,16 @@ const RightSideMobile = (): React.JSX.Element => {
           anchor="right"
           onOpen={noop}
         >
-          {user && isDashboardPath ? (
+          {mounted && user && isDashboardPath ? (
             <DashboardMobile user={user as User} pathname={pathname || ''} />
           ) : (
             <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
               <div
                 className={`grow overflow-auto px-4 pt-24 ${
-                  user ? 'pb-36' : 'pb-60'
+                  mounted && user ? 'pb-36' : 'pb-60'
                 }`}
               >
-                {user && (
+                {mounted && user && (
                   <H3 className="mb-8">
                     {(user as User).firstName} {(user as User).lastName}
                   </H3>
@@ -129,7 +132,7 @@ const RightSideMobile = (): React.JSX.Element => {
               </div>
               <div className="w-full h-auto sticky bottom-0">
                 <div className="p-6 bg-primary-dark h-auto">
-                  {user ? (
+                  {mounted && user ? (
                     <>
                       {status === 'candidate' && !isDashboardPath && (
                         <Button
