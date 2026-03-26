@@ -6,13 +6,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { useLocalStorageValue } from './utils/local-storage'
-import { setCookie, deleteCookie } from 'helpers/cookieHelper'
+import { setCookie, getCookie, deleteCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import {
   DropdownMenu,
@@ -27,11 +27,12 @@ import {
 import { ChevronDown } from 'lucide-react'
 import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
-import { HeaderLogo } from './layouts/navigation/HeaderLogo'
 import { queryClient } from './query-client'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { useCampaign } from './hooks/useCampaign'
 
-const LS_KEY = 'selected-organization-slug'
+const SHARED_PATHS = ['/dashboard/profile', '/dashboard/campaign-details']
 
 interface OrganizationContextValue {
   organizations: Organization[]
@@ -100,18 +101,11 @@ export const OrganizationProvider = ({
     enabled,
   })
 
-  const [selectedSlug, _setSelectedSlug] = useLocalStorageValue(LS_KEY)
-
-  useEffect(() => {
-    if (!enabled) {
-      deleteCookie(ORG_SLUG_COOKIE)
-      return
-    }
-    const slug = selectedSlug ?? organizations[0]?.slug
-    if (slug) {
-      setCookie(ORG_SLUG_COOKIE, slug)
-    }
-  }, [enabled, selectedSlug, organizations])
+  const [selectedSlug, _setSelectedSlug] = useState(() => {
+    const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
+    const isValid = initialOrganizations.some((o) => o.slug === cookieSlug)
+    return isValid ? cookieSlug : initialOrganizations[0]?.slug ?? null
+  })
 
   const selectedOrganization = useMemo(
     () =>
@@ -119,15 +113,24 @@ export const OrganizationProvider = ({
     [organizations, selectedSlug],
   )
 
-  const setSelectedSlug = useCallback(
-    (slug: string) => {
-      _setSelectedSlug(slug)
-      setCookie(ORG_SLUG_COOKIE, slug)
-      // When we change the org, we need to refetch just about everything.
-      queryClient.invalidateQueries()
-    },
-    [_setSelectedSlug],
-  )
+  useEffect(() => {
+    if (!enabled) {
+      deleteCookie(ORG_SLUG_COOKIE)
+    } else if (selectedOrganization) {
+      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
+    }
+  }, [enabled, selectedOrganization])
+
+  const setSelectedSlug = useCallback((slug: string) => {
+    _setSelectedSlug(slug)
+    setCookie(ORG_SLUG_COOKIE, slug)
+    // Exclude the organizations query from invalidation — the org list doesn't
+    // change when switching between orgs, and invalidating it causes a brief
+    // flash where nav items disappear while the list refetches.
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
+    })
+  }, [])
 
   return (
     <OrganizationContext.Provider
@@ -148,6 +151,9 @@ export const OrganizationPicker = () => {
 
   const isMobile = useIsMobile()
 
+  const [campaign] = useCampaign()
+  const pathname = usePathname()
+
   if (!ctx || ctx.organizations.length === 0) return null
 
   const { organizations, selected, setSelectedSlug } = ctx
@@ -155,7 +161,11 @@ export const OrganizationPicker = () => {
   const handleOrgSwitch = (org: Organization) => {
     if (org.slug === selected.slug) return
     setSelectedSlug(org.slug)
-    router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+
+    const isOnSharedPage = SHARED_PATHS.some((p) => pathname?.startsWith(p))
+    if (!isOnSharedPage) {
+      router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+    }
   }
 
   return (
@@ -167,11 +177,25 @@ export const OrganizationPicker = () => {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <HeaderLogo />
+              <Image
+                src="/images/logo/heart.svg"
+                data-cy="logo"
+                width={30}
+                height={24}
+                alt="GoodParty.org"
+                priority
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-xs font-opensans">
-                  GoodParty.org
-                </span>
+                <div className="flex items-center gap-1">
+                  <p className="truncate text-sm font-opensans">
+                    GoodParty.org
+                  </p>
+                  {campaign?.isPro && (
+                    <div className="bg-primary text-white text-[8px]/[12px] font-opensans font-bold rounded h-[12px] px-1">
+                      PRO
+                    </div>
+                  )}
+                </div>
                 <span className="truncate text-sm font-opensans font-semibold">
                   {selected.name}
                 </span>

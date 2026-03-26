@@ -8,6 +8,7 @@ export const TASK_TYPES = {
   socialMedia: 'socialMedia',
   events: 'events',
   education: 'education',
+  compliance: 'compliance',
 }
 
 // Legacy types, these were based on voter file types
@@ -28,6 +29,21 @@ export const STEPS = {
   download: 'download',
   socialPost: 'socialPost',
   purchase: 'purchase',
+}
+
+export const DISPLAY_TASK_TYPES: Record<
+  (typeof TASK_TYPES)[keyof typeof TASK_TYPES],
+  string
+> = {
+  text: 'Texting',
+  p2pDisabledText: 'Texting',
+  robocall: 'Robocall',
+  doorKnocking: 'Door Knocking',
+  phoneBanking: 'Phone Banking',
+  socialMedia: 'Social Media',
+  events: 'Event',
+  education: 'Education',
+  compliance: 'Compliance',
 }
 
 type TaskTypeKey = keyof typeof TASK_TYPES

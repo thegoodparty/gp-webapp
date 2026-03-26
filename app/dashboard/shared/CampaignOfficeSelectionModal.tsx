@@ -51,6 +51,12 @@ export const CampaignOfficeSelectionModal = ({
         adminMode={adminMode}
         organizationSlug={organizationSlug}
       />
+    ) : organizationSlug ? (
+      <OfficeStep
+        step={undefined}
+        updateCallback={onSelect}
+        organizationSlug={organizationSlug}
+      />
     ) : (
       <div className="p-4 text-center">
         <p>Loading campaign details...</p>

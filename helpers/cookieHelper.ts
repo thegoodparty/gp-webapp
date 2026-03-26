@@ -49,6 +49,7 @@ export const deleteUserCookies = (): void => {
   deleteCookie('user')
   deleteCookie('impersonateUser')
   deleteCookie('signupRedirect')
+  deleteCookie('organization-slug')
 }
 
 export const deleteCookie = (name: string): void => {
@@ -57,6 +58,11 @@ export const deleteCookie = (name: string): void => {
   }
   setCookie(name, '', 0)
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+}
+
+export function isImpersonating(): boolean {
+  if (typeof window === 'undefined') return false
+  return Boolean(getCookie('impersonateUser'))
 }
 
 export const setUserCookie = (value: string | object): void => {

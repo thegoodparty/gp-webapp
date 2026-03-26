@@ -118,3 +118,21 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getFullYear() === date2.getFullYear() &&
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate()
+
+export const timeToNextElection = (date: DateInput): string | false => {
+  const weeksUntil = weeksTill(date)
+  if (!weeksUntil || typeof weeksUntil === 'string') {
+    return false
+  } else if (isNaN(weeksUntil.weeks) || isNaN(weeksUntil.days)) {
+    return false
+  } else if (
+    weeksUntil.weeks < 0 ||
+    (weeksUntil.weeks === 0 && weeksUntil.days <= 0)
+  ) {
+    return false
+  } else if (weeksUntil.weeks === 0) {
+    return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'}`
+  } else {
+    return `${weeksUntil.weeks} ${weeksUntil.weeks === 1 ? 'week' : 'weeks'}`
+  }
+}

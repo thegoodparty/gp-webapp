@@ -9,9 +9,16 @@ import { ProUpgradePrompt } from './ProUpgradePrompt'
 import { usePathname, useRouter } from 'next/navigation'
 import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
-import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
+import {
+  Button,
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  useSidebar,
+} from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -34,6 +41,10 @@ const DashboardLayout = ({
   const [hookCampaign] = useCampaign()
   const router = useRouter()
   const hookPathname = usePathname()
+
+  const { clear: clearImpersonation, user: impersonateUser } =
+    useImpersonateUser()
+  const isImpersonating = !!impersonateUser
   const currentPath = pathname || hookPathname
   const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
 
@@ -80,6 +91,24 @@ const DashboardLayout = ({
           )}
           <SidebarInset className="bg-[#f5f5f5]">
             {!hideMenu && <MobileMenuTrigger />}
+            {isImpersonating && (
+              <div className="bg-white p-4 flex items-center justify-between gap-2">
+                <p className="text-sm font-opensans text-error-main">
+                  You are currently impersonating user{' '}
+                  <b>{impersonateUser?.email}</b>.
+                </p>
+                <Button
+                  className="bg-error-main border-error-main"
+                  size="small"
+                  onClick={() => {
+                    clearImpersonation()
+                    window.location.href = '/admin'
+                  }}
+                >
+                  Stop Impersonating
+                </Button>
+              </div>
+            )}
             <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
               {activeCampaign && showAlert && (
                 <AlertSection campaign={activeCampaign} />
@@ -134,6 +163,7 @@ const MobileMenuTrigger = () => {
           className="h-6 w-8 object-contain"
         />
         <button
+          data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"

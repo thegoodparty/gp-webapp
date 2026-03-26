@@ -10,8 +10,7 @@ if (!baseURL) {
   throw new Error('BASE_URL is not set')
 }
 
-const apiBaseURL = process.env.API_BASE_URL || baseURL
-const apiURL = `${apiBaseURL}/api`
+const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
 type BaseTestUserOptions = {
   /**
@@ -198,20 +197,24 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete('/logout')
-      console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      await client.delete(`/v1/users/${user.id}`)
+      if (process.env.DEBUG) {
+        console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      }
     },
   })
 
   const userCreated = Date.now()
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-        userCreated - start
-      }ms`,
-    )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
+          userCreated - start
+        }ms`,
+      )
+    } else {
+      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    }
   }
 
   const domain = baseURL.replace('http://', '').replace('https://', '')
@@ -235,11 +238,13 @@ export const authenticateTestUser = async (
   ])
 
   const loginTime = Date.now()
-  console.log(
-    `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
-      loginTime - userCreated
-    }ms`,
-  )
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
+  }
 
   return { user, client }
 }
