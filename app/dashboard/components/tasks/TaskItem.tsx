@@ -71,7 +71,7 @@ export default function TaskItem({
             ? dateUsHelper(new Date(date.replace(/-/g, '/')))
             : electionDate && deadline
             ? dateUsHelper(
-                subDays(new Date(electionDate.replace(/-/g, '/')), deadline)
+                subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
               )
             : ''
         }
