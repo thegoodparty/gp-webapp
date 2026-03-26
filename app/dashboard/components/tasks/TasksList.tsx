@@ -92,8 +92,8 @@ const TasksList = ({
       ? defaultIndex
       : Math.max(0, Math.min(selectedWeekIndex, weekNumbers.length - 1))
   const selectedWeek = weekNumbers[clampedIndex] ?? 0
-  const canGoPrevious = clampedIndex < weekNumbers.length - 1
-  const canGoNext = clampedIndex > 0
+  const canGoPrevious = clampedIndex > 0
+  const canGoNext = clampedIndex < weekNumbers.length - 1
 
   const currentWeekStart = electionDate
     ? startOfWeek(addWeeks(new Date(electionDate), -selectedWeek), {
@@ -258,8 +258,8 @@ const TasksList = ({
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
-              onPrevious={() => setSelectedWeekIndex(clampedIndex + 1)}
-              onNext={() => setSelectedWeekIndex(clampedIndex - 1)}
+              onPrevious={() => setSelectedWeekIndex(clampedIndex - 1)}
+              onNext={() => setSelectedWeekIndex(clampedIndex + 1)}
               canGoPrevious={canGoPrevious}
               canGoNext={canGoNext}
             />
