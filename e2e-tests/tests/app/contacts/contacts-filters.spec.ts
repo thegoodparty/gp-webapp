@@ -6,6 +6,8 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
+import { WaitHelper } from 'src/helpers/wait.helper'
 import { wait } from 'tests/utils/eventually'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
@@ -153,6 +155,7 @@ test('validate contacts filters', async ({ page }) => {
 
   await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)
+  await WaitHelper.waitForPageReady(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
   await expect(
