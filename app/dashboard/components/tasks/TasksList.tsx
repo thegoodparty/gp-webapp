@@ -66,6 +66,7 @@ const TasksList = ({
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
+  const [isReverting, setIsReverting] = useState(false)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -121,8 +122,12 @@ const TasksList = ({
   }
 
   const handleRevertConfirm = async () => {
-    if (revertConfirmTask) {
+    if (!revertConfirmTask) return
+    setIsReverting(true)
+    try {
       await revertTask(revertConfirmTask.id)
+    } finally {
+      setIsReverting(false)
       setRevertConfirmTask(null)
     }
   }
@@ -337,6 +342,7 @@ const TasksList = ({
         open={!!revertConfirmTask}
         onOpenChange={handleRevertOpenChange}
         onConfirm={handleRevertConfirm}
+        isLoading={isReverting}
       />
     </>
   )
