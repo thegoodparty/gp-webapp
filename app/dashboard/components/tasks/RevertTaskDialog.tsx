@@ -9,17 +9,17 @@ import {
   AlertDialogTitle,
 } from '@styleguide'
 
-interface UncompleteTaskDialogProps {
+interface RevertTaskDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onConfirm: () => void
 }
 
-export default function UncompleteTaskDialog({
+export default function RevertTaskDialog({
   open,
   onOpenChange,
   onConfirm,
-}: UncompleteTaskDialogProps) {
+}: RevertTaskDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>

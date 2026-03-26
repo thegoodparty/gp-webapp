@@ -35,7 +35,7 @@ import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { Card } from '@styleguide'
-import UncompleteTaskDialog from './UncompleteTaskDialog'
+import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -65,8 +65,7 @@ const TasksList = ({
   }, [tasksProp])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
-  const [uncompleteConfirmTask, setUncompleteConfirmTask] =
-    useState<Task | null>(null)
+  const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -99,7 +98,7 @@ const TasksList = ({
     const { id: taskId, flowType: type, completed } = task
 
     if (completed && !isLegacyList) {
-      setUncompleteConfirmTask(task)
+      setRevertConfirmTask(task)
       return
     }
 
@@ -117,14 +116,14 @@ const TasksList = ({
     setCompleteModalTask(null)
   }
 
-  const handleUncompleteOpenChange = (open: boolean) => {
-    if (!open) setUncompleteConfirmTask(null)
+  const handleRevertOpenChange = (open: boolean) => {
+    if (!open) setRevertConfirmTask(null)
   }
 
-  const handleUncompleteConfirm = async () => {
-    if (uncompleteConfirmTask) {
-      await uncompleteTask(uncompleteConfirmTask.id)
-      setUncompleteConfirmTask(null)
+  const handleRevertConfirm = async () => {
+    if (revertConfirmTask) {
+      await revertTask(revertConfirmTask.id)
+      setRevertConfirmTask(null)
     }
   }
 
@@ -134,7 +133,7 @@ const TasksList = ({
 
   const handleActionClick = (task: Task) => {
     if (task.completed && !isLegacyList) {
-      setUncompleteConfirmTask(task)
+      setRevertConfirmTask(task)
       return
     }
 
@@ -232,9 +231,9 @@ const TasksList = ({
     return sendTaskUpdate(route, taskId, 'Failed to complete task')
   }
 
-  const uncompleteTask = (taskId: string) =>
+  const revertTask = (taskId: string) =>
     sendTaskUpdate(
-      apiRoutes.campaign.tasks.uncomplete,
+      apiRoutes.campaign.tasks.revert,
       taskId,
       'Failed to mark task as incomplete',
     )
@@ -334,10 +333,10 @@ const TasksList = ({
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
-      <UncompleteTaskDialog
-        open={!!uncompleteConfirmTask}
-        onOpenChange={handleUncompleteOpenChange}
-        onConfirm={handleUncompleteConfirm}
+      <RevertTaskDialog
+        open={!!revertConfirmTask}
+        onOpenChange={handleRevertOpenChange}
+        onConfirm={handleRevertConfirm}
       />
     </>
   )

@@ -134,8 +134,8 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-describe('TasksList uncomplete flow', () => {
-  it('shows uncomplete dialog when clicking a completed task checkbox (non-legacy)', async () => {
+describe('TasksList revert completion flow', () => {
+  it('shows revert dialog when clicking a completed task checkbox (non-legacy)', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
 
@@ -154,7 +154,7 @@ describe('TasksList uncomplete flow', () => {
     ).toBeInTheDocument()
   })
 
-  it('does NOT show uncomplete dialog for completed tasks in legacy lists', async () => {
+  it('does NOT show revert dialog for completed tasks in legacy lists', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
 
@@ -175,14 +175,14 @@ describe('TasksList uncomplete flow', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('calls the uncomplete API and updates the task when confirmed', async () => {
+  it('calls the revert API and updates the task when confirmed', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
-    const uncompletedTask = { ...completedTask, completed: false }
+    const revertedTask = { ...completedTask, completed: false }
 
     mockClientFetch.mockResolvedValueOnce({
       ok: true,
-      data: uncompletedTask,
+      data: revertedTask,
     })
 
     render(
@@ -207,7 +207,7 @@ describe('TasksList uncomplete flow', () => {
     })
   })
 
-  it('closes the dialog after successful uncomplete', async () => {
+  it('closes the dialog after successful revert', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
 
@@ -234,7 +234,7 @@ describe('TasksList uncomplete flow', () => {
     })
   })
 
-  it('shows error snackbar when uncomplete API fails', async () => {
+  it('shows error snackbar when revert API fails', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
 
@@ -279,7 +279,7 @@ describe('TasksList uncomplete flow', () => {
     expect(mockClientFetch).not.toHaveBeenCalled()
   })
 
-  it('shows uncomplete dialog when clicking the action area of a completed non-legacy task', async () => {
+  it('shows revert dialog when clicking the action area of a completed non-legacy task', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
 

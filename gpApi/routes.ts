@@ -291,7 +291,7 @@ export const apiRoutes = {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
       },
-      uncomplete: {
+      revert: {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'DELETE',
       },

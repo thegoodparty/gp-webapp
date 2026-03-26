@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
-import UncompleteTaskDialog from './UncompleteTaskDialog'
+import RevertTaskDialog from './RevertTaskDialog'
 
 vi.mock('@styleguide', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>()
@@ -52,10 +52,10 @@ vi.mock('@styleguide', async (importOriginal) => {
   }
 })
 
-describe('UncompleteTaskDialog', () => {
+describe('RevertTaskDialog', () => {
   it('renders nothing when closed', () => {
     render(
-      <UncompleteTaskDialog
+      <RevertTaskDialog
         open={false}
         onOpenChange={vi.fn()}
         onConfirm={vi.fn()}
@@ -66,7 +66,7 @@ describe('UncompleteTaskDialog', () => {
 
   it('renders title and description when open', () => {
     render(
-      <UncompleteTaskDialog
+      <RevertTaskDialog
         open={true}
         onOpenChange={vi.fn()}
         onConfirm={vi.fn()}
@@ -85,7 +85,7 @@ describe('UncompleteTaskDialog', () => {
     const handleConfirm = vi.fn()
 
     render(
-      <UncompleteTaskDialog
+      <RevertTaskDialog
         open={true}
         onOpenChange={vi.fn()}
         onConfirm={handleConfirm}
@@ -101,7 +101,7 @@ describe('UncompleteTaskDialog', () => {
     const handleOpenChange = vi.fn()
 
     render(
-      <UncompleteTaskDialog
+      <RevertTaskDialog
         open={true}
         onOpenChange={handleOpenChange}
         onConfirm={vi.fn()}
