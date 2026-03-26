@@ -11,7 +11,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 import {
   ORGANIZATIONS_QUERY_KEY,
-  useOrganizationIfEnabled,
+  useOrganization,
 } from '@shared/organization-picker'
 import { usePositionName } from '@shared/hooks/usePositionName'
 import { queryClient } from '@shared/query-client'
@@ -21,7 +21,7 @@ interface OfficeSectionProps {
 }
 
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
-  const organization = useOrganizationIfEnabled()
+  const organization = useOrganization()
   const positionName = usePositionName()
   const initialState: OfficeFieldState = {
     office: '',
@@ -89,7 +89,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         <CampaignOfficeInputFields
           values={state}
           hiddenFields={
-            organization?.electedOfficeId
+            organization.electedOfficeId
               ? ['electionDate', 'primaryElectionDate', 'officeTermLength']
               : []
           }

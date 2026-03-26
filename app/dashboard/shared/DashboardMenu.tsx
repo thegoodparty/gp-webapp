@@ -1,8 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { KeyboardEvent } from 'react'
-import { handleLogOut } from '@shared/user/handleLogOut'
-import { DashboardMenuItem } from 'app/dashboard/shared/DashboardMenuItem'
 import {
   MdAccountCircle,
   MdAutoAwesome,
@@ -85,8 +82,6 @@ interface MenuItem {
 
 interface DashboardMenuProps {
   pathname: string | null
-  toggleCallback?: () => void
-  mobileMode?: boolean
 }
 
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
@@ -239,8 +234,6 @@ const getDashboardMenuItems = (
 
 export default function DashboardMenu({
   pathname,
-  toggleCallback,
-  mobileMode,
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
@@ -268,83 +261,6 @@ export default function DashboardMenu({
     }
   }, [campaign, ecanvasser])
 
-  const handleEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key == 'Enter') handleLogOut()
-  }
-
-  const { on: useNewNav } = useFlagOn('win-serve-split')
-
-  if (useNewNav) {
-    return <NewNavMenu menuItems={menuItems} pathname={pathname} />
-  }
-
-  const handleMenuItemClick = (item: MenuItem) => {
-    item?.onClick?.()
-    toggleCallback?.()
-  }
-
-  return (
-    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300 leading-[1.3]">
-      {menuItems.map((item) => {
-        const { id, link, icon, label, target, isNew } = item
-        return (
-          <DashboardMenuItem
-            key={label}
-            id={id}
-            link={link}
-            icon={icon}
-            onClick={() => handleMenuItemClick(item)}
-            pathname={pathname || ''}
-            target={target}
-            isNew={isNew}
-          >
-            {label}
-          </DashboardMenuItem>
-        )
-      })}
-      {mobileMode && (
-        <div className="mt-4 border-t border-indigo-400 pt-4">
-          <Link
-            href="/dashboard/profile"
-            className="no-underline block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
-            id="nav-dash-settings"
-          >
-            <div className="ml-2">Settings</div>
-          </Link>
-
-          <div
-            role="link"
-            tabIndex={0}
-            className="block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
-            onClick={handleLogOut}
-            onKeyDown={(e) => handleEnterPress(e)}
-          >
-            <div id="nav-log-out" className="ml-2">
-              Logout
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-type AccountManagementItem = {
-  label: string
-  icon: LucideIcon
-  id: string
-  href: string
-  onClick?: () => void
-  _target?: string
-}
-
-const NewNavMenu = ({
-  menuItems,
-  pathname,
-}: {
-  menuItems: MenuItem[]
-  pathname: string | null
-}) => {
   const [user] = useUser()
   const {
     clear: clearImpersonation,
@@ -577,4 +493,13 @@ const NewNavMenu = ({
       )}
     </>
   )
+}
+
+type AccountManagementItem = {
+  label: string
+  icon: LucideIcon
+  id: string
+  href: string
+  onClick?: () => void
+  _target?: string
 }
