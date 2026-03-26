@@ -22,10 +22,9 @@ export default async function Page(): Promise<React.JSX.Element> {
   await candidateAccess()
 
   const campaign = await fetchUserCampaign()
-  if (!campaign) {
-    throw new Error('Campaign not found')
-  }
-  let candidatePositions = await serverLoadCandidatePosition(campaign.id)
+  let candidatePositions = campaign
+    ? await serverLoadCandidatePosition(campaign.id)
+    : []
   const topIssues = await serverFetchIssues()
   const user = await getServerUser() // can be removed when door knocking app is not for admins only
   if (!candidatePositions) {
@@ -34,7 +33,7 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   const childProps = {
     pathname: '/dashboard/campaign-details',
-    campaign,
+    campaign: campaign ?? undefined,
     candidatePositions,
     topIssues,
     pathToVictory: campaign?.pathToVictory?.data,

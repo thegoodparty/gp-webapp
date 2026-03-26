@@ -95,27 +95,7 @@ export class NavigationHelper {
     }
   }
 
-  static async navigateToNavItem(
-    page: Page,
-    navItem: string,
-    isMobile: boolean = false,
-  ): Promise<void> {
-    if (isMobile) {
-      await NavigationHelper.openMobileNavMenu(page)
-      await page.getByRole('link', { name: navItem }).click()
-      const closeMenu = page.getByRole('button', { name: /close menu/i })
-      if (await closeMenu.isVisible().catch(() => false)) {
-        await closeMenu.click()
-      } else {
-        const tilt = page.getByTestId('tilt').first()
-        if (await tilt.isVisible().catch(() => false)) {
-          await tilt.click()
-        }
-      }
-    } else {
-      await page.getByRole('link', { name: navItem }).click()
-    }
-
-    await WaitHelper.waitForPageReady(page)
+  static async openMobileMenu(page: Page): Promise<void> {
+    await page.getByTestId('mobile-menu-trigger').click()
   }
 }

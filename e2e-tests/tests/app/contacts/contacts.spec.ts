@@ -5,7 +5,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
-import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
+import { wait } from 'tests/utils/eventually'
 
 test.describe('Contacts Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -18,16 +18,25 @@ test.describe('Contacts Page', () => {
     await page.goto('/dashboard/election-result', {
       waitUntil: 'domcontentloaded',
     })
+    await wait(500)
     await page
       .getByRole('button', { name: 'I won my race' })
       .click({ timeout: 10000 })
 
-    await page.waitForTimeout(3000)
+    await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
     await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
     await expect(page).toHaveURL(/\/dashboard\/contacts/)
-    await expect(page.getByRole('heading', { name: 'Contacts' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Constituents' }),
+    ).toBeVisible()
+    // URL and Contacts heading verified
+
+    //
+    //
+    //
+    // --- Table load: contacts table is visible and has at least one row ---
     const table = page.locator('table').first()
     await expect(table).toBeVisible({ timeout: 20000 })
     const firstRow = table.locator('tbody tr').first()

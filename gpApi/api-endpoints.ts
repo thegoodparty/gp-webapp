@@ -35,9 +35,7 @@ export type APIEndpoints = {
   }
 
   'POST /v1/elected-office': {
-    Request: {
-      electedDate: string
-    }
+    Request: {}
     Response: ElectedOffice
   }
 
@@ -84,7 +82,7 @@ export type Organization = {
   slug: string
   name: string | null
   positionName: string | null
-  position: null | { id: string; brPositionId: string }
+  position: null | { id: string; brPositionId: string; state: string }
   district: null | { id: string; l2Type: string; l2Name: string }
   electedOfficeId: string | null
   campaignId: number | null
@@ -111,8 +109,5 @@ export type AdminOrganization = Organization & {
 
 export type ElectedOffice = {
   id: string
-  electedDate: string | null
   swornInDate: string | null
-  termStartDate: string | null
-  termEndDate: string | null
 }
