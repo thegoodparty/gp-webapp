@@ -162,8 +162,7 @@ test('validate contacts filters', async ({ page }) => {
   await page.getByRole('button', { name: 'I won my race' }).click()
   await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
-  await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
-  await page.waitForLoadState('networkidle')
+  await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
