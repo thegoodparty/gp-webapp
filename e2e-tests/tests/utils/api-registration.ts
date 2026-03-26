@@ -21,27 +21,65 @@ const cookieDomain = (): string =>
  * tests (Content Builder, AI Assistant, etc.) see the same links as before
  * multi-org filtering.
  */
-export const ensureCampaignOrganizationCookie = async (
+const setOrganizationSlugCookie = async (
   page: Page,
-  client: AxiosInstance,
+  slug: string,
 ): Promise<void> => {
-  const { data } = await client.get<{
-    organizations: { slug: string; electedOfficeId: string | null }[]
-  }>('/v1/organizations')
-  const campaignOrg = data.organizations.find((o) => o.electedOfficeId == null)
-  if (!campaignOrg) {
-    return
-  }
   const domain = cookieDomain()
   await page.context().addCookies([
     {
       name: 'organization-slug',
-      value: campaignOrg.slug,
+      value: slug,
       domain,
       path: '/',
       sameSite: 'Lax',
     },
   ])
+}
+
+export const ensureCampaignOrganizationCookie = async (
+  page: Page,
+  client: AxiosInstance,
+): Promise<void> => {
+  const applyCampaignOrg = async (
+    organizations: { slug: string; electedOfficeId: string | null }[],
+  ): Promise<boolean> => {
+    const campaignOrg = organizations.find((o) => o.electedOfficeId == null)
+    if (!campaignOrg) {
+      return false
+    }
+    await setOrganizationSlugCookie(page, campaignOrg.slug)
+    return true
+  }
+
+  try {
+    const { data } = await client.get<{
+      organizations: { slug: string; electedOfficeId: string | null }[]
+    }>('/v1/organizations')
+    await applyCampaignOrg(data.organizations)
+    return
+  } catch {
+    // e.g. token vs API host mismatch; try same URL with browser cookies (BFF / same-site).
+  }
+
+  try {
+    const cookieHeader = (await page.context().cookies())
+      .map((c) => `${c.name}=${c.value}`)
+      .join('; ')
+    const url = `${apiURL.replace(/\/$/, '')}/v1/organizations`
+    const res = await page.request.get(url, {
+      headers: { Cookie: cookieHeader },
+    })
+    if (!res.ok()) {
+      return
+    }
+    const data = (await res.json()) as {
+      organizations: { slug: string; electedOfficeId: string | null }[]
+    }
+    await applyCampaignOrg(data.organizations)
+  } catch {
+    // Nav tests proceed without org cookie; may miss campaign-only links.
+  }
 }
 
 type BaseTestUserOptions = {
@@ -229,9 +267,13 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete(`/v1/users/${user.id}`)
-      if (process.env.DEBUG) {
-        console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      try {
+        await client.delete(`/v1/users/${user.id}`)
+        if (process.env.DEBUG) {
+          console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+        }
+      } catch {
+        // Token may be invalid after long runs or user already removed.
       }
     },
   })

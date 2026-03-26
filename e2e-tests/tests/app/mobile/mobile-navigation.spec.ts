@@ -94,7 +94,7 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
 
     await NavigationHelper.openMobileMenu(page)
-    await page.getByRole('link', { name: 'Content Builder' }).click()
+    await page.locator('#my-content-dashboard').click()
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
     ).toBeVisible({ timeout: 60000 })
