@@ -358,6 +358,7 @@ const TasksList = ({
         open={showFullPlan}
         onOpenChange={setShowFullPlan}
         campaign={campaign}
+        tasks={tasks}
       />
     </>
   )

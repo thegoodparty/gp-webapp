@@ -11,29 +11,27 @@ import {
   DrawerTitle,
   ScrollArea,
 } from '@styleguide'
-import { Campaign, AiContentData } from 'helpers/types'
+import { Campaign } from 'helpers/types'
 import { dateUsHelper } from 'helpers/dateHelper'
+import { startOfWeek, addWeeks, endOfWeek, format } from 'date-fns'
+import type { Task } from 'app/dashboard/components/tasks/TaskItem'
+import { DISPLAY_TASK_TYPES } from 'app/dashboard/shared/constants/tasks.const'
 
 interface FullPlanModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   campaign: Campaign
+  tasks: Task[]
 }
 
-const PLAN_SECTION_KEYS = [
-  'campaignPlan',
-  'strategicLandscape',
-  'timeline',
-  'budget',
-  'community',
-  'voterContactPlan',
-]
-
-function isAiContentData(value: unknown): value is AiContentData {
-  if (typeof value !== 'object' || value === null) {
-    return false
+function formatWeekRange(weekStart: Date): string {
+  const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 })
+  const startMonth = format(weekStart, 'MMM')
+  const endMonth = format(weekEnd, 'MMM')
+  if (startMonth === endMonth) {
+    return `${startMonth} ${format(weekStart, 'd')}-${format(weekEnd, 'd')}`
   }
-  return 'content' in value && 'name' in value
+  return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`
 }
 
 function PlanHeader({ campaign }: { campaign: Campaign }) {
@@ -46,7 +44,6 @@ function PlanHeader({ campaign }: { campaign: Campaign }) {
   const location = [office, city, state].filter(Boolean).join(', ')
   const electionDate = details?.electionDate
   const primaryDate = details?.primaryElectionDate
-  const generatedDate = campaign.updatedAt
 
   return (
     <div className="text-sm leading-5 text-muted-foreground">
@@ -55,43 +52,70 @@ function PlanHeader({ campaign }: { campaign: Campaign }) {
       {electionDate && <p>Election Date: {dateUsHelper(electionDate)}</p>}
       {!primaryDate && <p>No Primary Election</p>}
       {primaryDate && <p>Primary Election: {dateUsHelper(primaryDate)}</p>}
-      {generatedDate && (
-        <p>
-          Generated on:{' '}
-          {dateUsHelper(
-            typeof generatedDate === 'string'
-              ? generatedDate
-              : new Date(generatedDate).toISOString(),
-          )}
-        </p>
-      )}
     </div>
   )
 }
 
-function PlanContent({ campaign }: { campaign: Campaign }) {
-  const { aiContent } = campaign
-  if (!aiContent) return null
+interface WeekGroup {
+  week: number
+  label: string
+  tasks: Task[]
+}
 
-  const sections = PLAN_SECTION_KEYS.map((key) => {
-    const data = aiContent[key]
-    if (!isAiContentData(data)) return null
-    return { key, name: data.name, content: data.content }
-  }).filter(Boolean) as { key: string; name: string; content: string }[]
+function buildWeekGroups(tasks: Task[], electionDate?: string): WeekGroup[] {
+  const byWeek = new Map<number, Task[]>()
+  for (const task of tasks) {
+    const existing = byWeek.get(task.week) ?? []
+    existing.push(task)
+    byWeek.set(task.week, existing)
+  }
 
-  if (sections.length === 0) return null
+  const weekNumbers = [...byWeek.keys()].sort((a, b) => b - a)
+
+  return weekNumbers.map((week) => {
+    let label: string
+    if (electionDate) {
+      const weekStart = startOfWeek(addWeeks(new Date(electionDate), -week), {
+        weekStartsOn: 0,
+      })
+      label = formatWeekRange(weekStart)
+    } else {
+      label = `Week ${week}`
+    }
+    return { week, label, tasks: byWeek.get(week) ?? [] }
+  })
+}
+
+function PlanContent({
+  tasks,
+  electionDate,
+}: {
+  tasks: Task[]
+  electionDate?: string
+}) {
+  const groups = buildWeekGroups(tasks, electionDate)
+  if (groups.length === 0) return null
 
   return (
     <div className="flex flex-col gap-6">
-      {sections.map((section) => (
-        <div key={section.key} className="flex flex-col gap-3">
-          <h2 className="font-outfit text-xl font-medium leading-7 text-foreground">
-            {section.name}
+      {groups.map((group) => (
+        <div key={group.week} className="flex flex-col gap-2">
+          <h2 className="font-outfit text-base font-semibold text-foreground">
+            {group.label}
           </h2>
-          <div
-            className="prose prose-sm max-w-none text-muted-foreground prose-headings:text-foreground prose-headings:font-medium prose-h3:text-lg prose-h3:font-opensans prose-h4:text-sm prose-h4:font-opensans prose-h4:font-medium prose-ul:list-disc prose-li:ms-[21px]"
-            dangerouslySetInnerHTML={{ __html: section.content }}
-          />
+          <ul className="flex flex-col gap-1">
+            {group.tasks.map((task) => (
+              <li
+                key={task.id}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <span className="shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  {DISPLAY_TASK_TYPES[task.flowType] ?? task.flowType}
+                </span>
+                <span>{task.title}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>
@@ -102,8 +126,10 @@ export default function FullPlanModal({
   open,
   onOpenChange,
   campaign,
+  tasks,
 }: FullPlanModalProps) {
   const isMobile = useIsMobile()
+  const electionDate = campaign.details?.electionDate
 
   if (isMobile) {
     return (
@@ -117,7 +143,7 @@ export default function FullPlanModal({
           <ScrollArea className="flex-1 overflow-auto px-6 pb-6 pt-4">
             <PlanHeader campaign={campaign} />
             <div className="mt-6">
-              <PlanContent campaign={campaign} />
+              <PlanContent tasks={tasks} electionDate={electionDate} />
             </div>
           </ScrollArea>
         </DrawerContent>
@@ -136,7 +162,7 @@ export default function FullPlanModal({
         <ScrollArea className="max-h-[calc(80vh-80px)] overflow-auto px-6 pb-6">
           <PlanHeader campaign={campaign} />
           <div className="mt-6">
-            <PlanContent campaign={campaign} />
+            <PlanContent tasks={tasks} electionDate={electionDate} />
           </div>
         </ScrollArea>
       </DialogContent>
