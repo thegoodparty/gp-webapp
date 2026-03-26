@@ -8,7 +8,7 @@ import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { DashboardHeader } from 'app/dashboard/components/DashboardHeader'
 import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { apiRoutes, type ApiRoute } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import LogTaskModal, {
   TASK_TYPE_HEADINGS,
@@ -98,7 +98,7 @@ const TasksList = ({
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type, completed } = task
 
-    if (completed) {
+    if (completed && !isLegacyList) {
       setUncompleteConfirmTask(task)
       return
     }
@@ -121,9 +121,10 @@ const TasksList = ({
     if (!open) setUncompleteConfirmTask(null)
   }
 
-  const handleUncompleteConfirm = () => {
+  const handleUncompleteConfirm = async () => {
     if (uncompleteConfirmTask) {
-      uncompleteTask(uncompleteConfirmTask.id)
+      await uncompleteTask(uncompleteConfirmTask.id)
+      setUncompleteConfirmTask(null)
     }
   }
 
@@ -132,7 +133,7 @@ const TasksList = ({
   }
 
   const handleActionClick = (task: Task) => {
-    if (task.completed) {
+    if (task.completed && !isLegacyList) {
       setUncompleteConfirmTask(task)
       return
     }
@@ -200,50 +201,43 @@ const TasksList = ({
     }
   }
 
-  const completeTask = async (taskId: string): Promise<boolean> => {
-    const route = isLegacyList
-      ? apiRoutes.campaign.legacyTasks.complete
-      : apiRoutes.campaign.tasks.complete
-    const resp = await clientFetch<Task>(route, {
-      taskId,
+  const replaceTask = (taskId: string, updatedTask: Task) => {
+    setTasks((currentTasks) => {
+      const idx = currentTasks.findIndex((t) => t.id === taskId)
+      if (idx === -1) return currentTasks
+      const next = [...currentTasks]
+      next[idx] = updatedTask
+      return next
     })
+  }
+
+  const sendTaskUpdate = async (
+    route: ApiRoute,
+    taskId: string,
+    errorMessage: string,
+  ): Promise<boolean> => {
+    const resp = await clientFetch<Task>(route, { taskId })
     if (resp.ok) {
-      const updatedTask = resp.data
-      setTasks((currentTasks) => {
-        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
-        if (taskIndex !== -1) {
-          currentTasks.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks]
-        }
-        console.error('Completed task not found')
-        return currentTasks
-      })
+      replaceTask(taskId, resp.data)
       return true
     }
-    errorSnackbar('Failed to complete task')
+    errorSnackbar(errorMessage)
     return false
   }
 
-  const uncompleteTask = async (taskId: string): Promise<boolean> => {
-    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.uncomplete, {
-      taskId,
-    })
-    if (resp.ok) {
-      const updatedTask = resp.data
-      setTasks((currentTasks) => {
-        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
-        if (taskIndex !== -1) {
-          currentTasks.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks]
-        }
-        console.error('Uncompleted task not found')
-        return currentTasks
-      })
-      return true
-    }
-    errorSnackbar('Failed to mark task as incomplete')
-    return false
+  const completeTask = (taskId: string) => {
+    const route = isLegacyList
+      ? apiRoutes.campaign.legacyTasks.complete
+      : apiRoutes.campaign.tasks.complete
+    return sendTaskUpdate(route, taskId, 'Failed to complete task')
   }
+
+  const uncompleteTask = (taskId: string) =>
+    sendTaskUpdate(
+      apiRoutes.campaign.tasks.uncomplete,
+      taskId,
+      'Failed to mark task as incomplete',
+    )
 
   return (
     <>
