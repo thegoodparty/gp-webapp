@@ -24,11 +24,9 @@ interface SSEEvent {
 
 function isSSEEvent(value: unknown): value is SSEEvent {
   if (typeof value !== 'object' || value === null) return false
-  const obj = value as Record<string, unknown>
-  return (
-    typeof obj.type === 'string' &&
-    (obj.type === 'progress' || obj.type === 'complete' || obj.type === 'error')
-  )
+  if (!('type' in value)) return false
+  const { type } = value
+  return type === 'progress' || type === 'complete' || type === 'error'
 }
 
 function parseSSEEvents(text: string): SSEEvent[] {
