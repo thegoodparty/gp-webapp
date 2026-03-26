@@ -5,6 +5,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { wait } from 'tests/utils/eventually'
 
 /**
  * E2E: Contacts page.
@@ -26,11 +27,12 @@ test.describe('Contacts Page', () => {
     await page.goto('/dashboard/election-result', {
       waitUntil: 'domcontentloaded',
     })
+    await wait(500)
     await page
       .getByRole('button', { name: 'I won my race' })
       .click({ timeout: 10000 })
 
-    await page.waitForTimeout(3000)
+    await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
     // --- Navigation: go to contacts, dismiss cookie/overlays, wait for ready ---
     // Navigating to /dashboard/contacts
@@ -43,7 +45,9 @@ test.describe('Contacts Page', () => {
     //
     // --- Page identity: URL contains /dashboard/contacts and "Contacts" heading is visible ---
     await expect(page).toHaveURL(/\/dashboard\/contacts/)
-    await expect(page.getByRole('heading', { name: 'Contacts' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Constituents' }),
+    ).toBeVisible()
     // URL and Contacts heading verified
 
     //
