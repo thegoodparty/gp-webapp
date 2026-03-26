@@ -77,10 +77,18 @@ const TasksList = ({
     (a, b) => b - a,
   )
 
-  const defaultIndex = Math.max(
-    0,
-    weekNumbers.findIndex((w) => w <= weeksUntilElection),
-  )
+  const defaultIndex =
+    weekNumbers.length > 0
+      ? weekNumbers.reduce((bestIdx, w, idx) => {
+          const bestW = weekNumbers[bestIdx]
+          if (bestW === undefined) return idx
+          const bestDiff = Math.abs(bestW - weeksUntilElection)
+          const currDiff = Math.abs(w - weeksUntilElection)
+          if (currDiff < bestDiff) return idx
+          if (currDiff === bestDiff && w < bestW) return idx
+          return bestIdx
+        }, 0)
+      : 0
   const [selectedWeekIndex, setSelectedWeekIndex] = useState(-1)
 
   useEffect(() => {
