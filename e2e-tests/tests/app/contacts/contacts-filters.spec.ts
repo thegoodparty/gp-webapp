@@ -6,6 +6,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { wait } from 'tests/utils/eventually'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -157,6 +158,7 @@ test('validate contacts filters', async ({ page }) => {
   await page.goto('/dashboard/election-result', {
     waitUntil: 'domcontentloaded',
   })
+  await wait(500)
   await page.getByRole('button', { name: 'I won my race' }).click()
   await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 

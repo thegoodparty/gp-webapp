@@ -13,7 +13,7 @@ import {
   authenticateTestUser,
   type AuthenticatedUser,
 } from 'tests/utils/api-registration'
-import { eventually } from 'tests/utils/eventually'
+import { eventually, wait } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
 type CsvRow = {
@@ -325,6 +325,7 @@ test.describe.serial('poll onboarding', () => {
 
     // Become a Serve user
     await page.goto('/dashboard/election-result')
+    await wait(500)
     await page.getByRole('button', { name: 'I won my race' }).click()
     await page.waitForTimeout(3000)
 

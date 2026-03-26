@@ -1,6 +1,6 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import TopDashboardMenu from './TopDashboardMenu'
 import Link from 'next/link'
 import ProfileDropdown from './ProfileDropdown'
@@ -16,9 +16,6 @@ import { getMarketingUrl } from 'helpers/linkhelper'
 
 const RightSide = (): React.JSX.Element => {
   const [user] = useUser() as [User | null, (user: User | null) => void]
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -64,7 +61,7 @@ const RightSide = (): React.JSX.Element => {
 
   return (
     <div className="hidden lg:flex justify-end items-center">
-      {mounted && user ? (
+      {user ? (
         <>
           <ExitToDashboardButton />
           <ProfileDropdown
