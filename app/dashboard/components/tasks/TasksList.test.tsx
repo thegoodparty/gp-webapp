@@ -128,7 +128,7 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     pathToVictory: { data: { viability: { score: 80 } } },
     hasFreeTextsOffer: false,
     ...overrides,
-  }) as unknown as Campaign
+  } as unknown as Campaign)
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -149,9 +149,7 @@ describe('TasksList revert completion flow', () => {
 
     await user.click(screen.getByRole('checkbox'))
 
-    expect(
-      screen.getByText('Mark task as incomplete?'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Mark task as incomplete?')).toBeInTheDocument()
   })
 
   it('does NOT show revert dialog for completed tasks in legacy lists', async () => {
@@ -293,8 +291,6 @@ describe('TasksList revert completion flow', () => {
 
     await user.click(screen.getByRole('button', { name: /Test Task/i }))
 
-    expect(
-      screen.getByText('Mark task as incomplete?'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Mark task as incomplete?')).toBeInTheDocument()
   })
 })

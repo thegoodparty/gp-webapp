@@ -72,11 +72,11 @@ describe('RevertTaskDialog', () => {
         onConfirm={vi.fn()}
       />,
     )
+    expect(screen.getByText('Mark task as incomplete?')).toBeInTheDocument()
     expect(
-      screen.getByText('Mark task as incomplete?'),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText('Are you sure you want to mark this task as incomplete?'),
+      screen.getByText(
+        'Are you sure you want to mark this task as incomplete?',
+      ),
     ).toBeInTheDocument()
   })
 
