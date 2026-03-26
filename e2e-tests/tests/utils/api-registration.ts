@@ -12,6 +12,38 @@ if (!baseURL) {
 
 const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
+
+/**
+ * When win-serve-split is on, the sidebar only shows campaign items if the
+ * selected org has no electedOfficeId. Prefer the campaign org cookie so nav
+ * tests (Content Builder, AI Assistant, etc.) see the same links as before
+ * multi-org filtering.
+ */
+export const ensureCampaignOrganizationCookie = async (
+  page: Page,
+  client: AxiosInstance,
+): Promise<void> => {
+  const { data } = await client.get<{
+    organizations: { slug: string; electedOfficeId: string | null }[]
+  }>('/v1/organizations')
+  const campaignOrg = data.organizations.find((o) => o.electedOfficeId == null)
+  if (!campaignOrg) {
+    return
+  }
+  const domain = cookieDomain()
+  await page.context().addCookies([
+    {
+      name: 'organization-slug',
+      value: campaignOrg.slug,
+      domain,
+      path: '/',
+      sameSite: 'Lax',
+    },
+  ])
+}
+
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
@@ -217,7 +249,7 @@ export const authenticateTestUser = async (
     }
   }
 
-  const domain = baseURL.replace('http://', '').replace('https://', '')
+  const domain = cookieDomain()
   await page.context().addCookies([
     {
       name: 'token',

@@ -9,6 +9,7 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { WaitHelper } from 'src/helpers/wait.helper'
 
 test.describe('Organization Header Propagation', () => {
   test.beforeEach(async ({ page }) => {
@@ -78,7 +79,7 @@ test.describe('Organization Header Propagation', () => {
     })
 
     await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
-    await page.waitForLoadState('networkidle')
+    await WaitHelper.waitForPageReady(page)
 
     expect(capturedHeaders.length).toBeGreaterThan(0)
     for (const header of capturedHeaders) {

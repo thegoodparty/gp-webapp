@@ -1,5 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
-import { authenticateTestUser } from 'tests/utils/api-registration'
+import {
+  authenticateTestUser,
+  ensureCampaignOrganizationCookie,
+} from 'tests/utils/api-registration'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -22,7 +25,8 @@ test.describe('Mobile Navigation', () => {
 
   test.beforeEach(async ({ page }) => {
     await blockSlowScripts(page)
-    await authenticateTestUser(page)
+    const { client } = await authenticateTestUser(page)
+    await ensureCampaignOrganizationCookie(page, client)
     await page.goto('/dashboard')
     await NavigationHelper.dismissOverlays(page)
   })
