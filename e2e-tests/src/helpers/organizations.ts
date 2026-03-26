@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { type Page, expect } from '@playwright/test'
 import type { AxiosInstance } from 'axios'
 import {
   authenticateTestUser,
@@ -68,6 +68,7 @@ export const getOrgPickerOptions = async (page: Page): Promise<string[]> => {
   await trigger.click()
 
   const items = page.getByRole('menuitem')
+  await expect(items.first()).toBeVisible()
   const texts: string[] = []
   const count = await items.count()
   for (let i = 0; i < count; i++) {
