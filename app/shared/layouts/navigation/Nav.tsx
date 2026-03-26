@@ -36,7 +36,7 @@ const Nav = (): React.JSX.Element => {
           </div>
         </div>
       </div>
-      {!dashboardNewNav && <RightSideMobile />}
+      {!dashboardNewNav && !hideWhileLoading && <RightSideMobile />}
       <div
         id="top-nav-spacer"
         className={`h-14 relative${
