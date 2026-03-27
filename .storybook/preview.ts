@@ -9,6 +9,11 @@ const preview: Preview = {
     (Story) => React.createElement('div', { 'data-slot': 'storybook' }, React.createElement(Story)),
   ],
   parameters: {
+    options: {
+      storySort: {
+        order: ['Foundations', ['Borders', 'Colors', 'Icons', 'Shadows', 'Spacing', 'Typography'], 'Components', 'Campaign Plan'],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
