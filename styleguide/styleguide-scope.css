@@ -305,6 +305,7 @@
 /*
  * =============================================================================
  * DARK MODE SCOPED VARIABLES
+ * Values derived from Figma ThemeDark.json export.
  * =============================================================================
  */
 .dark
@@ -323,39 +324,194 @@
     [data-slot='sidebar-inset']
   )
   * {
+  /*
+   * ==========================================================================
+   * BASE TOKENS (dark mode)
+   * ==========================================================================
+   */
+  --base-foreground: #ffffff;
+  --base-background: var(--tw-neutral-950);
+  --base-muted-foreground: var(--tw-neutral-400);
+  --base-muted: var(--tw-neutral-800);
+  --base-border: var(--tw-neutral-600);
+  --base-accent: var(--tw-neutral-700);
+  --base-accent-foreground: #ffffff;
+  --base-surface: var(--tw-neutral-800);
+  --base-surface-foreground: #ffffff;
+  --base-focus-ring: var(--tw-neutral-500);
+  --base-ring-offset: #ffffff;
+  --base-foreground-focus: #a3a3a380;
+  --base-foreground-dark: var(--tw-neutral-950);
+  --base-foreground-dark-focus: #ffffff80;
+  --base-background-dark: #ffffff;
+
+  /*
+   * ==========================================================================
+   * THEME TOKENS (dark mode)
+   * ==========================================================================
+   */
+  --theme-primary: var(--tw-blue-300);
+  --theme-primary-foreground: var(--tw-neutral-950);
+  --theme-primary-focus: #93c5fd80;
+  --theme-secondary: var(--goodparty-cream);
+  --theme-secondary-foreground: var(--tw-neutral-950);
+  --theme-secondary-focus: #fcf8f380;
+  --theme-destructive: var(--color-red-300);
+  --theme-destructive-foreground: var(--tw-neutral-950);
+  --theme-destructive-focus: #f56c6a80;
+  --theme-success: var(--color-green-300);
+  --theme-success-foreground: var(--tw-neutral-950);
+  --theme-success-focus: #86e38280;
+  --theme-info: var(--color-blue-300);
+  --theme-info-foreground: var(--tw-neutral-950);
+  --theme-info-focus: #75affe80;
+  --theme-warning: var(--color-warning-400);
+  --theme-warning-foreground: #000000;
+  --theme-warning-focus: #ffb93f80;
+  --theme-link: var(--tw-blue-300);
+
+  /*
+   * ==========================================================================
+   * COMPONENT TOKENS (dark mode)
+   * ==========================================================================
+   */
+  --component-card-base: var(--tw-neutral-900);
+  --component-card-foreground: #ffffff;
+  --component-input-border: var(--tw-neutral-600);
+  --component-input-base: var(--tw-neutral-950);
+  --component-input-active: var(--tw-blue-300);
+  --component-input-foreground: var(--tw-neutral-950);
+  --component-input-focus: #93c5fd80;
+  --component-tooltip-base: var(--tw-neutral-100);
+  --component-tooltip-foreground: var(--tw-neutral-950);
+
+  /*
+   * ==========================================================================
+   * DATA/CHART TOKENS (dark mode)
+   * ==========================================================================
+   */
+  --data-chart-1: var(--color-lavender-400);
+  --data-chart-2: var(--color-halo-green-200);
+  --data-chart-3: var(--color-bright-yellow-400);
+  --data-chart-4: var(--color-waxflower-200);
+  --data-chart-5: var(--color-midnight-200);
+
+  /*
+   * ==========================================================================
+   * ALPHA TRANSPARENCY SCALE (dark mode)
+   * ==========================================================================
+   */
+  --alpha-5: #0a0a0af2;
+  --alpha-10: #0a0a0ae6;
+  --alpha-20: #0a0a0acc;
+  --alpha-30: #0a0a0ab3;
+  --alpha-40: #0a0a0a99;
+  --alpha-50: #0a0a0a80;
+  --alpha-60: #0a0a0a66;
+  --alpha-70: #0a0a0a4d;
+  --alpha-80: #0a0a0a33;
+  --alpha-90: #0a0a0a1a;
+
+  /*
+   * ==========================================================================
+   * SIDEBAR TOKENS (dark mode)
+   * ==========================================================================
+   */
+  --component-sidebar-background: var(--tw-neutral-900);
+  --component-sidebar-foreground: var(--tw-neutral-50);
+  --component-sidebar-primary: var(--tw-blue-600);
+  --component-sidebar-primary-foreground: var(--tw-neutral-50);
+  --component-sidebar-accent: var(--tw-neutral-800);
+  --component-sidebar-accent-foreground: var(--tw-neutral-50);
+  --component-sidebar-border: #ffffff1a;
+  --component-sidebar-ring: var(--tw-neutral-600);
+
+  /*
+   * ==========================================================================
+   * SHADCN/UI SEMANTIC VARIABLES (dark mode)
+   * ==========================================================================
+   */
   /* Primary */
-  --primary: var(--brand-primary);
-  --primary-foreground: var(--brand-text-inverse);
-  --color-primary: var(--brand-primary);
-  --color-primary-foreground: var(--brand-text-inverse);
+  --primary: var(--theme-primary);
+  --primary-foreground: var(--theme-primary-foreground);
+  --color-primary: var(--theme-primary);
+  --color-primary-foreground: var(--theme-primary-foreground);
 
   /* Background/Foreground */
-  --background: var(--brand-surface-inverse);
-  --foreground: var(--brand-text-inverse);
-  --color-background: var(--brand-surface-inverse);
-  --color-foreground: var(--brand-text-inverse);
+  --background: var(--base-background);
+  --foreground: var(--base-foreground);
+  --color-background: var(--base-background);
+  --color-foreground: var(--base-foreground);
 
   /* Border & Input */
-  --border: var(--brand-border-inverse);
-  --input: var(--brand-surface-inverse);
-  --color-border: var(--brand-border-inverse);
-  --color-input: var(--brand-surface-inverse);
+  --border: var(--base-border);
+  --input: var(--component-input-base);
+  --color-border: var(--base-border);
+  --color-input: var(--component-input-base);
+
+  /* Ring */
+  --ring: var(--base-focus-ring);
+  --color-ring: var(--base-focus-ring);
 
   /* Muted */
-  --muted: var(--brand-surface-inverse);
-  --muted-foreground: var(--brand-text-tertiary);
-  --color-muted: var(--brand-surface-inverse);
-  --color-muted-foreground: var(--brand-text-tertiary);
+  --muted: var(--base-muted);
+  --muted-foreground: var(--base-muted-foreground);
+  --color-muted: var(--base-muted);
+  --color-muted-foreground: var(--base-muted-foreground);
+
+  /* Accent */
+  --accent: var(--base-accent);
+  --accent-foreground: var(--base-accent-foreground);
+  --color-accent: var(--base-accent);
+  --color-accent-foreground: var(--base-accent-foreground);
+
+  /* Destructive */
+  --destructive: var(--theme-destructive);
+  --destructive-foreground: var(--theme-destructive-foreground);
+  --color-destructive: var(--theme-destructive);
+  --color-destructive-foreground: var(--theme-destructive-foreground);
 
   /* Card */
-  --card: var(--brand-surface-inverse);
-  --card-foreground: var(--brand-text-inverse);
-  --color-card: var(--brand-surface-inverse);
-  --color-card-foreground: var(--brand-text-inverse);
+  --card: var(--component-card-base);
+  --card-foreground: var(--component-card-foreground);
+  --color-card: var(--component-card-base);
+  --color-card-foreground: var(--component-card-foreground);
 
   /* Popover */
-  --popover: var(--brand-surface-inverse);
-  --popover-foreground: var(--brand-text-inverse);
-  --color-popover: var(--brand-surface-inverse);
-  --color-popover-foreground: var(--brand-text-inverse);
+  --popover: var(--base-surface);
+  --popover-foreground: var(--base-surface-foreground);
+  --color-popover: var(--base-surface);
+  --color-popover-foreground: var(--base-surface-foreground);
+
+  /* Charts */
+  --chart-1: var(--data-chart-1);
+  --chart-2: var(--data-chart-2);
+  --chart-3: var(--data-chart-3);
+  --chart-4: var(--data-chart-4);
+  --chart-5: var(--data-chart-5);
+
+  /* Focus/Ring */
+  --focus-ring: var(--base-focus-ring);
+  --ring-offset: var(--base-ring-offset);
+
+  /* Sidebar */
+  --sidebar-background: var(--component-sidebar-background);
+  --sidebar-foreground: var(--component-sidebar-foreground);
+  --sidebar-primary: var(--component-sidebar-primary);
+  --sidebar-primary-foreground: var(--component-sidebar-primary-foreground);
+  --sidebar-accent: var(--component-sidebar-accent);
+  --sidebar-accent-foreground: var(--component-sidebar-accent-foreground);
+  --sidebar-border: var(--component-sidebar-border);
+  --sidebar-ring: var(--component-sidebar-ring);
+
+  --color-sidebar: var(--component-sidebar-background);
+  --color-sidebar-foreground: var(--component-sidebar-foreground);
+  --color-sidebar-primary: var(--component-sidebar-primary);
+  --color-sidebar-primary-foreground: var(
+    --component-sidebar-primary-foreground
+  );
+  --color-sidebar-accent: var(--component-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--component-sidebar-accent-foreground);
+  --color-sidebar-border: var(--component-sidebar-border);
+  --color-sidebar-ring: var(--component-sidebar-ring);
 }

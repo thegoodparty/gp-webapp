@@ -723,9 +723,17 @@
   --base-surface-foreground: var(--tw-neutral-950);
   --base-focus-ring: var(--tw-neutral-400);
   --base-ring-offset: #ffffff;
-  --base-foreground-focus: color-mix(in srgb, var(--tw-neutral-400) 50%, transparent);
+  --base-foreground-focus: color-mix(
+    in srgb,
+    var(--tw-neutral-400) 50%,
+    transparent
+  );
   --base-foreground-dark: #ffffff;
-  --base-foreground-dark-focus: color-mix(in srgb, var(--base-foreground-dark) 50%, transparent);
+  --base-foreground-dark-focus: color-mix(
+    in srgb,
+    var(--base-foreground-dark) 50%,
+    transparent
+  );
   --base-background-dark: var(--tw-neutral-950);
 
   /* ==========================================================================
@@ -733,22 +741,47 @@
    * ========================================================================== */
   --theme-primary: var(--tw-blue-600);
   --theme-primary-foreground: #ffffff;
-  --theme-primary-focus: color-mix(in srgb, var(--tw-blue-600) 40%, transparent);
+  --theme-primary-focus: color-mix(
+    in srgb,
+    var(--tw-blue-600) 40%,
+    transparent
+  );
   --theme-secondary: var(--color-midnight-900);
   --theme-secondary-foreground: #ffffff;
-  --theme-secondary-focus: color-mix(in srgb, var(--color-midnight-900) 30%, transparent);
+  --theme-secondary-focus: color-mix(
+    in srgb,
+    var(--color-midnight-900) 30%,
+    transparent
+  );
   --theme-destructive: var(--color-red-500);
   --theme-destructive-foreground: #ffffff;
-  --theme-destructive-focus: color-mix(in srgb, var(--color-red-500) 30%, transparent);
+  --theme-destructive-focus: color-mix(
+    in srgb,
+    var(--color-red-500) 30%,
+    transparent
+  );
   --theme-success: var(--color-green-500);
   --theme-success-foreground: #ffffff;
-  --theme-success-focus: color-mix(in srgb, var(--color-green-500) 30%, transparent);
+  --theme-success-focus: color-mix(
+    in srgb,
+    var(--color-green-500) 30%,
+    transparent
+  );
   --theme-info: var(--color-blue-500);
   --theme-info-foreground: #ffffff;
-  --theme-info-focus: color-mix(in srgb, var(--color-blue-500) 30%, transparent);
-  --theme-warning: var(--color-warning-500);
+  --theme-info-focus: color-mix(
+    in srgb,
+    var(--color-blue-500) 30%,
+    transparent
+  );
+  --theme-warning: var(--color-warning-600);
   --theme-warning-foreground: #000000;
-  --theme-warning-focus: color-mix(in srgb, var(--color-warning-500) 30%, transparent);
+  --theme-warning-focus: color-mix(
+    in srgb,
+    var(--color-warning-500) 30%,
+    transparent
+  );
+  --theme-link: var(--tw-blue-500);
 
   /* ==========================================================================
    * DATA/CHART COLORS (from Figma)
@@ -780,13 +813,23 @@
   --component-input-foreground: #ffffff;
   --component-input-base: #ffffff;
   --component-input-border: #d4d4d4;
-  --component-input-focus: color-mix(in srgb, var(--tw-blue-600) 30%, transparent);
+  --component-input-focus: color-mix(
+    in srgb,
+    var(--tw-blue-600) 30%,
+    transparent
+  );
 
   /* ==========================================================================
    * COMPONENT TOOLTIP TOKENS (from Figma)
    * ========================================================================== */
   --component-tooltip-base: #262626;
   --component-tooltip-foreground: #ffffff;
+
+  /* ==========================================================================
+   * COMPONENT CARD TOKENS (from Figma)
+   * ========================================================================== */
+  --component-card-base: #ffffff;
+  --component-card-foreground: var(--tw-neutral-950);
 
   /* ==========================================================================
    * COMPONENT SIDEBAR TOKENS (from Figma)
