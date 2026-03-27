@@ -35,7 +35,7 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
-import { Card } from '@styleguide'
+import { Card, cn } from '@styleguide'
 import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
@@ -262,7 +262,12 @@ const TasksList = ({
   return (
     <>
       {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
-      <Card className="mt-8 mb-32 gap-0 pt-6 font-opensans">
+      <Card
+        className={cn(
+          'mt-8 mb-32 gap-0',
+          isLegacyList ? 'p-6' : 'pt-6 font-opensans',
+        )}
+      >
         {isLegacyList ? (
           <>
             <H2>Tasks for this week</H2>
