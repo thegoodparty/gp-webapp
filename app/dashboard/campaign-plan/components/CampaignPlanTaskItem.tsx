@@ -144,7 +144,7 @@ export default function CampaignPlanTaskItem({
   return (
     <div
       data-slot="task-item"
-      className={cn('flex w-full items-center', className)}
+      className={cn('flex w-full items-center font-opensans', className)}
     >
       <div className="flex shrink-0 items-start justify-center self-stretch pb-3 pl-4 pr-3 pt-3.5">
         {locked ? (
