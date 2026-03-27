@@ -19,6 +19,10 @@ vi.mock('@shared/ui/ModalOrDrawer', () => ({
   }) => (open ? <div role="dialog">{children}</div> : null),
 }))
 
+vi.mock('helpers/useSnackbar', () => ({
+  useSnackbar: () => ({ errorSnackbar: vi.fn() }),
+}))
+
 vi.mock('@styleguide', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>()
   return {

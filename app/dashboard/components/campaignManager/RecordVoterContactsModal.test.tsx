@@ -42,6 +42,11 @@ vi.mock('@shared/utils/analytics', () => ({
   identifyUser: vi.fn(() => Promise.resolve(true)),
 }))
 
+const mockErrorSnackbar = vi.fn()
+vi.mock('helpers/useSnackbar', () => ({
+  useSnackbar: () => ({ errorSnackbar: mockErrorSnackbar }),
+}))
+
 import {
   createUpdateHistory,
   createIrresponsiblyMassagedHistoryItem,

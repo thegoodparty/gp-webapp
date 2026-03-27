@@ -14,6 +14,7 @@ interface CampaignOfficeInputFieldsProps {
   values: CampaignOfficeValues
   gridLayout?: boolean
   fieldWrapClassName?: string
+  hiddenFields?: string[]
 }
 
 const getFieldValue = (
@@ -32,9 +33,12 @@ export const CampaignOfficeInputFields = ({
   values,
   gridLayout = true,
   fieldWrapClassName = '',
+  hiddenFields = [],
 }: CampaignOfficeInputFieldsProps): React.JSX.Element[] =>
   OFFICE_INPUT_FIELDS.filter(
-    ({ key }) => key !== 'primaryElectionDate' || getFieldValue(values, key),
+    ({ key }) =>
+      !hiddenFields.includes(key) &&
+      (key !== 'primaryElectionDate' || getFieldValue(values, key)),
   ).map((field) => {
     const fieldValue = getFieldValue(values, field.key)
     return (

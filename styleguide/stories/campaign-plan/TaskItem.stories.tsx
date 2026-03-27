@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
-import TaskItem from '../../../app/dashboard/campaign-plan/components/TaskItem'
+import CampaignPlanTaskItem from '../../../app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
 import { noop } from '@shared/utils/noop'
 
-const meta: Meta<typeof TaskItem> = {
-  title: 'Campaign Plan/TaskItem',
-  component: TaskItem,
+const meta: Meta<typeof CampaignPlanTaskItem> = {
+  title: 'Campaign Plan/CampaignPlanTaskItem',
+  component: CampaignPlanTaskItem,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -27,7 +27,7 @@ const meta: Meta<typeof TaskItem> = {
 }
 
 export default meta
-type Story = StoryObj<typeof TaskItem>
+type Story = StoryObj<typeof CampaignPlanTaskItem>
 
 export const Default: Story = {}
 
@@ -69,7 +69,13 @@ export const LongText: Story = {
 export const Interactive: Story = {
   render: (args) => {
     const [checked, setChecked] = useState(false)
-    return <TaskItem {...args} checked={checked} onCheckedChange={setChecked} />
+    return (
+      <CampaignPlanTaskItem
+        {...args}
+        checked={checked}
+        onCheckedChange={setChecked}
+      />
+    )
   },
   args: {
     title: 'Schedule introduction text message',
