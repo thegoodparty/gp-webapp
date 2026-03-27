@@ -220,13 +220,19 @@ const TasksList = ({
     taskId: string,
     errorMessage: string,
   ): Promise<boolean> => {
-    const resp = await clientFetch<Task>(route, { taskId })
-    if (resp.ok) {
-      replaceTask(taskId, resp.data)
-      return true
+    try {
+      const resp = await clientFetch<Task>(route, { taskId })
+      if (resp.ok) {
+        replaceTask(taskId, resp.data)
+        return true
+      }
+      errorSnackbar(errorMessage)
+      return false
+    } catch (error) {
+      console.error(error)
+      errorSnackbar(errorMessage)
+      return false
     }
-    errorSnackbar(errorMessage)
-    return false
   }
 
   const completeTask = (taskId: string) => {

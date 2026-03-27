@@ -5,6 +5,10 @@ import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import RevertTaskDialog from './RevertTaskDialog'
 
+const AlertDialogContext = React.createContext<{
+  onOpenChange: (open: boolean) => void
+} | null>(null)
+
 vi.mock('@styleguide', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>()
   return {
@@ -19,10 +23,11 @@ vi.mock('@styleguide', async (importOriginal) => {
       children: React.ReactNode
     }) =>
       open ? (
-        <div role="alertdialog" data-testid="alert-dialog">
-          {children}
-          <button onClick={() => onOpenChange(false)} data-testid="backdrop" />
-        </div>
+        <AlertDialogContext.Provider value={{ onOpenChange }}>
+          <div role="alertdialog" data-testid="alert-dialog">
+            {children}
+          </div>
+        </AlertDialogContext.Provider>
       ) : null,
     AlertDialogContent: ({ children }: { children: React.ReactNode }) => (
       <div>{children}</div>
@@ -46,9 +51,24 @@ vi.mock('@styleguide', async (importOriginal) => {
       children: React.ReactNode
       onClick?: () => void
     }) => <button onClick={onClick}>{children}</button>,
-    AlertDialogCancel: ({ children }: { children: React.ReactNode }) => (
-      <button>{children}</button>
-    ),
+    AlertDialogCancel: ({
+      children,
+      disabled,
+    }: {
+      children: React.ReactNode
+      disabled?: boolean
+    }) => {
+      const ctx = React.useContext(AlertDialogContext)
+      return (
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => ctx?.onOpenChange(false)}
+        >
+          {children}
+        </button>
+      )
+    },
   }
 })
 
@@ -107,7 +127,7 @@ describe('RevertTaskDialog', () => {
         onConfirm={vi.fn()}
       />,
     )
-    await user.click(screen.getByTestId('backdrop'))
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
     expect(handleOpenChange).toHaveBeenCalledWith(false)
   })

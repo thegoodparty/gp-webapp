@@ -35,6 +35,10 @@ vi.mock('helpers/analyticsHelper', () => ({
   EVENTS: { Outreach: { P2PCompliance: {} } },
 }))
 
+const AlertDialogContext = React.createContext<{
+  onOpenChange: (open: boolean) => void
+} | null>(null)
+
 vi.mock('@styleguide', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>()
   return {
@@ -56,13 +60,9 @@ vi.mock('@styleguide', async (importOriginal) => {
       children: React.ReactNode
     }) =>
       open ? (
-        <div role="alertdialog">
-          {children}
-          <button
-            onClick={() => onOpenChange(false)}
-            data-testid="dialog-dismiss"
-          />
-        </div>
+        <AlertDialogContext.Provider value={{ onOpenChange }}>
+          <div role="alertdialog">{children}</div>
+        </AlertDialogContext.Provider>
       ) : null,
     AlertDialogContent: ({ children }: { children: React.ReactNode }) => (
       <div>{children}</div>
@@ -86,9 +86,24 @@ vi.mock('@styleguide', async (importOriginal) => {
       children: React.ReactNode
       onClick?: () => void
     }) => <button onClick={onClick}>{children}</button>,
-    AlertDialogCancel: ({ children }: { children: React.ReactNode }) => (
-      <button>{children}</button>
-    ),
+    AlertDialogCancel: ({
+      children,
+      disabled,
+    }: {
+      children: React.ReactNode
+      disabled?: boolean
+    }) => {
+      const ctx = React.useContext(AlertDialogContext)
+      return (
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => ctx?.onOpenChange(false)}
+        >
+          {children}
+        </button>
+      )
+    },
   }
 })
 
@@ -256,6 +271,35 @@ describe('TasksList revert completion flow', () => {
     })
   })
 
+  it('shows error snackbar when revert API throws', async () => {
+    const user = userEvent.setup()
+    const completedTask = makeTask({ completed: true })
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(vi.fn())
+
+    mockClientFetch.mockRejectedValueOnce(new Error('network'))
+
+    try {
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={[completedTask]}
+          isLegacyList={false}
+        />,
+      )
+
+      await user.click(screen.getByRole('checkbox'))
+      await user.click(screen.getByRole('button', { name: 'Confirm' }))
+
+      await waitFor(() => {
+        expect(mockErrorSnackbar).toHaveBeenCalledWith(
+          'Failed to mark task as incomplete',
+        )
+      })
+    } finally {
+      consoleError.mockRestore()
+    }
+  })
+
   it('dismisses the dialog when Cancel is used', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
@@ -271,7 +315,7 @@ describe('TasksList revert completion flow', () => {
     await user.click(screen.getByRole('checkbox'))
     expect(screen.getByRole('alertdialog')).toBeInTheDocument()
 
-    await user.click(screen.getByTestId('dialog-dismiss'))
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
     expect(mockClientFetch).not.toHaveBeenCalled()
