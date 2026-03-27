@@ -7,6 +7,8 @@ const withPWA = require('next-pwa')({
 }) as (config: NextConfig) => NextConfig
 
 const nextConfig: NextConfig = {
+  // ESLint runs as a separate CI step;
+  eslint: { ignoreDuringBuilds: true },
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
