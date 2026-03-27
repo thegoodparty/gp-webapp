@@ -1,8 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import {
-  authenticateTestUser,
-  ensureCampaignOrganizationCookie,
-} from 'tests/utils/api-registration'
+import { authenticateTestUser } from 'tests/utils/api-registration'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -33,8 +30,7 @@ test.describe('Dashboard Functionality', () => {
     console.log(
       `🧪 Testing dashboard functionality with pre-authenticated user`,
     )
-    const { client } = await authenticateTestUser(page)
-    await ensureCampaignOrganizationCookie(page, client)
+    await authenticateTestUser(page)
     await page.goto('/dashboard')
     await page.waitForURL(/\/dashboard/)
     await NavigationHelper.dismissOverlays(page)
