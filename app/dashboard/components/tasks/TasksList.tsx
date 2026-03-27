@@ -7,7 +7,7 @@ import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { DashboardHeader } from 'app/dashboard/components/DashboardHeader'
 import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { apiRoutes, type ApiRoute } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import LogTaskModal, {
   TASK_TYPE_HEADINGS,
@@ -36,6 +36,7 @@ import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { Card } from '@styleguide'
+import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -86,6 +87,8 @@ const TasksList = ({
   } = useWeekNavigation(tasks, tasksProp, electionDateObj, daysUntilElection)
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
+  const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
+  const [isReverting, setIsReverting] = useState(false)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -103,7 +106,12 @@ const TasksList = ({
   const { errorSnackbar } = useSnackbar()
 
   const handleCheckClick = async (task: Task) => {
-    const { id: taskId, flowType: type } = task
+    const { id: taskId, flowType: type, completed } = task
+
+    if (completed && !isLegacyList) {
+      setRevertConfirmTask(task)
+      return
+    }
 
     if (NON_OUTREACH_TYPES.includes(type)) {
       await completeTask(taskId)
@@ -119,11 +127,31 @@ const TasksList = ({
     setCompleteModalTask(null)
   }
 
+  const handleRevertOpenChange = (open: boolean) => {
+    if (!open) setRevertConfirmTask(null)
+  }
+
+  const handleRevertConfirm = async () => {
+    if (!revertConfirmTask) return
+    setIsReverting(true)
+    try {
+      await revertTask(revertConfirmTask.id)
+    } finally {
+      setIsReverting(false)
+      setRevertConfirmTask(null)
+    }
+  }
+
   const handleCompleteCancel = () => {
     setCompleteModalTask(null)
   }
 
   const handleActionClick = (task: Task) => {
+    if (task.completed && !isLegacyList) {
+      setRevertConfirmTask(task)
+      return
+    }
+
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
@@ -187,29 +215,49 @@ const TasksList = ({
     }
   }
 
-  const completeTask = async (taskId: string): Promise<boolean> => {
+  const replaceTask = (taskId: string, updatedTask: Task) => {
+    setTasks((currentTasks) => {
+      const idx = currentTasks.findIndex((t) => t.id === taskId)
+      if (idx === -1) return currentTasks
+      const next = [...currentTasks]
+      next[idx] = updatedTask
+      return next
+    })
+  }
+
+  const sendTaskUpdate = async (
+    route: ApiRoute,
+    taskId: string,
+    errorMessage: string,
+  ): Promise<boolean> => {
+    try {
+      const resp = await clientFetch<Task>(route, { taskId })
+      if (resp.ok) {
+        replaceTask(taskId, resp.data)
+        return true
+      }
+      errorSnackbar(errorMessage)
+      return false
+    } catch (error) {
+      console.error(error)
+      errorSnackbar(errorMessage)
+      return false
+    }
+  }
+
+  const completeTask = (taskId: string) => {
     const route = isLegacyList
       ? apiRoutes.campaign.legacyTasks.complete
       : apiRoutes.campaign.tasks.complete
-    const resp = await clientFetch<Task>(route, {
-      taskId,
-    })
-    if (resp.ok) {
-      const updatedTask = resp.data
-      setTasks((currentTasks) => {
-        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
-        if (taskIndex !== -1) {
-          currentTasks.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks]
-        }
-        console.error('Completed task not found')
-        return currentTasks
-      })
-      return true
-    }
-    errorSnackbar('Failed to complete task')
-    return false
+    return sendTaskUpdate(route, taskId, 'Failed to complete task')
   }
+
+  const revertTask = (taskId: string) =>
+    sendTaskUpdate(
+      apiRoutes.campaign.tasks.revert,
+      taskId,
+      'Failed to mark task as incomplete',
+    )
 
   return (
     <>
@@ -320,6 +368,12 @@ const TasksList = ({
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
+      <RevertTaskDialog
+        open={!!revertConfirmTask}
+        onOpenChange={handleRevertOpenChange}
+        onConfirm={handleRevertConfirm}
+        isLoading={isReverting}
+      />
     </>
   )
 }
