@@ -7,6 +7,8 @@ import {
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
+import { WaitHelper } from 'src/helpers/wait.helper'
+import { wait } from 'tests/utils/eventually'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -147,14 +149,18 @@ test('validate contacts filters', async ({ page }) => {
   await page.goto('/dashboard/election-result', {
     waitUntil: 'domcontentloaded',
   })
+  await wait(500)
   await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForTimeout(3000)
+  await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
-  await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
+  await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)
+  await WaitHelper.waitForPageReady(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
-  await expect(page.getByRole('heading', { name: 'Contacts' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Constituents' }),
+  ).toBeVisible()
 
   const table = page.locator('table').first()
   await expect(table).toBeVisible()

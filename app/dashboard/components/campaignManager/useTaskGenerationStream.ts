@@ -24,11 +24,9 @@ interface SSEEvent {
 
 function isSSEEvent(value: unknown): value is SSEEvent {
   if (typeof value !== 'object' || value === null) return false
-  const obj = value as Record<string, unknown>
-  return (
-    typeof obj.type === 'string' &&
-    (obj.type === 'progress' || obj.type === 'complete' || obj.type === 'error')
-  )
+  if (!('type' in value)) return false
+  const { type } = value
+  return type === 'progress' || type === 'complete' || type === 'error'
 }
 
 function parseSSEEvents(text: string): SSEEvent[] {
@@ -88,6 +86,7 @@ export function useTaskGenerationStream(
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
+      let generationFinished = false
 
       while (true) {
         const { done, value } = await reader.read()
@@ -113,6 +112,7 @@ export function useTaskGenerationStream(
               },
             }))
           } else if (event.type === 'complete' && event.tasks) {
+            generationFinished = true
             onTasksReceived(event.tasks)
             setState({
               isGenerating: false,
@@ -120,6 +120,7 @@ export function useTaskGenerationStream(
               error: null,
             })
           } else if (event.type === 'error') {
+            generationFinished = true
             setState({
               isGenerating: false,
               progress: null,
@@ -128,13 +129,28 @@ export function useTaskGenerationStream(
           }
         }
       }
+
+      if (!generationFinished) {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: 'Stream ended before completing task generation',
+        })
+      }
     } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') return
-      setState({
-        isGenerating: false,
-        progress: null,
-        error: err instanceof Error ? err.message : String(err),
-      })
+      if (err instanceof Error && err.name === 'AbortError') {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: null,
+        })
+      } else {
+        setState({
+          isGenerating: false,
+          progress: null,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
     } finally {
       abortRef.current = null
     }

@@ -27,9 +27,10 @@ import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
-import { differenceInDays, startOfWeek, addWeeks } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
+import { useWeekNavigation } from './useWeekNavigation'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
@@ -67,49 +68,22 @@ const TasksList = ({
   const isPro = campaign.isPro ?? false
   const { electionDate } = details ?? {}
   const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = electionDate
-    ? differenceInDays(electionDate, new Date())
+  const electionDateObj =
+    typeof electionDate === 'string' && electionDate
+      ? new Date(electionDate.replace(/-/g, '/'))
+      : null
+  const daysUntilElection = electionDateObj
+    ? differenceInDays(electionDateObj, new Date())
     : Infinity
 
-  const weeksUntilElection = Math.ceil(daysUntilElection / 7)
-
-  const weekNumbers = [...new Set(tasks.map((t) => t.week))].sort(
-    (a, b) => b - a,
-  )
-
-  const defaultIndex =
-    weekNumbers.length > 0
-      ? weekNumbers.reduce((bestIdx, w, idx) => {
-          const bestW = weekNumbers[bestIdx]
-          if (bestW === undefined) return idx
-          const bestDiff = Math.abs(bestW - weeksUntilElection)
-          const currDiff = Math.abs(w - weeksUntilElection)
-          if (currDiff < bestDiff) return idx
-          if (currDiff === bestDiff && w < bestW) return idx
-          return bestIdx
-        }, 0)
-      : 0
-  const [selectedWeekIndex, setSelectedWeekIndex] = useState(-1)
-
-  useEffect(() => {
-    setSelectedWeekIndex(-1)
-  }, [tasksProp])
-
-  const clampedIndex =
-    selectedWeekIndex === -1
-      ? defaultIndex
-      : Math.max(0, Math.min(selectedWeekIndex, weekNumbers.length - 1))
-  const selectedWeek = weekNumbers[clampedIndex] ?? 0
-  const canGoPrevious = clampedIndex > 0
-  const canGoNext = clampedIndex < weekNumbers.length - 1
-
-  const currentWeekStart = electionDate
-    ? startOfWeek(addWeeks(new Date(electionDate), -selectedWeek), {
-        weekStartsOn: 0,
-      })
-    : startOfWeek(new Date(), { weekStartsOn: 0 })
-
-  const filteredTasks = tasks.filter((t) => t.week === selectedWeek)
+  const {
+    currentWeekStart,
+    filteredTasks,
+    canGoPrevious,
+    canGoNext,
+    goToPrevious,
+    goToNext,
+  } = useWeekNavigation(tasks, tasksProp, electionDateObj, daysUntilElection)
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
@@ -266,8 +240,8 @@ const TasksList = ({
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
-              onPrevious={() => setSelectedWeekIndex(clampedIndex - 1)}
-              onNext={() => setSelectedWeekIndex(clampedIndex + 1)}
+              onPrevious={goToPrevious}
+              onNext={goToNext}
               canGoPrevious={canGoPrevious}
               canGoNext={canGoNext}
             />

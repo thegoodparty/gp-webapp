@@ -191,11 +191,8 @@ describe('useTaskGenerationStream', () => {
       await result.current.startGeneration()
     })
 
-    // AbortError is silenced: no error state is set
     expect(result.current.error).toBeNull()
-    // Note: isGenerating remains true because the hook returns early
-    // without resetting state on AbortError (callers use cancelGeneration instead)
-    expect(result.current.isGenerating).toBe(true)
+    expect(result.current.isGenerating).toBe(false)
   })
 
   it('sets error state on network errors', async () => {
@@ -213,6 +210,24 @@ describe('useTaskGenerationStream', () => {
     })
 
     expect(result.current.error).toBe('Network failure')
+    expect(result.current.isGenerating).toBe(false)
+  })
+
+  it('sets error when stream closes without complete or error event', async () => {
+    mockFetchWithStream([])
+    const onTasksReceived = vi.fn()
+    const { result } = renderHook(() =>
+      useTaskGenerationStream(onTasksReceived),
+    )
+
+    await act(async () => {
+      await result.current.startGeneration()
+    })
+
+    expect(onTasksReceived).not.toHaveBeenCalled()
+    expect(result.current.error).toBe(
+      'Stream ended before completing task generation',
+    )
     expect(result.current.isGenerating).toBe(false)
   })
 

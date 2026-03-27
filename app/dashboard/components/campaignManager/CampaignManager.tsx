@@ -41,7 +41,7 @@ export default function CampaignManager({
     setShowLoadingState(false)
   }, [])
 
-  const { data: tasks = [] } = useQuery({
+  const { data: tasks = [], isLoading: isLoadingTasks } = useQuery({
     queryKey: TASKS_QUERY_KEY,
     queryFn: async () => {
       const resp = await clientFetch<Task[]>(apiRoutes.campaign.tasks.list)
@@ -63,6 +63,7 @@ export default function CampaignManager({
     useTaskGenerationStream(onTasksReceived)
 
   useEffect(() => {
+    if (isLoadingTasks) return
     if (tasks.length > 0) {
       generatingRef.current = false
       return
@@ -76,7 +77,7 @@ export default function CampaignManager({
       generatingRef.current = false
       cancelGeneration()
     }
-  }, [tasks, campaign, startGeneration, cancelGeneration])
+  }, [isLoadingTasks, tasks, campaign, startGeneration, cancelGeneration])
 
   useEffect(() => {
     if (error) {

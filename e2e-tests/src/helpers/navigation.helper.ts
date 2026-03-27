@@ -95,27 +95,17 @@ export class NavigationHelper {
     }
   }
 
-  static async navigateToNavItem(
-    page: Page,
-    navItem: string,
-    isMobile: boolean = false,
-  ): Promise<void> {
-    if (isMobile) {
-      await NavigationHelper.openMobileNavMenu(page)
-      await page.getByRole('link', { name: navItem }).click()
-      const closeMenu = page.getByRole('button', { name: /close menu/i })
-      if (await closeMenu.isVisible().catch(() => false)) {
-        await closeMenu.click()
-      } else {
-        const tilt = page.getByTestId('tilt').first()
-        if (await tilt.isVisible().catch(() => false)) {
-          await tilt.click()
-        }
-      }
-    } else {
-      await page.getByRole('link', { name: navItem }).click()
+  static async openMobileMenu(page: Page): Promise<void> {
+    const openMenu = page.getByRole('button', { name: /open menu/i })
+    if (await openMenu.isVisible().catch(() => false)) {
+      await openMenu.click()
+      return
     }
-
-    await WaitHelper.waitForPageReady(page)
+    const trigger = page.getByTestId('mobile-menu-trigger')
+    if (await trigger.isVisible().catch(() => false)) {
+      await trigger.click()
+      return
+    }
+    await NavigationHelper.openMobileNavMenu(page)
   }
 }
