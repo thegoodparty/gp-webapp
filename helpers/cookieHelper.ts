@@ -49,6 +49,7 @@ export const deleteUserCookies = (): void => {
   deleteCookie('user')
   deleteCookie('impersonateUser')
   deleteCookie('signupRedirect')
+  deleteCookie('organization-slug')
 }
 
 export const deleteCookie = (name: string): void => {

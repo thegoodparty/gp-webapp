@@ -8,10 +8,16 @@
  * - Styleguide components [data-slot] → uses these values (styleguide's blue)
  * 
  * [data-slot] is automatically present on all shadcn/ui components.
+ *
+ * Structural layout slots (sidebar-wrapper, sidebar-inset) are excluded
+ * from the wildcard descendant selector because they wrap the entire page content.
+ * Without this exclusion, legacy webapp components inside the sidebar layout would
+ * incorrectly inherit the styleguide's blue color theme.
  */
 
-[data-slot],
-[data-slot] * {
+[data-slot]:not([data-slot='sidebar-wrapper']):not([data-slot='sidebar-inset']),
+[data-slot]:not([data-slot='sidebar-wrapper']):not([data-slot='sidebar-inset'])
+  * {
   /*
    * ==========================================================================
    * TAILWIND UTILITY TOKEN OVERRIDES (--color-*)
@@ -301,10 +307,22 @@
  * DARK MODE SCOPED VARIABLES
  * =============================================================================
  */
-.dark [data-slot],
-.dark [data-slot] *,
-[data-slot].dark,
-[data-slot].dark * {
+.dark
+  [data-slot]:not([data-slot='sidebar-wrapper']):not(
+    [data-slot='sidebar-inset']
+  ),
+.dark
+  [data-slot]:not([data-slot='sidebar-wrapper']):not(
+    [data-slot='sidebar-inset']
+  )
+  *,
+[data-slot].dark:not([data-slot='sidebar-wrapper']):not(
+    [data-slot='sidebar-inset']
+  ),
+[data-slot].dark:not([data-slot='sidebar-wrapper']):not(
+    [data-slot='sidebar-inset']
+  )
+  * {
   /* Primary */
   --primary: var(--brand-primary);
   --primary-foreground: var(--brand-text-inverse);

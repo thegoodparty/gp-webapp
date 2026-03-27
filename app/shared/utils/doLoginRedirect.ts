@@ -4,6 +4,9 @@ import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { doPostAuthRedirect } from 'app/onboarding/shared/ajaxActions'
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { User, Campaign } from 'helpers/types'
+import { queryClient } from '@shared/query-client'
+import { ORGANIZATIONS_QUERY_KEY } from '@shared/organization-picker'
+import { clientRequest } from 'gpApi/typed-request'
 
 export const doLoginRedirect = async (
   router: AppRouterInstance,
@@ -11,7 +14,16 @@ export const doLoginRedirect = async (
   campaign: Campaign | null | undefined,
 ): Promise<void> => {
   const returnCookie = getCookie('returnUrl')
-  const status = await fetchCampaignStatus()
+  const [status] = await Promise.all([
+    fetchCampaignStatus(),
+    queryClient.prefetchQuery({
+      queryKey: ORGANIZATIONS_QUERY_KEY,
+      queryFn: () =>
+        clientRequest('GET /v1/organizations', {}).then(
+          (res) => res.data.organizations,
+        ),
+    }),
+  ])
 
   const redirectRoute: string | false | void | undefined = userHasRole(
     user,

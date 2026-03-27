@@ -12,6 +12,9 @@ if (!baseURL) {
 
 const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
+
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
@@ -197,23 +200,31 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete(`/v1/users/${user.id}`)
-      console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      try {
+        await client.delete(`/v1/users/${user.id}`)
+        if (process.env.DEBUG) {
+          console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+        }
+      } catch {
+        // Token may be invalid after long runs or user already removed.
+      }
     },
   })
 
   const userCreated = Date.now()
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-        userCreated - start
-      }ms`,
-    )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
+          userCreated - start
+        }ms`,
+      )
+    } else {
+      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    }
   }
 
-  const domain = baseURL.replace('http://', '').replace('https://', '')
+  const domain = cookieDomain()
   await page.context().addCookies([
     {
       name: 'token',
@@ -234,11 +245,13 @@ export const authenticateTestUser = async (
   ])
 
   const loginTime = Date.now()
-  console.log(
-    `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
-      loginTime - userCreated
-    }ms`,
-  )
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
+  }
 
   return { user, client }
 }
