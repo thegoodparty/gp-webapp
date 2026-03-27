@@ -35,6 +35,7 @@ import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { Card, cn } from '@styleguide'
+import FullPlanModal from 'app/dashboard/campaign-plan/components/FullPlanModal'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -126,6 +127,7 @@ const TasksList = ({
   const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState<
     ReturnType<typeof buildTrackingAttrs>
   >({})
+  const [showFullPlan, setShowFullPlan] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
   const handleCheckClick = async (task: Task) => {
@@ -260,6 +262,7 @@ const TasksList = ({
               <button
                 type="button"
                 className="text-sm font-semibold text-primary"
+                onClick={() => setShowFullPlan(true)}
               >
                 View full plan
               </button>
@@ -351,6 +354,12 @@ const TasksList = ({
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
+      <FullPlanModal
+        open={showFullPlan}
+        onOpenChange={setShowFullPlan}
+        campaign={campaign}
+        tasks={tasks}
+      />
     </>
   )
 }
