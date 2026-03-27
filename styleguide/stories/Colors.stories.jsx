@@ -4,7 +4,7 @@ import tailwindJson from '../tokens/Tailwind.json'
 import { resolveTokenGroup } from '../tokens/resolve-tokens'
 
 const meta = {
-  title: 'Design System/Colors',
+  title: 'Foundations/Colors',
   parameters: {
     docs: {
       description: {
@@ -98,8 +98,8 @@ function Section({ title, description, children, isDark }) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 style={{ fontSize: 18, fontWeight: 600, color: titleColor, margin: 0 }}>{title}</h3>
-        {description && <p style={{ fontSize: 14, color: descColor, margin: '4px 0 0' }}>{description}</p>}
+        <h3 style={{ fontSize: 18, fontWeight: 600, color: titleColor, margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{title}</h3>
+        {description && <p style={{ fontSize: 14, color: descColor, margin: '4px 0 0', fontFamily: "'Open Sans', sans-serif" }}>{description}</p>}
       </div>
       {children}
     </div>
@@ -115,8 +115,8 @@ const PAGE_STYLE = { backgroundColor: '#ffffff', padding: 24, minHeight: '100vh'
 function PageHeader({ title, description }) {
   return (
     <div>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0 }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#737373', marginTop: 4 }}>{description}</p>
+      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{title}</h2>
+      <p style={{ fontSize: 14, color: '#737373', marginTop: 4, fontFamily: "'Open Sans', sans-serif" }}>{description}</p>
     </div>
   )
 }
@@ -220,10 +220,10 @@ export const ThemeColors = ({ mode }) => {
   return (
     <div style={{ backgroundColor: pageBg, padding: 24, minHeight: '100vh' }} className="space-y-10">
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: foregroundColor, margin: 0 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: foregroundColor, margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
           Theme Colors — {isDark ? 'Dark' : 'Light'} Mode
         </h2>
-        <p style={{ fontSize: 14, color: mutedForegroundColor, marginTop: 4 }}>
+        <p style={{ fontSize: 14, color: mutedForegroundColor, marginTop: 4, fontFamily: "'Open Sans', sans-serif" }}>
           Core theme tokens from the Figma design system. Use the Mode control above to toggle between light and dark.
         </p>
       </div>
