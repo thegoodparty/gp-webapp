@@ -36,7 +36,7 @@ const DashboardLayout = ({
   showAlert = true,
   wrapperClassName = '',
   hideMenu = false,
-}: DashboardLayoutProps): React.JSX.Element => {
+}: DashboardLayoutProps): React.JSX.Element | null => {
   const [user] = useUser()
   const [hookCampaign] = useCampaign()
   const router = useRouter()
@@ -46,7 +46,8 @@ const DashboardLayout = ({
     useImpersonateUser()
   const isImpersonating = !!impersonateUser
   const currentPath = pathname || hookPathname
-  const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
+  const { ready: flagReady, on: navRefreshEnabled } =
+    useFlagOn('win-serve-split')
 
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
@@ -79,6 +80,10 @@ const DashboardLayout = ({
       router.push('/dashboard/election-result')
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
+
+  if (!flagReady) {
+    return null
+  }
 
   if (navRefreshEnabled) {
     return (
