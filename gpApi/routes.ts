@@ -299,6 +299,10 @@ export const apiRoutes = {
         path: '/campaigns/tasks/:taskId',
         method: 'DELETE',
       },
+      deleteAll: {
+        path: '/campaigns/tasks',
+        method: 'DELETE',
+      },
     },
     tcrCompliance: {
       fetch: {
