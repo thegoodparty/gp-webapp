@@ -234,7 +234,7 @@ jobs:
               text: '✅ E2E Tests Passed',
               attachments: [{
                 color: 'good',
-                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<${{ env.REPORT_URL }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<${{ env.REPORT_URL || format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
               }]
             }
         env:
@@ -250,7 +250,7 @@ jobs:
               "text": "⚠️ E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<${{ env.REPORT_URL }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<${{ env.REPORT_URL || format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:
