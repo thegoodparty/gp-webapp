@@ -1,3 +1,8 @@
+import lightJson from '../tokens/ThemeLight.json'
+import darkJson from '../tokens/ThemeDark.json'
+import tailwindJson from '../tokens/Tailwind.json'
+import { resolveTokenGroup } from '../tokens/resolve-tokens'
+
 const meta = {
   title: 'Design System/Colors',
   parameters: {
@@ -12,34 +17,89 @@ const meta = {
 
 export default meta
 
-const sampleText = 'Aa'
+function hexToRgba(hex) {
+  const clean = hex.replace('#', '')
+  if (clean.length !== 6 && clean.length !== 8) return hex
+  const r = parseInt(clean.slice(0, 2), 16)
+  const g = parseInt(clean.slice(2, 4), 16)
+  const b = parseInt(clean.slice(4, 6), 16)
+  const a = clean.length === 8
+    ? (parseInt(clean.slice(6, 8), 16) / 255).toFixed(2)
+    : '1.00'
+  return `rgba(${r},${g},${b},${a})`
+}
 
-function Swatch({ name, hex, tailwindClass, dark }) {
+function hexToHsla(hex) {
+  const clean = hex.replace('#', '')
+  if (clean.length !== 6 && clean.length !== 8) return hex
+  const r = parseInt(clean.slice(0, 2), 16) / 255
+  const g = parseInt(clean.slice(2, 4), 16) / 255
+  const b = parseInt(clean.slice(4, 6), 16) / 255
+  const a = clean.length === 8
+    ? (parseInt(clean.slice(6, 8), 16) / 255).toFixed(2)
+    : '1.00'
+  const max = Math.max(r, g, b), min = Math.min(r, g, b)
+  let h = 0, s = 0
+  const l = (max + min) / 2
+  if (max !== min) {
+    const d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+    else if (max === g) h = ((b - r) / d + 2) / 6
+    else h = ((r - g) / d + 4) / 6
+  }
+  return `hsla(${Math.round(h * 360)},${Math.round(s * 100)},${Math.round(l * 100)},${a})`
+}
+
+function Swatch({ name, hex, alias, tailwindClass, isDark, cardBg, borderColor, foregroundColor, mutedForegroundColor, cardHeight }) {
+  const _cardBg = cardBg ?? (isDark ? '#171717' : '#ffffff')
+  const _borderColor = borderColor ?? (isDark ? '#404040' : '#e5e5e5')
+  const _foregroundColor = foregroundColor ?? (isDark ? '#ffffff' : '#0a0a0a')
+  const _mutedForegroundColor = mutedForegroundColor ?? (isDark ? '#a3a3a3' : '#737373')
+
   return (
-    <div
-      className="flex flex-col items-start shrink-0 rounded overflow-hidden border border-gray-200 shadow-xs"
-      style={{ width: 120 }}
-    >
-      <div style={{ backgroundColor: hex, height: 80, width: '100%' }} />
-      <div className="p-2 w-full bg-white space-y-0.5">
-        <p className="text-xs font-semibold text-gray-900 truncate">{name}</p>
-        {tailwindClass && (
-          <p className="text-[10px] text-gray-500 truncate font-mono">
-            {tailwindClass}
+    <div style={{ width: 160, height: cardHeight ?? 220, border: `1px solid ${_borderColor}`, borderRadius: 4, overflow: 'hidden', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        backgroundColor: hex,
+        height: 100,
+        width: '100%',
+        flexShrink: 0,
+        borderBottom: `1px solid ${_borderColor}`,
+      }} />
+      <div style={{ padding: 8, backgroundColor: _cardBg, display: 'flex', flexDirection: 'column', gap: 8, flexGrow: 1 }}>
+        <p style={{ fontSize: 14, fontWeight: 400, color: _foregroundColor, margin: 0, lineHeight: '20px' }}>
+          {tailwindClass ?? name}
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <p style={{ fontSize: 9, fontFamily: 'monospace', color: _mutedForegroundColor, margin: 0 }}>
+            {hexToRgba(hex)}
           </p>
-        )}
-        <p className="text-[10px] text-gray-400 uppercase font-mono">{hex}</p>
+          <p style={{ fontSize: 9, fontFamily: 'monospace', color: _mutedForegroundColor, margin: 0 }}>
+            {hexToHsla(hex)}
+          </p>
+          <p style={{ fontSize: 9, fontFamily: 'monospace', color: _mutedForegroundColor, margin: 0, textTransform: 'uppercase' }}>
+            {hex}
+          </p>
+          {alias && (
+            <p style={{ fontSize: 9, fontFamily: 'monospace', color: _mutedForegroundColor, margin: '4px 0 0', opacity: 0.6, borderTop: `1px solid ${_borderColor}`, paddingTop: 4 }}>
+              ↳ {alias}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-function Section({ title, description, children }) {
+function Section({ title, description, children, isDark }) {
+  const titleColor = isDark ? '#ffffff' : '#111827'
+  const descColor = isDark ? '#a3a3a3' : '#6b7280'
+
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        {description && <p className="text-sm text-gray-500">{description}</p>}
+        <h3 style={{ fontSize: 18, fontWeight: 600, color: titleColor, margin: 0 }}>{title}</h3>
+        {description && <p style={{ fontSize: 14, color: descColor, margin: '4px 0 0' }}>{description}</p>}
       </div>
       {children}
     </div>
@@ -49,6 +109,19 @@ function Section({ title, description, children }) {
 function SwatchRow({ children }) {
   return <div className="flex flex-wrap gap-2">{children}</div>
 }
+
+const PAGE_STYLE = { backgroundColor: '#ffffff', padding: 24, minHeight: '100vh' }
+
+function PageHeader({ title, description }) {
+  return (
+    <div>
+      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0 }}>{title}</h2>
+      <p style={{ fontSize: 14, color: '#737373', marginTop: 4 }}>{description}</p>
+    </div>
+  )
+}
+
+const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
 
 function ScaleRow({ scaleName, prefix, colors }) {
   return (
@@ -68,180 +141,166 @@ function ScaleRow({ scaleName, prefix, colors }) {
 }
 
 // =============================================================================
+// Resolved theme token data (from Figma JSON exports)
+// =============================================================================
+
+const lightTokens = {
+  base: resolveTokenGroup(lightJson.base),
+  theme: resolveTokenGroup(lightJson.theme),
+  components: resolveTokenGroup(lightJson.components),
+  data: resolveTokenGroup(lightJson.data),
+  sidebar: resolveTokenGroup(lightJson.sidebar),
+}
+
+const darkTokens = {
+  base: resolveTokenGroup(darkJson.base),
+  theme: resolveTokenGroup(darkJson.theme),
+  components: resolveTokenGroup(darkJson.components),
+  data: resolveTokenGroup(darkJson.data),
+  sidebar: resolveTokenGroup(darkJson.sidebar),
+}
+
+// =============================================================================
 // Theme Colors
 // =============================================================================
-export const ThemeColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Theme Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Core theme tokens from Figma (theme/*). These define the
-        application&apos;s primary palette and are scoped via CSS variables.
-      </p>
+
+const SIDEBAR_EXCLUDED = new Set(['primary', 'primary-foreground', 'ring'])
+
+const THEME_GROUPS = [
+  ['primary', 'primary-foreground', 'primary-focus', 'secondary', 'secondary-foreground', 'secondary-focus'],
+  ['destructive', 'destructive-foreground', 'destructive-focus', 'success', 'success-foreground', 'success-focus'],
+  ['info', 'info-foreground', 'info-focus', 'warning', 'warning-foreground', 'warning-focus'],
+  ['link'],
+]
+
+const BASE_GROUPS = [
+  ['background', 'foreground', 'surface', 'surface-foreground', 'border'],
+  ['muted', 'muted-foreground', 'accent', 'accent-foreground'],
+  ['focus-ring', 'ring-offset', 'foreground-focus', 'foreground-dark-focus'],
+]
+
+const COMPONENT_GROUPS = [
+  ['card-base', 'card-foreground', 'tooltip-base', 'tooltip-foreground'],
+  ['input-base', 'input-foreground', 'input-border', 'input-active', 'input-focus'],
+]
+
+const TOKEN_GROUP_META = {
+  theme: {
+    title: 'Theme',
+    description: 'Semantic action colors — primary, secondary, destructive, success, info.',
+  },
+  base: {
+    title: 'Base',
+    description: 'Foundational surface tokens — backgrounds, foregrounds, borders, focus rings.',
+  },
+  components: {
+    title: 'Components',
+    description: 'Component-specific tokens — cards, inputs, tooltips.',
+  },
+  sidebar: {
+    title: 'Sidebar',
+    description: 'Tokens scoped to the sidebar navigation.',
+  },
+  data: {
+    title: 'Data / Chart',
+    description: 'Colors for data visualization and charts.',
+  },
+}
+
+export const ThemeColors = ({ mode }) => {
+  const tokens = mode === 'dark' ? darkTokens : lightTokens
+  const isDark = mode === 'dark'
+
+  const pageBg = tokens.base['background'].hex
+  const cardBg = tokens.components['card-base'].hex
+  const borderColor = tokens.base['border'].hex
+  const foregroundColor = tokens.base['foreground'].hex
+  const mutedForegroundColor = tokens.base['muted-foreground'].hex
+
+  return (
+    <div style={{ backgroundColor: pageBg, padding: 24, minHeight: '100vh' }} className="space-y-10">
+      <div>
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: foregroundColor, margin: 0 }}>
+          Theme Colors — {isDark ? 'Dark' : 'Light'} Mode
+        </h2>
+        <p style={{ fontSize: 14, color: mutedForegroundColor, marginTop: 4 }}>
+          Core theme tokens from the Figma design system. Use the Mode control above to toggle between light and dark.
+        </p>
+      </div>
+
+      {Object.entries(TOKEN_GROUP_META).map(([groupKey, { title, description }]) => (
+        <Section key={groupKey} title={title} description={description} isDark={isDark}>
+          {(groupKey === 'theme' || groupKey === 'base' || groupKey === 'components') ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {(groupKey === 'theme' ? THEME_GROUPS : groupKey === 'base' ? BASE_GROUPS : COMPONENT_GROUPS).map((keys) => (
+                <SwatchRow key={keys[0]}>
+                  {keys.map((name) => {
+                    const token = tokens[groupKey][name]
+                    if (!token) return null
+                    return (
+                      <Swatch
+                        key={name}
+                        name={name}
+                        hex={token.hex}
+                        alias={token.ref}
+                        isDark={isDark}
+                        cardBg={cardBg}
+                        borderColor={borderColor}
+                        foregroundColor={foregroundColor}
+                        mutedForegroundColor={mutedForegroundColor}
+                        cardHeight={260}
+                      />
+                    )
+                  })}
+                </SwatchRow>
+              ))}
+            </div>
+          ) : (
+            <SwatchRow>
+              {Object.entries(tokens[groupKey]).filter(([name]) => groupKey !== 'sidebar' || !SIDEBAR_EXCLUDED.has(name)).map(([name, { hex, ref }]) => (
+                <Swatch
+                  key={name}
+                  name={name}
+                  hex={hex}
+                  alias={ref}
+                  isDark={isDark}
+                  cardBg={cardBg}
+                  borderColor={borderColor}
+                  foregroundColor={foregroundColor}
+                  mutedForegroundColor={mutedForegroundColor}
+                  cardHeight={260}
+                />
+              ))}
+            </SwatchRow>
+          )}
+        </Section>
+      ))}
     </div>
+  )
+}
 
-    <Section
-      title="Primary"
-      description="Main brand action color — buttons, links, focus rings."
-    >
-      <SwatchRow>
-        <Swatch name="primary" hex="#2563EB" tailwindClass="bg-primary" />
-        <Swatch
-          name="primary-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-primary-foreground"
-        />
-        <Swatch
-          name="primary-dark"
-          hex="#0D3CB5"
-          tailwindClass="bg-primary-dark"
-        />
-        <Swatch
-          name="primary-light"
-          hex="#75AFFE"
-          tailwindClass="bg-primary-light"
-        />
-        <Swatch
-          name="primary-background"
-          hex="#E3F1FF"
-          tailwindClass="bg-primary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Secondary"
-      description="Supporting color — secondary actions, subtle emphasis."
-    >
-      <SwatchRow>
-        <Swatch name="secondary" hex="#0B1529" tailwindClass="bg-secondary" />
-        <Swatch
-          name="secondary-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-secondary-foreground"
-        />
-        <Swatch
-          name="secondary-dark"
-          hex="#060B17"
-          tailwindClass="bg-secondary-dark"
-        />
-        <Swatch
-          name="secondary-light"
-          hex="#1D305C"
-          tailwindClass="bg-secondary-light"
-        />
-        <Swatch
-          name="secondary-background"
-          hex="#ECF5FF"
-          tailwindClass="bg-secondary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Tertiary"
-      description="Accent color — highlights, decorative elements."
-    >
-      <SwatchRow>
-        <Swatch name="tertiary" hex="#63D1A0" tailwindClass="bg-tertiary" />
-        <Swatch
-          name="tertiary-dark"
-          hex="#257F68"
-          tailwindClass="bg-tertiary-dark"
-        />
-        <Swatch
-          name="tertiary-light"
-          hex="#7FDCB2"
-          tailwindClass="bg-tertiary-light"
-        />
-        <Swatch
-          name="tertiary-background"
-          hex="#DDF2E8"
-          tailwindClass="bg-tertiary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Destructive"
-      description="Destructive actions — delete, remove, errors."
-    >
-      <SwatchRow>
-        <Swatch
-          name="destructive"
-          hex="#E00C30"
-          tailwindClass="bg-destructive"
-        />
-        <Swatch
-          name="destructive-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-destructive-foreground"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Success"
-      description="Positive outcomes — completed, saved, approved."
-    >
-      <SwatchRow>
-        <Swatch name="success" hex="#30A541" tailwindClass="bg-success" />
-        <Swatch name="success-foreground" hex="#FFFFFF" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Info" description="Informational — tips, help, status.">
-      <SwatchRow>
-        <Swatch name="info" hex="#1B6AFC" tailwindClass="bg-info" />
-        <Swatch name="info-foreground" hex="#FFFFFF" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Warning" description="Caution — alerts, pending, at-risk.">
-      <SwatchRow>
-        <Swatch name="warning" hex="#FF9800" tailwindClass="bg-warning" />
-        <Swatch name="warning-foreground" hex="#000000" />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Base / Neutral"
-      description="Foundational tokens — backgrounds, foregrounds, borders."
-    >
-      <SwatchRow>
-        <Swatch name="background" hex="#FFFFFF" tailwindClass="bg-background" />
-        <Swatch
-          name="foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-foreground"
-        />
-        <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-muted" />
-        <Swatch
-          name="muted-foreground"
-          hex="#737373"
-          tailwindClass="text-muted-foreground"
-        />
-        <Swatch name="border" hex="#D4D4D4" tailwindClass="border-border" />
-        <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-accent" />
-        <Swatch name="card" hex="#FFFFFF" tailwindClass="bg-card" />
-        <Swatch name="ring" hex="#1B6AFC" tailwindClass="ring-ring" />
-      </SwatchRow>
-    </Section>
-  </div>
-)
+ThemeColors.args = { mode: 'light' }
+ThemeColors.argTypes = {
+  mode: {
+    control: { type: 'radio' },
+    options: ['light', 'dark'],
+    description: 'Toggle between light and dark mode token values',
+  },
+}
+ThemeColors.parameters = {
+  layout: 'fullscreen',
+  backgrounds: { disable: true },
+}
 
 // =============================================================================
 // Branding Colors
 // =============================================================================
 export const BrandingColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Branding Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Colors that represent GoodParty.org&apos;s visual identity. Defined as
-        static values in tailwind-theme.css.
-      </p>
-    </div>
+  <div style={PAGE_STYLE} className="space-y-10">
+    <PageHeader
+      title="Branding Colors"
+      description="Colors that represent GoodParty.org's visual identity. Defined as static values in tailwind-theme.css."
+    />
 
     <Section
       title="Core Brand"
@@ -283,24 +342,6 @@ export const BrandingColors = () => (
     />
 
     <ScaleRow
-      scaleName="Halo Green"
-      prefix="bg-brand-halo-green"
-      colors={[
-        { step: '50', hex: '#DDF2E8' },
-        { step: '100', hex: '#CCEADD' },
-        { step: '200', hex: '#B2E1CC' },
-        { step: '300', hex: '#7FDCB2' },
-        { step: '400', hex: '#63D1A0' },
-        { step: '500', hex: '#55BC8E' },
-        { step: '600', hex: '#3A9D7B' },
-        { step: '700', hex: '#257F68' },
-        { step: '800', hex: '#16695C' },
-        { step: '900', hex: '#115449' },
-        { step: '950', hex: '#043630' },
-      ]}
-    />
-
-    <ScaleRow
       scaleName="Lavender"
       prefix="bg-brand-lavender"
       colors={[
@@ -337,6 +378,24 @@ export const BrandingColors = () => (
     />
 
     <ScaleRow
+      scaleName="Halo Green"
+      prefix="bg-brand-halo-green"
+      colors={[
+        { step: '50', hex: '#DDF2E8' },
+        { step: '100', hex: '#CCEADD' },
+        { step: '200', hex: '#B2E1CC' },
+        { step: '300', hex: '#7FDCB2' },
+        { step: '400', hex: '#63D1A0' },
+        { step: '500', hex: '#55BC8E' },
+        { step: '600', hex: '#3A9D7B' },
+        { step: '700', hex: '#257F68' },
+        { step: '800', hex: '#16695C' },
+        { step: '900', hex: '#115449' },
+        { step: '950', hex: '#043630' },
+      ]}
+    />
+
+    <ScaleRow
       scaleName="Bright Yellow"
       prefix="bg-brand-bright-yellow"
       colors={[
@@ -355,19 +414,17 @@ export const BrandingColors = () => (
     />
   </div>
 )
+BrandingColors.parameters = STORY_PARAMS
 
 // =============================================================================
 // Semantic Colors
 // =============================================================================
 export const SemanticColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Semantic Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Colors that define logic used when applied to digital interfaces. Each
-        scale runs from 50 (lightest) to 950 (darkest).
-      </p>
-    </div>
+  <div style={PAGE_STYLE} className="space-y-10">
+    <PageHeader
+      title="Semantic Colors"
+      description="Colors that define logic used when applied to digital interfaces. Each scale runs from 50 (lightest) to 950 (darkest)."
+    />
 
     <ScaleRow
       scaleName="Error"
@@ -442,165 +499,53 @@ export const SemanticColors = () => (
     />
   </div>
 )
+SemanticColors.parameters = STORY_PARAMS
 
 // =============================================================================
-// Tailwind Colors (Grayscale, Base, Data/Chart)
+// Tailwind Colors
 // =============================================================================
+
+const twScales = tailwindJson['tailwind colors']
+
+// Converts a Tailwind scale object to [{ step, hex }] array
+function parseTwScale(scaleObj) {
+  return Object.entries(scaleObj).map(([step, token]) => ({
+    step,
+    hex: token.value,
+  }))
+}
+
+const TW_SCALE_NAMES = [
+  'slate', 'gray', 'zinc', 'neutral', 'stone',
+  'red', 'orange', 'amber', 'yellow', 'lime',
+  'green', 'emerald', 'teal', 'cyan', 'sky',
+  'blue', 'indigo', 'violet', 'purple', 'fuchsia',
+  'pink', 'rose',
+]
+
 export const TailwindColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Tailwind Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        An expertly-crafted, default color palette. Includes grayscale, base
-        tokens, and chart colors.
-      </p>
-    </div>
-
-    <ScaleRow
-      scaleName="Grayscale"
-      prefix="bg-grayscale"
-      colors={[
-        { step: '50', hex: '#F7FAFB' },
-        { step: '100', hex: '#EEF3F6' },
-        { step: '200', hex: '#E0E6EC' },
-        { step: '300', hex: '#D1D8DF' },
-        { step: '400', hex: '#B9C3CC' },
-        { step: '500', hex: '#879099' },
-        { step: '600', hex: '#70757A' },
-        { step: '700', hex: '#595C5F' },
-        { step: '800', hex: '#3E4042' },
-        { step: '900', hex: '#2D2E30' },
-        { step: '950', hex: '#1E1F20' },
-      ]}
+  <div style={PAGE_STYLE} className="space-y-10">
+    <PageHeader
+      title="Tailwind Colors"
+      description="The full standard Tailwind CSS color palette, sourced directly from the Figma design token export."
     />
 
-    <Section
-      title="Base Tokens"
-      description="Foundational color tokens used across all components."
-    >
+    <Section title="Base" description="Black, white, and transparent.">
       <SwatchRow>
-        <Swatch
-          name="foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-base-foreground"
-        />
-        <Swatch
-          name="background"
-          hex="#FFFFFF"
-          tailwindClass="bg-base-background"
-        />
-        <Swatch
-          name="muted-foreground"
-          hex="#737373"
-          tailwindClass="text-base-muted-foreground"
-        />
-        <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-base-muted" />
-        <Swatch
-          name="border"
-          hex="#D4D4D4"
-          tailwindClass="border-base-border"
-        />
-        <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-base-accent" />
-        <Swatch
-          name="accent-foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-base-accent-foreground"
-        />
-        <Swatch name="surface" hex="#FFFFFF" tailwindClass="bg-base-surface" />
-        <Swatch
-          name="focus-ring"
-          hex="#A3A3A3"
-          tailwindClass="ring-base-focus-ring"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Data / Chart"
-      description="Colors for data visualization and charts."
-    >
-      <SwatchRow>
-        <Swatch name="chart-1" hex="#5975A6" tailwindClass="bg-data-chart-1" />
-        <Swatch name="chart-2" hex="#CDA1FF" tailwindClass="bg-data-chart-2" />
-        <Swatch name="chart-3" hex="#63D1A0" tailwindClass="bg-data-chart-3" />
-        <Swatch name="chart-4" hex="#FFC523" tailwindClass="bg-data-chart-4" />
-        <Swatch name="chart-5" hex="#FF9364" tailwindClass="bg-data-chart-5" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Blue" description="Standard Tailwind blue scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#E3F1FF' },
-          { step: '100', hex: '#D1E7FE' },
-          { step: '200', hex: '#A3CDFE' },
-          { step: '300', hex: '#75AFFE' },
-          { step: '400', hex: '#2563EB' },
-          { step: '500', hex: '#1B6AFC' },
-          { step: '600', hex: '#1351D8' },
-          { step: '700', hex: '#0D3CB5' },
-          { step: '800', hex: '#082A92' },
-          { step: '900', hex: '#051D78' },
-          { step: '950', hex: '#01114D' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-blue-${step}`}
-          />
+        {parseTwScale(twScales.base).map(({ step, hex }) => (
+          <Swatch key={step} name={step} hex={hex} tailwindClass={`bg-${step}`} />
         ))}
       </SwatchRow>
     </Section>
 
-    <Section title="Green" description="Standard Tailwind green scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#EEFFE9' },
-          { step: '100', hex: '#DFFAD6' },
-          { step: '200', hex: '#B9F6B0' },
-          { step: '300', hex: '#86E382' },
-          { step: '400', hex: '#5EC963' },
-          { step: '500', hex: '#30A541' },
-          { step: '600', hex: '#187637' },
-          { step: '700', hex: '#0F5F31' },
-          { step: '800', hex: '#094F2D' },
-          { step: '900', hex: '#033A20' },
-          { step: '950', hex: '#002212' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-green-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
-
-    <Section title="Red" description="Standard Tailwind red scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#FFE8E8' },
-          { step: '100', hex: '#FDCDCD' },
-          { step: '200', hex: '#FFAEAE' },
-          { step: '300', hex: '#F56C6A' },
-          { step: '400', hex: '#EC4451' },
-          { step: '500', hex: '#E00C30' },
-          { step: '600', hex: '#B90A27' },
-          { step: '700', hex: '#93081F' },
-          { step: '800', hex: '#6C0617' },
-          { step: '900', hex: '#560311' },
-          { step: '950', hex: '#370009' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-red-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
+    {TW_SCALE_NAMES.map((scaleName) => (
+      <ScaleRow
+        key={scaleName}
+        scaleName={scaleName.charAt(0).toUpperCase() + scaleName.slice(1)}
+        prefix={`bg-${scaleName}`}
+        colors={parseTwScale(twScales[scaleName])}
+      />
+    ))}
   </div>
 )
+TailwindColors.parameters = STORY_PARAMS
