@@ -51,7 +51,7 @@ The `ai-rules/` directory is a git submodule containing rule files for AI code r
 
 ## License
 
-This project is licensed under the [Creative Common Zero (CC0)](https://creativecommons.org/share-your-work/public-domain/cc0/) License
+This project is licensed under the [Good Party Open Source License (GPOSL) v1.0](./LICENSE.md) 
 
 <h2>A Next13 App.</h2>
 
