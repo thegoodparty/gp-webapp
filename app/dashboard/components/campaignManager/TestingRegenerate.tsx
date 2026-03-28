@@ -25,7 +25,7 @@ export default function TestingRegenerate({
           color="primary"
           onClick={handleDeleteAllTasks}
         >
-          Delete and Regenerate
+          Delete and Regenerate all tasks
         </Button>
       </div>
     </Card>
