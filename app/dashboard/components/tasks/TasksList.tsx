@@ -279,12 +279,6 @@ const TasksList = ({
           <>
             <div className="flex justify-between items-baseline border-b px-6 pb-6">
               <div className="text-lg font-semibold">Campaign plan</div>
-              <button
-                type="button"
-                className="text-sm font-semibold text-primary"
-              >
-                View full plan
-              </button>
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
