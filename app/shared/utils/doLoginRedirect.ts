@@ -16,13 +16,9 @@ export const doLoginRedirect = async (
   const returnCookie = getCookie('returnUrl')
   const [status] = await Promise.all([
     fetchCampaignStatus(),
-    queryClient.prefetchQuery({
-      queryKey: ORGANIZATIONS_QUERY_KEY,
-      queryFn: () =>
-        clientRequest('GET /v1/organizations', {}).then(
-          (res) => res.data.organizations,
-        ),
-    }),
+    clientRequest('GET /v1/organizations', {}).then((res) =>
+      queryClient.setQueryData(ORGANIZATIONS_QUERY_KEY, res.data.organizations),
+    ),
   ])
 
   const redirectRoute: string | false | void | undefined = userHasRole(
@@ -43,4 +39,8 @@ export const doLoginRedirect = async (
     : '/onboarding/office-selection'
 
   router.push(redirectRoute as string)
+  // The root layout's PageWrapper (server component) was initially rendered
+  // before login, so its cached RSC payload has isAuthed: false and empty
+  // organizations. refresh() forces it to re-render with the new auth cookie.
+  router.refresh()
 }
