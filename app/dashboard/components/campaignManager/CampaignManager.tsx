@@ -19,6 +19,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useTaskGenerationStream } from './useTaskGenerationStream'
 import { FailedToGenerate } from './FailedToGenerate'
+import TestingRegenerate from './TestingRegenerate'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -120,12 +121,15 @@ export default function CampaignManager({
           {!showLoadingState && (
             <>
               {contactGoals ? (
-                <TasksList
-                  campaign={campaign}
-                  tasks={tasks}
-                  tcrCompliance={tcrCompliance}
-                  isLegacyList={false}
-                />
+                <>
+                  <TasksList
+                    campaign={campaign}
+                    tasks={tasks}
+                    tcrCompliance={tcrCompliance}
+                    isLegacyList={false}
+                  />
+                  <TestingRegenerate tasksNumber={tasks.length} />
+                </>
               ) : (
                 <div className="mt-4">
                   <EmptyState />

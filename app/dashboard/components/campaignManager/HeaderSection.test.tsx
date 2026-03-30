@@ -37,45 +37,49 @@ const renderWithProviders = () =>
   )
 
 describe('HeaderSection', () => {
-  it('shows general election greeting when available', () => {
+  it('shows greeting and general election countdown', () => {
     mockGetNextElection.mockReturnValue({
       nextElectionDate: '2025-11-04',
       isPrimary: false,
     })
     mockTimeToNextElection.mockReturnValue('8 weeks')
     renderWithProviders()
+    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
     expect(
-      screen.getByText(/8 weeks until General Election Day, Jane/),
+      screen.getByText(/8 weeks until your General Election/),
     ).toBeInTheDocument()
   })
 
-  it('shows primary election greeting when primary is next', () => {
+  it('shows greeting and primary election countdown', () => {
     mockGetNextElection.mockReturnValue({
       nextElectionDate: '2025-06-10',
       isPrimary: true,
     })
     mockTimeToNextElection.mockReturnValue('4 weeks')
     renderWithProviders()
+    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
     expect(
-      screen.getByText(/4 weeks until Primary Election Day, Jane/),
+      screen.getByText(/4 weeks until your Primary Election/),
     ).toBeInTheDocument()
   })
 
-  it('falls back to "Hello" when timeToNextElection returns false', () => {
+  it('shows greeting without countdown when timeToNextElection returns false', () => {
     mockGetNextElection.mockReturnValue({
       nextElectionDate: '2020-01-01',
       isPrimary: false,
     })
     mockTimeToNextElection.mockReturnValue(false)
     renderWithProviders()
-    expect(screen.getByText(/Hello, Jane/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 
-  it('falls back to "Hello" when getNextElection returns null', () => {
+  it('shows greeting without countdown when getNextElection returns null', () => {
     mockGetNextElection.mockReturnValue(null)
     mockTimeToNextElection.mockReturnValue(false)
     renderWithProviders()
-    expect(screen.getByText(/Hello, Jane/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 
   it('handles missing user gracefully', () => {
@@ -88,6 +92,7 @@ describe('HeaderSection', () => {
         </CampaignContext.Provider>
       </UserContext.Provider>,
     )
-    expect(screen.getByText(/Hello,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 })
