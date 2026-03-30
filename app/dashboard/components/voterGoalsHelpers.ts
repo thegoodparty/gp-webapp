@@ -1,3 +1,5 @@
+import { Campaign } from 'helpers/types'
+
 export interface ContactGoalBreakdown {
   total: number
   doorKnocking: number
@@ -90,6 +92,14 @@ const createContactGoalBreakdown = (
   calls: parseInt(String(weekTotal * 0.35), 10),
   digital: parseInt(String(weekTotal * 0.45), 10),
 })
+
+export function calculateContactGoalsFromCampaign(
+  campaign: Campaign,
+): ContactGoals | false {
+  const p2vData = campaign.pathToVictory?.data
+  const resolvedContactGoal = getVoterContactsGoal(p2vData || {})
+  return calculateContactGoals(resolvedContactGoal)
+}
 
 export function calculateContactGoals(total: number): ContactGoals | false {
   if (!total) {

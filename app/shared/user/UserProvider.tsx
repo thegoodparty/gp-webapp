@@ -39,12 +39,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateUser = useCallback(
     (_user?: User) => {
-      queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY_KEY] })
+      queryClient.invalidateQueries({
+        queryKey: [CURRENT_USER_QUERY_KEY],
+      })
     },
     [queryClient],
   )
 
-  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const reconnectTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return
@@ -53,10 +57,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     let es: EventSource | null = null
 
     const connect = () => {
-      es = new EventSource(`/api${API_VERSION_PREFIX}/users/me/events`)
+      es = new EventSource(
+        `/api${API_VERSION_PREFIX}/users/me/events`,
+      )
 
       es.addEventListener('user.updated', () => {
-        queryClient.invalidateQueries({ queryKey: [CURRENT_USER_QUERY_KEY] })
+        queryClient.invalidateQueries({
+          queryKey: [CURRENT_USER_QUERY_KEY],
+        })
       })
 
       es.onerror = () => {
@@ -78,9 +86,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isLoaded, isSignedIn, queryClient])
 
-  const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
+  const isUserLoading =
+    !isLoaded || (!!isSignedIn && isQueryLoading)
 
-  const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
+  const value: User | null =
+    isLoaded && !isSignedIn ? null : appUser ?? null
 
   return (
     <UserContext.Provider value={[value, updateUser, isUserLoading]}>

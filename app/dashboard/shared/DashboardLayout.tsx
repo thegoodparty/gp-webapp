@@ -29,14 +29,15 @@ const DashboardLayout = ({
   showAlert = true,
   wrapperClassName = '',
   hideMenu = false,
-}: DashboardLayoutProps): React.JSX.Element => {
+}: DashboardLayoutProps): React.JSX.Element | null => {
   const [user] = useUser()
   const [hookCampaign] = useCampaign()
   const router = useRouter()
   const hookPathname = usePathname()
 
   const currentPath = pathname || hookPathname
-  const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
+  const { ready: flagReady, on: navRefreshEnabled } =
+    useFlagOn('win-serve-split')
 
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
@@ -69,6 +70,10 @@ const DashboardLayout = ({
       router.push('/dashboard/election-result')
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
+
+  if (!flagReady) {
+    return null
+  }
 
   if (navRefreshEnabled) {
     return (
@@ -135,6 +140,7 @@ const MobileMenuTrigger = () => {
           className="h-6 w-8 object-contain"
         />
         <button
+          data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"

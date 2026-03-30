@@ -134,7 +134,6 @@ const bootstrapTestUser = async (
   page: Page,
   options?: TestUserOptions,
 ): Promise<BootstrappedUser & { clerkUserId: string }> => {
-  // If isolated is false/undefined and we have a cached user, re-sign-in with cached credentials
   if (!options?.isolated && cachedCredentials) {
     const token = await signInAndGetToken(
       page,
@@ -147,7 +146,9 @@ const bootstrapTestUser = async (
       token,
       client: axios.create({
         baseURL: apiURL,
-        headers: { common: { Authorization: `Bearer ${token}` } },
+        headers: {
+          common: { Authorization: `Bearer ${token}` },
+        },
       }),
       clerkUserId: cachedCredentials.clerkUserId,
     }
@@ -157,7 +158,6 @@ const bootstrapTestUser = async (
   const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  // Create user in Clerk
   const clerkUser = await clerkBackend.users.createUser({
     emailAddress: [generated.email],
     password,
@@ -166,15 +166,15 @@ const bootstrapTestUser = async (
     skipPasswordChecks: true,
   })
 
-  // Sign in via Clerk and get session token
   const token = await signInAndGetToken(page, generated.email, password)
 
   const client = axios.create({
     baseURL: apiURL,
-    headers: { common: { Authorization: `Bearer ${token}` } },
+    headers: {
+      common: { Authorization: `Bearer ${token}` },
+    },
   })
 
-  // Fetch user from our API (JIT-provisioned by ClerkSessionGuard)
   const { data: apiUser } = await client.get<{
     id: number
     firstName: string
@@ -200,7 +200,6 @@ const bootstrapTestUser = async (
     clerkUserId: clerkUser.id,
   }
 
-  // Cache the credentials if not isolated
   if (!options?.isolated) {
     cachedCredentials = {
       email: generated.email,

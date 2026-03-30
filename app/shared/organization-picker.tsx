@@ -6,13 +6,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { useLocalStorageValue } from './utils/local-storage'
-import { setCookie, deleteCookie } from 'helpers/cookieHelper'
+import { setCookie, getCookie, deleteCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import {
   DropdownMenu,
@@ -28,11 +28,11 @@ import { ChevronDown } from 'lucide-react'
 import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { queryClient } from './query-client'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useCampaign } from './hooks/useCampaign'
 
-const LS_KEY = 'selected-organization-slug'
+const SHARED_PATHS = ['/dashboard/profile', '/dashboard/campaign-details']
 
 interface OrganizationContextValue {
   organizations: Organization[]
@@ -101,18 +101,11 @@ export const OrganizationProvider = ({
     enabled,
   })
 
-  const [selectedSlug, _setSelectedSlug] = useLocalStorageValue(LS_KEY)
-
-  useEffect(() => {
-    if (!enabled) {
-      deleteCookie(ORG_SLUG_COOKIE)
-      return
-    }
-    const slug = selectedSlug ?? organizations[0]?.slug
-    if (slug) {
-      setCookie(ORG_SLUG_COOKIE, slug)
-    }
-  }, [enabled, selectedSlug, organizations])
+  const [selectedSlug, _setSelectedSlug] = useState(() => {
+    const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
+    const isValid = initialOrganizations.some((o) => o.slug === cookieSlug)
+    return isValid ? cookieSlug : initialOrganizations[0]?.slug ?? null
+  })
 
   const selectedOrganization = useMemo(
     () =>
@@ -120,15 +113,24 @@ export const OrganizationProvider = ({
     [organizations, selectedSlug],
   )
 
-  const setSelectedSlug = useCallback(
-    (slug: string) => {
-      _setSelectedSlug(slug)
-      setCookie(ORG_SLUG_COOKIE, slug)
-      // When we change the org, we need to refetch just about everything.
-      queryClient.invalidateQueries()
-    },
-    [_setSelectedSlug],
-  )
+  useEffect(() => {
+    if (!enabled) {
+      deleteCookie(ORG_SLUG_COOKIE)
+    } else if (selectedOrganization) {
+      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
+    }
+  }, [enabled, selectedOrganization])
+
+  const setSelectedSlug = useCallback((slug: string) => {
+    _setSelectedSlug(slug)
+    setCookie(ORG_SLUG_COOKIE, slug)
+    // Exclude the organizations query from invalidation — the org list doesn't
+    // change when switching between orgs, and invalidating it causes a brief
+    // flash where nav items disappear while the list refetches.
+    void queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
+    })
+  }, [])
 
   return (
     <OrganizationContext.Provider
@@ -150,6 +152,7 @@ export const OrganizationPicker = () => {
   const isMobile = useIsMobile()
 
   const [campaign] = useCampaign()
+  const pathname = usePathname()
 
   if (!ctx || ctx.organizations.length === 0) return null
 
@@ -158,7 +161,11 @@ export const OrganizationPicker = () => {
   const handleOrgSwitch = (org: Organization) => {
     if (org.slug === selected.slug) return
     setSelectedSlug(org.slug)
-    router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+
+    const isOnSharedPage = SHARED_PATHS.some((p) => pathname?.startsWith(p))
+    if (!isOnSharedPage) {
+      router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+    }
   }
 
   return (

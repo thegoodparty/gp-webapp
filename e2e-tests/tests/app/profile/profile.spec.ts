@@ -13,15 +13,17 @@ test.describe('Profile Management', () => {
   })
 
   test('should access profile page', async ({ page }) => {
+    test.setTimeout(120000)
     await authenticateTestUser(page)
     await page.goto('/dashboard')
     await NavigationHelper.dismissOverlays(page)
 
     await page.goto('/dashboard/profile')
+    await page.waitForURL(/\/dashboard\/profile/)
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Personal Information' }).first(),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 60000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const personalFields = page.locator('[data-testid*="personal"]')

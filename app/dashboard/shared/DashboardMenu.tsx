@@ -518,7 +518,10 @@ const NewNavMenu = ({
                       </Avatar.Fallback>
                     </Avatar>
                     <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
-                      <span className="truncate text-sm font-semibold">
+                      <span
+                        data-testid="user-menu-name"
+                        className="truncate text-sm font-semibold"
+                      >
                         {user?.firstName} {user?.lastName}
                       </span>
                       <span className="truncate text-xs">Manage account</span>
