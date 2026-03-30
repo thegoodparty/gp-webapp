@@ -12,8 +12,10 @@ import { useState } from 'react'
 import { ProUpgradeModal, VARIANTS } from 'app/dashboard/shared/ProUpgradeModal'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 export default function ContactsPage() {
+  const [campaign] = useCampaign()
   const { on: useConstituents } = useFlagOn('win-serve-split')
   const [showProModal, setShowProModal] = useState(false)
   const { isCustomSegment, searchTerm, totalSegmentContacts } =
@@ -57,13 +59,15 @@ export default function ContactsPage() {
         </Paper>
         <PersonOverlay />
       </DashboardLayout>
-      <ProUpgradeModal
-        variant={VARIANTS.Second_NonViable}
-        open={showProModal}
-        onClose={() => setShowProModal(false)}
-        onUpgradeLinkClick={() => setShowProModal(false)}
-        defaultTrackingEnabled
-      />
+      {campaign && (
+        <ProUpgradeModal
+          variant={VARIANTS.Second_NonViable}
+          open={showProModal}
+          onClose={() => setShowProModal(false)}
+          onUpgradeLinkClick={() => setShowProModal(false)}
+          defaultTrackingEnabled
+        />
+      )}
     </ContactProModalProvider>
   )
 }
