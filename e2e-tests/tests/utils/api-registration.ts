@@ -52,6 +52,7 @@ export type AuthenticatedUser = {
   name: string
   zip: string
   phone: string
+  password: string
 }
 
 type Race = {
@@ -96,6 +97,8 @@ const bootstrapTestUser = async (
 
   const zip = options?.race?.zip || generated.zipCode
 
+  const password = randomUUID()
+
   const registerResponse = await client.post<{
     user: AuthenticatedUser
     token: string
@@ -104,12 +107,13 @@ const bootstrapTestUser = async (
     signUpMode: 'candidate',
     ...generated,
     zipCode: zip,
-    password: randomUUID(),
+    password,
   })
 
   client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
 
   const user = registerResponse.data.user
+  user.password = password
 
   const result: BootstrappedUser = {
     user,
