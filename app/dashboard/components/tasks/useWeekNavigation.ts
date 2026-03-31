@@ -1,23 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { startOfWeek, addWeeks } from 'date-fns'
 import type { Task } from './TaskItem'
 
-const SESSION_KEY = 'campaign-plan-selected-week'
+const SESSION_KEY_PREFIX = 'campaign-plan-selected-week'
 
-function readSessionWeek(): number | null {
+function sessionKey(campaignId: string): string {
+  return `${SESSION_KEY_PREFIX}:${campaignId}`
+}
+
+function readSessionWeek(campaignId: string): number | null {
   if (typeof window === 'undefined') return null
-  const stored = sessionStorage.getItem(SESSION_KEY)
+  const stored = sessionStorage.getItem(sessionKey(campaignId))
   if (stored === null) return null
   const parsed = Number(stored)
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function writeSessionWeek(week: number | null): void {
+function writeSessionWeek(campaignId: string, week: number | null): void {
   if (typeof window === 'undefined') return
+  const key = sessionKey(campaignId)
   if (week === null) {
-    sessionStorage.removeItem(SESSION_KEY)
+    sessionStorage.removeItem(key)
   } else {
-    sessionStorage.setItem(SESSION_KEY, String(week))
+    sessionStorage.setItem(key, String(week))
   }
 }
 
@@ -33,6 +38,7 @@ interface WeekNavigationResult {
 
 export function useWeekNavigation(
   tasks: Task[],
+  campaignId: string,
   electionDateObj: Date | null,
   daysUntilElection: number,
 ): WeekNavigationResult {
@@ -55,7 +61,12 @@ export function useWeekNavigation(
         }, 0)
       : 0
 
-  const [savedWeek, setSavedWeek] = useState<number | null>(readSessionWeek)
+  const [savedWeek, setSavedWeek] = useState<number | null>(null)
+
+  useEffect(() => {
+    const stored = readSessionWeek(campaignId)
+    setSavedWeek(stored)
+  }, [campaignId])
 
   const savedIndex = savedWeek !== null ? weekNumbers.indexOf(savedWeek) : -1
   const activeIndex = savedIndex !== -1 ? savedIndex : defaultIndex
@@ -67,7 +78,7 @@ export function useWeekNavigation(
     if (index < 0 || index >= weekNumbers.length) return
     const week = weekNumbers[index]
     if (week !== undefined) {
-      writeSessionWeek(week)
+      writeSessionWeek(campaignId, week)
       setSavedWeek(week)
     }
   }
