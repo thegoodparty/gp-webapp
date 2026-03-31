@@ -84,7 +84,7 @@ const TasksList = ({
     canGoNext,
     goToPrevious,
     goToNext,
-  } = useWeekNavigation(tasks, tasksProp, electionDateObj, daysUntilElection)
+  } = useWeekNavigation(tasks, electionDateObj, daysUntilElection)
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
