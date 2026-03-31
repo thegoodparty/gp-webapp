@@ -61,11 +61,12 @@ export function useWeekNavigation(
         }, 0)
       : 0
 
-  const [savedWeek, setSavedWeek] = useState<number | null>(null)
+  const [savedWeek, setSavedWeek] = useState<number | null>(() =>
+    readSessionWeek(campaignId),
+  )
 
   useEffect(() => {
-    const stored = readSessionWeek(campaignId)
-    setSavedWeek(stored)
+    setSavedWeek(readSessionWeek(campaignId))
   }, [campaignId])
 
   const savedIndex = savedWeek !== null ? weekNumbers.indexOf(savedWeek) : -1
