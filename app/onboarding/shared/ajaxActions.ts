@@ -1,9 +1,6 @@
 'use client'
-
-import { deleteCookie, getCookie } from 'helpers/cookieHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { ONBOARDING_STEPS } from 'app/onboarding/onboarding.consts'
 import { Campaign } from 'helpers/types'
 
 type UpdateValue = string | number | boolean | object | null | undefined
@@ -115,36 +112,4 @@ export const onboardingStep = (
 
   const nextStep = Math.max(numericStep, step)
   return `onboarding-${nextStep}`
-}
-
-// TODO: Refactor/break this up. It's doing WAY too much for one method and is
-//  VERY confusing and brittle.
-export const doPostAuthRedirect = async (
-  campaign: Campaign,
-): Promise<string | false | undefined> => {
-  try {
-    const { slug, data: campaignData } = campaign
-    const { currentStep } = campaignData || {}
-
-    if (slug) {
-      deleteCookie('afterAction')
-      deleteCookie('returnUrl')
-
-      // claim profile from candidate page. save it to the new campaign
-      const claimProfile = getCookie('claimProfile')
-      if (claimProfile) {
-        await updateCampaign([
-          { key: 'data.claimProfile', value: claimProfile },
-        ])
-        deleteCookie('claimProfile')
-      }
-
-      return currentStep === ONBOARDING_STEPS.COMPLETE
-        ? '/dashboard'
-        : `/onboarding/${slug}/${parseNumericOnboardingStep(currentStep) + 1}`
-    }
-    return undefined
-  } catch {
-    return false
-  }
 }

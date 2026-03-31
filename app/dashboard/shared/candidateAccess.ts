@@ -24,6 +24,9 @@ export function resolvePostAuthRedirectPath(
   if (campaignStatus?.status === 'onboarding' && campaignStatus?.slug) {
     return `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
   }
+  if (!campaignStatus || campaignStatus.status === false) {
+    return '/onboarding/office-selection'
+  }
   return '/dashboard/profile'
 }
 
