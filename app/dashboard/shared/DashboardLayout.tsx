@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode, useEffect } from 'react'
+import Link from 'next/link'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
@@ -19,6 +20,7 @@ import {
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
+import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -48,6 +50,8 @@ const DashboardLayout = ({
   const currentPath = pathname || hookPathname
   const { ready: flagReady, on: navRefreshEnabled } =
     useFlagOn('win-serve-split')
+  const organization = useOrganizationIfEnabled()
+  const isElectedOffice = !!organization?.electedOfficeId
 
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
@@ -122,6 +126,7 @@ const DashboardLayout = ({
                 campaign={activeCampaign}
                 user={user}
                 pathname={currentPath || undefined}
+                isElectedOffice={isElectedOffice}
               />
               {children}
             </div>
@@ -162,11 +167,13 @@ const MobileMenuTrigger = () => {
   return (
     <>
       <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-        <img
-          src="/images/logo/heart.svg"
-          alt="GoodParty.org"
-          className="h-6 w-8 object-contain"
-        />
+        <Link href="/dashboard">
+          <img
+            src="/images/logo/heart.svg"
+            alt="GoodParty.org"
+            className="h-6 w-8 object-contain"
+          />
+        </Link>
         <button
           data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
