@@ -231,7 +231,7 @@ const getDashboardMenuItems = (
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (isElectedOffice) {
-    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
+    menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
@@ -494,7 +494,7 @@ const NewNavMenu = ({
                         </Link>
                       </SidebarMenuButton>
                       {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
                           NEW
                         </SidebarMenuBadge>
                       )}
