@@ -1,5 +1,4 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
-import pRetry from 'p-retry'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -19,26 +18,42 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 
 let filterCallCount = 0
 
-const openPersonPanel = async (row: Locator, panel: Locator) => {
+const waitForContactsResponse = (page: Page) =>
+  page.waitForResponse(
+    (res) =>
+      res.url().includes('/v1/contacts') &&
+      !res.url().includes('/v1/contacts/') &&
+      res.status() === 200,
+    { timeout: 30000 },
+  )
+
+const openPersonPanel = async (page: Page, row: Locator, panel: Locator) => {
+  const addressField = panel.locator('p', { hasText: 'Address' }).first()
   for (let attempt = 0; attempt < 3; attempt++) {
     await row.locator('td').first().click({ force: true })
     try {
-      await expect(panel).toBeVisible({ timeout: 10000 })
+      await expect(addressField).toBeVisible({ timeout: 20000 })
       return
     } catch {
-      if (attempt === 2) await expect(panel).toBeVisible()
+      if (attempt === 2) {
+        await expect(addressField).toBeVisible({ timeout: 20000 })
+      }
     }
   }
 }
 
 const closePanel = async (page: Page, panel: Locator) => {
-  await pRetry(
-    async () => {
-      await page.keyboard.press('Escape')
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await page.keyboard.press('Escape')
+    try {
       await expect(panel).toBeHidden({ timeout: 5000 })
-    },
-    { retries: 3 },
-  )
+      return
+    } catch {
+      if (attempt === 2) {
+        await expect(panel).toBeHidden({ timeout: 5000 })
+      }
+    }
+  }
 }
 
 const testFilterField = async (
@@ -89,6 +104,7 @@ const testFilterField = async (
   const updateBtn = sheet.getByRole('button', { name: /update segment/i })
   await updateBtn.scrollIntoViewIfNeeded()
   await expect(updateBtn).toBeEnabled({ timeout: 5000 })
+  const contactsResponsePromise = waitForContactsResponse(page)
   await updateBtn.click()
   try {
     await expect(sheet).toBeHidden({ timeout: 15000 })
@@ -96,6 +112,8 @@ const testFilterField = async (
     await page.keyboard.press('Escape')
     await expect(sheet).toBeHidden({ timeout: 5000 })
   }
+
+  await contactsResponsePromise
 
   const table = page.locator('table').first()
   const firstCell = table.locator('tbody tr').first().locator('td').first()
@@ -115,7 +133,7 @@ const testFilterField = async (
   const firstRow = table.locator('tbody tr').first()
   const panel = personContactPanel(page)
 
-  await openPersonPanel(firstRow, panel)
+  await openPersonPanel(page, firstRow, panel)
 
   for (const expectation of config.expectSheetValues) {
     if (typeof expectation === 'function') {
