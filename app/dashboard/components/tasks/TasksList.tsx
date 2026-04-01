@@ -259,20 +259,24 @@ const TasksList = ({
     errorMessage: string,
     body?: Record<string, unknown>,
   ): Promise<boolean> => {
+    let succeeded = false
     try {
       const resp = await clientFetch<Task>(route, { taskId, ...body })
       if ('ok' in resp && resp.ok) {
         replaceTask(taskId, (resp as { ok: true; data: Task }).data)
-        await refreshAfterTaskMutation()
-        return true
+        succeeded = true
+      } else {
+        errorSnackbar(errorMessage)
       }
-      errorSnackbar(errorMessage)
-      return false
     } catch (error) {
       console.error(error)
       errorSnackbar(errorMessage)
-      return false
     }
+
+    if (succeeded) {
+      refreshAfterTaskMutation().catch(console.error)
+    }
+    return succeeded
   }
 
   const completeTask = (
