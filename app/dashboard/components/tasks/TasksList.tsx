@@ -406,6 +406,11 @@ const TasksList = ({
           type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
+          onComplete={() => {
+            if (!flowModalTask.task.completed) {
+              completeTask(flowModalTask.task.id)
+            }
+          }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}

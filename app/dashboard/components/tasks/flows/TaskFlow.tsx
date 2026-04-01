@@ -80,6 +80,7 @@ type TaskFlowProps = {
   isCustom?: boolean
   forceOpen?: boolean
   onClose?: () => void
+  onComplete?: () => void
   defaultAiTemplateId?: string | number
 }
 
@@ -90,6 +91,7 @@ const TaskFlow = ({
   campaign,
   isCustom,
   onClose,
+  onComplete,
   defaultAiTemplateId,
 }: TaskFlowProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
@@ -166,6 +168,7 @@ const TaskFlow = ({
 
   const handleNext = () => {
     if (isLastStep) {
+      onComplete?.()
       handleCloseConfirm()
       return
     }
