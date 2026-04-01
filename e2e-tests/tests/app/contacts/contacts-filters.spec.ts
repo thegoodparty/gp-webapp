@@ -30,17 +30,13 @@ const waitForContactsResponse = (page: Page) =>
 
 const openPersonPanel = async (page: Page, row: Locator, panel: Locator) => {
   const addressField = panel.locator('p', { hasText: 'Address' }).first()
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await row.locator('td').first().click({ force: true })
-    try {
+  await pRetry(
+    async () => {
+      await row.locator('td').first().click({ force: true })
       await expect(addressField).toBeVisible({ timeout: 20000 })
-      return
-    } catch {
-      if (attempt === 2) {
-        await expect(addressField).toBeVisible({ timeout: 20000 })
-      }
-    }
-  }
+    },
+    { retries: 3 },
+  )
 }
 
 const closePanel = async (page: Page, panel: Locator) => {
