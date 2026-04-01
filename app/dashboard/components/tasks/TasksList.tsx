@@ -35,6 +35,10 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
+import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { Card, cn } from '@styleguide'
 import RevertTaskDialog from './RevertTaskDialog'
 
@@ -84,7 +88,12 @@ const TasksList = ({
     canGoNext,
     goToPrevious,
     goToNext,
-  } = useWeekNavigation(tasks, tasksProp, electionDateObj, daysUntilElection)
+  } = useWeekNavigation(
+    tasks,
+    String(campaign.id),
+    electionDateObj,
+    daysUntilElection,
+  )
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
@@ -104,6 +113,18 @@ const TasksList = ({
     ReturnType<typeof buildTrackingAttrs>
   >({})
   const { errorSnackbar } = useSnackbar()
+  const queryClient = useQueryClient()
+  const [, setUpdateHistory] = useCampaignUpdateHistory()
+
+  const refreshAfterTaskMutation = async () => {
+    await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+    const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
+      apiRoutes.campaign.updateHistory.list,
+    )
+    if ('ok' in resp && resp.ok) {
+      setUpdateHistory(resp.data || [])
+    }
+  }
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type, completed } = task
@@ -120,9 +141,16 @@ const TasksList = ({
     }
   }
 
-  const handleCompleteSubmit = (_count: number) => {
+  const handleCompleteSubmit = (count: number) => {
     if (completeModalTask) {
-      completeTask(completeModalTask.id)
+      const resolvedType =
+        completeModalTask.flowType === TASK_TYPES.p2pDisabledText
+          ? TASK_TYPES.text
+          : completeModalTask.flowType
+      completeTask(completeModalTask.id, {
+        type: resolvedType,
+        quantity: count,
+      })
     }
     setCompleteModalTask(null)
   }
@@ -229,27 +257,41 @@ const TasksList = ({
     route: ApiRoute,
     taskId: string,
     errorMessage: string,
+    body?: Record<string, unknown>,
   ): Promise<boolean> => {
+    let succeeded = false
     try {
-      const resp = await clientFetch<Task>(route, { taskId })
-      if (resp.ok) {
-        replaceTask(taskId, resp.data)
-        return true
+      const resp = await clientFetch<Task>(route, { taskId, ...body })
+      if ('ok' in resp && resp.ok) {
+        replaceTask(taskId, (resp as { ok: true; data: Task }).data)
+        succeeded = true
+      } else {
+        errorSnackbar(errorMessage)
       }
-      errorSnackbar(errorMessage)
-      return false
     } catch (error) {
       console.error(error)
       errorSnackbar(errorMessage)
-      return false
     }
+
+    if (succeeded) {
+      refreshAfterTaskMutation().catch(console.error)
+    }
+    return succeeded
   }
 
-  const completeTask = (taskId: string) => {
+  const completeTask = (
+    taskId: string,
+    voterContact?: { type: string; quantity: number },
+  ) => {
     const route = isLegacyList
       ? apiRoutes.campaign.legacyTasks.complete
       : apiRoutes.campaign.tasks.complete
-    return sendTaskUpdate(route, taskId, 'Failed to complete task')
+    return sendTaskUpdate(
+      route,
+      taskId,
+      'Failed to complete task',
+      voterContact,
+    )
   }
 
   const revertTask = (taskId: string) =>
