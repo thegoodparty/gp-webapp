@@ -12,7 +12,6 @@ import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import { dateUsHelper } from 'helpers/dateHelper'
 import Checkbox from '@shared/inputs/Checkbox'
-import VoterFileSection from './VoterFileSection'
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
 import DistrictPicker from 'app/onboarding/[slug]/[step]/components/districts/DistrictPicker'
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
@@ -465,7 +464,6 @@ export default function AdminVictoryPathPage(
                     : null
                 }
               />
-              {!notNeeded && <VoterFileSection />}
             </div>
           )}
           {sections.map((section) => (

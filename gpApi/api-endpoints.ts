@@ -1,6 +1,13 @@
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
 import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
+import type {
+  SegmentResponse,
+  Person,
+  ListContactsResponse,
+  GetConstituentIssuesResponse,
+  GetIndividualActivitiesResponse,
+} from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
 import { Campaign, CampaignDetails } from 'helpers/types'
 
 export type APIEndpoints = {
@@ -75,6 +82,50 @@ export type APIEndpoints = {
   'GET /v1/organizations/admin/list': {
     Request: { slug?: string; email?: string }
     Response: { organizations: AdminOrganization[] }
+  }
+
+  'POST /v1/voters/voter-file/filter': {
+    Request: { name?: string } & Record<string, unknown>
+    Response: SegmentResponse
+  }
+  'PUT /v1/voters/voter-file/filter/:id': {
+    Request: { name?: string } & Record<string, unknown>
+    Response: SegmentResponse
+  }
+  'GET /v1/voters/voter-file/filters': {
+    Request: {}
+    Response: SegmentResponse[]
+  }
+  'DELETE /v1/voters/voter-file/filter/:id': {
+    Request: {}
+    Response: {}
+  }
+
+  'GET /v1/contacts': {
+    Request: {
+      page?: number
+      resultsPerPage?: number
+      segment?: string
+      search?: string
+    }
+    Response: ListContactsResponse
+  }
+  'GET /v1/contacts/:id': {
+    Request: {}
+    Response: Person
+  }
+  'GET /v1/contacts/download': {
+    Request: { segment?: string }
+    Response: Blob
+  }
+
+  'GET /v1/contact-engagement/:id/issues': {
+    Request: { take?: number; after?: string }
+    Response: GetConstituentIssuesResponse
+  }
+  'GET /v1/contact-engagement/:id/activities': {
+    Request: { take?: number; after?: string }
+    Response: GetIndividualActivitiesResponse
   }
 }
 
