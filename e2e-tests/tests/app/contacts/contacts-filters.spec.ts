@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, test } from '@playwright/test'
+import pRetry from 'p-retry'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -43,17 +44,13 @@ const openPersonPanel = async (page: Page, row: Locator, panel: Locator) => {
 }
 
 const closePanel = async (page: Page, panel: Locator) => {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await page.keyboard.press('Escape')
-    try {
+  await pRetry(
+    async () => {
+      await page.keyboard.press('Escape')
       await expect(panel).toBeHidden({ timeout: 5000 })
-      return
-    } catch {
-      if (attempt === 2) {
-        await expect(panel).toBeHidden({ timeout: 5000 })
-      }
-    }
-  }
+    },
+    { retries: 3 },
+  )
 }
 
 const testFilterField = async (
