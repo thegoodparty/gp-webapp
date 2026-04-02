@@ -73,12 +73,13 @@ const sections: SectionConfig[] = [
     ],
   },
   {
-    title: 'Vote Goal',
+    title: 'Vote Goal (read-only — sourced from live metrics)',
     fields: [
       {
         key: 'projectedTurnout',
         label: 'Projected Turnout number',
         type: 'number',
+        formula: true,
       },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
       {
@@ -200,9 +201,6 @@ interface KeyTypes {
 
 const keys: FormFieldKey[] = [
   'canDownloadFederal',
-  'projectedTurnout',
-  'winNumber',
-  'voterContactGoal',
   'voteGoal',
   'voterProjection',
   'budgetLow',
@@ -278,21 +276,10 @@ export default function AdminVictoryPathPage(
       val = value
     }
 
-    const newState: FormState = {
+    setState({
       ...state,
       [key]: val,
-    }
-
-    if (key === 'projectedTurnout') {
-      const pt = val === '' ? 0 : parseFloat(String(val))
-      const winNumber = pt > 0 ? Math.floor(pt * 0.5) + 1 : 0
-      const voterContactGoal = pt > 0 ? pt * 5 : 0
-
-      newState.winNumber = winNumber
-      newState.voterContactGoal = voterContactGoal
-    }
-
-    setState(newState)
+    })
   }
 
   const save = async (): Promise<void> => {
@@ -327,7 +314,10 @@ export default function AdminVictoryPathPage(
         }
       })
 
-      if (state?.projectedTurnout && Number(state.projectedTurnout) > 0) {
+      if (
+        pathToVictory?.projectedTurnout &&
+        Number(pathToVictory.projectedTurnout) > 0
+      ) {
         attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' })
       } else {
         errorSnackbar('Projected Turnout is required')
