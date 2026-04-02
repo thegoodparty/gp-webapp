@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -112,6 +112,7 @@ const TasksList = ({
   const { errorSnackbar } = useSnackbar()
   const queryClient = useQueryClient()
   const [, setUpdateHistory] = useCampaignUpdateHistory()
+  const inFlightTasks = useRef(new Set<string>())
 
   const refreshAfterTaskMutation = async () => {
     await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
@@ -241,6 +242,9 @@ const TasksList = ({
     errorMessage: string,
     body?: Record<string, unknown>,
   ): Promise<boolean> => {
+    if (inFlightTasks.current.has(taskId)) return false
+    inFlightTasks.current.add(taskId)
+
     let succeeded = false
     try {
       const resp = await clientFetch<Task>(route, { taskId, ...body })
@@ -253,6 +257,8 @@ const TasksList = ({
     } catch (error) {
       console.error(error)
       errorSnackbar(errorMessage)
+    } finally {
+      inFlightTasks.current.delete(taskId)
     }
 
     if (succeeded) {

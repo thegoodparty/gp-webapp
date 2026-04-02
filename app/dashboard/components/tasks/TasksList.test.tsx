@@ -140,6 +140,10 @@ describe('TasksList revert completion flow', () => {
       expect.objectContaining({ method: 'PUT' }),
       expect.anything(),
     )
+    expect(mockClientFetch).not.toHaveBeenCalledWith(
+      expect.objectContaining({ method: 'DELETE' }),
+      expect.anything(),
+    )
   })
 
   it('shows error snackbar when revert API fails', async () => {
@@ -218,6 +222,35 @@ describe('TasksList revert completion flow', () => {
         }),
         { taskId: 'task-1' },
       )
+    })
+  })
+
+  it('ignores rapid duplicate clicks while a revert is in flight', async () => {
+    const user = userEvent.setup()
+    const completedTask = makeTask({ completed: true })
+    const revertedTask = { ...completedTask, completed: false }
+
+    let resolveFirst!: (v: unknown) => void
+    mockClientFetch.mockImplementationOnce(
+      () => new Promise((r) => { resolveFirst = r }),
+    )
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[completedTask]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('checkbox'))
+
+    resolveFirst({ ok: true, data: revertedTask })
+
+    await waitFor(() => {
+      expect(mockClientFetch).toHaveBeenCalledTimes(1)
     })
   })
 })
