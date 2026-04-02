@@ -15,12 +15,14 @@ export default function HeaderSection() {
     : 'General Election'
 
   return (
-    <>
-      <h1 className="text-4xl font-semibold">Hi {user?.firstName},</h1>
-      <div className="text-sm mb-8 ">
+    <div className="flex flex-col gap-1">
+      <h1 className="text-3xl font-semibold font-opensans">
+        Hi {user?.firstName},
+      </h1>
+      <div className="text-sm font-opensans">
         {timeUntilElection &&
           `${timeUntilElection} until your ${electionLabel}`}
       </div>
-    </>
+    </div>
   )
 }

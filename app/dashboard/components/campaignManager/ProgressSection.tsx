@@ -25,9 +25,11 @@ export default function ProgressSection() {
   )
   const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
   return (
-    <Card className="p-6">
-      <div className="flex w-full justify-between items-center mb-2 border-b border-primary/20 pb-6">
-        <div className="text-lg font-semibold">Your campaign progress</div>
+    <Card className="p-6 shadow-none">
+      <div className="flex w-full justify-between items-center mb-2 border-b pb-6">
+        <div className="text-lg font-semibold font-opensans">
+          Your campaign progress
+        </div>
         <div
           className="text-sm text-primary cursor-pointer hover:underline"
           onClick={toggleRecordModalOpen}

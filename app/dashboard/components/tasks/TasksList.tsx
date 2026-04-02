@@ -306,8 +306,8 @@ const TasksList = ({
       {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
       <Card
         className={cn(
-          'mt-8 mb-32 gap-0',
-          isLegacyList ? 'p-6' : 'pt-6 font-opensans',
+          'mt-8 mb-32 gap-0 shadow-none',
+          isLegacyList ? 'p-6' : 'p-0 font-opensans',
         )}
       >
         {isLegacyList ? (
@@ -319,8 +319,10 @@ const TasksList = ({
           </>
         ) : (
           <>
-            <div className="flex justify-between items-baseline border-b px-6 pb-6">
-              <div className="text-lg font-semibold">Campaign plan</div>
+            <div className="flex justify-between items-baseline border-b px-6 py-6">
+              <div className="text-lg font-semibold font-opensans">
+                Campaign plan
+              </div>
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
@@ -346,7 +348,7 @@ const TasksList = ({
               />
             ))
           ) : (
-            <li className="flex items-center justify-center border-t border-border px-4 py-6">
+            <li className="flex items-center justify-center border-t border-border px-6 py-6">
               <span className="text-sm">Nothing planned for this week</span>
             </li>
           )}

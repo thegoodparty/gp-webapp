@@ -96,47 +96,49 @@ export default function CampaignManager({
     <DashboardLayout pathname={pathname} campaign={campaign}>
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
-          <HeaderSection />
-          <ProgressSection />
-          <LoadingState hideCallback={hideLoadingChecklist} />
-          {isGenerating && progress && showLoadingState && (
-            <div className="mt-4 rounded-lg border bg-white p-4">
-              <p className="mb-2 text-sm font-medium text-gray-700">
-                {progress.message || 'Generating AI tasks...'}
-              </p>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-500"
-                  style={{ width: `${Math.min(progress.progress, 100)}%` }}
-                />
-              </div>
-              <p className="mt-1 text-xs text-gray-500">
-                {Math.round(progress.progress)}% complete
-              </p>
-            </div>
-          )}
-          {error && !isGenerating && !showLoadingState && (
-            <FailedToGenerate retryGeneration={startGeneration} />
-          )}
-          {!showLoadingState && (
-            <>
-              {contactGoals ? (
-                <>
-                  <TasksList
-                    campaign={campaign}
-                    tasks={tasks}
-                    tcrCompliance={tcrCompliance}
-                    isLegacyList={false}
+          <div className="mx-auto w-full max-w-160 px-4 py-8 md:px-0">
+            <HeaderSection />
+            <ProgressSection />
+            <LoadingState hideCallback={hideLoadingChecklist} />
+            {isGenerating && progress && showLoadingState && (
+              <div className="mt-4 rounded-lg border bg-white p-4">
+                <p className="mb-2 text-sm font-medium text-gray-700">
+                  {progress.message || 'Generating AI tasks...'}
+                </p>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-500"
+                    style={{ width: `${Math.min(progress.progress, 100)}%` }}
                   />
-                  <TestingRegenerate tasksNumber={tasks.length} />
-                </>
-              ) : (
-                <div className="mt-4">
-                  <EmptyState />
                 </div>
-              )}
-            </>
-          )}
+                <p className="mt-1 text-xs text-gray-500">
+                  {Math.round(progress.progress)}% complete
+                </p>
+              </div>
+            )}
+            {error && !isGenerating && !showLoadingState && (
+              <FailedToGenerate retryGeneration={startGeneration} />
+            )}
+            {!showLoadingState && (
+              <>
+                {contactGoals ? (
+                  <>
+                    <TasksList
+                      campaign={campaign}
+                      tasks={tasks}
+                      tcrCompliance={tcrCompliance}
+                      isLegacyList={false}
+                    />
+                    <TestingRegenerate tasksNumber={tasks.length} />
+                  </>
+                ) : (
+                  <div className="mt-4">
+                    <EmptyState />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </CampaignUpdateHistoryProvider>
       </VoterContactsProvider>
     </DashboardLayout>
