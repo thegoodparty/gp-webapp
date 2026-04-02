@@ -42,7 +42,6 @@ import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { Card, cn } from '@styleguide'
-import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -151,8 +150,6 @@ const TasksList = ({
   }, [isLegacyList, tasks.length > 0])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
-  const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
-  const [isReverting, setIsReverting] = useState(false)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -170,6 +167,7 @@ const TasksList = ({
   const { errorSnackbar } = useSnackbar()
   const queryClient = useQueryClient()
   const [, setUpdateHistory] = useCampaignUpdateHistory()
+  const inFlightTasks = useRef(new Set<string>())
 
   const refreshAfterTaskMutation = async () => {
     await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
@@ -217,7 +215,10 @@ const TasksList = ({
     const { id: taskId, flowType: type, completed } = task
 
     if (completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      const ok = await revertTask(taskId)
+      if (ok) {
+        trackTaskStatusUpdate(task, 'incomplete', 'manualCheckoff')
+      }
       return
     }
 
@@ -246,31 +247,17 @@ const TasksList = ({
     setCompleteModalTask(null)
   }
 
-  const handleRevertOpenChange = (open: boolean) => {
-    if (!open) setRevertConfirmTask(null)
-  }
-
-  const handleRevertConfirm = async () => {
-    if (!revertConfirmTask) return
-    setIsReverting(true)
-    try {
-      const ok = await revertTask(revertConfirmTask.id)
-      if (ok) {
-        trackTaskStatusUpdate(revertConfirmTask, 'incomplete', 'manualCheckoff')
-      }
-    } finally {
-      setIsReverting(false)
-      setRevertConfirmTask(null)
-    }
-  }
-
   const handleCompleteCancel = () => {
     setCompleteModalTask(null)
   }
 
   const handleActionClick = (task: Task) => {
     if (task.completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      void revertTask(task.id).then((ok) => {
+        if (ok) {
+          trackTaskStatusUpdate(task, 'incomplete', 'manualCheckoff')
+        }
+      })
       return
     }
 
@@ -362,6 +349,9 @@ const TasksList = ({
     errorMessage: string,
     body?: Record<string, unknown>,
   ): Promise<boolean> => {
+    if (inFlightTasks.current.has(taskId)) return false
+    inFlightTasks.current.add(taskId)
+
     let succeeded = false
     try {
       const resp = await clientFetch<Task>(route, { taskId, ...body })
@@ -374,6 +364,8 @@ const TasksList = ({
     } catch (error) {
       console.error(error)
       errorSnackbar(errorMessage)
+    } finally {
+      inFlightTasks.current.delete(taskId)
     }
 
     if (succeeded) {
@@ -509,15 +501,14 @@ const TasksList = ({
           type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
+          onComplete={async () => {
+            if (!flowModalTask.task.completed) {
+              await completeTask(flowModalTask.task.id)
+            }
+          }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
-      <RevertTaskDialog
-        open={!!revertConfirmTask}
-        onOpenChange={handleRevertOpenChange}
-        onConfirm={handleRevertConfirm}
-        isLoading={isReverting}
-      />
     </>
   )
 }
