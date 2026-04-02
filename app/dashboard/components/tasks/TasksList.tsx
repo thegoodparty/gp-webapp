@@ -406,9 +406,9 @@ const TasksList = ({
           type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
-          onComplete={() => {
+          onComplete={async () => {
             if (!flowModalTask.task.completed) {
-              completeTask(flowModalTask.task.id)
+              await completeTask(flowModalTask.task.id)
             }
           }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
