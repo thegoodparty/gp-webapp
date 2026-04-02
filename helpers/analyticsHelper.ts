@@ -129,6 +129,15 @@ export const EVENTS = {
 
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
+    CampaignPlan: {
+      GenerationCompleted: 'Dashboard - Campaign Plan Generation Completed',
+      Viewed: 'Dashboard - Campaign Plan Viewed',
+      WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
+      TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
+      TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+      VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
+      VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
+    },
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',
@@ -634,12 +643,15 @@ const getUserProperties = (): Record<string, string> => {
     hubspotId: userCookie.metaData?.hubspotId,
   }
 
-  return Object.entries(properties).reduce((acc, [key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      acc[key] = value
-    }
-    return acc
-  }, {} as Record<string, string>)
+  return Object.entries(properties).reduce(
+    (acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value
+      }
+      return acc
+    },
+    {} as Record<string, string>,
+  )
 }
 
 export const trackEvent = (

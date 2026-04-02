@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Modal from '@shared/utils/Modal'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
@@ -55,6 +55,12 @@ const LogTaskModal = ({
   const [user] = useUser()
   const [value, setValue] = useState<string>()
 
+  useEffect(() => {
+    trackEvent(EVENTS.Dashboard.CampaignPlan.VoterContactDialogViewed, {
+      taskType: resolvedFlowType,
+    })
+  }, [])
+
   const trackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Log Task Contacts', {
@@ -83,6 +89,10 @@ const LogTaskModal = ({
       medium: resolvedFlowType,
       method: 'unknown',
       campaignName: 'null',
+    })
+    trackEvent(EVENTS.Dashboard.CampaignPlan.VoterContactRecorded, {
+      taskType: resolvedFlowType,
+      recipientCount: newAddition,
     })
     await identifyUser(user?.id, {
       voterContacts: Object.values(nextGoals).reduce(

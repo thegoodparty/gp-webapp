@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -29,10 +29,12 @@ import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { identifyUser } from '@shared/utils/analytics'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
 import { useWeekNavigation } from './useWeekNavigation'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
+import { useUser } from '@shared/hooks/useUser'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { useQueryClient } from '@tanstack/react-query'
@@ -82,6 +84,7 @@ const TasksList = ({
     : Infinity
 
   const {
+    selectedWeek,
     currentWeekStart,
     filteredTasks,
     canGoPrevious,
@@ -94,6 +97,58 @@ const TasksList = ({
     electionDateObj,
     daysUntilElection,
   )
+
+  const weeksUntilElection = Math.ceil(daysUntilElection / 7)
+  const navigationDirectionRef = useRef<'previous' | 'next' | null>(null)
+  const prevSelectedWeekRef = useRef(selectedWeek)
+
+  const getWeekRelativePosition = useCallback(
+    (week: number) => {
+      if (week > weeksUntilElection) return 'past'
+      if (week < weeksUntilElection) return 'future'
+      return 'current'
+    },
+    [weeksUntilElection],
+  )
+
+  useEffect(() => {
+    if (
+      navigationDirectionRef.current &&
+      prevSelectedWeekRef.current !== selectedWeek
+    ) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
+        direction: navigationDirectionRef.current,
+        weekRelativePosition: getWeekRelativePosition(selectedWeek),
+      })
+      navigationDirectionRef.current = null
+    }
+    prevSelectedWeekRef.current = selectedWeek
+  }, [selectedWeek, getWeekRelativePosition])
+
+  const handlePreviousWeek = () => {
+    navigationDirectionRef.current = 'previous'
+    goToPrevious()
+  }
+
+  const handleNextWeek = () => {
+    navigationDirectionRef.current = 'next'
+    goToNext()
+  }
+
+  const [user] = useUser()
+
+  useEffect(() => {
+    if (isLegacyList || tasks.length === 0) return
+    trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, {
+      tasksThisWeek: filteredTasks.length,
+      tasksCompletedThisWeek: filteredTasks.filter((t) => t.completed).length,
+    })
+    const totalCompleted = tasks.filter((t) => t.completed).length
+    void identifyUser(user?.id, {
+      campaignPlanTasksTotal: tasks.length,
+      campaignPlanTasksCompleted: totalCompleted,
+    })
+  }, [isLegacyList, tasks.length > 0])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
@@ -126,6 +181,38 @@ const TasksList = ({
     }
   }
 
+  const trackTaskStatusUpdate = (
+    task: Task,
+    statusChange: 'complete' | 'incomplete',
+    source: 'manualCheckoff' | 'schedulingFlow',
+  ) => {
+    if (isLegacyList) return
+    const resolvedType =
+      task.flowType === TASK_TYPES.p2pDisabledText
+        ? TASK_TYPES.text
+        : task.flowType
+    const taskDueDate = task.date ?? null
+    const daysFromDueDate = taskDueDate
+      ? differenceInDays(new Date(), new Date(taskDueDate.replace(/-/g, '/')))
+      : null
+    trackEvent(EVENTS.Dashboard.CampaignPlan.TaskStatusUpdated, {
+      statusChange,
+      taskType: resolvedType,
+      taskName: task.title,
+      taskDueDate,
+      daysFromDueDate,
+      source,
+    })
+    const updatedTasks =
+      statusChange === 'complete'
+        ? tasks.filter((t) => t.completed).length + 1
+        : Math.max(0, tasks.filter((t) => t.completed).length - 1)
+    void identifyUser(user?.id, {
+      campaignPlanTasksTotal: tasks.length,
+      campaignPlanTasksCompleted: updatedTasks,
+    })
+  }
+
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type, completed } = task
 
@@ -135,7 +222,10 @@ const TasksList = ({
     }
 
     if (NON_OUTREACH_TYPES.includes(type)) {
-      await completeTask(taskId)
+      const ok = await completeTask(taskId)
+      if (ok) {
+        trackTaskStatusUpdate(task, 'complete', 'manualCheckoff')
+      }
     } else {
       setCompleteModalTask(task)
     }
@@ -151,6 +241,7 @@ const TasksList = ({
         type: resolvedType,
         quantity: count,
       })
+      trackTaskStatusUpdate(completeModalTask, 'complete', 'manualCheckoff')
     }
     setCompleteModalTask(null)
   }
@@ -163,7 +254,10 @@ const TasksList = ({
     if (!revertConfirmTask) return
     setIsReverting(true)
     try {
-      await revertTask(revertConfirmTask.id)
+      const ok = await revertTask(revertConfirmTask.id)
+      if (ok) {
+        trackTaskStatusUpdate(revertConfirmTask, 'incomplete', 'manualCheckoff')
+      }
     } finally {
       setIsReverting(false)
       setRevertConfirmTask(null)
@@ -181,6 +275,15 @@ const TasksList = ({
     }
 
     const { flowType, proRequired, deadline } = task
+
+    if (!isLegacyList) {
+      const resolvedType =
+        flowType === TASK_TYPES.p2pDisabledText ? TASK_TYPES.text : flowType
+      trackEvent(EVENTS.Dashboard.CampaignPlan.TaskCTAClicked, {
+        taskType: resolvedType,
+      })
+    }
+
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
@@ -324,8 +427,8 @@ const TasksList = ({
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
-              onPrevious={goToPrevious}
-              onNext={goToNext}
+              onPrevious={handlePreviousWeek}
+              onNext={handleNextWeek}
               canGoPrevious={canGoPrevious}
               canGoNext={canGoNext}
             />
