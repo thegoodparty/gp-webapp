@@ -40,7 +40,6 @@ import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { Card, cn } from '@styleguide'
-import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -96,8 +95,6 @@ const TasksList = ({
   )
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
-  const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
-  const [isReverting, setIsReverting] = useState(false)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -130,7 +127,7 @@ const TasksList = ({
     const { id: taskId, flowType: type, completed } = task
 
     if (completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      await revertTask(taskId)
       return
     }
 
@@ -155,28 +152,13 @@ const TasksList = ({
     setCompleteModalTask(null)
   }
 
-  const handleRevertOpenChange = (open: boolean) => {
-    if (!open) setRevertConfirmTask(null)
-  }
-
-  const handleRevertConfirm = async () => {
-    if (!revertConfirmTask) return
-    setIsReverting(true)
-    try {
-      await revertTask(revertConfirmTask.id)
-    } finally {
-      setIsReverting(false)
-      setRevertConfirmTask(null)
-    }
-  }
-
   const handleCompleteCancel = () => {
     setCompleteModalTask(null)
   }
 
   const handleActionClick = (task: Task) => {
     if (task.completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      void revertTask(task.id)
       return
     }
 
@@ -414,12 +396,6 @@ const TasksList = ({
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
-      <RevertTaskDialog
-        open={!!revertConfirmTask}
-        onOpenChange={handleRevertOpenChange}
-        onConfirm={handleRevertConfirm}
-        isLoading={isReverting}
-      />
     </>
   )
 }
