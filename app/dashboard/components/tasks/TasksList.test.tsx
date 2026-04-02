@@ -232,7 +232,10 @@ describe('TasksList revert completion flow', () => {
 
     let resolveFirst!: (v: unknown) => void
     mockClientFetch.mockImplementationOnce(
-      () => new Promise((r) => { resolveFirst = r }),
+      () =>
+        new Promise((r) => {
+          resolveFirst = r
+        }),
     )
 
     render(
