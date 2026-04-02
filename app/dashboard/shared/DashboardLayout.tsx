@@ -17,7 +17,6 @@ import {
   useSidebar,
 } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 
 interface DashboardLayoutProps {
@@ -46,9 +45,6 @@ const DashboardLayout = ({
     useImpersonateUser()
   const isImpersonating = !!impersonateUser
   const currentPath = pathname || hookPathname
-  const { ready: flagReady, on: navRefreshEnabled } =
-    useFlagOn('win-serve-split')
-
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
   const goals =
@@ -81,78 +77,47 @@ const DashboardLayout = ({
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
 
-  if (!flagReady) {
-    return null
-  }
-
-  if (navRefreshEnabled) {
-    return (
-      <EcanvasserProvider>
-        <SidebarProvider>
-          {!hideMenu && (
-            <Sidebar>
-              <DashboardMenu pathname={currentPath} />
-            </Sidebar>
-          )}
-          <SidebarInset className="bg-[#f5f5f5]">
-            {!hideMenu && <MobileMenuTrigger />}
-            {isImpersonating && (
-              <div className="bg-white p-4 flex items-center justify-between gap-2">
-                <p className="text-sm font-opensans text-error-main">
-                  You are currently impersonating user{' '}
-                  <b>{impersonateUser?.email}</b>.
-                </p>
-                <Button
-                  className="bg-error-main border-error-main"
-                  size="small"
-                  onClick={() => {
-                    clearImpersonation()
-                    window.location.href = '/admin'
-                  }}
-                >
-                  Stop Impersonating
-                </Button>
-              </div>
-            )}
-            <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
-              {activeCampaign && showAlert && (
-                <AlertSection campaign={activeCampaign} />
-              )}
-              <ProUpgradePrompt
-                campaign={activeCampaign}
-                user={user}
-                pathname={currentPath || undefined}
-              />
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </EcanvasserProvider>
-    )
-  }
-
   return (
     <EcanvasserProvider>
-      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
+      <SidebarProvider>
         {!hideMenu && (
-          <div className="hidden lg:block">
+          <Sidebar>
             <DashboardMenu pathname={currentPath} />
-          </div>
+          </Sidebar>
         )}
-        <main
-          className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
-        >
-          {activeCampaign && showAlert && (
-            <AlertSection campaign={activeCampaign} />
+        <SidebarInset className="bg-[#f5f5f5]">
+          {!hideMenu && <MobileMenuTrigger />}
+          {isImpersonating && (
+            <div className="bg-white p-4 flex items-center justify-between gap-2">
+              <p className="text-sm font-opensans text-error-main">
+                You are currently impersonating user{' '}
+                <b>{impersonateUser?.email}</b>.
+              </p>
+              <Button
+                className="bg-error-main border-error-main"
+                size="small"
+                onClick={() => {
+                  clearImpersonation()
+                  window.location.href = '/admin'
+                }}
+              >
+                Stop Impersonating
+              </Button>
+            </div>
           )}
-          <ProUpgradePrompt
-            campaign={activeCampaign}
-            user={user}
-            pathname={currentPath || undefined}
-          />
-          {children}
-        </main>
-      </div>
+          <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
+            {activeCampaign && showAlert && (
+              <AlertSection campaign={activeCampaign} />
+            )}
+            <ProUpgradePrompt
+              campaign={activeCampaign}
+              user={user}
+              pathname={currentPath || undefined}
+            />
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </EcanvasserProvider>
   )
 }

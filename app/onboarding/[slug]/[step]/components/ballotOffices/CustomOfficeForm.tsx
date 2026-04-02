@@ -121,9 +121,9 @@ export default function CustomOfficeForm({
 }: CustomOfficeFormProps): React.JSX.Element {
   const [state, setState] = useState<CustomOfficeFormState>({
     state: campaign?.details?.state || '',
-    office: campaign?.details?.office || '',
+    office: '',
     officeTermLength: campaign?.details?.officeTermLength || '',
-    otherOffice: campaign?.details?.otherOffice || '',
+    otherOffice: '',
     district: campaign?.details?.district || '',
     city: campaign?.details?.city || '',
     electionDate: campaign?.details?.electionDate || '',
@@ -163,8 +163,6 @@ export default function CustomOfficeForm({
       ...campaign?.details,
       ...state,
       raceId: null,
-      // Legacy compatibility write only. Do not use details.positionId for reads.
-      positionId: null,
       electionId: null,
       ballotOffice: null,
       electionDate: state.electionDate,

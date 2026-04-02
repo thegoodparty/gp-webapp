@@ -127,8 +127,6 @@ export interface CampaignDetails {
   city?: string | null
   county?: string | null
   normalizedOffice?: string | null
-  otherOffice?: string
-  office?: string
   ballotOffice?: boolean | null
   party?: string
   otherParty?: string
@@ -151,9 +149,6 @@ export interface CampaignDetails {
   officeTermLength?: string
   partisanType?: string
   priorElectionDates?: string[]
-  // Legacy BallotReady position ID: keep writing for compatibility.
-  // Read identity from raceId + electionId instead.
-  positionId?: string | null
   electionId?: string | null
   tier?: string
   einNumber?: string | null
@@ -342,15 +337,21 @@ export interface ViabilityScore {
   tier?: string
 }
 
+/**
+ * Turnout/district fields no longer stored on PathToVictoryData, but
+ * returned in API responses via the live-metrics overlay.
+ */
+export interface PathToVictoryLiveFields {
+  projectedTurnout?: number
+  winNumber?: number
+  voterContactGoal?: number
+}
+
 export interface PathToVictoryData {
   p2vStatus?: string
   p2vAttempts?: number
   p2vCompleteDate?: string
   completedBy?: number
-  electionType?: string
-  electionLocation?: string
-  voterContactGoal?: number
-  winNumber?: number
   p2vNotNeeded?: boolean
   totalRegisteredVoters?: number
   republicans?: number
@@ -363,11 +364,8 @@ export interface PathToVictoryData {
   africanAmerican?: number
   hispanic?: number
   averageTurnout?: number
-  projectedTurnout?: number
   viability?: ViabilityScore
   source?: string
-  districtId?: string
-  districtManuallySet?: boolean
   officeContextFingerprint?: string
   voteGoal?: number
   voterProjection?: number
