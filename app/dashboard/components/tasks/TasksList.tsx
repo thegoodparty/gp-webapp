@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -101,56 +101,56 @@ const TasksList = ({
   )
 
   const weeksUntilElection = Math.ceil(daysUntilElection / 7)
-  const navigationDirectionRef = useRef<'previous' | 'next' | null>(null)
-  const prevSelectedWeekRef = useRef(selectedWeek)
 
-  const getWeekRelativePosition = useCallback(
-    (week: number) => {
-      if (week > weeksUntilElection) return 'past'
-      if (week < weeksUntilElection) return 'future'
-      return 'current'
-    },
-    [weeksUntilElection],
-  )
-
-  useEffect(() => {
-    if (
-      navigationDirectionRef.current &&
-      prevSelectedWeekRef.current !== selectedWeek
-    ) {
-      trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
-        direction: navigationDirectionRef.current,
-        weekRelativePosition: getWeekRelativePosition(selectedWeek),
-      })
-      navigationDirectionRef.current = null
-    }
-    prevSelectedWeekRef.current = selectedWeek
-  }, [selectedWeek, getWeekRelativePosition])
+  const getWeekRelativePosition = (week: number) => {
+    if (week > weeksUntilElection) return 'past'
+    if (week < weeksUntilElection) return 'future'
+    return 'current'
+  }
 
   const handlePreviousWeek = () => {
-    navigationDirectionRef.current = 'previous'
+    const nextWeek = selectedWeek - 1
+    trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
+      direction: 'previous',
+      weekRelativePosition: getWeekRelativePosition(nextWeek),
+    })
     goToPrevious()
   }
 
   const handleNextWeek = () => {
-    navigationDirectionRef.current = 'next'
+    const nextWeek = selectedWeek + 1
+    trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
+      direction: 'next',
+      weekRelativePosition: getWeekRelativePosition(nextWeek),
+    })
     goToNext()
   }
 
   const [user] = useUser()
 
+  const tasksCount = tasks.length
+  const tasksCompletedCount = tasks.filter((t) => t.completed).length
+  const filteredTasksCount = filteredTasks.length
+  const filteredCompletedCount = filteredTasks.filter((t) => t.completed).length
+
   useEffect(() => {
-    if (isLegacyList || tasks.length === 0) return
+    if (isLegacyList || tasksCount === 0) return
     trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, {
-      tasksThisWeek: filteredTasks.length,
-      tasksCompletedThisWeek: filteredTasks.filter((t) => t.completed).length,
+      tasksThisWeek: filteredTasksCount,
+      tasksCompletedThisWeek: filteredCompletedCount,
     })
-    const totalCompleted = tasks.filter((t) => t.completed).length
     void identifyUser(user?.id, {
-      campaignPlanTasksTotal: tasks.length,
-      campaignPlanTasksCompleted: totalCompleted,
+      campaignPlanTasksTotal: tasksCount,
+      campaignPlanTasksCompleted: tasksCompletedCount,
     })
-  }, [filteredTasks, isLegacyList, tasks, user?.id])
+  }, [
+    filteredTasksCount,
+    filteredCompletedCount,
+    isLegacyList,
+    tasksCount,
+    tasksCompletedCount,
+    user?.id,
+  ])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
