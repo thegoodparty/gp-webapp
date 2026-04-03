@@ -67,7 +67,6 @@ const campaign = {
     zip: '78701',
     raceId: 'race-1',
     electionId: 'elec-1',
-    positionId: 'pos-1',
   },
   aiContent: {},
   vendorTsData: {},
@@ -78,7 +77,7 @@ const campaign = {
 } as Campaign
 
 describe('BallotRaces', () => {
-  it('clears raceId/electionId/positionId when saving custom office', async () => {
+  it('clears raceId/electionId when saving custom office', async () => {
     render(
       <BallotRaces
         campaign={campaign}
@@ -95,7 +94,6 @@ describe('BallotRaces', () => {
       expect(mockUpdateCampaign).toHaveBeenCalledWith(
         expect.arrayContaining([
           { key: 'details.raceId', value: null },
-          { key: 'details.positionId', value: null },
           { key: 'details.electionId', value: null },
         ]),
       )
