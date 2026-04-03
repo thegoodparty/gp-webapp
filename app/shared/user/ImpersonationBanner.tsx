@@ -1,14 +1,15 @@
 'use client'
 
-import { useAuth, useClerk } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
+import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
 
 const GP_ADMIN_URL = process.env.NEXT_PUBLIC_GP_ADMIN_URL ?? '/'
 
 export default function ImpersonationBanner() {
-  const { actor } = useAuth()
+  const isImpersonating = useIsImpersonating()
   const { signOut } = useClerk()
 
-  if (!actor) return null
+  if (!isImpersonating) return null
 
   async function handleStopImpersonating() {
     await signOut()
