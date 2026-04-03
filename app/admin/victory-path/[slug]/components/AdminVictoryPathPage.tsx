@@ -234,8 +234,7 @@ export default function AdminVictoryPathPage(
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { pathToVictory: p2vObject, details } = campaign || {}
   const pathToVictory = useMemo(
-    () =>
-      (p2vObject?.data || {}) as PathToVictoryData,
+    () => (p2vObject?.data || {}) as PathToVictoryData,
     [p2vObject],
   )
 

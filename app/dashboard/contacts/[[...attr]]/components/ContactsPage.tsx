@@ -23,9 +23,7 @@ export default function ContactsPage() {
       <DashboardLayout>
         <Paper className="h-full">
           <div className="flex flex-col">
-            <h1 className="text-3xl font-semibold">
-              Constituents
-            </h1>
+            <h1 className="text-3xl font-semibold">Constituents</h1>
             <p className="text-lg font-normal text-muted-foreground">
               Manage and filter on your constituent list
             </p>
