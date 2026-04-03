@@ -26,7 +26,10 @@ import {
 import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
-import { TASK_TYPES } from '../../shared/constants/tasks.const'
+import {
+  getCampaignPlanEventTaskType,
+  TASK_TYPES,
+} from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
@@ -147,7 +150,7 @@ const TasksList = ({
       campaignPlanTasksTotal: tasks.length,
       campaignPlanTasksCompleted: totalCompleted,
     })
-  }, [isLegacyList, tasks.length > 0])
+  }, [filteredTasks, isLegacyList, tasks, user?.id])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
@@ -185,22 +188,21 @@ const TasksList = ({
     source: 'manualCheckoff' | 'schedulingFlow',
   ) => {
     if (isLegacyList) return
-    const resolvedType =
-      task.flowType === TASK_TYPES.p2pDisabledText
-        ? TASK_TYPES.text
-        : task.flowType
+    const campaignPlanTaskType = getCampaignPlanEventTaskType(task.flowType)
     const taskDueDate = task.date ?? null
     const daysFromDueDate = taskDueDate
       ? differenceInDays(new Date(), new Date(taskDueDate.replace(/-/g, '/')))
       : null
-    trackEvent(EVENTS.Dashboard.CampaignPlan.TaskStatusUpdated, {
-      statusChange,
-      taskType: resolvedType,
-      taskName: task.title,
-      taskDueDate,
-      daysFromDueDate,
-      source,
-    })
+    if (campaignPlanTaskType) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.TaskStatusUpdated, {
+        statusChange,
+        taskType: campaignPlanTaskType,
+        taskName: task.title,
+        taskDueDate,
+        daysFromDueDate,
+        source,
+      })
+    }
     const updatedTasks =
       statusChange === 'complete'
         ? tasks.filter((t) => t.completed).length + 1
@@ -232,17 +234,19 @@ const TasksList = ({
     }
   }
 
-  const handleCompleteSubmit = (count: number) => {
+  const handleCompleteSubmit = async (count: number) => {
     if (completeModalTask) {
       const resolvedType =
         completeModalTask.flowType === TASK_TYPES.p2pDisabledText
           ? TASK_TYPES.text
           : completeModalTask.flowType
-      completeTask(completeModalTask.id, {
+      const ok = await completeTask(completeModalTask.id, {
         type: resolvedType,
         quantity: count,
       })
-      trackTaskStatusUpdate(completeModalTask, 'complete', 'manualCheckoff')
+      if (ok) {
+        trackTaskStatusUpdate(completeModalTask, 'complete', 'manualCheckoff')
+      }
     }
     setCompleteModalTask(null)
   }
@@ -264,11 +268,12 @@ const TasksList = ({
     const { flowType, proRequired, deadline } = task
 
     if (!isLegacyList) {
-      const resolvedType =
-        flowType === TASK_TYPES.p2pDisabledText ? TASK_TYPES.text : flowType
-      trackEvent(EVENTS.Dashboard.CampaignPlan.TaskCTAClicked, {
-        taskType: resolvedType,
-      })
+      const campaignPlanTaskType = getCampaignPlanEventTaskType(flowType)
+      if (campaignPlanTaskType) {
+        trackEvent(EVENTS.Dashboard.CampaignPlan.TaskCTAClicked, {
+          taskType: campaignPlanTaskType,
+        })
+      }
     }
 
     const isTextCompliant =
@@ -454,6 +459,7 @@ const TasksList = ({
             onSubmit={handleCompleteSubmit}
             onClose={handleCompleteCancel}
             flowType={completeModalTask.flowType}
+            trackCampaignPlanEvents={!isLegacyList}
           />
         )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
@@ -503,7 +509,14 @@ const TasksList = ({
           onClose={() => setFlowModalTask(null)}
           onComplete={async () => {
             if (!flowModalTask.task.completed) {
-              await completeTask(flowModalTask.task.id)
+              const ok = await completeTask(flowModalTask.task.id)
+              if (ok) {
+                trackTaskStatusUpdate(
+                  flowModalTask.task,
+                  'complete',
+                  'schedulingFlow',
+                )
+              }
             }
           }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}

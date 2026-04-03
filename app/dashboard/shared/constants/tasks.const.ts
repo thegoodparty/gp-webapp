@@ -46,6 +46,24 @@ export const DISPLAY_TASK_TYPES: Record<
   compliance: 'Compliance',
 }
 
+export type CampaignPlanEventTaskType = 'text' | 'robocall' | 'event'
+
+export const getCampaignPlanEventTaskType = (
+  taskType: string,
+): CampaignPlanEventTaskType | null => {
+  switch (taskType) {
+    case TASK_TYPES.text:
+    case TASK_TYPES.p2pDisabledText:
+      return 'text'
+    case TASK_TYPES.robocall:
+      return 'robocall'
+    case TASK_TYPES.events:
+      return 'event'
+    default:
+      return null
+  }
+}
+
 type TaskTypeKey = keyof typeof TASK_TYPES
 type LegacyTaskTypeKey = keyof typeof LEGACY_TASK_TYPES
 

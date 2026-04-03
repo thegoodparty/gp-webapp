@@ -20,6 +20,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { useTaskGenerationStream } from './useTaskGenerationStream'
 import { FailedToGenerate } from './FailedToGenerate'
 import TestingRegenerate from './TestingRegenerate'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -33,6 +34,8 @@ export default function CampaignManager({
   const [campaign] = useCampaign()
   const queryClient = useQueryClient()
   const generatingRef = useRef(false)
+  const generatedInSessionRef = useRef(false)
+  const trackedGenerationCompleteRef = useRef(false)
   const showLoadingStateCookie = getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)
   const [showLoadingState, setShowLoadingState] = useState(
     () => !showLoadingStateCookie,
@@ -64,6 +67,13 @@ export default function CampaignManager({
     useTaskGenerationStream(onTasksReceived)
 
   useEffect(() => {
+    if (isGenerating) {
+      generatedInSessionRef.current = true
+      trackedGenerationCompleteRef.current = false
+    }
+  }, [isGenerating])
+
+  useEffect(() => {
     if (isLoadingTasks) return
     if (tasks.length > 0) {
       generatingRef.current = false
@@ -85,6 +95,18 @@ export default function CampaignManager({
       generatingRef.current = false
     }
   }, [error])
+
+  useEffect(() => {
+    if (
+      !showLoadingState &&
+      tasks.length > 0 &&
+      generatedInSessionRef.current &&
+      !trackedGenerationCompleteRef.current
+    ) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.GenerationCompleted)
+      trackedGenerationCompleteRef.current = true
+    }
+  }, [showLoadingState, tasks.length])
 
   if (!campaign) {
     return null

@@ -3,7 +3,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { API_VERSION_PREFIX } from 'appEnv'
 import type { Task } from '../tasks/TaskItem'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 interface TaskGenerationProgress {
   progress: number
@@ -114,7 +113,6 @@ export function useTaskGenerationStream(
             }))
           } else if (event.type === 'complete' && event.tasks) {
             generationFinished = true
-            trackEvent(EVENTS.Dashboard.CampaignPlan.GenerationCompleted)
             onTasksReceived(event.tasks)
             setState({
               isGenerating: false,
