@@ -174,8 +174,10 @@ export default function BallotRaces({
     updated: Campaign & { currentStep?: number },
   ) => {
     const baseAttr = [
+      { key: 'details.otherOffice', value: '' },
       { key: 'details.raceId', value: null },
       { key: 'details.electionId', value: null },
+      { key: 'details.office', value: updated.details.office },
       { key: 'details.city', value: updated.details.city },
       { key: 'details.district', value: updated.details.district },
       {

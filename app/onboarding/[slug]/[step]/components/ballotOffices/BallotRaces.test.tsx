@@ -77,7 +77,7 @@ const campaign = {
 } as Campaign
 
 describe('BallotRaces', () => {
-  it('clears raceId/electionId when saving custom office', async () => {
+  it('clears raceId/electionId and sends office fields when saving custom office', async () => {
     render(
       <BallotRaces
         campaign={campaign}
@@ -93,8 +93,10 @@ describe('BallotRaces', () => {
     await waitFor(() => {
       expect(mockUpdateCampaign).toHaveBeenCalledWith(
         expect.arrayContaining([
+          { key: 'details.otherOffice', value: '' },
           { key: 'details.raceId', value: null },
           { key: 'details.electionId', value: null },
+          { key: 'details.office', value: 'School Board' },
         ]),
       )
     })

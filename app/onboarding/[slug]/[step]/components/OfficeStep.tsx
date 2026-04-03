@@ -148,9 +148,12 @@ export default function OfficeStep({
     const { position, election, id, filingPeriods } = state.ballotOffice
 
     const attr = [
+      { key: 'details.positionId', value: position?.id },
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
+      { key: 'details.office', value: 'Other' },
+      { key: 'details.otherOffice', value: position?.name },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
