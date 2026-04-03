@@ -28,6 +28,13 @@ function hexToRgba(hex) {
   return `rgba(${r},${g},${b},${a})`
 }
 
+function formatHex(hex) {
+  const clean = hex.replace('#', '')
+  if (clean.length !== 8) return hex.toUpperCase()
+  const alpha = Math.round((parseInt(clean.slice(6, 8), 16) / 255) * 100)
+  return `#${clean.slice(0, 6).toUpperCase()} / ${alpha}%`
+}
+
 function resolveColor(cssValue) {
   if (!cssValue) return ''
   const trimmed = cssValue.trim()
@@ -170,10 +177,9 @@ function Swatch({
               fontFamily: 'monospace',
               color: _mutedForegroundColor,
               margin: 0,
-              textTransform: 'uppercase',
             }}
           >
-            {hex}
+            {formatHex(hex)}
           </p>
           <p
             style={{
@@ -409,7 +415,7 @@ const TOKEN_GROUP_META = {
     description:
       'Foundational surface tokens — backgrounds, foregrounds, borders, focus rings.',
   },
-  components: {
+  component: {
     title: 'Components',
     description: 'Component-specific tokens — cards, inputs, tooltips.',
   },
@@ -434,7 +440,7 @@ export const ThemeColors = ({ mode }) => {
     setTokens({
       base: readCSSTokenGroup(el, 'base', BASE_TOKEN_NAMES),
       theme: readCSSTokenGroup(el, 'theme', THEME_TOKEN_NAMES),
-      components: readCSSTokenGroup(el, 'component', COMPONENT_TOKEN_NAMES),
+      component: readCSSTokenGroup(el, 'component', COMPONENT_TOKEN_NAMES),
       data: readCSSTokenGroup(el, 'data', DATA_TOKEN_NAMES),
       sidebar: readCSSTokenGroup(el, 'component-sidebar', SIDEBAR_TOKEN_NAMES),
     })
@@ -443,7 +449,7 @@ export const ThemeColors = ({ mode }) => {
   const pageBg =
     tokens?.base?.['background']?.hex ?? (isDark ? '#0a0a0a' : '#ffffff')
   const cardBg =
-    tokens?.components?.['card-base']?.hex ?? (isDark ? '#171717' : '#ffffff')
+    tokens?.component?.['card-base']?.hex ?? (isDark ? '#171717' : '#ffffff')
   const borderColor =
     tokens?.base?.['border']?.hex ?? (isDark ? '#525252' : '#e5e5e5')
   const foregroundColor =
@@ -489,7 +495,7 @@ export const ThemeColors = ({ mode }) => {
               >
                 {groupKey === 'theme' ||
                 groupKey === 'base' ||
-                groupKey === 'components' ? (
+                groupKey === 'component' ? (
                   <div
                     style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
                   >

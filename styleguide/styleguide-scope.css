@@ -352,22 +352,22 @@
    */
   --theme-primary: var(--tw-blue-300);
   --theme-primary-foreground: var(--tw-neutral-950);
-  --theme-primary-focus: #93c5fd80;
+  --theme-primary-focus: color-mix(in srgb, var(--tw-blue-300) 50%, transparent);
   --theme-secondary: var(--goodparty-cream);
   --theme-secondary-foreground: var(--tw-neutral-950);
-  --theme-secondary-focus: #fcf8f380;
+  --theme-secondary-focus: color-mix(in srgb, var(--goodparty-cream) 50%, transparent);
   --theme-destructive: var(--color-red-300);
   --theme-destructive-foreground: var(--tw-neutral-950);
-  --theme-destructive-focus: #f56c6a80;
+  --theme-destructive-focus: color-mix(in srgb, var(--color-red-300) 50%, transparent);
   --theme-success: var(--color-green-300);
   --theme-success-foreground: var(--tw-neutral-950);
-  --theme-success-focus: #86e38280;
+  --theme-success-focus: color-mix(in srgb, var(--color-green-300) 50%, transparent);
   --theme-info: var(--color-blue-300);
   --theme-info-foreground: var(--tw-neutral-950);
-  --theme-info-focus: #75affe80;
+  --theme-info-focus: color-mix(in srgb, var(--color-blue-300) 50%, transparent);
   --theme-warning: var(--color-warning-400);
   --theme-warning-foreground: #000000;
-  --theme-warning-focus: #ffb93f80;
+  --theme-warning-focus: color-mix(in srgb, var(--color-warning-400) 50%, transparent);
   --theme-link: var(--tw-blue-300);
 
   /*
@@ -381,7 +381,7 @@
   --component-input-base: var(--tw-neutral-950);
   --component-input-active: var(--tw-blue-300);
   --component-input-foreground: var(--tw-neutral-950);
-  --component-input-focus: #93c5fd80;
+  --component-input-focus: color-mix(in srgb, var(--tw-blue-300) 50%, transparent);
   --component-tooltip-base: var(--tw-neutral-100);
   --component-tooltip-foreground: var(--tw-neutral-950);
 

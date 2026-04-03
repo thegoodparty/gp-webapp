@@ -778,7 +778,7 @@
   --theme-warning-foreground: #000000;
   --theme-warning-focus: color-mix(
     in srgb,
-    var(--color-warning-500) 30%,
+    var(--color-warning-600) 30%,
     transparent
   );
   --theme-link: var(--tw-blue-500);
