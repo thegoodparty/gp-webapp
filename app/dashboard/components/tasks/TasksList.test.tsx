@@ -32,7 +32,24 @@ vi.mock('app/dashboard/components/DashboardHeader', () => ({
 vi.mock('helpers/analyticsHelper', () => ({
   trackEvent: vi.fn(),
   buildTrackingAttrs: vi.fn(() => ({})),
-  EVENTS: { Outreach: { P2PCompliance: {} } },
+  EVENTS: {
+    Outreach: { P2PCompliance: {} },
+    Dashboard: {
+      CampaignPlan: {
+        GenerationCompleted: 'Dashboard - Campaign Plan Generation Completed',
+        Viewed: 'Dashboard - Campaign Plan Viewed',
+        WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
+        TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
+        TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+        VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
+        VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
+      },
+    },
+  },
+}))
+
+vi.mock('@shared/utils/analytics', () => ({
+  identifyUser: vi.fn(),
 }))
 
 vi.mock('@styleguide', async (importOriginal) => {
