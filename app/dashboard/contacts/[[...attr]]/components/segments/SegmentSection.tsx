@@ -24,7 +24,7 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useShowContactProModal } from '../../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
 import { LuPencil } from 'react-icons/lu'
-import { type SegmentResponse } from '../shared/ajaxActions'
+import { type SegmentResponse } from '../shared/contacts-types'
 
 type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
 

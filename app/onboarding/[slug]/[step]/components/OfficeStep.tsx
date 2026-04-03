@@ -76,9 +76,6 @@ async function runPostOfficeStepUpdates(
   slug: string | undefined = undefined,
 ): Promise<void> {
   await updateCampaign(attr, slug)
-  // The API handles P2V record creation and silver enqueue in all cases
-  // (gold failure, gold success without turnout, etc.), so the webapp
-  // does not need to enqueue separately.
   await updateRaceTargetDetails(slug)
 }
 

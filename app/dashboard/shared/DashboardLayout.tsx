@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode, useEffect } from 'react'
+import Link from 'next/link'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
@@ -18,6 +19,7 @@ import {
 } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
+import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -127,11 +129,13 @@ const MobileMenuTrigger = () => {
   return (
     <>
       <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-        <img
-          src="/images/logo/heart.svg"
-          alt="GoodParty.org"
-          className="h-6 w-8 object-contain"
-        />
+        <Link href="/dashboard">
+          <img
+            src="/images/logo/heart.svg"
+            alt="GoodParty.org"
+            className="h-6 w-8 object-contain"
+          />
+        </Link>
         <button
           data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -35,8 +35,11 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
+import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { Card, cn } from '@styleguide'
-import RevertTaskDialog from './RevertTaskDialog'
 
 const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
@@ -84,11 +87,14 @@ const TasksList = ({
     canGoNext,
     goToPrevious,
     goToNext,
-  } = useWeekNavigation(tasks, tasksProp, electionDateObj, daysUntilElection)
+  } = useWeekNavigation(
+    tasks,
+    String(campaign.id),
+    electionDateObj,
+    daysUntilElection,
+  )
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
-  const [revertConfirmTask, setRevertConfirmTask] = useState<Task | null>(null)
-  const [isReverting, setIsReverting] = useState(false)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -104,12 +110,25 @@ const TasksList = ({
     ReturnType<typeof buildTrackingAttrs>
   >({})
   const { errorSnackbar } = useSnackbar()
+  const queryClient = useQueryClient()
+  const [, setUpdateHistory] = useCampaignUpdateHistory()
+  const inFlightTasks = useRef(new Set<string>())
+
+  const refreshAfterTaskMutation = async () => {
+    await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+    const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
+      apiRoutes.campaign.updateHistory.list,
+    )
+    if ('ok' in resp && resp.ok) {
+      setUpdateHistory(resp.data || [])
+    }
+  }
 
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type, completed } = task
 
     if (completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      await revertTask(taskId)
       return
     }
 
@@ -120,26 +139,18 @@ const TasksList = ({
     }
   }
 
-  const handleCompleteSubmit = (_count: number) => {
+  const handleCompleteSubmit = (count: number) => {
     if (completeModalTask) {
-      completeTask(completeModalTask.id)
+      const resolvedType =
+        completeModalTask.flowType === TASK_TYPES.p2pDisabledText
+          ? TASK_TYPES.text
+          : completeModalTask.flowType
+      completeTask(completeModalTask.id, {
+        type: resolvedType,
+        quantity: count,
+      })
     }
     setCompleteModalTask(null)
-  }
-
-  const handleRevertOpenChange = (open: boolean) => {
-    if (!open) setRevertConfirmTask(null)
-  }
-
-  const handleRevertConfirm = async () => {
-    if (!revertConfirmTask) return
-    setIsReverting(true)
-    try {
-      await revertTask(revertConfirmTask.id)
-    } finally {
-      setIsReverting(false)
-      setRevertConfirmTask(null)
-    }
   }
 
   const handleCompleteCancel = () => {
@@ -148,7 +159,7 @@ const TasksList = ({
 
   const handleActionClick = (task: Task) => {
     if (task.completed && !isLegacyList) {
-      setRevertConfirmTask(task)
+      void revertTask(task.id)
       return
     }
 
@@ -229,27 +240,46 @@ const TasksList = ({
     route: ApiRoute,
     taskId: string,
     errorMessage: string,
+    body?: Record<string, unknown>,
   ): Promise<boolean> => {
+    if (inFlightTasks.current.has(taskId)) return false
+    inFlightTasks.current.add(taskId)
+
+    let succeeded = false
     try {
-      const resp = await clientFetch<Task>(route, { taskId })
-      if (resp.ok) {
-        replaceTask(taskId, resp.data)
-        return true
+      const resp = await clientFetch<Task>(route, { taskId, ...body })
+      if ('ok' in resp && resp.ok) {
+        replaceTask(taskId, (resp as { ok: true; data: Task }).data)
+        succeeded = true
+      } else {
+        errorSnackbar(errorMessage)
       }
-      errorSnackbar(errorMessage)
-      return false
     } catch (error) {
       console.error(error)
       errorSnackbar(errorMessage)
-      return false
+    } finally {
+      inFlightTasks.current.delete(taskId)
     }
+
+    if (succeeded) {
+      refreshAfterTaskMutation().catch(console.error)
+    }
+    return succeeded
   }
 
-  const completeTask = (taskId: string) => {
+  const completeTask = (
+    taskId: string,
+    voterContact?: { type: string; quantity: number },
+  ) => {
     const route = isLegacyList
       ? apiRoutes.campaign.legacyTasks.complete
       : apiRoutes.campaign.tasks.complete
-    return sendTaskUpdate(route, taskId, 'Failed to complete task')
+    return sendTaskUpdate(
+      route,
+      taskId,
+      'Failed to complete task',
+      voterContact,
+    )
   }
 
   const revertTask = (taskId: string) =>
@@ -364,15 +394,14 @@ const TasksList = ({
           type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
+          onComplete={async () => {
+            if (!flowModalTask.task.completed) {
+              await completeTask(flowModalTask.task.id)
+            }
+          }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}
-      <RevertTaskDialog
-        open={!!revertConfirmTask}
-        onOpenChange={handleRevertOpenChange}
-        onConfirm={handleRevertConfirm}
-        isLoading={isReverting}
-      />
     </>
   )
 }
