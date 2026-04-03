@@ -47,7 +47,7 @@ vi.mock('./CantFindRaceModal', () => ({
             officeTermLength: '4 years',
             state: 'TX',
           },
-        } as Campaign)
+        } as unknown as Campaign)
       }
     >
       Save custom office

@@ -65,6 +65,7 @@ import {
   OrganizationPicker,
   useOrganization,
 } from '@shared/organization-picker'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 interface MenuItem {
   id: string
@@ -81,8 +82,6 @@ interface MenuItem {
 
 interface DashboardMenuProps {
   pathname: string | null
-  toggleCallback?: () => void
-  mobileMode?: boolean
 }
 
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
@@ -235,8 +234,6 @@ const getDashboardMenuItems = (
 
 export default function DashboardMenu({
   pathname,
-  toggleCallback,
-  mobileMode,
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()

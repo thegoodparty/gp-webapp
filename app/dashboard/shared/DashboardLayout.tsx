@@ -19,7 +19,6 @@ import {
 } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
-import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 interface DashboardLayoutProps {
   children: ReactNode

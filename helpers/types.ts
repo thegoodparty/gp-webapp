@@ -337,16 +337,6 @@ export interface ViabilityScore {
   tier?: string
 }
 
-/**
- * Turnout/district fields no longer stored on PathToVictoryData, but
- * returned in API responses via the live-metrics overlay.
- */
-export interface PathToVictoryLiveFields {
-  projectedTurnout?: number
-  winNumber?: number
-  voterContactGoal?: number
-}
-
 export interface PathToVictoryData {
   p2vStatus?: string
   p2vAttempts?: number
@@ -373,6 +363,9 @@ export interface PathToVictoryData {
   budgetHigh?: number
   voterMap?: string
   finalVotes?: number
+  projectedTurnout?: number
+  winNumber?: number
+  voterContactGoal?: number
 }
 
 export interface PathToVictory {

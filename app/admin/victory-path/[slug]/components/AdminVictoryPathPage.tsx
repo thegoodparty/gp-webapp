@@ -18,10 +18,7 @@ import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSe
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import type {
-  PathToVictoryData,
-  PathToVictoryLiveFields,
-} from 'helpers/types'
+import type { PathToVictoryData } from 'helpers/types'
 
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
@@ -238,7 +235,7 @@ export default function AdminVictoryPathPage(
   const { pathToVictory: p2vObject, details } = campaign || {}
   const pathToVictory = useMemo(
     () =>
-      (p2vObject?.data || {}) as PathToVictoryData & PathToVictoryLiveFields,
+      (p2vObject?.data || {}) as PathToVictoryData,
     [p2vObject],
   )
 
