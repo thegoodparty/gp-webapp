@@ -643,15 +643,12 @@ const getUserProperties = (): Record<string, string> => {
     hubspotId: userCookie.metaData?.hubspotId,
   }
 
-  return Object.entries(properties).reduce(
-    (acc, [key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        acc[key] = value
-      }
-      return acc
-    },
-    {} as Record<string, string>,
-  )
+  return Object.entries(properties).reduce((acc, [key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      acc[key] = value
+    }
+    return acc
+  }, {} as Record<string, string>)
 }
 
 export const trackEvent = (
