@@ -17,11 +17,13 @@ export default function HeaderSection() {
   return (
     <div className="flex flex-col gap-1">
       <h1 className="text-3xl font-semibold font-opensans">
-        Hi {user?.firstName},
+        Hi {user?.firstName}
       </h1>
       <div className="text-sm font-opensans">
-        {timeUntilElection &&
-          `${timeUntilElection} until your ${electionLabel}`}
+        {timeUntilElection === 'election-day'
+          ? 'Today is Election Day!'
+          : timeUntilElection &&
+            `${timeUntilElection} until your ${electionLabel}`}
       </div>
     </div>
   )

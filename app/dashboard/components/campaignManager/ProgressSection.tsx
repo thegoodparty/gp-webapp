@@ -25,9 +25,9 @@ export default function ProgressSection() {
   )
   const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
   return (
-    <Card className="p-6 shadow-none">
-      <div className="flex w-full justify-between items-center mb-2 border-b pb-6">
-        <div className="text-lg font-semibold font-opensans">
+    <Card className="gap-0 p-0">
+      <div className="flex flex-col md:flex-row w-full md:justify-between md:items-center gap-1 border-b p-6">
+        <div className="text-lg font-semibold font-opensans whitespace-nowrap">
           Your campaign progress
         </div>
         <div
@@ -37,15 +37,17 @@ export default function ProgressSection() {
           Record voter contacts
         </div>
       </div>
-      <Progress value={progress} className="w-full" />
-      <div className="flex w-full justify-between items-center text-sm">
-        <div>{numberFormatter(contacted)} voters contacted</div>
-        <div
-          onClick={toggleModalOpen}
-          className="cursor-pointer flex items-center gap-2"
-        >
-          <div>{numberFormatter(needed)} voter contacts needed to win</div>
-          <Info className="inline-block" size={16} />
+      <div className="flex flex-col gap-3 p-6">
+        <Progress value={progress} className="w-full" />
+        <div className="flex w-full justify-between items-center text-sm font-normal font-opensans">
+          <div>{numberFormatter(contacted)} voters contacted</div>
+          <div
+            onClick={toggleModalOpen}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            <div>{numberFormatter(needed)} voter contacts needed to win</div>
+            <Info className="inline-block" size={16} />
+          </div>
         </div>
       </div>
       <CountsInfoModal

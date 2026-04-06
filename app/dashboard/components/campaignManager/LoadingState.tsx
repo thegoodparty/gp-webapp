@@ -58,11 +58,15 @@ export default function LoadingState({
   }
 
   return (
-    <Card className="px-4 py-6 mt-4">
-      <CardHeader>
-        <CardTitle>Preparing your campaign plan...</CardTitle>
+    <Card className="gap-0 p-0 font-opensans">
+      <CardHeader className="p-6 pb-0">
+        <CardTitle className="text-lg font-semibold">
+          Preparing your campaign plan...
+        </CardTitle>
       </CardHeader>
-      <LoadingChecklist items={loadingItems} onComplete={onComplete} />
+      <div className="p-6 pt-0">
+        <LoadingChecklist items={loadingItems} onComplete={onComplete} />
+      </div>
     </Card>
   )
 }

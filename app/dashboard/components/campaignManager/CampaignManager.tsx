@@ -96,12 +96,12 @@ export default function CampaignManager({
     <DashboardLayout pathname={pathname} campaign={campaign}>
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
-          <div className="mx-auto w-full max-w-160 px-4 py-8 md:px-0">
+          <div className="mx-auto w-full max-w-160 flex flex-col gap-6 px-4 py-8 md:px-0">
             <HeaderSection />
             <ProgressSection />
             <LoadingState hideCallback={hideLoadingChecklist} />
             {isGenerating && progress && showLoadingState && (
-              <div className="mt-4 rounded-lg border bg-white p-4">
+              <div className="rounded-lg border bg-white p-4">
                 <p className="mb-2 text-sm font-medium text-gray-700">
                   {progress.message || 'Generating AI tasks...'}
                 </p>

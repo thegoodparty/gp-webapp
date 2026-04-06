@@ -294,7 +294,7 @@ const TasksList = ({
       {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
       <Card
         className={cn(
-          'mt-8 mb-32 gap-0 shadow-none',
+          'mb-32 gap-0',
           isLegacyList ? 'p-6' : 'p-0 font-opensans',
         )}
       >

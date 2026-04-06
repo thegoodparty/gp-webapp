@@ -75,7 +75,7 @@ export default function CampaignPlanTaskItem({
   const body = (
     <div className="flex min-w-0 flex-1 flex-col">
       <div className="flex items-center gap-2">
-        <p className="min-w-0 flex-1 truncate text-base leading-5.5 font-medium text-base-foreground">
+        <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground">
           {title}
         </p>
         {noLongerAvailable ? (
