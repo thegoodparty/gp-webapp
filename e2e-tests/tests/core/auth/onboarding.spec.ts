@@ -150,9 +150,12 @@ async function proceedToStep2(page: Page): Promise<void> {
   await expect(nextButton).toBeEnabled()
   await nextButton.click()
 
-  await page.waitForURL((url) => /\/onboarding\/[^/]+\/2/.test(url.toString()), {
-    timeout: 10000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/2/.test(url.toString()),
+    {
+      timeout: 10000,
+    },
+  )
 }
 
 async function completeStep2PartySelection(page: Page): Promise<void> {
@@ -245,9 +248,12 @@ async function proceedToStep3(page: Page): Promise<void> {
 
   await nextButton.click()
 
-  await page.waitForURL((url) => /\/onboarding\/[^/]+\/3/.test(url.toString()), {
-    timeout: 5000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/3/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep3PledgeAgreement(page: Page): Promise<void> {
@@ -266,9 +272,12 @@ async function acceptPledge(page: Page): Promise<void> {
 }
 
 async function proceedToStep4(page: Page): Promise<void> {
-  await page.waitForURL((url) => /\/onboarding\/[^/]+\/4/.test(url.toString()), {
-    timeout: 5000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/4/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep4FinishOnboarding(page: Page): Promise<void> {

@@ -59,9 +59,7 @@ test.describe('Dashboard Functionality', () => {
     await page.goto('/dashboard/profile')
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page
-        .getByRole('heading', { name: 'Contact Information' })
-        .first(),
+      page.getByRole('heading', { name: 'Contact Information' }).first(),
     ).toBeVisible()
     console.log('✅ Profile accessible')
     await visualSnapshot(page, 'profile.png', {

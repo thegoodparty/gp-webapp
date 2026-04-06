@@ -23,10 +23,9 @@ const signUpTestUser = async (page: Page): Promise<string> => {
     .fill(testUser.password)
   await getClerkContinueButton(page).click()
 
-  await page.waitForURL(
-    (url) => url.toString().includes('/onboarding/'),
-    { timeout: 45000 },
-  )
+  await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+    timeout: 45000,
+  })
 
   return page.url()
 }
@@ -44,25 +43,21 @@ test.describe('Onboarding redirect persistence', () => {
     await page.goto('https://goodparty.org/blog')
 
     await page.goto('/login')
-    await page.waitForURL(
-      (url) => url.toString().includes('/onboarding/'),
-      { timeout: 5000 },
-    )
+    await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+      timeout: 5000,
+    })
     expect(page.url()).toBe(onboardingUrl)
 
     await page.goto('https://goodparty.org/blog')
 
     await page.goto('/')
-    await page.waitForURL(
-      (url) => url.toString().includes('/onboarding/'),
-      { timeout: 5000 },
-    )
+    await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+      timeout: 5000,
+    })
     expect(page.url()).toBe(onboardingUrl)
   })
 
-  test('Finish Later should log out and redirect to blog', async ({
-    page,
-  }) => {
+  test('Finish Later should log out and redirect to blog', async ({ page }) => {
     await signUpTestUser(page)
 
     const finishLater = page.getByText('Finish Later')
@@ -70,14 +65,14 @@ test.describe('Onboarding redirect persistence', () => {
     await finishLater.click()
 
     await page.waitForURL(
-      (url) => !url.toString().includes('localhost') && url.pathname === '/blog',
+      (url) =>
+        !url.toString().includes('localhost') && url.pathname === '/blog',
       { timeout: 5000 },
     )
 
     await page.goto('/dashboard')
-    await page.waitForURL(
-      (url) => url.toString().includes('/login'),
-      { timeout: 5000 },
-    )
+    await page.waitForURL((url) => url.toString().includes('/login'), {
+      timeout: 5000,
+    })
   })
 })

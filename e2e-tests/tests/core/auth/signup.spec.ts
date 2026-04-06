@@ -15,15 +15,23 @@ test.describe('Sign Up Functionality', () => {
     await blockSlowScripts(page)
     await NavigationHelper.navigateToPage(page, '/sign-up')
     await NavigationHelper.dismissOverlays(page)
-    await page.waitForSelector('.cl-signUp-root', { state: 'attached'})
+    await page.waitForSelector('.cl-signUp-root', { state: 'attached' })
   })
 
-  test('should display sign up form elements', async ({ page }) => {    
+  test('should display sign up form elements', async ({ page }) => {
     await expect(page.locator('.cl-signUp-root')).toBeVisible()
-    const firstNameVisible = await page.locator('input[name=firstName]').isVisible()
-    const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
-    const emailVisible = await page.locator('input[name=emailAddress]').isVisible()
-    const passwordVisible = await page.locator('input[name=password]').isVisible()
+    const firstNameVisible = await page
+      .locator('input[name=firstName]')
+      .isVisible()
+    const lastNameVisible = await page
+      .locator('input[name=lastName]')
+      .isVisible()
+    const emailVisible = await page
+      .locator('input[name=emailAddress]')
+      .isVisible()
+    const passwordVisible = await page
+      .locator('input[name=password]')
+      .isVisible()
     const continueButtonVisible = await getClerkContinueButton(page).isVisible()
 
     expect(firstNameVisible).toBeTruthy()
@@ -33,12 +41,18 @@ test.describe('Sign Up Functionality', () => {
     expect(continueButtonVisible).toBeTruthy()
   })
 
-  test('should successfully sign up and redirect to onboarding', async ({ page }) => {
+  test('should successfully sign up and redirect to onboarding', async ({
+    page,
+  }) => {
     const testUserData = TestDataHelper.generateTestUserData()
 
-    const firstNameVisible = await page.locator('input[name=firstName]').isVisible()
-    const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
-    
+    const firstNameVisible = await page
+      .locator('input[name=firstName]')
+      .isVisible()
+    const lastNameVisible = await page
+      .locator('input[name=lastName]')
+      .isVisible()
+
     if (firstNameVisible) {
       const firstNameField = page.locator('input[name=firstName]')
       await firstNameField.fill(testUserData.firstName)
@@ -49,12 +63,8 @@ test.describe('Sign Up Functionality', () => {
       await lastNameField.fill(testUserData.lastName)
     }
 
-    await page
-      .locator('input[name=emailAddress]')
-      .fill(testUserData.email)
-    await page
-      .locator('input[name=password]')
-      .fill(testUserData.password)
+    await page.locator('input[name=emailAddress]').fill(testUserData.email)
+    await page.locator('input[name=password]').fill(testUserData.password)
 
     await getClerkContinueButton(page).click()
     await page.waitForTimeout(2000)

@@ -57,13 +57,13 @@ export default defineConfig({
       dependencies: ['global setup'],
     },
     {
-      name: "global setup",
+      name: 'global setup',
       testDir: './',
       testMatch: /global-setup\.ts/,
-      teardown: "global teardown",
+      teardown: 'global teardown',
     },
     {
-      name: "global teardown",
+      name: 'global teardown',
       testDir: './',
       testMatch: /global-teardown\.ts/,
     },
