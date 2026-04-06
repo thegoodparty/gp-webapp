@@ -4,12 +4,7 @@ import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import { useUser } from '@shared/hooks/useUser'
-import {
-  createIrresponsiblyMassagedHistoryItem,
-  createUpdateHistory,
-} from '@shared/utils/campaignUpdateHistoryServices'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 
@@ -56,8 +51,7 @@ const LogTaskModal = ({
   const modalTitle = TASK_TYPE_HEADINGS[flowType]
   const modalLabel = TASK_TYPE_LABELS[flowType]
   const resolvedFlowType = flowType === 'p2pDisabledText' ? 'text' : flowType
-  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
-  const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
+  const [reportedVoterGoals] = useVoterContacts()
   const [user] = useUser()
   const [value, setValue] = useState<string>()
 
@@ -75,19 +69,13 @@ const LogTaskModal = ({
   }
 
   const handleSubmit = async () => {
-    if (!user) {
-      throw new Error('User is required')
-    }
-
-    let newAddition = parseInt(value || '0', 10)
+    const newAddition = parseInt(value || '0', 10)
 
     const nextGoals = {
       ...reportedVoterGoals,
       [resolvedFlowType]:
         (reportedVoterGoals[resolvedFlowType] || 0) + newAddition,
     }
-
-    setReportedVoterGoals(nextGoals)
 
     trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
       recipientCount: newAddition,
@@ -102,16 +90,6 @@ const LogTaskModal = ({
         0,
       ),
     })
-
-    const newHistoryItem = await createUpdateHistory({
-      type: resolvedFlowType,
-      quantity: newAddition,
-    })
-
-    setUpdateHistory([
-      ...updateHistoryItems,
-      createIrresponsiblyMassagedHistoryItem(newHistoryItem, user),
-    ])
 
     onSubmit(newAddition)
     setValue('0')

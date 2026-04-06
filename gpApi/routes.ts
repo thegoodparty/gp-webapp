@@ -117,12 +117,6 @@ export const apiRoutes = {
     },
   },
   campaign: {
-    pathToVictory: {
-      create: {
-        path: '/campaigns/mine/path-to-victory',
-        method: 'POST',
-      },
-    },
     create: {
       path: '/campaigns',
       method: 'POST',

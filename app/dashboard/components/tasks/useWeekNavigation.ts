@@ -2,6 +2,30 @@ import { useEffect, useState } from 'react'
 import { startOfWeek, addWeeks } from 'date-fns'
 import type { Task } from './TaskItem'
 
+const SESSION_KEY_PREFIX = 'campaign-plan-selected-week'
+
+function sessionKey(campaignId: string): string {
+  return `${SESSION_KEY_PREFIX}:${campaignId}`
+}
+
+function readSessionWeek(campaignId: string): number | null {
+  if (typeof window === 'undefined') return null
+  const stored = sessionStorage.getItem(sessionKey(campaignId))
+  if (stored === null) return null
+  const parsed = Number(stored)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function writeSessionWeek(campaignId: string, week: number | null): void {
+  if (typeof window === 'undefined') return
+  const key = sessionKey(campaignId)
+  if (week === null) {
+    sessionStorage.removeItem(key)
+  } else {
+    sessionStorage.setItem(key, String(week))
+  }
+}
+
 interface WeekNavigationResult {
   selectedWeek: number
   currentWeekStart: Date
@@ -14,7 +38,7 @@ interface WeekNavigationResult {
 
 export function useWeekNavigation(
   tasks: Task[],
-  tasksProp: Task[],
+  campaignId: string,
   electionDateObj: Date | null,
   daysUntilElection: number,
 ): WeekNavigationResult {
@@ -37,19 +61,28 @@ export function useWeekNavigation(
         }, 0)
       : 0
 
-  const [selectedWeekIndex, setSelectedWeekIndex] = useState(-1)
+  const [savedWeek, setSavedWeek] = useState<number | null>(() =>
+    readSessionWeek(campaignId),
+  )
 
   useEffect(() => {
-    setSelectedWeekIndex(-1)
-  }, [tasksProp])
+    setSavedWeek(readSessionWeek(campaignId))
+  }, [campaignId])
 
-  const clampedIndex =
-    selectedWeekIndex === -1
-      ? defaultIndex
-      : Math.max(0, Math.min(selectedWeekIndex, weekNumbers.length - 1))
-  const selectedWeek = weekNumbers[clampedIndex] ?? 0
-  const canGoPrevious = clampedIndex > 0
-  const canGoNext = clampedIndex < weekNumbers.length - 1
+  const savedIndex = savedWeek !== null ? weekNumbers.indexOf(savedWeek) : -1
+  const activeIndex = savedIndex !== -1 ? savedIndex : defaultIndex
+  const selectedWeek = weekNumbers[activeIndex] ?? 0
+  const canGoPrevious = activeIndex > 0
+  const canGoNext = activeIndex < weekNumbers.length - 1
+
+  const navigateTo = (index: number) => {
+    if (index < 0 || index >= weekNumbers.length) return
+    const week = weekNumbers[index]
+    if (week !== undefined) {
+      writeSessionWeek(campaignId, week)
+      setSavedWeek(week)
+    }
+  }
 
   const currentWeekStart = electionDateObj
     ? startOfWeek(addWeeks(electionDateObj, -selectedWeek), {
@@ -65,7 +98,7 @@ export function useWeekNavigation(
     filteredTasks,
     canGoPrevious,
     canGoNext,
-    goToPrevious: () => setSelectedWeekIndex(clampedIndex - 1),
-    goToNext: () => setSelectedWeekIndex(clampedIndex + 1),
+    goToPrevious: () => navigateTo(activeIndex - 1),
+    goToNext: () => navigateTo(activeIndex + 1),
   }
 }

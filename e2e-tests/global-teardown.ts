@@ -1,5 +1,5 @@
 import { createClerkClient } from '@clerk/backend'
-import { clerkRetry } from 'tests/utils/clerk-retry'
+import { clerkThrottle } from 'tests/utils/throttle-requests-with-retry'
 
 const TEST_EMAIL_DOMAIN = 'test.goodparty.org'
 
@@ -21,7 +21,7 @@ export default async function globalTeardown() {
   const limit = 100
 
   while (true) {
-    const { data: users } = await clerkRetry(() =>
+    const { data: users } = await clerkThrottle(() =>
       clerk.users.getUserList({
         limit,
         offset,
@@ -42,7 +42,7 @@ export default async function globalTeardown() {
       )?.emailAddress
 
       try {
-        await clerkRetry(() => clerk.users.deleteUser(user.id))
+        await clerkThrottle(() => clerk.users.deleteUser(user.id))
         deletedCount++
         console.log(`[global-teardown] Deleted ${email ?? user.id}`)
       } catch (err) {

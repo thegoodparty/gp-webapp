@@ -10,7 +10,7 @@ import {
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
 import { switchOrganization } from 'src/helpers/organizations'
-import { clerkRetry } from 'tests/utils/clerk-retry'
+import { clerkThrottle } from 'tests/utils/throttle-requests-with-retry'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
@@ -758,7 +758,7 @@ test.describe.serial('poll onboarding', () => {
 
     await setupClerkTestingToken({ page })
     await page.goto('/')
-    await clerkRetry(() =>
+    await clerkThrottle(() =>
       clerk.signIn({ page, emailAddress: sharedUser.email }),
     )
 

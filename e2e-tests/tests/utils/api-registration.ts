@@ -5,7 +5,7 @@ import { uniqBy } from 'es-toolkit'
 import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
-import { clerkRetry } from './clerk-retry'
+import { clerkThrottle } from './throttle-requests-with-retry'
 
 const baseURL = process.env.BASE_URL
 
@@ -106,7 +106,7 @@ async function signInAndGetToken(page: Page, email: string): Promise<string> {
     timeout: 15000,
   })
 
-  await clerkRetry(() =>
+  await clerkThrottle(() =>
     clerk.signIn({
       page,
       emailAddress: email,
@@ -146,7 +146,7 @@ const bootstrapTestUser = async (
   const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  const clerkUser = await clerkRetry(() =>
+  const clerkUser = await clerkThrottle(() =>
     clerkBackend.users.createUser({
       emailAddress: [generated.email],
       password,
@@ -281,7 +281,7 @@ export const authenticateTestUser = async (
     user,
     cleanup: async () => {
       try {
-        await clerkRetry(() => clerkBackend.users.deleteUser(clerkUserId))
+        await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
         console.log(
           `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
         )

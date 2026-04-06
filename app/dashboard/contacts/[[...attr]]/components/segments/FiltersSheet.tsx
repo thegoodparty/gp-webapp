@@ -12,11 +12,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import filterSections from '../configs/filters.config'
 import { FiEdit } from 'react-icons/fi'
-import {
-  saveCustomSegment,
-  updateCustomSegment,
-  type SegmentResponse,
-} from '../shared/ajaxActions'
+import { clientRequest } from 'gpApi/typed-request'
+import { type SegmentResponse } from '../shared/contacts-types'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { SHEET_MODES } from '../shared/constants'
@@ -186,11 +183,10 @@ export default function Filters({
   }, [mode, editSegment, open, customSegments])
 
   const saveMutation = useMutation({
-    mutationFn: async (payload: { name: string } & BackendFilters) => {
-      const response = await saveCustomSegment(payload)
-      if (!response) throw new Error('Failed to create segment')
-      return response
-    },
+    mutationFn: async (payload: { name: string } & BackendFilters) =>
+      clientRequest('POST /v1/voters/voter-file/filter', payload).then(
+        (res) => res.data,
+      ),
     onSuccess: async (response) => {
       successSnackbar('Segment created successfully')
       trackEvent(EVENTS.Contacts.SegmentCreated, {
@@ -209,11 +205,11 @@ export default function Filters({
     mutationFn: async ({
       id,
       ...payload
-    }: { id: number; name: string } & BackendFilters) => {
-      const response = await updateCustomSegment(id, payload)
-      if (!response) throw new Error('Failed to update segment')
-      return response
-    },
+    }: { id: number; name: string } & BackendFilters) =>
+      clientRequest('PUT /v1/voters/voter-file/filter/:id', {
+        id: String(id),
+        ...payload,
+      }).then((res) => res.data),
     onSuccess: async (_data, variables) => {
       successSnackbar('Segment updated successfully')
       trackEvent(EVENTS.Contacts.SegmentUpdated, {

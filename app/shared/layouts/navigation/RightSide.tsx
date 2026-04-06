@@ -25,6 +25,7 @@ const RightSide = (): React.JSX.Element => {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
   const isOnboardingPath = pathname?.startsWith('/onboarding')
+  const isAdminPath = pathname?.startsWith('/admin')
   const toggleProfile = () => {
     if (profileOpen) {
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown)
@@ -75,7 +76,16 @@ const RightSide = (): React.JSX.Element => {
             user={user as User}
           />
           {!userHasRole(user, USER_ROLES.SALES) &&
-            (isDashboardPath ? (
+            (isAdminPath ? (
+              <Button
+                href="/dashboard"
+                onClick={closeAll}
+                id="nav-exit-admin"
+                className="!py-2 !text-base font-medium border-none ml-2"
+              >
+                Exit Admin
+              </Button>
+            ) : isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
                 toggleCallback={toggleDashboard}
