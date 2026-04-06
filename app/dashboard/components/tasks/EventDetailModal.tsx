@@ -47,7 +47,9 @@ export default function EventDetailModal({
           {date && (
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-base-muted-foreground" />
-              <span>{dateUsHelper(date, 'long')}</span>
+              <span>
+                {dateUsHelper(date.slice(0, 10).replace(/-/g, '/'), 'long')}
+              </span>
             </div>
           )}
         </div>

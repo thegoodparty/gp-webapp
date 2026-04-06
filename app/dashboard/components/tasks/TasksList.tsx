@@ -194,14 +194,14 @@ const TasksList = ({
       taskCountsRef.current[task.id] = { field, count }
     }
 
-    setCompleteModalTask(null)
-
     const ok = await completeTask(task.id, {
       type: resolvedType,
       quantity: count,
     })
 
-    if (!ok && fieldForRollback !== undefined) {
+    if (ok) {
+      setCompleteModalTask(null)
+    } else if (fieldForRollback !== undefined) {
       const f = fieldForRollback
       updateVoterContactsLocal((prev) => ({
         ...prev,
