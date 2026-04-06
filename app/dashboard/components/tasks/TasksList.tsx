@@ -157,7 +157,15 @@ const TasksList = ({
         }))
         delete taskCountsRef.current[taskId]
       }
-      await revertTask(taskId)
+      const ok = await revertTask(taskId)
+      if (!ok && saved) {
+        const { field, count } = saved
+        updateVoterContactsLocal((prev) => ({
+          ...prev,
+          [field]: (prev[field] || 0) + count,
+        }))
+        taskCountsRef.current[taskId] = { field, count }
+      }
       return
     }
 
