@@ -197,12 +197,11 @@ describe('TasksList revert completion flow', () => {
     }
   })
 
-  it('calls the revert API when clicking the action area of a completed non-legacy task', async () => {
+  it('does not revert when clicking the row of a completed non-legacy task without a link', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
-    const revertedTask = { ...completedTask, completed: false }
 
-    mockClientFetch.mockResolvedValueOnce({ ok: true, data: revertedTask })
+    mockClientFetch.mockResolvedValue({ ok: true, data: completedTask })
 
     render(
       <TasksList
@@ -212,17 +211,12 @@ describe('TasksList revert completion flow', () => {
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+    await user.click(screen.getByText('Test Task'))
 
-    await waitFor(() => {
-      expect(mockClientFetch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          path: '/campaigns/tasks/complete/:taskId',
-          method: 'DELETE',
-        }),
-        { taskId: 'task-1' },
-      )
-    })
+    expect(mockClientFetch).not.toHaveBeenCalledWith(
+      expect.objectContaining({ method: 'DELETE' }),
+      expect.anything(),
+    )
   })
 
   it('ignores rapid duplicate clicks while a revert is in flight', async () => {

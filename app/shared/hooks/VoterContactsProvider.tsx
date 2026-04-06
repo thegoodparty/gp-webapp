@@ -1,4 +1,4 @@
-import { noopAsync } from '@shared/utils/noop'
+import { noop, noopAsync } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
@@ -18,6 +18,8 @@ export const getVoterContactField = (
       return 'socialMedia'
     case 'robocall':
       return 'robocall'
+    case 'events':
+      return 'events'
     default:
       return 'text'
   }
@@ -81,18 +83,24 @@ const INITIAL_VOTER_CONTACTS_STATE: VoterContactsState = {
   socialMedia: 0,
 }
 
+type VoterContactsUpdater = (
+  next: VoterContactsState | ((prev: VoterContactsState) => VoterContactsState),
+) => Promise<void>
+
+type VoterContactsLocalUpdater = (
+  next: VoterContactsState | ((prev: VoterContactsState) => VoterContactsState),
+) => void
+
 type VoterContactsContextValue = [
   VoterContactsState,
-  (
-    next:
-      | VoterContactsState
-      | ((prev: VoterContactsState) => VoterContactsState),
-  ) => Promise<void>,
+  VoterContactsUpdater,
+  VoterContactsLocalUpdater,
 ]
 
 export const VoterContactsContext = createContext<VoterContactsContextValue>([
   INITIAL_VOTER_CONTACTS_STATE,
   noopAsync,
+  noop,
 ])
 
 interface VoterContactsProviderProps {
@@ -129,8 +137,21 @@ export const VoterContactsProvider = ({
     [state],
   )
 
+  const updateLocalState = useCallback(
+    (
+      next:
+        | VoterContactsState
+        | ((prev: VoterContactsState) => VoterContactsState),
+    ) => {
+      setState((prev) => (typeof next === 'function' ? next(prev) : next))
+    },
+    [],
+  )
+
   return (
-    <VoterContactsContext.Provider value={[state, updateState]}>
+    <VoterContactsContext.Provider
+      value={[state, updateState, updateLocalState]}
+    >
       {children}
     </VoterContactsContext.Provider>
   )

@@ -76,7 +76,7 @@ const renderWithProviders = (
 ) =>
   render(
     <CampaignContext.Provider value={[campaign]}>
-      <VoterContactsContext.Provider value={[voterContacts, vi.fn()]}>
+      <VoterContactsContext.Provider value={[voterContacts, vi.fn(), vi.fn()]}>
         <ProgressSection />
       </VoterContactsContext.Provider>
     </CampaignContext.Provider>,

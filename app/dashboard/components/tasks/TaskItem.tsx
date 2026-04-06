@@ -26,6 +26,7 @@ interface TaskItemProps {
   daysUntilElection: number
   electionDate: string | undefined
   isPro: boolean
+  isLegacyList?: boolean
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
 }
@@ -35,6 +36,7 @@ export default function TaskItem({
   daysUntilElection,
   electionDate,
   isPro,
+  isLegacyList = true,
   onCheck,
   onAction,
 }: TaskItemProps): React.JSX.Element {
@@ -61,6 +63,11 @@ export default function TaskItem({
 
   const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
 
+  const linkForRow = isLegacyList && completed ? undefined : link
+
+  const suppressRowAction =
+    completed && !isLegacyList && !link
+
   return (
     <li className="border-t border-black/12">
       <CampaignPlanTaskItem
@@ -80,8 +87,8 @@ export default function TaskItem({
         locked={locked}
         lockedReason={lockedReason}
         onCheckedChange={() => onCheck(task)}
-        onClick={() => onAction(task)}
-        link={completed ? undefined : link}
+        onClick={suppressRowAction ? undefined : () => onAction(task)}
+        link={linkForRow}
         noLongerAvailable={noLongerAvailable}
       />
     </li>
