@@ -132,12 +132,7 @@ const TasksList = ({
       const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
         apiRoutes.campaign.updateHistory.list,
       )
-      if (
-        resp &&
-        typeof resp === 'object' &&
-        'ok' in resp &&
-        resp.ok
-      ) {
+      if (resp && typeof resp === 'object' && 'ok' in resp && resp.ok) {
         setUpdateHistory(resp.data || [])
       }
     } catch (error) {
@@ -199,6 +194,8 @@ const TasksList = ({
       taskCountsRef.current[task.id] = { field, count }
     }
 
+    setCompleteModalTask(null)
+
     const ok = await completeTask(task.id, {
       type: resolvedType,
       quantity: count,
@@ -212,8 +209,6 @@ const TasksList = ({
       }))
       delete taskCountsRef.current[task.id]
     }
-
-    setCompleteModalTask(null)
   }
 
   const handleCompleteCancel = () => {
@@ -333,7 +328,7 @@ const TasksList = ({
     }
 
     if (succeeded) {
-      await refreshAfterTaskMutation()
+      void refreshAfterTaskMutation().catch(console.error)
     }
     return succeeded
   }
