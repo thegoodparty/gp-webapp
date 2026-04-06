@@ -69,8 +69,7 @@ export default function TaskItem({
       ? undefined
       : link
 
-  const suppressRowAction =
-    completed && !isLegacyList && !link
+  const suppressRowAction = completed && !isLegacyList && !link
 
   return (
     <li className="border-t border-black/12">

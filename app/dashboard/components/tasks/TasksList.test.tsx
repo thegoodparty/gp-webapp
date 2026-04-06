@@ -229,10 +229,7 @@ describe('TasksList revert completion flow', () => {
         phoneBanking: 0,
         socialMedia: 0,
       }
-      const next =
-        typeof updater === 'function'
-          ? updater(prev)
-          : updater
+      const next = typeof updater === 'function' ? updater(prev) : updater
       textTotal = next.text
     })
 
