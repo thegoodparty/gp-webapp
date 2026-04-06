@@ -1,27 +1,20 @@
 import { expect, type Page, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
-import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
+import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
 
 test.use({ storageState: { cookies: [], origins: [] } })
 
 const signUpTestUser = async (page: Page): Promise<string> => {
   await setupClerkTestingToken({ page })
-  const testUser = TestDataHelper.generateTestUserData()
 
   await page.goto('/sign-up')
   await NavigationHelper.dismissOverlays(page)
 
-  await page.getByLabel(/email/i).first().fill(testUser.email)
-  await page
-    .getByLabel(/password/i)
-    .first()
-    .fill(testUser.password)
-  await getClerkContinueButton(page).click()
+  await fillClerkSignUpForm(page)
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
     timeout: 45000,

@@ -1,11 +1,10 @@
 import { expect, type Page, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
-import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
+import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -15,21 +14,14 @@ test('authenticate with onboarded user', async ({ page }) => {
   console.log('Setting up authenticated user...')
 
   await setupClerkTestingToken({ page })
-  const testUser = TestDataHelper.generateTestUserData()
 
   await page.goto('/sign-up')
   await NavigationHelper.dismissOverlays(page)
 
-  // Fill Clerk's <SignUp /> form
-  await page.getByLabel(/email/i).first().fill(testUser.email)
-  await page
-    .getByLabel(/password/i)
-    .first()
-    .fill(testUser.password)
-  await getClerkContinueButton(page).click()
+  const testUser = await fillClerkSignUpForm(page)
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
-    timeout: 45000,
+    timeout: 3000,
   })
   console.log('User created, now completing onboarding...')
 

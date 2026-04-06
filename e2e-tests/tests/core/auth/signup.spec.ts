@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
-import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
+import {
+  fillClerkSignUpForm,
+  getClerkContinueButton,
+} from '../../../src/helpers/clerk.helper'
 
 test.use({ storageState: { cookies: [], origins: [] } })
 
@@ -44,29 +46,7 @@ test.describe('Sign Up Functionality', () => {
   test('should successfully sign up and redirect to onboarding', async ({
     page,
   }) => {
-    const testUserData = TestDataHelper.generateTestUserData()
-
-    const firstNameVisible = await page
-      .locator('input[name=firstName]')
-      .isVisible()
-    const lastNameVisible = await page
-      .locator('input[name=lastName]')
-      .isVisible()
-
-    if (firstNameVisible) {
-      const firstNameField = page.locator('input[name=firstName]')
-      await firstNameField.fill(testUserData.firstName)
-    }
-
-    if (lastNameVisible) {
-      const lastNameField = page.locator('input[name=lastName]')
-      await lastNameField.fill(testUserData.lastName)
-    }
-
-    await page.locator('input[name=emailAddress]').fill(testUserData.email)
-    await page.locator('input[name=password]').fill(testUserData.password)
-
-    await getClerkContinueButton(page).click()
+    await fillClerkSignUpForm(page)
     await page.waitForTimeout(2000)
     await page.waitForURL('**/onboarding**', { timeout: 10000 })
   })
