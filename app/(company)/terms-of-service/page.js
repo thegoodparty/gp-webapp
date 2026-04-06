@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { FullContentPage } from '@shared/FullContentPage'
-import { fetchContentByType } from 'helpers/fetchHelper'
+import { redirect } from 'next/navigation'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 const meta = pageMetaData({
   title: 'Terms of Service | GoodParty.org',
@@ -8,7 +8,6 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page() {
-  const content = (await fetchContentByType('termsOfService'))[0]
-  return <FullContentPage content={content} />
+export default function Page() {
+  redirect(getMarketingUrl('/terms-of-service'))
 }
