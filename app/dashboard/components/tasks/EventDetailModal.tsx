@@ -27,9 +27,9 @@ export default function EventDetailModal({
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      dialogClassName="max-w-md"
+      dialogClassName="max-w-md "
     >
-      <div className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-4 p-4 md:p-1">
         <div>
           <h3 className="text-lg font-semibold">{title}</h3>
           {description && (
