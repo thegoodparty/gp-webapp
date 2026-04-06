@@ -86,17 +86,25 @@ export const createCampaignWithOffice = async (
   attr: { key: string; value: string | number | boolean | undefined | null }[],
 ): Promise<Campaign | false> => {
   try {
-    const payload = attr.reduce<Record<string, Record<string, unknown>>>(
+    const payload = attr.reduce<Record<string, unknown>>(
       (acc, { key, value }) => {
-        const [section, field] = key.split('.')
-        if (!section || !field) return acc
-        if (!acc[section]) acc[section] = {}
-        acc[section][field] = value
+        const dotIndex = key.indexOf('.')
+        if (dotIndex === -1) {
+          acc[key] = value
+        } else {
+          const section = key.substring(0, dotIndex)
+          const field = key.substring(dotIndex + 1)
+          if (!acc[section]) acc[section] = {}
+          ;(acc[section] as Record<string, unknown>)[field] = value
+        }
         return acc
       },
       {},
     )
-    const resp = await clientFetch<Campaign>(apiRoutes.campaign.create, payload)
+    const resp = await clientFetch<Campaign>(
+      apiRoutes.campaign.create,
+      payload,
+    )
     return resp.data
   } catch (e) {
     console.error('error creating campaign', e)
