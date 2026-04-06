@@ -116,6 +116,40 @@ beforeEach(() => {
   mockUpdateVoterContactsLocal.mockReset()
 })
 
+describe('TasksList non-legacy event tasks', () => {
+  it('uses the row only to open event details; external link stays in the modal', async () => {
+    const user = userEvent.setup()
+    mockClientFetch.mockResolvedValue({ ok: true, data: [] })
+
+    const eventTask = makeTask({
+      flowType: TASK_TYPES.events,
+      link: 'https://example.com/event',
+      completed: false,
+    })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[eventTask]}
+        isLegacyList={false}
+      />,
+    )
+
+    const taskItem = document.querySelector('[data-slot="task-item"]')
+    expect(taskItem).toBeTruthy()
+    expect(taskItem?.querySelector('a[target="_blank"]')).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: /Learn more/i })).toHaveAttribute(
+        'href',
+        'https://example.com/event',
+      )
+    })
+  })
+})
+
 describe('TasksList revert completion flow', () => {
   it('calls the revert API immediately when clicking a completed task checkbox (non-legacy)', async () => {
     const user = userEvent.setup()

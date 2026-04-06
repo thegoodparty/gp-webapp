@@ -63,7 +63,11 @@ export default function TaskItem({
 
   const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
 
-  const linkForRow = isLegacyList && completed ? undefined : link
+  const linkForRow =
+    (isLegacyList && completed) ||
+    (!isLegacyList && flowType === TASK_TYPES.events)
+      ? undefined
+      : link
 
   const suppressRowAction =
     completed && !isLegacyList && !link
