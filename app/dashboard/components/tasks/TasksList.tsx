@@ -54,6 +54,8 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.compliance,
 ]
 
+type TaskId = Task['id']
+
 interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
@@ -104,7 +106,9 @@ const TasksList = ({
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
   const taskCountsRef = useRef<
-    Record<string, { field: keyof VoterContactsState; count: number }>
+    Partial<
+      Record<TaskId, { field: keyof VoterContactsState; count: number }>
+    >
   >({})
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
@@ -124,7 +128,7 @@ const TasksList = ({
   const queryClient = useQueryClient()
   const [, setUpdateHistory] = useCampaignUpdateHistory()
   const [, , updateVoterContactsLocal] = useVoterContacts()
-  const inFlightTasks = useRef(new Set<string>())
+  const inFlightTasks = useRef(new Set<TaskId>())
 
   const refreshAfterTaskMutation = async () => {
     try {

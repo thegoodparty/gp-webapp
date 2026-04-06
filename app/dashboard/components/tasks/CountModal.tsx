@@ -15,6 +15,10 @@ const COUNT_QUESTIONS: Record<LogTaskFlowType, string> = {
   events: 'How many voters did you meet?',
 }
 
+function isLogTaskCountFlowType(value: string): value is LogTaskFlowType {
+  return Object.hasOwn(COUNT_QUESTIONS, value)
+}
+
 interface CountModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -29,10 +33,9 @@ export default function CountModal({
   onSubmit,
 }: CountModalProps) {
   const [value, setValue] = useState('')
-  const question =
-    flowType in COUNT_QUESTIONS
-      ? COUNT_QUESTIONS[flowType as LogTaskFlowType]
-      : 'How many did you complete?'
+  const question = isLogTaskCountFlowType(flowType)
+    ? COUNT_QUESTIONS[flowType]
+    : 'How many did you complete?'
 
   const handleSave = () => {
     const parsed = parseInt(value, 10)
