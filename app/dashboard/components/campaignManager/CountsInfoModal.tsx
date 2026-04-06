@@ -44,7 +44,7 @@ export const CountsInfoModal = ({
           <span className="inline font-semibold">5</span> times across channels.
         </div>
 
-        <div className="mt-2 text-base font-semibold">
+        <div className="mt-4 text-base font-semibold">
           How we calculate this number
         </div>
         <ol className="mt-1.5 list-decimal list-outside pl-5 space-y-2 text-sm [&>li]:list-item">

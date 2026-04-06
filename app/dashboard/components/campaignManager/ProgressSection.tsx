@@ -26,7 +26,7 @@ export default function ProgressSection() {
   const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
   return (
     <Card className="gap-0 p-0">
-      <div className="flex flex-col md:flex-row w-full md:justify-between md:items-center gap-1 border-b p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b p-6">
         <div className="text-lg font-semibold font-opensans whitespace-nowrap">
           Your campaign progress
         </div>

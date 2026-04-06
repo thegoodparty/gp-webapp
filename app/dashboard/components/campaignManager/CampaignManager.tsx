@@ -93,7 +93,11 @@ export default function CampaignManager({
   const contactGoals = calculateContactGoalsFromCampaign(campaign)
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign}>
+    <DashboardLayout
+      pathname={pathname}
+      campaign={campaign}
+      wrapperClassName="flex-1"
+    >
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
           <div className="mx-auto w-full max-w-160 flex flex-col gap-6 px-4 py-8 md:px-0">

@@ -75,7 +75,7 @@ export default function CampaignPlanTaskItem({
   const body = (
     <div className="flex min-w-0 flex-1 flex-col">
       <div className="flex items-center gap-2">
-        <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground">
+        <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground group-hover:text-primary">
           {title}
         </p>
         {noLongerAvailable ? (
@@ -88,7 +88,7 @@ export default function CampaignPlanTaskItem({
           isClickable && (
             <ChevronRight
               size={18}
-              className="shrink-0 text-base-foreground md:opacity-0 transition-opacity group-hover:opacity-100"
+              className="shrink-0 text-base-foreground md:opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-primary"
             />
           )
         )}

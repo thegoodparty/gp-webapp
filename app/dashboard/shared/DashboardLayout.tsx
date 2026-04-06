@@ -118,7 +118,7 @@ const DashboardLayout = ({
                 </Button>
               </div>
             )}
-            <div className={wrapperClassName}>
+            <div className={wrapperClassName || 'flex-1 p-2 md:p-4'}>
               {activeCampaign && showAlert && (
                 <AlertSection campaign={activeCampaign} />
               )}
