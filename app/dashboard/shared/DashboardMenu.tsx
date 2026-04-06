@@ -446,7 +446,7 @@ const NewNavMenu = ({
             <SidebarMenu>
               {menuItems
                 .filter((i) =>
-                  organization.electedOfficeId
+                  organization?.electedOfficeId
                     ? i.v2Category === 'elected-office'
                     : i.v2Category === 'campaign',
                 )

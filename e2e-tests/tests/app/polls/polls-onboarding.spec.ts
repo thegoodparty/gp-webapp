@@ -10,6 +10,7 @@ import {
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
 import { switchOrganization } from 'src/helpers/organizations'
+import { clerkRetry } from 'tests/utils/clerk-retry'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
@@ -757,7 +758,9 @@ test.describe.serial('poll onboarding', () => {
 
     await setupClerkTestingToken({ page })
     await page.goto('/')
-    await clerk.signIn({ page, emailAddress: sharedUser.email })
+    await clerkRetry(() =>
+      clerk.signIn({ page, emailAddress: sharedUser.email }),
+    )
 
     // Navigate to contacts page
     await page.goto('/dashboard')

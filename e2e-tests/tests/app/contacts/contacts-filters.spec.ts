@@ -8,7 +8,6 @@ import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 import { WaitHelper } from 'src/helpers/wait.helper'
-import { wait } from 'tests/utils/eventually'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -149,9 +148,11 @@ test('validate contacts filters', async ({ page }) => {
   await page.goto('/dashboard/election-result', {
     waitUntil: 'domcontentloaded',
   })
-  await wait(500)
-  await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForURL('**/polls/welcome', { timeout: 15000 })
+  await NavigationHelper.dismissOverlays(page)
+  await page
+    .getByRole('button', { name: 'I won my race' })
+    .click({ timeout: 10_000 })
+  await page.waitForURL('**/polls/welcome', { timeout: 15_000 })
 
   await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)

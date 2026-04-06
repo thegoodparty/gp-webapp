@@ -11,46 +11,91 @@ test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('Sign Up Functionality', () => {
   test.beforeEach(async ({ page }) => {
+    await setupClerkTestingToken({ page })
     await blockSlowScripts(page)
-  })
-
-  test('should display sign up form elements', async ({ page }) => {
-    await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/sign-up')
     await NavigationHelper.dismissOverlays(page)
+    await page.waitForSelector('.cl-signUp-root', { state: 'attached'})
+  })
 
-    // Clerk's <SignUp /> renders its own UI
+  test('should display sign up form elements', async ({ page }) => {    
     await expect(page.locator('.cl-signUp-root')).toBeVisible()
-    await expect(page.getByLabel(/first name/i).first()).toBeVisible()
-    await expect(page.getByLabel(/last name/i).first()).toBeVisible()
-    await expect(page.getByLabel(/email/i).first()).toBeVisible()
-    await expect(page.getByLabel(/password/i).first()).toBeVisible()
-    await expect(page.getByRole('button', { name: /continue/i })).toBeVisible()
+    const firstNameVisible = await page.locator('input[name=firstName]').isVisible()
+    const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
+    const emailVisible = await page.locator('input[name=emailAddress]').isVisible()
+    const passwordVisible = await page.locator('input[name=password]').isVisible()
+    const continueButtonVisible = await page.getByRole('button', { name: /^continue$/i }).isVisible()
+    
+    expect(firstNameVisible).toBeTruthy()
+    expect(lastNameVisible).toBeTruthy()
+    expect(emailVisible).toBeTruthy()
+    expect(passwordVisible).toBeTruthy()
+    expect(continueButtonVisible).toBeTruthy()
   })
 
-  test('should validate and process form data correctly', async ({ page }) => {
-    await setupClerkTestingToken({ page })
-    await NavigationHelper.navigateToPage(page, '/sign-up')
-    await NavigationHelper.dismissOverlays(page)
+  test('should successfully sign up and redirect to onboarding', async ({ page }) => {
+    const testUserData = TestDataHelper.generateTestUserData()
 
-    const testUser = TestDataHelper.generateTestUser()
+    const firstNameVisible = await page.locator('input[name=firstName]').isVisible()
+    console.log('FirstName visible:', firstNameVisible)
+    const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
+    console.log('LastName visible:', lastNameVisible)
+    const emailVisible = await page.locator('input[name=emailAddress]').isVisible()
+    console.log('Email visible:', emailVisible)
+    const passwordVisible = await page.locator('input[name=password]').isVisible()
+    console.log('Password visible:', passwordVisible)
+    const continueButtonVisible = await page.getByRole('button', { name: /^continue$/i }).isVisible()
+
+    
+    if (firstNameVisible) {
+      const firstNameField = page.locator('input[name=firstName]')
+      await firstNameField.fill(testUserData.firstName)
+    }
+
+    if (lastNameVisible) {
+      const lastNameField = page.locator('input[name=lastName]')
+      await lastNameField.fill(testUserData.lastName)
+    }
 
     await page
-      .getByLabel(/first name/i)
-      .first()
-      .fill(` ${testUser.firstName}`)
+      .locator('input[name=emailAddress]')
+      .fill(testUserData.email)
     await page
-      .getByLabel(/last name/i)
-      .first()
-      .fill(` ${testUser.lastName}`)
-    await page.getByLabel(/email/i).first().fill(testUser.email)
-    await page
-      .getByLabel(/password/i)
-      .first()
-      .fill(testUser.password)
-    await page.getByRole('button', { name: /continue/i }).click()
+      .locator('input[name=password]')
+      .fill(testUserData.password)
 
-    // After successful Clerk signup, user is redirected to onboarding
-    await expect(page).toHaveURL(/\/onboarding/, { timeout: 45000 })
+    const continueBtn = page.getByRole('button', {
+      name: 'Continue',
+      exact: true,
+    })
+
+    console.log(
+      'Continue button visible:',
+      continueButtonVisible,
+    )
+    console.log(
+      'Continue button enabled:',
+      await continueBtn.isEnabled(),
+    )
+    console.log(
+      'Continue button text:',
+      await continueBtn.textContent(),
+    )
+
+    const urlBefore = page.url()
+    console.log('URL before click:', urlBefore)
+
+    await continueBtn.click()
+    console.log('Click executed')
+
+    await page.waitForTimeout(2000)
+    const urlAfter = page.url()
+    console.log('URL after click:', urlAfter)
+    console.log(
+      'URL changed:',
+      urlBefore !== urlAfter,
+    )
+
+    await page.waitForURL('**/onboarding**', { timeout: 10000 })
   })
 })

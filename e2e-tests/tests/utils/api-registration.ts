@@ -5,6 +5,7 @@ import { uniqBy } from 'es-toolkit'
 import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
+import { clerkRetry } from './clerk-retry'
 
 const baseURL = process.env.BASE_URL
 
@@ -60,6 +61,7 @@ export type AuthenticatedUser = {
   name: string
   zip: string
   phone: string
+  password: string
 }
 
 type Race = {
@@ -97,29 +99,19 @@ type CachedCredentials = {
 // Global cache for shared users per worker
 let cachedCredentials: CachedCredentials | null = null
 
-async function signInAndGetToken(
-  page: Page,
-  email: string,
-  password: string,
-): Promise<string> {
+async function signInAndGetToken(page: Page, email: string): Promise<string> {
   await setupClerkTestingToken({ page })
   await page.goto('/')
   await page.waitForFunction(() => window.Clerk?.loaded, null, {
     timeout: 15000,
   })
 
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: 'password',
-      identifier: email,
-      password,
-    },
-  })
-
-  await page.waitForFunction(() => !!window.Clerk?.session, null, {
-    timeout: 10000,
-  })
+  await clerkRetry(() =>
+    clerk.signIn({
+      page,
+      emailAddress: email,
+    }),
+  )
 
   const token = await page.evaluate(() => window.Clerk!.session!.getToken())
 
@@ -135,14 +127,10 @@ const bootstrapTestUser = async (
   options?: TestUserOptions,
 ): Promise<BootstrappedUser & { clerkUserId: string }> => {
   if (!options?.isolated && cachedCredentials) {
-    const token = await signInAndGetToken(
-      page,
-      cachedCredentials.email,
-      cachedCredentials.password,
-    )
+    const token = await signInAndGetToken(page, cachedCredentials.email)
 
     return {
-      user: cachedCredentials.user,
+      user: { ...cachedCredentials.user, password: cachedCredentials.password },
       token,
       client: axios.create({
         baseURL: apiURL,
@@ -154,19 +142,21 @@ const bootstrapTestUser = async (
     }
   }
 
-  const generated = TestDataHelper.generateTestUser()
+  const generated = TestDataHelper.generateTestUserData()
   const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  const clerkUser = await clerkBackend.users.createUser({
-    emailAddress: [generated.email],
-    password,
-    firstName: generated.firstName,
-    lastName: generated.lastName,
-    skipPasswordChecks: true,
-  })
+  const clerkUser = await clerkRetry(() =>
+    clerkBackend.users.createUser({
+      emailAddress: [generated.email],
+      password,
+      firstName: generated.firstName,
+      lastName: generated.lastName,
+      skipPasswordChecks: true,
+    }),
+  )
 
-  const token = await signInAndGetToken(page, generated.email, password)
+  const token = await signInAndGetToken(page, generated.email)
 
   const client = axios.create({
     baseURL: apiURL,
@@ -191,6 +181,7 @@ const bootstrapTestUser = async (
     name: `${apiUser.firstName} ${apiUser.lastName}`,
     zip,
     phone: apiUser.phone || generated.phone,
+    password,
   }
 
   const result = {
@@ -223,7 +214,7 @@ const bootstrapTestUser = async (
   )
 
   const desiredRace =
-    options?.race?.office ?? 'Flat Rock Village Council - District 1'
+    options?.race?.office ?? 'Cheyenne City Council - Ward 2'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)
@@ -273,6 +264,8 @@ test.afterAll(async ({}) => {
   for (const { cleanup } of users) {
     await cleanup()
   }
+  cachedCredentials = null
+  createdUsers.length = 0
 })
 
 export const authenticateTestUser = async (
@@ -288,9 +281,7 @@ export const authenticateTestUser = async (
     user,
     cleanup: async () => {
       try {
-        // Delete Clerk user (which is the auth source of truth).
-        // The API backend should handle cascading cleanup via Clerk webhooks.
-        await clerkBackend.users.deleteUser(clerkUserId)
+        await clerkRetry(() => clerkBackend.users.deleteUser(clerkUserId))
         console.log(
           `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
         )

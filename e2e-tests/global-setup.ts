@@ -1,5 +1,8 @@
 import { clerkSetup } from '@clerk/testing/playwright'
+import { test as setup } from '@playwright/test'
 
-export default async function globalSetup() {
+setup.describe.configure({ mode: 'serial' })
+
+setup('global setup', async () => {
   await clerkSetup()
-}
+})
