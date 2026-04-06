@@ -106,11 +106,13 @@ async function signInAndGetToken(page: Page, email: string): Promise<string> {
     timeout: 15000,
   })
 
-  await clerkThrottle(() =>
-    clerk.signIn({
-      page,
-      emailAddress: email,
-    }),
+  await clerkThrottle(
+    () =>
+      clerk.signIn({
+        page,
+        emailAddress: email,
+      }),
+    5,
   )
 
   const token = await page.evaluate(() => window.Clerk!.session!.getToken())
@@ -213,8 +215,7 @@ const bootstrapTestUser = async (
     },
   )
 
-  const desiredRace =
-    options?.race?.office ?? 'Cheyenne City Council - Ward 2'
+  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 2'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)

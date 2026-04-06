@@ -5,6 +5,7 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
 
 test.use({ storageState: { cookies: [], origins: [] } })
 
@@ -20,7 +21,7 @@ const signUpTestUser = async (page: Page): Promise<string> => {
     .getByLabel(/password/i)
     .first()
     .fill(testUser.password)
-  await page.getByRole('button', { name: /continue/i }).click()
+  await getClerkContinueButton(page).click()
 
   await page.waitForURL(
     (url) => url.toString().includes('/onboarding/'),

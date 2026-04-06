@@ -5,8 +5,8 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
 
-// Reset storage state for auth tests to avoid being pre-authenticated
 test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('Sign Up Functionality', () => {
@@ -24,8 +24,8 @@ test.describe('Sign Up Functionality', () => {
     const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
     const emailVisible = await page.locator('input[name=emailAddress]').isVisible()
     const passwordVisible = await page.locator('input[name=password]').isVisible()
-    const continueButtonVisible = await page.getByRole('button', { name: /^continue$/i }).isVisible()
-    
+    const continueButtonVisible = await getClerkContinueButton(page).isVisible()
+
     expect(firstNameVisible).toBeTruthy()
     expect(lastNameVisible).toBeTruthy()
     expect(emailVisible).toBeTruthy()
@@ -37,15 +37,7 @@ test.describe('Sign Up Functionality', () => {
     const testUserData = TestDataHelper.generateTestUserData()
 
     const firstNameVisible = await page.locator('input[name=firstName]').isVisible()
-    console.log('FirstName visible:', firstNameVisible)
     const lastNameVisible = await page.locator('input[name=lastName]').isVisible()
-    console.log('LastName visible:', lastNameVisible)
-    const emailVisible = await page.locator('input[name=emailAddress]').isVisible()
-    console.log('Email visible:', emailVisible)
-    const passwordVisible = await page.locator('input[name=password]').isVisible()
-    console.log('Password visible:', passwordVisible)
-    const continueButtonVisible = await page.getByRole('button', { name: /^continue$/i }).isVisible()
-
     
     if (firstNameVisible) {
       const firstNameField = page.locator('input[name=firstName]')
@@ -64,38 +56,8 @@ test.describe('Sign Up Functionality', () => {
       .locator('input[name=password]')
       .fill(testUserData.password)
 
-    const continueBtn = page.getByRole('button', {
-      name: 'Continue',
-      exact: true,
-    })
-
-    console.log(
-      'Continue button visible:',
-      continueButtonVisible,
-    )
-    console.log(
-      'Continue button enabled:',
-      await continueBtn.isEnabled(),
-    )
-    console.log(
-      'Continue button text:',
-      await continueBtn.textContent(),
-    )
-
-    const urlBefore = page.url()
-    console.log('URL before click:', urlBefore)
-
-    await continueBtn.click()
-    console.log('Click executed')
-
+    await getClerkContinueButton(page).click()
     await page.waitForTimeout(2000)
-    const urlAfter = page.url()
-    console.log('URL after click:', urlAfter)
-    console.log(
-      'URL changed:',
-      urlBefore !== urlAfter,
-    )
-
     await page.waitForURL('**/onboarding**', { timeout: 10000 })
   })
 })

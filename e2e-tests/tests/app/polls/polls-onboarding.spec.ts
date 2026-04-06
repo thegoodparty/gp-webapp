@@ -758,8 +758,9 @@ test.describe.serial('poll onboarding', () => {
 
     await setupClerkTestingToken({ page })
     await page.goto('/')
-    await clerkThrottle(() =>
-      clerk.signIn({ page, emailAddress: sharedUser.email }),
+    await clerkThrottle(
+      () => clerk.signIn({ page, emailAddress: sharedUser.email }),
+      5,
     )
 
     // Navigate to contacts page

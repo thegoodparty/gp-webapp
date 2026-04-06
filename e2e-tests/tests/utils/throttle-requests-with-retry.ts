@@ -6,7 +6,6 @@ type ThrottleConfig = {
   workerCount?: number
   safetyFactor?: number
   maxRetries?: number
-  maxConcurrent?: number
   label?: string
 }
 
@@ -17,14 +16,13 @@ const is429 = (error: RateLimitError): boolean =>
 
 export const throttleRequestsWithRetry = (
   config: ThrottleConfig,
-): (<T>(fn: () => Promise<T>) => Promise<T>) => {
+): (<T>(fn: () => Promise<T>, weight?: number) => Promise<T>) => {
   const {
     rateLimit,
     windowMs,
     workerCount = 1,
     safetyFactor = 0.5,
     maxRetries = 3,
-    maxConcurrent = 1,
     label = 'throttle',
   } = config
 
@@ -35,7 +33,7 @@ export const throttleRequestsWithRetry = (
     reservoir: perWorkerLimit,
     reservoirRefreshAmount: perWorkerLimit,
     reservoirRefreshInterval: windowMs,
-    maxConcurrent,
+    maxConcurrent: null,
     minTime: minTimeMs,
   })
 
@@ -57,7 +55,8 @@ export const throttleRequestsWithRetry = (
     },
   )
 
-  return <T>(fn: () => Promise<T>): Promise<T> => limiter.schedule(fn)
+  return <T>(fn: () => Promise<T>, weight?: number): Promise<T> =>
+    limiter.schedule({ weight: weight ?? 1 }, fn)
 }
 
 // https://clerk.com/docs/guides/how-clerk-works/system-limits#backend-api-requests

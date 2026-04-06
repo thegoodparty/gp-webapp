@@ -5,6 +5,7 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -25,7 +26,7 @@ test('authenticate with onboarded user', async ({ page }) => {
     .getByLabel(/password/i)
     .first()
     .fill(testUser.password)
-  await page.getByRole('button', { name: /continue/i }).click()
+  await getClerkContinueButton(page).click()
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
     timeout: 45000,
