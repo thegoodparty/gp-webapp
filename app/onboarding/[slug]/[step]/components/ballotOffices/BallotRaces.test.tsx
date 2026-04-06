@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import BallotRaces from './BallotRaces'
 import type { Campaign } from 'helpers/types'
+import { clientRequest } from 'gpApi/typed-request'
 
 const mockUpdateCampaign = vi.fn().mockResolvedValue({})
 
@@ -25,6 +26,10 @@ vi.mock('@tanstack/react-query', () => ({
   }),
 }))
 
+vi.mock('gpApi/typed-request', () => ({
+  clientRequest: vi.fn().mockResolvedValue({ data: {}, ok: true }),
+}))
+
 vi.mock('./RaceCard', () => ({
   default: () => null,
 }))
@@ -33,21 +38,23 @@ vi.mock('./CantFindRaceModal', () => ({
   default: ({
     onSaveCustomOffice,
   }: {
-    onSaveCustomOffice: (campaign: Campaign) => void
+    onSaveCustomOffice: (campaign: Campaign, customPositionName: string) => void
   }) => (
     <button
       data-testid="save-custom-office"
       onClick={() =>
-        onSaveCustomOffice({
-          details: {
-            office: 'School Board',
-            city: 'Austin',
-            district: '2',
-            electionDate: '2026-11-03',
-            officeTermLength: '4 years',
-            state: 'TX',
-          },
-        } as unknown as Campaign)
+        onSaveCustomOffice(
+          {
+            details: {
+              city: 'Austin',
+              district: '2',
+              electionDate: '2026-11-03',
+              officeTermLength: '4 years',
+              state: 'TX',
+            },
+          } as unknown as Campaign,
+          'School Board',
+        )
       }
     >
       Save custom office
@@ -77,7 +84,7 @@ const campaign = {
 } as Campaign
 
 describe('BallotRaces', () => {
-  it('clears raceId/electionId and sends office fields when saving custom office', async () => {
+  it('sends campaign details and patches org with customPositionName when saving custom office', async () => {
     render(
       <BallotRaces
         campaign={campaign}
@@ -93,11 +100,21 @@ describe('BallotRaces', () => {
     await waitFor(() => {
       expect(mockUpdateCampaign).toHaveBeenCalledWith(
         expect.arrayContaining([
-          { key: 'details.otherOffice', value: '' },
           { key: 'details.raceId', value: null },
           { key: 'details.electionId', value: null },
-          { key: 'details.office', value: 'School Board' },
+          { key: 'details.city', value: 'Austin' },
+          { key: 'details.state', value: 'TX' },
         ]),
+      )
+    })
+
+    await waitFor(() => {
+      expect(clientRequest).toHaveBeenCalledWith(
+        'PATCH /v1/organizations/:slug',
+        {
+          slug: 'campaign-1',
+          customPositionName: 'School Board',
+        },
       )
     })
   })

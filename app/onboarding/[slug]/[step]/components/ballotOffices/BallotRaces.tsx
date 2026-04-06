@@ -11,6 +11,7 @@ import H3 from '@shared/typography/H3'
 import CantFindRaceModal from './CantFindRaceModal'
 import { useRouter } from 'next/navigation'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body2 from '@shared/typography/Body2'
@@ -172,12 +173,13 @@ export default function BallotRaces({
 
   const handleSaveCustomOffice = async (
     updated: Campaign & { currentStep?: number },
+    officeName: string,
   ) => {
+    const customPositionName = officeName || null
+
     const baseAttr = [
-      { key: 'details.otherOffice', value: '' },
       { key: 'details.raceId', value: null },
       { key: 'details.electionId', value: null },
-      { key: 'details.office', value: updated.details.office },
       { key: 'details.city', value: updated.details.city },
       { key: 'details.district', value: updated.details.district },
       {
@@ -196,6 +198,7 @@ export default function BallotRaces({
       const attr = [
         { key: 'data.currentStep', value: currentStep },
         ...baseAttr,
+        { key: 'customPositionName', value: customPositionName },
       ]
       const newCampaign = await createCampaignWithOffice(attr)
       if (newCampaign) {
@@ -211,12 +214,22 @@ export default function BallotRaces({
         ...baseAttr,
       ]
       await updateCampaign(attr)
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: `campaign-${campaign.id}`,
+        customPositionName,
+      })
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     } else {
       if (adminMode && campaign) {
         await updateCampaign(baseAttr, campaign.slug)
       } else {
         await updateCampaign(baseAttr)
+      }
+      if (campaign) {
+        await clientRequest('PATCH /v1/organizations/:slug', {
+          slug: `campaign-${campaign.id}`,
+          customPositionName,
+        })
       }
       if (updateCallback) {
         updateCallback()

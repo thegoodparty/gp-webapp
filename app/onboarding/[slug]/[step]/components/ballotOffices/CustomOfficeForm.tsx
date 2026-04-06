@@ -110,7 +110,7 @@ interface CustomOfficeFormState {
 
 interface CustomOfficeFormProps {
   campaign?: Campaign
-  onSave: (campaign: Campaign) => void
+  onSave: (campaign: Campaign, customPositionName: string) => void
   onBack: () => void
 }
 
@@ -159,15 +159,17 @@ export default function CustomOfficeForm({
     }
     const updated = campaign ? { ...campaign } : ({ details: {} } as Campaign)
 
+    const { office, otherOffice: _otherOffice, ...detailFields } = state
     updated.details = {
       ...campaign?.details,
-      ...state,
+      ...detailFields,
       raceId: null,
       electionId: null,
       ballotOffice: null,
       electionDate: state.electionDate,
     }
-    onSave(updated)
+    const customPositionName = office || ''
+    onSave(updated, customPositionName)
 
     const trackingProperties = {
       officeState: state.state,
