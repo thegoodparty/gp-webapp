@@ -106,9 +106,7 @@ const TasksList = ({
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
   const taskCountsRef = useRef<
-    Partial<
-      Record<TaskId, { field: keyof VoterContactsState; count: number }>
-    >
+    Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
   >({})
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
