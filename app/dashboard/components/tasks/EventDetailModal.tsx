@@ -1,20 +1,27 @@
 'use client'
 
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
+import { Button } from '@styleguide'
+import { Calendar, Globe } from 'lucide-react'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { DISPLAY_TASK_TYPES } from '../../shared/constants/tasks.const'
+import type { Task } from './TaskItem'
+import Link from 'next/link'
 
 interface EventDetailModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  title: string
-  description: string
+  task: Task
 }
 
 export default function EventDetailModal({
   open,
   onOpenChange,
-  title,
-  description,
+  task,
 }: EventDetailModalProps) {
+  const { title, description, flowType, date, link } = task
+  const displayType = DISPLAY_TASK_TYPES[flowType] ?? 'Event'
+
   return (
     <ModalOrDrawer
       open={open}
@@ -22,11 +29,42 @@ export default function EventDetailModal({
       title={title}
       dialogClassName="max-w-md"
     >
-      {description ? (
-        <div className="p-6">
-          <p className="text-sm text-base-muted-foreground">{description}</p>
+      <div className="flex flex-col gap-4 p-6">
+        <div>
+          <h3 className="text-lg font-semibold">{title}</h3>
+          {description && (
+            <p className="mt-1 text-sm text-base-muted-foreground">
+              {description}
+            </p>
+          )}
         </div>
-      ) : null}
+
+        <div className="flex flex-col gap-2 text-sm">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4 text-base-muted-foreground" />
+            <span>{displayType}</span>
+          </div>
+          {date && (
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-base-muted-foreground" />
+              <span>{dateUsHelper(date, 'long')}</span>
+            </div>
+          )}
+        </div>
+
+        {link && (
+          <div className="flex justify-end">
+            <Link
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full md:w-auto"
+            >
+              <Button className="w-full md:w-auto">Learn more</Button>
+            </Link>
+          </div>
+        )}
+      </div>
     </ModalOrDrawer>
   )
 }

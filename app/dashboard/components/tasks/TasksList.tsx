@@ -430,8 +430,7 @@ const TasksList = ({
           onOpenChange={(open) => {
             if (!open) setEventDetailTask(null)
           }}
-          title={eventDetailTask.title}
-          description={eventDetailTask.description}
+          task={eventDetailTask}
         />
       )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
