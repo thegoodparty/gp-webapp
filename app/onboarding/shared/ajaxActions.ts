@@ -101,10 +101,7 @@ export const createCampaignWithOffice = async (
       },
       {},
     )
-    const resp = await clientFetch<Campaign>(
-      apiRoutes.campaign.create,
-      payload,
-    )
+    const resp = await clientFetch<Campaign>(apiRoutes.campaign.create, payload)
     return resp.data
   } catch (e) {
     console.error('error creating campaign', e)
