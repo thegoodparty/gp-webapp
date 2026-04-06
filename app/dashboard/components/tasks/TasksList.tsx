@@ -13,6 +13,8 @@ import LogTaskModal, {
   TASK_TYPE_HEADINGS,
   LogTaskFlowType,
 } from './LogTaskModal'
+import CountModal from './CountModal'
+import EventDetailModal from './EventDetailModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
@@ -37,6 +39,11 @@ import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOut
 import type { OutreachType } from 'gpApi/outreach.api'
 import { useQueryClient } from '@tanstack/react-query'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import {
+  getVoterContactField,
+  type VoterContactsState,
+} from '@shared/hooks/VoterContactsProvider'
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { Card, cn } from '@styleguide'
@@ -46,6 +53,8 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.events,
   TASK_TYPES.compliance,
 ]
+
+type TaskId = Task['id']
 
 interface TasksListProps {
   campaign: Campaign
@@ -95,6 +104,10 @@ const TasksList = ({
   )
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
+  const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
+  const taskCountsRef = useRef<
+    Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
+  >({})
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -112,15 +125,20 @@ const TasksList = ({
   const { errorSnackbar } = useSnackbar()
   const queryClient = useQueryClient()
   const [, setUpdateHistory] = useCampaignUpdateHistory()
-  const inFlightTasks = useRef(new Set<string>())
+  const [, , updateVoterContactsLocal] = useVoterContacts()
+  const inFlightTasks = useRef(new Set<TaskId>())
 
   const refreshAfterTaskMutation = async () => {
-    await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
-    const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
-      apiRoutes.campaign.updateHistory.list,
-    )
-    if ('ok' in resp && resp.ok) {
-      setUpdateHistory(resp.data || [])
+    try {
+      await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+      const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
+        apiRoutes.campaign.updateHistory.list,
+      )
+      if (resp && typeof resp === 'object' && 'ok' in resp && resp.ok) {
+        setUpdateHistory(resp.data || [])
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -128,29 +146,71 @@ const TasksList = ({
     const { id: taskId, flowType: type, completed } = task
 
     if (completed && !isLegacyList) {
-      await revertTask(taskId)
+      const saved = taskCountsRef.current[taskId]
+      if (saved) {
+        updateVoterContactsLocal((prev) => ({
+          ...prev,
+          [saved.field]: Math.max((prev[saved.field] || 0) - saved.count, 0),
+        }))
+        delete taskCountsRef.current[taskId]
+      }
+      const ok = await revertTask(taskId)
+      if (!ok && saved) {
+        const { field, count } = saved
+        updateVoterContactsLocal((prev) => ({
+          ...prev,
+          [field]: (prev[field] || 0) + count,
+        }))
+        taskCountsRef.current[taskId] = { field, count }
+      }
       return
     }
 
-    if (NON_OUTREACH_TYPES.includes(type)) {
+    if (
+      NON_OUTREACH_TYPES.includes(type) &&
+      (isLegacyList || type !== TASK_TYPES.events)
+    ) {
       await completeTask(taskId)
     } else {
       setCompleteModalTask(task)
     }
   }
 
-  const handleCompleteSubmit = (count: number) => {
-    if (completeModalTask) {
-      const resolvedType =
-        completeModalTask.flowType === TASK_TYPES.p2pDisabledText
-          ? TASK_TYPES.text
-          : completeModalTask.flowType
-      completeTask(completeModalTask.id, {
-        type: resolvedType,
-        quantity: count,
-      })
+  const handleCompleteSubmit = async (count: number) => {
+    if (!completeModalTask) return
+
+    const task = completeModalTask
+    const resolvedType =
+      task.flowType === TASK_TYPES.p2pDisabledText
+        ? TASK_TYPES.text
+        : task.flowType
+
+    let fieldForRollback: keyof VoterContactsState | undefined
+    if (!isLegacyList) {
+      const field = getVoterContactField(resolvedType)
+      fieldForRollback = field
+      updateVoterContactsLocal((prev) => ({
+        ...prev,
+        [field]: (prev[field] || 0) + count,
+      }))
+      taskCountsRef.current[task.id] = { field, count }
     }
-    setCompleteModalTask(null)
+
+    const ok = await completeTask(task.id, {
+      type: resolvedType,
+      quantity: count,
+    })
+
+    if (ok) {
+      setCompleteModalTask(null)
+    } else if (fieldForRollback !== undefined) {
+      const f = fieldForRollback
+      updateVoterContactsLocal((prev) => ({
+        ...prev,
+        [f]: Math.max((prev[f] || 0) - count, 0),
+      }))
+      delete taskCountsRef.current[task.id]
+    }
   }
 
   const handleCompleteCancel = () => {
@@ -159,13 +219,21 @@ const TasksList = ({
 
   const handleActionClick = (task: Task) => {
     if (task.completed && !isLegacyList) {
-      void revertTask(task.id)
+      const href = task.link
+      if (href?.startsWith('/')) {
+        router.push(href)
+      }
       return
     }
 
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
+    if (!isLegacyList && flowType === TASK_TYPES.events) {
+      setEventDetailTask(task)
+      return
+    }
 
     if (NON_OUTREACH_TYPES.includes(flowType)) {
       void (async () => {
@@ -262,7 +330,7 @@ const TasksList = ({
     }
 
     if (succeeded) {
-      refreshAfterTaskMutation().catch(console.error)
+      void refreshAfterTaskMutation().catch(console.error)
     }
     return succeeded
   }
@@ -327,6 +395,7 @@ const TasksList = ({
                 key={task.id}
                 task={task}
                 isPro={isPro}
+                isLegacyList={isLegacyList}
                 daysUntilElection={daysUntilElection}
                 electionDate={electionDate}
                 onCheck={handleCheckClick}
@@ -341,14 +410,34 @@ const TasksList = ({
         </ul>
       </Card>
       {completeModalTask &&
-        ((value: Task['flowType']): value is LogTaskFlowType =>
-          value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
-          <LogTaskModal
-            onSubmit={handleCompleteSubmit}
-            onClose={handleCompleteCancel}
+        (isLegacyList ? (
+          ((value: Task['flowType']): value is LogTaskFlowType =>
+            value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
+            <LogTaskModal
+              onSubmit={handleCompleteSubmit}
+              onClose={handleCompleteCancel}
+              flowType={completeModalTask.flowType}
+            />
+          )
+        ) : (
+          <CountModal
+            open={true}
+            onOpenChange={(open) => {
+              if (!open) handleCompleteCancel()
+            }}
             flowType={completeModalTask.flowType}
+            onSubmit={handleCompleteSubmit}
           />
-        )}
+        ))}
+      {eventDetailTask && (
+        <EventDetailModal
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) setEventDetailTask(null)
+          }}
+          task={eventDetailTask}
+        />
+      )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
