@@ -23,13 +23,28 @@ export async function fetchCampaignStatus(): Promise<CampaignStatus> {
   }
 }
 
-export async function getPostAuthRedirectPath(): Promise<string> {
-  const [user, campaignStatus] = await Promise.all([
-    getServerUser(),
-    fetchCampaignStatus(),
-  ])
+const fetchHasElectedOffice = async (): Promise<boolean> => {
+  try {
+    const resp = await serverFetch(apiRoutes.electedOffice.current)
+    return resp.ok
+  } catch {
+    return false
+  }
+}
 
-  return resolvePostAuthRedirectPath(user, campaignStatus)
+export async function getPostAuthRedirectPath(): Promise<string> {
+  const [user, campaignStatus, hasElectedOffice] =
+    await Promise.all([
+      getServerUser(),
+      fetchCampaignStatus(),
+      fetchHasElectedOffice(),
+    ])
+
+  return resolvePostAuthRedirectPath(
+    user,
+    campaignStatus,
+    hasElectedOffice,
+  )
 }
 
 export default async function candidateAccess(): Promise<void> {

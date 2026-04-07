@@ -33,16 +33,21 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       : {}
 
     try {
-      const [userRes, statusRes] = await Promise.all([
-        fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
-          headers,
-          cache: 'no-store',
-        }),
-        fetch(`${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`, {
-          headers,
-          cache: 'no-store',
-        }),
-      ])
+      const [userRes, statusRes, electedOfficeRes] =
+        await Promise.all([
+          fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
+            headers,
+            cache: 'no-store',
+          }),
+          fetch(
+            `${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`,
+            { headers, cache: 'no-store' },
+          ),
+          fetch(
+            `${API_ROOT}${API_VERSION_PREFIX}/elected-office/current`,
+            { headers, cache: 'no-store' },
+          ),
+        ])
 
       const user = userRes.ok
         ? ((await userRes.json()) as { roles?: string[] })
@@ -50,7 +55,12 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       const campaignStatus = statusRes.ok
         ? ((await statusRes.json()) as CampaignStatus)
         : null
-      const redirectPath = resolvePostAuthRedirectPath(user, campaignStatus)
+      const hasElectedOffice = electedOfficeRes.ok
+      const redirectPath = resolvePostAuthRedirectPath(
+        user,
+        campaignStatus,
+        hasElectedOffice,
+      )
 
       return NextResponse.redirect(new URL(redirectPath, req.url))
     } catch (e) {
