@@ -8,8 +8,8 @@ interface FailedToGenerateProps {
 export const FailedToGenerate = ({
   retryGeneration,
 }: FailedToGenerateProps): React.JSX.Element => (
-  <Card className="mt-4 p-4">
-    <p className="font-semibold">
+  <Card className="p-4">
+    <p className="font-semibold font-opensans">
       We&apos;re having trouble building your campaign plan...
     </p>
     <div>
