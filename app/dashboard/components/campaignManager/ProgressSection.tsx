@@ -28,7 +28,7 @@ export default function ProgressSection() {
     <Card className="gap-0 p-0">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b p-6">
         <div className="text-lg font-semibold font-opensans whitespace-nowrap">
-          Your campaign progress
+          campaign progress
         </div>
         <div
           className="text-sm text-primary cursor-pointer hover:underline font-opensans"
