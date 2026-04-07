@@ -96,7 +96,7 @@ export default function CampaignManager({
     <DashboardLayout
       pathname={pathname}
       campaign={campaign}
-      wrapperClassName="flex-1"
+      wrapperClassName="!p-0"
     >
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
