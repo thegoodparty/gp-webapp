@@ -15,16 +15,11 @@ export const resolvePostAuthRedirectPath = (
   if (campaignStatus?.status === 'candidate') {
     return '/dashboard'
   }
-  if (
-    campaignStatus?.status === 'onboarding' &&
-    campaignStatus?.slug
-  ) {
+  if (campaignStatus?.status === 'onboarding' && campaignStatus?.slug) {
     return `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
   }
   if (!campaignStatus || campaignStatus.status === false) {
-    return hasElectedOffice
-      ? '/dashboard'
-      : '/onboarding/office-selection'
+    return hasElectedOffice ? '/dashboard' : '/onboarding/office-selection'
   }
   return '/dashboard/profile'
 }

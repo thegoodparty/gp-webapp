@@ -33,21 +33,20 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       : {}
 
     try {
-      const [userRes, statusRes, electedOfficeRes] =
-        await Promise.all([
-          fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
-            headers,
-            cache: 'no-store',
-          }),
-          fetch(
-            `${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`,
-            { headers, cache: 'no-store' },
-          ),
-          fetch(
-            `${API_ROOT}${API_VERSION_PREFIX}/elected-office/current`,
-            { headers, cache: 'no-store' },
-          ),
-        ])
+      const [userRes, statusRes, electedOfficeRes] = await Promise.all([
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
+          headers,
+          cache: 'no-store',
+        }),
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`, {
+          headers,
+          cache: 'no-store',
+        }),
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/elected-office/current`, {
+          headers,
+          cache: 'no-store',
+        }),
+      ])
 
       const user = userRes.ok
         ? ((await userRes.json()) as { roles?: string[] })
