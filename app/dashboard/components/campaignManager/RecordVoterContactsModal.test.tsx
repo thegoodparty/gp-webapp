@@ -101,7 +101,7 @@ const renderModal = ({
   render(
     <UserContext.Provider value={[user, vi.fn()]}>
       <VoterContactsContext.Provider
-        value={[voterContacts, mockSetVoterContacts]}
+        value={[voterContacts, mockSetVoterContacts, vi.fn()]}
       >
         <CampaignUpdateHistoryContext.Provider
           value={[updateHistory, mockSetUpdateHistory]}

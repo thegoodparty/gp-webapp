@@ -18,6 +18,30 @@ vi.mock('helpers/useSnackbar', () => ({
   useSnackbar: () => ({ errorSnackbar: mockErrorSnackbar }),
 }))
 
+const { mockUpdateVoterContactsLocal } = vi.hoisted(() => ({
+  mockUpdateVoterContactsLocal: vi.fn(),
+}))
+
+vi.mock('@shared/hooks/useVoterContacts', () => ({
+  useVoterContacts: () => [
+    {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+      directMail: 0,
+      digitalAds: 0,
+      text: 0,
+      events: 0,
+      yardSigns: 0,
+      robocall: 0,
+      phoneBanking: 0,
+      socialMedia: 0,
+    },
+    vi.fn(),
+    mockUpdateVoterContactsLocal,
+  ],
+}))
+
 vi.mock(
   'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider',
   () => ({
@@ -89,6 +113,41 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockUpdateVoterContactsLocal.mockReset()
+})
+
+describe('TasksList non-legacy event tasks', () => {
+  it('uses the row only to open event details; external link stays in the modal', async () => {
+    const user = userEvent.setup()
+    mockClientFetch.mockResolvedValue({ ok: true, data: [] })
+
+    const eventTask = makeTask({
+      flowType: TASK_TYPES.events,
+      link: 'https://example.com/event',
+      completed: false,
+    })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[eventTask]}
+        isLegacyList={false}
+      />,
+    )
+
+    const taskItem = document.querySelector('[data-slot="task-item"]')
+    expect(taskItem).toBeTruthy()
+    expect(taskItem?.querySelector('a[target="_blank"]')).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: /Learn more/i })).toHaveAttribute(
+        'href',
+        'https://example.com/event',
+      )
+    })
+  })
 })
 
 describe('TasksList revert completion flow', () => {
@@ -146,6 +205,85 @@ describe('TasksList revert completion flow', () => {
     )
   })
 
+  it('rolls back local voter contact count when revert fails after outreach complete', async () => {
+    const user = userEvent.setup()
+    const textTask = makeTask({
+      flowType: TASK_TYPES.text,
+      completed: false,
+      week: 1,
+    })
+    const completedTextTask = { ...textTask, completed: true }
+
+    let textTotal = 0
+    mockUpdateVoterContactsLocal.mockImplementation((updater) => {
+      const prev = {
+        doorKnocking: 0,
+        calls: 0,
+        digital: 0,
+        directMail: 0,
+        digitalAds: 0,
+        text: textTotal,
+        events: 0,
+        yardSigns: 0,
+        robocall: 0,
+        phoneBanking: 0,
+        socialMedia: 0,
+      }
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      textTotal = next.text
+    })
+
+    mockClientFetch.mockImplementation(
+      (route: { method?: string; path?: string }) => {
+        if (
+          route.method === 'PUT' &&
+          route.path?.includes('/campaigns/tasks/complete/')
+        ) {
+          return Promise.resolve({ ok: true, data: completedTextTask })
+        }
+        if (
+          route.method === 'GET' &&
+          route.path?.includes('/campaigns/mine/update-history')
+        ) {
+          return Promise.resolve({ ok: true, data: [] })
+        }
+        if (
+          route.method === 'DELETE' &&
+          route.path?.includes('/campaigns/tasks/complete/')
+        ) {
+          return Promise.resolve({ ok: false, status: 500 })
+        }
+        return Promise.resolve({ ok: true, data: [] })
+      },
+    )
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[textTask]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.type(screen.getByPlaceholderText('Enter amount'), '4')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    await waitFor(() => {
+      expect(textTotal).toBe(4)
+    })
+
+    await user.click(screen.getByRole('checkbox'))
+
+    await waitFor(() => {
+      expect(mockErrorSnackbar).toHaveBeenCalledWith(
+        'Failed to mark task as incomplete',
+      )
+    })
+
+    expect(textTotal).toBe(4)
+  })
+
   it('shows error snackbar when revert API fails', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
@@ -197,12 +335,11 @@ describe('TasksList revert completion flow', () => {
     }
   })
 
-  it('calls the revert API when clicking the action area of a completed non-legacy task', async () => {
+  it('does not revert when clicking the row of a completed non-legacy task without a link', async () => {
     const user = userEvent.setup()
     const completedTask = makeTask({ completed: true })
-    const revertedTask = { ...completedTask, completed: false }
 
-    mockClientFetch.mockResolvedValueOnce({ ok: true, data: revertedTask })
+    mockClientFetch.mockResolvedValue({ ok: true, data: completedTask })
 
     render(
       <TasksList
@@ -212,17 +349,12 @@ describe('TasksList revert completion flow', () => {
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+    await user.click(screen.getByText('Test Task'))
 
-    await waitFor(() => {
-      expect(mockClientFetch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          path: '/campaigns/tasks/complete/:taskId',
-          method: 'DELETE',
-        }),
-        { taskId: 'task-1' },
-      )
-    })
+    expect(mockClientFetch).not.toHaveBeenCalledWith(
+      expect.objectContaining({ method: 'DELETE' }),
+      expect.anything(),
+    )
   })
 
   it('ignores rapid duplicate clicks while a revert is in flight', async () => {
