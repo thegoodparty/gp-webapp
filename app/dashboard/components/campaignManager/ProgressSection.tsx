@@ -31,7 +31,7 @@ export default function ProgressSection() {
           Your campaign progress
         </div>
         <div
-          className="text-sm text-primary cursor-pointer hover:underline"
+          className="text-sm text-primary cursor-pointer hover:underline font-opensans"
           onClick={toggleRecordModalOpen}
         >
           Record voter contacts
@@ -39,7 +39,7 @@ export default function ProgressSection() {
       </div>
       <div className="flex flex-col gap-3 p-6">
         <Progress value={progress} className="w-full" />
-        <div className="flex w-full justify-between items-center text-sm font-normal font-opensans">
+        <div className="flex w-full flex-wrap justify-between items-center gap-x-4 gap-y-1 text-sm font-normal font-opensans">
           <div>{numberFormatter(contacted)} voters contacted</div>
           <div
             onClick={toggleModalOpen}
