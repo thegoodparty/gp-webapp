@@ -120,11 +120,11 @@ test.describe('Contacts Page', () => {
     await searchInput.press('Enter')
 
     const searchResults = table.locator('tbody tr')
-    
+
     await expect
       .poll(() => searchResults.count(), { timeout: 5000 })
       .toBeGreaterThanOrEqual(1)
-    
+
     await expect(
       pagination.getByRole('link', { name: '1' }).first(),
     ).toHaveAttribute('data-active', 'true', { timeout: 5000 })
