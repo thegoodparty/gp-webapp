@@ -315,9 +315,6 @@ export default function AdminVictoryPathPage(
         Number(pathToVictory.projectedTurnout) > 0
       ) {
         attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' })
-      } else {
-        errorSnackbar('Projected Turnout is required')
-        return
       }
 
       await updateCampaign(attr, campaign?.slug || '')

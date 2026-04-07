@@ -19,6 +19,7 @@ import {
 } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
+import { useOrganization } from '@shared/organization-picker'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -39,6 +40,7 @@ const DashboardLayout = ({
 }: DashboardLayoutProps): React.JSX.Element | null => {
   const [user] = useUser()
   const [hookCampaign] = useCampaign()
+  const organization = useOrganization()
   const router = useRouter()
   const hookPathname = usePathname()
 
@@ -114,6 +116,7 @@ const DashboardLayout = ({
               campaign={activeCampaign}
               user={user}
               pathname={currentPath || undefined}
+              isElectedOffice={!!organization?.electedOfficeId}
             />
             {children}
           </div>
