@@ -125,11 +125,10 @@ export const timeToNextElection = (date: DateInput): string | false => {
     return false
   } else if (isNaN(weeksUntil.weeks) || isNaN(weeksUntil.days)) {
     return false
-  } else if (
-    weeksUntil.weeks < 0 ||
-    (weeksUntil.weeks === 0 && weeksUntil.days <= 0)
-  ) {
+  } else if (weeksUntil.weeks < 0) {
     return false
+  } else if (weeksUntil.weeks === 0 && weeksUntil.days <= 0) {
+    return 'election-day'
   } else if (weeksUntil.weeks === 0) {
     return `${weeksUntil.days} ${weeksUntil.days === 1 ? 'day' : 'days'}`
   } else {

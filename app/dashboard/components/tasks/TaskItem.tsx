@@ -2,9 +2,8 @@ import {
   DISPLAY_TASK_TYPES,
   TASK_TYPES,
 } from '../../shared/constants/tasks.const'
-import { dateUsHelper } from 'helpers/dateHelper'
 import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
-import { subDays } from 'date-fns'
+import { format, subDays } from 'date-fns'
 
 export interface Task {
   id: string
@@ -78,10 +77,11 @@ export default function TaskItem({
         description={description}
         date={
           date
-            ? dateUsHelper(new Date(date.slice(0, 10).replace(/-/g, '/')))
+            ? format(new Date(date.slice(0, 10).replace(/-/g, '/')), 'MMM d')
             : electionDate && deadline
-            ? dateUsHelper(
+            ? format(
                 subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
+                'MMM d',
               )
             : ''
         }

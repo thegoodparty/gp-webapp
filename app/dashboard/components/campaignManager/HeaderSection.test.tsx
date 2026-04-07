@@ -44,7 +44,7 @@ describe('HeaderSection', () => {
     })
     mockTimeToNextElection.mockReturnValue('8 weeks')
     renderWithProviders()
-    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
     expect(
       screen.getByText(/8 weeks until your General Election/),
     ).toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('HeaderSection', () => {
     })
     mockTimeToNextElection.mockReturnValue('4 weeks')
     renderWithProviders()
-    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
     expect(
       screen.getByText(/4 weeks until your Primary Election/),
     ).toBeInTheDocument()
@@ -70,7 +70,7 @@ describe('HeaderSection', () => {
     })
     mockTimeToNextElection.mockReturnValue(false)
     renderWithProviders()
-    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
     expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 
@@ -78,7 +78,7 @@ describe('HeaderSection', () => {
     mockGetNextElection.mockReturnValue(null)
     mockTimeToNextElection.mockReturnValue(false)
     renderWithProviders()
-    expect(screen.getByText(/Hi Jane,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
     expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 

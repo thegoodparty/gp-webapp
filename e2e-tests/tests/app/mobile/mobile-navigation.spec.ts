@@ -10,7 +10,7 @@ import { visualSnapshot } from '../../../src/helpers/visual.helper'
 function campaignPageGreetingHeading(page: Page) {
   return page
     .getByRole('heading', { level: 1 })
-    .filter({ hasText: /Hello|until|General|Primary|Election|concluded/ })
+    .filter({ hasText: /Hi|Hello|until|General|Primary|Election|concluded/ })
     .first()
 }
 
