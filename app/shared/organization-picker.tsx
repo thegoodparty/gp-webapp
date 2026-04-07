@@ -58,18 +58,6 @@ export const useSetOrganizationSlug = () => {
   return ctx.setSelectedSlug
 }
 
-export const useOrganizationIfEnabled = () => {
-  const ctx = useContext(OrganizationContext)
-
-  if (!ctx) {
-    console.warn(
-      'useOrganizationIfEnabled must be used within OrganizationProvider',
-    )
-    return undefined
-  }
-  return ctx.selected
-}
-
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]

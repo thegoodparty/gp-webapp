@@ -101,7 +101,6 @@ interface CustomOfficeFormState {
   state: string
   office: string
   officeTermLength: string
-  otherOffice: string
   district: string
   city: string
   electionDate: string
@@ -123,7 +122,6 @@ export default function CustomOfficeForm({
     state: campaign?.details?.state || '',
     office: '',
     officeTermLength: campaign?.details?.officeTermLength || '',
-    otherOffice: '',
     district: campaign?.details?.district || '',
     city: campaign?.details?.city || '',
     electionDate: campaign?.details?.electionDate || '',
@@ -159,7 +157,7 @@ export default function CustomOfficeForm({
     }
     const updated = campaign ? { ...campaign } : ({ details: {} } as Campaign)
 
-    const { office, otherOffice: _otherOffice, ...detailFields } = state
+    const { office, ...detailFields } = state
     updated.details = {
       ...campaign?.details,
       ...detailFields,

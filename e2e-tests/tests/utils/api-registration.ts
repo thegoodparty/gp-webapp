@@ -154,13 +154,11 @@ const bootstrapTestUser = async (
   }
 
   await client.post('/v1/campaigns', {
+    ballotReadyPositionId: race.position.id,
     details: {
-      positionId: race.position.id,
       electionId: race.election.id,
       raceId: race.id,
       state: race.election.state,
-      office: 'Other',
-      otherOffice: race.position.name,
       ballotLevel: race.position.level,
       electionDate: race.election.electionDay,
       partisanType: race.position.partisanType,
@@ -229,6 +227,7 @@ export const authenticateTestUser = async (
   }
 
   const domain = cookieDomain()
+
   await page.context().addCookies([
     {
       name: 'token',
@@ -247,6 +246,21 @@ export const authenticateTestUser = async (
       sameSite: 'Lax',
     },
   ])
+
+  if (!options?.skipCampaignCreation) {
+    const { data: campaign } = await client.get<{ id: number }>(
+      '/v1/campaigns/mine',
+    )
+    await page.context().addCookies([
+      {
+        name: 'organization-slug',
+        value: `campaign-${campaign.id}`,
+        domain,
+        path: '/',
+        sameSite: 'Lax',
+      },
+    ])
+  }
 
   const loginTime = Date.now()
   if (process.env.DEBUG) {
