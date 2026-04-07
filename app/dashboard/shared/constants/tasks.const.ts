@@ -46,6 +46,36 @@ export const DISPLAY_TASK_TYPES: Record<
   compliance: 'Compliance',
 }
 
+export const WEEK_POSITIONS = {
+  past: 'past',
+  current: 'current',
+  future: 'future',
+} as const
+
+export type WeekPosition = (typeof WEEK_POSITIONS)[keyof typeof WEEK_POSITIONS]
+
+export const NAV_DIRECTIONS = {
+  previous: 'previous',
+  next: 'next',
+} as const
+
+export type NavDirection = (typeof NAV_DIRECTIONS)[keyof typeof NAV_DIRECTIONS]
+
+export const STATUS_CHANGES = {
+  complete: 'complete',
+  incomplete: 'incomplete',
+} as const
+
+export type StatusChange = (typeof STATUS_CHANGES)[keyof typeof STATUS_CHANGES]
+
+export const TRACKING_SOURCES = {
+  manualCheckoff: 'manualCheckoff',
+  schedulingFlow: 'schedulingFlow',
+} as const
+
+export type TrackingSource =
+  (typeof TRACKING_SOURCES)[keyof typeof TRACKING_SOURCES]
+
 export type CampaignPlanEventTaskType = 'text' | 'robocall' | 'event'
 
 export const getCampaignPlanEventTaskType = (
