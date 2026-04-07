@@ -135,8 +135,6 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('validate contacts filters', async ({ page }) => {
-  test.setTimeout(5 * 60 * 1000)
-
   await authenticateTestUser(page, {
     isolated: true,
     race: {

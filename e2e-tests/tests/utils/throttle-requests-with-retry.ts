@@ -73,7 +73,7 @@ export const clerkThrottle = throttleRequestsWithRetry({
   rateLimit: CLERK_DEV_RATE_LIMIT,
   windowMs: CLERK_RATE_WINDOW_MS,
   workerCount: 4,
-  safetyFactor: 0.5,
+  safetyFactor: 0.25,
   maxRetries: 3,
   label: 'clerk-limiter',
 })

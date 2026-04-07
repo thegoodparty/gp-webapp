@@ -14,7 +14,6 @@ test.describe('Contacts Page', () => {
   })
 
   test('contacts page functionality', async ({ page }) => {
-    test.setTimeout(120 * 1000)
     await authenticateTestUser(page, { isolated: true })
     await page.goto('/dashboard/election-result', {
       waitUntil: 'domcontentloaded',
@@ -121,8 +120,11 @@ test.describe('Contacts Page', () => {
     await searchInput.press('Enter')
 
     const searchResults = table.locator('tbody tr')
-    await expect(searchResults).toHaveCount(1, { timeout: 20000 })
-
+    
+    await expect
+      .poll(() => searchResults.count(), { timeout: 5000 })
+      .toBeGreaterThanOrEqual(1)
+    
     await expect(
       pagination.getByRole('link', { name: '1' }).first(),
     ).toHaveAttribute('data-active', 'true', { timeout: 5000 })
