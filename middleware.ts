@@ -5,7 +5,7 @@ import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 import {
   resolvePostAuthRedirectPath,
   CampaignStatus,
-} from 'app/dashboard/shared/candidateAccess'
+} from 'helpers/resolvePostAuthRedirectPath.util'
 
 const isPublicRoute = createRouteMatcher([
   '/',
