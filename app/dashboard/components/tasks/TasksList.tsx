@@ -151,26 +151,24 @@ const TasksList = ({
 
   const tasksCount = tasks.length
   const tasksCompletedCount = tasks.filter((t) => t.completed).length
-  const filteredTasksCount = filteredTasks.length
-  const filteredCompletedCount = filteredTasks.filter((t) => t.completed).length
+  const viewedPayloadRef = useRef({
+    tasksThisWeek: 0,
+    tasksCompletedThisWeek: 0,
+  })
+  viewedPayloadRef.current = {
+    tasksThisWeek: filteredTasks.length,
+    tasksCompletedThisWeek: filteredTasks.filter((t) => t.completed).length,
+  }
 
-  const trackedWeekRef = useRef<number | null>(null)
+  const trackedWeekRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (isLegacyList || tasksCount === 0) return
-    if (trackedWeekRef.current === selectedWeek) return
-    trackedWeekRef.current = selectedWeek
-    trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, {
-      tasksThisWeek: filteredTasksCount,
-      tasksCompletedThisWeek: filteredCompletedCount,
-    })
-  }, [
-    filteredTasksCount,
-    filteredCompletedCount,
-    isLegacyList,
-    selectedWeek,
-    tasksCount,
-  ])
+    const trackedWeekKey = `${campaign.id}:${selectedWeek}`
+    if (trackedWeekRef.current === trackedWeekKey) return
+    trackedWeekRef.current = trackedWeekKey
+    trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, viewedPayloadRef.current)
+  }, [campaign.id, isLegacyList, selectedWeek, tasksCount])
 
   useEffect(() => {
     if (isLegacyList || tasksCount === 0 || !user?.id) return
