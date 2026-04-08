@@ -21,12 +21,24 @@ export default function EventDetailModal({
 }: EventDetailModalProps) {
   const { title, description, flowType, date, link } = task
   const displayType = DISPLAY_TASK_TYPES[flowType] ?? 'Event'
+  const formattedDate = date
+    ? dateUsHelper(date.slice(0, 10).replace(/-/g, '/'), 'long')
+    : null
+  const modalDescription = [
+    description,
+    displayType,
+    formattedDate ? `Date: ${formattedDate}` : null,
+    link ? 'Includes an external link for more details.' : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <ModalOrDrawer
       open={open}
       onOpenChange={onOpenChange}
       title={title}
+      description={modalDescription || 'Event details'}
       dialogClassName="max-w-md "
     >
       <div className="flex flex-col gap-4 p-4 md:p-1">
@@ -47,7 +59,7 @@ export default function EventDetailModal({
           {date && (
             <div className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-base-muted-foreground" />
-              <span>{dateUsHelper(date.slice(0, 10).replace(/-/g, '/'))}</span>
+              <span>{formattedDate}</span>
             </div>
           )}
         </div>
