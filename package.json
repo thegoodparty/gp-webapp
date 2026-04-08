@@ -101,7 +101,7 @@
     "object-to-formdata": "^4.5.1",
     "ofetch": "^1.5.1",
     "p-map": "^7.0.4",
-    "path-to-regexp": "^8.2.0",
+    "path-to-regexp": "^8.4.0",
     "query-string": "^9.1.0",
     "quill": "^2.0.3",
     "react": "^19.1.2",
