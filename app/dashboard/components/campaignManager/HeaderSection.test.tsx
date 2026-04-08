@@ -7,6 +7,10 @@ import { UserContext } from '@shared/user/UserProvider'
 import { CampaignContext } from '@shared/hooks/CampaignProvider'
 import type { Campaign, User } from 'helpers/types'
 
+vi.mock('helpers/campaignHelper', () => ({
+  getNextElection: vi.fn(),
+}))
+
 vi.mock('helpers/dateHelper', async (importOriginal) => {
   const actual = await importOriginal<typeof import('helpers/dateHelper')>()
   return {
@@ -15,7 +19,9 @@ vi.mock('helpers/dateHelper', async (importOriginal) => {
   }
 })
 
+import { getNextElection } from 'helpers/campaignHelper'
 import { timeToNextElection } from 'helpers/dateHelper'
+const mockGetNextElection = vi.mocked(getNextElection)
 const mockTimeToNextElection = vi.mocked(timeToNextElection)
 
 const mockUser = { firstName: 'Jane' } as User
@@ -31,19 +37,53 @@ const renderWithProviders = () =>
   )
 
 describe('HeaderSection', () => {
-  it('shows time-to-election greeting when available', () => {
-    mockTimeToNextElection.mockReturnValue('8 weeks away')
+  it('shows greeting and general election countdown', () => {
+    mockGetNextElection.mockReturnValue({
+      nextElectionDate: '2025-11-04',
+      isPrimary: false,
+    })
+    mockTimeToNextElection.mockReturnValue('8 weeks')
     renderWithProviders()
-    expect(screen.getByText(/8 weeks away, Jane/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/8 weeks until your General Election/),
+    ).toBeInTheDocument()
   })
 
-  it('falls back to "Hello" when timeToNextElection returns false', () => {
+  it('shows greeting and primary election countdown', () => {
+    mockGetNextElection.mockReturnValue({
+      nextElectionDate: '2025-06-10',
+      isPrimary: true,
+    })
+    mockTimeToNextElection.mockReturnValue('4 weeks')
+    renderWithProviders()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/4 weeks until your Primary Election/),
+    ).toBeInTheDocument()
+  })
+
+  it('shows greeting without countdown when timeToNextElection returns false', () => {
+    mockGetNextElection.mockReturnValue({
+      nextElectionDate: '2020-01-01',
+      isPrimary: false,
+    })
     mockTimeToNextElection.mockReturnValue(false)
     renderWithProviders()
-    expect(screen.getByText(/Hello, Jane/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
+  })
+
+  it('shows greeting without countdown when getNextElection returns null', () => {
+    mockGetNextElection.mockReturnValue(null)
+    mockTimeToNextElection.mockReturnValue(false)
+    renderWithProviders()
+    expect(screen.getByText(/Hi Jane/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 
   it('handles missing user gracefully', () => {
+    mockGetNextElection.mockReturnValue(null)
     mockTimeToNextElection.mockReturnValue(false)
     render(
       <UserContext.Provider value={[null, vi.fn(), true]}>
@@ -52,6 +92,7 @@ describe('HeaderSection', () => {
         </CampaignContext.Provider>
       </UserContext.Provider>,
     )
-    expect(screen.getByText(/Hello,/)).toBeInTheDocument()
+    expect(screen.getByText(/Hi/)).toBeInTheDocument()
+    expect(screen.queryByText(/until your/)).not.toBeInTheDocument()
   })
 })

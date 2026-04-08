@@ -129,6 +129,16 @@ jobs:
             e2e-tests/test-results
           retention-days: 30
 
+      - name: Upload report to S3
+        if: ${{ !cancelled() }}
+        working-directory: e2e-tests
+        run: |
+          REPORT_PATH="${{ github.run_id }}/${{ github.run_attempt }}"
+          aws s3 sync playwright-report/ \
+            "s3://gp-playwright-reports/${REPORT_PATH}/" \
+            --no-progress
+          echo "REPORT_URL=https://gp-playwright-reports.s3.us-west-2.amazonaws.com/${REPORT_PATH}/index.html" >> "$GITHUB_ENV"
+
       - name: Parse test results
         if: always()
         id: test-results
@@ -202,7 +212,12 @@ jobs:
               body += `**Failed Tests:**\n${failed_tests}\n\n`;
             }
 
-            body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            const reportUrl = '${{ env.REPORT_URL }}';
+            if (reportUrl) {
+              body += `[View full test report](${reportUrl}) | [View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            } else {
+              body += `[View full test report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            }
 
             await github.rest.issues.createComment({
               issue_number: prNumber,
@@ -221,7 +236,7 @@ jobs:
               text: '✅ E2E Tests Passed',
               attachments: [{
                 color: 'good',
-                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
+                text: `${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n✅ ${{ steps.test-results.outputs.passed_count }}/${{ steps.test-results.outputs.total_tests }} tests passed\n\n<${{ env.REPORT_URL }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>`
               }]
             }
         env:
@@ -237,7 +252,7 @@ jobs:
               "text": "⚠️ E2E Tests Failed",
               "attachments": [{
                 "color": "warning",
-                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                "text": "${{ github.repository }} - ${{ github.ref_name }} by ${{ github.actor }}\nURL: ${{ env.BASE_URL }}\n\n❌ ${{ steps.test-results.outputs.failed_count }} failed\n✅ ${{ steps.test-results.outputs.passed_count }} passed\n📊 ${{ steps.test-results.outputs.total_tests }} total\n\nFailed Tests:\n${{ steps.test-results.outputs.failed_tests || '(Unable to parse test results)' }}\n\n<${{ env.REPORT_URL }}|View test report> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
               }]
             }
         env:

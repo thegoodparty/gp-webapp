@@ -5,7 +5,7 @@ import { API_ROOT, API_VERSION_PREFIX } from 'appEnv'
 import {
   resolvePostAuthRedirectPath,
   CampaignStatus,
-} from 'app/dashboard/shared/candidateAccess'
+} from 'helpers/resolvePostAuthRedirectPath.util'
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -34,12 +34,16 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       : {}
 
     try {
-      const [userRes, statusRes] = await Promise.all([
+      const [userRes, statusRes, electedOfficeRes] = await Promise.all([
         fetch(`${API_ROOT}${API_VERSION_PREFIX}/users/me`, {
           headers,
           cache: 'no-store',
         }),
         fetch(`${API_ROOT}${API_VERSION_PREFIX}/campaigns/mine/status`, {
+          headers,
+          cache: 'no-store',
+        }),
+        fetch(`${API_ROOT}${API_VERSION_PREFIX}/elected-office/current`, {
           headers,
           cache: 'no-store',
         }),
@@ -51,7 +55,12 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       const campaignStatus = statusRes.ok
         ? ((await statusRes.json()) as CampaignStatus)
         : null
-      const redirectPath = resolvePostAuthRedirectPath(user, campaignStatus)
+      const hasElectedOffice = electedOfficeRes.ok
+      const redirectPath = resolvePostAuthRedirectPath(
+        user,
+        campaignStatus,
+        hasElectedOffice,
+      )
 
       return NextResponse.redirect(new URL(redirectPath, req.url))
     } catch (e) {
@@ -87,7 +96,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 export const config = {
   matcher: [
     // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?:on)?|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],

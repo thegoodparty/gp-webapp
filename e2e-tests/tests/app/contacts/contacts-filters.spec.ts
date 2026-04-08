@@ -6,6 +6,8 @@ import {
 } from 'src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
+import { WaitHelper } from 'src/helpers/wait.helper'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -16,15 +18,9 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
 
 let filterCallCount = 0
 
-const personPanelLocator = (page: Page) =>
-  page
-    .getByRole('dialog')
-    .filter({ has: page.getByText('Registered Voter') })
-    .first()
-
 const openPersonPanel = async (row: Locator, panel: Locator) => {
   for (let attempt = 0; attempt < 3; attempt++) {
-    await row.click({ force: true })
+    await row.locator('td').first().click({ force: true })
     try {
       await expect(panel).toBeVisible({ timeout: 10000 })
       return
@@ -78,14 +74,9 @@ const testFilterField = async (
   }
 
   await page.getByTestId('edit-list-button').first().click()
-  const sheet = page
-    .getByRole('dialog')
-    .filter({
-      has: page.getByRole('button', { name: /update segment/i }),
-    })
-    .first()
+  const sheet = filtersSheet(page, /update segment/i)
 
-  await expect(sheet).toBeVisible()
+  await expect(sheet).toBeVisible({ timeout: 30000 })
   await sheet.getByRole('button', { name: /clear filters/i }).click()
 
   for (const { label, values } of config.select) {
@@ -121,7 +112,7 @@ const testFilterField = async (
   }
 
   const firstRow = table.locator('tbody tr').first()
-  const panel = personPanelLocator(page)
+  const panel = personContactPanel(page)
 
   await openPersonPanel(firstRow, panel)
 
@@ -144,8 +135,6 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('validate contacts filters', async ({ page }) => {
-  test.setTimeout(5 * 60 * 1000)
-
   await authenticateTestUser(page, {
     isolated: true,
     race: {
@@ -157,15 +146,20 @@ test('validate contacts filters', async ({ page }) => {
   await page.goto('/dashboard/election-result', {
     waitUntil: 'domcontentloaded',
   })
-  await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForTimeout(3000)
-
-  await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
-  await page.waitForLoadState('networkidle')
   await NavigationHelper.dismissOverlays(page)
+  await page
+    .getByRole('button', { name: 'I won my race' })
+    .click({ timeout: 10_000 })
+  await page.waitForURL('**/polls/welcome', { timeout: 15_000 })
+
+  await page.goto('/dashboard/contacts')
+  await NavigationHelper.dismissOverlays(page)
+  await WaitHelper.waitForPageReady(page)
 
   await expect(page).toHaveURL(/\/dashboard\/contacts/)
-  await expect(page.getByRole('heading', { name: 'Contacts' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Constituents' }),
+  ).toBeVisible()
 
   const table = page.locator('table').first()
   await expect(table).toBeVisible()
@@ -178,13 +172,8 @@ test('validate contacts filters', async ({ page }) => {
   await createListButton.scrollIntoViewIfNeeded()
   await expect(createListButton).toBeVisible()
   await createListButton.click({ force: true })
-  const sheet = page
-    .getByRole('dialog')
-    .filter({
-      has: page.getByRole('button', { name: /create segment/i }),
-    })
-    .first()
-  await expect(sheet).toBeVisible()
+  const sheet = filtersSheet(page, /create segment/i)
+  await expect(sheet).toBeVisible({ timeout: 30000 })
   await selectCheckbox(sheet, 'Gender', 'Unknown')
   const createBtn = sheet.getByRole('button', { name: /create segment/i })
   await expect(createBtn).toBeEnabled({ timeout: 5000 })

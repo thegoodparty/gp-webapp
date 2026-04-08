@@ -7,7 +7,7 @@ import LoadingChecklist, {
 import { Card, CardHeader, CardTitle } from '@styleguide'
 import { getCookie, setCookie } from 'helpers/cookieHelper'
 
-const AI_CAMPAIGN_COOKIE = 'aiCampaignChecklistComplete'
+export const AI_CAMPAIGN_CHECKLIST_COOKIE = 'aiCampaignChecklistComplete'
 
 const loadingItems: LoadingItem[] = [
   {
@@ -36,14 +36,21 @@ const loadingItems: LoadingItem[] = [
   },
 ]
 
-export default function LoadingState() {
+export default function LoadingState({
+  hideCallback,
+}: {
+  hideCallback?: () => void
+}) {
   const [showChecklist, setShowChecklist] = useState(
-    () => !getCookie(AI_CAMPAIGN_COOKIE),
+    () => !getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE),
   )
 
   const onComplete = () => {
-    setCookie(AI_CAMPAIGN_COOKIE, 'true')
+    setCookie(AI_CAMPAIGN_CHECKLIST_COOKIE, 'true')
     setShowChecklist(false)
+    if (hideCallback) {
+      hideCallback()
+    }
   }
 
   if (!showChecklist) {
@@ -51,11 +58,15 @@ export default function LoadingState() {
   }
 
   return (
-    <Card className="px-4 py-6">
-      <CardHeader>
-        <CardTitle>Preparing your campaign plan...</CardTitle>
+    <Card className="gap-0 p-0 font-opensans">
+      <CardHeader className="p-6 pb-0">
+        <CardTitle className="text-lg font-semibold">
+          Preparing your campaign plan...
+        </CardTitle>
       </CardHeader>
-      <LoadingChecklist items={loadingItems} onComplete={onComplete} />
+      <div className="p-6 pt-0">
+        <LoadingChecklist items={loadingItems} onComplete={onComplete} />
+      </div>
     </Card>
   )
 }

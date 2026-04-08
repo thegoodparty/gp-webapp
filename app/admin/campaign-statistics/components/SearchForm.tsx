@@ -67,7 +67,7 @@ const formFields: FormField[] = [
     key: 'p2vStatus',
     label: 'P2V Status',
     type: 'select',
-    options: ['Waiting', 'Complete', 'Failed'],
+    options: ['Complete', 'Failed'],
   },
   {
     key: 'primaryElectionDateStart',

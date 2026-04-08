@@ -5,6 +5,7 @@ import TopDashboardMenu from './TopDashboardMenu'
 import Link from 'next/link'
 import ProfileDropdown from './ProfileDropdown'
 import DashboardOrContinue from './DashboardOrContinue'
+import { useClerk } from '@clerk/nextjs'
 import { useUser } from '@shared/hooks/useUser'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import NavButton from './NavButton'
@@ -16,6 +17,7 @@ import { getMarketingUrl } from 'helpers/linkhelper'
 
 const RightSide = (): React.JSX.Element => {
   const [user] = useUser()
+  const { signOut } = useClerk()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -23,6 +25,7 @@ const RightSide = (): React.JSX.Element => {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
   const isOnboardingPath = pathname?.startsWith('/onboarding')
+  const isAdminPath = pathname?.startsWith('/admin')
   const toggleProfile = () => {
     if (profileOpen) {
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown)
@@ -42,14 +45,17 @@ const RightSide = (): React.JSX.Element => {
   }
 
   if (isOnboardingPath) {
+    const handleFinishLater = async () => {
+      trackEvent(EVENTS.Onboarding.ClickFinishLater, {
+        pathname: pathname,
+      })
+      await signOut()
+      window.location.href = getMarketingUrl('/blog')
+    }
+
     return (
       <Button
-        href="/"
-        onClick={() =>
-          trackEvent(EVENTS.Onboarding.ClickFinishLater, {
-            pathname: pathname,
-          })
-        }
+        onClick={handleFinishLater}
         id="nav-onboarding-finish-later"
         className="hidden lg:block relative z-60 font-medium text-base! py-2! leading-6!"
         variant="text"
@@ -70,7 +76,16 @@ const RightSide = (): React.JSX.Element => {
             user={user as User}
           />
           {!userHasRole(user, USER_ROLES.SALES) &&
-            (isDashboardPath ? (
+            (isAdminPath ? (
+              <Button
+                href="/dashboard"
+                onClick={closeAll}
+                id="nav-exit-admin"
+                className="!py-2 !text-base font-medium border-none ml-2"
+              >
+                Exit Admin
+              </Button>
+            ) : isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
                 toggleCallback={toggleDashboard}

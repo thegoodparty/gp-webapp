@@ -1,18 +1,20 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
-import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { DashboardHeader } from 'app/dashboard/components/DashboardHeader'
 import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { apiRoutes, type ApiRoute } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import LogTaskModal, {
   TASK_TYPE_HEADINGS,
   LogTaskFlowType,
 } from './LogTaskModal'
+import CountModal from './CountModal'
+import EventDetailModal from './EventDetailModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
@@ -29,25 +31,83 @@ import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import WeeklyTaskNavigator from './WeeklyTaskNavigator'
+import { useWeekNavigation } from './useWeekNavigation'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import {
+  getVoterContactField,
+  type VoterContactsState,
+} from '@shared/hooks/VoterContactsProvider'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
+import type { CampaignUpdateHistoryWithUser } from '@shared/hooks/CampaignUpdateHistoryProvider'
+import { Card, cn } from '@styleguide'
+
+const NON_OUTREACH_TYPES = [
+  TASK_TYPES.education,
+  TASK_TYPES.events,
+  TASK_TYPES.compliance,
+]
+
+type TaskId = Task['id']
 
 interface TasksListProps {
   campaign: Campaign
   tasks?: Task[]
   tcrCompliance?: TcrCompliance | null
+  isLegacyList?: boolean
 }
 
 const TasksList = ({
   campaign,
   tasks: tasksProp = [],
   tcrCompliance,
+  isLegacyList = true,
 }: TasksListProps): React.JSX.Element => {
+  const router = useRouter()
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
+
+  useEffect(() => {
+    setTasks(tasksProp)
+  }, [tasksProp])
+
+  const { details, pathToVictory, hasFreeTextsOffer } = campaign
+  const isPro = campaign.isPro ?? false
+  const { electionDate } = details ?? {}
+  const viabilityScore = pathToVictory?.data?.viability?.score || 0
+  const electionDateObj =
+    typeof electionDate === 'string' && electionDate
+      ? new Date(electionDate.replace(/-/g, '/'))
+      : null
+  const daysUntilElection = electionDateObj
+    ? differenceInDays(electionDateObj, new Date())
+    : Infinity
+
+  const {
+    currentWeekStart,
+    filteredTasks,
+    canGoPrevious,
+    canGoNext,
+    goToPrevious,
+    goToNext,
+  } = useWeekNavigation(
+    tasks,
+    String(campaign.id),
+    electionDateObj,
+    daysUntilElection,
+  )
+
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
+  const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
+  const taskCountsRef = useRef<
+    Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
+  >({})
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [showP2PModal, setShowP2PModal] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -63,27 +123,94 @@ const TasksList = ({
     ReturnType<typeof buildTrackingAttrs>
   >({})
   const { errorSnackbar } = useSnackbar()
+  const queryClient = useQueryClient()
+  const [, setUpdateHistory] = useCampaignUpdateHistory()
+  const [, , updateVoterContactsLocal] = useVoterContacts()
+  const inFlightTasks = useRef(new Set<TaskId>())
 
-  const { details, pathToVictory, hasFreeTextsOffer } = campaign
-  const isPro = campaign.isPro ?? false
-  const { electionDate } = details
-  const viabilityScore = pathToVictory?.data?.viability?.score || 0
-  const daysUntilElection = differenceInDays(electionDate!, new Date())
+  const refreshAfterTaskMutation = async () => {
+    try {
+      await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+      const resp = await clientFetch<CampaignUpdateHistoryWithUser[]>(
+        apiRoutes.campaign.updateHistory.list,
+      )
+      if (resp && typeof resp === 'object' && 'ok' in resp && resp.ok) {
+        setUpdateHistory(resp.data || [])
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleCheckClick = async (task: Task) => {
-    const { id: taskId, flowType: type } = task
+    const { id: taskId, flowType: type, completed } = task
 
-    // skip voter counts for education tasks
-    if (type === TASK_TYPES.education) {
-      completeTask(taskId)
+    if (completed && !isLegacyList) {
+      const saved = taskCountsRef.current[taskId]
+      if (saved) {
+        updateVoterContactsLocal((prev) => ({
+          ...prev,
+          [saved.field]: Math.max((prev[saved.field] || 0) - saved.count, 0),
+        }))
+        delete taskCountsRef.current[taskId]
+      }
+      const ok = await revertTask(taskId)
+      if (!ok && saved) {
+        const { field, count } = saved
+        updateVoterContactsLocal((prev) => ({
+          ...prev,
+          [field]: (prev[field] || 0) + count,
+        }))
+        taskCountsRef.current[taskId] = { field, count }
+      }
+      return
+    }
+
+    if (
+      NON_OUTREACH_TYPES.includes(type) &&
+      (isLegacyList || type !== TASK_TYPES.events)
+    ) {
+      await completeTask(taskId)
     } else {
       setCompleteModalTask(task)
     }
   }
 
-  const handleCompleteSubmit = (_count: number) => {
-    completeTask(completeModalTask!.id)
-    setCompleteModalTask(null)
+  const handleCompleteSubmit = async (count: number) => {
+    if (!completeModalTask) return
+
+    const task = completeModalTask
+    const resolvedType =
+      task.flowType === TASK_TYPES.p2pDisabledText
+        ? TASK_TYPES.text
+        : task.flowType
+
+    let fieldForRollback: keyof VoterContactsState | undefined
+    if (!isLegacyList) {
+      const field = getVoterContactField(resolvedType)
+      fieldForRollback = field
+      updateVoterContactsLocal((prev) => ({
+        ...prev,
+        [field]: (prev[field] || 0) + count,
+      }))
+      taskCountsRef.current[task.id] = { field, count }
+    }
+
+    const ok = await completeTask(task.id, {
+      type: resolvedType,
+      quantity: count,
+    })
+
+    if (ok) {
+      setCompleteModalTask(null)
+    } else if (fieldForRollback !== undefined) {
+      const f = fieldForRollback
+      updateVoterContactsLocal((prev) => ({
+        ...prev,
+        [f]: Math.max((prev[f] || 0) - count, 0),
+      }))
+      delete taskCountsRef.current[task.id]
+    }
   }
 
   const handleCompleteCancel = () => {
@@ -91,9 +218,32 @@ const TasksList = ({
   }
 
   const handleActionClick = (task: Task) => {
+    if (task.completed && !isLegacyList) {
+      const href = task.link
+      if (href?.startsWith('/')) {
+        router.push(href)
+      }
+      return
+    }
+
     const { flowType, proRequired, deadline } = task
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
+    if (!isLegacyList && flowType === TASK_TYPES.events) {
+      setEventDetailTask(task)
+      return
+    }
+
+    if (NON_OUTREACH_TYPES.includes(flowType)) {
+      void (async () => {
+        const ok = await completeTask(task.id)
+        if (ok && task.link?.startsWith('/')) {
+          router.push(task.link)
+        }
+      })()
+      return
+    }
 
     // Normalize p2pDisabledText to text before validation/rendering
     const resolvedFlowType =
@@ -144,66 +294,153 @@ const TasksList = ({
     }
   }
 
-  const completeTask = async (taskId: string) => {
-    const resp = await clientFetch<Task>(apiRoutes.campaign.tasks.complete, {
-      taskId,
+  const replaceTask = (taskId: string, updatedTask: Task) => {
+    setTasks((currentTasks) => {
+      const idx = currentTasks.findIndex((t) => t.id === taskId)
+      if (idx === -1) return currentTasks
+      const next = [...currentTasks]
+      next[idx] = updatedTask
+      return next
     })
-
-    if (resp.ok) {
-      const updatedTask = resp.data
-      setTasks((currentTasks) => {
-        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
-        if (taskIndex !== -1) {
-          currentTasks.splice(taskIndex, 1, updatedTask)
-          return [...currentTasks]
-        }
-        // Shouldn't happen
-        console.error('Completed task not found')
-        return currentTasks
-      })
-    } else {
-      errorSnackbar('Failed to complete task')
-    }
   }
+
+  const sendTaskUpdate = async (
+    route: ApiRoute,
+    taskId: string,
+    errorMessage: string,
+    body?: Record<string, unknown>,
+  ): Promise<boolean> => {
+    if (inFlightTasks.current.has(taskId)) return false
+    inFlightTasks.current.add(taskId)
+
+    let succeeded = false
+    try {
+      const resp = await clientFetch<Task>(route, { taskId, ...body })
+      if ('ok' in resp && resp.ok) {
+        replaceTask(taskId, (resp as { ok: true; data: Task }).data)
+        succeeded = true
+      } else {
+        errorSnackbar(errorMessage)
+      }
+    } catch (error) {
+      console.error(error)
+      errorSnackbar(errorMessage)
+    } finally {
+      inFlightTasks.current.delete(taskId)
+    }
+
+    if (succeeded) {
+      void refreshAfterTaskMutation().catch(console.error)
+    }
+    return succeeded
+  }
+
+  const completeTask = (
+    taskId: string,
+    voterContact?: { type: string; quantity: number },
+  ) => {
+    const route = isLegacyList
+      ? apiRoutes.campaign.legacyTasks.complete
+      : apiRoutes.campaign.tasks.complete
+    return sendTaskUpdate(
+      route,
+      taskId,
+      'Failed to complete task',
+      voterContact,
+    )
+  }
+
+  const revertTask = (taskId: string) =>
+    sendTaskUpdate(
+      apiRoutes.campaign.tasks.revert,
+      taskId,
+      'Failed to mark task as incomplete',
+    )
 
   return (
     <>
-      <DashboardHeader campaign={campaign} tasks={tasks} />
-      <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
-        <H2>Tasks for this week</H2>
-        <Body2 className="!font-outfit mt-1">
-          Election day: {dateUsHelper(electionDate!)}
-        </Body2>
+      {isLegacyList && <DashboardHeader campaign={campaign} tasks={tasks} />}
+      <Card
+        className={cn(
+          'mb-32 gap-0',
+          isLegacyList ? 'p-6' : 'p-0 font-opensans',
+        )}
+      >
+        {isLegacyList ? (
+          <>
+            <H2>Tasks for this week</H2>
+            <Body2 className="!font-outfit mt-1">
+              Election day: {electionDate ? dateUsHelper(electionDate) : ''}
+            </Body2>
+          </>
+        ) : (
+          <>
+            <div className="flex justify-between items-baseline border-b px-6 py-6">
+              <div className="text-lg font-semibold font-opensans">
+                Campaign plan
+              </div>
+            </div>
+            <WeeklyTaskNavigator
+              currentWeekStart={currentWeekStart}
+              onPrevious={goToPrevious}
+              onNext={goToNext}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+            />
+          </>
+        )}
 
-        <ul className="p-0 mt-4">
-          {tasks.length > 0 ? (
-            tasks.map((task) => (
+        <ul>
+          {(isLegacyList ? tasks : filteredTasks).length > 0 ? (
+            (isLegacyList ? tasks : filteredTasks).map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}
                 isPro={isPro}
+                isLegacyList={isLegacyList}
                 daysUntilElection={daysUntilElection}
+                electionDate={electionDate}
                 onCheck={handleCheckClick}
                 onAction={handleActionClick}
               />
             ))
           ) : (
-            <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-              <H4 className="mt-1">No tasks for this week</H4>
+            <li className="flex items-center justify-center border-t border-border px-6 py-6">
+              <span className="text-sm">Nothing planned for this week</span>
             </li>
           )}
         </ul>
-      </div>
+      </Card>
       {completeModalTask &&
-        ((value: Task['flowType']): value is LogTaskFlowType =>
-          value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
-          <LogTaskModal
-            onSubmit={handleCompleteSubmit}
-            onClose={handleCompleteCancel}
+        (isLegacyList ? (
+          ((value: Task['flowType']): value is LogTaskFlowType =>
+            value in TASK_TYPE_HEADINGS)(completeModalTask.flowType) && (
+            <LogTaskModal
+              onSubmit={handleCompleteSubmit}
+              onClose={handleCompleteCancel}
+              flowType={completeModalTask.flowType}
+            />
+          )
+        ) : (
+          <CountModal
+            open={true}
+            onOpenChange={(open) => {
+              if (!open) handleCompleteCancel()
+            }}
             flowType={completeModalTask.flowType}
+            onSubmit={handleCompleteSubmit}
           />
-        )}
-      {deadlineModalTask && (
+        ))}
+      {eventDetailTask && (
+        <EventDetailModal
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) setEventDetailTask(null)
+          }}
+          task={eventDetailTask}
+        />
+      )}
+      {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
         <DeadlineModal
           type={deadlineModalTask.flowType}
           deadline={deadlineModalTask.deadline}
@@ -248,6 +485,11 @@ const TasksList = ({
           type={flowModalTask.resolvedType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
+          onComplete={async () => {
+            if (!flowModalTask.task.completed) {
+              await completeTask(flowModalTask.task.id)
+            }
+          }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
         />
       )}

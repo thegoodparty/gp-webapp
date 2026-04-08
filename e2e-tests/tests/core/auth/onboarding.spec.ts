@@ -1,10 +1,10 @@
 import { expect, type Page, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -14,32 +14,18 @@ test('authenticate with onboarded user', async ({ page }) => {
   console.log('Setting up authenticated user...')
 
   await setupClerkTestingToken({ page })
-  const testUser = TestDataHelper.generateTestUser()
 
   await page.goto('/sign-up')
   await NavigationHelper.dismissOverlays(page)
 
-  // Fill Clerk's <SignUp /> form
-  await page
-    .getByLabel(/first name/i)
-    .first()
-    .fill(testUser.firstName)
-  await page
-    .getByLabel(/last name/i)
-    .first()
-    .fill(testUser.lastName)
-  await page.getByLabel(/email/i).first().fill(testUser.email)
-  await page
-    .getByLabel(/password/i)
-    .first()
-    .fill(testUser.password)
-  await page.getByRole('button', { name: /continue/i }).click()
+  const testUser = await fillClerkSignUpForm(page)
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
-    timeout: 45000,
+    timeout: 3000,
   })
   console.log('User created, now completing onboarding...')
 
+  await fillZipCode(page)
   await waitForOfficesLoad(page)
 
   await completeOnboardingFlow(page)
@@ -73,7 +59,7 @@ async function completeStep1OfficeSelection(page: Page): Promise<void> {
 
 async function fillZipCode(page: Page): Promise<void> {
   const zipField = page.getByLabel('Zip Code')
-  await zipField.fill('28739')
+  await zipField.fill('82001')
 }
 
 async function selectOfficeLevel(page: Page): Promise<void> {
@@ -156,13 +142,21 @@ async function proceedToStep2(page: Page): Promise<void> {
   await expect(nextButton).toBeEnabled()
   await nextButton.click()
 
-  await page.waitForURL((url) => url.toString().includes('/2'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/2/.test(url.toString()),
+    {
+      timeout: 10000,
+    },
+  )
 }
 
 async function completeStep2PartySelection(page: Page): Promise<void> {
   console.log('Completing Step 2: Party Selection')
+
+  await page.getByText('How will your campaign appear on the ballot?').waitFor({
+    state: 'visible',
+    timeout: 3000,
+  })
 
   await selectPartyAffiliation(page)
   await proceedToStep3(page)
@@ -246,9 +240,12 @@ async function proceedToStep3(page: Page): Promise<void> {
 
   await nextButton.click()
 
-  await page.waitForURL((url) => url.toString().includes('/3'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/3/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep3PledgeAgreement(page: Page): Promise<void> {
@@ -267,9 +264,12 @@ async function acceptPledge(page: Page): Promise<void> {
 }
 
 async function proceedToStep4(page: Page): Promise<void> {
-  await page.waitForURL((url) => url.toString().includes('/4'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/4/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep4FinishOnboarding(page: Page): Promise<void> {

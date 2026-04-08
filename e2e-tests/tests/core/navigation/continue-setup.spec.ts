@@ -1,57 +1,71 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
 
-test.describe('Continue Setup button', () => {
+test.use({ storageState: { cookies: [], origins: [] } })
+
+const signUpTestUser = async (page: Page): Promise<string> => {
+  await setupClerkTestingToken({ page })
+
+  await page.goto('/sign-up')
+  await NavigationHelper.dismissOverlays(page)
+
+  await fillClerkSignUpForm(page)
+
+  await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+    timeout: 45000,
+  })
+
+  return page.url()
+}
+
+test.describe('Onboarding redirect persistence', () => {
   test.beforeEach(async ({ page }) => {
     await blockSlowScripts(page)
   })
 
-  test('should link to office selection when user bails before selecting an office', async ({
+  test('should redirect back to onboarding after bailing and returning', async ({
     page,
   }) => {
-    await setupClerkTestingToken({ page })
-    const testUser = TestDataHelper.generateTestUser()
+    const onboardingUrl = await signUpTestUser(page)
 
-    await page.goto('/sign-up')
-    await NavigationHelper.dismissOverlays(page)
+    await page.goto('https://goodparty.org/blog')
 
-    // Fill Clerk's <SignUp /> form
-    await page
-      .getByLabel(/first name/i)
-      .first()
-      .fill(testUser.firstName)
-    await page
-      .getByLabel(/last name/i)
-      .first()
-      .fill(testUser.lastName)
-    await page.getByLabel(/email/i).first().fill(testUser.email)
-    await page
-      .getByLabel(/password/i)
-      .first()
-      .fill(testUser.password)
-    await page.getByRole('button', { name: /continue/i }).click()
-
+    await page.goto('/login')
     await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
-      timeout: 45000,
+      timeout: 5000,
     })
+    expect(page.url()).toBe(onboardingUrl)
 
-    // Bail before selecting an office by navigating away
-    await NavigationHelper.navigateToPage(page, '/blog')
-    await NavigationHelper.dismissOverlays(page)
+    await page.goto('https://goodparty.org/blog')
 
-    // Assert takes you back to office selection
-    const continueButton = page.getByText('Continue Setup')
-    await expect(continueButton).toBeVisible()
-    await expect(continueButton).toHaveAttribute(
-      'href',
-      '/onboarding/office-selection',
+    await page.goto('/')
+    await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+      timeout: 5000,
+    })
+    expect(page.url()).toBe(onboardingUrl)
+  })
+
+  test('Finish Later should log out and redirect to blog', async ({ page }) => {
+    await signUpTestUser(page)
+
+    const finishLater = page.getByText('Finish Later')
+    await expect(finishLater).toBeVisible()
+    await finishLater.click()
+
+    await page.waitForURL(
+      (url) =>
+        !url.toString().includes('localhost') && url.pathname === '/blog',
+      { timeout: 5000 },
     )
-    await continueButton.click()
-    await expect(page.getByText("Let's find your office")).toBeVisible()
+
+    await page.goto('/dashboard')
+    await page.waitForURL((url) => url.toString().includes('/login'), {
+      timeout: 5000,
+    })
   })
 })

@@ -4,28 +4,10 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { getServerUser } from 'helpers/userServerHelper'
-
-export interface CampaignStatus {
-  status: string | boolean
-  slug?: string
-  step?: number
-}
-
-export function resolvePostAuthRedirectPath(
-  user: { roles?: string[] } | null,
-  campaignStatus: CampaignStatus | null,
-): string {
-  if (user?.roles?.includes('sales')) {
-    return '/sales/add-campaign'
-  }
-  if (campaignStatus?.status === 'candidate') {
-    return '/dashboard'
-  }
-  if (campaignStatus?.status === 'onboarding' && campaignStatus?.slug) {
-    return `/onboarding/${campaignStatus.slug}/${campaignStatus.step ?? 1}`
-  }
-  return '/dashboard/profile'
-}
+import {
+  resolvePostAuthRedirectPath,
+  CampaignStatus,
+} from 'helpers/resolvePostAuthRedirectPath.util'
 
 export async function fetchCampaignStatus(): Promise<CampaignStatus> {
   try {
@@ -41,13 +23,23 @@ export async function fetchCampaignStatus(): Promise<CampaignStatus> {
   }
 }
 
+const fetchHasElectedOffice = async (): Promise<boolean> => {
+  try {
+    const resp = await serverFetch(apiRoutes.electedOffice.current)
+    return resp.ok
+  } catch {
+    return false
+  }
+}
+
 export async function getPostAuthRedirectPath(): Promise<string> {
-  const [user, campaignStatus] = await Promise.all([
+  const [user, campaignStatus, hasElectedOffice] = await Promise.all([
     getServerUser(),
     fetchCampaignStatus(),
+    fetchHasElectedOffice(),
   ])
 
-  return resolvePostAuthRedirectPath(user, campaignStatus)
+  return resolvePostAuthRedirectPath(user, campaignStatus, hasElectedOffice)
 }
 
 export default async function candidateAccess(): Promise<void> {

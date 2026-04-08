@@ -50,3 +50,8 @@ export const deleteCookie = (name: string): void => {
   setCookie(name, '', 0)
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
+
+export const isImpersonating = (): boolean => {
+  if (typeof window === 'undefined') return false
+  return Boolean(getCookie('impersonateUser'))
+}

@@ -80,6 +80,7 @@ type TaskFlowProps = {
   isCustom?: boolean
   forceOpen?: boolean
   onClose?: () => void
+  onComplete?: () => void | Promise<void>
   defaultAiTemplateId?: string | number
 }
 
@@ -90,6 +91,7 @@ const TaskFlow = ({
   campaign,
   isCustom,
   onClose,
+  onComplete,
   defaultAiTemplateId,
 }: TaskFlowProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
@@ -164,8 +166,9 @@ const TaskFlow = ({
     onClose?.()
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isLastStep) {
+      await onComplete?.()
       handleCloseConfirm()
       return
     }
@@ -193,7 +196,7 @@ const TaskFlow = ({
     setState(DEFAULT_STATE)
   }
 
-  const handleAddScriptOnComplete = (
+  const handleAddScriptOnComplete = async (
     scriptKeyOrText: string | null,
     scriptContent?: string,
   ) => {
@@ -209,7 +212,7 @@ const TaskFlow = ({
       : scriptKeyValue
 
     handleChange('scriptText', scriptText)
-    handleNext()
+    await handleNext()
   }
 
   const callbackProps = {
@@ -289,7 +292,7 @@ const TaskFlow = ({
           (currentContacts[contactField] || 0) + (state.voterCount || 0),
       }))
 
-      handleNext()
+      await handleNext()
     } finally {
       isPurchaseCompletingRef.current = false
     }

@@ -6,14 +6,17 @@ import { calculateVoterContactCounts } from '../voterGoalsHelpers'
 import { numberFormatter } from 'helpers/numberHelper'
 import { useState } from 'react'
 
-import { ContactCountsInfoModal } from '../ContactCountsInfoModal'
 import { Info } from 'lucide-react'
+import { CountsInfoModal } from './CountsInfoModal'
+import { RecordVoterContactsModal } from './RecordVoterContactsModal'
 
 export default function ProgressSection() {
   const [campaign] = useCampaign()
   const [modalOpen, setModalOpen] = useState(false)
-  const toggleModalOpen = () => setModalOpen(!modalOpen)
+  const [recordModalOpen, setRecordModalOpen] = useState(false)
   const p2vData = campaign?.pathToVictory?.data
+  const toggleModalOpen = () => setModalOpen(!modalOpen)
+  const toggleRecordModalOpen = () => setRecordModalOpen(!recordModalOpen)
 
   const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
@@ -22,28 +25,39 @@ export default function ProgressSection() {
   )
   const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
   return (
-    <Card className="p-6">
-      <div className="flex w-full justify-between items-center mb-2 border-b border-primary/20 pb-6">
-        <div className="text-lg font-semibold">Your campaign progress</div>
-        <div className="text-sm text-primary cursor-pointer hover:underline">
+    <Card className="gap-0 p-0">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b p-6">
+        <div className="text-lg font-semibold font-opensans whitespace-nowrap">
+          Your campaign progress
+        </div>
+        <div
+          className="text-sm text-primary cursor-pointer hover:underline font-opensans"
+          onClick={toggleRecordModalOpen}
+        >
           Record voter contacts
         </div>
       </div>
-      <Progress value={progress} className="w-full" />
-      <div className="flex w-full justify-between items-center text-sm">
-        <div>{numberFormatter(contacted)} voters contacted</div>
-        <div
-          onClick={toggleModalOpen}
-          className="cursor-pointer flex items-center gap-2"
-        >
-          <div>{numberFormatter(needed)} voter contacts needed to win</div>
-          <Info className="inline-block" size={16} />
+      <div className="flex flex-col gap-3 p-6">
+        <Progress value={progress} className="w-full" />
+        <div className="flex w-full flex-wrap justify-between items-center gap-x-4 gap-y-1 text-sm font-normal font-opensans">
+          <div>{numberFormatter(contacted)} voters contacted</div>
+          <div
+            onClick={toggleModalOpen}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            <div>{numberFormatter(needed)} voter contacts needed to win</div>
+            <Info className="inline-block" size={16} />
+          </div>
         </div>
       </div>
-      <ContactCountsInfoModal
+      <CountsInfoModal
         pathToVictory={p2vData}
         open={modalOpen}
         setOpen={toggleModalOpen}
+      />
+      <RecordVoterContactsModal
+        open={recordModalOpen}
+        setOpen={setRecordModalOpen}
       />
     </Card>
   )

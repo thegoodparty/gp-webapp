@@ -5,6 +5,7 @@ import { uniqBy } from 'es-toolkit'
 import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
+import { clerkThrottle } from './throttle-requests-with-retry'
 
 const baseURL = process.env.BASE_URL
 
@@ -60,6 +61,7 @@ export type AuthenticatedUser = {
   name: string
   zip: string
   phone: string
+  password: string
 }
 
 type Race = {
@@ -97,29 +99,21 @@ type CachedCredentials = {
 // Global cache for shared users per worker
 let cachedCredentials: CachedCredentials | null = null
 
-async function signInAndGetToken(
-  page: Page,
-  email: string,
-  password: string,
-): Promise<string> {
+async function signInAndGetToken(page: Page, email: string): Promise<string> {
   await setupClerkTestingToken({ page })
   await page.goto('/')
   await page.waitForFunction(() => window.Clerk?.loaded, null, {
     timeout: 15000,
   })
 
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: 'password',
-      identifier: email,
-      password,
-    },
-  })
-
-  await page.waitForFunction(() => !!window.Clerk?.session, null, {
-    timeout: 10000,
-  })
+  await clerkThrottle(
+    () =>
+      clerk.signIn({
+        page,
+        emailAddress: email,
+      }),
+    5,
+  )
 
   const token = await page.evaluate(() => window.Clerk!.session!.getToken())
 
@@ -134,47 +128,45 @@ const bootstrapTestUser = async (
   page: Page,
   options?: TestUserOptions,
 ): Promise<BootstrappedUser & { clerkUserId: string }> => {
-  // If isolated is false/undefined and we have a cached user, re-sign-in with cached credentials
   if (!options?.isolated && cachedCredentials) {
-    const token = await signInAndGetToken(
-      page,
-      cachedCredentials.email,
-      cachedCredentials.password,
-    )
+    const token = await signInAndGetToken(page, cachedCredentials.email)
 
     return {
-      user: cachedCredentials.user,
+      user: { ...cachedCredentials.user, password: cachedCredentials.password },
       token,
       client: axios.create({
         baseURL: apiURL,
-        headers: { common: { Authorization: `Bearer ${token}` } },
+        headers: {
+          common: { Authorization: `Bearer ${token}` },
+        },
       }),
       clerkUserId: cachedCredentials.clerkUserId,
     }
   }
 
-  const generated = TestDataHelper.generateTestUser()
+  const generated = TestDataHelper.generateTestUserData()
   const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  // Create user in Clerk
-  const clerkUser = await clerkBackend.users.createUser({
-    emailAddress: [generated.email],
-    password,
-    firstName: generated.firstName,
-    lastName: generated.lastName,
-    skipPasswordChecks: true,
-  })
+  const clerkUser = await clerkThrottle(() =>
+    clerkBackend.users.createUser({
+      emailAddress: [generated.email],
+      password,
+      firstName: generated.firstName,
+      lastName: generated.lastName,
+      skipPasswordChecks: true,
+    }),
+  )
 
-  // Sign in via Clerk and get session token
-  const token = await signInAndGetToken(page, generated.email, password)
+  const token = await signInAndGetToken(page, generated.email)
 
   const client = axios.create({
     baseURL: apiURL,
-    headers: { common: { Authorization: `Bearer ${token}` } },
+    headers: {
+      common: { Authorization: `Bearer ${token}` },
+    },
   })
 
-  // Fetch user from our API (JIT-provisioned by ClerkSessionGuard)
   const { data: apiUser } = await client.get<{
     id: number
     firstName: string
@@ -191,6 +183,7 @@ const bootstrapTestUser = async (
     name: `${apiUser.firstName} ${apiUser.lastName}`,
     zip,
     phone: apiUser.phone || generated.phone,
+    password,
   }
 
   const result = {
@@ -200,7 +193,6 @@ const bootstrapTestUser = async (
     clerkUserId: clerkUser.id,
   }
 
-  // Cache the credentials if not isolated
   if (!options?.isolated) {
     cachedCredentials = {
       email: generated.email,
@@ -223,8 +215,7 @@ const bootstrapTestUser = async (
     },
   )
 
-  const desiredRace =
-    options?.race?.office ?? 'Flat Rock Village Council - District 1'
+  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 2'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)
@@ -274,6 +265,8 @@ test.afterAll(async ({}) => {
   for (const { cleanup } of users) {
     await cleanup()
   }
+  cachedCredentials = null
+  createdUsers.length = 0
 })
 
 export const authenticateTestUser = async (
@@ -289,9 +282,7 @@ export const authenticateTestUser = async (
     user,
     cleanup: async () => {
       try {
-        // Delete Clerk user (which is the auth source of truth).
-        // The API backend should handle cascading cleanup via Clerk webhooks.
-        await clerkBackend.users.deleteUser(clerkUserId)
+        await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
         console.log(
           `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
         )

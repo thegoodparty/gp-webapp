@@ -9,11 +9,13 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { switchOrganization } from 'src/helpers/organizations'
+import { clerkThrottle } from 'tests/utils/throttle-requests-with-retry'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
 } from 'tests/utils/api-registration'
-import { eventually } from 'tests/utils/eventually'
+import { eventually, wait } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
 type CsvRow = {
@@ -324,6 +326,7 @@ test.describe.serial('poll onboarding', () => {
 
     // Become a Serve user
     await page.goto('/dashboard/election-result')
+    await wait(500)
     await page.getByRole('button', { name: 'I won my race' }).click()
     await page.waitForTimeout(3000)
 
@@ -755,9 +758,14 @@ test.describe.serial('poll onboarding', () => {
 
     await setupClerkTestingToken({ page })
     await page.goto('/')
-    await clerk.signIn({ page, emailAddress: sharedUser.email })
+    await clerkThrottle(
+      () => clerk.signIn({ page, emailAddress: sharedUser.email }),
+      5,
+    )
 
     // Navigate to contacts page
+    await page.goto('/dashboard')
+    await switchOrganization(page, district.office)
     await page.goto('/dashboard/contacts')
     await NavigationHelper.dismissOverlays(page)
 

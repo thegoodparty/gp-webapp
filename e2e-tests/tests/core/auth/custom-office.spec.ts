@@ -17,7 +17,7 @@ test.describe('Custom office flow', () => {
 
     await page.goto('/onboarding/office-selection')
 
-    await page.getByLabel('Zip Code').fill('28739')
+    await page.getByLabel('Zip Code').fill('82001')
 
     // Wait for offices to load
     await page.waitForFunction(

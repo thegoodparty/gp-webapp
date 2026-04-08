@@ -11,6 +11,8 @@ import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { setCookie } from 'helpers/cookieHelper'
+import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { clientRequest } from 'gpApi/typed-request'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
@@ -74,9 +76,6 @@ async function runPostOfficeStepUpdates(
   slug: string | undefined = undefined,
 ): Promise<void> {
   await updateCampaign(attr, slug)
-  // The API handles P2V record creation and silver enqueue in all cases
-  // (gold failure, gold success without turnout, etc.), so the webapp
-  // does not need to enqueue separately.
   await updateRaceTargetDetails(slug)
 }
 
@@ -245,6 +244,7 @@ export default function OfficeStep({
         setProcessing(false)
         return
       }
+      setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
       await updateRaceTargetDetails()
       router.push(`/onboarding/${newCampaign.slug}/2`)
       setProcessing(false)
