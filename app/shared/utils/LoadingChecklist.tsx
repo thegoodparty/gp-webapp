@@ -83,10 +83,10 @@ export default function LoadingChecklist({
               />
             )}
             {item.status === STATUS_COMPLETE && (
-              <FaCheck className="text-success" />
+              <FaCheck className="text-foreground" />
             )}
           </div>
-          <p className="text-base">{item.label}</p>
+          <p className="text-base font-normal">{item.label}</p>
         </div>
       ))}
     </div>
