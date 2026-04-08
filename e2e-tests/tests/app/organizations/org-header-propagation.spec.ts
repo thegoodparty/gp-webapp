@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import {
-  setupWinServeUser,
+  setupElectedOfficeUser,
   switchOrganization,
   getSelectedOrgName,
   getOrgPickerOptions,
@@ -19,7 +19,7 @@ test.describe('Organization Header Propagation', () => {
   test('organization slug cookie is set and updates on switch', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -51,7 +51,7 @@ test.describe('Organization Header Propagation', () => {
   test('switching orgs updates the header on subsequent requests', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 

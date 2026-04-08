@@ -229,13 +229,11 @@ const bootstrapTestUser = async (
   }
 
   await client.post('/v1/campaigns', {
+    ballotReadyPositionId: race.position.id,
     details: {
-      positionId: race.position.id,
       electionId: race.election.id,
       raceId: race.id,
       state: race.election.state,
-      office: 'Other',
-      otherOffice: race.position.name,
       ballotLevel: race.position.level,
       electionDate: race.election.electionDay,
       partisanType: race.position.partisanType,
