@@ -22,7 +22,7 @@ export default function TaskCheckbox({
       data-slot="task-checkbox"
       onClick={() => onCheckedChange?.(!checked)}
       className={cn(
-        'group inline-flex cursor-pointer items-center justify-center border-none bg-transparent p-0 base-foreground',
+        ' p-0 pl-3 group inline-flex cursor-pointer items-center justify-center border-none bg-transparent base-foreground',
         className,
       )}
     >
