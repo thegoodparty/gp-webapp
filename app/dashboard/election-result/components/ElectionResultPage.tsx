@@ -4,12 +4,18 @@ import { useRouter } from 'next/navigation'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
-import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { LuTrophy, LuFrown } from 'react-icons/lu'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ResultOptionButton from './ResultOptionButton'
+import { clientRequest } from 'gpApi/typed-request'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  ORGANIZATIONS_QUERY_KEY,
+  useSetOrganizationSlug,
+} from '@shared/organization-picker'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 const RESULT_WON = 'won'
 const RESULT_LOST = 'lost'
@@ -41,8 +47,10 @@ interface RequestState {
 
 export default function ElectionResultPage(): React.JSX.Element {
   const router = useRouter()
-  const [campaign, setCampaign] = useCampaign()
+  const [campaign] = useCampaign()
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
+
+  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const details = campaign?.details
   const goals = campaign && 'goals' in campaign ? campaign.goals : undefined
   const goalsObj = goals && typeof goals === 'object' ? goals : null
@@ -53,33 +61,43 @@ export default function ElectionResultPage(): React.JSX.Element {
       ? goalsObj.electionDate
       : undefined
   const electionDate = details?.electionDate || goalsElectionDate
-  const officeName =
-    details?.office?.toLowerCase() === 'other'
-      ? details?.otherOffice
-      : details?.office
+  const positionName = usePositionName()
 
-  const { refreshElectedOffice } = useElectedOffice()
   const { errorSnackbar } = useSnackbar()
   const [requestState, setRequestState] = useState<RequestState>({
     submitting: false,
     error: false,
   })
+  const setSelectedSlug = useSetOrganizationSlug()
 
-  const createElectedOffice = async () => {
-    if (!electionDate) {
-      throw new Error('Invalid election date')
-    }
+  const queryClient = useQueryClient()
 
-    const response = await clientFetch(apiRoutes.electedOffice.create, {
-      electedDate: new Date(electionDate).toISOString().split('T')[0],
-    })
+  const createElectedOfficeMutation = useMutation({
+    mutationFn: async () =>
+      clientRequest('POST /v1/elected-office', {}).then((res) => res.data),
+    onSuccess: async (newOffice) => {
+      if (winServeSplit) {
+        const organizations = await clientRequest(
+          'GET /v1/organizations',
+          {},
+        ).then((res) => res.data.organizations)
 
-    if (!response.ok) {
-      throw new Error('Failed to create elected office')
-    }
-    refreshElectedOffice()
-    return response.data
-  }
+        queryClient.setQueryData(ORGANIZATIONS_QUERY_KEY, organizations)
+
+        const newOrg = organizations.find(
+          (org) => org.electedOfficeId === newOffice.id,
+        )
+
+        if (!newOrg) {
+          throw new Error('New organization not found')
+        }
+
+        setSelectedSlug(newOrg.slug)
+      }
+
+      router.replace('/polls/welcome')
+    },
+  })
 
   async function handleSelection(selection: string) {
     setSelectedOption(selection)
@@ -90,10 +108,10 @@ export default function ElectionResultPage(): React.JSX.Element {
       await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
 
       if (campaign) {
-        setCampaign({
+        queryClient.setQueryData(CAMPAIGN_QUERY_KEY, {
           ...campaign,
           details: {
-            ...campaign.details,
+            ...campaign.details!,
             wonGeneral: wonGeneral,
           },
         })
@@ -104,8 +122,10 @@ export default function ElectionResultPage(): React.JSX.Element {
       })
       // Create ElectedOffice if the user won the election
       if (wonGeneral) {
-        await createElectedOffice()
-        router.replace('/polls/welcome')
+        if (!electionDate) {
+          throw new Error('Invalid election date')
+        }
+        await createElectedOfficeMutation.mutateAsync()
       } else {
         router.replace('/dashboard/election-result/loss')
       }
@@ -148,7 +168,7 @@ export default function ElectionResultPage(): React.JSX.Element {
                 >
                   Election Results:
                   <br />
-                  {officeName}
+                  {positionName || 'Your Office'}
                 </h1>
                 <p className="text-left md:text-center mt-4 text-lg font-normal text-muted-foreground w-full">
                   It looks like your general election date has passed. Please

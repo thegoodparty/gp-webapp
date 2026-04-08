@@ -12,7 +12,6 @@ import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import { dateUsHelper } from 'helpers/dateHelper'
 import Checkbox from '@shared/inputs/Checkbox'
-import VoterFileSection from './VoterFileSection'
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
 import DistrictPicker from 'app/onboarding/[slug]/[step]/components/districts/DistrictPicker'
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
@@ -20,6 +19,7 @@ import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSe
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
@@ -249,6 +249,7 @@ interface AdminVictoryPathPageProps {
 export default function AdminVictoryPathPage(
   props: AdminVictoryPathPageProps,
 ): React.JSX.Element {
+  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { pathToVictory: p2vObject, details } = campaign || {}
   const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
@@ -354,8 +355,7 @@ export default function AdminVictoryPathPage(
     }
   }
 
-  const office =
-    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office
+  const positionName = campaign?.positionName || null
 
   const handleNotNeeded = async (
     e: ChangeEvent<HTMLInputElement>,
@@ -407,7 +407,7 @@ export default function AdminVictoryPathPage(
           <AdditionalFieldsSection />
           <P2VProSection />
           <H4 className="my-8">
-            Office: <strong>{office || 'N/A'}</strong>. State:{' '}
+            Office: <strong>{positionName || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. City:{' '}
             <strong>{details?.city || 'N/A'}</strong>. ElectionDate:{' '}
             <strong>{dateUsHelper(details?.electionDate) || 'N/A'}</strong>.
@@ -416,55 +416,56 @@ export default function AdminVictoryPathPage(
               {dateUsHelper(details?.primaryElectionDate) || 'N/A'}
             </strong>
           </H4>
-          <div className="my-12">
-            <h2 className="font-black text-2xl mb-8">District Picker</h2>
-            <div className="mb-6 flex items-center gap-3">
-              <Checkbox
-                defaultChecked={excludeInvalidOverride}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setExcludeInvalidOverride(e.target.checked)
-                }
-                color="error"
-              />
-              <div>
-                excludeInvalid override - only check this if you aren&apos;t
-                seeing districts, and/or you&apos;re confident you can select
-                the correct one without safeguards for validity. Any districts
-                you see exclusively with this override we do not have a
-                projected turnout for.
+          {!winServeSplit && (
+            <div className="my-12">
+              <h2 className="font-black text-2xl mb-8">District Picker</h2>
+              <div className="mb-6 flex items-center gap-3">
+                <Checkbox
+                  defaultChecked={excludeInvalidOverride}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setExcludeInvalidOverride(e.target.checked)
+                  }
+                  color="error"
+                />
+                <div>
+                  excludeInvalid override - only check this if you aren&apos;t
+                  seeing districts, and/or you&apos;re confident you can select
+                  the correct one without safeguards for validity. Any districts
+                  you see exclusively with this override we do not have a
+                  projected turnout for.
+                </div>
               </div>
+              <DistrictPicker
+                state={details?.state || ''}
+                electionYear={
+                  details?.electionDate
+                    ? new Date(details.electionDate).getFullYear()
+                    : new Date().getFullYear()
+                }
+                className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
+                buttonText="Save District"
+                onSubmit={handleDistrictSubmit}
+                excludeInvalidOverride={excludeInvalidOverride}
+                initialType={
+                  pathToVictory?.electionType
+                    ? {
+                        id: pathToVictory.electionType,
+                        L2DistrictType: pathToVictory.electionType,
+                        label: pathToVictory.electionType.replace(/_/g, ' '),
+                      }
+                    : null
+                }
+                initialName={
+                  pathToVictory?.electionLocation
+                    ? {
+                        id: pathToVictory.electionLocation,
+                        L2DistrictName: pathToVictory.electionLocation,
+                      }
+                    : null
+                }
+              />
             </div>
-            <DistrictPicker
-              state={details?.state || ''}
-              electionYear={
-                details?.electionDate
-                  ? new Date(details.electionDate).getFullYear()
-                  : new Date().getFullYear()
-              }
-              className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
-              buttonText="Save District"
-              onSubmit={handleDistrictSubmit}
-              excludeInvalidOverride={excludeInvalidOverride}
-              initialType={
-                pathToVictory?.electionType
-                  ? {
-                      id: pathToVictory.electionType,
-                      L2DistrictType: pathToVictory.electionType,
-                      label: pathToVictory.electionType.replace(/_/g, ' '),
-                    }
-                  : null
-              }
-              initialName={
-                pathToVictory?.electionLocation
-                  ? {
-                      id: pathToVictory.electionLocation,
-                      L2DistrictName: pathToVictory.electionLocation,
-                    }
-                  : null
-              }
-            />
-            {!notNeeded && <VoterFileSection />}
-          </div>
+          )}
           {sections.map((section) => (
             <div className="mb-12" key={section.title}>
               <h2 className="font-black text-2xl mb-8">{section.title}</h2>

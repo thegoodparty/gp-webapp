@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test'
+import { blockSlowScripts } from '../../../src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Custom office flow', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should allow user to submit a custom office via "I don\'t see my office"', async ({
     page,
   }) => {
@@ -55,20 +60,38 @@ test.describe('Custom office flow', () => {
     })
     await expect(page).toHaveURL(/\/onboarding\/.*\/2/)
 
-    const { data } = await client.get<{
+    type OrganizationsResponse = {
       organizations: {
         slug: string
         campaignId: number
         name: string
         electedOfficeId: number | null
       }[]
-    }>('/v1/organizations')
-    expect(data.organizations).toHaveLength(1)
+    }
+
+    await expect
+      .poll(
+        async () => {
+          const { data } = await client.get<OrganizationsResponse>(
+            '/v1/organizations',
+          )
+          return data.organizations.length
+        },
+        { timeout: 15000 },
+      )
+      .toBe(1)
+
+    const { data } = await client.get<OrganizationsResponse>(
+      '/v1/organizations',
+    )
     expect(data.organizations[0]).toStrictEqual({
       slug: expect.any(String),
       campaignId: expect.any(Number),
-      name: 'City Council',
+      name: '2030 Campaign',
       electedOfficeId: null,
+      district: null,
+      position: null,
+      positionName: 'City Council',
     })
 
     const { data: campaign } = await client.get<{

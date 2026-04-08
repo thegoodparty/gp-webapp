@@ -1,5 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
-import DashboardPage from './components/DashboardPage'
+import DashboardContent from './components/DashboardContent'
 import candidateAccess from './shared/candidateAccess'
 import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
@@ -12,7 +12,7 @@ import type { TcrCompliance } from 'helpers/types'
 const fetchTasks = async (): Promise<Task[]> => {
   const currentDate = new Date().toISOString().split('T')[0]
 
-  const resp = await serverFetch<Task[]>(apiRoutes.campaign.tasks.list, {
+  const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
     date: currentDate,
   })
   return resp.data
@@ -47,7 +47,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   return (
     <>
       <HubSpotChatWidgetScript />
-      <DashboardPage
+      <DashboardContent
         pathname="/dashboard"
         campaign={campaign}
         tasks={tasks}

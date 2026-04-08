@@ -1,51 +1,41 @@
 'use client'
-import { createContext, useEffect, useState, useCallback } from 'react'
-import { noop, noopAsync } from '@shared/utils/noop'
-import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
-import { useUser } from '@shared/hooks/useUser'
+import { createContext } from 'react'
 import { Campaign } from 'helpers/types'
+import { useQuery } from '@tanstack/react-query'
+import { clientRequest } from 'gpApi/typed-request'
+import { FetchError } from 'ofetch'
 
-type CampaignContextValue = [
-  campaign: Campaign | null,
-  setCampaign: (campaign: Campaign | null) => void,
-  refreshCampaign: () => Promise<void>,
-]
+type CampaignContextValue = [campaign: Campaign | null]
 
-export const CampaignContext = createContext<CampaignContextValue>([
-  null,
-  noop,
-  noopAsync,
-])
+export const CampaignContext = createContext<CampaignContextValue>([null])
 
 interface CampaignProviderProps {
   children: React.ReactNode
   campaign: Campaign | null
 }
 
+export const CAMPAIGN_QUERY_KEY = ['campaign']
+
 export const CampaignProvider = ({
   children,
   campaign: initCampaign,
 }: CampaignProviderProps): React.JSX.Element => {
-  const [campaign, setCampaign] = useState<Campaign | null>(initCampaign)
-  const [user] = useUser()
-
-  const refreshCampaign = useCallback(async () => {
-    const resp = await fetchUserClientCampaign()
-    if (resp && typeof resp === 'object' && 'ok' in resp) {
-      setCampaign(resp.ok === false ? null : (resp.data as Campaign))
-    } else {
-      setCampaign(null)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (user) {
-      refreshCampaign()
-    }
-  }, [user, refreshCampaign])
+  const query = useQuery({
+    queryKey: CAMPAIGN_QUERY_KEY,
+    queryFn: async () => {
+      try {
+        const res = await clientRequest('GET /v1/campaigns/mine', {})
+        return res.data
+      } catch (e) {
+        if (e instanceof FetchError && e.status === 404) return null
+        throw e
+      }
+    },
+    initialData: initCampaign ?? undefined,
+  })
 
   return (
-    <CampaignContext.Provider value={[campaign, setCampaign, refreshCampaign]}>
+    <CampaignContext.Provider value={[query.data ?? null]}>
       {children}
     </CampaignContext.Provider>
   )

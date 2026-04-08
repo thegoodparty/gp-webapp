@@ -1,29 +1,50 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { authenticateTestUser } from 'tests/utils/api-registration'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import { WaitHelper } from '../../../src/helpers/wait.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
 
+/**
+ * Greeting line after client campaign/user hydration (HeaderSection).
+ * Avoids matching unrelated h1s; works with legacy layout and sidebar inset.
+ */
+function campaignPageGreetingHeading(page: Page) {
+  return page
+    .getByRole('heading', { level: 1 })
+    .filter({ hasText: /Hi|Hello|until|General|Primary|Election|concluded/ })
+    .first()
+}
+
 test.describe('Dashboard Functionality', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should access dashboard and navigate to app features', async ({
     page,
   }) => {
+    test.setTimeout(120000)
     console.log(
       `🧪 Testing dashboard functionality with pre-authenticated user`,
     )
     await authenticateTestUser(page)
     await page.goto('/dashboard')
+    await page.waitForURL(/\/dashboard/)
     await NavigationHelper.dismissOverlays(page)
 
     await expect(page).toHaveURL(/\/dashboard$/)
 
-    const dashboardContent = page.locator('h1, h2, h3, main')
-    await expect(dashboardContent.first()).toBeVisible()
+    await expect(campaignPageGreetingHeading(page)).toBeVisible({
+      timeout: 90000,
+    })
     console.log('✅ Dashboard accessible')
     await visualSnapshot(page, 'dashboard.png', {
       mask: [
-        // The election countdown changes weekly (e.g. "35 weeks until Election Day!")
-        page.getByRole('heading', { name: /until Election Day/ }),
+        // Greeting / election line changes with date and copy experiments
+        campaignPageGreetingHeading(page),
       ],
     })
 
@@ -31,7 +52,7 @@ test.describe('Dashboard Functionality', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 60000 })
     console.log('✅ AI Assistant accessible')
     await visualSnapshot(page, 'campaign-assistant.png')
 

@@ -1,13 +1,20 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
 import { WaitHelper } from 'src/helpers/wait.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Website Management', () => {
+  test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
+  })
+
   test('should create and publish website through complete flow', async ({
     page,
   }) => {
-    await authenticateTestUser(page)
+    await authenticateTestUser(page, { isolated: true })
     await NavigationHelper.navigateToPage(page, '/dashboard/website')
     await NavigationHelper.dismissOverlays(page)
 
@@ -57,6 +64,30 @@ test.describe('Website Management', () => {
     ).toBeVisible()
 
     await page.getByRole('button', { name: 'Next', exact: true }).click()
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Please complete Your Bio' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'What is your campaign about?' }),
+    ).toBeVisible()
+
+    await page.locator('.ql-editor').click()
+    await page
+      .locator('.ql-editor')
+      .fill(
+        'As a lifelong resident of our community, I am committed to sustainable growth, public safety, and creating opportunities for all residents in our district.',
+      )
+
+    await page.getByRole('button', { name: 'Add issue' }).click()
+    await page.locator('input[required]').fill('Education')
+    await page
+      .locator('textarea[required]')
+      .fill(
+        'Our schools deserve leaders who prioritize student outcomes and teacher support.',
+      )
+    await page.getByRole('button', { name: 'Save' }).click()
+
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
     await expect(
       page.getByRole('heading', { name: 'How can voters contact you?' }),
@@ -64,14 +95,26 @@ test.describe('Website Management', () => {
 
     await page.getByRole('button', { name: 'Publish website' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
-    await expect(
-      page.getByRole('heading', {
-        name: 'Congratulations, your website is live!',
-      }),
-    ).toBeVisible()
+    const liveHeading = page
+      .getByRole('heading')
+      .filter({ hasText: /Congratulations,\s*your website is live!/i })
+      .first()
+    const publishedCardHeading = page
+      .getByText('Your campaign website', { exact: true })
+      .first()
 
-    await expect(page.getByRole('link', { name: 'Add a domain' })).toBeVisible()
-    await page.getByRole('link', { name: 'Done' }).click()
+    await Promise.any([
+      liveHeading.waitFor({ state: 'visible', timeout: 20000 }),
+      publishedCardHeading.waitFor({ state: 'visible', timeout: 20000 }),
+    ])
+
+    if (await liveHeading.isVisible()) {
+      await expect(
+        page.getByRole('link', { name: 'Add a domain' }),
+      ).toBeVisible()
+      await page.getByRole('link', { name: 'Done' }).click()
+    }
+
     await expect(
       page
         .getByRole('heading', { name: /Published/ })

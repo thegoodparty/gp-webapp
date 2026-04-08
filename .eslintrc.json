@@ -1,9 +1,12 @@
 {
   "ignorePatterns": [
+    "ai-rules/",
     "e2e-tests/playwright-report",
     "e2e-tests/**/*.md",
     "styleguide/*.md",
-    "public/"
+    "public/",
+    "ai-rules/",
+    "CLAUDE.md"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
@@ -54,6 +57,12 @@
             "varsIgnorePattern": "^_"
           }
         ]
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "off"
       }
     },
     {

@@ -1,9 +1,15 @@
 import { expect, test } from '@playwright/test'
-import { NavigationHelper } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
+import { authenticateTestUser } from 'tests/utils/api-registration'
+import { wait } from 'tests/utils/eventually'
 
 test.describe('Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
+    await blockSlowScripts(page)
     await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
   })
@@ -37,5 +43,17 @@ test.describe('Login Functionality', () => {
     ).toBeVisible()
 
     await visualSnapshot(page, 'login-error-state.png')
+  })
+
+  test('should login and redirect to dashboard', async ({ page }) => {
+    const { user } = await authenticateTestUser(page)
+    await page.getByLabel('Email').fill(user.email)
+    await page
+      .getByPlaceholder("Please don't use your dog's")
+      .fill(user.password)
+    await page.getByRole('button', { name: 'Login' }).click()
+    await page.waitForURL('**/dashboard')
+    await wait(500)
+    await expect(page.getByText('Campaign Progress')).toBeVisible()
   })
 })

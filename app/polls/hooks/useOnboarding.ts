@@ -1,6 +1,5 @@
 'use client'
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import {
   personElectDemoMessageText as personElectDemoMessageTextPolls,
@@ -13,6 +12,7 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { grammarizeOfficeName } from '../onboarding/utils/grammarizeOfficeName'
 import { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { clientRequest } from 'gpApi/typed-request'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 interface FormData {
   imageUrl: string | null
@@ -42,7 +42,7 @@ export interface UseOnboardingReturn {
 }
 
 export const useOnboarding = (): UseOnboardingReturn => {
-  const [campaign] = useCampaign()
+  const positionName = usePositionName()
   const [user] = useUser()
 
   const [formData, setFormData] = useState<FormData>({
@@ -70,12 +70,9 @@ export const useOnboarding = (): UseOnboardingReturn => {
     }))
   }, [swornInDate, scheduledDate])
 
-  const campaignOffice = useMemo(
-    () =>
-      grammarizeOfficeName(
-        campaign?.details?.otherOffice || campaign?.details?.office || '',
-      ),
-    [campaign],
+  const officeName = useMemo(
+    () => grammarizeOfficeName(positionName),
+    [positionName],
   )
   const userName = useMemo(() => {
     if (user?.firstName && user?.lastName) {
@@ -90,23 +87,23 @@ export const useOnboarding = (): UseOnboardingReturn => {
       !isSwornIn
         ? personElectDemoMessageTextPolls({
             name: userName,
-            office: campaignOffice,
+            office: officeName,
           })
         : demoMessageTextPolls({
             name: userName,
-            office: campaignOffice,
+            office: officeName,
           }),
-    [userName, campaignOffice, isSwornIn],
+    [userName, officeName, isSwornIn],
   )
   const messageText = useMemo(
     () =>
       !isSwornIn
         ? personElectMessageTextPolls({
             name: userName,
-            office: campaignOffice,
+            office: officeName,
           })
-        : messageTextPolls({ name: userName, office: campaignOffice }),
-    [userName, campaignOffice, isSwornIn],
+        : messageTextPolls({ name: userName, office: officeName }),
+    [userName, officeName, isSwornIn],
   )
 
   useEffect(() => {

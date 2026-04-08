@@ -1,7 +1,46 @@
 import type { Page } from '@playwright/test'
 import { WaitHelper } from './wait.helper'
 
+// LinkedIn's analytics script (snap.licdn.com) intermittently stalls in CI,
+// which prevents the browser's `load` event from firing and causes Playwright's
+// `page.goto()` to time out at 45s. Blocking it has no effect on test coverage.
+export const blockSlowScripts = async (page: Page) => {
+  await page.route('**/snap.licdn.com/**', (route) => route.abort())
+}
+
 export class NavigationHelper {
+  /**
+   * Opens the mobile nav drawer. New dashboard sidebar uses an "Open menu" button;
+   * legacy layouts use the Hamburger (`data-testid="tilt"`).
+   */
+  static async openMobileNavMenu(page: Page): Promise<void> {
+    const openMenu = page.getByRole('button', { name: /open menu/i })
+    if (await openMenu.isVisible().catch(() => false)) {
+      await openMenu.click()
+      return
+    }
+
+    const tilts = page.getByTestId('tilt')
+    const count = await tilts.count()
+    if (count === 0) {
+      throw new Error('No mobile menu trigger found (Open menu or tilt)')
+    }
+    for (let i = 0; i < count; i++) {
+      const t = tilts.nth(i)
+      if (await t.isVisible().catch(() => false)) {
+        await t.click()
+        return
+      }
+    }
+    // Legacy layouts sometimes attach two tilt nodes (e.g. desktop + mobile); the
+    // actionable one may only match index 1, or need force when CSS hides duplicates.
+    if (count >= 2) {
+      await tilts.nth(1).click({ force: true })
+      return
+    }
+    await tilts.first().click({ force: true })
+  }
+
   static async navigateToPage(page: Page, path: string): Promise<void> {
     await page.goto(path)
     await WaitHelper.waitForPageReady(page)
@@ -56,20 +95,17 @@ export class NavigationHelper {
     }
   }
 
-  static async navigateToNavItem(
-    page: Page,
-    navItem: string,
-    isMobile: boolean = false,
-  ): Promise<void> {
-    if (isMobile) {
-      // Open mobile menu
-      await page.getByTestId('tilt').nth(1).click()
-      await page.getByRole('link', { name: navItem }).click()
-      await page.getByTestId('tilt').nth(1).click() // Close menu
-    } else {
-      await page.getByRole('link', { name: navItem }).click()
+  static async openMobileMenu(page: Page): Promise<void> {
+    const openMenu = page.getByRole('button', { name: /open menu/i })
+    if (await openMenu.isVisible().catch(() => false)) {
+      await openMenu.click()
+      return
     }
-
-    await WaitHelper.waitForPageReady(page)
+    const trigger = page.getByTestId('mobile-menu-trigger')
+    if (await trigger.isVisible().catch(() => false)) {
+      await trigger.click()
+      return
+    }
+    await NavigationHelper.openMobileNavMenu(page)
   }
 }

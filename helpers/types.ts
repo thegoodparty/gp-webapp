@@ -133,7 +133,7 @@ export interface CampaignDetails {
   party?: string
   otherParty?: string
   district?: string
-  raceId?: string
+  raceId?: string | null
   level?: string | null
   noNormalizedOffice?: boolean
   website?: string
@@ -151,6 +151,8 @@ export interface CampaignDetails {
   officeTermLength?: string
   partisanType?: string
   priorElectionDates?: string[]
+  // Legacy BallotReady position ID: keep writing for compatibility.
+  // Read identity from raceId + electionId instead.
   positionId?: string | null
   electionId?: string | null
   tier?: string
@@ -437,6 +439,10 @@ export interface Campaign {
   vendorTsData: VendorTsData
   pathToVictory?: PathToVictory
   user?: User
+  organization?: {
+    positionId?: string | null
+    customPositionName?: string | null
+  } | null
   userId: number
   canDownloadFederal: boolean
   completedTaskIds: string[]

@@ -10,8 +10,10 @@ if (!baseURL) {
   throw new Error('BASE_URL is not set')
 }
 
-const apiBaseURL = process.env.API_BASE_URL || baseURL
-const apiURL = `${apiBaseURL}/api`
+const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
+
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
 
 type BaseTestUserOptions = {
   /**
@@ -50,6 +52,7 @@ export type AuthenticatedUser = {
   name: string
   zip: string
   phone: string
+  password: string
 }
 
 type Race = {
@@ -94,6 +97,8 @@ const bootstrapTestUser = async (
 
   const zip = options?.race?.zip || generated.zipCode
 
+  const password = randomUUID()
+
   const registerResponse = await client.post<{
     user: AuthenticatedUser
     token: string
@@ -102,12 +107,13 @@ const bootstrapTestUser = async (
     signUpMode: 'candidate',
     ...generated,
     zipCode: zip,
-    password: randomUUID(),
+    password,
   })
 
   client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
 
   const user = registerResponse.data.user
+  user.password = password
 
   const result: BootstrappedUser = {
     user,
@@ -198,23 +204,31 @@ export const authenticateTestUser = async (
   createdUsers.push({
     user,
     cleanup: async () => {
-      await client.delete('/logout')
-      console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+      try {
+        await client.delete(`/v1/users/${user.id}`)
+        if (process.env.DEBUG) {
+          console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
+        }
+      } catch {
+        // Token may be invalid after long runs or user already removed.
+      }
     },
   })
 
   const userCreated = Date.now()
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-        userCreated - start
-      }ms`,
-    )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
+          userCreated - start
+        }ms`,
+      )
+    } else {
+      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    }
   }
 
-  const domain = baseURL.replace('http://', '').replace('https://', '')
+  const domain = cookieDomain()
   await page.context().addCookies([
     {
       name: 'token',
@@ -235,11 +249,13 @@ export const authenticateTestUser = async (
   ])
 
   const loginTime = Date.now()
-  console.log(
-    `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
-      loginTime - userCreated
-    }ms`,
-  )
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
+  }
 
   return { user, client }
 }

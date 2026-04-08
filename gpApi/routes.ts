@@ -71,10 +71,6 @@ export const apiRoutes = {
       path: '/elected-office/current',
       method: 'GET',
     },
-    create: {
-      path: '/elected-office',
-      method: 'POST',
-    },
   },
   homepage: {
     subscribeEmail: {
@@ -150,12 +146,6 @@ export const apiRoutes = {
     },
   },
   campaign: {
-    pathToVictory: {
-      create: {
-        path: '/campaigns/mine/path-to-victory',
-        method: 'POST',
-      },
-    },
     create: {
       path: '/campaigns',
       method: 'POST',
@@ -187,12 +177,6 @@ export const apiRoutes = {
     district: {
       path: '/campaigns/mine/district',
       method: 'PUT',
-    },
-    map: {
-      list: {
-        path: '/campaigns/map',
-        method: 'GET',
-      },
     },
     ai: {
       create: {
@@ -270,17 +254,47 @@ export const apiRoutes = {
       path: '/campaigns/mine/plan-version',
       method: 'GET',
     },
+    legacyTasks: {
+      list: {
+        path: '/campaigns/legacy-tasks',
+        method: 'GET',
+      },
+      complete: {
+        path: '/campaigns/legacy-tasks/complete/:taskId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/legacy-tasks/:taskId',
+        method: 'DELETE',
+      },
+    },
     tasks: {
       list: {
         path: '/campaigns/tasks',
+        method: 'GET',
+      },
+      generate: {
+        path: '/campaigns/tasks/generate',
+        method: 'POST',
+      },
+      generateStream: {
+        path: '/campaigns/tasks/generate/stream',
         method: 'GET',
       },
       complete: {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
       },
+      revert: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'DELETE',
+      },
       delete: {
         path: '/campaigns/tasks/:taskId',
+        method: 'DELETE',
+      },
+      deleteAll: {
+        path: '/campaigns/tasks',
         method: 'DELETE',
       },
     },

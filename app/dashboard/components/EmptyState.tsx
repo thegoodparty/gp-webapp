@@ -3,23 +3,10 @@ import WandAnimation from '@shared/animations/WandAnimation'
 import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
-interface Campaign {
-  details?: {
-    office?: string
-    otherOffice?: string
-  }
-}
-
-interface EmptyStateProps {
-  campaign: Campaign
-}
-
-export default function EmptyState({
-  campaign,
-}: EmptyStateProps): React.JSX.Element {
-  const { office, otherOffice } = campaign?.details || {}
-  const resolvedOffice = office === 'Other' ? otherOffice : office
+export default function EmptyState(): React.JSX.Element {
+  const positionName = usePositionName()
   return (
     <Paper>
       <div className="p-4 md:py-8 lg:py-12 flex items-center justify-center">
@@ -29,7 +16,7 @@ export default function EmptyState({
           </div>
           <H3 className="mt-4">
             We&apos;re currently gathering the necessary data for{' '}
-            <strong>{resolvedOffice}.</strong>
+            <strong>{positionName || 'your office'}.</strong>
           </H3>
           <Body1 className="mt-4">
             While you wait, we suggest you check out our educational content on

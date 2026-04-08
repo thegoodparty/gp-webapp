@@ -19,36 +19,19 @@ import {
   queryOptions,
   useQueryClient,
 } from '@tanstack/react-query'
+import { clientRequest } from 'gpApi/typed-request'
 import {
-  fetchContacts,
-  FetchContactsParams,
-  fetchCustomSegments,
-  fetchPerson,
-  fetchConstituentIssues,
-  fetchConstituentActivities,
-  Person,
+  type Person,
   type ConstituentIssue,
   type ConstituentActivity,
   type ListContactsResponse,
   type SegmentResponse,
-} from '../components/shared/ajaxActions'
+} from '../components/shared/contacts-types'
 import { DEFAULT_PAGE_SIZE, ALL_SEGMENTS } from '../components/shared/constants'
 import defaultSegments from '../components/configs/defaultSegments.config'
 import { isCustomSegment } from '../components/shared/segments.util'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
-
-const createEmptyPagination = (
-  currentPage: number,
-  pageSize: number,
-): ListContactsResponse['pagination'] => ({
-  totalResults: 0,
-  currentPage,
-  pageSize,
-  totalPages: 0,
-  hasNextPage: false,
-  hasPreviousPage: false,
-})
 
 const extractPersonIdFromParams = (
   params: ReturnType<typeof useParams> | null,
@@ -132,17 +115,21 @@ interface ContactsTableProviderProps {
   children: ReactNode
 }
 
-const contactTableQueryOptions = (params: FetchContactsParams) =>
+const contactTableQueryOptions = (params: {
+  page: number
+  resultsPerPage: number
+  segment: string
+  search?: string
+}) =>
   queryOptions({
     queryKey: ['contacts', params],
-    queryFn: async () => {
-      const emptyResponse = {
-        people: [],
-        pagination: createEmptyPagination(params.page, params.resultsPerPage),
-      }
-      const data = await fetchContacts(params)
-      return data || emptyResponse
-    },
+    queryFn: () =>
+      clientRequest('GET /v1/contacts', {
+        page: params.page || 1,
+        resultsPerPage: params.resultsPerPage || DEFAULT_PAGE_SIZE,
+        segment: params.segment || ALL_SEGMENTS,
+        ...(params.search ? { search: params.search } : {}),
+      }).then((res) => res.data),
     refetchOnMount: false,
   })
 
@@ -152,7 +139,7 @@ export const ContactsTableProvider = ({
   const router = useRouter()
 
   const [campaign] = useCampaign()
-  const { electedOffice } = useElectedOffice()
+  const { data: electedOffice } = useElectedOffice()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const params = useParams()
@@ -215,26 +202,21 @@ export const ContactsTableProvider = ({
 
   const personQuery = useQuery({
     queryKey: ['person', currentlySelectedPersonId],
-    queryFn: async () => {
-      const id = currentlySelectedPersonId
-      if (!id) return null
-      const person = await fetchPerson(id)
-      return person as Person | null
-    },
+    queryFn: () =>
+      clientRequest('GET /v1/contacts/:id', {
+        id: currentlySelectedPersonId!,
+      }).then((res) => res.data),
     enabled: Boolean(currentlySelectedPersonId),
   })
 
   const issuesInfiniteQuery = useInfiniteQuery({
     queryKey: ['contact-engagement', 'issues', currentlySelectedPersonId],
-    queryFn: async ({ pageParam }) => {
-      const id = currentlySelectedPersonId
-      if (!id) return { nextCursor: null, results: [] }
-      const data = await fetchConstituentIssues(id, {
+    queryFn: ({ pageParam }) =>
+      clientRequest('GET /v1/contact-engagement/:id/issues', {
+        id: currentlySelectedPersonId!,
         take: 3,
-        after: pageParam as string | undefined,
-      })
-      return data ?? { nextCursor: null, results: [] }
-    },
+        ...(pageParam ? { after: pageParam } : {}),
+      }).then((res) => res.data),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     enabled: Boolean(currentlySelectedPersonId),
@@ -242,30 +224,24 @@ export const ContactsTableProvider = ({
 
   const activitiesInfiniteQuery = useInfiniteQuery({
     queryKey: ['contact-engagement', 'activities', currentlySelectedPersonId],
-    queryFn: async ({ pageParam }) => {
-      const id = currentlySelectedPersonId
-      if (!id) return { nextCursor: null, results: [] }
-      const data = await fetchConstituentActivities(id, {
+    queryFn: ({ pageParam }) =>
+      clientRequest('GET /v1/contact-engagement/:id/activities', {
+        id: currentlySelectedPersonId!,
         take: 2,
-        after: pageParam as string | undefined,
-      })
-      return data ?? { nextCursor: null, results: [] }
-    },
+        ...(pageParam ? { after: pageParam } : {}),
+      }).then((res) => res.data),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     enabled: Boolean(currentlySelectedPersonId),
   })
 
-  const customSegmentsQueryOptions = queryOptions({
+  const customSegmentsQuery = useQuery({
     queryKey: ['custom-segments'],
-    queryFn: async () => {
-      const segments = await fetchCustomSegments()
-      return segments || []
-    },
-    initialData: undefined,
+    queryFn: () =>
+      clientRequest('GET /v1/voters/voter-file/filters', {}).then(
+        (res) => res.data,
+      ),
   })
-
-  const customSegmentsQuery = useQuery(customSegmentsQueryOptions)
 
   const filteredContacts = useMemo(
     () => (contactsQuery.data?.people as Person[]) || [],

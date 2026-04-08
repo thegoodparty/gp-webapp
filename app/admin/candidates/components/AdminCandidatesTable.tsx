@@ -28,7 +28,6 @@ interface CandidateTableRow {
   launched: string
   lastVisited: string | number | undefined
   party: string
-  office: string | null | undefined
   officeTermLength: string | null | undefined
   level: string | null | undefined
   ballotLevel: string | null | undefined
@@ -54,7 +53,6 @@ interface CandidateTableRow {
   events: number
   yardSigns: number
   aiDocsCreated: number
-  waitingForP2v: string
   p2vStatus: string | undefined
   viabilityScore: number
   pledged: string
@@ -129,7 +127,6 @@ export default function AdminCandidatesTable({
       'launched',
       'lastVisited',
       'party',
-      'office',
       'officeTermLength',
       'level',
       'ballotLevel',
@@ -155,7 +152,6 @@ export default function AdminCandidatesTable({
       'events',
       'yardSigns',
       'aiDocsCreated',
-      'waitingForP2v',
       'p2vStatus',
       'pledged',
       'knowRun',
@@ -210,8 +206,6 @@ export default function AdminCandidatesTable({
         level,
         website,
         ballotLevel,
-        office,
-        otherOffice,
         filingPeriodsStart,
         filingPeriodsEnd,
         primaryElectionDate,
@@ -238,21 +232,7 @@ export default function AdminCandidatesTable({
 
       const lastVisited = user?.metaData?.lastVisited
 
-      let waitingForP2v =
-        !pathToVictory?.data?.p2vStatus ||
-        pathToVictory?.data?.p2vStatus === 'Waiting'
-          ? 'Yes'
-          : 'No'
-
       let viabilityScore = pathToVictory?.data?.viability?.score || 0
-
-      if (!details?.pledged) {
-        waitingForP2v = 'n/a'
-      }
-
-      if (data?.p2vNotNeeded || pathToVictory?.data?.p2vNotNeeded) {
-        waitingForP2v = 'Not Needed'
-      }
 
       let runningForOffice = 'Exploring'
       if (details?.knowRun && details.knowRun === 'yes') {
@@ -281,7 +261,6 @@ export default function AdminCandidatesTable({
         launched: mapStatus(details?.launchStatus),
         lastVisited,
         party: partyResolver(details?.party),
-        office: office === 'Other' ? `${otherOffice}` : office,
         officeTermLength: details?.officeTermLength,
         level,
         ballotLevel,
@@ -307,7 +286,6 @@ export default function AdminCandidatesTable({
         events: reportedVoterGoals?.events || 0,
         yardSigns: reportedVoterGoals?.yardSigns || 0,
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
-        waitingForP2v,
         p2vStatus: pathToVictory?.data?.p2vStatus,
         viabilityScore,
         pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
@@ -392,11 +370,6 @@ export default function AdminCandidatesTable({
         id: 'isActive',
         header: 'Active (Live)',
         accessorKey: 'isActive',
-      },
-      {
-        id: 'waitingForP2v',
-        header: 'Waiting for P2V',
-        accessorKey: 'waitingForP2v',
       },
       {
         id: 'p2vStatus',
@@ -672,11 +645,6 @@ export default function AdminCandidatesTable({
         id: 'party',
         header: 'Party',
         accessorKey: 'party',
-      },
-      {
-        id: 'office',
-        header: 'Office',
-        accessorKey: 'office',
       },
       {
         id: 'ballotLevel',

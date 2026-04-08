@@ -231,7 +231,7 @@ const getDashboardMenuItems = (
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (isElectedOffice) {
-    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
+    menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
   }
 
   return menuItems
@@ -244,7 +244,7 @@ export default function DashboardMenu({
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
-  const { electedOffice } = useElectedOffice()
+  const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
 
@@ -373,7 +373,7 @@ const NewNavMenu = ({
       label: 'Settings',
       icon: Settings,
       id: 'nav-dash-settings',
-      href: '/profile',
+      href: '/dashboard/profile',
     },
     addCampaign: {
       label: 'Add Campaign',
@@ -494,7 +494,7 @@ const NewNavMenu = ({
                         </Link>
                       </SidebarMenuButton>
                       {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
                           NEW
                         </SidebarMenuBadge>
                       )}
@@ -539,7 +539,10 @@ const NewNavMenu = ({
                       </Avatar.Fallback>
                     </Avatar>
                     <div className="flex flex-1 flex-col gap-0.5 min-w-0 leading-none text-left">
-                      <span className="truncate text-sm font-semibold">
+                      <span
+                        data-testid="user-menu-name"
+                        className="truncate text-sm font-semibold"
+                      >
                         {user?.firstName} {user?.lastName}
                       </span>
                       <span className="truncate text-xs">Manage account</span>

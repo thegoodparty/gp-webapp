@@ -1,11 +1,9 @@
-import { useMemo } from 'react'
-import Button from '@shared/buttons/Button'
-import Body2 from '@shared/typography/Body2'
-import { CheckRounded, LockRounded } from '@mui/icons-material'
-import TaskCheck from './TaskCheck'
-import H4 from '@shared/typography/H4'
-import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { TASK_TYPES } from '../../shared/constants/tasks.const'
+import {
+  DISPLAY_TASK_TYPES,
+  TASK_TYPES,
+} from '../../shared/constants/tasks.const'
+import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
+import { format, subDays } from 'date-fns'
 
 export interface Task {
   id: string
@@ -15,7 +13,8 @@ export interface Task {
   proRequired?: boolean
   flowType: (typeof TASK_TYPES)[keyof typeof TASK_TYPES]
   week: number
-  deadline: number
+  deadline?: number
+  date?: string | null
   link?: string
   completed: boolean
   defaultAiTemplateId?: string | number
@@ -24,7 +23,9 @@ export interface Task {
 interface TaskItemProps {
   task: Task
   daysUntilElection: number
+  electionDate: string | undefined
   isPro: boolean
+  isLegacyList?: boolean
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
 }
@@ -32,132 +33,67 @@ interface TaskItemProps {
 export default function TaskItem({
   task,
   daysUntilElection,
+  electionDate,
   isPro,
+  isLegacyList = true,
   onCheck,
   onAction,
 }: TaskItemProps): React.JSX.Element {
   const {
-    id: taskId,
     title,
     description,
-    cta,
-    proRequired,
     flowType,
-    week,
     deadline,
+    date,
     link,
     completed,
+    proRequired,
   } = task
 
-  const isExternalLink = link !== undefined
-  const isExpired = daysUntilElection < deadline
+  const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
-  const proLocked = proRequired && !isPro
-
-  const checkTrackingAttrs = useMemo(
-    () =>
-      buildTrackingAttrs('Task Checkmark', {
-        id: taskId,
-        type: flowType,
-        weekNumber: week,
-        daysUntilElection: daysUntilElection,
-        checked: completed,
-      }),
-    [taskId, flowType, week, daysUntilElection, completed],
-  )
-
-  const actionTrackingAttrs = useMemo(
-    () =>
-      buildTrackingAttrs('Task Button', {
-        id: taskId,
-        type: flowType,
-        weekNumber: week,
-        daysUntilElection: daysUntilElection,
-        state: noLongerAvailable
-          ? 'No Longer Available'
-          : completed
-          ? 'Completed'
-          : proLocked
-          ? 'Pro Locked'
-          : 'Available',
-      }),
-    [
-      taskId,
-      flowType,
-      week,
-      daysUntilElection,
-      noLongerAvailable,
-      completed,
-      proLocked,
-    ],
-  )
-  const handleAction = () => {
-    onAction(task)
+  const locked = noLongerAvailable || Boolean(proRequired && !isPro)
+  let lockedReason = ''
+  if (noLongerAvailable) {
+    lockedReason = 'This task is no longer available'
+  } else if (proRequired && !isPro) {
+    lockedReason = 'This task is only available to Pro users'
   }
 
-  const handleCheck = () => {
-    onCheck(task)
-  }
+  const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
+
+  const linkForRow =
+    (isLegacyList && completed) ||
+    (!isLegacyList && flowType === TASK_TYPES.events)
+      ? undefined
+      : link
+
+  const suppressRowAction = completed && !isLegacyList && !link
 
   return (
-    <li className="flex flex-col sm:flex-row items-center p-4 mt-4 gap-x-4 bg-white rounded-lg border border-black/[0.12]">
-      <div className="flex items-center gap-x-2 gap-y-4 w-full sm:w-auto">
-        <div className="mt-1 self-start">
-          <TaskCheck
-            checked={completed}
-            onClick={handleCheck}
-            trackingAttrs={checkTrackingAttrs}
-          />
-        </div>
-        <div className={`${completed ? 'text-indigo-400' : ''}`}>
-          <H4 className="mb-1">{title}</H4>
-          <Body2>{description}</Body2>
-        </div>
-      </div>
-      {noLongerAvailable ? (
-        <Button
-          onClick={handleAction}
-          size="medium"
-          color="neutral"
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-        >
-          <LockRounded className="mr-1 text-base" />
-          No Longer Available
-        </Button>
-      ) : isExternalLink && link ? (
-        <Button
-          href={link}
-          target="_blank"
-          size="medium"
-          color={completed ? 'success' : 'secondary'}
-          disabled={completed}
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-          {...actionTrackingAttrs}
-        >
-          {completed ? (
-            <CheckRounded className="mr-1 text-base" />
-          ) : (
-            proLocked && <LockRounded className="mr-1 text-base" />
-          )}
-          {cta || 'Complete Task'}
-        </Button>
-      ) : (
-        <Button
-          onClick={handleAction}
-          size="medium"
-          color={completed ? 'success' : 'secondary'}
-          disabled={completed}
-          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
-          {...actionTrackingAttrs}
-        >
-          {completed ? (
-            <CheckRounded className="mr-1 text-base" />
-          ) : (
-            proLocked && <LockRounded className="mr-1 text-base" />
-          )}
-          {cta || 'Complete Task'}
-        </Button>
-      )}
+    <li className="border-t border-black/12">
+      <CampaignPlanTaskItem
+        title={title}
+        description={description}
+        date={
+          date
+            ? format(new Date(date.slice(0, 10).replace(/-/g, '/')), 'MMM d')
+            : electionDate && deadline
+            ? format(
+                subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
+                'MMM d',
+              )
+            : ''
+        }
+        type={displayTaskType}
+        checked={completed}
+        locked={locked}
+        lockedReason={lockedReason}
+        onCheckedChange={() => onCheck(task)}
+        onClick={suppressRowAction ? undefined : () => onAction(task)}
+        link={linkForRow}
+        noLongerAvailable={noLongerAvailable}
+      />
     </li>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode, useEffect } from 'react'
+import Link from 'next/link'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
@@ -9,9 +10,17 @@ import { ProUpgradePrompt } from './ProUpgradePrompt'
 import { usePathname, useRouter } from 'next/navigation'
 import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
-import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
+import {
+  Button,
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  useSidebar,
+} from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
+import { useOrganizationIfEnabled } from '@shared/organization-picker'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -29,13 +38,20 @@ const DashboardLayout = ({
   showAlert = true,
   wrapperClassName = '',
   hideMenu = false,
-}: DashboardLayoutProps): React.JSX.Element => {
+}: DashboardLayoutProps): React.JSX.Element | null => {
   const [user] = useUser()
   const [hookCampaign] = useCampaign()
   const router = useRouter()
   const hookPathname = usePathname()
+
+  const { clear: clearImpersonation, user: impersonateUser } =
+    useImpersonateUser()
+  const isImpersonating = !!impersonateUser
   const currentPath = pathname || hookPathname
-  const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
+  const { ready: flagReady, on: navRefreshEnabled } =
+    useFlagOn('win-serve-split')
+  const organization = useOrganizationIfEnabled()
+  const isElectedOffice = !!organization?.electedOfficeId
 
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
@@ -69,6 +85,10 @@ const DashboardLayout = ({
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
 
+  if (!flagReady) {
+    return null
+  }
+
   if (navRefreshEnabled) {
     return (
       <EcanvasserProvider>
@@ -80,12 +100,33 @@ const DashboardLayout = ({
           )}
           <SidebarInset className="bg-[#f5f5f5]">
             {!hideMenu && <MobileMenuTrigger />}
+            {isImpersonating && (
+              <div className="bg-white p-4 flex items-center justify-between gap-2">
+                <p className="text-sm font-opensans text-error-main">
+                  You are currently impersonating user{' '}
+                  <b>{impersonateUser?.email}</b>.
+                </p>
+                <Button
+                  className="bg-error-main border-error-main"
+                  size="small"
+                  onClick={() => {
+                    clearImpersonation()
+                    window.location.href = '/admin'
+                  }}
+                >
+                  Stop Impersonating
+                </Button>
+              </div>
+            )}
             <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
-              {campaign && showAlert && <AlertSection campaign={campaign} />}
+              {activeCampaign && showAlert && (
+                <AlertSection campaign={activeCampaign} />
+              )}
               <ProUpgradePrompt
-                campaign={campaign}
+                campaign={activeCampaign}
                 user={user}
                 pathname={currentPath || undefined}
+                isElectedOffice={isElectedOffice}
               />
               {children}
             </div>
@@ -106,9 +147,11 @@ const DashboardLayout = ({
         <main
           className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
         >
-          {campaign && showAlert && <AlertSection campaign={campaign} />}
+          {activeCampaign && showAlert && (
+            <AlertSection campaign={activeCampaign} />
+          )}
           <ProUpgradePrompt
-            campaign={campaign}
+            campaign={activeCampaign}
             user={user}
             pathname={currentPath || undefined}
           />
@@ -124,12 +167,15 @@ const MobileMenuTrigger = () => {
   return (
     <>
       <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-        <img
-          src="/images/logo/heart.svg"
-          alt="GoodParty.org"
-          className="h-6 w-8 object-contain"
-        />
+        <Link href="/dashboard">
+          <img
+            src="/images/logo/heart.svg"
+            alt="GoodParty.org"
+            className="h-6 w-8 object-contain"
+          />
+        </Link>
         <button
+          data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"

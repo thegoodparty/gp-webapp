@@ -13,17 +13,15 @@ import React, {
 import {
   Experiment,
   ExperimentClient,
+  ExperimentUser,
   Variant,
 } from '@amplitude/experiment-js-client'
 import { noop, noopAsync } from '@shared/utils/noop'
 import { getReadyAnalytics } from '@shared/utils/analytics'
+import { useUser } from '@shared/hooks/useUser'
+import { reportErrorToSentry } from '@shared/sentry'
+import { buildUserTraits } from 'helpers/buildUserTraits'
 import { NEXT_PUBLIC_AMPLITUDE_API_KEY } from 'appEnv'
-
-interface UserContext {
-  user_id?: string
-  device_id?: string
-  user_properties?: Record<string, string | number | boolean>
-}
 
 interface FeatureFlagsContextValue {
   ready: boolean
@@ -56,69 +54,37 @@ export const FeatureFlagsProvider = ({
   const clientRef = useRef<ExperimentClient | null>(null)
   const [ready, setReady] = useState<boolean>(false)
   const [rev, setRev] = useState<number>(0)
+  const [user] = useUser()
+  const prevUserIdRef = useRef<string | undefined>(undefined)
 
-  const getUserContext = useCallback(async (): Promise<UserContext> => {
-    const analytics = await getReadyAnalytics()
-    let userId: string | undefined
-    let deviceId: string | undefined
-    let userProperties: Record<string, string | number | boolean> = {}
-
-    const amplitudeUser =
-      typeof analytics?.user === 'function' ? analytics.user() : null
-    if (amplitudeUser) {
-      if (typeof amplitudeUser.id === 'function') {
-        const id = amplitudeUser.id()
-        userId = id ?? undefined
-      }
-      if (typeof amplitudeUser.anonymousId === 'function') {
-        const id = amplitudeUser.anonymousId()
-        deviceId = id ?? undefined
-      }
-      if (typeof amplitudeUser.traits === 'function') {
-        const traits = amplitudeUser.traits()
-        if (traits) {
-          const { email, name, phone } = traits
-          ;[
-            ['email', email],
-            ['name', name],
-            ['phone', phone],
-          ].forEach(([key, value]) => {
-            if (
-              typeof key === 'string' &&
-              (typeof value === 'string' ||
-                typeof value === 'number' ||
-                typeof value === 'boolean')
-            ) {
-              userProperties[key] = value
-            }
-          })
-          if (
-            typeof traits.zip === 'string' ||
-            typeof traits.zip === 'number' ||
-            typeof traits.zip === 'boolean'
-          ) {
-            userProperties.zip = traits.zip
-          }
-        }
-      }
-    }
-
+  const buildExperimentUser = useCallback((): ExperimentUser => {
+    if (!user) return {}
     return {
-      user_id: userId,
-      device_id: deviceId,
-      user_properties: userProperties,
+      user_id: String(user.id),
+      user_properties: buildUserTraits(user),
     }
-  }, [])
+  }, [user])
 
   const refresh = useCallback(async () => {
+    const client = clientRef.current
+    if (!client) return
     try {
-      const amplitudeUser = await getUserContext()
-      await clientRef.current?.fetch(amplitudeUser)
+      const currentUserId = user ? String(user.id) : undefined
+      if (prevUserIdRef.current !== currentUserId) {
+        client.clear()
+        prevUserIdRef.current = currentUserId
+      }
+      await client.fetch(buildExperimentUser())
+      setReady(true)
       setRev((v) => v + 1)
     } catch (error) {
-      console.warn('Experiment fetch failed: ', error)
+      reportErrorToSentry(
+        error instanceof Error ? error : new Error(String(error)),
+        { context: 'FeatureFlagsProvider.refresh' },
+      )
+      setReady(true)
     }
-  }, [getUserContext])
+  }, [buildExperimentUser, user])
 
   useEffect(() => {
     const key = NEXT_PUBLIC_AMPLITUDE_API_KEY
@@ -128,23 +94,28 @@ export const FeatureFlagsProvider = ({
       return
     }
 
-    clientRef.current = Experiment.initialize(key, {
-      automaticExposureTracking: true,
-      exposureTrackingProvider: {
-        track: async (exposure) => {
-          try {
-            const analytics = await getReadyAnalytics()
-            if (analytics && typeof analytics.track === 'function') {
-              analytics.track('$exposure', exposure)
+    if (!clientRef.current) {
+      clientRef.current = Experiment.initialize(key, {
+        automaticExposureTracking: true,
+        exposureTrackingProvider: {
+          track: async (exposure) => {
+            try {
+              const analytics = await getReadyAnalytics()
+              if (analytics && typeof analytics.track === 'function') {
+                analytics.track('$exposure', exposure)
+              }
+            } catch (error) {
+              reportErrorToSentry(
+                error instanceof Error ? error : new Error(String(error)),
+                { context: 'FeatureFlagsProvider.exposureTrack' },
+              )
             }
-          } catch (error) {
-            console.warn('Experiment exposure track failed: ', error)
-          }
+          },
         },
-      },
-    })
+      })
+    }
 
-    refresh().finally(() => setReady(true))
+    refresh()
   }, [refresh])
 
   const value = useMemo<FeatureFlagsContextValue>(() => {
@@ -180,5 +151,5 @@ interface UseFlagOnResult {
 export const useFlagOn = (key: string): UseFlagOnResult => {
   const { ready, variant } = useFeatureFlags()
   const v = variant(key, { value: 'off' })
-  return { ready, on: ready && v?.value === 'on' }
+  return { ready, on: v.value === 'on' }
 }

@@ -4,12 +4,16 @@ import { expect, type Page, test } from '@playwright/test'
 import type { MessageElement } from '@slack/web-api/dist/types/response/ConversationsHistoryResponse'
 import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
-import { NavigationHelper } from 'src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from 'src/helpers/navigation.helper'
+import { switchOrganization } from 'src/helpers/organizations'
 import {
   authenticateTestUser,
   type AuthenticatedUser,
 } from 'tests/utils/api-registration'
-import { eventually } from 'tests/utils/eventually'
+import { eventually, wait } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
 type CsvRow = {
@@ -300,6 +304,10 @@ const with11AmLocalTime = (date: Date) => {
   return copy
 }
 
+test.beforeEach(async ({ page }) => {
+  await blockSlowScripts(page)
+})
+
 test.describe.serial('poll onboarding', () => {
   // Shared state between tests
   let sharedUser: AuthenticatedUser
@@ -317,6 +325,7 @@ test.describe.serial('poll onboarding', () => {
 
     // Become a Serve user
     await page.goto('/dashboard/election-result')
+    await wait(500)
     await page.getByRole('button', { name: 'I won my race' }).click()
     await page.waitForTimeout(3000)
 
@@ -772,6 +781,8 @@ test.describe.serial('poll onboarding', () => {
     ])
 
     // Navigate to contacts page
+    await page.goto('/dashboard')
+    await switchOrganization(page, district.office)
     await page.goto('/dashboard/contacts')
     await NavigationHelper.dismissOverlays(page)
 

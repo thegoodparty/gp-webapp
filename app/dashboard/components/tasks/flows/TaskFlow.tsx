@@ -1,6 +1,6 @@
 'use client'
 import Modal from '@shared/utils/Modal'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
@@ -19,7 +19,6 @@ import { useOutreach } from 'app/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { getVoterContactField } from '@shared/hooks/VoterContactsProvider'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import {
   handleCreateOutreach,
   handleCreatePhoneList,
@@ -44,6 +43,8 @@ import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffecti
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
 import { noopAsync } from '@shared/utils/noop'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
 interface TaskFlowState extends FlowState {
   step: number
@@ -79,6 +80,7 @@ type TaskFlowProps = {
   isCustom?: boolean
   forceOpen?: boolean
   onClose?: () => void
+  onComplete?: () => void | Promise<void>
   defaultAiTemplateId?: string | number
 }
 
@@ -89,6 +91,7 @@ const TaskFlow = ({
   campaign,
   isCustom,
   onClose,
+  onComplete,
   defaultAiTemplateId,
 }: TaskFlowProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
@@ -102,7 +105,6 @@ const TaskFlow = ({
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [, updateVoterContacts] = useVoterContacts()
-  const [, , refreshCampaign] = useCampaign()
   const outreachOption = OUTREACH_OPTIONS.find(
     (outreach) => outreach.type === type,
   )
@@ -164,8 +166,9 @@ const TaskFlow = ({
     onClose?.()
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isLastStep) {
+      await onComplete?.()
       handleCloseConfirm()
       return
     }
@@ -193,7 +196,7 @@ const TaskFlow = ({
     setState(DEFAULT_STATE)
   }
 
-  const handleAddScriptOnComplete = (
+  const handleAddScriptOnComplete = async (
     scriptKeyOrText: string | null,
     scriptContent?: string,
   ) => {
@@ -209,7 +212,7 @@ const TaskFlow = ({
       : scriptKeyValue
 
     handleChange('scriptText', scriptText)
-    handleNext()
+    await handleNext()
   }
 
   const callbackProps = {
@@ -219,6 +222,11 @@ const TaskFlow = ({
     backCallback: handleBack,
     resetCallback: handleReset,
   }
+
+  const queryClient = useQueryClient()
+  const refreshCampaign = useCallback(async () => {
+    queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+  }, [queryClient])
 
   const onCreateOutreach = useMemo(
     () =>
@@ -284,7 +292,7 @@ const TaskFlow = ({
           (currentContacts[contactField] || 0) + (state.voterCount || 0),
       }))
 
-      handleNext()
+      await handleNext()
     } finally {
       isPurchaseCompletingRef.current = false
     }
