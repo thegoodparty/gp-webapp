@@ -2,7 +2,7 @@
 
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
 import { Button } from '@styleguide'
-import { Calendar, Globe } from 'lucide-react'
+import { CalendarDays, Handshake } from 'lucide-react'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { DISPLAY_TASK_TYPES } from '../../shared/constants/tasks.const'
 import type { Task } from './TaskItem'
@@ -41,15 +41,13 @@ export default function EventDetailModal({
 
         <div className="flex flex-col gap-2 text-sm">
           <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4 text-base-muted-foreground" />
+            <Handshake className="h-4 w-4 text-base-muted-foreground" />
             <span>{displayType}</span>
           </div>
           {date && (
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-base-muted-foreground" />
-              <span>
-                {dateUsHelper(date.slice(0, 10).replace(/-/g, '/'), 'long')}
-              </span>
+              <CalendarDays className="h-4 w-4 text-base-muted-foreground" />
+              <span>{dateUsHelper(date.slice(0, 10).replace(/-/g, '/'))}</span>
             </div>
           )}
         </div>
