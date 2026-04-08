@@ -12,7 +12,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { setCookie, getCookie, deleteCookie } from 'helpers/cookieHelper'
+import { setCookie, getCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import {
   DropdownMenu,
@@ -25,7 +25,6 @@ import {
   SidebarMenuItem,
 } from '@styleguide'
 import { ChevronDown } from 'lucide-react'
-import { useFlagOn } from './experiments/FeatureFlagsProvider'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { queryClient } from './query-client'
 import { usePathname, useRouter } from 'next/navigation'
@@ -59,24 +58,6 @@ export const useSetOrganizationSlug = () => {
   return ctx.setSelectedSlug
 }
 
-export const useOrganizationIfEnabled = () => {
-  const { on: enabled } = useFlagOn('win-serve-split')
-
-  const ctx = useContext(OrganizationContext)
-
-  if (!enabled) {
-    return undefined
-  }
-
-  if (!ctx) {
-    console.warn(
-      'useOrganizationIfEnabled must be used within OrganizationProvider',
-    )
-    return undefined
-  }
-  return ctx.selected
-}
-
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]
@@ -88,8 +69,6 @@ export const OrganizationProvider = ({
   children,
   initialOrganizations,
 }: OrganizationProviderProps) => {
-  const { on: enabled } = useFlagOn('win-serve-split')
-
   const { data: organizations } = useQuery({
     queryKey: ORGANIZATIONS_QUERY_KEY,
     queryFn: async () =>
@@ -97,7 +76,6 @@ export const OrganizationProvider = ({
         (res) => res.data.organizations,
       ),
     initialData: initialOrganizations,
-    enabled,
   })
 
   const [selectedSlug, _setSelectedSlug] = useState(() => {
@@ -113,12 +91,10 @@ export const OrganizationProvider = ({
   )
 
   useEffect(() => {
-    if (!enabled) {
-      deleteCookie(ORG_SLUG_COOKIE)
-    } else if (selectedOrganization) {
+    if (selectedOrganization) {
       setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
     }
-  }, [enabled, selectedOrganization])
+  }, [selectedOrganization])
 
   const setSelectedSlug = useCallback((slug: string) => {
     _setSelectedSlug(slug)

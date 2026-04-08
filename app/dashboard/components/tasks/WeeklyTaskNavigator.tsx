@@ -76,7 +76,7 @@ export default function WeeklyTaskNavigator({
         <ArrowRightIcon className="size-4" />
       </IconButton>
       <div className="flex flex-col">
-        <span className="text-base font-semibold leading-none">{label}</span>
+        <span className="text-base font-semibold">{label}</span>
         {showDateRange && (
           <span className="text-xs text-muted-foreground">{dateRange}</span>
         )}
