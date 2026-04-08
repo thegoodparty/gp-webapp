@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import DeleteAction from './DeleteAction'
 
 interface ActionsProps {
@@ -28,6 +29,7 @@ export default function Actions({ user }: ActionsProps): React.JSX.Element {
             }}
           />
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
+            <ImpersonateAction userId={id} />
             <DeleteAction id={id} />
           </div>
         </>

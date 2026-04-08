@@ -78,6 +78,11 @@ export type APIEndpoints = {
     Request: { slug?: string; email?: string }
     Response: { organizations: AdminOrganization[] }
   }
+
+  'POST /v1/admin/users/impersonate/:userId': {
+    Request: {}
+    Response: { token: string }
+  }
 }
 
 export type Organization = {
