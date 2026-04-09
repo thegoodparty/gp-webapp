@@ -5,7 +5,7 @@ import { useUser } from './hooks/useUser'
 import { useCampaign } from './hooks/useCampaign'
 import { useEffect } from 'react'
 import { isTestUser } from 'helpers/test-users'
-import { useOrganizationIfEnabled } from './organization-picker'
+import { useOrganization } from './organization-picker'
 
 export const reportErrorToSentry = (
   error: Error,
@@ -19,10 +19,11 @@ export const reportErrorToSentry = (
 export const SentryIdentifier: React.FC = () => {
   const [user] = useUser()
   const [campaign] = useCampaign()
-  const organization = useOrganizationIfEnabled()
+  const organization = useOrganization()
 
-  const userId = user?.id
-  const email = user?.email
+  const cookieUser = getUserCookie(true)
+  const userId = user?.id ?? (cookieUser ? cookieUser.id : undefined)
+  const email = user?.email ?? (cookieUser ? cookieUser.email : undefined)
 
   useEffect(() => {
     if (userId) {

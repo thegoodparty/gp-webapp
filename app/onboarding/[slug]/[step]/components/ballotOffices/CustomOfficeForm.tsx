@@ -101,7 +101,6 @@ interface CustomOfficeFormState {
   state: string
   office: string
   officeTermLength: string
-  otherOffice: string
   district: string
   city: string
   electionDate: string
@@ -110,7 +109,7 @@ interface CustomOfficeFormState {
 
 interface CustomOfficeFormProps {
   campaign?: Campaign
-  onSave: (campaign: Campaign) => void
+  onSave: (campaign: Campaign, customPositionName: string) => void
   onBack: () => void
 }
 
@@ -121,9 +120,8 @@ export default function CustomOfficeForm({
 }: CustomOfficeFormProps): React.JSX.Element {
   const [state, setState] = useState<CustomOfficeFormState>({
     state: campaign?.details?.state || '',
-    office: campaign?.details?.office || '',
+    office: '',
     officeTermLength: campaign?.details?.officeTermLength || '',
-    otherOffice: campaign?.details?.otherOffice || '',
     district: campaign?.details?.district || '',
     city: campaign?.details?.city || '',
     electionDate: campaign?.details?.electionDate || '',
@@ -159,17 +157,17 @@ export default function CustomOfficeForm({
     }
     const updated = campaign ? { ...campaign } : ({ details: {} } as Campaign)
 
+    const { office, ...detailFields } = state
     updated.details = {
       ...campaign?.details,
-      ...state,
+      ...detailFields,
       raceId: null,
-      // Legacy compatibility write only. Do not use details.positionId for reads.
-      positionId: null,
       electionId: null,
       ballotOffice: null,
       electionDate: state.electionDate,
     }
-    onSave(updated)
+    const customPositionName = office || ''
+    onSave(updated, customPositionName)
 
     const trackingProperties = {
       officeState: state.state,

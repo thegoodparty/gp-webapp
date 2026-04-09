@@ -100,11 +100,8 @@ test.describe('Custom office flow', () => {
         electionDate: string
         city: string
         district: string
-        office: string
         officeTermLength: string
         state: string
-        otherOffice: string
-        positionId: string | null
         electionId: string | null
         zip: string | null
       }
@@ -115,11 +112,8 @@ test.describe('Custom office flow', () => {
         electionDate: '2030-02-01',
         city: 'Hendersonville',
         district: '3',
-        office: 'City Council',
         officeTermLength: '4 years',
         state: 'NC',
-        otherOffice: '',
-        positionId: null,
         electionId: null,
         zip: null,
       },

@@ -229,13 +229,11 @@ const bootstrapTestUser = async (
   }
 
   await client.post('/v1/campaigns', {
+    ballotReadyPositionId: race.position.id,
     details: {
-      positionId: race.position.id,
       electionId: race.election.id,
       raceId: race.id,
       state: race.election.state,
-      office: 'Other',
-      otherOffice: race.position.name,
       ballotLevel: race.position.level,
       electionDate: race.election.electionDay,
       partisanType: race.position.partisanType,
@@ -292,13 +290,62 @@ export const authenticateTestUser = async (
     },
   })
 
-  const elapsed = Date.now() - start
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${elapsed}ms`,
+  const userCreated = Date.now()
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
+          userCreated - start
+        }ms`,
+      )
+    } else {
+      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    }
+  }
+
+  const domain = cookieDomain()
+
+  await page.context().addCookies([
+    {
+      name: 'token',
+      value: token,
+      domain,
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Lax',
+    },
+    {
+      name: 'user',
+      value: JSON.stringify(user),
+      domain,
+      path: '/',
+      sameSite: 'Lax',
+    },
+  ])
+
+  if (!options?.skipCampaignCreation) {
+    const { data: campaign } = await client.get<{ id: number }>(
+      '/v1/campaigns/mine',
     )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    await page.context().addCookies([
+      {
+        name: 'organization-slug',
+        value: `campaign-${campaign.id}`,
+        domain,
+        path: '/',
+        sameSite: 'Lax',
+      },
+    ])
+  }
+
+  const loginTime = Date.now()
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
   }
 
   return { user, client }
