@@ -1,4 +1,7 @@
-import type { Briefing, BriefingListItem } from 'app/dashboard/briefings/shared/briefing-types'
+import type {
+  Briefing,
+  BriefingListItem,
+} from 'app/dashboard/briefings/shared/briefing-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
 import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
