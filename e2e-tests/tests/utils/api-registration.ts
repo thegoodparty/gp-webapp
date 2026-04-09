@@ -172,8 +172,13 @@ const bootstrapTestUser = async (
     },
   )
 
-  client.defaults.headers.common['x-organization-slug'] =
-    `campaign-${campaign.id}`
+  if (!campaign?.id) {
+    throw new Error('Campaign creation did not return a valid id')
+  }
+
+  client.defaults.headers.common[
+    'x-organization-slug'
+  ] = `campaign-${campaign.id}`
 
   await client.put('/v1/campaigns/mine/race-target-details', {})
   await client.put('/v1/campaigns/mine', {
