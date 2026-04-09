@@ -27,7 +27,7 @@ export type APIEndpoints = {
     Request: {
       ballotReadyPositionId?: string | undefined
       overrideDistrictId?: string | null | undefined
-      customOfficeName?: string | null | undefined
+      customPositionName?: string | null | undefined
     }
     Response: Organization
   }

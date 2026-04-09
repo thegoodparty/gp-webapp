@@ -12,7 +12,7 @@ type SetupResult = {
   client: AxiosInstance
 }
 
-export const setupWinServeUser = async (
+export const setupElectedOfficeUser = async (
   page: Page,
   raceOptions?: TestUserOptions['race'],
 ): Promise<SetupResult> => {

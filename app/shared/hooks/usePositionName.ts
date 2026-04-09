@@ -1,9 +1,7 @@
 'use client'
-import { useOrganizationIfEnabled } from '@shared/organization-picker'
-import { useCampaign } from '@shared/hooks/useCampaign'
+import { useOrganization } from '@shared/organization-picker'
 
 export const usePositionName = (): string => {
-  const organization = useOrganizationIfEnabled()
-  const [campaign] = useCampaign()
-  return organization?.positionName || campaign?.positionName || ''
+  const organization = useOrganization()
+  return organization.positionName || ''
 }

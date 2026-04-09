@@ -13,13 +13,12 @@ import H4 from '@shared/typography/H4'
 import { dateUsHelper } from 'helpers/dateHelper'
 import Checkbox from '@shared/inputs/Checkbox'
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
-import DistrictPicker from 'app/onboarding/[slug]/[step]/components/districts/DistrictPicker'
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import type { PathToVictoryData } from 'helpers/types'
 
 export const sendVictoryMail = async (id: number): Promise<boolean> => {
   try {
@@ -30,17 +29,6 @@ export const sendVictoryMail = async (id: number): Promise<boolean> => {
     return false
   }
 }
-
-const updateDistrict = (
-  slug: string,
-  L2DistrictType: string,
-  L2DistrictName: string,
-) =>
-  clientFetch(apiRoutes.campaign.district, {
-    slug,
-    L2DistrictType,
-    L2DistrictName,
-  })
 
 type FormFieldKey =
   | 'canDownloadFederal'
@@ -82,12 +70,13 @@ const sections: SectionConfig[] = [
     ],
   },
   {
-    title: 'Vote Goal',
+    title: 'Vote Goal (read-only — sourced from live metrics)',
     fields: [
       {
         key: 'projectedTurnout',
         label: 'Projected Turnout number',
         type: 'number',
+        formula: true,
       },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
       {
@@ -151,8 +140,6 @@ interface FormState {
   p2vAttempts?: number
   p2vCompleteDate?: string
   completedBy?: number
-  electionType?: string
-  electionLocation?: string
   p2vNotNeeded?: boolean
   totalRegisteredVoters?: number
   republicans?: number
@@ -167,8 +154,6 @@ interface FormState {
   averageTurnout?: number
   viability?: { score?: number; tier?: string }
   source?: string
-  districtId?: string
-  districtManuallySet?: boolean
   officeContextFingerprint?: string
 }
 
@@ -213,9 +198,6 @@ interface KeyTypes {
 
 const keys: FormFieldKey[] = [
   'canDownloadFederal',
-  'projectedTurnout',
-  'winNumber',
-  'voterContactGoal',
   'voteGoal',
   'voterProjection',
   'budgetLow',
@@ -249,10 +231,12 @@ interface AdminVictoryPathPageProps {
 export default function AdminVictoryPathPage(
   props: AdminVictoryPathPageProps,
 ): React.JSX.Element {
-  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const [campaign, _, refreshCampaign] = useAdminCampaign()
   const { pathToVictory: p2vObject, details } = campaign || {}
-  const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
+  const pathToVictory = useMemo(
+    () => (p2vObject?.data || {}) as PathToVictoryData,
+    [p2vObject],
+  )
 
   const [state, setState] = useState<FormState>({
     ...initialState,
@@ -261,9 +245,8 @@ export default function AdminVictoryPathPage(
   })
 
   const [notNeeded, setNotNeeded] = useState(
-    pathToVictory?.p2vNotNeeded || false,
+    Boolean(pathToVictory?.p2vNotNeeded),
   )
-  const [excludeInvalidOverride, setExcludeInvalidOverride] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
   useEffect(() => {
@@ -289,21 +272,10 @@ export default function AdminVictoryPathPage(
       val = value
     }
 
-    const newState: FormState = {
+    setState({
       ...state,
       [key]: val,
-    }
-
-    if (key === 'projectedTurnout') {
-      const pt = val === '' ? 0 : parseFloat(String(val))
-      const winNumber = pt > 0 ? Math.floor(pt * 0.5) + 1 : 0
-      const voterContactGoal = pt > 0 ? pt * 5 : 0
-
-      newState.winNumber = winNumber
-      newState.voterContactGoal = voterContactGoal
-    }
-
-    setState(newState)
+    })
   }
 
   const save = async (): Promise<void> => {
@@ -338,11 +310,11 @@ export default function AdminVictoryPathPage(
         }
       })
 
-      if (state?.projectedTurnout && Number(state.projectedTurnout) > 0) {
+      if (
+        pathToVictory?.projectedTurnout &&
+        Number(pathToVictory.projectedTurnout) > 0
+      ) {
         attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' })
-      } else {
-        errorSnackbar('Projected Turnout is required')
-        return
       }
 
       await updateCampaign(attr, campaign?.slug || '')
@@ -374,25 +346,6 @@ export default function AdminVictoryPathPage(
     await refreshCampaign()
   }
 
-  const handleDistrictSubmit = async (
-    typeObj: { L2DistrictType: string } | null,
-    nameObj: { L2DistrictName: string } | null,
-  ): Promise<void> => {
-    if (!typeObj || !nameObj) return
-    try {
-      await updateDistrict(
-        campaign?.slug || '',
-        typeObj.L2DistrictType,
-        nameObj.L2DistrictName,
-      )
-      await refreshCampaign()
-      successSnackbar('District updated')
-    } catch (e) {
-      console.error('Error updating district', e)
-      errorSnackbar('Error updating district')
-    }
-  }
-
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
@@ -416,56 +369,6 @@ export default function AdminVictoryPathPage(
               {dateUsHelper(details?.primaryElectionDate) || 'N/A'}
             </strong>
           </H4>
-          {!winServeSplit && (
-            <div className="my-12">
-              <h2 className="font-black text-2xl mb-8">District Picker</h2>
-              <div className="mb-6 flex items-center gap-3">
-                <Checkbox
-                  defaultChecked={excludeInvalidOverride}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setExcludeInvalidOverride(e.target.checked)
-                  }
-                  color="error"
-                />
-                <div>
-                  excludeInvalid override - only check this if you aren&apos;t
-                  seeing districts, and/or you&apos;re confident you can select
-                  the correct one without safeguards for validity. Any districts
-                  you see exclusively with this override we do not have a
-                  projected turnout for.
-                </div>
-              </div>
-              <DistrictPicker
-                state={details?.state || ''}
-                electionYear={
-                  details?.electionDate
-                    ? new Date(details.electionDate).getFullYear()
-                    : new Date().getFullYear()
-                }
-                className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6"
-                buttonText="Save District"
-                onSubmit={handleDistrictSubmit}
-                excludeInvalidOverride={excludeInvalidOverride}
-                initialType={
-                  pathToVictory?.electionType
-                    ? {
-                        id: pathToVictory.electionType,
-                        L2DistrictType: pathToVictory.electionType,
-                        label: pathToVictory.electionType.replace(/_/g, ' '),
-                      }
-                    : null
-                }
-                initialName={
-                  pathToVictory?.electionLocation
-                    ? {
-                        id: pathToVictory.electionLocation,
-                        L2DistrictName: pathToVictory.electionLocation,
-                      }
-                    : null
-                }
-              />
-            </div>
-          )}
           {sections.map((section) => (
             <div className="mb-12" key={section.title}>
               <h2 className="font-black text-2xl mb-8">{section.title}</h2>

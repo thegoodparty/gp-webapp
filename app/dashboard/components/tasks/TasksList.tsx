@@ -28,13 +28,27 @@ import {
 import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
-import { TASK_TYPES } from '../../shared/constants/tasks.const'
+import {
+  getCampaignPlanEventTaskType,
+  NAV_DIRECTIONS,
+  STATUS_CHANGES,
+  TASK_TYPES,
+  TRACKING_SOURCES,
+  WEEK_POSITIONS,
+} from '../../shared/constants/tasks.const'
+import type {
+  StatusChange,
+  TrackingSource,
+  WeekPosition,
+} from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { identifyUser } from '@shared/utils/analytics'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
 import { useWeekNavigation } from './useWeekNavigation'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
+import { useUser } from '@shared/hooks/useUser'
 import { isValidOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import type { OutreachType } from 'gpApi/outreach.api'
 import { useQueryClient } from '@tanstack/react-query'
@@ -90,6 +104,10 @@ const TasksList = ({
     : Infinity
 
   const {
+    selectedWeek,
+    weeksUntilElection,
+    previousWeekNumber,
+    nextWeekNumber,
     currentWeekStart,
     filteredTasks,
     canGoPrevious,
@@ -102,6 +120,63 @@ const TasksList = ({
     electionDateObj,
     daysUntilElection,
   )
+
+  const getWeekRelativePosition = (week: number): WeekPosition => {
+    if (week > weeksUntilElection) return WEEK_POSITIONS.past
+    if (week < weeksUntilElection) return WEEK_POSITIONS.future
+    return WEEK_POSITIONS.current
+  }
+
+  const handlePreviousWeek = () => {
+    if (previousWeekNumber !== null) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
+        direction: NAV_DIRECTIONS.previous,
+        weekRelativePosition: getWeekRelativePosition(previousWeekNumber),
+      })
+    }
+    goToPrevious()
+  }
+
+  const handleNextWeek = () => {
+    if (nextWeekNumber !== null) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.WeekNavigated, {
+        direction: NAV_DIRECTIONS.next,
+        weekRelativePosition: getWeekRelativePosition(nextWeekNumber),
+      })
+    }
+    goToNext()
+  }
+
+  const [user] = useUser()
+
+  const tasksCount = tasks.length
+  const tasksCompletedCount = tasks.filter((t) => t.completed).length
+  const viewedPayloadRef = useRef({
+    tasksThisWeek: 0,
+    tasksCompletedThisWeek: 0,
+  })
+  viewedPayloadRef.current = {
+    tasksThisWeek: filteredTasks.length,
+    tasksCompletedThisWeek: filteredTasks.filter((t) => t.completed).length,
+  }
+
+  const trackedWeekRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (isLegacyList || tasksCount === 0) return
+    const trackedWeekKey = `${campaign.id}:${selectedWeek}`
+    if (trackedWeekRef.current === trackedWeekKey) return
+    trackedWeekRef.current = trackedWeekKey
+    trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, viewedPayloadRef.current)
+  }, [campaign.id, isLegacyList, selectedWeek, tasksCount])
+
+  useEffect(() => {
+    if (isLegacyList || tasksCount === 0 || !user?.id) return
+    void identifyUser(user.id, {
+      campaignPlanTasksTotal: tasksCount,
+      campaignPlanTasksCompleted: tasksCompletedCount,
+    })
+  }, [isLegacyList, tasksCount, tasksCompletedCount, user?.id])
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
@@ -142,6 +217,29 @@ const TasksList = ({
     }
   }
 
+  const trackTaskStatusUpdate = (
+    task: Task,
+    statusChange: StatusChange,
+    source: TrackingSource,
+  ) => {
+    if (isLegacyList) return
+    const campaignPlanTaskType = getCampaignPlanEventTaskType(task.flowType)
+    const taskDueDate = task.date ?? null
+    const daysFromDueDate = taskDueDate
+      ? differenceInDays(new Date(), new Date(taskDueDate.replace(/-/g, '/')))
+      : null
+    if (campaignPlanTaskType) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.TaskStatusUpdated, {
+        statusChange,
+        taskType: campaignPlanTaskType,
+        taskName: task.title,
+        taskDueDate,
+        daysFromDueDate,
+        source,
+      })
+    }
+  }
+
   const handleCheckClick = async (task: Task) => {
     const { id: taskId, flowType: type, completed } = task
 
@@ -155,7 +253,13 @@ const TasksList = ({
         delete taskCountsRef.current[taskId]
       }
       const ok = await revertTask(taskId)
-      if (!ok && saved) {
+      if (ok) {
+        trackTaskStatusUpdate(
+          task,
+          STATUS_CHANGES.incomplete,
+          TRACKING_SOURCES.manualCheckoff,
+        )
+      } else if (saved) {
         const { field, count } = saved
         updateVoterContactsLocal((prev) => ({
           ...prev,
@@ -170,7 +274,14 @@ const TasksList = ({
       NON_OUTREACH_TYPES.includes(type) &&
       (isLegacyList || type !== TASK_TYPES.events)
     ) {
-      await completeTask(taskId)
+      const ok = await completeTask(taskId)
+      if (ok) {
+        trackTaskStatusUpdate(
+          task,
+          STATUS_CHANGES.complete,
+          TRACKING_SOURCES.manualCheckoff,
+        )
+      }
     } else {
       setCompleteModalTask(task)
     }
@@ -202,6 +313,11 @@ const TasksList = ({
     })
 
     if (ok) {
+      trackTaskStatusUpdate(
+        task,
+        STATUS_CHANGES.complete,
+        TRACKING_SOURCES.manualCheckoff,
+      )
       setCompleteModalTask(null)
     } else if (fieldForRollback !== undefined) {
       const f = fieldForRollback
@@ -227,6 +343,16 @@ const TasksList = ({
     }
 
     const { flowType, proRequired, deadline } = task
+
+    if (!isLegacyList) {
+      const campaignPlanTaskType = getCampaignPlanEventTaskType(flowType)
+      if (campaignPlanTaskType) {
+        trackEvent(EVENTS.Dashboard.CampaignPlan.TaskCTAClicked, {
+          taskType: campaignPlanTaskType,
+        })
+      }
+    }
+
     const isTextCompliant =
       tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
@@ -369,7 +495,7 @@ const TasksList = ({
         {isLegacyList ? (
           <>
             <H2>Tasks for this week</H2>
-            <Body2 className="!font-outfit mt-1">
+            <Body2 className="font-outfit! mt-1">
               Election day: {electionDate ? dateUsHelper(electionDate) : ''}
             </Body2>
           </>
@@ -382,8 +508,8 @@ const TasksList = ({
             </div>
             <WeeklyTaskNavigator
               currentWeekStart={currentWeekStart}
-              onPrevious={goToPrevious}
-              onNext={goToNext}
+              onPrevious={handlePreviousWeek}
+              onNext={handleNextWeek}
               canGoPrevious={canGoPrevious}
               canGoNext={canGoNext}
             />
@@ -487,7 +613,14 @@ const TasksList = ({
           onClose={() => setFlowModalTask(null)}
           onComplete={async () => {
             if (!flowModalTask.task.completed) {
-              await completeTask(flowModalTask.task.id)
+              const ok = await completeTask(flowModalTask.task.id)
+              if (ok) {
+                trackTaskStatusUpdate(
+                  flowModalTask.task,
+                  STATUS_CHANGES.complete,
+                  TRACKING_SOURCES.schedulingFlow,
+                )
+              }
             }
           }}
           defaultAiTemplateId={flowModalTask.task.defaultAiTemplateId}
