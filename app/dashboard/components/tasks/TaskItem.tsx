@@ -77,7 +77,7 @@ export default function TaskItem({
   }
 
   const displayTaskType = flowType
-    ? (DISPLAY_TASK_TYPES[flowType] ?? flowType)
+    ? DISPLAY_TASK_TYPES[flowType] ?? flowType
     : ''
 
   const linkForRow =
