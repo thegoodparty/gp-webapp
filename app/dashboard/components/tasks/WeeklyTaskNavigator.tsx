@@ -1,6 +1,6 @@
 'use client'
 
-import { format, addDays, addWeeks, startOfDay } from 'date-fns'
+import { format, addDays, startOfDay } from 'date-fns'
 import { ArrowLeftIcon, ArrowRightIcon, IconButton } from '@styleguide'
 
 interface WeeklyTaskNavigatorProps {
@@ -29,18 +29,8 @@ function isInWeekRange(date: Date, rangeStart: Date): boolean {
   return d >= s && d <= e
 }
 
-function getDisplayLabel(weekStart: Date): string {
-  const today = new Date()
-  if (isInWeekRange(today, weekStart)) {
-    return 'This week'
-  }
-  if (isInWeekRange(today, addWeeks(weekStart, 1))) {
-    return 'Last week'
-  }
-  if (isInWeekRange(today, addWeeks(weekStart, -1))) {
-    return 'Next week'
-  }
-  return formatWeekLabel(weekStart)
+function isCurrentWeek(weekStart: Date): boolean {
+  return isInWeekRange(new Date(), weekStart)
 }
 
 export default function WeeklyTaskNavigator({
@@ -50,9 +40,8 @@ export default function WeeklyTaskNavigator({
   canGoPrevious,
   canGoNext,
 }: WeeklyTaskNavigatorProps) {
-  const label = getDisplayLabel(currentWeekStart)
+  const isThisWeek = isCurrentWeek(currentWeekStart)
   const dateRange = formatWeekLabel(currentWeekStart)
-  const showDateRange = label !== dateRange
 
   return (
     <div className="flex items-center gap-3 px-6 py-3">
@@ -75,10 +64,9 @@ export default function WeeklyTaskNavigator({
         <ArrowRightIcon className="size-4" />
       </IconButton>
       <div className="flex flex-col">
-        <span className="text-base font-semibold">{label}</span>
-        {showDateRange && (
-          <span className="text-xs text-muted-foreground">{dateRange}</span>
-        )}
+        <span className="text-base font-semibold">
+          {isThisWeek ? 'This week' : dateRange}
+        </span>
       </div>
     </div>
   )

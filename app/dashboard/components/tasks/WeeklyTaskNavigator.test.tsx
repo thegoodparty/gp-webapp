@@ -44,7 +44,7 @@ describe('WeeklyTaskNavigator', () => {
     expect(screen.getByText('Apr 28 - May 4')).toBeInTheDocument()
   })
 
-  it('shows "This week" when today falls in the range', () => {
+  it('shows only "This week" with no date range when today falls in the range', () => {
     const today = new Date()
     const weekStart = addDays(today, -2)
 
@@ -55,7 +55,7 @@ describe('WeeklyTaskNavigator', () => {
     expect(screen.getByText('This week')).toBeInTheDocument()
   })
 
-  it('shows "Next week" for the following week range', () => {
+  it('shows date range instead of "Next week" label for the following week', () => {
     const today = new Date()
     const nextWeekStart = addWeeks(today, 1)
 
@@ -66,10 +66,10 @@ describe('WeeklyTaskNavigator', () => {
       />,
     )
 
-    expect(screen.getByText('Next week')).toBeInTheDocument()
+    expect(screen.queryByText('Next week')).not.toBeInTheDocument()
   })
 
-  it('shows "Last week" for the previous week range', () => {
+  it('shows date range instead of "Last week" label for the previous week', () => {
     const today = new Date()
     const lastWeekStart = addWeeks(today, -1)
 
@@ -80,7 +80,7 @@ describe('WeeklyTaskNavigator', () => {
       />,
     )
 
-    expect(screen.getByText('Last week')).toBeInTheDocument()
+    expect(screen.queryByText('Last week')).not.toBeInTheDocument()
   })
 
   it('disables previous button when canGoPrevious is false', () => {
