@@ -1,10 +1,10 @@
 import {
   DISPLAY_TASK_TYPES,
   TASK_TYPES,
+  formatTaskDate,
 } from '../../shared/constants/tasks.const'
 import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
 import AwarenessTaskItem from './AwarenessTaskItem'
-import { format, subDays } from 'date-fns'
 
 export interface Task {
   id: string
@@ -51,14 +51,7 @@ export default function TaskItem({
     proRequired,
   } = task
 
-  const formattedDate = date
-    ? format(new Date(date.slice(0, 10).replace(/-/g, '/')), 'MMM d')
-    : electionDate && deadline
-    ? format(
-        subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
-        'MMM d',
-      )
-    : ''
+  const formattedDate = formatTaskDate(date, electionDate, deadline)
 
   if (flowType === TASK_TYPES.awareness) {
     return (

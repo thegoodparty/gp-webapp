@@ -1,3 +1,5 @@
+import { format, subDays } from 'date-fns'
+
 // NOTE: copied from CampaignTaskType enum in gp-api
 export const TASK_TYPES = {
   text: 'text',
@@ -94,6 +96,23 @@ export const getCampaignPlanEventTaskType = (
     default:
       return null
   }
+}
+
+export function formatTaskDate(
+  taskDate: string | null | undefined,
+  electionDate: string | undefined,
+  deadline: number | undefined,
+): string {
+  if (taskDate) {
+    return format(new Date(taskDate.slice(0, 10).replace(/-/g, '/')), 'MMM d')
+  }
+  if (electionDate && deadline) {
+    return format(
+      subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
+      'MMM d',
+    )
+  }
+  return ''
 }
 
 type TaskTypeKey = keyof typeof TASK_TYPES

@@ -30,6 +30,7 @@ import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import {
+  formatTaskDate,
   getCampaignPlanEventTaskType,
   NAV_DIRECTIONS,
   STATUS_CHANGES,
@@ -42,7 +43,7 @@ import type {
   TrackingSource,
   WeekPosition,
 } from '../../shared/constants/tasks.const'
-import { differenceInDays, format, subDays } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
@@ -343,15 +344,10 @@ const TasksList = ({
     const { flowType, proRequired, deadline } = task
 
     if (flowType === TASK_TYPES.awareness) {
-      const date = task.date
-        ? format(new Date(task.date.slice(0, 10).replace(/-/g, '/')), 'MMM d')
-        : electionDate && deadline
-          ? format(
-              subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
-              'MMM d',
-            )
-          : ''
-      setAwarenessDetail({ task, formattedDate: date })
+      setAwarenessDetail({
+        task,
+        formattedDate: formatTaskDate(task.date, electionDate, deadline),
+      })
       return
     }
 
