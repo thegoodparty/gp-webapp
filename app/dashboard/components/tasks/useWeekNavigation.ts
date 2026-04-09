@@ -28,6 +28,9 @@ function writeSessionWeek(campaignId: string, week: number | null): void {
 
 interface WeekNavigationResult {
   selectedWeek: number
+  weeksUntilElection: number
+  previousWeekNumber: number | null
+  nextWeekNumber: number | null
   currentWeekStart: Date
   filteredTasks: Task[]
   canGoPrevious: boolean
@@ -74,6 +77,10 @@ export function useWeekNavigation(
   const selectedWeek = weekNumbers[activeIndex] ?? 0
   const canGoPrevious = activeIndex > 0
   const canGoNext = activeIndex < weekNumbers.length - 1
+  const previousWeekNumber = canGoPrevious
+    ? weekNumbers[activeIndex - 1] ?? null
+    : null
+  const nextWeekNumber = canGoNext ? weekNumbers[activeIndex + 1] ?? null : null
 
   const navigateTo = (index: number) => {
     if (index < 0 || index >= weekNumbers.length) return
@@ -94,6 +101,9 @@ export function useWeekNavigation(
 
   return {
     selectedWeek,
+    weeksUntilElection,
+    previousWeekNumber,
+    nextWeekNumber,
     currentWeekStart,
     filteredTasks,
     canGoPrevious,

@@ -4,11 +4,13 @@ import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from '@styleguide/components/ui/dialog'
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerTitle,
   DrawerClose,
 } from '@styleguide/components/ui/drawer'
@@ -19,6 +21,7 @@ interface ModalOrDrawerProps {
   onOpenChange: (open: boolean) => void
   children: React.ReactNode
   title: string
+  description?: string
   dialogClassName?: string
   drawerClassName?: string
 }
@@ -28,6 +31,7 @@ export function ModalOrDrawer({
   onOpenChange,
   children,
   title,
+  description,
   dialogClassName,
   drawerClassName,
 }: ModalOrDrawerProps) {
@@ -37,8 +41,16 @@ export function ModalOrDrawer({
   if (isSmall) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className={drawerClassName}>
+        <DrawerContent
+          className={drawerClassName}
+          aria-describedby={description ? undefined : undefined}
+        >
           <DrawerTitle className="sr-only">{title}</DrawerTitle>
+          {description ? (
+            <DrawerDescription className="sr-only">
+              {description}
+            </DrawerDescription>
+          ) : null}
           <DrawerClose className="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden">
             <XMarkIcon />
             <span className="sr-only">Close</span>
@@ -51,8 +63,16 @@ export function ModalOrDrawer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={dialogClassName}>
+      <DialogContent
+        className={dialogClassName}
+        aria-describedby={description ? undefined : undefined}
+      >
         <DialogTitle className="sr-only">{title}</DialogTitle>
+        {description ? (
+          <DialogDescription className="sr-only">
+            {description}
+          </DialogDescription>
+        ) : null}
         {children}
       </DialogContent>
     </Dialog>

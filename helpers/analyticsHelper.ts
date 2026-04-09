@@ -131,6 +131,15 @@ export const EVENTS = {
 
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
+    CampaignPlan: {
+      GenerationCompleted: 'Dashboard - Campaign Plan Generation Completed',
+      Viewed: 'Dashboard - Campaign Plan Viewed',
+      WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
+      TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
+      TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+      VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
+      VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
+    },
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',
