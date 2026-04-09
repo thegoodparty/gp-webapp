@@ -42,7 +42,7 @@ import type {
   TrackingSource,
   WeekPosition,
 } from '../../shared/constants/tasks.const'
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, format, subDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
@@ -182,9 +182,10 @@ const TasksList = ({
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
-  const [awarenessDetailTask, setAwarenessDetailTask] = useState<Task | null>(
-    null,
-  )
+  const [awarenessDetail, setAwarenessDetail] = useState<{
+    task: Task
+    formattedDate: string
+  } | null>(null)
   const taskCountsRef = useRef<
     Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
   >({})
@@ -342,7 +343,15 @@ const TasksList = ({
     const { flowType, proRequired, deadline } = task
 
     if (flowType === TASK_TYPES.awareness) {
-      setAwarenessDetailTask(task)
+      const date = task.date
+        ? format(new Date(task.date.slice(0, 10).replace(/-/g, '/')), 'MMM d')
+        : electionDate && deadline
+          ? format(
+              subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
+              'MMM d',
+            )
+          : ''
+      setAwarenessDetail({ task, formattedDate: date })
       return
     }
 
@@ -576,13 +585,14 @@ const TasksList = ({
           task={eventDetailTask}
         />
       )}
-      {awarenessDetailTask && (
+      {awarenessDetail && (
         <AwarenessDetailModal
           open={true}
           onOpenChange={(open) => {
-            if (!open) setAwarenessDetailTask(null)
+            if (!open) setAwarenessDetail(null)
           }}
-          task={awarenessDetailTask}
+          task={awarenessDetail.task}
+          formattedDate={awarenessDetail.formattedDate}
         />
       )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (

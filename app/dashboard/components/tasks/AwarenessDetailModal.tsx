@@ -2,24 +2,22 @@
 
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
 import { CalendarCheck } from 'lucide-react'
-import { dateUsHelper } from 'helpers/dateHelper'
 import type { Task } from './TaskItem'
 
 interface AwarenessDetailModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   task: Task
+  formattedDate: string
 }
 
 export default function AwarenessDetailModal({
   open,
   onOpenChange,
   task,
+  formattedDate,
 }: AwarenessDetailModalProps) {
-  const { title, description, date } = task
-  const formattedDate = date
-    ? dateUsHelper(date.slice(0, 10).replace(/-/g, '/'), 'long')
-    : null
+  const { title, description } = task
 
   return (
     <ModalOrDrawer
