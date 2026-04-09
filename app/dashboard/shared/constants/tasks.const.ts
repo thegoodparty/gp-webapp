@@ -9,6 +9,7 @@ export const TASK_TYPES = {
   events: 'events',
   education: 'education',
   compliance: 'compliance',
+  awareness: 'awareness',
 }
 
 // Legacy types, these were based on voter file types
@@ -44,6 +45,7 @@ export const DISPLAY_TASK_TYPES: Record<
   events: 'Event',
   education: 'Education',
   compliance: 'Compliance',
+  awareness: 'Awareness',
 }
 
 export const WEEK_POSITIONS = {

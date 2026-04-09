@@ -15,6 +15,7 @@ import LogTaskModal, {
 } from './LogTaskModal'
 import CountModal from './CountModal'
 import EventDetailModal from './EventDetailModal'
+import AwarenessDetailModal from './AwarenessDetailModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
@@ -66,6 +67,7 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
   TASK_TYPES.events,
   TASK_TYPES.compliance,
+  TASK_TYPES.awareness,
 ]
 
 type TaskId = Task['id']
@@ -180,6 +182,9 @@ const TasksList = ({
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
+  const [awarenessDetailTask, setAwarenessDetailTask] = useState<Task | null>(
+    null,
+  )
   const taskCountsRef = useRef<
     Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
   >({})
@@ -358,6 +363,11 @@ const TasksList = ({
 
     if (!isLegacyList && flowType === TASK_TYPES.events) {
       setEventDetailTask(task)
+      return
+    }
+
+    if (flowType === TASK_TYPES.awareness) {
+      setAwarenessDetailTask(task)
       return
     }
 
@@ -564,6 +574,15 @@ const TasksList = ({
             if (!open) setEventDetailTask(null)
           }}
           task={eventDetailTask}
+        />
+      )}
+      {awarenessDetailTask && (
+        <AwarenessDetailModal
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) setAwarenessDetailTask(null)
+          }}
+          task={awarenessDetailTask}
         />
       )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (
