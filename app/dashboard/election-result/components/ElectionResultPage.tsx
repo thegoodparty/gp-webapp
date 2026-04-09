@@ -13,7 +13,6 @@ import {
   ORGANIZATIONS_QUERY_KEY,
   useSetOrganizationSlug,
 } from '@shared/organization-picker'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { usePositionName } from '@shared/hooks/usePositionName'
 
@@ -50,7 +49,6 @@ export default function ElectionResultPage(): React.JSX.Element {
   const [campaign] = useCampaign()
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
-  const { on: winServeSplit } = useFlagOn('win-serve-split')
   const details = campaign?.details
   const goals = campaign && 'goals' in campaign ? campaign.goals : undefined
   const goalsObj = goals && typeof goals === 'object' ? goals : null
@@ -76,24 +74,22 @@ export default function ElectionResultPage(): React.JSX.Element {
     mutationFn: async () =>
       clientRequest('POST /v1/elected-office', {}).then((res) => res.data),
     onSuccess: async (newOffice) => {
-      if (winServeSplit) {
-        const organizations = await clientRequest(
-          'GET /v1/organizations',
-          {},
-        ).then((res) => res.data.organizations)
+      const organizations = await clientRequest(
+        'GET /v1/organizations',
+        {},
+      ).then((res) => res.data.organizations)
 
-        queryClient.setQueryData(ORGANIZATIONS_QUERY_KEY, organizations)
+      queryClient.setQueryData(ORGANIZATIONS_QUERY_KEY, organizations)
 
-        const newOrg = organizations.find(
-          (org) => org.electedOfficeId === newOffice.id,
-        )
+      const newOrg = organizations.find(
+        (org) => org.electedOfficeId === newOffice.id,
+      )
 
-        if (!newOrg) {
-          throw new Error('New organization not found')
-        }
-
-        setSelectedSlug(newOrg.slug)
+      if (!newOrg) {
+        throw new Error('New organization not found')
       }
+
+      setSelectedSlug(newOrg.slug)
 
       router.replace('/polls/welcome')
     },

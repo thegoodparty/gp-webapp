@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import {
-  setupWinServeUser,
+  setupElectedOfficeUser,
   switchOrganization,
   getSelectedOrgName,
   getOrgPickerOptions,
@@ -18,7 +18,7 @@ test.describe('Organization Switcher', () => {
   test('shows both campaign and elected office orgs after winning', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -27,7 +27,7 @@ test.describe('Organization Switcher', () => {
   })
 
   test('switching to campaign org routes to /dashboard', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -44,7 +44,7 @@ test.describe('Organization Switcher', () => {
   test('switching to elected office org routes to /dashboard/polls', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -64,7 +64,7 @@ test.describe('Organization Switcher', () => {
   })
 
   test('org selection persists across page reload', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 

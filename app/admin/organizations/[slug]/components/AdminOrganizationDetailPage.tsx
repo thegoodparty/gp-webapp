@@ -16,7 +16,6 @@ import {
   TooltipTrigger,
 } from '@styleguide'
 import { CircleCheck } from 'lucide-react'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import Checkbox from '@shared/inputs/Checkbox'
 
@@ -38,8 +37,6 @@ export const AdminOrganizationDetailPage = ({
 }: {
   organization: AdminOrganization
 }) => {
-  const { on: enabled } = useFlagOn('win-serve-split')
-
   const { successSnackbar, errorSnackbar } = useSnackbar()
   const { impersonate } = useImpersonateUser()
   const [excludeInvalidOverride, setExcludeInvalidOverride] = useState(false)
@@ -60,10 +57,6 @@ export const AdminOrganizationDetailPage = ({
       errorSnackbar(error.message)
     },
   })
-
-  if (!enabled) {
-    return <div>Feature flag not enabled</div>
-  }
 
   const details = org.extra.campaign?.details
   const state = details?.state || ''

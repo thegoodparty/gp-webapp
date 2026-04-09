@@ -124,11 +124,21 @@ export const EVENTS = {
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
       ClickContacts: 'Navigation - Dashboard: Click Contacts',
       ClickPolls: 'Navigation - Dashboard: Click Polls',
+      ClickBriefings: 'Navigation - Dashboard: Click Briefings',
     },
   },
 
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
+    CampaignPlan: {
+      GenerationCompleted: 'Dashboard - Campaign Plan Generation Completed',
+      Viewed: 'Dashboard - Campaign Plan Viewed',
+      WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
+      TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
+      TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+      VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
+      VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
+    },
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',
@@ -465,6 +475,14 @@ export const EVENTS = {
     DidYouWinModalViewed: 'Candidacy - Did You Win Modal Viewed',
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
+  },
+  Briefings: {
+    BriefingViewed: 'Briefings - Briefing Viewed',
+    IssueDetailViewed: 'Briefings - Issue Detail Viewed',
+    ClickDownload: 'Briefings - Click Download',
+    FeedbackHelpful: 'Briefings - Feedback: Helpful',
+    FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
+    ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
   },
 } as const
 

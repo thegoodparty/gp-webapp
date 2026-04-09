@@ -6,7 +6,6 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper'
 import { clientRequest } from 'gpApi/typed-request'
 import { AdminOrganization } from 'gpApi/api-endpoints'
 import { useQuery } from '@tanstack/react-query'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useDebouncedValue } from '@shared/hooks/useDebouncedValue'
 
 const OrgTypeLabel = ({ org }: { org: AdminOrganization }) => {
@@ -17,7 +16,6 @@ const OrgTypeLabel = ({ org }: { org: AdminOrganization }) => {
 }
 
 export const AdminOrganizationsPage = (): React.JSX.Element => {
-  const { on: enabled } = useFlagOn('win-serve-split')
   const [debouncedEmail, email, setEmail] = useDebouncedValue('', 300)
 
   const query = useQuery({
@@ -28,10 +26,6 @@ export const AdminOrganizationsPage = (): React.JSX.Element => {
       }).then((res) => res.data.organizations),
     enabled: debouncedEmail.length > 0,
   })
-
-  if (!enabled) {
-    return <div>Feature flag not enabled</div>
-  }
 
   return (
     <AdminWrapper pathname="/admin/organizations" title="Organizations">

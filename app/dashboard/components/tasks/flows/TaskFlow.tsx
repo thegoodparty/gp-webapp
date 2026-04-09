@@ -168,6 +168,14 @@ const TaskFlow = ({
 
   const handleNext = async () => {
     if (isLastStep) {
+      if (stepName !== STEPS.purchase) {
+        const contactField = getVoterContactField(type)
+        await updateVoterContacts((currentContacts) => ({
+          ...currentContacts,
+          [contactField]:
+            (currentContacts[contactField] || 0) + (state.voterCount || 0),
+        }))
+      }
       await onComplete?.()
       handleCloseConfirm()
       return
@@ -243,12 +251,12 @@ const TaskFlow = ({
     [
       type,
       state,
-      campaign,
       outreaches,
       setOutreaches,
       errorSnackbar,
       refreshCampaign,
       p2pUxEnabled,
+      campaignId,
     ],
   )
 

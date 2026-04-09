@@ -9,7 +9,7 @@ import H4 from '@shared/typography/H4'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
-import Link from 'next/link'
+import { getMarketingUrl } from 'helpers/linkhelper'
 import { MdPerson, MdGroups, MdFlag } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -116,17 +116,21 @@ export default function PledgeStep({ campaign, step }: PledgeStepProps) {
             listening to citizens, learning about important issues and
             demonstrating your ability to serve, not mudslinging with your
             opponents, and accept GoodParty.org&apos;s{' '}
-            <Link
-              href="/terms-of-service"
+            <a
+              href={getMarketingUrl('/terms-of-service')}
               target="_blank"
               className="underline"
             >
               Terms of Service
-            </Link>{' '}
+            </a>{' '}
             and{' '}
-            <Link href="/privacy" target="_blank" className="underline">
+            <a
+              href={getMarketingUrl('/privacy')}
+              target="_blank"
+              className="underline"
+            >
               Privacy Policy
-            </Link>
+            </a>
             .
           </Body2>
         </div>

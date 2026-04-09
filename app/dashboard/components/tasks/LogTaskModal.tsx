@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Modal from '@shared/utils/Modal'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
@@ -7,6 +7,7 @@ import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { useUser } from '@shared/hooks/useUser'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
+import { getCampaignPlanEventTaskType } from '../../shared/constants/tasks.const'
 
 export type LogTaskFlowType =
   | 'text'
@@ -18,9 +19,10 @@ export type LogTaskFlowType =
   | 'events'
 
 interface LogTaskModalProps {
-  onSubmit: (value: number) => void
+  onSubmit: (value: number) => void | Promise<void>
   onClose: () => void
   flowType: LogTaskFlowType
+  trackCampaignPlanEvents?: boolean
 }
 
 export const TASK_TYPE_HEADINGS: { [K in LogTaskFlowType]: string } = {
@@ -47,13 +49,22 @@ const LogTaskModal = ({
   onSubmit,
   onClose,
   flowType,
+  trackCampaignPlanEvents = false,
 }: LogTaskModalProps): React.JSX.Element => {
   const modalTitle = TASK_TYPE_HEADINGS[flowType]
   const modalLabel = TASK_TYPE_LABELS[flowType]
   const resolvedFlowType = flowType === 'p2pDisabledText' ? 'text' : flowType
+  const campaignPlanTaskType = getCampaignPlanEventTaskType(flowType)
   const [reportedVoterGoals] = useVoterContacts()
   const [user] = useUser()
   const [value, setValue] = useState<string>()
+
+  useEffect(() => {
+    if (!trackCampaignPlanEvents || !campaignPlanTaskType) return
+    trackEvent(EVENTS.Dashboard.CampaignPlan.VoterContactDialogViewed, {
+      taskType: campaignPlanTaskType,
+    })
+  }, [campaignPlanTaskType, trackCampaignPlanEvents])
 
   const trackingAttrs = useMemo(
     () =>
@@ -84,6 +95,12 @@ const LogTaskModal = ({
       method: 'unknown',
       campaignName: 'null',
     })
+    if (trackCampaignPlanEvents && campaignPlanTaskType) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.VoterContactRecorded, {
+        taskType: campaignPlanTaskType,
+        recipientCount: newAddition,
+      })
+    }
     await identifyUser(user?.id, {
       voterContacts: Object.values(nextGoals).reduce(
         (sum, v) => sum + (Number(v) || 0),
@@ -91,7 +108,7 @@ const LogTaskModal = ({
       ),
     })
 
-    onSubmit(newAddition)
+    await onSubmit(newAddition)
     setValue('0')
   }
 
