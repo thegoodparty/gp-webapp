@@ -104,45 +104,47 @@ export default function PriorityIssueCard({
         )}
       </div>
 
-      {/* Feedback + Read the full briefing */}
+      {/* Feedback */}
       <div className="flex items-center gap-3 py-1 mt-3">
-        <span className="text-sm text-muted-foreground">Was this helpful?</span>
-        <button
-          onClick={() => {
-            setFeedback('yes')
-            trackEvent(EVENTS.Briefings.FeedbackHelpful, {
-              date,
-              issueNumber: issue.number,
-              issueSlug: issue.slug,
-            })
-          }}
-          className={`inline-flex items-center gap-1 text-sm transition-colors ${
-            feedback === 'yes'
-              ? 'text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <LuThumbsUp className="h-3.5 w-3.5" />
-          Yes
-        </button>
-        <button
-          onClick={() => {
-            setFeedback('no')
-            trackEvent(EVENTS.Briefings.FeedbackNotHelpful, {
-              date,
-              issueNumber: issue.number,
-              issueSlug: issue.slug,
-            })
-          }}
-          className={`inline-flex items-center gap-1 text-sm transition-colors ${
-            feedback === 'no'
-              ? 'text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          <LuThumbsDown className="h-3.5 w-3.5" />
-          No
-        </button>
+        {feedback ? (
+          <span className="text-sm text-muted-foreground">
+            Thank you for your feedback
+          </span>
+        ) : (
+          <>
+            <span className="text-sm text-muted-foreground">
+              Was this helpful?
+            </span>
+            <button
+              onClick={() => {
+                setFeedback('yes')
+                trackEvent(EVENTS.Briefings.FeedbackHelpful, {
+                  date,
+                  issueNumber: issue.number,
+                  issueSlug: issue.slug,
+                })
+              }}
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <LuThumbsUp className="h-3.5 w-3.5" />
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                setFeedback('no')
+                trackEvent(EVENTS.Briefings.FeedbackNotHelpful, {
+                  date,
+                  issueNumber: issue.number,
+                  issueSlug: issue.slug,
+                })
+              }}
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <LuThumbsDown className="h-3.5 w-3.5" />
+              No
+            </button>
+          </>
+        )}
       </div>
 
       <div className="flex justify-end gap-2 mt-3">
