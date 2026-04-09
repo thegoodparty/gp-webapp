@@ -124,6 +124,7 @@ export const EVENTS = {
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
       ClickContacts: 'Navigation - Dashboard: Click Contacts',
       ClickPolls: 'Navigation - Dashboard: Click Polls',
+      ClickBriefings: 'Navigation - Dashboard: Click Briefings',
     },
   },
 
@@ -474,6 +475,14 @@ export const EVENTS = {
     DidYouWinModalViewed: 'Candidacy - Did You Win Modal Viewed',
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
+  },
+  Briefings: {
+    BriefingViewed: 'Briefings - Briefing Viewed',
+    IssueDetailViewed: 'Briefings - Issue Detail Viewed',
+    ClickDownload: 'Briefings - Click Download',
+    FeedbackHelpful: 'Briefings - Feedback: Helpful',
+    FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
+    ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
   },
 } as const
 
