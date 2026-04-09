@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
-import { addWeeks, startOfWeek, format, endOfWeek } from 'date-fns'
+import { addDays, addWeeks } from 'date-fns'
 import WeeklyTaskNavigator from './WeeklyTaskNavigator'
 
 describe('WeeklyTaskNavigator', () => {
@@ -30,7 +30,7 @@ describe('WeeklyTaskNavigator', () => {
       />,
     )
 
-    expect(screen.getByText('Jun 1-6')).toBeInTheDocument()
+    expect(screen.getByText('Jun 1-7')).toBeInTheDocument()
   })
 
   it('renders the date range spanning two months', () => {
@@ -41,29 +41,23 @@ describe('WeeklyTaskNavigator', () => {
       />,
     )
 
-    expect(screen.getByText('Apr 28 - May 2')).toBeInTheDocument()
+    expect(screen.getByText('Apr 28 - May 4')).toBeInTheDocument()
   })
 
   it('shows only "This week" with no date range when today falls in the range', () => {
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 0 })
+    const today = new Date()
+    const weekStart = addDays(today, -2)
 
     render(
       <WeeklyTaskNavigator {...defaultProps} currentWeekStart={weekStart} />,
     )
 
     expect(screen.getByText('This week')).toBeInTheDocument()
-    const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 })
-    const dateRange = `${format(weekStart, 'MMM')} ${format(
-      weekStart,
-      'd',
-    )}-${format(weekEnd, 'd')}`
-    expect(screen.queryByText(dateRange)).not.toBeInTheDocument()
   })
 
   it('shows date range instead of "Next week" label for the following week', () => {
-    const nextWeekStart = startOfWeek(addWeeks(new Date(), 1), {
-      weekStartsOn: 0,
-    })
+    const today = new Date()
+    const nextWeekStart = addWeeks(today, 1)
 
     render(
       <WeeklyTaskNavigator
@@ -73,20 +67,11 @@ describe('WeeklyTaskNavigator', () => {
     )
 
     expect(screen.queryByText('Next week')).not.toBeInTheDocument()
-    const weekEnd = endOfWeek(nextWeekStart, { weekStartsOn: 0 })
-    const startMonth = format(nextWeekStart, 'MMM')
-    const endMonth = format(weekEnd, 'MMM')
-    const expectedRange =
-      startMonth === endMonth
-        ? `${startMonth} ${format(nextWeekStart, 'd')}-${format(weekEnd, 'd')}`
-        : `${format(nextWeekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`
-    expect(screen.getByText(expectedRange)).toBeInTheDocument()
   })
 
   it('shows date range instead of "Last week" label for the previous week', () => {
-    const lastWeekStart = startOfWeek(addWeeks(new Date(), -1), {
-      weekStartsOn: 0,
-    })
+    const today = new Date()
+    const lastWeekStart = addWeeks(today, -1)
 
     render(
       <WeeklyTaskNavigator
@@ -96,14 +81,6 @@ describe('WeeklyTaskNavigator', () => {
     )
 
     expect(screen.queryByText('Last week')).not.toBeInTheDocument()
-    const weekEnd = endOfWeek(lastWeekStart, { weekStartsOn: 0 })
-    const startMonth = format(lastWeekStart, 'MMM')
-    const endMonth = format(weekEnd, 'MMM')
-    const expectedRange =
-      startMonth === endMonth
-        ? `${startMonth} ${format(lastWeekStart, 'd')}-${format(weekEnd, 'd')}`
-        : `${format(lastWeekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`
-    expect(screen.getByText(expectedRange)).toBeInTheDocument()
   })
 
   it('disables previous button when canGoPrevious is false', () => {

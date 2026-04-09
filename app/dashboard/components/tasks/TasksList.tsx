@@ -15,6 +15,7 @@ import LogTaskModal, {
 } from './LogTaskModal'
 import CountModal from './CountModal'
 import EventDetailModal from './EventDetailModal'
+import AwarenessDetailModal from './AwarenessDetailModal'
 import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
@@ -29,6 +30,7 @@ import { ComplianceModal } from '../../shared/ComplianceModal'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
 import TaskFlow from './flows/TaskFlow'
 import {
+  formatTaskDate,
   getCampaignPlanEventTaskType,
   NAV_DIRECTIONS,
   STATUS_CHANGES,
@@ -66,6 +68,7 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.education,
   TASK_TYPES.events,
   TASK_TYPES.compliance,
+  TASK_TYPES.awareness,
 ]
 
 type TaskId = Task['id']
@@ -180,6 +183,10 @@ const TasksList = ({
 
   const [completeModalTask, setCompleteModalTask] = useState<Task | null>(null)
   const [eventDetailTask, setEventDetailTask] = useState<Task | null>(null)
+  const [awarenessDetail, setAwarenessDetail] = useState<{
+    task: Task
+    formattedDate: string
+  } | null>(null)
   const taskCountsRef = useRef<
     Partial<Record<TaskId, { field: keyof VoterContactsState; count: number }>>
   >({})
@@ -334,6 +341,16 @@ const TasksList = ({
   }
 
   const handleActionClick = (task: Task) => {
+    const { flowType, proRequired, deadline } = task
+
+    if (flowType === TASK_TYPES.awareness) {
+      setAwarenessDetail({
+        task,
+        formattedDate: formatTaskDate(task.date, electionDate, deadline),
+      })
+      return
+    }
+
     if (task.completed && !isLegacyList) {
       const href = task.link
       if (href?.startsWith('/')) {
@@ -341,8 +358,6 @@ const TasksList = ({
       }
       return
     }
-
-    const { flowType, proRequired, deadline } = task
 
     if (!isLegacyList) {
       const campaignPlanTaskType = getCampaignPlanEventTaskType(flowType)
@@ -564,6 +579,16 @@ const TasksList = ({
             if (!open) setEventDetailTask(null)
           }}
           task={eventDetailTask}
+        />
+      )}
+      {awarenessDetail && (
+        <AwarenessDetailModal
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) setAwarenessDetail(null)
+          }}
+          task={awarenessDetail.task}
+          formattedDate={awarenessDetail.formattedDate}
         />
       )}
       {deadlineModalTask && deadlineModalTask.deadline !== undefined && (

@@ -1,6 +1,6 @@
 'use client'
 
-import { format, endOfWeek, isSameWeek } from 'date-fns'
+import { format, addDays, startOfDay } from 'date-fns'
 import { ArrowLeftIcon, ArrowRightIcon, IconButton } from '@styleguide'
 
 interface WeeklyTaskNavigatorProps {
@@ -12,7 +12,7 @@ interface WeeklyTaskNavigatorProps {
 }
 
 function formatWeekLabel(weekStart: Date): string {
-  const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 })
+  const weekEnd = addDays(weekStart, 6)
   const startMonth = format(weekStart, 'MMM')
   const endMonth = format(weekEnd, 'MMM')
 
@@ -22,8 +22,15 @@ function formatWeekLabel(weekStart: Date): string {
   return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`
 }
 
+function isInWeekRange(date: Date, rangeStart: Date): boolean {
+  const d = startOfDay(date).getTime()
+  const s = startOfDay(rangeStart).getTime()
+  const e = startOfDay(addDays(rangeStart, 6)).getTime()
+  return d >= s && d <= e
+}
+
 function isCurrentWeek(weekStart: Date): boolean {
-  return isSameWeek(new Date(), weekStart, { weekStartsOn: 0 })
+  return isInWeekRange(new Date(), weekStart)
 }
 
 export default function WeeklyTaskNavigator({
