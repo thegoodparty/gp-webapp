@@ -339,6 +339,13 @@ const TasksList = ({
   }
 
   const handleActionClick = (task: Task) => {
+    const { flowType, proRequired, deadline } = task
+
+    if (flowType === TASK_TYPES.awareness) {
+      setAwarenessDetailTask(task)
+      return
+    }
+
     if (task.completed && !isLegacyList) {
       const href = task.link
       if (href?.startsWith('/')) {
@@ -346,8 +353,6 @@ const TasksList = ({
       }
       return
     }
-
-    const { flowType, proRequired, deadline } = task
 
     if (!isLegacyList) {
       const campaignPlanTaskType = getCampaignPlanEventTaskType(flowType)
@@ -363,11 +368,6 @@ const TasksList = ({
 
     if (!isLegacyList && flowType === TASK_TYPES.events) {
       setEventDetailTask(task)
-      return
-    }
-
-    if (flowType === TASK_TYPES.awareness) {
-      setAwarenessDetailTask(task)
       return
     }
 
