@@ -181,6 +181,33 @@ beforeEach(() => {
 })
 
 describe('TasksList non-legacy event tasks', () => {
+  it('renders a week range that contains the rendered task date', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/01/01 12:00:00'))
+
+    try {
+      const task = makeTask({
+        id: 'task-week-30',
+        title: 'Week aligned task',
+        week: 30,
+        date: '2026-04-13',
+      })
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={[task]}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Apr 7-13')).toBeInTheDocument()
+      expect(screen.getByText('Apr 13')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('uses the row only to open event details; external link stays in the modal', async () => {
     const user = userEvent.setup()
     mockClientFetch.mockResolvedValue({ ok: true, data: [] })

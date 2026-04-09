@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { startOfWeek, addWeeks } from 'date-fns'
+import { addWeeks, startOfWeek } from 'date-fns'
 import type { Task } from './TaskItem'
 
 const SESSION_KEY_PREFIX = 'campaign-plan-selected-week'
@@ -92,9 +92,7 @@ export function useWeekNavigation(
   }
 
   const currentWeekStart = electionDateObj
-    ? startOfWeek(addWeeks(electionDateObj, -selectedWeek), {
-        weekStartsOn: 0,
-      })
+    ? addWeeks(electionDateObj, -selectedWeek)
     : startOfWeek(new Date(), { weekStartsOn: 0 })
 
   const filteredTasks = tasks.filter((t) => t.week === selectedWeek)
