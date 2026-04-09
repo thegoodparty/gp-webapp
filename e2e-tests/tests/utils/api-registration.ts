@@ -24,6 +24,9 @@ const clerkBackend = createClerkClient({ secretKey: CLERK_SECRET_KEY })
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
+
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
@@ -290,13 +293,41 @@ export const authenticateTestUser = async (
     },
   })
 
+  const userCreated = Date.now()
   const elapsed = Date.now() - start
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${elapsed}ms`,
+
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${elapsed}ms`,
+      )
+    } else {
+      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    }
+  }
+  const domain = cookieDomain()
+
+  if (!options?.skipCampaignCreation) {
+    const { data: campaign } = await client.get<{ id: number }>(
+      '/v1/campaigns/mine',
     )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+    await page.context().addCookies([
+      {
+        name: 'organization-slug',
+        value: `campaign-${campaign.id}`,
+        domain,
+        path: '/',
+        sameSite: 'Lax',
+      },
+    ])
+  }
+  const loginTime = Date.now()
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
   }
 
   return { user, client }
