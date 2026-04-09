@@ -21,9 +21,8 @@ export const SentryIdentifier: React.FC = () => {
   const [campaign] = useCampaign()
   const organization = useOrganization()
 
-  const cookieUser = getUserCookie(true)
-  const userId = user?.id ?? (cookieUser ? cookieUser.id : undefined)
-  const email = user?.email ?? (cookieUser ? cookieUser.email : undefined)
+  const userId = user?.id
+  const email = user?.email
 
   useEffect(() => {
     if (userId) {
