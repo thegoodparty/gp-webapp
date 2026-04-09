@@ -21,5 +21,5 @@ export default async function Page() {
     redirect(`/dashboard/briefings/${briefings[0].date}`)
   }
 
-  return <BriefingsPage pathname="/dashboard/briefings" briefings={briefings} />
+  return <BriefingsPage pathname="/dashboard/briefings" />
 }

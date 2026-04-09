@@ -124,6 +124,7 @@ export const EVENTS = {
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
       ClickContacts: 'Navigation - Dashboard: Click Contacts',
       ClickPolls: 'Navigation - Dashboard: Click Polls',
+      ClickBriefings: 'Navigation - Dashboard: Click Briefings',
     },
   },
 

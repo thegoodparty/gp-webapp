@@ -1,33 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LuDownload, LuChevronDown, LuChevronUp } from 'react-icons/lu'
 import DashboardLayout from '../../../../shared/DashboardLayout'
 import { Briefing } from '../../../shared/briefing-types'
+import { ISSUE_COLORS } from '../../../shared/issue-colors'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-
-// Must stay in sync with PriorityIssueCard color palette
-// Uses /900 for badge/text/border (dark), /50 for callout bg (tint).
-const ISSUE_COLORS = [
-  {
-    badge: 'bg-brand-midnight-900',
-    text: 'text-brand-midnight-900',
-    border: 'border-l-brand-midnight-900',
-    bg: 'bg-brand-midnight-50',
-  },
-  {
-    badge: 'bg-brand-halo-green-900',
-    text: 'text-brand-halo-green-900',
-    border: 'border-l-brand-halo-green-900',
-    bg: 'bg-brand-halo-green-50',
-  },
-  {
-    badge: 'bg-brand-waxflower-900',
-    text: 'text-brand-waxflower-900',
-    border: 'border-l-brand-waxflower-900',
-    bg: 'bg-brand-waxflower-50',
-  },
-] as const
 
 interface IssueDetailPageProps {
   briefing: Briefing
@@ -43,6 +21,17 @@ export default function IssueDetailPage({
 
   const issueIndex = priorityIssues.findIndex((i) => i.number === issueNumber)
   const issue = priorityIssues[issueIndex]
+
+  useEffect(() => {
+    if (!issue) return
+    trackEvent(EVENTS.Briefings.IssueDetailViewed, {
+      citySlug: meeting.citySlug,
+      date: meeting.date,
+      issueNumber,
+      issueSlug: issue.slug,
+    })
+  }, [meeting.citySlug, meeting.date, issueNumber, issue])
+
   if (!issue) return null
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -185,8 +174,9 @@ export default function IssueDetailPage({
                         Say this in the room
                       </p>
                       <p className="text-sm italic text-card-foreground leading-relaxed">
-                        &ldquo;{analysis.askThis || guidance.askThisInTheRoom}
-                        &rdquo;
+                        {`\u201C${
+                          analysis.askThis || guidance.askThisInTheRoom
+                        }\u201D`}
                       </p>
                     </div>
 

@@ -221,6 +221,7 @@ const BRIEFINGS_MENU_ITEM: MenuItem = {
   v2Icon: ClipboardList,
   v2Category: 'elected-office',
   isNew: true,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
 }
 
 const getDashboardMenuItems = (

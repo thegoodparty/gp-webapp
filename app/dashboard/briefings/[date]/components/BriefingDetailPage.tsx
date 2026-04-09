@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 import { LuDownload } from 'react-icons/lu'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -14,6 +15,13 @@ export default function BriefingDetailPage({
   briefing,
 }: BriefingDetailPageProps) {
   const { meeting, priorityIssues, fullAgenda, fullAgendaSummary } = briefing
+
+  useEffect(() => {
+    trackEvent(EVENTS.Briefings.BriefingViewed, {
+      citySlug: meeting.citySlug,
+      date: meeting.date,
+    })
+  }, [meeting.citySlug, meeting.date])
 
   const meetingDate = new Date(meeting.date + 'T00:00:00')
   const weekday = meetingDate.toLocaleDateString('en-US', { weekday: 'long' })
