@@ -466,6 +466,14 @@ export const EVENTS = {
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
+  Briefings: {
+    BriefingViewed: 'Briefings - Briefing Viewed',
+    IssueDetailViewed: 'Briefings - Issue Detail Viewed',
+    ClickDownload: 'Briefings - Click Download',
+    FeedbackHelpful: 'Briefings - Feedback: Helpful',
+    FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
+    ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
+  },
 } as const
 
 interface UserCookie {
