@@ -1,4 +1,5 @@
 import { faqArticleRoute } from 'helpers/articleHelper'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 export const LegalStatements = (): React.JSX.Element => (
   <ul>
@@ -19,7 +20,11 @@ export const LegalStatements = (): React.JSX.Element => (
     </li>
     <li>
       I agree to the GoodParty.org{' '}
-      <a className="underline" href="/privacy" target="_blank">
+      <a
+        className="underline"
+        href={getMarketingUrl('/privacy')}
+        target="_blank"
+      >
         privacy policy
       </a>{' '}
     </li>
@@ -31,7 +36,7 @@ export const LegalStatements = (): React.JSX.Element => (
     <li>
       <a
         className="underline cursor-pointer"
-        href="/terms-of-service"
+        href={getMarketingUrl('/terms-of-service')}
         target="_blank"
       >
         Terms of Service

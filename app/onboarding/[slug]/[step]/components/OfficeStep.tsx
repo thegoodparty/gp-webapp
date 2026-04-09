@@ -148,13 +148,9 @@ export default function OfficeStep({
     const { position, election, id, filingPeriods } = state.ballotOffice
 
     const attr = [
-      // Legacy compatibility write only. Do not use details.positionId for reads.
-      { key: 'details.positionId', value: position?.id },
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
-      { key: 'details.office', value: 'Other' },
-      { key: 'details.otherOffice', value: position?.name },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
@@ -217,9 +213,12 @@ export default function OfficeStep({
       officeElectionDate: election.electionDay,
     }
 
-    if (organizationSlug && position?.id) {
+    const resolvedOrgSlug =
+      organizationSlug ?? (campaign ? `campaign-${campaign.id}` : undefined)
+
+    if (resolvedOrgSlug && position?.id) {
       await clientRequest('PATCH /v1/organizations/:slug', {
-        slug: organizationSlug,
+        slug: resolvedOrgSlug,
         ballotReadyPositionId: position.id,
       })
     }
@@ -239,7 +238,11 @@ export default function OfficeStep({
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      const newCampaign = await createCampaignWithOffice(attr)
+      const createAttr = [
+        ...attr,
+        { key: 'ballotReadyPositionId', value: position?.id },
+      ]
+      const newCampaign = await createCampaignWithOffice(createAttr)
       if (!newCampaign) {
         setProcessing(false)
         return

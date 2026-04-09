@@ -10,6 +10,10 @@ vi.mock('gpApi/clientFetch', () => ({
   clientFetch: vi.fn(),
 }))
 
+vi.mock('gpApi/typed-request', () => ({
+  clientRequest: vi.fn().mockResolvedValue({ data: {}, ok: true }),
+}))
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }))
@@ -156,14 +160,13 @@ describe('OfficeStep', () => {
     })
   })
 
-  it('uses raceId/electionId for unchanged comparison, not details.positionId', async () => {
+  it('uses raceId/electionId for unchanged comparison', async () => {
     const campaign = {
       ...baseCampaign,
       details: {
         ...baseCampaign.details,
         raceId: 'race-1',
         electionId: 'elec-1',
-        positionId: 'legacy-pos-mismatch',
       },
     } as Campaign
     render(<OfficeStep campaign={campaign} />)
