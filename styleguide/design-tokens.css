@@ -24,6 +24,30 @@
   --goodparty-cream: #fcf8f3;
 
   /* ==========================================================================
+   * STANDARD TAILWIND NEUTRAL SCALE
+   * Referenced by base and theme tokens via var()
+   * ========================================================================== */
+  --tw-neutral-50: #fafafa;
+  --tw-neutral-100: #f5f5f5;
+  --tw-neutral-200: #e5e5e5;
+  --tw-neutral-300: #d4d4d4;
+  --tw-neutral-400: #a3a3a3;
+  --tw-neutral-500: #737373;
+  --tw-neutral-600: #525252;
+  --tw-neutral-700: #404040;
+  --tw-neutral-800: #262626;
+  --tw-neutral-900: #171717;
+  --tw-neutral-950: #0a0a0a;
+
+  /* ==========================================================================
+   * STANDARD TAILWIND BLUE SCALE
+   * Referenced by theme tokens via var()
+   * ========================================================================== */
+  --tw-blue-300: #93c5fd;
+  --tw-blue-500: #3b82f6;
+  --tw-blue-600: #2563eb;
+
+  /* ==========================================================================
    * BLUE SCALE
    * ========================================================================== */
   --color-blue-50: #e3f1ff;
@@ -688,43 +712,43 @@
   /* ==========================================================================
    * BASE/THEME VARIABLES (from Figma theme tokens)
    * ========================================================================== */
-  --base-foreground: #0a0a0a;
+  --base-foreground: var(--tw-neutral-950);
   --base-background: #ffffff;
-  --base-muted-foreground: #737373;
-  --base-muted: #f5f5f5;
-  --base-border: #d4d4d4;
-  --base-accent: #f5f5f5;
-  --base-accent-foreground: #0a0a0a;
+  --base-muted-foreground: var(--tw-neutral-500);
+  --base-muted: var(--tw-neutral-100);
+  --base-border: var(--tw-neutral-300);
+  --base-accent: var(--tw-neutral-100);
+  --base-accent-foreground: var(--tw-neutral-950);
   --base-surface: #ffffff;
-  --base-surface-foreground: #0a0a0a;
-  --base-focus-ring: #a3a3a3;
+  --base-surface-foreground: var(--tw-neutral-950);
+  --base-focus-ring: var(--tw-neutral-400);
   --base-ring-offset: #ffffff;
-  --base-foreground-focus: rgba(163, 163, 163, 0.5);
+  --base-foreground-focus: color-mix(in srgb, var(--tw-neutral-400) 50%, transparent);
   --base-foreground-dark: #ffffff;
-  --base-foreground-dark-focus: rgba(255, 255, 255, 0.5);
-  --base-background-dark: #0a0a0a;
+  --base-foreground-dark-focus: color-mix(in srgb, var(--base-foreground-dark) 50%, transparent);
+  --base-background-dark: var(--tw-neutral-950);
 
   /* ==========================================================================
    * THEME COLORS (from Figma theme tokens)
    * ========================================================================== */
-  --theme-primary: #2563eb;
+  --theme-primary: var(--tw-blue-600);
   --theme-primary-foreground: #ffffff;
-  --theme-primary-focus: rgba(37, 99, 235, 0.4);
-  --theme-secondary: #0b1529;
+  --theme-primary-focus: color-mix(in srgb, var(--tw-blue-600) 40%, transparent);
+  --theme-secondary: var(--color-midnight-900);
   --theme-secondary-foreground: #ffffff;
-  --theme-secondary-focus: rgba(11, 21, 41, 0.3);
-  --theme-destructive: #e00c30;
+  --theme-secondary-focus: color-mix(in srgb, var(--color-midnight-900) 30%, transparent);
+  --theme-destructive: var(--color-red-500);
   --theme-destructive-foreground: #ffffff;
-  --theme-destructive-focus: rgba(224, 12, 48, 0.3);
-  --theme-success: #30a541;
+  --theme-destructive-focus: color-mix(in srgb, var(--color-red-500) 30%, transparent);
+  --theme-success: var(--color-green-500);
   --theme-success-foreground: #ffffff;
-  --theme-success-focus: rgba(48, 165, 65, 0.3);
-  --theme-info: #1b6afc;
+  --theme-success-focus: color-mix(in srgb, var(--color-green-500) 30%, transparent);
+  --theme-info: var(--color-blue-500);
   --theme-info-foreground: #ffffff;
-  --theme-info-focus: rgba(27, 106, 252, 0.3);
-  --theme-warning: #ff9800;
+  --theme-info-focus: color-mix(in srgb, var(--color-blue-500) 30%, transparent);
+  --theme-warning: var(--color-warning-500);
   --theme-warning-foreground: #000000;
-  --theme-warning-focus: rgba(255, 152, 0, 0.3);
+  --theme-warning-focus: color-mix(in srgb, var(--color-warning-500) 30%, transparent);
 
   /* ==========================================================================
    * DATA/CHART COLORS (from Figma)
@@ -756,7 +780,7 @@
   --component-input-foreground: #ffffff;
   --component-input-base: #ffffff;
   --component-input-border: #d4d4d4;
-  --component-input-focus: rgba(37, 99, 235, 0.3);
+  --component-input-focus: color-mix(in srgb, var(--tw-blue-600) 30%, transparent);
 
   /* ==========================================================================
    * COMPONENT TOOLTIP TOKENS (from Figma)
