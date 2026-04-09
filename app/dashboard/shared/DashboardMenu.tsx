@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { useHandleLogOut } from '@shared/user/handleLogOut'
 import {
   MdAccountCircle,
   MdAutoAwesome,
