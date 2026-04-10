@@ -315,10 +315,10 @@ const TasksList = ({
       taskCountsRef.current[task.id] = { field, count }
     }
 
-    const ok = await completeTask(
-      task.id,
-      isRecurring ? undefined : { type: resolvedType, quantity: count },
-    )
+    const ok = await completeTask(task.id, {
+      type: resolvedType,
+      quantity: count,
+    })
 
     if (ok) {
       trackTaskStatusUpdate(
