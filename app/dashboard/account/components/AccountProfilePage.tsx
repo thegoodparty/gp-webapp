@@ -1,23 +1,42 @@
 'use client'
 
-import { UserProfile } from '@clerk/nextjs'
+import { useClerk, UserProfile } from '@clerk/nextjs'
+import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
+import { useEffect } from 'react'
 
 export default function AccountProfilePage(): React.JSX.Element {
+  const clerk = useClerk()
+  let removeListener: () => void
+
+  useEffect(() => {
+    removeListener = clerk.addListener((event) => {
+      console.log('event', event)
+    })
+    return () => {
+      removeListener()
+    }
+  }, [])
+
   return (
-    <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
-      <div className="max-w-md mx-auto px-4 py-4 xl:p-0 xl:pt-4">
-        <UserProfile
-          routing="hash"
-          appearance={{
-            elements: {
-              rootBox: 'w-full',
-              cardBox: 'w-full shadow-none',
-              navbar: 'hidden',
-              pageScrollBox: 'p-0',
+    <DashboardLayout pathname="/dashboard/account">
+      <div className="-m-2 md:-m-4 h-full">
+      <UserProfile
+        {...{
+          routing: 'hash',
+          appearance: {
+            variables: {
+              borderRadius: 'none',
+              colorBackground: '#f5f5f5',
             },
-          }}
-        />
+            elements: {
+              rootBox: 'w-full! h-full! border-none!',
+              cardBox: 'w-full! h-full!border-none! shadow-none!',
+              navbar: 'hidden',
+            },
+          },
+        }}
+      />
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

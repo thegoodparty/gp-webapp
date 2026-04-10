@@ -5,6 +5,7 @@ import {
   FaExternalLinkAlt,
   FaToolbox,
   FaUserCircle,
+  FaUserCog,
 } from 'react-icons/fa'
 import { memo, useEffect } from 'react'
 import { RiLogoutBoxFill } from 'react-icons/ri'
@@ -41,6 +42,12 @@ const links: NavLink[] = [
     icon: <FaToolbox />,
     onClick: () =>
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickSettings),
+  },
+  {
+    id: 'account',
+    label: 'Account',
+    href: '/dashboard/account',
+    icon: <FaUserCog />,
   },
 ]
 

@@ -26,6 +26,7 @@ import {
   Plus,
   Send,
   Settings,
+  UserCog,
   UserRound,
   UsersRound,
   Wand,
@@ -326,6 +327,12 @@ const NewNavMenu = ({
       id: 'nav-dash-settings',
       href: '/dashboard/profile',
     },
+    account: {
+      label: 'Account',
+      icon: UserCog,
+      id: 'nav-dash-account',
+      href: '/dashboard/account',
+    },
     addCampaign: {
       label: 'Add Campaign',
       icon: Plus,
@@ -449,6 +456,7 @@ const NewNavMenu = ({
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
+                  {sidebarItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
                     sidebarItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
@@ -494,6 +502,7 @@ const NewNavMenu = ({
                 >
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
+                  {dropDownItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
                     dropDownItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
