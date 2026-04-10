@@ -5,6 +5,7 @@ import TopDashboardMenu from './TopDashboardMenu'
 import Link from 'next/link'
 import ProfileDropdown from './ProfileDropdown'
 import DashboardOrContinue from './DashboardOrContinue'
+import { useClerk } from '@clerk/nextjs'
 import { useUser } from '@shared/hooks/useUser'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import NavButton from './NavButton'
@@ -15,7 +16,8 @@ import { User } from 'helpers/types'
 import { getMarketingUrl } from 'helpers/linkhelper'
 
 const RightSide = (): React.JSX.Element => {
-  const [user] = useUser() as [User | null, (user: User | null) => void]
+  const [user] = useUser()
+  const { signOut } = useClerk()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -43,14 +45,17 @@ const RightSide = (): React.JSX.Element => {
   }
 
   if (isOnboardingPath) {
+    const handleFinishLater = async () => {
+      trackEvent(EVENTS.Onboarding.ClickFinishLater, {
+        pathname: pathname,
+      })
+      await signOut()
+      window.location.href = getMarketingUrl('/blog')
+    }
+
     return (
       <Button
-        href="/"
-        onClick={() =>
-          trackEvent(EVENTS.Onboarding.ClickFinishLater, {
-            pathname: pathname,
-          })
-        }
+        onClick={handleFinishLater}
         id="nav-onboarding-finish-later"
         className="hidden lg:block relative z-60 font-medium text-base! py-2! leading-6!"
         variant="text"

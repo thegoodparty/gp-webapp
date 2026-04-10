@@ -12,10 +12,14 @@ import type { TcrCompliance } from 'helpers/types'
 const fetchTasks = async (): Promise<Task[]> => {
   const currentDate = new Date().toISOString().split('T')[0]
 
-  const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
-    date: currentDate,
-  })
-  return resp.data
+  try {
+    const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
+      date: currentDate,
+    })
+    return resp.ok ? resp.data : []
+  } catch {
+    return []
+  }
 }
 
 const meta = pageMetaData({

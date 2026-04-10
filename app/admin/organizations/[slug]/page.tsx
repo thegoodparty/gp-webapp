@@ -3,6 +3,7 @@ import { AdminOrganizationDetailPage } from './components/AdminOrganizationDetai
 import pageMetaData from 'helpers/metadataHelper'
 import { serverRequest } from 'gpApi/server-request'
 import { notFound } from 'next/navigation'
+import { Params } from 'next/dist/server/request/params'
 
 export const metadata = pageMetaData({
   title: 'Organization Detail | GoodParty.org',
@@ -12,10 +13,16 @@ export const metadata = pageMetaData({
 
 export default async function Page({
   params,
-}: PageProps<'/admin/organizations/[slug]'>): Promise<React.JSX.Element> {
+}: {
+  params: Params
+}): Promise<React.JSX.Element> {
   await adminAccessOnly()
 
-  const { slug } = await params
+  const resolvedParams = await params
+  const slug = resolvedParams.slug
+  if (!slug || Array.isArray(slug)) {
+    return notFound()
+  }
 
   const response = await serverRequest('GET /v1/organizations/admin/list', {
     slug,

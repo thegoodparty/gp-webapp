@@ -88,6 +88,11 @@ export type APIEndpoints = {
     Response: { organizations: AdminOrganization[] }
   }
 
+  'POST /v1/admin/users/impersonate/:userId': {
+    Request: {}
+    Response: { token: string }
+  }
+
   'POST /v1/voters/voter-file/filter': {
     Request: { name?: string } & Record<string, unknown>
     Response: SegmentResponse

@@ -1,7 +1,7 @@
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import { getServerToken } from 'helpers/userServerHelper'
+import { getServerToken } from 'helpers/tokenHelper'
 import pageMetaData from 'helpers/metadataHelper'
 import AdminAllCandidatesPage from './components/AdminAllCandidatesPage'
 

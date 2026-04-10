@@ -2,20 +2,17 @@
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DeleteAction from './DeleteAction'
-import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import Button from '@shared/buttons/Button'
 
 interface ActionsProps {
   launched: string
   slug: string
-  email: string
   id: number
 }
 
 export default function Actions({
   launched,
   slug,
-  email,
   id,
 }: ActionsProps): React.JSX.Element {
   const [showMenu, setShowMenu] = useState(false)
@@ -55,11 +52,6 @@ export default function Actions({
             >
               Path to Victory
             </Button>
-            <ImpersonateAction
-              email={email}
-              isCandidate={true}
-              launched={launched}
-            />
             <DeleteAction id={id} slug={slug} isLive={isLive} />
           </div>
         </>

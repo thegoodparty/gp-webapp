@@ -1,29 +1,25 @@
 'use client'
-import { deleteUserCookies } from 'helpers/cookieHelper'
+
+import { useClerk } from '@clerk/nextjs'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
-import { queryClient } from '@shared/query-client'
+export default function LogoutPage() {
+  const { signOut } = useClerk()
+  const queryClient = useQueryClient()
+  const router = useRouter()
 
-const fetchLogout = async () => {
-  try {
-    return await clientFetch(apiRoutes.authentication.logout)
-  } catch (e) {
-    console.log('error at fetchLogout', e)
-    return false
-  }
-}
-
-export default function LogoutPage(): React.JSX.Element {
   useEffect(() => {
     const logout = async () => {
       queryClient.clear()
-      deleteUserCookies()
-      await fetchLogout()
-      window.location.replace('/login')
+      try {
+        await signOut({ redirectUrl: '/login' })
+      } catch {
+        router.push('/login')
+      }
     }
     logout()
-  }, [])
+  }, [signOut, queryClient, router])
 
-  return <></>
+  return <p className="p-8 text-center">Signing out...</p>
 }

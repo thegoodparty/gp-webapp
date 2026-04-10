@@ -1,4 +1,3 @@
-import { setUserCookie } from 'helpers/cookieHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { User, UserRole } from './types'
@@ -11,7 +10,6 @@ export const updateUser = async (
   try {
     const resp = await clientFetch(apiRoutes.user.updateUser, updateFields)
     const user = resp.data as User
-    setUserCookie(user)
     return user
   } catch (error) {
     console.log('Error updating user', error)

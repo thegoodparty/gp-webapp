@@ -1,42 +1,31 @@
 import { expect, type Page, test } from '@playwright/test'
-import { TestDataHelper } from '../../../src/helpers/data.helper'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
+import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
 })
 
 test('authenticate with onboarded user', async ({ page }) => {
-  console.log('🔐 Setting up authenticated user...')
+  console.log('Setting up authenticated user...')
 
-  const testUser = TestDataHelper.generateTestUser()
+  await setupClerkTestingToken({ page })
 
   await page.goto('/sign-up')
   await NavigationHelper.dismissOverlays(page)
 
-  await page
-    .getByRole('textbox', { name: 'First Name' })
-    .fill(testUser.firstName)
-  await page.getByRole('textbox', { name: 'Last Name' }).fill(testUser.lastName)
-  await page.getByRole('textbox', { name: 'email' }).fill(testUser.email)
-  await page.getByRole('textbox', { name: 'phone' }).fill(testUser.phone)
-  await page.getByRole('textbox', { name: 'Zip Code' }).fill(testUser.zipCode)
-  await page
-    .getByPlaceholder("Please don't use your dog's name")
-    .fill(testUser.password)
-
-  const joinButton = page.getByRole('button', { name: 'Join' })
-  await joinButton.waitFor({ state: 'visible', timeout: 15000 })
-  await joinButton.click()
+  const testUser = await fillClerkSignUpForm(page)
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
-    timeout: 45000,
+    timeout: 3000,
   })
-  console.log('📝 User created, now completing onboarding...')
+  console.log('User created, now completing onboarding...')
 
+  await fillZipCode(page)
   await waitForOfficesLoad(page)
 
   await completeOnboardingFlow(page)
@@ -45,30 +34,8 @@ test('authenticate with onboarded user', async ({ page }) => {
     throw new Error(`Onboarding failed - ended at: ${page.url()}`)
   }
 
-  console.log(`✅ Fully onboarded user created: ${testUser.email}`)
-  console.log(`📍 Final URL: ${page.url()}`)
-
-  await page.goto('/dashboard/profile')
-  await page.waitForLoadState('domcontentloaded')
-
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-
-  const deleteButton = page.getByText('Delete Account')
-  await deleteButton.scrollIntoViewIfNeeded()
-  await deleteButton.waitFor({ state: 'visible', timeout: 10000 })
-  await deleteButton.click()
-
-  await page.waitForSelector('[role="dialog"]', { timeout: 10000 })
-
-  const proceedButton = page.getByRole('button', { name: 'Proceed' })
-  await proceedButton.waitFor({ state: 'visible', timeout: 10000 })
-  await proceedButton.click()
-
-  await page.waitForURL((url) => new URL(url).pathname === '/login', {
-    timeout: 15000,
-  })
-  console.log('✅ Onboarded user account deleted')
-  console.log('ℹ️ Tests will complete onboarding if needed')
+  console.log(`Fully onboarded user created: ${testUser.email}`)
+  console.log(`Final URL: ${page.url()}`)
 })
 
 async function completeOnboardingFlow(page: Page): Promise<void> {
@@ -79,7 +46,7 @@ async function completeOnboardingFlow(page: Page): Promise<void> {
 }
 
 async function completeStep1OfficeSelection(page: Page): Promise<void> {
-  console.log('📍 Completing Step 1: Office Selection')
+  console.log('Completing Step 1: Office Selection')
 
   await fillZipCode(page)
   await selectOfficeLevel(page)
@@ -87,12 +54,12 @@ async function completeStep1OfficeSelection(page: Page): Promise<void> {
   await selectOffice(page)
   await proceedToStep2(page)
 
-  console.log('✅ Completed Step 1 - moved to step 2')
+  console.log('Completed Step 1 - moved to step 2')
 }
 
 async function fillZipCode(page: Page): Promise<void> {
   const zipField = page.getByLabel('Zip Code')
-  await zipField.fill('28739')
+  await zipField.fill('82001')
 }
 
 async function selectOfficeLevel(page: Page): Promise<void> {
@@ -136,7 +103,7 @@ async function selectOffice(page: Page): Promise<void> {
   if (radioCount > 0) {
     await officeRadios.first().click()
     officeSelected = true
-    console.log('✅ Selected office via radio button')
+    console.log('Selected office via radio button')
   } else {
     const officeButtons = page.getByRole('button').filter({
       hasText:
@@ -147,7 +114,7 @@ async function selectOffice(page: Page): Promise<void> {
     if (buttonCount > 0) {
       await officeButtons.first().click()
       officeSelected = true
-      console.log('✅ Selected office via button')
+      console.log('Selected office via button')
     }
   }
 
@@ -175,18 +142,26 @@ async function proceedToStep2(page: Page): Promise<void> {
   await expect(nextButton).toBeEnabled()
   await nextButton.click()
 
-  await page.waitForURL((url) => url.toString().includes('/2'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/2/.test(url.toString()),
+    {
+      timeout: 10000,
+    },
+  )
 }
 
 async function completeStep2PartySelection(page: Page): Promise<void> {
-  console.log('🎭 Completing Step 2: Party Selection')
+  console.log('Completing Step 2: Party Selection')
+
+  await page.getByText('How will your campaign appear on the ballot?').waitFor({
+    state: 'visible',
+    timeout: 3000,
+  })
 
   await selectPartyAffiliation(page)
   await proceedToStep3(page)
 
-  console.log('✅ Completed Step 2 - moved to step 3')
+  console.log('Completed Step 2 - moved to step 3')
 }
 
 async function selectPartyAffiliation(page: Page): Promise<void> {
@@ -196,7 +171,7 @@ async function selectPartyAffiliation(page: Page): Promise<void> {
   if (await otherLabel.isVisible({ timeout: 3000 })) {
     await otherLabel.fill('Independent')
     partySelected = true
-    console.log("✅ Filled 'Other' party field")
+    console.log("Filled 'Other' party field")
   } else {
     const textInputs = page.locator('input[type="text"]')
     const inputCount = await textInputs.count()
@@ -210,7 +185,7 @@ async function selectPartyAffiliation(page: Page): Promise<void> {
           const value = await input.inputValue()
           if (value === 'Independent') {
             partySelected = true
-            console.log(`✅ Filled party input field ${i}`)
+            console.log(`Filled party input field ${i}`)
             break
           }
         } catch {}
@@ -225,7 +200,7 @@ async function selectPartyAffiliation(page: Page): Promise<void> {
     if (radioCount > 0) {
       await partyRadios.first().click()
       partySelected = true
-      console.log('✅ Selected party via radio button')
+      console.log('Selected party via radio button')
     }
   }
 
@@ -265,18 +240,21 @@ async function proceedToStep3(page: Page): Promise<void> {
 
   await nextButton.click()
 
-  await page.waitForURL((url) => url.toString().includes('/3'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/3/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep3PledgeAgreement(page: Page): Promise<void> {
-  console.log('📜 Completing Step 3: Pledge Agreement')
+  console.log('Completing Step 3: Pledge Agreement')
 
   await acceptPledge(page)
   await proceedToStep4(page)
 
-  console.log('✅ Completed Step 3 - moved to step 4')
+  console.log('Completed Step 3 - moved to step 4')
 }
 
 async function acceptPledge(page: Page): Promise<void> {
@@ -286,18 +264,21 @@ async function acceptPledge(page: Page): Promise<void> {
 }
 
 async function proceedToStep4(page: Page): Promise<void> {
-  await page.waitForURL((url) => url.toString().includes('/4'), {
-    timeout: 15000,
-  })
+  await page.waitForURL(
+    (url) => /\/onboarding\/[^/]+\/4/.test(url.toString()),
+    {
+      timeout: 5000,
+    },
+  )
 }
 
 async function completeStep4FinishOnboarding(page: Page): Promise<void> {
-  console.log('🎉 Completing Step 4: Finish Onboarding')
+  console.log('Completing Step 4: Finish Onboarding')
 
   await navigateToDashboard(page)
   await verifyDashboardAccess(page)
 
-  console.log('✅ Reached dashboard - onboarding complete!')
+  console.log('Reached dashboard - onboarding complete!')
 }
 
 async function navigateToDashboard(page: Page): Promise<void> {

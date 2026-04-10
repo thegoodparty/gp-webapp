@@ -29,7 +29,7 @@ const mockCampaign = { id: 1 } as Campaign
 
 const renderWithProviders = () =>
   render(
-    <UserContext.Provider value={[mockUser, vi.fn()]}>
+    <UserContext.Provider value={[mockUser, vi.fn(), true]}>
       <CampaignContext.Provider value={[mockCampaign]}>
         <HeaderSection />
       </CampaignContext.Provider>
@@ -86,7 +86,7 @@ describe('HeaderSection', () => {
     mockGetNextElection.mockReturnValue(null)
     mockTimeToNextElection.mockReturnValue(false)
     render(
-      <UserContext.Provider value={[null, vi.fn()]}>
+      <UserContext.Provider value={[null, vi.fn(), true]}>
         <CampaignContext.Provider value={[mockCampaign]}>
           <HeaderSection />
         </CampaignContext.Provider>

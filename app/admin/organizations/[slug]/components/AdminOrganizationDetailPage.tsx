@@ -16,7 +16,6 @@ import {
   TooltipTrigger,
 } from '@styleguide'
 import { CircleCheck } from 'lucide-react'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import Checkbox from '@shared/inputs/Checkbox'
 
 const Field = ({
@@ -38,7 +37,6 @@ export const AdminOrganizationDetailPage = ({
   organization: AdminOrganization
 }) => {
   const { successSnackbar, errorSnackbar } = useSnackbar()
-  const { impersonate } = useImpersonateUser()
   const [excludeInvalidOverride, setExcludeInvalidOverride] = useState(false)
 
   const mutation = useMutation({
@@ -75,24 +73,7 @@ export const AdminOrganizationDetailPage = ({
     >
       <div className="max-w-4xl">
         <div className="border rounded-lg p-4 mb-4 bg-white">
-          <div className="flex justify-between items-center mb-2">
-            <h3>Organization</h3>
-            <Button
-              size="xSmall"
-              variant={'secondary'}
-              onClick={async () => {
-                successSnackbar('Impersonating user')
-                const ok = await impersonate(org.extra.owner.email)
-                if (ok) {
-                  window.location.href = '/dashboard'
-                } else {
-                  errorSnackbar('Impersonate failed')
-                }
-              }}
-            >
-              Impersonate User
-            </Button>
-          </div>
+          <h3 className="mb-2">Organization</h3>
           <div className="grid grid-cols-1 gap-2 text-sm">
             {org.electedOfficeId && (
               <Field label="Elected Office ID" value={org.electedOfficeId} />
