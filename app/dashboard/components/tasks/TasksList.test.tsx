@@ -154,6 +154,7 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
 beforeEach(() => {
   vi.clearAllMocks()
   sessionStorage.clear()
+  sessionStorage.setItem('campaign-plan-selected-week:campaign-1', '1')
   mockUpdateVoterContactsLocal.mockReset()
   mockUseUser.mockReturnValue([{ id: 'user-1' }, vi.fn()])
   mockClientFetch.mockImplementation(
@@ -192,6 +193,8 @@ describe('TasksList non-legacy event tasks', () => {
         week: 30,
         date: '2026-04-13',
       })
+
+      sessionStorage.setItem('campaign-plan-selected-week:campaign-1', '30')
 
       render(
         <TasksList
@@ -301,7 +304,6 @@ describe('TasksList revert completion flow', () => {
     const textTask = makeTask({
       flowType: TASK_TYPES.text,
       completed: false,
-      week: 1,
     })
     const completedTextTask = { ...textTask, completed: true }
 
@@ -875,12 +877,11 @@ describe('TasksList tracking events', () => {
   })
 
   describe('Week Navigated', () => {
-    const getCurrentWeek = () =>
-      Math.ceil(differenceInDays(new Date('2026/11/03'), new Date()) / 7)
-
     it('fires WeekNavigated with direction "next" when navigating forward', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
+      )
       sessionStorage.setItem(
         'campaign-plan-selected-week:campaign-1',
         String(currentWeek + 1),
@@ -914,7 +915,9 @@ describe('TasksList tracking events', () => {
 
     it('fires WeekNavigated with direction "previous" when navigating back', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
+      )
       sessionStorage.setItem(
         'campaign-plan-selected-week:campaign-1',
         String(currentWeek),

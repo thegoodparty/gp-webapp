@@ -32,12 +32,13 @@ describe('useWeekNavigation', () => {
     const week = 30
     const tasks = [makeTask({ week })]
     const daysUntilElection = 200
+    const weeksUntilElection = Math.ceil(daysUntilElection / 7)
 
     const { result } = renderHook(() =>
       useWeekNavigation(tasks, 'campaign-1', election, daysUntilElection),
     )
 
-    const expected = addWeeks(election, -week)
+    const expected = addWeeks(election, -weeksUntilElection)
     expect(result.current.currentWeekStart.getTime()).toBe(expected.getTime())
   })
 
@@ -64,13 +65,15 @@ describe('useWeekNavigation', () => {
 
   it('selects the week closest to current weeksUntilElection', () => {
     const election = new Date('2026/11/03')
+    const daysUntilElection = 77
+    const weeksUntilElection = Math.ceil(daysUntilElection / 7)
     const tasks = [makeTask({ week: 10 }), makeTask({ week: 20 })]
 
     const { result } = renderHook(() =>
-      useWeekNavigation(tasks, 'campaign-1', election, 77),
+      useWeekNavigation(tasks, 'campaign-1', election, daysUntilElection),
     )
 
-    expect(result.current.selectedWeek).toBe(10)
+    expect(result.current.selectedWeek).toBe(weeksUntilElection)
   })
 
   it('filters tasks to only the selected week', () => {
@@ -141,11 +144,29 @@ describe('useWeekNavigation', () => {
         useWeekNavigation(tasks, 'campaign-1', null, Infinity),
       )
 
+      expect(result.current.selectedWeek).toBe(5)
+      expect(result.current.filteredTasks).toHaveLength(1)
       expect(result.current.currentWeekStart.getTime()).toBe(
         startOfWeek(new Date(), { weekStartsOn: 0 }).getTime(),
       )
     } finally {
       vi.useRealTimers()
     }
+  })
+
+  it('includes current week even when no tasks exist for it', () => {
+    const election = new Date('2026/11/03')
+    const daysUntilElection = 49
+    const weeksUntilElection = Math.ceil(daysUntilElection / 7)
+    const nextWeek = weeksUntilElection - 1
+    const tasks = [makeTask({ week: nextWeek })]
+
+    const { result } = renderHook(() =>
+      useWeekNavigation(tasks, 'campaign-1', election, daysUntilElection),
+    )
+
+    expect(result.current.selectedWeek).toBe(weeksUntilElection)
+    expect(result.current.filteredTasks).toHaveLength(0)
+    expect(result.current.canGoNext).toBe(true)
   })
 })
