@@ -154,6 +154,27 @@ describe('useWeekNavigation', () => {
     }
   })
 
+  it('defaults to the most-recent week when electionDateObj is null and multiple weeks exist', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+
+    try {
+      const tasks = [
+        makeTask({ id: 'a', week: 30 }),
+        makeTask({ id: 'b', week: 20 }),
+        makeTask({ id: 'c', week: 10 }),
+      ]
+
+      const { result } = renderHook(() =>
+        useWeekNavigation(tasks, 'campaign-1', null, Infinity),
+      )
+
+      expect(result.current.selectedWeek).toBe(10)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('includes current week even when no tasks exist for it', () => {
     const election = new Date('2026/11/03')
     const daysUntilElection = 49

@@ -65,7 +65,7 @@ export function useWeekNavigation(
             if (currDiff === bestDiff && w < bestW) return idx
             return bestIdx
           }, 0)
-        : 0
+        : weekNumbers.length - 1
       : 0
 
   const [savedWeek, setSavedWeek] = useState<number | null>(() =>
