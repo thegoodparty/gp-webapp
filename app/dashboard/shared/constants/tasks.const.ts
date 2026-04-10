@@ -1,3 +1,5 @@
+import { format, subDays } from 'date-fns'
+
 // NOTE: copied from CampaignTaskType enum in gp-api
 export const TASK_TYPES = {
   text: 'text',
@@ -9,6 +11,7 @@ export const TASK_TYPES = {
   events: 'events',
   education: 'education',
   compliance: 'compliance',
+  awareness: 'awareness',
 }
 
 // Legacy types, these were based on voter file types
@@ -44,6 +47,7 @@ export const DISPLAY_TASK_TYPES: Record<
   events: 'Event',
   education: 'Education',
   compliance: 'Compliance',
+  awareness: 'Awareness',
 }
 
 export const WEEK_POSITIONS = {
@@ -92,6 +96,23 @@ export const getCampaignPlanEventTaskType = (
     default:
       return null
   }
+}
+
+export function formatTaskDate(
+  taskDate: string | null | undefined,
+  electionDate: string | undefined,
+  deadline: number | undefined,
+): string {
+  if (taskDate) {
+    return format(new Date(taskDate.slice(0, 10).replace(/-/g, '/')), 'MMM d')
+  }
+  if (electionDate && deadline) {
+    return format(
+      subDays(new Date(electionDate.replace(/-/g, '/')), deadline),
+      'MMM d',
+    )
+  }
+  return ''
 }
 
 type TaskTypeKey = keyof typeof TASK_TYPES
