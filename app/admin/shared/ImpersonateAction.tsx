@@ -17,7 +17,6 @@ export default function ImpersonateAction({
   const handleImpersonate = async () => {
     try {
       console.log('[impersonate] starting for userId:', userId)
-      successSnackbar('Impersonating user...')
       const resp = await clientRequest(
         'POST /v1/admin/users/impersonate/:userId',
         { userId: String(userId) },
@@ -35,12 +34,17 @@ export default function ImpersonateAction({
         ticket: resp.data.token,
       })
       console.log('[impersonate] signIn.create result:', { status: result.status, createdSessionId: result.createdSessionId })
+      if (result.status !== 'complete') {
+        errorSnackbar('Impersonation failed')
+        return
+      }
       if (!result.createdSessionId) {
         errorSnackbar('Impersonation failed')
         return
       }
       console.log('[impersonate] setting active session')
       await setActive({ session: result.createdSessionId })
+      successSnackbar('Impersonating user...')
       console.log('[impersonate] navigating to /dashboard')
       window.location.assign('/dashboard')
     } catch (e) {

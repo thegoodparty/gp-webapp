@@ -35,12 +35,12 @@ const createCampaign = async (
   adminUserEmail?: string,
 ) => {
   try {
-    if (adminUserEmail) {
-      payload.adminUserEmail = adminUserEmail
-    } else {
+    if (!adminUserEmail) {
       console.error('User not found or missing email')
+      return false
     }
 
+    payload.adminUserEmail = adminUserEmail
     return await clientFetch(apiRoutes.admin.campaign.create, payload)
   } catch (e) {
     console.error('error', e)
