@@ -231,21 +231,33 @@ const bootstrapTestUser = async (
     throw new Error('No race found for the specific office selector')
   }
 
-  await client.post('/v1/campaigns', {
-    ballotReadyPositionId: race.position.id,
-    details: {
-      electionId: race.election.id,
-      raceId: race.id,
-      state: race.election.state,
-      ballotLevel: race.position.level,
-      electionDate: race.election.electionDay,
-      partisanType: race.position.partisanType,
-      hasPrimary: race.position.hasPrimary,
-      filingPeriodsStart: race.filingPeriods[0]?.startOn,
-      filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+  const { data: campaign } = await client.post<{ id: number }>(
+    '/v1/campaigns',
+    {
+      ballotReadyPositionId: race.position.id,
+      details: {
+        electionId: race.election.id,
+        raceId: race.id,
+        state: race.election.state,
+        ballotLevel: race.position.level,
+        electionDate: race.election.electionDay,
+        partisanType: race.position.partisanType,
+        hasPrimary: race.position.hasPrimary,
+        filingPeriodsStart: race.filingPeriods[0]?.startOn,
+        filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+      },
+      data: { currentStep: 'onboarding-1' },
     },
-    data: { currentStep: 'onboarding-1' },
-  })
+  )
+
+  if (!campaign?.id) {
+    throw new Error('Campaign creation did not return a valid id')
+  }
+
+  client.defaults.headers.common[
+    'x-organization-slug'
+  ] = `campaign-${campaign.id}`
+
   await client.put('/v1/campaigns/mine/race-target-details', {})
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
