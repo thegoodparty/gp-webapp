@@ -344,7 +344,10 @@ const TasksList = ({
   const handleActionClick = (task: Task) => {
     const { flowType, proRequired, deadline } = task
 
-    if (flowType === TASK_TYPES.awareness || flowType === TASK_TYPES.recurring) {
+    if (
+      flowType === TASK_TYPES.awareness ||
+      flowType === TASK_TYPES.recurring
+    ) {
       setAwarenessDetail({
         task,
         formattedDate: formatTaskDate(task.date, electionDate, deadline),
