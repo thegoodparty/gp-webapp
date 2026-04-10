@@ -30,7 +30,7 @@ const links: NavLink[] = [
   {
     id: 'profile',
     label: 'Profile',
-    href: '/dashboard/account',
+    href: '/dashboard/campaign-details',
     icon: <FaUserCircle />,
     onClick: () =>
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickProfile),
