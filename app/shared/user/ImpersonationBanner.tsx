@@ -17,7 +17,7 @@ export default function ImpersonationBanner() {
   }
 
   return (
-    <div className="sticky top-0 z-[9999] bg-amber-400 text-black px-4 py-2 text-center text-sm font-medium">
+    <div className="bg-amber-400 text-black px-4 py-1 text-center text-xs font-medium">
       You are impersonating this user.{' '}
       <button
         onClick={handleStopImpersonating}

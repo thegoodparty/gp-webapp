@@ -1,5 +1,5 @@
 'use client'
-import { useClerk, useSignIn } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
 import Button from '@shared/buttons/Button'
 import { clientRequest } from 'gpApi/typed-request'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -11,12 +11,10 @@ interface ImpersonateActionProps {
 export default function ImpersonateAction({
   userId,
 }: ImpersonateActionProps): React.JSX.Element {
-  const { signIn, fetchStatus } = useSignIn()
-  const { setActive } = useClerk()
+  const { client, setActive, signOut } = useClerk()
   const { successSnackbar, errorSnackbar } = useSnackbar()
 
   const handleImpersonate = async () => {
-    if (fetchStatus === 'fetching') return
     try {
       successSnackbar('Impersonating user...')
       const resp = await clientRequest(
@@ -27,13 +25,17 @@ export default function ImpersonateAction({
         errorSnackbar('Failed to get impersonation token')
         return
       }
-      const { error } = await signIn.create({ ticket: resp.data.token })
-      if (!error && signIn.createdSessionId) {
-        await setActive({ session: signIn.createdSessionId })
-        window.location.href = '/dashboard'
-      } else {
+      await signOut()
+      const result = await client.signIn.create({
+        strategy: 'ticket',
+        ticket: resp.data.token,
+      })
+      if (!result.createdSessionId) {
         errorSnackbar('Impersonation failed')
+        return
       }
+      await setActive({ session: result.createdSessionId })
+      window.location.assign('/dashboard')
     } catch (e) {
       console.error('Impersonation error', e)
       errorSnackbar('Impersonation failed')

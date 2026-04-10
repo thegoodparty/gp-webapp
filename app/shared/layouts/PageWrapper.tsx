@@ -22,7 +22,6 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 import { ReactQueryProvider } from '@shared/query-client'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
-import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -48,7 +47,6 @@ const PageWrapper = async ({
 
   return (
     <ClerkProvider>
-      <ImpersonationBanner />
       <ReactQueryProvider>
         <FeatureFlagsProvider>
           <UserProvider>
