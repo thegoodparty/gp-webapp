@@ -151,9 +151,12 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     ...overrides,
   } as unknown as Campaign)
 
+const TEST_SESSION_KEY = 'campaign-plan-selected-week:campaign-1'
+
 beforeEach(() => {
   vi.clearAllMocks()
   sessionStorage.clear()
+  sessionStorage.setItem(TEST_SESSION_KEY, '1')
   mockUpdateVoterContactsLocal.mockReset()
   mockUseUser.mockReturnValue([{ id: 'user-1' }, vi.fn()])
   mockClientFetch.mockImplementation(
@@ -192,6 +195,8 @@ describe('TasksList non-legacy event tasks', () => {
         week: 30,
         date: '2026-04-13',
       })
+
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
 
       render(
         <TasksList
@@ -301,7 +306,6 @@ describe('TasksList revert completion flow', () => {
     const textTask = makeTask({
       flowType: TASK_TYPES.text,
       completed: false,
-      week: 1,
     })
     const completedTextTask = { ...textTask, completed: true }
 
@@ -584,7 +588,7 @@ describe('TasksList tracking events', () => {
 
   describe('Campaign Plan Viewed', () => {
     it('fires Viewed event with the selected week counts', () => {
-      sessionStorage.setItem('campaign-plan-selected-week:campaign-1', '30')
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       const tasks = [
         makeTask({ id: 'task-1', week: 30, completed: false }),
         makeTask({ id: 'task-2', week: 30, completed: true }),
@@ -626,6 +630,7 @@ describe('TasksList tracking events', () => {
     })
 
     it('does NOT re-fire Viewed event when tasks are completed within the same week', async () => {
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       const user = userEvent.setup()
       const task = makeTask({
         week: 30,
@@ -661,6 +666,7 @@ describe('TasksList tracking events', () => {
     })
 
     it('identifies the real user when the user becomes available after initial render', async () => {
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       mockUseUser.mockReturnValueOnce([null, vi.fn()])
 
       const task = makeTask({ week: 30 })
@@ -967,16 +973,12 @@ describe('TasksList tracking events', () => {
   })
 
   describe('Week Navigated', () => {
-    const getCurrentWeek = () =>
-      Math.ceil(differenceInDays(new Date('2026/11/03'), new Date()) / 7)
-
     it('fires WeekNavigated with direction "next" when navigating forward', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
-      sessionStorage.setItem(
-        'campaign-plan-selected-week:campaign-1',
-        String(currentWeek + 1),
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
       )
+      sessionStorage.setItem(TEST_SESSION_KEY, String(currentWeek + 1))
       const tasks = [
         makeTask({ id: 'task-1', week: currentWeek + 1 }),
         makeTask({ id: 'task-2', week: currentWeek }),
@@ -1006,11 +1008,10 @@ describe('TasksList tracking events', () => {
 
     it('fires WeekNavigated with direction "previous" when navigating back', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
-      sessionStorage.setItem(
-        'campaign-plan-selected-week:campaign-1',
-        String(currentWeek),
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
       )
+      sessionStorage.setItem(TEST_SESSION_KEY, String(currentWeek))
       const tasks = [
         makeTask({ id: 'task-1', week: currentWeek + 1 }),
         makeTask({ id: 'task-2', week: currentWeek }),
