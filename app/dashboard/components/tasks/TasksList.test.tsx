@@ -486,6 +486,98 @@ describe('TasksList revert completion flow', () => {
   })
 })
 
+describe('TasksList recurring task completion', () => {
+  it('sends {type, quantity} payload to the API when completing a recurring task via CountModal', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      completed: false,
+    })
+    const completedTask = { ...task, completed: true }
+
+    mockClientFetch.mockResolvedValueOnce({ ok: true, data: completedTask })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Save count' }))
+
+    await waitFor(() => {
+      expect(mockClientFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          path: '/campaigns/tasks/complete/:taskId',
+          method: 'PUT',
+        }),
+        { taskId: 'task-1', type: 'recurring', quantity: 5 },
+      )
+    })
+  })
+
+  it('does NOT update local voter contacts when completing a recurring task', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      completed: false,
+    })
+    const completedTask = { ...task, completed: true }
+
+    mockClientFetch.mockResolvedValueOnce({ ok: true, data: completedTask })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Save count' }))
+
+    await waitFor(() => {
+      expect(mockClientFetch).toHaveBeenCalledWith(
+        expect.objectContaining({ method: 'PUT' }),
+        expect.anything(),
+      )
+    })
+
+    expect(mockUpdateVoterContactsLocal).not.toHaveBeenCalled()
+  })
+
+  it('opens the detail modal (not the outreach flow) when clicking the row action for a recurring task', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      title: 'Weekly canvass',
+      description: 'Go knock doors',
+      completed: false,
+    })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Weekly canvass/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument()
+    })
+    expect(
+      screen.getAllByRole('heading', { name: 'Weekly canvass' }),
+    ).not.toHaveLength(0)
+  })
+})
+
 describe('TasksList tracking events', () => {
   const mockTrackEvent = vi.mocked(trackEvent)
   const mockIdentifyUser = vi.mocked(identifyUser)
