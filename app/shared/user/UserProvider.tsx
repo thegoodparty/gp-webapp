@@ -1,33 +1,57 @@
 'use client'
-import { createContext, useCallback, useMemo, useState } from 'react'
-import { noop } from '@shared/utils/noop'
-import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
-import { queryClient } from '@shared/query-client'
-import { User } from 'helpers/types'
 
-export const UserContext = createContext<[User | null, (user: User) => void]>([
-  null,
-  noop,
-])
+import { useUser as useClerkUser } from '@clerk/nextjs'
+import { createContext, useCallback } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { User } from 'helpers/types'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { noop } from '@shared/utils/noop'
+
+export type UserContextValue = [User | null, (user?: User) => void, boolean]
+
+const CURRENT_USER_QUERY_KEY = 'currentUser'
+
+export const UserContext = createContext<UserContextValue>([null, noop, true])
+
+async function fetchCurrentUser(): Promise<User | null> {
+  try {
+    const resp = await clientFetch<User>(apiRoutes.user.getUser)
+    if (!resp.ok) return null
+    return resp.data
+  } catch {
+    return null
+  }
+}
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [userState, setUserState] = useState<User | null>(() => {
-    const cookieUser = getUserCookie(true)
-    return cookieUser && cookieUser.id ? cookieUser : null
+  const { isSignedIn, isLoaded } = useClerkUser()
+  const queryClient = useQueryClient()
+
+  const { data: appUser, isLoading: isQueryLoading } = useQuery({
+    queryKey: [CURRENT_USER_QUERY_KEY],
+    queryFn: fetchCurrentUser,
+    enabled: isLoaded && !!isSignedIn,
   })
 
-  const setUser = useCallback((updated: User) => {
-    queryClient.clear()
-    setUserCookie(updated)
-    setUserState(updated)
-  }, [])
-
-  const value = useMemo<[User | null, (user: User) => void]>(
-    () => [userState, setUser],
-    [userState, setUser],
+  const updateUser = useCallback(
+    (_user?: User) => {
+      queryClient.invalidateQueries({
+        queryKey: [CURRENT_USER_QUERY_KEY],
+      })
+    },
+    [queryClient],
   )
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+  const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
+
+  const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
+
+  return (
+    <UserContext.Provider value={[value, updateUser, isUserLoading]}>
+      {children}
+    </UserContext.Provider>
+  )
 }

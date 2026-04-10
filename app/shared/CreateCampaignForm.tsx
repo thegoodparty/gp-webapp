@@ -9,7 +9,7 @@ import RenderInputField from '@shared/inputs/RenderInputField'
 import TextField from '@shared/inputs/TextField'
 import Button from '@shared/buttons/Button'
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
@@ -30,13 +30,15 @@ interface CampaignResponse {
   slug: string
 }
 
-const createCampaign = async (payload: CreateCampaignPayload) => {
+const createCampaign = async (
+  payload: CreateCampaignPayload,
+  adminUserEmail?: string,
+) => {
   try {
-    const user = getUserCookie(true)
-    if (!user || !user.email) {
-      console.error('User not found or missing email')
+    if (adminUserEmail) {
+      payload.adminUserEmail = adminUserEmail
     } else {
-      payload.adminUserEmail = user.email
+      console.error('User not found or missing email')
     }
 
     return await clientFetch(apiRoutes.admin.campaign.create, payload)
@@ -112,6 +114,7 @@ export const initialValues: FormValues = fields.reduce((acc, field) => {
 }, {} as FormValues)
 
 export const CreateCampaignForm = (): React.JSX.Element => {
+  const [currentUser] = useUser()
   const [values, setValues] = useState<FormValues>(initialValues)
   const [showOfficeSelectionModal, setShowOfficeSelectionModal] =
     useState(false)
@@ -146,7 +149,7 @@ export const CreateCampaignForm = (): React.JSX.Element => {
 
   const handleCreateCampaign = async () => {
     setIsLoading(true)
-    const campaignResponse = await createCampaign(values)
+    const campaignResponse = await createCampaign(values, currentUser?.email)
     if (
       campaignResponse &&
       typeof campaignResponse === 'object' &&

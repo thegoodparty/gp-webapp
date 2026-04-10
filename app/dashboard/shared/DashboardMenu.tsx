@@ -26,7 +26,7 @@ import {
   Plus,
   Send,
   Settings,
-  StopCircle,
+  UserCog,
   UserRound,
   UsersRound,
   Wand,
@@ -60,7 +60,6 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
@@ -305,12 +304,6 @@ const NewNavMenu = ({
   pathname: string | null
 }) => {
   const [user] = useUser()
-  const {
-    clear: clearImpersonation,
-    token: impersonateToken,
-    user: impersonateUser,
-  } = useImpersonateUser()
-  const impersonating = impersonateToken && impersonateUser
   const { setOpenMobile, isMobile } = useSidebar()
 
   const organization = useOrganization()
@@ -334,6 +327,12 @@ const NewNavMenu = ({
       id: 'nav-dash-settings',
       href: '/dashboard/profile',
     },
+    account: {
+      label: 'Account',
+      icon: UserCog,
+      id: 'nav-dash-account',
+      href: '/dashboard/account',
+    },
     addCampaign: {
       label: 'Add Campaign',
       icon: Plus,
@@ -345,16 +344,6 @@ const NewNavMenu = ({
       icon: Wand,
       id: 'nav-dash-admin',
       href: '/admin',
-    },
-    stopImpersonating: {
-      label: 'Stop Impersonating',
-      icon: StopCircle,
-      id: 'nav-dash-stop-impersonating',
-      href: '/admin',
-      onClick: () => {
-        clearImpersonation()
-        window.location.href = '/admin'
-      },
     },
     community: {
       label: 'Community Forum',
@@ -422,7 +411,7 @@ const NewNavMenu = ({
             <SidebarMenu>
               {menuItems
                 .filter((i) =>
-                  organization.electedOfficeId
+                  organization?.electedOfficeId
                     ? i.v2Category === 'elected-office'
                     : i.v2Category === 'campaign',
                 )
@@ -467,14 +456,11 @@ const NewNavMenu = ({
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
+                  {sidebarItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
                     sidebarItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
-                    !impersonating &&
                     sidebarItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    sidebarItem(accountManagementMenuItems.stopImpersonating)}
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.logout)}
                   <SidebarSeparator />
@@ -516,14 +502,11 @@ const NewNavMenu = ({
                 >
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
+                  {dropDownItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
                     dropDownItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
-                    !impersonating &&
                     dropDownItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    dropDownItem(accountManagementMenuItems.stopImpersonating)}
                   <DropdownMenuSeparator />
                   {dropDownItem(accountManagementMenuItems.community)}
                   <DropdownMenuSeparator />

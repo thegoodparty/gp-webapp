@@ -5,9 +5,10 @@ import JsonLdSchema from './JsonLdSchema'
 import Nav from './navigation/Nav'
 import CookiesSnackbar from './CookiesSnackbar'
 import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvider'
+import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
-import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
+
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/onboarding/shared/getCampaign'
@@ -17,7 +18,11 @@ import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
 import { OrganizationProvider } from '@shared/organization-picker'
 import { serverRequest } from 'gpApi/server-request'
-import { getServerToken, isTokenExpired } from 'helpers/userServerHelper'
+import { ClerkProvider } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
+import { ReactQueryProvider } from '@shared/query-client'
+import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
+import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -26,8 +31,8 @@ interface PageWrapperProps {
 const PageWrapper = async ({
   children,
 }: PageWrapperProps): Promise<React.JSX.Element> => {
-  const token = await getServerToken()
-  const isAuthed = token && !isTokenExpired(token)
+  const { userId } = await auth()
+  const isAuthed = !!userId
 
   const [pathname, campaign, organizations] = await Promise.all([
     getReqPathname(),
@@ -42,41 +47,46 @@ const PageWrapper = async ({
   ])
 
   return (
-    <>
-      <AmplitudeInit />
-      <ImpersonateUserProvider>
-        <OrganizationProvider initialOrganizations={organizations}>
-          <CampaignProvider campaign={campaign}>
-            <SentryIdentifier />
-            <CampaignStatusProvider>
-              <P2pUxEnabledProvider>
-                <NavigationProvider>
-                  <SnackbarProvider>
-                    <div className="overflow-x-hidden">
-                      <JsonLdSchema />
-                      <Nav />
-                      <Suspense>
-                        <PromoBanner initPathname={pathname || ''} />
-                      </Suspense>
-                      {children}
-                      <Suspense>
-                        <Footer initPathname={pathname || ''} />
-                      </Suspense>
-                      <Suspense>
-                        <CookiesSnackbar />
-                      </Suspense>
-                      <Suspense>
-                        <SegmentIdentify />
-                      </Suspense>
-                    </div>
-                  </SnackbarProvider>
-                </NavigationProvider>
-              </P2pUxEnabledProvider>
-            </CampaignStatusProvider>
-          </CampaignProvider>
-        </OrganizationProvider>
-      </ImpersonateUserProvider>
-    </>
+    <ClerkProvider>
+      <ImpersonationBanner />
+      <ReactQueryProvider>
+        <FeatureFlagsProvider>
+          <UserProvider>
+            <AmplitudeInit />
+            <OrganizationProvider initialOrganizations={organizations}>
+              <CampaignProvider campaign={campaign}>
+                <SentryIdentifier />
+                <CampaignStatusProvider>
+                  <P2pUxEnabledProvider>
+                    <NavigationProvider>
+                      <SnackbarProvider>
+                        <div className="overflow-x-hidden">
+                          <JsonLdSchema />
+                          <Nav />
+                          <Suspense>
+                            <PromoBanner initPathname={pathname || ''} />
+                          </Suspense>
+                          {children}
+                          <Suspense>
+                            <Footer initPathname={pathname || ''} />
+                          </Suspense>
+                          <Suspense>
+                            <CookiesSnackbar />
+                          </Suspense>
+                          <Suspense>
+                            <SegmentIdentify />
+                          </Suspense>
+                        </div>
+                      </SnackbarProvider>
+                    </NavigationProvider>
+                  </P2pUxEnabledProvider>
+                </CampaignStatusProvider>
+              </CampaignProvider>
+            </OrganizationProvider>
+          </UserProvider>
+        </FeatureFlagsProvider>
+      </ReactQueryProvider>
+    </ClerkProvider>
   )
 }
 

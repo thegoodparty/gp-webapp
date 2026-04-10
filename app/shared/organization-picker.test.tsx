@@ -270,4 +270,60 @@ describe('X-Organization-Slug header attachment', () => {
 
     expect(capturedHeader).toBeUndefined()
   })
+
+  it('handleApiRequestRewrite attaches the header from cookies', async () => {
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
+
+    const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
+    const request = new Request(reqUrl.toString())
+
+    const headersSpy = vi.spyOn(request.headers, 'set')
+
+    Object.defineProperty(request, 'cookies', {
+      value: {
+        get: (name: string) => {
+          if (name === 'organization-slug') return { value: 'org-two' }
+          return undefined
+        },
+      },
+    })
+
+    Object.defineProperty(request, 'nextUrl', {
+      value: reqUrl,
+    })
+
+    await handleApiRequestRewrite(request as any, null)
+
+    expect(headersSpy).toHaveBeenCalledWith('X-Organization-Slug', 'org-two')
+  })
+
+  it('handleApiRequestRewrite does not attach header when no org cookie exists', async () => {
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
+
+    const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
+    const request = new Request(reqUrl.toString())
+
+    const headersSpy = vi.spyOn(request.headers, 'set')
+
+    Object.defineProperty(request, 'cookies', {
+      value: {
+        get: () => undefined,
+      },
+    })
+
+    Object.defineProperty(request, 'nextUrl', {
+      value: reqUrl,
+    })
+
+    await handleApiRequestRewrite(request as any, null)
+
+    expect(headersSpy).not.toHaveBeenCalledWith(
+      'X-Organization-Slug',
+      expect.anything(),
+    )
+  })
 })

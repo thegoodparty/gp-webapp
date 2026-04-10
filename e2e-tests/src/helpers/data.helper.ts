@@ -6,7 +6,7 @@ export class TestDataHelper {
    * Generate test user data (does NOT create actual user)
    * Use this for form validation tests that don't submit
    */
-  static generateTestUser() {
+  static generateTestUserData() {
     const timestamp = `${Date.now()}-${nanoid(5)}`
     return {
       firstName: `Test${timestamp}`,
@@ -14,7 +14,7 @@ export class TestDataHelper {
       email: `test-${timestamp}@test.goodparty.org`,
       phone: `5105${Date.now().toString().slice(-6)}`,
       password: randomUUID(),
-      zipCode: '28739',
+      zipCode: '82001',
     }
   }
 

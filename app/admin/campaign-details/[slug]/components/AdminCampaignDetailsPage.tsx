@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react'
 import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
 import Button from '@shared/buttons/Button'
-import ImpersonateAction from 'app/admin/shared/ImpersonateAction'
 import DeleteAction from 'app/admin/candidates/components/DeleteAction'
 import UserInfoCard from './UserInfoCard'
 import { User } from 'helpers/types'
@@ -75,12 +74,6 @@ export default function AdminCampaignDetailsPage({
               >
                 Path to Victory
               </Button>
-              <ImpersonateAction
-                email={user?.email || ''}
-                isCandidate={true}
-                launched={launchStatus}
-              />
-
               <DeleteAction
                 id={campaign?.id || 0}
                 slug={campaign?.slug || ''}

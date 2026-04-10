@@ -6,14 +6,14 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { setCookie, getCookie } from 'helpers/cookieHelper'
+import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
+import { useSelectedOrgSlug } from '@shared/hooks/useSelectedOrgSlug'
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -78,11 +78,8 @@ export const OrganizationProvider = ({
     initialData: initialOrganizations,
   })
 
-  const [selectedSlug, _setSelectedSlug] = useState(() => {
-    const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
-    const isValid = initialOrganizations.some((o) => o.slug === cookieSlug)
-    return isValid ? cookieSlug : initialOrganizations[0]?.slug ?? null
-  })
+  const [selectedSlug, setRawSelectedSlug] =
+    useSelectedOrgSlug(initialOrganizations)
 
   const selectedOrganization = useMemo(
     () =>
@@ -97,7 +94,7 @@ export const OrganizationProvider = ({
   }, [selectedOrganization])
 
   const setSelectedSlug = useCallback((slug: string) => {
-    _setSelectedSlug(slug)
+    setRawSelectedSlug(slug)
     setCookie(ORG_SLUG_COOKIE, slug)
     // Exclude the organizations query from invalidation — the org list doesn't
     // change when switching between orgs, and invalidating it causes a brief
