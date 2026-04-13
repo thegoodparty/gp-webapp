@@ -30,6 +30,12 @@ export default function ImpersonatePageContent() {
           ticket: ticket!,
         })
 
+        if (result.status !== 'complete') {
+          throw new Error(
+            `Impersonation sign-in not complete (status: ${result.status})`,
+          )
+        }
+
         if (!result.createdSessionId) {
           throw new Error(
             `Impersonation did not create a session (status: ${result.status})`,
