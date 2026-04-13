@@ -16,6 +16,7 @@ import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
+import { ImpersonatingTracker } from '@shared/user/ImpersonatingTracker'
 import { OrganizationProvider } from '@shared/organization-picker'
 import { serverRequest } from 'gpApi/server-request'
 import { ClerkProvider } from '@clerk/nextjs'
@@ -51,6 +52,7 @@ const PageWrapper = async ({
         <FeatureFlagsProvider>
           <UserProvider>
             <AmplitudeInit />
+            <ImpersonatingTracker />
             <OrganizationProvider initialOrganizations={organizations}>
               <CampaignProvider campaign={campaign}>
                 <SentryIdentifier />

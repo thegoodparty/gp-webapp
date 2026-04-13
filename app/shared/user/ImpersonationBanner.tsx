@@ -2,19 +2,12 @@
 
 import { useClerk } from '@clerk/nextjs'
 import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
-import { useEffect } from 'react'
-import { setImpersonating } from 'helpers/analyticsHelper'
 
 const GP_ADMIN_URL = process.env.NEXT_PUBLIC_GP_ADMIN_URL ?? '/'
 
 export default function ImpersonationBanner() {
   const isImpersonating = useIsImpersonating()
   const { signOut } = useClerk()
-
-  useEffect(() => {
-    setImpersonating(isImpersonating)
-    return () => setImpersonating(false)
-  }, [isImpersonating])
 
   if (!isImpersonating) return null
 
