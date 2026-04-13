@@ -13,9 +13,12 @@ const fetchTasks = async (): Promise<Task[]> => {
   const currentDate = new Date().toISOString().split('T')[0]
 
   try {
-    const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
-      date: currentDate,
-    })
+    const resp = await serverFetch<Task[]>(
+      apiRoutes.campaign.legacyTasks.list,
+      {
+        date: currentDate,
+      },
+    )
     return resp.ok ? resp.data : []
   } catch {
     return []

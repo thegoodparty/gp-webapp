@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { getCookie, setCookie, deleteCookie, deleteCookies } from './cookieHelper'
+import {
+  getCookie,
+  setCookie,
+  deleteCookie,
+  deleteCookies,
+} from './cookieHelper'
 
 const clearCookies = () => {
   document.cookie.split(';').forEach((c) => {
