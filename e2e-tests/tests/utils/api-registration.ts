@@ -24,6 +24,9 @@ const clerkBackend = createClerkClient({ secretKey: CLERK_SECRET_KEY })
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
+const cookieDomain = (): string =>
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
+
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
@@ -228,21 +231,33 @@ const bootstrapTestUser = async (
     throw new Error('No race found for the specific office selector')
   }
 
-  await client.post('/v1/campaigns', {
-    ballotReadyPositionId: race.position.id,
-    details: {
-      electionId: race.election.id,
-      raceId: race.id,
-      state: race.election.state,
-      ballotLevel: race.position.level,
-      electionDate: race.election.electionDay,
-      partisanType: race.position.partisanType,
-      hasPrimary: race.position.hasPrimary,
-      filingPeriodsStart: race.filingPeriods[0]?.startOn,
-      filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+  const { data: campaign } = await client.post<{ id: number }>(
+    '/v1/campaigns',
+    {
+      ballotReadyPositionId: race.position.id,
+      details: {
+        electionId: race.election.id,
+        raceId: race.id,
+        state: race.election.state,
+        ballotLevel: race.position.level,
+        electionDate: race.election.electionDay,
+        partisanType: race.position.partisanType,
+        hasPrimary: race.position.hasPrimary,
+        filingPeriodsStart: race.filingPeriods[0]?.startOn,
+        filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+      },
+      data: { currentStep: 'onboarding-1' },
     },
-    data: { currentStep: 'onboarding-1' },
-  })
+  )
+
+  if (!campaign?.id) {
+    throw new Error('Campaign creation did not return a valid id')
+  }
+
+  client.defaults.headers.common[
+    'x-organization-slug'
+  ] = `campaign-${campaign.id}`
+
   await client.put('/v1/campaigns/mine/race-target-details', {})
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
@@ -291,38 +306,18 @@ export const authenticateTestUser = async (
   })
 
   const userCreated = Date.now()
+  const elapsed = Date.now() - start
+
   if (process.env.DEBUG) {
     if (options?.isolated) {
       console.log(
-        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-          userCreated - start
-        }ms`,
+        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${elapsed}ms`,
       )
     } else {
       console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
     }
   }
-
   const domain = cookieDomain()
-
-  await page.context().addCookies([
-    {
-      name: 'token',
-      value: token,
-      domain,
-      path: '/',
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
-    },
-    {
-      name: 'user',
-      value: JSON.stringify(user),
-      domain,
-      path: '/',
-      sameSite: 'Lax',
-    },
-  ])
 
   if (!options?.skipCampaignCreation) {
     const { data: campaign } = await client.get<{ id: number }>(
@@ -338,7 +333,6 @@ export const authenticateTestUser = async (
       },
     ])
   }
-
   const loginTime = Date.now()
   if (process.env.DEBUG) {
     console.log(

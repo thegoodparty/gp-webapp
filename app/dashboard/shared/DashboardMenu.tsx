@@ -16,6 +16,7 @@ import {
   Bot,
   Circle,
   CircleUserRound,
+  ClipboardList,
   DoorClosed,
   ExternalLink,
   FileText,
@@ -25,6 +26,7 @@ import {
   Plus,
   Send,
   Settings,
+  UserCog,
   UserRound,
   UsersRound,
   Wand,
@@ -210,10 +212,22 @@ const POLLS_MENU_ITEM: MenuItem = {
   isNew: true,
 }
 
+const BRIEFINGS_MENU_ITEM: MenuItem = {
+  id: 'briefings-dashboard',
+  label: 'Briefings',
+  link: '/dashboard/briefings',
+  icon: <MdFactCheck />,
+  v2Icon: ClipboardList,
+  v2Category: 'elected-office',
+  isNew: true,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
+}
+
 const getDashboardMenuItems = (
   campaign: Campaign | null,
   serveAccessEnabled: boolean,
   isElectedOffice: boolean,
+  briefingsEnabled: boolean,
 ): MenuItem[] => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -225,6 +239,9 @@ const getDashboardMenuItems = (
   }
   if (isElectedOffice) {
     menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
+    if (briefingsEnabled) {
+      menuItems.splice(voterDataIndex, 0, BRIEFINGS_MENU_ITEM)
+    }
   }
 
   return menuItems
@@ -238,12 +255,14 @@ export default function DashboardMenu({
   const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
+  const { on: briefingsEnabled } = useFlagOn('serve-briefings')
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
       !!electedOffice,
+      briefingsEnabled,
     )
 
     if (ecanvasser) {
@@ -251,7 +270,13 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice])
+  }, [
+    campaign,
+    serveAccessEnabled,
+    briefingsEnabled,
+    ecanvasser,
+    electedOffice,
+  ])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
@@ -301,6 +326,12 @@ const NewNavMenu = ({
       icon: Settings,
       id: 'nav-dash-settings',
       href: '/dashboard/profile',
+    },
+    account: {
+      label: 'Account',
+      icon: UserCog,
+      id: 'nav-dash-account',
+      href: '/dashboard/account',
     },
     addCampaign: {
       label: 'Add Campaign',
@@ -425,6 +456,7 @@ const NewNavMenu = ({
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
+                  {sidebarItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
                     sidebarItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
@@ -470,6 +502,7 @@ const NewNavMenu = ({
                 >
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
+                  {dropDownItem(accountManagementMenuItems.account)}
                   {userHasRole(user, USER_ROLES.SALES) &&
                     dropDownItem(accountManagementMenuItems.addCampaign)}
                   {userIsAdmin(user) &&
