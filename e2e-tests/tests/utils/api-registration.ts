@@ -124,11 +124,6 @@ const bootstrapTestUser = async (
     token: registerResponse.data.token,
   }
 
-  // Cache the user if not isolated
-  if (!options?.isolated) {
-    cachedUser = result
-  }
-
   if (options?.skipCampaignCreation) {
     return result
   }
@@ -179,6 +174,13 @@ const bootstrapTestUser = async (
     throw new Error('Campaign creation did not return a valid id')
   }
 
+  result.campaignId = campaign.id
+
+  // Cache the user if not isolated
+  if (!options?.isolated) {
+    cachedUser = result
+  }
+
   client.defaults.headers.common[
     'x-organization-slug'
   ] = `campaign-${campaign.id}`
@@ -189,7 +191,7 @@ const bootstrapTestUser = async (
     details: { otherParty: 'Independent', pledged: true },
   })
   await client.post('/v1/campaigns/launch', {})
-  return { ...result, campaignId: campaign.id }
+  return result
 }
 
 const createdUsers: {
