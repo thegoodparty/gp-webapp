@@ -8,6 +8,12 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  authentication: {
+    sendSetPasswordEmail: {
+      path: '/authentication/send-set-password-email',
+      method: 'POST',
+    },
+  },
   contactEngagement: {
     issues: {
       path: '/contact-engagement/:id/issues',
