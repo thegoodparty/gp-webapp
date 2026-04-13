@@ -1,54 +1,40 @@
 'use client'
-import { useClerk } from '@clerk/nextjs'
 import Button from '@shared/buttons/Button'
-import { clientRequest } from 'gpApi/typed-request'
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { useSnackbar } from 'helpers/useSnackbar'
 
 interface ImpersonateActionProps {
-  userId: number
+  email: string
+  isCandidate: boolean
+  launched?: string
 }
 
 export default function ImpersonateAction({
-  userId,
+  email,
+  isCandidate,
+  launched: launchStatus,
 }: ImpersonateActionProps): React.JSX.Element {
-  const { client, setActive, signOut } = useClerk()
   const { successSnackbar, errorSnackbar } = useSnackbar()
+  const { impersonate } = useImpersonateUser()
 
-  const handleImpersonate = async () => {
-    try {
-      const resp = await clientRequest(
-        'POST /v1/admin/users/impersonate/:userId',
-        { userId: String(userId) },
-      )
-      if (!resp.ok || !resp.data.token) {
-        errorSnackbar('Failed to get impersonation token')
-        return
+  const handleImpersonateUser = async () => {
+    successSnackbar('Impersonating user')
+
+    const impersonateResp = await impersonate(email)
+    if (impersonateResp) {
+      if (isCandidate && launchStatus === 'Live') {
+        window.location.href = `/dashboard`
+      } else {
+        window.location.href = '/'
       }
-      await signOut()
-      const result = await client.signIn.create({
-        strategy: 'ticket',
-        ticket: resp.data.token,
-      })
-      if (result.status !== 'complete') {
-        errorSnackbar('Impersonation failed')
-        return
-      }
-      if (!result.createdSessionId) {
-        errorSnackbar('Impersonation failed')
-        return
-      }
-      await setActive({ session: result.createdSessionId })
-      successSnackbar('Impersonating user...')
-      window.location.assign('/dashboard')
-    } catch (e) {
-      console.error('[impersonate] error:', e)
-      errorSnackbar('Impersonation failed')
+    } else {
+      errorSnackbar('Impersonate failed')
     }
   }
 
   return (
     <Button
-      onClick={handleImpersonate}
+      onClick={handleImpersonateUser}
       size="small"
       className="w-full font-semibold"
     >
