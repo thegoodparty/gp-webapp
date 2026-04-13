@@ -5,7 +5,7 @@ import {
   type AuthenticatedUser,
   type TestUserOptions,
 } from 'tests/utils/api-registration'
-import { wait } from 'tests/utils/eventually'
+import { eventually, wait } from 'tests/utils/eventually'
 
 type SetupResult = {
   user: AuthenticatedUser
@@ -32,6 +32,26 @@ export const setupElectedOfficeUser = async (
     .getByRole('button', { name: 'I won my race' })
     .click({ timeout: 10000 })
   await page.waitForURL('**/polls/welcome', { timeout: 15000 })
+
+  const electedOfficeOrgSlug = await eventually(
+    { that: 'an elected office organization is created' },
+    async () => {
+      const { data } = await client.get<{ organizations: { slug: string }[] }>(
+        '/v1/organizations',
+      )
+
+      const electedOfficeOrg = data.organizations.find((org) =>
+        org.slug.startsWith('eo-'),
+      )
+
+      if (!electedOfficeOrg) {
+        throw new Error('No elected office organization found')
+      }
+
+      return electedOfficeOrg.slug
+    },
+  )
+  client.defaults.headers['x-organization-slug'] = electedOfficeOrgSlug
 
   return { user, client }
 }

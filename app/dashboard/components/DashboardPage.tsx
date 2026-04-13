@@ -14,24 +14,24 @@ import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHisto
 import TasksList from './tasks/TasksList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type { Task } from './tasks/TaskItem'
-import type { Campaign, TcrCompliance } from 'helpers/types'
+import type { TcrCompliance } from 'helpers/types'
 import { usePositionName } from '@shared/hooks/usePositionName'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 interface DashboardPageProps {
   pathname: string
   tasks: Task[]
-  campaign: Campaign | null
   tcrCompliance: TcrCompliance | null
 }
 
 const DashboardPage = ({
   pathname,
   tasks,
-  campaign: campaignProp,
   tcrCompliance,
 }: DashboardPageProps): React.JSX.Element => {
   const [_, setUser] = useUser()
-  const [campaign, setCampaign] = useState<Campaign | null>(campaignProp)
+  const [campaign] = useCampaign()
+
   const { pathToVictory: p2vObject, goals, details } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
   const { primaryElectionDate } = details || {}
@@ -45,7 +45,7 @@ const DashboardPage = ({
     useState<PrimaryResultState>({
       modalOpen: false,
       modalDismissed: false,
-      primaryResult: campaignProp?.details?.primaryResult,
+      primaryResult: campaign?.details?.primaryResult,
     })
 
   const positionName = usePositionName()
@@ -98,19 +98,6 @@ const DashboardPage = ({
           modalOpen: false,
           primaryResult: selectedResult,
         }))
-
-        //update local campaign object
-        setCampaign((campaign) =>
-          campaign
-            ? {
-                ...campaign,
-                details: {
-                  ...campaign.details,
-                  primaryResult: selectedResult,
-                },
-              }
-            : campaign,
-        )
       } else {
         // user pressed Cancel to dismiss modal for now
         setPrimaryResultState({

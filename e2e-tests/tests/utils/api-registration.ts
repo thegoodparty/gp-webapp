@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { type Page, test } from '@playwright/test'
+import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
 import { uniqBy } from 'es-toolkit'
 import { TestDataHelper } from 'src/helpers/data.helper'
@@ -12,7 +12,7 @@ if (!baseURL) {
 
 const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
 
-const cookieDomain = (): string =>
+const COOKIE_DOMAIN =
   baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
 
 type BaseTestUserOptions = {
@@ -78,7 +78,10 @@ type BootstrappedUser = {
   user: AuthenticatedUser
   token: string
   client: AxiosInstance
+  campaignId?: number
 }
+
+type PlaywrightCookie = Parameters<BrowserContext['addCookies']>[0][0]
 
 // Global cache for shared users per worker
 let cachedUser: BootstrappedUser | null = null
@@ -186,7 +189,7 @@ const bootstrapTestUser = async (
     details: { otherParty: 'Independent', pledged: true },
   })
   await client.post('/v1/campaigns/launch', {})
-  return result
+  return { ...result, campaignId: campaign.id }
 }
 
 const createdUsers: {
@@ -207,7 +210,7 @@ export const authenticateTestUser = async (
   options?: TestUserOptions,
 ) => {
   const start = Date.now()
-  const { user, token, client } = await bootstrapTestUser(options)
+  const { user, token, client, campaignId } = await bootstrapTestUser(options)
 
   const { title } = test.info()
 
@@ -238,13 +241,11 @@ export const authenticateTestUser = async (
     }
   }
 
-  const domain = cookieDomain()
-
-  await page.context().addCookies([
+  const cookies: PlaywrightCookie[] = [
     {
       name: 'token',
       value: token,
-      domain,
+      domain: COOKIE_DOMAIN,
       path: '/',
       httpOnly: true,
       secure: true,
@@ -253,26 +254,22 @@ export const authenticateTestUser = async (
     {
       name: 'user',
       value: JSON.stringify(user),
-      domain,
+      domain: COOKIE_DOMAIN,
       path: '/',
       sameSite: 'Lax',
     },
-  ])
+  ]
 
-  if (!options?.skipCampaignCreation) {
-    const { data: campaign } = await client.get<{ id: number }>(
-      '/v1/campaigns/mine',
-    )
-    await page.context().addCookies([
-      {
-        name: 'organization-slug',
-        value: `campaign-${campaign.id}`,
-        domain,
-        path: '/',
-        sameSite: 'Lax',
-      },
-    ])
+  if (campaignId) {
+    cookies.push({
+      name: 'organization-slug',
+      value: `campaign-${campaignId}`,
+      domain: COOKIE_DOMAIN,
+      path: '/',
+      sameSite: 'Lax',
+    })
   }
+  await page.context().addCookies(cookies)
 
   const loginTime = Date.now()
   if (process.env.DEBUG) {
