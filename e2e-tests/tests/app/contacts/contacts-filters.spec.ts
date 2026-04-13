@@ -4,10 +4,10 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
-import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 import { WaitHelper } from 'src/helpers/wait.helper'
+import { setupElectedOfficeUser } from 'src/helpers/organizations'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -138,22 +138,12 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('validate contacts filters', async ({ page }) => {
-  await authenticateTestUser(page, {
-    isolated: true,
-    race: {
-      zip: '82001',
-      office: 'Cheyenne City Council - Ward 2',
-    },
-  })
+  test.setTimeout(5 * 60 * 1000)
 
-  await page.goto('/dashboard/election-result', {
-    waitUntil: 'domcontentloaded',
+  await setupElectedOfficeUser(page, {
+    zip: '82001',
+    office: 'Cheyenne City Council - Ward 2',
   })
-  await NavigationHelper.dismissOverlays(page)
-  await page
-    .getByRole('button', { name: 'I won my race' })
-    .click({ timeout: 10_000 })
-  await page.waitForURL('**/polls/welcome', { timeout: 15_000 })
 
   await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)

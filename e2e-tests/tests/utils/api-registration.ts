@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto'
-import { type Page, test } from '@playwright/test'
+import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
 import { uniqBy } from 'es-toolkit'
 import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
 import { clerkThrottle } from './throttle-requests-with-retry'
+import { eventually } from './eventually'
 
 const baseURL = process.env.BASE_URL
 
@@ -24,7 +25,7 @@ const clerkBackend = createClerkClient({ secretKey: CLERK_SECRET_KEY })
 const apiBaseURL = process.env.API_BASE_URL || baseURL
 const apiURL = `${apiBaseURL}/api`
 
-const cookieDomain = (): string =>
+const COOKIE_DOMAIN =
   baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
 
 type BaseTestUserOptions = {
@@ -90,17 +91,14 @@ type BootstrappedUser = {
   user: AuthenticatedUser
   token: string
   client: AxiosInstance
+  clerkUserId: string
+  campaignId: number | undefined
 }
 
-type CachedCredentials = {
-  email: string
-  password: string
-  user: AuthenticatedUser
-  clerkUserId: string
-}
+type PlaywrightCookie = Parameters<BrowserContext['addCookies']>[0][0]
 
 // Global cache for shared users per worker
-let cachedCredentials: CachedCredentials | null = null
+let cachedUser: BootstrappedUser | null = null
 
 async function signInAndGetToken(page: Page, email: string): Promise<string> {
   await setupClerkTestingToken({ page })
@@ -130,21 +128,9 @@ async function signInAndGetToken(page: Page, email: string): Promise<string> {
 const bootstrapTestUser = async (
   page: Page,
   options?: TestUserOptions,
-): Promise<BootstrappedUser & { clerkUserId: string }> => {
-  if (!options?.isolated && cachedCredentials) {
-    const token = await signInAndGetToken(page, cachedCredentials.email)
-
-    return {
-      user: { ...cachedCredentials.user, password: cachedCredentials.password },
-      token,
-      client: axios.create({
-        baseURL: apiURL,
-        headers: {
-          common: { Authorization: `Bearer ${token}` },
-        },
-      }),
-      clerkUserId: cachedCredentials.clerkUserId,
-    }
+): Promise<BootstrappedUser> => {
+  if (!options?.isolated && cachedUser) {
+    return cachedUser
   }
 
   const generated = TestDataHelper.generateTestUserData()
@@ -189,23 +175,18 @@ const bootstrapTestUser = async (
     password,
   }
 
-  const result = {
+  const result: BootstrappedUser = {
     user,
     token,
     client,
     clerkUserId: clerkUser.id,
-  }
-
-  if (!options?.isolated) {
-    cachedCredentials = {
-      email: generated.email,
-      password,
-      user,
-      clerkUserId: clerkUser.id,
-    }
+    campaignId: undefined,
   }
 
   if (options?.skipCampaignCreation) {
+    if (!options?.isolated) {
+      cachedUser = result
+    }
     return result
   }
 
@@ -254,11 +235,20 @@ const bootstrapTestUser = async (
     throw new Error('Campaign creation did not return a valid id')
   }
 
+  result.campaignId = campaign.id
+
+  // Cache the user if not isolated
+  if (!options?.isolated) {
+    cachedUser = result
+  }
+
   client.defaults.headers.common[
     'x-organization-slug'
   ] = `campaign-${campaign.id}`
 
-  await client.put('/v1/campaigns/mine/race-target-details', {})
+  await eventually({ that: 'race-target-details are updated' }, async () => {
+    await client.put('/v1/campaigns/mine/race-target-details', {})
+  })
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
     details: { otherParty: 'Independent', pledged: true },
@@ -278,7 +268,7 @@ test.afterAll(async ({}) => {
   for (const { cleanup } of users) {
     await cleanup()
   }
-  cachedCredentials = null
+  cachedUser = null
   createdUsers.length = 0
 })
 
@@ -287,23 +277,26 @@ export const authenticateTestUser = async (
   options?: TestUserOptions,
 ) => {
   const start = Date.now()
-  const { user, client, clerkUserId } = await bootstrapTestUser(page, options)
+  const { user, token, client, clerkUserId, campaignId } =
+    await bootstrapTestUser(page, options)
 
   const { title } = test.info()
 
-  createdUsers.push({
-    user,
-    cleanup: async () => {
-      try {
-        await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
-        console.log(
-          `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
-        )
-      } catch (err) {
-        console.error(`[${title}] Failed to delete user ${user.email}:`, err)
-      }
-    },
-  })
+  if (options?.isolated) {
+    createdUsers.push({
+      user,
+      cleanup: async () => {
+        try {
+          await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
+          console.log(
+            `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
+          )
+        } catch (err) {
+          console.error(`[${title}] Failed to delete user ${user.email}:`, err)
+        }
+      },
+    })
+  }
 
   const userCreated = Date.now()
   const elapsed = Date.now() - start
@@ -317,22 +310,37 @@ export const authenticateTestUser = async (
       console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
     }
   }
-  const domain = cookieDomain()
 
-  if (!options?.skipCampaignCreation) {
-    const { data: campaign } = await client.get<{ id: number }>(
-      '/v1/campaigns/mine',
-    )
-    await page.context().addCookies([
-      {
-        name: 'organization-slug',
-        value: `campaign-${campaign.id}`,
-        domain,
-        path: '/',
-        sameSite: 'Lax',
-      },
-    ])
+  const cookies: PlaywrightCookie[] = [
+    {
+      name: 'token',
+      value: token,
+      domain: COOKIE_DOMAIN,
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Lax',
+    },
+    {
+      name: 'user',
+      value: JSON.stringify(user),
+      domain: COOKIE_DOMAIN,
+      path: '/',
+      sameSite: 'Lax',
+    },
+  ]
+
+  if (campaignId) {
+    cookies.push({
+      name: 'organization-slug',
+      value: `campaign-${campaignId}`,
+      domain: COOKIE_DOMAIN,
+      path: '/',
+      sameSite: 'Lax',
+    })
   }
+  await page.context().addCookies(cookies)
+
   const loginTime = Date.now()
   if (process.env.DEBUG) {
     console.log(
