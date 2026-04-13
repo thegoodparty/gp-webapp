@@ -3,12 +3,10 @@ import { decodeJwt } from 'jose'
 
 export async function getServerToken(): Promise<string | undefined> {
   try {
-    const { getToken, userId } = await auth()
-    const token = (await getToken()) ?? undefined
-    console.log('[getServerToken] userId:', userId, 'hasToken:', !!token)
+    const session = await auth()
+    const token = (await session.getToken()) ?? undefined
     return token
-  } catch (e) {
-    console.error('[getServerToken] error:', e)
+  } catch {
     return undefined
   }
 }
@@ -21,3 +19,4 @@ export const isTokenExpired = (token: string): boolean => {
     return true
   }
 }
+ 
