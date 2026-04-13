@@ -9,11 +9,8 @@ import {
 } from 'react-icons/fa'
 import { memo, useEffect } from 'react'
 import { RiLogoutBoxFill } from 'react-icons/ri'
-import { HiOutlineStar } from 'react-icons/hi'
 import UserAvatar from '@shared/user/UserAvatar'
 import { useHandleLogOut } from '@shared/user/handleLogOut'
-import { MdAdd } from 'react-icons/md'
-import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 
@@ -152,26 +149,6 @@ const ProfileDropdown = ({
                 {link.external && <FaExternalLinkAlt size={14} />}
               </Link>
             ))}
-            {userHasRole(user, USER_ROLES.SALES) && (
-              <Link
-                href="/sales/add-campaign"
-                className="no-underline font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
-              >
-                <MdAdd className="text-lg" />
-                <div className="ml-3">Add Campaign</div>
-              </Link>
-            )}
-            {userIsAdmin(user) && (
-              <>
-                <Link
-                  href="/admin"
-                  className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-                >
-                  <HiOutlineStar />
-                  <div className="ml-3">Admin</div>
-                </Link>
-              </>
-            )}
             <div
               role="link"
               tabIndex={0}
