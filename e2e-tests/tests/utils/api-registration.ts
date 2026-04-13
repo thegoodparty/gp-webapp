@@ -235,6 +235,14 @@ const bootstrapTestUser = async (
     throw new Error('Campaign creation did not return a valid id')
   }
 
+  if (process.env.DEBUG) {
+    console.log(
+      `[${test.info().title}] Created campaign ${campaign.id} for user ${
+        user.email
+      }`,
+    )
+  }
+
   result.campaignId = campaign.id
 
   // Cache the user if not isolated
@@ -304,10 +312,12 @@ export const authenticateTestUser = async (
   if (process.env.DEBUG) {
     if (options?.isolated) {
       console.log(
-        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${elapsed}ms`,
+        `[${title}] Created new user ${user.email} (id: ${user.id}, clerk: ${clerkUserId}) in ${elapsed}ms`,
       )
     } else {
-      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+      console.log(
+        `[${title}] Using cached user ${user.email} (id: ${user.id}, clerk: ${clerkUserId})`,
+      )
     }
   }
 

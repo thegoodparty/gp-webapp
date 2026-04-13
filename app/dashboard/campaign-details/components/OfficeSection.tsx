@@ -14,7 +14,7 @@ import {
   useOrganization,
 } from '@shared/organization-picker'
 import { usePositionName } from '@shared/hooks/usePositionName'
-import { queryClient } from '@shared/query-client'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface OfficeSectionProps {
   campaign?: Campaign
@@ -23,6 +23,7 @@ interface OfficeSectionProps {
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   const organization = useOrganization()
   const positionName = usePositionName()
+  const queryClient = useQueryClient()
   const initialState: OfficeFieldState = {
     office: '',
     state: '',

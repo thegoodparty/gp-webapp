@@ -8,7 +8,7 @@ import {
   useMemo,
   type ReactNode,
 } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
 import { setCookie } from 'helpers/cookieHelper'
@@ -26,7 +26,6 @@ import {
 } from '@styleguide'
 import { ChevronDown } from 'lucide-react'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
-import { queryClient } from './query-client'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCampaign } from './hooks/useCampaign'
 
@@ -69,6 +68,8 @@ export const OrganizationProvider = ({
   children,
   initialOrganizations,
 }: OrganizationProviderProps) => {
+  const queryClient = useQueryClient()
+
   const { data: organizations } = useQuery({
     queryKey: ORGANIZATIONS_QUERY_KEY,
     queryFn: async () =>
@@ -93,16 +94,19 @@ export const OrganizationProvider = ({
     }
   }, [selectedOrganization])
 
-  const setSelectedSlug = useCallback((slug: string) => {
-    setRawSelectedSlug(slug)
-    setCookie(ORG_SLUG_COOKIE, slug)
-    // Exclude the organizations query from invalidation — the org list doesn't
-    // change when switching between orgs, and invalidating it causes a brief
-    // flash where nav items disappear while the list refetches.
-    void queryClient.invalidateQueries({
-      predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
-    })
-  }, [])
+  const setSelectedSlug = useCallback(
+    (slug: string) => {
+      setRawSelectedSlug(slug)
+      setCookie(ORG_SLUG_COOKIE, slug)
+      // Exclude the organizations query from invalidation — the org list doesn't
+      // change when switching between orgs, and invalidating it causes a brief
+      // flash where nav items disappear while the list refetches.
+      void queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] !== ORGANIZATIONS_QUERY_KEY[0],
+      })
+    },
+    [queryClient],
+  )
 
   return (
     <OrganizationContext.Provider

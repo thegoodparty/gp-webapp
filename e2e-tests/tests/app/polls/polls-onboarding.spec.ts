@@ -326,9 +326,6 @@ test.describe.serial('poll onboarding', () => {
 
     // Store for reuse in subsequent tests
     sharedUser = user
-    sharedToken = (
-      client.defaults.headers.common.Authorization as string
-    ).replace('Bearer ', '')
     await NavigationHelper.dismissOverlays(page)
 
     await page.getByRole('button', { name: "Let's get started" }).click()

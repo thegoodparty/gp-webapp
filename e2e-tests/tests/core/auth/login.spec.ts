@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { setupClerkTestingToken } from '@clerk/testing/playwright'
+import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -38,11 +38,14 @@ test.describe('Login Functionality', () => {
     await visualSnapshot(page, 'login-error-state.png')
   })
 
-  test('should login and redirect to dashboard', async ({ page }) => {
-    const { user } = await authenticateTestUser(page)
+  test('should login and redirect to dashboard', async ({
+    browser,
+    page: initialPage,
+  }) => {
+    const { user } = await authenticateTestUser(initialPage)
+    await initialPage.close()
 
-    await page.evaluate(() => window.Clerk?.signOut())
-    await page.waitForLoadState('networkidle')
+    const page = await browser.newPage()
 
     await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
