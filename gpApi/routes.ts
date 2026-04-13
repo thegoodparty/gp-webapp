@@ -8,6 +8,12 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  authentication: {
+    sendSetPasswordEmail: {
+      path: '/authentication/send-set-password-email',
+      method: 'POST',
+    },
+  },
   contactEngagement: {
     issues: {
       path: '/contact-engagement/:id/issues',
@@ -380,6 +386,61 @@ export const apiRoutes = {
     delete: {
       path: '/voters/voter-file/filter/:id',
       method: 'DELETE',
+    },
+  },
+  admin: {
+    bustCache: {
+      path: '/revalidate',
+      method: 'GET',
+      nextApiRoute: true,
+    },
+    user: {
+      get: {
+        path: '/admin/users/:id',
+        method: 'GET',
+      },
+      list: {
+        path: '/admin/users',
+        method: 'GET',
+      },
+      create: {
+        path: '/admin/users',
+        method: 'POST',
+      },
+      delete: {
+        path: '/admin/users/:id',
+        method: 'DELETE',
+      },
+      impersonate: {
+        path: '/admin/users/impersonate',
+        method: 'POST',
+      },
+    },
+    campaign: {
+      create: {
+        path: '/admin/campaigns',
+        method: 'POST',
+      },
+      update: {
+        path: '/admin/campaigns/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/admin/campaigns/:id',
+        method: 'DELETE',
+      },
+      victoryMail: {
+        path: '/admin/campaigns/:id/send-victory-email',
+        method: 'POST',
+      },
+      proNoVoterFile: {
+        path: '/admin/campaigns/pro-no-voter-file',
+        method: 'GET',
+      },
+      p2vStats: {
+        path: '/admin/campaigns/p2v-stats',
+        method: 'GET',
+      },
     },
   },
   elections: {

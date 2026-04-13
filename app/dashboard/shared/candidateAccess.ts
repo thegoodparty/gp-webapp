@@ -43,13 +43,19 @@ export async function getPostAuthRedirectPath(): Promise<string> {
 }
 
 export default async function candidateAccess(): Promise<void> {
-  const { userId } = await auth()
+  const { userId, actor } = await auth()
 
   if (!userId) {
     return redirect('/sign-up')
   }
 
-  // don't remove this call. It prevents the build process from trying to to cache this page which should be dynamic
+  // Skip the legacy token check for impersonated sessions — actor tokens are Clerk JWTs
+  // and won't have the legacy cookie that fetchCampaignStatus checks for (which would
+  // return 498 and incorrectly sign out the session).
+  // don't remove this call for non-impersonated users. It prevents the build process
+  // from trying to cache this page which should be dynamic
   // https://nextjs.org/docs/messages/dynamic-server-error
-  await fetchCampaignStatus()
+  if (!actor) {
+    await fetchCampaignStatus()
+  }
 }

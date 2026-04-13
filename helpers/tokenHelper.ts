@@ -3,8 +3,9 @@ import { decodeJwt } from 'jose'
 
 export async function getServerToken(): Promise<string | undefined> {
   try {
-    const { getToken } = await auth()
-    return (await getToken()) ?? undefined
+    const session = await auth()
+    const token = (await session.getToken()) ?? undefined
+    return token
   } catch {
     return undefined
   }

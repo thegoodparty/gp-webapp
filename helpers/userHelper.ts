@@ -4,6 +4,14 @@ import { User } from './types'
 
 export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$/i
 
+export const USER_ROLES = {
+  SALES: 'sales' as const,
+  CANDIDATE: 'candidate' as const,
+  ADMIN: 'admin' as const,
+  CAMPAIGN_MANAGER: 'campaignManager' as const,
+  DEMO: 'demo' as const,
+}
+
 export const updateUser = async (
   updateFields: Partial<User> = {},
 ): Promise<User | undefined> => {
