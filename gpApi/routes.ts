@@ -382,57 +382,6 @@ export const apiRoutes = {
       method: 'DELETE',
     },
   },
-  admin: {
-    bustCache: {
-      path: '/revalidate',
-      method: 'GET',
-      nextApiRoute: true,
-    },
-    user: {
-      get: {
-        path: '/admin/users/:id',
-        method: 'GET',
-      },
-      list: {
-        path: '/admin/users',
-        method: 'GET',
-      },
-      create: {
-        path: '/admin/users',
-        method: 'POST',
-      },
-      delete: {
-        path: '/admin/users/:id',
-        method: 'DELETE',
-      },
-    },
-    campaign: {
-      create: {
-        path: '/admin/campaigns',
-        method: 'POST',
-      },
-      update: {
-        path: '/admin/campaigns/:id',
-        method: 'PUT',
-      },
-      delete: {
-        path: '/admin/campaigns/:id',
-        method: 'DELETE',
-      },
-      victoryMail: {
-        path: '/admin/campaigns/:id/send-victory-email',
-        method: 'POST',
-      },
-      proNoVoterFile: {
-        path: '/admin/campaigns/pro-no-voter-file',
-        method: 'GET',
-      },
-      p2vStats: {
-        path: '/admin/campaigns/p2v-stats',
-        method: 'GET',
-      },
-    },
-  },
   elections: {
     racesByYear: {
       path: '/elections/races-by-year',

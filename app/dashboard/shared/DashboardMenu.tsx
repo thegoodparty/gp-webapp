@@ -23,13 +23,11 @@ import {
   Globe,
   LayoutDashboard,
   LogOut,
-  Plus,
   Send,
   Settings,
   UserCog,
   UserRound,
   UsersRound,
-  Wand,
   type LucideIcon,
 } from 'lucide-react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -60,7 +58,6 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
   useOrganization,
@@ -333,18 +330,6 @@ const NewNavMenu = ({
       id: 'nav-dash-account',
       href: '/dashboard/account',
     },
-    addCampaign: {
-      label: 'Add Campaign',
-      icon: Plus,
-      id: 'nav-dash-add-campaign',
-      href: '/sales/add-campaign',
-    },
-    admin: {
-      label: 'Admin',
-      icon: Wand,
-      id: 'nav-dash-admin',
-      href: '/admin',
-    },
     community: {
       label: 'Community Forum',
       icon: ExternalLink,
@@ -457,10 +442,6 @@ const NewNavMenu = ({
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
                   {sidebarItem(accountManagementMenuItems.account)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    sidebarItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    sidebarItem(accountManagementMenuItems.admin)}
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.logout)}
                   <SidebarSeparator />
@@ -503,10 +484,6 @@ const NewNavMenu = ({
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
                   {dropDownItem(accountManagementMenuItems.account)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    dropDownItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    dropDownItem(accountManagementMenuItems.admin)}
                   <DropdownMenuSeparator />
                   {dropDownItem(accountManagementMenuItems.community)}
                   <DropdownMenuSeparator />
