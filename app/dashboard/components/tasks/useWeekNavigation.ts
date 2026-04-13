@@ -46,22 +46,26 @@ export function useWeekNavigation(
   daysUntilElection: number,
 ): WeekNavigationResult {
   const weeksUntilElection = Math.ceil(daysUntilElection / 7)
+  const hasCurrentWeek = Number.isFinite(weeksUntilElection)
+  const taskWeeks = tasks.map((task) => task.week)
 
-  const weekNumbers = [...new Set(tasks.map((t) => t.week))].sort(
-    (a, b) => b - a,
-  )
+  const weekNumbers = [
+    ...new Set([...taskWeeks, ...(hasCurrentWeek ? [weeksUntilElection] : [])]),
+  ].sort((a, b) => b - a)
 
   const defaultIndex =
     weekNumbers.length > 0
-      ? weekNumbers.reduce((bestIdx, w, idx) => {
-          const bestW = weekNumbers[bestIdx]
-          if (bestW === undefined) return idx
-          const bestDiff = Math.abs(bestW - weeksUntilElection)
-          const currDiff = Math.abs(w - weeksUntilElection)
-          if (currDiff < bestDiff) return idx
-          if (currDiff === bestDiff && w < bestW) return idx
-          return bestIdx
-        }, 0)
+      ? hasCurrentWeek
+        ? weekNumbers.reduce((bestIdx, w, idx) => {
+            const bestW = weekNumbers[bestIdx]
+            if (bestW === undefined) return idx
+            const bestDiff = Math.abs(bestW - weeksUntilElection)
+            const currDiff = Math.abs(w - weeksUntilElection)
+            if (currDiff < bestDiff) return idx
+            if (currDiff === bestDiff && w < bestW) return idx
+            return bestIdx
+          }, 0)
+        : weekNumbers.length - 1
       : 0
 
   const [savedWeek, setSavedWeek] = useState<number | null>(() =>
