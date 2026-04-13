@@ -3,9 +3,9 @@ import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
 import type { Analytics } from '@segment/analytics-next'
 
-let _isImpersonating = false
+let isImpersonating = false
 export const setImpersonating = (value: boolean): void => {
-  _isImpersonating = value
+  isImpersonating = value
 }
 
 const UTM_KEYS = [
@@ -651,7 +651,7 @@ export const trackEvent = (
     const commonProperties = {
       ...getPersistedUtms(),
       ...properties,
-      impersonation: _isImpersonating,
+      impersonation: isImpersonating,
     }
     segmentTrackEvent(name, commonProperties)
   } catch (e) {
