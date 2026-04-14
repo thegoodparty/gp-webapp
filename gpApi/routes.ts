@@ -8,6 +8,12 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  authentication: {
+    sendSetPasswordEmail: {
+      path: '/authentication/send-set-password-email',
+      method: 'POST',
+    },
+  },
   contactEngagement: {
     issues: {
       path: '/contact-engagement/:id/issues',
@@ -404,6 +410,10 @@ export const apiRoutes = {
       delete: {
         path: '/admin/users/:id',
         method: 'DELETE',
+      },
+      impersonate: {
+        path: '/admin/users/impersonate',
+        method: 'POST',
       },
     },
     campaign: {

@@ -16,13 +16,13 @@ import SegmentIdentify from './navigation/SegmentIdentify'
 import { P2pUxEnabledProvider } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
+import { ImpersonatingTracker } from '@shared/user/ImpersonatingTracker'
 import { OrganizationProvider } from '@shared/organization-picker'
 import { serverRequest } from 'gpApi/server-request'
 import { ClerkProvider } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 import { ReactQueryProvider } from '@shared/query-client'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
-import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
 interface PageWrapperProps {
   children: React.ReactNode
@@ -48,11 +48,11 @@ const PageWrapper = async ({
 
   return (
     <ClerkProvider>
-      <ImpersonationBanner />
       <ReactQueryProvider>
         <FeatureFlagsProvider>
           <UserProvider>
             <AmplitudeInit />
+            <ImpersonatingTracker />
             <OrganizationProvider initialOrganizations={organizations}>
               <CampaignProvider campaign={campaign}>
                 <SentryIdentifier />

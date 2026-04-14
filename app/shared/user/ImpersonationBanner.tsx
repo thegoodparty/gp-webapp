@@ -1,14 +1,15 @@
 'use client'
 
-import { useAuth, useClerk } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
+import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
 
 const GP_ADMIN_URL = process.env.NEXT_PUBLIC_GP_ADMIN_URL ?? '/'
 
 export default function ImpersonationBanner() {
-  const { actor } = useAuth()
+  const isImpersonating = useIsImpersonating()
   const { signOut } = useClerk()
 
-  if (!actor) return null
+  if (!isImpersonating) return null
 
   async function handleStopImpersonating() {
     await signOut()
@@ -16,7 +17,7 @@ export default function ImpersonationBanner() {
   }
 
   return (
-    <div className="sticky top-0 z-[9999] bg-amber-400 text-black px-4 py-2 text-center text-sm font-medium">
+    <div className="bg-amber-400 text-black px-4 py-1 text-center text-xs font-medium">
       You are impersonating this user.{' '}
       <button
         onClick={handleStopImpersonating}

@@ -13,6 +13,7 @@ import { Campaign } from 'helpers/types'
 import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useOrganization } from '@shared/organization-picker'
+import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -80,6 +81,7 @@ const DashboardLayout = ({
         )}
         <SidebarInset className="bg-[#f5f5f5]">
           {!hideMenu && <MobileMenuTrigger />}
+          <ImpersonationBanner />
           <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
             {activeCampaign && showAlert && (
               <AlertSection campaign={activeCampaign} />

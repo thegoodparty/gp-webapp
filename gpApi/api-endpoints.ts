@@ -3,6 +3,7 @@ import type {
   BriefingListItem,
 } from 'app/dashboard/briefings/shared/briefing-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
+import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
 import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
 import type {
@@ -12,7 +13,6 @@ import type {
   GetConstituentIssuesResponse,
   GetIndividualActivitiesResponse,
 } from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
-import { Campaign, CampaignDetails, User } from 'helpers/types'
 
 export type APIEndpoints = {
   'GET /v1/users/me': {
@@ -100,6 +100,11 @@ export type APIEndpoints = {
   'GET /v1/organizations/admin/list': {
     Request: { slug?: string; email?: string }
     Response: { organizations: AdminOrganization[] }
+  }
+
+  'POST /v1/admin/users/impersonate/:userId': {
+    Request: {}
+    Response: { token: string }
   }
 
   'POST /v1/voters/voter-file/filter': {

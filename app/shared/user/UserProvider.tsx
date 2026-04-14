@@ -37,10 +37,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   })
 
   const updateUser = useCallback(
-    (_user?: User) => {
-      queryClient.invalidateQueries({
-        queryKey: [CURRENT_USER_QUERY_KEY],
-      })
+    (user?: User) => {
+      if (user) {
+        queryClient.setQueryData([CURRENT_USER_QUERY_KEY], user)
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [CURRENT_USER_QUERY_KEY],
+        })
+      }
     },
     [queryClient],
   )

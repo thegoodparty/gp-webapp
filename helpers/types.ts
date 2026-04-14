@@ -52,10 +52,6 @@ export interface User {
   passwordResetToken?: string | null
 }
 
-export interface UserResponse {
-  data: User
-}
-
 // ===== CampaignUpdateHistory Types =====
 
 export enum CampaignUpdateHistoryType {
