@@ -298,13 +298,14 @@ const TasksList = ({
     if (!completeModalTask) return
 
     const task = completeModalTask
+    const isRecurring = task.flowType === TASK_TYPES.recurring
     const resolvedType =
       task.flowType === TASK_TYPES.p2pDisabledText
         ? TASK_TYPES.text
         : task.flowType
 
     let fieldForRollback: keyof VoterContactsState | undefined
-    if (!isLegacyList) {
+    if (!isLegacyList && !isRecurring) {
       const field = getVoterContactField(resolvedType)
       fieldForRollback = field
       updateVoterContactsLocal((prev) => ({
@@ -343,7 +344,10 @@ const TasksList = ({
   const handleActionClick = (task: Task) => {
     const { flowType, proRequired, deadline } = task
 
-    if (flowType === TASK_TYPES.awareness) {
+    if (
+      flowType === TASK_TYPES.awareness ||
+      flowType === TASK_TYPES.recurring
+    ) {
       setAwarenessDetail({
         task,
         formattedDate: formatTaskDate(task.date, electionDate, deadline),

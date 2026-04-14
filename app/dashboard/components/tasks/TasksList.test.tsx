@@ -151,9 +151,12 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     ...overrides,
   } as unknown as Campaign)
 
+const TEST_SESSION_KEY = 'campaign-plan-selected-week:campaign-1'
+
 beforeEach(() => {
   vi.clearAllMocks()
   sessionStorage.clear()
+  sessionStorage.setItem(TEST_SESSION_KEY, '1')
   mockUpdateVoterContactsLocal.mockReset()
   mockUseUser.mockReturnValue([{ id: 'user-1' }, vi.fn()])
   mockClientFetch.mockImplementation(
@@ -181,6 +184,35 @@ beforeEach(() => {
 })
 
 describe('TasksList non-legacy event tasks', () => {
+  it('renders a week range that contains the rendered task date', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/01/01 12:00:00'))
+
+    try {
+      const task = makeTask({
+        id: 'task-week-30',
+        title: 'Week aligned task',
+        week: 30,
+        date: '2026-04-13',
+      })
+
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={[task]}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Apr 7-13')).toBeInTheDocument()
+      expect(screen.getByText('Apr 13')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('uses the row only to open event details; external link stays in the modal', async () => {
     const user = userEvent.setup()
     mockClientFetch.mockResolvedValue({ ok: true, data: [] })
@@ -274,7 +306,6 @@ describe('TasksList revert completion flow', () => {
     const textTask = makeTask({
       flowType: TASK_TYPES.text,
       completed: false,
-      week: 1,
     })
     const completedTextTask = { ...textTask, completed: true }
 
@@ -459,13 +490,105 @@ describe('TasksList revert completion flow', () => {
   })
 })
 
+describe('TasksList recurring task completion', () => {
+  it('sends {type, quantity} payload to the API when completing a recurring task via CountModal', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      completed: false,
+    })
+    const completedTask = { ...task, completed: true }
+
+    mockClientFetch.mockResolvedValueOnce({ ok: true, data: completedTask })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Save count' }))
+
+    await waitFor(() => {
+      expect(mockClientFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          path: '/campaigns/tasks/complete/:taskId',
+          method: 'PUT',
+        }),
+        { taskId: 'task-1', type: 'recurring', quantity: 5 },
+      )
+    })
+  })
+
+  it('does NOT update local voter contacts when completing a recurring task', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      completed: false,
+    })
+    const completedTask = { ...task, completed: true }
+
+    mockClientFetch.mockResolvedValueOnce({ ok: true, data: completedTask })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Save count' }))
+
+    await waitFor(() => {
+      expect(mockClientFetch).toHaveBeenCalledWith(
+        expect.objectContaining({ method: 'PUT' }),
+        expect.anything(),
+      )
+    })
+
+    expect(mockUpdateVoterContactsLocal).not.toHaveBeenCalled()
+  })
+
+  it('opens the detail modal (not the outreach flow) when clicking the row action for a recurring task', async () => {
+    const user = userEvent.setup()
+    const task = makeTask({
+      flowType: TASK_TYPES.recurring,
+      title: 'Weekly canvass',
+      description: 'Go knock doors',
+      completed: false,
+    })
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[task]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Weekly canvass/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument()
+    })
+    expect(
+      screen.getAllByRole('heading', { name: 'Weekly canvass' }),
+    ).not.toHaveLength(0)
+  })
+})
+
 describe('TasksList tracking events', () => {
   const mockTrackEvent = vi.mocked(trackEvent)
   const mockIdentifyUser = vi.mocked(identifyUser)
 
   describe('Campaign Plan Viewed', () => {
     it('fires Viewed event with the selected week counts', () => {
-      sessionStorage.setItem('campaign-plan-selected-week:campaign-1', '30')
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       const tasks = [
         makeTask({ id: 'task-1', week: 30, completed: false }),
         makeTask({ id: 'task-2', week: 30, completed: true }),
@@ -507,6 +630,7 @@ describe('TasksList tracking events', () => {
     })
 
     it('does NOT re-fire Viewed event when tasks are completed within the same week', async () => {
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       const user = userEvent.setup()
       const task = makeTask({
         week: 30,
@@ -542,6 +666,7 @@ describe('TasksList tracking events', () => {
     })
 
     it('identifies the real user when the user becomes available after initial render', async () => {
+      sessionStorage.setItem(TEST_SESSION_KEY, '30')
       mockUseUser.mockReturnValueOnce([null, vi.fn()])
 
       const task = makeTask({ week: 30 })
@@ -848,16 +973,12 @@ describe('TasksList tracking events', () => {
   })
 
   describe('Week Navigated', () => {
-    const getCurrentWeek = () =>
-      Math.ceil(differenceInDays(new Date('2026/11/03'), new Date()) / 7)
-
     it('fires WeekNavigated with direction "next" when navigating forward', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
-      sessionStorage.setItem(
-        'campaign-plan-selected-week:campaign-1',
-        String(currentWeek + 1),
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
       )
+      sessionStorage.setItem(TEST_SESSION_KEY, String(currentWeek + 1))
       const tasks = [
         makeTask({ id: 'task-1', week: currentWeek + 1 }),
         makeTask({ id: 'task-2', week: currentWeek }),
@@ -887,11 +1008,10 @@ describe('TasksList tracking events', () => {
 
     it('fires WeekNavigated with direction "previous" when navigating back', async () => {
       const user = userEvent.setup()
-      const currentWeek = getCurrentWeek()
-      sessionStorage.setItem(
-        'campaign-plan-selected-week:campaign-1',
-        String(currentWeek),
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
       )
+      sessionStorage.setItem(TEST_SESSION_KEY, String(currentWeek))
       const tasks = [
         makeTask({ id: 'task-1', week: currentWeek + 1 }),
         makeTask({ id: 'task-2', week: currentWeek }),

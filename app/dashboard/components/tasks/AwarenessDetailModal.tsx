@@ -24,7 +24,7 @@ export default function AwarenessDetailModal({
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      description={description || 'Awareness milestone'}
+      description={description || 'Task details'}
       dialogClassName="max-w-md"
     >
       <div className="flex flex-col gap-4 p-4 md:p-1">

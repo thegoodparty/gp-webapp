@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { startOfWeek, addWeeks } from 'date-fns'
+import { addWeeks, startOfWeek } from 'date-fns'
 import type { Task } from './TaskItem'
 
 const SESSION_KEY_PREFIX = 'campaign-plan-selected-week'
@@ -46,22 +46,26 @@ export function useWeekNavigation(
   daysUntilElection: number,
 ): WeekNavigationResult {
   const weeksUntilElection = Math.ceil(daysUntilElection / 7)
+  const hasCurrentWeek = Number.isFinite(weeksUntilElection)
+  const taskWeeks = tasks.map((task) => task.week)
 
-  const weekNumbers = [...new Set(tasks.map((t) => t.week))].sort(
-    (a, b) => b - a,
-  )
+  const weekNumbers = [
+    ...new Set([...taskWeeks, ...(hasCurrentWeek ? [weeksUntilElection] : [])]),
+  ].sort((a, b) => b - a)
 
   const defaultIndex =
     weekNumbers.length > 0
-      ? weekNumbers.reduce((bestIdx, w, idx) => {
-          const bestW = weekNumbers[bestIdx]
-          if (bestW === undefined) return idx
-          const bestDiff = Math.abs(bestW - weeksUntilElection)
-          const currDiff = Math.abs(w - weeksUntilElection)
-          if (currDiff < bestDiff) return idx
-          if (currDiff === bestDiff && w < bestW) return idx
-          return bestIdx
-        }, 0)
+      ? hasCurrentWeek
+        ? weekNumbers.reduce((bestIdx, w, idx) => {
+            const bestW = weekNumbers[bestIdx]
+            if (bestW === undefined) return idx
+            const bestDiff = Math.abs(bestW - weeksUntilElection)
+            const currDiff = Math.abs(w - weeksUntilElection)
+            if (currDiff < bestDiff) return idx
+            if (currDiff === bestDiff && w < bestW) return idx
+            return bestIdx
+          }, 0)
+        : weekNumbers.length - 1
       : 0
 
   const [savedWeek, setSavedWeek] = useState<number | null>(() =>
@@ -92,9 +96,7 @@ export function useWeekNavigation(
   }
 
   const currentWeekStart = electionDateObj
-    ? startOfWeek(addWeeks(electionDateObj, -selectedWeek), {
-        weekStartsOn: 0,
-      })
+    ? addWeeks(electionDateObj, -selectedWeek)
     : startOfWeek(new Date(), { weekStartsOn: 0 })
 
   const filteredTasks = tasks.filter((t) => t.week === selectedWeek)
