@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { render } from 'helpers/test-utils/render'
+import { render, testQueryClient } from 'helpers/test-utils/render'
 import { api } from 'helpers/test-utils/api-mocking'
-import { queryClient } from '@shared/query-client'
 import { Organization } from 'gpApi/api-endpoints'
 import { SidebarProvider } from '@styleguide'
 import {
@@ -216,7 +215,7 @@ describe('OrganizationPicker', () => {
       data: { organizations: updatedOrgs },
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 0, retry: false },
     })
 
@@ -226,7 +225,7 @@ describe('OrganizationPicker', () => {
       expect(screen.getByText('Fetched Org')).toBeInTheDocument()
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 1000 * 60 * 5, retry: 2 },
     })
   })

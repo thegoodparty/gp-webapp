@@ -13,10 +13,12 @@ import Button from '@shared/buttons/Button'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 import { getMarketingUrl } from 'helpers/linkhelper'
+import { useQueryClient } from '@tanstack/react-query'
 
 const RightSide = (): React.JSX.Element => {
   const [user] = useUser()
   const { signOut } = useClerk()
+  const queryClient = useQueryClient()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -47,8 +49,9 @@ const RightSide = (): React.JSX.Element => {
       trackEvent(EVENTS.Onboarding.ClickFinishLater, {
         pathname: pathname,
       })
-      await signOut()
-      window.location.href = getMarketingUrl('/blog')
+
+      queryClient.clear()
+      await signOut({ redirectUrl: getMarketingUrl('/blog') })
     }
 
     return (

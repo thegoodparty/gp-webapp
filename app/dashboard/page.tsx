@@ -1,7 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import DashboardContent from './components/DashboardContent'
 import candidateAccess from './shared/candidateAccess'
-import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
@@ -41,8 +40,7 @@ export default async function Page(): Promise<React.JSX.Element> {
     return redirect('/dashboard/polls')
   }
 
-  const [campaign, tasks, tcrComplianceResponse] = await Promise.all([
-    fetchUserCampaign(),
+  const [tasks, tcrComplianceResponse] = await Promise.all([
     fetchTasks(),
     serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
   ])
@@ -56,7 +54,6 @@ export default async function Page(): Promise<React.JSX.Element> {
       <HubSpotChatWidgetScript />
       <DashboardContent
         pathname="/dashboard"
-        campaign={campaign}
         tasks={tasks}
         tcrCompliance={tcrCompliance}
       />
