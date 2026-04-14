@@ -25,7 +25,7 @@ export const CampaignProgress = ({
 }: CampaignProgressProps): React.JSX.Element => {
   const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
-    raceTargetMetrics ?? undefined,
+    raceTargetMetrics,
     reportedVoterGoals,
   )
   const [modalOpen, setModalOpen] = useState(false)
@@ -73,7 +73,11 @@ export const CampaignProgress = ({
           {numberFormatter(needed)} voter contacts needed
           <InfoOutlined className="ml-2 !text-base" />
           <ContactCountsInfoModal
-            {...{ raceTargetMetrics, open: modalOpen, setOpen: toggleModalOpen }}
+            {...{
+              raceTargetMetrics,
+              open: modalOpen,
+              setOpen: toggleModalOpen,
+            }}
           />
         </Subtitle2>
       </div>

@@ -158,9 +158,15 @@ export default function AdminVictoryPathPage(
     successSnackbar('Saving...')
 
     try {
-      const attr: { key: string; value: string | number | boolean | undefined }[] = []
+      const attr: {
+        key: string
+        value: string | number | boolean | undefined
+      }[] = []
       if (state.canDownloadFederal !== campaign?.canDownloadFederal) {
-        attr.push({ key: 'canDownloadFederal', value: state.canDownloadFederal })
+        attr.push({
+          key: 'canDownloadFederal',
+          value: state.canDownloadFederal,
+        })
       }
 
       if (attr.length > 0) {

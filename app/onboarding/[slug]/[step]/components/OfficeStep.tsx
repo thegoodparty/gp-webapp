@@ -40,18 +40,6 @@ interface OfficeStepProps {
   organizationSlug?: string
 }
 
-interface UpdateAttr {
-  key: string
-  value: string | number | boolean | undefined
-}
-
-async function runPostOfficeStepUpdates(
-  attr: UpdateAttr[],
-  slug: string | undefined = undefined,
-): Promise<void> {
-  await updateCampaign(attr, slug)
-}
-
 export default function OfficeStep({
   campaign,
   step,
@@ -187,14 +175,14 @@ export default function OfficeStep({
     }
 
     if (adminMode && campaign) {
-      await runPostOfficeStepUpdates(attr, campaign.slug)
+      await updateCampaign(attr, campaign.slug)
     } else if (campaign) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      await runPostOfficeStepUpdates(attr)
+      await updateCampaign(attr)
     } else if (!organizationSlug) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {

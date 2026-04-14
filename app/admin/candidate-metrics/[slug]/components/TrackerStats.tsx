@@ -5,6 +5,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 import { FaBullhorn } from 'react-icons/fa'
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri'
 import { Campaign, ReportedVoterGoals } from 'helpers/types'
+import { getVoterContactsGoal } from 'app/dashboard/components/voterGoalsHelpers'
 
 interface TrackerStatsProps {
   campaign: Campaign
@@ -47,9 +48,7 @@ export default function TrackerStats(
     return <div className="my-4 text-xl">No reported voter goals</div>
   }
 
-  const m = campaign.raceTargetMetrics
-  const resolvedContactGoal =
-    m?.voterContactGoal ?? (m?.winNumber ? m.winNumber * 5 : 0)
+  const resolvedContactGoal = getVoterContactsGoal(campaign.raceTargetMetrics)
 
   return (
     <div className="grid grid-cols-12 gap-6">

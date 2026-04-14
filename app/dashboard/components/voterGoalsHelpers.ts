@@ -64,13 +64,6 @@ export interface ReportedVoterGoals {
   socialMedia?: number
 }
 
-export interface VoterContactGoalInput {
-  voterContactGoal?: number
-  /** Legacy name for votes needed to win; prefer `winNumber` from race target metrics. */
-  voteGoal?: number
-  winNumber?: number
-}
-
 const WEEK_PERCENTAGES: ContactGoals = {
   week12: { total: 2.7, doorKnocking: 0, calls: 0, digital: 0 },
   week11: { total: 4.05, doorKnocking: 0, calls: 0, digital: 0 },
@@ -98,12 +91,7 @@ const createContactGoalBreakdown = (
 export function calculateContactGoalsFromCampaign(
   campaign: Campaign,
 ): ContactGoals | false {
-  const m = campaign.raceTargetMetrics
-  const resolvedContactGoal = getVoterContactsGoal({
-    voterContactGoal: m?.voterContactGoal,
-    winNumber: m?.winNumber,
-  })
-  return calculateContactGoals(resolvedContactGoal)
+  return calculateContactGoals(getVoterContactsGoal(campaign.raceTargetMetrics))
 }
 
 export function calculateContactGoals(total: number): ContactGoals | false {
@@ -317,16 +305,11 @@ export function calculateAccumulatedByWeek(
   return accumulatedTotal
 }
 
-export const getVoterContactsGoal = ({
-  voterContactGoal,
-  voteGoal,
-  winNumber,
-}: VoterContactGoalInput): number => {
-  const fallback = (voteGoal ?? winNumber ?? 0) * 5
-  if (voterContactGoal != null && voterContactGoal > 0) {
-    return parseInt(String(voterContactGoal), 10)
-  }
-  return parseInt(String(fallback), 10)
+export const getVoterContactsGoal = (
+  metrics: RaceTargetMetrics | null | undefined,
+): number => {
+  const goal = metrics?.voterContactGoal ?? 0
+  return goal > 0 ? goal : 0
 }
 
 export const getVoterContactsTotal = ({
@@ -358,18 +341,9 @@ export interface VoterContactCounts {
 }
 
 export const calculateVoterContactCounts = (
-  input: RaceTargetMetrics | VoterContactGoalInput | null | undefined,
+  metrics: RaceTargetMetrics | null | undefined,
   reportedVoterGoals: ReportedVoterGoals | undefined,
-): VoterContactCounts => {
-  const normalized: VoterContactGoalInput =
-    input != null && typeof input === 'object' && 'projectedTurnout' in input
-      ? {
-          voterContactGoal: input.voterContactGoal,
-          winNumber: input.winNumber,
-        }
-      : (input as VoterContactGoalInput) || {}
-  return {
-    needed: getVoterContactsGoal(normalized),
-    contacted: getVoterContactsTotal(reportedVoterGoals || {}),
-  }
-}
+): VoterContactCounts => ({
+  needed: getVoterContactsGoal(metrics),
+  contacted: getVoterContactsTotal(reportedVoterGoals || {}),
+})

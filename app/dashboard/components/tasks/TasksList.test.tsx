@@ -146,7 +146,11 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     id: 'campaign-1',
     isPro: false,
     details: { electionDate: '2026-11-03' },
-    raceTargetMetrics: { projectedTurnout: 0, winNumber: 0, voterContactGoal: 0 },
+    raceTargetMetrics: {
+      projectedTurnout: 0,
+      winNumber: 0,
+      voterContactGoal: 0,
+    },
     hasFreeTextsOffer: false,
     ...overrides,
   } as unknown as Campaign)
