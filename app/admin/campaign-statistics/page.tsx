@@ -17,7 +17,6 @@ interface FiltersPayload {
   generalElectionDateStart?: string | string[]
   generalElectionDateEnd?: string | string[]
   campaignStatus?: string | string[]
-  p2vStatus?: string | string[]
   firehose?: string | string[]
 }
 
@@ -32,7 +31,6 @@ const FILTER_KEYS: (keyof FiltersPayload)[] = [
   'generalElectionDateStart',
   'generalElectionDateEnd',
   'campaignStatus',
-  'p2vStatus',
   'firehose',
 ]
 
@@ -88,7 +86,6 @@ export default async function Page({
     'generalElectionDateStart',
     'generalElectionDateEnd',
     'campaignStatus',
-    'p2vStatus',
     'firehose',
   ])
   const firehose = initialParams.firehose

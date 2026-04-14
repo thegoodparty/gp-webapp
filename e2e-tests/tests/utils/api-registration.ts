@@ -3,7 +3,6 @@ import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
 import { uniqBy } from 'es-toolkit'
 import { TestDataHelper } from 'src/helpers/data.helper'
-import { eventually } from './eventually'
 
 const baseURL = process.env.BASE_URL
 
@@ -186,9 +185,6 @@ const bootstrapTestUser = async (
     'x-organization-slug'
   ] = `campaign-${campaign.id}`
 
-  await eventually({ that: 'race-target-details are updated' }, async () => {
-    await client.put('/v1/campaigns/mine/race-target-details', {})
-  })
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
     details: { otherParty: 'Independent', pledged: true },

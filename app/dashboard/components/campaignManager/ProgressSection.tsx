@@ -14,7 +14,7 @@ export default function ProgressSection() {
   const [campaign] = useCampaign()
   const [modalOpen, setModalOpen] = useState(false)
   const [recordModalOpen, setRecordModalOpen] = useState(false)
-  const p2vData = campaign?.pathToVictory?.data
+  const p2vData = campaign?.raceTargetMetrics
   const toggleModalOpen = () => setModalOpen(!modalOpen)
   const toggleRecordModalOpen = () => setRecordModalOpen(!recordModalOpen)
 
@@ -51,7 +51,7 @@ export default function ProgressSection() {
         </div>
       </div>
       <CountsInfoModal
-        pathToVictory={p2vData}
+        raceTargetMetrics={p2vData}
         open={modalOpen}
         setOpen={toggleModalOpen}
       />

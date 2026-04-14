@@ -53,7 +53,6 @@ interface CandidateTableRow {
   events: number
   yardSigns: number
   aiDocsCreated: number
-  p2vStatus: string | undefined
   viabilityScore: number
   pledged: string
   knowRun: string
@@ -152,7 +151,6 @@ export default function AdminCandidatesTable({
       'events',
       'yardSigns',
       'aiDocsCreated',
-      'p2vStatus',
       'pledged',
       'knowRun',
       'isPro',
@@ -195,7 +193,7 @@ export default function AdminCandidatesTable({
         tier,
         aiContent,
         details,
-        pathToVictory,
+        vendorTsData,
         createdAt,
         updatedAt,
       } = campaign
@@ -232,7 +230,10 @@ export default function AdminCandidatesTable({
 
       const lastVisited = user?.metaData?.lastVisited
 
-      let viabilityScore = pathToVictory?.data?.viability?.score || 0
+      const vendorP2v = vendorTsData?.['pathToVictory'] as
+        | { viability?: { score?: number } }
+        | undefined
+      let viabilityScore = vendorP2v?.viability?.score || 0
 
       let runningForOffice = 'Exploring'
       if (details?.knowRun && details.knowRun === 'yes') {
@@ -286,7 +287,6 @@ export default function AdminCandidatesTable({
         events: reportedVoterGoals?.events || 0,
         yardSigns: reportedVoterGoals?.yardSigns || 0,
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
-        p2vStatus: pathToVictory?.data?.p2vStatus,
         viabilityScore,
         pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
         knowRun: runningForOffice,
@@ -370,11 +370,6 @@ export default function AdminCandidatesTable({
         id: 'isActive',
         header: 'Active (Live)',
         accessorKey: 'isActive',
-      },
-      {
-        id: 'p2vStatus',
-        header: 'P2V Status',
-        accessorKey: 'p2vStatus',
       },
       {
         id: 'viabilityScore',

@@ -3,15 +3,18 @@ import { calculateContactGoalsFromCampaign } from './voterGoalsHelpers'
 import type { Campaign } from 'helpers/types'
 
 const makeCampaign = (
-  overrides: { voterContactGoal?: number; voteGoal?: number } = {},
+  overrides: { voterContactGoal?: number; winNumber?: number } = {},
 ): Campaign =>
   ({
-    pathToVictory: {
-      data: {
-        voterContactGoal: overrides.voterContactGoal,
-        voteGoal: overrides.voteGoal,
-      },
-    },
+    raceTargetMetrics:
+      overrides.voterContactGoal !== undefined ||
+      overrides.winNumber !== undefined
+        ? {
+            projectedTurnout: 0,
+            winNumber: overrides.winNumber ?? 0,
+            voterContactGoal: overrides.voterContactGoal ?? 0,
+          }
+        : undefined,
   } as unknown as Campaign)
 
 describe('calculateContactGoalsFromCampaign', () => {
@@ -28,14 +31,21 @@ describe('calculateContactGoalsFromCampaign', () => {
     }
   })
 
-  it('falls back to voteGoal * 5 when voterContactGoal is undefined', () => {
-    const fromVoteGoal = calculateContactGoalsFromCampaign(
-      makeCampaign({ voteGoal: 200 }),
+  it('returns false when voterContactGoal is 0 and winNumber is 0', () => {
+    const result = calculateContactGoalsFromCampaign(
+      makeCampaign({ voterContactGoal: 0, winNumber: 0 }),
     )
-    const fromContactGoal = calculateContactGoalsFromCampaign(
+    expect(result).toBe(false)
+  })
+
+  it('falls back to winNumber * 5 when voterContactGoal is 0 but winNumber is set', () => {
+    const fromWin = calculateContactGoalsFromCampaign(
+      makeCampaign({ voterContactGoal: 0, winNumber: 200 }),
+    )
+    const fromContact = calculateContactGoalsFromCampaign(
       makeCampaign({ voterContactGoal: 1000 }),
     )
-    expect(fromVoteGoal).toEqual(fromContactGoal)
+    expect(fromWin).toEqual(fromContact)
   })
 
   it('returns false when both voterContactGoal and voteGoal are undefined', () => {
@@ -43,27 +53,25 @@ describe('calculateContactGoalsFromCampaign', () => {
     expect(result).toBe(false)
   })
 
-  it('returns false when pathToVictory is undefined', () => {
-    const campaign = { pathToVictory: undefined } as unknown as Campaign
+  it('returns false when raceTargetMetrics is undefined', () => {
+    const campaign = { raceTargetMetrics: undefined } as unknown as Campaign
     const result = calculateContactGoalsFromCampaign(campaign)
     expect(result).toBe(false)
   })
 
-  it('returns false when pathToVictory.data is undefined', () => {
-    const campaign = {
-      pathToVictory: { data: undefined },
-    } as unknown as Campaign
+  it('returns false when raceTargetMetrics is null', () => {
+    const campaign = { raceTargetMetrics: null } as unknown as Campaign
     const result = calculateContactGoalsFromCampaign(campaign)
     expect(result).toBe(false)
   })
 
-  it('prefers voterContactGoal over voteGoal when both are present', () => {
+  it('prefers voterContactGoal over winNumber when both are present', () => {
     const result = calculateContactGoalsFromCampaign(
-      makeCampaign({ voterContactGoal: 500, voteGoal: 200 }),
+      makeCampaign({ voterContactGoal: 500, winNumber: 200 }),
     )
-    const fromContactGoal = calculateContactGoalsFromCampaign(
+    const fromContactOnly = calculateContactGoalsFromCampaign(
       makeCampaign({ voterContactGoal: 500 }),
     )
-    expect(result).toEqual(fromContactGoal)
+    expect(result).toEqual(fromContactOnly)
   })
 })

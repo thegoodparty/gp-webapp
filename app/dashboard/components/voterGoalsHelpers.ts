@@ -1,4 +1,4 @@
-import { Campaign } from 'helpers/types'
+import type { Campaign, RaceTargetMetrics } from 'helpers/types'
 
 export interface ContactGoalBreakdown {
   total: number
@@ -64,9 +64,11 @@ export interface ReportedVoterGoals {
   socialMedia?: number
 }
 
-export interface PathToVictoryGoals {
+export interface VoterContactGoalInput {
   voterContactGoal?: number
+  /** Legacy name for votes needed to win; prefer `winNumber` from race target metrics. */
   voteGoal?: number
+  winNumber?: number
 }
 
 const WEEK_PERCENTAGES: ContactGoals = {
@@ -96,8 +98,11 @@ const createContactGoalBreakdown = (
 export function calculateContactGoalsFromCampaign(
   campaign: Campaign,
 ): ContactGoals | false {
-  const p2vData = campaign.pathToVictory?.data
-  const resolvedContactGoal = getVoterContactsGoal(p2vData || {})
+  const m = campaign.raceTargetMetrics
+  const resolvedContactGoal = getVoterContactsGoal({
+    voterContactGoal: m?.voterContactGoal,
+    winNumber: m?.winNumber,
+  })
   return calculateContactGoals(resolvedContactGoal)
 }
 
@@ -315,8 +320,14 @@ export function calculateAccumulatedByWeek(
 export const getVoterContactsGoal = ({
   voterContactGoal,
   voteGoal,
-}: PathToVictoryGoals): number =>
-  parseInt(String(voterContactGoal ?? (voteGoal ?? 0) * 5), 10)
+  winNumber,
+}: VoterContactGoalInput): number => {
+  const fallback = (voteGoal ?? winNumber ?? 0) * 5
+  if (voterContactGoal != null && voterContactGoal > 0) {
+    return parseInt(String(voterContactGoal), 10)
+  }
+  return parseInt(String(fallback), 10)
+}
 
 export const getVoterContactsTotal = ({
   doorKnocking,
@@ -347,11 +358,18 @@ export interface VoterContactCounts {
 }
 
 export const calculateVoterContactCounts = (
-  pathToVictory: PathToVictoryGoals | undefined,
+  input: RaceTargetMetrics | VoterContactGoalInput | null | undefined,
   reportedVoterGoals: ReportedVoterGoals | undefined,
 ): VoterContactCounts => {
+  const normalized: VoterContactGoalInput =
+    input != null && typeof input === 'object' && 'projectedTurnout' in input
+      ? {
+          voterContactGoal: input.voterContactGoal,
+          winNumber: input.winNumber,
+        }
+      : (input as VoterContactGoalInput) || {}
   return {
-    needed: getVoterContactsGoal(pathToVictory || {}),
+    needed: getVoterContactsGoal(normalized),
     contacted: getVoterContactsTotal(reportedVoterGoals || {}),
   }
 }

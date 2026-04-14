@@ -47,10 +47,9 @@ export default function TrackerStats(
     return <div className="my-4 text-xl">No reported voter goals</div>
   }
 
-  const pathToVictoryData = campaign.vendorTsData?.pathToVictory
-  const voterContactGoal = pathToVictoryData?.voterContactGoal
-  const voteGoal = campaign.pathToVictory?.data?.winNumber
-  const resolvedContactGoal = voterContactGoal || (voteGoal ? voteGoal * 5 : 0)
+  const m = campaign.raceTargetMetrics
+  const resolvedContactGoal =
+    m?.voterContactGoal ?? (m?.winNumber ? m.winNumber * 5 : 0)
 
   return (
     <div className="grid grid-cols-12 gap-6">

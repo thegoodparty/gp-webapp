@@ -9,8 +9,6 @@ import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { clientRequest } from 'gpApi/typed-request'
@@ -42,30 +40,6 @@ interface OfficeStepProps {
   organizationSlug?: string
 }
 
-interface CampaignResponse extends Campaign {
-  error?: string
-}
-
-async function updateRaceTargetDetails(
-  slug: string | undefined = undefined,
-): Promise<Campaign | false> {
-  try {
-    const endpoint = slug
-      ? apiRoutes.campaign.raceTargetDetails.adminUpdate
-      : apiRoutes.campaign.raceTargetDetails.update
-    const resp = await clientFetch<CampaignResponse>(endpoint, { slug })
-
-    if (resp.data && resp.data.error) {
-      console.error('API error: ', resp.data)
-      return false
-    }
-    return resp.data
-  } catch (error) {
-    console.error('error: ', error)
-    return false
-  }
-}
-
 interface UpdateAttr {
   key: string
   value: string | number | boolean | undefined
@@ -76,7 +50,6 @@ async function runPostOfficeStepUpdates(
   slug: string | undefined = undefined,
 ): Promise<void> {
   await updateCampaign(attr, slug)
-  await updateRaceTargetDetails(slug)
 }
 
 export default function OfficeStep({
@@ -190,16 +163,6 @@ export default function OfficeStep({
             ? filingPeriods[0]?.endOn
             : undefined,
       },
-      // reset the electionType and electionLocation
-      // so it can run a full p2v.
-      {
-        key: 'pathToVictory.electionType',
-        value: undefined,
-      },
-      {
-        key: 'pathToVictory.electionLocation',
-        value: undefined,
-      },
     ]
     if (step) {
       const currentStep = onboardingStep(campaign, step)
@@ -248,7 +211,6 @@ export default function OfficeStep({
         return
       }
       setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
-      await updateRaceTargetDetails()
       router.push(`/onboarding/${newCampaign.slug}/2`)
       setProcessing(false)
       return

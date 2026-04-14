@@ -22,7 +22,6 @@ interface FormState {
   email?: string
   level?: string
   campaignStatus?: string
-  p2vStatus?: string
   primaryElectionDateStart?: string
   primaryElectionDateEnd?: string
   generalElectionDateStart?: string
@@ -62,12 +61,6 @@ const formFields: FormField[] = [
     label: 'Campaign Status',
     type: 'select',
     options: ['active', 'inactive'],
-  },
-  {
-    key: 'p2vStatus',
-    label: 'P2V Status',
-    type: 'select',
-    options: ['Complete', 'Failed'],
   },
   {
     key: 'primaryElectionDateStart',
@@ -142,7 +135,6 @@ export default function SearchForm({
       'email',
       'level',
       'campaignStatus',
-      'p2vStatus',
       'primaryElectionDateStart',
       'primaryElectionDateEnd',
       'generalElectionDateStart',

@@ -14,18 +14,18 @@ import { RecordVoterContactsModal } from 'app/dashboard/components/RecordVoterCo
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { InfoOutlined } from '@mui/icons-material'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { PathToVictoryData } from 'helpers/types'
+import { RaceTargetMetrics } from 'helpers/types'
 
 interface CampaignProgressProps {
-  pathToVictory: PathToVictoryData | undefined
+  raceTargetMetrics: RaceTargetMetrics | null | undefined
 }
 
 export const CampaignProgress = ({
-  pathToVictory,
+  raceTargetMetrics,
 }: CampaignProgressProps): React.JSX.Element => {
   const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
-    pathToVictory,
+    raceTargetMetrics ?? undefined,
     reportedVoterGoals,
   )
   const [modalOpen, setModalOpen] = useState(false)
@@ -73,7 +73,7 @@ export const CampaignProgress = ({
           {numberFormatter(needed)} voter contacts needed
           <InfoOutlined className="ml-2 !text-base" />
           <ContactCountsInfoModal
-            {...{ pathToVictory, open: modalOpen, setOpen: toggleModalOpen }}
+            {...{ raceTargetMetrics, open: modalOpen, setOpen: toggleModalOpen }}
           />
         </Subtitle2>
       </div>
