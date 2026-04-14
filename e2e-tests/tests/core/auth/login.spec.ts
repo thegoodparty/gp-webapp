@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
