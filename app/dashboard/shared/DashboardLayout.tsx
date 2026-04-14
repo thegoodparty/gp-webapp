@@ -116,7 +116,7 @@ const DashboardLayout = ({
               campaign={activeCampaign}
               user={user}
               pathname={currentPath || undefined}
-              isElectedOffice={!!organization?.electedOfficeId}
+              isElectedOffice={!!organization.electedOfficeId}
             />
             {children}
           </div>

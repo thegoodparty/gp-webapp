@@ -8,12 +8,12 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
-import { switchOrganization } from 'src/helpers/organizations'
 import {
-  authenticateTestUser,
-  type AuthenticatedUser,
-} from 'tests/utils/api-registration'
-import { eventually, wait } from 'tests/utils/eventually'
+  setupElectedOfficeUser,
+  switchOrganization,
+} from 'src/helpers/organizations'
+import { type AuthenticatedUser } from 'tests/utils/api-registration'
+import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
 type CsvRow = {
@@ -318,23 +318,16 @@ test.describe.serial('poll onboarding', () => {
   test('poll onboarding and expansion', async ({ page }) => {
     // Set this test's timeout to 10 minutes
     test.setTimeout(10 * 60 * 1000)
-    const { user, client } = await authenticateTestUser(page, {
-      isolated: true,
-      race: { zip: district.zip, office: district.office },
+    const { user, client } = await setupElectedOfficeUser(page, {
+      zip: district.zip,
+      office: district.office,
     })
-
-    // Become a Serve user
-    await page.goto('/dashboard/election-result')
-    await wait(500)
-    await page.getByRole('button', { name: 'I won my race' }).click()
-    await page.waitForTimeout(3000)
 
     // Store for reuse in subsequent tests
     sharedUser = user
     sharedToken = (
       client.defaults.headers.common.Authorization as string
     ).replace('Bearer ', '')
-    await page.goto('/polls/welcome')
     await NavigationHelper.dismissOverlays(page)
 
     await page.getByRole('button', { name: "Let's get started" }).click()
