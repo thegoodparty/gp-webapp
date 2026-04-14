@@ -290,7 +290,6 @@ export const authenticateTestUser = async (
 
   const { title } = test.info()
 
-
   if (options?.isolated) {
     createdUsers.push({
       user,
