@@ -15,7 +15,7 @@ const fetchTasks = async (): Promise<Task[]> => {
   const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
     date: currentDate,
   })
-  return resp.data
+  return resp.data ?? []
 }
 
 const meta = pageMetaData({
@@ -34,15 +34,23 @@ export default async function Page(): Promise<React.JSX.Element> {
     return redirect('/dashboard/polls')
   }
 
-  const [campaign, tasks, tcrComplianceResponse] = await Promise.all([
-    fetchUserCampaign(),
-    fetchTasks(),
-    serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
-  ])
-
-  const tcrCompliance = tcrComplianceResponse.ok
-    ? tcrComplianceResponse.data
-    : null
+  let campaign, tasks, tcrCompliance
+  try {
+    const [campaignResult, tasksResult, tcrComplianceResponse] =
+      await Promise.all([
+        fetchUserCampaign(),
+        fetchTasks(),
+        serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
+      ])
+    campaign = campaignResult
+    tasks = tasksResult ?? []
+    tcrCompliance = tcrComplianceResponse.ok
+      ? tcrComplianceResponse.data
+      : null
+  } catch (error) {
+    console.error('Dashboard data fetch failed, redirecting to AI insights', error)
+    return redirect('/dashboard/ai-insights')
+  }
 
   return (
     <>

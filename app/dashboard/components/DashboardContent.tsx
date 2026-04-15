@@ -11,7 +11,7 @@ const AI_CAMPAIGN_MANAGER_FLAG_KEY = 'ai-campaign-manager'
 interface DashboardContentProps {
   pathname: string
   campaign: Campaign | null
-  tasks: Task[]
+  tasks?: Task[] | null
   tcrCompliance: TcrCompliance | null
 }
 
@@ -33,7 +33,7 @@ export default function DashboardContent({
     <DashboardPage
       pathname={pathname}
       campaign={campaign}
-      tasks={tasks}
+      tasks={tasks ?? []}
       tcrCompliance={tcrCompliance}
     />
   )

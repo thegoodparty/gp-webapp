@@ -1,5 +1,8 @@
 'use client'
 import Link from 'next/link'
+import { KeyboardEvent } from 'react'
+import { handleLogOut } from '@shared/user/handleLogOut'
+import { DashboardMenuItem } from 'app/dashboard/shared/DashboardMenuItem'
 import {
   MdAccountCircle,
   MdAutoAwesome,
@@ -16,7 +19,6 @@ import {
   Bot,
   Circle,
   CircleUserRound,
-  ClipboardList,
   DoorClosed,
   ExternalLink,
   FileText,
@@ -26,6 +28,7 @@ import {
   Plus,
   Send,
   Settings,
+  Sparkles,
   StopCircle,
   UserRound,
   UsersRound,
@@ -38,6 +41,7 @@ import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from '@shared/utils/syncEcanvasser'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { Campaign } from 'helpers/types'
@@ -66,7 +70,6 @@ import {
   OrganizationPicker,
   useOrganization,
 } from '@shared/organization-picker'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 interface MenuItem {
   id: string
@@ -79,10 +82,13 @@ interface MenuItem {
   onClick?: () => void
   target?: string
   isNew?: boolean
+  badgeText?: string
 }
 
 interface DashboardMenuProps {
   pathname: string | null
+  toggleCallback?: () => void
+  mobileMode?: boolean
 }
 
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
@@ -213,22 +219,11 @@ const POLLS_MENU_ITEM: MenuItem = {
   isNew: true,
 }
 
-const BRIEFINGS_MENU_ITEM: MenuItem = {
-  id: 'briefings-dashboard',
-  label: 'Briefings',
-  link: '/dashboard/briefings',
-  icon: <MdFactCheck />,
-  v2Icon: ClipboardList,
-  v2Category: 'elected-office',
-  isNew: true,
-  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
-}
-
 const getDashboardMenuItems = (
   campaign: Campaign | null,
   serveAccessEnabled: boolean,
   isElectedOffice: boolean,
-  briefingsEnabled: boolean,
+  isImpersonating: boolean,
 ): MenuItem[] => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -239,10 +234,22 @@ const getDashboardMenuItems = (
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (isElectedOffice) {
-    menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
-    if (briefingsEnabled) {
-      menuItems.splice(voterDataIndex, 0, BRIEFINGS_MENU_ITEM)
-    }
+    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
+  }
+
+  const showAiInsights =
+    isImpersonating || campaign?.details?.isAiBetaVip
+
+  if (showAiInsights) {
+    menuItems.push({
+      label: 'AI Insights',
+      icon: <MdAutoAwesome />,
+      v2Icon: Sparkles,
+      v2Category: isElectedOffice ? 'elected-office' : 'campaign',
+      link: '/dashboard/ai-insights',
+      id: 'ai-insights-dashboard',
+      badgeText: 'BETA',
+    })
   }
 
   return menuItems
@@ -250,20 +257,24 @@ const getDashboardMenuItems = (
 
 export default function DashboardMenu({
   pathname,
+  toggleCallback,
+  mobileMode,
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
   const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
-  const { on: briefingsEnabled } = useFlagOn('serve-briefings')
+  const { token: impersonateToken, user: impersonateUser } =
+    useImpersonateUser()
+  const isImpersonating = !!(impersonateToken && impersonateUser)
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
       !!electedOffice,
-      briefingsEnabled,
+      isImpersonating,
     )
 
     if (ecanvasser) {
@@ -271,13 +282,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [
-    campaign,
-    serveAccessEnabled,
-    briefingsEnabled,
-    ecanvasser,
-    electedOffice,
-  ])
+  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice, isImpersonating])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
@@ -285,7 +290,66 @@ export default function DashboardMenu({
     }
   }, [campaign, ecanvasser])
 
-  return <NewNavMenu menuItems={menuItems} pathname={pathname} />
+  const handleEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key == 'Enter') handleLogOut()
+  }
+
+  const { on: useNewNav } = useFlagOn('win-serve-split')
+
+  if (useNewNav) {
+    return <NewNavMenu menuItems={menuItems} pathname={pathname} />
+  }
+
+  const handleMenuItemClick = (item: MenuItem) => {
+    item?.onClick?.()
+    toggleCallback?.()
+  }
+
+  return (
+    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300 leading-[1.3]">
+      {menuItems.map((item) => {
+        const { id, link, icon, label, target, isNew, badgeText } = item
+        return (
+          <DashboardMenuItem
+            key={label}
+            id={id}
+            link={link}
+            icon={icon}
+            onClick={() => handleMenuItemClick(item)}
+            pathname={pathname || ''}
+            target={target}
+            isNew={isNew}
+            badgeText={badgeText}
+          >
+            {label}
+          </DashboardMenuItem>
+        )
+      })}
+      {mobileMode && (
+        <div className="mt-4 border-t border-indigo-400 pt-4">
+          <Link
+            href="/dashboard/profile"
+            className="no-underline block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
+            id="nav-dash-settings"
+          >
+            <div className="ml-2">Settings</div>
+          </Link>
+
+          <div
+            role="link"
+            tabIndex={0}
+            className="block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
+            onClick={handleLogOut}
+            onKeyDown={(e) => handleEnterPress(e)}
+          >
+            <div id="nav-log-out" className="ml-2">
+              Logout
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 type AccountManagementItem = {
@@ -452,9 +516,9 @@ const NewNavMenu = ({
                           <span>{item.v2Name || label}</span>
                         </Link>
                       </SidebarMenuButton>
-                      {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
-                          NEW
+                      {(isNew || item.badgeText) && (
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
+                          {item.badgeText || 'NEW'}
                         </SidebarMenuBadge>
                       )}
                     </SidebarMenuItemComponent>

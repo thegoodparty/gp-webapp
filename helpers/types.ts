@@ -156,6 +156,7 @@ export interface CampaignDetails {
   wonGeneral?: boolean
   launchStatus?: string
   filedStatement?: string
+  isAiBetaVip?: boolean
 }
 
 export type TcrComplianceStatus =

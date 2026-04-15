@@ -23,7 +23,7 @@ export const DashboardHeader = ({
   const pathToVictory: PathToVictoryData = p2vObject?.data || {}
   const { electionDate } = campaignDetails || {}
 
-  const numOfRemainingTasks = tasks.filter((task) => !task.completed).length
+  const numOfRemainingTasks = tasks?.filter((task) => !task.completed).length ?? 0
 
   return (
     <section className="mb-6">
