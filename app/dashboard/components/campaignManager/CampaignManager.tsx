@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import LoadingState, { AI_CAMPAIGN_CHECKLIST_COOKIE } from './LoadingState'
-import { getCookie } from 'helpers/cookieHelper'
+import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ProgressSection from './ProgressSection'
@@ -36,10 +35,7 @@ export default function CampaignManager({
   const generatingRef = useRef(false)
   const generatedInSessionRef = useRef(false)
   const trackedGenerationCompleteRef = useRef(false)
-  const showLoadingStateCookie = getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)
-  const [showLoadingState, setShowLoadingState] = useState(
-    () => !showLoadingStateCookie,
-  )
+  const [showLoadingState, setShowLoadingState] = useState(false)
 
   const hideLoadingChecklist = useCallback(() => {
     setShowLoadingState(false)
@@ -63,13 +59,14 @@ export default function CampaignManager({
     [queryClient],
   )
 
-  const { isGenerating, progress, error, startGeneration, cancelGeneration } =
+  const { isGenerating, error, startGeneration, cancelGeneration } =
     useTaskGenerationStream(onTasksReceived)
 
   useEffect(() => {
     if (isGenerating) {
       generatedInSessionRef.current = true
       trackedGenerationCompleteRef.current = false
+      setShowLoadingState(true)
     }
   }, [isGenerating])
 
@@ -93,6 +90,7 @@ export default function CampaignManager({
   useEffect(() => {
     if (error) {
       generatingRef.current = false
+      setShowLoadingState(false)
     }
   }, [error])
 
@@ -113,6 +111,8 @@ export default function CampaignManager({
   }
 
   const contactGoals = calculateContactGoalsFromCampaign(campaign)
+  const isStreamComplete =
+    !isGenerating && !error && generatedInSessionRef.current
 
   return (
     <DashboardLayout
@@ -125,22 +125,11 @@ export default function CampaignManager({
           <div className="mx-auto w-full max-w-160 flex flex-col gap-6 px-4 py-8 md:px-0">
             <HeaderSection />
             <ProgressSection />
-            <LoadingState hideCallback={hideLoadingChecklist} />
-            {isGenerating && progress && showLoadingState && (
-              <div className="rounded-lg border bg-white p-4">
-                <p className="mb-2 text-sm font-medium text-gray-700">
-                  {progress.message || 'Generating AI tasks...'}
-                </p>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all duration-500"
-                    style={{ width: `${Math.min(progress.progress, 100)}%` }}
-                  />
-                </div>
-                <p className="mt-1 text-xs text-gray-500">
-                  {Math.round(progress.progress)}% complete
-                </p>
-              </div>
+            {showLoadingState && (
+              <LoadingState
+                isStreamComplete={isStreamComplete}
+                hideCallback={hideLoadingChecklist}
+              />
             )}
             {error && !isGenerating && !showLoadingState && (
               <FailedToGenerate retryGeneration={startGeneration} />

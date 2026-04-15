@@ -1,13 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import LoadingChecklist, {
   type LoadingItem,
 } from '@shared/utils/LoadingChecklist'
 import { Card, CardHeader, CardTitle } from '@styleguide'
-import { getCookie, setCookie } from 'helpers/cookieHelper'
-
-export const AI_CAMPAIGN_CHECKLIST_COOKIE = 'aiCampaignChecklistComplete'
 
 const loadingItems: LoadingItem[] = [
   {
@@ -37,26 +33,12 @@ const loadingItems: LoadingItem[] = [
 ]
 
 export default function LoadingState({
+  isStreamComplete,
   hideCallback,
 }: {
-  hideCallback?: () => void
+  isStreamComplete: boolean
+  hideCallback: () => void
 }) {
-  const [showChecklist, setShowChecklist] = useState(
-    () => !getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE),
-  )
-
-  const onComplete = () => {
-    setCookie(AI_CAMPAIGN_CHECKLIST_COOKIE, 'true')
-    setShowChecklist(false)
-    if (hideCallback) {
-      hideCallback()
-    }
-  }
-
-  if (!showChecklist) {
-    return null
-  }
-
   return (
     <Card className="gap-0 p-0 font-opensans">
       <CardHeader className="p-6 pb-0">
@@ -65,7 +47,11 @@ export default function LoadingState({
         </CardTitle>
       </CardHeader>
       <div className="p-6 pt-0">
-        <LoadingChecklist items={loadingItems} onComplete={onComplete} />
+        <LoadingChecklist
+          items={loadingItems}
+          onComplete={hideCallback}
+          isComplete={isStreamComplete}
+        />
       </div>
     </Card>
   )
