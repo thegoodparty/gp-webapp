@@ -9,12 +9,7 @@ import RunningAgainstSection from './RunningAgainstSection'
 import WhySection from './WhySection'
 import { CandidatePositionsProvider } from 'app/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import {
-  Campaign,
-  User,
-  PathToVictoryData,
-  CandidatePosition,
-} from 'helpers/types'
+import { Campaign, User, CandidatePosition } from 'helpers/types'
 
 interface TopIssue {
   id: number
@@ -27,7 +22,6 @@ interface DetailsPageProps {
   campaign: Campaign | undefined
   candidatePositions: CandidatePosition[]
   topIssues: TopIssue[]
-  pathToVictory?: PathToVictoryData
   user?: User | null
 }
 

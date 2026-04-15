@@ -92,7 +92,11 @@ beforeEach(() => {
       id: 'campaign-1',
       isPro: false,
       details: { electionDate: '2026-11-03' },
-      pathToVictory: { data: { viability: { score: 80 } } },
+      raceTargetMetrics: {
+        projectedTurnout: 0,
+        winNumber: 0,
+        voterContactGoal: 0,
+      },
       hasFreeTextsOffer: false,
     },
   ])
