@@ -210,7 +210,6 @@ export interface CampaignData {
   adminUserEmail?: string
   hubspotId?: string
   name?: string
-  p2vNotNeeded?: boolean
 }
 
 export interface HubSpotUpdates {
@@ -328,48 +327,10 @@ export interface CampaignAiContent {
     | undefined
 }
 
-export interface ViabilityScore {
-  score?: number
-  tier?: string
-}
-
-export interface PathToVictoryData {
-  p2vStatus?: string
-  p2vAttempts?: number
-  p2vCompleteDate?: string
-  completedBy?: number
-  p2vNotNeeded?: boolean
-  totalRegisteredVoters?: number
-  republicans?: number
-  democrats?: number
-  indies?: number
-  women?: number
-  men?: number
-  white?: number
-  asian?: number
-  africanAmerican?: number
-  hispanic?: number
-  averageTurnout?: number
-  viability?: ViabilityScore
-  source?: string
-  officeContextFingerprint?: string
-  voteGoal?: number
-  voterProjection?: number
-  budgetLow?: number
-  budgetHigh?: number
-  voterMap?: string
-  finalVotes?: number
-  projectedTurnout?: number
-  winNumber?: number
-  voterContactGoal?: number
-}
-
-export interface PathToVictory {
-  id: number
-  createdAt: Date | string
-  updatedAt: Date | string
-  campaignId: number
-  data: PathToVictoryData
+export interface RaceTargetMetrics {
+  projectedTurnout: number
+  winNumber: number
+  voterContactGoal: number
 }
 
 export interface IssuePosition {
@@ -424,7 +385,7 @@ export interface Campaign {
   details: CampaignDetails
   aiContent: CampaignAiContent
   vendorTsData: VendorTsData
-  pathToVictory?: PathToVictory
+  raceTargetMetrics?: RaceTargetMetrics | null
   user?: User
   organization?: {
     positionId?: string | null
@@ -467,14 +428,7 @@ export interface CandidateStance {
 }
 
 export interface VendorTsData {
-  pathToVictory?: PathToVictoryData
-  [key: string]:
-    | PathToVictoryData
-    | string
-    | number
-    | boolean
-    | object
-    | undefined
+  [key: string]: string | number | boolean | object | undefined
 }
 
 export interface WebsiteIssue {

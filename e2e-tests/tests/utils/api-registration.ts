@@ -254,9 +254,6 @@ const bootstrapTestUser = async (
     'x-organization-slug'
   ] = `campaign-${campaign.id}`
 
-  await eventually({ that: 'race-target-details are updated' }, async () => {
-    await client.put('/v1/campaigns/mine/race-target-details', {})
-  })
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
     details: { otherParty: 'Independent', pledged: true },

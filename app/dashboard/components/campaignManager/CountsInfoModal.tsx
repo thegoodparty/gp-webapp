@@ -2,25 +2,21 @@ import { noop } from '@shared/utils/noop'
 import { numberFormatter } from 'helpers/numberHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
-
-interface PathToVictoryData {
-  projectedTurnout?: number
-  voterContactGoal?: number
-  winNumber?: number
-}
+import { RaceTargetMetrics } from 'helpers/types'
 
 interface CountsInfoModalProps {
   open?: boolean
   setOpen?: () => void
-  pathToVictory?: PathToVictoryData
+  raceTargetMetrics?: RaceTargetMetrics | null
 }
 
 export const CountsInfoModal = ({
   open = true,
   setOpen = noop,
-  pathToVictory = {},
+  raceTargetMetrics,
 }: CountsInfoModalProps): React.JSX.Element => {
-  const { projectedTurnout, voterContactGoal, winNumber } = pathToVictory
+  const { projectedTurnout, voterContactGoal, winNumber } =
+    raceTargetMetrics ?? {}
 
   return (
     <ModalOrDrawer
