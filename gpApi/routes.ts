@@ -655,4 +655,22 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  agentExperiments: {
+    mine: {
+      path: '/agent-experiments/mine',
+      method: 'GET',
+    },
+    available: {
+      path: '/agent-experiments/available',
+      method: 'GET',
+    },
+    request: {
+      path: '/agent-experiments/request',
+      method: 'POST',
+    },
+    artifact: {
+      path: '/agent-experiments/:runId/artifact',
+      method: 'GET',
+    },
+  },
 } as const

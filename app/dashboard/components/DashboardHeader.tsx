@@ -22,7 +22,7 @@ export const DashboardHeader = ({
   const { raceTargetMetrics, details: campaignDetails } = campaign || {}
   const { electionDate } = campaignDetails || {}
 
-  const numOfRemainingTasks = tasks.filter((task) => !task.completed).length
+  const numOfRemainingTasks = tasks?.filter((task) => !task.completed).length ?? 0
 
   return (
     <section className="mb-6">
