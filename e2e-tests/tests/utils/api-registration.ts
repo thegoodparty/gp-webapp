@@ -6,7 +6,6 @@ import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
 import { clerkThrottle } from './throttle-requests-with-retry'
-import { eventually } from './eventually'
 
 const baseURL = process.env.BASE_URL
 
