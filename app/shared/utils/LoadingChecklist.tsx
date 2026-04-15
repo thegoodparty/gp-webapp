@@ -24,8 +24,9 @@ interface LoadingChecklistProps {
 export default function LoadingChecklist({
   items,
   onComplete,
-  isComplete = false,
+  isComplete,
 }: LoadingChecklistProps) {
+  const waitForSignal = isComplete !== undefined
   const [loadingItems, setLoadingItems] = useState(items)
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function LoadingChecklist({
         }
 
         const isLastItem = currentLoadingIndex === prevItems.length - 1
-        if (isLastItem) {
+        if (waitForSignal && isLastItem) {
           clearInterval(timer)
           return prevItems
         }
