@@ -136,7 +136,7 @@ export default function CampaignManager({
             )}
             {!showLoadingState && (
               <>
-                {contactGoals ? (
+                {tasks.length > 0 || contactGoals ? (
                   <>
                     <TasksList
                       campaign={campaign}
