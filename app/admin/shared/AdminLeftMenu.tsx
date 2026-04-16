@@ -40,10 +40,6 @@ export const leftMenuItems: MenuItem[] = [
   },
 
   {
-    label: 'P2V Stats',
-    link: '/admin/p2v-stats',
-  },
-  {
     label: 'Pro users w/o voter file',
     link: '/admin/pro-no-voter-file',
   },

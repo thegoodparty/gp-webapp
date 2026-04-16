@@ -43,7 +43,10 @@ export function ProUpgradePrompt({
 }: ProUpgradePromptProps): React.JSX.Element | null {
   const isPro = campaign?.isPro || false
   const sessionCount = user?.metaData?.sessionCount || 0
-  const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
+  const vendorP2v = campaign?.vendorTsData?.['pathToVictory'] as
+    | { viability?: { score?: number } }
+    | undefined
+  const viablityScore = vendorP2v?.viability?.score || 0
 
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,

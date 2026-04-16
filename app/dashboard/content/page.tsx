@@ -45,7 +45,6 @@ export default async function Page(): Promise<React.JSX.Element> {
     prompts,
     templates: promptsRaw,
     categories,
-    pathToVictory: campaign?.pathToVictory?.data,
     requiresQuestions,
     candidatePositions,
     user,

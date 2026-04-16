@@ -312,16 +312,6 @@ export const apiRoutes = {
         method: 'POST',
       },
     },
-    raceTargetDetails: {
-      update: {
-        path: '/campaigns/mine/race-target-details',
-        method: 'PUT',
-      },
-      adminUpdate: {
-        path: '/campaigns/admin/:slug/race-target-details',
-        method: 'PUT',
-      },
-    },
   },
   content: {
     getByType: {
@@ -452,16 +442,8 @@ export const apiRoutes = {
         path: '/admin/campaigns/:id',
         method: 'DELETE',
       },
-      victoryMail: {
-        path: '/admin/campaigns/:id/send-victory-email',
-        method: 'POST',
-      },
       proNoVoterFile: {
         path: '/admin/campaigns/pro-no-voter-file',
-        method: 'GET',
-      },
-      p2vStats: {
-        path: '/admin/campaigns/p2v-stats',
         method: 'GET',
       },
     },
