@@ -1,8 +1,8 @@
-import { getServerUser } from 'helpers/userServerHelper'
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import LoginPage from './components/LoginPage'
+import { SignIn } from '@clerk/nextjs'
+import { getPostAuthRedirectPath } from 'app/dashboard/shared/candidateAccess'
 import pageMetaData from 'helpers/metadataHelper'
-import { fetchCampaignStatus } from 'app/dashboard/shared/candidateAccess'
 
 const meta = pageMetaData({
   title: 'Login',
@@ -11,18 +11,15 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const Page = async (): Promise<React.JSX.Element> => {
-  if (await getServerUser()) {
-    const { status, slug } = await fetchCampaignStatus()
-    if (status === 'candidate') {
-      redirect(`/dashboard`)
-    } else if (slug) {
-      redirect(`/onboarding/${slug}/1`)
-    } else {
-      redirect('/dashboard/profile')
-    }
+export default async function LoginPage() {
+  const { userId } = await auth()
+  if (userId) {
+    redirect(await getPostAuthRedirectPath())
   }
-  return <LoginPage />
-}
 
-export default Page
+  return (
+    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
+      <SignIn fallbackRedirectUrl="/post-auth-redirect" routing="hash" />
+    </div>
+  )
+}

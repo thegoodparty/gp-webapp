@@ -64,7 +64,6 @@ export class NavigationHelper {
       for (const selector of cookieSelectors) {
         try {
           if (await selector.first().isVisible({ timeout: 2000 })) {
-            console.log('🍪 Dismissing cookie banner')
             await selector.first().click()
             await selector.first().waitFor({ state: 'hidden', timeout: 5000 })
             return
