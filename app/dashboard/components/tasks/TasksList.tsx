@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -43,10 +43,10 @@ import type {
   TrackingSource,
   WeekPosition,
 } from '../../shared/constants/tasks.const'
-import { differenceInDays } from 'date-fns'
+import { addWeeks, differenceInDays } from 'date-fns'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
-import WeeklyTaskNavigator from './WeeklyTaskNavigator'
+import WeeklyTaskNavigator, { formatWeekLabel } from './WeeklyTaskNavigator'
 import { useWeekNavigation } from './useWeekNavigation'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import { Campaign, TcrCompliance } from 'helpers/types'
@@ -123,6 +123,38 @@ const TasksList = ({
     electionDateObj,
     daysUntilElection,
   )
+
+  const [viewMode, setViewMode] = useState<'weekly' | 'full'>(() => {
+    if (typeof window === 'undefined') return 'weekly'
+    const stored = sessionStorage.getItem(
+      `campaign-plan-view-mode:${campaign.id}`,
+    )
+    return stored === 'full' ? 'full' : 'weekly'
+  })
+
+  const toggleViewMode = () => {
+    const newMode = viewMode === 'weekly' ? 'full' : 'weekly'
+    setViewMode(newMode)
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(
+        `campaign-plan-view-mode:${campaign.id}`,
+        newMode,
+      )
+    }
+  }
+
+  const tasksByWeek = useMemo(() => {
+    const groups = new Map<number, Task[]>()
+    for (const task of tasks) {
+      const existing = groups.get(task.week)
+      if (existing) {
+        existing.push(task)
+      } else {
+        groups.set(task.week, [task])
+      }
+    }
+    return [...groups.entries()].sort(([a], [b]) => b - a)
+  }, [tasks])
 
   const getWeekRelativePosition = (week: number): WeekPosition => {
     if (week > weeksUntilElection) return WEEK_POSITIONS.past
@@ -520,41 +552,97 @@ const TasksList = ({
           </>
         ) : (
           <>
-            <div className="flex justify-between items-baseline border-b px-6 py-6">
+            <div className="flex flex-wrap gap-y-1 justify-between items-baseline border-b px-6 py-6">
               <div className="text-lg font-semibold font-opensans">
                 Campaign plan
               </div>
+              <button
+                className="text-sm font-semibold font-opensans text-blue-600"
+                onClick={toggleViewMode}
+              >
+                {viewMode === 'weekly' ? 'View all' : 'View weekly'}
+              </button>
             </div>
-            <WeeklyTaskNavigator
-              currentWeekStart={currentWeekStart}
-              onPrevious={handlePreviousWeek}
-              onNext={handleNextWeek}
-              canGoPrevious={canGoPrevious}
-              canGoNext={canGoNext}
-            />
+            {viewMode === 'weekly' && (
+              <WeeklyTaskNavigator
+                currentWeekStart={currentWeekStart}
+                onPrevious={handlePreviousWeek}
+                onNext={handleNextWeek}
+                canGoPrevious={canGoPrevious}
+                canGoNext={canGoNext}
+              />
+            )}
           </>
         )}
 
-        <ul>
-          {(isLegacyList ? tasks : filteredTasks).length > 0 ? (
-            (isLegacyList ? tasks : filteredTasks).map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                isPro={isPro}
-                isLegacyList={isLegacyList}
-                daysUntilElection={daysUntilElection}
-                electionDate={electionDate}
-                onCheck={handleCheckClick}
-                onAction={handleActionClick}
-              />
-            ))
-          ) : (
-            <li className="flex items-center justify-center border-t border-border px-6 py-6">
-              <span className="text-sm">Nothing planned for this week</span>
-            </li>
-          )}
-        </ul>
+        {!isLegacyList && viewMode === 'full' ? (
+          tasksByWeek.map(([weekNum, weekTasks]) => {
+            const isThisWeek =
+              Number.isFinite(weeksUntilElection) &&
+              weekNum === weeksUntilElection
+            const weekStart = electionDateObj
+              ? addWeeks(electionDateObj, -weekNum)
+              : null
+            return (
+              <div key={weekNum}>
+                <div
+                  className={cn(
+                    'flex items-center bg-muted px-6 py-3',
+                    isThisWeek && 'border-l-[6px] border-slate-500',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'text-sm font-opensans',
+                      isThisWeek ? 'font-semibold' : 'font-normal',
+                    )}
+                  >
+                    {isThisWeek
+                      ? 'This week'
+                      : weekStart
+                        ? formatWeekLabel(weekStart)
+                        : `Week ${weekNum}`}
+                  </span>
+                </div>
+                <ul className="border-b border-border">
+                  {weekTasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      isPro={isPro}
+                      isLegacyList={isLegacyList}
+                      daysUntilElection={daysUntilElection}
+                      electionDate={electionDate}
+                      onCheck={handleCheckClick}
+                      onAction={handleActionClick}
+                    />
+                  ))}
+                </ul>
+              </div>
+            )
+          })
+        ) : (
+          <ul>
+            {(isLegacyList ? tasks : filteredTasks).length > 0 ? (
+              (isLegacyList ? tasks : filteredTasks).map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  isPro={isPro}
+                  isLegacyList={isLegacyList}
+                  daysUntilElection={daysUntilElection}
+                  electionDate={electionDate}
+                  onCheck={handleCheckClick}
+                  onAction={handleActionClick}
+                />
+              ))
+            ) : (
+              <li className="flex items-center justify-center border-t border-border px-6 py-6">
+                <span className="text-sm">Nothing planned for this week</span>
+              </li>
+            )}
+          </ul>
+        )}
       </Card>
       {completeModalTask &&
         (isLegacyList ? (
