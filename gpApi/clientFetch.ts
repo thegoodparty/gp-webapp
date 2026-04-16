@@ -20,6 +20,11 @@ interface FetchOptions {
   extraHeaders?: Record<string, string>
 }
 
+/**
+ * @deprecated Use `clientRequest` from `gpApi/typed-request.ts` (with a route
+ * key in `gpApi/api-endpoints.ts`). See `gpApi/AGENTS.md` for the migration
+ * recipe.
+ */
 export async function clientFetch(
   endpoint: ApiRoute,
   data: Partial<Record<string, unknown>> | FormData | undefined,

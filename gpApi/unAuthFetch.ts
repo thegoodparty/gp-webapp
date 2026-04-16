@@ -1,5 +1,10 @@
 import { buildUrl } from '@shared/utils/buildUrl'
 
+/**
+ * @deprecated Use `clientRequest` / `serverRequest` from `gpApi/typed-request.ts`
+ * (with a route key in `gpApi/api-endpoints.ts`). See `gpApi/AGENTS.md` for the
+ * migration recipe.
+ */
 export const unAuthFetch = async <T = unknown>(
   url: string,
   data?: Record<string, unknown>,

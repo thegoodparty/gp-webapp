@@ -12,6 +12,11 @@ interface ServerFetchOptions {
   returnFullResponse?: boolean
 }
 
+/**
+ * @deprecated Use `serverRequest` from `gpApi/server-request.ts` (with a route
+ * key in `gpApi/api-endpoints.ts`). See `gpApi/AGENTS.md` for the migration
+ * recipe.
+ */
 export async function serverFetch(
   endpoint: ApiRoute,
   data: Record<string, unknown> | FormData | undefined,

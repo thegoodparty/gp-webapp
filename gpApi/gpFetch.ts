@@ -7,7 +7,7 @@ import {
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
     typeof process !== 'undefined' &&
-      process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
+    process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
   ) ||
   Boolean(
     typeof window !== 'undefined' && window.location.href.includes('localhost'),
@@ -21,6 +21,11 @@ interface GpFetchEndpoint {
   additionalRequestOptions?: RequestInit
 }
 
+/**
+ * @deprecated Use `clientRequest` / `serverRequest` from
+ * `gpApi/typed-request.ts` (with a route key in `gpApi/api-endpoints.ts`).
+ * See `gpApi/AGENTS.md` for the migration recipe.
+ */
 const gpFetch = async <T = Partial<Record<string, unknown>>>(
   endpoint: GpFetchEndpoint,
   data?: Partial<Record<string, unknown>> | FormData,
