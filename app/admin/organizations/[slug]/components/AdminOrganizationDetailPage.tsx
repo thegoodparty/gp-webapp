@@ -46,7 +46,7 @@ export const AdminOrganizationDetailPage = ({
       slug: string
       overrideDistrictId: string | null
     }) =>
-      clientRequest('PATCH /v1/organizations/:slug', mutationParams).then(
+      clientRequest('PATCH /v1/organizations/admin/:slug', mutationParams).then(
         (res) => res.data,
       ),
     onSuccess: () => {

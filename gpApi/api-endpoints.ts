@@ -83,6 +83,15 @@ export type APIEndpoints = {
     Response: GetPollIssuesResponse
   }
 
+  'PATCH /v1/organizations/admin/:slug': {
+    Request: {
+      ballotReadyPositionId?: string | undefined
+      overrideDistrictId?: string | null | undefined
+      customPositionName?: string | null | undefined
+    }
+    Response: Organization
+  }
+
   'GET /v1/organizations/admin/list': {
     Request: { slug?: string; email?: string }
     Response: { organizations: AdminOrganization[] }
