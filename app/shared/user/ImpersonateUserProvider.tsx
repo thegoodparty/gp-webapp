@@ -13,7 +13,7 @@ interface ImpersonateUser {
 interface ImpersonateUserContextValue {
   user: ImpersonateUser | null
   token: string | null
-  impersonate: (email: string) => Promise<boolean>
+  impersonate: (email: string) => Promise<string | null>
   clear: () => void
 }
 
@@ -21,7 +21,7 @@ export const ImpersonateUserContext =
   createContext<ImpersonateUserContextValue>({
     user: null,
     token: null,
-    impersonate: () => Promise.resolve(false),
+    impersonate: () => Promise.resolve(null),
     clear: noop,
   })
 
@@ -65,7 +65,7 @@ export const ImpersonateUserProvider = ({
     setCookie('impersonateUser', JSON.stringify(user))
   }
 
-  const impersonate = async (email: string) => {
+  const impersonate = async (email: string): Promise<string | null> => {
     try {
       const resp = await clientFetch(apiRoutes.admin.user.impersonate, {
         email,
@@ -76,12 +76,12 @@ export const ImpersonateUserProvider = ({
       const { token, user } = data || {}
       if (token && user) {
         set(token, user)
-        return true
+        return token
       }
     } catch (e) {
       console.error('error', e)
     }
-    return false
+    return null
   }
 
   return (
