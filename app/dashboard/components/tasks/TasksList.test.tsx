@@ -78,6 +78,7 @@ vi.mock('helpers/analyticsHelper', () => ({
         WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
         TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
         TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+        ViewModeToggled: 'Dashboard - Campaign Plan View Mode Toggled',
         VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
         VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
       },
@@ -156,6 +157,7 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
   } as unknown as Campaign)
 
 const TEST_SESSION_KEY = 'campaign-plan-selected-week:campaign-1'
+const TEST_VIEW_MODE_KEY = 'campaign-plan-view-mode:campaign-1'
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -1044,5 +1046,337 @@ describe('TasksList tracking events', () => {
         },
       )
     })
+  })
+})
+
+describe('TasksList view mode toggle', () => {
+  const mockTrackEvent = vi.mocked(trackEvent)
+
+  it('renders "View all" label when in weekly mode by default', () => {
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: /view all weeks/i })).toHaveTextContent(
+      'View all',
+    )
+  })
+
+  it('does NOT render the toggle button for legacy lists', () => {
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={true}
+      />,
+    )
+
+    expect(
+      screen.queryByRole('button', { name: /view all weeks/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /view current week only/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows "View weekly" label after toggling from weekly to full', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toHaveTextContent('View weekly')
+  })
+
+  it('hides the weekly navigator when toggled to full view', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(screen.getByLabelText('Previous week')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(screen.queryByLabelText('Previous week')).not.toBeInTheDocument()
+  })
+
+  it('shows "View all" label again when toggled back to weekly', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
+  })
+
+  it('restores the weekly navigator when toggled back to weekly', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(screen.getByLabelText('Previous week')).toBeInTheDocument()
+  })
+
+  it('fires ViewModeToggled with viewMode="full" when toggling from weekly to full', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      EVENTS.Dashboard.CampaignPlan.ViewModeToggled,
+      { viewMode: 'full' },
+    )
+  })
+
+  it('fires ViewModeToggled with viewMode="weekly" when toggling from full to weekly', async () => {
+    const user = userEvent.setup()
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      EVENTS.Dashboard.CampaignPlan.ViewModeToggled,
+      { viewMode: 'weekly' },
+    )
+  })
+
+  it('persists the view mode in sessionStorage on toggle', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(sessionStorage.getItem(TEST_VIEW_MODE_KEY)).toBe('full')
+
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(sessionStorage.getItem(TEST_VIEW_MODE_KEY)).toBe('weekly')
+  })
+
+  it('restores the persisted view mode from sessionStorage on mount', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toHaveTextContent('View weekly')
+  })
+
+  it('defaults to weekly when sessionStorage value is invalid', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'garbage')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
+  })
+
+  it('re-reads sessionStorage when campaign.id changes', () => {
+    sessionStorage.setItem('campaign-plan-view-mode:1', 'full')
+    sessionStorage.setItem('campaign-plan-view-mode:2', 'weekly')
+
+    const view = render(
+      <TasksList
+        campaign={makeCampaign({ id: 1 })}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toBeInTheDocument()
+
+    view.rerender(
+      <TasksList
+        campaign={makeCampaign({ id: 2 })}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('TasksList full view', () => {
+  it('renders tasks grouped by week with week headers, in descending week order', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const tasks = [
+        makeTask({ id: 'task-early', title: 'Early task', week: 22 }),
+        makeTask({ id: 'task-late', title: 'Late task', week: 20 }),
+      ]
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={tasks}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Early task')).toBeInTheDocument()
+      expect(screen.getByText('Late task')).toBeInTheDocument()
+
+      const earlyPos = screen
+        .getByText('Early task')
+        .compareDocumentPosition(screen.getByText('Late task'))
+      expect(earlyPos & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('marks the current week with the "This week" label', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
+      )
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={[makeTask({ week: currentWeek })]}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('This week')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('renders a date-range label for weeks that are not the current week', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const tasks = [
+        makeTask({ id: 'task-week-30', title: 'Week 30 task', week: 30 }),
+      ]
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={tasks}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Apr 7-13')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('renders the empty state when there are no tasks', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByText('No tasks in the campaign plan'),
+    ).toBeInTheDocument()
   })
 })
