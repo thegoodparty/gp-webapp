@@ -52,6 +52,13 @@ export const DISPLAY_TASK_TYPES: Record<
   recurring: '',
 }
 
+export const VIEW_MODES = {
+  weekly: 'weekly',
+  full: 'full',
+} as const
+
+export type ViewMode = (typeof VIEW_MODES)[keyof typeof VIEW_MODES]
+
 export const WEEK_POSITIONS = {
   past: 'past',
   current: 'current',
