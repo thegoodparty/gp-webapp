@@ -1,58 +1,65 @@
 import { expect, test } from '@playwright/test'
+import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
 import { visualSnapshot } from '../../../src/helpers/visual.helper'
+import { getClerkContinueButton } from '../../../src/helpers/clerk.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 import { wait } from 'tests/utils/eventually'
 
 test.describe('Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await blockSlowScripts(page)
+    await setupClerkTestingToken({ page })
     await NavigationHelper.navigateToPage(page, '/login')
     await NavigationHelper.dismissOverlays(page)
   })
 
   test('should display login form elements', async ({ page }) => {
-    await expect(page.getByText('Login to GoodParty.org')).toBeVisible()
-    await expect(page.getByLabel('Email')).toBeVisible()
-    await expect(
-      page.getByPlaceholder("Please don't use your dog's"),
-    ).toBeVisible() // More specific password field locator
-    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible()
+    // Clerk's <SignIn /> renders its own UI
+    await expect(page.locator('.cl-signIn-root')).toBeVisible()
+    await expect(page.getByLabel(/email/i).first()).toBeVisible()
+    await expect(getClerkContinueButton(page)).toBeVisible()
 
     await visualSnapshot(page, 'login-page.png')
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
-    const invalidEmail = 'nonexistent@example.com'
-    const invalidPassword = 'wrongpassword123'
-    await page.getByLabel('Email').fill(invalidEmail)
-    await page
-      .getByPlaceholder("Please don't use your dog's")
-      .fill(invalidPassword)
+    await page.getByLabel(/email/i).first().fill('nonexistent@example.com')
+    await getClerkContinueButton(page).click()
 
-    const loginButton = page.getByRole('button', { name: 'Login' })
-    await expect(loginButton).toBeEnabled()
-    await loginButton.click()
-    await expect(
-      page.getByText(
-        'Invalid login. Please check your credentials and try again.',
-      ),
-    ).toBeVisible()
+    // Clerk shows an error for non-existent accounts
+    await expect(page.locator('.cl-formFieldErrorText').first()).toBeVisible({
+      timeout: 5000,
+    })
 
     await visualSnapshot(page, 'login-error-state.png')
   })
 
-  test('should login and redirect to dashboard', async ({ page }) => {
-    const { user } = await authenticateTestUser(page)
-    await page.getByLabel('Email').fill(user.email)
+  test('should login and redirect to dashboard', async ({
+    browser,
+    page: initialPage,
+  }) => {
+    const { user } = await authenticateTestUser(initialPage)
+    await initialPage.close()
+
+    const page = await browser.newPage()
+
+    await NavigationHelper.navigateToPage(page, '/login')
+    await NavigationHelper.dismissOverlays(page)
+
+    await page.getByLabel(/email/i).first().fill(user.email)
+    await getClerkContinueButton(page).click()
+
     await page
-      .getByPlaceholder("Please don't use your dog's")
-      .fill(user.password)
-    await page.getByRole('button', { name: 'Login' }).click()
-    await page.waitForURL('**/dashboard')
+      .getByLabel(/password/i)
+      .first()
+      .fill(user.password, { timeout: 10000 })
+    await getClerkContinueButton(page).click()
+
+    await page.waitForURL('**/dashboard', { timeout: 5000 })
     await wait(500)
     await expect(page.getByText('Campaign Progress')).toBeVisible()
   })

@@ -2,7 +2,9 @@
   "ignorePatterns": [
     "ai-rules/",
     "e2e-tests/playwright-report",
+    "e2e-tests/test-results",
     "e2e-tests/**/*.md",
+    "test-results",
     "styleguide/*.md",
     "public/",
     "ai-rules/",

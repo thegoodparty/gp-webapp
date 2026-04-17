@@ -4,8 +4,6 @@ import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper'
 import { noop } from '@shared/utils/noop'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
-import { queryClient } from '@shared/query-client'
 
 interface ImpersonateUser {
   id: string
@@ -54,8 +52,6 @@ export const ImpersonateUserProvider = ({
     setUser(null)
     deleteCookie('impersonateToken')
     deleteCookie('impersonateUser')
-    deleteCookie(ORG_SLUG_COOKIE)
-    queryClient.clear()
   }
 
   const set = (token: string, user: ImpersonateUser) => {
@@ -80,8 +76,6 @@ export const ImpersonateUserProvider = ({
       const { token, user } = data || {}
       if (token && user) {
         set(token, user)
-        deleteCookie(ORG_SLUG_COOKIE)
-        queryClient.clear()
         return true
       }
     } catch (e) {

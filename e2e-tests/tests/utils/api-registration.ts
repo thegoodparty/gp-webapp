@@ -2,8 +2,10 @@ import { randomUUID } from 'node:crypto'
 import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
 import { uniqBy } from 'es-toolkit'
+import { createClerkClient } from '@clerk/backend'
+import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
-import { eventually } from './eventually'
+import { clerkThrottle } from './throttle-requests-with-retry'
 
 const baseURL = process.env.BASE_URL
 
@@ -11,7 +13,16 @@ if (!baseURL) {
   throw new Error('BASE_URL is not set')
 }
 
-const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
+const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY
+
+if (!CLERK_SECRET_KEY) {
+  throw new Error('CLERK_SECRET_KEY is not set')
+}
+
+const clerkBackend = createClerkClient({ secretKey: CLERK_SECRET_KEY })
+
+const apiBaseURL = process.env.API_BASE_URL || baseURL
+const apiURL = `${apiBaseURL}/api`
 
 const COOKIE_DOMAIN =
   baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
@@ -79,7 +90,8 @@ type BootstrappedUser = {
   user: AuthenticatedUser
   token: string
   client: AxiosInstance
-  campaignId?: number
+  clerkUserId: string
+  campaignId: number | undefined
 }
 
 type PlaywrightCookie = Parameters<BrowserContext['addCookies']>[0][0]
@@ -87,45 +99,93 @@ type PlaywrightCookie = Parameters<BrowserContext['addCookies']>[0][0]
 // Global cache for shared users per worker
 let cachedUser: BootstrappedUser | null = null
 
+async function signInAndGetToken(page: Page, email: string): Promise<string> {
+  await setupClerkTestingToken({ page })
+  await page.goto('/')
+  await page.waitForFunction(() => window.Clerk?.loaded, null, {
+    timeout: 15000,
+  })
+
+  await clerkThrottle(
+    () =>
+      clerk.signIn({
+        page,
+        emailAddress: email,
+      }),
+    5,
+  )
+
+  const token = await page.evaluate(() => window.Clerk!.session!.getToken())
+
+  if (!token) {
+    throw new Error('Failed to get Clerk session token after sign-in')
+  }
+
+  return token
+}
+
 const bootstrapTestUser = async (
+  page: Page,
   options?: TestUserOptions,
 ): Promise<BootstrappedUser> => {
-  // If isolated is false/undefined and we have a cached user, return it
   if (!options?.isolated && cachedUser) {
     return cachedUser
   }
 
-  const client = axios.create({ baseURL: apiURL })
-
-  const generated = TestDataHelper.generateTestUser()
-
+  const generated = TestDataHelper.generateTestUserData()
+  const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  const password = randomUUID()
+  const clerkUser = await clerkThrottle(() =>
+    clerkBackend.users.createUser({
+      emailAddress: [generated.email],
+      password,
+      firstName: generated.firstName,
+      lastName: generated.lastName,
+      skipPasswordChecks: true,
+    }),
+  )
 
-  const registerResponse = await client.post<{
-    user: AuthenticatedUser
-    token: string
-  }>('/v1/authentication/register', {
-    ...TestDataHelper.generateTestUser(),
-    signUpMode: 'candidate',
-    ...generated,
-    zipCode: zip,
-    password,
+  const token = await signInAndGetToken(page, generated.email)
+
+  const client = axios.create({
+    baseURL: apiURL,
+    headers: {
+      common: { Authorization: `Bearer ${token}` },
+    },
   })
 
-  client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
+  const { data: apiUser } = await client.get<{
+    id: number
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+  }>('/v1/users/me')
 
-  const user = registerResponse.data.user
-  user.password = password
+  const user: AuthenticatedUser = {
+    id: apiUser.id,
+    firstName: apiUser.firstName,
+    lastName: apiUser.lastName,
+    email: apiUser.email,
+    name: `${apiUser.firstName} ${apiUser.lastName}`,
+    zip,
+    phone: apiUser.phone || generated.phone,
+    password,
+  }
 
   const result: BootstrappedUser = {
     user,
+    token,
     client,
-    token: registerResponse.data.token,
+    clerkUserId: clerkUser.id,
+    campaignId: undefined,
   }
 
   if (options?.skipCampaignCreation) {
+    if (!options?.isolated) {
+      cachedUser = result
+    }
     return result
   }
 
@@ -138,8 +198,7 @@ const bootstrapTestUser = async (
     },
   )
 
-  const desiredRace =
-    options?.race?.office ?? 'Flat Rock Village Council - District 1'
+  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 2'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)
@@ -175,6 +234,14 @@ const bootstrapTestUser = async (
     throw new Error('Campaign creation did not return a valid id')
   }
 
+  if (process.env.DEBUG) {
+    console.log(
+      `[${test.info().title}] Created campaign ${campaign.id} for user ${
+        user.email
+      }`,
+    )
+  }
+
   result.campaignId = campaign.id
 
   // Cache the user if not isolated
@@ -186,9 +253,6 @@ const bootstrapTestUser = async (
     'x-organization-slug'
   ] = `campaign-${campaign.id}`
 
-  await eventually({ that: 'race-target-details are updated' }, async () => {
-    await client.put('/v1/campaigns/mine/race-target-details', {})
-  })
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
     details: { otherParty: 'Independent', pledged: true },
@@ -208,6 +272,8 @@ test.afterAll(async ({}) => {
   for (const { cleanup } of users) {
     await cleanup()
   }
+  cachedUser = null
+  createdUsers.length = 0
 })
 
 export const authenticateTestUser = async (
@@ -215,39 +281,39 @@ export const authenticateTestUser = async (
   options?: TestUserOptions,
 ) => {
   const start = Date.now()
-  const { user, token, client, campaignId } = await bootstrapTestUser(options)
+  const { user, token, client, clerkUserId, campaignId } =
+    await bootstrapTestUser(page, options)
 
   const { title } = test.info()
 
-  // If the user is cached, we can't clean it up -- it may still be in use by other tests.
   if (options?.isolated) {
     createdUsers.push({
       user,
       cleanup: async () => {
         try {
-          await client.delete(`/v1/users/${user.id}`)
-          if (process.env.DEBUG) {
-            console.log(
-              `[${title}] Deleted user ${user.email} (id: ${user.id})`,
-            )
-          }
-        } catch {
-          // Token may be invalid after long runs or user already removed.
+          await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
+          console.log(
+            `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
+          )
+        } catch (err) {
+          console.error(`[${title}] Failed to delete user ${user.email}:`, err)
         }
       },
     })
   }
 
   const userCreated = Date.now()
+  const elapsed = Date.now() - start
+
   if (process.env.DEBUG) {
     if (options?.isolated) {
       console.log(
-        `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-          userCreated - start
-        }ms`,
+        `[${title}] Created new user ${user.email} (id: ${user.id}, clerk: ${clerkUserId}) in ${elapsed}ms`,
       )
     } else {
-      console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+      console.log(
+        `[${title}] Using cached user ${user.email} (id: ${user.id}, clerk: ${clerkUserId})`,
+      )
     }
   }
 

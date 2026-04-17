@@ -38,7 +38,7 @@ test.describe('Dashboard Functionality', () => {
     await expect(page).toHaveURL(/\/dashboard$/)
 
     await expect(campaignPageGreetingHeading(page)).toBeVisible({
-      timeout: 90000,
+      timeout: 15000,
     })
     console.log('✅ Dashboard accessible')
     await visualSnapshot(page, 'dashboard.png', {
@@ -52,21 +52,18 @@ test.describe('Dashboard Functionality', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible({ timeout: 60000 })
+    ).toBeVisible({ timeout: 5000 })
     console.log('✅ AI Assistant accessible')
     await visualSnapshot(page, 'campaign-assistant.png')
 
     await page.goto('/dashboard/profile')
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page.getByRole('heading', { name: 'Personal Information' }).first(),
+      page.getByRole('heading', { name: 'Contact Information' }).first(),
     ).toBeVisible()
     console.log('✅ Profile accessible')
     await visualSnapshot(page, 'profile.png', {
       mask: [
-        page.getByTestId('personal-first-name'),
-        page.getByTestId('personal-last-name'),
-        page.getByTestId('personal-email'),
         page.getByTestId('personal-phone'),
         page.getByTestId('personal-zip'),
       ],

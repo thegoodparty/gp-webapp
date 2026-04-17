@@ -41,7 +41,7 @@ const sections: NavSection[] = [
 
 const RightSideMobile = (): React.JSX.Element => {
   const [isOpen, setOpen] = useState(false)
-  const [user] = useUser() as [User | null, (user: User | null) => void]
+  const [user] = useUser()
   const [campaignStatus] = useCampaignStatus()
   const { status, slug, step } =
     (campaignStatus as {
