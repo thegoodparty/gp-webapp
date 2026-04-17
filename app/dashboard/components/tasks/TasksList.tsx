@@ -131,11 +131,7 @@ const TasksList = ({
 
   const viewModeSessionKey = `campaign-plan-view-mode:${campaign.id}`
 
-  const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    if (typeof window === 'undefined') return VIEW_MODES.weekly
-    const stored = sessionStorage.getItem(viewModeSessionKey)
-    return stored === VIEW_MODES.full ? VIEW_MODES.full : VIEW_MODES.weekly
-  })
+  const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODES.weekly)
 
   useEffect(() => {
     const stored = sessionStorage.getItem(viewModeSessionKey)
