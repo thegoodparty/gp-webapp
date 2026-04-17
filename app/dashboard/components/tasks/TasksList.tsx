@@ -144,7 +144,7 @@ const TasksList = ({
     )
   }, [viewModeSessionKey])
 
-  const toggleViewMode = () => {
+  const handleToggleViewMode = () => {
     const newMode =
       viewMode === VIEW_MODES.weekly ? VIEW_MODES.full : VIEW_MODES.weekly
     setViewMode(newMode)
@@ -569,7 +569,12 @@ const TasksList = ({
               </div>
               <button
                 className="text-sm font-semibold font-opensans text-blue-600 hover:text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-blue-600 rounded-sm"
-                onClick={toggleViewMode}
+                onClick={handleToggleViewMode}
+                aria-label={
+                  viewMode === VIEW_MODES.weekly
+                    ? 'View all weeks'
+                    : 'View current week only'
+                }
               >
                 {viewMode === VIEW_MODES.weekly ? 'View all' : 'View weekly'}
               </button>
