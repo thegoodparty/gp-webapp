@@ -8,18 +8,45 @@ export interface PhoneListResponse {
   token: string
 }
 
+export interface PhoneListError {
+  message?: string
+  errorCode?: string
+  status?: number
+}
+
+export type PhoneListResult =
+  | ({ ok: true } & PhoneListResponse)
+  | ({ ok: false } & PhoneListError)
+
 export interface PhoneListStatusResponse {
   phoneListId: number
   leadsLoaded: number
 }
 
+const extractErrorInfo = (
+  data: unknown,
+): { message?: string; errorCode?: string } => {
+  if (!data || typeof data !== 'object') return {}
+  const record = data as Record<string, unknown>
+  const rawMessage = record.message
+  const message =
+    typeof rawMessage === 'string'
+      ? rawMessage
+      : Array.isArray(rawMessage)
+      ? rawMessage.filter((m) => typeof m === 'string').join(', ')
+      : undefined
+  const errorCode =
+    typeof record.errorCode === 'string' ? record.errorCode : undefined
+  return { message, errorCode }
+}
+
 export const createP2pPhoneList = async (
   voterFileFilter: PhoneListInput | undefined,
-): Promise<PhoneListResponse | false> => {
+): Promise<PhoneListResult> => {
   try {
     if (!voterFileFilter) {
       console.error('Error creating phone list: voterFileFilter is undefined')
-      return false
+      return { ok: false }
     }
 
     const listName = voterFileFilter.name || `P2P Campaign ${Date.now()}`
@@ -32,12 +59,16 @@ export const createP2pPhoneList = async (
     )
     if (!resp.ok) {
       console.error('Error creating phone list:', resp.statusText)
-      return false
+      return {
+        ok: false,
+        status: resp.status,
+        ...extractErrorInfo(resp.data),
+      }
     }
-    return resp.data
+    return { ok: true, ...resp.data }
   } catch (e) {
     console.error('error', e)
-    return false
+    return { ok: false }
   }
 }
 

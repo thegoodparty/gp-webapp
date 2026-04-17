@@ -1,6 +1,7 @@
 'use client'
 
 import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import CustomVoterAudienceFilters, {
@@ -9,7 +10,10 @@ import CustomVoterAudienceFilters, {
   AudienceFilterKey,
 } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
 import { useEffect, useMemo, useState } from 'react'
-import { countVoterFile } from 'app/dashboard/voter-records/[type]/components/RecordCount'
+import {
+  countVoterFile,
+  CountVoterFileError,
+} from 'app/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
 import {
@@ -25,6 +29,12 @@ import { PhoneListInput } from 'helpers/createP2pPhoneList'
 const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
 const CALL_W_VOICEMAIL_PRICE = 0.055
+
+const MISSING_L2_DISTRICT_DATA_ERROR_CODE = 'MISSING_L2_DISTRICT_DATA'
+const MISSING_L2_DISTRICT_DATA_DEFAULT_MESSAGE =
+  'Voter data is not available for your selected office. Please contact support at help@goodparty.org so we can update your district information.'
+const GENERIC_COUNT_ERROR_MESSAGE =
+  'We were unable to count voters for this audience. Please try again, or contact support if the problem persists.'
 
 const isAudienceFilterKey = (
   key: string,
@@ -72,6 +82,7 @@ export default function AudienceStep({
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [countError, setCountError] = useState<CountVoterFileError | null>(null)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
@@ -94,10 +105,21 @@ export default function AudienceStep({
       type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
 
     const voterFileFilter = await onCreateVoterFileFilter()
-    const phoneListToken =
-      p2pUxEnabled && isTextType
-        ? await onCreatePhoneList(voterFileFilter)
-        : null
+    if (!voterFileFilter) {
+      setLoading(false)
+      return
+    }
+
+    const needsPhoneList = p2pUxEnabled && isTextType
+    const phoneListToken = needsPhoneList
+      ? await onCreatePhoneList(voterFileFilter)
+      : null
+
+    if (needsPhoneList && !phoneListToken) {
+      setLoading(false)
+      return
+    }
+
     setLoading(false)
     onChangeCallback({
       voterFileFilter,
@@ -118,9 +140,14 @@ export default function AudienceStep({
         filters: selectedAudience,
       })
 
-      if (res !== false) {
+      if (typeof res === 'number') {
+        setCountError(null)
         setCount(res)
         onChangeCallback('voterCount', res)
+      } else {
+        setCountError(res)
+        setCount(0)
+        onChangeCallback('voterCount', 0)
       }
       setLoading(false)
     }, 300)
@@ -151,6 +178,17 @@ export default function AudienceStep({
     }
     return textCount * (price ?? 0)
   }
+
+  const isMissingDistrictData =
+    countError?.errorCode === MISSING_L2_DISTRICT_DATA_ERROR_CODE
+  const inlineCountErrorMessage = countError
+    ? isMissingDistrictData
+      ? countError.message || MISSING_L2_DISTRICT_DATA_DEFAULT_MESSAGE
+      : countError.message || GENERIC_COUNT_ERROR_MESSAGE
+    : null
+  const hasCountError = !!countError
+  const isNextDisabled =
+    !hasValues || loading || hasCountError || (hasValues && count === 0)
 
   return (
     <div className="p-4 w-[80vw] max-w-4xl">
@@ -192,6 +230,14 @@ export default function AudienceStep({
             </>
           )}
         </div>
+        {inlineCountErrorMessage ? (
+          <div
+            className="mx-auto mb-4 max-w-2xl rounded-lg border border-red-200 bg-red-50 p-3 text-left"
+            role="alert"
+          >
+            <Body2 className="text-red-800">{inlineCountErrorMessage}</Body2>
+          </div>
+        ) : null}
         <div className="text-left">
           <CustomVoterAudienceFilters
             trackingKey={TRACKING_KEYS.scheduleCampaign}
@@ -216,7 +262,7 @@ export default function AudienceStep({
               size="large"
               color="secondary"
               onClick={handleOnNext}
-              disabled={!hasValues || loading}
+              disabled={isNextDisabled}
               loading={loading}
               {...nextTrackingAttrs}
             >
