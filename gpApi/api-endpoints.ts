@@ -164,13 +164,13 @@ export type APIEndpoints = {
 
 export type Organization = {
   slug: string
+  createdAt: string
   name: string | null
   positionName: string | null
   position: null | { id: string; brPositionId: string; state: string }
   district: null | { id: string; l2Type: string; l2Name: string }
   electedOfficeId: string | null
   campaignId: number | null
-  electionDate: string | null
 }
 
 export type AdminOrganization = Organization & {
