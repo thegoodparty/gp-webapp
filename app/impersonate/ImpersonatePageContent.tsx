@@ -12,6 +12,7 @@ export default function ImpersonatePageContent() {
   const router = useRouter()
 
   const ticket = searchParams?.get('__clerk_ticket') ?? null
+  const redirectPath = searchParams?.get('redirect') ?? '/dashboard'
 
   useEffect(() => {
     if (!loaded) return
@@ -44,7 +45,7 @@ export default function ImpersonatePageContent() {
 
         await setActive({ session: result.createdSessionId })
         router.refresh()
-        router.push('/dashboard')
+        router.push(redirectPath)
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         console.error('[impersonate] Failed:', err)
@@ -53,7 +54,7 @@ export default function ImpersonatePageContent() {
     }
 
     run()
-  }, [loaded, ticket])
+  }, [loaded, ticket, redirectPath, signOut, client.signIn, setActive, router])
 
   if (error) {
     return (

@@ -20,13 +20,12 @@ export default function ImpersonateAction({
   const handleImpersonateUser = async () => {
     successSnackbar('Impersonating user')
 
-    const impersonateResp = await impersonate(email)
-    if (impersonateResp) {
-      if (isCandidate && launchStatus === 'Live') {
-        window.location.href = `/dashboard`
-      } else {
-        window.location.href = '/'
-      }
+    const token = await impersonate(email)
+    if (token) {
+      // Navigate to /impersonate to exchange the actor token for a Clerk session
+      const redirectPath =
+        isCandidate && launchStatus === 'Live' ? '/dashboard' : '/'
+      window.location.href = `/impersonate?__clerk_ticket=${encodeURIComponent(token)}&redirect=${encodeURIComponent(redirectPath)}`
     } else {
       errorSnackbar('Impersonate failed')
     }
