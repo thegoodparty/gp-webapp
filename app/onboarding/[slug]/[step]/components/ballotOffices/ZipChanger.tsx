@@ -2,7 +2,7 @@
 import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
 import { useState, KeyboardEvent } from 'react'
-import { validateZip } from 'app/login/components/LoginPage'
+import isPostalCode from 'validator/lib/isPostalCode'
 import Modal from '@shared/utils/Modal'
 import H2 from '@shared/typography/H2'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
@@ -20,7 +20,7 @@ export default function ZipChanger({
 }: ZipChangerProps) {
   const [editMode, setEditMode] = useState(false)
   const [updatedZip, setUpdatedZip] = useState(zip)
-  const isValid = validateZip(updatedZip)
+  const isValid = isPostalCode(updatedZip, 'US')
 
   const handleToggle = async () => {
     if (!editMode) {

@@ -23,13 +23,11 @@ import {
   Globe,
   LayoutDashboard,
   LogOut,
-  Plus,
   Send,
   Settings,
-  StopCircle,
+  UserCog,
   UserRound,
   UsersRound,
-  Wand,
   type LucideIcon,
 } from 'lucide-react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -60,8 +58,6 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
-import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
   useOrganization,
@@ -305,12 +301,6 @@ const NewNavMenu = ({
   pathname: string | null
 }) => {
   const [user] = useUser()
-  const {
-    clear: clearImpersonation,
-    token: impersonateToken,
-    user: impersonateUser,
-  } = useImpersonateUser()
-  const impersonating = impersonateToken && impersonateUser
   const { setOpenMobile, isMobile } = useSidebar()
 
   const organization = useOrganization()
@@ -334,27 +324,11 @@ const NewNavMenu = ({
       id: 'nav-dash-settings',
       href: '/dashboard/profile',
     },
-    addCampaign: {
-      label: 'Add Campaign',
-      icon: Plus,
-      id: 'nav-dash-add-campaign',
-      href: '/sales/add-campaign',
-    },
-    admin: {
-      label: 'Admin',
-      icon: Wand,
-      id: 'nav-dash-admin',
-      href: '/admin',
-    },
-    stopImpersonating: {
-      label: 'Stop Impersonating',
-      icon: StopCircle,
-      id: 'nav-dash-stop-impersonating',
-      href: '/admin',
-      onClick: () => {
-        clearImpersonation()
-        window.location.href = '/admin'
-      },
+    account: {
+      label: 'Account',
+      icon: UserCog,
+      id: 'nav-dash-account',
+      href: '/dashboard/account',
     },
     community: {
       label: 'Community Forum',
@@ -422,7 +396,7 @@ const NewNavMenu = ({
             <SidebarMenu>
               {menuItems
                 .filter((i) =>
-                  organization.electedOfficeId
+                  organization?.electedOfficeId
                     ? i.v2Category === 'elected-office'
                     : i.v2Category === 'campaign',
                 )
@@ -467,14 +441,7 @@ const NewNavMenu = ({
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
-                    sidebarItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    !impersonating &&
-                    sidebarItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    sidebarItem(accountManagementMenuItems.stopImpersonating)}
+                  {sidebarItem(accountManagementMenuItems.account)}
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.logout)}
                   <SidebarSeparator />
@@ -516,14 +483,7 @@ const NewNavMenu = ({
                 >
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
-                    dropDownItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    !impersonating &&
-                    dropDownItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    dropDownItem(accountManagementMenuItems.stopImpersonating)}
+                  {dropDownItem(accountManagementMenuItems.account)}
                   <DropdownMenuSeparator />
                   {dropDownItem(accountManagementMenuItems.community)}
                   <DropdownMenuSeparator />

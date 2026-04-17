@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom/vitest'
-import { queryClient } from '@shared/query-client'
+import { testQueryClient } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { beforeEach, vi } from 'vitest'
 
 beforeEach(() => {
-  queryClient.clear()
+  testQueryClient.clear()
 })
 
 vi.mock('next/navigation', () => ({

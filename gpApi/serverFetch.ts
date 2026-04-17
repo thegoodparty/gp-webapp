@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { getServerToken } from 'helpers/userServerHelper'
+import { getServerToken } from 'helpers/tokenHelper'
 import {
   ORG_SLUG_COOKIE,
   ORG_SLUG_HEADER,
@@ -43,7 +43,7 @@ export async function serverFetch<T = unknown>(
   if (options.returnFullResponse) {
     return clientFetch(endpoint, data, {
       revalidate: options.revalidate,
-      serverToken: token || undefined,
+      serverToken: token,
       returnFullResponse: true,
       extraHeaders,
     })

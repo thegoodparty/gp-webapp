@@ -4,10 +4,12 @@ import { expect, type Page, test } from '@playwright/test'
 import type { MessageElement } from '@slack/web-api/dist/types/response/ConversationsHistoryResponse'
 import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
+import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { clerkThrottle } from 'tests/utils/throttle-requests-with-retry'
 import {
   setupElectedOfficeUser,
   switchOrganization,
@@ -311,7 +313,6 @@ test.beforeEach(async ({ page }) => {
 test.describe.serial('poll onboarding', () => {
   // Shared state between tests
   let sharedUser: AuthenticatedUser
-  let sharedToken: string
   let sharedPollId: string
   let sharedContact: CsvRow
 
@@ -325,9 +326,6 @@ test.describe.serial('poll onboarding', () => {
 
     // Store for reuse in subsequent tests
     sharedUser = user
-    sharedToken = (
-      client.defaults.headers.common.Authorization as string
-    ).replace('Bearer ', '')
     await NavigationHelper.dismissOverlays(page)
 
     await page.getByRole('button', { name: "Let's get started" }).click()
@@ -751,27 +749,12 @@ test.describe.serial('poll onboarding', () => {
   }) => {
     test.setTimeout(2 * 60 * 1000)
 
-    // Re-authenticate with the same user by setting cookies on the new page context.
-    const baseURL = process.env.BASE_URL || 'http://localhost:4000'
-    const domain = baseURL.replace('http://', '').replace('https://', '')
-    await page.context().addCookies([
-      {
-        name: 'token',
-        value: sharedToken,
-        domain,
-        path: '/',
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax',
-      },
-      {
-        name: 'user',
-        value: JSON.stringify(sharedUser),
-        domain,
-        path: '/',
-        sameSite: 'Lax',
-      },
-    ])
+    await setupClerkTestingToken({ page })
+    await page.goto('/')
+    await clerkThrottle(
+      () => clerk.signIn({ page, emailAddress: sharedUser.email }),
+      5,
+    )
 
     // Navigate to contacts page
     await page.goto('/dashboard')

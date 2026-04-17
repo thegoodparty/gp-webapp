@@ -7,12 +7,7 @@ import MyContent from './MyContent'
 import { getCookie } from 'helpers/cookieHelper'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import {
-  Campaign,
-  CandidatePosition,
-  PathToVictoryData,
-  User,
-} from 'helpers/types'
+import { Campaign, CandidatePosition, User } from 'helpers/types'
 
 const ContentTutorial = dynamic(() => import('./ContentTutorial'), {
   ssr: false,
@@ -34,7 +29,6 @@ interface ContentPageProps {
   prompts?: Prompt[]
   templates?: object
   categories?: Category[]
-  pathToVictory?: PathToVictoryData
   requiresQuestions?: Partial<Record<string, boolean>>
   candidatePositions?: CandidatePosition[] | false
   user?: User | null

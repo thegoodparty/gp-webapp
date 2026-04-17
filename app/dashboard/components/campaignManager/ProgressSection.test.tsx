@@ -46,10 +46,12 @@ vi.mock('@styleguide', async (importOriginal) => {
   }
 })
 
-const makeCampaign = (voterContactGoal = 1000, voteGoal = 200): Campaign =>
+const makeCampaign = (voterContactGoal = 1000): Campaign =>
   ({
-    pathToVictory: {
-      data: { voterContactGoal, voteGoal },
+    raceTargetMetrics: {
+      projectedTurnout: 0,
+      winNumber: 0,
+      voterContactGoal,
     },
   } as unknown as Campaign)
 
@@ -110,7 +112,7 @@ describe('ProgressSection', () => {
 
   it('sets progress bar to 0 when needed is 0', () => {
     renderWithProviders(
-      makeCampaign(0, 0),
+      makeCampaign(0),
       makeVoterContacts({ doorKnocking: 50 }),
     )
     const progressBar = screen.getByRole('progressbar')

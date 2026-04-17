@@ -94,10 +94,13 @@ const TasksList = ({
     setTasks(tasksProp)
   }, [tasksProp])
 
-  const { details, pathToVictory, hasFreeTextsOffer } = campaign
+  const { details, hasFreeTextsOffer } = campaign
   const isPro = campaign.isPro ?? false
   const { electionDate } = details ?? {}
-  const viabilityScore = pathToVictory?.data?.viability?.score || 0
+  const vendorP2v = campaign.vendorTsData?.['pathToVictory'] as
+    | { viability?: { score?: number } }
+    | undefined
+  const viabilityScore = vendorP2v?.viability?.score || 0
   const electionDateObj =
     typeof electionDate === 'string' && electionDate
       ? new Date(electionDate.replace(/-/g, '/'))
