@@ -34,9 +34,9 @@ export default function DeleteAccountPage(): React.JSX.Element {
       setError(
         'An unexpected error occurred. Please try again or contact support.',
       )
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
@@ -47,7 +47,10 @@ export default function DeleteAccountPage(): React.JSX.Element {
       </p>
       <button
         className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded"
-        onClick={() => setModalOpen(true)}
+        onClick={() => {
+          setError(null)
+          setModalOpen(true)
+        }}
       >
         Delete Account
       </button>
