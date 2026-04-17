@@ -622,18 +622,26 @@ const TasksList = ({
                     </span>
                   </div>
                   <ul className="border-b border-border">
-                    {weekTasks.map((task) => (
-                      <TaskItem
-                        key={task.id}
-                        task={task}
-                        isPro={isPro}
-                        isLegacyList={isLegacyList}
-                        daysUntilElection={daysUntilElection}
-                        electionDate={electionDate}
-                        onCheck={handleCheckClick}
-                        onAction={handleActionClick}
-                      />
-                    ))}
+                    {weekTasks.length > 0 ? (
+                      weekTasks.map((task) => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          isPro={isPro}
+                          isLegacyList={isLegacyList}
+                          daysUntilElection={daysUntilElection}
+                          electionDate={electionDate}
+                          onCheck={handleCheckClick}
+                          onAction={handleActionClick}
+                        />
+                      ))
+                    ) : (
+                      <li className="flex items-center justify-center px-6 py-6">
+                        <span className="text-sm">
+                          Nothing planned for this week
+                        </span>
+                      </li>
+                    )}
                   </ul>
                 </div>
               )
