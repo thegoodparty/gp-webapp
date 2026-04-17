@@ -1061,9 +1061,9 @@ describe('TasksList view mode toggle', () => {
       />,
     )
 
-    expect(screen.getByRole('button', { name: /view all weeks/i })).toHaveTextContent(
-      'View all',
-    )
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
   })
 
   it('does NOT render the toggle button for legacy lists', () => {
@@ -1368,11 +1368,7 @@ describe('TasksList full view', () => {
     sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
 
     render(
-      <TasksList
-        campaign={makeCampaign()}
-        tasks={[]}
-        isLegacyList={false}
-      />,
+      <TasksList campaign={makeCampaign()} tasks={[]} isLegacyList={false} />,
     )
 
     expect(
