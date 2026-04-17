@@ -164,8 +164,11 @@ const TasksList = ({
         groups.set(task.week, [task])
       }
     }
+    if (Number.isFinite(weeksUntilElection) && !groups.has(weeksUntilElection)) {
+      groups.set(weeksUntilElection, [])
+    }
     return [...groups.entries()].sort(([a], [b]) => b - a)
-  }, [tasks])
+  }, [tasks, weeksUntilElection])
 
   const getWeekRelativePosition = (week: number): WeekPosition => {
     if (week > weeksUntilElection) return WEEK_POSITIONS.past
@@ -568,6 +571,7 @@ const TasksList = ({
                 Campaign plan
               </div>
               <button
+                type="button"
                 className="text-sm font-semibold font-opensans text-blue-600 hover:text-blue-700 hover:underline focus-visible:outline-2 focus-visible:outline-blue-600 rounded-sm"
                 onClick={handleToggleViewMode}
                 aria-label={
@@ -592,7 +596,7 @@ const TasksList = ({
         )}
 
         {!isLegacyList && viewMode === VIEW_MODES.full ? (
-          tasksByWeek.length > 0 ? (
+          tasks.length > 0 ? (
             tasksByWeek.map(([weekNum, weekTasks]) => {
               const isThisWeek =
                 Number.isFinite(weeksUntilElection) &&
