@@ -612,6 +612,7 @@ describe('TasksList tracking events', () => {
       expect(mockTrackEvent).toHaveBeenCalledWith(
         EVENTS.Dashboard.CampaignPlan.Viewed,
         {
+          viewMode: 'weekly',
           tasksThisWeek: 2,
           tasksCompletedThisWeek: 1,
         },

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TaskItem, { Task } from './TaskItem'
 import H2 from '@shared/typography/H2'
@@ -73,6 +73,9 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.awareness,
 ]
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
 type TaskId = Task['id']
 
 interface TasksListProps {
@@ -133,7 +136,7 @@ const TasksList = ({
 
   const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODES.weekly)
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const stored = sessionStorage.getItem(viewModeSessionKey)
     setViewMode(
       stored === VIEW_MODES.full ? VIEW_MODES.full : VIEW_MODES.weekly,
@@ -160,7 +163,10 @@ const TasksList = ({
         groups.set(task.week, [task])
       }
     }
-    if (Number.isFinite(weeksUntilElection) && !groups.has(weeksUntilElection)) {
+    if (
+      Number.isFinite(weeksUntilElection) &&
+      !groups.has(weeksUntilElection)
+    ) {
       groups.set(weeksUntilElection, [])
     }
     return [...groups.entries()].sort(([a], [b]) => b - a)
@@ -196,24 +202,33 @@ const TasksList = ({
 
   const tasksCount = tasks.length
   const tasksCompletedCount = tasks.filter((t) => t.completed).length
-  const viewedPayloadRef = useRef({
+  const viewedPayloadRef = useRef<{
+    viewMode: ViewMode
+    tasksThisWeek: number
+    tasksCompletedThisWeek: number
+  }>({
+    viewMode: VIEW_MODES.weekly,
     tasksThisWeek: 0,
     tasksCompletedThisWeek: 0,
   })
+  const isFullView = viewMode === VIEW_MODES.full
   viewedPayloadRef.current = {
-    tasksThisWeek: filteredTasks.length,
-    tasksCompletedThisWeek: filteredTasks.filter((t) => t.completed).length,
+    viewMode,
+    tasksThisWeek: isFullView ? tasksCount : filteredTasks.length,
+    tasksCompletedThisWeek: isFullView
+      ? tasksCompletedCount
+      : filteredTasks.filter((t) => t.completed).length,
   }
 
   const trackedWeekRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (isLegacyList || tasksCount === 0) return
-    const trackedWeekKey = `${campaign.id}:${selectedWeek}`
+    const trackedWeekKey = `${campaign.id}:${viewMode}:${selectedWeek}`
     if (trackedWeekRef.current === trackedWeekKey) return
     trackedWeekRef.current = trackedWeekKey
     trackEvent(EVENTS.Dashboard.CampaignPlan.Viewed, viewedPayloadRef.current)
-  }, [campaign.id, isLegacyList, selectedWeek, tasksCount])
+  }, [campaign.id, isLegacyList, selectedWeek, tasksCount, viewMode])
 
   useEffect(() => {
     if (isLegacyList || tasksCount === 0 || !user?.id) return
