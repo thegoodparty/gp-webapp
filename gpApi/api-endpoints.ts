@@ -170,6 +170,7 @@ export type Organization = {
   district: null | { id: string; l2Type: string; l2Name: string }
   electedOfficeId: string | null
   campaignId: number | null
+  electionDate: string | null
 }
 
 export type AdminOrganization = Organization & {

@@ -34,8 +34,27 @@ export const useSelectedOrgSlug = (initialOrganizations: Organization[]) => {
   return [selectedSlug, setSelectedSlug] as const
 }
 
+/**
+ * Returns true when the organization is considered "active":
+ * - Elected-office orgs are always active.
+ * - Campaign orgs are active when their electionDate is today or in the future.
+ * - Campaigns with no electionDate are treated as active (benefit of the doubt).
+ */
+const isActiveOrg = (org: Organization): boolean => {
+  if (org.electedOfficeId) return true
+  if (org.electionDate) {
+    return org.electionDate >= new Date().toISOString().slice(0, 10)
+  }
+  return true
+}
+
 export const resolveSlug = (organizations: Organization[]): string | null => {
   const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
   const isValid = organizations.some((o) => o.slug === cookieSlug)
-  return isValid ? cookieSlug : organizations[0]?.slug ?? null
+  if (isValid) return cookieSlug
+
+  // Prefer active orgs (EO or future-election campaigns) over completed ones.
+  const active = organizations.filter(isActiveOrg)
+  const preferred = active.length > 0 ? active : organizations
+  return preferred[0]?.slug ?? null
 }
