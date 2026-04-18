@@ -55,7 +55,7 @@ Skip a rule file when nothing in the diff is in scope. State which files you ski
 
 ## Output format
 
-```
+````
 ## Findings
 
 ### <rule-file>:<rule-number> - <one-line title>
@@ -71,4 +71,4 @@ Skip a rule file when nothing in the diff is in scope. State which files you ski
 - <thing done well>
 
 VERDICT: PASS WITH NOTES
-```
+````

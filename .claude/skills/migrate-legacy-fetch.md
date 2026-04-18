@@ -44,10 +44,10 @@ Background: see `gpApi/AGENTS.md`.
    After:
 
    ```ts
-   import { clientRequest } from "gpApi/typed-request"
+   import { clientRequest } from 'gpApi/typed-request'
 
    try {
-     const { data: widget } = await clientRequest("POST /v1/widgets", {
+     const { data: widget } = await clientRequest('POST /v1/widgets', {
        name,
        color,
      })

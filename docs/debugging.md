@@ -48,8 +48,8 @@ If you have the Grafana MCP server, use `query_loki_logs` instead of pasting Log
 ## Where to look
 
 | Symptom                                  | First place to look                                          |
-| ---------------------------------------- | ------------------------------------------------------------ | ----------------- |
-| 4xx/5xx from gp-api                      | Loki: `{service_name="gp-api"}                               | = "<request id>"` |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| 4xx/5xx from gp-api                      | Loki: `{service_name="gp-api"} \| = "<request id>"`          |
 | Frontend exception, no API in trace      | Sentry — check the breadcrumbs for the failing component     |
 | Auth redirect loop                       | `middleware.ts`, `UserProvider`, `getServerToken()`          |
 | Wrong organization context               | `goodparty-org-slug` cookie, `x-organization` request header |
