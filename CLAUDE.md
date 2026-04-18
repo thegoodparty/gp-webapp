@@ -45,10 +45,11 @@ Vercel auto-deploys on push. Branch mapping:
 
 Two systems coexist in `gpApi/`. **The typed system is canonical for new code.** The legacy fetch helpers are `@deprecated` and being migrated out.
 
-- Typed: `clientRequest` / `serverRequest`, routes in `gpApi/api-endpoints.ts`. Throws on non-2xx.
-- Legacy (deprecated): `gpFetch`, `clientFetch`, `serverFetch`, `unAuthFetch`, routes in `gpApi/routes.ts`. Returns `T | Response | false`, never throws.
+- Typed: `clientRequest` / `serverRequest`, routes in `gpApi/api-endpoints.ts`. Throws on non-2xx. Always attach auth (cookie / Bearer token).
+- Legacy (deprecated): `gpFetch`, `clientFetch`, `serverFetch`, routes in `gpApi/routes.ts`. Returns `T | Response | false`, never throws.
+- Still valid: `unAuthFetch` for genuinely public endpoints — it attaches no credentials, and the typed helpers have no anonymous equivalent yet.
 
-Full reference + decision tree: `docs/api-clients.md` and `gpApi/AGENTS.md`. To add an endpoint or migrate a legacy call, see `.claude/skills/`.
+Full reference + decision tree: `docs/api-clients.md` and `gpApi/CLAUDE.md`. To add an endpoint or migrate a legacy call, see `.claude/skills/`.
 
 ### State Management
 
@@ -111,7 +112,7 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 - **Never** edit `middleware.ts`, `app/api/revalidate/route.ts`, or `gpApi/api-endpoints.ts` without explicit confirmation. The first two affect every request; the third is a cross-repo contract with `gp-api`.
 - **Never** commit env files. `.env.example` only.
 - **Never** push to `develop` directly — open a PR.
-- **Ask first** before adding new utilities to `helpers/` (it is already a 50+ file dumping ground; check whether the helper exists). See `gpApi/AGENTS.md` for fetch-helper rules.
+- **Ask first** before adding new utilities to `helpers/` (it is already a 50+ file dumping ground; check whether the helper exists). See `gpApi/CLAUDE.md` for fetch-helper rules.
 - **Deploys** are automatic via Vercel on push to `develop` / `qa` / `master`. There is no manual deploy command.
 
 ## Observability
@@ -125,7 +126,7 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 - `docs/api-clients.md` - Typed vs legacy fetch, decision tree
 - `docs/testing.md` - Vitest patterns, MSW mocking
 - `docs/debugging.md` - Sentry / Loki, repro recipe
-- `gpApi/AGENTS.md` - Working in the gpApi/ directory
+- `gpApi/CLAUDE.md` - Working in the gpApi/ directory
 - `app/dashboard/website/README.md` - Website feature layout
 
 ## Code Style

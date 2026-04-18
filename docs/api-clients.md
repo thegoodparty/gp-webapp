@@ -29,9 +29,12 @@ const { data: poll } = await clientRequest('GET /v1/polls/:pollId', {
 - `clientFetch` — `gpApi/clientFetch.ts`
 - `serverFetch` — `gpApi/serverFetch.ts`
 - `gpFetch` — `gpApi/gpFetch.ts`
-- `unAuthFetch` — `gpApi/unAuthFetch.ts`
 - Routes live in `gpApi/routes.ts` as `{ path, method }` records.
 - Returns polymorphic `T | Response | false` — callers must check `ok`/`status` and never rely on a thrown error.
+
+## For unauthenticated endpoints
+
+- `unAuthFetch` — `gpApi/unAuthFetch.ts`. Use for public endpoints that should reach gp-api with no credentials. `clientRequest` and `serverRequest` always attach auth (cookie / Bearer token), so swapping a public call to the typed helpers silently changes server-side behavior. Keep using `unAuthFetch` for anonymous calls.
 
 ## Auth
 
@@ -55,6 +58,6 @@ See `helpers/test-utils/api-mocking.ts` for `mockOrdered`, dynamic handlers, and
 
 ## See also
 
-- `gpApi/AGENTS.md` — repo-local guide for working in `gpApi/`.
+- `gpApi/CLAUDE.md` — repo-local guide for working in `gpApi/`.
 - `.claude/skills/add-typed-endpoint.md` — recipe for adding a new endpoint.
 - `.claude/skills/migrate-legacy-fetch.md` — recipe for porting a legacy call.

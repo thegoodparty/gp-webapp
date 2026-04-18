@@ -22,7 +22,7 @@ interface FetchOptions {
 
 /**
  * @deprecated Use `clientRequest` from `gpApi/typed-request.ts` (with a route
- * key in `gpApi/api-endpoints.ts`). See `gpApi/AGENTS.md` for the migration
+ * key in `gpApi/api-endpoints.ts`). See `gpApi/CLAUDE.md` for the migration
  * recipe.
  */
 export async function clientFetch(

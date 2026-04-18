@@ -7,7 +7,7 @@ description: Add a new gp-api endpoint to the typed client (gpApi/api-endpoints.
 
 Use when adding a new gp-api route to the webapp, or porting one off the legacy `clientFetch`/`gpFetch` helpers.
 
-Background: see `gpApi/AGENTS.md`. The typed system is canonical; legacy fetch helpers are deprecated.
+Background: see `gpApi/CLAUDE.md`. The typed system is canonical; legacy fetch helpers are deprecated.
 
 ## Procedure
 

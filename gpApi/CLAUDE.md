@@ -27,10 +27,13 @@ Returns a consistent `Response<T>`:
 - `gpFetch.ts` — deprecated
 - `clientFetch.ts` — deprecated (still used in 85+ files; do not add more)
 - `serverFetch.ts` — deprecated
-- `unAuthFetch.ts` — deprecated
 - `routes.ts` — the `ApiRoute` registry consumed only by the deprecated helpers
 
 These return polymorphic `T | Response | false` and never throw — callers must check `ok`/`status` manually. New code should not rely on this contract.
+
+## Not deprecated
+
+- `unAuthFetch.ts` — for public endpoints. Sends no cookie and no Bearer token, so gp-api treats the request as anonymous. Keep using it for genuinely unauthenticated calls; do NOT swap it for `clientRequest` / `serverRequest`, which always attach credentials.
 
 ## Adding a new endpoint
 

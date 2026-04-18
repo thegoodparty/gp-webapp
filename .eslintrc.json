@@ -10,7 +10,7 @@
     "ai-rules/",
     "CLAUDE.md",
     "docs/*.md",
-    "gpApi/AGENTS.md",
+    "gpApi/CLAUDE.md",
     ".claude/**/*.md"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
