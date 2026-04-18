@@ -49,8 +49,8 @@ const PageWrapper = async ({
   return (
     <ClerkProvider>
       <ReactQueryProvider>
-        <FeatureFlagsProvider>
-          <UserProvider>
+        <UserProvider>
+          <FeatureFlagsProvider>
             <AmplitudeInit />
             <ImpersonatingTracker />
             <OrganizationProvider initialOrganizations={organizations}>
@@ -83,8 +83,8 @@ const PageWrapper = async ({
                 </CampaignStatusProvider>
               </CampaignProvider>
             </OrganizationProvider>
-          </UserProvider>
-        </FeatureFlagsProvider>
+          </FeatureFlagsProvider>
+        </UserProvider>
       </ReactQueryProvider>
     </ClerkProvider>
   )
