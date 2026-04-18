@@ -8,7 +8,10 @@
     "styleguide/*.md",
     "public/",
     "ai-rules/",
-    "CLAUDE.md"
+    "CLAUDE.md",
+    "docs/*.md",
+    "gpApi/AGENTS.md",
+    ".claude/**/*.md"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [

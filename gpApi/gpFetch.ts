@@ -7,7 +7,7 @@ import {
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
     typeof process !== 'undefined' &&
-    process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
+      process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
   ) ||
   Boolean(
     typeof window !== 'undefined' && window.location.href.includes('localhost'),
