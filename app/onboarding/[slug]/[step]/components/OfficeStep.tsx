@@ -112,7 +112,7 @@ export default function OfficeStep({
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
-      ...(city ? [{ key: 'details.city', value: city }] : []),
+      { key: 'details.city', value: city ?? null },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
@@ -160,7 +160,7 @@ export default function OfficeStep({
 
     const trackingProperties = {
       officeState: position.state,
-      officeMunicipality: 'Unavailable',
+      officeMunicipality: city ?? 'Unavailable',
       officeName: position.name,
       officeElectionDate: election.electionDay,
     }
