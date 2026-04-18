@@ -28,7 +28,7 @@ const waitForContactsResponse = (page: Page) =>
     { timeout: 30000 },
   )
 
-const openPersonPanel = async (page: Page, row: Locator, panel: Locator) => {
+const openPersonPanel = async (row: Locator, panel: Locator) => {
   const addressField = panel.locator('p', { hasText: 'Address' }).first()
   await pRetry(
     async () => {
@@ -126,7 +126,7 @@ const testFilterField = async (
   const firstRow = table.locator('tbody tr').first()
   const panel = personContactPanel(page)
 
-  await openPersonPanel(page, firstRow, panel)
+  await openPersonPanel(firstRow, panel)
 
   for (const expectation of config.expectSheetValues) {
     if (typeof expectation === 'function') {
