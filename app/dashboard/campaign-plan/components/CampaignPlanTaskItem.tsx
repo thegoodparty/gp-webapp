@@ -153,7 +153,7 @@ export default function CampaignPlanTaskItem({
               <Lock
                 size={20}
                 strokeWidth={1.5}
-                className="text-base-foreground"
+                className="text-base-foreground ml-3"
               />
             </TooltipTrigger>
             <TooltipContent>{lockedReason}</TooltipContent>
