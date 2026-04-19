@@ -77,7 +77,11 @@ export default function TaskItem({
   }
 
   const textRequiresCompliance =
-    isTextFlowType(flowType) && isPro && p2pUxEnabled && !isTextCompliant
+    isTextFlowType(flowType) &&
+    isPro &&
+    p2pUxEnabled &&
+    !isTextCompliant &&
+    !completed
 
   const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
@@ -91,7 +95,19 @@ export default function TaskItem({
   } else if (proRequired && !isPro) {
     lockedReason = 'This task is only available to Pro users'
   } else if (textRequiresCompliance) {
-    lockedReason = 'Click to complete your 10DLC compliance'
+    switch (tcrCompliance?.status) {
+      case TCR_COMPLIANCE_STATUS.PENDING:
+        lockedReason = 'Compliance review in progress'
+        break
+      case TCR_COMPLIANCE_STATUS.REJECTED:
+        lockedReason = '10DLC registration needs attention'
+        break
+      case TCR_COMPLIANCE_STATUS.ERROR:
+        lockedReason = '10DLC registration error'
+        break
+      default:
+        lockedReason = 'Click to complete your 10DLC compliance'
+    }
   }
 
   const displayTaskType = flowType

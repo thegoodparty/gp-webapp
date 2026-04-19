@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
@@ -1402,6 +1402,17 @@ describe('TasksList full view', () => {
 })
 
 describe('TasksList text task 10DLC compliance lock', () => {
+  beforeAll(() => {
+    if (typeof globalThis.ResizeObserver === 'undefined') {
+      const noop = () => undefined
+      globalThis.ResizeObserver = class {
+        observe = noop
+        unobserve = noop
+        disconnect = noop
+      } as unknown as typeof ResizeObserver
+    }
+  })
+
   it('locks a text task when the Pro user is not 10DLC compliant and p2pUxEnabled is on', () => {
     mockP2pUxState.p2pUxEnabled = true
 
@@ -1494,4 +1505,57 @@ describe('TasksList text task 10DLC compliance lock', () => {
 
     expect(screen.getByTestId('compliance-modal')).toBeInTheDocument()
   })
+
+  it('does NOT lock a completed text task when the Pro user is not 10DLC compliant', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text, completed: true })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+  })
+
+  it.each([
+    { status: 'pending' as const, reason: 'Compliance review in progress' },
+    {
+      status: 'rejected' as const,
+      reason: '10DLC registration needs attention',
+    },
+    { status: 'error' as const, reason: '10DLC registration error' },
+    {
+      status: 'submitted' as const,
+      reason: 'Click to complete your 10DLC compliance',
+    },
+  ])(
+    'shows "$reason" tooltip when the user is locked with status "$status"',
+    async ({ status, reason }) => {
+      const user = userEvent.setup()
+      mockP2pUxState.p2pUxEnabled = true
+
+      const { container } = render(
+        <TasksList
+          campaign={makeCampaign({ isPro: true })}
+          tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+          isLegacyList={false}
+          tcrCompliance={makeTcrCompliance({ status })}
+        />,
+      )
+
+      const lockIcon = container.querySelector('.lucide-lock')
+      expect(lockIcon).not.toBeNull()
+      await user.hover(lockIcon as Element)
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(reason, { selector: '[role="tooltip"]' }),
+        ).toBeInTheDocument()
+      })
+    },
+  )
 })
