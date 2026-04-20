@@ -24,7 +24,7 @@ const mockUseClerk = vi.mocked(useClerk)
 
 beforeEach(() => {
   vi.clearAllMocks()
-  mockUseClerk.mockReturnValue({ signOut: vi.fn() } as ReturnType<typeof useClerk>)
+  mockUseClerk.mockReturnValue({ signOut: vi.fn() } as unknown as ReturnType<typeof useClerk>)
 })
 
 describe('DeleteAccountPage', () => {
