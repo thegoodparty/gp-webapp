@@ -91,6 +91,9 @@ export type TrackingSource =
 
 export type CampaignPlanEventTaskType = 'text' | 'robocall' | 'event'
 
+export const isTextFlowType = (taskType: string): boolean =>
+  taskType === TASK_TYPES.text || taskType === TASK_TYPES.p2pDisabledText
+
 export const getCampaignPlanEventTaskType = (
   taskType: string,
 ): CampaignPlanEventTaskType | null => {
