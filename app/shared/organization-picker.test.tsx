@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { render } from 'helpers/test-utils/render'
+import { render, testQueryClient } from 'helpers/test-utils/render'
 import { api } from 'helpers/test-utils/api-mocking'
-import { queryClient } from '@shared/query-client'
 import { Organization } from 'gpApi/api-endpoints'
 import { SidebarProvider } from '@styleguide'
 import {
@@ -216,7 +215,7 @@ describe('OrganizationPicker', () => {
       data: { organizations: updatedOrgs },
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 0, retry: false },
     })
 
@@ -226,7 +225,7 @@ describe('OrganizationPicker', () => {
       expect(screen.getByText('Fetched Org')).toBeInTheDocument()
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 1000 * 60 * 5, retry: 2 },
     })
   })
@@ -269,5 +268,61 @@ describe('X-Organization-Slug header attachment', () => {
     await gpFetch({ url: '/api/v1/organizations', method: 'GET' })
 
     expect(capturedHeader).toBeUndefined()
+  })
+
+  it('handleApiRequestRewrite attaches the header from cookies', async () => {
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
+
+    const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
+    const request = new Request(reqUrl.toString())
+
+    const headersSpy = vi.spyOn(request.headers, 'set')
+
+    Object.defineProperty(request, 'cookies', {
+      value: {
+        get: (name: string) => {
+          if (name === 'organization-slug') return { value: 'org-two' }
+          return undefined
+        },
+      },
+    })
+
+    Object.defineProperty(request, 'nextUrl', {
+      value: reqUrl,
+    })
+
+    await handleApiRequestRewrite(request as any, null)
+
+    expect(headersSpy).toHaveBeenCalledWith('X-Organization-Slug', 'org-two')
+  })
+
+  it('handleApiRequestRewrite does not attach header when no org cookie exists', async () => {
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
+
+    const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
+    const request = new Request(reqUrl.toString())
+
+    const headersSpy = vi.spyOn(request.headers, 'set')
+
+    Object.defineProperty(request, 'cookies', {
+      value: {
+        get: () => undefined,
+      },
+    })
+
+    Object.defineProperty(request, 'nextUrl', {
+      value: reqUrl,
+    })
+
+    await handleApiRequestRewrite(request as any, null)
+
+    expect(headersSpy).not.toHaveBeenCalledWith(
+      'X-Organization-Slug',
+      expect.anything(),
+    )
   })
 })

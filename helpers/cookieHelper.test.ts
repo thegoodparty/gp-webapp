@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { isImpersonating } from './cookieHelper'
+import {
+  getCookie,
+  setCookie,
+  deleteCookie,
+  deleteCookies,
+} from './cookieHelper'
 
 const clearCookies = () => {
   document.cookie.split(';').forEach((c) => {
@@ -9,17 +14,36 @@ const clearCookies = () => {
   })
 }
 
-describe('isImpersonating', () => {
+describe('cookieHelper', () => {
   beforeEach(() => {
     clearCookies()
   })
 
-  it('returns false when no impersonateUser cookie is set', () => {
-    expect(isImpersonating()).toBe(false)
+  it('getCookie returns false when cookie does not exist', () => {
+    expect(getCookie('nonexistent')).toBe(false)
   })
 
-  it('returns true when impersonateUser cookie exists', () => {
-    document.cookie = 'impersonateUser=someValue'
-    expect(isImpersonating()).toBe(true)
+  it('getCookie returns value when cookie exists', () => {
+    document.cookie = 'testCookie=hello'
+    expect(getCookie('testCookie')).toBe('hello')
+  })
+
+  it('setCookie sets a cookie that can be retrieved', () => {
+    setCookie('myCookie', 'myValue')
+    expect(getCookie('myCookie')).toBe('myValue')
+  })
+
+  it('deleteCookie removes a cookie', () => {
+    setCookie('toDelete', 'value')
+    deleteCookie('toDelete')
+    expect(getCookie('toDelete')).toBe(false)
+  })
+
+  it('deleteCookies clears all cookies', () => {
+    setCookie('a', '1')
+    setCookie('b', '2')
+    deleteCookies()
+    expect(getCookie('a')).toBe(false)
+    expect(getCookie('b')).toBe(false)
   })
 })

@@ -45,7 +45,7 @@ test.describe('Dashboard Regression with Elected Office', () => {
     await page.goto('/dashboard/profile', { waitUntil: 'domcontentloaded' })
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page.getByRole('heading', { name: 'Personal Information' }),
+      page.getByRole('heading', { name: 'Contact Information' }),
     ).toBeVisible({ timeout: 10000 })
   })
 

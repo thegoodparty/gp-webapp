@@ -12,7 +12,7 @@ export class AccountHelper {
   static async upgradeToPro(page: Page): Promise<void> {
     const { cardNumber, expirationDate, zipCode, cvc } = testCardInfo
     const testCampaignCommittee = 'Test Campaign Committee'
-    const testUser = TestDataHelper.generateTestUser()
+    const testUser = TestDataHelper.generateTestUserData()
 
     // Verify user is on voter data (free) page
     await WaitHelper.waitForPageReady(page)
