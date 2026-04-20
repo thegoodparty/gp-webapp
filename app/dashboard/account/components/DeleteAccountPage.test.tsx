@@ -24,7 +24,9 @@ const mockUseClerk = vi.mocked(useClerk)
 
 beforeEach(() => {
   vi.clearAllMocks()
-  mockUseClerk.mockReturnValue({ signOut: vi.fn() } as unknown as ReturnType<typeof useClerk>)
+  mockUseClerk.mockReturnValue({ signOut: vi.fn() } as unknown as ReturnType<
+    typeof useClerk
+  >)
 })
 
 describe('DeleteAccountPage', () => {
@@ -51,8 +53,15 @@ describe('DeleteAccountPage', () => {
 
   it('calls clientFetch then signOut on 204 success', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
-    mockClientFetch.mockResolvedValue({ ok: true, status: 204, statusText: 'No Content', data: null })
+    mockUseClerk.mockReturnValue({
+      signOut: mockSignOut,
+    } as unknown as ReturnType<typeof useClerk>)
+    mockClientFetch.mockResolvedValue({
+      ok: true,
+      status: 204,
+      statusText: 'No Content',
+      data: null,
+    })
 
     render(<DeleteAccountPage />)
     fireEvent.click(screen.getByRole('button', { name: /delete account/i }))
@@ -69,8 +78,15 @@ describe('DeleteAccountPage', () => {
 
   it('treats 404 as success and calls signOut', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
-    mockClientFetch.mockResolvedValue({ ok: false, status: 404, statusText: 'Not Found', data: null })
+    mockUseClerk.mockReturnValue({
+      signOut: mockSignOut,
+    } as unknown as ReturnType<typeof useClerk>)
+    mockClientFetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+      data: null,
+    })
 
     render(<DeleteAccountPage />)
     fireEvent.click(screen.getByRole('button', { name: /delete account/i }))
@@ -83,8 +99,15 @@ describe('DeleteAccountPage', () => {
 
   it('shows error message and does not call signOut on API failure', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
-    mockClientFetch.mockResolvedValue({ ok: false, status: 500, statusText: 'Internal Server Error', data: null })
+    mockUseClerk.mockReturnValue({
+      signOut: mockSignOut,
+    } as unknown as ReturnType<typeof useClerk>)
+    mockClientFetch.mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      data: null,
+    })
 
     render(<DeleteAccountPage />)
     fireEvent.click(screen.getByRole('button', { name: /delete account/i }))

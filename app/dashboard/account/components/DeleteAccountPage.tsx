@@ -20,7 +20,9 @@ export default function DeleteAccountPage(): React.JSX.Element {
     setError(null)
 
     try {
-      const resp = await clientFetch(apiRoutes.user.deleteAccount, { id: user.id })
+      const resp = await clientFetch(apiRoutes.user.deleteAccount, {
+        id: user.id,
+      })
 
       if (resp.ok || resp.status === 404) {
         await signOut({ redirectUrl: '/' })
