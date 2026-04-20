@@ -71,6 +71,7 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.events,
   TASK_TYPES.compliance,
   TASK_TYPES.awareness,
+  TASK_TYPES.recurring,
 ]
 
 const useIsomorphicLayoutEffect =
