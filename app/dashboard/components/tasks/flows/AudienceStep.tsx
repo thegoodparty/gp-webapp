@@ -100,6 +100,10 @@ export default function AudienceStep({
   )
 
   const handleOnNext = async () => {
+    if (countError) {
+      return
+    }
+
     setLoading(true)
 
     const isTextType =
@@ -130,7 +134,12 @@ export default function AudienceStep({
   }
 
   useEffect(() => {
-    if (!hasValues) return
+    if (!hasValues) {
+      setCountError(null)
+      setCount(0)
+      onChangeCallback('voterCount', 0)
+      return
+    }
 
     debounce(async () => {
       setLoading(true)

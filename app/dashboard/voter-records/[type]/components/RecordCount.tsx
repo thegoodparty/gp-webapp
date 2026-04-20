@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MarketingH2 from '@shared/typography/MarketingH2'
 import { CircularProgress } from '@mui/material'
 import { numberFormatter } from 'helpers/numberHelper'
@@ -8,8 +8,8 @@ import Body2 from '@shared/typography/Body2'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { Campaign } from 'helpers/types'
+import { extractApiErrorInfo } from 'helpers/extractApiErrorInfo'
 
-let attempts = 0
 const MAX_ATTEMPTS = 3
 const MISSING_L2_DISTRICT_DATA_ERROR_CODE = 'MISSING_L2_DISTRICT_DATA'
 
@@ -31,23 +31,6 @@ export interface CountVoterFileError {
 }
 
 export type CountVoterFileResult = number | CountVoterFileError
-
-const extractErrorInfo = (
-  data: unknown,
-): { message?: string; errorCode?: string } => {
-  if (!data || typeof data !== 'object') return {}
-  const record = data as Record<string, unknown>
-  const rawMessage = record.message
-  const message =
-    typeof rawMessage === 'string'
-      ? rawMessage
-      : Array.isArray(rawMessage)
-      ? rawMessage.filter((m) => typeof m === 'string').join(', ')
-      : undefined
-  const errorCode =
-    typeof record.errorCode === 'string' ? record.errorCode : undefined
-  return { message, errorCode }
-}
 
 export const countVoterFile = async (
   type: string,
@@ -72,7 +55,11 @@ export const countVoterFile = async (
     )
 
     if (!resp.ok) {
-      return { ok: false, status: resp.status, ...extractErrorInfo(resp.data) }
+      return {
+        ok: false,
+        status: resp.status,
+        ...extractApiErrorInfo(resp.data),
+      }
     }
 
     const count = resp.data
@@ -100,7 +87,9 @@ export default function RecordCount(
   const [loading, setLoading] = useState(true)
   const [count, setCount] = useState(0)
   const [error, setError] = useState<CountVoterFileError | null>(null)
+  const attemptsRef = useRef(0)
   useEffect(() => {
+    attemptsRef.current = 0
     handleCount()
   }, [type, isCustom])
 
@@ -120,8 +109,8 @@ export default function RecordCount(
         response.status >= 400 &&
         response.status < 500
       if (!isMissingDistrictData && !isClientError) {
-        attempts++
-        if (attempts < MAX_ATTEMPTS) {
+        attemptsRef.current++
+        if (attemptsRef.current < MAX_ATTEMPTS) {
           handleCount()
           return
         }
@@ -129,6 +118,7 @@ export default function RecordCount(
       setError(response)
       setLoading(false)
     } else {
+      setError(null)
       setCount(response)
       setLoading(false)
     }

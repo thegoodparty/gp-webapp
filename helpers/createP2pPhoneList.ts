@@ -1,6 +1,7 @@
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { VoterFileFilters } from 'helpers/types'
+import { extractApiErrorInfo } from 'helpers/extractApiErrorInfo'
 
 export type PhoneListInput = VoterFileFilters & { name?: string }
 
@@ -21,23 +22,6 @@ export type PhoneListResult =
 export interface PhoneListStatusResponse {
   phoneListId: number
   leadsLoaded: number
-}
-
-const extractErrorInfo = (
-  data: unknown,
-): { message?: string; errorCode?: string } => {
-  if (!data || typeof data !== 'object') return {}
-  const record = data as Record<string, unknown>
-  const rawMessage = record.message
-  const message =
-    typeof rawMessage === 'string'
-      ? rawMessage
-      : Array.isArray(rawMessage)
-      ? rawMessage.filter((m) => typeof m === 'string').join(', ')
-      : undefined
-  const errorCode =
-    typeof record.errorCode === 'string' ? record.errorCode : undefined
-  return { message, errorCode }
 }
 
 export const createP2pPhoneList = async (
@@ -62,7 +46,7 @@ export const createP2pPhoneList = async (
       return {
         ok: false,
         status: resp.status,
-        ...extractErrorInfo(resp.data),
+        ...extractApiErrorInfo(resp.data),
       }
     }
     return { ok: true, ...resp.data }
