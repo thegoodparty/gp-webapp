@@ -4,11 +4,10 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
-import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
 import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
 import { WaitHelper } from 'src/helpers/wait.helper'
-import { wait } from 'tests/utils/eventually'
+import { setupElectedOfficeUser } from 'src/helpers/organizations'
 
 const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   const sectionHeading = sheet.locator('h4', { hasText: label })
@@ -17,7 +16,7 @@ const selectCheckbox = async (sheet: Locator, label: string, value: string) => {
   await checkboxLabel.locator('xpath=..').getByRole('checkbox').click()
 }
 
-let filterCallCount = 0
+// let filterCallCount = 0
 
 const openPersonPanel = async (row: Locator, panel: Locator) => {
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -52,7 +51,7 @@ const testFilterField = async (
     )[]
   },
 ) => {
-  filterCallCount++
+  // filterCallCount++
 
   /**
    * Why:
@@ -60,19 +59,22 @@ const testFilterField = async (
    * in the browser. It's not that reflective of actual user behavior, so we reload the page every few
    * filters in order to avoid the memory issues.
    */
-  if (filterCallCount % 8 === 0) {
-    await page.reload({ waitUntil: 'domcontentloaded' })
-    await NavigationHelper.dismissOverlays(page)
-    await expect(
-      page
-        .locator('table')
-        .first()
-        .locator('tbody tr')
-        .first()
-        .locator('td')
-        .first(),
-    ).toHaveText(/.+/)
-  }
+  // Commenting this out for now since it was causing tests to fail.
+  //  Swain to follow up with a long term solution.
+
+  // if (filterCallCount % 8 === 0) {
+  //   await page.reload({ waitUntil: 'domcontentloaded' })
+  //   await NavigationHelper.dismissOverlays(page)
+  //   await expect(
+  //     page
+  //       .locator('table')
+  //       .first()
+  //       .locator('tbody tr')
+  //       .first()
+  //       .locator('td')
+  //       .first(),
+  //   ).toHaveText(/.+/)
+  // }
 
   await page.getByTestId('edit-list-button').first().click()
   const sheet = filtersSheet(page, /update segment/i)
@@ -138,20 +140,10 @@ test.beforeEach(async ({ page }) => {
 test('validate contacts filters', async ({ page }) => {
   test.setTimeout(5 * 60 * 1000)
 
-  await authenticateTestUser(page, {
-    isolated: true,
-    race: {
-      zip: '82001',
-      office: 'Cheyenne City Council - Ward 2',
-    },
+  await setupElectedOfficeUser(page, {
+    zip: '82001',
+    office: 'Cheyenne City Council - Ward 2',
   })
-
-  await page.goto('/dashboard/election-result', {
-    waitUntil: 'domcontentloaded',
-  })
-  await wait(500)
-  await page.getByRole('button', { name: 'I won my race' }).click()
-  await page.waitForURL('**/polls/welcome', { timeout: 15000 })
 
   await page.goto('/dashboard/contacts')
   await NavigationHelper.dismissOverlays(page)

@@ -1,7 +1,7 @@
 import { API_ROOT } from 'appEnv'
 import { cookies } from 'next/headers'
 import { createRequest } from './typed-request'
-import { getServerToken } from 'helpers/userServerHelper'
+import { getServerToken } from 'helpers/tokenHelper'
 import {
   ORG_SLUG_COOKIE,
   ORG_SLUG_HEADER,
@@ -10,7 +10,10 @@ import {
 /** Use this for server-side requests. */
 export const serverRequest = createRequest(async (opts) => {
   const token = await getServerToken()
-  opts.headers = { ...opts.headers, Authorization: `Bearer ${token}` }
+  opts.headers = {
+    ...opts.headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  }
   opts.baseURL = API_ROOT
 
   const cookieStore = await cookies()

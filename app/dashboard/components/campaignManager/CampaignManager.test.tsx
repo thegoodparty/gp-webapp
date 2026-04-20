@@ -2,11 +2,11 @@ import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
 import { render } from 'helpers/test-utils/render'
 import CampaignManager from './CampaignManager'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-const mockGetCookie = vi.fn()
 const mockUseCampaign = vi.fn()
 const mockClientFetch = vi.fn()
 const mockUseTaskGenerationStream = vi.fn()
@@ -16,11 +16,12 @@ vi.mock('app/dashboard/shared/DashboardLayout', () => ({
 }))
 
 vi.mock('./LoadingState', () => ({
-  AI_CAMPAIGN_CHECKLIST_COOKIE: 'aiCampaignChecklistComplete',
-  default: ({ hideCallback }: { hideCallback?: () => void }) =>
-    mockGetCookie('aiCampaignChecklistComplete') ? null : (
-      <button onClick={hideCallback}>Hide loading</button>
-    ),
+  default: ({
+    hideCallback,
+  }: {
+    isStreamComplete: boolean
+    hideCallback: () => void
+  }) => <button onClick={hideCallback}>Hide loading</button>,
 }))
 
 vi.mock('./HeaderSection', () => ({ default: () => <div>Header</div> }))
@@ -43,10 +44,6 @@ vi.mock('@shared/hooks/CampaignUpdateHistoryProvider', () => ({
 }))
 vi.mock('../voterGoalsHelpers', () => ({
   calculateContactGoalsFromCampaign: () => ({ text: 1 }),
-}))
-
-vi.mock('helpers/cookieHelper', () => ({
-  getCookie: (...args: unknown[]) => mockGetCookie(...args),
 }))
 
 vi.mock('@shared/hooks/useCampaign', () => ({
@@ -86,13 +83,16 @@ const makeTask = () => ({
 
 beforeEach(() => {
   vi.clearAllMocks()
-  mockGetCookie.mockReturnValue(undefined)
   mockUseCampaign.mockReturnValue([
     {
       id: 'campaign-1',
       isPro: false,
       details: { electionDate: '2026-11-03' },
-      pathToVictory: { data: { viability: { score: 80 } } },
+      raceTargetMetrics: {
+        projectedTurnout: 0,
+        winNumber: 0,
+        voterContactGoal: 0,
+      },
       hasFreeTextsOffer: false,
     },
   ])
@@ -139,7 +139,6 @@ describe('CampaignManager generation tracking', () => {
   })
 
   it('does NOT fire GenerationCompleted when no generation occurred in the session', async () => {
-    const user = userEvent.setup()
     mockUseTaskGenerationStream.mockReturnValue({
       isGenerating: false,
       progress: null,
@@ -149,8 +148,6 @@ describe('CampaignManager generation tracking', () => {
     })
 
     render(<CampaignManager pathname="/dashboard" tcrCompliance={null} />)
-
-    await user.click(screen.getByRole('button', { name: 'Hide loading' }))
 
     await waitFor(() => {
       expect(screen.getByText('Tasks list')).toBeInTheDocument()

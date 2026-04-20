@@ -9,8 +9,6 @@ import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { clientRequest } from 'gpApi/typed-request'
@@ -40,43 +38,6 @@ interface OfficeStepProps {
   updateCallback?: () => void | Promise<void>
   adminMode?: boolean
   organizationSlug?: string
-}
-
-interface CampaignResponse extends Campaign {
-  error?: string
-}
-
-async function updateRaceTargetDetails(
-  slug: string | undefined = undefined,
-): Promise<Campaign | false> {
-  try {
-    const endpoint = slug
-      ? apiRoutes.campaign.raceTargetDetails.adminUpdate
-      : apiRoutes.campaign.raceTargetDetails.update
-    const resp = await clientFetch<CampaignResponse>(endpoint, { slug })
-
-    if (resp.data && resp.data.error) {
-      console.error('API error: ', resp.data)
-      return false
-    }
-    return resp.data
-  } catch (error) {
-    console.error('error: ', error)
-    return false
-  }
-}
-
-interface UpdateAttr {
-  key: string
-  value: string | number | boolean | undefined
-}
-
-async function runPostOfficeStepUpdates(
-  attr: UpdateAttr[],
-  slug: string | undefined = undefined,
-): Promise<void> {
-  await updateCampaign(attr, slug)
-  await updateRaceTargetDetails(slug)
 }
 
 export default function OfficeStep({
@@ -145,12 +106,13 @@ export default function OfficeStep({
       step,
     })
 
-    const { position, election, id, filingPeriods } = state.ballotOffice
+    const { position, election, id, filingPeriods, city } = state.ballotOffice
 
     const attr = [
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
+      { key: 'details.city', value: city ?? null },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
@@ -190,16 +152,6 @@ export default function OfficeStep({
             ? filingPeriods[0]?.endOn
             : undefined,
       },
-      // reset the electionType and electionLocation
-      // so it can run a full p2v.
-      {
-        key: 'pathToVictory.electionType',
-        value: undefined,
-      },
-      {
-        key: 'pathToVictory.electionLocation',
-        value: undefined,
-      },
     ]
     if (step) {
       const currentStep = onboardingStep(campaign, step)
@@ -208,7 +160,7 @@ export default function OfficeStep({
 
     const trackingProperties = {
       officeState: position.state,
-      officeMunicipality: 'Unavailable',
+      officeMunicipality: city ?? 'Unavailable',
       officeName: position.name,
       officeElectionDate: election.electionDay,
     }
@@ -224,14 +176,14 @@ export default function OfficeStep({
     }
 
     if (adminMode && campaign) {
-      await runPostOfficeStepUpdates(attr, campaign.slug)
+      await updateCampaign(attr, campaign.slug)
     } else if (campaign) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,
       })
-      await runPostOfficeStepUpdates(attr)
+      await updateCampaign(attr)
     } else if (!organizationSlug) {
       await identifyUser(user?.id, trackingProperties)
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
@@ -248,7 +200,6 @@ export default function OfficeStep({
         return
       }
       setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
-      await updateRaceTargetDetails()
       router.push(`/onboarding/${newCampaign.slug}/2`)
       setProcessing(false)
       return

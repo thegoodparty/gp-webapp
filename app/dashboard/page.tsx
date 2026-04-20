@@ -1,7 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import DashboardContent from './components/DashboardContent'
 import candidateAccess from './shared/candidateAccess'
-import { fetchUserCampaign } from '../onboarding/shared/getCampaign'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
@@ -12,10 +11,17 @@ import type { TcrCompliance } from 'helpers/types'
 const fetchTasks = async (): Promise<Task[]> => {
   const currentDate = new Date().toISOString().split('T')[0]
 
-  const resp = await serverFetch<Task[]>(apiRoutes.campaign.legacyTasks.list, {
-    date: currentDate,
-  })
-  return resp.data
+  try {
+    const resp = await serverFetch<Task[]>(
+      apiRoutes.campaign.legacyTasks.list,
+      {
+        date: currentDate,
+      },
+    )
+    return resp.ok ? resp.data : []
+  } catch {
+    return []
+  }
 }
 
 const meta = pageMetaData({
@@ -34,8 +40,7 @@ export default async function Page(): Promise<React.JSX.Element> {
     return redirect('/dashboard/polls')
   }
 
-  const [campaign, tasks, tcrComplianceResponse] = await Promise.all([
-    fetchUserCampaign(),
+  const [tasks, tcrComplianceResponse] = await Promise.all([
     fetchTasks(),
     serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
   ])
@@ -49,7 +54,6 @@ export default async function Page(): Promise<React.JSX.Element> {
       <HubSpotChatWidgetScript />
       <DashboardContent
         pathname="/dashboard"
-        campaign={campaign}
         tasks={tasks}
         tcrCompliance={tcrCompliance}
       />

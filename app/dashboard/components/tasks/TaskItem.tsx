@@ -2,9 +2,13 @@ import {
   DISPLAY_TASK_TYPES,
   TASK_TYPES,
   formatTaskDate,
+  isTextFlowType,
 } from '../../shared/constants/tasks.const'
 import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
 import AwarenessTaskItem from './AwarenessTaskItem'
+import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
+import type { TcrCompliance } from 'helpers/types'
 
 export interface Task {
   id: string
@@ -27,6 +31,7 @@ interface TaskItemProps {
   electionDate: string | undefined
   isPro: boolean
   isLegacyList?: boolean
+  tcrCompliance?: TcrCompliance | null
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
 }
@@ -37,6 +42,7 @@ export default function TaskItem({
   electionDate,
   isPro,
   isLegacyList = true,
+  tcrCompliance,
   onCheck,
   onAction,
 }: TaskItemProps): React.JSX.Element {
@@ -50,6 +56,10 @@ export default function TaskItem({
     completed,
     proRequired,
   } = task
+
+  const { p2pUxEnabled } = useP2pUxEnabled()
+  const isTextCompliant =
+    tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
 
   const formattedDate = formatTaskDate(date, electionDate, deadline)
 
@@ -66,14 +76,38 @@ export default function TaskItem({
     )
   }
 
+  const textRequiresCompliance =
+    isTextFlowType(flowType) &&
+    isPro &&
+    p2pUxEnabled &&
+    !isTextCompliant &&
+    !completed
+
   const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
-  const locked = noLongerAvailable || Boolean(proRequired && !isPro)
+  const locked =
+    noLongerAvailable ||
+    Boolean(proRequired && !isPro) ||
+    textRequiresCompliance
   let lockedReason = ''
   if (noLongerAvailable) {
     lockedReason = 'This task is no longer available'
   } else if (proRequired && !isPro) {
     lockedReason = 'This task is only available to Pro users'
+  } else if (textRequiresCompliance) {
+    switch (tcrCompliance?.status) {
+      case TCR_COMPLIANCE_STATUS.PENDING:
+        lockedReason = 'Compliance review in progress'
+        break
+      case TCR_COMPLIANCE_STATUS.REJECTED:
+        lockedReason = '10DLC registration needs attention'
+        break
+      case TCR_COMPLIANCE_STATUS.ERROR:
+        lockedReason = '10DLC registration error'
+        break
+      default:
+        lockedReason = 'Click to complete your 10DLC compliance'
+    }
   }
 
   const displayTaskType = flowType

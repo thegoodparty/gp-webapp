@@ -2,7 +2,7 @@
 import DashboardLayout from '../shared/DashboardLayout'
 import { weeksTill } from 'helpers/dateHelper'
 import { useCallback, useEffect, useState } from 'react'
-import { calculateContactGoals } from './voterGoalsHelpers'
+import { calculateContactGoalsFromCampaign } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
 import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
@@ -14,26 +14,25 @@ import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHisto
 import TasksList from './tasks/TasksList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type { Task } from './tasks/TaskItem'
-import type { Campaign, TcrCompliance } from 'helpers/types'
+import type { TcrCompliance } from 'helpers/types'
 import { usePositionName } from '@shared/hooks/usePositionName'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 interface DashboardPageProps {
   pathname: string
   tasks: Task[]
-  campaign: Campaign | null
   tcrCompliance: TcrCompliance | null
 }
 
 const DashboardPage = ({
   pathname,
   tasks,
-  campaign: campaignProp,
   tcrCompliance,
 }: DashboardPageProps): React.JSX.Element => {
   const [_, setUser] = useUser()
-  const [campaign, setCampaign] = useState<Campaign | null>(campaignProp)
-  const { pathToVictory: p2vObject, goals, details } = campaign || {}
-  const pathToVictory = p2vObject?.data || {}
+  const [campaign] = useCampaign()
+
+  const { goals, details } = campaign || {}
   const { primaryElectionDate } = details || {}
   type PrimaryResult = 'won' | 'lost'
   type PrimaryResultState = {
@@ -45,7 +44,7 @@ const DashboardPage = ({
     useState<PrimaryResultState>({
       modalOpen: false,
       modalDismissed: false,
-      primaryResult: campaignProp?.details?.primaryResult,
+      primaryResult: campaign?.details?.primaryResult,
     })
 
   const positionName = usePositionName()
@@ -66,8 +65,6 @@ const DashboardPage = ({
   }, [])
 
   const electionDate = details?.electionDate || goals?.electionDate
-  const { voterContactGoal, voteGoal } = pathToVictory || {}
-  let resolvedContactGoal = voterContactGoal ?? voteGoal! * 5
   const now = new Date()
   let resolvedDate = electionDate
 
@@ -87,7 +84,9 @@ const DashboardPage = ({
   }
 
   const weeksUntil = weeksTill(resolvedDate)
-  const contactGoals = calculateContactGoals(resolvedContactGoal)
+  const contactGoals = campaign
+    ? calculateContactGoalsFromCampaign(campaign)
+    : false
 
   const primaryResultCloseCallback = useCallback(
     (selectedResult?: PrimaryResult) => {
@@ -98,19 +97,6 @@ const DashboardPage = ({
           modalOpen: false,
           primaryResult: selectedResult,
         }))
-
-        //update local campaign object
-        setCampaign((campaign) =>
-          campaign
-            ? {
-                ...campaign,
-                details: {
-                  ...campaign.details,
-                  primaryResult: selectedResult,
-                },
-              }
-            : campaign,
-        )
       } else {
         // user pressed Cancel to dismiss modal for now
         setPrimaryResultState({
@@ -124,11 +110,7 @@ const DashboardPage = ({
   )
 
   trackEvent(EVENTS.Dashboard.Viewed, {
-    p2vCompleted: `${
-      pathToVictory && pathToVictory?.p2vStatus === 'Complete'
-        ? 'true'
-        : 'false'
-    }`,
+    p2vCompleted: `${campaign?.raceTargetMetrics ? 'true' : 'false'}`,
   })
 
   const weeksUntilValue =

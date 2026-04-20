@@ -17,7 +17,7 @@ test.describe('Custom office flow', () => {
 
     await page.goto('/onboarding/office-selection')
 
-    await page.getByLabel('Zip Code').fill('28739')
+    await page.getByLabel('Zip Code').fill('82001')
 
     // Wait for offices to load
     await page.waitForFunction(
@@ -105,7 +105,11 @@ test.describe('Custom office flow', () => {
         electionId: string | null
         zip: string | null
       }
-    }>('/v1/campaigns/mine')
+    }>('/v1/campaigns/mine', {
+      headers: {
+        'x-organization-slug': data.organizations[0]!.slug,
+      },
+    })
     expect(campaign).toMatchObject({
       id: expect.any(Number),
       details: {

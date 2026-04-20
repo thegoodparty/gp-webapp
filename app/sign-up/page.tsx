@@ -1,8 +1,8 @@
-import { getServerUser } from 'helpers/userServerHelper'
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import SignUpPage from './components/SignUpPage'
+import { SignUp } from '@clerk/nextjs'
+import { getPostAuthRedirectPath } from 'app/dashboard/shared/candidateAccess'
 import pageMetaData from 'helpers/metadataHelper'
-import { fetchCampaignStatus } from 'app/dashboard/shared/candidateAccess'
 
 const meta = pageMetaData({
   title: 'Sign up to GoodParty.org',
@@ -11,19 +11,15 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-const Page = async (): Promise<React.JSX.Element> => {
-  const user = await getServerUser()
-  if (user) {
-    const { status, slug } = await fetchCampaignStatus()
-    if (status === 'candidate') {
-      redirect('/dashboard')
-    } else if (slug) {
-      redirect(`/onboarding/${slug}/1`)
-    } else {
-      redirect('/dashboard/profile')
-    }
+export default async function SignUpPage() {
+  const { userId } = await auth()
+  if (userId) {
+    redirect(await getPostAuthRedirectPath())
   }
-  return <SignUpPage />
-}
 
-export default Page
+  return (
+    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
+      <SignUp fallbackRedirectUrl="/post-auth-redirect" routing="hash" />
+    </div>
+  )
+}

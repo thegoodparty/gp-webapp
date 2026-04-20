@@ -14,7 +14,7 @@ import {
   useOrganization,
 } from '@shared/organization-picker'
 import { usePositionName } from '@shared/hooks/usePositionName'
-import { queryClient } from '@shared/query-client'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface OfficeSectionProps {
   campaign?: Campaign
@@ -23,6 +23,7 @@ interface OfficeSectionProps {
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   const organization = useOrganization()
   const positionName = usePositionName()
+  const queryClient = useQueryClient()
   const initialState: OfficeFieldState = {
     office: '',
     state: '',
@@ -48,7 +49,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         primaryElectionDate: details.primaryElectionDate || '',
         officeTermLength: details.officeTermLength || '',
       })
-    } else if (organization) {
+    } else {
       setState({
         office: positionName,
         state: organization.position?.state || '',
@@ -80,7 +81,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   return (
     <section
       className={
-        organization?.electedOfficeId ? 'pt-6' : 'border-t pt-6 border-gray-600'
+        organization.electedOfficeId ? 'pt-6' : 'border-t pt-6 border-gray-600'
       }
     >
       <H3 className="pb-6">Office Details</H3>
@@ -89,7 +90,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         <CampaignOfficeInputFields
           values={state}
           hiddenFields={
-            organization?.electedOfficeId
+            organization.electedOfficeId
               ? ['electionDate', 'primaryElectionDate', 'officeTermLength']
               : []
           }
@@ -103,7 +104,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSelect={handleUpdate}
-        organizationSlug={organization?.slug}
+        organizationSlug={organization.slug}
       />
     </section>
   )
