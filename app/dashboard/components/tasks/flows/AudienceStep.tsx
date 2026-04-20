@@ -1,9 +1,10 @@
 'use client'
 
 import H1 from '@shared/typography/H1'
-import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Alert, AlertDescription, AlertTitle } from '@styleguide'
+import { MdError } from 'react-icons/md'
 import CustomVoterAudienceFilters, {
   TRACKING_KEYS,
   AudienceFiltersState,
@@ -231,12 +232,11 @@ export default function AudienceStep({
           )}
         </div>
         {inlineCountErrorMessage ? (
-          <div
-            className="mx-auto mb-4 max-w-2xl rounded-lg border border-red-200 bg-red-50 p-3 text-left"
-            role="alert"
-          >
-            <Body2 className="text-red-800">{inlineCountErrorMessage}</Body2>
-          </div>
+          <Alert variant="destructive" className="mb-4 text-left">
+            <MdError />
+            <AlertTitle>Voter data unavailable</AlertTitle>
+            <AlertDescription>{inlineCountErrorMessage}</AlertDescription>
+          </Alert>
         ) : null}
         <div className="text-left">
           <CustomVoterAudienceFilters
