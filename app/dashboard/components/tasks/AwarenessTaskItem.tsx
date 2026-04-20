@@ -38,7 +38,7 @@ export default function AwarenessTaskItem({
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
-            <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground group-hover:text-primary">
+            <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground group-hover:text-primary line-clamp-1">
               {title}
             </p>
             <ChevronRight
@@ -47,7 +47,9 @@ export default function AwarenessTaskItem({
             />
           </div>
           {description && (
-            <p className="text-sm text-base-muted-foreground">{description}</p>
+            <p className="text-sm text-base-muted-foreground line-clamp-1">
+              {description}
+            </p>
           )}
           {date && (
             <div className="flex items-start gap-1 pt-1 text-xs text-base-muted-foreground">
