@@ -38,7 +38,7 @@ export default function AwarenessTaskItem({
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2">
-            <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground group-hover:text-primary line-clamp-1">
+            <p className="min-w-0 flex-1 text-base font-medium text-base-foreground group-hover:text-primary line-clamp-1">
               {title}
             </p>
             <ChevronRight
