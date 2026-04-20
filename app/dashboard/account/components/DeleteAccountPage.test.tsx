@@ -51,7 +51,7 @@ describe('DeleteAccountPage', () => {
 
   it('calls clientFetch then signOut on 204 success', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as ReturnType<typeof useClerk>)
+    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
     mockClientFetch.mockResolvedValue({ ok: true, status: 204, statusText: 'No Content', data: null })
 
     render(<DeleteAccountPage />)
@@ -69,7 +69,7 @@ describe('DeleteAccountPage', () => {
 
   it('treats 404 as success and calls signOut', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as ReturnType<typeof useClerk>)
+    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
     mockClientFetch.mockResolvedValue({ ok: false, status: 404, statusText: 'Not Found', data: null })
 
     render(<DeleteAccountPage />)
@@ -83,7 +83,7 @@ describe('DeleteAccountPage', () => {
 
   it('shows error message and does not call signOut on API failure', async () => {
     const mockSignOut = vi.fn()
-    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as ReturnType<typeof useClerk>)
+    mockUseClerk.mockReturnValue({ signOut: mockSignOut } as unknown as ReturnType<typeof useClerk>)
     mockClientFetch.mockResolvedValue({ ok: false, status: 500, statusText: 'Internal Server Error', data: null })
 
     render(<DeleteAccountPage />)
