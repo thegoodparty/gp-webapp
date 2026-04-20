@@ -23,7 +23,7 @@ export default function AwarenessTaskItem({
       data-slot="task-item"
       className={cn('flex w-full items-center font-opensans', className)}
     >
-      <div className="flex shrink-0 items-start justify-center self-stretch pb-3 pl-4 pr-3 pt-3.5">
+      <div className="flex shrink-0 items-start justify-center self-stretch pb-3 pl-8 pr-3 pt-3.5">
         <CalendarCheck
           size={20}
           strokeWidth={1.5}
