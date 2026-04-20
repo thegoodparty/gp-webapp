@@ -106,13 +106,14 @@ export default function OfficeStep({
       step,
     })
 
-    const { position, election, id, filingPeriods, city } = state.ballotOffice
+    const { position, election, id, filingPeriods } = state.ballotOffice
+    const city = state.ballotOffice.city as string | null | undefined
 
     const attr = [
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
-      { key: 'details.city', value: city ?? null },
+      { key: 'details.city', value: city },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
