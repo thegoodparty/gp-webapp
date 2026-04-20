@@ -106,8 +106,7 @@ export default function OfficeStep({
       step,
     })
 
-    const { position, election, id, filingPeriods } = state.ballotOffice
-    const city = state.ballotOffice.city as string | null | undefined
+    const { position, election, id, filingPeriods, city } = state.ballotOffice
 
     const attr = [
       { key: 'details.electionId', value: election?.id },
