@@ -249,15 +249,14 @@ export const handleCreatePhoneList =
     voterFileFilter: PhoneListInput | undefined,
   ): Promise<string | undefined> => {
     const result = await createP2pPhoneList(voterFileFilter)
-    const phoneListToken = result ? result.token : undefined
 
-    if (!phoneListToken) {
-      errorSnackbar(
-        'There was an error generating a phone list. Please try again.',
-      )
+    if (!result.ok) {
+      const fallback =
+        'There was an error generating a phone list. Please try again.'
+      errorSnackbar(result.message || fallback)
       return
     }
-    return phoneListToken
+    return result.token
   }
 
 export const handleCreateVoterFileFilter =
