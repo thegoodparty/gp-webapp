@@ -111,6 +111,18 @@ export default function BriefingDetailPage({
               {briefing.footer.preparedBy} &middot;{' '}
               {briefing.footer.contactNote}
             </p>
+
+            {/* Disclaimer */}
+            <div className="mt-6 mx-auto max-w-lg rounded-lg border border-border bg-muted/50 px-5 py-4 text-center">
+              <p className="text-xs font-medium text-muted-foreground">
+                Briefings are AI-generated and still in beta
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground/70">
+                Double-check anything you&apos;ll act on against the sources.
+                Your feedback shapes how we improve. We enjoy hearing from all
+                our users.
+              </p>
+            </div>
           </div>
         </div>
       </div>
