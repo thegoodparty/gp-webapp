@@ -112,7 +112,7 @@ export default function OfficeStep({
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
-      { key: 'details.city', value: city ?? null },
+      { key: 'details.city', value: city },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
