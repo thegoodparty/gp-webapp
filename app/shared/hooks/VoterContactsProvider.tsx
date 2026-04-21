@@ -123,15 +123,25 @@ export const VoterContactsProvider = ({
   )
 
   const writeToCache = useCallback(
-    (next: VoterContactsState) => {
-      queryClient.setQueryData<Campaign | null>(CAMPAIGN_QUERY_KEY, (prev) =>
-        prev
+    (
+      next:
+        | VoterContactsState
+        | ((prev: VoterContactsState) => VoterContactsState),
+    ): VoterContactsState => {
+      let nextValues: VoterContactsState = INITIAL_VOTER_CONTACTS_STATE
+      queryClient.setQueryData<Campaign | null>(CAMPAIGN_QUERY_KEY, (prev) => {
+        const prevValues = getFilteredListOfReportedVoterContacts(
+          prev?.data?.reportedVoterGoals,
+        )
+        nextValues = typeof next === 'function' ? next(prevValues) : next
+        return prev
           ? {
               ...prev,
-              data: { ...(prev.data ?? {}), reportedVoterGoals: next },
+              data: { ...(prev.data ?? {}), reportedVoterGoals: nextValues },
             }
-          : prev,
-      )
+          : prev
+      })
+      return nextValues
     },
     [queryClient],
   )
@@ -143,9 +153,12 @@ export const VoterContactsProvider = ({
     { previous: Campaign | null | undefined }
   >({
     mutationFn: async (newValues) => {
-      await updateCampaign([
+      const result = await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newValues },
       ])
+      if (result === false) {
+        throw new Error('Failed to update reportedVoterGoals')
+      }
       return newValues
     },
     onMutate: async (newValues) => {
@@ -166,19 +179,25 @@ export const VoterContactsProvider = ({
     },
   })
 
+  const { mutateAsync } = mutation
+
   const updateState = useCallback<VoterContactsUpdater>(
     async (next) => {
-      const newValues = typeof next === 'function' ? next(state) : next
-      await mutation.mutateAsync(newValues)
+      const current = getFilteredListOfReportedVoterContacts(
+        queryClient.getQueryData<Campaign | null>(CAMPAIGN_QUERY_KEY)?.data
+          ?.reportedVoterGoals,
+      )
+      const newValues = typeof next === 'function' ? next(current) : next
+      await mutateAsync(newValues)
     },
-    [mutation, state],
+    [mutateAsync, queryClient],
   )
 
   const updateLocalState = useCallback<VoterContactsLocalUpdater>(
     (next) => {
-      writeToCache(typeof next === 'function' ? next(state) : next)
+      writeToCache(next)
     },
-    [state, writeToCache],
+    [writeToCache],
   )
 
   return (
