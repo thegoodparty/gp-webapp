@@ -106,12 +106,13 @@ export default function OfficeStep({
       step,
     })
 
-    const { position, election, id, filingPeriods } = state.ballotOffice
+    const { position, election, id, filingPeriods, city } = state.ballotOffice
 
     const attr = [
       { key: 'details.electionId', value: election?.id },
       { key: 'details.raceId', value: id },
       { key: 'details.state', value: election?.state },
+      { key: 'details.city', value: city ?? null },
       {
         key: 'details.officeTermLength',
         value: calcTerm(position),
@@ -159,7 +160,7 @@ export default function OfficeStep({
 
     const trackingProperties = {
       officeState: position.state,
-      officeMunicipality: 'Unavailable',
+      officeMunicipality: city ?? 'Unavailable',
       officeName: position.name,
       officeElectionDate: election.electionDay,
     }

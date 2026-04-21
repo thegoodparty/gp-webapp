@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import TasksList from './TasksList'
 import type { Task } from './TaskItem'
-import type { Campaign } from 'helpers/types'
+import type { Campaign, TcrCompliance } from 'helpers/types'
 import {
   TASK_TYPES,
   STATUS_CHANGES,
@@ -55,10 +55,14 @@ vi.mock('@shared/hooks/useVoterContacts', () => ({
   ],
 }))
 
+const { mockP2pUxState } = vi.hoisted(() => ({
+  mockP2pUxState: { p2pUxEnabled: false },
+}))
+
 vi.mock(
   'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider',
   () => ({
-    useP2pUxEnabled: () => ({ p2pUxEnabled: false }),
+    useP2pUxEnabled: () => mockP2pUxState,
   }),
 )
 
@@ -78,6 +82,7 @@ vi.mock('helpers/analyticsHelper', () => ({
         WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
         TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
         TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+        ViewModeToggled: 'Dashboard - Campaign Plan View Mode Toggled',
         VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
         VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
       },
@@ -124,7 +129,8 @@ vi.mock('../../shared/P2PUpgradeModal', () => ({
   P2P_MODAL_VARIANTS: { NonProUpgrade: 'a', ProFreeTextsNonCompliant: 'b' },
 }))
 vi.mock('../../shared/ComplianceModal', () => ({
-  ComplianceModal: () => null,
+  ComplianceModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="compliance-modal">Compliance Modal</div> : null,
 }))
 vi.mock('./LogTaskModal', () => ({
   default: () => null,
@@ -155,13 +161,32 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     ...overrides,
   } as unknown as Campaign)
 
+const makeTcrCompliance = (
+  overrides: Partial<TcrCompliance> = {},
+): TcrCompliance => ({
+  id: 'tcr-1',
+  ein: '',
+  postalAddress: '',
+  committeeName: '',
+  websiteDomain: '',
+  filingUrl: '',
+  phone: '',
+  email: '',
+  createdAt: new Date('2026-01-01'),
+  updatedAt: new Date('2026-01-01'),
+  campaignId: 1,
+  ...overrides,
+})
+
 const TEST_SESSION_KEY = 'campaign-plan-selected-week:campaign-1'
+const TEST_VIEW_MODE_KEY = 'campaign-plan-view-mode:campaign-1'
 
 beforeEach(() => {
   vi.clearAllMocks()
   sessionStorage.clear()
   sessionStorage.setItem(TEST_SESSION_KEY, '1')
   mockUpdateVoterContactsLocal.mockReset()
+  mockP2pUxState.p2pUxEnabled = false
   mockUseUser.mockReturnValue([{ id: 'user-1' }, vi.fn()])
   mockClientFetch.mockImplementation(
     (route: { path?: string; method?: string }) => {
@@ -610,6 +635,7 @@ describe('TasksList tracking events', () => {
       expect(mockTrackEvent).toHaveBeenCalledWith(
         EVENTS.Dashboard.CampaignPlan.Viewed,
         {
+          viewMode: 'weekly',
           tasksThisWeek: 2,
           tasksCompletedThisWeek: 1,
         },
@@ -938,7 +964,7 @@ describe('TasksList tracking events', () => {
           campaign={makeCampaign({ isPro: true })}
           tasks={[task]}
           isLegacyList={false}
-          tcrCompliance={{ status: 'APPROVED' } as never}
+          tcrCompliance={makeTcrCompliance({ status: 'approved' })}
         />,
       )
 
@@ -1045,4 +1071,491 @@ describe('TasksList tracking events', () => {
       )
     })
   })
+})
+
+describe('TasksList view mode toggle', () => {
+  const mockTrackEvent = vi.mocked(trackEvent)
+
+  it('renders "View all" label when in weekly mode by default', () => {
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
+  })
+
+  it('does NOT render the toggle button for legacy lists', () => {
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={true}
+      />,
+    )
+
+    expect(
+      screen.queryByRole('button', { name: /view all weeks/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /view current week only/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows "View weekly" label after toggling from weekly to full', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toHaveTextContent('View weekly')
+  })
+
+  it('hides the weekly navigator when toggled to full view', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(screen.getByLabelText('Previous week')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(screen.queryByLabelText('Previous week')).not.toBeInTheDocument()
+  })
+
+  it('shows "View all" label again when toggled back to weekly', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
+  })
+
+  it('restores the weekly navigator when toggled back to weekly', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(screen.getByLabelText('Previous week')).toBeInTheDocument()
+  })
+
+  it('fires ViewModeToggled with viewMode="full" when toggling from weekly to full', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      EVENTS.Dashboard.CampaignPlan.ViewModeToggled,
+      { viewMode: 'full' },
+    )
+  })
+
+  it('fires ViewModeToggled with viewMode="weekly" when toggling from full to weekly', async () => {
+    const user = userEvent.setup()
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      EVENTS.Dashboard.CampaignPlan.ViewModeToggled,
+      { viewMode: 'weekly' },
+    )
+  })
+
+  it('persists the view mode in sessionStorage on toggle', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /view all weeks/i }))
+
+    expect(sessionStorage.getItem(TEST_VIEW_MODE_KEY)).toBe('full')
+
+    await user.click(
+      screen.getByRole('button', { name: /view current week only/i }),
+    )
+
+    expect(sessionStorage.getItem(TEST_VIEW_MODE_KEY)).toBe('weekly')
+  })
+
+  it('restores the persisted view mode from sessionStorage on mount', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toHaveTextContent('View weekly')
+  })
+
+  it('defaults to weekly when sessionStorage value is invalid', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'garbage')
+
+    render(
+      <TasksList
+        campaign={makeCampaign()}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toHaveTextContent('View all')
+  })
+
+  it('re-reads sessionStorage when campaign.id changes', () => {
+    sessionStorage.setItem('campaign-plan-view-mode:1', 'full')
+    sessionStorage.setItem('campaign-plan-view-mode:2', 'weekly')
+
+    const view = render(
+      <TasksList
+        campaign={makeCampaign({ id: 1 })}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view current week only/i }),
+    ).toBeInTheDocument()
+
+    view.rerender(
+      <TasksList
+        campaign={makeCampaign({ id: 2 })}
+        tasks={[makeTask({ week: 1 })]}
+        isLegacyList={false}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /view all weeks/i }),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('TasksList full view', () => {
+  it('renders tasks grouped by week with week headers, in descending week order', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const tasks = [
+        makeTask({ id: 'task-early', title: 'Early task', week: 22 }),
+        makeTask({ id: 'task-late', title: 'Late task', week: 20 }),
+      ]
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={tasks}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Early task')).toBeInTheDocument()
+      expect(screen.getByText('Late task')).toBeInTheDocument()
+
+      const earlyPos = screen
+        .getByText('Early task')
+        .compareDocumentPosition(screen.getByText('Late task'))
+      expect(earlyPos & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('marks the current week with the "This week" label', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const currentWeek = Math.ceil(
+        differenceInDays(new Date('2026/11/03'), new Date()) / 7,
+      )
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={[makeTask({ week: currentWeek })]}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('This week')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('renders a date-range label for weeks that are not the current week', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026/06/10 12:00:00'))
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    try {
+      const tasks = [
+        makeTask({ id: 'task-week-30', title: 'Week 30 task', week: 30 }),
+      ]
+
+      render(
+        <TasksList
+          campaign={makeCampaign()}
+          tasks={tasks}
+          isLegacyList={false}
+        />,
+      )
+
+      expect(screen.getByText('Apr 7-13')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('renders the empty state when there are no tasks', () => {
+    sessionStorage.setItem(TEST_VIEW_MODE_KEY, 'full')
+
+    render(
+      <TasksList campaign={makeCampaign()} tasks={[]} isLegacyList={false} />,
+    )
+
+    expect(
+      screen.getByText('No tasks in the campaign plan'),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('TasksList text task 10DLC compliance lock', () => {
+  beforeAll(() => {
+    if (typeof globalThis.ResizeObserver === 'undefined') {
+      const noop = () => undefined
+      globalThis.ResizeObserver = class {
+        observe = noop
+        unobserve = noop
+        disconnect = noop
+      } as unknown as typeof ResizeObserver
+    }
+  })
+
+  it('locks a text task when the Pro user is not 10DLC compliant and p2pUxEnabled is on', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+  })
+
+  it('locks a p2pDisabledText task when the Pro user is not 10DLC compliant and p2pUxEnabled is on', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.p2pDisabledText })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+  })
+
+  it('does NOT lock a text task when the Pro user is 10DLC compliant', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'approved' })}
+      />,
+    )
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+  })
+
+  it('does NOT lock a text task for compliance when p2pUxEnabled is off', () => {
+    mockP2pUxState.p2pUxEnabled = false
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+  })
+
+  it('does NOT lock non-text tasks for 10DLC compliance', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.robocall })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+  })
+
+  it('opens the ComplianceModal when clicking a compliance-locked text task', async () => {
+    const user = userEvent.setup()
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+
+    expect(screen.getByTestId('compliance-modal')).toBeInTheDocument()
+  })
+
+  it('does NOT lock a completed text task when the Pro user is not 10DLC compliant', () => {
+    mockP2pUxState.p2pUxEnabled = true
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: true })}
+        tasks={[makeTask({ flowType: TASK_TYPES.text, completed: true })]}
+        isLegacyList={false}
+        tcrCompliance={makeTcrCompliance({ status: 'pending' })}
+      />,
+    )
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+  })
+
+  it.each([
+    { status: 'pending' as const, reason: 'Compliance review in progress' },
+    {
+      status: 'rejected' as const,
+      reason: '10DLC registration needs attention',
+    },
+    { status: 'error' as const, reason: '10DLC registration error' },
+    {
+      status: 'submitted' as const,
+      reason: 'Click to complete your 10DLC compliance',
+    },
+  ])(
+    'shows "$reason" tooltip when the user is locked with status "$status"',
+    async ({ status, reason }) => {
+      const user = userEvent.setup()
+      mockP2pUxState.p2pUxEnabled = true
+
+      const { container } = render(
+        <TasksList
+          campaign={makeCampaign({ isPro: true })}
+          tasks={[makeTask({ flowType: TASK_TYPES.text })]}
+          isLegacyList={false}
+          tcrCompliance={makeTcrCompliance({ status })}
+        />,
+      )
+
+      const lockIcon = container.querySelector('.lucide-lock')
+      expect(lockIcon).not.toBeNull()
+      await user.hover(lockIcon as Element)
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(reason, { selector: '[role="tooltip"]' }),
+        ).toBeInTheDocument()
+      })
+    },
+  )
 })
