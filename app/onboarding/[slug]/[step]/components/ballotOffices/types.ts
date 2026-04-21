@@ -35,6 +35,7 @@ export interface Race {
   position: RacePosition
   election: RaceElection
   filingPeriods?: FilingPeriod[]
+  city?: string | null
 }
 
 export interface RaceWithHighlight extends Omit<Race, 'position'> {

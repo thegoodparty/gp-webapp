@@ -75,7 +75,7 @@ export default function CampaignPlanTaskItem({
   const body = (
     <div className="flex min-w-0 flex-1 flex-col">
       <div className="flex items-center gap-2">
-        <p className="min-w-0 flex-1 truncate text-base font-medium text-base-foreground group-hover:text-primary">
+        <p className="min-w-0 flex-1 text-base font-medium text-base-foreground group-hover:text-primary  line-clamp-1">
           {title}
         </p>
         {noLongerAvailable ? (
@@ -94,7 +94,9 @@ export default function CampaignPlanTaskItem({
         )}
       </div>
       {description && (
-        <p className="text-sm text-base-muted-foreground">{description}</p>
+        <p className="text-sm text-base-muted-foreground line-clamp-1">
+          {description}
+        </p>
       )}
       <div className="flex items-start gap-1 pt-1 text-xs text-base-muted-foreground">
         <span>{formattedDate}</span>
@@ -153,7 +155,7 @@ export default function CampaignPlanTaskItem({
               <Lock
                 size={20}
                 strokeWidth={1.5}
-                className="text-base-foreground"
+                className="text-base-foreground ml-3"
               />
             </TooltipTrigger>
             <TooltipContent>{lockedReason}</TooltipContent>

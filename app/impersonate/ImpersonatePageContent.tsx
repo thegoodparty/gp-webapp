@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useClerk } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 
 export default function ImpersonatePageContent() {
   const { client, setActive, signOut, loaded } = useClerk()
   const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
 
   const ticket = searchParams?.get('__clerk_ticket') ?? null
 
@@ -43,8 +41,7 @@ export default function ImpersonatePageContent() {
         }
 
         await setActive({ session: result.createdSessionId })
-        router.refresh()
-        router.push('/dashboard')
+        window.location.href = '/dashboard'
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         console.error('[impersonate] Failed:', err)
