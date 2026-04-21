@@ -1,7 +1,10 @@
 import { noop, noopAsync } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
+import { createContext, useCallback, useMemo } from 'react'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Campaign } from 'helpers/types'
 
 export const getVoterContactField = (
   outreachType: string,
@@ -110,42 +113,72 @@ interface VoterContactsProviderProps {
 export const VoterContactsProvider = ({
   children,
 }: VoterContactsProviderProps): React.JSX.Element => {
+  const queryClient = useQueryClient()
   const [campaign] = useCampaign()
-  const { data: campaignData } = campaign || {}
-  const { reportedVoterGoals } = campaignData || {}
-  const [state, setState] = useState(INITIAL_VOTER_CONTACTS_STATE)
+  const reportedVoterGoals = campaign?.data?.reportedVoterGoals
 
-  useEffect(() => {
-    if (reportedVoterGoals) {
-      setState(getFilteredListOfReportedVoterContacts(reportedVoterGoals))
-    }
-  }, [reportedVoterGoals])
+  const state = useMemo(
+    () => getFilteredListOfReportedVoterContacts(reportedVoterGoals),
+    [reportedVoterGoals],
+  )
 
-  const updateState = useCallback(
-    async (
-      next:
-        | VoterContactsState
-        | ((prev: VoterContactsState) => VoterContactsState),
-    ) => {
-      const newValues = typeof next === 'function' ? next(state) : next
+  const writeToCache = useCallback(
+    (next: VoterContactsState) => {
+      queryClient.setQueryData<Campaign | null>(CAMPAIGN_QUERY_KEY, (prev) =>
+        prev
+          ? {
+              ...prev,
+              data: { ...(prev.data ?? {}), reportedVoterGoals: next },
+            }
+          : prev,
+      )
+    },
+    [queryClient],
+  )
+
+  const mutation = useMutation<
+    VoterContactsState,
+    Error,
+    VoterContactsState,
+    { previous: Campaign | null | undefined }
+  >({
+    mutationFn: async (newValues) => {
       await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newValues },
       ])
-
-      setState(newValues)
+      return newValues
     },
-    [state],
+    onMutate: async (newValues) => {
+      await queryClient.cancelQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+      const previous = queryClient.getQueryData<Campaign | null>(
+        CAMPAIGN_QUERY_KEY,
+      )
+      writeToCache(newValues)
+      return { previous }
+    },
+    onError: (_err, _vars, context) => {
+      if (context) {
+        queryClient.setQueryData(CAMPAIGN_QUERY_KEY, context.previous)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+    },
+  })
+
+  const updateState = useCallback<VoterContactsUpdater>(
+    async (next) => {
+      const newValues = typeof next === 'function' ? next(state) : next
+      await mutation.mutateAsync(newValues)
+    },
+    [mutation, state],
   )
 
-  const updateLocalState = useCallback(
-    (
-      next:
-        | VoterContactsState
-        | ((prev: VoterContactsState) => VoterContactsState),
-    ) => {
-      setState((prev) => (typeof next === 'function' ? next(prev) : next))
+  const updateLocalState = useCallback<VoterContactsLocalUpdater>(
+    (next) => {
+      writeToCache(typeof next === 'function' ? next(state) : next)
     },
-    [],
+    [state, writeToCache],
   )
 
   return (
