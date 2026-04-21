@@ -27,19 +27,21 @@ export default function AwarenessDetailModal({
       description={description || 'Task details'}
       dialogClassName="max-w-md"
     >
-      <div className="flex flex-col gap-4 p-4 md:p-1">
-        <div>
-          <h3 className="text-lg font-semibold">{title}</h3>
+      <div className="flex flex-col gap-4 font-opensans p-4 md:p-1">
+        <div className="flex flex-col gap-1.5 text-center md:text-left">
+          <h3 className="text-lg font-semibold leading-none text-base-foreground">
+            {title}
+          </h3>
           {description && (
-            <p className="mt-1 text-sm text-base-muted-foreground">
+            <p className="text-sm font-normal leading-5 text-base-muted-foreground">
               {description}
             </p>
           )}
         </div>
 
         {formattedDate && (
-          <div className="flex items-center gap-2 text-sm">
-            <CalendarCheck className="h-4 w-4 text-base-muted-foreground" />
+          <div className="flex items-center gap-2 text-sm font-normal text-base-foreground">
+            <CalendarCheck className="h-4 w-4 shrink-0" />
             <span>{formattedDate}</span>
           </div>
         )}
