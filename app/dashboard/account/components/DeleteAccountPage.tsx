@@ -71,6 +71,12 @@ export default function DeleteAccountPage(): React.JSX.Element {
         Delete Account
       </Button>
 
+      {error && (
+        <Alert variant="destructive" className="mt-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <AlertDialog
         open={modalOpen}
         onOpenChange={(open) => {
@@ -85,11 +91,6 @@ export default function DeleteAccountPage(): React.JSX.Element {
               deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
             <AlertDialogAction
