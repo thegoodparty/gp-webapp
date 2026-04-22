@@ -5,8 +5,20 @@ import { useClerk } from '@clerk/nextjs'
 import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { Button } from 'styleguide/components/ui/button'
-import Modal from '@shared/utils/Modal'
+import { buttonVariants } from 'styleguide/components/ui/button'
+import {
+  Alert,
+  AlertDescription,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+  Button,
+} from 'styleguide/components/ui'
 
 export default function DeleteAccountPage(): React.JSX.Element {
   const [user] = useUser()
@@ -59,37 +71,37 @@ export default function DeleteAccountPage(): React.JSX.Element {
         Delete Account
       </Button>
 
-      <Modal
+      <AlertDialog
         open={modalOpen}
-        closeCallback={() => {
-          if (!loading) setModalOpen(false)
+        onOpenChange={(open) => {
+          if (!loading) setModalOpen(open)
         }}
-        preventBackdropClose={loading}
-        preventEscClose={loading}
       >
-        <h3 className="text-lg font-semibold mb-2">Are you sure?</h3>
-        <p className="text-gray-600 mb-4">
-          This cannot be undone. All your campaign data will be permanently
-          deleted.
-        </p>
-        {error && (
-          <p role="alert" className="text-red-600 text-sm mb-4">
-            {error}
-          </p>
-        )}
-        <div className="flex gap-3 justify-end">
-          <Button onClick={() => setModalOpen(false)} disabled={loading}>
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDeleteConfirm}
-            disabled={loading}
-          >
-            {loading ? 'Deleting...' : 'Delete My Account'}
-          </Button>
-        </div>
-      </Modal>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This cannot be undone. All your campaign data will be permanently
+              deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={buttonVariants({ variant: 'destructive' })}
+              onClick={handleDeleteConfirm}
+              disabled={loading}
+            >
+              {loading ? 'Deleting...' : 'Delete My Account'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
