@@ -61,11 +61,8 @@ export default function PledgeStep({ campaign, step }: PledgeStepProps) {
               <H4>Independent</H4>
             </div>
             <Body1>
-              I am on the ballot as a nonpartisan, independent, or third-party
-              candidate. I don&apos;t serve on any boards or organizations
-              affiliated with the Democratic or Republican parties. I am
-              committed to serving the interests of the people regardless of
-              partisan politics.
+              You must be independent of big money and the two major political
+              parties.
             </Body1>
           </div>
 
@@ -75,10 +72,9 @@ export default function PledgeStep({ campaign, step }: PledgeStepProps) {
               <H4>People-Powered</H4>
             </div>
             <Body1>
-              I will focus on solving the problems facing my community, not
-              serving myself or special interests. I will disclose donors and
-              ensure that most of my funding comes from individual donors, not
-              from corporations, unions or other special interests.
+              Your campaign or administration must be centered on serving the
+              people, only raising funds from real, living people (not
+              corporations or special interests).
             </Body1>
           </div>
 
@@ -88,11 +84,8 @@ export default function PledgeStep({ campaign, step }: PledgeStepProps) {
               <H4>Anti-Corruption</H4>
             </div>
             <Body1>
-              I will uphold the highest level of integrity by being open,
-              transparent and accountable about my positions and progress on
-              issues. This means staying connected to, informed by, and
-              responsive to all my constituents using modern tools and data to
-              inform decisions.
+              You must serve with integrity, transparency, and be accountable to
+              the people.
             </Body1>
           </div>
         </div>
