@@ -45,9 +45,10 @@ Tests that need an authenticated user call `authenticateTestUser(page)` from `te
 1. Registers a user via the API
 2. Completes the full onboarding flow via API calls
 3. Injects `token` and `user` cookies into the browser context
-4. Auto-deletes created users after the test run
 
 By default, a single user is cached and shared across tests in a worker. Pass `{ isolated: true }` to create a dedicated user for a test.
+
+Test users are not cleaned up per-run. A scheduled job on gp-api (`UsersService.deleteTestUsers`, every 6h) removes any `@test.goodparty.org` user older than 3 hours from both the DB and Clerk, so every e2e run leaves a short-lived footprint that the next scheduled sweep clears.
 
 ```typescript
 import { authenticateTestUser } from '../utils/api-registration'

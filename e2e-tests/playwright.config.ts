@@ -23,8 +23,6 @@ export default defineConfig({
   outputDir: './test-results',
   snapshotPathTemplate:
     '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
-  // globalSetup: require.resolve('./global-setup'),
-  // globalTeardown: require.resolve('./global-teardown'),
   timeout: 120000,
   expect: {
     timeout: 15000,
@@ -60,12 +58,6 @@ export default defineConfig({
       name: 'global setup',
       testDir: './',
       testMatch: /global-setup\.ts/,
-      teardown: 'global teardown',
-    },
-    {
-      name: 'global teardown',
-      testDir: './',
-      testMatch: /global-teardown\.ts/,
     },
   ],
 
