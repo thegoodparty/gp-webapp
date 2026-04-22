@@ -520,7 +520,7 @@ describe('TasksList revert completion flow', () => {
 })
 
 describe('TasksList recurring task completion', () => {
-  it('sends {type, quantity} payload to the API when completing a recurring task via CountModal', async () => {
+  it('completes the task directly without opening a CountModal when checking off a recurring task', async () => {
     const user = userEvent.setup()
     const task = makeTask({
       flowType: TASK_TYPES.recurring,
@@ -539,7 +539,6 @@ describe('TasksList recurring task completion', () => {
     )
 
     await user.click(screen.getByRole('checkbox'))
-    await user.click(screen.getByRole('button', { name: 'Save count' }))
 
     await waitFor(() => {
       expect(mockClientFetch).toHaveBeenCalledWith(
@@ -547,9 +546,13 @@ describe('TasksList recurring task completion', () => {
           path: '/campaigns/tasks/complete/:taskId',
           method: 'PUT',
         }),
-        { taskId: 'task-1', type: 'recurring', quantity: 5 },
+        { taskId: 'task-1' },
       )
     })
+
+    expect(
+      screen.queryByRole('button', { name: 'Save count' }),
+    ).not.toBeInTheDocument()
   })
 
   it('does NOT update local voter contacts when completing a recurring task', async () => {
@@ -571,7 +574,6 @@ describe('TasksList recurring task completion', () => {
     )
 
     await user.click(screen.getByRole('checkbox'))
-    await user.click(screen.getByRole('button', { name: 'Save count' }))
 
     await waitFor(() => {
       expect(mockClientFetch).toHaveBeenCalledWith(
