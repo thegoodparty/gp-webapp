@@ -71,6 +71,7 @@ const NON_OUTREACH_TYPES = [
   TASK_TYPES.events,
   TASK_TYPES.compliance,
   TASK_TYPES.awareness,
+  TASK_TYPES.recurring,
 ]
 
 const useIsomorphicLayoutEffect =
@@ -355,14 +356,13 @@ const TasksList = ({
     if (!completeModalTask) return
 
     const task = completeModalTask
-    const isRecurring = task.flowType === TASK_TYPES.recurring
     const resolvedType =
       task.flowType === TASK_TYPES.p2pDisabledText
         ? TASK_TYPES.text
         : task.flowType
 
     let fieldForRollback: keyof VoterContactsState | undefined
-    if (!isLegacyList && !isRecurring) {
+    if (!isLegacyList) {
       const field = getVoterContactField(resolvedType)
       fieldForRollback = field
       updateVoterContactsLocal((prev) => ({
