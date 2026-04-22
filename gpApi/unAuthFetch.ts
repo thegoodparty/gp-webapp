@@ -1,5 +1,12 @@
 import { buildUrl } from '@shared/utils/buildUrl'
 
+/**
+ * Fetches a public (unauthenticated) endpoint. Unlike `clientRequest` and
+ * `serverRequest`, this helper attaches no cookies and no Authorization header,
+ * so the request reaches gp-api as anonymous. Do NOT migrate calls off this
+ * helper to `clientRequest` / `serverRequest` without confirming the endpoint
+ * should accept authenticated traffic — those helpers always send credentials.
+ */
 export const unAuthFetch = async <T = unknown>(
   url: string,
   data?: Record<string, unknown>,
