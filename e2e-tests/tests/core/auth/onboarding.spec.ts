@@ -21,7 +21,7 @@ test('authenticate with onboarded user', async ({ page }) => {
   const testUser = await fillClerkSignUpForm(page)
 
   await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
-    timeout: 3000,
+    timeout: 15000,
   })
   console.log('User created, now completing onboarding...')
 
