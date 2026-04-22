@@ -78,10 +78,7 @@ export default function DeleteAccountPage(): React.JSX.Element {
           </p>
         )}
         <div className="flex gap-3 justify-end">
-          <Button
-            onClick={() => setModalOpen(false)}
-            disabled={loading}
-          >
+          <Button onClick={() => setModalOpen(false)} disabled={loading}>
             Cancel
           </Button>
           <Button
