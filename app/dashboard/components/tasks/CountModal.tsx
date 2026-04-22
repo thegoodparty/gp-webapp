@@ -35,7 +35,7 @@ export default function CountModal({
   const [value, setValue] = useState('')
   const question = isLogTaskCountFlowType(flowType)
     ? COUNT_QUESTIONS[flowType]
-    : 'How many did you complete?'
+    : 'How many voters did you contact?'
 
   const handleSave = () => {
     const parsed = parseInt(value, 10)

@@ -5,6 +5,7 @@ import { useClerk } from '@clerk/nextjs'
 import { useUser } from '@shared/hooks/useUser'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { Button } from 'styleguide/components/ui/button'
 import Modal from '@shared/utils/Modal'
 
 export default function DeleteAccountPage(): React.JSX.Element {
@@ -47,15 +48,16 @@ export default function DeleteAccountPage(): React.JSX.Element {
       <p className="text-gray-600 mb-6">
         Permanently delete your account and all associated campaign data.
       </p>
-      <button
-        className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded"
+      <Button
+        variant="destructive"
+        className="px-4 py-2"
         onClick={() => {
           setError(null)
           setModalOpen(true)
         }}
       >
         Delete Account
-      </button>
+      </Button>
 
       <Modal
         open={modalOpen}
@@ -76,20 +78,19 @@ export default function DeleteAccountPage(): React.JSX.Element {
           </p>
         )}
         <div className="flex gap-3 justify-end">
-          <button
-            className="px-4 py-2 border rounded font-medium"
+          <Button
             onClick={() => setModalOpen(false)}
             disabled={loading}
           >
             Cancel
-          </button>
-          <button
-            className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-medium px-4 py-2 rounded"
+          </Button>
+          <Button
+            variant="destructive"
             onClick={handleDeleteConfirm}
             disabled={loading}
           >
             {loading ? 'Deleting...' : 'Delete My Account'}
-          </button>
+          </Button>
         </div>
       </Modal>
     </div>

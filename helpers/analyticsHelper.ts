@@ -142,6 +142,7 @@ export const EVENTS = {
       WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
       TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
       TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+      ViewModeToggled: 'Dashboard - Campaign Plan View Mode Toggled',
       VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
       VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
     },

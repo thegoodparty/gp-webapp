@@ -11,7 +11,7 @@ interface WeeklyTaskNavigatorProps {
   canGoNext: boolean
 }
 
-function formatWeekLabel(weekStart: Date): string {
+export function formatWeekLabel(weekStart: Date): string {
   const weekEnd = addDays(weekStart, 6)
   const startMonth = format(weekStart, 'MMM')
   const endMonth = format(weekEnd, 'MMM')

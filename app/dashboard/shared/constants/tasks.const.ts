@@ -52,6 +52,13 @@ export const DISPLAY_TASK_TYPES: Record<
   recurring: '',
 }
 
+export const VIEW_MODES = {
+  weekly: 'weekly',
+  full: 'full',
+} as const
+
+export type ViewMode = (typeof VIEW_MODES)[keyof typeof VIEW_MODES]
+
 export const WEEK_POSITIONS = {
   past: 'past',
   current: 'current',
@@ -83,6 +90,9 @@ export type TrackingSource =
   (typeof TRACKING_SOURCES)[keyof typeof TRACKING_SOURCES]
 
 export type CampaignPlanEventTaskType = 'text' | 'robocall' | 'event'
+
+export const isTextFlowType = (taskType: string): boolean =>
+  taskType === TASK_TYPES.text || taskType === TASK_TYPES.p2pDisabledText
 
 export const getCampaignPlanEventTaskType = (
   taskType: string,
