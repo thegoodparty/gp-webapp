@@ -30,6 +30,10 @@ type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
    * Otherwise, the user will be shared with other tests.
+   *
+   * Either way, the user is not deleted after the test — gp-api's
+   * scheduled `deleteTestUsers` sweep removes stale @test.goodparty.org
+   * users older than 3 hours.
    */
   isolated?: boolean
   user?: Partial<{
@@ -259,6 +263,11 @@ const bootstrapTestUser = async (
   await client.post('/v1/campaigns/launch', {})
   return result
 }
+
+// biome-ignore lint/correctness/noEmptyPattern: Playwright forces us to use destructuring here.
+test.afterAll(async ({}) => {
+  cachedUser = null
+})
 
 export const authenticateTestUser = async (
   page: Page,
