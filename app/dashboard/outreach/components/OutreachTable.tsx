@@ -20,7 +20,7 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { VoterFileFilters } from 'helpers/types'
 
 interface OutreachRow extends Outreach {
-  p2pJob?: { status?: string }
+  p2pJob?: { status?: string; start_date?: string }
   voterFileFilter?: VoterFileFilters
 }
 
@@ -56,6 +56,21 @@ const isStatusKey = (key: string | null | undefined): key is StatusKey => {
   return key !== null && key !== undefined && key in statusLabels
 }
 
+/**
+ * Checks if a scheduled date is in the future (has not yet passed).
+ * Compares using date-only (ignoring time) in the local timezone.
+ */
+const isScheduledDateInFuture = (scheduledDate: string | undefined): boolean => {
+  if (!scheduledDate) {
+    return false
+  }
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const scheduled = new Date(scheduledDate)
+  scheduled.setHours(0, 0, 0, 0)
+  return scheduled > today
+}
+
 const getP2pStatusLabel = (row: OutreachRow): string | null => {
   // Check if this is a P2P outreach by checking for phoneListId
   // (phoneListId indicates it was created via P2P flow, even if type is normalized to 'text')
@@ -70,9 +85,20 @@ const getP2pStatusLabel = (row: OutreachRow): string | null => {
     return null
   }
 
-  // If P2P job is active, show as completed; otherwise use the outreach status
-  const displayStatus: StatusKey =
-    p2pJob.status === 'active' ? 'completed' : status
+  // Determine if job is active but still scheduled for a future date
+  // Use the p2pJob's start_date if available, otherwise fall back to the outreach date
+  const scheduledDate = p2pJob.start_date ?? (row.date as string | undefined)
+  const isScheduledForFuture = isScheduledDateInFuture(scheduledDate)
+
+  // If P2P job is active and scheduled date has passed, show as 'Sent' (completed)
+  // If P2P job is active but scheduled for the future, show as 'Scheduled' (paid)
+  // Otherwise use the outreach status
+  let displayStatus: StatusKey
+  if (p2pJob.status === 'active') {
+    displayStatus = isScheduledForFuture ? 'paid' : 'completed'
+  } else {
+    displayStatus = status
+  }
   return statusLabels[displayStatus]
 }
 
