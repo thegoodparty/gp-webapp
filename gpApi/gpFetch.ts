@@ -21,6 +21,11 @@ interface GpFetchEndpoint {
   additionalRequestOptions?: RequestInit
 }
 
+/**
+ * @deprecated Use `clientRequest` / `serverRequest` from
+ * `gpApi/typed-request.ts` (with a route key in `gpApi/api-endpoints.ts`).
+ * See `gpApi/CLAUDE.md` for the migration recipe.
+ */
 const gpFetch = async <T = Partial<Record<string, unknown>>>(
   endpoint: GpFetchEndpoint,
   data?: Partial<Record<string, unknown>> | FormData,

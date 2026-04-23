@@ -2,7 +2,7 @@ name: Update Visual Snapshots
 
 on:
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 jobs:
   update-snapshots:
@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     if: >-
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/update-snapshots') &&
-      (github.event.comment.author_association == 'OWNER' ||
+      github.event.issue.pull_request && contains(github.event.comment.body,
+      '/update-snapshots') && (github.event.comment.author_association ==
+      'OWNER' ||
        github.event.comment.author_association == 'MEMBER' ||
        github.event.comment.author_association == 'COLLABORATOR')
     permissions:
@@ -141,7 +141,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No snapshot changes to commit"
           else
-            git commit -m "chore: update visual snapshots from CI [skip ci]"
+            git commit -m "chore: update visual snapshots from CI"
             git push origin HEAD:${{ steps.pr.outputs.branch }}
           fi
 
