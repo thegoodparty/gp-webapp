@@ -29,7 +29,6 @@ vi.mock('./ProgressSection', () => ({ default: () => <div>Progress</div> }))
 vi.mock('./FailedToGenerate', () => ({
   FailedToGenerate: () => <div>Failed</div>,
 }))
-vi.mock('./TestingRegenerate', () => ({ default: () => null }))
 vi.mock('../tasks/TasksList', () => ({ default: () => <div>Tasks list</div> }))
 vi.mock('../EmptyState', () => ({ default: () => <div>Empty state</div> }))
 vi.mock('@shared/hooks/VoterContactsProvider', () => ({
