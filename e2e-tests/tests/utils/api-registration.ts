@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
-import { uniqBy } from 'es-toolkit'
 import { createClerkClient } from '@clerk/backend'
 import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
@@ -31,6 +30,10 @@ type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
    * Otherwise, the user will be shared with other tests.
+   *
+   * Either way, the user is not deleted after the test — gp-api's
+   * scheduled `deleteTestUsers` sweep removes stale @test.goodparty.org
+   * users older than 3 hours.
    */
   isolated?: boolean
   user?: Partial<{
@@ -261,19 +264,9 @@ const bootstrapTestUser = async (
   return result
 }
 
-const createdUsers: {
-  user: AuthenticatedUser
-  cleanup: () => Promise<void>
-}[] = []
-
 // biome-ignore lint/correctness/noEmptyPattern: Playwright forces us to use destructuring here.
 test.afterAll(async ({}) => {
-  const users = uniqBy(createdUsers, ({ user }) => user.id)
-  for (const { cleanup } of users) {
-    await cleanup()
-  }
   cachedUser = null
-  createdUsers.length = 0
 })
 
 export const authenticateTestUser = async (
@@ -285,22 +278,6 @@ export const authenticateTestUser = async (
     await bootstrapTestUser(page, options)
 
   const { title } = test.info()
-
-  if (options?.isolated) {
-    createdUsers.push({
-      user,
-      cleanup: async () => {
-        try {
-          await clerkThrottle(() => clerkBackend.users.deleteUser(clerkUserId))
-          console.log(
-            `[${title}] Deleted Clerk user ${user.email} (clerk: ${clerkUserId}, api: ${user.id})`,
-          )
-        } catch (err) {
-          console.error(`[${title}] Failed to delete user ${user.email}:`, err)
-        }
-      },
-    })
-  }
 
   const userCreated = Date.now()
   const elapsed = Date.now() - start
