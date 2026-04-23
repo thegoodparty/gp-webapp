@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 import getCampaign from 'app/onboarding/shared/getCampaign'
 import pageMetaData from 'helpers/metadataHelper'
 import { redirect } from 'next/navigation'
-import { getMarketingUrl } from 'helpers/linkhelper'
 import OnboardingPage from './components/OnboardingPage'
 import { fetchContentByType } from 'helpers/fetchHelper'
 import { PledgeContent } from 'helpers/types'
@@ -38,10 +37,6 @@ export default async function Page({
   let pledge: PledgeContent | undefined
   if (stepInt === 3) {
     pledge = await fetchContentByType<PledgeContent>('pledge')
-  }
-
-  if (!campaign) {
-    redirect(getMarketingUrl('/run-for-office'))
   }
 
   const childProps = {

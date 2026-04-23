@@ -31,7 +31,7 @@ export async function fetchUserCampaign(): Promise<Campaign | null> {
 
 export default async function getCampaign(
   params: GetCampaignParams,
-): Promise<Campaign | false> {
+): Promise<Campaign> {
   const { slug } = params
   const campaign = await fetchUserCampaign()
 
