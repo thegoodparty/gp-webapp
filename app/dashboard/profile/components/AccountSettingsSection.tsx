@@ -1,7 +1,6 @@
 'use client'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
-import Link from 'next/link'
 import { SubscriptionPendingCancellationAlert } from 'app/dashboard/profile/components/SubscriptionPendingCancellationAlert'
 import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
@@ -12,6 +11,7 @@ import { AccountSettingsButton } from 'app/dashboard/profile/components/AccountS
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 export const AccountSettingsSection = (): React.JSX.Element => {
   const [user] = useUser()
@@ -55,15 +55,17 @@ export const AccountSettingsSection = (): React.JSX.Element => {
             <H5> GoodParty.org - {plan} </H5>
             <Body2 className="mt-2 text-gray-600">
               Need help?
-              <Link
+              <a
                 className="ml-1 underline text-info-main"
-                href="/contact"
+                href={getMarketingUrl('/contact')}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent(EVENTS.Settings.Account.ClickSendEmail)
                 }
               >
                 Send us an email.
-              </Link>
+              </a>
             </Body2>
           </div>
           {hideButtonForLimboProUsers ? null : (
