@@ -24,7 +24,7 @@ const ChatInput = (): React.JSX.Element => {
 
   return (
     <div className="w-full max-w-[960px] px-4 pb-6 self-center relative">
-      <div className="absolute bottom-[10px] pb-6 left-6 min-[1400px]:left-[-40px]">
+      <div className="flex justify-center mb-2 lg:absolute lg:bottom-[10px] lg:pb-6 lg:left-[-40px] lg:mb-0">
         <Fab onClick={scrollUp} size="small" color="primary">
           <MdKeyboardArrowUp className="text-primary" />
         </Fab>
