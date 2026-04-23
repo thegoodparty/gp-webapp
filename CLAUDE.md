@@ -24,43 +24,37 @@ Next.js 15 App Router deployed on Vercel. Calls gp-api (NestJS backend on ECS) a
 ### Deployment
 
 Vercel auto-deploys on push. Branch mapping:
+
 - `develop` → `dev.goodparty.org` (API: `gp-api-dev.goodparty.org`)
 - `qa` → `qa.goodparty.org` (API: `gp-api-qa.goodparty.org`)
 - `master` → `goodparty.org` (API: `api.goodparty.org`)
 - PR branches → Vercel preview environments
 
-### Route Groups
+### Top-level routes (`app/`)
 
-- `(candidate)/` - Protected candidate dashboard (campaign tools, polls, voter outreach)
-- `(company)/` - Public pages (about, team, volunteer)
-- `(entrance)/` - Auth flows (login, signup, password)
-- `(landing)/` - Marketing landing pages
-- `(user)/` - User profile
+- `dashboard/` - Candidate dashboard (campaign tools, polls, voter outreach, website, contacts, content, meetings)
 - `admin/` - Admin tools
+- `polls/` - Public poll results
+- `onboarding/` - Post-signup onboarding flow
+- `login/`, `sign-up/`, `logout/`, `post-auth-redirect/`, `impersonate/` - Auth + session flows
+- `api/` - Next.js route handlers (proxy + webhooks)
+- `shared/` - Providers, hooks, UI atoms, utils shared across routes
+- `layout.tsx`, `page.tsx`, `error.tsx`, `global-error.tsx`, `not-found.tsx` - App Router roots
 
-### Two API Client Systems
+### API clients
 
-The codebase has two parallel fetch systems — a legacy one and a newer typed one:
+Two systems coexist in `gpApi/`. **The typed system is canonical for new code.** The legacy fetch helpers are `@deprecated` and being migrated out.
 
-**Legacy system** (`gpApi/gpFetch.ts`, `gpApi/clientFetch.ts`, `gpApi/serverFetch.ts`):
-- `clientFetch<T>(endpoint, data)` - Browser-side, sends JWT via cookies
-- `serverFetch<T>(endpoint, data)` - Server-side, injects Bearer token from `getServerToken()`
-- `unAuthFetch` - Public endpoints (no auth)
-- Routes defined in `gpApi/routes.ts` as `ApiRoute` objects with `path` and `method`
-- URL building via `@shared/utils/buildUrl` (replaces `:param` placeholders, appends query strings)
-- **Error handling:** Returns polymorphic types — parsed JSON on 2xx, raw `Response` on non-2xx, `false` on parse failure. Callers must check `ok`/status manually; errors are never thrown.
+- Typed: `clientRequest` / `serverRequest`, routes in `gpApi/api-endpoints.ts`. Throws on non-2xx. Always attach auth (cookie / Bearer token).
+- Legacy (deprecated): `gpFetch`, `clientFetch`, `serverFetch`, routes in `gpApi/routes.ts`. Returns `T | Response | false`, never throws.
+- Still valid: `unAuthFetch` for genuinely public endpoints — it attaches no credentials, and the typed helpers have no anonymous equivalent yet.
 
-**Typed system** (`gpApi/typed-request.ts`, `gpApi/api-endpoints.ts`):
-- `clientRequest<Route>(route, payload)` - Browser-side typed requests via `ofetch`
-- `serverRequest<Route>(route, payload)` - Server-side typed requests
-- Routes are string keys like `'GET /v1/polls/:pollId'` with typed `Request`/`Response` in `APIEndpoints`
-- Path params auto-extracted from route string via `PathParamsOf<Route>` type
-- **Error handling:** Returns a consistent `Response<T>` shape with `{ ok, status, data, headers }`. `ofetch` throws on 4xx/5xx by default, so callers should use try/catch.
-- This is the newer pattern — prefer it for new code
+Full reference + decision tree: `docs/api-clients.md` and `gpApi/CLAUDE.md`. To add an endpoint or migrate a legacy call, see `.claude/skills/`.
 
 ### State Management
 
 React Context providers wrap the app (in `app/shared/hooks/`):
+
 - `UserProvider` - Auth state, loaded from cookie
 - `CampaignProvider` - Current campaign, refreshes on user change
 - `FeatureFlagsProvider` - Amplitude experiments
@@ -78,32 +72,30 @@ JWT stored in HTTP-only cookie by gp-api. Frontend includes it via `credentials:
 
 Vitest + React Testing Library + jsdom. Test globals enabled (no imports needed for `describe`, `it`, `expect`, `vi`).
 
+### Targeted runs
+
+```bash
+npx vitest run path/to/file.test.tsx     # single file
+npx vitest run -t "creates a poll"       # by name pattern
+npx vitest --watch path/to/file.test.tsx # single file in watch mode
+```
+
+Full guide: `docs/testing.md`.
+
 ### API Mocking
 
-MSW-based via `helpers/test-utils/api-mocking.ts`:
+MSW-based via `helpers/test-utils/api-mocking.ts`. Routes must match keys in `APIEndpoints`:
 
 ```typescript
 import { api } from 'helpers/test-utils/api-mocking'
 
-// Static response
-api.mock('GET /v1/polls', { status: 200, data: { results: [], pagination: { nextCursor: undefined } } })
-
-// Ordered responses (returned one at a time in sequence)
-api.mockOrdered('GET /v1/polls/:pollId', [
-  { status: 200, data: firstPoll },
-  { status: 200, data: updatedPoll },
-])
-
-// Dynamic handler with access to request params/body
-api.mock('POST /v1/polls/initial-poll', ({ body }) => ({
+api.mock('GET /v1/polls', {
   status: 200,
-  data: { ...mockPoll, message: body.message },
-}))
-
-api.reset() // Clear all handlers (also auto-clears in beforeEach)
+  data: { results: [], pagination: { nextCursor: undefined } },
+})
 ```
 
-Routes must match keys in `APIEndpoints` type (e.g., `'GET /v1/contacts/stats'`).
+Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 
 ### Test Utilities
 
@@ -113,13 +105,29 @@ Routes must match keys in `APIEndpoints` type (e.g., `'GET /v1/contacts/stats'`)
 
 ### AI Code Review
 
-The `ai-rules/` directory is a git submodule with rule files for focused code review. Before using the critics, always pull the latest rules first: `npm run ai-rules:update`. When writing or modifying code, consider spawning a critic subagent for each relevant rule file:
+`ai-rules/` is a git submodule with focused rule files. Run `npm run ai-rules:update` to pull the latest. The wired-up critic agent lives at `.claude/agents/code-critic.md` — invoke it via `@code-critic` (or just spawn a subagent that loads the rule files and reviews the diff).
 
-```
-Read each .md file in ai-rules/. For each rule file relevant to my changes,
-review the code I changed against those rules. For each violation, cite the
-rule number, quote the offending code, and explain what to change.
-```
+## Boundaries
+
+- **Never** edit `middleware.ts`, `app/api/revalidate/route.ts`, or `gpApi/api-endpoints.ts` without explicit confirmation. The first two affect every request; the third is a cross-repo contract with `gp-api`.
+- **Never** commit env files. `.env.example` only.
+- **Never** push to `develop` directly — open a PR.
+- **Ask first** before adding new utilities to `helpers/` (it is already a 50+ file dumping ground; check whether the helper exists). See `gpApi/CLAUDE.md` for fetch-helper rules.
+- **Deploys** are automatic via Vercel on push to `develop` / `qa` / `master`. There is no manual deploy command.
+
+## Observability
+
+- **Frontend errors → Sentry.** Org slug `goodparty`. https://goodparty.sentry.io.
+- **Backend logs → Grafana Cloud Loki.** `{service_name="gp-api", deployment_environment_name="dev|qa|prod"}`. https://goodparty.grafana.net.
+- Recipe for reproducing a Sentry issue locally: `docs/debugging.md`.
+
+## Docs
+
+- `docs/api-clients.md` - Typed vs legacy fetch, decision tree
+- `docs/testing.md` - Vitest patterns, MSW mocking
+- `docs/debugging.md` - Sentry / Loki, repro recipe
+- `gpApi/CLAUDE.md` - Working in the gpApi/ directory
+- `app/dashboard/website/README.md` - Website feature layout
 
 ## Code Style
 
