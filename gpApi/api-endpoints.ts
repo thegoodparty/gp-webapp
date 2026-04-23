@@ -102,8 +102,13 @@ export type APIEndpoints = {
     Response: { organizations: AdminOrganization[] }
   }
 
+  'GET /v1/admin/users/search': {
+    Request: { email: string }
+    Response: { id: number; email: string; name: string | null }[]
+  }
+
   'POST /v1/admin/users/impersonate/:userId': {
-    Request: {}
+    Request: { actorEmail?: string }
     Response: { token: string }
   }
 
