@@ -50,7 +50,9 @@ test.describe('Onboarding redirect persistence', () => {
     expect(page.url()).toBe(onboardingUrl)
   })
 
-  test('Finish Later should log out and redirect to blog', async ({ page }) => {
+  test('Finish Later should log out and redirect to /run-for-office', async ({
+    page,
+  }) => {
     await signUpTestUser(page)
 
     const finishLater = page.getByText('Finish Later')
@@ -59,7 +61,8 @@ test.describe('Onboarding redirect persistence', () => {
 
     await page.waitForURL(
       (url) =>
-        !url.toString().includes('localhost') && url.pathname === '/blog',
+        !url.toString().includes('localhost') &&
+        url.pathname === '/run-for-office',
       { timeout: 5000 },
     )
 
