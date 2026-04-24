@@ -184,7 +184,7 @@
     "node-fetch": "^3.3.2",
     "p-limit": "^6.2.0",
     "p-retry": "^7.1.1",
-    "postcss": "^8.4.23",
+    "postcss": "^8.5.10",
     "prettier": "^2.7.1",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18",
