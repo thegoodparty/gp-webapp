@@ -1,6 +1,6 @@
 'use client'
 
-import { useClerk, useAuth } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
 import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
 import { useUser } from '@shared/hooks/useUser'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -25,7 +25,6 @@ type SearchResult = { id: number; email: string; name: string | null }
 export default function ImpersonationBanner() {
   const isImpersonating = useIsImpersonating()
   const { signOut, client, setActive } = useClerk()
-  const { actor } = useAuth()
   const [user] = useUser()
   const { errorSnackbar } = useSnackbar()
 
@@ -62,16 +61,11 @@ export default function ImpersonationBanner() {
 
   async function handleSwap() {
     if (!selected) return
-    const actorSub = actor?.sub
-    if (!actorSub) {
-      errorSnackbar('Could not determine admin identity')
-      return
-    }
     setSwapping(true)
     try {
       const resp = await clientRequest(
         'POST /v1/admin/users/impersonate/:userId',
-        { userId: String(selected.id), actorEmail: actorSub },
+        { userId: String(selected.id) },
       )
       if (!resp.ok) {
         errorSnackbar('Failed to switch impersonation')
