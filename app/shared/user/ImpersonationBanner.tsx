@@ -6,6 +6,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { clientRequest } from 'gpApi/typed-request'
 import { useState, useRef, useCallback } from 'react'
+import { ArrowLeftRight, Ban } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -107,16 +108,25 @@ export default function ImpersonationBanner() {
 
   return (
     <>
-      <div className="bg-amber-400 text-black px-4 py-1 text-center text-xs font-medium flex items-center justify-center gap-2">
+      <div className="bg-amber-400 text-black px-4 py-2 text-center text-xs font-medium flex flex-col items-center gap-2">
         <span>
           You are impersonating <strong>{user?.email ?? 'this user'}</strong>
         </span>
-        <Button variant="outline" size="xSmall" onClick={() => setOpen(true)}>
-          Switch User
-        </Button>
-        <Button variant="default" size="xSmall" onClick={handleStopImpersonating}>
-          Stop Impersonating
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="xSmall"
+            onClick={() => setOpen(true)}
+            className="bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700"
+          >
+            <ArrowLeftRight />
+            Switch User
+          </Button>
+          <Button variant="destructive" size="xSmall" onClick={handleStopImpersonating}>
+            <Ban />
+            Stop Impersonating
+          </Button>
+        </div>
       </div>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
