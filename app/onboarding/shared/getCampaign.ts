@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import type { Campaign } from 'helpers/types'
 import { serverRequest } from 'gpApi/server-request'
 import { getServerToken, isTokenExpired } from 'helpers/tokenHelper'
+import { getMarketingUrl } from 'helpers/linkhelper'
 
 interface GetCampaignParams {
   slug: string
@@ -30,12 +31,12 @@ export async function fetchUserCampaign(): Promise<Campaign | null> {
 
 export default async function getCampaign(
   params: GetCampaignParams,
-): Promise<Campaign | false> {
+): Promise<Campaign> {
   const { slug } = params
   const campaign = await fetchUserCampaign()
 
   if (!campaign || campaign.slug !== slug) {
-    redirect('/run-for-office')
+    redirect(getMarketingUrl('/run-for-office'))
   }
   return campaign
 }
