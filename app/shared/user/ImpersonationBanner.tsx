@@ -122,7 +122,11 @@ export default function ImpersonationBanner() {
             <ArrowLeftRight />
             Switch User
           </Button>
-          <Button variant="destructive" size="xSmall" onClick={handleStopImpersonating}>
+          <Button
+            variant="destructive"
+            size="xSmall"
+            onClick={handleStopImpersonating}
+          >
             <Ban />
             Stop Impersonating
           </Button>
@@ -175,7 +179,8 @@ export default function ImpersonationBanner() {
             )}
             {selected && (
               <p className="text-sm text-muted-foreground break-all">
-                Switching to: <strong className="text-foreground">{selected.email}</strong>
+                Switching to:{' '}
+                <strong className="text-foreground">{selected.email}</strong>
               </p>
             )}
           </div>
