@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import ImpersonationBanner from './ImpersonationBanner'
@@ -86,22 +86,22 @@ describe('ImpersonationBanner', () => {
     expect(screen.getByText('this user')).toBeInTheDocument()
   })
 
-  it('opens search popover when email is clicked', async () => {
+  it('opens search dialog when Switch User is clicked', async () => {
     vi.mocked(useIsImpersonating).mockReturnValue(true)
     const user = userEvent.setup()
     render(<ImpersonationBanner />)
 
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
 
     expect(screen.getByPlaceholderText(/search by email/i)).toBeInTheDocument()
   })
 
-  it('closes popover when Escape is pressed', async () => {
+  it('closes dialog when Escape is pressed', async () => {
     vi.mocked(useIsImpersonating).mockReturnValue(true)
     const user = userEvent.setup()
     render(<ImpersonationBanner />)
 
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
     expect(screen.getByPlaceholderText(/search by email/i)).toBeInTheDocument()
 
     await user.keyboard('{Escape}')
@@ -117,11 +117,11 @@ describe('ImpersonationBanner', () => {
     mockClientRequest.mockResolvedValue({
       ok: true,
       status: 200,
-      data: { id: 5, email: 'found@example.com', name: 'Found User' },
+      data: [{ id: 5, email: 'found@example.com', name: 'Found User' }],
     })
 
     render(<ImpersonationBanner />)
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
     await user.type(screen.getByPlaceholderText(/search by email/i), 'found')
 
     await waitFor(
@@ -139,7 +139,7 @@ describe('ImpersonationBanner', () => {
     mockClientRequest.mockResolvedValue({ ok: true, status: 200, data: null })
 
     render(<ImpersonationBanner />)
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
     await user.type(screen.getByPlaceholderText(/search by email/i), 'nobody')
 
     await waitFor(
@@ -159,7 +159,7 @@ describe('ImpersonationBanner', () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          data: { id: 7, email: 'new@example.com', name: null },
+          data: [{ id: 7, email: 'new@example.com', name: null }],
         })
       }
       return Promise.resolve({
@@ -170,7 +170,7 @@ describe('ImpersonationBanner', () => {
     })
 
     render(<ImpersonationBanner />)
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
     await user.type(screen.getByPlaceholderText(/search by email/i), 'new')
 
     await waitFor(
@@ -181,6 +181,11 @@ describe('ImpersonationBanner', () => {
     )
 
     await user.click(screen.getByText('new@example.com'))
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: /switch user/i,
+      }),
+    )
 
     await waitFor(() => {
       expect(mockSignOut).toHaveBeenCalled()
@@ -201,14 +206,14 @@ describe('ImpersonationBanner', () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          data: { id: 7, email: 'new@example.com', name: null },
+          data: [{ id: 7, email: 'new@example.com', name: null }],
         })
       }
       return Promise.resolve({ ok: false, status: 500, data: null })
     })
 
     render(<ImpersonationBanner />)
-    await user.click(screen.getByText('target@example.com'))
+    await user.click(screen.getByRole('button', { name: /switch user/i }))
     await user.type(screen.getByPlaceholderText(/search by email/i), 'new')
 
     await waitFor(
@@ -219,6 +224,11 @@ describe('ImpersonationBanner', () => {
     )
 
     await user.click(screen.getByText('new@example.com'))
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: /switch user/i,
+      }),
+    )
 
     await waitFor(() => {
       expect(mockErrorSnackbar).toHaveBeenCalled()
