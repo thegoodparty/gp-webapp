@@ -51,7 +51,7 @@ const RightSide = (): React.JSX.Element => {
       })
 
       queryClient.clear()
-      await signOut({ redirectUrl: getMarketingUrl('/blog') })
+      await signOut({ redirectUrl: getMarketingUrl('/run-for-office') })
     }
 
     return (

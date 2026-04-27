@@ -39,10 +39,6 @@ export default async function Page({
     pledge = await fetchContentByType<PledgeContent>('pledge')
   }
 
-  if (!campaign) {
-    redirect('/run-for-office')
-  }
-
   const childProps = {
     step: stepInt,
     campaign,
