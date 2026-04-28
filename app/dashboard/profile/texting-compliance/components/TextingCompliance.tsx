@@ -22,7 +22,7 @@ const TDlcNumber = ({ tdlcNumber }: TDlcNumberProps): React.JSX.Element => (
   </div>
 )
 
-interface TextingComplianceProps {
+export interface TextingComplianceProps {
   website?: Website | null
   domainStatus?: string | null
   tcrCompliance?: TcrCompliance | null

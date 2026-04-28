@@ -1,9 +1,9 @@
 import NotificationSection from 'app/dashboard/profile/components/NotificationSection'
 import ContactInfoSection from './ContactInfoSection'
 import { AccountSettingsSection } from 'app/dashboard/profile/components/AccountSettingsSection'
-import TextingCompliance from 'app/dashboard/profile/texting-compliance/components/TextingCompliance'
 import { User, Website, TcrCompliance, Campaign } from 'helpers/types'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
+import TextingComplianceFeatureFlag from 'app/dashboard/profile/texting-compliance-agentic/components/TextingComplianceFeatureFlag'
 
 interface ProfilePageProps {
   user: User
@@ -30,7 +30,7 @@ export default function ProfilePage({
           <ContactInfoSection user={user} />
           {!!campaign && <AccountSettingsSection />}
           {!!campaign && isPro && (
-            <TextingCompliance
+            <TextingComplianceFeatureFlag
               {...{
                 website,
                 domainStatus,
