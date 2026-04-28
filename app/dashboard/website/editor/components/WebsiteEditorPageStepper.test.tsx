@@ -162,7 +162,11 @@ describe('WebsiteEditorPageStepper', () => {
 
   it('disables Next button when nextDisabled is true', () => {
     render(
-      <WebsiteEditorPageStepper {...defaultProps} currentStep={3} nextDisabled />,
+      <WebsiteEditorPageStepper
+        {...defaultProps}
+        currentStep={3}
+        nextDisabled
+      />,
     )
 
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
