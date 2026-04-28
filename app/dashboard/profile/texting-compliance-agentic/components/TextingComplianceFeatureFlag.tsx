@@ -19,5 +19,5 @@ export default function TextingComplianceFeatureFlag(
     return <TextingCompliance {...props} />
   }
 
-  return <TextingComplianceAgentic {...props} />
+  return <TextingComplianceAgentic />
 }
