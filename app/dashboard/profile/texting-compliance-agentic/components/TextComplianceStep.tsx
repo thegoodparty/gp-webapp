@@ -27,7 +27,7 @@ export default function TextComplianceStep({
       className={`p-3 md:p-4 flex items-center justify-between ${
         isLast ? '' : 'border-b border-gray-200'
       }
-      ${isDisabled ? 'cursor-not-allowed bg-muted' : 'cursor-pointer'}
+      ${isDisabled ? 'cursor-not-allowed bg-muted' : ''}
       ${isActive ? 'hover:bg-blue-50' : ''} transition-colors`}
     >
       <div className="flex items-center gap-3">
