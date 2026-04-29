@@ -422,6 +422,21 @@ export const EVENTS = {
       SubmitDelete: 'Profile - Top Issues: Submit Delete',
       CancelDelete: 'Profile - Top Issues: Cancel Delete',
     },
+    PolicyPriorities: {
+      ClickAdd: 'Profile - Policy Priorities: Click Add',
+      ClickEdit: 'Profile - Policy Priorities: Click Edit',
+      SubmitAdd: 'Profile - Policy Priorities: Submit Add',
+      SubmitEdit: 'Profile - Policy Priorities: Submit Edit',
+      CancelEdit: 'Profile - Policy Priorities: Cancel Edit',
+      ClickDelete: 'Profile - Policy Priorities: Click Delete',
+      SubmitDelete: 'Profile - Policy Priorities: Submit Delete',
+      CancelDelete: 'Profile - Policy Priorities: Cancel Delete',
+    },
+    CandidateProfile: {
+      ClickSubmit: 'Profile - Candidate Profile: Click Submit',
+      SubmitSuccess: 'Profile - Candidate Profile: Submit Success',
+      SubmitError: 'Profile - Candidate Profile: Submit Error',
+    },
   },
   Settings: {
     PersonalInfo: {
