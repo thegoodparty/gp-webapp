@@ -2,6 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
+import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
+import { useUser } from '@shared/hooks/useUser'
+import { useClerk, useAuth } from '@clerk/nextjs'
+import { useSnackbar } from 'helpers/useSnackbar'
 import ImpersonationBanner from './ImpersonationBanner'
 
 const mockClientRequest = vi.fn()
@@ -30,11 +34,6 @@ vi.mock('@clerk/nextjs', () => ({
 vi.mock('helpers/useSnackbar', () => ({
   useSnackbar: vi.fn(),
 }))
-
-import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
-import { useUser } from '@shared/hooks/useUser'
-import { useClerk, useAuth } from '@clerk/nextjs'
-import { useSnackbar } from 'helpers/useSnackbar'
 
 beforeEach(() => {
   mockClientRequest.mockReset()
