@@ -13,15 +13,11 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type CheckoutErrorBody = { errorCode?: string; message?: string }
 
-type CheckoutError =
-  | { type: 'electionDateInvalid'; message: string }
-  | { type: 'generic'; message: string }
-
 const ELECTION_DATE_ERROR_CODE = 'CAMPAIGN_ELECTION_DATE_INVALID'
 
 const doRedirect = async (
   currentTimeoutId: NodeJS.Timeout | null,
-  setError: (error: CheckoutError) => void,
+  setElectionDateError: (message: string) => void,
 ) => {
   if (currentTimeoutId) {
     clearTimeout(currentTimeoutId)
@@ -32,21 +28,12 @@ const doRedirect = async (
     )
     if (!resp.ok) {
       const body = (resp.data as CheckoutErrorBody | undefined) ?? {}
-      setError(
-        body.errorCode === ELECTION_DATE_ERROR_CODE
-          ? {
-              type: 'electionDateInvalid',
-              message:
-                body.message ??
-                'Your campaign election date is missing or in the past.',
-            }
-          : {
-              type: 'generic',
-              message:
-                body.message ??
-                'We could not start your Pro checkout. Please try again.',
-            },
-      )
+      if (body.errorCode === ELECTION_DATE_ERROR_CODE) {
+        setElectionDateError(
+          body.message ??
+            'Your campaign election date is missing or in the past.',
+        )
+      }
       return
     }
     const { redirectUrl } = resp.data || {}
@@ -58,10 +45,6 @@ const doRedirect = async (
     }
   } catch (e) {
     console.error('error when creating checkout session.', e)
-    setError({
-      type: 'generic',
-      message: 'We could not start your Pro checkout. Please try again.',
-    })
   }
 }
 
@@ -75,7 +58,9 @@ const PurchaseRedirectPage = ({
   redirectDelaySecs,
 }: PurchaseRedirectPageProps): React.JSX.Element => {
   const [countdown, setCountdown] = useState(Number(redirectDelaySecs))
-  const [error, setError] = useState<CheckoutError | null>(null)
+  const [electionDateError, setElectionDateError] = useState<string | null>(
+    null,
+  )
   const [currentTimeoutId, setCurrentTimeoutId] =
     useState<NodeJS.Timeout | null>(null)
 
@@ -86,49 +71,33 @@ const PurchaseRedirectPage = ({
   }
 
   useEffect(() => {
-    if (error) return
+    if (electionDateError) return
     if (countdown === 0) {
-      doRedirect(currentTimeoutId, setError)
+      doRedirect(currentTimeoutId, setElectionDateError)
     } else {
       killTimeout()
       setCurrentTimeoutId(setTimeout(() => setCountdown(countdown - 1), 1000))
     }
 
     return () => killTimeout()
-  }, [countdown, error])
+  }, [countdown, electionDateError])
 
   return (
     <FocusedExperienceWrapper>
       {campaign?.isPro ? (
         <AlreadyProUserPrompt />
-      ) : error ? (
+      ) : electionDateError ? (
         <div className="text-center">
-          <H1 className="mb-4">
-            {error.type === 'electionDateInvalid'
-              ? 'Update your election date to renew Pro'
-              : 'Something went wrong'}
-          </H1>
-          <Body2 className="mb-8">{error.message}</Body2>
-          {error.type === 'electionDateInvalid' ? (
-            <PrimaryButton
-              className="w-full md:w-auto"
-              onClick={() => {
-                window.location.href = '/dashboard/campaign-details'
-              }}
-            >
-              Update campaign details
-            </PrimaryButton>
-          ) : (
-            <PrimaryButton
-              className="w-full md:w-auto"
-              onClick={() => {
-                setError(null)
-                setCountdown(Number(redirectDelaySecs))
-              }}
-            >
-              Try again
-            </PrimaryButton>
-          )}
+          <H1 className="mb-4">Update your election date to renew Pro</H1>
+          <Body2 className="mb-8">{electionDateError}</Body2>
+          <PrimaryButton
+            className="w-full md:w-auto"
+            onClick={() => {
+              window.location.href = '/dashboard/campaign-details'
+            }}
+          >
+            Update campaign details
+          </PrimaryButton>
         </div>
       ) : (
         <div className="text-center">
@@ -153,7 +122,7 @@ const PurchaseRedirectPage = ({
             className="w-full md:w-auto"
             onClick={() => {
               trackEvent(EVENTS.ProUpgrade.ClickGoToStripe)
-              doRedirect(currentTimeoutId, setError)
+              doRedirect(currentTimeoutId, setElectionDateError)
             }}
           >
             Go to Stripe
