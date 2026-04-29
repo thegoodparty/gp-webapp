@@ -6,7 +6,6 @@ import AlertDialog from '@shared/utils/AlertDialog'
 import { CustomIssue } from 'helpers/types'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import PolicyForm from './PolicyForm'
-import TextingComplianceHeader from '../../shared/TextingComplianceHeader'
 
 const POLICY_MODAL_MODE = {
   ADD: 'add',
@@ -102,11 +101,9 @@ export default function PolicyPriorities({
 
   return (
     <div>
-      <TextingComplianceHeader>
-        <h5 className="flex-1 text-center md:hidden text-sm font-medium">
-          Your policy priorities
-        </h5>
-      </TextingComplianceHeader>
+      <div className="mb-1.5 block text-sm font-medium">
+        Your policy priorities
+      </div>
       <div className="flex flex-col gap-3">
         {issues.map((issue, index) => (
           <button
