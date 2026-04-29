@@ -3,7 +3,7 @@ import { Pencil, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
 import AlertDialog from '@shared/utils/AlertDialog'
-import { CustomIssue } from 'helpers/types'
+import { WebsiteIssue } from 'helpers/types'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import PolicyForm from './PolicyForm'
 
@@ -21,8 +21,8 @@ type ModalState =
   | { open: true; mode: typeof POLICY_MODAL_MODE.EDIT; index: number }
 
 interface PolicyPrioritiesProps {
-  issues: CustomIssue[]
-  onChange: (issues: CustomIssue[]) => void
+  issues: WebsiteIssue[]
+  onChange: (issues: WebsiteIssue[]) => void
   disabled?: boolean
 }
 
@@ -60,7 +60,7 @@ export default function PolicyPriorities({
     setModal({ open: false })
   }
 
-  const handleSave = (issue: CustomIssue) => {
+  const handleSave = (issue: WebsiteIssue) => {
     if (!modal.open) return
     if (modal.mode === POLICY_MODAL_MODE.EDIT) {
       trackEvent(EVENTS.Profile.PolicyPriorities.SubmitEdit)
@@ -78,6 +78,7 @@ export default function PolicyPriorities({
     if (!modal.open || modal.mode !== POLICY_MODAL_MODE.EDIT) return
     trackEvent(EVENTS.Profile.PolicyPriorities.ClickDelete)
     setPendingDeleteIndex(modal.index)
+    setModal({ open: false })
   }
 
   const handleCancelDelete = () => {
@@ -117,7 +118,7 @@ export default function PolicyPriorities({
             <div className="min-w-0 flex-1">
               <div className="truncate text-base">{issue.title}</div>
               <div className="truncate text-sm text-foreground">
-                {issue.position}
+                {issue.description}
               </div>
             </div>
             <Pencil className="mt-1 h-4 w-4 shrink-0" aria-hidden />

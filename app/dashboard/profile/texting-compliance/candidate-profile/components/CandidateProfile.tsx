@@ -4,12 +4,15 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useQueryClient } from '@tanstack/react-query'
-import { useCampaign } from '@shared/hooks/useCampaign'
-import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
-import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  createWebsite,
+  getUserWebsite,
+  updateWebsite,
+  USER_WEBSITE_QUERY_KEY,
+} from 'app/dashboard/website/util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { CustomIssue } from 'helpers/types'
+import { Website, WebsiteIssue } from 'helpers/types'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import {
   MIN_BIO_LENGTH,
@@ -17,47 +20,62 @@ import {
 } from '../candidateProfile.utils'
 import PolicyPriorities from './PolicyPriorities'
 
+const normalizeIssues = (
+  raw: { title?: string; description?: string }[] | undefined,
+): WebsiteIssue[] =>
+  (raw ?? []).map((i) => ({
+    title: i.title ?? '',
+    description: i.description ?? '',
+  }))
+
 export default function CandidateProfile(): React.JSX.Element {
-  const [campaign] = useCampaign()
   const router = useRouter()
   const queryClient = useQueryClient()
   const { errorSnackbar } = useSnackbar()
+  const { data: website } = useQuery<Website | null>({
+    queryKey: USER_WEBSITE_QUERY_KEY,
+    queryFn: getUserWebsite,
+  })
 
-  const [whyRunning, setWhyRunning] = useState('')
-  const [customIssues, setCustomIssues] = useState<CustomIssue[]>([])
+  const [bio, setBio] = useState('')
+  const [issues, setIssues] = useState<WebsiteIssue[]>([])
   const [submitting, setSubmitting] = useState(false)
   const seededRef = useRef(false)
 
   useEffect(() => {
-    if (seededRef.current || !campaign?.details) return
-    setWhyRunning(campaign.details.whyRunning ?? '')
-    setCustomIssues(campaign.details.customIssues ?? [])
+    if (seededRef.current || !website) return
+    setBio(website.content?.about?.bio ?? '')
+    setIssues(normalizeIssues(website.content?.about?.issues))
     seededRef.current = true
-  }, [campaign])
+  }, [website])
 
-  const trimmedWhyRunningLength = whyRunning.trim().length
+  const trimmedBioLength = bio.trim().length
   const canSubmit =
-    trimmedWhyRunningLength >= MIN_BIO_LENGTH &&
-    customIssues.length >= MIN_POLICY_PRIORITIES &&
+    trimmedBioLength >= MIN_BIO_LENGTH &&
+    issues.length >= MIN_POLICY_PRIORITIES &&
     !submitting
 
   const handleSubmit = async () => {
     if (!canSubmit) return
     trackEvent(EVENTS.Profile.CandidateProfile.ClickSubmit)
     setSubmitting(true)
-    const result = await updateCampaign([
-      { key: 'details.whyRunning', value: whyRunning },
-      { key: 'details.customIssues', value: customIssues },
-    ])
-    if (!result) {
+    try {
+      if (!website) {
+        const createResp = await createWebsite()
+        if (!createResp.ok) throw new Error('create failed')
+      }
+      const result = await updateWebsite({
+        about: { ...website?.content?.about, bio, issues },
+      })
+      if (!result || !result.ok) throw new Error('update failed')
+      trackEvent(EVENTS.Profile.CandidateProfile.SubmitSuccess)
+      await queryClient.invalidateQueries({ queryKey: USER_WEBSITE_QUERY_KEY })
+      router.push('/dashboard/profile')
+    } catch {
       trackEvent(EVENTS.Profile.CandidateProfile.SubmitError)
       errorSnackbar('Failed to save candidate profile. Please try again.')
       setSubmitting(false)
-      return
     }
-    trackEvent(EVENTS.Profile.CandidateProfile.SubmitSuccess)
-    await queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
-    router.push('/dashboard/profile')
   }
 
   return (
@@ -78,20 +96,20 @@ export default function CandidateProfile(): React.JSX.Element {
           <Textarea
             id="why"
             rows={5}
-            value={whyRunning}
-            onChange={(e) => setWhyRunning(e.target.value)}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
             disabled={submitting}
           />
           <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
             <span>{MIN_BIO_LENGTH} character minimum</span>
-            <span>{trimmedWhyRunningLength}</span>
+            <span>{trimmedBioLength}</span>
           </div>
         </div>
 
         <div className="mt-8">
           <PolicyPriorities
-            issues={customIssues}
-            onChange={setCustomIssues}
+            issues={issues}
+            onChange={setIssues}
             disabled={submitting}
           />
         </div>

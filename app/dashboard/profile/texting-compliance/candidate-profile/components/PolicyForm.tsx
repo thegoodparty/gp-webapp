@@ -1,13 +1,13 @@
 'use client'
 import { Button, Input, Textarea } from '@styleguide'
 import { useState } from 'react'
-import { CustomIssue } from 'helpers/types'
+import { WebsiteIssue } from 'helpers/types'
 import { MIN_POLICY_FOCUS_LENGTH } from '../candidateProfile.utils'
 
 interface PolicyFormProps {
-  initial?: CustomIssue
+  initial?: WebsiteIssue
   showDelete: boolean
-  onSave: (issue: CustomIssue) => void
+  onSave: (issue: WebsiteIssue) => void
   onDelete: () => void
 }
 
@@ -18,12 +18,13 @@ export default function PolicyForm({
   onDelete,
 }: PolicyFormProps): React.JSX.Element {
   const [title, setTitle] = useState(initial?.title ?? '')
-  const [position, setPosition] = useState(initial?.position ?? '')
+  const [description, setDescription] = useState(initial?.description ?? '')
 
   const trimmedTitle = title.trim()
-  const trimmedPosition = position.trim()
+  const trimmedDescription = description.trim()
   const canSave =
-    trimmedTitle.length > 0 && trimmedPosition.length >= MIN_POLICY_FOCUS_LENGTH
+    trimmedTitle.length > 0 &&
+    trimmedDescription.length >= MIN_POLICY_FOCUS_LENGTH
 
   return (
     <div className="flex flex-col gap-4 p-6">
@@ -48,12 +49,12 @@ export default function PolicyForm({
         <Textarea
           id="policy-focus"
           rows={4}
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{MIN_POLICY_FOCUS_LENGTH} character minimum</span>
-          <span>{trimmedPosition.length}</span>
+          <span>{trimmedDescription.length}</span>
         </div>
       </div>
 
@@ -75,7 +76,7 @@ export default function PolicyForm({
           size="medium"
           disabled={!canSave}
           onClick={() =>
-            onSave({ title: trimmedTitle, position: trimmedPosition })
+            onSave({ title: trimmedTitle, description: trimmedDescription })
           }
         >
           Save

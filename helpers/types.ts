@@ -117,7 +117,6 @@ export interface CampaignDetails {
   pledged?: boolean
   isProUpdatedAt?: number
   customIssues?: CustomIssue[]
-  whyRunning?: string
   runningAgainst?: RunningAgainst[]
   geoLocation?: CampaignGeoLocation
   geoLocationFailed?: boolean
