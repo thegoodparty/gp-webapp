@@ -11,7 +11,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     title: 'Submit candidate profile',
-    route: '/dashboard/profile/texting-compliance/submit-candidate-profile',
+    route: '/dashboard/profile/texting-compliance/candidate-profile',
     status: STEP_STATUS.ACTIVE,
   },
   {
