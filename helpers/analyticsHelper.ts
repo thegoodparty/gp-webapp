@@ -427,6 +427,7 @@ export const EVENTS = {
       ClickEdit: 'Profile - Policy Priorities: Click Edit',
       SubmitAdd: 'Profile - Policy Priorities: Submit Add',
       SubmitEdit: 'Profile - Policy Priorities: Submit Edit',
+      CancelAdd: 'Profile - Policy Priorities: Cancel Add',
       CancelEdit: 'Profile - Policy Priorities: Cancel Edit',
       ClickDelete: 'Profile - Policy Priorities: Click Delete',
       SubmitDelete: 'Profile - Policy Priorities: Submit Delete',

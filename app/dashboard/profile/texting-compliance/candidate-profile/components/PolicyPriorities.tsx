@@ -6,6 +6,7 @@ import AlertDialog from '@shared/utils/AlertDialog'
 import { CustomIssue } from 'helpers/types'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import PolicyForm from './PolicyForm'
+import TextingComplianceHeader from '../../shared/TextingComplianceHeader'
 
 const POLICY_MODAL_MODE = {
   ADD: 'add',
@@ -49,8 +50,14 @@ export default function PolicyPriorities({
     setModal({ open: true, mode: POLICY_MODAL_MODE.EDIT, index })
   }
 
-  const handleCancelEdit = () => {
-    if (modal.open) trackEvent(EVENTS.Profile.PolicyPriorities.CancelEdit)
+  const handleCancel = () => {
+    if (modal.open) {
+      trackEvent(
+        modal.mode === POLICY_MODAL_MODE.EDIT
+          ? EVENTS.Profile.PolicyPriorities.CancelEdit
+          : EVENTS.Profile.PolicyPriorities.CancelAdd,
+      )
+    }
     setModal({ open: false })
   }
 
@@ -95,7 +102,11 @@ export default function PolicyPriorities({
 
   return (
     <div>
-      <div className="mb-1.5 text-sm font-medium">Your policy priorities</div>
+      <TextingComplianceHeader>
+        <h5 className="flex-1 text-center md:hidden text-sm font-medium">
+          Your policy priorities
+        </h5>
+      </TextingComplianceHeader>
       <div className="flex flex-col gap-3">
         {issues.map((issue, index) => (
           <button
@@ -130,7 +141,7 @@ export default function PolicyPriorities({
       <ModalOrDrawer
         open={modal.open}
         onOpenChange={(open) => {
-          if (!open) handleCancelEdit()
+          if (!open) handleCancel()
         }}
         title="Policy priority"
       >
