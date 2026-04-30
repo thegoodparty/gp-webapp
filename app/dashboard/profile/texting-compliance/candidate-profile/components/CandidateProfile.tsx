@@ -1,11 +1,11 @@
 'use client'
-import { Button, Textarea } from '@styleguide'
+import { Button } from '@styleguide'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { stripHtml } from 'string-strip-html'
 import {
   createWebsite,
   getUserWebsite,
@@ -21,15 +21,21 @@ import {
 } from '../candidateProfile.utils'
 import PolicyPriorities from './PolicyPriorities'
 
-const stripIfPresent = (value: string | undefined | null): string =>
-  value ? stripHtml(value).result : ''
+const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="rounded-md border border-input bg-white px-3 py-2 text-sm text-muted-foreground">
+      Loading editor…
+    </div>
+  ),
+})
 
 const normalizeIssues = (
   raw: { title?: string; description?: string }[] | undefined,
 ): WebsiteIssue[] =>
   (raw ?? []).map((i) => ({
-    title: stripIfPresent(i.title),
-    description: stripIfPresent(i.description),
+    title: i.title ?? '',
+    description: i.description ?? '',
   }))
 
 export default function CandidateProfile(): React.JSX.Element {
@@ -42,20 +48,22 @@ export default function CandidateProfile(): React.JSX.Element {
   })
 
   const [bio, setBio] = useState('')
+  const [bioPlainLength, setBioPlainLength] = useState(0)
   const [issues, setIssues] = useState<WebsiteIssue[]>([])
   const [submitting, setSubmitting] = useState(false)
   const seededRef = useRef(false)
 
   useEffect(() => {
     if (seededRef.current || !website) return
-    setBio(stripIfPresent(website.content?.about?.bio))
+    setBio(website.content?.about?.bio ?? '')
     setIssues(normalizeIssues(website.content?.about?.issues))
     seededRef.current = true
   }, [website])
 
-  const trimmedBioLength = bio.trim().length
+  const initialBio = website?.content?.about?.bio ?? ''
+
   const canSubmit =
-    trimmedBioLength >= MIN_BIO_LENGTH &&
+    bioPlainLength >= MIN_BIO_LENGTH &&
     issues.length >= MIN_POLICY_PRIORITIES &&
     !submitting
 
@@ -94,19 +102,17 @@ export default function CandidateProfile(): React.JSX.Element {
         </div>
 
         <div className="mt-10">
-          <label htmlFor="why" className="mb-1.5 block text-sm font-medium">
+          <div className="mb-1.5 block text-sm font-medium">
             Why are you running?
-          </label>
-          <Textarea
-            id="why"
-            rows={5}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            disabled={submitting}
+          </div>
+          <RichEditor
+            initialText={initialBio}
+            onChangeCallback={setBio}
+            onTextLengthChange={setBioPlainLength}
           />
           <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
             <span>{MIN_BIO_LENGTH} character minimum</span>
-            <span>{trimmedBioLength}</span>
+            <span>{bioPlainLength}</span>
           </div>
         </div>
 

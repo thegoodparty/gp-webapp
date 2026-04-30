@@ -1,8 +1,18 @@
 'use client'
-import { Button, Input, Textarea } from '@styleguide'
+import { Button, Input } from '@styleguide'
+import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { WebsiteIssue } from 'helpers/types'
 import { MIN_POLICY_FOCUS_LENGTH } from '../candidateProfile.utils'
+
+const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="rounded-md border border-input bg-white px-3 py-2 text-sm text-muted-foreground">
+      Loading editor…
+    </div>
+  ),
+})
 
 interface PolicyFormProps {
   initial?: WebsiteIssue
@@ -19,12 +29,12 @@ export default function PolicyForm({
 }: PolicyFormProps): React.JSX.Element {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [description, setDescription] = useState(initial?.description ?? '')
+  const [descriptionPlainLength, setDescriptionPlainLength] = useState(0)
+  const [initialDescription] = useState(initial?.description ?? '')
 
   const trimmedTitle = title.trim()
-  const trimmedDescription = description.trim()
   const canSave =
-    trimmedTitle.length > 0 &&
-    trimmedDescription.length >= MIN_POLICY_FOCUS_LENGTH
+    trimmedTitle.length > 0 && descriptionPlainLength >= MIN_POLICY_FOCUS_LENGTH
 
   return (
     <div className="flex flex-col gap-4 p-6">
@@ -43,18 +53,15 @@ export default function PolicyForm({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="policy-focus" className="text-sm font-medium">
-          Policy focus
-        </label>
-        <Textarea
-          id="policy-focus"
-          rows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+        <div className="text-sm font-medium">Policy focus</div>
+        <RichEditor
+          initialText={initialDescription}
+          onChangeCallback={setDescription}
+          onTextLengthChange={setDescriptionPlainLength}
         />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{MIN_POLICY_FOCUS_LENGTH} character minimum</span>
-          <span>{trimmedDescription.length}</span>
+          <span>{descriptionPlainLength}</span>
         </div>
       </div>
 
@@ -75,9 +82,7 @@ export default function PolicyForm({
           type="button"
           size="medium"
           disabled={!canSave}
-          onClick={() =>
-            onSave({ title: trimmedTitle, description: trimmedDescription })
-          }
+          onClick={() => onSave({ title: trimmedTitle, description })}
         >
           Save
         </Button>
