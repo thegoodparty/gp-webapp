@@ -36,6 +36,7 @@ import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from '@shared/utils/syncEcanvasser'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
+import { useUser as useClerkUser } from '@clerk/nextjs'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { Campaign } from 'helpers/types'
@@ -301,7 +302,15 @@ const NewNavMenu = ({
   pathname: string | null
 }) => {
   const [user] = useUser()
+  const { user: clerkUser, isLoaded: isClerkUserLoaded } = useClerkUser()
   const { setOpenMobile, isMobile } = useSidebar()
+
+  const menuFirstName =
+    (isClerkUserLoaded && clerkUser?.firstName?.trim()) ||
+    user?.firstName ||
+    ''
+  const menuLastName =
+    (isClerkUserLoaded && clerkUser?.lastName?.trim()) || user?.lastName || ''
 
   const organization = useOrganization()
 
@@ -469,7 +478,7 @@ const NewNavMenu = ({
                         data-testid="user-menu-name"
                         className="truncate text-sm font-semibold"
                       >
-                        {user?.firstName} {user?.lastName}
+                        {menuFirstName} {menuLastName}
                       </span>
                       <span className="truncate text-xs">Manage account</span>
                     </div>
