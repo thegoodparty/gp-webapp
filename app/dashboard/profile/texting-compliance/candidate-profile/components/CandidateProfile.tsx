@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { stripHtml } from 'string-strip-html'
 import {
   createWebsite,
   getUserWebsite,
@@ -20,12 +21,15 @@ import {
 } from '../candidateProfile.utils'
 import PolicyPriorities from './PolicyPriorities'
 
+const stripIfPresent = (value: string | undefined | null): string =>
+  value ? stripHtml(value).result : ''
+
 const normalizeIssues = (
   raw: { title?: string; description?: string }[] | undefined,
 ): WebsiteIssue[] =>
   (raw ?? []).map((i) => ({
-    title: i.title ?? '',
-    description: i.description ?? '',
+    title: stripIfPresent(i.title),
+    description: stripIfPresent(i.description),
   }))
 
 export default function CandidateProfile(): React.JSX.Element {
@@ -44,7 +48,7 @@ export default function CandidateProfile(): React.JSX.Element {
 
   useEffect(() => {
     if (seededRef.current || !website) return
-    setBio(website.content?.about?.bio ?? '')
+    setBio(stripIfPresent(website.content?.about?.bio))
     setIssues(normalizeIssues(website.content?.about?.issues))
     seededRef.current = true
   }, [website])
