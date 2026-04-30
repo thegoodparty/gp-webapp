@@ -10,6 +10,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { AccountSettingsButton } from 'app/dashboard/profile/components/AccountSettingsButton'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { getMarketingUrl } from 'helpers/linkhelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
 
@@ -57,7 +58,7 @@ export const AccountSettingsSection = (): React.JSX.Element => {
               Need help?
               <Link
                 className="ml-1 underline text-info-main"
-                href="/contact"
+                href={getMarketingUrl('/contact')}
                 onClick={() =>
                   trackEvent(EVENTS.Settings.Account.ClickSendEmail)
                 }
