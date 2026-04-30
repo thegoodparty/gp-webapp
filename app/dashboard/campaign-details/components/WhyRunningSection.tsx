@@ -39,6 +39,13 @@ export default function WhyRunningSection(): React.JSX.Element {
   const [bio, setBio] = useState('')
   const [bioPlainLength, setBioPlainLength] = useState(0)
   const [saving, setSaving] = useState(false)
+  // `initialBio` must be captured exactly once and never change afterward.
+  // RichEditor re-pastes its content whenever `initialText` changes by value,
+  // so if we derived it live from the query it would clobber the user's
+  // in-progress edits whenever `invalidateQueries` (after save) triggers a
+  // refetch. `null` means "not seeded yet" so we can defer mounting the
+  // editor until we have the real value.
+  const [initialBio, setInitialBio] = useState<string | null>(null)
   const seededRef = useRef(false)
 
   useEffect(() => {
@@ -48,10 +55,10 @@ export default function WhyRunningSection(): React.JSX.Element {
     // Seed length up-front so Save isn't falsely disabled before the editor
     // emits its first onTextLengthChange.
     setBioPlainLength(getBioPlainLength(initial))
+    setInitialBio(initial)
     seededRef.current = true
   }, [website])
 
-  const initialBio = website?.content?.about?.bio ?? ''
   const canSave = bioPlainLength >= MIN_BIO_LENGTH && !saving
 
   const handleSave = async () => {
@@ -75,11 +82,13 @@ export default function WhyRunningSection(): React.JSX.Element {
       <Body1 className="text-gray-600 mt-2 pb-6 mb-6">
         Tell potential voters why you&apos;re running for office.
       </Body1>
-      <RichEditor
-        initialText={initialBio}
-        onChangeCallback={setBio}
-        onTextLengthChange={setBioPlainLength}
-      />
+      {initialBio !== null && (
+        <RichEditor
+          initialText={initialBio}
+          onChangeCallback={setBio}
+          onTextLengthChange={setBioPlainLength}
+        />
+      )}
       <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
         <span>{MIN_BIO_LENGTH} character minimum</span>
         <span>{bioPlainLength}</span>
