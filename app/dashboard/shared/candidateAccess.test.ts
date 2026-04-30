@@ -2,13 +2,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Organization } from 'gpApi/api-endpoints'
 import candidateAccess from './candidateAccess'
 
-const { mockAuth, mockHeadersGet, mockRedirect, mockGetCurrentUserOrganizations } =
-  vi.hoisted(() => ({
-    mockAuth: vi.fn(),
-    mockHeadersGet: vi.fn(),
-    mockRedirect: vi.fn(),
-    mockGetCurrentUserOrganizations: vi.fn(),
-  }))
+const {
+  mockAuth,
+  mockHeadersGet,
+  mockRedirect,
+  mockGetCurrentUserOrganizations,
+} = vi.hoisted(() => ({
+  mockAuth: vi.fn(),
+  mockHeadersGet: vi.fn(),
+  mockRedirect: vi.fn(),
+  mockGetCurrentUserOrganizations: vi.fn(),
+}))
 
 vi.mock('@clerk/nextjs/server', () => ({
   auth: () => mockAuth(),
@@ -99,6 +103,8 @@ describe('candidateAccess', () => {
     await candidateAccess()
 
     expect(mockGetCurrentUserOrganizations).toHaveBeenCalledOnce()
-    expect(mockRedirect).not.toHaveBeenCalledWith('/onboarding/office-selection')
+    expect(mockRedirect).not.toHaveBeenCalledWith(
+      '/onboarding/office-selection',
+    )
   })
 })

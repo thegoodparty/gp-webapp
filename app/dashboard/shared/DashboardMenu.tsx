@@ -306,9 +306,7 @@ const NewNavMenu = ({
   const { setOpenMobile, isMobile } = useSidebar()
 
   const menuFirstName =
-    (isClerkUserLoaded && clerkUser?.firstName?.trim()) ||
-    user?.firstName ||
-    ''
+    (isClerkUserLoaded && clerkUser?.firstName?.trim()) || user?.firstName || ''
   const menuLastName =
     (isClerkUserLoaded && clerkUser?.lastName?.trim()) || user?.lastName || ''
 
