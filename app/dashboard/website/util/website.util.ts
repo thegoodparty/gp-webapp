@@ -2,6 +2,9 @@ import { apiRoutes } from 'gpApi/routes'
 import { clientFetch, ApiResponse } from 'gpApi/clientFetch'
 import { isDomainActive } from './domain.util'
 import { NEXT_PUBLIC_CANDIDATES_SITE_BASE } from 'appEnv'
+import type { Website, WebsiteContent, Domain } from 'helpers/types'
+
+type WebsiteAbout = NonNullable<WebsiteContent['about']>
 
 const CANDIDATES_SITE_BASE = NEXT_PUBLIC_CANDIDATES_SITE_BASE
 
@@ -20,8 +23,6 @@ interface CustomIssue {
   title?: string
   position?: string
 }
-
-import type { Website, WebsiteContent, Domain } from 'helpers/types'
 
 interface CombinedIssue {
   title: string
@@ -71,6 +72,25 @@ export async function getUserWebsite(): Promise<Website | null> {
   } catch (e) {
     console.error('error', e)
     return null
+  }
+}
+
+export async function saveAboutFields(
+  partial: Partial<WebsiteAbout>,
+  existing: Website | null | undefined,
+): Promise<boolean> {
+  try {
+    if (!existing) {
+      const createResp = await createWebsite()
+      if (!createResp.ok) return false
+    }
+    const result = await updateWebsite({
+      about: { ...existing?.content?.about, ...partial },
+    })
+    return Boolean(result && result.ok)
+  } catch (e) {
+    console.error('saveAboutFields error', e)
+    return false
   }
 }
 

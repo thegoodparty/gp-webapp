@@ -103,9 +103,6 @@ export default function PolicyPriorities({
 
   return (
     <div>
-      <div className="mb-1.5 block text-sm font-medium">
-        Your policy priorities
-      </div>
       <div className="flex flex-col gap-3">
         {issues.map((issue, index) => (
           <button

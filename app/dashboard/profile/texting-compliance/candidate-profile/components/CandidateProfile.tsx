@@ -7,9 +7,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  createWebsite,
   getUserWebsite,
-  updateWebsite,
+  saveAboutFields,
   USER_WEBSITE_QUERY_KEY,
 } from 'app/dashboard/website/util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -18,6 +17,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import {
   MIN_BIO_LENGTH,
   MIN_POLICY_PRIORITIES,
+  normalizeIssues,
 } from '../candidateProfile.utils'
 import PolicyPriorities from './PolicyPriorities'
 
@@ -29,14 +29,6 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
     </div>
   ),
 })
-
-const normalizeIssues = (
-  raw: { title?: string; description?: string }[] | undefined,
-): WebsiteIssue[] =>
-  (raw ?? []).map((i) => ({
-    title: i.title ?? '',
-    description: i.description ?? '',
-  }))
 
 export default function CandidateProfile(): React.JSX.Element {
   const router = useRouter()
@@ -71,23 +63,16 @@ export default function CandidateProfile(): React.JSX.Element {
     if (!canSubmit) return
     trackEvent(EVENTS.Profile.CandidateProfile.ClickSubmit)
     setSubmitting(true)
-    try {
-      if (!website) {
-        const createResp = await createWebsite()
-        if (!createResp.ok) throw new Error('create failed')
-      }
-      const result = await updateWebsite({
-        about: { ...website?.content?.about, bio, issues },
-      })
-      if (!result || !result.ok) throw new Error('update failed')
-      trackEvent(EVENTS.Profile.CandidateProfile.SubmitSuccess)
-      await queryClient.invalidateQueries({ queryKey: USER_WEBSITE_QUERY_KEY })
-      router.push('/dashboard/profile')
-    } catch {
+    const ok = await saveAboutFields({ bio, issues }, website)
+    if (!ok) {
       trackEvent(EVENTS.Profile.CandidateProfile.SubmitError)
       errorSnackbar('Failed to save candidate profile. Please try again.')
       setSubmitting(false)
+      return
     }
+    trackEvent(EVENTS.Profile.CandidateProfile.SubmitSuccess)
+    await queryClient.invalidateQueries({ queryKey: USER_WEBSITE_QUERY_KEY })
+    router.push('/dashboard/profile')
   }
 
   return (
@@ -117,6 +102,9 @@ export default function CandidateProfile(): React.JSX.Element {
         </div>
 
         <div className="mt-8">
+          <div className="mb-1.5 block text-sm font-medium">
+            Your policy priorities
+          </div>
           <PolicyPriorities
             issues={issues}
             onChange={setIssues}
