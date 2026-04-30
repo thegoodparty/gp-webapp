@@ -58,7 +58,7 @@ export default function WhyRunningSection(): React.JSX.Element {
     if (!canSave) return
     trackEvent(EVENTS.Profile.WhyRunning.ClickSave)
     setSaving(true)
-    const ok = await saveAboutFields({ bio }, website)
+    const ok = await saveAboutFields({ bio })
     if (!ok) {
       errorSnackbar('Failed to save. Please try again.')
       setSaving(false)

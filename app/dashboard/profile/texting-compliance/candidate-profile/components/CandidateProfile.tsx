@@ -63,7 +63,7 @@ export default function CandidateProfile(): React.JSX.Element {
     if (!canSubmit) return
     trackEvent(EVENTS.Profile.CandidateProfile.ClickSubmit)
     setSubmitting(true)
-    const ok = await saveAboutFields({ bio, issues }, website)
+    const ok = await saveAboutFields({ bio, issues })
     if (!ok) {
       trackEvent(EVENTS.Profile.CandidateProfile.SubmitError)
       errorSnackbar('Failed to save candidate profile. Please try again.')

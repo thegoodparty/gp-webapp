@@ -43,7 +43,7 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
     if (!canSave) return
     trackEvent(EVENTS.Profile.PolicyPriorities.ClickSave)
     setSaving(true)
-    const ok = await saveAboutFields({ issues }, website)
+    const ok = await saveAboutFields({ issues })
     if (!ok) {
       errorSnackbar('Failed to save policy priorities. Please try again.')
       setSaving(false)
