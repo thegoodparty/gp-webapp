@@ -62,6 +62,18 @@ export async function updateWebsite(
   }
 }
 
+export const USER_WEBSITE_QUERY_KEY = ['user-website']
+
+export async function getUserWebsite(): Promise<Website | null> {
+  try {
+    const resp = await clientFetch<Website>(apiRoutes.website.get)
+    return resp.ok ? resp.data : null
+  } catch (e) {
+    console.error('error', e)
+    return null
+  }
+}
+
 export async function validateVanityPath(
   vanityPath: string,
 ): Promise<ApiResponse<{ available: boolean }>> {

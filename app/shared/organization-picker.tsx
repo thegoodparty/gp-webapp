@@ -33,13 +33,13 @@ const SHARED_PATHS = ['/dashboard/profile', '/dashboard/campaign-details']
 
 interface OrganizationContextValue {
   organizations: Organization[]
-  selected: Organization
+  selected: Organization | undefined
   setSelectedSlug: (slug: string) => void
 }
 
 const OrganizationContext = createContext<OrganizationContextValue | null>(null)
 
-export const useOrganization = () => {
+export const useOrganization = (): Organization | undefined => {
   const ctx = useContext(OrganizationContext)
   if (!ctx) {
     throw new Error('useOrganization must be used within OrganizationProvider')
@@ -112,7 +112,7 @@ export const OrganizationProvider = ({
     <OrganizationContext.Provider
       value={{
         organizations,
-        selected: selectedOrganization!,
+        selected: selectedOrganization,
         setSelectedSlug,
       }}
     >
@@ -130,7 +130,7 @@ export const OrganizationPicker = () => {
   const [campaign] = useCampaign()
   const pathname = usePathname()
 
-  if (!ctx || ctx.organizations.length === 0) return null
+  if (!ctx || ctx.organizations.length === 0 || !ctx.selected) return null
 
   const { organizations, selected, setSelectedSlug } = ctx
 

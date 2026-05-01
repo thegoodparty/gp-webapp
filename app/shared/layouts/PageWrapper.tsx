@@ -18,7 +18,7 @@ import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
 import { ImpersonatingTracker } from '@shared/user/ImpersonatingTracker'
 import { OrganizationProvider } from '@shared/organization-picker'
-import { serverRequest } from 'gpApi/server-request'
+import { getCurrentUserOrganizations } from 'helpers/getCurrentUserOrganizations'
 import { ClerkProvider } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 import { ReactQueryProvider } from '@shared/query-client'
@@ -37,13 +37,7 @@ const PageWrapper = async ({
   const [pathname, campaign, organizations] = await Promise.all([
     getReqPathname(),
     isAuthed ? fetchUserCampaign() : Promise.resolve(null),
-    isAuthed
-      ? serverRequest(
-          'GET /v1/organizations',
-          {},
-          { ignoreResponseError: true },
-        ).then((res) => (res.ok ? res.data.organizations : []))
-      : Promise.resolve([]),
+    isAuthed ? getCurrentUserOrganizations() : Promise.resolve([]),
   ])
 
   return (
