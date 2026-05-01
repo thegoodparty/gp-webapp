@@ -1,5 +1,40 @@
 import { useState, useEffect, useRef } from 'react'
 import tailwindJson from '../tokens/Tailwind.json'
+import themeLightJson from '../tokens/ThemeLight.json'
+import themeDarkJson from '../tokens/ThemeDark.json'
+
+// Stories groupKey → JSON top-level key (note: JSON uses "components" plural)
+const JSON_GROUP_BY_STORIES_KEY = {
+  base: 'base',
+  theme: 'theme',
+  component: 'components',
+  data: 'data',
+  sidebar: 'sidebar',
+}
+
+// "{tailwind colors.blue.600}" → "tw-blue-600"
+// "{midnight.900}" / "{warning.600}" → "midnight-900" / "warning-600"
+// Raw hex (focus alpha tokens) → null
+function prettifyJsonRef(value) {
+  if (typeof value !== 'string') return null
+  if (!value.startsWith('{') || !value.endsWith('}')) return null
+  const inner = value.slice(1, -1)
+  if (inner.startsWith('tailwind colors.')) {
+    return 'tw-' + inner.slice('tailwind colors.'.length).replaceAll('.', '-')
+  }
+  return inner.replaceAll('.', '-')
+}
+
+function buildBaseRefMap(json, storiesGroupKey) {
+  const group = json[JSON_GROUP_BY_STORIES_KEY[storiesGroupKey]]
+  if (!group) return {}
+  const map = {}
+  for (const [name, token] of Object.entries(group)) {
+    const pretty = prettifyJsonRef(token?.value)
+    if (pretty) map[name] = pretty
+  }
+  return map
+}
 
 const meta = {
   title: 'Design System/Colors',
@@ -434,6 +469,15 @@ export const ThemeColors = ({ mode }) => {
   const [tokens, setTokens] = useState(null)
   const isDark = mode === 'dark'
 
+  const themeJson = isDark ? themeDarkJson : themeLightJson
+  const baseRefs = {
+    base: buildBaseRefMap(themeJson, 'base'),
+    theme: buildBaseRefMap(themeJson, 'theme'),
+    component: buildBaseRefMap(themeJson, 'component'),
+    data: buildBaseRefMap(themeJson, 'data'),
+    sidebar: buildBaseRefMap(themeJson, 'sidebar'),
+  }
+
   useEffect(() => {
     if (!containerRef.current) return
     const el = containerRef.current
@@ -509,12 +553,16 @@ export const ThemeColors = ({ mode }) => {
                         {keys.map((name) => {
                           const token = tokens[groupKey]?.[name]
                           if (!token) return null
+                          const baseRef = baseRefs[groupKey]?.[name]
+                          const alias = baseRef
+                            ? `${token.ref} → ${baseRef}`
+                            : token.ref
                           return (
                             <Swatch
                               key={name}
                               name={name}
                               hex={token.hex}
-                              alias={token.ref}
+                              alias={alias}
                               isDark={isDark}
                               cardBg={cardBg}
                               borderColor={borderColor}
@@ -534,20 +582,26 @@ export const ThemeColors = ({ mode }) => {
                         ([name]) =>
                           groupKey !== 'sidebar' || !SIDEBAR_EXCLUDED.has(name),
                       )
-                      .map(([name, { hex, ref: tokenRef }]) => (
-                        <Swatch
-                          key={name}
-                          name={name}
-                          hex={hex}
-                          alias={tokenRef}
-                          isDark={isDark}
-                          cardBg={cardBg}
-                          borderColor={borderColor}
-                          foregroundColor={foregroundColor}
-                          mutedForegroundColor={mutedForegroundColor}
-                          cardHeight={260}
-                        />
-                      ))}
+                      .map(([name, { hex, ref: tokenRef }]) => {
+                        const baseRef = baseRefs[groupKey]?.[name]
+                        const alias = baseRef
+                          ? `${tokenRef} → ${baseRef}`
+                          : tokenRef
+                        return (
+                          <Swatch
+                            key={name}
+                            name={name}
+                            hex={hex}
+                            alias={alias}
+                            isDark={isDark}
+                            cardBg={cardBg}
+                            borderColor={borderColor}
+                            foregroundColor={foregroundColor}
+                            mutedForegroundColor={mutedForegroundColor}
+                            cardHeight={260}
+                          />
+                        )
+                      })}
                   </SwatchRow>
                 )}
               </Section>
