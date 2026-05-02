@@ -56,6 +56,12 @@ const isStatusKey = (key: string | null | undefined): key is StatusKey => {
   return key !== null && key !== undefined && key in statusLabels
 }
 
+const isScheduledDatePassed = (date: Date | string | null | undefined): boolean => {
+  if (!date) return false
+  const scheduledDate = new Date(date)
+  return scheduledDate.getTime() <= Date.now()
+}
+
 const getP2pStatusLabel = (row: OutreachRow): string | null => {
   // Check if this is a P2P outreach by checking for phoneListId
   // (phoneListId indicates it was created via P2P flow, even if type is normalized to 'text')
@@ -63,17 +69,21 @@ const getP2pStatusLabel = (row: OutreachRow): string | null => {
     return null
   }
 
-  const { p2pJob, status } = row
+  const { p2pJob, status, date } = row
 
   // Need both p2pJob status and outreach status to display
   if (!p2pJob?.status || !status || !isStatusKey(status)) {
     return null
   }
 
-  // If P2P job is active, show as completed; otherwise use the outreach status
-  const displayStatus: StatusKey =
-    p2pJob.status === 'active' ? 'completed' : status
-  return statusLabels[displayStatus]
+  // If P2P job is active, only show as completed if the scheduled date has passed
+  // Otherwise show as scheduled (the job is active but hasn't started sending yet)
+  if (p2pJob.status === 'active') {
+    const displayStatus: StatusKey = isScheduledDatePassed(date) ? 'completed' : 'in_progress'
+    return statusLabels[displayStatus]
+  }
+
+  return statusLabels[status]
 }
 
 const STATUS_COLUMN = {
