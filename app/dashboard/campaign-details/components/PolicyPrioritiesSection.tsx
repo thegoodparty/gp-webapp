@@ -31,11 +31,12 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
   const [saving, setSaving] = useState(false)
   const seededRef = useRef(false)
 
+  const websiteIssues = website?.content?.about?.issues
   useEffect(() => {
     if (seededRef.current || !website) return
-    setIssues(normalizeIssues(website.content?.about?.issues))
+    setIssues(normalizeIssues(websiteIssues))
     seededRef.current = true
-  }, [website])
+  }, [website, websiteIssues])
 
   const canSave = issues.length >= MIN_POLICY_PRIORITIES && !saving
 

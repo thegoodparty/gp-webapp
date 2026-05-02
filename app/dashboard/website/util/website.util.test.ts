@@ -57,13 +57,17 @@ describe('saveAboutFields', () => {
     expect(result).toBe(true)
     expect(mockClientFetch).toHaveBeenCalledTimes(2)
     expect(mockClientFetch).toHaveBeenNthCalledWith(1, apiRoutes.website.get)
-    expect(mockClientFetch).toHaveBeenNthCalledWith(2, apiRoutes.website.update, {
-      about: {
-        bio: 'new bio',
-        issues: [{ title: 'Healthcare', description: 'Universal' }],
-        committee: 'Friends of Jane',
+    expect(mockClientFetch).toHaveBeenNthCalledWith(
+      2,
+      apiRoutes.website.update,
+      {
+        about: {
+          bio: 'new bio',
+          issues: [{ title: 'Healthcare', description: 'Universal' }],
+          committee: 'Friends of Jane',
+        },
       },
-    })
+    )
   })
 
   it('returns false when update fails and does not throw', async () => {
@@ -118,9 +122,13 @@ describe('saveAboutFields', () => {
     const result = await saveAboutFields({ bio: 'new' })
 
     expect(result).toBe(true)
-    expect(mockClientFetch).toHaveBeenNthCalledWith(2, apiRoutes.website.update, {
-      about: { bio: 'new' },
-    })
+    expect(mockClientFetch).toHaveBeenNthCalledWith(
+      2,
+      apiRoutes.website.update,
+      {
+        about: { bio: 'new' },
+      },
+    )
   })
 
   it('overwrites a sibling field already present in the latest about', async () => {
@@ -134,12 +142,16 @@ describe('saveAboutFields', () => {
 
     await saveAboutFields({ issues: [{ title: 'B', description: 'b' }] })
 
-    expect(mockClientFetch).toHaveBeenNthCalledWith(2, apiRoutes.website.update, {
-      about: {
-        bio: 'first',
-        issues: [{ title: 'B', description: 'b' }],
+    expect(mockClientFetch).toHaveBeenNthCalledWith(
+      2,
+      apiRoutes.website.update,
+      {
+        about: {
+          bio: 'first',
+          issues: [{ title: 'B', description: 'b' }],
+        },
       },
-    })
+    )
   })
 
   describe('when no website exists yet', () => {
@@ -204,7 +216,7 @@ describe('saveAboutFields', () => {
   })
 
   describe('concurrency', () => {
-    it('serializes overlapping calls so the second save merges with the first save\'s result', async () => {
+    it("serializes overlapping calls so the second save merges with the first save's result", async () => {
       type Deferred<T> = {
         resolve: (v: T) => void
         promise: Promise<T>
