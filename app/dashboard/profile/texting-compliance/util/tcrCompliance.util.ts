@@ -42,7 +42,8 @@ export const getTcrComplianceStatusCompletions = (
 ): TcrComplianceStatusCompletions => {
   const status = tcrCompliance?.status ?? null
   return {
-    filingComplete: status !== null && FILING_COMPLETE_STATUSES.includes(status),
+    filingComplete:
+      status !== null && FILING_COMPLETE_STATUSES.includes(status),
     pinComplete: status !== null && PIN_COMPLETE_STATUSES.includes(status),
   }
 }
