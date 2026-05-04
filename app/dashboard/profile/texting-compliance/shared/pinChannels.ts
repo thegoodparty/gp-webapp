@@ -23,5 +23,7 @@ export const formatPinChannels = (channels: PinChannel[]): string => {
   if (channels.length === 0) return ''
   if (channels.length === 1) return channels[0]!
   if (channels.length === 2) return `${channels[0]} or ${channels[1]}`
-  return `${channels.slice(0, -1).join(', ')} or ${channels[channels.length - 1]}`
+  return `${channels.slice(0, -1).join(', ')} or ${
+    channels[channels.length - 1]
+  }`
 }

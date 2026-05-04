@@ -99,9 +99,7 @@ describe('PinForm', () => {
   })
 
   it('disables the form while loading', () => {
-    render(
-      <PinForm channels={['email']} onSubmit={vi.fn()} loading />,
-    )
+    render(<PinForm channels={['email']} onSubmit={vi.fn()} loading />)
     const inputs = getDigitInputs()
     inputs.forEach((input) => expect(input).toBeDisabled())
     expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled()

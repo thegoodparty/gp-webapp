@@ -30,19 +30,16 @@ vi.mock('helpers/useSnackbar', () => ({
   }),
 }))
 
-const mockUseUser = vi.fn(() => [
-  { email: 'jane@example.com' },
-  vi.fn(),
-  false,
-])
+const mockUseUser = vi.fn(() => [{ email: 'jane@example.com' }, vi.fn(), false])
 vi.mock('@shared/hooks/useUser', () => ({
   useUser: () => mockUseUser(),
 }))
 
 const mockTrackEvent = vi.fn()
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('helpers/analyticsHelper')>()
+  const actual = await importOriginal<
+    typeof import('helpers/analyticsHelper')
+  >()
   return {
     ...actual,
     trackEvent: (...args: unknown[]) => mockTrackEvent(...args),
@@ -101,9 +98,7 @@ describe('EnterPin — gating', () => {
     await waitFor(() => {
       expect(getDigitInputs()).toHaveLength(6)
     })
-    expect(
-      screen.getByRole('button', { name: /submit/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
   })
 
   it.each<[TcrComplianceStatus | null]>([['rejected'], ['error'], [null]])(
