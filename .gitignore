@@ -78,6 +78,7 @@ invalid_urls.csv
 # AI Tools
 /.ai/
 /.cursor
+.superpowers/
 .claude/settings.json
 .claude/settings.local.json
 .claude/cache/

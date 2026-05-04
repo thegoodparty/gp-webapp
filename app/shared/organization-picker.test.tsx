@@ -79,7 +79,7 @@ describe('OrganizationProvider', () => {
   it('provides the first organization as default when no cookie is set', () => {
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -99,7 +99,7 @@ describe('OrganizationProvider', () => {
 
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -118,7 +118,7 @@ describe('OrganizationProvider', () => {
 
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -139,6 +139,22 @@ describe('OrganizationProvider', () => {
     )
 
     expect(screen.getByTestId('child')).toHaveTextContent('hello')
+  })
+
+  it('does not throw when reading electedOfficeId with no organizations (dashboard layout pattern)', () => {
+    const Probe = () => {
+      const organization = useOrganization()
+      const isElectedOffice = !!organization?.electedOfficeId
+      return <div data-testid="elected">{String(isElectedOffice)}</div>
+    }
+
+    render(
+      <OrganizationProvider initialOrganizations={[]}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    expect(screen.getByTestId('elected')).toHaveTextContent('false')
   })
 
   it('throws when useOrganization is used outside the provider', () => {

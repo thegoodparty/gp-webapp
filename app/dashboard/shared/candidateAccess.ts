@@ -1,8 +1,10 @@
 import { auth } from '@clerk/nextjs/server'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { getCurrentUserOrganizations } from 'helpers/getCurrentUserOrganizations'
 import { getServerUser } from 'helpers/userServerHelper'
 import {
   resolvePostAuthRedirectPath,
@@ -47,6 +49,16 @@ export default async function candidateAccess(): Promise<void> {
 
   if (!userId) {
     return redirect('/sign-up')
+  }
+
+  // `candidateAccess` is also used by non-dashboard routes (e.g. `/polls/*`); only
+  // bounce orgless users away from `/dashboard` where the UI assumes an organization.
+  const pathname = (await headers()).get('x-pathname') ?? ''
+  if (pathname.startsWith('/dashboard')) {
+    const organizations = await getCurrentUserOrganizations()
+    if (organizations.length === 0) {
+      return redirect('/onboarding/office-selection')
+    }
   }
 
   // Skip the legacy token check for impersonated sessions — actor tokens are Clerk JWTs
