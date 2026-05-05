@@ -19,6 +19,8 @@ import {
   onboardingStep,
   updateCampaign,
 } from 'app/onboarding/shared/ajaxActions'
+
+const ONBOARDING_STEP_COMPLETE = 'onboarding-complete'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
@@ -52,6 +54,11 @@ import type {
   PartyAffiliation,
   SelectedOffice,
 } from './newOnboardingTypes'
+
+type OnboardingUpdateAttribute = {
+  key: string
+  value: string | number | boolean | OnboardingAnswers | null | undefined
+}
 
 const ballotStatusOptions: ReadonlyArray<RadioCardOption<BallotStatus>> = [
   {
@@ -105,6 +112,13 @@ const partyAffiliationOptions: ReadonlyArray<
 const isMajorPartyAffiliation = (
   value: PartyAffiliation | undefined,
 ): boolean => value === 'democrat' || value === 'republican'
+
+const partyAffiliationToCampaignParty: Record<PartyAffiliation, string> = {
+  nonpartisan: 'nonpartisan',
+  'independent-or-non-major': 'independent',
+  democrat: 'democrat',
+  republican: 'republican',
+}
 
 interface PartyAffiliationStepProps {
   value: PartyAffiliation | undefined
@@ -475,6 +489,20 @@ export default function NewOnboardingFlow({
     }
   }
 
+  const buildEarlyAnswerAttrs = (): OnboardingUpdateAttribute[] => {
+    const attrs: OnboardingUpdateAttribute[] = []
+    if (answers.partyAffiliation) {
+      attrs.push({
+        key: 'details.party',
+        value: partyAffiliationToCampaignParty[answers.partyAffiliation],
+      })
+    }
+    if (answers.ballotStatus) {
+      attrs.push({ key: 'details.ballotStatus', value: answers.ballotStatus })
+    }
+    return attrs
+  }
+
   const persistStructuredOffice = async (
     office: SelectedOffice,
   ): Promise<boolean> => {
@@ -530,7 +558,12 @@ export default function NewOnboardingFlow({
     })
     const createAttr = [
       ...attr,
-      { key: 'data.currentStep', value: onboardingStep(undefined, 1) },
+      ...buildEarlyAnswerAttrs(),
+      {
+        key: 'data.currentStep',
+        value: nextStep?.id ?? onboardingStep(undefined, 1),
+      },
+      { key: 'data.onboarding', value: answers },
       { key: 'ballotReadyPositionId', value: office.positionId },
     ]
     const newCampaign = await createCampaignWithOffice(createAttr)
@@ -578,7 +611,12 @@ export default function NewOnboardingFlow({
 
     const createAttr = [
       ...baseAttr,
-      { key: 'data.currentStep', value: onboardingStep(undefined, 1) },
+      ...buildEarlyAnswerAttrs(),
+      {
+        key: 'data.currentStep',
+        value: nextStep?.id ?? onboardingStep(undefined, 1),
+      },
+      { key: 'data.onboarding', value: answers },
       { key: 'customPositionName', value: customPositionName },
     ]
     const newCampaign = await createCampaignWithOffice(createAttr)
@@ -589,6 +627,36 @@ export default function NewOnboardingFlow({
       ...trackingProperties,
       officeManuallyInput: true,
     })
+    return true
+  }
+
+  const persistPartyAffiliation = async (
+    affiliation: PartyAffiliation,
+  ): Promise<boolean> => {
+    const party = partyAffiliationToCampaignParty[affiliation]
+    const updated = await updateCampaign([
+      { key: 'details.party', value: party },
+    ])
+    if (updated === false) return false
+    trackEvent(EVENTS.Onboarding.PartyStep.Completed, { affiliation: party })
+    if (user?.id) {
+      await identifyUser(user.id, { affiliation: party })
+    }
+    return true
+  }
+
+  const persistPledgeAndComplete = async (): Promise<boolean> => {
+    trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
+    const updated = await updateCampaign([
+      { key: 'details.pledged', value: true },
+      { key: 'data.currentStep', value: ONBOARDING_STEP_COMPLETE },
+      { key: 'data.onboarding', value: answers },
+    ])
+    if (updated === false) return false
+    trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
+    if (user?.id) {
+      await identifyUser(user.id, { pledgeCompleted: true })
+    }
     return true
   }
 
@@ -624,7 +692,34 @@ export default function NewOnboardingFlow({
         setIsSavingOffice(false)
       }
     }
+    if (activeStep.id === 'ballot-status' && answers.ballotStatus && campaign) {
+      const updated = await updateCampaign([
+        { key: 'details.ballotStatus', value: answers.ballotStatus },
+      ])
+      if (updated === false) return
+    }
+    if (
+      activeStep.id === 'party-affiliation' &&
+      answers.partyAffiliation &&
+      campaign
+    ) {
+      const ok = await persistPartyAffiliation(answers.partyAffiliation)
+      if (!ok) return
+    }
+    if (activeStep.id === 'pledge') {
+      if (!campaign) return
+      const ok = await persistPledgeAndComplete()
+      if (!ok) return
+      router.push('/dashboard')
+      return
+    }
     if (nextStep) {
+      if (campaign) {
+        await updateCampaign([
+          { key: 'data.currentStep', value: nextStep.id },
+          { key: 'data.onboarding', value: answers },
+        ])
+      }
       setActiveStepId(nextStep.id)
     }
   }

@@ -58,7 +58,6 @@ export interface ManualOfficeForm {
 }
 
 export interface OnboardingAnswers {
-  [key: string]: unknown
   officePath?: OnboardingOfficePath
   manualOffice?: boolean
   unmatchedOffice?: boolean
