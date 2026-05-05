@@ -12,10 +12,22 @@ import TextingComplianceApproved from './TextingComplianceApproved'
 import TextingComplianceInReview from './TextingComplianceInReview'
 
 export default function TextingComplianceAgentic(): React.JSX.Element {
-  const { data: tcrCompliance } = useQuery({
+  const { data: tcrCompliance, isPending } = useQuery({
     queryKey: TCR_COMPLIANCE_QUERY_KEY,
     queryFn: getTcrCompliance,
   })
+
+  // Render a placeholder shell while loading so we don't flash the default
+  // steps view to users who are actually approved or pending review.
+  if (isPending) {
+    return (
+      <Card className="p-4 md:p-6 mt-4 gap-2" id="texting-compliance">
+        <h2 className="text-2xl font-semibold mb-4">Texting Compliance</h2>
+        <div className="h-6 w-2/3 animate-pulse rounded-md bg-slate-200" />
+        <div className="h-4 w-full animate-pulse rounded-md bg-slate-200" />
+      </Card>
+    )
+  }
 
   const status = tcrCompliance?.status
 
