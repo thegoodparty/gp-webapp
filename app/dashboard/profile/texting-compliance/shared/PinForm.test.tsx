@@ -63,8 +63,11 @@ describe('PinForm', () => {
   it('lists only the channels passed in', () => {
     render(<PinForm channels={['email']} onSubmit={vi.fn()} />)
     expect(
-      screen.getByText(/to either your email from CampaignVerify\./i),
+      screen.getByText(/to your email from CampaignVerify\./i),
     ).toBeInTheDocument()
+    // "either" only makes sense with multiple channels; with one channel it
+    // would misleadingly imply the user has a choice of delivery methods.
+    expect(screen.queryByText(/either/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/phone/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/address/i)).not.toBeInTheDocument()
   })

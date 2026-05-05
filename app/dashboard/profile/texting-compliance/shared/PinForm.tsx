@@ -25,7 +25,10 @@ const buildHelperText = (channels: PinChannel[]): string => {
   if (!channelText) {
     return `${baseText} from CampaignVerify.`
   }
-  return `${baseText} to either your ${channelText} from CampaignVerify.`
+  // "either" implies a choice between options, so only use it when there are
+  // multiple channels — with a single channel it's misleading.
+  const connector = channels.length === 1 ? 'to your' : 'to either your'
+  return `${baseText} ${connector} ${channelText} from CampaignVerify.`
 }
 
 interface PinFormProps {
