@@ -81,55 +81,15 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
-    id: 'candidate-issues',
-    eyebrow: 'Candidate priorities',
-    title: 'What are the most important issues to you?',
+    id: 'voter-demographics',
+    eyebrow: 'Voter demographics',
+    title: "Here's everything to know about your voters",
     description:
-      'Candidate-selected issues are stored for alignment and future campaign plan personalization.',
+      'We crunch the latest voter data, along with proprietary behavior models, to give you a snapshot of who lives, votes, and pays attention in your community.',
     summary:
-      'Manual-office users skip this step and land directly on the pledge.',
+      'Voter demographic charts are rendered from the structured-office district stats.',
     whyWeAsk:
-      "Aligning your platform with your community's top concerns increases your chances of earning their vote and building real coalitions.",
-    shouldSkip: ({ answers }) => answers.officePath === 'manual',
-  },
-  {
-    id: 'community-cares',
-    eyebrow: 'Community priorities',
-    title: 'What your community cares most about',
-    description:
-      'Community issue data appears when the flow has enough location context to request it.',
-    summary:
-      'Manual-office users skip this step unless ZIP-only community data is available.',
-    whyWeAsk:
-      'Voter issue data helps us match your positions to what residents actually care about, making your outreach more effective.',
-    shouldSkip: ({ answers }) =>
-      answers.officePath === 'manual' &&
-      answers.hasZipOnlyCommunityData !== true,
-  },
-  {
-    id: 'community-alignment',
-    eyebrow: 'Issue alignment',
-    title: 'Where you and your community align',
-    description:
-      'Candidate and community priorities are compared before the final effort estimate.',
-    summary:
-      'Manual-office users skip this step unless ZIP-only community data is available.',
-    whyWeAsk:
-      'Understanding where you and your community agree gives you a stronger foundation for your messaging and platform.',
-    shouldSkip: ({ answers }) =>
-      answers.officePath === 'manual' &&
-      answers.hasZipOnlyCommunityData !== true,
-  },
-  {
-    id: 'minimum-budget',
-    eyebrow: 'Campaign effort',
-    title: "Here's the minimum budget required",
-    description:
-      'Structured-office candidates can see the campaign effort estimates once calculations are ready.',
-    summary:
-      'Manual-office users skip this step because structured calculations are unavailable.',
-    whyWeAsk:
-      'Providing a realistic minimum budget helps set expectations and gives your campaign a concrete financial goal to plan around.',
+      'We use this data to help you understand what voters care most about, and to customize your campaign plan.',
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {

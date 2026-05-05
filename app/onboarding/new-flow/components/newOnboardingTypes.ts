@@ -5,10 +5,7 @@ export type OnboardingStepId =
   | 'office-selection'
   | 'manual-office-entry'
   | 'path-to-victory'
-  | 'candidate-issues'
-  | 'community-cares'
-  | 'community-alignment'
-  | 'minimum-budget'
+  | 'voter-demographics'
   | 'pledge'
 
 export type OnboardingOfficePath = 'structured' | 'manual'
@@ -65,7 +62,6 @@ export interface OnboardingAnswers {
   officePath?: OnboardingOfficePath
   manualOffice?: boolean
   unmatchedOffice?: boolean
-  hasZipOnlyCommunityData?: boolean
   ballotStatus?: BallotStatus
   partyAffiliation?: PartyAffiliation
   officeZip?: string

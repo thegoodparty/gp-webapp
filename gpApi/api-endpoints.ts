@@ -69,6 +69,29 @@ export type APIEndpoints = {
     Response: ContactsStats
   }
 
+  'GET /v1/onboarding/contacts/stats': {
+    Request: {
+      ballotReadyPositionId?: string
+      districtId?: string
+    }
+    Response: ContactsStats
+  }
+
+  'GET /v1/onboarding/local-news': {
+    Request: {
+      city?: string
+      state: string
+      office: string
+    }
+    Response: {
+      outlets: Array<{
+        name: string
+        type: 'TV' | 'print' | 'radio'
+        description: string
+      }>
+    }
+  }
+
   'POST /v1/polls/initial-poll': {
     Request: {
       message: string

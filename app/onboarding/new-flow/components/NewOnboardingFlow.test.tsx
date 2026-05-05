@@ -40,9 +40,7 @@ describe('new onboarding flow shell', () => {
     ).toBe('manual-office-entry')
     expect(visibleStepIds).toContain('manual-office-entry')
     expect(visibleStepIds).not.toContain('path-to-victory')
-    expect(visibleStepIds).not.toContain('minimum-budget')
-    expect(visibleStepIds).not.toContain('community-cares')
-    expect(visibleStepIds).not.toContain('community-alignment')
+    expect(visibleStepIds).not.toContain('voter-demographics')
   })
 
   it('keeps onboarding answers in a flexible payload with office mode flags', () => {

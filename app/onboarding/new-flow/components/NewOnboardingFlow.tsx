@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   createCampaignWithOffice,
   onboardingStep,
@@ -35,6 +36,11 @@ import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
+import {
+  VoterDemographicsStep,
+  onboardingDistrictStatsQueryOptions,
+} from './VoterDemographicsStep'
+import { localNewsQueryOptions } from './LocalNewsSourcesSection'
 import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
@@ -349,6 +355,17 @@ const StepBody = ({
     )
   }
 
+  if (activeStep.id === 'voter-demographics') {
+    return (
+      <VoterDemographicsStep
+        ballotReadyPositionId={answers.structuredOffice?.positionId}
+        city={answers.structuredOffice?.city}
+        state={answers.structuredOffice?.state}
+        office={answers.structuredOffice?.positionName}
+      />
+    )
+  }
+
   return (
     <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
       <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
@@ -374,6 +391,7 @@ export default function NewOnboardingFlow({
     initialCampaign,
   )
   const [isP2vLoading, setIsP2vLoading] = useState(true)
+  const queryClient = useQueryClient()
 
   const visibleSteps = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
@@ -417,6 +435,31 @@ export default function NewOnboardingFlow({
       cancelled = true
     }
   }, [activeStepId])
+
+  useEffect(() => {
+    if (activeStepId !== 'path-to-victory') return
+    const ballotReadyPositionId = answers.structuredOffice?.positionId
+    const city = answers.structuredOffice?.city
+    const state = answers.structuredOffice?.state
+    const office = answers.structuredOffice?.positionName
+    if (ballotReadyPositionId) {
+      void queryClient.prefetchQuery(
+        onboardingDistrictStatsQueryOptions({ ballotReadyPositionId }),
+      )
+    }
+    if (state && office) {
+      void queryClient.prefetchQuery(
+        localNewsQueryOptions({ city, state, office }),
+      )
+    }
+  }, [
+    activeStepId,
+    answers.structuredOffice?.positionId,
+    answers.structuredOffice?.city,
+    answers.structuredOffice?.state,
+    answers.structuredOffice?.positionName,
+    queryClient,
+  ])
 
   const updateAnswers = (answerPatch: Partial<OnboardingAnswers>) => {
     setAnswers((currentAnswers) => ({ ...currentAnswers, ...answerPatch }))
