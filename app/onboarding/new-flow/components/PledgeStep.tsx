@@ -24,8 +24,8 @@ const PLEDGE_ITEMS = [
 
 export const PledgeStep = (): React.JSX.Element => (
   <Card className="rounded-2xl border-slate-200 shadow-none">
-    <CardContent className="space-y-6 p-6 sm:p-8">
-      <p className="text-base font-semibold text-slate-950">
+    <CardContent className="space-y-6 px-6 py-4 sm:px-8 sm:py-5">
+      <p className="text-4xl font-bold leading-[1.08] text-slate-950">
         I pledge to be...
       </p>
 
