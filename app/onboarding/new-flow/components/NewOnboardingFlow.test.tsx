@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import NewOnboardingFlow from './NewOnboardingFlow'
 import { NEW_ONBOARDING_STEPS } from './newOnboardingConfig'
 import {
@@ -67,6 +67,32 @@ describe('new onboarding flow shell', () => {
         ballotStatus: 'seriously-considering',
       },
     })
+  })
+
+  it('disables continue on the ballot-status step until a status is selected', () => {
+    render(<NewOnboardingFlow />)
+
+    const continueButton = screen.getByRole('button', { name: /continue/i })
+    fireEvent.click(continueButton)
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /already on the ballot/i,
+      }),
+    ).toBeInTheDocument()
+    expect(continueButton).toBeDisabled()
+
+    fireEvent.click(screen.getByLabelText(/officially on the ballot/i))
+    expect(continueButton).toBeEnabled()
+
+    fireEvent.click(continueButton)
+    expect(
+      screen.queryByRole('heading', {
+        level: 1,
+        name: /already on the ballot/i,
+      }),
+    ).not.toBeInTheDocument()
   })
 
   it('supports back and continue navigation across skipped manual-office steps', () => {

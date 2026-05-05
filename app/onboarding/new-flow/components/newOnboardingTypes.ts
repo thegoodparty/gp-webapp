@@ -13,6 +13,12 @@ export type OnboardingStepId =
 
 export type OnboardingOfficePath = 'structured' | 'manual'
 
+export type BallotStatus =
+  | 'on-ballot'
+  | 'qualified-not-filed'
+  | 'considering'
+  | 'testing'
+
 export type OnboardingJsonValue =
   | string
   | number
@@ -27,6 +33,7 @@ export interface OnboardingAnswers {
   manualOffice?: boolean
   unmatchedOffice?: boolean
   hasZipOnlyCommunityData?: boolean
+  ballotStatus?: BallotStatus
 }
 
 export interface NewOnboardingStepContext {
@@ -41,6 +48,7 @@ export interface NewOnboardingStep {
   summary: string
   whyWeAsk?: string
   shouldSkip?: (context: NewOnboardingStepContext) => boolean
+  isValid?: (context: NewOnboardingStepContext) => boolean
 }
 
 export interface NewOnboardingPayload {

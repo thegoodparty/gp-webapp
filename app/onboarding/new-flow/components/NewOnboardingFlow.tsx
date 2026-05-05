@@ -1,10 +1,19 @@
 'use client'
 
-import { Button, Card, CardContent, GoodPartyOrgLogo } from '@styleguide'
+import {
+  Button,
+  Card,
+  CardContent,
+  GoodPartyOrgLogo,
+  RadioGroup,
+  RadioGroupItem,
+} from '@styleguide'
 import {
   ArrowLeft,
   ArrowRight,
   CalendarCheck,
+  CheckCircle2,
+  Circle,
   Compass,
   Target,
   UsersRound,
@@ -17,6 +26,7 @@ import {
 } from './newOnboardingConfig'
 import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
 import type {
+  BallotStatus,
   NewOnboardingStep,
   OnboardingAnswers,
   OnboardingOfficePath,
@@ -27,6 +37,33 @@ const pathLabels: Record<OnboardingOfficePath, string> = {
   structured: 'Known office',
   manual: 'Manual office',
 }
+
+const ballotStatusOptions: ReadonlyArray<{
+  value: BallotStatus
+  title: string
+  description: string
+}> = [
+  {
+    value: 'on-ballot',
+    title: "I'm officially on the ballot",
+    description: 'Filing accepted by your local elections office.',
+  },
+  {
+    value: 'qualified-not-filed',
+    title: "I've qualified but haven't filed",
+    description: 'You meet residency/age/petition requirements.',
+  },
+  {
+    value: 'considering',
+    title: "I'm seriously considering running",
+    description: "We'll help you understand what it takes.",
+  },
+  {
+    value: 'testing',
+    title: "I'm just testing out the product",
+    description: 'Poke around with sample data — no commitment required.',
+  },
+]
 
 const welcomeCards = [
   {
@@ -156,6 +193,56 @@ const StepBody = ({
     )
   }
 
+  if (activeStep.id === 'ballot-status') {
+    return (
+      <RadioGroup
+        value={answers.ballotStatus ?? ''}
+        onValueChange={(value) =>
+          updateAnswers({ ballotStatus: value as BallotStatus })
+        }
+        className="grid gap-3"
+      >
+        {ballotStatusOptions.map(({ value, title, description }) => {
+          const isSelected = answers.ballotStatus === value
+          const inputId = `ballot-status-${value}`
+          return (
+            <label
+              key={value}
+              htmlFor={inputId}
+              className={`flex cursor-pointer items-start gap-4 rounded-lg border bg-white p-5 transition-colors hover:border-slate-300 ${
+                isSelected
+                  ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                  : 'border-slate-200'
+              }`}
+            >
+              <RadioGroupItem id={inputId} value={value} className="sr-only" />
+              <span
+                aria-hidden="true"
+                className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
+                  isSelected ? 'text-blue-600' : 'text-slate-300'
+                }`}
+              >
+                {isSelected ? (
+                  <CheckCircle2 className="size-5 fill-blue-600 text-white" />
+                ) : (
+                  <Circle className="size-5" />
+                )}
+              </span>
+              <span className="space-y-1 text-left">
+                <span className="block text-base font-semibold text-slate-950">
+                  {title}
+                </span>
+                <span className="block text-sm leading-6 text-slate-500">
+                  {description}
+                </span>
+              </span>
+            </label>
+          )
+        })}
+      </RadioGroup>
+    )
+  }
+
   if (activeStep.id === 'office-selection') {
     return (
       <div className="grid gap-3 sm:grid-cols-2">
@@ -238,6 +325,8 @@ export default function NewOnboardingFlow(): React.JSX.Element {
   const previousStep = activeIndex > 0 ? visibleSteps[activeIndex - 1] : null
   const nextStep = visibleSteps[activeIndex + 1] ?? null
   const activeStepNumber = activeIndex + 1
+  const isActiveStepValid = activeStep.isValid?.({ answers }) ?? true
+  const canContinue = nextStep !== null && isActiveStepValid
 
   const updateAnswers = (answerPatch: Partial<OnboardingAnswers>) => {
     setAnswers((currentAnswers) => ({ ...currentAnswers, ...answerPatch }))
@@ -250,7 +339,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
   }
 
   const goNext = () => {
-    if (nextStep) {
+    if (canContinue && nextStep) {
       setActiveStepId(nextStep.id)
     }
   }
@@ -335,7 +424,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
             icon={<ArrowRight aria-hidden="true" />}
             iconPosition="right"
             onClick={goNext}
-            disabled={!nextStep}
+            disabled={!canContinue}
             className="min-w-36"
           >
             {nextStep ? 'Continue' : 'Complete'}

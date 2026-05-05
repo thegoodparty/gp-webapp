@@ -15,11 +15,12 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
     eyebrow: 'Candidate status',
     title: 'Are you already on the ballot?',
     description:
-      'Ballot status is captured for internal context without changing the flow path.',
+      'We tailor your strategy to where you actually are in your campaign.',
     summary:
       'The answer is stored in onboarding state and can be submitted with the final payload.',
     whyWeAsk:
-      'We track ballot status to personalize your timeline and task priorities. It has no effect on the questions we ask.',
+      'Goodparty.org only works with non-partisan candidates or those who are independent of both major parties and big money, so they can run, win and serve empowered by our verifiably anti-corrupt platform.',
+    isValid: ({ answers }) => Boolean(answers.ballotStatus),
   },
   {
     id: 'party-affiliation',
@@ -76,7 +77,7 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
     summary:
       'This step remains available to both structured-office and manual-office users.',
     whyWeAsk:
-      'Aligning your platform with your community\'s top concerns increases your chances of earning their vote and building real coalitions.',
+      "Aligning your platform with your community's top concerns increases your chances of earning their vote and building real coalitions.",
   },
   {
     id: 'community-cares',
