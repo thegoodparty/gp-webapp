@@ -1,6 +1,5 @@
 'use client'
 
-import { BadgeCheck } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Card } from '@styleguide'
 import {
@@ -9,6 +8,8 @@ import {
   getTcrCompliance,
 } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import TextComplianceSteps from './TextComplianceSteps'
+import TextingComplianceApproved from './TextingComplianceApproved'
+import TextingComplianceInReview from './TextingComplianceInReview'
 
 export default function TextingComplianceAgentic(): React.JSX.Element {
   const { data: tcrCompliance } = useQuery({
@@ -19,28 +20,11 @@ export default function TextingComplianceAgentic(): React.JSX.Element {
   const status = tcrCompliance?.status
 
   if (status === TCR_COMPLIANCE_STATUS.APPROVED) {
-    return (
-      <Card className="p-4 md:p-6 mt-4 gap-2" id="texting-compliance">
-        <h2 className="text-2xl font-semibold mb-4">Texting Compliance</h2>
-        <div className="flex items-center gap-2">
-          <BadgeCheck className="h-6 w-6 text-green-600" aria-hidden />
-          <p className="text-lg font-medium">Your campaign is compliant</p>
-        </div>
-      </Card>
-    )
+    return <TextingComplianceApproved />
   }
 
   if (status === TCR_COMPLIANCE_STATUS.PENDING) {
-    return (
-      <Card className="p-4 md:p-6 mt-4 gap-2" id="texting-compliance">
-        <h2 className="text-2xl font-semibold mb-4">Texting Compliance</h2>
-        <p className="text-lg font-medium">Your application is in review</p>
-        <p className="text-sm text-secondary">
-          This can take 3-7 business days. We will send you an email once your
-          campaign is approved, so you can start sending text messages.
-        </p>
-      </Card>
-    )
+    return <TextingComplianceInReview />
   }
 
   return (
