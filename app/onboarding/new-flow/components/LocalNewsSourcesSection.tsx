@@ -1,7 +1,8 @@
 'use client'
+import { useMemo, useState } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
-import { LuNewspaper, LuTv, LuRadio } from 'react-icons/lu'
+import { LuNewspaper, LuTv, LuRadioTower } from 'react-icons/lu'
 import { clientRequest } from 'gpApi/typed-request'
 
 type OutletType = 'TV' | 'print' | 'radio'
@@ -32,18 +33,18 @@ export { localNewsQueryOptions }
 
 const typeIcon: Record<OutletType, React.JSX.Element> = {
   print: (
-    <span className="flex size-8 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-      <LuNewspaper className="size-4" />
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+      <LuNewspaper className="size-5" />
     </span>
   ),
   TV: (
-    <span className="flex size-8 items-center justify-center rounded-md bg-red-50 text-red-600">
-      <LuTv className="size-4" />
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
+      <LuTv className="size-5" />
     </span>
   ),
   radio: (
-    <span className="flex size-8 items-center justify-center rounded-md bg-emerald-50 text-emerald-600">
-      <LuRadio className="size-4" />
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+      <LuRadioTower className="size-5" />
     </span>
   ),
 }
@@ -68,10 +69,42 @@ export const LocalNewsSourcesSection = ({
   jurisdictionLabel,
 }: LocalNewsSourcesSectionProps): React.JSX.Element | null => {
   const query = useQuery(localNewsQueryOptions({ city, state, office }))
+  const [expandedTypes, setExpandedTypes] = useState<Set<OutletType>>(
+    () => new Set(),
+  )
+
+  const outlets: Outlet[] = useMemo(
+    () => query.data?.outlets ?? [],
+    [query.data?.outlets],
+  )
+
+  const groupedOutlets = useMemo(() => {
+    const groups: Array<{ type: OutletType; outlets: Outlet[] }> = []
+    const indexByType = new Map<OutletType, number>()
+    for (const outlet of outlets) {
+      const existingIndex = indexByType.get(outlet.type)
+      if (existingIndex === undefined) {
+        indexByType.set(outlet.type, groups.length)
+        groups.push({ type: outlet.type, outlets: [outlet] })
+      } else {
+        groups[existingIndex].outlets.push(outlet)
+      }
+    }
+    return groups
+  }, [outlets])
 
   if (!state || !office) return null
 
-  const outlets: Outlet[] = query.data?.outlets ?? []
+  const toggleType = (type: OutletType) =>
+    setExpandedTypes((prev) => {
+      const next = new Set(prev)
+      if (next.has(type)) {
+        next.delete(type)
+      } else {
+        next.add(type)
+      }
+      return next
+    })
 
   return (
     <section className="flex w-full flex-col gap-4 text-left">
@@ -107,26 +140,62 @@ export const LocalNewsSourcesSection = ({
           No local news sources found for this area yet.
         </p>
       ) : (
-        <div className="flex flex-col gap-3">
-          {outlets.map((outlet) => (
-            <Card
-              key={`${outlet.name}-${outlet.type}`}
-              className="rounded-xl border-slate-200 shadow-none"
-            >
-              <CardContent className="flex items-start gap-4 p-4">
-                {typeIcon[outlet.type]}
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-base font-semibold text-slate-950">
-                    {outlet.name}
-                  </h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-500">
-                    {outlet.description}
-                  </p>
-                </div>
-                <Badge variant="default">{typeLabel[outlet.type]}</Badge>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex flex-col gap-6">
+          {groupedOutlets.map(({ type, outlets: typeOutlets }) => {
+            const isExpanded = expandedTypes.has(type)
+            const visible = isExpanded ? typeOutlets : typeOutlets.slice(0, 1)
+            const additionalCount = typeOutlets.length - 1
+            return (
+              <Card
+                key={type}
+                className="rounded-xl border-slate-200 shadow-none"
+              >
+                <CardContent className="flex flex-col gap-4 px-4 py-3">
+                  {visible.map((outlet, index) => (
+                    <div
+                      key={`${outlet.name}-${outlet.type}`}
+                      className={
+                        index === 0
+                          ? 'flex items-start gap-4'
+                          : 'flex items-start gap-4 border-t border-slate-100 pt-4'
+                      }
+                    >
+                      {typeIcon[outlet.type]}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-base font-semibold text-slate-950">
+                          {outlet.name}
+                        </h3>
+                        <p className="mt-1 text-sm leading-6 text-slate-500">
+                          {outlet.description}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="default"
+                        className="rounded-full bg-slate-950 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-950"
+                      >
+                        {typeLabel[outlet.type]}
+                      </Badge>
+                    </div>
+                  ))}
+                  {additionalCount > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleType(type)}
+                      className="-mb-2 self-center text-sm font-semibold text-primary hover:underline"
+                    >
+                      {isExpanded
+                        ? `Show fewer ${typeLabel[type].toLowerCase()} sources`
+                        : `View ${additionalCount} more ${typeLabel[
+                            type
+                          ].toLowerCase()} ${
+                            additionalCount === 1 ? 'source' : 'sources'
+                          }`}
+                    </button>
+                  ) : null}
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       )}
     </section>

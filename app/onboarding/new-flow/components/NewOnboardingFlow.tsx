@@ -36,6 +36,7 @@ import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
+import { PledgeStep } from './PledgeStep'
 import {
   VoterDemographicsStep,
   onboardingDistrictStatsQueryOptions,
@@ -366,6 +367,10 @@ const StepBody = ({
     )
   }
 
+  if (activeStep.id === 'pledge') {
+    return <PledgeStep />
+  }
+
   return (
     <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
       <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
@@ -410,8 +415,7 @@ export default function NewOnboardingFlow({
     liveCampaign?.organization?.customPositionName ||
     liveCampaign?.office ||
     null
-  const canContinue =
-    nextStep !== null && isActiveStepValid && !isSavingOffice && !isP2vBlocking
+  const canContinue = isActiveStepValid && !isSavingOffice && !isP2vBlocking
 
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
@@ -589,7 +593,7 @@ export default function NewOnboardingFlow({
   }
 
   const goNext = async () => {
-    if (!canContinue || !nextStep) return
+    if (!canContinue) return
     if (
       activeStep.id === 'office-selection' &&
       answers.structuredOffice &&
@@ -620,7 +624,9 @@ export default function NewOnboardingFlow({
         setIsSavingOffice(false)
       }
     }
-    setActiveStepId(nextStep.id)
+    if (nextStep) {
+      setActiveStepId(nextStep.id)
+    }
   }
 
   const handleCantFindOffice = () => {
@@ -647,35 +653,36 @@ export default function NewOnboardingFlow({
   return (
     <div className="min-h-screen bg-white pb-28 text-slate-950">
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
-        <div
-          className={`grid grid-cols-1 gap-8${
-            activeStep.whyWeAsk && !isP2vBlocking
-              ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
-              : ''
-          }`}
-        >
-          <div>
-            <StepProgress
-              currentStep={activeStepNumber}
-              numberOfSteps={visibleSteps.length}
-            />
+        <div>
+          <StepProgress
+            currentStep={activeStepNumber}
+            numberOfSteps={visibleSteps.length}
+          />
 
+          <div
+            className={`mt-8 grid grid-cols-1 gap-8 sm:mt-5${
+              activeStep.whyWeAsk && !isP2vBlocking
+                ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
+                : ''
+            }`}
+          >
             <section
-              className={`mt-8 space-y-8 sm:mt-5${
-                activeStep.whyWeAsk && !isP2vBlocking ? '' : ' text-center'
+              className={`space-y-8${
+                activeStep.id === 'welcome' ? ' text-center' : ''
               }`}
             >
               {isP2vBlocking ? null : (
                 <div className="space-y-4">
-                  {activeStep.id === 'welcome' ? null : (
+                  {activeStep.id === 'welcome' ||
+                  activeStep.id === 'pledge' ? null : (
                     <p className="text-sm font-semibold text-blue-600">
                       {activeStep.eyebrow}
                     </p>
                   )}
-                  <h1 className="mx-auto max-w-2xl text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
+                  <h1 className="text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
                     {activeStep.title}
                   </h1>
-                  <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                  <p className="text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
                     {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
                       <>
                         We use historical voter data and proprietary models to
@@ -702,25 +709,25 @@ export default function NewOnboardingFlow({
                 p2vOfficeName={p2vOfficeName}
               />
             </section>
-          </div>
 
-          {activeStep.whyWeAsk && !isP2vBlocking ? (
-            activeStep.id === 'path-to-victory' ? (
-              <WhyWeAsk title="You can do this!">
-                Most candidates think they need to convince <em>everyone</em>.
-                You don&apos;t. You need to find{' '}
-                {liveCampaign?.raceTargetMetrics?.winNumber
-                  ? `${numberFormatter(
-                      liveCampaign.raceTargetMetrics.winNumber,
-                    )} people`
-                  : 'your win number'}
-                , talk to them, and make sure they vote. We&apos;ll show you
-                exactly what that takes.
-              </WhyWeAsk>
-            ) : (
-              <WhyWeAsk text={activeStep.whyWeAsk} />
-            )
-          ) : null}
+            {activeStep.whyWeAsk && !isP2vBlocking ? (
+              activeStep.id === 'path-to-victory' ? (
+                <WhyWeAsk title="You can do this!">
+                  Most candidates think they need to convince <em>everyone</em>.
+                  You don&apos;t. You need to find{' '}
+                  {liveCampaign?.raceTargetMetrics?.winNumber
+                    ? `${numberFormatter(
+                        liveCampaign.raceTargetMetrics.winNumber,
+                      )} people`
+                    : 'your win number'}
+                  , talk to them, and make sure they vote. We&apos;ll show you
+                  exactly what that takes.
+                </WhyWeAsk>
+              ) : (
+                <WhyWeAsk text={activeStep.whyWeAsk} />
+              )
+            ) : null}
+          </div>
         </div>
       </main>
 
@@ -747,7 +754,11 @@ export default function NewOnboardingFlow({
             disabled={!canContinue}
             className="min-w-36"
           >
-            {nextStep ? 'Continue' : 'Complete'}
+            {nextStep
+              ? 'Continue'
+              : activeStep.id === 'pledge'
+              ? 'Agree & Create My Plan'
+              : 'Complete'}
           </Button>
         </div>
       </div>

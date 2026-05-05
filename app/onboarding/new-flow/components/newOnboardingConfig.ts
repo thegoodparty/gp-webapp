@@ -95,13 +95,11 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
   {
     id: 'pledge',
     eyebrow: 'Final step',
-    title: 'Agree to the GoodParty.org pledge',
+    title: 'Take our pledge to get your campaign plan',
     description:
-      'Both onboarding paths end at the pledge before routing to the regular dashboard.',
+      'We only work with candidates who are independent of both major parties, big-money influence, and are anti-corruption.',
     summary:
       'The final payload keeps collected answers available for future integrations.',
-    whyWeAsk:
-      'The GoodParty.org pledge ensures every candidate on our platform shares a commitment to anti-corruption and independent politics.',
   },
 ]
 

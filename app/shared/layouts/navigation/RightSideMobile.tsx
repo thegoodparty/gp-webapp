@@ -51,10 +51,15 @@ const RightSideMobile = (): React.JSX.Element => {
     }) || {}
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
+  const isOnboardingPath = pathname?.startsWith('/onboarding')
   const dashboardLink = '/dashboard'
 
   const closeMenu = () => {
     setOpen(false)
+  }
+
+  if (isOnboardingPath) {
+    return <></>
   }
 
   return (

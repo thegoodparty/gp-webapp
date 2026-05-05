@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import NewOnboardingFlow from './NewOnboardingFlow'
 import { NEW_ONBOARDING_STEPS } from './newOnboardingConfig'
 import {
@@ -9,9 +10,16 @@ import {
   getVisibleOnboardingSteps,
 } from './newOnboardingHelpers'
 
+const renderFlow = () =>
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <NewOnboardingFlow />
+    </QueryClientProvider>,
+  )
+
 describe('new onboarding flow shell', () => {
   it('renders the first step on initial mount', () => {
-    render(<NewOnboardingFlow />)
+    renderFlow()
     expect(
       screen.getByRole('heading', { level: 1, name: /winning campaign plan/i }),
     ).toBeInTheDocument()
@@ -68,7 +76,7 @@ describe('new onboarding flow shell', () => {
   })
 
   it('disables continue on the ballot-status step until a status is selected', () => {
-    render(<NewOnboardingFlow />)
+    renderFlow()
 
     const continueButton = screen.getByRole('button', { name: /continue/i })
     fireEvent.click(continueButton)
@@ -94,7 +102,7 @@ describe('new onboarding flow shell', () => {
   })
 
   it('blocks continue on party affiliation when a major party is selected', () => {
-    render(<NewOnboardingFlow />)
+    renderFlow()
 
     const continueButton = screen.getByRole('button', { name: /continue/i })
     // welcome -> ballot-status
