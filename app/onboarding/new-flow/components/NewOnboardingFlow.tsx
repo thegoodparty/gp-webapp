@@ -1,14 +1,14 @@
 'use client'
 
-import { Button, Card, CardContent } from '@styleguide'
+import { Button, Card, CardContent, GoodPartyOrgLogo } from '@styleguide'
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
+  CalendarCheck,
   Compass,
-  Sparkles,
   Target,
   UsersRound,
+  Wand2,
 } from 'lucide-react'
 import { useState } from 'react'
 import {
@@ -45,13 +45,13 @@ const welcomeCards = [
     title: 'Get a powerful outreach plan & materials',
     description:
       'We create personalized stump speeches, door-knocking scripts, fundraising emails, social posts, all drafted from your profile and platform.',
-    Icon: Sparkles,
+    Icon: Wand2,
   },
   {
     title: 'Plan with a budget and calendar of tasks',
     description:
       'We provide you with a minimum resources budget and an interactive weekly plan of tasks & actions that give you the best chances of winning.',
-    Icon: CalendarDays,
+    Icon: CalendarCheck,
   },
 ]
 
@@ -125,15 +125,18 @@ const StepBody = ({
   if (activeStep.id === 'welcome') {
     return (
       <div className="space-y-8">
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {welcomeCards.map(({ title, description, Icon }) => (
-            <Card key={title} className="rounded-md border-slate-200 shadow-sm">
-              <CardContent className="space-y-4 p-4 sm:p-5">
-                <span className="flex size-9 items-center justify-center rounded-md bg-blue-50 text-blue-600">
+            <Card
+              key={title}
+              className="rounded-xl border-slate-200 text-left shadow-none"
+            >
+              <CardContent className="space-y-4 p-6">
+                <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div className="space-y-2">
-                  <h2 className="text-base font-semibold leading-6 text-slate-950">
+                  <h2 className="text-base leading-6 font-semibold text-slate-950">
                     {title}
                   </h2>
                   <p className="text-sm leading-6 text-slate-500">
@@ -254,9 +257,21 @@ export default function NewOnboardingFlow(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-white pb-28 text-slate-950">
+      <header className="border-b border-slate-200">
+        <div className="mx-auto flex h-14 w-full max-w-4xl items-center gap-2 px-4 sm:px-8">
+          <GoodPartyOrgLogo className="h-6 w-auto lg:h-7 lg:w-auto" />
+          <span className="text-base font-semibold text-slate-950">
+            GoodParty.org
+          </span>
+        </div>
+      </header>
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div
-          className={`grid grid-cols-1 gap-8${activeStep.whyWeAsk ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start' : ''}`}
+          className={`grid grid-cols-1 gap-8${
+            activeStep.whyWeAsk
+              ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
+              : ''
+          }`}
         >
           <div>
             <StepProgress
@@ -265,7 +280,9 @@ export default function NewOnboardingFlow(): React.JSX.Element {
             />
 
             <section
-              className={`mt-8 space-y-8 sm:mt-5${activeStep.whyWeAsk ? '' : ' text-center'}`}
+              className={`mt-8 space-y-8 sm:mt-5${
+                activeStep.whyWeAsk ? '' : ' text-center'
+              }`}
             >
               <div className="space-y-4">
                 {activeStep.id === 'welcome' ? null : (
@@ -273,7 +290,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
                     {activeStep.eyebrow}
                   </p>
                 )}
-                <h1 className="mx-auto max-w-2xl text-4xl font-semibold leading-[1.08] text-slate-950 sm:text-5xl">
+                <h1 className="mx-auto max-w-2xl text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
                   {activeStep.title}
                 </h1>
                 <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
@@ -294,9 +311,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
             </section>
           </div>
 
-          {activeStep.whyWeAsk ? (
-            <WhyWeAsk text={activeStep.whyWeAsk} />
-          ) : null}
+          {activeStep.whyWeAsk ? <WhyWeAsk text={activeStep.whyWeAsk} /> : null}
         </div>
       </main>
 
