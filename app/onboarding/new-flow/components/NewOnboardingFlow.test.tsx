@@ -95,6 +95,35 @@ describe('new onboarding flow shell', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('blocks continue on party affiliation when a major party is selected', () => {
+    render(<NewOnboardingFlow />)
+
+    const continueButton = screen.getByRole('button', { name: /continue/i })
+    // welcome -> ballot-status
+    fireEvent.click(continueButton)
+    fireEvent.click(screen.getByLabelText(/officially on the ballot/i))
+    // ballot-status -> party-affiliation
+    fireEvent.click(continueButton)
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /official party affiliation/i,
+      }),
+    ).toBeInTheDocument()
+    expect(continueButton).toBeDisabled()
+
+    fireEvent.click(screen.getByLabelText(/democrat/i))
+    expect(continueButton).toBeDisabled()
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      /only for non-partisan and independent candidates/i,
+    )
+
+    fireEvent.click(screen.getByLabelText(/nonpartisan race/i))
+    expect(continueButton).toBeEnabled()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
   it('supports back and continue navigation across skipped manual-office steps', () => {
     const answers = {
       officePath: 'manual' as const,

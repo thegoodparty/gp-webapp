@@ -1,23 +1,15 @@
 'use client'
 
-import {
-  Button,
-  Card,
-  CardContent,
-  GoodPartyOrgLogo,
-  RadioGroup,
-  RadioGroupItem,
-} from '@styleguide'
+import { Button, Card, CardContent } from '@styleguide'
 import {
   ArrowLeft,
   ArrowRight,
   CalendarCheck,
-  CheckCircle2,
-  Circle,
   Compass,
   Target,
   UsersRound,
   Wand2,
+  X,
 } from 'lucide-react'
 import { useState } from 'react'
 import {
@@ -25,12 +17,14 @@ import {
   firstNewOnboardingStepId,
 } from './newOnboardingConfig'
 import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
+import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
   NewOnboardingStep,
   OnboardingAnswers,
   OnboardingOfficePath,
   OnboardingStepId,
+  PartyAffiliation,
 } from './newOnboardingTypes'
 
 const pathLabels: Record<OnboardingOfficePath, string> = {
@@ -38,11 +32,7 @@ const pathLabels: Record<OnboardingOfficePath, string> = {
   manual: 'Manual office',
 }
 
-const ballotStatusOptions: ReadonlyArray<{
-  value: BallotStatus
-  title: string
-  description: string
-}> = [
+const ballotStatusOptions: ReadonlyArray<RadioCardOption<BallotStatus>> = [
   {
     value: 'on-ballot',
     title: "I'm officially on the ballot",
@@ -64,6 +54,86 @@ const ballotStatusOptions: ReadonlyArray<{
     description: 'Poke around with sample data — no commitment required.',
   },
 ]
+
+const partyAffiliationOptions: ReadonlyArray<
+  RadioCardOption<PartyAffiliation>
+> = [
+  {
+    value: 'nonpartisan',
+    title: 'Nonpartisan Race',
+    description: 'The race itself is officially nonpartisan (most local seats).',
+  },
+  {
+    value: 'independent-or-non-major',
+    title: 'Independent / Non-major party',
+    description: 'Running independent of both major parties.',
+  },
+  {
+    value: 'democrat',
+    title: 'Democrat',
+    description: 'Running as a Democrat.',
+  },
+  {
+    value: 'republican',
+    title: 'Republican',
+    description: 'Running as a Republican.',
+  },
+]
+
+const isMajorPartyAffiliation = (
+  value: PartyAffiliation | undefined,
+): boolean => value === 'democrat' || value === 'republican'
+
+interface PartyAffiliationStepProps {
+  value: PartyAffiliation | undefined
+  onChange: (value: PartyAffiliation) => void
+}
+
+const PartyAffiliationStep = ({
+  value,
+  onChange,
+}: PartyAffiliationStepProps): React.JSX.Element => {
+  const [dismissedFor, setDismissedFor] = useState<PartyAffiliation | null>(
+    null,
+  )
+  const showBlocker =
+    isMajorPartyAffiliation(value) && dismissedFor !== value
+
+  return (
+    <div className="space-y-4">
+      {showBlocker ? (
+        <div
+          role="alert"
+          className="relative flex items-start gap-4 rounded-lg border border-red-200 bg-red-50 p-5 pr-12 text-left"
+        >
+          <div className="flex-1 space-y-2">
+            <p className="text-sm leading-6 font-semibold text-red-700">
+              Sorry, GoodParty.org is only for non-partisan and independent
+              candidates.
+            </p>
+          </div>
+          <button
+            type="button"
+            aria-label="Dismiss"
+            onClick={() => setDismissedFor(value ?? null)}
+            className="absolute top-3 right-3 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-100 hover:text-slate-600"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+      <RadioCardGroup
+        name="party-affiliation"
+        value={value}
+        onChange={(next) => {
+          setDismissedFor(null)
+          onChange(next)
+        }}
+        options={partyAffiliationOptions}
+      />
+    </div>
+  )
+}
 
 const welcomeCards = [
   {
@@ -195,51 +265,21 @@ const StepBody = ({
 
   if (activeStep.id === 'ballot-status') {
     return (
-      <RadioGroup
-        value={answers.ballotStatus ?? ''}
-        onValueChange={(value) =>
-          updateAnswers({ ballotStatus: value as BallotStatus })
-        }
-        className="grid gap-3"
-      >
-        {ballotStatusOptions.map(({ value, title, description }) => {
-          const isSelected = answers.ballotStatus === value
-          const inputId = `ballot-status-${value}`
-          return (
-            <label
-              key={value}
-              htmlFor={inputId}
-              className={`flex cursor-pointer items-start gap-4 rounded-lg border bg-white p-5 transition-colors hover:border-slate-300 ${
-                isSelected
-                  ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
-                  : 'border-slate-200'
-              }`}
-            >
-              <RadioGroupItem id={inputId} value={value} className="sr-only" />
-              <span
-                aria-hidden="true"
-                className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
-                  isSelected ? 'text-blue-600' : 'text-slate-300'
-                }`}
-              >
-                {isSelected ? (
-                  <CheckCircle2 className="size-5 fill-blue-600 text-white" />
-                ) : (
-                  <Circle className="size-5" />
-                )}
-              </span>
-              <span className="space-y-1 text-left">
-                <span className="block text-base font-semibold text-slate-950">
-                  {title}
-                </span>
-                <span className="block text-sm leading-6 text-slate-500">
-                  {description}
-                </span>
-              </span>
-            </label>
-          )
-        })}
-      </RadioGroup>
+      <RadioCardGroup
+        name="ballot-status"
+        value={answers.ballotStatus}
+        onChange={(value) => updateAnswers({ ballotStatus: value })}
+        options={ballotStatusOptions}
+      />
+    )
+  }
+
+  if (activeStep.id === 'party-affiliation') {
+    return (
+      <PartyAffiliationStep
+        value={answers.partyAffiliation}
+        onChange={(value) => updateAnswers({ partyAffiliation: value })}
+      />
     )
   }
 
@@ -346,14 +386,6 @@ export default function NewOnboardingFlow(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-white pb-28 text-slate-950">
-      <header className="border-b border-slate-200">
-        <div className="mx-auto flex h-14 w-full max-w-4xl items-center gap-2 px-4 sm:px-8">
-          <GoodPartyOrgLogo className="h-6 w-auto lg:h-7 lg:w-auto" />
-          <span className="text-base font-semibold text-slate-950">
-            GoodParty.org
-          </span>
-        </div>
-      </header>
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div
           className={`grid grid-cols-1 gap-8${

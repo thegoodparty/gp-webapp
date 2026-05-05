@@ -19,6 +19,12 @@ export type BallotStatus =
   | 'considering'
   | 'testing'
 
+export type PartyAffiliation =
+  | 'nonpartisan'
+  | 'independent-or-non-major'
+  | 'democrat'
+  | 'republican'
+
 export type OnboardingJsonValue =
   | string
   | number
@@ -34,6 +40,7 @@ export interface OnboardingAnswers {
   unmatchedOffice?: boolean
   hasZipOnlyCommunityData?: boolean
   ballotStatus?: BallotStatus
+  partyAffiliation?: PartyAffiliation
 }
 
 export interface NewOnboardingStepContext {

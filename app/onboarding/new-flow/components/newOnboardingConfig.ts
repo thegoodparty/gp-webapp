@@ -19,7 +19,7 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
     summary:
       'The answer is stored in onboarding state and can be submitted with the final payload.',
     whyWeAsk:
-      'Goodparty.org only works with non-partisan candidates or those who are independent of both major parties and big money, so they can run, win and serve empowered by our verifiably anti-corrupt platform.',
+      'Party affiliation determines whether the candidate can continue with GoodParty.org support.',
     isValid: ({ answers }) => Boolean(answers.ballotStatus),
   },
   {
