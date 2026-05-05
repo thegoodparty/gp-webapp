@@ -410,6 +410,9 @@ export const EVENTS = {
     Why: {
       ClickSave: 'Profile - Why Section: Click Save',
     },
+    WhyRunning: {
+      ClickSave: 'Profile - Why Running: Click Save',
+    },
     FunFact: {
       ClickSave: 'Profile - Fun Fact: Click Save',
     },
@@ -432,6 +435,7 @@ export const EVENTS = {
       ClickDelete: 'Profile - Policy Priorities: Click Delete',
       SubmitDelete: 'Profile - Policy Priorities: Submit Delete',
       CancelDelete: 'Profile - Policy Priorities: Cancel Delete',
+      ClickSave: 'Profile - Policy Priorities: Click Save',
     },
     CandidateProfile: {
       ClickSubmit: 'Profile - Candidate Profile: Click Submit',

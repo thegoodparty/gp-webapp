@@ -2,6 +2,7 @@ import ComplianceStep from 'app/dashboard/profile/texting-compliance/components/
 import { WEBSITE_STATUS } from 'app/dashboard/website/util/website.util'
 import { isDomainStatusActive } from 'app/dashboard/website/util/domain.util'
 import { Website, TcrCompliance } from 'helpers/types'
+import { getTcrComplianceStatusCompletions } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 
 export const STEP_STATUS: {
   DISABLED: 'disabled'
@@ -11,20 +12,6 @@ export const STEP_STATUS: {
   DISABLED: 'disabled',
   ACTIVE: 'active',
   COMPLETED: 'completed',
-}
-
-export const TCR_COMPLIANCE_STATUS: {
-  SUBMITTED: 'submitted'
-  PENDING: 'pending'
-  APPROVED: 'approved'
-  REJECTED: 'rejected'
-  ERROR: 'error'
-} = {
-  SUBMITTED: 'submitted',
-  PENDING: 'pending',
-  APPROVED: 'approved',
-  REJECTED: 'rejected',
-  ERROR: 'error',
 }
 
 // domainStatus can be either a string (the message directly) or an object with a message property
@@ -47,24 +34,13 @@ export const getTcrComplianceStepCompletions = (
     typeof domainStatus === 'string' ? domainStatus : domainStatus?.message
   const domainComplete = isDomainStatusActive(domainMessage ?? null)
 
-  const tcrStatus = tcrCompliance?.status
-  const registrationStatuses: string[] = [
-    TCR_COMPLIANCE_STATUS.SUBMITTED,
-    TCR_COMPLIANCE_STATUS.PENDING,
-    TCR_COMPLIANCE_STATUS.APPROVED,
-  ]
-  const pinStatuses: string[] = [
-    TCR_COMPLIANCE_STATUS.PENDING,
-    TCR_COMPLIANCE_STATUS.APPROVED,
-  ]
-  const registrationComplete =
-    tcrStatus != null && registrationStatuses.includes(tcrStatus)
-  const pinComplete = tcrStatus != null && pinStatuses.includes(tcrStatus)
+  const { filingComplete, pinComplete } =
+    getTcrComplianceStatusCompletions(tcrCompliance)
 
   return {
     websiteComplete,
     domainComplete,
-    registrationComplete,
+    registrationComplete: filingComplete,
     pinComplete,
   }
 }
