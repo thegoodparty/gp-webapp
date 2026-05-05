@@ -21,6 +21,16 @@ interface PathToVictoryStepProps {
   campaign: Campaign | null
   officeName?: string | null
   onLoadingChange?: (isLoading: boolean) => void
+  onMetricsResolved?: (
+    result:
+      | {
+          status: 'success'
+          winNumber: number
+          projectedTurnout: number
+          totalRegisteredVoters: number | null
+        }
+      | { status: 'error'; reason: 'missing_turnout' | 'upstream_error' },
+  ) => void
 }
 
 const formatLocation = (campaign: Campaign | null): string => {
@@ -40,6 +50,7 @@ export const PathToVictoryStep = ({
   campaign,
   officeName: officeNameProp,
   onLoadingChange,
+  onMetricsResolved,
 }: PathToVictoryStepProps): React.JSX.Element => {
   const [revealedCount, setRevealedCount] = useState(0)
   const [showResults, setShowResults] = useState(false)
@@ -85,6 +96,30 @@ export const PathToVictoryStep = ({
   useEffect(() => {
     onLoadingChange?.(!showResults)
   }, [showResults, onLoadingChange])
+
+  useEffect(() => {
+    if (!showResults) return
+    if (!metrics || winNumber <= 0) {
+      onMetricsResolved?.({
+        status: 'error',
+        reason: !metrics ? 'upstream_error' : 'missing_turnout',
+      })
+      return
+    }
+    onMetricsResolved?.({
+      status: 'success',
+      winNumber,
+      projectedTurnout,
+      totalRegisteredVoters: registeredVoters,
+    })
+  }, [
+    showResults,
+    metrics,
+    winNumber,
+    projectedTurnout,
+    registeredVoters,
+    onMetricsResolved,
+  ])
 
   if (!showResults) {
     return (

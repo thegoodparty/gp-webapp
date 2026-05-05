@@ -88,6 +88,14 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
+    WelcomeContinued: 'Onboarding - Welcome Continued',
+    BallotStatusCompleted: 'Onboarding - Ballot Status Completed',
+    PartySelectionCompleted: 'Onboarding - Party Selection Completed',
+    OfficeSelectionCompleted: 'Onboarding - Office Selection Completed',
+    PathToVictoryUpdated: 'Onboarding - Path To Victory Updated',
+    PathToVictoryErrored: 'Onboarding - Path To Victory Errored',
+    PathToVictoryCompleted: 'Onboarding - Path To Victory Completed',
+    PledgeCompleted: 'Onboarding - Pledge Completed',
   },
   ServeOnboarding: {
     GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',

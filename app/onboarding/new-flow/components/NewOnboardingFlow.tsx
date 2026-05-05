@@ -120,6 +120,18 @@ const partyAffiliationToCampaignParty: Record<PartyAffiliation, string> = {
   republican: 'republican',
 }
 
+const ballotStatusToCandidateStage: Record<
+  BallotStatus,
+  'FILED' | 'QUALIFIED' | 'CONSIDERING' | 'TESTING'
+> = {
+  'on-ballot': 'FILED',
+  'qualified-not-filed': 'QUALIFIED',
+  considering: 'CONSIDERING',
+  testing: 'TESTING',
+}
+
+const PLEDGE_VERSION = 1
+
 interface PartyAffiliationStepProps {
   value: PartyAffiliation | undefined
   onChange: (value: PartyAffiliation) => void
@@ -266,6 +278,9 @@ interface StepBodyProps {
   onCantFindOffice: () => void
   liveCampaign: Campaign | null
   onP2vLoadingChange: (loading: boolean) => void
+  onP2vMetricsResolved: NonNullable<
+    React.ComponentProps<typeof PathToVictoryStep>['onMetricsResolved']
+  >
   p2vOfficeName: string | null
 }
 
@@ -276,6 +291,7 @@ const StepBody = ({
   onCantFindOffice,
   liveCampaign,
   onP2vLoadingChange,
+  onP2vMetricsResolved,
   p2vOfficeName,
 }: StepBodyProps): React.JSX.Element => {
   if (activeStep.id === 'welcome') {
@@ -366,6 +382,7 @@ const StepBody = ({
         campaign={liveCampaign}
         officeName={p2vOfficeName}
         onLoadingChange={onP2vLoadingChange}
+        onMetricsResolved={onP2vMetricsResolved}
       />
     )
   }
@@ -434,6 +451,36 @@ export default function NewOnboardingFlow({
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
   }, [])
+
+  const handleP2vMetricsResolved = useCallback<
+    NonNullable<
+      React.ComponentProps<typeof PathToVictoryStep>['onMetricsResolved']
+    >
+  >(
+    (result) => {
+      const campaignId = liveCampaign?.id ?? campaign?.id
+      if (result.status === 'success') {
+        trackEvent(EVENTS.Onboarding.PathToVictoryUpdated, {
+          campaignId,
+          projectedTurnout: result.projectedTurnout,
+          winNumber: result.winNumber,
+          voterContactGoal: liveCampaign?.raceTargetMetrics?.voterContactGoal,
+          totalRegisteredVoters: result.totalRegisteredVoters,
+          source: 'ballot_ready',
+          modelVersion: 1,
+        })
+        if (user?.id) {
+          void identifyUser(user.id, { hasWinNumber: true })
+        }
+      } else {
+        trackEvent(EVENTS.Onboarding.PathToVictoryErrored, {
+          campaignId,
+          reason: result.reason,
+        })
+      }
+    },
+    [liveCampaign, campaign, user?.id],
+  )
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
@@ -542,16 +589,28 @@ export default function NewOnboardingFlow({
     }
 
     if (campaign) {
-      await identifyUser(user?.id, trackingProperties)
+      await identifyUser(user?.id, {
+        ...trackingProperties,
+        officeType: office.level,
+      })
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: false,
+      })
+      trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
+        zipCode: answers.officeZip,
+        officeType: office.level,
+        officeName: office.positionName,
+        campaignId: campaign.id,
       })
       const updated = await updateCampaign(attr)
       return updated !== false
     }
 
-    await identifyUser(user?.id, trackingProperties)
+    await identifyUser(user?.id, {
+      ...trackingProperties,
+      officeType: office.level,
+    })
     trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
       ...trackingProperties,
       officeManuallyInput: false,
@@ -569,6 +628,12 @@ export default function NewOnboardingFlow({
     const newCampaign = await createCampaignWithOffice(createAttr)
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
+      zipCode: answers.officeZip,
+      officeType: office.level,
+      officeName: office.positionName,
+      campaignId: newCampaign.id,
+    })
     return true
   }
 
@@ -601,10 +666,19 @@ export default function NewOnboardingFlow({
         slug: `campaign-${campaign.id}`,
         customPositionName,
       })
-      await identifyUser(user?.id, trackingProperties)
+      await identifyUser(user?.id, {
+        ...trackingProperties,
+        officeType: 'manual',
+      })
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
         ...trackingProperties,
         officeManuallyInput: true,
+      })
+      trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
+        zipCode: answers.officeZip,
+        officeType: 'manual',
+        officeName: form.office,
+        campaignId: campaign.id,
       })
       return true
     }
@@ -622,10 +696,19 @@ export default function NewOnboardingFlow({
     const newCampaign = await createCampaignWithOffice(createAttr)
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
-    await identifyUser(user?.id, trackingProperties)
+    await identifyUser(user?.id, {
+      ...trackingProperties,
+      officeType: 'manual',
+    })
     trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
       ...trackingProperties,
       officeManuallyInput: true,
+    })
+    trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
+      zipCode: answers.officeZip,
+      officeType: 'manual',
+      officeName: form.office,
+      campaignId: newCampaign.id,
     })
     return true
   }
@@ -639,8 +722,12 @@ export default function NewOnboardingFlow({
     ])
     if (updated === false) return false
     trackEvent(EVENTS.Onboarding.PartyStep.Completed, { affiliation: party })
+    trackEvent(EVENTS.Onboarding.PartySelectionCompleted, {
+      party,
+      campaignId: campaign?.id,
+    })
     if (user?.id) {
-      await identifyUser(user.id, { affiliation: party })
+      await identifyUser(user.id, { affiliation: party, party })
     }
     return true
   }
@@ -654,14 +741,32 @@ export default function NewOnboardingFlow({
     ])
     if (updated === false) return false
     trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
+    trackEvent(EVENTS.Onboarding.PledgeCompleted, {
+      pledgeVersion: PLEDGE_VERSION,
+      campaignId: campaign?.id,
+    })
     if (user?.id) {
-      await identifyUser(user.id, { pledgeCompleted: true })
+      await identifyUser(user.id, {
+        pledgeCompleted: true,
+        onboardingCompleted: true,
+      })
     }
     return true
   }
 
   const goNext = async () => {
     if (!canContinue) return
+    if (activeStep.id === 'welcome') {
+      trackEvent(EVENTS.Onboarding.WelcomeContinued, {
+        campaignId: campaign?.id,
+      })
+    }
+    if (activeStep.id === 'path-to-victory' && campaign) {
+      trackEvent(EVENTS.Onboarding.PathToVictoryCompleted, {
+        campaignId: campaign.id,
+        winNumber: campaign.raceTargetMetrics?.winNumber ?? 0,
+      })
+    }
     if (
       activeStep.id === 'office-selection' &&
       answers.structuredOffice &&
@@ -697,6 +802,17 @@ export default function NewOnboardingFlow({
         { key: 'details.ballotStatus', value: answers.ballotStatus },
       ])
       if (updated === false) return
+      const candidateStage = ballotStatusToCandidateStage[answers.ballotStatus]
+      trackEvent(EVENTS.Onboarding.BallotStatusCompleted, {
+        candidateStage,
+        campaignId: campaign.id,
+      })
+      if (user?.id) {
+        await identifyUser(user.id, {
+          candidateStage: candidateStage.toLowerCase(),
+          hasNotYetFiled: candidateStage !== 'FILED' ? true : undefined,
+        })
+      }
     }
     if (
       activeStep.id === 'party-affiliation' &&
@@ -801,6 +917,7 @@ export default function NewOnboardingFlow({
                 onCantFindOffice={handleCantFindOffice}
                 liveCampaign={liveCampaign}
                 onP2vLoadingChange={handleP2vLoadingChange}
+                onP2vMetricsResolved={handleP2vMetricsResolved}
                 p2vOfficeName={p2vOfficeName}
               />
             </section>
