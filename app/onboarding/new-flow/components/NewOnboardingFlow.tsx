@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   CalendarDays,
+  Compass,
   Sparkles,
   Target,
   UsersRound,
@@ -53,6 +54,22 @@ const welcomeCards = [
     Icon: CalendarDays,
   },
 ]
+
+interface WhyWeAskProps {
+  text: string
+}
+
+const WhyWeAsk = ({ text }: WhyWeAskProps): React.JSX.Element => (
+  <aside className="rounded-xl border border-slate-200 p-5">
+    <div className="mb-3 flex items-center gap-2">
+      <Compass className="size-4 text-slate-400" aria-hidden="true" />
+      <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
+        Why we ask
+      </span>
+    </div>
+    <p className="text-sm leading-6 text-slate-700">{text}</p>
+  </aside>
+)
 
 interface StepProgressProps {
   currentStep: number
@@ -237,38 +254,50 @@ export default function NewOnboardingFlow(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-white pb-28 text-slate-950">
-      <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-8 sm:py-8">
-        <StepProgress
-          currentStep={activeStepNumber}
-          numberOfSteps={visibleSteps.length}
-        />
+      <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
+        <div
+          className={`grid grid-cols-1 gap-8${activeStep.whyWeAsk ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start' : ''}`}
+        >
+          <div>
+            <StepProgress
+              currentStep={activeStepNumber}
+              numberOfSteps={visibleSteps.length}
+            />
 
-        <section className="mx-auto mt-8 max-w-2xl space-y-8 text-center sm:mt-5">
-          <div className="space-y-4">
-            {activeStep.id === 'welcome' ? null : (
-              <p className="text-sm font-semibold text-blue-600">
-                {activeStep.eyebrow}
-              </p>
-            )}
-            <h1 className="mx-auto max-w-2xl text-4xl font-semibold leading-[1.08] text-slate-950 sm:text-5xl">
-              {activeStep.title}
-            </h1>
-            <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
-              {activeStep.description}
-            </p>
-            {answers.officePath ? (
-              <p className="text-sm font-medium text-slate-500">
-                {pathLabels[answers.officePath]}
-              </p>
-            ) : null}
+            <section
+              className={`mt-8 space-y-8 sm:mt-5${activeStep.whyWeAsk ? '' : ' text-center'}`}
+            >
+              <div className="space-y-4">
+                {activeStep.id === 'welcome' ? null : (
+                  <p className="text-sm font-semibold text-blue-600">
+                    {activeStep.eyebrow}
+                  </p>
+                )}
+                <h1 className="mx-auto max-w-2xl text-4xl font-semibold leading-[1.08] text-slate-950 sm:text-5xl">
+                  {activeStep.title}
+                </h1>
+                <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                  {activeStep.description}
+                </p>
+                {answers.officePath ? (
+                  <p className="text-sm font-medium text-slate-500">
+                    {pathLabels[answers.officePath]}
+                  </p>
+                ) : null}
+              </div>
+
+              <StepBody
+                activeStep={activeStep}
+                answers={answers}
+                updateAnswers={updateAnswers}
+              />
+            </section>
           </div>
 
-          <StepBody
-            activeStep={activeStep}
-            answers={answers}
-            updateAnswers={updateAnswers}
-          />
-        </section>
+          {activeStep.whyWeAsk ? (
+            <WhyWeAsk text={activeStep.whyWeAsk} />
+          ) : null}
+        </div>
       </main>
 
       <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white">

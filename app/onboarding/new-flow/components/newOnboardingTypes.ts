@@ -39,6 +39,7 @@ export interface NewOnboardingStep {
   title: string
   description: string
   summary: string
+  whyWeAsk?: string
   shouldSkip?: (context: NewOnboardingStepContext) => boolean
 }
 
