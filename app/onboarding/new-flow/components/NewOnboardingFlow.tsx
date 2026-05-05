@@ -12,7 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   createCampaignWithOffice,
   onboardingStep,
@@ -25,6 +25,7 @@ import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
+import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
 import {
   NEW_ONBOARDING_STEPS,
@@ -33,22 +34,17 @@ import {
 import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
+import { PathToVictoryStep } from './PathToVictoryStep'
 import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
   ManualOfficeForm,
   NewOnboardingStep,
   OnboardingAnswers,
-  OnboardingOfficePath,
   OnboardingStepId,
   PartyAffiliation,
   SelectedOffice,
 } from './newOnboardingTypes'
-
-const pathLabels: Record<OnboardingOfficePath, string> = {
-  structured: 'Known office',
-  manual: 'Manual office',
-}
 
 const ballotStatusOptions: ReadonlyArray<RadioCardOption<BallotStatus>> = [
   {
@@ -181,18 +177,24 @@ const welcomeCards = [
 ]
 
 interface WhyWeAskProps {
-  text: string
+  text?: string
+  title?: string
+  children?: React.ReactNode
 }
 
-const WhyWeAsk = ({ text }: WhyWeAskProps): React.JSX.Element => (
+const WhyWeAsk = ({
+  text,
+  title = 'Why we ask',
+  children,
+}: WhyWeAskProps): React.JSX.Element => (
   <aside className="rounded-xl border border-slate-200 p-5">
     <div className="mb-3 flex items-center gap-2">
       <Compass className="size-4 text-slate-400" aria-hidden="true" />
       <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
-        Why we ask
+        {title}
       </span>
     </div>
-    <p className="text-sm leading-6 text-slate-700">{text}</p>
+    <p className="text-sm leading-6 text-slate-700">{children ?? text}</p>
   </aside>
 )
 
@@ -241,6 +243,9 @@ interface StepBodyProps {
   answers: OnboardingAnswers
   updateAnswers: (answers: Partial<OnboardingAnswers>) => void
   onCantFindOffice: () => void
+  liveCampaign: Campaign | null
+  onP2vLoadingChange: (loading: boolean) => void
+  p2vOfficeName: string | null
 }
 
 const StepBody = ({
@@ -248,6 +253,9 @@ const StepBody = ({
   answers,
   updateAnswers,
   onCantFindOffice,
+  liveCampaign,
+  onP2vLoadingChange,
+  p2vOfficeName,
 }: StepBodyProps): React.JSX.Element => {
   if (activeStep.id === 'welcome') {
     return (
@@ -331,6 +339,16 @@ const StepBody = ({
     )
   }
 
+  if (activeStep.id === 'path-to-victory') {
+    return (
+      <PathToVictoryStep
+        campaign={liveCampaign}
+        officeName={p2vOfficeName}
+        onLoadingChange={onP2vLoadingChange}
+      />
+    )
+  }
+
   return (
     <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
       <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
@@ -352,6 +370,10 @@ export default function NewOnboardingFlow({
     firstNewOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
+  const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
+    initialCampaign,
+  )
+  const [isP2vLoading, setIsP2vLoading] = useState(true)
 
   const visibleSteps = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
@@ -363,7 +385,38 @@ export default function NewOnboardingFlow({
   const nextStep = visibleSteps[activeIndex + 1] ?? null
   const activeStepNumber = activeIndex + 1
   const isActiveStepValid = activeStep.isValid?.({ answers }) ?? true
-  const canContinue = nextStep !== null && isActiveStepValid && !isSavingOffice
+  const isP2vBlocking = activeStep.id === 'path-to-victory' && isP2vLoading
+  const p2vOfficeName =
+    answers.structuredOffice?.positionName ||
+    liveCampaign?.positionName ||
+    liveCampaign?.organization?.customPositionName ||
+    liveCampaign?.office ||
+    null
+  const canContinue =
+    nextStep !== null && isActiveStepValid && !isSavingOffice && !isP2vBlocking
+
+  const handleP2vLoadingChange = useCallback((loading: boolean) => {
+    setIsP2vLoading(loading)
+  }, [])
+
+  useEffect(() => {
+    if (activeStepId !== 'path-to-victory') return
+    let cancelled = false
+    setIsP2vLoading(true)
+    void (async () => {
+      try {
+        const res = await clientRequest('GET /v1/campaigns/mine', {})
+        if (!cancelled && res.data) {
+          setLiveCampaign(res.data)
+        }
+      } catch {
+        // leave previous campaign in place
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [activeStepId])
 
   const updateAnswers = (answerPatch: Partial<OnboardingAnswers>) => {
     setAnswers((currentAnswers) => ({ ...currentAnswers, ...answerPatch }))
@@ -553,7 +606,7 @@ export default function NewOnboardingFlow({
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div
           className={`grid grid-cols-1 gap-8${
-            activeStep.whyWeAsk
+            activeStep.whyWeAsk && !isP2vBlocking
               ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
               : ''
           }`}
@@ -566,38 +619,65 @@ export default function NewOnboardingFlow({
 
             <section
               className={`mt-8 space-y-8 sm:mt-5${
-                activeStep.whyWeAsk ? '' : ' text-center'
+                activeStep.whyWeAsk && !isP2vBlocking ? '' : ' text-center'
               }`}
             >
-              <div className="space-y-4">
-                {activeStep.id === 'welcome' ? null : (
-                  <p className="text-sm font-semibold text-blue-600">
-                    {activeStep.eyebrow}
+              {isP2vBlocking ? null : (
+                <div className="space-y-4">
+                  {activeStep.id === 'welcome' ? null : (
+                    <p className="text-sm font-semibold text-blue-600">
+                      {activeStep.eyebrow}
+                    </p>
+                  )}
+                  <h1 className="mx-auto max-w-2xl text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
+                    {activeStep.title}
+                  </h1>
+                  <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                    {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
+                      <>
+                        We use historical voter data and proprietary models to
+                        get the most accurate projections for{' '}
+                        <span className="font-semibold text-slate-950">
+                          {p2vOfficeName}
+                        </span>
+                        .
+                      </>
+                    ) : (
+                      activeStep.description
+                    )}
                   </p>
-                )}
-                <h1 className="mx-auto max-w-2xl text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
-                  {activeStep.title}
-                </h1>
-                <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
-                  {activeStep.description}
-                </p>
-                {answers.officePath ? (
-                  <p className="text-sm font-medium text-slate-500">
-                    {pathLabels[answers.officePath]}
-                  </p>
-                ) : null}
-              </div>
+                </div>
+              )}
 
               <StepBody
                 activeStep={activeStep}
                 answers={answers}
                 updateAnswers={updateAnswers}
                 onCantFindOffice={handleCantFindOffice}
+                liveCampaign={liveCampaign}
+                onP2vLoadingChange={handleP2vLoadingChange}
+                p2vOfficeName={p2vOfficeName}
               />
             </section>
           </div>
 
-          {activeStep.whyWeAsk ? <WhyWeAsk text={activeStep.whyWeAsk} /> : null}
+          {activeStep.whyWeAsk && !isP2vBlocking ? (
+            activeStep.id === 'path-to-victory' ? (
+              <WhyWeAsk title="You can do this!">
+                Most candidates think they need to convince <em>everyone</em>.
+                You don&apos;t. You need to find{' '}
+                {liveCampaign?.raceTargetMetrics?.winNumber
+                  ? `${numberFormatter(
+                      liveCampaign.raceTargetMetrics.winNumber,
+                    )} people`
+                  : 'your win number'}
+                , talk to them, and make sure they vote. We&apos;ll show you
+                exactly what that takes.
+              </WhyWeAsk>
+            ) : (
+              <WhyWeAsk text={activeStep.whyWeAsk} />
+            )
+          ) : null}
         </div>
       </main>
 

@@ -71,13 +71,13 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
   {
     id: 'path-to-victory',
     eyebrow: 'Vote goal',
-    title: 'Building your path to victory',
+    title: "Here's how many votes you need to win",
     description:
-      'Structured-office candidates can see vote calculations once office data is available.',
+      'We use historical voter data and proprietary models to get the most accurate projections for your race.',
     summary:
       'Manual-office users skip this step because the required structured election data is unavailable.',
     whyWeAsk:
-      'Knowing how many votes you need to win helps you plan your outreach intensity, budget, and timeline more precisely.',
+      "Most candidates think they need to convince everyone. You don't. You need to find your win number, talk to them, and make sure they vote. We'll show you exactly what that takes.",
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
