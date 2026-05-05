@@ -51,6 +51,15 @@ export type OnboardingJsonValue =
   | OnboardingJsonValue[]
   | { [key: string]: OnboardingJsonValue }
 
+export interface ManualOfficeForm {
+  office: string
+  state: string
+  city: string
+  district: string
+  officeTermLength: string
+  electionDate: string
+}
+
 export interface OnboardingAnswers {
   [key: string]: unknown
   officePath?: OnboardingOfficePath
@@ -61,6 +70,7 @@ export interface OnboardingAnswers {
   partyAffiliation?: PartyAffiliation
   officeZip?: string
   structuredOffice?: SelectedOffice
+  manualOfficeForm?: ManualOfficeForm
 }
 
 export interface NewOnboardingStepContext {

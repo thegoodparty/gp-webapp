@@ -132,11 +132,7 @@ describe('new onboarding flow shell', () => {
     }
 
     expect(
-      getPreviousOnboardingStep(
-        NEW_ONBOARDING_STEPS,
-        'candidate-issues',
-        answers,
-      )?.id,
+      getPreviousOnboardingStep(NEW_ONBOARDING_STEPS, 'pledge', answers)?.id,
     ).toBe('manual-office-entry')
     expect(
       getNextOnboardingStep(
@@ -144,10 +140,6 @@ describe('new onboarding flow shell', () => {
         'manual-office-entry',
         answers,
       )?.id,
-    ).toBe('candidate-issues')
-    expect(
-      getNextOnboardingStep(NEW_ONBOARDING_STEPS, 'candidate-issues', answers)
-        ?.id,
     ).toBe('pledge')
   })
 })

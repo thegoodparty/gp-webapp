@@ -32,9 +32,11 @@ import {
 } from './newOnboardingConfig'
 import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
+import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
+  ManualOfficeForm,
   NewOnboardingStep,
   OnboardingAnswers,
   OnboardingOfficePath,
@@ -322,20 +324,10 @@ const StepBody = ({
 
   if (activeStep.id === 'manual-office-entry') {
     return (
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-slate-200 p-4">
-          <p className="text-sm font-medium text-slate-900">manualOffice</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">
-            {answers.manualOffice ? 'true' : 'false'}
-          </p>
-        </div>
-        <div className="rounded-lg border border-slate-200 p-4">
-          <p className="text-sm font-medium text-slate-900">unmatchedOffice</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-900">
-            {answers.unmatchedOffice ? 'true' : 'false'}
-          </p>
-        </div>
-      </div>
+      <ManualOfficeEntryStep
+        value={answers.manualOfficeForm}
+        onChange={(form) => updateAnswers({ manualOfficeForm: form })}
+      />
     )
   }
 
@@ -447,6 +439,59 @@ export default function NewOnboardingFlow({
     return true
   }
 
+  const persistManualOffice = async (
+    form: ManualOfficeForm,
+  ): Promise<boolean> => {
+    const baseAttr = [
+      { key: 'details.raceId', value: null },
+      { key: 'details.electionId', value: null },
+      { key: 'details.ballotOffice', value: null },
+      { key: 'details.state', value: form.state },
+      { key: 'details.city', value: form.city },
+      { key: 'details.district', value: form.district },
+      { key: 'details.officeTermLength', value: form.officeTermLength },
+      { key: 'details.electionDate', value: form.electionDate },
+    ]
+    const customPositionName = form.office
+
+    const trackingProperties = {
+      officeState: form.state,
+      officeMunicipality: form.city,
+      officeName: form.office,
+      officeElectionDate: form.electionDate,
+    }
+
+    if (campaign) {
+      const updated = await updateCampaign(baseAttr)
+      if (updated === false) return false
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: `campaign-${campaign.id}`,
+        customPositionName,
+      })
+      await identifyUser(user?.id, trackingProperties)
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+        ...trackingProperties,
+        officeManuallyInput: true,
+      })
+      return true
+    }
+
+    const createAttr = [
+      ...baseAttr,
+      { key: 'data.currentStep', value: onboardingStep(undefined, 1) },
+      { key: 'customPositionName', value: customPositionName },
+    ]
+    const newCampaign = await createCampaignWithOffice(createAttr)
+    if (!newCampaign) return false
+    setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    await identifyUser(user?.id, trackingProperties)
+    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+      ...trackingProperties,
+      officeManuallyInput: true,
+    })
+    return true
+  }
+
   const goNext = async () => {
     if (!canContinue || !nextStep) return
     if (
@@ -458,6 +503,21 @@ export default function NewOnboardingFlow({
       try {
         trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
         const ok = await persistStructuredOffice(answers.structuredOffice)
+        if (!ok) return
+        router.refresh()
+      } finally {
+        setIsSavingOffice(false)
+      }
+    }
+    if (
+      activeStep.id === 'manual-office-entry' &&
+      answers.manualOfficeForm &&
+      !isSavingOffice
+    ) {
+      setIsSavingOffice(true)
+      try {
+        trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
+        const ok = await persistManualOffice(answers.manualOfficeForm)
         if (!ok) return
         router.refresh()
       } finally {

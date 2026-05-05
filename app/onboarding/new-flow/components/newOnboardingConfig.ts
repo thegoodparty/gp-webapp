@@ -52,14 +52,21 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
   {
     id: 'manual-office-entry',
     eyebrow: 'Office details',
-    title: 'Enter your office manually',
+    title: 'Tell us about your office',
     description:
-      'Manual entries are kept for follow-up and skip structured-office calculations.',
+      "We couldn't find a structured match. Enter your office details and our team will follow up.",
     summary:
       'The manualOffice and unmatchedOffice flags are stored in onboarding state.',
     whyWeAsk:
       'We capture your office details manually so we can still generate a tailored campaign plan, even without structured election data.',
     shouldSkip: ({ answers }) => answers.officePath !== 'manual',
+    isValid: ({ answers }) => {
+      const f = answers.manualOfficeForm
+      if (!f) return false
+      return Boolean(
+        f.office && f.state && f.city && f.officeTermLength && f.electionDate,
+      )
+    },
   },
   {
     id: 'path-to-victory',
@@ -80,9 +87,10 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
     description:
       'Candidate-selected issues are stored for alignment and future campaign plan personalization.',
     summary:
-      'This step remains available to both structured-office and manual-office users.',
+      'Manual-office users skip this step and land directly on the pledge.',
     whyWeAsk:
       "Aligning your platform with your community's top concerns increases your chances of earning their vote and building real coalitions.",
+    shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
     id: 'community-cares',
