@@ -25,6 +25,24 @@ export type PartyAffiliation =
   | 'democrat'
   | 'republican'
 
+export interface SelectedOffice {
+  raceId: string
+  positionId?: string
+  positionName: string
+  level?: string
+  city?: string
+  electionDay?: string
+  electionId?: string
+  state?: string
+  partisanType?: string
+  hasPrimary?: boolean
+  primaryElectionDate?: string
+  primaryElectionId?: string
+  officeTermLength?: string
+  filingPeriodsStart?: string
+  filingPeriodsEnd?: string
+}
+
 export type OnboardingJsonValue =
   | string
   | number
@@ -34,13 +52,15 @@ export type OnboardingJsonValue =
   | { [key: string]: OnboardingJsonValue }
 
 export interface OnboardingAnswers {
-  [key: string]: OnboardingJsonValue | undefined
+  [key: string]: unknown
   officePath?: OnboardingOfficePath
   manualOffice?: boolean
   unmatchedOffice?: boolean
   hasZipOnlyCommunityData?: boolean
   ballotStatus?: BallotStatus
   partyAffiliation?: PartyAffiliation
+  officeZip?: string
+  structuredOffice?: SelectedOffice
 }
 
 export interface NewOnboardingStepContext {

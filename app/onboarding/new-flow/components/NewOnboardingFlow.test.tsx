@@ -51,7 +51,7 @@ describe('new onboarding flow shell', () => {
         officePath: 'manual',
         manualOffice: true,
         unmatchedOffice: true,
-        ballotStatus: 'seriously-considering',
+        ballotStatus: 'considering',
       }),
     ).toEqual({
       version: 1,
@@ -64,7 +64,7 @@ describe('new onboarding flow shell', () => {
         officePath: 'manual',
         manualOffice: true,
         unmatchedOffice: true,
-        ballotStatus: 'seriously-considering',
+        ballotStatus: 'considering',
       },
     })
   })

@@ -11,12 +11,27 @@ import {
   Wand2,
   X,
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import {
+  createCampaignWithOffice,
+  onboardingStep,
+  updateCampaign,
+} from 'app/onboarding/shared/ajaxActions'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useUser } from '@shared/hooks/useUser'
+import { clientRequest } from 'gpApi/typed-request'
+import { setCookie } from 'helpers/cookieHelper'
+import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { identifyUser } from '@shared/utils/analytics'
+import type { Campaign } from 'helpers/types'
 import {
   NEW_ONBOARDING_STEPS,
   firstNewOnboardingStepId,
 } from './newOnboardingConfig'
 import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
+import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
@@ -25,6 +40,7 @@ import type {
   OnboardingOfficePath,
   OnboardingStepId,
   PartyAffiliation,
+  SelectedOffice,
 } from './newOnboardingTypes'
 
 const pathLabels: Record<OnboardingOfficePath, string> = {
@@ -61,7 +77,8 @@ const partyAffiliationOptions: ReadonlyArray<
   {
     value: 'nonpartisan',
     title: 'Nonpartisan Race',
-    description: 'The race itself is officially nonpartisan (most local seats).',
+    description:
+      'The race itself is officially nonpartisan (most local seats).',
   },
   {
     value: 'independent-or-non-major',
@@ -96,8 +113,7 @@ const PartyAffiliationStep = ({
   const [dismissedFor, setDismissedFor] = useState<PartyAffiliation | null>(
     null,
   )
-  const showBlocker =
-    isMajorPartyAffiliation(value) && dismissedFor !== value
+  const showBlocker = isMajorPartyAffiliation(value) && dismissedFor !== value
 
   return (
     <div className="space-y-4">
@@ -222,12 +238,14 @@ interface StepBodyProps {
   activeStep: NewOnboardingStep
   answers: OnboardingAnswers
   updateAnswers: (answers: Partial<OnboardingAnswers>) => void
+  onCantFindOffice: () => void
 }
 
 const StepBody = ({
   activeStep,
   answers,
   updateAnswers,
+  onCantFindOffice,
 }: StepBodyProps): React.JSX.Element => {
   if (activeStep.id === 'welcome') {
     return (
@@ -285,42 +303,20 @@ const StepBody = ({
 
   if (activeStep.id === 'office-selection') {
     return (
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Button
-          type="button"
-          variant={answers.officePath === 'structured' ? 'default' : 'outline'}
-          className="h-auto min-h-24 flex-col items-start rounded-lg p-5 text-left whitespace-normal"
-          onClick={() =>
-            updateAnswers({
-              officePath: 'structured',
-              manualOffice: false,
-              unmatchedOffice: false,
-            })
-          }
-        >
-          <span className="font-semibold">Use a matched office</span>
-          <span className="text-sm font-normal opacity-80">
-            Candidate selected an office from structured election data.
-          </span>
-        </Button>
-        <Button
-          type="button"
-          variant={answers.officePath === 'manual' ? 'default' : 'outline'}
-          className="h-auto min-h-24 flex-col items-start rounded-lg p-5 text-left whitespace-normal"
-          onClick={() =>
-            updateAnswers({
-              officePath: 'manual',
-              manualOffice: true,
-              unmatchedOffice: true,
-            })
-          }
-        >
-          <span className="font-semibold">Enter office manually</span>
-          <span className="text-sm font-normal opacity-80">
-            Candidate could not find their office in the search results.
-          </span>
-        </Button>
-      </div>
+      <OfficeSelectionStep
+        zip={answers.officeZip}
+        selected={answers.structuredOffice}
+        onZipChange={(zip) => updateAnswers({ officeZip: zip })}
+        onSelect={(office) =>
+          updateAnswers({
+            structuredOffice: office,
+            officePath: office ? 'structured' : undefined,
+            manualOffice: office ? false : undefined,
+            unmatchedOffice: office ? false : undefined,
+          })
+        }
+        onCantFindOffice={onCantFindOffice}
+      />
     )
   }
 
@@ -350,11 +346,20 @@ const StepBody = ({
   )
 }
 
-export default function NewOnboardingFlow(): React.JSX.Element {
+export default function NewOnboardingFlow({
+  campaign: initialCampaign = null,
+}: {
+  campaign?: Campaign | null
+} = {}): React.JSX.Element {
+  const router = useRouter()
+  const [contextCampaign] = useCampaign()
+  const campaign = contextCampaign ?? initialCampaign
+  const [user] = useUser()
   const [answers, setAnswers] = useState<OnboardingAnswers>({})
   const [activeStepId, setActiveStepId] = useState<OnboardingStepId>(
     firstNewOnboardingStepId,
   )
+  const [isSavingOffice, setIsSavingOffice] = useState(false)
 
   const visibleSteps = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
@@ -366,7 +371,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
   const nextStep = visibleSteps[activeIndex + 1] ?? null
   const activeStepNumber = activeIndex + 1
   const isActiveStepValid = activeStep.isValid?.({ answers }) ?? true
-  const canContinue = nextStep !== null && isActiveStepValid
+  const canContinue = nextStep !== null && isActiveStepValid && !isSavingOffice
 
   const updateAnswers = (answerPatch: Partial<OnboardingAnswers>) => {
     setAnswers((currentAnswers) => ({ ...currentAnswers, ...answerPatch }))
@@ -378,9 +383,108 @@ export default function NewOnboardingFlow(): React.JSX.Element {
     }
   }
 
-  const goNext = () => {
-    if (canContinue && nextStep) {
-      setActiveStepId(nextStep.id)
+  const persistStructuredOffice = async (
+    office: SelectedOffice,
+  ): Promise<boolean> => {
+    const attr = [
+      { key: 'details.electionId', value: office.electionId },
+      { key: 'details.raceId', value: office.raceId },
+      { key: 'details.state', value: office.state },
+      { key: 'details.city', value: office.city },
+      { key: 'details.officeTermLength', value: office.officeTermLength },
+      { key: 'details.ballotLevel', value: office.level },
+      {
+        key: 'details.primaryElectionDate',
+        value: office.primaryElectionDate,
+      },
+      { key: 'details.electionDate', value: office.electionDay },
+      { key: 'details.partisanType', value: office.partisanType },
+      { key: 'details.primaryElectionId', value: office.primaryElectionId },
+      { key: 'details.hasPrimary', value: office.hasPrimary },
+      { key: 'details.filingPeriodsStart', value: office.filingPeriodsStart },
+      { key: 'details.filingPeriodsEnd', value: office.filingPeriodsEnd },
+    ]
+
+    const trackingProperties = {
+      officeState: office.state,
+      officeMunicipality: office.city ?? 'Unavailable',
+      officeName: office.positionName,
+      officeElectionDate: office.electionDay,
+    }
+
+    const resolvedOrgSlug = campaign ? `campaign-${campaign.id}` : undefined
+
+    if (resolvedOrgSlug && office.positionId) {
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: resolvedOrgSlug,
+        ballotReadyPositionId: office.positionId,
+      })
+    }
+
+    if (campaign) {
+      await identifyUser(user?.id, trackingProperties)
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+        ...trackingProperties,
+        officeManuallyInput: false,
+      })
+      const updated = await updateCampaign(attr)
+      return updated !== false
+    }
+
+    await identifyUser(user?.id, trackingProperties)
+    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+      ...trackingProperties,
+      officeManuallyInput: false,
+    })
+    const createAttr = [
+      ...attr,
+      { key: 'data.currentStep', value: onboardingStep(undefined, 1) },
+      { key: 'ballotReadyPositionId', value: office.positionId },
+    ]
+    const newCampaign = await createCampaignWithOffice(createAttr)
+    if (!newCampaign) return false
+    setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    return true
+  }
+
+  const goNext = async () => {
+    if (!canContinue || !nextStep) return
+    if (
+      activeStep.id === 'office-selection' &&
+      answers.structuredOffice &&
+      !isSavingOffice
+    ) {
+      setIsSavingOffice(true)
+      try {
+        trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
+        const ok = await persistStructuredOffice(answers.structuredOffice)
+        if (!ok) return
+        router.refresh()
+      } finally {
+        setIsSavingOffice(false)
+      }
+    }
+    setActiveStepId(nextStep.id)
+  }
+
+  const handleCantFindOffice = () => {
+    setAnswers((current) => ({
+      ...current,
+      officePath: 'manual',
+      manualOffice: true,
+      unmatchedOffice: true,
+      structuredOffice: undefined,
+    }))
+    const visibleAfter = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, {
+      ...answers,
+      officePath: 'manual',
+    })
+    const currentIndex = visibleAfter.findIndex(
+      (step) => step.id === activeStepId,
+    )
+    const next = visibleAfter[currentIndex + 1]
+    if (next) {
+      setActiveStepId(next.id)
     }
   }
 
@@ -428,6 +532,7 @@ export default function NewOnboardingFlow(): React.JSX.Element {
                 activeStep={activeStep}
                 answers={answers}
                 updateAnswers={updateAnswers}
+                onCantFindOffice={handleCantFindOffice}
               />
             </section>
           </div>

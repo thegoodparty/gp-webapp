@@ -32,17 +32,22 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:
       'GoodParty.org only works with non-partisan candidates or those who are independent of both major parties and big money, so they can run, win and serve empowered by our verifiably anti-corrupt platform.',
+    isValid: ({ answers }) =>
+      answers.partyAffiliation === 'nonpartisan' ||
+      answers.partyAffiliation === 'independent-or-non-major',
   },
   {
     id: 'office-selection',
     eyebrow: 'Office selection',
     title: 'What office are you running for?',
     description:
-      'The shell tracks whether the candidate selected a structured office or manually entered an unmatched one.',
+      "We'll use this to analyze local voter data, trends, & news to create your campaign plan.",
     summary:
       'Structured office selection feeds Path to Victory. Manual office entry follows a shorter path.',
     whyWeAsk:
-      'Your office determines which voter data, turnout models, and path-to-victory calculations we can run for your campaign.',
+      "We use this to find the district you're running in, pull registered voter data, historical voter turnout, partisan data, and local issues to build your campaign plan.",
+    isValid: ({ answers }) =>
+      Boolean(answers.structuredOffice) || answers.officePath === 'manual',
   },
   {
     id: 'manual-office-entry',
