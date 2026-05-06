@@ -112,7 +112,7 @@ const LocalNewsHeader = ({
 const LocalNewsSkeleton = (): React.JSX.Element => (
   <div className="space-y-3">
     {Array.from({ length: SKELETON_PLACEHOLDER_COUNT }).map((_, index) => (
-      <div key={index} className="h-20 animate-pulse rounded-lg bg-slate-100" />
+      <div key={index} className="h-20 animate-pulse rounded-lg bg-muted" />
     ))}
   </div>
 )
@@ -129,7 +129,7 @@ const OutletRow = ({
   <div
     className={
       withDivider
-        ? 'flex items-start gap-4 border-t border-slate-100 pt-4'
+        ? 'flex items-start gap-4 border-t border-base-border pt-4'
         : 'flex items-start gap-4'
     }
   >

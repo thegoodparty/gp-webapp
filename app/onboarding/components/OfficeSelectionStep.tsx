@@ -302,7 +302,7 @@ export const OfficeSelectionStep = ({
               aria-invalid={
                 query.isError || (Boolean(zipInput) && !canSearch) || undefined
               }
-              className="bg-white"
+              className="bg-base-surface"
             />
             <Button
               type="submit"
@@ -336,7 +336,7 @@ export const OfficeSelectionStep = ({
                 placeholder="Search by office name"
                 value={nameFilter}
                 onChange={(event) => setNameFilter(event.target.value)}
-                className="bg-white"
+                className="bg-base-surface"
               />
             ) : null}
 

@@ -169,13 +169,13 @@ const ChecklistItem = ({
   isChecked,
 }: ChecklistItemProps): React.JSX.Element => (
   <li
-    className={`flex items-center gap-3 rounded-lg border bg-white px-4 py-3 transition-opacity ${
-      isChecked ? 'border-base-border opacity-100' : 'border-slate-100 opacity-60'
+    className={`flex items-center gap-3 rounded-lg border bg-base-surface px-4 py-3 transition-opacity ${
+      isChecked ? 'border-base-border opacity-100' : 'border-base-border opacity-60'
     }`}
   >
     <span
       className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
-        isChecked ? 'bg-blue-600 text-white' : 'bg-slate-100 text-muted-foreground'
+        isChecked ? 'bg-blue-600 text-white' : 'bg-muted text-muted-foreground'
       }`}
     >
       <Check className="size-4" aria-hidden="true" />
@@ -221,7 +221,7 @@ const BuildingPathToVictory = ({
 )
 
 const MetricsUnavailable = (): React.JSX.Element => (
-  <div className="rounded-lg border border-base-border bg-slate-50 p-6 text-center">
+  <div className="rounded-lg border border-base-border bg-muted p-6 text-center">
     <p className="text-sm leading-6 text-foreground">
       We couldn&apos;t calculate vote projections for your district yet.
       We&apos;ll keep working on it in the background.
@@ -268,7 +268,7 @@ const ProjectionStep = ({
   value,
 }: ProjectionStepProps): React.JSX.Element => (
   <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-muted-foreground">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
       {index}
     </span>
     <div className="flex-1">

@@ -337,7 +337,7 @@ const StepBody = ({
   }
 
   return (
-    <div className="rounded-lg border border-base-border bg-slate-50 p-5">
+    <div className="rounded-lg border border-base-border bg-muted p-5">
       <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
     </div>
   )
@@ -866,7 +866,7 @@ export default function OnboardingFlow({
   }
 
   return (
-    <div className="min-h-screen bg-white pb-28 text-foreground">
+    <div className="min-h-screen bg-base-surface pb-28 text-foreground">
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div>
           <Stepper
@@ -959,7 +959,7 @@ export default function OnboardingFlow({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-white">
+      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
           <Button
             type="button"
