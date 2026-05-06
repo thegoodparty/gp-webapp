@@ -328,7 +328,7 @@ export const OfficeSelectionStep = ({
 
             {filterOptions.length > 0 ? (
               <FilterPillGroup
-                value={activeFilter}
+                value={activeFilter || undefined}
                 onValueChange={(value) => {
                   setActiveFilter(value)
                   onSelect(undefined)
@@ -355,15 +355,15 @@ export const OfficeSelectionStep = ({
             ) : (
               <RadioGroup
                 aria-label="Available offices"
-                className="flex flex-col space-y-6"
+                className="flex flex-col"
                 value={selected?.raceId ?? ''}
                 onValueChange={(raceId) => {
                   const race = races.find((r) => r.id === raceId)
                   if (race) onSelect(toSelectedOffice(race))
                 }}
               >
-                <p className="text-sm leading-5 text-muted-foreground">
-                  {`${filteredCount} office${filteredCount === 1 ? '' : 's'} showing. Please select your office.`}
+                <p className="text-sm text-muted-foreground">
+                  {`${filteredCount} office${filteredCount === 1 ? '' : 's'} showing. Please select yours.`}
                 </p>
                 {Array.from(officesByYear.entries()).map(
                   ([year, yearRaces]) => (
