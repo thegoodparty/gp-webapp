@@ -33,7 +33,7 @@ export type APIEndpoints = {
 
   'PATCH /v1/organizations/:slug': {
     Request: {
-      ballotReadyPositionId?: string | undefined
+      ballotReadyPositionId?: string | null | undefined
       overrideDistrictId?: string | null | undefined
       customPositionName?: string | null | undefined
     }

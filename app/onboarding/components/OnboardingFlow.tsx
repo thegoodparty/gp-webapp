@@ -691,6 +691,7 @@ export default function OnboardingFlow({
       try {
         await clientRequest('PATCH /v1/organizations/:slug', {
           slug: `campaign-${campaign.id}`,
+          ballotReadyPositionId: null,
           customPositionName,
         })
       } catch (error: unknown) {
