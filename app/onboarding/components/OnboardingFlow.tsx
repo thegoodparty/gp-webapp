@@ -729,6 +729,7 @@ export default function OnboardingFlow({
     const newCampaign = await createCampaignWithOffice(createAttr)
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    setLiveCampaign(newCampaign)
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: 'manual',
@@ -875,7 +876,8 @@ export default function OnboardingFlow({
       if (!ok) return
     }
     if (activeStep.id === 'pledge') {
-      if (!campaign) return
+      const effectiveCampaign = campaign ?? liveCampaign
+      if (!effectiveCampaign) return
       const ok = await persistPledgeAndComplete()
       if (!ok) return
       router.push('/dashboard')
