@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@styleguide/lib/utils'
 
 const alertVariants = cva(
-  'relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5',
+  'relative w-full rounded-lg border px-4 py-3 text-sm grid gap-y-0.5 items-start',
   {
     variants: {
       variant: {
@@ -22,18 +22,29 @@ const alertVariants = cva(
   },
 )
 
-function Alert({
-  className,
-  variant,
-  ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof alertVariants>) {
+interface AlertProps
+  extends React.ComponentProps<'div'>,
+    VariantProps<typeof alertVariants> {
+  icon?: React.ReactNode
+}
+
+function Alert({ className, variant, icon, children, ...props }: AlertProps) {
   return (
     <div
       data-slot="alert"
       role="alert"
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(
+        alertVariants({ variant }),
+        icon
+          ? 'grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5'
+          : 'grid-cols-[0_1fr]',
+        className,
+      )}
       {...props}
-    />
+    >
+      {icon}
+      {children}
+    </div>
   )
 }
 

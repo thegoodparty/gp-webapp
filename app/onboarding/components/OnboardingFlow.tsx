@@ -1,15 +1,15 @@
 'use client'
 
-import { Button, Card, CardContent } from '@styleguide'
+import { Alert, AlertDescription, Button, Card, CardContent } from '@styleguide'
 import {
   ArrowLeft,
   ArrowRight,
   CalendarCheck,
+  CircleAlert,
   Compass,
   Target,
   UsersRound,
   Wand2,
-  X,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -141,41 +141,20 @@ const PartyAffiliationStep = ({
   value,
   onChange,
 }: PartyAffiliationStepProps): React.JSX.Element => {
-  const [dismissedFor, setDismissedFor] = useState<PartyAffiliation | null>(
-    null,
-  )
-  const showBlocker = isMajorPartyAffiliation(value) && dismissedFor !== value
-
   return (
     <div className="space-y-4">
-      {showBlocker ? (
-        <div
-          role="alert"
-          className="relative flex items-start gap-4 rounded-lg border border-red-200 bg-red-50 p-5 pr-12 text-left"
-        >
-          <div className="flex-1 space-y-2">
-            <p className="text-sm leading-6 font-semibold text-red-700">
-              Sorry, GoodParty.org is only for non-partisan and independent
-              candidates.
-            </p>
-          </div>
-          <button
-            type="button"
-            aria-label="Dismiss"
-            onClick={() => setDismissedFor(value ?? null)}
-            className="absolute top-3 right-3 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-100 hover:text-slate-600"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </button>
-        </div>
+      {isMajorPartyAffiliation(value) ? (
+        <Alert variant="destructive" icon={<CircleAlert />}>
+          <AlertDescription>
+            Sorry, GoodParty.org is only for non-partisan and independent
+            candidates.
+          </AlertDescription>
+        </Alert>
       ) : null}
       <RadioCardGroup
         name="party-affiliation"
         value={value}
-        onChange={(next) => {
-          setDismissedFor(null)
-          onChange(next)
-        }}
+        onChange={onChange}
         options={partyAffiliationOptions}
       />
     </div>
