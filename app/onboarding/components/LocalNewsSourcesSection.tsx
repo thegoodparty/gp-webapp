@@ -6,12 +6,28 @@ import { LuNewspaper, LuTv, LuRadioTower } from 'react-icons/lu'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
-type OutletType = 'TV' | 'print' | 'radio'
+const OUTLET_TYPE = {
+  TV: 'TV',
+  PRINT: 'print',
+  RADIO: 'radio',
+} as const
+type OutletType = (typeof OUTLET_TYPE)[keyof typeof OUTLET_TYPE]
+
+const LOCAL_NEWS_QUERY_KEY = 'onboarding-local-news'
+const LOCAL_NEWS_ROUTE = 'GET /v1/onboarding/local-news'
+const SENTRY_CONTEXT_FETCH_OUTLETS = 'onboarding.localNews.fetchOutlets'
+const COLLAPSED_OUTLETS_VISIBLE = 1
+const SKELETON_PLACEHOLDER_COUNT = 3
 
 interface Outlet {
   name: string
   type: OutletType
   description: string
+}
+
+interface OutletGroup {
+  type: OutletType
+  outlets: Outlet[]
 }
 
 const localNewsQueryOptions = (params: {
@@ -20,10 +36,10 @@ const localNewsQueryOptions = (params: {
   office?: string
 }) =>
   queryOptions({
-    queryKey: ['onboarding-local-news', params] as const,
+    queryKey: [LOCAL_NEWS_QUERY_KEY, params] as const,
     enabled: Boolean(params.state && params.office),
     queryFn: () =>
-      clientRequest('GET /v1/onboarding/local-news', {
+      clientRequest(LOCAL_NEWS_ROUTE, {
         city: params.city,
         state: params.state ?? '',
         office: params.office ?? '',
@@ -33,17 +49,17 @@ const localNewsQueryOptions = (params: {
 export { localNewsQueryOptions }
 
 const typeIcon: Record<OutletType, React.JSX.Element> = {
-  print: (
+  [OUTLET_TYPE.PRINT]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
       <LuNewspaper className="size-5" />
     </span>
   ),
-  TV: (
+  [OUTLET_TYPE.TV]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
       <LuTv className="size-5" />
     </span>
   ),
-  radio: (
+  [OUTLET_TYPE.RADIO]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
       <LuRadioTower className="size-5" />
     </span>
@@ -51,9 +67,158 @@ const typeIcon: Record<OutletType, React.JSX.Element> = {
 }
 
 const typeLabel: Record<OutletType, string> = {
-  TV: 'Television',
-  print: 'Print',
-  radio: 'Radio',
+  [OUTLET_TYPE.TV]: 'Television',
+  [OUTLET_TYPE.PRINT]: 'Print',
+  [OUTLET_TYPE.RADIO]: 'Radio',
+}
+
+const groupOutletsByType = (outlets: Outlet[]): OutletGroup[] => {
+  const groups: OutletGroup[] = []
+  const indexByType = new Map<OutletType, number>()
+  for (const outlet of outlets) {
+    const existingIndex = indexByType.get(outlet.type)
+    const existingGroup =
+      existingIndex !== undefined ? groups[existingIndex] : undefined
+    if (existingGroup) {
+      existingGroup.outlets.push(outlet)
+      continue
+    }
+    indexByType.set(outlet.type, groups.length)
+    groups.push({ type: outlet.type, outlets: [outlet] })
+  }
+  return groups
+}
+
+interface LocalNewsHeaderProps {
+  jurisdiction: string
+}
+
+const LocalNewsHeader = ({
+  jurisdiction,
+}: LocalNewsHeaderProps): React.JSX.Element => (
+  <div className="space-y-2">
+    <h2 className="text-2xl font-semibold text-slate-950">
+      Local News Sources
+    </h2>
+    <p className="text-sm leading-6 text-slate-500">
+      These are the local news sources we&apos;re monitoring for{' '}
+      <span className="font-semibold text-slate-950">{jurisdiction}</span> for
+      campaign insights. You will be able to add / change and customize these
+      later in your campaign plan.
+    </p>
+  </div>
+)
+
+const LocalNewsSkeleton = (): React.JSX.Element => (
+  <div className="space-y-3">
+    {Array.from({ length: SKELETON_PLACEHOLDER_COUNT }).map((_, index) => (
+      <div
+        key={index}
+        className="h-20 animate-pulse rounded-lg bg-slate-100"
+      />
+    ))}
+  </div>
+)
+
+interface OutletRowProps {
+  outlet: Outlet
+  withDivider: boolean
+}
+
+const OutletRow = ({
+  outlet,
+  withDivider,
+}: OutletRowProps): React.JSX.Element => (
+  <div
+    className={
+      withDivider
+        ? 'flex items-start gap-4 border-t border-slate-100 pt-4'
+        : 'flex items-start gap-4'
+    }
+  >
+    {typeIcon[outlet.type]}
+    <div className="min-w-0 flex-1">
+      <h3 className="text-base font-semibold text-slate-950">{outlet.name}</h3>
+      <p className="mt-1 text-sm leading-6 text-slate-500">
+        {outlet.description}
+      </p>
+    </div>
+    <Badge
+      variant="default"
+      className="rounded-full bg-slate-950 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-950"
+    >
+      {typeLabel[outlet.type]}
+    </Badge>
+  </div>
+)
+
+interface ToggleGroupExpansionButtonProps {
+  type: OutletType
+  additionalCount: number
+  isExpanded: boolean
+  onToggle: () => void
+}
+
+const ToggleGroupExpansionButton = ({
+  type,
+  additionalCount,
+  isExpanded,
+  onToggle,
+}: ToggleGroupExpansionButtonProps): React.JSX.Element => {
+  const lowercaseLabel = typeLabel[type].toLowerCase()
+  const sourceWord = additionalCount === 1 ? 'source' : 'sources'
+  const buttonLabel = isExpanded
+    ? `Show fewer ${lowercaseLabel} sources`
+    : `View ${additionalCount} more ${lowercaseLabel} ${sourceWord}`
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="-mb-2 self-center text-sm font-semibold text-primary hover:underline"
+    >
+      {buttonLabel}
+    </button>
+  )
+}
+
+interface OutletGroupCardProps {
+  group: OutletGroup
+  isExpanded: boolean
+  onToggle: () => void
+}
+
+const OutletGroupCard = ({
+  group,
+  isExpanded,
+  onToggle,
+}: OutletGroupCardProps): React.JSX.Element => {
+  const visibleOutlets = isExpanded
+    ? group.outlets
+    : group.outlets.slice(0, COLLAPSED_OUTLETS_VISIBLE)
+  const additionalCount = group.outlets.length - COLLAPSED_OUTLETS_VISIBLE
+
+  return (
+    <Card className="rounded-xl border-slate-200 shadow-none">
+      <CardContent className="flex flex-col gap-4 px-4 py-3">
+        {visibleOutlets.map((outlet, index) => (
+          <OutletRow
+            key={`${outlet.name}-${outlet.type}`}
+            outlet={outlet}
+            withDivider={index > 0}
+          />
+        ))}
+        {additionalCount > 0 ? (
+          <ToggleGroupExpansionButton
+            type={group.type}
+            additionalCount={additionalCount}
+            isExpanded={isExpanded}
+            onToggle={onToggle}
+          />
+        ) : null}
+      </CardContent>
+    </Card>
+  )
 }
 
 interface LocalNewsSourcesSectionProps {
@@ -62,6 +227,14 @@ interface LocalNewsSourcesSectionProps {
   office?: string
   jurisdictionLabel?: string
 }
+
+const resolveJurisdiction = ({
+  office,
+  jurisdictionLabel,
+  city,
+  state,
+}: LocalNewsSourcesSectionProps): string =>
+  office ?? jurisdictionLabel ?? (city ? `${city}, ${state}` : state ?? '')
 
 export const LocalNewsSourcesSection = ({
   city,
@@ -77,7 +250,7 @@ export const LocalNewsSourcesSection = ({
   useEffect(() => {
     if (!query.error) return
     reportErrorToSentry(query.error, {
-      context: 'onboarding.localNews.fetchOutlets',
+      context: SENTRY_CONTEXT_FETCH_OUTLETS,
       state,
       office,
     })
@@ -88,26 +261,11 @@ export const LocalNewsSourcesSection = ({
     [query.data?.outlets],
   )
 
-  const groupedOutlets = useMemo(() => {
-    const groups: Array<{ type: OutletType; outlets: Outlet[] }> = []
-    const indexByType = new Map<OutletType, number>()
-    for (const outlet of outlets) {
-      const existingIndex = indexByType.get(outlet.type)
-      const existingGroup =
-        existingIndex !== undefined ? groups[existingIndex] : undefined
-      if (existingGroup) {
-        existingGroup.outlets.push(outlet)
-      } else {
-        indexByType.set(outlet.type, groups.length)
-        groups.push({ type: outlet.type, outlets: [outlet] })
-      }
-    }
-    return groups
-  }, [outlets])
+  const groupedOutlets = useMemo(() => groupOutletsByType(outlets), [outlets])
 
   if (!state || !office) return null
 
-  const toggleType = (type: OutletType) =>
+  const handleToggleType = (type: OutletType) =>
     setExpandedTypes((prev) => {
       const next = new Set(prev)
       if (next.has(type)) {
@@ -118,100 +276,47 @@ export const LocalNewsSourcesSection = ({
       return next
     })
 
-  return (
-    <section className="flex w-full flex-col gap-4 text-left">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-slate-950">
-          Local News Sources
-        </h2>
-        <p className="text-sm leading-6 text-slate-500">
-          These are the local news sources we&apos;re monitoring for{' '}
-          <span className="font-semibold text-slate-950">
-            {office ??
-              jurisdictionLabel ??
-              (city ? `${city}, ${state}` : state)}
-          </span>{' '}
-          for campaign insights. You will be able to add / change and customize
-          these later in your campaign plan.
-        </p>
-      </div>
+  const jurisdiction = resolveJurisdiction({
+    office,
+    jurisdictionLabel,
+    city,
+    state,
+  })
 
-      {query.isPending ? (
-        <div className="space-y-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-20 animate-pulse rounded-lg bg-slate-100"
-            />
-          ))}
-        </div>
-      ) : query.error ? (
+  const renderBody = () => {
+    if (query.isPending) return <LocalNewsSkeleton />
+    if (query.error) {
+      return (
         <p className="text-sm text-slate-500">
           We couldn&apos;t load local news sources right now.
         </p>
-      ) : outlets.length === 0 ? (
+      )
+    }
+    if (outlets.length === 0) {
+      return (
         <p className="text-sm text-slate-500">
           No local news sources found for this area yet.
         </p>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {groupedOutlets.map(({ type, outlets: typeOutlets }) => {
-            const isExpanded = expandedTypes.has(type)
-            const visible = isExpanded ? typeOutlets : typeOutlets.slice(0, 1)
-            const additionalCount = typeOutlets.length - 1
-            return (
-              <Card
-                key={type}
-                className="rounded-xl border-slate-200 shadow-none"
-              >
-                <CardContent className="flex flex-col gap-4 px-4 py-3">
-                  {visible.map((outlet, index) => (
-                    <div
-                      key={`${outlet.name}-${outlet.type}`}
-                      className={
-                        index === 0
-                          ? 'flex items-start gap-4'
-                          : 'flex items-start gap-4 border-t border-slate-100 pt-4'
-                      }
-                    >
-                      {typeIcon[outlet.type]}
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-base font-semibold text-slate-950">
-                          {outlet.name}
-                        </h3>
-                        <p className="mt-1 text-sm leading-6 text-slate-500">
-                          {outlet.description}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="default"
-                        className="rounded-full bg-slate-950 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-950"
-                      >
-                        {typeLabel[outlet.type]}
-                      </Badge>
-                    </div>
-                  ))}
-                  {additionalCount > 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => toggleType(type)}
-                      className="-mb-2 self-center text-sm font-semibold text-primary hover:underline"
-                    >
-                      {isExpanded
-                        ? `Show fewer ${typeLabel[type].toLowerCase()} sources`
-                        : `View ${additionalCount} more ${typeLabel[
-                            type
-                          ].toLowerCase()} ${
-                            additionalCount === 1 ? 'source' : 'sources'
-                          }`}
-                    </button>
-                  ) : null}
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-      )}
+      )
+    }
+    return (
+      <div className="flex flex-col gap-6">
+        {groupedOutlets.map((group) => (
+          <OutletGroupCard
+            key={group.type}
+            group={group}
+            isExpanded={expandedTypes.has(group.type)}
+            onToggle={() => handleToggleType(group.type)}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <section className="flex w-full flex-col gap-4 text-left">
+      <LocalNewsHeader jurisdiction={jurisdiction} />
+      {renderBody()}
     </section>
   )
 }
