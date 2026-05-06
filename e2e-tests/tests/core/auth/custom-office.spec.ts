@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { blockSlowScripts } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Custom office flow', () => {
@@ -16,6 +19,7 @@ test.describe('Custom office flow', () => {
     })
 
     await page.goto('/onboarding/office-selection')
+    await NavigationHelper.dismissOverlays(page)
 
     // Step through Welcome → Ballot status → Party affiliation → Office selection.
     const continueButton = page

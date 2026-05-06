@@ -47,7 +47,7 @@ export const RadioCardGroup = <TValue extends string>({
           />
           <span
             aria-hidden="true"
-            className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
+            className={`pointer-events-none mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
               isSelected ? 'text-blue-600' : 'text-slate-300'
             }`}
           >

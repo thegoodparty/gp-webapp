@@ -25,6 +25,8 @@ test('authenticate with onboarded user', async ({ page }) => {
   })
   console.log('User created, now completing onboarding...')
 
+  await NavigationHelper.dismissOverlays(page)
+
   await completeOnboardingFlow(page)
 
   if (!page.url().includes('/dashboard')) {
