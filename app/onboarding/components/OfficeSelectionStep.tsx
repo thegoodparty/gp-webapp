@@ -3,7 +3,7 @@
 import { Button, Input, Label, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
-import { CheckCircle2, Circle, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useId, useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -309,7 +309,7 @@ export const OfficeSelectionStep = ({
               aria-invalid={
                 query.isError || (Boolean(zipInput) && !canSearch) || undefined
               }
-              className="rounded-full bg-white px-4"
+              className="bg-white"
             />
             <Button
               type="submit"
@@ -343,7 +343,7 @@ export const OfficeSelectionStep = ({
                 placeholder="Search by office name"
                 value={nameFilter}
                 onChange={(event) => setNameFilter(event.target.value)}
-                className="rounded-full bg-white px-4"
+                className="bg-white"
               />
             ) : null}
 
@@ -353,7 +353,7 @@ export const OfficeSelectionStep = ({
                   {filterOptions.map((option) => {
                     const isActive = activeFilter === option.value
                     return (
-                      <button
+                      <Button
                         type="button"
                         key={option.value}
                         onClick={() => {
@@ -361,14 +361,11 @@ export const OfficeSelectionStep = ({
                           onSelect(undefined)
                         }}
                         aria-pressed={isActive}
-                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                          isActive
-                            ? 'border-slate-900 bg-slate-900 text-white'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                        }`}
+                        variant={isActive ? 'secondary' : 'outline'}
+                        size="xSmall"
                       >
                         {option.label} ({option.count})
-                      </button>
+                      </Button>
                     )
                   })}
                 </div>
@@ -434,14 +431,10 @@ export const OfficeSelectionStep = ({
                           >
                             <span
                               aria-hidden="true"
-                              className={`mt-0.5 flex size-5 shrink-0 items-center justify-center ${
-                                isSelected ? 'text-blue-600' : 'text-slate-300'
-                              }`}
+                              className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-input text-primary"
                             >
-                              {isSelected ? (
-                                <CheckCircle2 className="size-5 fill-blue-600 text-white" />
-                              ) : (
-                                <Circle className="size-5" />
+                              {isSelected && (
+                                <span className="size-2 rounded-full bg-current" />
                               )}
                             </span>
                             <span className="flex-1 space-y-1">
@@ -466,13 +459,14 @@ export const OfficeSelectionStep = ({
 
         {showResults ? (
           <div className="text-center">
-            <button
+            <Button
               type="button"
+              variant="link"
+              size="small"
               onClick={onCantFindOffice}
-              className="text-sm font-semibold text-blue-600 hover:underline"
             >
               I don&apos;t see my office
-            </button>
+            </Button>
           </div>
         ) : null}
       </div>
