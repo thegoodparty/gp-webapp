@@ -8,7 +8,7 @@ import {
   dateFromNonStandardUSFormatString,
   isSameDay,
 } from 'helpers/dateHelper'
-import type { ManualOfficeForm } from './newOnboardingTypes'
+import type { ManualOfficeForm } from './onboardingTypes'
 
 interface ManualOfficeEntryStepProps {
   value: ManualOfficeForm | undefined

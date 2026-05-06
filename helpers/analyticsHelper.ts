@@ -88,7 +88,7 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
-    WelcomeContinued: 'Onboarding - Welcome Continued',
+    WelcomeCompleted: 'Onboarding - Welcome Completed',
     BallotStatusCompleted: 'Onboarding - Ballot Status Completed',
     PartySelectionCompleted: 'Onboarding - Party Selection Completed',
     OfficeSelectionCompleted: 'Onboarding - Office Selection Completed',

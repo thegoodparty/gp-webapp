@@ -68,22 +68,22 @@ export interface OnboardingAnswers {
   manualOfficeForm?: ManualOfficeForm
 }
 
-export interface NewOnboardingStepContext {
+export interface OnboardingStepContext {
   answers: OnboardingAnswers
 }
 
-export interface NewOnboardingStep {
+export interface OnboardingStepConfig {
   id: OnboardingStepId
   eyebrow: string
   title: string
   description: string
   summary: string
   whyWeAsk?: string
-  shouldSkip?: (context: NewOnboardingStepContext) => boolean
-  isValid?: (context: NewOnboardingStepContext) => boolean
+  shouldSkip?: (context: OnboardingStepContext) => boolean
+  isValid?: (context: OnboardingStepContext) => boolean
 }
 
-export interface NewOnboardingPayload {
+export interface OnboardingPayload {
   version: 1
   officeSelection: {
     mode: OnboardingOfficePath | null

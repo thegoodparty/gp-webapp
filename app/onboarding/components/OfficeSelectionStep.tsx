@@ -7,8 +7,8 @@ import { CheckCircle2, Circle, Loader2 } from 'lucide-react'
 import { useId, useMemo, useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import type { Race } from '../../[slug]/[step]/components/ballotOffices/types'
-import type { SelectedOffice } from './newOnboardingTypes'
+import type { Race } from '../[slug]/[step]/components/ballotOffices/types'
+import type { SelectedOffice } from './onboardingTypes'
 
 interface OfficeSelectionStepProps {
   zip: string | undefined
@@ -33,6 +33,8 @@ const FILTER_PRIORITY: Record<string, number> = {
   Judge: 5,
   Other: 6,
 }
+
+const DEPRIORITIZED_CATEGORIES = new Set(['Judge', 'Other'])
 
 const FILTER_BUCKETS: ReadonlyArray<{
   label: string
@@ -195,17 +197,21 @@ export const OfficeSelectionStep = ({
 
   const races = useMemo(() => query.data ?? [], [query.data])
 
-  const filterOptions = useMemo<FilterOption[]>(() => {
+  const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>()
     for (const race of races) {
       const label = getBucketLabel(race)
       counts.set(label, (counts.get(label) ?? 0) + 1)
     }
-    const opts: FilterOption[] = Array.from(counts.entries()).map(
+    return counts
+  }, [races])
+
+  const filterOptions = useMemo<FilterOption[]>(() => {
+    const opts: FilterOption[] = Array.from(categoryCounts.entries()).map(
       ([label, count]) => ({ label, value: label, count }),
     )
     return sortFilters(opts)
-  }, [races])
+  }, [categoryCounts])
 
   const filteredRaces = useMemo(() => {
     let working = races
@@ -216,8 +222,19 @@ export const OfficeSelectionStep = ({
       const fuse = new Fuse(working, FUSE_OPTIONS)
       working = fuse.search(nameFilter.trim()).map((result) => result.item)
     }
-    return working
-  }, [races, activeFilter, nameFilter])
+    const rank = (label: string): [number, number] => {
+      const deprioritized = DEPRIORITIZED_CATEGORIES.has(label) ? 1 : 0
+      const count = categoryCounts.get(label) ?? 0
+      return [deprioritized, -count]
+    }
+    return [...working].sort((a, b) => {
+      const [da, ca] = rank(getBucketLabel(a))
+      const [db, cb] = rank(getBucketLabel(b))
+      if (da !== db) return da - db
+      if (ca !== cb) return ca - cb
+      return getBucketLabel(a).localeCompare(getBucketLabel(b))
+    })
+  }, [races, activeFilter, nameFilter, categoryCounts])
 
   const officesByYear = useMemo(
     () => groupByYear(filteredRaces),
@@ -314,14 +331,6 @@ export const OfficeSelectionStep = ({
             ) : null}
 
             <div className="flex flex-col gap-3">
-              <p className="text-sm leading-5 text-slate-500">
-                {activeFilter !== ''
-                  ? `${filteredCount} office${filteredCount === 1 ? '' : 's'}`
-                  : `${totalOffices} office${
-                      totalOffices === 1 ? '' : 's'
-                    } showing. Please select your office type.`}
-              </p>
-
               {filterOptions.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {filterOptions.map((option) => {
@@ -357,6 +366,13 @@ export const OfficeSelectionStep = ({
                 aria-label="Available offices"
                 className="space-y-6"
               >
+                <p className="text-sm leading-5 text-slate-500">
+                  {activeFilter !== ''
+                    ? `${filteredCount} office${filteredCount === 1 ? '' : 's'}`
+                    : `${totalOffices} office${
+                        totalOffices === 1 ? '' : 's'
+                      } showing. Please select your office.`}
+                </p>
                 {Array.from(officesByYear.entries()).map(
                   ([year, yearRaces]) => (
                     <div

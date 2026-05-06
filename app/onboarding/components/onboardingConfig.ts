@@ -1,6 +1,6 @@
-import type { NewOnboardingStep, NonEmptyArray } from './newOnboardingTypes'
+import type { OnboardingStepConfig, NonEmptyArray } from './onboardingTypes'
 
-export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
+export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'welcome',
     eyebrow: 'Campaign plan setup',
@@ -103,4 +103,4 @@ export const NEW_ONBOARDING_STEPS: NonEmptyArray<NewOnboardingStep> = [
   },
 ]
 
-export const firstNewOnboardingStepId = NEW_ONBOARDING_STEPS[0].id
+export const firstOnboardingStepId = ONBOARDING_STEPS[0].id

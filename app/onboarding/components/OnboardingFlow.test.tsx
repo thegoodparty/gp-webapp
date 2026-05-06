@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import NewOnboardingFlow from './NewOnboardingFlow'
-import { NEW_ONBOARDING_STEPS } from './newOnboardingConfig'
+import OnboardingFlow from './OnboardingFlow'
+import { ONBOARDING_STEPS } from './onboardingConfig'
 import {
   getNextOnboardingStep,
   getOnboardingPayload,
   getPreviousOnboardingStep,
   getVisibleOnboardingSteps,
-} from './newOnboardingHelpers'
+} from './onboardingHelpers'
 
 const renderFlow = () =>
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <NewOnboardingFlow />
+      <OnboardingFlow />
     </QueryClientProvider>,
   )
 
@@ -28,21 +28,21 @@ describe('new onboarding flow shell', () => {
 
   it('routes structured office users through structured calculation steps', () => {
     expect(
-      getNextOnboardingStep(NEW_ONBOARDING_STEPS, 'office-selection', {
+      getNextOnboardingStep(ONBOARDING_STEPS, 'office-selection', {
         officePath: 'structured',
       })?.id,
     ).toBe('path-to-victory')
   })
 
   it('routes manual office users through manual entry and skips structured calculation steps', () => {
-    const visibleStepIds = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, {
+    const visibleStepIds = getVisibleOnboardingSteps(ONBOARDING_STEPS, {
       officePath: 'manual',
       manualOffice: true,
       unmatchedOffice: true,
     }).map((step) => step.id)
 
     expect(
-      getNextOnboardingStep(NEW_ONBOARDING_STEPS, 'office-selection', {
+      getNextOnboardingStep(ONBOARDING_STEPS, 'office-selection', {
         officePath: 'manual',
       })?.id,
     ).toBe('manual-office-entry')
@@ -138,14 +138,11 @@ describe('new onboarding flow shell', () => {
     }
 
     expect(
-      getPreviousOnboardingStep(NEW_ONBOARDING_STEPS, 'pledge', answers)?.id,
+      getPreviousOnboardingStep(ONBOARDING_STEPS, 'pledge', answers)?.id,
     ).toBe('manual-office-entry')
     expect(
-      getNextOnboardingStep(
-        NEW_ONBOARDING_STEPS,
-        'manual-office-entry',
-        answers,
-      )?.id,
+      getNextOnboardingStep(ONBOARDING_STEPS, 'manual-office-entry', answers)
+        ?.id,
     ).toBe('pledge')
   })
 })

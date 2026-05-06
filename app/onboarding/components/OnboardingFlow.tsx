@@ -30,11 +30,8 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
-import {
-  NEW_ONBOARDING_STEPS,
-  firstNewOnboardingStepId,
-} from './newOnboardingConfig'
-import { getVisibleOnboardingSteps } from './newOnboardingHelpers'
+import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
+import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
@@ -48,12 +45,12 @@ import { RadioCardGroup, type RadioCardOption } from './RadioCardGroup'
 import type {
   BallotStatus,
   ManualOfficeForm,
-  NewOnboardingStep,
+  OnboardingStepConfig,
   OnboardingAnswers,
   OnboardingStepId,
   PartyAffiliation,
   SelectedOffice,
-} from './newOnboardingTypes'
+} from './onboardingTypes'
 
 type OnboardingUpdateAttribute = {
   key: string
@@ -272,7 +269,7 @@ const StepProgress = ({
 )
 
 interface StepBodyProps {
-  activeStep: NewOnboardingStep
+  activeStep: OnboardingStepConfig
   answers: OnboardingAnswers
   updateAnswers: (answers: Partial<OnboardingAnswers>) => void
   onCantFindOffice: () => void
@@ -409,7 +406,7 @@ const StepBody = ({
   )
 }
 
-export default function NewOnboardingFlow({
+export default function OnboardingFlow({
   campaign: initialCampaign = null,
 }: {
   campaign?: Campaign | null
@@ -420,7 +417,7 @@ export default function NewOnboardingFlow({
   const [user] = useUser()
   const [answers, setAnswers] = useState<OnboardingAnswers>({})
   const [activeStepId, setActiveStepId] = useState<OnboardingStepId>(
-    firstNewOnboardingStepId,
+    firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
@@ -429,7 +426,7 @@ export default function NewOnboardingFlow({
   const [isP2vLoading, setIsP2vLoading] = useState(true)
   const queryClient = useQueryClient()
 
-  const visibleSteps = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, answers)
+  const visibleSteps = getVisibleOnboardingSteps(ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
     0,
     visibleSteps.findIndex((step) => step.id === activeStepId),
@@ -757,7 +754,7 @@ export default function NewOnboardingFlow({
   const goNext = async () => {
     if (!canContinue) return
     if (activeStep.id === 'welcome') {
-      trackEvent(EVENTS.Onboarding.WelcomeContinued, {
+      trackEvent(EVENTS.Onboarding.WelcomeCompleted, {
         campaignId: campaign?.id,
       })
     }
@@ -848,7 +845,7 @@ export default function NewOnboardingFlow({
       unmatchedOffice: true,
       structuredOffice: undefined,
     }))
-    const visibleAfter = getVisibleOnboardingSteps(NEW_ONBOARDING_STEPS, {
+    const visibleAfter = getVisibleOnboardingSteps(ONBOARDING_STEPS, {
       ...answers,
       officePath: 'manual',
     })

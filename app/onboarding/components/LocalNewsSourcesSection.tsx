@@ -83,11 +83,13 @@ export const LocalNewsSourcesSection = ({
     const indexByType = new Map<OutletType, number>()
     for (const outlet of outlets) {
       const existingIndex = indexByType.get(outlet.type)
-      if (existingIndex === undefined) {
+      const existingGroup =
+        existingIndex !== undefined ? groups[existingIndex] : undefined
+      if (existingGroup) {
+        existingGroup.outlets.push(outlet)
+      } else {
         indexByType.set(outlet.type, groups.length)
         groups.push({ type: outlet.type, outlets: [outlet] })
-      } else {
-        groups[existingIndex].outlets.push(outlet)
       }
     }
     return groups
