@@ -418,9 +418,6 @@ export default function OnboardingFlow({
   const [contextCampaign] = useCampaign()
   const campaign = contextCampaign ?? initialCampaign
   const [user] = useUser()
-  const validStepIds = new Set<OnboardingStepId>(
-    ONBOARDING_STEPS.map((s) => s.id),
-  )
   // Only hydrate from campaign if explicitly resuming (not on first onboarding visit)
   // If the router has ?resume=1 or similar, you could use that; for now, always start fresh
   const [answers, setAnswers] = useState<OnboardingAnswers>({})
