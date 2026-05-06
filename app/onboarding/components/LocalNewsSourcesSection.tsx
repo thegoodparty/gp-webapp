@@ -50,7 +50,7 @@ export { localNewsQueryOptions }
 
 const typeIcon: Record<OutletType, React.JSX.Element> = {
   [OUTLET_TYPE.PRINT]: (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-components-input-active">
       <LuNewspaper className="size-5" />
     </span>
   ),
@@ -97,12 +97,12 @@ const LocalNewsHeader = ({
   jurisdiction,
 }: LocalNewsHeaderProps): React.JSX.Element => (
   <div className="space-y-2">
-    <h2 className="text-2xl font-semibold text-slate-950">
+    <h2 className="text-2xl font-semibold text-foreground">
       Local News Sources
     </h2>
-    <p className="text-sm leading-6 text-slate-500">
+    <p className="text-sm leading-6 text-muted-foreground">
       These are the local news sources we&apos;re monitoring for{' '}
-      <span className="font-semibold text-slate-950">{jurisdiction}</span> for
+      <span className="font-semibold text-foreground">{jurisdiction}</span> for
       campaign insights. You will be able to add / change and customize these
       later in your campaign plan.
     </p>
@@ -135,8 +135,8 @@ const OutletRow = ({
   >
     {typeIcon[outlet.type]}
     <div className="min-w-0 flex-1">
-      <h3 className="text-base font-semibold text-slate-950">{outlet.name}</h3>
-      <p className="mt-1 text-sm leading-6 text-slate-500">
+      <h3 className="text-base font-semibold text-foreground">{outlet.name}</h3>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">
         {outlet.description}
       </p>
     </div>
@@ -196,7 +196,7 @@ const OutletGroupCard = ({
   const additionalCount = group.outlets.length - COLLAPSED_OUTLETS_VISIBLE
 
   return (
-    <Card className="rounded-xl border-slate-200 shadow-none">
+    <Card className="rounded-xl border-base-border shadow-none">
       <CardContent className="flex flex-col gap-4 px-4 py-3">
         {visibleOutlets.map((outlet, index) => (
           <OutletRow
@@ -284,14 +284,14 @@ export const LocalNewsSourcesSection = ({
     if (query.isPending) return <LocalNewsSkeleton />
     if (query.error) {
       return (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           We couldn&apos;t load local news sources right now.
         </p>
       )
     }
     if (outlets.length === 0) {
       return (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           No local news sources found for this area yet.
         </p>
       )

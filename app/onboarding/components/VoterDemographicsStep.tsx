@@ -73,13 +73,13 @@ export const VoterDemographicsStep = ({
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-slate-950">
+        <h2 className="text-2xl font-semibold text-foreground">
           Voter Demographics
         </h2>
         {locationLabel ? (
-          <p className="text-sm leading-6 text-slate-500">
+          <p className="text-sm leading-6 text-muted-foreground">
             A snapshot of who lives, votes, and pays attention in{' '}
-            <span className="font-semibold text-slate-950">
+            <span className="font-semibold text-foreground">
               {locationLabel}
             </span>
             .

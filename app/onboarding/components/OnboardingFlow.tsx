@@ -196,7 +196,7 @@ const WhyWeAsk = ({
   title = 'Why we ask',
   children,
 }: WhyWeAskProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-[--base-border] p-5 flex flex-col gap-2">
+  <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
       <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
         {title}
       </span>
@@ -235,17 +235,17 @@ const StepBody = ({
           {welcomeCards.map(({ title, description, Icon }) => (
             <Card
               key={title}
-              className="rounded-xl border-slate-200 text-left shadow-none"
+              className="rounded-xl border-base-border text-left shadow-none"
             >
               <CardContent className="space-y-4 p-6">
                 <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div className="space-y-2">
-                  <h2 className="text-base leading-6 font-semibold text-slate-950">
+                  <h2 className="text-base leading-6 font-semibold text-foreground">
                     {title}
                   </h2>
-                  <p className="text-sm leading-6 text-slate-500">
+                  <p className="text-sm leading-6 text-muted-foreground">
                     {description}
                   </p>
                 </div>
@@ -253,9 +253,9 @@ const StepBody = ({
             </Card>
           ))}
         </div>
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-muted-foreground">
           Ready? Hit{' '}
-          <span className="font-semibold text-slate-950">Continue</span> to get
+          <span className="font-semibold text-foreground">Continue</span> to get
           started.
         </p>
       </div>
@@ -337,8 +337,8 @@ const StepBody = ({
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
-      <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
+    <div className="rounded-lg border border-base-border bg-slate-50 p-5">
+      <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
     </div>
   )
 }
@@ -866,7 +866,7 @@ export default function OnboardingFlow({
   }
 
   return (
-    <div className="min-h-screen bg-white pb-28 text-slate-950">
+    <div className="min-h-screen bg-white pb-28 text-foreground">
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div>
           <Stepper
@@ -891,19 +891,19 @@ export default function OnboardingFlow({
                 <div className="space-y-4">
                   {activeStep.id === 'welcome' ||
                   activeStep.id === 'pledge' ? null : (
-                    <p className="text-sm font-semibold text-blue-600">
+                    <p className="text-sm font-semibold text-components-input-active">
                       {activeStep.eyebrow}
                     </p>
                   )}
-                  <h1 className="text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
+                  <h1 className="text-4xl leading-[1.08] font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
-                  <p className="text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                  <p className="text-lg leading-8 text-muted-foreground sm:text-base sm:leading-7">
                     {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
                       <>
                         We use historical voter data and proprietary models to
                         get the most accurate projections for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -914,7 +914,7 @@ export default function OnboardingFlow({
                         We crunch the latest voter data, along with proprietary
                         behavior models, and local news to prioritize the issues
                         voters care about for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -959,7 +959,7 @@ export default function OnboardingFlow({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white">
+      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-white">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
           <Button
             type="button"

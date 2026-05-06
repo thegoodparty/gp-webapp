@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input, Label, Skeleton } from '@styleguide'
+import { Button, Input, Label, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { Loader2 } from 'lucide-react'
@@ -178,7 +178,7 @@ const RaceListSkeleton = () => (
 )
 
 const EmptyState = ({ message }: { message: string }) => (
-  <div className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-base text-slate-700">
+  <div className="rounded-xl border border-dashed border-base-border px-4 py-8 text-center text-base text-foreground">
     {message}
   </div>
 )
@@ -273,13 +273,6 @@ export const OfficeSelectionStep = ({
     handleSearch()
   }
 
-  const handleSelectRace = (race: Race) => {
-    if (selected?.raceId === race.id) {
-      onSelect(undefined)
-    } else {
-      onSelect(toSelectedOffice(race))
-    }
-  }
 
   const showResults = Boolean(submittedZip) && query.isSuccess
   const totalOffices = races.length
@@ -290,7 +283,7 @@ export const OfficeSelectionStep = ({
       <div className="space-y-6 text-left">
         <form className="space-y-2" noValidate onSubmit={handleSubmit}>
           <Label
-            className="text-sm font-medium text-slate-900"
+            className="text-sm font-medium text-foreground"
             htmlFor={zipInputId}
           >
             Zip code
@@ -383,12 +376,16 @@ export const OfficeSelectionStep = ({
                 }
               />
             ) : (
-              <div
-                role="radiogroup"
+              <RadioGroup
                 aria-label="Available offices"
-                className="space-y-6"
+                className="flex flex-col space-y-6"
+                value={selected?.raceId ?? ''}
+                onValueChange={(raceId) => {
+                  const race = races.find((r) => r.id === raceId)
+                  if (race) onSelect(toSelectedOffice(race))
+                }}
               >
-                <p className="text-sm leading-5 text-slate-500">
+                <p className="text-sm leading-5 text-muted-foreground">
                   {activeFilter !== ''
                     ? `${filteredCount} office${filteredCount === 1 ? '' : 's'}`
                     : `${totalOffices} office${
@@ -405,54 +402,30 @@ export const OfficeSelectionStep = ({
                     >
                       <div className="flex items-center gap-3">
                         <span
-                          className="shrink-0 text-sm text-slate-500"
+                          className="shrink-0 text-sm text-muted-foreground"
                           data-testid="race-form-year-header"
                         >
                           {year}
                         </span>
-                        <div className="h-px flex-1 bg-slate-200" />
+                        <div className="h-px flex-1 bg-base-border" />
                       </div>
                       {yearRaces.map((race) => {
-                        const isSelected = selected?.raceId === race.id
                         const positionName = race.position?.name ?? 'Office'
                         const cityLabel = race.city ? ` — ${race.city}` : ''
                         return (
-                          <button
-                            type="button"
+                          <RadioCardItem
                             key={race.id}
-                            role="radio"
-                            aria-checked={isSelected}
-                            onClick={() => handleSelectRace(race)}
-                            className={`flex w-full cursor-pointer items-start gap-3 rounded-md border bg-white p-4 text-left transition-colors hover:border-slate-300 ${
-                              isSelected
-                                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
-                                : 'border-slate-200'
-                            }`}
-                          >
-                            <span
-                              aria-hidden="true"
-                              className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-input text-primary"
-                            >
-                              {isSelected && (
-                                <span className="size-2 rounded-full bg-current" />
-                              )}
-                            </span>
-                            <span className="flex-1 space-y-1">
-                              <span className="block text-sm font-semibold text-slate-950">
-                                {positionName}
-                                {cityLabel}
-                              </span>
-                              <span className="block text-xs text-slate-500">
-                                {formatElectionDate(race.election?.electionDay)}
-                              </span>
-                            </span>
-                          </button>
+                            value={race.id}
+                            id={`race-${race.id}`}
+                            title={`${positionName}${cityLabel}`}
+                            description={formatElectionDate(race.election?.electionDay)}
+                          />
                         )
                       })}
                     </div>
                   ),
                 )}
-              </div>
+              </RadioGroup>
             )}
           </div>
         ) : null}
