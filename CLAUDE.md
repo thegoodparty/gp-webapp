@@ -156,6 +156,8 @@ Before implementing a pattern manually (wrapper divs, absolute positioning, ad-h
 
 Use Radix `ToggleGroup` (`@radix-ui/react-toggle-group`) for filter pills and any toggleable selection UI. Never use `Button` with `aria-pressed` for this pattern — `ToggleGroup` provides correct semantics, roving focus, and controlled state out of the box.
 
+Always pass a defined `value` to controlled Radix components — never use `value={someState || undefined}` to express "nothing selected." That pattern toggles the component between controlled and uncontrolled modes on every deselect, causing internal state desync. Use `value={someState}` and let `""` mean nothing selected.
+
 ### Icons
 
 Always use `lucide-react` for icons. Never use `react-icons` or other icon libraries. Check `lucide-react` for an equivalent before considering any alternative.
