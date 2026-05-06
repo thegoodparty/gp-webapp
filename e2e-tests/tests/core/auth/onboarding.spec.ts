@@ -95,8 +95,13 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
   await page.getByLabel(/zip code/i).fill('82001')
   await page.getByRole('button', { name: /search/i }).click()
 
-  const officeGroup = page.getByRole('radiogroup', { name: /available offices/i })
-  await officeGroup.getByRole('radio').first().waitFor({ state: 'visible', timeout: 30000 })
+  const officeGroup = page.getByRole('radiogroup', {
+    name: /available offices/i,
+  })
+  await officeGroup
+    .getByRole('radio')
+    .first()
+    .waitFor({ state: 'visible', timeout: 30000 })
   await officeGroup.getByRole('radio').first().click()
 
   await clickContinue(page)
