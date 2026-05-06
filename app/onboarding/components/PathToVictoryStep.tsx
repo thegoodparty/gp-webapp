@@ -21,6 +21,7 @@ const CHECKLIST_ITEMS = [
   'Calculating the votes you need to win',
 ] as const
 
+const WIN_NUMBER_RANGE_PCT = 0.15
 const REVEAL_INTERVAL_MS = 700
 const RESULTS_HOLD_MS = 600
 
@@ -174,18 +175,20 @@ const ChecklistItem = ({
   isChecked,
 }: ChecklistItemProps): React.JSX.Element => (
   <li
-    className={`flex items-center gap-3 rounded-lg border bg-white px-4 py-3 transition-opacity ${
-      isChecked ? 'border-slate-200 opacity-100' : 'border-slate-100 opacity-60'
+    className={`flex items-center gap-3 rounded-lg border bg-base-surface px-4 py-3 transition-opacity ${
+      isChecked
+        ? 'border-base-border opacity-100'
+        : 'border-base-border opacity-60'
     }`}
   >
     <span
       className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
-        isChecked ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-300'
+        isChecked ? 'bg-blue-600 text-white' : 'bg-muted text-muted-foreground'
       }`}
     >
       <Check className="size-4" aria-hidden="true" />
     </span>
-    <span className="text-sm leading-6 text-slate-700">{text}</span>
+    <span className="text-sm leading-6 text-foreground">{text}</span>
   </li>
 )
 
@@ -200,16 +203,16 @@ const BuildingPathToVictory = ({
 }: BuildingPathToVictoryProps): React.JSX.Element => (
   <Card className="mx-auto max-w-2xl rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
     <CardContent className="space-y-6 p-8 text-center">
-      <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+      <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-blue-100 text-components-input-active">
         <Sparkles className="size-5" aria-hidden="true" />
       </span>
       <div className="space-y-2">
-        <h2 className="text-2xl leading-8 font-bold text-slate-950">
+        <h2 className="text-2xl leading-8 font-bold text-foreground">
           Building your path to victory
         </h2>
-        <p className="text-sm leading-6 text-slate-500">
+        <p className="text-sm leading-6 text-muted-foreground">
           Crunching real voter data for{' '}
-          <span className="font-semibold text-slate-950">{officeName}</span>
+          <span className="font-semibold text-foreground">{officeName}</span>
         </p>
       </div>
       <ul className="space-y-3 text-left">
@@ -226,8 +229,8 @@ const BuildingPathToVictory = ({
 )
 
 const MetricsUnavailable = (): React.JSX.Element => (
-  <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center">
-    <p className="text-sm leading-6 text-slate-700">
+  <div className="rounded-lg border border-base-border bg-muted p-6 text-center">
+    <p className="text-sm leading-6 text-foreground">
       We couldn&apos;t calculate vote projections for your district yet.
       We&apos;ll keep working on it in the background.
     </p>
@@ -242,22 +245,34 @@ interface WinNumberHeroCardProps {
 const WinNumberHeroCard = ({
   winNumber,
   officeName,
-}: WinNumberHeroCardProps): React.JSX.Element => (
-  <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
-    <CardContent className="space-y-2 p-8 text-center">
-      <p className="text-6xl leading-none font-bold text-slate-950 sm:text-7xl">
-        {numberFormatter(winNumber)}
-      </p>
-      <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase">
-        Votes needed to win
-      </p>
-      <p className="text-base font-semibold text-slate-950">{officeName}</p>
-      <p className="pt-2 text-xs text-slate-500">
-        *Depending on the election&apos;s turnout
-      </p>
-    </CardContent>
-  </Card>
-)
+}: WinNumberHeroCardProps): React.JSX.Element => {
+  const lowEstimate = Math.max(
+    0,
+    Math.round(winNumber * (1 - WIN_NUMBER_RANGE_PCT)),
+  )
+  const highEstimate = Math.round(winNumber * (1 + WIN_NUMBER_RANGE_PCT))
+
+  return (
+    <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
+      <CardContent className="space-y-2 p-8 text-center">
+        <p className="text-6xl leading-none font-bold text-foreground sm:text-7xl">
+          {numberFormatter(winNumber)}
+        </p>
+        <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
+          Projected votes needed to win (50% + 1)
+        </p>
+        <p className="text-base font-semibold text-foreground">{officeName}</p>
+        <p className="pt-2 text-xs text-muted-foreground">
+          Projected range:{' '}
+          <span className="font-semibold text-foreground">
+            {numberFormatter(lowEstimate)}–{numberFormatter(highEstimate)}
+          </span>{' '}
+          (~95% confidence)
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
 
 interface ProjectionStepProps {
   index: number
@@ -272,15 +287,15 @@ const ProjectionStep = ({
   description,
   value,
 }: ProjectionStepProps): React.JSX.Element => (
-  <li className="flex items-start gap-4 rounded-xl border border-slate-200 p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-500">
+  <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
       {index}
     </span>
     <div className="flex-1">
-      <p className="text-sm font-semibold text-slate-950">{title}</p>
-      <p className="text-xs text-slate-500">{description}</p>
+      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
     </div>
-    <span className="text-base font-bold text-slate-950">{value}</span>
+    <span className="text-base font-bold text-foreground">{value}</span>
   </li>
 )
 
@@ -300,7 +315,7 @@ const ProjectionExplanation = ({
 
   return (
     <div>
-      <p className="mb-3 text-sm font-medium text-slate-500">
+      <p className="mb-3 text-sm font-medium text-muted-foreground">
         Here&apos;s how our projections work:
       </p>
       <ol className="space-y-3">

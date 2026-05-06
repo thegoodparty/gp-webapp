@@ -25,9 +25,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'party-affiliation',
     eyebrow: 'Candidate eligibility',
-    title: 'Are you running with an official party affiliation?',
+    title: 'Are you running with an official party designation?',
     description:
-      'Party affiliation determines whether the candidate can continue with GoodParty.org support.',
+      'Party designation determines whether the candidate can continue with GoodParty.org support.',
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:

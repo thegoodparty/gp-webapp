@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
-import { LuUsersRound } from 'react-icons/lu'
+import { UsersRound } from 'lucide-react'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 import { NumberInsight } from 'app/polls/onboarding/components/NumberInsight'
@@ -76,13 +76,13 @@ export const VoterDemographicsStep = ({
       <TopVoterIssuesSection city={city} state={state} office={office} />
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-slate-950">
+        <h2 className="text-2xl font-semibold text-foreground">
           Voter Demographics
         </h2>
         {locationLabel ? (
-          <p className="text-sm leading-6 text-slate-500">
+          <p className="text-sm leading-6 text-muted-foreground">
             A snapshot of who lives, votes, and pays attention in{' '}
-            <span className="font-semibold text-slate-950">
+            <span className="font-semibold text-foreground">
               {locationLabel}
             </span>
             .
@@ -93,7 +93,7 @@ export const VoterDemographicsStep = ({
       <NumberInsight
         title="Total Voters"
         value={chartData.totalConstituents || 0}
-        icon={<LuUsersRound />}
+        icon={<UsersRound />}
         isLoading={isLoading}
         error={error}
         testID="onboarding-total-voters"

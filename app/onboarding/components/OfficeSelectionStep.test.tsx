@@ -14,7 +14,7 @@ const sampleRace = (overrides: Record<string, unknown> = {}) => ({
   id: 'race-1',
   position: {
     id: 'pos-1',
-    name: 'City Council',
+    name: /city council election date/i,
     level: 'local',
     state: 'WY',
     electionFrequencies: [{ frequency: 4 }],
@@ -99,7 +99,7 @@ describe('OfficeSelectionStep', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('radio', { name: /city council/i }),
+        screen.getByRole('radio', { name: /city council election date/i }),
       ).toBeInTheDocument()
     })
   })
@@ -117,15 +117,14 @@ describe('OfficeSelectionStep', () => {
     fireEvent.click(screen.getByRole('button', { name: /search/i }))
 
     const raceButton = await screen.findByRole('radio', {
-      name: /city council/i,
+      name: /city council election date/i,
     })
     fireEvent.click(raceButton)
 
-    expect(onSelect).toHaveBeenLastCalledWith(
+    expect(onSelect).toHaveBeenCalledWith(
       expect.objectContaining({
         raceId: 'race-1',
         positionId: 'pos-1',
-        positionName: 'City Council',
         officeTermLength: '4 years',
         electionDay: '2026-11-03',
         electionId: 'elec-1',

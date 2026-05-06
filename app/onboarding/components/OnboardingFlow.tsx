@@ -1,15 +1,19 @@
 'use client'
 
-import { Button, Card, CardContent } from '@styleguide'
 import {
-  ArrowLeft,
-  ArrowRight,
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  Stepper,
+} from '@styleguide'
+import {
   CalendarCheck,
-  Compass,
+  CircleAlert,
   Target,
   UsersRound,
   Wand2,
-  X,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -141,41 +145,20 @@ const PartyAffiliationStep = ({
   value,
   onChange,
 }: PartyAffiliationStepProps): React.JSX.Element => {
-  const [dismissedFor, setDismissedFor] = useState<PartyAffiliation | null>(
-    null,
-  )
-  const showBlocker = isMajorPartyAffiliation(value) && dismissedFor !== value
-
   return (
     <div className="space-y-4">
-      {showBlocker ? (
-        <div
-          role="alert"
-          className="relative flex items-start gap-4 rounded-lg border border-red-200 bg-red-50 p-5 pr-12 text-left"
-        >
-          <div className="flex-1 space-y-2">
-            <p className="text-sm leading-6 font-semibold text-red-700">
-              Sorry, GoodParty.org is only for non-partisan and independent
-              candidates.
-            </p>
-          </div>
-          <button
-            type="button"
-            aria-label="Dismiss"
-            onClick={() => setDismissedFor(value ?? null)}
-            className="absolute top-3 right-3 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-100 hover:text-slate-600"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </button>
-        </div>
+      {isMajorPartyAffiliation(value) ? (
+        <Alert variant="destructive" icon={<CircleAlert />}>
+          <AlertDescription>
+            Sorry, GoodParty.org is only for non-partisan and independent
+            candidates.
+          </AlertDescription>
+        </Alert>
       ) : null}
       <RadioCardGroup
         name="party-affiliation"
         value={value}
-        onChange={(next) => {
-          setDismissedFor(null)
-          onChange(next)
-        }}
+        onChange={onChange}
         options={partyAffiliationOptions}
       />
     </div>
@@ -220,61 +203,12 @@ const WhyWeAsk = ({
   title = 'Why we ask',
   children,
 }: WhyWeAskProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-slate-200 p-5">
-    <div className="mb-3 flex items-center gap-2">
-      <Compass className="size-4 text-slate-400" aria-hidden="true" />
-      <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
-        {title}
-      </span>
-    </div>
-    <p className="text-sm leading-6 text-slate-700">{children ?? text}</p>
+  <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
+    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+      {title}
+    </span>
+    <p className="text-sm text-foreground">{children ?? text}</p>
   </aside>
-)
-
-interface StepProgressProps {
-  currentStep: number
-  numberOfSteps: number
-}
-
-const StepProgress = ({
-  currentStep,
-  numberOfSteps,
-}: StepProgressProps): React.JSX.Element => (
-  <div
-    className="space-y-3"
-    role="progressbar"
-    aria-label="Onboarding progress"
-    aria-valuemin={1}
-    aria-valuemax={numberOfSteps}
-    aria-valuenow={currentStep}
-  >
-    <div className="flex justify-end text-sm font-medium text-slate-500">
-      Step {currentStep} of {numberOfSteps}
-    </div>
-    <div
-      className="grid gap-2"
-      style={{
-        gridTemplateColumns: `repeat(${numberOfSteps}, minmax(0, 1fr))`,
-      }}
-    >
-      {Array.from({ length: numberOfSteps }, (_, index) => {
-        const isFilled = index < currentStep
-        return (
-          <div
-            key={index}
-            className="relative h-1.5 overflow-hidden rounded-full bg-slate-100"
-          >
-            <div
-              className={`absolute inset-0 origin-left rounded-full bg-blue-600 transition-transform duration-500 ease-out ${
-                isFilled ? 'scale-x-100' : 'scale-x-0'
-              }`}
-              style={{ transitionDelay: `${index * 60}ms` }}
-            />
-          </div>
-        )
-      })}
-    </div>
-  </div>
 )
 
 interface StepBodyProps {
@@ -309,27 +243,25 @@ const StepBody = ({
           {welcomeCards.map(({ title, description, Icon }) => (
             <Card
               key={title}
-              className="rounded-xl border-slate-200 text-left shadow-none"
+              className="rounded-xl border-base-border text-left shadow-none"
             >
-              <CardContent className="space-y-4 p-6">
+              <CardContent className="space-y-4">
                 <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div className="space-y-2">
-                  <h2 className="text-base leading-6 font-semibold text-slate-950">
+                  <h2 className="text-base font-semibold text-foreground">
                     {title}
                   </h2>
-                  <p className="text-sm leading-6 text-slate-500">
-                    {description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-muted-foreground">
           Ready? Hit{' '}
-          <span className="font-semibold text-slate-950">Continue</span> to get
+          <span className="font-semibold text-foreground">Continue</span> to get
           started.
         </p>
       </div>
@@ -412,8 +344,8 @@ const StepBody = ({
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
-      <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
+    <div className="rounded-lg border border-base-border bg-muted p-5">
+      <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
     </div>
   )
 }
@@ -496,6 +428,10 @@ export default function OnboardingFlow({
     },
     [liveCampaign, campaign, user?.id],
   )
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [activeStepId])
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
@@ -945,16 +881,17 @@ export default function OnboardingFlow({
   }
 
   return (
-    <div className="min-h-screen bg-white pb-28 text-slate-950">
-      <div className="fixed inset-x-0 top-14 z-40 border-b border-slate-100 bg-white/95 backdrop-blur">
+    <div className="min-h-screen bg-base-surface pb-28 text-foreground">
+      <div className="fixed top-14 left-0 right-0 z-10 border-b border-slate-100 bg-base-surface">
         <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
-          <StepProgress
+          <Stepper
+            variant="bar"
             currentStep={activeStepNumber}
-            numberOfSteps={visibleSteps.length}
+            totalSteps={visibleSteps.length}
           />
         </div>
       </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-24 pb-6 sm:px-8 sm:pt-28 sm:pb-8">
+      <main className="mx-auto w-full max-w-4xl px-4 pt-28 pb-6 sm:px-8 sm:pb-8">
         <div>
           <div
             className={`grid grid-cols-1 gap-8${
@@ -970,15 +907,15 @@ export default function OnboardingFlow({
             >
               {isP2vBlocking ? null : (
                 <div className="space-y-4">
-                  <h1 className="text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
+                  <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
-                  <p className="text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                  <p className="text-lg text-muted-foreground sm:text-base">
                     {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
                       <>
                         We use historical voter data and proprietary models to
                         get the most accurate projections for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -989,7 +926,7 @@ export default function OnboardingFlow({
                         We crunch the latest voter data, along with proprietary
                         behavior models, and local news to prioritize the issues
                         voters care about for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -1042,16 +979,14 @@ export default function OnboardingFlow({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white">
+      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
           <Button
             type="button"
             variant="ghost"
             size="large"
-            icon={<ArrowLeft aria-hidden="true" />}
             onClick={goBack}
             disabled={!previousStep}
-            className="px-0 text-slate-500 disabled:opacity-50"
           >
             Back
           </Button>
@@ -1059,11 +994,8 @@ export default function OnboardingFlow({
             type="button"
             variant="default"
             size="large"
-            icon={<ArrowRight aria-hidden="true" />}
-            iconPosition="right"
             onClick={goNext}
             disabled={!canContinue}
-            className="min-w-36"
           >
             {nextStep
               ? 'Continue'
