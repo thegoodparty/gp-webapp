@@ -4,7 +4,6 @@ import { Alert, AlertDescription, Button, Card, CardContent, Stepper } from '@st
 import {
   CalendarCheck,
   CircleAlert,
-  Compass,
   Target,
   UsersRound,
   Wand2,
@@ -197,14 +196,11 @@ const WhyWeAsk = ({
   title = 'Why we ask',
   children,
 }: WhyWeAskProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-slate-200 p-5">
-    <div className="mb-3 flex items-center gap-2">
-      <Compass className="size-4 text-slate-400" aria-hidden="true" />
-      <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
+  <aside className="rounded-xl border border-[--base-border] p-5 flex flex-col gap-2">
+      <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
         {title}
       </span>
-    </div>
-    <p className="text-sm leading-6 text-slate-700">{children ?? text}</p>
+    <p className="text-sm text-foreground">{children ?? text}</p>
   </aside>
 )
 
