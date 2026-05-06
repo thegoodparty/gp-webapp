@@ -1,5 +1,4 @@
 import type {
-  OnboardingPayload,
   OnboardingStepConfig,
   NonEmptyArray,
   OnboardingAnswers,
@@ -39,15 +38,3 @@ export const getPreviousOnboardingStep = (
   const activeIndex = visibleSteps.findIndex((step) => step.id === activeStepId)
   return activeIndex > 0 ? visibleSteps[activeIndex - 1] ?? null : null
 }
-
-export const getOnboardingPayload = (
-  answers: OnboardingAnswers,
-): OnboardingPayload => ({
-  version: 1,
-  officeSelection: {
-    mode: answers.officePath ?? null,
-    manualOffice: answers.manualOffice === true,
-    unmatchedOffice: answers.unmatchedOffice === true,
-  },
-  answers,
-})

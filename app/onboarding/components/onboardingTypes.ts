@@ -83,14 +83,4 @@ export interface OnboardingStepConfig {
   isValid?: (context: OnboardingStepContext) => boolean
 }
 
-export interface OnboardingPayload {
-  version: 1
-  officeSelection: {
-    mode: OnboardingOfficePath | null
-    manualOffice: boolean
-    unmatchedOffice: boolean
-  }
-  answers: OnboardingAnswers
-}
-
 export type NonEmptyArray<T> = readonly [T, ...T[]]

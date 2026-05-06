@@ -5,7 +5,6 @@ import OnboardingFlow from './OnboardingFlow'
 import { ONBOARDING_STEPS } from './onboardingConfig'
 import {
   getNextOnboardingStep,
-  getOnboardingPayload,
   getPreviousOnboardingStep,
   getVisibleOnboardingSteps,
 } from './onboardingHelpers'
@@ -49,30 +48,6 @@ describe('new onboarding flow shell', () => {
     expect(visibleStepIds).toContain('manual-office-entry')
     expect(visibleStepIds).not.toContain('path-to-victory')
     expect(visibleStepIds).not.toContain('voter-demographics')
-  })
-
-  it('keeps onboarding answers in a flexible payload with office mode flags', () => {
-    expect(
-      getOnboardingPayload({
-        officePath: 'manual',
-        manualOffice: true,
-        unmatchedOffice: true,
-        ballotStatus: 'considering',
-      }),
-    ).toEqual({
-      version: 1,
-      officeSelection: {
-        mode: 'manual',
-        manualOffice: true,
-        unmatchedOffice: true,
-      },
-      answers: {
-        officePath: 'manual',
-        manualOffice: true,
-        unmatchedOffice: true,
-        ballotStatus: 'considering',
-      },
-    })
   })
 
   it('disables continue on the ballot-status step until a status is selected', async () => {

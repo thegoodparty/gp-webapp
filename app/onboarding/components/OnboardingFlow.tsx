@@ -600,7 +600,7 @@ export default function OnboardingFlow({
       } catch (error: unknown) {
         reportErrorToSentry(error as Error, {
           context: 'onboarding.persistStructuredOffice.patchOrganization',
-          campaignId: campaign?.id,
+          campaignId: liveCampaign?.id ?? campaign?.id,
         })
         return false
       }
@@ -771,6 +771,7 @@ export default function OnboardingFlow({
   }
 
   const persistPledgeAndComplete = async (): Promise<boolean> => {
+    const effectiveCampaignId = liveCampaign?.id ?? campaign?.id
     trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
     const updated = await updateCampaign([
       { key: 'details.pledged', value: true },
@@ -783,14 +784,14 @@ export default function OnboardingFlow({
     } catch (error: unknown) {
       reportErrorToSentry(error as Error, {
         context: 'onboarding.persistPledgeAndComplete.launchCampaign',
-        campaignId: campaign?.id,
+        campaignId: effectiveCampaignId,
       })
       return false
     }
     trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
     trackEvent(EVENTS.Onboarding.PledgeCompleted, {
       pledgeVersion: PLEDGE_VERSION,
-      campaignId: campaign?.id,
+      campaignId: effectiveCampaignId,
     })
     if (user?.id) {
       await identifyUser(user.id, {
