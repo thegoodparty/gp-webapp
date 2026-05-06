@@ -133,6 +133,11 @@ async function completePledgeStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', { level: 1, name: /pledge/i }),
   ).toBeVisible()
-  await clickContinue(page)
+  const submit = page
+    .getByRole('button', { name: /agree.*create my plan/i })
+    .first()
+  await expect(submit).toBeVisible({ timeout: 15000 })
+  await expect(submit).toBeEnabled()
+  await submit.click()
   await page.waitForURL(/\/dashboard/, { timeout: 15000 })
 }
