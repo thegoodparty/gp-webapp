@@ -410,8 +410,8 @@ export const OfficeSelectionStep = ({
                   totalOffices === 0
                     ? "We couldn't find any offices for that ZIP. Try a different ZIP or enter your office manually below."
                     : activeFilter || nameFilter.trim()
-                      ? 'No offices match that filter. Try clearing filters or another office type.'
-                      : 'No offices available right now. Please try again or enter your office manually below.'
+                    ? 'No offices match that filter. Try clearing filters or another office type.'
+                    : 'No offices available right now. Please try again or enter your office manually below.'
                 }
               />
             ) : (
