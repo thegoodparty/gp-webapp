@@ -1,10 +1,9 @@
 'use client'
 
-import { Button, Input, Label, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
+import { Button, Input, InputWithButton, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
-import { Loader2 } from 'lucide-react'
-import { useId, useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { reportErrorToSentry } from '@shared/sentry'
@@ -190,7 +189,6 @@ export const OfficeSelectionStep = ({
   onSelect,
   onCantFindOffice,
 }: OfficeSelectionStepProps): React.JSX.Element => {
-  const zipInputId = useId()
   const [zipInput, setZipInput] = useState(zip ?? '')
   const [submittedZip, setSubmittedZip] = useState<string | undefined>(zip)
   const [nameFilter, setNameFilter] = useState('')
@@ -281,41 +279,27 @@ export const OfficeSelectionStep = ({
   return (
     <>
       <div className="space-y-6 text-left">
-        <form className="space-y-2" noValidate onSubmit={handleSubmit}>
-          <Label
-            className="text-sm font-medium text-foreground"
-            htmlFor={zipInputId}
-          >
-            Zip code
-          </Label>
-          <div className="flex items-center gap-2">
-            <Input
-              id={zipInputId}
-              inputMode="numeric"
-              maxLength={5}
-              pattern="[0-9]{5}"
-              placeholder="ZIP"
-              value={zipInput}
-              onChange={(event) =>
-                setZipInput(event.target.value.replace(/\D/g, ''))
-              }
-              aria-invalid={
-                query.isError || (Boolean(zipInput) && !canSearch) || undefined
-              }
-              className="bg-base-surface"
-            />
-            <Button
-              type="submit"
-              variant="secondary"
-              disabled={!canSearch || query.isFetching}
-            >
-              {query.isFetching ? (
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              ) : (
-                'Search'
-              )}
-            </Button>
-          </div>
+        <form noValidate onSubmit={handleSubmit}>
+          <InputWithButton
+            label="Zip code"
+            inputMode="numeric"
+            maxLength={5}
+            pattern="[0-9]{5}"
+            placeholder="ZIP"
+            value={zipInput}
+            onChange={(event) =>
+              setZipInput(event.target.value.replace(/\D/g, ''))
+            }
+            aria-invalid={
+              query.isError || (Boolean(zipInput) && !canSearch) || undefined
+            }
+            buttonLabel="Search"
+            buttonProps={{
+              type: 'submit',
+              disabled: !canSearch || query.isFetching,
+              loading: query.isFetching,
+            }}
+          />
         </form>
 
         {!submittedZip && !query.isFetching ? (
