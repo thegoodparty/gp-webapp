@@ -16,17 +16,6 @@ export const getVisibleOnboardingSteps = (
   return firstVisible ? [firstVisible, ...remainingVisible] : [steps[0]]
 }
 
-export const getActiveOnboardingStep = (
-  steps: NonEmptyArray<OnboardingStepConfig>,
-  activeStepId: OnboardingStepId,
-  answers: OnboardingAnswers,
-): OnboardingStepConfig => {
-  const visibleSteps = getVisibleOnboardingSteps(steps, answers)
-  return (
-    visibleSteps.find((step) => step.id === activeStepId) ?? visibleSteps[0]
-  )
-}
-
 export const getNextOnboardingStep = (
   steps: NonEmptyArray<OnboardingStepConfig>,
   activeStepId: OnboardingStepId,

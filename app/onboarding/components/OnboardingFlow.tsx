@@ -421,21 +421,11 @@ export default function OnboardingFlow({
   const validStepIds = new Set<OnboardingStepId>(
     ONBOARDING_STEPS.map((s) => s.id),
   )
-  const initialStoredStep = (
-    initialCampaign?.data as { currentStep?: string } | undefined
-  )?.currentStep
-  const initialStoredAnswers = (
-    initialCampaign?.data as { onboarding?: OnboardingAnswers } | undefined
-  )?.onboarding
-  const [answers, setAnswers] = useState<OnboardingAnswers>(
-    initialStoredAnswers && typeof initialStoredAnswers === 'object'
-      ? initialStoredAnswers
-      : {},
-  )
+  // Only hydrate from campaign if explicitly resuming (not on first onboarding visit)
+  // If the router has ?resume=1 or similar, you could use that; for now, always start fresh
+  const [answers, setAnswers] = useState<OnboardingAnswers>({})
   const [activeStepId, setActiveStepId] = useState<OnboardingStepId>(
-    initialStoredStep && validStepIds.has(initialStoredStep as OnboardingStepId)
-      ? (initialStoredStep as OnboardingStepId)
-      : firstOnboardingStepId,
+    firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
   const isAdvancingRef = useRef(false)
@@ -579,7 +569,7 @@ export default function OnboardingFlow({
       { key: 'details.raceId', value: office.raceId },
       { key: 'details.state', value: office.state },
       { key: 'details.city', value: office.city },
-      { key: 'details.district', value: null },
+      { key: 'details.district', value: '' },
       { key: 'details.officeTermLength', value: office.officeTermLength },
       { key: 'details.ballotLevel', value: office.level },
       {
@@ -676,9 +666,8 @@ export default function OnboardingFlow({
       { key: 'details.raceId', value: null },
       { key: 'details.electionId', value: null },
       { key: 'details.ballotOffice', value: null },
-      { key: 'details.ballotLevel', value: null },
       { key: 'details.partisanType', value: null },
-      { key: 'details.primaryElectionDate', value: null },
+      { key: 'details.primaryElectionDate', value: '' },
       { key: 'details.primaryElectionId', value: null },
       { key: 'details.hasPrimary', value: null },
       { key: 'details.filingPeriodsStart', value: null },

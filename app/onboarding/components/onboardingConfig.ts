@@ -63,8 +63,16 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     isValid: ({ answers }) => {
       const f = answers.manualOfficeForm
       if (!f) return false
+      const validTermLengths = ['2 years', '3 years', '4 years', '6 years']
       if (
-        !(f.office && f.state && f.city && f.officeTermLength && f.electionDate)
+        !(
+          f.office &&
+          f.state &&
+          f.city &&
+          f.officeTermLength &&
+          validTermLengths.includes(f.officeTermLength) &&
+          f.electionDate
+        )
       ) {
         return false
       }
