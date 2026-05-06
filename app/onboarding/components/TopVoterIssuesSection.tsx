@@ -117,7 +117,7 @@ export const TopVoterIssuesSection = ({
 
   const issues = query.data?.issues ?? []
 
-  if (!query.isPending && !query.error && issues.length === 0) {
+  if (!query.isPending && issues.length === 0) {
     return null
   }
 
