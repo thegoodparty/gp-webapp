@@ -418,11 +418,27 @@ export default function OnboardingFlow({
   const [contextCampaign] = useCampaign()
   const campaign = contextCampaign ?? initialCampaign
   const [user] = useUser()
-  const [answers, setAnswers] = useState<OnboardingAnswers>({})
+  const validStepIds = new Set<OnboardingStepId>(
+    ONBOARDING_STEPS.map((s) => s.id),
+  )
+  const initialStoredStep = (
+    initialCampaign?.data as { currentStep?: string } | undefined
+  )?.currentStep
+  const initialStoredAnswers = (
+    initialCampaign?.data as { onboarding?: OnboardingAnswers } | undefined
+  )?.onboarding
+  const [answers, setAnswers] = useState<OnboardingAnswers>(
+    initialStoredAnswers && typeof initialStoredAnswers === 'object'
+      ? initialStoredAnswers
+      : {},
+  )
   const [activeStepId, setActiveStepId] = useState<OnboardingStepId>(
-    firstOnboardingStepId,
+    initialStoredStep && validStepIds.has(initialStoredStep as OnboardingStepId)
+      ? (initialStoredStep as OnboardingStepId)
+      : firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
+  const [isAdvancing, setIsAdvancing] = useState(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
     initialCampaign,
   )
@@ -446,7 +462,8 @@ export default function OnboardingFlow({
     liveCampaign?.organization?.customPositionName ||
     liveCampaign?.office ||
     null
-  const canContinue = isActiveStepValid && !isSavingOffice && !isP2vBlocking
+  const canContinue =
+    isActiveStepValid && !isSavingOffice && !isP2vBlocking && !isAdvancing
 
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
@@ -588,11 +605,19 @@ export default function OnboardingFlow({
     const resolvedOrgSlug = campaign ? `campaign-${campaign.id}` : undefined
 
     if (resolvedOrgSlug && office.positionId) {
-      await clientRequest('PATCH /v1/organizations/:slug', {
-        slug: resolvedOrgSlug,
-        ballotReadyPositionId: office.positionId,
-        customPositionName: null,
-      })
+      try {
+        await clientRequest('PATCH /v1/organizations/:slug', {
+          slug: resolvedOrgSlug,
+          ballotReadyPositionId: office.positionId,
+          customPositionName: null,
+        })
+      } catch (error: unknown) {
+        reportErrorToSentry(error as Error, {
+          context: 'onboarding.persistStructuredOffice.patchOrganization',
+          campaignId: campaign?.id,
+        })
+        return false
+      }
     }
 
     if (campaign) {
@@ -677,10 +702,18 @@ export default function OnboardingFlow({
     if (campaign) {
       const updated = await updateCampaign(baseAttr)
       if (updated === false) return false
-      await clientRequest('PATCH /v1/organizations/:slug', {
-        slug: `campaign-${campaign.id}`,
-        customPositionName,
-      })
+      try {
+        await clientRequest('PATCH /v1/organizations/:slug', {
+          slug: `campaign-${campaign.id}`,
+          customPositionName,
+        })
+      } catch (error: unknown) {
+        reportErrorToSentry(error as Error, {
+          context: 'onboarding.persistManualOffice.patchOrganization',
+          campaignId: campaign.id,
+        })
+        return false
+      }
       await identifyUser(user?.id, {
         ...trackingProperties,
         officeType: 'manual',
@@ -781,7 +814,16 @@ export default function OnboardingFlow({
   }
 
   const goNext = async () => {
-    if (!canContinue) return
+    if (!canContinue || isAdvancing) return
+    setIsAdvancing(true)
+    try {
+      await runGoNext()
+    } finally {
+      setIsAdvancing(false)
+    }
+  }
+
+  const runGoNext = async () => {
     if (activeStep.id === 'welcome') {
       trackEvent(EVENTS.Onboarding.WelcomeCompleted, {
         campaignId: campaign?.id,
