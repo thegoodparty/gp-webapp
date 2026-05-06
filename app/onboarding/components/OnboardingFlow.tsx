@@ -1018,8 +1018,7 @@ export default function OnboardingFlow({
               <aside
                 className="md:fixed md:top-36 md:w-[280px]"
                 style={{
-                  right:
-                    'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
+                  right: 'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
                 }}
               >
                 {activeStep.id === 'path-to-victory' ? (
@@ -1031,8 +1030,8 @@ export default function OnboardingFlow({
                           liveCampaign.raceTargetMetrics.winNumber,
                         )} people`
                       : 'your win number'}
-                    , talk to them, and make sure they vote. We&apos;ll show
-                    you exactly what that takes.
+                    , talk to them, and make sure they vote. We&apos;ll show you
+                    exactly what that takes.
                   </WhyWeAsk>
                 ) : (
                   <WhyWeAsk text={activeStep.whyWeAsk} />
