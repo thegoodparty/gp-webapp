@@ -8,6 +8,7 @@ import { NumberInsight } from 'app/polls/onboarding/components/NumberInsight'
 import { DataVisualizationInsight } from 'app/polls/onboarding/components/DataVisualizationInsight'
 import { mapContactsStatsToCharts } from 'app/polls/onboarding/utils/mapContactsStatsToCharts'
 import { LocalNewsSourcesSection } from './LocalNewsSourcesSection'
+import { TopVoterIssuesSection } from './TopVoterIssuesSection'
 
 const onboardingDistrictStatsQueryOptions = (params: {
   ballotReadyPositionId?: string
@@ -72,6 +73,8 @@ export const VoterDemographicsStep = ({
 
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
+      <TopVoterIssuesSection city={city} state={state} />
+
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold text-slate-950">
           Voter Demographics
