@@ -23,7 +23,6 @@ const CHECKLIST_ITEMS = [
 
 const REVEAL_INTERVAL_MS = 700
 const RESULTS_HOLD_MS = 600
-const WIN_NUMBER_RANGE_PCT = 0.15
 
 const METRICS_STATUS = {
   SUCCESS: 'success',
