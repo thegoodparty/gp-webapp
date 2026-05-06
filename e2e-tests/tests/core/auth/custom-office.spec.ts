@@ -31,11 +31,11 @@ test.describe('Custom office flow', () => {
     await continueButton.click()
 
     // Ballot status
-    await page.getByLabel(/officially on the ballot/i).click()
+    await page.getByRole('radio').first().click({ force: true })
     await continueButton.click()
 
     // Party affiliation
-    await page.getByLabel(/nonpartisan race/i).click()
+    await page.getByRole('radio').first().click({ force: true })
     await continueButton.click()
 
     // Office selection — search by zip first

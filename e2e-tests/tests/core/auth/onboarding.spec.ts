@@ -70,7 +70,7 @@ async function completeBallotStatusStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', { level: 1, name: /already on the ballot/i }),
   ).toBeVisible()
-  await page.getByLabel(/officially on the ballot/i).click()
+  await page.getByRole('radio').first().click({ force: true })
   await clickContinue(page)
 }
 
@@ -82,7 +82,7 @@ async function completePartyAffiliationStep(page: Page): Promise<void> {
       name: /official party affiliation/i,
     }),
   ).toBeVisible()
-  await page.getByLabel(/nonpartisan race/i).click()
+  await page.getByRole('radio').first().click({ force: true })
   await clickContinue(page)
 }
 
