@@ -51,6 +51,7 @@ interface PathToVictoryStepProps {
   officeName?: string | null
   onLoadingChange?: (isLoading: boolean) => void
   onMetricsResolved?: (result: MetricsResolution) => void
+  skipReveal?: boolean
 }
 
 const formatOfficeName = (campaign: Campaign | null): string =>
@@ -85,24 +86,28 @@ const useRegisteredVoters = (campaignId: number | undefined) => {
   return registeredVoters
 }
 
-const useChecklistReveal = () => {
-  const [revealedCount, setRevealedCount] = useState(0)
-  const [showResults, setShowResults] = useState(false)
+const useChecklistReveal = (skipReveal: boolean) => {
+  const [revealedCount, setRevealedCount] = useState(
+    skipReveal ? CHECKLIST_ITEMS.length : 0,
+  )
+  const [showResults, setShowResults] = useState(skipReveal)
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount >= CHECKLIST_ITEMS.length) return
     const id = setTimeout(
       () => setRevealedCount((prev) => prev + 1),
       REVEAL_INTERVAL_MS,
     )
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount < CHECKLIST_ITEMS.length) return
     const id = setTimeout(() => setShowResults(true), RESULTS_HOLD_MS)
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   return { revealedCount, showResults }
 }
@@ -258,7 +263,7 @@ interface ProjectionStepProps {
   index: number
   title: string
   description: string
-  value: number
+  value: string
 }
 
 const ProjectionStep = ({
@@ -275,9 +280,7 @@ const ProjectionStep = ({
       <p className="text-sm font-semibold text-slate-950">{title}</p>
       <p className="text-xs text-slate-500">{description}</p>
     </div>
-    <span className="text-base font-bold text-slate-950">
-      {numberFormatter(value)}
-    </span>
+    <span className="text-base font-bold text-slate-950">{value}</span>
   </li>
 )
 
@@ -306,20 +309,20 @@ const ProjectionExplanation = ({
             index={stepIndex++}
             title="Registered voters in your district"
             description="The total pool of voters eligible to cast a ballot in your race."
-            value={registeredVoters}
+            value={numberFormatter(registeredVoters)}
           />
         ) : null}
         <ProjectionStep
           index={stepIndex++}
-          title="Average voter turnout"
-          description="Based on our projections from the last three election cycles."
-          value={projectedTurnout}
+          title="Projected voter turnout"
+          description="The number of voters we expect to cast a ballot based on similar past elections."
+          value={numberFormatter(projectedTurnout)}
         />
         <ProjectionStep
           index={stepIndex++}
-          title="50% + 1 — Votes needed to win"
-          description="A simple majority of who actually votes."
-          value={winNumber}
+          title="Projected votes needed to win (50% + 1)"
+          description="A simple majority of voters who actually cast a ballot."
+          value={numberFormatter(winNumber)}
         />
       </ol>
     </div>
@@ -331,9 +334,10 @@ export const PathToVictoryStep = ({
   officeName: officeNameProp,
   onLoadingChange,
   onMetricsResolved,
+  skipReveal = false,
 }: PathToVictoryStepProps): React.JSX.Element => {
   const registeredVoters = useRegisteredVoters(campaign?.id)
-  const { revealedCount, showResults } = useChecklistReveal()
+  const { revealedCount, showResults } = useChecklistReveal(skipReveal)
 
   const officeName = officeNameProp || formatOfficeName(campaign)
   const metrics = campaign?.raceTargetMetrics ?? null

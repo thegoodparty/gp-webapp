@@ -99,6 +99,17 @@ export type APIEndpoints = {
     }
   }
 
+  'GET /v1/onboarding/voter-issues': {
+    Request: {}
+    Response: {
+      issues: Array<{
+        label: string
+        score: number
+        priority: 'high' | 'medium' | 'low'
+      }>
+    }
+  }
+
   'POST /v1/polls/initial-poll': {
     Request: {
       message: string
