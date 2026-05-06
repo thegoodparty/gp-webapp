@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import OnboardingFlow from './OnboardingFlow'
 import { ONBOARDING_STEPS } from './onboardingConfig'
@@ -75,14 +75,14 @@ describe('new onboarding flow shell', () => {
     })
   })
 
-  it('disables continue on the ballot-status step until a status is selected', () => {
+  it('disables continue on the ballot-status step until a status is selected', async () => {
     renderFlow()
 
     const continueButton = screen.getByRole('button', { name: /continue/i })
     fireEvent.click(continueButton)
 
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         level: 1,
         name: /already on the ballot/i,
       }),
@@ -93,26 +93,28 @@ describe('new onboarding flow shell', () => {
     expect(continueButton).toBeEnabled()
 
     fireEvent.click(continueButton)
-    expect(
-      screen.queryByRole('heading', {
-        level: 1,
-        name: /already on the ballot/i,
-      }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', {
+          level: 1,
+          name: /already on the ballot/i,
+        }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
-  it('blocks continue on party affiliation when a major party is selected', () => {
+  it('blocks continue on party affiliation when a major party is selected', async () => {
     renderFlow()
 
     const continueButton = screen.getByRole('button', { name: /continue/i })
     // welcome -> ballot-status
     fireEvent.click(continueButton)
-    fireEvent.click(screen.getByLabelText(/officially on the ballot/i))
+    fireEvent.click(await screen.findByLabelText(/officially on the ballot/i))
     // ballot-status -> party-affiliation
     fireEvent.click(continueButton)
 
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         level: 1,
         name: /official party affiliation/i,
       }),

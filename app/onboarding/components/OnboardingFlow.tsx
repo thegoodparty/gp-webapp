@@ -12,7 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   createCampaignWithOffice,
@@ -438,7 +438,7 @@ export default function OnboardingFlow({
       : firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
-  const [isAdvancing, setIsAdvancing] = useState(false)
+  const isAdvancingRef = useRef(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
     initialCampaign,
   )
@@ -462,8 +462,7 @@ export default function OnboardingFlow({
     liveCampaign?.organization?.customPositionName ||
     liveCampaign?.office ||
     null
-  const canContinue =
-    isActiveStepValid && !isSavingOffice && !isP2vBlocking && !isAdvancing
+  const canContinue = isActiveStepValid && !isSavingOffice && !isP2vBlocking
 
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
@@ -814,12 +813,12 @@ export default function OnboardingFlow({
   }
 
   const goNext = async () => {
-    if (!canContinue || isAdvancing) return
-    setIsAdvancing(true)
+    if (!canContinue || isAdvancingRef.current) return
+    isAdvancingRef.current = true
     try {
       await runGoNext()
     } finally {
-      setIsAdvancing(false)
+      isAdvancingRef.current = false
     }
   }
 
