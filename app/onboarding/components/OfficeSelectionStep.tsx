@@ -304,7 +304,7 @@ export const OfficeSelectionStep = ({
         </form>
 
         {!submittedZip && !query.isFetching ? (
-          <EmptyState message="Enter your zip code to see offices" />
+          <EmptyState message="Enter your zip code to see offices." />
         ) : null}
 
         {query.isFetching ? <RaceListSkeleton /> : null}
@@ -363,11 +363,7 @@ export const OfficeSelectionStep = ({
                 }}
               >
                 <p className="text-sm leading-5 text-muted-foreground">
-                  {activeFilter !== ''
-                    ? `${filteredCount} office${filteredCount === 1 ? '' : 's'}`
-                    : `${totalOffices} office${
-                        totalOffices === 1 ? '' : 's'
-                      } showing. Please select your office.`}
+                  {`${filteredCount} office${filteredCount === 1 ? '' : 's'} showing. Please select your office.`}
                 </p>
                 {Array.from(officesByYear.entries()).map(
                   ([year, yearRaces]) => (
