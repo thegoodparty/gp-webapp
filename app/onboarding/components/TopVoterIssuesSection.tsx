@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
 import {
@@ -19,12 +19,14 @@ import { reportErrorToSentry } from '@shared/sentry'
 interface TopVoterIssuesSectionProps {
   city?: string
   state?: string
+  office?: string
 }
 
 const VOTER_ISSUES_QUERY_KEY = 'onboarding-voter-issues'
 const VOTER_ISSUES_ROUTE = 'GET /v1/onboarding/voter-issues'
 const SENTRY_CONTEXT_FETCH_ISSUES = 'onboarding.voterIssues.fetch'
 const SKELETON_PLACEHOLDER_COUNT = 3
+const COLLAPSED_ISSUES_VISIBLE = 3
 
 const ISSUE_ICON_BASE =
   'flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600'
@@ -92,8 +94,10 @@ const VoterIssuesSkeleton = (): React.JSX.Element => (
 export const TopVoterIssuesSection = ({
   city,
   state,
+  office,
 }: TopVoterIssuesSectionProps): React.JSX.Element | null => {
   const query = useQuery(voterIssuesQueryOptions())
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     if (!query.error) return
@@ -102,11 +106,13 @@ export const TopVoterIssuesSection = ({
     })
   }, [query.error])
 
-  let jurisdiction = ''
-  if (city && state) {
-    jurisdiction = `${city}, ${state}`
+  let audienceLabel = ''
+  if (office) {
+    audienceLabel = office
+  } else if (city && state) {
+    audienceLabel = `${city}, ${state}`
   } else if (state) {
-    jurisdiction = state
+    audienceLabel = state
   }
 
   const issues = query.data?.issues ?? []
@@ -115,6 +121,11 @@ export const TopVoterIssuesSection = ({
     return null
   }
 
+  const visibleIssues = isExpanded
+    ? issues
+    : issues.slice(0, COLLAPSED_ISSUES_VISIBLE)
+  const additionalCount = issues.length - COLLAPSED_ISSUES_VISIBLE
+
   return (
     <div className="space-y-4 text-left">
       <div className="space-y-1">
@@ -122,27 +133,33 @@ export const TopVoterIssuesSection = ({
           Top issues for your voters
         </h2>
         <p className="text-sm leading-6 text-slate-500">
-          The issues voters{jurisdiction ? ' in ' : ' '}
-          {jurisdiction ? (
-            <span className="font-semibold text-slate-950">{jurisdiction}</span>
-          ) : null}{' '}
-          care about most right now.
+          {audienceLabel ? (
+            <>
+              The issues voters in your race for{' '}
+              <span className="font-semibold text-slate-950">
+                {audienceLabel}
+              </span>{' '}
+              care about most right now.
+            </>
+          ) : (
+            <>The issues your voters care about most right now.</>
+          )}
         </p>
       </div>
 
       {query.isPending ? (
         <VoterIssuesSkeleton />
       ) : (
-        <div className="space-y-3">
-          {issues.map((issue) => (
-            <Card key={issue.label} className="rounded-2xl shadow-none">
-              <CardContent className="space-y-3 p-5">
-                <div className="flex items-start justify-between gap-3">
+        <Card className="rounded-2xl shadow-none">
+          <CardContent className="flex flex-col gap-3 px-4 py-3">
+            {visibleIssues.map((issue) => (
+              <div key={issue.label} className="space-y-2">
+                <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className={ISSUE_ICON_BASE}>
                       {iconForLabel(issue.label)}
                     </span>
-                    <h3 className="text-base font-semibold text-slate-950">
+                    <h3 className="text-sm font-semibold text-slate-950">
                       {issue.label}
                     </h3>
                   </div>
@@ -152,7 +169,7 @@ export const TopVoterIssuesSection = ({
                 </div>
 
                 <div className="space-y-1">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
                     <div
                       className="h-full rounded-full bg-blue-600"
                       style={{ width: `${Math.round(issue.score)}%` }}
@@ -162,10 +179,23 @@ export const TopVoterIssuesSection = ({
                     {Math.round(issue.score)}% voters care
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </div>
+            ))}
+            {additionalCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => setIsExpanded((prev) => !prev)}
+                className="-mb-1 self-center text-sm font-semibold text-primary hover:underline"
+              >
+                {isExpanded
+                  ? 'Show fewer issues'
+                  : `View ${additionalCount} more ${
+                      additionalCount === 1 ? 'issue' : 'issues'
+                    }`}
+              </button>
+            ) : null}
+          </CardContent>
+        </Card>
       )}
     </div>
   )
