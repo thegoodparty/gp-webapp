@@ -887,7 +887,7 @@ export default function OnboardingFlow({
           />
         </div>
       </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-16 pb-6 sm:px-8 sm:pb-8">
+      <main className="mx-auto w-full max-w-4xl px-4 pt-28 pb-6 sm:px-8 sm:pb-8">
         <div>
           <div
             className={`grid grid-cols-1 gap-8${
