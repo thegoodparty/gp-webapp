@@ -51,7 +51,7 @@ const buttonVariants = cva(
       },
       iconPosition: {
         left: '', // Default flex direction
-        right: 'flex-row-reverse',
+        right: '',
       },
     },
     defaultVariants: {

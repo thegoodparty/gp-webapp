@@ -29,6 +29,7 @@ const MessageFallback = ({ message }: MessageFallbackProps) => (
 interface DataVisualizationInsightProps {
   title: string
   data: ChartDataPoint[]
+  description?: string | null
   insight?: string | null
   chartType:
     | 'pie'
@@ -44,6 +45,7 @@ interface DataVisualizationInsightProps {
 export const DataVisualizationInsight = ({
   title,
   data,
+  description,
   insight,
   chartType,
   percentage,
@@ -66,6 +68,11 @@ export const DataVisualizationInsight = ({
             <LuChartLine />
           </div>
         </div>
+        {description ? (
+          <p className="-mt-2 mb-4 text-xs font-normal text-muted-foreground">
+            {description}
+          </p>
+        ) : null}
         <div className="w-full h-auto">
           {showSkeleton && <ChartSkeleton />}
           {showError && <MessageFallback message="Unable to load chart data" />}
