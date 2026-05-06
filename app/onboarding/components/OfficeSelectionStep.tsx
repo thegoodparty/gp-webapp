@@ -102,7 +102,10 @@ const fetchRaces = async (zip: string): Promise<Race[]> => {
 
 const formatElectionDate = (date?: string): string => {
   if (!date) return 'Election date unavailable'
-  const parsed = new Date(date)
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(date)
+  const parsed = match
+    ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+    : new Date(date)
   if (Number.isNaN(parsed.getTime())) return `Election date: ${date}`
   return `Election date: ${parsed.toLocaleDateString('en-US', {
     day: 'numeric',
@@ -368,7 +371,15 @@ export const OfficeSelectionStep = ({
             </div>
 
             {filteredCount === 0 ? (
-              <EmptyState message="No offices match that filter. Try another office type." />
+              <EmptyState
+                message={
+                  totalOffices === 0
+                    ? "We couldn't find any offices for that ZIP. Try a different ZIP or enter your office manually below."
+                    : activeFilter || nameFilter.trim()
+                    ? 'No offices match that filter. Try clearing filters or another office type.'
+                    : 'No offices available right now. Please try again or enter your office manually below.'
+                }
+              />
             ) : (
               <div
                 role="radiogroup"

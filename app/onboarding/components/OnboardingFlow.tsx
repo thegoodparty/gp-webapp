@@ -24,6 +24,8 @@ const ONBOARDING_STEP_COMPLETE = 'onboarding-complete'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -561,6 +563,7 @@ export default function OnboardingFlow({
       { key: 'details.raceId', value: office.raceId },
       { key: 'details.state', value: office.state },
       { key: 'details.city', value: office.city },
+      { key: 'details.district', value: null },
       { key: 'details.officeTermLength', value: office.officeTermLength },
       { key: 'details.ballotLevel', value: office.level },
       {
@@ -588,6 +591,7 @@ export default function OnboardingFlow({
       await clientRequest('PATCH /v1/organizations/:slug', {
         slug: resolvedOrgSlug,
         ballotReadyPositionId: office.positionId,
+        customPositionName: null,
       })
     }
 
@@ -648,6 +652,13 @@ export default function OnboardingFlow({
       { key: 'details.raceId', value: null },
       { key: 'details.electionId', value: null },
       { key: 'details.ballotOffice', value: null },
+      { key: 'details.ballotLevel', value: null },
+      { key: 'details.partisanType', value: null },
+      { key: 'details.primaryElectionDate', value: null },
+      { key: 'details.primaryElectionId', value: null },
+      { key: 'details.hasPrimary', value: null },
+      { key: 'details.filingPeriodsStart', value: null },
+      { key: 'details.filingPeriodsEnd', value: null },
       { key: 'details.state', value: form.state },
       { key: 'details.city', value: form.city },
       { key: 'details.district', value: form.district },
@@ -746,6 +757,15 @@ export default function OnboardingFlow({
       { key: 'data.onboarding', value: answers },
     ])
     if (updated === false) return false
+    try {
+      await clientFetch(apiRoutes.campaign.launch)
+    } catch (error: unknown) {
+      reportErrorToSentry(error as Error, {
+        context: 'onboarding.persistPledgeAndComplete.launchCampaign',
+        campaignId: campaign?.id,
+      })
+      return false
+    }
     trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
     trackEvent(EVENTS.Onboarding.PledgeCompleted, {
       pledgeVersion: PLEDGE_VERSION,
@@ -767,10 +787,11 @@ export default function OnboardingFlow({
         campaignId: campaign?.id,
       })
     }
-    if (activeStep.id === 'path-to-victory' && campaign) {
+    if (activeStep.id === 'path-to-victory' && (liveCampaign || campaign)) {
+      const trackedCampaign = liveCampaign ?? campaign
       trackEvent(EVENTS.Onboarding.PathToVictoryCompleted, {
-        campaignId: campaign.id,
-        winNumber: campaign.raceTargetMetrics?.winNumber ?? 0,
+        campaignId: trackedCampaign?.id,
+        winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
       })
     }
     if (

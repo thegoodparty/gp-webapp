@@ -19,7 +19,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     summary:
       'The answer is stored in onboarding state and can be submitted with the final payload.',
     whyWeAsk:
-      'Party affiliation determines whether the candidate can continue with GoodParty.org support.',
+      'Knowing whether you’re already on the ballot lets us tailor your timeline and the next steps in your campaign plan.',
     isValid: ({ answers }) => Boolean(answers.ballotStatus),
   },
   {
@@ -68,7 +68,10 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
       ) {
         return false
       }
-      const parsed = new Date(f.electionDate)
+      const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(f.electionDate)
+      const parsed = match
+        ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+        : new Date(f.electionDate)
       if (Number.isNaN(parsed.getTime())) return false
       const today = new Date()
       today.setHours(0, 0, 0, 0)

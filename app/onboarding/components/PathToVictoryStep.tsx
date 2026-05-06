@@ -49,7 +49,7 @@ export const PathToVictoryStep = ({
   const [revealedCount, setRevealedCount] = useState(0)
   const [showResults, setShowResults] = useState(false)
   const [registeredVoters, setRegisteredVoters] = useState<number | null>(null)
-  const metricsResolvedRef = useRef(false)
+  const metricsResolvedStatusRef = useRef<'success' | 'error' | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -97,16 +97,17 @@ export const PathToVictoryStep = ({
 
   useEffect(() => {
     if (!showResults) return
-    if (metricsResolvedRef.current) return
+    if (metricsResolvedStatusRef.current === 'success') return
     if (!metrics || winNumber <= 0) {
-      metricsResolvedRef.current = true
+      if (metricsResolvedStatusRef.current === 'error') return
+      metricsResolvedStatusRef.current = 'error'
       onMetricsResolved?.({
         status: 'error',
         reason: !metrics ? 'upstream_error' : 'missing_turnout',
       })
       return
     }
-    metricsResolvedRef.current = true
+    metricsResolvedStatusRef.current = 'success'
     onMetricsResolved?.({
       status: 'success',
       winNumber,
