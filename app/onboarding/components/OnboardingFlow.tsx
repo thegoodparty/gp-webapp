@@ -216,6 +216,7 @@ interface StepBodyProps {
     React.ComponentProps<typeof PathToVictoryStep>['onMetricsResolved']
   >
   p2vOfficeName: string | null
+  skipP2vReveal: boolean
 }
 
 const StepBody = ({
@@ -227,6 +228,7 @@ const StepBody = ({
   onP2vLoadingChange,
   onP2vMetricsResolved,
   p2vOfficeName,
+  skipP2vReveal,
 }: StepBodyProps): React.JSX.Element => {
   if (activeStep.id === 'welcome') {
     return (
@@ -317,6 +319,7 @@ const StepBody = ({
         officeName={p2vOfficeName}
         onLoadingChange={onP2vLoadingChange}
         onMetricsResolved={onP2vMetricsResolved}
+        skipReveal={skipP2vReveal}
       />
     )
   }
@@ -364,6 +367,8 @@ export default function OnboardingFlow({
     initialCampaign,
   )
   const [isP2vLoading, setIsP2vLoading] = useState(true)
+  const [hasResolvedPathToVictory, setHasResolvedPathToVictory] =
+    useState(false)
   const queryClient = useQueryClient()
 
   const visibleSteps = getVisibleOnboardingSteps(ONBOARDING_STEPS, answers)
@@ -397,6 +402,7 @@ export default function OnboardingFlow({
     (result) => {
       const campaignId = liveCampaign?.id ?? campaign?.id
       if (result.status === 'success') {
+        setHasResolvedPathToVictory(true)
         trackEvent(EVENTS.Onboarding.PathToVictoryUpdated, {
           campaignId,
           projectedTurnout: result.projectedTurnout,
@@ -425,6 +431,7 @@ export default function OnboardingFlow({
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
+    if (hasResolvedPathToVictory) return
     let cancelled = false
     setIsP2vLoading(true)
     void (async () => {
@@ -445,7 +452,7 @@ export default function OnboardingFlow({
     return () => {
       cancelled = true
     }
-  }, [activeStepId])
+  }, [activeStepId, hasResolvedPathToVictory])
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
@@ -871,7 +878,7 @@ export default function OnboardingFlow({
 
   return (
     <div className="min-h-screen bg-base-surface pb-28 text-foreground">
-      <div className="fixed top-14 left-0 right-0 z-10 bg-base-surface">
+      <div className="fixed top-14 left-0 right-0 z-10 border-b border-slate-100 bg-base-surface">
         <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
           <Stepper
             variant="bar"
@@ -882,9 +889,8 @@ export default function OnboardingFlow({
       </div>
       <main className="mx-auto w-full max-w-4xl px-4 pt-16 pb-6 sm:px-8 sm:pb-8">
         <div>
-
           <div
-            className={`mt-8 grid grid-cols-1 gap-8 sm:mt-5${
+            className={`grid grid-cols-1 gap-8${
               activeStep.whyWeAsk && !isP2vBlocking
                 ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
                 : ''
@@ -897,12 +903,6 @@ export default function OnboardingFlow({
             >
               {isP2vBlocking ? null : (
                 <div className="space-y-4">
-                  {activeStep.id === 'welcome' ||
-                  activeStep.id === 'pledge' ? null : (
-                    <p className="text-sm font-semibold text-components-input-active">
-                      {activeStep.eyebrow}
-                    </p>
-                  )}
                   <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
@@ -943,6 +943,7 @@ export default function OnboardingFlow({
                 onP2vLoadingChange={handleP2vLoadingChange}
                 onP2vMetricsResolved={handleP2vMetricsResolved}
                 p2vOfficeName={p2vOfficeName}
+                skipP2vReveal={hasResolvedPathToVictory}
               />
             </section>
 

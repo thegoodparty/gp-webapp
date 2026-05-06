@@ -23,6 +23,7 @@ const CHECKLIST_ITEMS = [
 
 const REVEAL_INTERVAL_MS = 700
 const RESULTS_HOLD_MS = 600
+const WIN_NUMBER_RANGE_PCT = 0.15
 
 const METRICS_STATUS = {
   SUCCESS: 'success',
@@ -51,6 +52,7 @@ interface PathToVictoryStepProps {
   officeName?: string | null
   onLoadingChange?: (isLoading: boolean) => void
   onMetricsResolved?: (result: MetricsResolution) => void
+  skipReveal?: boolean
 }
 
 const formatOfficeName = (campaign: Campaign | null): string =>
@@ -85,24 +87,28 @@ const useRegisteredVoters = (campaignId: number | undefined) => {
   return registeredVoters
 }
 
-const useChecklistReveal = () => {
-  const [revealedCount, setRevealedCount] = useState(0)
-  const [showResults, setShowResults] = useState(false)
+const useChecklistReveal = (skipReveal: boolean) => {
+  const [revealedCount, setRevealedCount] = useState(
+    skipReveal ? CHECKLIST_ITEMS.length : 0,
+  )
+  const [showResults, setShowResults] = useState(skipReveal)
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount >= CHECKLIST_ITEMS.length) return
     const id = setTimeout(
       () => setRevealedCount((prev) => prev + 1),
       REVEAL_INTERVAL_MS,
     )
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount < CHECKLIST_ITEMS.length) return
     const id = setTimeout(() => setShowResults(true), RESULTS_HOLD_MS)
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   return { revealedCount, showResults }
 }
@@ -237,28 +243,40 @@ interface WinNumberHeroCardProps {
 const WinNumberHeroCard = ({
   winNumber,
   officeName,
-}: WinNumberHeroCardProps): React.JSX.Element => (
-  <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
-    <CardContent className="space-y-2 p-8 text-center">
-      <p className="text-6xl leading-none font-bold text-foreground sm:text-7xl">
-        {numberFormatter(winNumber)}
-      </p>
-      <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
-        Votes needed to win
-      </p>
-      <p className="text-base font-semibold text-foreground">{officeName}</p>
-      <p className="pt-2 text-xs text-muted-foreground">
-        *Depending on the election&apos;s turnout
-      </p>
-    </CardContent>
-  </Card>
-)
+}: WinNumberHeroCardProps): React.JSX.Element => {
+  const lowEstimate = Math.max(
+    0,
+    Math.round(winNumber * (1 - WIN_NUMBER_RANGE_PCT)),
+  )
+  const highEstimate = Math.round(winNumber * (1 + WIN_NUMBER_RANGE_PCT))
+
+  return (
+    <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
+      <CardContent className="space-y-2 p-8 text-center">
+        <p className="text-6xl leading-none font-bold text-foreground sm:text-7xl">
+          {numberFormatter(winNumber)}
+        </p>
+        <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
+          Projected votes needed to win (50% + 1)
+        </p>
+        <p className="text-base font-semibold text-foreground">{officeName}</p>
+        <p className="pt-2 text-xs text-muted-foreground">
+          Projected range:{' '}
+          <span className="font-semibold text-foreground">
+            {numberFormatter(lowEstimate)}–{numberFormatter(highEstimate)}
+          </span>{' '}
+          (~95% confidence)
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
 
 interface ProjectionStepProps {
   index: number
   title: string
   description: string
-  value: number
+  value: string
 }
 
 const ProjectionStep = ({
@@ -275,9 +293,7 @@ const ProjectionStep = ({
       <p className="text-sm font-semibold text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>
-    <span className="text-base font-bold text-foreground">
-      {numberFormatter(value)}
-    </span>
+    <span className="text-base font-bold text-foreground">{value}</span>
   </li>
 )
 
@@ -306,20 +322,20 @@ const ProjectionExplanation = ({
             index={stepIndex++}
             title="Registered voters in your district"
             description="The total pool of voters eligible to cast a ballot in your race."
-            value={registeredVoters}
+            value={numberFormatter(registeredVoters)}
           />
         ) : null}
         <ProjectionStep
           index={stepIndex++}
-          title="Average voter turnout"
-          description="Based on our projections from the last three election cycles."
-          value={projectedTurnout}
+          title="Projected voter turnout"
+          description="The number of voters we expect to cast a ballot based on similar past elections."
+          value={numberFormatter(projectedTurnout)}
         />
         <ProjectionStep
           index={stepIndex++}
-          title="50% + 1 — Votes needed to win"
-          description="A simple majority of who actually votes."
-          value={winNumber}
+          title="Projected votes needed to win (50% + 1)"
+          description="A simple majority of voters who actually cast a ballot."
+          value={numberFormatter(winNumber)}
         />
       </ol>
     </div>
@@ -331,9 +347,10 @@ export const PathToVictoryStep = ({
   officeName: officeNameProp,
   onLoadingChange,
   onMetricsResolved,
+  skipReveal = false,
 }: PathToVictoryStepProps): React.JSX.Element => {
   const registeredVoters = useRegisteredVoters(campaign?.id)
-  const { revealedCount, showResults } = useChecklistReveal()
+  const { revealedCount, showResults } = useChecklistReveal(skipReveal)
 
   const officeName = officeNameProp || formatOfficeName(campaign)
   const metrics = campaign?.raceTargetMetrics ?? null

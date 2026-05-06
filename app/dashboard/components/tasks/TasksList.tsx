@@ -27,7 +27,7 @@ import {
   P2P_MODAL_VARIANTS,
 } from '../../shared/P2PUpgradeModal'
 import { ComplianceModal } from '../../shared/ComplianceModal'
-import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
+import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import TaskFlow from './flows/TaskFlow'
 import {
   formatTaskDate,

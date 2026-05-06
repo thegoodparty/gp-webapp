@@ -54,6 +54,13 @@ export type APIEndpoints = {
     }
   }
 
+  'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin': {
+    Request: {
+      pin: string
+    }
+    Response: void
+  }
+
   'GET /v1/elected-office/current': {
     Request: {}
     Response: ElectedOffice
@@ -88,6 +95,17 @@ export type APIEndpoints = {
         name: string
         type: 'TV' | 'print' | 'radio'
         description: string
+      }>
+    }
+  }
+
+  'GET /v1/onboarding/voter-issues': {
+    Request: {}
+    Response: {
+      issues: Array<{
+        label: string
+        score: number
+        priority: 'high' | 'medium' | 'low'
       }>
     }
   }
