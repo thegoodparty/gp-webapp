@@ -49,7 +49,10 @@ describe('TopVoterIssuesSection', () => {
   })
 
   it('renders nothing and reports the error when the request fails', async () => {
-    api.mock('GET /v1/onboarding/voter-issues', { status: 500 })
+    api.mock('GET /v1/onboarding/voter-issues', {
+      status: 500,
+      data: { message: 'boom' },
+    })
 
     const noRetryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
