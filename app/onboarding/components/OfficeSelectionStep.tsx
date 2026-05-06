@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input, InputWithButton, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
+import { Button, FilterPill, FilterPillGroup, Input, InputWithButton, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { Search } from 'lucide-react'
@@ -326,30 +326,21 @@ export const OfficeSelectionStep = ({
               />
             ) : null}
 
-            <div className="flex flex-col gap-3">
-              {filterOptions.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {filterOptions.map((option) => {
-                    const isActive = activeFilter === option.value
-                    return (
-                      <Button
-                        type="button"
-                        key={option.value}
-                        onClick={() => {
-                          setActiveFilter(isActive ? '' : option.value)
-                          onSelect(undefined)
-                        }}
-                        aria-pressed={isActive}
-                        variant={isActive ? 'secondary' : 'outline'}
-                        size="xSmall"
-                      >
-                        {option.label} ({option.count})
-                      </Button>
-                    )
-                  })}
-                </div>
-              ) : null}
-            </div>
+            {filterOptions.length > 0 ? (
+              <FilterPillGroup
+                value={activeFilter}
+                onValueChange={(value) => {
+                  setActiveFilter(value)
+                  onSelect(undefined)
+                }}
+              >
+                {filterOptions.map((option) => (
+                  <FilterPill key={option.value} value={option.value}>
+                    {option.label} ({option.count})
+                  </FilterPill>
+                ))}
+              </FilterPillGroup>
+            ) : null}
 
             {filteredCount === 0 ? (
               <EmptyState
