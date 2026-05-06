@@ -28,6 +28,7 @@ import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
+import { reportErrorToSentry } from '@shared/sentry'
 import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
 import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
@@ -489,8 +490,13 @@ export default function OnboardingFlow({
         if (!cancelled && res.data) {
           setLiveCampaign(res.data)
         }
-      } catch {
-        // leave previous campaign in place
+      } catch (error) {
+        if (!cancelled) {
+          reportErrorToSentry(error as Error, {
+            context: 'onboarding.fetchLiveCampaign',
+            activeStepId,
+          })
+        }
       }
     })()
     return () => {

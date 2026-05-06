@@ -1,9 +1,10 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
 import { LuNewspaper, LuTv, LuRadioTower } from 'react-icons/lu'
 import { clientRequest } from 'gpApi/typed-request'
+import { reportErrorToSentry } from '@shared/sentry'
 
 type OutletType = 'TV' | 'print' | 'radio'
 
@@ -72,6 +73,15 @@ export const LocalNewsSourcesSection = ({
   const [expandedTypes, setExpandedTypes] = useState<Set<OutletType>>(
     () => new Set(),
   )
+
+  useEffect(() => {
+    if (!query.error) return
+    reportErrorToSentry(query.error, {
+      context: 'onboarding.localNews.fetchOutlets',
+      state,
+      office,
+    })
+  }, [query.error, state, office])
 
   const outlets: Outlet[] = useMemo(
     () => query.data?.outlets ?? [],

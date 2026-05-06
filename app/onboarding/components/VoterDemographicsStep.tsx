@@ -1,8 +1,9 @@
 'use client'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { LuUsersRound } from 'react-icons/lu'
 import { clientRequest } from 'gpApi/typed-request'
+import { reportErrorToSentry } from '@shared/sentry'
 import { NumberInsight } from 'app/polls/onboarding/components/NumberInsight'
 import { DataVisualizationInsight } from 'app/polls/onboarding/components/DataVisualizationInsight'
 import { mapContactsStatsToCharts } from 'app/polls/onboarding/utils/mapContactsStatsToCharts'
@@ -41,6 +42,15 @@ export const VoterDemographicsStep = ({
   const query = useQuery(
     onboardingDistrictStatsQueryOptions({ ballotReadyPositionId, districtId }),
   )
+
+  useEffect(() => {
+    if (!query.error) return
+    reportErrorToSentry(query.error, {
+      context: 'onboarding.voterDemographics.fetchStats',
+      ballotReadyPositionId,
+      districtId,
+    })
+  }, [query.error, ballotReadyPositionId, districtId])
 
   const isLoading =
     query.isPending && Boolean(ballotReadyPositionId || districtId)

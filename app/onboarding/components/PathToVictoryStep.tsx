@@ -5,6 +5,7 @@ import { Check, Sparkles } from 'lucide-react'
 import { Card, CardContent } from '@styleguide'
 import { clientRequest } from 'gpApi/typed-request'
 import { numberFormatter } from 'helpers/numberHelper'
+import { reportErrorToSentry } from '@shared/sentry'
 import type { Campaign } from 'helpers/types'
 
 const CHECKLIST_ITEMS = [
@@ -63,14 +64,18 @@ export const PathToVictoryStep = ({
         if (cancelled) return
         setRegisteredVoters(res.data?.totalConstituents ?? null)
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (cancelled) return
         setRegisteredVoters(null)
+        reportErrorToSentry(error as Error, {
+          context: 'onboarding.pathToVictory.fetchContactsStats',
+          campaignId: campaign?.id,
+        })
       })
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [campaign?.id])
 
   const officeName = officeNameProp || formatOfficeName(campaign)
   const location = formatLocation(campaign)

@@ -4,9 +4,10 @@ import { Button, Input, Label, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { CheckCircle2, Circle, Loader2 } from 'lucide-react'
-import { useId, useMemo, useState } from 'react'
+import { useId, useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { reportErrorToSentry } from '@shared/sentry'
 import type { Race } from '../[slug]/[step]/components/ballotOffices/types'
 import type { SelectedOffice } from './onboardingTypes'
 
@@ -194,6 +195,14 @@ export const OfficeSelectionStep = ({
     queryFn: () => fetchRaces(submittedZip as string),
     enabled: Boolean(submittedZip && isZipValid(submittedZip)),
   })
+
+  useEffect(() => {
+    if (!query.error) return
+    reportErrorToSentry(query.error as Error, {
+      context: 'onboarding.officeSelection.fetchRaces',
+      zip: submittedZip,
+    })
+  }, [query.error, submittedZip])
 
   const races = useMemo(() => query.data ?? [], [query.data])
 
