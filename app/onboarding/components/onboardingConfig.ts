@@ -63,9 +63,17 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     isValid: ({ answers }) => {
       const f = answers.manualOfficeForm
       if (!f) return false
-      return Boolean(
-        f.office && f.state && f.city && f.officeTermLength && f.electionDate,
-      )
+      if (
+        !(f.office && f.state && f.city && f.officeTermLength && f.electionDate)
+      ) {
+        return false
+      }
+      const parsed = new Date(f.electionDate)
+      if (Number.isNaN(parsed.getTime())) return false
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      parsed.setHours(0, 0, 0, 0)
+      return parsed >= today
     },
   },
   {

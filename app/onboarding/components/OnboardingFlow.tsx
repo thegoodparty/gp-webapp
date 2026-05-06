@@ -592,6 +592,8 @@ export default function OnboardingFlow({
     }
 
     if (campaign) {
+      const updated = await updateCampaign(attr)
+      if (updated === false) return false
       await identifyUser(user?.id, {
         ...trackingProperties,
         officeType: office.level,
@@ -606,18 +608,9 @@ export default function OnboardingFlow({
         officeName: office.positionName,
         campaignId: campaign.id,
       })
-      const updated = await updateCampaign(attr)
-      return updated !== false
+      return true
     }
 
-    await identifyUser(user?.id, {
-      ...trackingProperties,
-      officeType: office.level,
-    })
-    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
-      ...trackingProperties,
-      officeManuallyInput: false,
-    })
     const createAttr = [
       ...attr,
       ...buildEarlyAnswerAttrs(),
@@ -631,6 +624,14 @@ export default function OnboardingFlow({
     const newCampaign = await createCampaignWithOffice(createAttr)
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    await identifyUser(user?.id, {
+      ...trackingProperties,
+      officeType: office.level,
+    })
+    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
+      ...trackingProperties,
+      officeManuallyInput: false,
+    })
     trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
       zipCode: answers.officeZip,
       officeType: office.level,
@@ -720,10 +721,12 @@ export default function OnboardingFlow({
     affiliation: PartyAffiliation,
   ): Promise<boolean> => {
     const party = partyAffiliationToCampaignParty[affiliation]
-    const updated = await updateCampaign([
-      { key: 'details.party', value: party },
-    ])
-    if (updated === false) return false
+    if (campaign) {
+      const updated = await updateCampaign([
+        { key: 'details.party', value: party },
+      ])
+      if (updated === false) return false
+    }
     trackEvent(EVENTS.Onboarding.PartyStep.Completed, { affiliation: party })
     trackEvent(EVENTS.Onboarding.PartySelectionCompleted, {
       party,
@@ -800,15 +803,17 @@ export default function OnboardingFlow({
         setIsSavingOffice(false)
       }
     }
-    if (activeStep.id === 'ballot-status' && answers.ballotStatus && campaign) {
-      const updated = await updateCampaign([
-        { key: 'details.ballotStatus', value: answers.ballotStatus },
-      ])
-      if (updated === false) return
+    if (activeStep.id === 'ballot-status' && answers.ballotStatus) {
+      if (campaign) {
+        const updated = await updateCampaign([
+          { key: 'details.ballotStatus', value: answers.ballotStatus },
+        ])
+        if (updated === false) return
+      }
       const candidateStage = ballotStatusToCandidateStage[answers.ballotStatus]
       trackEvent(EVENTS.Onboarding.BallotStatusCompleted, {
         candidateStage,
-        campaignId: campaign.id,
+        campaignId: campaign?.id,
       })
       if (user?.id) {
         await identifyUser(user.id, {
@@ -817,11 +822,7 @@ export default function OnboardingFlow({
         })
       }
     }
-    if (
-      activeStep.id === 'party-affiliation' &&
-      answers.partyAffiliation &&
-      campaign
-    ) {
+    if (activeStep.id === 'party-affiliation' && answers.partyAffiliation) {
       const ok = await persistPartyAffiliation(answers.partyAffiliation)
       if (!ok) return
     }

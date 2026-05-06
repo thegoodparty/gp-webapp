@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Check, Sparkles } from 'lucide-react'
 import { Card, CardContent } from '@styleguide'
 import { clientRequest } from 'gpApi/typed-request'
@@ -56,6 +56,7 @@ export const PathToVictoryStep = ({
   const [revealedCount, setRevealedCount] = useState(0)
   const [showResults, setShowResults] = useState(false)
   const [registeredVoters, setRegisteredVoters] = useState<number | null>(null)
+  const metricsResolvedRef = useRef(false)
 
   useEffect(() => {
     let cancelled = false
@@ -104,13 +105,16 @@ export const PathToVictoryStep = ({
 
   useEffect(() => {
     if (!showResults) return
+    if (metricsResolvedRef.current) return
     if (!metrics || winNumber <= 0) {
+      metricsResolvedRef.current = true
       onMetricsResolved?.({
         status: 'error',
         reason: !metrics ? 'upstream_error' : 'missing_turnout',
       })
       return
     }
+    metricsResolvedRef.current = true
     onMetricsResolved?.({
       status: 'success',
       winNumber,
