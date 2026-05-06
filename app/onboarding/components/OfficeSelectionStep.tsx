@@ -6,8 +6,10 @@ import Fuse, { type IFuseOptions } from 'fuse.js'
 import { CheckCircle2, Circle, Loader2 } from 'lucide-react'
 import { useId, useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
 import { reportErrorToSentry } from '@shared/sentry'
+import { useSnackbar } from 'helpers/useSnackbar'
 import type { Race } from '../[slug]/[step]/components/ballotOffices/types'
 import type { SelectedOffice } from './onboardingTypes'
 
@@ -195,6 +197,8 @@ export const OfficeSelectionStep = ({
   const [submittedZip, setSubmittedZip] = useState<string | undefined>(zip)
   const [nameFilter, setNameFilter] = useState('')
   const [activeFilter, setActiveFilter] = useState<string>('')
+  const [hydratingId, setHydratingId] = useState<string | null>(null)
+  const { errorSnackbar } = useSnackbar()
 
   const canSearch = isZipValid(zipInput)
 
@@ -273,12 +277,37 @@ export const OfficeSelectionStep = ({
     handleSearch()
   }
 
-  const handleSelectRace = (race: Race) => {
+  const hydrateRace = async (race: Race): Promise<Race | null> => {
+    if (!race.brPositionId || !race.election?.electionDay || !submittedZip) {
+      errorSnackbar('Could not load this race. Please try a different one.')
+      return null
+    }
+    try {
+      const { data } = await clientRequest(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: race.brPositionId,
+          zip: submittedZip,
+          electionDate: race.election.electionDay,
+        },
+      )
+      return { ...data, id: race.id }
+    } catch {
+      errorSnackbar('Could not load race details. Please try again.')
+      return null
+    }
+  }
+
+  const handleSelectRace = async (race: Race) => {
     if (selected?.raceId === race.id) {
       onSelect(undefined)
-    } else {
-      onSelect(toSelectedOffice(race))
+      return
     }
+    setHydratingId(race.id)
+    const hydrated = await hydrateRace(race)
+    setHydratingId(null)
+    if (!hydrated) return
+    onSelect(toSelectedOffice(hydrated))
   }
 
   const showResults = Boolean(submittedZip) && query.isSuccess
@@ -381,8 +410,8 @@ export const OfficeSelectionStep = ({
                   totalOffices === 0
                     ? "We couldn't find any offices for that ZIP. Try a different ZIP or enter your office manually below."
                     : activeFilter || nameFilter.trim()
-                    ? 'No offices match that filter. Try clearing filters or another office type.'
-                    : 'No offices available right now. Please try again or enter your office manually below.'
+                      ? 'No offices match that filter. Try clearing filters or another office type.'
+                      : 'No offices available right now. Please try again or enter your office manually below.'
                 }
               />
             ) : (
@@ -417,6 +446,7 @@ export const OfficeSelectionStep = ({
                       </div>
                       {yearRaces.map((race) => {
                         const isSelected = selected?.raceId === race.id
+                        const isHydrating = hydratingId === race.id
                         const positionName = race.position?.name ?? 'Office'
                         const cityLabel = race.city ? ` — ${race.city}` : ''
                         return (
@@ -425,8 +455,10 @@ export const OfficeSelectionStep = ({
                             key={race.id}
                             role="radio"
                             aria-checked={isSelected}
+                            aria-busy={isHydrating || undefined}
+                            disabled={hydratingId !== null}
                             onClick={() => handleSelectRace(race)}
-                            className={`flex w-full cursor-pointer items-start gap-3 rounded-md border bg-white p-4 text-left transition-colors hover:border-slate-300 ${
+                            className={`flex w-full cursor-pointer items-start gap-3 rounded-md border bg-white p-4 text-left transition-colors hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60 ${
                               isSelected
                                 ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
                                 : 'border-slate-200'
@@ -438,7 +470,9 @@ export const OfficeSelectionStep = ({
                                 isSelected ? 'text-blue-600' : 'text-slate-300'
                               }`}
                             >
-                              {isSelected ? (
+                              {isHydrating ? (
+                                <Loader2 className="size-5 animate-spin text-blue-600" />
+                              ) : isSelected ? (
                                 <CheckCircle2 className="size-5 fill-blue-600 text-white" />
                               ) : (
                                 <Circle className="size-5" />
