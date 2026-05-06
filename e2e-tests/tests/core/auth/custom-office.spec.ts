@@ -61,7 +61,7 @@ test.describe('Custom office flow', () => {
     await page.locator('select').first().selectOption('NC')
     await page.getByLabel('City, Town Or County').fill('Hendersonville')
     await page.getByLabel('District (If Applicable)').fill('3')
-    await page.getByLabel('Term Length').selectOption('4 years')
+    await page.locator('select').nth(1).selectOption('4 years')
     await page.getByLabel('General Election Date').fill('2030-02-01')
 
     await expect(continueButton).toBeEnabled()

@@ -114,7 +114,7 @@ async function completePathToVictoryStep(page: Page): Promise<void> {
     page.getByRole('heading', { level: 1, name: /votes you need/i }),
   ).toBeVisible({ timeout: 30000 })
   // Wait for the metrics card to render before continuing.
-  await expect(page.getByText(/votes needed to win/i)).toBeVisible({
+  await expect(page.getByText(/votes needed to win/i).first()).toBeVisible({
     timeout: 30000,
   })
   await clickContinue(page)
