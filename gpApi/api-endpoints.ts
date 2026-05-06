@@ -54,6 +54,13 @@ export type APIEndpoints = {
     }
   }
 
+  'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin': {
+    Request: {
+      pin: string
+    }
+    Response: void
+  }
+
   'GET /v1/elected-office/current': {
     Request: {}
     Response: ElectedOffice
