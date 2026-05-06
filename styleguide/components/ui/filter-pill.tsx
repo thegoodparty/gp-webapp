@@ -14,10 +14,14 @@ const pillClass = cn(
 
 const ARROW_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']
 
-type FilterPillGroupProps = Omit<
+type SingleToggleGroupProps = Extract<
   React.ComponentProps<typeof ToggleGroupPrimitive.Root>,
-  'type'
-> & { type?: 'single' }
+  { type: 'single' }
+>
+
+type FilterPillGroupProps = Omit<SingleToggleGroupProps, 'type'> & {
+  type?: 'single'
+}
 
 function FilterPillGroup({
   className,
