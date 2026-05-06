@@ -639,6 +639,7 @@ export default function OnboardingFlow({
     const newCampaign = await createCampaignWithOffice(createAttr)
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
+    setLiveCampaign(newCampaign)
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: office.level,

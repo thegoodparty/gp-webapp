@@ -97,8 +97,9 @@ export const PathToVictoryStep = ({
 
   useEffect(() => {
     if (!showResults) return
-    if (metricsResolvedStatusRef.current !== null) return
+    if (metricsResolvedStatusRef.current === 'success') return
     if (!metrics || winNumber <= 0) {
+      if (metricsResolvedStatusRef.current === 'error') return
       metricsResolvedStatusRef.current = 'error'
       onMetricsResolved?.({
         status: 'error',
