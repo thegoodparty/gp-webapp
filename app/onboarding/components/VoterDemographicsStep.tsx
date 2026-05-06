@@ -61,8 +61,32 @@ export const VoterDemographicsStep = ({
     [query.data],
   )
 
+  let locationLabel = ''
+  if (office) {
+    locationLabel = office
+  } else if (city && state) {
+    locationLabel = `${city}, ${state}`
+  } else if (state) {
+    locationLabel = state
+  }
+
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-semibold text-slate-950">
+          Voter Demographics
+        </h2>
+        {locationLabel ? (
+          <p className="text-sm leading-6 text-slate-500">
+            A snapshot of who lives, votes, and pays attention in{' '}
+            <span className="font-semibold text-slate-950">
+              {locationLabel}
+            </span>
+            .
+          </p>
+        ) : null}
+      </div>
+
       <NumberInsight
         title="Total Voters"
         value={chartData.totalConstituents || 0}
@@ -76,7 +100,7 @@ export const VoterDemographicsStep = ({
         chartType="horizontalGauge"
         percentage={true}
         title="Age Distribution"
-        insight="Tailor your messaging and outreach channels to the age groups most represented in your district."
+        description="Use this to pick the right outreach mix — younger voters lean into SMS and social, older voters respond best to mail and door-knocks."
         data={chartData.ageDistribution}
         isLoading={isLoading}
         error={error}
@@ -86,7 +110,7 @@ export const VoterDemographicsStep = ({
         chartType="pie"
         percentage={true}
         title="Has Children Under 18"
-        insight="Households with kids tend to prioritize schools, safety, and family-focused policies."
+        description="Households with kids prioritize schools, safety, and after-school programs — message and canvas these blocks accordingly."
         data={chartData.presenceOfChildren}
         isLoading={isLoading}
         error={error}
@@ -96,7 +120,7 @@ export const VoterDemographicsStep = ({
         chartType="donut"
         percentage={true}
         title="Homeowner"
-        insight="Homeowners often care most about property taxes, zoning, and neighborhood services."
+        description="Homeowners care about property taxes, zoning, and services — focus door-knocking and direct mail here when those issues are central to your platform."
         data={chartData.homeowner}
         isLoading={isLoading}
         error={error}
@@ -106,7 +130,7 @@ export const VoterDemographicsStep = ({
         chartType="verticalBar"
         percentage={true}
         title="Estimated Income Range"
-        insight="Knowing your district's income mix helps you frame economic issues that resonate with voters."
+        description="Knowing the income mix helps you frame economic messaging in your SMS, email, and canvassing scripts so it lands with each segment."
         data={chartData.estimatedIncomeRange}
         isLoading={isLoading}
         error={error}
@@ -116,7 +140,7 @@ export const VoterDemographicsStep = ({
         chartType="horizontalBar"
         percentage={true}
         title="Education"
-        insight="Education levels shape how voters consume information and which issues feel most urgent."
+        description="Education levels shape how voters consume info — tune the depth and channel of your outreach (SMS, email, literature drops) to match."
         data={chartData.education}
         isLoading={isLoading}
         error={error}

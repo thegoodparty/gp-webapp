@@ -34,13 +34,6 @@ interface PathToVictoryStepProps {
   ) => void
 }
 
-const formatLocation = (campaign: Campaign | null): string => {
-  const city = campaign?.details?.city ?? campaign?.city
-  const state = campaign?.details?.state ?? campaign?.state
-  if (city && state) return `${city}, ${state}`
-  return city || state || 'your district'
-}
-
 const formatOfficeName = (campaign: Campaign | null): string =>
   campaign?.positionName ||
   campaign?.organization?.customPositionName ||
@@ -79,7 +72,6 @@ export const PathToVictoryStep = ({
   }, [campaign?.id])
 
   const officeName = officeNameProp || formatOfficeName(campaign)
-  const location = formatLocation(campaign)
   const metrics = campaign?.raceTargetMetrics ?? null
   const winNumber = metrics?.winNumber ?? 0
   const projectedTurnout = metrics?.projectedTurnout ?? 0
@@ -142,8 +134,8 @@ export const PathToVictoryStep = ({
               Building your path to victory
             </h2>
             <p className="text-sm leading-6 text-slate-500">
-              Crunching real voter data for your district in{' '}
-              <span className="font-semibold text-slate-950">{location}</span>
+              Crunching real voter data for{' '}
+              <span className="font-semibold text-slate-950">{officeName}</span>
             </p>
           </div>
           <ul className="space-y-3 text-left">

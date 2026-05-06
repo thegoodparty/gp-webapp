@@ -125,9 +125,11 @@ export const LocalNewsSourcesSection = ({
           Local News Sources
         </h2>
         <p className="text-sm leading-6 text-slate-500">
-          These are the local news sources we&apos;re monitoring in{' '}
+          These are the local news sources we&apos;re monitoring for{' '}
           <span className="font-semibold text-slate-950">
-            {jurisdictionLabel ?? (city ? `${city}, ${state}` : state)}
+            {office ??
+              jurisdictionLabel ??
+              (city ? `${city}, ${state}` : state)}
           </span>{' '}
           for campaign insights. You will be able to add / change and customize
           these later in your campaign plan.
