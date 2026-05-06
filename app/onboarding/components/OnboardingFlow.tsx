@@ -420,6 +420,10 @@ export default function OnboardingFlow({
   )
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [activeStepId])
+
+  useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
     let cancelled = false
     setIsP2vLoading(true)

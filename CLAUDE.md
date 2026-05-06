@@ -119,6 +119,10 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 - **Ask first** before adding new utilities to `helpers/` (it is already a 50+ file dumping ground; check whether the helper exists). See `gpApi/CLAUDE.md` for fetch-helper rules.
 - **Deploys** are automatic via Vercel on push to `develop` / `qa` / `master`. There is no manual deploy command.
 
+## Navigation
+
+When the active step or view changes in a multi-step flow, always reset scroll position to the top (`window.scrollTo(0, 0)`) via a `useEffect` that watches the active step identifier.
+
 ## Observability
 
 - **Frontend errors → Sentry.** Org slug `goodparty`. https://goodparty.sentry.io.
