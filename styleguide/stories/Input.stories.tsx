@@ -51,9 +51,7 @@ export const Disabled: Story = {
 }
 
 export const WithIcon: Story = {
-  render: () => (
-    <Input icon={<Search />} placeholder="Search..." />
-  ),
+  render: () => <Input icon={<Search />} placeholder="Search..." />,
 }
 
 export const File: Story = {

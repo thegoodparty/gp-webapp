@@ -140,9 +140,7 @@ const OutletRow = ({
         {outlet.description}
       </p>
     </div>
-    <Badge variant="secondary">
-      {typeLabel[outlet.type]}
-    </Badge>
+    <Badge variant="secondary">{typeLabel[outlet.type]}</Badge>
   </div>
 )
 

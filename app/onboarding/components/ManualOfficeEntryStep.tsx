@@ -48,10 +48,8 @@ export const ManualOfficeEntryStep = ({
     !isSameDay(selectedDate, now) &&
     selectedDate < now
 
-  const update =
-    (key: keyof ManualOfficeForm) =>
-    (val: string) =>
-      onChange({ ...form, [key]: val })
+  const update = (key: keyof ManualOfficeForm) => (val: string) =>
+    onChange({ ...form, [key]: val })
 
   const officeId = useId()
   const stateId = useId()
@@ -63,8 +61,7 @@ export const ManualOfficeEntryStep = ({
   return (
     <div className="space-y-6 text-left">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor={officeId}>
-          Office Name        </Label>
+        <Label htmlFor={officeId}>Office Name </Label>
         <Input
           id={officeId}
           value={form.office}
@@ -74,12 +71,8 @@ export const ManualOfficeEntryStep = ({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor={stateId}>
-          State        </Label>
-        <Select
-          value={form.state}
-          onValueChange={update('state')}
-        >
+        <Label htmlFor={stateId}>State </Label>
+        <Select value={form.state} onValueChange={update('state')}>
           <SelectTrigger
             id={stateId}
             className="w-full"
@@ -98,8 +91,7 @@ export const ManualOfficeEntryStep = ({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor={cityId}>
-          City, Town Or County        </Label>
+        <Label htmlFor={cityId}>City, Town Or County </Label>
         <Input
           id={cityId}
           value={form.city}
@@ -119,8 +111,7 @@ export const ManualOfficeEntryStep = ({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor={termId}>
-          Term Length        </Label>
+        <Label htmlFor={termId}>Term Length </Label>
         <Select
           value={form.officeTermLength}
           onValueChange={update('officeTermLength')}
@@ -143,8 +134,7 @@ export const ManualOfficeEntryStep = ({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor={electionDateId}>
-          General Election Date        </Label>
+        <Label htmlFor={electionDateId}>General Election Date </Label>
         <Input
           id={electionDateId}
           type="date"

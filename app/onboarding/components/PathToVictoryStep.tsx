@@ -176,7 +176,9 @@ const ChecklistItem = ({
 }: ChecklistItemProps): React.JSX.Element => (
   <li
     className={`flex items-center gap-3 rounded-lg border bg-base-surface px-4 py-3 transition-opacity ${
-      isChecked ? 'border-base-border opacity-100' : 'border-base-border opacity-60'
+      isChecked
+        ? 'border-base-border opacity-100'
+        : 'border-base-border opacity-60'
     }`}
   >
     <span

@@ -30,9 +30,7 @@ function InputWithButton({
 
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
-      {showLabel && label ? (
-        <Label htmlFor={inputId}>{label}</Label>
-      ) : null}
+      {showLabel && label ? <Label htmlFor={inputId}>{label}</Label> : null}
       <div
         className={cn(
           'flex gap-2',

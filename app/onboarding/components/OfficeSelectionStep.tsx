@@ -1,6 +1,15 @@
 'use client'
 
-import { Button, FilterPill, FilterPillGroup, Input, InputWithButton, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
+import {
+  Button,
+  FilterPill,
+  FilterPillGroup,
+  Input,
+  InputWithButton,
+  RadioCardItem,
+  RadioGroup,
+  Skeleton,
+} from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { Search } from 'lucide-react'
@@ -272,7 +281,6 @@ export const OfficeSelectionStep = ({
     handleSearch()
   }
 
-
   const showResults = Boolean(submittedZip) && query.isSuccess
   const totalOffices = races.length
   const filteredCount = filteredRaces.length
@@ -363,7 +371,9 @@ export const OfficeSelectionStep = ({
                 }}
               >
                 <p className="text-sm text-muted-foreground">
-                  {`${filteredCount} office${filteredCount === 1 ? '' : 's'} showing. Please select yours.`}
+                  {`${filteredCount} office${
+                    filteredCount === 1 ? '' : 's'
+                  } showing. Please select yours.`}
                 </p>
                 {Array.from(officesByYear.entries()).map(
                   ([year, yearRaces]) => (
@@ -391,7 +401,9 @@ export const OfficeSelectionStep = ({
                             value={race.id}
                             id={`race-${race.id}`}
                             title={`${positionName}${cityLabel}`}
-                            description={formatElectionDate(race.election?.electionDay)}
+                            description={formatElectionDate(
+                              race.election?.electionDay,
+                            )}
                           />
                         )
                       })}

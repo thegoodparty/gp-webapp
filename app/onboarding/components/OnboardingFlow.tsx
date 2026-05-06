@@ -1,6 +1,13 @@
 'use client'
 
-import { Alert, AlertDescription, Button, Card, CardContent, Stepper } from '@styleguide'
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  Stepper,
+} from '@styleguide'
 import {
   CalendarCheck,
   CircleAlert,
@@ -197,13 +204,12 @@ const WhyWeAsk = ({
   children,
 }: WhyWeAskProps): React.JSX.Element => (
   <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
-      <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-        {title}
-      </span>
+    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+      {title}
+    </span>
     <p className="text-sm text-foreground">{children ?? text}</p>
   </aside>
 )
-
 
 interface StepBodyProps {
   activeStep: OnboardingStepConfig
@@ -247,9 +253,7 @@ const StepBody = ({
                   <h2 className="text-base font-semibold text-foreground">
                     {title}
                   </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
               </CardContent>
             </Card>
