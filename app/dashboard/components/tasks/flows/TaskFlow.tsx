@@ -41,7 +41,6 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
-import { noopAsync } from '@shared/utils/noop'
 import { useQueryClient } from '@tanstack/react-query'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
@@ -415,7 +414,7 @@ const TaskFlow = ({
                       errorSnackbar(
                         'Campaign could not be created. Please try again.',
                       )
-                      return
+                      return false
                     }
                     trackEvent(
                       EVENTS.Dashboard.VoterContact.CampaignCompleted,
@@ -426,8 +425,9 @@ const TaskFlow = ({
                       },
                     )
                     successSnackbar('Request submitted successfully.')
+                    return true
                   }
-                : noopAsync
+                : async () => true
             }
             isLastStep
           />
