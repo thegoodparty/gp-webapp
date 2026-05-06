@@ -309,10 +309,6 @@ const ProjectionExplanation = ({
   winNumber,
 }: ProjectionExplanationProps): React.JSX.Element => {
   const showRegisteredVoters = registeredVoters !== null && registeredVoters > 0
-  const turnoutPercent =
-    showRegisteredVoters && registeredVoters
-      ? Math.round((projectedTurnout / registeredVoters) * 100)
-      : null
   let stepIndex = 1
 
   return (
@@ -329,18 +325,10 @@ const ProjectionExplanation = ({
             value={numberFormatter(registeredVoters)}
           />
         ) : null}
-        {turnoutPercent !== null ? (
-          <ProjectionStep
-            index={stepIndex++}
-            title="Average voter turnout"
-            description="Based on the last three election cycles in your district."
-            value={`${turnoutPercent}%`}
-          />
-        ) : null}
         <ProjectionStep
           index={stepIndex++}
           title="Projected voter turnout"
-          description="Registered voters multiplied by the average turnout rate."
+          description="The number of voters we expect to cast a ballot based on similar past elections."
           value={numberFormatter(projectedTurnout)}
         />
         <ProjectionStep
