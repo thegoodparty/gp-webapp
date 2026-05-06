@@ -895,10 +895,10 @@ export default function OnboardingFlow({
                       {activeStep.eyebrow}
                     </p>
                   )}
-                  <h1 className="text-4xl leading-[1.08] font-bold text-foreground sm:text-5xl">
+                  <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
-                  <p className="text-lg leading-8 text-muted-foreground sm:text-base sm:leading-7">
+                  <p className="text-lg text-muted-foreground sm:text-base">
                     {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
                       <>
                         We use historical voter data and proprietary models to
