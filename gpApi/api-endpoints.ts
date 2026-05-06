@@ -1,4 +1,4 @@
-import type { RaceFull } from '@goodparty_org/contracts'
+import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
 import type {
   Briefing,
   BriefingListItem,
@@ -203,7 +203,7 @@ export type APIEndpoints = {
       zip: string
       electionDate: string
     }
-    Response: RaceFull
+    Response: Race
   }
 }
 
