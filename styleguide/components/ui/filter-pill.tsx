@@ -14,10 +14,10 @@ const pillClass = cn(
 
 const ARROW_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']
 
-interface FilterPillGroupProps
-  extends React.ComponentProps<typeof ToggleGroupPrimitive.Root> {
-  type?: 'single'
-}
+type FilterPillGroupProps = Omit<
+  React.ComponentProps<typeof ToggleGroupPrimitive.Root>,
+  'type'
+> & { type?: 'single' }
 
 function FilterPillGroup({
   className,
@@ -47,8 +47,7 @@ function FilterPillGroup({
   )
 }
 
-interface FilterPillProps
-  extends React.ComponentProps<typeof ToggleGroupPrimitive.Item> {}
+type FilterPillProps = React.ComponentProps<typeof ToggleGroupPrimitive.Item>
 
 function FilterPill({ className, children, value, ...props }: FilterPillProps) {
   return (

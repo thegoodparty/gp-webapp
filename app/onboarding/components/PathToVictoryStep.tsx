@@ -21,6 +21,7 @@ const CHECKLIST_ITEMS = [
   'Calculating the votes you need to win',
 ] as const
 
+const WIN_NUMBER_RANGE_PCT = 0.15
 const REVEAL_INTERVAL_MS = 700
 const RESULTS_HOLD_MS = 600
 
