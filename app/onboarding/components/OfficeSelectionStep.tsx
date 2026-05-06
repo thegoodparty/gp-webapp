@@ -328,7 +328,7 @@ export const OfficeSelectionStep = ({
 
             {filterOptions.length > 0 ? (
               <FilterPillGroup
-                value={activeFilter || undefined}
+                value={activeFilter}
                 onValueChange={(value) => {
                   setActiveFilter(value)
                   onSelect(undefined)
