@@ -237,15 +237,15 @@ const StepBody = ({
               key={title}
               className="rounded-xl border-base-border text-left shadow-none"
             >
-              <CardContent className="space-y-4 p-6">
+              <CardContent className="space-y-4">
                 <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div className="space-y-2">
-                  <h2 className="text-base leading-6 font-semibold text-foreground">
+                  <h2 className="text-base font-semibold text-foreground">
                     {title}
                   </h2>
-                  <p className="text-sm leading-6 text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {description}
                   </p>
                 </div>
