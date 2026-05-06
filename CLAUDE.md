@@ -76,6 +76,8 @@ JWT stored in HTTP-only cookie by gp-api. Frontend includes it via `credentials:
 
 Vitest + React Testing Library + jsdom. Test globals enabled (no imports needed for `describe`, `it`, `expect`, `vi`).
 
+After refactoring a component, run `npm run test` locally and update any tests that reference old selectors (e.g. library-specific CSS classes like `.Mui-error`), old copy, or old component APIs before pushing. Do not rely on CI to catch these — fix them first.
+
 ### Targeted runs
 
 ```bash
