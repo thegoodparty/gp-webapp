@@ -133,11 +133,26 @@ describe('OfficeSelectionStep', () => {
     )
   })
 
-  it('invokes onCantFindOffice when "I don\'t see my office" is clicked', () => {
+  it('hides "I don\'t see my office" until results are showing', async () => {
+    mockClientFetch.mockResolvedValueOnce({
+      data: [sampleRace()],
+      ok: true,
+    } as unknown as Awaited<ReturnType<typeof clientFetch>>)
+
     const { onCantFindOffice } = renderStep()
-    fireEvent.click(
-      screen.getByRole('button', { name: /i don't see my office/i }),
-    )
+    expect(
+      screen.queryByRole('button', { name: /i don't see my office/i }),
+    ).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText(/zip code/i), {
+      target: { value: '82001' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /search/i }))
+
+    const cantFindButton = await screen.findByRole('button', {
+      name: /i don't see my office/i,
+    })
+    fireEvent.click(cantFindButton)
     expect(onCantFindOffice).toHaveBeenCalledTimes(1)
   })
 

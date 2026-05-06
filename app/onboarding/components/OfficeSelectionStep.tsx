@@ -448,15 +448,17 @@ export const OfficeSelectionStep = ({
           </div>
         ) : null}
 
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={onCantFindOffice}
-            className="text-sm font-semibold text-blue-600 hover:underline"
-          >
-            I don&apos;t see my office
-          </button>
-        </div>
+        {showResults ? (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={onCantFindOffice}
+              className="text-sm font-semibold text-blue-600 hover:underline"
+            >
+              I don&apos;t see my office
+            </button>
+          </div>
+        ) : null}
       </div>
     </>
   )
