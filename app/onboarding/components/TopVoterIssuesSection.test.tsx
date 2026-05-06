@@ -26,7 +26,10 @@ beforeEach(() => {
 
 describe('TopVoterIssuesSection', () => {
   it('renders skeleton placeholders while the request is pending', () => {
-    api.mock('GET /v1/onboarding/voter-issues', () => new Promise(() => {}))
+    api.mock(
+      'GET /v1/onboarding/voter-issues',
+      () => new Promise(() => undefined),
+    )
 
     const { container } = render(<TopVoterIssuesSection office="Mayor" />)
 
