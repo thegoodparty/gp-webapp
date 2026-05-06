@@ -23,7 +23,6 @@ import {
   handleCreateOutreach,
   handleCreatePhoneList,
   handleCreateVoterFileFilter,
-  handleScheduleOutreach,
   FlowState,
   AudienceState,
 } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -286,12 +285,12 @@ const TaskFlow = ({
         errorSnackbar('Campaign could not be created. Please try again.')
         return
       }
-      await handleScheduleOutreach(
-        type,
-        errorSnackbar,
-        successSnackbar,
-        state,
-      )(outreach)
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
+        medium: type,
+        price: state.budget,
+        voterContacts: state.audience?.count || 0,
+      })
+      successSnackbar('Request submitted successfully.')
 
       const contactField = getVoterContactField(type)
       await updateVoterContacts((currentContacts) => ({
@@ -411,12 +410,23 @@ const TaskFlow = ({
             }
             onScheduleOutreach={
               isLastStep
-                ? handleScheduleOutreach(
-                    type,
-                    errorSnackbar,
-                    successSnackbar,
-                    state,
-                  )
+                ? async (outreach) => {
+                    if (!outreach?.id) {
+                      errorSnackbar(
+                        'Campaign could not be created. Please try again.',
+                      )
+                      return
+                    }
+                    trackEvent(
+                      EVENTS.Dashboard.VoterContact.CampaignCompleted,
+                      {
+                        medium: type,
+                        price: state.budget,
+                        voterContacts: state.audience?.count || 0,
+                      },
+                    )
+                    successSnackbar('Request submitted successfully.')
+                  }
                 : noopAsync
             }
             isLastStep
