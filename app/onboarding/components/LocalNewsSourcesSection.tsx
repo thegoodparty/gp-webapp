@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
-import { LuNewspaper, LuTv, LuRadioTower } from 'react-icons/lu'
+import { Newspaper, RadioTower, Tv } from 'lucide-react'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
@@ -51,17 +51,17 @@ export { localNewsQueryOptions }
 const typeIcon: Record<OutletType, React.JSX.Element> = {
   [OUTLET_TYPE.PRINT]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-components-input-active">
-      <LuNewspaper className="size-5" />
+      <Newspaper className="size-5" />
     </span>
   ),
   [OUTLET_TYPE.TV]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
-      <LuTv className="size-5" />
+      <Tv className="size-5" />
     </span>
   ),
   [OUTLET_TYPE.RADIO]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-      <LuRadioTower className="size-5" />
+      <RadioTower className="size-5" />
     </span>
   ),
 }
@@ -140,10 +140,7 @@ const OutletRow = ({
         {outlet.description}
       </p>
     </div>
-    <Badge
-      variant="default"
-      className="rounded-full bg-slate-950 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-950"
-    >
+    <Badge variant="secondary">
       {typeLabel[outlet.type]}
     </Badge>
   </div>

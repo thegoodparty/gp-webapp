@@ -146,6 +146,10 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 
 Always use styleguide components (`Button`, `Input`, `Label`, etc.) imported from `@styleguide` instead of raw HTML elements (`<button>`, `<input>`, `<label>`). Raw elements are only acceptable inside styleguide component definitions themselves (`styleguide/components/ui/`).
 
+### Icons
+
+Always use `lucide-react` for icons. Never use `react-icons` or other icon libraries. Check `lucide-react` for an equivalent before considering any alternative.
+
 ### Design Tokens
 
 - Never use raw hex colors, hardcoded pixel values, or Tailwind default color palette (e.g. `blue-600`, `slate-300`) in component code. Always reference a design token.
