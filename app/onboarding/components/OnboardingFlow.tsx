@@ -1,6 +1,6 @@
 'use client'
 
-import { Alert, AlertDescription, Button, Card, CardContent } from '@styleguide'
+import { Alert, AlertDescription, Button, Card, CardContent, Stepper } from '@styleguide'
 import {
   ArrowLeft,
   ArrowRight,
@@ -210,45 +210,6 @@ const WhyWeAsk = ({
   </aside>
 )
 
-interface StepProgressProps {
-  currentStep: number
-  numberOfSteps: number
-}
-
-const StepProgress = ({
-  currentStep,
-  numberOfSteps,
-}: StepProgressProps): React.JSX.Element => (
-  <div
-    className="space-y-3"
-    role="progressbar"
-    aria-label="Onboarding progress"
-    aria-valuemin={1}
-    aria-valuemax={numberOfSteps}
-    aria-valuenow={currentStep}
-  >
-    <div className="flex justify-end text-sm font-medium text-slate-500">
-      Step {currentStep} of {numberOfSteps}
-    </div>
-    <div
-      className="grid gap-2"
-      style={{
-        gridTemplateColumns: `repeat(${numberOfSteps}, minmax(0, 1fr))`,
-      }}
-    >
-      {Array.from({ length: numberOfSteps }, (_, index) => (
-        <div
-          key={index}
-          className={
-            index < currentStep
-              ? 'h-1.5 rounded-full bg-blue-600'
-              : 'h-1.5 rounded-full bg-slate-100'
-          }
-        />
-      ))}
-    </div>
-  </div>
-)
 
 interface StepBodyProps {
   activeStep: OnboardingStepConfig
@@ -914,9 +875,10 @@ export default function OnboardingFlow({
     <div className="min-h-screen bg-white pb-28 text-slate-950">
       <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
         <div>
-          <StepProgress
+          <Stepper
+            variant="bar"
             currentStep={activeStepNumber}
-            numberOfSteps={visibleSteps.length}
+            totalSteps={visibleSteps.length}
           />
 
           <div
