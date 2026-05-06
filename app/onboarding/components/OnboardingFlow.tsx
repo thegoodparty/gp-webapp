@@ -867,13 +867,17 @@ export default function OnboardingFlow({
 
   return (
     <div className="min-h-screen bg-base-surface pb-28 text-foreground">
-      <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
-        <div>
+      <div className="fixed top-14 left-0 right-0 z-10 bg-base-surface">
+        <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
           <Stepper
             variant="bar"
             currentStep={activeStepNumber}
             totalSteps={visibleSteps.length}
           />
+        </div>
+      </div>
+      <main className="mx-auto w-full max-w-4xl px-4 pt-16 pb-6 sm:px-8 sm:pb-8">
+        <div>
 
           <div
             className={`mt-8 grid grid-cols-1 gap-8 sm:mt-5${
