@@ -170,16 +170,12 @@ const ChecklistItem = ({
 }: ChecklistItemProps): React.JSX.Element => (
   <li
     className={`flex items-center gap-3 rounded-lg border bg-white px-4 py-3 transition-opacity ${
-      isChecked
-        ? 'border-slate-200 opacity-100'
-        : 'border-slate-100 opacity-60'
+      isChecked ? 'border-slate-200 opacity-100' : 'border-slate-100 opacity-60'
     }`}
   >
     <span
       className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
-        isChecked
-          ? 'bg-blue-600 text-white'
-          : 'bg-slate-100 text-slate-300'
+        isChecked ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-300'
       }`}
     >
       <Check className="size-4" aria-hidden="true" />
@@ -296,8 +292,7 @@ const ProjectionExplanation = ({
   projectedTurnout,
   winNumber,
 }: ProjectionExplanationProps): React.JSX.Element => {
-  const showRegisteredVoters =
-    registeredVoters !== null && registeredVoters > 0
+  const showRegisteredVoters = registeredVoters !== null && registeredVoters > 0
   let stepIndex = 1
 
   return (
