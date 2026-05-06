@@ -2,8 +2,6 @@
 
 import { Alert, AlertDescription, Button, Card, CardContent, Stepper } from '@styleguide'
 import {
-  ArrowLeft,
-  ArrowRight,
   CalendarCheck,
   CircleAlert,
   Compass,
@@ -971,10 +969,8 @@ export default function OnboardingFlow({
             type="button"
             variant="ghost"
             size="large"
-            icon={<ArrowLeft aria-hidden="true" />}
             onClick={goBack}
             disabled={!previousStep}
-            className="px-0 text-slate-500 disabled:opacity-50"
           >
             Back
           </Button>
@@ -982,11 +978,8 @@ export default function OnboardingFlow({
             type="button"
             variant="default"
             size="large"
-            icon={<ArrowRight aria-hidden="true" />}
-            iconPosition="right"
             onClick={goNext}
             disabled={!canContinue}
-            className="min-w-36"
           >
             {nextStep
               ? 'Continue'
