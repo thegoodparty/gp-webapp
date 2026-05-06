@@ -1015,21 +1015,29 @@ export default function OnboardingFlow({
             </section>
 
             {activeStep.whyWeAsk && !isP2vBlocking ? (
-              activeStep.id === 'path-to-victory' ? (
-                <WhyWeAsk title="You can do this!">
-                  Most candidates think they need to convince <em>everyone</em>.
-                  You don&apos;t. You need to find{' '}
-                  {liveCampaign?.raceTargetMetrics?.winNumber
-                    ? `${numberFormatter(
-                        liveCampaign.raceTargetMetrics.winNumber,
-                      )} people`
-                    : 'your win number'}
-                  , talk to them, and make sure they vote. We&apos;ll show you
-                  exactly what that takes.
-                </WhyWeAsk>
-              ) : (
-                <WhyWeAsk text={activeStep.whyWeAsk} />
-              )
+              <aside
+                className="md:fixed md:top-36 md:w-[280px]"
+                style={{
+                  right:
+                    'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
+                }}
+              >
+                {activeStep.id === 'path-to-victory' ? (
+                  <WhyWeAsk title="You can do this!">
+                    Most candidates think they need to convince{' '}
+                    <em>everyone</em>. You don&apos;t. You need to find{' '}
+                    {liveCampaign?.raceTargetMetrics?.winNumber
+                      ? `${numberFormatter(
+                          liveCampaign.raceTargetMetrics.winNumber,
+                        )} people`
+                      : 'your win number'}
+                    , talk to them, and make sure they vote. We&apos;ll show
+                    you exactly what that takes.
+                  </WhyWeAsk>
+                ) : (
+                  <WhyWeAsk text={activeStep.whyWeAsk} />
+                )}
+              </aside>
             ) : null}
           </div>
         </div>
