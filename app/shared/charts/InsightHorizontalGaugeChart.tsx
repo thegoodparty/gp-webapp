@@ -34,7 +34,7 @@ export const InsightHorizontalGaugeChart = ({
               <span className="truncate text-xs text-muted-foreground font-normal">
                 {item.name}
               </span>
-              <span className="text-xs font-semibold ml-4">
+              <span className="text-base font-semibold ml-4">
                 {percentage
                   ? `${formatPercentLabel(item.value)}%`
                   : numberFormatter(item.value)}
