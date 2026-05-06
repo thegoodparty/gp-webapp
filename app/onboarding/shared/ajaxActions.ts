@@ -80,7 +80,7 @@ export const fetchCampaignVersions = async (): Promise<CampaignVersions> => {
 }
 
 export const createCampaignWithOffice = async (
-  attr: { key: string; value: string | number | boolean | undefined | null }[],
+  attr: UpdateAttribute[],
 ): Promise<Campaign | false> => {
   try {
     const payload = attr.reduce<Record<string, unknown>>(
