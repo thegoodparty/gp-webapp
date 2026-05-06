@@ -39,6 +39,7 @@ export interface FilingPeriod {
 
 export interface Race {
   id: string
+  brPositionId?: string
   position: RacePosition
   election: RaceElection
   filingPeriods?: FilingPeriod[]
