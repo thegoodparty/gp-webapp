@@ -61,7 +61,7 @@ export const PathToVictoryStep = ({
       .catch((error: unknown) => {
         if (cancelled) return
         setRegisteredVoters(null)
-        reportErrorToSentry(error as Error, {
+        reportErrorToSentry(error, {
           context: 'onboarding.pathToVictory.fetchContactsStats',
           campaignId: campaign?.id,
         })

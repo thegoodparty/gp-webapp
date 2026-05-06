@@ -97,7 +97,12 @@ const fetchRaces = async (zip: string): Promise<Race[]> => {
     { zipcode: zip },
     { revalidate: 3600 },
   )
-  return resp.data ?? []
+  if (!resp.ok) {
+    throw new Error(
+      `racesByYear returned ${resp.status} ${resp.statusText}`.trim(),
+    )
+  }
+  return Array.isArray(resp.data) ? resp.data : []
 }
 
 const formatElectionDate = (date?: string): string => {
@@ -201,7 +206,7 @@ export const OfficeSelectionStep = ({
 
   useEffect(() => {
     if (!query.error) return
-    reportErrorToSentry(query.error as Error, {
+    reportErrorToSentry(query.error, {
       context: 'onboarding.officeSelection.fetchRaces',
       zip: submittedZip,
     })

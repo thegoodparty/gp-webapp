@@ -497,7 +497,7 @@ export default function OnboardingFlow({
         }
       } catch (error) {
         if (!cancelled) {
-          reportErrorToSentry(error as Error, {
+          reportErrorToSentry(error, {
             context: 'onboarding.fetchLiveCampaign',
             activeStepId,
           })
@@ -597,8 +597,8 @@ export default function OnboardingFlow({
           ballotReadyPositionId: office.positionId,
           customPositionName: null,
         })
-      } catch (error: unknown) {
-        reportErrorToSentry(error as Error, {
+      } catch (error) {
+        reportErrorToSentry(error, {
           context: 'onboarding.persistStructuredOffice.patchOrganization',
           campaignId: liveCampaign?.id ?? campaign?.id,
         })
@@ -694,8 +694,8 @@ export default function OnboardingFlow({
           ballotReadyPositionId: null,
           customPositionName,
         })
-      } catch (error: unknown) {
-        reportErrorToSentry(error as Error, {
+      } catch (error) {
+        reportErrorToSentry(error, {
           context: 'onboarding.persistManualOffice.patchOrganization',
           campaignId: campaign.id,
         })
@@ -780,9 +780,22 @@ export default function OnboardingFlow({
     ])
     if (updated === false) return false
     try {
-      await clientFetch(apiRoutes.campaign.launch)
-    } catch (error: unknown) {
-      reportErrorToSentry(error as Error, {
+      const launchResp = await clientFetch(apiRoutes.campaign.launch)
+      if (!launchResp.ok) {
+        reportErrorToSentry(
+          new Error(
+            `campaign.launch returned ${launchResp.status} ${launchResp.statusText}`,
+          ),
+          {
+            context: 'onboarding.persistPledgeAndComplete.launchCampaign',
+            status: launchResp.status,
+            campaignId: effectiveCampaignId,
+          },
+        )
+        return false
+      }
+    } catch (error) {
+      reportErrorToSentry(error, {
         context: 'onboarding.persistPledgeAndComplete.launchCampaign',
         campaignId: effectiveCampaignId,
       })
