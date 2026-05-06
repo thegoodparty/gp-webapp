@@ -1,3 +1,4 @@
+import type { RaceFull } from '@goodparty_org/contracts'
 import type {
   Briefing,
   BriefingListItem,
@@ -194,6 +195,15 @@ export type APIEndpoints = {
   'GET /v1/meetings/briefings/:date': {
     Request: {}
     Response: Briefing
+  }
+
+  'GET /v1/elections/race-by-position': {
+    Request: {
+      brPositionId: string
+      zip: string
+      electionDate: string
+    }
+    Response: RaceFull
   }
 }
 
