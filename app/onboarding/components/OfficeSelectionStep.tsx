@@ -3,6 +3,7 @@
 import { Button, Input, InputWithButton, RadioCardItem, RadioGroup, Skeleton } from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
+import { Search } from 'lucide-react'
 import { useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -316,6 +317,7 @@ export const OfficeSelectionStep = ({
           <div className="space-y-4">
             {submittedZip && isZipValid(submittedZip) ? (
               <Input
+                icon={<Search />}
                 aria-label="Search by office name"
                 placeholder="Search by office name"
                 value={nameFilter}
