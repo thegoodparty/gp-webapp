@@ -96,12 +96,12 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
   await page.getByRole('button', { name: /search/i }).click()
 
   await page
-    .getByRole('button', { name: /Council|Mayor|Board|Commission|Sheriff/ })
+    .getByRole('radio', { name: /Council|Mayor|Board|Commission|Sheriff/ })
     .first()
     .waitFor({ state: 'visible', timeout: 30000 })
 
   await page
-    .getByRole('button', { name: /Council|Mayor|Board|Commission|Sheriff/ })
+    .getByRole('radio', { name: /Council|Mayor|Board|Commission|Sheriff/ })
     .first()
     .click()
 
