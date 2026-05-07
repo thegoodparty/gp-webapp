@@ -107,6 +107,44 @@ describe('TopVoterIssuesSection', () => {
     ).toBeInTheDocument()
   })
 
+  it('refetches when ballotReadyPositionId changes (no stale cross-office cache)', async () => {
+    api.mockOrdered('GET /v1/onboarding/voter-issues', [
+      {
+        status: 200,
+        data: {
+          issues: [
+            { label: 'Beverly Hills issue', score: 80, priority: 'high' },
+          ],
+        },
+      },
+      {
+        status: 200,
+        data: {
+          issues: [{ label: 'NYC issue', score: 90, priority: 'high' }],
+        },
+      },
+    ])
+
+    const { rerender } = render(
+      <TopVoterIssuesSection
+        ballotReadyPositionId="bh-123"
+        office="Beverly Hills City Council"
+      />,
+    )
+
+    expect(await screen.findByText('Beverly Hills issue')).toBeInTheDocument()
+
+    rerender(
+      <TopVoterIssuesSection
+        ballotReadyPositionId="nyc-456"
+        office="NYC City Council"
+      />,
+    )
+
+    expect(await screen.findByText('NYC issue')).toBeInTheDocument()
+    expect(screen.queryByText('Beverly Hills issue')).not.toBeInTheDocument()
+  })
+
   it('collapses to the first three issues and expands on demand', async () => {
     api.mock('GET /v1/onboarding/voter-issues', {
       status: 200,
