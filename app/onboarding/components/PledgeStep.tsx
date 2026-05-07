@@ -39,12 +39,12 @@ export const PledgeStep = (): React.JSX.Element => (
               />
               <h3 className="text-xl font-semibold text-foreground">{title}</h3>
             </div>
-            <p className="text-sm leading-6 text-foreground">{body}</p>
+            <p className="text-sm text-muted-foreground">{body}</p>
           </li>
         ))}
       </ul>
 
-      <p className="border-t border-base-border pt-4 text-xs leading-5 text-muted-foreground">
+      <p className="border-t border-base-border pt-4 text-xs text-muted-foreground">
         By continuing, you agree to run a civil campaign focused on issues, not
         mudslinging or ad hominem attacks; also accepting GoodParty.org&apos;s{' '}
         <a
