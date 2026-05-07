@@ -24,6 +24,10 @@ const EDUCATION_ORDER = [
   'Unknown',
 ] as const
 
+const EDUCATION_LABEL_OVERRIDES: Record<string, string> = {
+  None: 'No High School',
+}
+
 export const mapContactsStatsToCharts = (
   contactsStats: ContactsStats | undefined,
 ): ChartData => {
@@ -101,9 +105,12 @@ export const mapContactsStatsToCharts = (
       return i === -1 ? EDUCATION_ORDER.length : i
     }
     return toChartData(
-      [...categories.education].sort(
-        (a, b) => orderIndex(a.label) - orderIndex(b.label),
-      ),
+      [...categories.education]
+        .sort((a, b) => orderIndex(a.label) - orderIndex(b.label))
+        .map((bucket) => ({
+          ...bucket,
+          label: EDUCATION_LABEL_OVERRIDES[bucket.label] ?? bucket.label,
+        })),
     )
   }
 
