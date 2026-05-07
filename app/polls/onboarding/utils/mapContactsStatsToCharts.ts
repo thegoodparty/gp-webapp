@@ -21,7 +21,6 @@ const EDUCATION_ORDER = [
   'Technical School',
   'College Degree',
   'Graduate Degree',
-  'Unknown',
 ] as const
 
 const EDUCATION_LABEL_OVERRIDES: Record<string, string> = {
@@ -51,11 +50,14 @@ export const mapContactsStatsToCharts = (
   }
   const toChartData = (
     buckets: { label: string; percent: number }[],
-  ): ChartDataPoint[] =>
-    buckets.map((bucket) => ({
+  ): ChartDataPoint[] => {
+    const known = buckets.filter((b) => b.label !== 'Unknown')
+    const unknown = buckets.filter((b) => b.label === 'Unknown')
+    return [...known, ...unknown].map((bucket) => ({
       name: bucket.label,
       value: toPercent(bucket.percent),
     }))
+  }
 
   const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
     const buckets = categories.estimatedIncomeRange
