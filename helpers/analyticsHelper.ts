@@ -90,6 +90,7 @@ export const EVENTS = {
     },
     WelcomeCompleted: 'Onboarding - Welcome Completed',
     BallotStatusCompleted: 'Onboarding - Ballot Status Completed',
+    KnowYourVotersCompleted: 'Onboarding - Know Your Voters Completed',
     PartySelectionCompleted: 'Onboarding - Party Selection Completed',
     OfficeSelectionCompleted: 'Onboarding - Office Selection Completed',
     PathToVictoryUpdated: 'Onboarding - Path To Victory Updated',
