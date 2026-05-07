@@ -23,7 +23,7 @@ npm run storybook        # Component library on :6006
 
 ## Architecture
 
-Next.js 15 App Router deployed on Vercel. Calls gp-api (NestJS backend on ECS) and election-api for data.
+Next.js 15 App Router deployed on Vercel. Calls gp-api (NestJS backend on ECS) and election-api for data. Full overview: `docs/architecture.md`.
 
 ### Deployment
 
@@ -34,43 +34,11 @@ Vercel auto-deploys on push. Branch mapping:
 - `master` → `goodparty.org` (API: `api.goodparty.org`)
 - PR branches → Vercel preview environments
 
-### Top-level routes (`app/`)
-
-- `dashboard/` - Candidate dashboard (campaign tools, polls, voter outreach, website, contacts, content, meetings)
-- `admin/` - Admin tools
-- `polls/` - Public poll results
-- `onboarding/` - Post-signup onboarding flow
-- `login/`, `sign-up/`, `logout/`, `post-auth-redirect/`, `impersonate/` - Auth + session flows
-- `api/` - Next.js route handlers (proxy + webhooks)
-- `shared/` - Providers, hooks, UI atoms, utils shared across routes
-- `layout.tsx`, `page.tsx`, `error.tsx`, `global-error.tsx`, `not-found.tsx` - App Router roots
-
-### API clients
-
-Two systems coexist in `gpApi/`. **The typed system is canonical for new code.** The legacy fetch helpers are `@deprecated` and being migrated out.
-
-- Typed: `clientRequest` / `serverRequest`, routes in `gpApi/api-endpoints.ts`. Throws on non-2xx. Always attach auth (cookie / Bearer token).
-- Legacy (deprecated): `gpFetch`, `clientFetch`, `serverFetch`, routes in `gpApi/routes.ts`. Returns `T | Response | false`, never throws.
-- Still valid: `unAuthFetch` for genuinely public endpoints — it attaches no credentials, and the typed helpers have no anonymous equivalent yet.
-
-Full reference + decision tree: `docs/api-clients.md` and `gpApi/CLAUDE.md`. To add an endpoint or migrate a legacy call, see `.claude/skills/`.
-
-### State Management
-
-React Context providers wrap the app (in `app/shared/hooks/`):
-
-- `UserProvider` - Auth state, loaded from cookie
-- `CampaignProvider` - Current campaign, refreshes on user change
-- `FeatureFlagsProvider` - Amplitude experiments
-- React Query (`@tanstack/react-query`) with 5min stale time for data fetching
-
-### Auth
-
-JWT stored in HTTP-only cookie by gp-api. Frontend includes it via `credentials: 'include'`. User loaded on mount in `UserProvider`. Protected routes check user context and redirect to login.
-
 ### Environment Config
 
 `appEnv.ts` exports all env-derived constants: `API_ROOT`, `ELECTION_API_ROOT`, `APP_BASE`, `IS_PROD`, `IS_LOCAL`, etc. Defaults point to dev API when env vars are unset.
+
+(Auth, providers, API clients, and module shape live in `docs/architecture.md` and the per-area `CLAUDE.md` files — see the pointer table below.)
 
 ## Testing
 
@@ -131,13 +99,24 @@ When the active step or view changes in a multi-step flow, always reset scroll p
 - **Backend logs → Grafana Cloud Loki.** `{service_name="gp-api", deployment_environment_name="dev|qa|prod"}`. https://goodparty.grafana.net.
 - Recipe for reproducing a Sentry issue locally: `docs/debugging.md`.
 
-## Docs
+## Pointer table — when in doubt
 
-- `docs/api-clients.md` - Typed vs legacy fetch, decision tree
-- `docs/testing.md` - Vitest patterns, MSW mocking
-- `docs/debugging.md` - Sentry / Loki, repro recipe
-- `gpApi/CLAUDE.md` - Working in the gpApi/ directory
-- `app/dashboard/website/README.md` - Website feature layout
+| Doing | Read |
+|-------|------|
+| Overall architecture / stack / module shape | `docs/architecture.md` |
+| Auth (cookie/JWT, server vs client, impersonation) | `docs/architecture.md` § Auth |
+| Adding or migrating an API call | `docs/api-clients.md` + `gpApi/CLAUDE.md` |
+| Writing a unit/component test | `docs/testing.md` |
+| Reproducing a Sentry issue locally | `docs/debugging.md` |
+| State / providers / React Query patterns | `docs/state-management.md` |
+| Adding or removing a feature flag | `docs/feature-flags.md` |
+| Working inside a dashboard feature | `app/dashboard/<feature>/CLAUDE.md` |
+| Working in `app/admin/`, `app/onboarding/`, or `app/shared/` | nested `CLAUDE.md` in that dir |
+| Working with helpers | `helpers/CLAUDE.md` |
+| Working in `gpApi/` | `gpApi/CLAUDE.md` |
+| Writing or running E2E tests | `e2e-tests/CLAUDE.md` (and `e2e-tests/README.md`) |
+| AI rule-by-rule code review | `ai-rules/` (git submodule) |
+| Website feature internals | `app/dashboard/website/README.md` |
 
 ## Code Style
 
