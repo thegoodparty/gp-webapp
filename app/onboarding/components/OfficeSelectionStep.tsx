@@ -338,12 +338,17 @@ export const OfficeSelectionStep = ({
     pendingHydrationRaceIdRef.current = race.id
     onSelect(toSelectedOffice(race))
     onHydratingChange?.(true)
+    const zipAtClick = submittedZip
     const hydrated = await hydrateRace(race)
 
     // The user may have clicked a different race, deselected, or changed zip
     // while we were hydrating. If so, bail — the newer handler owns state.
     if (pendingHydrationRaceIdRef.current !== race.id) {
-      if (hydrated) hydratedRacesRef.current.set(race.id, hydrated)
+      // Only cache if the zip context still matches; otherwise this result
+      // belongs to a previous zip and would poison cache for the new one.
+      if (hydrated && submittedZip === zipAtClick) {
+        hydratedRacesRef.current.set(race.id, hydrated)
+      }
       return
     }
 

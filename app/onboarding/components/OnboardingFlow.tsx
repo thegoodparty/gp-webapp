@@ -383,14 +383,16 @@ export default function OnboardingFlow({
   // Tracking the resolved office (rather than a boolean) lets the
   // path-to-victory effect re-run when the user goes back and changes
   // zip/office, so the new race's metrics replace the previous one.
+  // `||` (not `??`) so an empty-string id falls through to the next option
+  // instead of being treated as a valid identity.
   const officeIdentityKey =
-    answers.structuredOffice?.positionId ??
-    answers.structuredOffice?.raceId ??
+    answers.structuredOffice?.positionId ||
+    answers.structuredOffice?.raceId ||
     (answers.manualOfficeForm
       ? `manual:${answers.manualOfficeForm.state}:${answers.manualOfficeForm.city}:${answers.manualOfficeForm.office}`
       : null)
   const hasResolvedPathToVictory =
-    officeIdentityKey !== null && resolvedP2vOfficeKey === officeIdentityKey
+    Boolean(officeIdentityKey) && resolvedP2vOfficeKey === officeIdentityKey
 
   const visibleSteps = getVisibleOnboardingSteps(ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
