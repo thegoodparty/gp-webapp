@@ -29,18 +29,14 @@ export const InsightHorizontalGaugeChart = ({
         const barWidthPercent = `${valuePercent}%`
 
         return (
-          <div key={`gauge-row-${item.name}`} className="w-full mb-3">
-            <div className="flex items-center justify-between w-full mb-1.5">
-              <span className="truncate text-xs text-muted-foreground font-normal">
-                {item.name}
-              </span>
-              <span className="text-base font-semibold ml-4">
-                {percentage
-                  ? `${formatPercentLabel(item.value)}%`
-                  : numberFormatter(item.value)}
-              </span>
-            </div>
-            <div className="w-full h-4 bg-muted rounded-lg">
+          <div
+            key={`gauge-row-${item.name}`}
+            className="flex items-center gap-3 w-full"
+          >
+            <span className="w-12 shrink-0 truncate text-xs text-muted-foreground font-normal">
+              {item.name}
+            </span>
+            <div className="flex-1 h-4 bg-muted rounded-lg">
               <div
                 className="h-4 rounded-lg"
                 style={{
@@ -49,6 +45,11 @@ export const InsightHorizontalGaugeChart = ({
                 }}
               />
             </div>
+            <span className="w-12 shrink-0 text-right text-xs font-semibold text-foreground">
+              {percentage
+                ? `${formatPercentLabel(item.value)}%`
+                : numberFormatter(item.value)}
+            </span>
           </div>
         )
       })}

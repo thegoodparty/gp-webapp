@@ -5,6 +5,7 @@ import {
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
 import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
+import { wait } from 'tests/utils/eventually'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -79,7 +80,7 @@ async function completePartyAffiliationStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', {
       level: 1,
-      name: /official party affiliation/i,
+      name: /official party designation/i,
     }),
   ).toBeVisible()
   await page.getByRole('radio').first().click({ force: true })
@@ -95,15 +96,16 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
   await page.getByLabel(/zip code/i).fill('82001')
   await page.getByRole('button', { name: /search/i }).click()
 
-  await page
-    .getByRole('radio', { name: /Council|Mayor|Board|Commission|Sheriff/ })
+  const officeGroup = page.getByRole('radiogroup', {
+    name: /available offices/i,
+  })
+  await officeGroup
+    .getByRole('radio')
     .first()
     .waitFor({ state: 'visible', timeout: 30000 })
+  await officeGroup.getByRole('radio').first().click()
 
-  await page
-    .getByRole('radio', { name: /Council|Mayor|Board|Commission|Sheriff/ })
-    .first()
-    .click()
+  await wait(1000)
 
   await clickContinue(page)
 }

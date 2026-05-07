@@ -41,7 +41,7 @@ describe('ManualOfficeEntryStep', () => {
 
   it('emits onChange with the merged form when the office name is updated', () => {
     const { onChange } = renderStep()
-    const officeInput = screen.getByPlaceholderText('Other')
+    const officeInput = screen.getByLabelText(/office name/i)
     fireEvent.change(officeInput, { target: { value: 'City Council' } })
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ office: 'City Council', state: '' }),
@@ -50,21 +50,25 @@ describe('ManualOfficeEntryStep', () => {
 
   it('emits onChange when the state select changes', () => {
     const { onChange } = renderStep()
-    const selects = screen.getAllByRole('combobox')
-    fireEvent.change(selects[0]!, { target: { value: 'NC' } })
+    fireEvent.click(screen.getByRole('combobox', { name: /state/i }))
+    fireEvent.click(screen.getByRole('option', { name: 'NC' }))
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ state: 'NC' }),
     )
   })
 
   it('flags past election dates as invalid', () => {
-    const { container } = renderStep({ electionDate: '2000-01-01' })
-    expect(container.querySelector('.Mui-error')).not.toBeNull()
+    renderStep({ electionDate: '2000-01-01' })
+    expect(
+      screen.getByText(/election date cannot be in the past/i),
+    ).toBeInTheDocument()
   })
 
   it('does not flag future election dates as invalid', () => {
-    const { container } = renderStep({ electionDate: '2099-01-01' })
-    expect(container.querySelector('.Mui-error')).toBeNull()
+    renderStep({ electionDate: '2099-01-01' })
+    expect(
+      screen.queryByText(/election date cannot be in the past/i),
+    ).not.toBeInTheDocument()
   })
 
   it('passes the current value through to controlled inputs', () => {
