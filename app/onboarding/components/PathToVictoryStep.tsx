@@ -259,7 +259,7 @@ const WinNumberHeroCard = ({
           {numberFormatter(winNumber)}
         </p>
         <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
-          Projected votes needed to win (50% + 1)
+          Projected votes needed to win
         </p>
         <p className="text-base font-semibold text-foreground">{officeName}</p>
         <p className="pt-2 text-xs text-muted-foreground">
@@ -335,8 +335,8 @@ const ProjectionExplanation = ({
         />
         <ProjectionStep
           index={stepIndex++}
-          title="Projected votes needed to win (50% + 1)"
-          description="A simple majority of voters who actually cast a ballot."
+          title="Projected votes needed to win"
+          description="A simple majority of voters (50% + 1) who actually cast a ballot."
           value={numberFormatter(winNumber)}
         />
       </ol>
