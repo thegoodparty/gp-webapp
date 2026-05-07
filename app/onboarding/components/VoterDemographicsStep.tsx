@@ -100,7 +100,7 @@ export const VoterDemographicsStep = ({
       />
 
       <DataVisualizationInsight
-        chartType="horizontalGauge"
+        chartType="barList"
         percentage={true}
         title="Age Distribution"
         description="We'll help you tailor your outreach mix to each age group — leaning into SMS and social for younger voters, and prioritizing mail and door-knocks for older ones."
@@ -110,7 +110,7 @@ export const VoterDemographicsStep = ({
       />
 
       <DataVisualizationInsight
-        chartType="pie"
+        chartType="donut"
         percentage={true}
         title="Has Children Under 18"
         description="We'll help you reach households with kids using messaging that resonates with them — schools, safety, and after-school programs."
@@ -130,7 +130,7 @@ export const VoterDemographicsStep = ({
       />
 
       <DataVisualizationInsight
-        chartType="verticalBar"
+        chartType="barList"
         percentage={true}
         title="Estimated Income Range"
         description="We'll help you frame your economic messaging across SMS, email, and canvassing scripts so it lands with each income segment."
@@ -140,7 +140,7 @@ export const VoterDemographicsStep = ({
       />
 
       <DataVisualizationInsight
-        chartType="horizontalBar"
+        chartType="barList"
         percentage={true}
         title="Education"
         description="We'll help you tune the depth and channel of your outreach (SMS, email, literature drops) to match how each education segment consumes information."

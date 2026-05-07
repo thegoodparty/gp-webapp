@@ -36,3 +36,7 @@ export * from './table'
 export * from './tabs'
 export * from './textarea'
 export * from './tooltip'
+
+// Charts
+export * from './bar-list'
+export * from './donut-chart'
