@@ -2,7 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check, Sparkles } from 'lucide-react'
-import { Card, CardContent } from '@styleguide'
+import {
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@styleguide'
 import { clientRequest } from 'gpApi/typed-request'
 import { numberFormatter } from 'helpers/numberHelper'
 import { reportErrorToSentry } from '@shared/sentry'
@@ -315,9 +324,35 @@ const ProjectionExplanation = ({
 
   return (
     <div>
-      <p className="mb-3 text-sm font-medium text-muted-foreground">
-        Here&apos;s how our projections work:
-      </p>
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <p className="text-sm font-medium text-muted-foreground">
+          Here&apos;s how our projections work:
+        </p>
+        <Dialog>
+          <DialogTrigger className="cursor-pointer text-sm font-medium text-muted-foreground underline-offset-4 hover:underline">
+            Methodology
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Methodology</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
+              We use the historical voter data, and proprietary neural inference
+              network and data models to provide the most accurate projections
+              possible. Visit our{' '}
+              <a
+                href="https://goodparty.org/team"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-components-input-active hover:underline"
+              >
+                GoodParty Election Data Labs
+              </a>{' '}
+              for more details.
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
+      </div>
       <ol className="space-y-3">
         {showRegisteredVoters ? (
           <ProjectionStep
