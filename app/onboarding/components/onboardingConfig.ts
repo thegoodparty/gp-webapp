@@ -4,7 +4,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'welcome',
     eyebrow: 'Campaign plan setup',
-    title: "Let's build your winning campaign plan in 5 mins",
+    title: "Let's build your winning campaign plan in 5 minutes",
     description:
       "All we need to know is what office you're running for and where, and we'll take it from there",
     summary:
