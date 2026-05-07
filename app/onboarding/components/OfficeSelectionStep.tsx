@@ -15,8 +15,10 @@ import Fuse, { type IFuseOptions } from 'fuse.js'
 import { Search } from 'lucide-react'
 import { useMemo, useState, useEffect } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
 import { reportErrorToSentry } from '@shared/sentry'
+import { useSnackbar } from 'helpers/useSnackbar'
 import type { Race } from '../[slug]/[step]/components/ballotOffices/types'
 import type { SelectedOffice } from './onboardingTypes'
 
@@ -203,6 +205,7 @@ export const OfficeSelectionStep = ({
   const [submittedZip, setSubmittedZip] = useState<string | undefined>(zip)
   const [nameFilter, setNameFilter] = useState('')
   const [activeFilter, setActiveFilter] = useState<string>('')
+  const { errorSnackbar } = useSnackbar()
 
   const canSearch = isZipValid(zipInput)
 
@@ -279,6 +282,37 @@ export const OfficeSelectionStep = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     handleSearch()
+  }
+
+  const hydrateRace = async (race: Race): Promise<Race | null> => {
+    if (!race.brPositionId || !race.election?.electionDay || !submittedZip) {
+      errorSnackbar('Could not load this race. Please try a different one.')
+      return null
+    }
+    try {
+      const { data } = await clientRequest(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: race.brPositionId,
+          zip: submittedZip,
+          electionDate: race.election.electionDay,
+        },
+      )
+      return { ...data, id: race.id }
+    } catch {
+      errorSnackbar('Could not load race details. Please try again.')
+      return null
+    }
+  }
+
+  const handleSelectRace = async (race: Race) => {
+    if (selected?.raceId === race.id) {
+      onSelect(undefined)
+      return
+    }
+    const hydrated = await hydrateRace(race)
+    if (!hydrated) return
+    onSelect(toSelectedOffice(hydrated))
   }
 
   const showResults = Boolean(submittedZip) && query.isSuccess
@@ -367,7 +401,7 @@ export const OfficeSelectionStep = ({
                 value={selected?.raceId ?? ''}
                 onValueChange={(raceId) => {
                   const race = races.find((r) => r.id === raceId)
-                  if (race) onSelect(toSelectedOffice(race))
+                  if (race) void handleSelectRace(race)
                 }}
               >
                 <p className="text-sm text-muted-foreground">

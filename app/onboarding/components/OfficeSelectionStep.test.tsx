@@ -3,15 +3,28 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 vi.mock('gpApi/clientFetch', () => ({
   clientFetch: vi.fn(),
 }))
 
+vi.mock('gpApi/typed-request', () => ({
+  clientRequest: vi.fn(),
+}))
+
+vi.mock('helpers/useSnackbar', () => ({
+  useSnackbar: vi.fn(),
+}))
+
 const mockClientFetch = vi.mocked(clientFetch)
+const mockClientRequest = vi.mocked(clientRequest)
+const mockErrorSnackbar = vi.fn()
 
 const sampleRace = (overrides: Record<string, unknown> = {}) => ({
   id: 'race-1',
+  brPositionId: 'br-pos-1',
   position: {
     id: 'pos-1',
     name: /city council election date/i,
@@ -56,6 +69,13 @@ const renderStep = (
 describe('OfficeSelectionStep', () => {
   beforeEach(() => {
     mockClientFetch.mockReset()
+    mockClientRequest.mockReset()
+    mockErrorSnackbar.mockReset()
+    vi.mocked(useSnackbar).mockReturnValue({
+      errorSnackbar: mockErrorSnackbar,
+      successSnackbar: vi.fn(),
+      displaySnackbar: vi.fn(),
+    })
   })
 
   it('keeps the search disabled until a 5-digit zip is entered', () => {
@@ -104,11 +124,39 @@ describe('OfficeSelectionStep', () => {
     })
   })
 
-  it('forwards selected race details to onSelect', async () => {
+  it('hydrates the selected race and forwards full details to onSelect', async () => {
     mockClientFetch.mockResolvedValueOnce({
       data: [sampleRace()],
       ok: true,
     } as unknown as Awaited<ReturnType<typeof clientFetch>>)
+
+    mockClientRequest.mockResolvedValueOnce({
+      data: {
+        id: 'race-server',
+        brPositionId: 'br-pos-1',
+        position: {
+          id: 'pos-1',
+          name: 'City Council',
+          level: 'local',
+          state: 'WY',
+          partisanType: 'partisan',
+          hasPrimary: true,
+          electionFrequencies: [{ frequency: 4 }],
+        },
+        election: {
+          id: 'elec-1',
+          electionDay: '2026-11-03',
+          state: 'WY',
+          primaryElectionDate: '2026-08-04',
+          primaryElectionId: 'prim-elec-1',
+        },
+        filingPeriods: [{ startOn: '2026-01-01', endOn: '2026-06-01' }],
+        city: 'Cheyenne',
+      },
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+    } as unknown as Awaited<ReturnType<typeof clientRequest>>)
 
     const { onSelect } = renderStep()
     fireEvent.change(screen.getByLabelText(/zip code/i), {
@@ -121,15 +169,65 @@ describe('OfficeSelectionStep', () => {
     })
     fireEvent.click(raceButton)
 
-    expect(onSelect).toHaveBeenCalledWith(
-      expect.objectContaining({
-        raceId: 'race-1',
-        positionId: 'pos-1',
-        officeTermLength: '4 years',
-        electionDay: '2026-11-03',
-        electionId: 'elec-1',
-      }),
-    )
+    await waitFor(() => {
+      expect(mockClientRequest).toHaveBeenCalledWith(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: 'br-pos-1',
+          zip: '82001',
+          electionDate: '2026-11-03',
+        },
+      )
+    })
+
+    await waitFor(() => {
+      expect(onSelect).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          raceId: 'race-1',
+          positionId: 'pos-1',
+          positionName: 'City Council',
+          officeTermLength: '4 years',
+          electionDay: '2026-11-03',
+          electionId: 'elec-1',
+          partisanType: 'partisan',
+          hasPrimary: true,
+          primaryElectionDate: '2026-08-04',
+          primaryElectionId: 'prim-elec-1',
+          filingPeriodsStart: '2026-01-01',
+          filingPeriodsEnd: '2026-06-01',
+        }),
+      )
+    })
+  })
+
+  it('shows an error snackbar and does not call onSelect when hydration fails', async () => {
+    mockClientFetch.mockResolvedValueOnce({
+      data: [sampleRace()],
+      ok: true,
+    } as unknown as Awaited<ReturnType<typeof clientFetch>>)
+
+    mockClientRequest.mockRejectedValueOnce(new Error('boom'))
+
+    const onSelect = vi.fn()
+    renderStep({ onSelect })
+    fireEvent.change(screen.getByLabelText(/zip code/i), {
+      target: { value: '82001' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /search/i }))
+
+    const raceButton = await screen.findByRole('radio', {
+      name: /city council election date/i,
+    })
+    onSelect.mockClear()
+    fireEvent.click(raceButton)
+
+    await waitFor(() => {
+      expect(mockErrorSnackbar).toHaveBeenCalledWith(
+        'Could not load race details. Please try again.',
+      )
+    })
+
+    expect(onSelect).not.toHaveBeenCalled()
   })
 
   it('hides "I don\'t see my office" until results are showing', async () => {

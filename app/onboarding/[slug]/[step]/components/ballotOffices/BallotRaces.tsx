@@ -19,6 +19,7 @@ import Fuse, { IFuseOptions } from 'fuse.js'
 import { useQuery } from '@tanstack/react-query'
 import { Campaign } from 'helpers/types'
 import { Race } from './types'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 interface BallotRacesCampaign extends Campaign {
   currentStep?: number
@@ -145,21 +146,54 @@ export default function BallotRaces({
     selectedOffice || false,
   )
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [hydratingId, setHydratingId] = useState<string | null>(null)
 
   const router = useRouter()
+  const { errorSnackbar } = useSnackbar()
 
   if (!zip) {
     return <div>No valid zip</div>
   }
 
-  const handleSelect = (race: { id: string }) => {
+  const hydrateRace = async (race: Race): Promise<Race | null> => {
+    if (!race.brPositionId || !race.election?.electionDay || !zip) {
+      errorSnackbar('Could not load this race. Please try a different one.')
+      return null
+    }
+    try {
+      const { data } = await clientRequest(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: race.brPositionId,
+          zip,
+          electionDate: race.election.electionDay,
+        },
+      )
+      return { ...data, id: race.id }
+    } catch {
+      errorSnackbar('Could not load race details. Please try again.')
+      return null
+    }
+  }
+
+  const handleSelect = async (race: { id: string }) => {
+    if (race.id === (selected && 'id' in selected ? selected.id : undefined)) {
+      setSelected(false)
+      onSelect(false)
+      return
+    }
     const matchedRace = races.find(({ id }) => id === race.id)
-    const selectedRace =
-      race?.id === (selected && 'id' in selected ? selected.id : undefined)
-        ? false
-        : matchedRace || false
-    setSelected(selectedRace)
-    onSelect(selectedRace)
+    if (!matchedRace) {
+      setSelected(false)
+      onSelect(false)
+      return
+    }
+    setHydratingId(race.id)
+    const hydrated = await hydrateRace(matchedRace)
+    setHydratingId(null)
+    if (!hydrated) return
+    setSelected(hydrated)
+    onSelect(hydrated)
   }
 
   const handleShowModal = () => {
@@ -281,6 +315,7 @@ export default function BallotRaces({
                   race?.id ===
                   (selected && 'id' in selected ? selected.id : undefined)
                 }
+                isHydrating={hydratingId === race.id}
                 selectCallback={handleSelect}
               />
             ))
