@@ -1,6 +1,6 @@
 # app/dashboard/website/
 
-Candidate website builder. Lets a campaign create a public site, edit content sections, and connect a custom domain. Public visitor view lives outside this dir under `app/(candidate)/`.
+Candidate website builder. Lets a campaign create a public site, edit content sections, and connect a custom domain. Public visitor view does not currently live under a dedicated route group in this repo.
 
 ## Key files
 
