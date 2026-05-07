@@ -12,16 +12,16 @@ There is no Redux / Zustand / Jotai. Don't add one.
 
 Mounted at the root in `app/layout.tsx` (or close to it). Order matters — children of a provider can read its context.
 
-| Provider | File | Purpose |
-|----------|------|---------|
-| `UserProvider` | `app/shared/user/UserProvider.tsx` | Auth state, loaded from cookie. Most app code starts here. |
-| `ImpersonateUserProvider` | `app/shared/user/ImpersonateUserProvider.tsx` | Impersonation state — drives the global banner. |
-| `CampaignProvider` | `app/shared/hooks/CampaignProvider.tsx` | Current campaign. Refreshes on user change. |
-| `CampaignStatusProvider` | `app/shared/user/CampaignStatusProvider.tsx` | Campaign-level status flag. |
-| `FeatureFlagsProvider` | `app/shared/experiments/FeatureFlagsProvider.tsx` | Amplitude experiments — see `docs/feature-flags.md`. |
-| `QueryClientProvider` | `app/shared/query-client.tsx` | React Query client. |
-| `Snackbar` | `app/shared/utils/Snackbar.tsx` | App-wide toast surface. Use `helpers/useSnackbar.ts`. |
-| `NavigationProvider` | `app/shared/layouts/navigation/NavigationProvider.tsx` | Sidebar / nav state. |
+| Provider                  | File                                                   | Purpose                                                    |
+| ------------------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
+| `UserProvider`            | `app/shared/user/UserProvider.tsx`                     | Auth state, loaded from cookie. Most app code starts here. |
+| `ImpersonateUserProvider` | `app/shared/user/ImpersonateUserProvider.tsx`          | Impersonation state — drives the global banner.            |
+| `CampaignProvider`        | `app/shared/hooks/CampaignProvider.tsx`                | Current campaign. Refreshes on user change.                |
+| `CampaignStatusProvider`  | `app/shared/user/CampaignStatusProvider.tsx`           | Campaign-level status flag.                                |
+| `FeatureFlagsProvider`    | `app/shared/experiments/FeatureFlagsProvider.tsx`      | Amplitude experiments — see `docs/feature-flags.md`.       |
+| `QueryClientProvider`     | `app/shared/query-client.tsx`                          | React Query client.                                        |
+| `Snackbar`                | `app/shared/utils/Snackbar.tsx`                        | App-wide toast surface. Use `helpers/useSnackbar.ts`.      |
+| `NavigationProvider`      | `app/shared/layouts/navigation/NavigationProvider.tsx` | Sidebar / nav state.                                       |
 
 ## Feature-local providers
 

@@ -50,13 +50,13 @@ JWT in HTTP-only cookie issued by gp-api. Frontend attaches it via `credentials:
 
 ## Cross-service edges
 
-| Direction | Service | Protocol | Auth |
-|-----------|---------|----------|------|
-| outbound | gp-api (NestJS, ECS) | HTTP via `clientRequest` / `serverRequest` | Cookie or Bearer |
-| outbound | election-api | HTTP | Configured baseURL |
-| outbound | Stripe (Checkout Sessions, redirect) | HTTP via gp-api | gp-api owns Stripe keys |
-| outbound | Amplitude | JS SDK | Public key |
-| outbound | Sentry | JS SDK | Public DSN |
+| Direction | Service                              | Protocol                                   | Auth                    |
+| --------- | ------------------------------------ | ------------------------------------------ | ----------------------- |
+| outbound  | gp-api (NestJS, ECS)                 | HTTP via `clientRequest` / `serverRequest` | Cookie or Bearer        |
+| outbound  | election-api                         | HTTP                                       | Configured baseURL      |
+| outbound  | Stripe (Checkout Sessions, redirect) | HTTP via gp-api                            | gp-api owns Stripe keys |
+| outbound  | Amplitude                            | JS SDK                                     | Public key              |
+| outbound  | Sentry                               | JS SDK                                     | Public DSN              |
 
 Shared types flow through hand-rolled `Request`/`Response` declarations on `gpApi/api-endpoints.ts`. Some shapes are mirrored in `gpApi/types/`. There is no auto-generated contract package between gp-webapp and gp-api today.
 

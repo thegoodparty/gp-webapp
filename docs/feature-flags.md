@@ -5,7 +5,10 @@ Feature flags are powered by **Amplitude Experiment**. The provider in `app/shar
 ## Hooks
 
 ```ts
-import { useFeatureFlags, useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import {
+  useFeatureFlags,
+  useFlagOn,
+} from '@shared/experiments/FeatureFlagsProvider'
 
 // Boolean check — most common use case
 const { ready, on } = useFlagOn('my-feature-key')
