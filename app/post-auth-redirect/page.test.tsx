@@ -5,7 +5,13 @@ import { api } from 'helpers/test-utils/api-mocking'
 import PostAuthRedirectPage from './page'
 
 vi.mock('@clerk/nextjs', () => ({
-  useUser: vi.fn(() => ({ isSignedIn: true, isLoaded: true })),
+  useUser: vi.fn(() => ({
+    isSignedIn: true,
+    isLoaded: true,
+    user: {
+      primaryEmailAddress: { emailAddress: 'clerk-fallback@example.com' },
+    },
+  })),
 }))
 
 const mockSetCookie = vi.fn<(name: string, value: string) => void>()
@@ -15,15 +21,30 @@ vi.mock('helpers/cookieHelper', () => ({
   deleteCookie: vi.fn(),
 }))
 
+const mockTrackRegistration =
+  vi.fn<(args: { userId: string; email?: string }) => void>()
+vi.mock('helpers/analyticsHelper', () => ({
+  trackRegistrationCompleted: (args: { userId: string; email?: string }) =>
+    mockTrackRegistration(args),
+}))
+vi.mock('@shared/utils/analytics', () => ({
+  getReadyAnalytics: vi.fn().mockResolvedValue(null),
+}))
+
 let replaceSpy: ReturnType<typeof vi.fn>
+
+const setLocation = (search = '') => {
+  Object.defineProperty(window, 'location', {
+    configurable: true,
+    value: { ...window.location, replace: replaceSpy, search },
+  })
+}
 
 beforeEach(() => {
   mockSetCookie.mockClear()
+  mockTrackRegistration.mockClear()
   replaceSpy = vi.fn()
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { ...window.location, replace: replaceSpy },
-  })
+  setLocation('')
 })
 
 afterEach(() => {
@@ -120,5 +141,60 @@ describe('PostAuthRedirectPage', () => {
     render(<PostAuthRedirectPage />)
 
     await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/login'))
+  })
+
+  it('signup source: fires trackRegistrationCompleted with gp-api id and email', async () => {
+    setLocation('?source=signup')
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      data: { organizations: [orgFixture] },
+    })
+    api.mock('GET /v1/users/me', {
+      status: 200,
+      data: { id: 42, email: 'new-user@example.com', roles: [] } as any,
+    })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 404,
+      data: { message: 'none' },
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/dashboard'))
+    expect(mockTrackRegistration).toHaveBeenCalledTimes(1)
+    expect(mockTrackRegistration).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: '42',
+        email: 'new-user@example.com',
+      }),
+    )
+  })
+
+  it('login (no source param): does not fire trackRegistrationCompleted', async () => {
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      data: { organizations: [orgFixture] },
+    })
+    api.mock('GET /v1/users/me', {
+      status: 200,
+      data: { id: 42, email: 'returning@example.com', roles: [] } as any,
+    })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 404,
+      data: { message: 'none' },
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/dashboard'))
+    expect(mockTrackRegistration).not.toHaveBeenCalled()
   })
 })

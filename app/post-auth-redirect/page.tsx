@@ -11,10 +11,12 @@ import {
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { resolveSlug } from '@shared/hooks/useSelectedOrgSlug'
+import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
+import { getReadyAnalytics } from '@shared/utils/analytics'
 import { LoaderCircle } from 'lucide-react'
 
 const PostAuthRedirectPage = () => {
-  const { isSignedIn, isLoaded } = useClerkUser()
+  const { isSignedIn, isLoaded, user: clerkUser } = useClerkUser()
   const ranRef = useRef(false)
 
   useEffect(() => {
@@ -73,6 +75,28 @@ const PostAuthRedirectPage = () => {
           ? (statusRes.data as CampaignStatus)
           : null
         const hasElectedOffice = electedRes.ok
+
+        // Fire the registration event only when the redirect originated from
+        // the sign-up route. <SignUp /> sets ?source=signup; <SignIn /> does
+        // not, so this fires once per fresh registration and never on login.
+        if (
+          userRes.ok &&
+          new URLSearchParams(window.location.search).get('source') === 'signup'
+        ) {
+          try {
+            const userData = userRes.data as { id: number; email?: string }
+            await trackRegistrationCompleted({
+              analytics: getReadyAnalytics(),
+              userId: String(userData.id),
+              email:
+                userData.email ||
+                clerkUser?.primaryEmailAddress?.emailAddress ||
+                '',
+            })
+          } catch (e) {
+            console.error('registration tracking error', e)
+          }
+        }
 
         const path = resolvePostAuthRedirectPath(
           user,
