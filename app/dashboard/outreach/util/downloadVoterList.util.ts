@@ -3,21 +3,49 @@ import { voterFileDownload } from 'helpers/voterFileDownload'
 import { VoterFileFilters } from 'helpers/types'
 import { AudienceState } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
 
+// Keys used in AudienceState format (underscore-delimited)
+const AUDIENCE_STATE_FILTER_KEYS = [
+  'audience_superVoters',
+  'audience_likelyVoters',
+  'audience_unreliableVoters',
+  'audience_unlikelyVoters',
+  'audience_firstTimeVoters',
+  'party_independent',
+  'party_democrat',
+  'party_republican',
+  'age_18_25',
+  'age_25_35',
+  'age_35_50',
+  'age_50_plus',
+  'gender_male',
+  'gender_female',
+  'gender_unknown',
+] as const
+
 interface DownloadVoterListParams {
   voterFileFilter?: VoterFileFilters | AudienceState
   outreachType?: string
 }
 
-export const downloadVoterList = async (
-  { voterFileFilter = {}, outreachType = '' }: DownloadVoterListParams = {},
-  setLoading: (loading: boolean) => void = noop,
-  errorSnackbar: (message: string) => void = noop,
-): Promise<void> => {
-  setLoading(true)
-  const resolvedFilter: VoterFileFilters =
-    voterFileFilter && 'audienceSuperVoters' in voterFileFilter
-      ? voterFileFilter
-      : {}
+const isAudienceState = (
+  filter: VoterFileFilters | AudienceState,
+): filter is AudienceState => {
+  // AudienceState uses underscore keys like 'audience_superVoters'
+  // VoterFileFilters uses camelCase keys like 'audienceSuperVoters'
+  return 'audience_superVoters' in filter || 'party_independent' in filter
+}
+
+const getSelectedFiltersFromAudienceState = (
+  audienceState: AudienceState,
+): string[] => {
+  return AUDIENCE_STATE_FILTER_KEYS.filter(
+    (key) => audienceState[key as keyof AudienceState] === true,
+  )
+}
+
+const getSelectedFiltersFromVoterFileFilters = (
+  voterFileFilters: VoterFileFilters,
+): string[] => {
   const {
     audienceSuperVoters,
     audienceLikelyVoters,
@@ -33,7 +61,8 @@ export const downloadVoterList = async (
     age50Plus,
     genderMale,
     genderFemale,
-  } = resolvedFilter
+    genderUnknown,
+  } = voterFileFilters
 
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
   //  https://goodparty.atlassian.net/browse/WEB-4277
@@ -52,10 +81,30 @@ export const downloadVoterList = async (
     age_50_plus: age50Plus,
     gender_male: genderMale,
     gender_female: genderFemale,
+    gender_unknown: genderUnknown,
   }
-  const selectedAudience = Object.keys(audience).filter(
-    (key) => audience[key] === true,
-  )
+
+  return Object.keys(audience).filter((key) => audience[key] === true)
+}
+
+export const downloadVoterList = async (
+  { voterFileFilter = {}, outreachType = '' }: DownloadVoterListParams = {},
+  setLoading: (loading: boolean) => void = noop,
+  errorSnackbar: (message: string) => void = noop,
+): Promise<void> => {
+  setLoading(true)
+
+  let selectedAudience: string[] = []
+
+  if (voterFileFilter && Object.keys(voterFileFilter).length > 0) {
+    if (isAudienceState(voterFileFilter)) {
+      // Handle AudienceState format (from DownloadStep/task flows)
+      selectedAudience = getSelectedFiltersFromAudienceState(voterFileFilter)
+    } else {
+      // Handle VoterFileFilters format (camelCase keys)
+      selectedAudience = getSelectedFiltersFromVoterFileFilters(voterFileFilter)
+    }
+  }
 
   try {
     await voterFileDownload(outreachType, { filters: selectedAudience })
