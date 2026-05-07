@@ -39,10 +39,7 @@ function InputWithButton({
       >
         <Input
           id={inputId}
-          className={cn(
-            'rounded-full',
-            layout === 'inline' && 'w-auto flex-1 min-w-0',
-          )}
+          className={cn(layout === 'inline' && 'w-auto flex-1 min-w-0')}
           {...inputProps}
         />
         <Button
