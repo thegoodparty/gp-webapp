@@ -163,7 +163,11 @@ export const TopVoterIssuesSection = ({
                       {issue.label}
                     </h3>
                   </div>
-                  <Badge variant="soft">{PRIORITY_LABEL[issue.priority]}</Badge>
+                  {issue.priority === 'high' ? (
+                    <Badge variant="soft">
+                      {PRIORITY_LABEL[issue.priority]}
+                    </Badge>
+                  ) : null}
                 </div>
 
                 <div className="space-y-1">
