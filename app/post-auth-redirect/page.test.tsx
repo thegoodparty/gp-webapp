@@ -143,7 +143,7 @@ describe('PostAuthRedirectPage', () => {
     await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/login'))
   })
 
-  it('signup source: fires trackRegistrationCompleted with gp-api id and email', async () => {
+  it('signup source + fresh createdAt: fires trackRegistrationCompleted', async () => {
     setLocation('?source=signup')
     api.mock('GET /v1/organizations', {
       status: 200,
@@ -151,7 +151,12 @@ describe('PostAuthRedirectPage', () => {
     })
     api.mock('GET /v1/users/me', {
       status: 200,
-      data: { id: 42, email: 'new-user@example.com', roles: [] } as any,
+      data: {
+        id: 42,
+        email: 'new-user@example.com',
+        roles: [],
+        createdAt: new Date().toISOString(),
+      } as any,
     })
     api.mock('GET /v1/campaigns/mine/status', {
       status: 200,
@@ -174,6 +179,36 @@ describe('PostAuthRedirectPage', () => {
     )
   })
 
+  it('signup source + stale createdAt: does NOT fire (URL-tampering guard)', async () => {
+    setLocation('?source=signup')
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      data: { organizations: [orgFixture] },
+    })
+    api.mock('GET /v1/users/me', {
+      status: 200,
+      data: {
+        id: 42,
+        email: 'old-user@example.com',
+        roles: [],
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      } as any,
+    })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 404,
+      data: { message: 'none' },
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/dashboard'))
+    expect(mockTrackRegistration).not.toHaveBeenCalled()
+  })
+
   it('login (no source param): does not fire trackRegistrationCompleted', async () => {
     api.mock('GET /v1/organizations', {
       status: 200,
@@ -181,7 +216,12 @@ describe('PostAuthRedirectPage', () => {
     })
     api.mock('GET /v1/users/me', {
       status: 200,
-      data: { id: 42, email: 'returning@example.com', roles: [] } as any,
+      data: {
+        id: 42,
+        email: 'returning@example.com',
+        roles: [],
+        createdAt: new Date().toISOString(),
+      } as any,
     })
     api.mock('GET /v1/campaigns/mine/status', {
       status: 200,

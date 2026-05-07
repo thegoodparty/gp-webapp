@@ -76,23 +76,35 @@ const PostAuthRedirectPage = () => {
           : null
         const hasElectedOffice = electedRes.ok
 
-        // Fire the registration event only when the redirect originated from
-        // the sign-up route. <SignUp /> sets ?source=signup; <SignIn /> does
-        // not, so this fires once per fresh registration and never on login.
-        if (
-          userRes.ok &&
+        // Fire the registration event only on a true fresh sign-up. The
+        // ?source=signup hint set by <SignUp /> is just a re-fire guard for
+        // back-to-back logout/login; the authoritative gate is the gp-api
+        // user record's createdAt, which is server-set at JIT-provisioning
+        // and cannot be forged by crafting a URL.
+        const REGISTRATION_FRESHNESS_MS = 5 * 60 * 1000
+        const sourceIsSignup =
           new URLSearchParams(window.location.search).get('source') === 'signup'
-        ) {
+        if (userRes.ok && sourceIsSignup) {
           try {
-            const userData = userRes.data as { id: number; email?: string }
-            await trackRegistrationCompleted({
-              analytics: getReadyAnalytics(),
-              userId: String(userData.id),
-              email:
-                userData.email ||
-                clerkUser?.primaryEmailAddress?.emailAddress ||
-                '',
-            })
+            const userData = userRes.data as {
+              id: number
+              email?: string
+              createdAt: string | Date
+            }
+            const createdAtMs = new Date(userData.createdAt).getTime()
+            const isFreshlyCreated =
+              Number.isFinite(createdAtMs) &&
+              Date.now() - createdAtMs < REGISTRATION_FRESHNESS_MS
+            if (isFreshlyCreated) {
+              await trackRegistrationCompleted({
+                analytics: getReadyAnalytics(),
+                userId: String(userData.id),
+                email:
+                  userData.email ||
+                  clerkUser?.primaryEmailAddress?.emailAddress ||
+                  '',
+              })
+            }
           } catch (e) {
             console.error('registration tracking error', e)
           }
