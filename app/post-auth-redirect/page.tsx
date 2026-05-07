@@ -9,8 +9,8 @@ import {
 } from 'helpers/resolvePostAuthRedirectPath.util'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
-import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import { resolveSlug } from '@shared/hooks/useSelectedOrgSlug'
+import { LoaderCircle } from 'lucide-react'
 
 const PostAuthRedirectPage = () => {
   const { isSignedIn, isLoaded } = useClerkUser()
@@ -73,7 +73,7 @@ const PostAuthRedirectPage = () => {
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <LoadingAnimation />
+      <LoaderCircle className="animate-spin" />
     </div>
   )
 }
