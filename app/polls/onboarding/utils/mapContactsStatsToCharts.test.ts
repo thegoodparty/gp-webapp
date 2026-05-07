@@ -96,11 +96,7 @@ describe('mapContactsStatsToCharts — education ordering', () => {
 describe('mapContactsStatsToCharts — Unknown-last across charts', () => {
   it('moves "Unknown" to the end of any category', () => {
     const stats = buildStats([], {
-      age: [
-        bucket('Unknown', 5),
-        bucket('25-34', 30),
-        bucket('35-44', 40),
-      ],
+      age: [bucket('Unknown', 5), bucket('25-34', 30), bucket('35-44', 40)],
       homeowner: [bucket('Unknown', 10), bucket('Yes', 90)],
     })
 
