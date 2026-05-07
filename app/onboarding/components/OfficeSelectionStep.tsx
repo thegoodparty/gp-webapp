@@ -13,7 +13,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
 import { Search } from 'lucide-react'
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
@@ -28,6 +28,7 @@ interface OfficeSelectionStepProps {
   onZipChange: (zip: string) => void
   onSelect: (office: SelectedOffice | undefined) => void
   onCantFindOffice: () => void
+  onHydratingChange?: (isHydrating: boolean) => void
 }
 
 interface FilterOption {
@@ -200,6 +201,7 @@ export const OfficeSelectionStep = ({
   onZipChange,
   onSelect,
   onCantFindOffice,
+  onHydratingChange,
 }: OfficeSelectionStepProps): React.JSX.Element => {
   const [zipInput, setZipInput] = useState(zip ?? '')
   const [submittedZip, setSubmittedZip] = useState<string | undefined>(zip)
@@ -275,14 +277,24 @@ export const OfficeSelectionStep = ({
     setSubmittedZip(cleaned)
     setActiveFilter('')
     setNameFilter('')
+    hydratedRacesRef.current.clear()
+    pendingHydrationRaceIdRef.current = null
     onZipChange(cleaned)
     onSelect(undefined)
+    onHydratingChange?.(false)
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     handleSearch()
   }
+
+  const hydratedRacesRef = useRef<Map<string, Race>>(new Map())
+  // Tracks the most recently clicked race so an in-flight hydration result
+  // for a previously clicked race can detect that it's stale and bail.
+  // Updated synchronously inside the click handler so it doesn't depend on
+  // the parent feeding the new `selected` prop back through a re-render.
+  const pendingHydrationRaceIdRef = useRef<string | null>(null)
 
   const hydrateRace = async (race: Race): Promise<Race | null> => {
     if (!race.brPositionId || !race.election?.electionDay || !submittedZip) {
@@ -307,12 +319,47 @@ export const OfficeSelectionStep = ({
 
   const handleSelectRace = async (race: Race) => {
     if (selected?.raceId === race.id) {
+      pendingHydrationRaceIdRef.current = null
       onSelect(undefined)
+      onHydratingChange?.(false)
       return
     }
+
+    // Cached hydration: previous click on this race already enriched it.
+    const cached = hydratedRacesRef.current.get(race.id)
+    if (cached) {
+      pendingHydrationRaceIdRef.current = null
+      onSelect(toSelectedOffice(cached))
+      onHydratingChange?.(false)
+      return
+    }
+
+    // Optimistic select so the radio reflects the click immediately.
+    pendingHydrationRaceIdRef.current = race.id
+    onSelect(toSelectedOffice(race))
+    onHydratingChange?.(true)
+    const zipAtClick = submittedZip
     const hydrated = await hydrateRace(race)
-    if (!hydrated) return
-    onSelect(toSelectedOffice(hydrated))
+
+    // The user may have clicked a different race, deselected, or changed zip
+    // while we were hydrating. If so, bail — the newer handler owns state.
+    if (pendingHydrationRaceIdRef.current !== race.id) {
+      // Only cache if the zip context still matches; otherwise this result
+      // belongs to a previous zip and would poison cache for the new one.
+      if (hydrated && submittedZip === zipAtClick) {
+        hydratedRacesRef.current.set(race.id, hydrated)
+      }
+      return
+    }
+
+    pendingHydrationRaceIdRef.current = null
+    if (hydrated) {
+      hydratedRacesRef.current.set(race.id, hydrated)
+      onSelect(toSelectedOffice(hydrated))
+    } else {
+      onSelect(undefined)
+    }
+    onHydratingChange?.(false)
   }
 
   const showResults = Boolean(submittedZip) && query.isSuccess
@@ -373,7 +420,9 @@ export const OfficeSelectionStep = ({
                 value={activeFilter}
                 onValueChange={(value) => {
                   setActiveFilter(value)
+                  pendingHydrationRaceIdRef.current = null
                   onSelect(undefined)
+                  onHydratingChange?.(false)
                 }}
               >
                 {filterOptions.map((option) => (

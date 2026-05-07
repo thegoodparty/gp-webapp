@@ -73,7 +73,12 @@ export const VoterDemographicsStep = ({
 
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
-      <TopVoterIssuesSection city={city} state={state} office={office} />
+      <TopVoterIssuesSection
+        ballotReadyPositionId={ballotReadyPositionId}
+        city={city}
+        state={state}
+        office={office}
+      />
 
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold text-foreground">

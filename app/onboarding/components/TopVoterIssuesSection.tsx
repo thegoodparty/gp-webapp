@@ -17,6 +17,7 @@ import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
 interface TopVoterIssuesSectionProps {
+  ballotReadyPositionId?: string
   city?: string
   state?: string
   office?: string
@@ -71,9 +72,17 @@ const iconForLabel = (label: string): React.JSX.Element => {
   return match ? match.icon : <LuHeart className="size-5" />
 }
 
-const voterIssuesQueryOptions = () =>
+// Endpoint derives district from the org cookie, so the request takes no
+// params. We still key the cache by office identity so navigating back and
+// changing zip/office refetches instead of returning the prior district.
+const voterIssuesQueryOptions = (params: {
+  ballotReadyPositionId?: string
+  city?: string
+  state?: string
+  office?: string
+}) =>
   queryOptions({
-    queryKey: [VOTER_ISSUES_QUERY_KEY] as const,
+    queryKey: [VOTER_ISSUES_QUERY_KEY, params] as const,
     queryFn: () =>
       clientRequest(VOTER_ISSUES_ROUTE, {}).then((res) => res.data),
   })
@@ -92,11 +101,14 @@ const VoterIssuesSkeleton = (): React.JSX.Element => (
 )
 
 export const TopVoterIssuesSection = ({
+  ballotReadyPositionId,
   city,
   state,
   office,
 }: TopVoterIssuesSectionProps): React.JSX.Element | null => {
-  const query = useQuery(voterIssuesQueryOptions())
+  const query = useQuery(
+    voterIssuesQueryOptions({ ballotReadyPositionId, city, state, office }),
+  )
   const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
