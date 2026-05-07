@@ -163,9 +163,7 @@ export const TopVoterIssuesSection = ({
                       {issue.label}
                     </h3>
                   </div>
-                  <Badge className="rounded-full bg-slate-950 px-3 py-1 text-xs font-medium text-white hover:bg-slate-950">
-                    {PRIORITY_LABEL[issue.priority]}
-                  </Badge>
+                  <Badge variant="soft">{PRIORITY_LABEL[issue.priority]}</Badge>
                 </div>
 
                 <div className="space-y-1">
