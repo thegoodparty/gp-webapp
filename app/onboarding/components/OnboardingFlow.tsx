@@ -200,7 +200,7 @@ interface WhyWeAskProps {
 
 const WhyWeAsk = ({
   text,
-  title = 'Why we ask',
+  title = 'Why this matters',
   children,
 }: WhyWeAskProps): React.JSX.Element => (
   <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
