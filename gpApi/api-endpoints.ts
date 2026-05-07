@@ -1,3 +1,4 @@
+import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
 import type {
   Briefing,
   BriefingListItem,
@@ -33,7 +34,7 @@ export type APIEndpoints = {
 
   'PATCH /v1/organizations/:slug': {
     Request: {
-      ballotReadyPositionId?: string | undefined
+      ballotReadyPositionId?: string | null | undefined
       overrideDistrictId?: string | null | undefined
       customPositionName?: string | null | undefined
     }
@@ -54,6 +55,13 @@ export type APIEndpoints = {
     }
   }
 
+  'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin': {
+    Request: {
+      pin: string
+    }
+    Response: void
+  }
+
   'GET /v1/elected-office/current': {
     Request: {}
     Response: ElectedOffice
@@ -67,6 +75,40 @@ export type APIEndpoints = {
   'GET /v1/contacts/stats': {
     Request: {}
     Response: ContactsStats
+  }
+
+  'GET /v1/onboarding/contacts/stats': {
+    Request: {
+      ballotReadyPositionId?: string
+      districtId?: string
+    }
+    Response: ContactsStats
+  }
+
+  'GET /v1/onboarding/local-news': {
+    Request: {
+      city?: string
+      state: string
+      office: string
+    }
+    Response: {
+      outlets: Array<{
+        name: string
+        type: 'TV' | 'print' | 'radio'
+        description: string
+      }>
+    }
+  }
+
+  'GET /v1/onboarding/voter-issues': {
+    Request: {}
+    Response: {
+      issues: Array<{
+        label: string
+        score: number
+        priority: 'high' | 'medium' | 'low'
+      }>
+    }
   }
 
   'POST /v1/polls/initial-poll': {
@@ -164,6 +206,15 @@ export type APIEndpoints = {
   'GET /v1/meetings/briefings/:date': {
     Request: {}
     Response: Briefing
+  }
+
+  'GET /v1/elections/race-by-position': {
+    Request: {
+      brPositionId: string
+      zip: string
+      electionDate: string
+    }
+    Response: Race
   }
 }
 

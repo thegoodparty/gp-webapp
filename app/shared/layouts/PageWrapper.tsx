@@ -9,7 +9,6 @@ import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 
-import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
@@ -57,9 +56,6 @@ const PageWrapper = async ({
                         <div className="overflow-x-hidden">
                           <JsonLdSchema />
                           <Nav />
-                          <Suspense>
-                            <PromoBanner initPathname={pathname || ''} />
-                          </Suspense>
                           {children}
                           <Suspense>
                             <Footer initPathname={pathname || ''} />

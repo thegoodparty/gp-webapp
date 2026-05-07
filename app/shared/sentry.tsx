@@ -8,10 +8,14 @@ import { isTestUser } from 'helpers/test-users'
 import { useOrganization } from './organization-picker'
 
 export const reportErrorToSentry = (
-  error: Error,
+  error: unknown,
   customAttributes?: Partial<Record<string, unknown>>,
 ) => {
-  Sentry.captureException(error, {
+  const reportable =
+    error instanceof Error
+      ? error
+      : new Error(typeof error === 'string' ? error : JSON.stringify(error))
+  Sentry.captureException(reportable, {
     extra: customAttributes,
   })
 }

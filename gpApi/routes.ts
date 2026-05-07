@@ -430,6 +430,10 @@ export const apiRoutes = {
       path: '/elections/races-by-year',
       method: 'GET',
     },
+    raceByPosition: {
+      path: '/elections/race-by-position',
+      method: 'GET',
+    },
     districts: {
       types: {
         path: '/elections/districts/types',

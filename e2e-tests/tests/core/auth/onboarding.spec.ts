@@ -5,6 +5,7 @@ import {
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
 import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
+import { wait } from 'tests/utils/eventually'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -20,13 +21,12 @@ test('authenticate with onboarded user', async ({ page }) => {
 
   const testUser = await fillClerkSignUpForm(page)
 
-  await page.waitForURL((url) => url.toString().includes('/onboarding/'), {
+  await page.waitForURL((url) => url.pathname.startsWith('/onboarding/'), {
     timeout: 15000,
   })
   console.log('User created, now completing onboarding...')
 
-  await fillZipCode(page)
-  await waitForOfficesLoad(page)
+  await NavigationHelper.dismissOverlays(page)
 
   await completeOnboardingFlow(page)
 
@@ -39,256 +39,107 @@ test('authenticate with onboarded user', async ({ page }) => {
 })
 
 async function completeOnboardingFlow(page: Page): Promise<void> {
-  await completeStep1OfficeSelection(page)
-  await completeStep2PartySelection(page)
-  await completeStep3PledgeAgreement(page)
-  await completeStep4FinishOnboarding(page)
+  await completeWelcomeStep(page)
+  await completeBallotStatusStep(page)
+  await completePartyAffiliationStep(page)
+  await completeOfficeSelectionStep(page)
+  await completePathToVictoryStep(page)
+  await completeVoterDemographicsStep(page)
+  await completePledgeStep(page)
 }
 
-async function completeStep1OfficeSelection(page: Page): Promise<void> {
-  console.log('Completing Step 1: Office Selection')
+const continueButton = (page: Page) =>
+  page.getByRole('button', { name: /continue/i }).first()
 
-  await fillZipCode(page)
-  await selectOfficeLevel(page)
-  await waitForOfficesLoad(page)
-  await selectOffice(page)
-  await proceedToStep2(page)
-
-  console.log('Completed Step 1 - moved to step 2')
+async function clickContinue(page: Page): Promise<void> {
+  const button = continueButton(page)
+  await expect(button).toBeVisible()
+  await expect(button).toBeEnabled()
+  await button.click()
 }
 
-async function fillZipCode(page: Page): Promise<void> {
-  const zipField = page.getByLabel('Zip Code')
-  await zipField.fill('82001')
+async function completeWelcomeStep(page: Page): Promise<void> {
+  console.log('Step: Welcome')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /winning campaign plan/i }),
+  ).toBeVisible({ timeout: 15000 })
+  await clickContinue(page)
 }
 
-async function selectOfficeLevel(page: Page): Promise<void> {
-  let levelSelected = false
-
-  const levelSelect = page.getByLabel('Office Level')
-  if (await levelSelect.isVisible({ timeout: 3000 })) {
-    try {
-      await levelSelect.selectOption('Local/Township/City')
-      levelSelected = true
-    } catch {
-      await levelSelect.selectOption({ index: 1 })
-      levelSelected = true
-    }
-  }
-
-  if (!levelSelected) {
-    const anySelect = page.locator('select').first()
-    if (await anySelect.isVisible({ timeout: 3000 })) {
-      await anySelect.selectOption({ index: 1 })
-    }
-  }
+async function completeBallotStatusStep(page: Page): Promise<void> {
+  console.log('Step: Ballot status')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /already on the ballot/i }),
+  ).toBeVisible()
+  await page.getByRole('radio').first().click({ force: true })
+  await clickContinue(page)
 }
 
-async function waitForOfficesLoad(page: Page): Promise<void> {
-  await page.waitForFunction(
-    () => {
-      const text = document.body.textContent || ''
-      return text.includes('offices found') || text.includes('office found')
-    },
-    { timeout: 30000 },
-  )
+async function completePartyAffiliationStep(page: Page): Promise<void> {
+  console.log('Step: Party affiliation')
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: /official party designation/i,
+    }),
+  ).toBeVisible()
+  await page.getByRole('radio').first().click({ force: true })
+  await clickContinue(page)
 }
 
-async function selectOffice(page: Page): Promise<void> {
-  let officeSelected = false
+async function completeOfficeSelectionStep(page: Page): Promise<void> {
+  console.log('Step: Office selection')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /what office/i }),
+  ).toBeVisible()
 
-  const officeRadios = page.locator('input[type="radio"]')
-  const radioCount = await officeRadios.count()
+  await page.getByLabel(/zip code/i).fill('82001')
+  await page.getByRole('button', { name: /search/i }).click()
 
-  if (radioCount > 0) {
-    await officeRadios.first().click()
-    officeSelected = true
-    console.log('Selected office via radio button')
-  } else {
-    const officeButtons = page.getByRole('button').filter({
-      hasText:
-        /Council|Mayor|Board|Commission|Village|County|Flat Rock|Henderson/,
-    })
-    const buttonCount = await officeButtons.count()
-
-    if (buttonCount > 0) {
-      await officeButtons.first().click()
-      officeSelected = true
-      console.log('Selected office via button')
-    }
-  }
-
-  if (!officeSelected) {
-    throw new Error('Could not select an office')
-  }
-
-  await page.waitForFunction(
-    () => {
-      const buttons = Array.from(document.querySelectorAll('button'))
-      for (const button of buttons) {
-        if (button.textContent?.includes('Next') || button.type === 'submit') {
-          return !(button as HTMLButtonElement).disabled
-        }
-      }
-      return false
-    },
-    { timeout: 10000 },
-  )
-}
-
-async function proceedToStep2(page: Page): Promise<void> {
-  const nextButton = page.getByRole('button', { name: 'Next' }).first()
-  await expect(nextButton).toBeVisible()
-  await expect(nextButton).toBeEnabled()
-  await nextButton.click()
-
-  await page.waitForURL(
-    (url) => /\/onboarding\/[^/]+\/2/.test(url.toString()),
-    {
-      timeout: 10000,
-    },
-  )
-}
-
-async function completeStep2PartySelection(page: Page): Promise<void> {
-  console.log('Completing Step 2: Party Selection')
-
-  await page.getByText('How will your campaign appear on the ballot?').waitFor({
-    state: 'visible',
-    timeout: 3000,
+  const officeGroup = page.getByRole('radiogroup', {
+    name: /available offices/i,
   })
+  await officeGroup
+    .getByRole('radio')
+    .first()
+    .waitFor({ state: 'visible', timeout: 30000 })
+  await officeGroup.getByRole('radio').first().click()
 
-  await selectPartyAffiliation(page)
-  await proceedToStep3(page)
+  await wait(1000)
 
-  console.log('Completed Step 2 - moved to step 3')
+  await clickContinue(page)
 }
 
-async function selectPartyAffiliation(page: Page): Promise<void> {
-  let partySelected = false
-
-  const otherLabel = page.getByLabel('Other')
-  if (await otherLabel.isVisible({ timeout: 3000 })) {
-    await otherLabel.fill('Independent')
-    partySelected = true
-    console.log("Filled 'Other' party field")
-  } else {
-    const textInputs = page.locator('input[type="text"]')
-    const inputCount = await textInputs.count()
-
-    if (inputCount > 0) {
-      for (let i = 0; i < inputCount; i++) {
-        try {
-          const input = textInputs.nth(i)
-          await input.fill('Independent')
-
-          const value = await input.inputValue()
-          if (value === 'Independent') {
-            partySelected = true
-            console.log(`Filled party input field ${i}`)
-            break
-          }
-        } catch {}
-      }
-    }
-  }
-
-  if (!partySelected) {
-    const partyRadios = page.locator('input[type="radio"]')
-    const radioCount = await partyRadios.count()
-
-    if (radioCount > 0) {
-      await partyRadios.first().click()
-      partySelected = true
-      console.log('Selected party via radio button')
-    }
-  }
-
-  if (!partySelected) {
-    throw new Error('Could not select party affiliation')
-  }
-
-  await page.waitForFunction(
-    () => {
-      const buttons = Array.from(document.querySelectorAll('button'))
-      for (const button of buttons) {
-        if (button.textContent?.includes('Next') || button.type === 'submit') {
-          return !(button as HTMLButtonElement).disabled
-        }
-      }
-      return false
-    },
-    { timeout: 10000 },
-  )
-}
-
-async function proceedToStep3(page: Page): Promise<void> {
-  const nextButton = page.getByRole('button', { name: 'Next' }).first()
-  await expect(nextButton).toBeVisible()
-
-  const isEnabled = await nextButton.isEnabled()
-  if (!isEnabled) {
-    console.warn('Next button not enabled, checking form state...')
-    const buttonAttrs = await nextButton.evaluate((el) => ({
-      disabled: (el as HTMLButtonElement).disabled,
-      'data-step': el.getAttribute('data-step'),
-      'data-party': el.getAttribute('data-party'),
-      'data-other-party': el.getAttribute('data-other-party'),
-    }))
-    console.log('Button attributes:', buttonAttrs)
-  }
-
-  await nextButton.click()
-
-  await page.waitForURL(
-    (url) => /\/onboarding\/[^/]+\/3/.test(url.toString()),
-    {
-      timeout: 5000,
-    },
-  )
-}
-
-async function completeStep3PledgeAgreement(page: Page): Promise<void> {
-  console.log('Completing Step 3: Pledge Agreement')
-
-  await acceptPledge(page)
-  await proceedToStep4(page)
-
-  console.log('Completed Step 3 - moved to step 4')
-}
-
-async function acceptPledge(page: Page): Promise<void> {
-  const agreeButton = page.getByRole('button', { name: 'I Agree' })
-  await agreeButton.waitFor({ state: 'visible' })
-  await agreeButton.click()
-}
-
-async function proceedToStep4(page: Page): Promise<void> {
-  await page.waitForURL(
-    (url) => /\/onboarding\/[^/]+\/4/.test(url.toString()),
-    {
-      timeout: 5000,
-    },
-  )
-}
-
-async function completeStep4FinishOnboarding(page: Page): Promise<void> {
-  console.log('Completing Step 4: Finish Onboarding')
-
-  await navigateToDashboard(page)
-  await verifyDashboardAccess(page)
-
-  console.log('Reached dashboard - onboarding complete!')
-}
-
-async function navigateToDashboard(page: Page): Promise<void> {
-  const viewDashboardButton = page.getByRole('button', {
-    name: 'View Dashboard',
+async function completePathToVictoryStep(page: Page): Promise<void> {
+  console.log('Step: Path to victory')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /votes you need/i }),
+  ).toBeVisible({ timeout: 30000 })
+  // Wait for the metrics card to render before continuing.
+  await expect(page.getByText(/votes needed to win/i).first()).toBeVisible({
+    timeout: 30000,
   })
-  await viewDashboardButton.waitFor({ state: 'visible' })
-  await viewDashboardButton.click()
+  await clickContinue(page)
 }
 
-async function verifyDashboardAccess(page: Page): Promise<void> {
+async function completeVoterDemographicsStep(page: Page): Promise<void> {
+  console.log('Step: Voter demographics')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /your voters/i }),
+  ).toBeVisible({ timeout: 15000 })
+  await clickContinue(page)
+}
+
+async function completePledgeStep(page: Page): Promise<void> {
+  console.log('Step: Pledge')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /pledge/i }),
+  ).toBeVisible()
+  const submit = page
+    .getByRole('button', { name: /agree.*create my plan/i })
+    .first()
+  await expect(submit).toBeVisible({ timeout: 15000 })
+  await expect(submit).toBeEnabled()
+  await submit.click()
   await page.waitForURL(/\/dashboard/, { timeout: 15000 })
 }

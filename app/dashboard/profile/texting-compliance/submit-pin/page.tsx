@@ -4,15 +4,12 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import candidateAccess from 'app/dashboard/shared/candidateAccess'
 import { redirect } from 'next/navigation'
+import type { TcrCompliance } from 'helpers/types'
 
 export const dynamic = 'force-dynamic'
 
-interface TcrComplianceData {
-  id: number
-}
-
-const fetchTcrCompliance = async (): Promise<TcrComplianceData> => {
-  const response = await serverFetch<TcrComplianceData>(
+const fetchTcrCompliance = async (): Promise<TcrCompliance> => {
+  const response = await serverFetch<TcrCompliance>(
     apiRoutes.campaign.tcrCompliance.fetch,
   )
   if (!response.ok) {
