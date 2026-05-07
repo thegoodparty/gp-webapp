@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Scope
+
+Only do exactly what is asked. Do not fix adjacent issues, tackle the "next item," or make unrequested improvements. If you notice something else worth fixing, mention it — but do not act on it unless explicitly asked.
+
 ## Commands
 
 ```bash
@@ -72,6 +76,8 @@ JWT stored in HTTP-only cookie by gp-api. Frontend includes it via `credentials:
 
 Vitest + React Testing Library + jsdom. Test globals enabled (no imports needed for `describe`, `it`, `expect`, `vi`).
 
+After refactoring a component, run `npm run test` locally and update any tests that reference old selectors (e.g. library-specific CSS classes like `.Mui-error`), old copy, or old component APIs before pushing. Do not rely on CI to catch these — fix them first.
+
 ### Targeted runs
 
 ```bash
@@ -115,6 +121,10 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 - **Ask first** before adding new utilities to `helpers/` (it is already a 50+ file dumping ground; check whether the helper exists). See `gpApi/CLAUDE.md` for fetch-helper rules.
 - **Deploys** are automatic via Vercel on push to `develop` / `qa` / `master`. There is no manual deploy command.
 
+## Navigation
+
+When the active step or view changes in a multi-step flow, always reset scroll position to the top (`window.scrollTo(0, 0)`) via a `useEffect` that watches the active step identifier.
+
 ## Observability
 
 - **Frontend errors → Sentry.** Org slug `goodparty`. https://goodparty.sentry.io.
@@ -135,3 +145,32 @@ Other patterns (`mockOrdered`, dynamic handlers): `docs/testing.md`.
 - `@shared/*` path alias maps to `app/shared/*`
 - Strict TypeScript: `noImplicitAny`, `noUncheckedIndexedAccess`, `noUnusedLocals`, `noUnusedParameters`
 - ESLint enforces no unused imports via `unused-imports/no-unused-imports`
+
+## Styleguide
+
+### Components
+
+Always use styleguide components (`Button`, `Input`, `Label`, etc.) imported from `@styleguide` instead of raw HTML elements (`<button>`, `<input>`, `<label>`). Raw elements are only acceptable inside styleguide component definitions themselves (`styleguide/components/ui/`).
+
+Before implementing a pattern manually (wrapper divs, absolute positioning, ad-hoc layout), check whether the primitive component should support it as a prop instead. Build capability at the component level so it is reusable.
+
+### Toggle and Selection
+
+Use Radix `ToggleGroup` (`@radix-ui/react-toggle-group`) for filter pills and any toggleable selection UI. Never use `Button` with `aria-pressed` for this pattern — `ToggleGroup` provides correct semantics, roving focus, and controlled state out of the box.
+
+Always pass a defined `value` to controlled Radix components — never use `value={someState || undefined}` to express "nothing selected." That pattern toggles the component between controlled and uncontrolled modes on every deselect, causing internal state desync. Use `value={someState}` and let `""` mean nothing selected.
+
+### Icons
+
+Always use `lucide-react` for icons. Never use `react-icons` or other icon libraries. Check `lucide-react` for an equivalent before considering any alternative.
+
+### Design Tokens
+
+- Never use raw hex colors, hardcoded pixel values, or Tailwind default color palette (e.g. `blue-600`, `slate-300`) in component code. Always reference a design token.
+- Check `styleguide/design-tokens.css` for available tokens and `styleguide/tailwind-theme.css` for their Tailwind utility class names.
+- Colors in `tailwind-theme.css` are registered as `--color-*` and have a corresponding Tailwind utility (e.g. `--color-components-input-active` → `border-components-input-active`). **Never** use CSS variable bracket syntax (e.g. `bg-[--some-variable]`, `border-[--some-variable]`) — it does not reliably render in Tailwind v4. Always use the registered utility class name.
+- Never modify shared CSS variables (`--input`, `--border`, etc.) to fix a single component's appearance — these affect borders, backgrounds, and focus rings globally. Fix at the component level using the correct token.
+
+### Figma
+
+When implementing or matching a Figma design, read the generated code structure — not just the screenshot. The code shows exact token names, sizing, and state logic. The screenshot can mislead.
