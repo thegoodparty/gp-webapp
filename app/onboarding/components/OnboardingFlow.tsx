@@ -822,6 +822,11 @@ export default function OnboardingFlow({
         winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
       })
     }
+    if (activeStep.id === 'voter-demographics') {
+      trackEvent(EVENTS.Onboarding.KnowYourVotersCompleted, {
+        campaignId: campaign?.id,
+      })
+    }
     if (
       activeStep.id === 'office-selection' &&
       answers.structuredOffice &&
