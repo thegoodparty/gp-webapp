@@ -18,7 +18,7 @@ A pointer-heavy doc. Detailed conventions live in `CLAUDE.md` and feature-level 
 
 ```
 app/
-  (candidate)/                # public candidate website (route group)
+  (candidate)/                # public candidate website (route group) — not yet present in this repo
   dashboard/
     <feature>/                # one dir per feature, owns its routes + components
       page.tsx
