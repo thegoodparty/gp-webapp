@@ -347,7 +347,7 @@ const ProjectionExplanation = ({
                   We analyze voter eligibility, historical voting behavior and
                   election patterns to estimate the likelihood that each voter
                   in your district will turn out in your race. Combining the
-                  voter-level predictions, generate an accurate turnout
+                  voter-level predictions, we generate an accurate turnout
                   projection and win number target tailored specifically to your
                   election.
                 </p>
@@ -363,7 +363,7 @@ const ProjectionExplanation = ({
                   >
                     our blog post
                   </a>
-                  .
+                  {'.'}
                 </p>
               </div>
             </DialogDescription>
