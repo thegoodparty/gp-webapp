@@ -1,5 +1,5 @@
 import { GrRadial, GrRadialSelected } from 'react-icons/gr'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircle } from 'lucide-react'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import H5 from '@shared/typography/H5'
@@ -47,7 +47,9 @@ export default function RaceCard({
         ) : (
           <GrRadial className="text-xl text-indigo" />
         )}
-        {isHydrating ? <CircularProgress size={16} className="ml-2" /> : null}
+        {isHydrating ? (
+          <LoaderCircle size={16} className="ml-2 animate-spin" />
+        ) : null}
         <div className="ml-3 text-left">
           <H5>{name}</H5>
           <Body2>{normalizedPosition?.name || ''}</Body2>

@@ -5,6 +5,7 @@ import {
   NavigationHelper,
 } from '../../../src/helpers/navigation.helper'
 import { fillClerkSignUpForm } from '../../../src/helpers/clerk.helper'
+import { wait } from 'tests/utils/eventually'
 
 test.beforeEach(async ({ page }) => {
   await blockSlowScripts(page)
@@ -103,6 +104,8 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
     .first()
     .waitFor({ state: 'visible', timeout: 30000 })
   await officeGroup.getByRole('radio').first().click()
+
+  await wait(1000)
 
   await clickContinue(page)
 }
