@@ -14,6 +14,16 @@ interface ChartData {
   education: ChartDataPoint[]
 }
 
+const EDUCATION_ORDER = [
+  'None',
+  'High School Diploma',
+  'Some College',
+  'Technical School',
+  'College Degree',
+  'Graduate Degree',
+  'Unknown',
+] as const
+
 export const mapContactsStatsToCharts = (
   contactsStats: ContactsStats | undefined,
 ): ChartData => {
@@ -85,12 +95,24 @@ export const mapContactsStatsToCharts = (
     )
   }
 
+  const mapEducation = (): ChartDataPoint[] => {
+    const orderIndex = (label: string): number => {
+      const i = (EDUCATION_ORDER as readonly string[]).indexOf(label)
+      return i === -1 ? EDUCATION_ORDER.length : i
+    }
+    return toChartData(
+      [...categories.education].sort(
+        (a, b) => orderIndex(a.label) - orderIndex(b.label),
+      ),
+    )
+  }
+
   return {
     totalConstituents: contactsStats.totalConstituents,
     ageDistribution: toChartData(categories.age),
     presenceOfChildren: toChartData(categories.presenceOfChildren),
     homeowner: toChartData(categories.homeowner),
     estimatedIncomeRange: mapEstimatedIncomeRange(),
-    education: toChartData(categories.education),
+    education: mapEducation(),
   }
 }
