@@ -216,6 +216,7 @@ interface StepBodyProps {
   answers: OnboardingAnswers
   updateAnswers: (answers: Partial<OnboardingAnswers>) => void
   onCantFindOffice: () => void
+  onOfficeHydratingChange: (isHydrating: boolean) => void
   liveCampaign: Campaign | null
   onP2vLoadingChange: (loading: boolean) => void
   onP2vMetricsResolved: NonNullable<
@@ -230,6 +231,7 @@ const StepBody = ({
   answers,
   updateAnswers,
   onCantFindOffice,
+  onOfficeHydratingChange,
   liveCampaign,
   onP2vLoadingChange,
   onP2vMetricsResolved,
@@ -303,6 +305,7 @@ const StepBody = ({
           })
         }
         onCantFindOffice={onCantFindOffice}
+        onHydratingChange={onOfficeHydratingChange}
       />
     )
   }
@@ -366,14 +369,28 @@ export default function OnboardingFlow({
     firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
+  const [isHydratingOffice, setIsHydratingOffice] = useState(false)
   const isAdvancingRef = useRef(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
     initialCampaign,
   )
   const [isP2vLoading, setIsP2vLoading] = useState(true)
-  const [hasResolvedPathToVictory, setHasResolvedPathToVictory] =
-    useState(false)
+  const [resolvedP2vOfficeKey, setResolvedP2vOfficeKey] = useState<
+    string | null
+  >(null)
   const queryClient = useQueryClient()
+
+  // Tracking the resolved office (rather than a boolean) lets the
+  // path-to-victory effect re-run when the user goes back and changes
+  // zip/office, so the new race's metrics replace the previous one.
+  const officeIdentityKey =
+    answers.structuredOffice?.positionId ??
+    answers.structuredOffice?.raceId ??
+    (answers.manualOfficeForm
+      ? `manual:${answers.manualOfficeForm.state}:${answers.manualOfficeForm.city}:${answers.manualOfficeForm.office}`
+      : null)
+  const hasResolvedPathToVictory =
+    officeIdentityKey !== null && resolvedP2vOfficeKey === officeIdentityKey
 
   const visibleSteps = getVisibleOnboardingSteps(ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
@@ -386,13 +403,19 @@ export default function OnboardingFlow({
   const activeStepNumber = activeIndex + 1
   const isActiveStepValid = activeStep.isValid?.({ answers }) ?? true
   const isP2vBlocking = activeStep.id === 'path-to-victory' && isP2vLoading
+  const isOfficeHydrationBlocking =
+    activeStep.id === 'office-selection' && isHydratingOffice
   const p2vOfficeName =
     answers.structuredOffice?.positionName ||
     liveCampaign?.positionName ||
     liveCampaign?.organization?.customPositionName ||
     liveCampaign?.office ||
     null
-  const canContinue = isActiveStepValid && !isSavingOffice && !isP2vBlocking
+  const canContinue =
+    isActiveStepValid &&
+    !isSavingOffice &&
+    !isP2vBlocking &&
+    !isOfficeHydrationBlocking
 
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
@@ -406,7 +429,9 @@ export default function OnboardingFlow({
     (result) => {
       const campaignId = liveCampaign?.id ?? campaign?.id
       if (result.status === 'success') {
-        setHasResolvedPathToVictory(true)
+        if (officeIdentityKey) {
+          setResolvedP2vOfficeKey(officeIdentityKey)
+        }
         trackEvent(EVENTS.Onboarding.PathToVictoryUpdated, {
           campaignId,
           projectedTurnout: result.projectedTurnout,
@@ -426,12 +451,20 @@ export default function OnboardingFlow({
         })
       }
     },
-    [liveCampaign, campaign, user?.id],
+    [liveCampaign, campaign, user?.id, officeIdentityKey],
   )
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [activeStepId])
+
+  useEffect(() => {
+    if (activeStepId !== 'office-selection') setIsHydratingOffice(false)
+  }, [activeStepId])
+
+  const handleOfficeHydratingChange = useCallback((hydrating: boolean) => {
+    setIsHydratingOffice(hydrating)
+  }, [])
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
@@ -943,6 +976,7 @@ export default function OnboardingFlow({
                 answers={answers}
                 updateAnswers={updateAnswers}
                 onCantFindOffice={handleCantFindOffice}
+                onOfficeHydratingChange={handleOfficeHydratingChange}
                 liveCampaign={liveCampaign}
                 onP2vLoadingChange={handleP2vLoadingChange}
                 onP2vMetricsResolved={handleP2vMetricsResolved}

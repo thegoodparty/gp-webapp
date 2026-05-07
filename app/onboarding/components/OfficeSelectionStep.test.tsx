@@ -124,7 +124,7 @@ describe('OfficeSelectionStep', () => {
     })
   })
 
-  it('hydrates the selected race and forwards full details to onSelect', async () => {
+  it('selects the race optimistically and forwards full details after hydration', async () => {
     mockClientFetch.mockResolvedValueOnce({
       data: [sampleRace()],
       ok: true,
@@ -169,6 +169,11 @@ describe('OfficeSelectionStep', () => {
     })
     fireEvent.click(raceButton)
 
+    // Optimistic select fires synchronously with the click — no await.
+    expect(onSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ raceId: 'race-1' }),
+    )
+
     await waitFor(() => {
       expect(mockClientRequest).toHaveBeenCalledWith(
         'GET /v1/elections/race-by-position',
@@ -200,7 +205,58 @@ describe('OfficeSelectionStep', () => {
     })
   })
 
-  it('shows an error snackbar and does not call onSelect when hydration fails', async () => {
+  it('signals hydration via onHydratingChange across the request lifecycle', async () => {
+    mockClientFetch.mockResolvedValueOnce({
+      data: [sampleRace()],
+      ok: true,
+    } as unknown as Awaited<ReturnType<typeof clientFetch>>)
+
+    let resolveHydrate: (value: unknown) => void = () => undefined
+    mockClientRequest.mockImplementationOnce(
+      () =>
+        new Promise<unknown>((resolve) => {
+          resolveHydrate = resolve
+        }) as ReturnType<typeof clientRequest>,
+    )
+
+    const onHydratingChange = vi.fn()
+    renderStep({ onHydratingChange })
+    fireEvent.change(screen.getByLabelText(/zip code/i), {
+      target: { value: '82001' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /search/i }))
+
+    const raceButton = await screen.findByRole('radio', {
+      name: /city council election date/i,
+    })
+    fireEvent.click(raceButton)
+
+    await waitFor(() => {
+      expect(onHydratingChange).toHaveBeenCalledWith(true)
+    })
+
+    resolveHydrate({
+      data: {
+        id: 'race-server',
+        brPositionId: 'br-pos-1',
+        position: {
+          id: 'pos-1',
+          name: 'City Council',
+          electionFrequencies: [{ frequency: 4 }],
+        },
+        election: { id: 'elec-1', electionDay: '2026-11-03' },
+      },
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+    })
+
+    await waitFor(() => {
+      expect(onHydratingChange).toHaveBeenLastCalledWith(false)
+    })
+  })
+
+  it('reverts the optimistic selection and signals an error when hydration fails', async () => {
     mockClientFetch.mockResolvedValueOnce({
       data: [sampleRace()],
       ok: true,
@@ -221,13 +277,19 @@ describe('OfficeSelectionStep', () => {
     onSelect.mockClear()
     fireEvent.click(raceButton)
 
+    // Optimistic select fires immediately so the radio reflects the click.
+    expect(onSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ raceId: 'race-1' }),
+    )
+
     await waitFor(() => {
       expect(mockErrorSnackbar).toHaveBeenCalledWith(
         'Could not load race details. Please try again.',
       )
     })
 
-    expect(onSelect).not.toHaveBeenCalled()
+    // Hydration failure rolls the selection back.
+    expect(onSelect).toHaveBeenLastCalledWith(undefined)
   })
 
   it('hides "I don\'t see my office" until results are showing', async () => {
