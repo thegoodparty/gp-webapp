@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useUser as useClerkUser } from '@clerk/nextjs'
 import { clientRequest } from 'gpApi/typed-request'
+import type { Organization } from 'gpApi/api-endpoints'
 import {
   resolvePostAuthRedirectPath,
   CampaignStatus,
@@ -27,9 +28,26 @@ const PostAuthRedirectPage = () => {
     ranRef.current = true
     ;(async () => {
       try {
-        const {
-          data: { organizations },
-        } = await clientRequest('GET /v1/organizations', {})
+        // First authenticated call after a fresh sign-up may race the gp-api
+        // JIT-provisioning of the local user record. Retry once on failure
+        // before falling back to an empty list.
+        let organizations: Organization[] = []
+        const orgsRes = await clientRequest(
+          'GET /v1/organizations',
+          {},
+          { ignoreResponseError: true },
+        )
+        if (orgsRes.ok) {
+          organizations = orgsRes.data.organizations
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          const retry = await clientRequest(
+            'GET /v1/organizations',
+            {},
+            { ignoreResponseError: true },
+          )
+          if (retry.ok) organizations = retry.data.organizations
+        }
 
         const slug = resolveSlug(organizations)
         if (slug) {
@@ -66,7 +84,9 @@ const PostAuthRedirectPage = () => {
         window.location.replace(path)
       } catch (e) {
         console.error('post-auth-redirect error', e)
-        window.location.replace('/dashboard')
+        // Don't strand new users on a blank /dashboard if the resolver
+        // throws — onboarding is the safe default for unknown state.
+        window.location.replace('/onboarding/office-selection')
       }
     })()
   }, [isSignedIn, isLoaded])

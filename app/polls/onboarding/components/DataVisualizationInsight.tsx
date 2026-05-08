@@ -1,13 +1,6 @@
-import { Card, CardContent } from '@styleguide'
+import { BarList, Card, CardContent, DonutChart } from '@styleguide'
 import { LuChartLine } from 'react-icons/lu'
-import {
-  InsightPieChart,
-  InsightDonutChart,
-  InsightHorizontalGaugeChart,
-  InsightVerticalBarChart,
-  InsightHorizontalBarChart,
-  ChartSkeleton,
-} from '@shared/charts'
+import { ChartSkeleton } from '@shared/charts'
 
 interface ChartDataPoint {
   name: string
@@ -31,12 +24,7 @@ interface DataVisualizationInsightProps {
   data: ChartDataPoint[]
   description?: string | null
   insight?: string | null
-  chartType:
-    | 'pie'
-    | 'donut'
-    | 'horizontalGauge'
-    | 'verticalBar'
-    | 'horizontalBar'
+  chartType: 'donut' | 'barList'
   percentage?: boolean
   isLoading?: boolean
   error?: string | null
@@ -81,26 +69,11 @@ export const DataVisualizationInsight = ({
           )}
           {showChart && (
             <>
-              {chartType === 'pie' && (
-                <InsightPieChart data={data} percentage={percentage} />
-              )}
               {chartType === 'donut' && (
-                <InsightDonutChart data={data} percentage={percentage} />
+                <DonutChart data={data} percentage={percentage} />
               )}
-              {chartType === 'horizontalGauge' && (
-                <InsightHorizontalGaugeChart
-                  data={data}
-                  percentage={percentage}
-                />
-              )}
-              {chartType === 'verticalBar' && (
-                <InsightVerticalBarChart data={data} percentage={percentage} />
-              )}
-              {chartType === 'horizontalBar' && (
-                <InsightHorizontalBarChart
-                  data={data}
-                  percentage={percentage}
-                />
+              {chartType === 'barList' && (
+                <BarList data={data} percentage={percentage} />
               )}
             </>
           )}
