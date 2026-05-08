@@ -1,6 +1,17 @@
 # gpApi/
 
-Two API client systems live here. The **typed system is canonical**; the legacy fetch helpers are deprecated and being migrated out file-by-file.
+API client layer. Two systems coexist — the **typed system is canonical**; the legacy fetch helpers are deprecated and being migrated out file-by-file.
+
+## Key files
+
+| File | Role |
+|------|------|
+| `api-endpoints.ts` | `APIEndpoints` registry — keys are `'METHOD /path/:param'`, values define `Request` / `Response`. **Cross-repo contract with gp-api — confirm before editing.** |
+| `typed-request.ts` | `clientRequest<Route>(route, payload)` — browser. Throws on non-2xx. |
+| `server-request.ts` | `serverRequest<Route>(route, payload)` — server components / route handlers / `'use server'`. |
+| `unAuthFetch.ts` | Public endpoints. Sends no cookie / no Bearer — keep using for genuinely anonymous calls. |
+| `gpFetch.ts`, `clientFetch.ts`, `serverFetch.ts`, `routes.ts` | Legacy. **Do not use in new code.** |
+| `outreach.api.ts`, `types/outreach.types.ts` | Feature-specific bindings + shared shapes. |
 
 ## Use this for new code
 
@@ -68,11 +79,11 @@ These return polymorphic `T | Response | false` and never throw — callers must
    })
    ```
 
+Full recipe: `.claude/skills/add-typed-endpoint.md`.
+
 ## Migrating a legacy call
 
-See `.claude/skills/migrate-legacy-fetch.md` for the step-by-step.
-
-Short version:
+The endpoint-add recipe above is also the migration recipe. Short version:
 
 1. Find the `routes.ts` entry for the call (`url`, `method`).
 2. Add a corresponding `'METHOD /path'` entry to `APIEndpoints`.
@@ -86,7 +97,7 @@ Short version:
 | -------- | --------------------------- | --------------------------------------------------- |
 | Where    | Browser / client components | Server components / route handlers / `'use server'` |
 | baseURL  | `/api` (Next.js rewrite)    | `API_ROOT` (direct to gp-api)                       |
-| Auth     | Cookie via `credentials`    | Bearer token via `getServerToken()`                 |
+| Auth     | Cookie via `credentials`    | Bearer via `getServerToken()`                       |
 | Org slug | Cookie → `x-organization`   | `next/headers` cookies → `x-organization`           |
 
 If you call from a context where `next/headers` is unavailable, use `clientRequest`.
@@ -96,7 +107,22 @@ If you call from a context where `next/headers` is unavailable, use `clientReque
 - **Typed system**: throws `FetchError` on non-2xx; caller wraps in try/catch.
 - **Legacy system**: returns `Response` on non-2xx, `false` on parse failure, never throws. New code should not depend on this.
 
+## Gotchas
+
+- **`api-endpoints.ts` is a cross-repo contract** with gp-api. Don't change request/response shapes without coordinating.
+- **Don't add to `routes.ts`** — it's the legacy registry. New routes go in `api-endpoints.ts`.
+- **Path params share one object** with the body/query payload. The runtime strips path params from the body/query before sending — don't pre-strip them yourself.
+- **Test mocks are typed against `APIEndpoints` keys** — the same string you call drives the mock.
+- **`unAuthFetch` is not deprecated.** The typed helpers always attach credentials; it's the only anonymous variant.
+- **Legacy returns `T | Response | false`, never throws.** New code shouldn't depend on that contract — port to typed first.
+
 ## Out-of-scope here
 
 - Adding new entries to `routes.ts` — add to `api-endpoints.ts` instead.
 - Wrapping legacy helpers with retry/error utilities — port the call to the typed system first.
+
+## Related
+
+- `docs/api-clients.md` — full decision tree, examples.
+- `helpers/test-utils/api-mocking.ts` — MSW mocker with typed routes.
+- `.claude/skills/add-typed-endpoint.md` — endpoint-add recipe (also the basis for legacy migration).
