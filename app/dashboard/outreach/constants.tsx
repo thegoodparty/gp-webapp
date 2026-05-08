@@ -62,6 +62,12 @@ export const OUTREACH_TYPE_MAPPING: OutreachTypeMapping = {
   socialMedia: 'Social post',
 }
 
+// If making a change, also update: 
+// gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+// gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+// gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+// gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+// gp-webapp/app/dashboard/outreach/constants.tsx
 export type AudienceLabelKey =
   | 'audienceSuperVoters'
   | 'audienceLikelyVoters'
@@ -77,7 +83,14 @@ export type AudienceLabelKey =
   | 'age50Plus'
   | 'genderMale'
   | 'genderFemale'
+  | 'genderUnknown'
 
+// If making a change, also update: 
+// gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+// gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+// gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+// gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+// gp-webapp/app/dashboard/outreach/constants.tsx
 interface AudienceLabelsMapping {
   audienceSuperVoters: string
   audienceLikelyVoters: string
@@ -93,8 +106,15 @@ interface AudienceLabelsMapping {
   age50Plus: string
   genderMale: string
   genderFemale: string
+  genderUnknown: string
 }
 
+// If making a change, also update: 
+// gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+// gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+// gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+// gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+// gp-webapp/app/dashboard/outreach/constants.tsx
 export const AUDIENCE_LABELS_MAPPING: AudienceLabelsMapping = {
   audienceSuperVoters: 'Super',
   audienceLikelyVoters: 'Likely',
@@ -110,6 +130,7 @@ export const AUDIENCE_LABELS_MAPPING: AudienceLabelsMapping = {
   age50Plus: '50+',
   genderMale: 'Male',
   genderFemale: 'Female',
+  genderUnknown: 'Unknown',
 }
 
 interface OutreachTypes {

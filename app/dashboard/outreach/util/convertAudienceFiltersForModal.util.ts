@@ -4,6 +4,12 @@ import {
 } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
 import { VoterFileFilters } from 'helpers/types'
 
+// If making a change, also update: 
+// gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+// gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+// gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+// gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+// gp-webapp/app/dashboard/outreach/constants.tsx
 const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<
   Record<keyof VoterFileFilters, AudienceFilterKey>
 > = {
@@ -21,6 +27,7 @@ const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING: Partial<
   age50Plus: 'age_50_plus',
   genderMale: 'gender_male',
   genderFemale: 'gender_female',
+  genderUnknown: 'gender_unknown',
 }
 
 const isConvertibleFilterKey = (
