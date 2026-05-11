@@ -782,12 +782,15 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const CANDIDATE_HOURS_PER_WEEK = 14
   const VOLUNTEER_HOURS_PER_WEEK_EACH = 3
   const DOORS_PER_HOUR = 15
-  const FALLBACK_WEEKS_REMAINING = 12
-  let weeksRemaining = FALLBACK_WEEKS_REMAINING
+  const MAX_CAMPAIGN_WEEKS = 12
+  let weeksRemaining = MAX_CAMPAIGN_WEEKS
   if (electionDateValid) {
     const ms = electionDateValid.getTime() - Date.now()
     if (ms > 0) {
-      weeksRemaining = Math.ceil(ms / (7 * 24 * 60 * 60 * 1000))
+      weeksRemaining = Math.min(
+        Math.ceil(ms / (7 * 24 * 60 * 60 * 1000)),
+        MAX_CAMPAIGN_WEEKS,
+      )
     }
   }
   const totalDoors = Math.round(voterContactGoal * 0.2)

@@ -13,8 +13,10 @@ const TEXT_COST = 0.035
 const DOORS_PER_HOUR = 15
 const VOLUNTEER_HOURS_PER_WEEK = 3
 const CANDIDATE_HOURS_PER_WEEK = 14
-// Used only when electionDate is missing or in the past.
-const FALLBACK_WEEKS_REMAINING = 12
+// Cap the active campaign window at 12 weeks. Anything past this point counts
+// as "still in the prep window" — the plan assumes a final 12-week sprint.
+const MAX_CAMPAIGN_WEEKS = 12
+const FALLBACK_WEEKS_REMAINING = MAX_CAMPAIGN_WEEKS
 
 /**
  * Budget channel benchmarks — first-stab values for researcher review.
@@ -74,13 +76,14 @@ const formatCurrency = (value: number): string =>
 const formatHours = (value: number): string =>
   `${numberFormatter(Math.round(value))} hrs`
 
-const computeWeeksRemaining = (electionDate?: string | null): number => {
+export const computeWeeksRemaining = (electionDate?: string | null): number => {
   if (!electionDate) return FALLBACK_WEEKS_REMAINING
   const election = new Date(electionDate)
   if (Number.isNaN(election.getTime())) return FALLBACK_WEEKS_REMAINING
   const ms = election.getTime() - Date.now()
   if (ms <= 0) return FALLBACK_WEEKS_REMAINING
-  return Math.ceil(ms / (7 * 24 * 60 * 60 * 1000))
+  const weeks = Math.ceil(ms / (7 * 24 * 60 * 60 * 1000))
+  return Math.min(weeks, MAX_CAMPAIGN_WEEKS)
 }
 
 interface ResourcesComputation {
@@ -101,23 +104,25 @@ interface ResourcesComputation {
   volunteersPerWeek: number
   volunteerHoursPerWeek: number
   totalHoursPerWeek: number
+  weeksRemaining: number
+  totalHours: number
 }
 
 const computeResources = (
   voterContactGoal: number,
   weeksRemaining: number,
 ): ResourcesComputation => {
+  // Volunteers needed each week:
+  //   doors_to_knock = voterContactGoal × DOORS_PERCENT
+  //   volunteers/week = doors_to_knock / (doors_per_hr × vol_hrs_week × weeks)
+  // Each volunteer covers (doors_per_hr × vol_hrs_week × weeks) doors over
+  // the campaign; this many running concurrently each week clears the total.
   const totalDoors = Math.round(voterContactGoal * DOORS_PERCENT)
-  const doorsPerWeek = totalDoors / weeksRemaining
-  const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
-  const volunteerDoorsPerWeek = Math.max(
-    0,
-    doorsPerWeek - candidateDoorsPerWeek,
-  )
-  const doorsPerVolunteerPerWeek = VOLUNTEER_HOURS_PER_WEEK * DOORS_PER_HOUR
+  const doorsPerVolunteerOverCampaign =
+    DOORS_PER_HOUR * VOLUNTEER_HOURS_PER_WEEK * weeksRemaining
   const volunteersPerWeek =
-    volunteerDoorsPerWeek > 0
-      ? Math.ceil(volunteerDoorsPerWeek / doorsPerVolunteerPerWeek)
+    doorsPerVolunteerOverCampaign > 0
+      ? Math.ceil(totalDoors / doorsPerVolunteerOverCampaign)
       : 0
 
   const textCount = Math.round(voterContactGoal * TEXTS_PERCENT)
@@ -166,11 +171,15 @@ const computeResources = (
     volunteersPerWeek,
     volunteerHoursPerWeek,
     totalHoursPerWeek: CANDIDATE_HOURS_PER_WEEK + volunteerHoursPerWeek,
+    weeksRemaining,
+    totalHours:
+      (CANDIDATE_HOURS_PER_WEEK + volunteerHoursPerWeek) * weeksRemaining,
   }
 }
 
 interface ResourceAccordionProps {
   label: string
+  sublabel?: string
   total: string
   icon: React.ReactNode
   children: React.ReactNode
@@ -178,6 +187,7 @@ interface ResourceAccordionProps {
 
 const ResourceAccordion = ({
   label,
+  sublabel,
   total,
   icon,
   children,
@@ -188,7 +198,14 @@ const ResourceAccordion = ({
         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
           {icon}
         </span>
-        <span className="text-base font-semibold text-foreground">{label}</span>
+        <span className="flex flex-col">
+          <span className="text-base font-semibold text-foreground">
+            {label}
+          </span>
+          {sublabel ? (
+            <span className="text-xs text-muted-foreground">{sublabel}</span>
+          ) : null}
+        </span>
       </span>
       <span className="flex items-center gap-3">
         <span className="text-base font-semibold text-foreground">{total}</span>
@@ -205,7 +222,7 @@ const ResourceAccordion = ({
 interface BreakdownRowProps {
   label: string
   value: string
-  hint?: string
+  hint?: React.ReactNode
 }
 
 const BreakdownRow = ({
@@ -232,10 +249,14 @@ const BudgetAccordion = ({
   resources,
 }: BudgetAccordionProps): React.JSX.Element => (
   <ResourceAccordion
-    label="Budget"
+    label="Total budget"
+    sublabel="For voter outreach, compliance, and fees"
     total={formatCurrency(resources.totalBudget)}
     icon={<DollarSign className="size-5" aria-hidden="true" />}
   >
+    <p className="px-5 pt-4 text-xs text-muted-foreground">
+      Based on a {resources.weeksRemaining}-week campaign.
+    </p>
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow
         label="Text messages"
@@ -257,21 +278,31 @@ const BudgetAccordion = ({
       <BreakdownRow
         label="Direct mail"
         value={formatCurrency(resources.mailCost)}
-        hint={`${numberFormatter(resources.mailCount)} pieces × $${
-          MAIL_COST_PER_PIECE
-        }`}
+        hint={`${numberFormatter(
+          resources.mailCount,
+        )} pieces × $${MAIL_COST_PER_PIECE}`}
       />
       <BreakdownRow
         label="Yard signs & literature"
         value={formatCurrency(resources.yardLitCost)}
-        hint={`${numberFormatter(resources.signCount)} signs + ${numberFormatter(
-          resources.doorHangerCount,
-        )} door hangers`}
+        hint={`${numberFormatter(
+          resources.signCount,
+        )} signs + ${numberFormatter(resources.doorHangerCount)} door hangers`}
       />
       <BreakdownRow
         label="Compliance & filing fees"
         value={formatCurrency(resources.complianceCost)}
-        hint="FEC/state filings + accounting tool"
+        hint={
+          <>
+            Compliance and filing fees come from BallotReady.{' '}
+            <a
+              href="mailto:customersupport@goodparty.org?subject=Issue%20with%20BallotReady%27s%20compliance%20and%20filing%20fees"
+              className="text-components-input-active hover:underline"
+            >
+              Report issue
+            </a>
+          </>
+        }
       />
     </ul>
   </ResourceAccordion>
@@ -285,22 +316,34 @@ const TimeAccordion = ({
   resources,
 }: TimeAccordionProps): React.JSX.Element => (
   <ResourceAccordion
-    label="Time per week"
-    total={formatHours(resources.totalHoursPerWeek)}
+    label="Total time"
+    sublabel="For in-person campaigning, events, and volunteers"
+    total={formatHours(resources.totalHours)}
     icon={<Clock className="size-5" aria-hidden="true" />}
   >
+    <p className="px-5 pt-4 text-xs text-muted-foreground">
+      Based on a {resources.weeksRemaining}-week campaign.
+    </p>
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow
         label="Your time"
-        value={formatHours(resources.candidateHoursPerWeek)}
-        hint="Knocking doors and meeting voters in person."
+        value={formatHours(
+          resources.candidateHoursPerWeek * resources.weeksRemaining,
+        )}
+        hint={`${formatHours(
+          resources.candidateHoursPerWeek,
+        )} per week knocking doors and meeting voters in person.`}
       />
       <BreakdownRow
         label="Volunteers"
-        value={formatHours(resources.volunteerHoursPerWeek)}
+        value={formatHours(
+          resources.volunteerHoursPerWeek * resources.weeksRemaining,
+        )}
         hint={`${numberFormatter(resources.volunteersPerWeek)} ${
           resources.volunteersPerWeek === 1 ? 'volunteer' : 'volunteers'
-        } knocking doors for 3 hours per week.`}
+        } x ${VOLUNTEER_HOURS_PER_WEEK}hr ${
+          resources.volunteersPerWeek === 1 ? 'shift' : 'shifts'
+        } per week.`}
       />
     </ul>
   </ResourceAccordion>

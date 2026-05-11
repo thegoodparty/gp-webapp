@@ -22,9 +22,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'party-affiliation',
-    title: 'Are you running with a major party?',
+    title: 'Are you running with a party designation?',
     description:
-      "GoodParty.org supports independent and nonpartisan candidates. Let's make sure you qualify.",
+      "Pick the party label voters will see on the ballot as an official designation for your race, not your personal voting history or party preference.",
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:
@@ -84,7 +84,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'path-to-victory',
-    title: "Here's how many votes you need to win",
+    title: "Projected votes needed to win",
     description:
       'We use historical voter data and proprietary models to get the most accurate projections for your race.',
     summary:
@@ -95,8 +95,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'voter-demographics',
-    title: "Here's what we know about the voters in your district",
-    description: 'Knowing who shows up to vote shapes who you reach and how.',
+    title: "Voter insights for your district",
+    description:
+      'We use survey and voter data along with your district demographics to project likely top issues for your race.',
     summary:
       'Voter demographic charts are rendered from the structured-office district stats.',
     whyWeAsk:
@@ -105,7 +106,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'outreach-plan',
-    title: 'Here are the minimum resources you need',
+    title: 'Projected minimum resources needed',
     description:
       'Commit at least this much money and time, and you’ll have a real shot at winning your race.',
     summary:

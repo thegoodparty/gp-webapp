@@ -30,6 +30,7 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { numberFormatter } from 'helpers/numberHelper'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -40,7 +41,7 @@ import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
 import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
-import { OutreachPlanStep } from './OutreachPlanStep'
+import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
 import {
   PathToVictoryAside,
   PathToVictoryHeader,
@@ -965,7 +966,13 @@ export default function OnboardingFlow({
                     {activeStep.title}
                   </h1>
                   <p className="text-lg text-muted-foreground sm:text-base">
-                    {activeStep.description}
+                    {activeStep.id === 'outreach-plan'
+                      ? `You need ${numberFormatter(
+                          liveCampaign?.raceTargetMetrics?.winNumber ?? 0,
+                        )} projected voters to win with at least ${computeWeeksRemaining(
+                          liveCampaign?.details?.electionDate ?? null,
+                        )} weeks to campaign before Election Day.`
+                      : activeStep.description}
                   </p>
                 </div>
               )}

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Download, Share2 } from 'lucide-react'
-import { Button, GoodPartyOrgLogo } from '@styleguide'
+import { Button, GoodPartyOrgLogo, IconButton } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import type { User } from 'helpers/types'
@@ -116,71 +116,102 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       </div>
       <main className="mx-auto w-full max-w-4xl px-4 pt-8 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
         <div
-          className={`flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 py-12 text-center sm:px-12 sm:py-16 ${cardEnter}`}
+          className={`relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 py-12 text-center sm:px-12 sm:py-16 ${cardEnter}`}
           style={{ transitionDelay: '0ms' }}
         >
+          <IconButton
+            type="button"
+            variant="outline"
+            size="medium"
+            onClick={() => setShareOpen(true)}
+            aria-label="Share campaign plan"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4"
+          >
+            <Share2 className="size-5" />
+          </IconButton>
+
           <div className={enter} style={{ transitionDelay: '300ms' }}>
             <GoodPartyOrgLogo className="!h-12 !w-auto sm:!h-14" />
           </div>
 
-          <div className="space-y-4">
-            <h1
-              className={`text-4xl font-bold text-foreground sm:text-5xl ${enter}`}
-              style={{ transitionDelay: '500ms' }}
-            >
-              Your campaign plan is ready!
-            </h1>
-            <p
-              className={`text-base text-muted-foreground sm:text-lg ${enter}`}
+          <h1
+            className={`text-4xl font-bold text-foreground sm:text-5xl ${enter}`}
+            style={{ transitionDelay: '500ms' }}
+          >
+            Initial campaign plan
+          </h1>
+
+          {plan.candidateName ? (
+            <div
+              className={`space-y-2 ${enter}`}
               style={{ transitionDelay: '700ms' }}
             >
-              Read it through, download a copy, or share it with your team. Find
-              it anytime on your Campaign plan page.
+              <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase sm:text-sm">
+                Prepared for
+              </p>
+              <p className="text-xl font-bold text-foreground sm:text-2xl">
+                {plan.candidateName}
+              </p>
+            </div>
+          ) : null}
+
+          <div
+            className={`space-y-1 ${enter}`}
+            style={{ transitionDelay: '900ms' }}
+          >
+            {plan.race ? (
+              <p className="text-base text-muted-foreground sm:text-lg">
+                {plan.race}
+                {plan.location ? ` • ${plan.location}` : ''}
+              </p>
+            ) : null}
+            {plan.electionDate ? (
+              <p className="text-sm text-muted-foreground sm:text-base">
+                Election Day: {plan.electionDate}
+              </p>
+            ) : null}
+          </div>
+
+          <div
+            className={`flex w-full flex-col items-center gap-1 border-t border-base-border pt-6 ${enter}`}
+            style={{ transitionDelay: '1100ms' }}
+          >
+            <p className="text-xs text-muted-foreground sm:text-sm">
+              Prepared by GoodParty.org
+            </p>
+            <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+              Empowering people to run, win, and serve
             </p>
           </div>
         </div>
 
         <div
           className={`mt-8 sm:mt-16 ${enter}`}
-          style={{ transitionDelay: '1300ms' }}
+          style={{ transitionDelay: '1500ms' }}
         >
           <PlanSections plan={plan} />
         </div>
       </main>
 
       <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
-        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="large"
-              icon={<Download className="size-5" />}
-              onClick={handleDownload}
-              loading={downloading}
-              loadingText="Generating PDF"
-              aria-label="Download campaign plan"
-            >
-              <span className="hidden sm:inline">Download</span>
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="large"
-              icon={<Share2 className="size-5" />}
-              onClick={() => setShareOpen(true)}
-              aria-label="Share campaign plan"
-            >
-              <span className="hidden sm:inline">Share</span>
-            </Button>
-          </div>
+        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between gap-3 px-4 sm:px-8">
+          <Button
+            type="button"
+            variant="ghost"
+            size="large"
+            icon={<Download className="size-5" />}
+            onClick={handleDownload}
+            loading={downloading}
+          >
+            Download
+          </Button>
           <Button
             type="button"
             variant="default"
             size="large"
             onClick={handleContinue}
           >
-            Continue
+            Campaign manager
           </Button>
         </div>
       </div>

@@ -112,10 +112,10 @@ const SharePlanModal = ({
                 type="button"
                 variant="outline"
                 className="w-full justify-start"
-                icon={item.icon}
                 asChild
               >
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
+                  {item.icon}
                   {item.label}
                 </a>
               </Button>

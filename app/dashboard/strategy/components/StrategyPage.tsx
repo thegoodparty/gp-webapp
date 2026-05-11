@@ -114,7 +114,6 @@ const StrategyPage = ({ pathname }: StrategyPageProps): React.JSX.Element => {
               icon={<Download className="size-5" />}
               onClick={handleDownload}
               loading={downloading}
-              loadingText="Generating PDF"
               aria-label="Download campaign plan"
             >
               <span className="hidden sm:inline">Download</span>

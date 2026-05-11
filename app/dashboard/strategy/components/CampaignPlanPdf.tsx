@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
+import type { ReactNode } from 'react'
 import {
   Document,
   Font,
@@ -6,30 +7,63 @@ import {
   Path,
   StyleSheet,
   Svg,
-  Text,
+  Text as PdfText,
   View,
 } from '@react-pdf/renderer'
+import type { Style } from '@react-pdf/types'
 import type { PlanData } from './planContent'
 
-// Open Sans (matches the app's typography). TTF files served from jsdelivr's
-// mirror of @fontsource/open-sans.
+// fontkit (used by @react-pdf/renderer) applies OpenType ligature substitution
+// by default. With Open Sans this produces visible character drops in the PDF
+// ("filed" → "fled", "first" → "frst"). Inserting a Zero-Width Non-Joiner
+// between f and a following i/l/f/t/b/h/j/k tells the layout engine to skip
+// the ligature lookup, so each letter renders as its own glyph. ZWNJ has no
+// width and no visible representation.
+const ZWNJ = '‌'
+const defeatLigatures = (s: string): string =>
+  s.replace(/(f)(?=[iflbhjkt])/gi, `$1${ZWNJ}`)
+
+const processChildren = (children: ReactNode): ReactNode => {
+  if (typeof children === 'string') return defeatLigatures(children)
+  if (Array.isArray(children)) return children.map(processChildren)
+  return children
+}
+
+interface TextProps {
+  children?: ReactNode
+  style?: Style | Style[]
+  fixed?: boolean
+  break?: boolean
+  wrap?: boolean
+  render?: (props: {
+    pageNumber: number
+    totalPages: number
+  }) => React.ReactNode
+}
+const Text = ({ children, ...rest }: TextProps): React.JSX.Element => (
+  <PdfText {...rest}>{processChildren(children)}</PdfText>
+)
+
+// Open Sans (matches the app's typography). TTF files from the official
+// googlefonts/opensans repo via jsdelivr. The full-charset TTFs include the
+// ligature glyphs (U+FB01–FB04) that fontkit's GSUB substitution needs.
 Font.register({
   family: 'Open Sans',
   fonts: [
     {
-      src: 'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.0.21/files/open-sans-latin-400-normal.woff',
+      src: 'https://cdn.jsdelivr.net/gh/googlefonts/opensans@main/fonts/ttf/OpenSans-Regular.ttf',
       fontWeight: 'normal',
     },
     {
-      src: 'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.0.21/files/open-sans-latin-600-normal.woff',
+      src: 'https://cdn.jsdelivr.net/gh/googlefonts/opensans@main/fonts/ttf/OpenSans-SemiBold.ttf',
       fontWeight: 'semibold',
     },
     {
-      src: 'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.0.21/files/open-sans-latin-700-normal.woff',
+      src: 'https://cdn.jsdelivr.net/gh/googlefonts/opensans@main/fonts/ttf/OpenSans-Bold.ttf',
       fontWeight: 'bold',
     },
     {
-      src: 'https://cdn.jsdelivr.net/npm/@fontsource/open-sans@5.0.21/files/open-sans-latin-400-italic.woff',
+      src: 'https://cdn.jsdelivr.net/gh/googlefonts/opensans@main/fonts/ttf/OpenSans-Italic.ttf',
       fontStyle: 'italic',
     },
   ],
@@ -55,50 +89,59 @@ const styles = StyleSheet.create({
   },
   coverWrapper: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+    paddingTop: 160,
   },
-  coverHeader: { alignItems: 'center', marginBottom: 32 },
+  coverHeader: { alignItems: 'center' },
   wordmark: {
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginTop: 14,
+    lineHeight: 1.2,
   },
   wordmarkTagline: {
     fontSize: 9,
     letterSpacing: 2,
     color: COLORS.muted,
-    marginTop: 6,
     textTransform: 'uppercase',
+    lineHeight: 1.2,
   },
+  coverHeaderInner: { alignItems: 'center', gap: 6 },
   coverDivider: {
     width: '100%',
     height: 1,
     backgroundColor: COLORS.divider,
     marginVertical: 32,
   },
+  coverTitleBlock: { alignItems: 'center', gap: 8 },
   coverEyebrow: {
     fontSize: 28,
     fontWeight: 'bold',
     letterSpacing: 4,
     textTransform: 'uppercase',
-    marginBottom: 18,
+    textAlign: 'center',
+    lineHeight: 1.2,
   },
   coverCandidate: {
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.brand,
-    marginBottom: 4,
+    textAlign: 'center',
+    lineHeight: 1.2,
   },
-  coverRace: { fontSize: 14, marginBottom: 4 },
-  coverLocation: { fontSize: 12, color: COLORS.muted },
+  coverRace: { fontSize: 14, textAlign: 'center', lineHeight: 1.3 },
+  coverLocation: {
+    fontSize: 12,
+    color: COLORS.muted,
+    textAlign: 'center',
+    lineHeight: 1.3,
+  },
   coverElection: {
     fontSize: 11,
     color: COLORS.muted,
     fontStyle: 'italic',
-    marginTop: 10,
+    textAlign: 'center',
+    lineHeight: 1.3,
+    marginTop: 6,
   },
   coverFooter: {
     position: 'absolute',
@@ -139,6 +182,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 14,
   },
+  tocTitle: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
+  tocRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 10,
+  },
+  tocLabel: { fontSize: 12, lineHeight: 1.2 },
+  tocDots: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'dotted',
+    borderBottomColor: COLORS.muted,
+    marginHorizontal: 6,
+    marginBottom: 3,
+  },
+  tocPage: { fontSize: 12, lineHeight: 1.2, minWidth: 24, textAlign: 'right' },
   subTitle: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -164,6 +223,7 @@ const styles = StyleSheet.create({
   },
   bulletDot: { width: 8, fontSize: 10 },
   bulletText: { flex: 1, fontSize: 10, lineHeight: 1.5 },
+  defText: { fontSize: 10, lineHeight: 1.5 },
   defTerm: { fontWeight: 'bold' },
   table: {
     borderTopWidth: 1,
@@ -206,14 +266,23 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: 'absolute',
-    bottom: 32,
+    bottom: 24,
     left: 56,
     right: 56,
+  },
+  footerDivider: {
+    height: 1,
+    backgroundColor: COLORS.divider,
+    marginBottom: 10,
+  },
+  footerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    fontSize: 8,
-    color: COLORS.muted,
+    alignItems: 'center',
   },
+  footerText: { fontSize: 9, color: COLORS.muted },
+  footerPageBold: { fontSize: 9, color: COLORS.text, fontWeight: 'bold' },
+  footerPageGroup: { flexDirection: 'row', alignItems: 'baseline' },
   glossary: {
     borderTopWidth: 1,
     borderTopColor: COLORS.divider,
@@ -277,10 +346,24 @@ const PageHeader = ({ plan }: PageHeaderProps): React.JSX.Element => (
 
 const PageFooter = (): React.JSX.Element => (
   <View style={styles.footer} fixed>
-    <Text>Prepared by GoodParty.org</Text>
-    <Text
-      render={({ pageNumber, totalPages }) => `${pageNumber} of ${totalPages}`}
-    />
+    <View style={styles.footerDivider} />
+    <View style={styles.footerRow}>
+      <Text style={styles.footerText}>
+        Prepared by GoodParty.org • Empowering people to run, win, and serve
+      </Text>
+      <View style={styles.footerPageGroup}>
+        <Text style={styles.footerText}>Page </Text>
+        <Text
+          style={styles.footerPageBold}
+          render={({ pageNumber }) => `${pageNumber}`}
+        />
+        <Text style={styles.footerText}> of </Text>
+        <Text
+          style={styles.footerPageBold}
+          render={({ totalPages }) => `${totalPages}`}
+        />
+      </View>
+    </View>
   </View>
 )
 
@@ -296,6 +379,32 @@ const SectionHeader = ({
   <View>
     <Text style={styles.sectionEyebrow}>Section {number}</Text>
     <Text style={styles.sectionTitle}>{title}</Text>
+  </View>
+)
+
+const TOC_ENTRIES: { label: string; page: number }[] = [
+  { label: 'Executive Summary', page: 3 },
+  { label: '1. Strategic Landscape', page: 5 },
+  { label: '2. Electoral Goals & Key Metrics', page: 6 },
+  { label: '3. Campaign Timeline', page: 7 },
+  { label: '4. Recommended Budget', page: 8 },
+  { label: '5. Community Engagement & Earned Media', page: 9 },
+  { label: '6. Voter Contact Plan', page: 10 },
+  { label: '7. Measurement & Accountability', page: 11 },
+  { label: '8. Methodology & Data Sources', page: 12 },
+  { label: '9. Glossary', page: 13 },
+]
+
+const TableOfContents = (): React.JSX.Element => (
+  <View>
+    <Text style={styles.tocTitle}>Table of Contents</Text>
+    {TOC_ENTRIES.map((entry) => (
+      <View key={entry.label} style={styles.tocRow}>
+        <Text style={styles.tocLabel}>{entry.label}</Text>
+        <View style={styles.tocDots} />
+        <Text style={styles.tocPage}>{entry.page}</Text>
+      </View>
+    ))}
   </View>
 )
 
@@ -322,7 +431,7 @@ const DefinitionList = ({ items }: DefinitionListProps): React.JSX.Element => (
   <View>
     {items.map((item) => (
       <View key={item.title} style={{ marginBottom: 6 }}>
-        <Text style={styles.bulletText}>
+        <Text style={styles.defText}>
           <Text style={styles.defTerm}>{item.title}</Text>{' '}
           <Text style={{ color: COLORS.muted }}>{item.body}</Text>
         </Text>
@@ -381,33 +490,45 @@ export const CampaignPlanPdf = ({
       <View style={styles.coverWrapper}>
         <View style={styles.coverHeader}>
           <Logo size={70} />
-          <Text style={styles.wordmark}>GoodParty.org</Text>
-          <Text style={styles.wordmarkTagline}>
-            Empowering people to run, win, and serve
-          </Text>
+          <View style={{ height: 14 }} />
+          <View style={styles.coverHeaderInner}>
+            <Text style={styles.wordmark}>GoodParty.org</Text>
+            <Text style={styles.wordmarkTagline}>
+              Empowering people to run, win, and serve
+            </Text>
+          </View>
         </View>
 
         <View style={styles.coverDivider} />
 
-        <Text style={styles.coverEyebrow}>Campaign Plan</Text>
-        <Text style={styles.coverCandidate}>{plan.candidateName}</Text>
-        {plan.race ? (
-          <Text style={styles.coverRace}>for {plan.race}</Text>
-        ) : null}
-        {plan.location ? (
-          <Text style={styles.coverLocation}>{plan.location}</Text>
-        ) : null}
-        {plan.electionDate ? (
-          <Text style={styles.coverElection}>
-            Election Day: {plan.electionDate}
-          </Text>
-        ) : null}
+        <View style={styles.coverTitleBlock}>
+          <Text style={styles.coverEyebrow}>Campaign Plan</Text>
+          <Text style={styles.coverCandidate}>{plan.candidateName}</Text>
+          {plan.race ? (
+            <Text style={styles.coverRace}>for {plan.race}</Text>
+          ) : null}
+          {plan.location ? (
+            <Text style={styles.coverLocation}>{plan.location}</Text>
+          ) : null}
+          {plan.electionDate ? (
+            <Text style={styles.coverElection}>
+              Election Day: {plan.electionDate}
+            </Text>
+          ) : null}
+        </View>
       </View>
 
       <Text style={styles.coverFooter}>
         Plan prepared by GoodParty.org&apos;s Win Campaign Intelligence System
         using public voter data and historical election results.
       </Text>
+    </Page>
+
+    {/* Table of Contents */}
+    <Page size="LETTER" style={styles.page}>
+      <PageHeader plan={plan} />
+      <TableOfContents />
+      <PageFooter />
     </Page>
 
     {/* 1. Executive Summary */}
