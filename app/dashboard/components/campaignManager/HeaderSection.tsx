@@ -2,7 +2,7 @@
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { getNextElection } from 'helpers/campaignHelper'
-import { timeToNextElection } from 'helpers/dateHelper'
+import { dateUsHelper, timeToNextElection } from 'helpers/dateHelper'
 
 export default function HeaderSection() {
   const [user] = useUser()
@@ -13,6 +13,9 @@ export default function HeaderSection() {
   const electionLabel = nextElection?.isPrimary
     ? 'Primary Election'
     : 'General Election'
+  const formattedElectionDate = nextElection?.nextElectionDate
+    ? dateUsHelper(nextElection.nextElectionDate)
+    : ''
 
   return (
     <div className="flex flex-col gap-1">
@@ -23,7 +26,9 @@ export default function HeaderSection() {
         {timeUntilElection === 'election-day'
           ? 'Today is Election Day!'
           : timeUntilElection &&
-            `${timeUntilElection} until your ${electionLabel}`}
+            `${timeUntilElection} until your ${electionLabel}${
+              formattedElectionDate ? ` on ${formattedElectionDate}` : ''
+            }`}
       </div>
     </div>
   )

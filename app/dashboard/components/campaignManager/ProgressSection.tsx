@@ -10,6 +10,10 @@ import { Info } from 'lucide-react'
 import { CountsInfoModal } from './CountsInfoModal'
 import { RecordVoterContactsModal } from './RecordVoterContactsModal'
 
+// Industry rule of thumb: roughly 5 voter contacts (texts or robocalls)
+// translate to 1 likely vote.
+const CONTACTS_PER_LIKELY_VOTE = 5
+
 export default function ProgressSection() {
   const [campaign] = useCampaign()
   const [modalOpen, setModalOpen] = useState(false)
@@ -19,11 +23,10 @@ export default function ProgressSection() {
   const toggleRecordModalOpen = () => setRecordModalOpen(!recordModalOpen)
 
   const [reportedVoterGoals] = useVoterContacts()
-  const { needed, contacted } = calculateVoterContactCounts(
-    p2vData,
-    reportedVoterGoals,
-  )
-  const progress = needed > 0 ? Math.min((contacted / needed) * 100, 100) : 0
+  const { contacted } = calculateVoterContactCounts(p2vData, reportedVoterGoals)
+  const needed = p2vData?.winNumber ?? 0
+  const likelyVotes = Math.floor(contacted / CONTACTS_PER_LIKELY_VOTE)
+  const progress = needed > 0 ? Math.min((likelyVotes / needed) * 100, 100) : 0
   return (
     <Card className="gap-0 p-0">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b p-6">
@@ -40,12 +43,12 @@ export default function ProgressSection() {
       <div className="flex flex-col gap-3 p-6">
         <Progress value={progress} className="w-full" />
         <div className="flex w-full flex-wrap justify-between items-center gap-x-4 gap-y-1 text-sm font-normal font-opensans">
-          <div>{numberFormatter(contacted)} voters contacted</div>
+          <div>{numberFormatter(likelyVotes)} likely votes</div>
           <div
             onClick={toggleModalOpen}
             className="cursor-pointer flex items-center gap-2"
           >
-            <div>{numberFormatter(needed)} voter contacts needed to win</div>
+            <div>{numberFormatter(needed)} likely votes needed to win</div>
             <Info className="inline-block" size={16} />
           </div>
         </div>

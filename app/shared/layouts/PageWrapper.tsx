@@ -53,7 +53,7 @@ const PageWrapper = async ({
                   <P2pUxEnabledProvider>
                     <NavigationProvider>
                       <SnackbarProvider>
-                        <div className="overflow-x-hidden">
+                        <div className="overflow-x-clip">
                           <JsonLdSchema />
                           <Nav />
                           {children}

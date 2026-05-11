@@ -9,14 +9,14 @@ import { usePathname } from 'next/navigation'
 const Nav = (): React.JSX.Element => {
   const pathname = usePathname()
   const isDashboardPath = pathname?.startsWith('/dashboard')
+  const isOnboardingSuccessPath = pathname === '/onboarding/success'
+  const isHidden = isDashboardPath || isOnboardingSuccessPath
 
   return (
     <>
       <div
         id="top-nav"
-        className={`fixed w-screen h-14 z-50${
-          isDashboardPath ? ' hidden' : ''
-        }`}
+        className={`fixed w-screen h-14 z-50${isHidden ? ' hidden' : ''}`}
       >
         <div className="relative bg-indigo-50 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 z-50 h-14">
           <div
@@ -32,10 +32,10 @@ const Nav = (): React.JSX.Element => {
           </div>
         </div>
       </div>
-      {!isDashboardPath && <RightSideMobile />}
+      {!isHidden && <RightSideMobile />}
       <div
         id="top-nav-spacer"
-        className={`h-14 relative${isDashboardPath ? ' hidden' : ''}`}
+        className={`h-14 relative${isHidden ? ' hidden' : ''}`}
       >
         &nbsp;
       </div>

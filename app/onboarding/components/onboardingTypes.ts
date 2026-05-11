@@ -6,6 +6,7 @@ export type OnboardingStepId =
   | 'manual-office-entry'
   | 'path-to-victory'
   | 'voter-demographics'
+  | 'outreach-plan'
   | 'pledge'
 
 export type OnboardingOfficePath = 'structured' | 'manual'
@@ -74,11 +75,11 @@ export interface OnboardingStepContext {
 
 export interface OnboardingStepConfig {
   id: OnboardingStepId
-  eyebrow: string
   title: string
   description: string
   summary: string
   whyWeAsk?: string
+  nextLabel?: string
   shouldSkip?: (context: OnboardingStepContext) => boolean
   isValid?: (context: OnboardingStepContext) => boolean
 }
