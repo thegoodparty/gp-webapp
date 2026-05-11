@@ -113,10 +113,11 @@ test.describe('Contacts Page', () => {
 
     await eventually({ that: 'the search results are narrowed' }, async () => {
       const numSearchResults = await table.locator('tbody tr').count()
-      // Sometimes a common name like "Joey" will match multiple contacts. We're targeting a
-      // small district, so we expect 1-5 results, and verify that each one matches.
       expect(numSearchResults).toBeGreaterThanOrEqual(1)
-      expect(numSearchResults).toBeLessThanOrEqual(5)
+      // The per-row check below is what verifies the filter actually ran:
+      // if the search were a no-op, unrelated rows would not contain the term.
+      // Don't gate on an absolute row-count ceiling, common first names
+      // (e.g. "John") legitimately produce many matches in larger districts.
       for (const row of await table.locator('tbody tr').all()) {
         await expect(row).toContainText(searchTerm, {
           ignoreCase: true,
