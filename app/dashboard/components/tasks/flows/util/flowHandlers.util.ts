@@ -198,6 +198,12 @@ export const mapAudienceForPersistence = ({
   //  to match the API once we redo that component so that we don't have to do
   //  this mapping: https://goodparty.atlassian.net/browse/WEB-4277
 
+  // If making a change, also update:
+  // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+  // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+  // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+  // gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+  // gp-webapp/app/dashboard/outreach/constants.tsx
   const mappedAudience: MappedAudience = {
     audienceSuperVoters,
     audienceLikelyVoters,
