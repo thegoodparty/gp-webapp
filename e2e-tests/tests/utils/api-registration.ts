@@ -220,9 +220,14 @@ const bootstrapTestUser = async (
     {
       ballotReadyPositionId: race.brPositionId,
       details: {
+        // electionId: the /v1/elections/races-by-year response does not include
+        // election.id; CreateCampaignSchema treats this field as `nullish`, so
+        // omitting it is well-formed (not a silent malformed campaign).
         electionId: race.election.id,
         raceId: race.id,
-        state: race.election.state,
+        // state is sourced from race.position.state (always present) rather
+        // than race.election.state (not returned by the elections endpoint).
+        state: race.position.state,
         ballotLevel: race.position.level?.toUpperCase(),
         electionDate: race.election.electionDay,
         partisanType: race.position.partisanType,
