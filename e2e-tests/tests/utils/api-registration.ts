@@ -72,17 +72,18 @@ export type AuthenticatedUser = {
 
 type Race = {
   id: string
-  filingPeriods: { startOn: string; endOn: string }[]
+  brPositionId: string
+  filingPeriods?: { startOn: string; endOn: string }[]
   election: {
-    id: string
+    id?: string
     electionDay: string
-    name: string
-    state: string
+    name?: string
+    state?: string
   }
   position: {
-    id: string
-    hasPrimary: boolean
-    partisanType: string
+    id?: string
+    hasPrimary?: boolean
+    partisanType?: string
     level: string
     name: string
     state: string
@@ -201,7 +202,7 @@ const bootstrapTestUser = async (
     },
   )
 
-  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 2'
+  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 1'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)
@@ -217,17 +218,17 @@ const bootstrapTestUser = async (
   const { data: campaign } = await client.post<{ id: number }>(
     '/v1/campaigns',
     {
-      ballotReadyPositionId: race.position.id,
+      ballotReadyPositionId: race.brPositionId,
       details: {
         electionId: race.election.id,
         raceId: race.id,
         state: race.election.state,
-        ballotLevel: race.position.level,
+        ballotLevel: race.position.level?.toUpperCase(),
         electionDate: race.election.electionDay,
         partisanType: race.position.partisanType,
         hasPrimary: race.position.hasPrimary,
-        filingPeriodsStart: race.filingPeriods[0]?.startOn,
-        filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+        filingPeriodsStart: race.filingPeriods?.[0]?.startOn,
+        filingPeriodsEnd: race.filingPeriods?.[0]?.endOn,
       },
       data: { currentStep: 'onboarding-1' },
     },
