@@ -116,7 +116,7 @@ test.describe('Contacts Page', () => {
       expect(numSearchResults).toBeGreaterThanOrEqual(1)
       // The per-row check below is what verifies the filter actually ran:
       // if the search were a no-op, unrelated rows would not contain the term.
-      // Don't gate on an absolute row-count ceiling — common first names
+      // Don't gate on an absolute row-count ceiling, common first names
       // (e.g. "John") legitimately produce many matches in larger districts.
       for (const row of await table.locator('tbody tr').all()) {
         await expect(row).toContainText(searchTerm, {
