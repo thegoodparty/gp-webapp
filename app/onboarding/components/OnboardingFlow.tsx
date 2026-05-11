@@ -26,6 +26,7 @@ import {
 
 const ONBOARDING_STEP_COMPLETE = 'onboarding-complete'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -624,6 +625,12 @@ export default function OnboardingFlow({
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
     setLiveCampaign(newCampaign)
+    // CampaignProvider cached the prior 404 (no campaign yet) for this
+    // session. POST /campaigns returns the bare campaign without
+    // raceTargetMetrics — those are only computed by GET /campaigns/mine —
+    // so we invalidate instead of seeding the cache, forcing the next read
+    // to refetch the fully-hydrated record.
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: office.level,
@@ -716,6 +723,7 @@ export default function OnboardingFlow({
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
     setLiveCampaign(newCampaign)
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: 'manual',
@@ -785,6 +793,11 @@ export default function OnboardingFlow({
       })
       return false
     }
+    // Launch flips isActive + recomputes raceTargetMetrics on the next read.
+    // Invalidate so /dashboard's CampaignProvider refetches the hydrated
+    // campaign instead of serving the stale (or missing-metrics) entry that
+    // was cached earlier in this session.
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
     trackEvent(EVENTS.Onboarding.PledgeCompleted, {
       pledgeVersion: PLEDGE_VERSION,

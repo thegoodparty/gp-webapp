@@ -10,13 +10,12 @@ import CustomVoterAudienceFilters, {
   AudienceFiltersState,
   AudienceFilterKey,
 } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   countVoterFile,
   CountVoterFileError,
 } from 'app/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
-import { debounce } from 'helpers/debounceHelper'
 import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
@@ -84,6 +83,13 @@ export default function AudienceStep({
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [countError, setCountError] = useState<CountVoterFileError | null>(null)
+  // Tracks the latest count request so out-of-order responses can be dropped.
+  // See useEffect below.
+  const countRequestIdRef = useRef(0)
+  // Component-scoped debounce timer. We don't use the shared `debounce` helper
+  // because it stores its handle on `window.timer` — any other caller in the
+  // app can clear our pending fetch.
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
@@ -134,21 +140,37 @@ export default function AudienceStep({
   }
 
   useEffect(() => {
+    // Bump the request ID up front so any in-flight response from a prior
+    // filter combination is dropped on arrival. countVoterFile has no abort
+    // support, so the network call still completes — we just ignore it.
+    const requestId = ++countRequestIdRef.current
+
     if (!hasValues) {
       setCountError(null)
       setCount(0)
+      setLoading(false)
       onChangeCallback('voterCount', 0)
       return
     }
 
-    debounce(async () => {
-      setLoading(true)
+    setLoading(true)
+
+    debounceTimerRef.current = setTimeout(async () => {
+      if (requestId !== countRequestIdRef.current) return
+
       const selectedAudience = Object.keys(audience).filter(
         (key) => isAudienceFilterKey(key, audience) && audience[key] === true,
       )
       const res = await countVoterFile(isCustom ? 'custom' : type, {
         filters: selectedAudience,
       })
+
+      if (requestId !== countRequestIdRef.current) {
+        console.warn(
+          `[AudienceStep] Dropping stale voter-count response (req #${requestId}, current #${countRequestIdRef.current})`,
+        )
+        return
+      }
 
       if (typeof res === 'number') {
         setCountError(null)
@@ -161,7 +183,17 @@ export default function AudienceStep({
       }
       setLoading(false)
     }, 300)
-  }, [audience, isCustom, type, hasValues])
+
+    return () => {
+      // Invalidate any pending debounced fetch or in-flight response so it
+      // can't fire after this effect tears down (filter change, unmount).
+      countRequestIdRef.current += 1
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        debounceTimerRef.current = null
+      }
+    }
+  }, [audience, isCustom, type, hasValues, onChangeCallback])
 
   const handleChangeAudience = (newState: AudienceFiltersState) => {
     onChangeCallback('audience', newState)
