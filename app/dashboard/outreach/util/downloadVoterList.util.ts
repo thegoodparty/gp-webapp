@@ -2,7 +2,7 @@ import { noop } from '@shared/utils/noop'
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { VoterFileFilters } from 'helpers/types'
 import { AudienceState } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
-import { AudienceFilterKey } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
+import type { AudienceFilterKey } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
 
 interface DownloadVoterListParams {
   voterFileFilter?: VoterFileFilters | AudienceState
