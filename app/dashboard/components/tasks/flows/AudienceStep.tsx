@@ -16,7 +16,6 @@ import {
   CountVoterFileError,
 } from 'app/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
-import { debounce } from 'helpers/debounceHelper'
 import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
@@ -87,6 +86,10 @@ export default function AudienceStep({
   // Tracks the latest count request so out-of-order responses can be dropped.
   // See useEffect below.
   const countRequestIdRef = useRef(0)
+  // Component-scoped debounce timer. We don't use the shared `debounce` helper
+  // because it stores its handle on `window.timer` — any other caller in the
+  // app can clear our pending fetch.
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
@@ -152,7 +155,7 @@ export default function AudienceStep({
 
     setLoading(true)
 
-    debounce(async () => {
+    debounceTimerRef.current = setTimeout(async () => {
       if (requestId !== countRequestIdRef.current) return
 
       const selectedAudience = Object.keys(audience).filter(
@@ -185,6 +188,10 @@ export default function AudienceStep({
       // Invalidate any pending debounced fetch or in-flight response so it
       // can't fire after this effect tears down (filter change, unmount).
       countRequestIdRef.current += 1
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        debounceTimerRef.current = null
+      }
     }
   }, [audience, isCustom, type, hasValues])
 
