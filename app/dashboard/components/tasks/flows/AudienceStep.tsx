@@ -193,7 +193,7 @@ export default function AudienceStep({
         debounceTimerRef.current = null
       }
     }
-  }, [audience, isCustom, type, hasValues])
+  }, [audience, isCustom, type, hasValues, onChangeCallback])
 
   const handleChangeAudience = (newState: AudienceFiltersState) => {
     onChangeCallback('audience', newState)
