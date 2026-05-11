@@ -39,7 +39,7 @@ export const downloadVoterList = async (
 
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
   //  https://goodparty.atlassian.net/browse/WEB-4277
-  // If making a change, also update: 
+  // If making a change, also update:
   // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
   // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
   // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts

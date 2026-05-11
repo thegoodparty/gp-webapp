@@ -101,28 +101,28 @@ export const handleScheduleOutreach =
     successSnackbar: (message: string) => void = noop,
     { budget, audience }: ScheduleOutreachParams = {},
   ) =>
-    async (outreach: Outreach = { id: 0 }): Promise<void> => {
-      const outreachId = outreach?.id
-      if (!outreachId || outreachId <= 0) {
-        errorSnackbar('Cannot schedule: outreach was not created')
-        return
-      }
-      const { audience_request: audienceRequest } = audience || {}
-      const result = await scheduleVoterMessagingCampaign(
-        outreachId,
-        audienceRequest,
-      )
-      if (!result) {
-        errorSnackbar('There was an error scheduling your campaign')
-        return
-      }
-      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
-        medium: type,
-        price: budget,
-        voterContacts: audience!.count || 0,
-      })
-      successSnackbar('Request submitted successfully.')
+  async (outreach: Outreach = { id: 0 }): Promise<void> => {
+    const outreachId = outreach?.id
+    if (!outreachId || outreachId <= 0) {
+      errorSnackbar('Cannot schedule: outreach was not created')
+      return
     }
+    const { audience_request: audienceRequest } = audience || {}
+    const result = await scheduleVoterMessagingCampaign(
+      outreachId,
+      audienceRequest,
+    )
+    if (!result) {
+      errorSnackbar('There was an error scheduling your campaign')
+      return
+    }
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
+      medium: type,
+      price: budget,
+      voterContacts: audience!.count || 0,
+    })
+    successSnackbar('Request submitted successfully.')
+  }
 
 export const handleCreateOutreach =
   ({
@@ -135,47 +135,47 @@ export const handleCreateOutreach =
     refreshCampaign = noopAsync,
     p2pUxEnabled = true,
   }: CreateOutreachParams) =>
-    async (): Promise<Outreach | undefined> => {
-      const { audience_request: audienceRequest } = audience || {}
-      const { message } = schedule || {}
-      const date = schedule?.date
-      const voterFileFilterId = voterFileFilter?.id
-      const outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
+  async (): Promise<Outreach | undefined> => {
+    const { audience_request: audienceRequest } = audience || {}
+    const { message } = schedule || {}
+    const date = schedule?.date
+    const voterFileFilterId = voterFileFilter?.id
+    const outreachType = getEffectiveOutreachType(type, p2pUxEnabled)
 
-      const outreach = await createOutreach(
-        {
-          campaignId,
-          outreachType,
-          message,
-          title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
-          script: typeof script === 'string' ? script : undefined,
-          ...(date
-            ? { date: date instanceof Date ? date.toISOString() : date }
-            : {}),
-          ...(voterFileFilterId && voterFileFilterId > 0
-            ? { voterFileFilterId }
-            : {}),
-          ...(typeof audienceRequest === 'string' && audienceRequest
-            ? { audienceRequest }
-            : {}),
-          ...(p2pUxEnabled && phoneListId && phoneListId > 0
-            ? { phoneListId }
-            : {}),
-        },
-        image || null,
-      )
+    const outreach = await createOutreach(
+      {
+        campaignId,
+        outreachType,
+        message,
+        title: `${PEERLY_DEFAULT_IMAGE_TITLE} ${campaignId}`,
+        script: typeof script === 'string' ? script : undefined,
+        ...(date
+          ? { date: date instanceof Date ? date.toISOString() : date }
+          : {}),
+        ...(voterFileFilterId && voterFileFilterId > 0
+          ? { voterFileFilterId }
+          : {}),
+        ...(typeof audienceRequest === 'string' && audienceRequest
+          ? { audienceRequest }
+          : {}),
+        ...(p2pUxEnabled && phoneListId && phoneListId > 0
+          ? { phoneListId }
+          : {}),
+      },
+      image || null,
+    )
 
-      if (!outreach) {
-        errorSnackbar('There was an error creating your outreach campaign')
-        return
-      }
-
-      setOutreaches([...outreaches, outreach])
-
-      await refreshCampaign()
-
-      return outreach
+    if (!outreach) {
+      errorSnackbar('There was an error creating your outreach campaign')
+      return
     }
+
+    setOutreaches([...outreaches, outreach])
+
+    await refreshCampaign()
+
+    return outreach
+  }
 
 export const mapAudienceForPersistence = ({
   audience_superVoters: audienceSuperVoters,
@@ -198,7 +198,7 @@ export const mapAudienceForPersistence = ({
   //  to match the API once we redo that component so that we don't have to do
   //  this mapping: https://goodparty.atlassian.net/browse/WEB-4277
 
-  // If making a change, also update: 
+  // If making a change, also update:
   // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
   // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
   // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
@@ -251,19 +251,19 @@ export const mapAudienceForPersistence = ({
 
 export const handleCreatePhoneList =
   (errorSnackbar: (message: string) => void = noop) =>
-    async (
-      voterFileFilter: PhoneListInput | undefined,
-    ): Promise<string | undefined> => {
-      const result = await createP2pPhoneList(voterFileFilter)
+  async (
+    voterFileFilter: PhoneListInput | undefined,
+  ): Promise<string | undefined> => {
+    const result = await createP2pPhoneList(voterFileFilter)
 
-      if (!result.ok) {
-        const fallback =
-          'There was an error generating a phone list. Please try again.'
-        errorSnackbar(result.message || fallback)
-        return
-      }
-      return result.token
+    if (!result.ok) {
+      const fallback =
+        'There was an error generating a phone list. Please try again.'
+      errorSnackbar(result.message || fallback)
+      return
     }
+    return result.token
+  }
 
 export const handleCreateVoterFileFilter =
   ({
@@ -271,19 +271,19 @@ export const handleCreateVoterFileFilter =
     state: { audience, voterCount },
     errorSnackbar = noop,
   }: CreateVoterFileFilterParams) =>
-    async (): Promise<PhoneListInput | undefined> => {
-      const chosenAudiences = mapAudienceForPersistence(audience)
+  async (): Promise<PhoneListInput | undefined> => {
+    const chosenAudiences = mapAudienceForPersistence(audience)
 
-      const voterFileFilter = await createVoterFileFilter({
-        name: `${type} Campaign`,
-        ...chosenAudiences,
-        voterCount,
-      })
+    const voterFileFilter = await createVoterFileFilter({
+      name: `${type} Campaign`,
+      ...chosenAudiences,
+      voterCount,
+    })
 
-      if (!voterFileFilter) {
-        errorSnackbar('There was an error creating your voter file filter')
-        return
-      }
-
-      return voterFileFilter
+    if (!voterFileFilter) {
+      errorSnackbar('There was an error creating your voter file filter')
+      return
     }
+
+    return voterFileFilter
+  }

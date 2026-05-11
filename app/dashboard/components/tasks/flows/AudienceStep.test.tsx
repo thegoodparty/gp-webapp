@@ -50,7 +50,7 @@ describe('AudienceStep voter-count race', () => {
     vi.useRealTimers()
   })
 
-  it("ignores a stale earlier response that arrives after a newer one", async () => {
+  it('ignores a stale earlier response that arrives after a newer one', async () => {
     const onChangeCallback = vi.fn()
     const warn = vi.spyOn(console, 'warn').mockImplementation(vi.fn())
 

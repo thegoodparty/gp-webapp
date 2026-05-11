@@ -4,8 +4,7 @@ import {
 } from 'app/dashboard/outreach/constants'
 import { VoterFileFilters } from 'helpers/types'
 
-
-// If making a change, also update: 
+// If making a change, also update:
 // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
 // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
 // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts

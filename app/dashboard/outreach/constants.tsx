@@ -62,7 +62,7 @@ export const OUTREACH_TYPE_MAPPING: OutreachTypeMapping = {
   socialMedia: 'Social post',
 }
 
-// If making a change, also update: 
+// If making a change, also update:
 // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
 // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
 // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
@@ -85,7 +85,7 @@ export type AudienceLabelKey =
   | 'genderFemale'
   | 'genderUnknown'
 
-// If making a change, also update: 
+// If making a change, also update:
 // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
 // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
 // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
@@ -109,7 +109,7 @@ interface AudienceLabelsMapping {
   genderUnknown: string
 }
 
-// If making a change, also update: 
+// If making a change, also update:
 // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
 // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
 // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
