@@ -132,7 +132,7 @@ const buildPollResponseJson = (params: {
 
 const district = {
   zip: '82001',
-  office: 'Cheyenne City Council - Ward 2',
+  office: 'Cheyenne City Council - Ward 1',
   constituents: 13000,
 }
 
