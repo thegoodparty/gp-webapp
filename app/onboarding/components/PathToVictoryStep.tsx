@@ -325,30 +325,47 @@ const ProjectionExplanation = ({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between gap-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Here&apos;s how our projections work:
         </p>
         <Dialog>
-          <DialogTrigger className="cursor-pointer text-sm font-medium text-muted-foreground underline-offset-4 hover:underline">
+          <DialogTrigger className="cursor-pointer text-sm text-muted-foreground underline-offset-4 hover:underline">
             Methodology
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Methodology</DialogTitle>
             </DialogHeader>
-            <DialogDescription>
-              We use the historical voter data, and proprietary neural inference
-              network and data models to provide the most accurate projections
-              possible. Visit our{' '}
-              <a
-                href="https://goodparty.org/team"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-components-input-active hover:underline"
-              >
-                GoodParty Election Data Labs
-              </a>{' '}
-              for more details.
+            <DialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  Our turnout projections are built on a national voter file
+                  covering more than 240 million voters and over 130,000
+                  elections each year.
+                </p>
+                <p>
+                  We analyze voter eligibility, historical voting behavior and
+                  election patterns to estimate the likelihood that each voter
+                  in your district will turn out in your race. Combining the
+                  voter-level predictions, we generate an accurate turnout
+                  projection and win number target tailored specifically to your
+                  election.
+                </p>
+                <p>
+                  In 2025, the model&rsquo;s predictions were calibrated within
+                  approximately 1.5 percentage points of actual voter turnout
+                  behavior on average. For more information, see{' '}
+                  <a
+                    href="https://goodparty.org/blog/article/calculate-win-numbers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-components-input-active hover:underline"
+                  >
+                    our blog post
+                  </a>
+                  {'.'}
+                </p>
+              </div>
             </DialogDescription>
           </DialogContent>
         </Dialog>

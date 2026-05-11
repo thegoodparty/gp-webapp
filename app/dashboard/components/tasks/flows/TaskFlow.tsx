@@ -126,22 +126,25 @@ const TaskFlow = ({
     [type],
   )
 
-  const handleChange = (
-    changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
-    value?: TaskFlowState[keyof TaskFlowState],
-  ) => {
-    if (typeof changeSetOrKey === 'object') {
-      setState((prevState) => ({
-        ...prevState,
-        ...changeSetOrKey,
-      }))
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        [changeSetOrKey]: value,
-      }))
-    }
-  }
+  const handleChange = useCallback(
+    (
+      changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
+      value?: TaskFlowState[keyof TaskFlowState],
+    ) => {
+      if (typeof changeSetOrKey === 'object') {
+        setState((prevState) => ({
+          ...prevState,
+          ...changeSetOrKey,
+        }))
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          [changeSetOrKey]: value,
+        }))
+      }
+    },
+    [],
+  )
 
   const handleClose = () => {
     if (isObjectEqual(state, DEFAULT_STATE) || isLastStep) {

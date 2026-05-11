@@ -2,17 +2,6 @@
 import { useEffect, useState } from 'react'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
-import {
-  LuHeart,
-  LuDollarSign,
-  LuMapPin,
-  LuBriefcase,
-  LuGraduationCap,
-  LuLeaf,
-  LuShieldCheck,
-  LuStethoscope,
-  LuVote,
-} from 'react-icons/lu'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
@@ -29,47 +18,10 @@ const SENTRY_CONTEXT_FETCH_ISSUES = 'onboarding.voterIssues.fetch'
 const SKELETON_PLACEHOLDER_COUNT = 3
 const COLLAPSED_ISSUES_VISIBLE = 3
 
-const ISSUE_ICON_BASE =
-  'flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600'
-
 const PRIORITY_LABEL: Record<'high' | 'medium' | 'low', string> = {
   high: 'High priority',
   medium: 'Medium priority',
   low: 'Low priority',
-}
-
-const ICON_BY_KEYWORD: Array<{
-  pattern: RegExp
-  icon: React.JSX.Element
-}> = [
-  {
-    pattern: /(safety|crime|police)/i,
-    icon: <LuShieldCheck className="size-5" />,
-  },
-  {
-    pattern: /(econom|job|business|tax)/i,
-    icon: <LuDollarSign className="size-5" />,
-  },
-  { pattern: /(hous|rent|afford)/i, icon: <LuMapPin className="size-5" /> },
-  {
-    pattern: /(health|medic|hospital)/i,
-    icon: <LuStethoscope className="size-5" />,
-  },
-  {
-    pattern: /(educat|school|student)/i,
-    icon: <LuGraduationCap className="size-5" />,
-  },
-  {
-    pattern: /(environment|climate|energy)/i,
-    icon: <LuLeaf className="size-5" />,
-  },
-  { pattern: /(work|employ|labor)/i, icon: <LuBriefcase className="size-5" /> },
-  { pattern: /(elect|vot|democra)/i, icon: <LuVote className="size-5" /> },
-]
-
-const iconForLabel = (label: string): React.JSX.Element => {
-  const match = ICON_BY_KEYWORD.find(({ pattern }) => pattern.test(label))
-  return match ? match.icon : <LuHeart className="size-5" />
 }
 
 // Endpoint derives district from the org cookie, so the request takes no
@@ -167,14 +119,9 @@ export const TopVoterIssuesSection = ({
             {visibleIssues.map((issue) => (
               <div key={issue.label} className="space-y-2">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className={ISSUE_ICON_BASE}>
-                      {iconForLabel(issue.label)}
-                    </span>
-                    <h3 className="text-sm font-semibold text-slate-950">
-                      {issue.label}
-                    </h3>
-                  </div>
+                  <h3 className="text-base font-semibold text-foreground">
+                    {issue.label}
+                  </h3>
                   {issue.priority === 'high' ? (
                     <Badge variant="soft">
                       {PRIORITY_LABEL[issue.priority]}
