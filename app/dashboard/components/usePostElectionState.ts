@@ -19,48 +19,43 @@ export function usePostElectionState(): PostElectionState {
   const { primaryElectionDate } = details || {}
 
   const [primaryResultState, setPrimaryResultState] = useState<{
-    modalOpen: boolean
     modalDismissed: boolean
     primaryResult: PrimaryResult | null | undefined
   }>({
-    modalOpen: false,
     modalDismissed: false,
     primaryResult: campaign?.details?.primaryResult,
   })
 
   const electionDate = details?.electionDate || goals?.electionDate
   const now = new Date()
-  let resolvedDate = electionDate
+  const primaryElectionDateObj = primaryElectionDate
+    ? new Date(primaryElectionDate)
+    : null
+  const primaryInFuture =
+    primaryElectionDateObj !== null && primaryElectionDateObj > now
+  const primaryInPast = primaryElectionDateObj !== null && !primaryInFuture
+  const resolvedDate = primaryInFuture ? primaryElectionDate : electionDate
 
-  if (primaryElectionDate) {
-    const primaryElectionDateObj = new Date(primaryElectionDate)
-    const { modalOpen, primaryResult, modalDismissed } = primaryResultState
-
-    if (primaryElectionDateObj > now) {
-      resolvedDate = primaryElectionDate
-    } else if (!primaryResult && !modalOpen && !modalDismissed) {
-      setPrimaryResultState((state) => ({ ...state, modalOpen: true }))
-    }
-  }
+  const { modalDismissed, primaryResult } = primaryResultState
+  const primaryResultModalOpen =
+    primaryInPast && !primaryResult && !modalDismissed
 
   const weeksUntil = weeksTill(resolvedDate)
   const weeksUntilValue =
     typeof weeksUntil === 'object' && weeksUntil ? weeksUntil.weeks : NaN
   const electionInPast =
     weeksUntilValue < 0 && resolvedDate !== primaryElectionDate
-  const primaryLost = primaryResultState.primaryResult === 'lost'
+  const primaryLost = primaryResult === 'lost'
 
   const closePrimaryResultModal = useCallback(
     (selectedResult?: PrimaryResult) => {
       if (selectedResult) {
-        setPrimaryResultState((state) => ({
-          ...state,
-          modalOpen: false,
+        setPrimaryResultState({
+          modalDismissed: false,
           primaryResult: selectedResult,
-        }))
+        })
       } else {
         setPrimaryResultState({
-          modalOpen: false,
           modalDismissed: true,
           primaryResult: undefined,
         })
@@ -72,7 +67,7 @@ export function usePostElectionState(): PostElectionState {
   return {
     electionInPast,
     primaryLost,
-    primaryResultModalOpen: primaryResultState.modalOpen,
+    primaryResultModalOpen,
     primaryElectionDate,
     electionDate,
     closePrimaryResultModal,
