@@ -154,6 +154,25 @@ describe('usePostElectionState', () => {
     expect(result.current.primaryLost).toBe(false)
   })
 
+  it('respects a persisted primaryResult that arrives after the hook mounts', () => {
+    // Simulate CampaignProvider returning [null] before the campaign loads
+    mockUseCampaign.mockReturnValue([null])
+
+    const { result, rerender } = renderHook(() => usePostElectionState())
+    expect(result.current.primaryResultModalOpen).toBe(false)
+
+    // Campaign resolves with a persisted result for a past primary
+    setCampaign({
+      electionDate: daysFromNow(60),
+      primaryElectionDate: daysFromNow(-10),
+      primaryResult: 'won',
+    })
+    rerender()
+
+    expect(result.current.primaryResultModalOpen).toBe(false)
+    expect(result.current.primaryLost).toBe(false)
+  })
+
   it('returns safe defaults when campaign is null', () => {
     mockUseCampaign.mockReturnValue([null])
 

@@ -20,10 +20,10 @@ export function usePostElectionState(): PostElectionState {
 
   const [primaryResultState, setPrimaryResultState] = useState<{
     modalDismissed: boolean
-    primaryResult: PrimaryResult | null | undefined
+    overrideResult: PrimaryResult | null
   }>({
     modalDismissed: false,
-    primaryResult: campaign?.details?.primaryResult,
+    overrideResult: null,
   })
 
   const electionDate = details?.electionDate || goals?.electionDate
@@ -36,7 +36,14 @@ export function usePostElectionState(): PostElectionState {
   const primaryInPast = primaryElectionDateObj !== null && !primaryInFuture
   const resolvedDate = primaryInFuture ? primaryElectionDate : electionDate
 
-  const { modalDismissed, primaryResult } = primaryResultState
+  // Derive primaryResult from the live campaign so persisted server values
+  // are always respected after they load — local state only tracks the
+  // current session's modal interaction.
+  const primaryResult =
+    primaryResultState.overrideResult ??
+    campaign?.details?.primaryResult ??
+    null
+  const { modalDismissed } = primaryResultState
   const primaryResultModalOpen =
     primaryInPast && !primaryResult && !modalDismissed
 
@@ -50,15 +57,15 @@ export function usePostElectionState(): PostElectionState {
   const closePrimaryResultModal = useCallback(
     (selectedResult?: PrimaryResult) => {
       if (selectedResult) {
-        setPrimaryResultState({
-          modalDismissed: false,
-          primaryResult: selectedResult,
-        })
+        setPrimaryResultState((state) => ({
+          ...state,
+          overrideResult: selectedResult,
+        }))
       } else {
-        setPrimaryResultState({
+        setPrimaryResultState((state) => ({
+          ...state,
           modalDismissed: true,
-          primaryResult: undefined,
-        })
+        }))
       }
     },
     [],
