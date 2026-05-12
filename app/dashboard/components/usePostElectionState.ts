@@ -44,8 +44,6 @@ export function usePostElectionState(): PostElectionState {
     campaign?.details?.primaryResult ??
     null
   const { modalDismissed } = primaryResultState
-  const primaryResultModalOpen =
-    primaryInPast && !primaryResult && !modalDismissed
 
   const weeksUntil = weeksTill(resolvedDate)
   const weeksUntilValue =
@@ -53,6 +51,12 @@ export function usePostElectionState(): PostElectionState {
   const electionInPast =
     weeksUntilValue < 0 && resolvedDate !== primaryElectionDate
   const primaryLost = primaryResult === 'lost'
+
+  // Suppress the primary-result modal once the general election has also
+  // ended — at that point the race is over and we render ElectionOver
+  // (which is the screen the modal would otherwise cover non-dismissibly).
+  const primaryResultModalOpen =
+    primaryInPast && !primaryResult && !modalDismissed && !electionInPast
 
   const closePrimaryResultModal = useCallback(
     (selectedResult?: PrimaryResult) => {

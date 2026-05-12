@@ -92,6 +92,18 @@ describe('usePostElectionState', () => {
     expect(result.current.primaryResultModalOpen).toBe(false)
   })
 
+  it('does not open the modal when the general election is also in the past', () => {
+    setCampaign({
+      electionDate: daysFromNow(-5),
+      primaryElectionDate: daysFromNow(-30),
+    })
+
+    const { result } = renderHook(() => usePostElectionState())
+
+    expect(result.current.electionInPast).toBe(true)
+    expect(result.current.primaryResultModalOpen).toBe(false)
+  })
+
   it('does not open the modal when a primary result is already recorded', () => {
     setCampaign({
       electionDate: daysFromNow(60),
