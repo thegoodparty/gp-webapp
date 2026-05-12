@@ -49,6 +49,18 @@ vi.mock('@shared/hooks/useCampaign', () => ({
   useCampaign: () => mockUseCampaign(),
 }))
 
+vi.mock('@shared/hooks/usePositionName', () => ({
+  usePositionName: () => 'Mayor',
+}))
+
+vi.mock('../ElectionOver', () => ({
+  default: () => <div>Election over</div>,
+}))
+
+vi.mock('../PrimaryResultModal', () => ({
+  default: () => null,
+}))
+
 vi.mock('gpApi/clientFetch', () => ({
   clientFetch: (...args: unknown[]) => mockClientFetch(...args),
 }))
