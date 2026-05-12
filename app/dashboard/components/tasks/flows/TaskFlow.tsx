@@ -23,7 +23,6 @@ import {
   handleCreateOutreach,
   handleCreatePhoneList,
   handleCreateVoterFileFilter,
-  handleScheduleOutreach,
   FlowState,
   AudienceState,
 } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -42,7 +41,6 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
-import { noopAsync } from '@shared/utils/noop'
 import { useQueryClient } from '@tanstack/react-query'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
@@ -289,12 +287,12 @@ const TaskFlow = ({
         errorSnackbar('Campaign could not be created. Please try again.')
         return
       }
-      await handleScheduleOutreach(
-        type,
-        errorSnackbar,
-        successSnackbar,
-        state,
-      )(outreach)
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
+        medium: type,
+        price: state.budget,
+        voterContacts: state.audience?.count || 0,
+      })
+      successSnackbar('Request submitted successfully.')
 
       const contactField = getVoterContactField(type)
       await updateVoterContacts((currentContacts) => ({
@@ -414,13 +412,25 @@ const TaskFlow = ({
             }
             onScheduleOutreach={
               isLastStep
-                ? handleScheduleOutreach(
-                    type,
-                    errorSnackbar,
-                    successSnackbar,
-                    state,
-                  )
-                : noopAsync
+                ? async (outreach) => {
+                    if (!outreach?.id) {
+                      errorSnackbar(
+                        'Campaign could not be created. Please try again.',
+                      )
+                      return false
+                    }
+                    trackEvent(
+                      EVENTS.Dashboard.VoterContact.CampaignCompleted,
+                      {
+                        medium: type,
+                        price: state.budget,
+                        voterContacts: state.audience?.count || 0,
+                      },
+                    )
+                    successSnackbar('Request submitted successfully.')
+                    return true
+                  }
+                : async () => true
             }
             isLastStep
           />
