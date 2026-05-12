@@ -177,11 +177,11 @@ export default function CampaignManager({
               </>
             )}
           </div>
-          {primaryElectionDate && (
+          {primaryElectionDate && electionDate && (
             <PrimaryResultModal
               open={primaryResultModalOpen}
               onClose={closePrimaryResultModal}
-              electionDate={electionDate!}
+              electionDate={electionDate}
               officeName={positionName}
             />
           )}

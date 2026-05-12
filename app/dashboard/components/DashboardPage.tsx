@@ -88,11 +88,11 @@ const DashboardPage = ({
                   <EmptyState />
                 )}
               </div>
-              {primaryElectionDate && (
+              {primaryElectionDate && electionDate && (
                 <PrimaryResultModal
                   open={primaryResultModalOpen}
                   onClose={closePrimaryResultModal}
-                  electionDate={electionDate!}
+                  electionDate={electionDate}
                   officeName={positionName}
                 />
               )}
