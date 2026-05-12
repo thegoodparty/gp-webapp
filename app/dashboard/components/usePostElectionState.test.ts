@@ -92,6 +92,18 @@ describe('usePostElectionState', () => {
     expect(result.current.primaryResultModalOpen).toBe(false)
   })
 
+  it('marks electionInPast=true when general and primary dates are the same and both have passed', () => {
+    const sameDate = daysFromNow(-5)
+    setCampaign({
+      electionDate: sameDate,
+      primaryElectionDate: sameDate,
+    })
+
+    const { result } = renderHook(() => usePostElectionState())
+
+    expect(result.current.electionInPast).toBe(true)
+  })
+
   it('does not open the modal when the general election is also in the past', () => {
     setCampaign({
       electionDate: daysFromNow(-5),

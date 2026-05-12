@@ -48,8 +48,11 @@ export function usePostElectionState(): PostElectionState {
   const weeksUntil = weeksTill(resolvedDate)
   const weeksUntilValue =
     typeof weeksUntil === 'object' && weeksUntil ? weeksUntil.weeks : NaN
-  const electionInPast =
-    weeksUntilValue < 0 && resolvedDate !== primaryElectionDate
+  // resolvedDate represents the general election only when the primary
+  // is not still ahead of us — guarding on !primaryInFuture instead of
+  // string-comparing the dates avoids a false negative for campaigns
+  // whose primary and general dates are identical strings.
+  const electionInPast = weeksUntilValue < 0 && !primaryInFuture
   const primaryLost = primaryResult === 'lost'
 
   // Suppress the primary-result modal once the general election has also
