@@ -26,11 +26,8 @@ const Section = ({
   children,
   transition,
 }: SectionProps): React.JSX.Element => (
-  <section
-    id={id}
-    className="scroll-mt-24 border-t border-base-border pt-12 first-of-type:border-t-0 first-of-type:pt-0"
-  >
-    <header className="mb-2 space-y-4">
+  <section id={id} className="scroll-mt-24">
+    <header className="mb-2 space-y-2">
       <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
         Section {number}
       </p>
@@ -38,11 +35,12 @@ const Section = ({
         {title}
       </h2>
     </header>
-    <div className="space-y-8 text-left">{children}</div>
+    <div className="space-y-6 text-left">{children}</div>
     {transition ? (
-      <p className="mt-8 border-t border-base-border pt-8 text-sm italic text-muted-foreground">
-        {transition}
-      </p>
+      <>
+        <hr className="mt-8 border-t border-base-border" />
+        <p className="mt-8 text-sm text-muted-foreground">{transition}</p>
+      </>
     ) : null}
   </section>
 )
@@ -156,7 +154,7 @@ const PlanSections = ({
       onStuckChange={onStuckChange}
     />
 
-    <div className="mt-8 space-y-16">
+    <div className="mt-8 space-y-12">
       {/* 1. Executive Summary */}
       <Section
         id="plan-section-1"

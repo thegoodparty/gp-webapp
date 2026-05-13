@@ -124,48 +124,50 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       <div className="pointer-events-none fixed inset-0 z-40">
         <ConfettiCanvas play />
       </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-8 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
+      <main className="mx-auto w-full max-w-4xl px-4 pt-4 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
         <div
-          className={`relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 pt-12 pb-6 text-center sm:px-12 sm:py-16 ${cardEnter}`}
+          className={`relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 pt-12 pb-6 text-center sm:px-12 sm:pt-16 ${cardEnter}`}
           style={{ transitionDelay: '0ms' }}
         >
           <div className={enter} style={{ transitionDelay: '300ms' }}>
             <GoodPartyOrgLogo className="!h-12 !w-auto sm:!h-14" />
           </div>
 
-          <h1
-            className={`text-4xl font-bold text-foreground sm:text-5xl ${enter}`}
-            style={{ transitionDelay: '500ms' }}
-          >
-            Your initial campaign plan
-          </h1>
+          <div className="flex flex-col items-center gap-2">
+            <h1
+              className={`text-4xl font-bold text-foreground sm:text-5xl ${enter}`}
+              style={{ transitionDelay: '500ms' }}
+            >
+              Your initial campaign plan
+            </h1>
 
-          <div
-            className={`flex flex-col items-center gap-1 ${enter}`}
-            style={{ transitionDelay: '700ms' }}
-          >
-            {plan.candidateName && plan.race ? (
-              <p className="text-xl font-bold text-foreground sm:text-2xl">
-                {plan.candidateName} for {plan.race}
-              </p>
-            ) : null}
-            {plan.districtName ? (
-              <p className="text-base text-muted-foreground sm:text-lg">
-                {plan.districtName}
-              </p>
-            ) : null}
-            {plan.electionDate ? (
-              <p className="text-sm italic text-muted-foreground sm:text-base">
-                Election Day: {plan.electionDate}
-              </p>
-            ) : null}
+            <div
+              className={`flex flex-col items-center gap-1 ${enter}`}
+              style={{ transitionDelay: '700ms' }}
+            >
+              {plan.candidateName && plan.race ? (
+                <p className="text-xl font-bold text-foreground sm:text-2xl">
+                  {plan.candidateName} for {plan.race}
+                </p>
+              ) : null}
+              {plan.districtName ? (
+                <p className="text-base text-muted-foreground sm:text-lg">
+                  {plan.districtName}
+                </p>
+              ) : null}
+              {plan.electionDate ? (
+                <p className="text-sm text-muted-foreground sm:text-base">
+                  Election Day: {plan.electionDate}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <div
             className={`w-full border-t border-base-border pt-6 ${enter}`}
             style={{ transitionDelay: '1100ms' }}
           >
-            <p className="text-xs italic text-muted-foreground sm:text-sm">
+            <p className="text-xs text-muted-foreground sm:text-sm">
               Campaign plan prepared for{' '}
               <span className="font-semibold text-foreground">
                 {plan.candidateName}
@@ -204,7 +206,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             </IconButton>
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="large"
               icon={<Download className="size-5" />}
               onClick={handleDownload}

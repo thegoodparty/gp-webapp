@@ -719,7 +719,11 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const candidateName = input.candidateName || 'Your campaign'
   const race = input.race || 'Your race'
   const location = [input.city, input.state].filter(Boolean).join(', ')
-  const districtName = location || '{district_name}'
+  // Per the source doc, the hero line is the specific district label
+  // (e.g., "Precinct 6"), not city/state. The campaign object doesn't carry
+  // a real district_name today, so we surface the literal placeholder.
+  // Do not fall back to city/state.
+  const districtName = '{district_name}'
 
   const electionDateRaw = input.electionDateIso
     ? new Date(input.electionDateIso)
