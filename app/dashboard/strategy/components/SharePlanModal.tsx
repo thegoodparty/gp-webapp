@@ -1,15 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Check,
-  Copy,
-  Facebook,
-  Instagram,
-  Link as LinkIcon,
-  Mail,
-  Twitter,
-} from 'lucide-react'
+import { Check, Copy, Facebook, Instagram, Mail, Twitter } from 'lucide-react'
 import {
   Button,
   Dialog,
@@ -17,7 +9,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
 } from '@styleguide'
+import { useIsMobile } from '@styleguide/hooks/use-mobile'
 
 interface SharePlanModalProps {
   open: boolean
@@ -26,12 +26,59 @@ interface SharePlanModalProps {
   candidateName: string
 }
 
+interface ShareLink {
+  label: string
+  icon: React.ReactNode
+  href: string
+}
+
+interface ShareBodyProps {
+  copied: boolean
+  onCopy: () => void
+  links: ShareLink[]
+}
+
+const ShareBody = ({
+  copied,
+  onCopy,
+  links,
+}: ShareBodyProps): React.JSX.Element => (
+  <div className="space-y-2">
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full justify-start"
+      icon={copied ? <Check className="size-5" /> : <Copy className="size-5" />}
+      onClick={onCopy}
+    >
+      {copied ? 'Link copied' : 'Copy link'}
+    </Button>
+    <div className="grid grid-cols-2 gap-2">
+      {links.map((item) => (
+        <Button
+          key={item.label}
+          type="button"
+          variant="outline"
+          className="w-full justify-start"
+          icon={item.icon}
+          onClick={() =>
+            window.open(item.href, '_blank', 'noopener,noreferrer')
+          }
+        >
+          {item.label}
+        </Button>
+      ))}
+    </div>
+  </div>
+)
+
 const SharePlanModal = ({
   open,
   onClose,
   url,
   candidateName,
 }: SharePlanModalProps): React.JSX.Element => {
+  const isMobile = useIsMobile()
   const [copied, setCopied] = useState(false)
 
   const subject = candidateName
@@ -44,7 +91,7 @@ const SharePlanModal = ({
   const encodedUrl = encodeURIComponent(url)
   const encodedMessage = encodeURIComponent(message)
 
-  const links: { label: string; icon: React.ReactNode; href: string }[] = [
+  const links: ShareLink[] = [
     {
       label: 'Email',
       icon: <Mail className="size-5" />,
@@ -79,54 +126,41 @@ const SharePlanModal = ({
     }
   }
 
+  const title = 'Share your campaign plan'
+  const description =
+    'Send your plan to a teammate, family member, or supporter.'
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{title}</DrawerTitle>
+            <DrawerDescription>{description}</DrawerDescription>
+          </DrawerHeader>
+          <div className="flex flex-col gap-4 p-4">
+            <ShareBody copied={copied} onCopy={handleCopy} links={links} />
+          </div>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button type="button" variant="outline">
+                Close
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share your campaign plan</DialogTitle>
-          <DialogDescription>
-            Send your plan to a teammate, family member, or supporter.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-
-        <div className="space-y-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full justify-start"
-            icon={
-              copied ? (
-                <Check className="size-5" />
-              ) : (
-                <Copy className="size-5" />
-              )
-            }
-            onClick={handleCopy}
-          >
-            {copied ? 'Link copied' : 'Copy link'}
-          </Button>
-          <div className="grid grid-cols-2 gap-2">
-            {links.map((item) => (
-              <Button
-                key={item.label}
-                type="button"
-                variant="outline"
-                className="w-full justify-start"
-                icon={item.icon}
-                onClick={() =>
-                  window.open(item.href, '_blank', 'noopener,noreferrer')
-                }
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <p className="flex items-center gap-2 truncate rounded-md border border-base-border bg-muted px-3 py-2 text-xs text-muted-foreground">
-          <LinkIcon className="size-3 shrink-0" aria-hidden="true" />
-          <span className="truncate">{url}</span>
-        </p>
+        <ShareBody copied={copied} onCopy={handleCopy} links={links} />
       </DialogContent>
     </Dialog>
   )

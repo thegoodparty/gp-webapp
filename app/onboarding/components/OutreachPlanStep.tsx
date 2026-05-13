@@ -6,8 +6,6 @@ import type { Campaign } from 'helpers/types'
 
 const VOTER_CONTACT_MULTIPLIER = 5
 const DOORS_PERCENT = 0.2
-const ROBOCALLS_PERCENT = 0.2
-const TEXTS_PERCENT = 0.6
 const ROBOCALL_COST = 0.045
 const TEXT_COST = 0.035
 const DOORS_PER_HOUR = 15
@@ -18,53 +16,20 @@ const CANDIDATE_HOURS_PER_WEEK = 14
 const MAX_CAMPAIGN_WEEKS = 12
 const FALLBACK_WEEKS_REMAINING = MAX_CAMPAIGN_WEEKS
 
-/**
- * Budget channel benchmarks — first-stab values for researcher review.
- * Each rate is a midpoint of public sources; tighten or tier these once
- * GoodParty.org strategy has a preferred number.
- *
- * Direct mail
- *   MAIL_UNIVERSE_RATE: real mail goes to a persuadable subset of the voter-
- *   contact universe, not all of it. 40% is a midpoint between high-prop
- *   targeting (~25%) and full-universe (~60%).
- *   MAIL_COST_PER_PIECE: $0.55 = midpoint of $0.50–$0.70 typical bulk political
- *   postcards (printing + postage). Drops to ~$0.32 at 50k+ pieces.
- *   https://suttonsmart.com/political-mailers/budgeting-cost-management/political-mailer-pricing-guide/
- *   https://www.thecampaignworkshop.com/blog/political-direct-mail/political-direct-mail
- *
- * Digital ads
- *   DIGITAL_COST_PER_CONTACT: $0.06 ≈ 5 impressions × ~$12 CPM. The $12 CPM is
- *   a "normal political year" midpoint for Meta political reach; election
- *   cycles can push this higher.
- *   DIGITAL_IMPRESSIONS_PER_CONTACT: used only for the hint string ("~N
- *   impressions"), not for cost. Keep in sync with the CPM assumption above.
- *   https://www.adamigo.ai/blog/meta-ads-cpm-cpc-benchmarks-by-country-2026
- *   https://www.brennancenter.org/our-work/analysis-opinion/online-ad-spending-2024-election-totaled-least-19-billion
- *
- * Yard signs & literature
- *   SIGNS_PER_CONTACT_DENOMINATOR: 1 sign per 100 voter contacts. Calibrated so
- *   a ~10k voter-contact race lands near 100 signs. May be too few for
- *   sprawling rural districts or too many for dense urban ones.
- *   SIGN_COST: $5 = mid-bulk price for an 18×24" coroplast sign (sign + stake).
- *   DOOR_HANGER_COST: $0.20/piece = bulk printing midpoint. Quantity reuses the
- *   already-computed `totalDoors` so it tracks the canvassing plan.
- *   https://www.thecampaignworkshop.com/yard-sign-calculator-learn-what-campaign-signs-cost
- *   https://www.doorhangerswork.com/door-hanger-distribution-cost/
- *
- * Compliance & filing fees
- *   COMPLIANCE_FLAT_COST: $400. Does not currently scale with race size; state
- *   races have higher filing fees but the difference is modest. Worth tiering
- *   later by `ballotLevel` if precision matters.
- *   https://ispolitical.com/compliance/
- */
-const MAIL_UNIVERSE_RATE = 0.4
-const MAIL_COST_PER_PIECE = 0.55
-const DIGITAL_COST_PER_CONTACT = 0.06
-const DIGITAL_IMPRESSIONS_PER_CONTACT = 5
-const SIGNS_PER_CONTACT_DENOMINATOR = 100
-const SIGN_COST = 5
-const DOOR_HANGER_COST = 0.2
-const COMPLIANCE_FLAT_COST = 400
+// Budget breakdown constants. Mirrors `buildBudgetBreakdown` in
+// planContent.ts (success-page plan). Tweak both in lockstep.
+const FILING_FEE = 100
+const YARD_SIGNS_COST = 385
+const PALM_CARDS_COST = 67
+const TEXT_CAMPAIGN_COUNT = 4
+const ROBOCALL_CAMPAIGN_COUNT = 3
+const CONTINGENCY_RATE = 0.05
+// Placeholder match rates used to derive registered-voter-with-phone counts
+// from projected turnout. Same formula as planContent.ts.
+const MATCH_RATE_CELL = 0.65
+const MATCH_RATE_LANDLINE = 0.35
+const CELL_REGISTRATION_MULTIPLIER = 4
+const LANDLINE_REGISTRATION_MULTIPLIER = 2
 
 interface OutreachPlanStepProps {
   campaign: Campaign | null
@@ -87,18 +52,14 @@ export const computeWeeksRemaining = (electionDate?: string | null): number => {
 }
 
 interface ResourcesComputation {
-  textCount: number
-  textCost: number
-  robocallCount: number
-  robocallCost: number
-  digitalImpressions: number
-  digitalCost: number
-  mailCount: number
-  mailCost: number
-  signCount: number
-  doorHangerCount: number
-  yardLitCost: number
-  complianceCost: number
+  filingCost: number
+  yardSignsCost: number
+  palmCardsCost: number
+  matchedCellRecords: number
+  matchedLandlineRecords: number
+  textCampaignsCost: number
+  robocallCampaignsCost: number
+  contingencyCost: number
   totalBudget: number
   candidateHoursPerWeek: number
   volunteersPerWeek: number
@@ -111,6 +72,7 @@ interface ResourcesComputation {
 const computeResources = (
   voterContactGoal: number,
   weeksRemaining: number,
+  projectedTurnout: number,
 ): ResourcesComputation => {
   // Volunteers needed each week:
   //   doors_to_knock = voterContactGoal × DOORS_PERCENT
@@ -125,48 +87,49 @@ const computeResources = (
       ? Math.ceil(totalDoors / doorsPerVolunteerOverCampaign)
       : 0
 
-  const textCount = Math.round(voterContactGoal * TEXTS_PERCENT)
-  const textCost = textCount * TEXT_COST
-  const robocallCount = Math.round(voterContactGoal * ROBOCALLS_PERCENT)
-  const robocallCost = robocallCount * ROBOCALL_COST
-
-  const digitalImpressions = voterContactGoal * DIGITAL_IMPRESSIONS_PER_CONTACT
-  const digitalCost = voterContactGoal * DIGITAL_COST_PER_CONTACT
-
-  const mailCount = Math.round(voterContactGoal * MAIL_UNIVERSE_RATE)
-  const mailCost = mailCount * MAIL_COST_PER_PIECE
-
-  const signCount = Math.max(
+  const matchedCellRecords = Math.max(
     0,
-    Math.ceil(voterContactGoal / SIGNS_PER_CONTACT_DENOMINATOR),
+    Math.round(
+      projectedTurnout * MATCH_RATE_CELL * CELL_REGISTRATION_MULTIPLIER,
+    ),
   )
-  const doorHangerCount = totalDoors
-  const yardLitCost = signCount * SIGN_COST + doorHangerCount * DOOR_HANGER_COST
+  const matchedLandlineRecords = Math.max(
+    0,
+    Math.round(
+      projectedTurnout *
+        MATCH_RATE_LANDLINE *
+        LANDLINE_REGISTRATION_MULTIPLIER,
+    ),
+  )
 
-  const complianceCost = COMPLIANCE_FLAT_COST
+  const filingCost = FILING_FEE
+  const yardSignsCost = YARD_SIGNS_COST
+  const palmCardsCost = PALM_CARDS_COST
+  const textCampaignsCost =
+    TEXT_CAMPAIGN_COUNT * matchedCellRecords * TEXT_COST
+  const robocallCampaignsCost =
+    ROBOCALL_CAMPAIGN_COUNT * matchedLandlineRecords * ROBOCALL_COST
+  const subtotal =
+    filingCost +
+    yardSignsCost +
+    palmCardsCost +
+    textCampaignsCost +
+    robocallCampaignsCost
+  const contingencyCost = subtotal * CONTINGENCY_RATE
+  const totalBudget = Math.round(subtotal + contingencyCost)
 
   const volunteerHoursPerWeek = volunteersPerWeek * VOLUNTEER_HOURS_PER_WEEK
 
   return {
-    textCount,
-    textCost,
-    robocallCount,
-    robocallCost,
-    digitalImpressions,
-    digitalCost,
-    mailCount,
-    mailCost,
-    signCount,
-    doorHangerCount,
-    yardLitCost,
-    complianceCost,
-    totalBudget:
-      textCost +
-      robocallCost +
-      digitalCost +
-      mailCost +
-      yardLitCost +
-      complianceCost,
+    filingCost,
+    yardSignsCost,
+    palmCardsCost,
+    matchedCellRecords,
+    matchedLandlineRecords,
+    textCampaignsCost,
+    robocallCampaignsCost,
+    contingencyCost,
+    totalBudget,
     candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
     volunteersPerWeek,
     volunteerHoursPerWeek,
@@ -259,50 +222,38 @@ const BudgetAccordion = ({
     </p>
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow
-        label="Text messages"
-        value={formatCurrency(resources.textCost)}
-        hint={`${numberFormatter(resources.textCount)} messages × 3.5¢`}
+        label="Filing fees"
+        value={formatCurrency(resources.filingCost)}
+        hint="Nomination papers, any mandatory state/local filings."
       />
       <BreakdownRow
-        label="Robocalls"
-        value={formatCurrency(resources.robocallCost)}
-        hint={`${numberFormatter(resources.robocallCount)} calls × 4.5¢`}
+        label="Yard signs"
+        value={formatCurrency(resources.yardSignsCost)}
+        hint="Core visibility in a small precinct; estimated 50 yard signs for $385."
       />
       <BreakdownRow
-        label="Digital ads"
-        value={formatCurrency(resources.digitalCost)}
-        hint={`~${numberFormatter(
-          resources.digitalImpressions,
-        )} impressions, geo-targeted to your district`}
+        label="Palm cards"
+        value={formatCurrency(resources.palmCardsCost)}
+        hint="Handoffs at events and passive drops; estimated 250 palm cards for $67."
       />
       <BreakdownRow
-        label="Direct mail"
-        value={formatCurrency(resources.mailCost)}
-        hint={`${numberFormatter(
-          resources.mailCount,
-        )} pieces × $${MAIL_COST_PER_PIECE}`}
+        label="Text campaigns"
+        value={formatCurrency(resources.textCampaignsCost)}
+        hint={`${TEXT_CAMPAIGN_COUNT} text campaigns to ${numberFormatter(
+          resources.matchedCellRecords,
+        )} at $${TEXT_COST.toFixed(3)} per text.`}
       />
       <BreakdownRow
-        label="Yard signs & literature"
-        value={formatCurrency(resources.yardLitCost)}
-        hint={`${numberFormatter(
-          resources.signCount,
-        )} signs + ${numberFormatter(resources.doorHangerCount)} door hangers`}
+        label="Robocall campaigns"
+        value={formatCurrency(resources.robocallCampaignsCost)}
+        hint={`${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns to ${numberFormatter(
+          resources.matchedLandlineRecords,
+        )} at $${ROBOCALL_COST.toFixed(3)} per call.`}
       />
       <BreakdownRow
-        label="Compliance & filing fees"
-        value={formatCurrency(resources.complianceCost)}
-        hint={
-          <>
-            Compliance and filing fees come from BallotReady.{' '}
-            <a
-              href="mailto:customersupport@goodparty.org?subject=Issue%20with%20BallotReady%27s%20compliance%20and%20filing%20fees"
-              className="text-components-input-active hover:underline"
-            >
-              Report issue
-            </a>
-          </>
-        }
+        label="Contingency (5%)"
+        value={formatCurrency(resources.contingencyCost)}
+        hint="Reserve for last-week opportunities."
       />
     </ul>
   </ResourceAccordion>
@@ -363,6 +314,7 @@ export const OutreachPlanStep = ({
 }: OutreachPlanStepProps): React.JSX.Element => {
   const metrics = campaign?.raceTargetMetrics ?? null
   const winNumber = metrics?.winNumber ?? 0
+  const projectedTurnout = metrics?.projectedTurnout ?? 0
   const voterContactGoal =
     metrics?.voterContactGoal ?? winNumber * VOTER_CONTACT_MULTIPLIER
 
@@ -371,7 +323,11 @@ export const OutreachPlanStep = ({
   }
 
   const weeksRemaining = computeWeeksRemaining(campaign?.details?.electionDate)
-  const resources = computeResources(voterContactGoal, weeksRemaining)
+  const resources = computeResources(
+    voterContactGoal,
+    weeksRemaining,
+    projectedTurnout,
+  )
 
   return (
     <div className="flex w-full flex-col items-stretch gap-4 text-left">

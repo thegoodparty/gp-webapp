@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 import { Download, Share2 } from 'lucide-react'
 import { Button, GoodPartyOrgLogo, IconButton } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import type { User } from 'helpers/types'
 import ConfettiCanvas from './ConfettiCanvas'
@@ -18,12 +20,20 @@ interface SuccessPageProps {
 
 const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [clientUser] = useUser()
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
   const [shareOpen, setShareOpen] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  // Campaign data is hydrated once when PageWrapper mounts. After onboarding
+  // updates the campaign server-side, the client cache is stale — re-fetch on
+  // mount so positionName, electionDate, etc. reflect the candidate's choices.
+  useEffect(() => {
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
+  }, [queryClient])
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true))
@@ -116,20 +126,9 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       </div>
       <main className="mx-auto w-full max-w-4xl px-4 pt-8 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
         <div
-          className={`relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 py-12 text-center sm:px-12 sm:py-16 ${cardEnter}`}
+          className={`relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 pt-12 pb-6 text-center sm:px-12 sm:py-16 ${cardEnter}`}
           style={{ transitionDelay: '0ms' }}
         >
-          <IconButton
-            type="button"
-            variant="outline"
-            size="medium"
-            onClick={() => setShareOpen(true)}
-            aria-label="Share campaign plan"
-            className="absolute top-3 right-3 sm:top-4 sm:right-4"
-          >
-            <Share2 className="size-5" />
-          </IconButton>
-
           <div className={enter} style={{ transitionDelay: '300ms' }}>
             <GoodPartyOrgLogo className="!h-12 !w-auto sm:!h-14" />
           </div>
@@ -138,49 +137,45 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             className={`text-4xl font-bold text-foreground sm:text-5xl ${enter}`}
             style={{ transitionDelay: '500ms' }}
           >
-            Initial campaign plan
+            Your initial campaign plan
           </h1>
 
-          {plan.candidateName ? (
-            <div
-              className={`space-y-2 ${enter}`}
-              style={{ transitionDelay: '700ms' }}
-            >
-              <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase sm:text-sm">
-                Prepared for
-              </p>
-              <p className="text-xl font-bold text-foreground sm:text-2xl">
-                {plan.candidateName}
-              </p>
-            </div>
-          ) : null}
-
           <div
-            className={`space-y-1 ${enter}`}
-            style={{ transitionDelay: '900ms' }}
+            className={`flex flex-col items-center gap-1 ${enter}`}
+            style={{ transitionDelay: '700ms' }}
           >
-            {plan.race ? (
+            {plan.candidateName && plan.race ? (
+              <p className="text-xl font-bold text-foreground sm:text-2xl">
+                {plan.candidateName} for {plan.race}
+              </p>
+            ) : null}
+            {plan.districtName ? (
               <p className="text-base text-muted-foreground sm:text-lg">
-                {plan.race}
-                {plan.location ? ` • ${plan.location}` : ''}
+                {plan.districtName}
               </p>
             ) : null}
             {plan.electionDate ? (
-              <p className="text-sm text-muted-foreground sm:text-base">
+              <p className="text-sm italic text-muted-foreground sm:text-base">
                 Election Day: {plan.electionDate}
               </p>
             ) : null}
           </div>
 
           <div
-            className={`flex w-full flex-col items-center gap-1 border-t border-base-border pt-6 ${enter}`}
+            className={`w-full border-t border-base-border pt-6 ${enter}`}
             style={{ transitionDelay: '1100ms' }}
           >
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Prepared by GoodParty.org
-            </p>
-            <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-              Empowering people to run, win, and serve
+            <p className="text-xs italic text-muted-foreground sm:text-sm">
+              Campaign plan prepared for{' '}
+              <span className="font-semibold text-foreground">
+                {plan.candidateName}
+              </span>{' '}
+              on{' '}
+              <span className="font-semibold text-foreground">
+                {plan.planGenerationDate}
+              </span>{' '}
+              by GoodParty.org&apos;s Campaign Intelligence System using public
+              voter data and historical election results.
             </p>
           </div>
         </div>
@@ -195,16 +190,39 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
 
       <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between gap-3 px-4 sm:px-8">
-          <Button
-            type="button"
-            variant="ghost"
-            size="large"
-            icon={<Download className="size-5" />}
-            onClick={handleDownload}
-            loading={downloading}
-          >
-            Download
-          </Button>
+          <div className="flex items-center gap-2">
+            <IconButton
+              type="button"
+              variant="outline"
+              size="large"
+              onClick={handleDownload}
+              loading={downloading}
+              aria-label="Download campaign plan"
+              className="sm:hidden"
+            >
+              <Download className="size-5" />
+            </IconButton>
+            <Button
+              type="button"
+              variant="ghost"
+              size="large"
+              icon={<Download className="size-5" />}
+              onClick={handleDownload}
+              loading={downloading}
+              className="hidden sm:inline-flex"
+            >
+              Download
+            </Button>
+            <IconButton
+              type="button"
+              variant="outline"
+              size="large"
+              onClick={() => setShareOpen(true)}
+              aria-label="Share campaign plan"
+            >
+              <Share2 className="size-5" />
+            </IconButton>
+          </div>
           <Button
             type="button"
             variant="default"

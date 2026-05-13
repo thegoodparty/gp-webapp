@@ -18,15 +18,20 @@ export interface PlanInput {
   voterContactGoal: number
 }
 
-export interface KeyNumber {
+export interface KeyTarget {
   metric: string
   target: string
+}
+
+export interface KeyDate {
+  date: string
+  description: string
 }
 
 export interface TimelineRow {
   date: string
   milestone: string
-  owner: string
+  notes: string
 }
 
 export interface MetricRow {
@@ -41,8 +46,14 @@ export interface BudgetRow {
   rationale: string
 }
 
+export interface FundraisingRow {
+  source: string
+  share: string
+}
+
 export interface CivicEvent {
   event: string
+  address: string
   date: string
   why: string
 }
@@ -51,20 +62,13 @@ export interface PressOutlet {
   outlet: string
   type: string
   angle: string
+  contact: string
 }
 
 export interface ContactSend {
   date: string
   tactic: string
-  audience: string
   purpose: string
-  format: string
-}
-
-export interface KpiRow {
-  kpi: string
-  target: string
-  cadence: string
 }
 
 export interface DataSourceRow {
@@ -85,13 +89,26 @@ export interface GlossaryRow {
   definition: string
 }
 
+export interface Opponent {
+  name: string
+  party: string
+  isIncumbent: boolean
+  lastVoteShare: string
+  positions: string[]
+  websites: string[]
+}
+
 export interface PlanData {
   // Identity
   candidateName: string
   race: string
   location: string
+  districtName: string
   electionDate: string
   electionDateRaw: Date | null
+  planGenerationDate: string
+  // Approximate window when first voter contact should land — 12 weeks before E-Day.
+  contactWindowStart: string
 
   // Numbers
   winNumber: number
@@ -100,6 +117,7 @@ export interface PlanData {
   projectedTurnout: number
   projectedTurnoutLow: number
   projectedTurnoutHigh: number
+  registeredVoters: number
   voterContactGoal: number
 
   // Placeholder identity numbers
@@ -109,23 +127,24 @@ export interface PlanData {
   volunteerHourTarget: number
   totalBudget: number
   averageTouchesPerVoter: number
+  eventCount: number
+  mediaCount: number
 
-  // Weekly cadence targets (for plan-inputs gap analysis)
+  // Weekly cadence targets
   candidateHoursPerWeek: number
   volunteerHoursPerWeek: number
   weeksRemaining: number
   filingDeadline: string | null
 
   // Executive summary
-  strategyBullets: { title: string; body: string }[]
-  keyNumbers: KeyNumber[]
-  timelineHighlights: { date: string; description: string }[]
-  candidateCommitments: string[]
-  biggestRisks: { title: string; body: string }[]
+  planAtAGlance: { title: string; body: string }[]
+  keyCampaignTargets: KeyTarget[]
+  keyDates: KeyDate[]
 
   // Strategic landscape
   opportunities: { title: string; body: string }[]
   challenges: { title: string; body: string }[]
+  opponents: Opponent[]
 
   // Electoral goals
   metrics: MetricRow[]
@@ -135,7 +154,7 @@ export interface PlanData {
 
   // Budget
   budgetLineItems: BudgetRow[]
-  budgetNotCovered: { title: string; body: string }[]
+  fundraisingMix: FundraisingRow[]
 
   // Community engagement
   civicEvents: CivicEvent[]
@@ -143,9 +162,6 @@ export interface PlanData {
 
   // Voter contact
   contactSchedule: ContactSend[]
-
-  // KPIs
-  kpis: KpiRow[]
 
   // Methodology
   dataSources: DataSourceRow[]
@@ -169,13 +185,12 @@ const buildTimeline = (
   electionDate: Date | null,
 ): {
   timeline: TimelineRow[]
-  highlights: { date: string; description: string }[]
+  keyDates: KeyDate[]
 } => {
   if (!electionDate) {
-    return { timeline: [], highlights: [] }
+    return { timeline: [], keyDates: [] }
   }
   const filing = addDays(electionDate, -40)
-  const staffReady = addDays(electionDate, -34)
   const messagingLocked = addDays(electionDate, -27)
   const ballotsStart = addDays(electionDate, -25)
   const voterRegDeadline = addDays(electionDate, -10)
@@ -185,41 +200,39 @@ const buildTimeline = (
     {
       date: formatDate(filing),
       milestone: 'Nomination papers filed with Town Clerk',
-      owner: 'You. Bring two backup copies.',
-    },
-    {
-      date: formatDate(staffReady),
-      milestone: 'Staff and volunteer recruitment and training complete',
-      owner: 'Campaign Manager',
+      notes: 'Bring two backup copies.',
     },
     {
       date: formatDate(messagingLocked),
       milestone: 'Messaging, branding, and printed materials finalized',
-      owner: 'Comms Lead. Lock before first text send.',
+      notes: 'Lock down before first voter contact campaign.',
     },
     {
       date: formatDate(ballotsStart),
-      milestone: 'Absentee and mail-in ballot distribution begins',
-      owner: 'Plan first contact to land by this date.',
+      milestone:
+        'Absentee / mail-in ballot distribution begins (by Town Clerk)',
+      notes:
+        'Plan introduction text and robocall campaigns to be sent before this deadline.',
     },
     {
       date: formatDate(voterRegDeadline),
       milestone: 'Voter registration deadline',
-      owner: 'Push via first robocall and digital.',
+      notes: 'Push via robocall campaign.',
     },
     {
       date: formatDate(absenteeDeadline),
       milestone: 'Absentee ballot request deadline',
-      owner: 'Push via second P2P text.',
+      notes: 'Push via text campaign.',
     },
     {
       date: formatDate(electionDate),
-      milestone: 'Election Day. Polls open. Absentee ballots due.',
-      owner: 'All hands. See GOTV plan.',
+      milestone: 'Election Day, polls open; absentee ballots due',
+      notes:
+        'All hands on deck; push via GOTV text and robocall campaigns.',
     },
   ]
 
-  const highlights = [
+  const keyDates: KeyDate[] = [
     {
       date: formatDate(filing),
       description: 'Nomination papers filed with Town Clerk.',
@@ -227,7 +240,11 @@ const buildTimeline = (
     {
       date: formatDate(ballotsStart),
       description:
-        'Absentee and mail ballots begin distributing. First voter contact must land by this date.',
+        'Absentee / mail ballots begin distributing. First voter contact must land by this date.',
+    },
+    {
+      date: formatDate(addDays(electionDate, -20)),
+      description: '{N} community events that you should personally attend.',
     },
     {
       date: formatDate(voterRegDeadline),
@@ -239,78 +256,65 @@ const buildTimeline = (
     },
     {
       date: formatDate(electionDate),
-      description:
-        'Election Day. GOTV push via robocall and peer-to-peer text.',
+      description: 'Election Day.',
     },
   ]
 
-  return { timeline, highlights }
+  return { timeline, keyDates }
 }
 
 const buildContactSchedule = (electionDate: Date | null): ContactSend[] => {
   if (!electionDate) return []
   const sends: { offset: number; data: Omit<ContactSend, 'date'> }[] = [
     {
-      offset: -20,
+      offset: -56,
       data: {
-        tactic: 'P2P Text',
-        audience: 'All matched cells',
-        purpose: 'Introduce yourself and your top priorities.',
-        format: 'Personalized peer-to-peer text.',
+        tactic: 'Text',
+        purpose: 'Introduce yourself to voters with cellphones.',
       },
     },
     {
-      offset: -10,
+      offset: -49,
       data: {
         tactic: 'Robocall',
-        audience: 'All matched landlines',
-        purpose: 'Alert voters to registration deadline (today).',
-        format: 'Automated voice call.',
+        purpose: 'Introduce yourself to voters with landlines.',
       },
     },
     {
-      offset: -5,
+      offset: -35,
       data: {
-        tactic: 'P2P Text',
-        audience: 'All matched cells',
-        purpose: 'Remind voters of absentee and mail ballot deadlines.',
-        format: 'Peer-to-peer text.',
+        tactic: 'Text',
+        purpose:
+          'Build trust and persuade voters with cellphones to vote for you.',
       },
     },
     {
-      offset: -3,
+      offset: -28,
       data: {
         tactic: 'Robocall',
-        audience: 'All matched landlines',
-        purpose: 'Encourage early voting and ballot returns.',
-        format: 'Automated voice call.',
+        purpose:
+          'Build trust and persuade voters with landlines to vote for you.',
+      },
+    },
+    {
+      offset: -14,
+      data: {
+        tactic: 'Text',
+        purpose: 'Encourage voters with cellphones to vote early.',
       },
     },
     {
       offset: -1,
       data: {
-        tactic: 'P2P Text',
-        audience: 'All matched cells',
-        purpose: 'Day-before: polling location and reminder of candidacy.',
-        format: 'Peer-to-peer text.',
-      },
-    },
-    {
-      offset: 0,
-      data: {
         tactic: 'Robocall',
-        audience: 'All matched landlines',
-        purpose: 'GOTV push with poll hours.',
-        format: 'Automated voice call.',
+        purpose: 'Get out the vote on election day.',
       },
     },
     {
       offset: 0,
       data: {
-        tactic: 'P2P Text',
-        audience: 'All matched cells',
-        purpose: 'Final turnout push. Thank those who voted.',
-        format: 'Peer-to-peer text.',
+        tactic: 'Text',
+        purpose: 'Get out the vote on election day.',
       },
     },
   ]
@@ -333,18 +337,21 @@ const buildCivicEvents = (
   return [
     {
       event: `${cityLabel} Community Fall Festival`,
+      address: '{event_address}',
       date: formatDate(event1),
-      why: 'High family turnout. Strong opportunity for literature handoffs and name recognition.',
+      why: 'High family turnout; literature handoffs and name recognition.',
     },
     {
       event: `${cityLabel} Town Council Public Meeting`,
+      address: '{event_address}',
       date: formatDate(event2),
       why: "Demonstrate fluency with the council's actual agenda.",
     },
     {
       event: `${cityLabel} Civic Association Meeting`,
+      address: '{event_address}',
       date: formatDate(event3),
-      why: 'The single highest-density event inside your target precinct.',
+      why: 'The single highest-density event in the actual target precinct.',
     },
   ]
 }
@@ -356,36 +363,34 @@ const buildPressOutlets = (city: string, state: string): PressOutlet[] => {
     {
       outlet: `${cityLabel} Times`,
       type: 'Daily newspaper. Broad area reach.',
-      angle: 'Your profile or op-ed on a local policy priority.',
+      angle: 'Candidate profile or op-ed on local policy priority.',
+      contact: '{address}\n{phone_number}\n{email}',
     },
     {
       outlet: `The ${cityLabel} Weekly`,
       type: 'Weekly. Deep local government coverage.',
-      angle: 'Your Q&A. Respond quickly to any editorial coverage.',
+      angle: 'Candidate Q&A; respond quickly to any editorial coverage.',
+      contact: '{address}\n{phone_number}\n{email}',
     },
     {
       outlet: `${stateLabel} Local Radio`,
       type: 'Community radio.',
-      angle: 'Short interview segment. Aim for drive-time window.',
+      angle: 'Short interview segment; drive-time window.',
+      contact: '{address}\n{phone_number}\n{email}',
     },
   ]
 }
 
-// NOTE: budget math mirrors OutreachPlanStep. If you tweak the constants there,
-// match them here so the success-page plan stays consistent with what the
-// candidate saw in onboarding.
-const DOORS_PERCENT = 0.2
-const ROBOCALLS_PERCENT = 0.2
-const TEXTS_PERCENT = 0.6
-const ROBOCALL_COST = 0.045
+// Budget math mirrors OutreachPlanStep. Constants are placeholders; revisit with
+// strategy. Yard signs / palm cards are doc-exact dollar values (not formulas).
+const FILING_FEE = 100
+const YARD_SIGNS_COST = 385
+const PALM_CARDS_COST = 67
+const TEXT_CAMPAIGN_COUNT = 4
+const ROBOCALL_CAMPAIGN_COUNT = 3
 const TEXT_COST = 0.035
-const MAIL_UNIVERSE_RATE = 0.4
-const MAIL_COST_PER_PIECE = 0.55
-const DIGITAL_COST_PER_CONTACT = 0.06
-const SIGNS_PER_CONTACT_DENOMINATOR = 100
-const SIGN_COST = 5
-const DOOR_HANGER_COST = 0.2
-const COMPLIANCE_FLAT_COST = 400
+const ROBOCALL_COST = 0.045
+const CONTINGENCY_RATE = 0.05
 
 const formatDollars = (value: number): string =>
   `$${Math.round(value).toLocaleString('en-US')}`
@@ -395,70 +400,75 @@ interface BudgetBreakdown {
   lineItems: BudgetRow[]
 }
 
-const buildBudgetBreakdown = (voterContactGoal: number): BudgetBreakdown => {
-  const textCost = Math.round(voterContactGoal * TEXTS_PERCENT) * TEXT_COST
-  const robocallCost =
-    Math.round(voterContactGoal * ROBOCALLS_PERCENT) * ROBOCALL_COST
-  const digitalCost = voterContactGoal * DIGITAL_COST_PER_CONTACT
-  const mailCost =
-    Math.round(voterContactGoal * MAIL_UNIVERSE_RATE) * MAIL_COST_PER_PIECE
-  const totalDoors = Math.round(voterContactGoal * DOORS_PERCENT)
-  const signCount = Math.max(
-    0,
-    Math.ceil(voterContactGoal / SIGNS_PER_CONTACT_DENOMINATOR),
-  )
-  const yardLitCost = signCount * SIGN_COST + totalDoors * DOOR_HANGER_COST
-  const complianceCost = COMPLIANCE_FLAT_COST
-
-  const totalBudget = Math.round(
-    textCost +
-      robocallCost +
-      digitalCost +
-      mailCost +
-      yardLitCost +
-      complianceCost,
-  )
+const buildBudgetBreakdown = (
+  matchedCell: number,
+  matchedLandline: number,
+): BudgetBreakdown => {
+  const textCampaignsCost = TEXT_CAMPAIGN_COUNT * matchedCell * TEXT_COST
+  const robocallCampaignsCost =
+    ROBOCALL_CAMPAIGN_COUNT * matchedLandline * ROBOCALL_COST
+  const subtotal =
+    FILING_FEE +
+    YARD_SIGNS_COST +
+    PALM_CARDS_COST +
+    textCampaignsCost +
+    robocallCampaignsCost
+  const contingency = subtotal * CONTINGENCY_RATE
+  const totalBudget = Math.round(subtotal + contingency)
 
   const lineItems: BudgetRow[] = [
     {
-      category: 'Text messages',
-      amount: formatDollars(textCost),
-      rationale:
-        'Direct, scalable reach across your matched voter universe at the lowest cost per touch.',
+      category: 'Filing fees',
+      amount: formatDollars(FILING_FEE),
+      rationale: 'Nomination papers, any mandatory state/local filings.',
     },
     {
-      category: 'Robocalls',
-      amount: formatDollars(robocallCost),
+      category: 'Yard signs',
+      amount: formatDollars(YARD_SIGNS_COST),
       rationale:
-        "Catches landline-only voters that texts can't reach and reinforces your name on Election Day.",
+        'Core visibility in a small precinct; reusable between canvassers; estimated 50 yard signs for $385.',
     },
     {
-      category: 'Digital ads',
-      amount: formatDollars(digitalCost),
+      category: 'Palm cards',
+      amount: formatDollars(PALM_CARDS_COST),
       rationale:
-        'Geo-targeted reinforcement of name recognition across your district.',
+        'Handoffs at events and passive drops where canvassing allows; estimated 250 palm cards for $67.',
     },
     {
-      category: 'Direct mail',
-      amount: formatDollars(mailCost),
-      rationale:
-        'Tangible household touch that lands at home, often seen by the whole family.',
+      category: 'Text campaigns',
+      amount: formatDollars(textCampaignsCost),
+      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns to ${matchedCell.toLocaleString(
+        'en-US',
+      )} at $${TEXT_COST.toFixed(3)} per text.`,
     },
     {
-      category: 'Yard signs & literature',
-      amount: formatDollars(yardLitCost),
-      rationale:
-        'Local visibility multiplier. Every sign is a passive endorsement to every passerby.',
+      category: 'Robocall campaigns',
+      amount: formatDollars(robocallCampaignsCost),
+      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns to ${matchedLandline.toLocaleString(
+        'en-US',
+      )} at $${ROBOCALL_COST.toFixed(3)} per call.`,
     },
     {
-      category: 'Compliance & filing fees',
-      amount: formatDollars(complianceCost),
-      rationale: 'Mandatory state and local filings plus basic accounting.',
+      category: 'Contingency (5%)',
+      amount: formatDollars(contingency),
+      rationale: 'Reserve for last-week opportunities.',
+    },
+    {
+      category: 'Total',
+      amount: formatDollars(totalBudget),
+      rationale: 'Sum of all budget line-items.',
     },
   ]
 
   return { totalBudget, lineItems }
 }
+
+const FUNDRAISING_MIX: FundraisingRow[] = [
+  { source: 'Self-fund or loan', share: '30%' },
+  { source: 'Friends & family', share: '30%' },
+  { source: 'Small-dollar online', share: '25%' },
+  { source: 'Events, house parties, larger checks', share: '15%' },
+]
 
 const KEY_ASSUMPTIONS: string[] = [
   'Turnout behaves like recent comparable off-year municipal elections in your area, roughly 18 to 24 percent of registered voters.',
@@ -475,9 +485,9 @@ const PLAN_DOES_NOT_DO: string[] = [
 
 const GLOSSARY: GlossaryRow[] = [
   {
-    term: 'Projected Votes Needed to Win',
+    term: 'Projected Votes to Win',
     definition:
-      'The vote total needed to win the seat with certainty given the modeled voter turnout. Calculated as 50% plus one of projected voter turnout.',
+      'The vote total at which a candidate would win the seat with certainty given the modeled voter turnout. Calculated as 50% + 1 of the projected voter turnout.',
   },
   {
     term: 'Projected Voter Turnout',
@@ -485,17 +495,22 @@ const GLOSSARY: GlossaryRow[] = [
       'The estimated number of registered voters expected to cast a ballot in this specific election, derived from a turnout model applied to recent comparable cycles.',
   },
   {
-    term: 'Voter Contact Target',
+    term: 'Targeted Voter Contact Goal',
     definition:
-      'The total number of quality touches your campaign aims to deliver. Industry rule of thumb is 5x the win number.',
+      'The total number of contacts sent to voters that the campaign aims to deliver. Industry rule of thumb is 5× the projected votes to win.',
   },
   {
-    term: 'Quality Touch',
+    term: 'Voter Contact',
     definition:
-      'A contact attempt that reaches an intended voter via a channel capable of conveying the message (a delivered text, an answered call, an in-person conversation).',
+      'A contact attempt that reaches an intended voter via a channel capable of conveying the message (delivered text, answered call, in-person conversation).',
   },
   {
-    term: 'P2P Text (Peer-to-Peer Text)',
+    term: 'Likely Votes',
+    definition:
+      'The estimated number of votes you are on track to receive based on voter contacts completed to date. Calculated by counting 1 likely vote for every 5 voter contacts made.',
+  },
+  {
+    term: 'Text',
     definition:
       'A one-to-one SMS send from a volunteer-operated dashboard that complies with federal wireless regulations around automated dialing.',
   },
@@ -517,122 +532,111 @@ const GLOSSARY: GlossaryRow[] = [
   {
     term: 'GOTV',
     definition:
-      'Get Out The Vote. The concentrated push in the final 72 hours to convert identified supporters into cast ballots.',
+      '"Get Out The Vote", the concentrated push in the final 72 hours to convert identified supporters into cast ballots.',
   },
 ]
 
-const STRATEGY_BULLETS = [
+// "Campaign Plan at a Glance" — doc flags these as LLM-generated. Static
+// placeholders below render the doc's example copy with dynamic fields filled.
+const buildPlanAtAGlance = (
+  projectedTurnout: number,
+  contactWindowStart: string,
+  electionDate: string,
+  eventCount: number,
+): { title: string; body: string }[] => [
   {
-    title: "Mobilize, don't persuade.",
-    body: 'In a small electorate with no party cue, repeated name exposure and turnout are the decisive levers, not ideological persuasion.',
+    title: 'Voter turnout is the ball game.',
+    body: `In a ${projectedTurnout.toLocaleString(
+      'en-US',
+    )}-group of targeted voters with no party label to lean on, repeated name exposure and getting your people to the polls are the decisive levers.`,
   },
   {
     title: 'Stack the channels.',
-    body: 'Coordinated voter contact via peer-to-peer text and robocall covers your full voter universe across the campaign.',
+    body: `7 coordinated voter contacts (text + robocall) blanket your targeted voters between ${
+      contactWindowStart || '{12_weeks_before_election_date}'
+    } and ${electionDate || '{election_date}'}.`,
   },
   {
     title: 'Show up in person.',
-    body: 'High-density civic events carry more weight per hour than any paid channel at this budget.',
+    body: `${eventCount} high-density community events during your campaign carry more weight per hour than any paid channel.`,
   },
   {
-    title: 'Lock one message.',
-    body: 'Same name, same local issue, same ask on every send. Variation dilutes recognition.',
+    title: 'Message discipline.',
+    body: 'Define your core values and top issues that matter to you and your voters and stay consistent in how you communicate them.',
   },
 ]
 
-const CANDIDATE_COMMITMENTS = [
-  'Attend the three listed civic events in person.',
-  'Secure at least one earned-media placement per week during the final month.',
-  'Lock one concrete local issue as the consistent subject of every voter contact.',
-  'Clear calendar capacity for 10 to 15 hours per week of campaign activity through Election Day.',
-]
-
-const BIGGEST_RISKS = [
-  {
-    title: 'Vote-splitting.',
-    body: 'With multiple candidates on the ballot, a consolidated opposing base can win with as little as 35 to 40 percent of the vote. Your base must hold.',
-  },
-  {
-    title: 'Small-universe volatility.',
-    body: 'In a small voter universe, losing 30 committed supporters to weather, scheduling, or apathy moves the outcome by several percentage points. Contact redundancy is not optional.',
-  },
-  {
-    title: 'Compressed outreach window.',
-    body: 'Mail ballots begin distributing about three weeks before Election Day. Voters who return early cannot be persuaded late.',
-  },
-]
-
+// Opportunities and challenges — doc flags as LLM-generated. Doc example copy
+// preserved as static placeholders.
 const OPPORTUNITIES = [
   {
-    title: 'High reach potential.',
-    body: 'Matched phone data lets you realistically touch every likely voter multiple times across the cycle.',
-  },
-  {
-    title: 'Low absolute win number.',
-    body: 'A small win number is a mobilization target, not a persuasion target. A disciplined turnout operation is the decisive lever.',
+    title: 'Low absolute projected votes to win.',
+    body: 'A small win number is a target, not a ceiling. A disciplined turnout operation, not a media war, is the decisive lever (see Section 2).',
   },
   {
     title: 'Accessible earned media.',
-    body: 'Local outlets cover local races closely. A single op-ed or profile can move a meaningful share of your voter universe.',
+    body: 'Credible local outlets cover town-council races closely. A single op-ed or profile can move a meaningful share of the votes (see Section 5).',
   },
   {
     title: 'Strong civic calendar.',
-    body: 'Several high-value in-person events fall inside the final 30 days, listed in the Community Engagement section.',
+    body: 'High-value in-person opportunities fall inside the race window (see Section 5).',
   },
 ]
 
 const CHALLENGES = [
   {
     title: 'Vote-splitting risk.',
-    body: 'With multiple candidates on the ballot, your plan assumes the more conservative 50% + 1 target to absorb this risk.',
+    body: 'With multiple candidates on the ballot, a consolidated opposing base can win with as little as 35–40% of the votes. Our plan assumes the more conservative win-number target to absorb this risk.',
   },
   {
-    title: 'No party cue.',
-    body: 'A nonpartisan ballot means voters need repeated, standalone exposure to your name to recognize it when marking the ballot.',
+    title: 'No party ballot affiliation.',
+    body: 'Nonpartisan ballots mean voters need repeated, standalone exposure to your name to recognize it when marking the ballot. Name recognition has to be built one voter contact at a time.',
   },
   {
-    title: 'Compressed outreach window.',
-    body: 'Absentee and mail ballots begin distributing weeks before Election Day. Early contact is non-negotiable.',
+    title: 'Compressed contact window.',
+    body: 'Absentee, mail, or early ballots distribute weeks before Election Day. Voters who return early cannot be persuaded late — early contact is non-negotiable.',
   },
   {
-    title: 'Small-universe volatility.',
-    body: 'A small voter universe amplifies any swing. Redundancy in contact is the hedge against weather, schedule, or apathy.',
+    title: 'Small-district volatility.',
+    body: 'In a small voter universe, losing a few dozen committed supporters to weather, scheduling, or apathy moves the outcome by several percentage points. Redundancy in voter contact is not optional.',
+  },
+  {
+    title: 'No institutional endorsements at launch.',
+    body: 'Established organizations typically endorse candidates they already know. Endorsement outreach has to start in the first 30 days because most groups vote on endorsements months before Election Day.',
+  },
+  {
+    title: 'No prior donor list to inherit.',
+    body: 'Every dollar in your first 60 days has to be raised through cold asks to your personal network before extending out to contributors you do not already know.',
+  },
+  {
+    title: 'No existing volunteer base.',
+    body: 'The first 30 days should prioritize recruiting and training a core team of 5–10 volunteers, even if it slows other work.',
+  },
+  {
+    title: 'Debate and forum access is not automatic.',
+    body: "Candidate forums and debates are organized by civic groups, newspapers, or chambers of commerce, and inclusion depends on the organizer's discretion. Proactively contact every forum host in the district.",
+  },
+  {
+    title: 'Ballot access requirements have hard deadlines.',
+    body: 'Qualifying for the ballot requires meeting your jurisdiction-specific requirements by a fixed deadline. Work has to start early enough to absorb invalid signatures, paperwork errors, or timing risk.',
   },
 ]
 
-const KPIS = (
-  voterContactGoal: number,
-  volunteerHourTarget: number,
-): KpiRow[] => [
+// Opposition Research is rendered only when opponents.length >= 1. We don't yet
+// have opponent data from the campaign object, so this is a placeholder that
+// shows the doc's structure with {variable} slots.
+const OPPONENTS_PLACEHOLDER: Opponent[] = [
   {
-    kpi: 'Cumulative voter touches delivered',
-    target: `${voterContactGoal.toLocaleString('en-US')} by Election Day`,
-    cadence: 'Weekly Monday review',
-  },
-  {
-    kpi: 'Volunteer hours logged',
-    target: `${volunteerHourTarget}+ by Election Day`,
-    cadence: 'Weekly Monday review',
-  },
-  {
-    kpi: 'Earned-media placements',
-    target: 'At least 3 by Election Day',
-    cadence: 'Weekly Monday review',
-  },
-  {
-    kpi: 'Yard signs placed',
-    target: '40+ by 2 weeks before Election Day',
-    cadence: 'Bi-weekly walkthrough',
-  },
-  {
-    kpi: 'Absentee ballot requests among matched supporters',
-    target: '40%+ by absentee deadline',
-    cadence: 'Weekly after mail ballots open',
-  },
-  {
-    kpi: 'Event attendance (you in person)',
-    target: '3 of 3 civic events',
-    cadence: 'Tracked per event',
+    name: '{opponent_name_1}',
+    party: '{party}',
+    isIncumbent: false,
+    lastVoteShare: '{last_vote_share}',
+    positions: [
+      'Position on issue 1',
+      'Position on issue 2',
+      'Position on issue 3',
+    ],
+    websites: ['{website_1}'],
   },
 ]
 
@@ -645,7 +649,7 @@ const DATA_SOURCES: DataSourceRow[] = [
   {
     metric: 'Historical turnout',
     source:
-      'Certified results for the three most recent comparable municipal cycles.',
+      'Town Clerk certified results for the three most recent comparable municipal cycles.',
     lastUpdated: 'As of last certified election',
   },
   {
@@ -655,13 +659,14 @@ const DATA_SOURCES: DataSourceRow[] = [
     lastUpdated: 'Rolling 90-day refresh',
   },
   {
-    metric: 'Opponent-field data (opponents, seats)',
-    source: 'Local elections office candidate filings.',
+    metric: 'Candidate-field data (opponents, seats)',
+    source: 'Town Clerk candidate filings.',
     lastUpdated: 'As of filing deadline',
   },
   {
-    metric: 'Civic event calendar',
-    source: 'Public local calendars and civic association announcements.',
+    metric: 'Community event calendar',
+    source:
+      'Public local calendars and civic association announcements.',
     lastUpdated: 'Refreshed weekly',
   },
   {
@@ -679,53 +684,34 @@ const buildConfidenceEstimates = (
   winNumber: number,
   winNumberLow: number,
   winNumberHigh: number,
-  matchedCell: number,
-  matchedLandline: number,
 ): ConfidenceRow[] => [
   {
     estimate: 'Projected voter turnout',
     pointValue: projectedTurnout.toLocaleString('en-US'),
     range: `${projectedTurnoutLow.toLocaleString(
       'en-US',
-    )} to ${projectedTurnoutHigh.toLocaleString('en-US')}`,
-    notes:
-      'Based on 3-cycle turnout average plus or minus one standard deviation.',
+    )}–${projectedTurnoutHigh.toLocaleString('en-US')}`,
+    notes: 'Based on 3-cycle turnout average.',
   },
   {
-    estimate: 'Projected votes needed to win (50% + 1)',
+    estimate: 'Projected votes to win',
     pointValue: winNumber.toLocaleString('en-US'),
     range: `${winNumberLow.toLocaleString(
       'en-US',
-    )} to ${winNumberHigh.toLocaleString('en-US')}`,
-    notes: 'Moves with the voter universe.',
+    )}–${winNumberHigh.toLocaleString('en-US')}`,
+    notes: 'Moves with the targeted voters.',
   },
   {
-    estimate: 'Matched cell-phone records',
-    pointValue: matchedCell.toLocaleString('en-US'),
-    range: `${Math.round(matchedCell * 0.95).toLocaleString(
-      'en-US',
-    )} to ${Math.round(matchedCell * 1.05).toLocaleString('en-US')}`,
-    notes: 'Match-rate variance ±5%.',
-  },
-  {
-    estimate: 'Matched landline records',
-    pointValue: matchedLandline.toLocaleString('en-US'),
-    range: `${Math.round(matchedLandline * 0.95).toLocaleString(
-      'en-US',
-    )} to ${Math.round(matchedLandline * 1.05).toLocaleString('en-US')}`,
-    notes: 'Match-rate variance ±5%.',
-  },
-  {
-    estimate: 'Projected P2P text deliverability',
+    estimate: 'Projected text deliverability',
     pointValue: '~85%',
-    range: '80% to 90%',
-    notes: 'Industry benchmark (US wireless).',
+    range: '80–90%',
+    notes: 'Industry benchmark.',
   },
   {
-    estimate: 'Projected robocall answer rate',
+    estimate: 'Projected robocall listen rate',
     pointValue: '~30%',
-    range: '25% to 35%',
-    notes: 'Industry benchmark (landline).',
+    range: '25–35%',
+    notes: 'Industry benchmark.',
   },
 ]
 
@@ -733,6 +719,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const candidateName = input.candidateName || 'Your campaign'
   const race = input.race || 'Your race'
   const location = [input.city, input.state].filter(Boolean).join(', ')
+  const districtName = location || '{district_name}'
 
   const electionDateRaw = input.electionDateIso
     ? new Date(input.electionDateIso)
@@ -745,6 +732,11 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     electionDateRaw && !Number.isNaN(electionDateRaw.getTime())
       ? electionDateRaw
       : null
+  const contactWindowStart = electionDateValid
+    ? formatDate(addDays(electionDateValid, -84))
+    : ''
+
+  const planGenerationDate = formatDate(new Date())
 
   const winNumber = input.winNumber
   const projectedTurnout = input.projectedTurnout
@@ -758,6 +750,10 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const projectedTurnoutLow = Math.max(0, Math.round(projectedTurnout * 0.9))
   const projectedTurnoutHigh = Math.round(projectedTurnout * 1.1)
 
+  // Placeholder registered-voter count — derived from projected turnout
+  // assuming ~22% turnout. Replace once we have a real registered-voter source.
+  const registeredVoters =
+    projectedTurnout > 0 ? Math.round(projectedTurnout / 0.22) : 0
   const matchedCellRecords = Math.max(
     0,
     Math.round(projectedTurnout * PLACEHOLDER_MATCH_RATE_CELL * 4),
@@ -775,12 +771,12 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
       : 0
 
-  const { totalBudget, lineItems: budgetLineItems } =
-    buildBudgetBreakdown(voterContactGoal)
+  const { totalBudget, lineItems: budgetLineItems } = buildBudgetBreakdown(
+    matchedCellRecords,
+    matchedLandlineRecords,
+  )
 
-  // Weekly cadence targets (mirror OutreachPlanStep assumptions).
   const CANDIDATE_HOURS_PER_WEEK = 14
-  const VOLUNTEER_HOURS_PER_WEEK_EACH = 3
   const DOORS_PER_HOUR = 15
   const MAX_CAMPAIGN_WEEKS = 12
   let weeksRemaining = MAX_CAMPAIGN_WEEKS
@@ -800,18 +796,19 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     0,
     doorsPerWeek - candidateDoorsPerWeek,
   )
-  const volunteerHoursPerWeek =
-    Math.round(volunteerDoorsPerWeek / DOORS_PER_HOUR / 1) * 1
+  const volunteerHoursPerWeek = Math.round(
+    volunteerDoorsPerWeek / DOORS_PER_HOUR,
+  )
   const filingDeadline = electionDateValid
     ? formatDate(addDays(electionDateValid, -40))
     : null
-  void VOLUNTEER_HOURS_PER_WEEK_EACH
 
-  const { timeline, highlights } = buildTimeline(electionDateValid)
+  const { timeline, keyDates } = buildTimeline(electionDateValid)
   const contactSchedule = buildContactSchedule(electionDateValid)
   const civicEvents = buildCivicEvents(electionDateValid, input.city)
   const pressOutlets = buildPressOutlets(input.city, input.state)
-  const kpis = KPIS(voterContactGoal, volunteerHourTarget)
+  const eventCount = civicEvents.length
+  const mediaCount = pressOutlets.length
   const confidenceEstimates = buildConfidenceEstimates(
     projectedTurnout,
     projectedTurnoutLow,
@@ -819,81 +816,69 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     winNumber,
     winNumberLow,
     winNumberHigh,
-    matchedCellRecords,
-    matchedLandlineRecords,
+  )
+  const planAtAGlance = buildPlanAtAGlance(
+    projectedTurnout,
+    contactWindowStart,
+    electionDate,
+    eventCount,
   )
 
-  const keyNumbers: KeyNumber[] = [
+  const keyCampaignTargets: KeyTarget[] = [
     {
-      metric: 'Projected votes needed to win',
+      metric: 'Projected Votes to Win',
       target: winNumber.toLocaleString('en-US'),
     },
     {
-      metric: 'Projected voter turnout',
-      target: `${projectedTurnout.toLocaleString(
-        'en-US',
-      )} (range ${projectedTurnoutLow.toLocaleString(
-        'en-US',
-      )} to ${projectedTurnoutHigh.toLocaleString('en-US')})`,
+      metric: 'Projected Voter Turnout',
+      target: projectedTurnout.toLocaleString('en-US'),
     },
     {
-      metric: 'Voter contact target',
+      metric: 'Targeted Voter Contact Goal',
       target: voterContactGoal.toLocaleString('en-US'),
     },
     {
-      metric: 'Matched cell-phone records',
-      target: matchedCellRecords.toLocaleString('en-US'),
+      metric: 'Recommended Budget',
+      target: `$${totalBudget.toLocaleString('en-US')}`,
     },
     {
-      metric: 'Matched landline records',
-      target: matchedLandlineRecords.toLocaleString('en-US'),
-    },
-    {
-      metric: 'Volunteer-hour target',
-      target: `${volunteerHourTarget}+`,
-    },
-    {
-      metric: 'Total recommended budget',
-      target: `≈ $${totalBudget.toLocaleString('en-US')}`,
+      metric: 'Volunteer-Hour Goal',
+      target: `${volunteerHourTarget.toLocaleString('en-US')}+`,
     },
   ]
 
   const metrics: MetricRow[] = [
     {
-      metric: 'Projected votes needed to win',
-      target: winNumber.toLocaleString('en-US'),
-      source: '50% + 1 of projected voter turnout.',
-    },
-    {
-      metric: 'Projected voter turnout',
-      target: projectedTurnout.toLocaleString('en-US'),
+      metric: 'Registered Voters',
+      target: `${registeredVoters.toLocaleString('en-US')} registered voters`,
       source:
-        'Turnout model applied to active registered voters in your district.',
+        'The total pool of voters eligible to cast a ballot in your race, pulled from the latest voter file.',
     },
     {
-      metric: 'Voter contact target (quality touches)',
-      target: voterContactGoal.toLocaleString('en-US'),
-      source: '5x votes-to-win, industry rule of thumb for local races.',
+      metric: 'Projected Voter Turnout',
+      target: `${projectedTurnout.toLocaleString('en-US')} voters turnout`,
+      source:
+        'The projected number of voters we expect to cast a ballot in your race, based on past voter turnout and our proprietary models.',
     },
     {
-      metric: 'Matched cell-phone records',
-      target: matchedCellRecords.toLocaleString('en-US'),
-      source: 'Voter file append, commercial match.',
+      metric: 'Projected Votes to Win',
+      target: `${winNumber.toLocaleString('en-US')} votes needed to win`,
+      source: 'Projecting a simple majority (50% + 1) of projected voter turnout.',
     },
     {
-      metric: 'Matched landline records',
-      target: matchedLandlineRecords.toLocaleString('en-US'),
-      source: 'Voter file append, commercial match.',
+      metric: 'Contacts Per Likely Voter',
+      target: '5 contacts per likely voter',
+      source: 'Industry standard number of contacts for winning campaigns.',
     },
     {
-      metric: 'Average touches per likely voter',
-      target: `~${averageTouchesPerVoter}`,
-      source: 'Voter contact target divided by projected turnout.',
+      metric: 'Voter Contact Target',
+      target: `${voterContactGoal.toLocaleString('en-US')} total voter contacts`,
+      source: 'Voter Contacts × Votes-to-Win.',
     },
     {
-      metric: 'Volunteer-hour target',
-      target: `${volunteerHourTarget}+`,
-      source: 'Benchmark: about 1 volunteer hour per 3 votes needed.',
+      metric: 'Volunteer-Hour Target',
+      target: `${volunteerHourTarget.toLocaleString('en-US')} volunteer hours`,
+      source: 'Benchmark: 1 volunteer hour per ~3 votes needed.',
     },
   ]
 
@@ -901,14 +886,18 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     candidateName,
     race,
     location,
+    districtName,
     electionDate,
     electionDateRaw: electionDateValid,
+    planGenerationDate,
+    contactWindowStart,
     winNumber,
     winNumberLow,
     winNumberHigh,
     projectedTurnout,
     projectedTurnoutLow,
     projectedTurnoutHigh,
+    registeredVoters,
     voterContactGoal,
     opponentCount: FALLBACK_OPPONENT_COUNT,
     matchedCellRecords,
@@ -916,34 +905,25 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     volunteerHourTarget,
     totalBudget,
     averageTouchesPerVoter,
+    eventCount,
+    mediaCount,
     candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
     volunteerHoursPerWeek,
     weeksRemaining,
     filingDeadline,
-    strategyBullets: STRATEGY_BULLETS,
-    keyNumbers,
-    timelineHighlights: highlights,
-    candidateCommitments: CANDIDATE_COMMITMENTS,
-    biggestRisks: BIGGEST_RISKS,
+    planAtAGlance,
+    keyCampaignTargets,
+    keyDates,
     opportunities: OPPORTUNITIES,
     challenges: CHALLENGES,
+    opponents: OPPONENTS_PLACEHOLDER,
     metrics,
     timeline,
     budgetLineItems,
-    budgetNotCovered: [
-      {
-        title: 'Paid staff.',
-        body: 'This plan assumes an all-volunteer operation.',
-      },
-      {
-        title: 'Polling.',
-        body: 'In a small voter universe, a statistically valid poll would cost more than the entire campaign.',
-      },
-    ],
+    fundraisingMix: FUNDRAISING_MIX,
     civicEvents,
     pressOutlets,
     contactSchedule,
-    kpis,
     dataSources: DATA_SOURCES,
     keyAssumptions: KEY_ASSUMPTIONS,
     confidenceEstimates,

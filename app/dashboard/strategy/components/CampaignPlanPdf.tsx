@@ -503,12 +503,12 @@ export const CampaignPlanPdf = ({
 
         <View style={styles.coverTitleBlock}>
           <Text style={styles.coverEyebrow}>Campaign Plan</Text>
-          <Text style={styles.coverCandidate}>{plan.candidateName}</Text>
-          {plan.race ? (
-            <Text style={styles.coverRace}>for {plan.race}</Text>
-          ) : null}
-          {plan.location ? (
-            <Text style={styles.coverLocation}>{plan.location}</Text>
+          <Text style={styles.coverCandidate}>
+            {plan.candidateName}
+            {plan.race ? ` for ${plan.race}` : ''}
+          </Text>
+          {plan.districtName ? (
+            <Text style={styles.coverRace}>{plan.districtName}</Text>
           ) : null}
           {plan.electionDate ? (
             <Text style={styles.coverElection}>
@@ -519,8 +519,9 @@ export const CampaignPlanPdf = ({
       </View>
 
       <Text style={styles.coverFooter}>
-        Plan prepared by GoodParty.org&apos;s Win Campaign Intelligence System
-        using public voter data and historical election results.
+        Campaign plan prepared for {plan.candidateName} on{' '}
+        {plan.planGenerationDate} by GoodParty.org&apos;s Campaign Intelligence
+        System using public voter data and historical election results.
       </Text>
     </Page>
 
@@ -536,43 +537,40 @@ export const CampaignPlanPdf = ({
       <PageHeader plan={plan} />
       <SectionHeader number={1} title="Executive Summary" />
       <Text style={styles.paraMuted}>
-        This page is the whole plan in one view. If the candidate reads nothing
-        else, read this.
+        This is the whole plan in one view. If you read nothing else, read
+        this.
       </Text>
 
+      {/*
+        The Race intro has three variants in the source doc; only variant 2
+        (>= 1 opponent, no incumbent) is rendered here, locked to 2 opponents
+        for this prototype. See planContent.ts and PlanSections.tsx for the
+        full variant list.
+      */}
       <Text style={styles.subTitle}>The Race</Text>
       <Text style={styles.para}>
-        {plan.candidateName} is running for {plan.race}
-        {plan.location ? ` in ${plan.location}` : ''}. The race is nonpartisan
-        with {plan.opponentCount} opponents. Election Day is {plan.electionDate}
-        . Because the electorate is small and no party cue appears on the
-        ballot, the race is decided by name recognition and turnout, not
-        ideological persuasion.
+        You are running for {plan.race} representing {plan.districtName}. As of{' '}
+        {plan.planGenerationDate}, the race is a nonpartisan election with 2
+        opponents. Election Day is {plan.electionDate}. Because the electorate
+        is small and no party cue appears on the ballot, the race is decided by
+        name recognition and turnout, not by ideological persuasion.
       </Text>
 
-      <Text style={styles.subTitle}>The Win Condition</Text>
+      <Text style={styles.subTitle}>Projected Votes to Win</Text>
       <Text style={styles.para}>
         Our modeling projects voter turnout of{' '}
-        {plan.projectedTurnout.toLocaleString('en-US')} (±10%), putting the
-        threshold for a guaranteed win at{' '}
-        {plan.winNumber.toLocaleString('en-US')} votes, a conservative 50% + 1
-        target. Hitting that target requires{' '}
-        {plan.voterContactGoal.toLocaleString('en-US')} quality voter touches
-        across the cycle, delivered through matched phone data plus in-person
-        visibility and earned media.
+        {plan.projectedTurnout.toLocaleString('en-US')} voters, putting the
+        threshold for a win at {plan.winNumber.toLocaleString('en-US')} votes, a
+        simple majority of voters (50% + 1) who actually cast a ballot. This is
+        the lowest amount of votes we project you need to win your election;
+        the plan below will guide you toward surpassing that number. Hitting
+        that target requires {plan.voterContactGoal.toLocaleString('en-US')}{' '}
+        voter contacts across the cycle (roughly 5 contacts per targeted
+        voter).
       </Text>
 
-      <Text style={styles.subTitle}>Strategy at a Glance</Text>
-      <DefinitionList items={plan.strategyBullets} />
-
-      <Text style={styles.subTitle}>Key Numbers</Text>
-      <Table
-        columns={[
-          { label: 'Metric', flex: 2 },
-          { label: 'Target', flex: 1, bold: true },
-        ]}
-        rows={plan.keyNumbers.map((n) => [n.metric, n.target])}
-      />
+      <Text style={styles.subTitle}>Campaign Plan at a Glance</Text>
+      <DefinitionList items={plan.planAtAGlance} />
 
       <PageFooter />
     </Page>
@@ -581,18 +579,26 @@ export const CampaignPlanPdf = ({
     <Page size="LETTER" style={styles.page}>
       <PageHeader plan={plan} />
 
-      <Text style={styles.subTitle}>Timeline Highlights</Text>
-      <BulletList
-        items={plan.timelineHighlights.map(
-          (h) => `${h.date}. ${h.description}`,
-        )}
+      <Text style={styles.subTitle}>Key Campaign Targets</Text>
+      <Table
+        columns={[
+          { label: 'Metric', flex: 2 },
+          { label: 'Target', flex: 1, bold: true },
+        ]}
+        rows={plan.keyCampaignTargets.map((t) => [t.metric, t.target])}
       />
 
-      <Text style={styles.subTitle}>What You Must Commit Personally</Text>
-      <BulletList items={plan.candidateCommitments} />
+      <Text style={styles.subTitle}>Key Dates</Text>
+      <BulletList
+        items={plan.keyDates.map((d) => `${d.date}. ${d.description}`)}
+      />
 
-      <Text style={styles.subTitle}>Biggest Risks</Text>
-      <DefinitionList items={plan.biggestRisks} />
+      <Text style={styles.paraMuted}>
+        The race is mapped by your opponents, your projected votes to win, and
+        your timeline. What shapes everything else is you. Continue to your
+        Campaign HQ and we&apos;ll help rebuild this plan around you
+        specifically.
+      </Text>
 
       <PageFooter />
     </Page>
@@ -602,10 +608,9 @@ export const CampaignPlanPdf = ({
       <PageHeader plan={plan} />
       <SectionHeader number={2} title="Strategic Landscape" />
       <Text style={styles.para}>
-        Your district is a small, often nonpartisan electorate where name
-        recognition and turnout, not ideological persuasion, decide most races.
-        The following opportunities and challenges are framed against that
-        reality.
+        {plan.districtName} is an electorate where name recognition and turnout
+        (not ideological persuasion) decide most races. The following
+        opportunities and challenges are framed against that reality.
       </Text>
 
       <Text style={styles.subTitle}>Opportunities</Text>
@@ -614,13 +619,33 @@ export const CampaignPlanPdf = ({
       <Text style={styles.subTitle}>Challenges</Text>
       <DefinitionList items={plan.challenges} />
 
-      <Text style={styles.subTitle}>Competitive Read</Text>
-      <Text style={styles.para}>
-        This plan is deliberately opponent-agnostic. The campaign should produce
-        a brief opponent memo covering each opponent&apos;s name-recognition
-        baseline, their top one or two public positions, and any obvious
-        coalitions they are courting. Until that memo exists, the plan assumes a
-        neutral split and optimizes for your own turnout.
+      {plan.opponents.length > 0 ? (
+        <>
+          <Text style={styles.subTitle}>Opposition Research</Text>
+          {plan.opponents.map((opp) => (
+            <View key={opp.name} style={{ marginBottom: 8 }}>
+              <Text style={[styles.defText, styles.defTerm]}>{opp.name}</Text>
+              <BulletList
+                items={[
+                  `Party: ${opp.party}`,
+                  ...(opp.isIncumbent
+                    ? [
+                        `Incumbent — received ${opp.lastVoteShare} of the vote last cycle`,
+                      ]
+                    : []),
+                  ...opp.positions.map((p) => `Position: ${p}`),
+                  ...opp.websites.map((w) => `Website: ${w}`),
+                ]}
+              />
+            </View>
+          ))}
+        </>
+      ) : null}
+
+      <Text style={styles.paraMuted}>
+        The strategic landscape is drawn from public data and historical
+        election results. Head to your Campaign HQ to share your platform and
+        we&apos;ll reframe the opportunities and challenges around it.
       </Text>
 
       <PageFooter />
@@ -683,9 +708,9 @@ export const CampaignPlanPdf = ({
         columns={[
           { label: 'Date', flex: 1.4 },
           { label: 'Milestone', flex: 3 },
-          { label: 'Owner / Notes', flex: 2, muted: true },
+          { label: 'Notes', flex: 2, muted: true },
         ]}
-        rows={plan.timeline.map((t) => [t.date, t.milestone, t.owner])}
+        rows={plan.timeline.map((t) => [t.date, t.milestone, t.notes])}
       />
 
       <PageFooter />
@@ -698,10 +723,9 @@ export const CampaignPlanPdf = ({
       <Text style={styles.para}>
         The recommended total campaign budget is approximately $
         {plan.totalBudget.toLocaleString('en-US')}, calculated from a
-        cost-per-vote benchmark of roughly $3 to $4 per targeted voter across
-        all digital and phone channels, rounded for planning clarity. Every
-        dollar should be directed toward high-impact outreach that drives name
-        recognition and turnout.
+        cost-per-campaign benchmark across all channels. Every dollar should be
+        directed toward high-impact contact that drives name recognition and
+        turnout.
       </Text>
 
       <Text style={styles.subTitle}>Line-Item Breakdown</Text>
@@ -718,8 +742,21 @@ export const CampaignPlanPdf = ({
         ])}
       />
 
-      <Text style={styles.subTitle}>What This Budget Does Not Cover</Text>
-      <DefinitionList items={plan.budgetNotCovered} />
+      <Text style={styles.subTitle}>How to Raise This</Text>
+      <Text style={styles.para}>
+        ${plan.totalBudget.toLocaleString('en-US')} sounds like real money. For
+        most candidates at this level, it comes from a surprisingly small
+        number of people, typically 20 to 40 donors giving $25 to $100 each.
+        The right fundraising mix is candidate-specific, but the default
+        starting mix for a race like yours looks like this:
+      </Text>
+      <Table
+        columns={[
+          { label: 'Source', flex: 2 },
+          { label: 'Share', flex: 1, bold: true },
+        ]}
+        rows={plan.fundraisingMix.map((f) => [f.source, f.share])}
+      />
 
       <PageFooter />
     </Page>
@@ -735,31 +772,47 @@ export const CampaignPlanPdf = ({
         channel at this budget.
       </Text>
 
-      <Text style={styles.subTitle}>Civic Events</Text>
+      <Text style={styles.subTitle}>Community Events</Text>
       <Table
         columns={[
           { label: 'Event', flex: 2 },
+          { label: 'Address', flex: 2, muted: true },
           { label: 'Date', flex: 1 },
           { label: 'Why It Matters', flex: 3, muted: true },
         ]}
-        rows={plan.civicEvents.map((e) => [e.event, e.date, e.why])}
+        rows={plan.civicEvents.map((e) => [
+          e.event,
+          e.address,
+          e.date,
+          e.why,
+        ])}
       />
 
-      <Text style={styles.subTitle}>Press / Media Outlets</Text>
+      <Text style={styles.subTitle}>Press & Media Outlets</Text>
+      <Text style={styles.para}>
+        Target at least one earned-media placement per week between{' '}
+        {plan.contactWindowStart || '{12_weeks_before_election_date}'} and{' '}
+        {plan.electionDate || '{election_date}'}.
+      </Text>
       <Table
         columns={[
           { label: 'Outlet', flex: 2 },
           { label: 'Type', flex: 2, muted: true },
           { label: 'Pitch Angle', flex: 3, muted: true },
+          { label: 'Contact', flex: 2, muted: true },
         ]}
-        rows={plan.pressOutlets.map((o) => [o.outlet, o.type, o.angle])}
+        rows={plan.pressOutlets.map((o) => [
+          o.outlet,
+          o.type,
+          o.angle,
+          o.contact,
+        ])}
       />
 
-      <Text style={styles.para}>
-        Target at least one earned-media placement per week during the final
-        month. Prepare a single-page fact sheet and two short op-ed drafts
-        (under 200 words) that can be tailored quickly to each outlet&apos;s
-        editorial voice.
+      <Text style={styles.paraMuted}>
+        These are your highest-value rooms and your best media targets. Tell us
+        why you&apos;re running in Campaign HQ and we&apos;ll turn this list
+        into talking points and a press pitch.
       </Text>
 
       <PageFooter />
@@ -771,44 +824,36 @@ export const CampaignPlanPdf = ({
       <SectionHeader number={7} title="Voter Contact Plan" />
       <Text style={styles.para}>
         The contact cadence below is designed so every likely voter receives at
-        least one introductory touch before mail ballots arrive, at least one
-        deadline reminder, and at least one Election-Day push. Peer-to-peer
-        texts are the primary workhorse. Robocalls layer on top to catch
-        landline-only voters.
+        least one introductory voter contact, at least one persuasion voter
+        contact, at least one early vote reminder, and at least one Election
+        Day push. Texts are the primary workhorse; robocalls layer on top to
+        catch landline-only voters.
       </Text>
 
       <Table
         columns={[
-          { label: 'Date', flex: 1.2 },
-          { label: 'Tactic', flex: 1.2 },
-          { label: 'Audience', flex: 1.6, muted: true },
-          { label: 'Purpose', flex: 2.5, muted: true },
-          { label: 'Format', flex: 1.5, muted: true },
+          { label: 'Date', flex: 1.4 },
+          { label: 'Tactic', flex: 1.2, bold: true },
+          { label: 'Purpose', flex: 3, muted: true },
         ]}
-        rows={plan.contactSchedule.map((s) => [
-          s.date,
-          s.tactic,
-          s.audience,
-          s.purpose,
-          s.format,
-        ])}
+        rows={plan.contactSchedule.map((s) => [s.date, s.tactic, s.purpose])}
       />
 
-      <Text style={styles.subTitle}>Expected Yield</Text>
+      <Text style={styles.subTitle}>Expected Outcome</Text>
       <Text style={styles.para}>
-        Across these sends, the plan produces approximately{' '}
-        {plan.voterContactGoal.toLocaleString('en-US')} quality touches against
-        your voter universe, an average of roughly {plan.averageTouchesPerVoter}{' '}
-        contacts per likely voter. Expected realized contact (accounting for
-        deliverability and answer rates) is 60 to 70 percent of attempts.
+        Across 7 voter contact campaigns, this plan produces over{' '}
+        {plan.voterContactGoal.toLocaleString('en-US')} voter contacts against
+        the group of {plan.winNumber.toLocaleString('en-US')} voters, more than
+        the 5 contacts per likely voter. Expected realized contact (accounting
+        for deliverability and answer rates) is ~60–70% of voter contacts,
+        which clears the threshold for reliable name recognition in a
+        nonpartisan race.
       </Text>
 
-      <Text style={styles.subTitle}>Message Discipline</Text>
-      <Text style={styles.para}>
-        Every send should carry the same three elements: your name in the first
-        line, one concrete local issue (the same issue every time), and a single
-        clear ask (register, request a ballot, vote on Election Day). Variation
-        across sends dilutes recognition. Consistency is the point.
+      <Text style={styles.paraMuted}>
+        This plan puts you in front of every likely voter at the right moment.
+        Once you share your issues in Campaign HQ, we&apos;ll help you build
+        the message for each campaign so all you need to do is schedule it.
       </Text>
 
       <PageFooter />
@@ -819,19 +864,27 @@ export const CampaignPlanPdf = ({
       <PageHeader plan={plan} />
       <SectionHeader number={8} title="Measurement & Accountability" />
       <Text style={styles.para}>
-        Your campaign manager should review the KPI dashboard every Monday and
-        report variances against target the same day. The goal is not to hit
-        every number exactly, but to catch trends early enough to reallocate
-        effort.
+        Every week, log into your Campaign HQ to check your progress. We
+        estimate the number of likely votes you are on track to receive based
+        on the activity you complete. For every 5 voter contacts you make, we
+        count that as 1 likely vote in your election.
+      </Text>
+      <Text style={styles.para}>
+        This number will grow as you work through your voter contact plan. It
+        will never reach 100% — that is by design. No campaign plan can
+        guarantee an outcome, and there is always another action you can take
+        to increase your chances of winning. What this will do is show you
+        clearly whether you are on pace, ahead, or behind, and give you time
+        to adjust before it is too late.
       </Text>
 
-      <Table
-        columns={[
-          { label: 'KPI', flex: 2.5 },
-          { label: 'Target', flex: 2, bold: true },
-          { label: 'Review Cadence', flex: 1.6, muted: true },
+      <Text style={styles.subTitle}>How to read your progress</Text>
+      <BulletList
+        items={[
+          'If your likely votes are tracking toward your projected votes to win, stay the course.',
+          'If you are falling behind, prioritize scheduling your next text or robocall campaign and look for additional outreach opportunities.',
+          'Check in at least once a week — small gaps caught early are easy to close; the same gap caught in the final week is not.',
         ]}
-        rows={plan.kpis.map((k) => [k.kpi, k.target, k.cadence])}
       />
 
       <PageFooter />
