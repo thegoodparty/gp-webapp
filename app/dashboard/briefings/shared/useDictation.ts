@@ -153,6 +153,13 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
   const onPartialRef = useRef(input.onPartialTranscript)
   const statusRef = useRef<DictationStatus>('idle')
   const sawErrorRef = useRef(false)
+  // Monotonically increasing generation that identifies the most recent
+  // start() attempt. Each start() captures its own value before awaiting; a
+  // subsequent stop(), teardown, server-driven 'closed', or unmount bumps the
+  // counter so any in-flight async work from the prior attempt detects the
+  // mismatch and bails out instead of silently re-acquiring resources after
+  // the user has cancelled.
+  const generationRef = useRef(0)
 
   useEffect(() => {
     onFinalRef.current = input.onFinalTranscript
@@ -169,6 +176,9 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
   }, [])
 
   const teardown = useCallback(() => {
+    // Any in-flight start() that survives past this point would be racing the
+    // freshly-cleaned-up refs, so invalidate its generation.
+    generationRef.current += 1
     if (workletNodeRef.current) {
       workletNodeRef.current.port.onmessage = null
       workletNodeRef.current.disconnect()
@@ -252,22 +262,14 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     [input.target.id, input.target.type, teardown, updateStatus],
   )
 
-  // If a stop() was issued while we were awaiting an external resource, abort
-  // the pipeline before it acquires more resources and silently overwrites
-  // statusRef. Returns true when the caller should bail out of start().
-  const handleStopRequestedDuringStart = useCallback((): boolean => {
-    if (statusRef.current !== 'stopping') {
-      return false
-    }
-    teardown()
-    updateStatus('idle')
-    return true
-  }, [teardown, updateStatus])
-
   const start = useCallback(async () => {
     if (BUSY_STATUSES.has(statusRef.current)) {
       return
     }
+    generationRef.current += 1
+    const myGeneration = generationRef.current
+    const isCancelled = (): boolean => myGeneration !== generationRef.current
+
     sawErrorRef.current = false
     setError(null)
     setTranscript('')
@@ -286,6 +288,9 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         },
       })
     } catch (err) {
+      if (isCancelled()) {
+        return
+      }
       const message =
         err instanceof Error ? err.message : 'Microphone access denied'
       sawErrorRef.current = true
@@ -298,11 +303,15 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       })
       return
     }
-    // Always assign before the cancellation check so teardown() can stop tracks.
-    streamRef.current = stream
-    if (handleStopRequestedDuringStart()) {
+    if (isCancelled()) {
+      // stop()/teardown ran while we were awaiting the mic. Make sure the
+      // freshly-acquired stream's tracks don't keep the mic open.
+      for (const track of stream.getTracks()) {
+        track.stop()
+      }
       return
     }
+    streamRef.current = stream
 
     updateStatus('connecting')
     let session
@@ -311,6 +320,9 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         target: input.target,
       })
     } catch (err) {
+      if (isCancelled()) {
+        return
+      }
       const message =
         err instanceof Error ? err.message : 'Failed to open dictation session'
       sawErrorRef.current = true
@@ -324,7 +336,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       teardown()
       return
     }
-    if (handleStopRequestedDuringStart()) {
+    if (isCancelled()) {
       return
     }
 
@@ -385,16 +397,13 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       audioContextRef.current = audioContext
       try {
         await audioContext.audioWorklet.addModule(PCM_WORKLET_PATH)
-        // teardown() may have run while addModule was awaiting (the user could
-        // have called stop()). The refs we just assigned have been nulled out;
-        // continuing here would leak a fresh AudioContext + worklet because
-        // teardown won't see the new instances we're about to construct.
-        if (handleStopRequestedDuringStart()) {
-          return
-        }
-        if (audioContextRef.current !== audioContext) {
-          // Pipeline was torn down (e.g. WebSocket closed) before addModule
-          // resolved. Close the orphaned context and abort.
+        if (isCancelled()) {
+          // stop()/teardown ran while addModule was awaiting. Close the
+          // orphaned context and detach the ref so a later teardown doesn't
+          // operate on it.
+          if (audioContextRef.current === audioContext) {
+            audioContextRef.current = null
+          }
           void audioContext.close().catch(() => undefined)
           return
         }
@@ -423,6 +432,13 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
           targetId: input.target.id,
         })
       } catch (err) {
+        if (isCancelled()) {
+          if (audioContextRef.current === audioContext) {
+            audioContextRef.current = null
+          }
+          void audioContext.close().catch(() => undefined)
+          return
+        }
         const message =
           err instanceof Error ? err.message : 'Failed to start audio pipeline'
         sawErrorRef.current = true
@@ -436,19 +452,16 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         teardown()
       }
     }
-  }, [
-    handleServerEvent,
-    handleStopRequestedDuringStart,
-    input.target,
-    teardown,
-    updateStatus,
-  ])
+  }, [handleServerEvent, input.target, teardown, updateStatus])
 
   const stop = useCallback(async () => {
     const current = statusRef.current
     if (current === 'idle' || current === 'error' || current === 'stopping') {
       return
     }
+    // Invalidate any in-flight start() before changing observable state so its
+    // post-await cancellation checks fire.
+    generationRef.current += 1
     updateStatus('stopping')
     trackEvent(EVENTS.Briefings.DictationStopped, {
       targetType: input.target.type,
