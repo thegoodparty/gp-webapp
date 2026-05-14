@@ -201,6 +201,14 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     if (wsRef.current) {
       const socket = wsRef.current
       wsRef.current = null
+      // Detach handlers before close so any onclose/onerror that fires after
+      // teardown() (e.g. because we cancelled while CONNECTING, or because a
+      // new start() has already overwritten wsRef) cannot reach back into the
+      // hook and clobber the new session's refs / status.
+      socket.onopen = null
+      socket.onmessage = null
+      socket.onerror = null
+      socket.onclose = null
       if (
         socket.readyState === WebSocket.OPEN ||
         socket.readyState === WebSocket.CONNECTING
@@ -244,6 +252,9 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
             targetId: input.target.id,
             code: event.code,
           })
+          // Release mic / WebSocket / AudioContext immediately so a subsequent
+          // start() doesn't overwrite the refs and orphan them.
+          teardown()
           return
         case 'closed':
           if (event.reason === 'max_duration') {
@@ -266,6 +277,14 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     if (BUSY_STATUSES.has(statusRef.current)) {
       return
     }
+    // Defensive cleanup: if we're entering from 'error' (or any state where a
+    // previous session's mic/socket/AudioContext is still alive), release
+    // those resources before we acquire fresh ones. Otherwise we'd overwrite
+    // the refs and orphan the old resources, leaking the microphone and
+    // leaving a stale socket whose onclose could later teardown() this new
+    // session.
+    teardown()
+
     generationRef.current += 1
     const myGeneration = generationRef.current
     const isCancelled = (): boolean => myGeneration !== generationRef.current
@@ -385,6 +404,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         targetId: input.target.id,
         code: 'WS_ERROR',
       })
+      teardown()
     }
     socket.onclose = () => {
       teardown()

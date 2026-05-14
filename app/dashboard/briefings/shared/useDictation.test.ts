@@ -33,9 +33,15 @@ class MockMediaStreamTrack {
 }
 
 class MockMediaStream {
+  static instances: MockMediaStream[] = []
+  static reset(): void {
+    MockMediaStream.instances = []
+  }
+
   tracks: MockMediaStreamTrack[]
   constructor() {
     this.tracks = [new MockMediaStreamTrack()]
+    MockMediaStream.instances.push(this)
   }
   getTracks(): MockMediaStreamTrack[] {
     return this.tracks
@@ -189,6 +195,7 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0))
 beforeEach(() => {
   MockWebSocket.reset()
   MockAudioContext.reset()
+  MockMediaStream.reset()
   clientRequestMock.mockReset()
   trackEventMock.mockReset()
   vi.stubGlobal('WebSocket', MockWebSocket)
@@ -603,5 +610,149 @@ describe('useDictation', () => {
       vi.advanceTimersByTime(3001)
     })
     expect(result.current.status).toBe('idle')
+  })
+
+  it('server "error" event tears down mic, socket, and AudioContext', async () => {
+    happyPathSession()
+    const { result } = renderHook(() => useDictation({ target }))
+
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[0]?.open()
+      MockWebSocket.instances[0]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+    const stream = MockMediaStream.instances[0]!
+
+    await act(async () => {
+      MockWebSocket.instances[0]?.emitMessage(
+        JSON.stringify({
+          type: 'error',
+          code: 'TRANSCRIBE_FAILED',
+          message: 'upstream blew up',
+        }),
+      )
+    })
+
+    expect(result.current.status).toBe('error')
+    expect(stream.tracks[0]?.stopped).toBeGreaterThan(0)
+    expect(MockWebSocket.instances[0]?.closed).toBeGreaterThanOrEqual(1)
+    expect(MockAudioContext.instances[0]?.closed).toBeGreaterThanOrEqual(1)
+  })
+
+  it('socket onerror tears down mic, socket, and AudioContext', async () => {
+    happyPathSession()
+    const { result } = renderHook(() => useDictation({ target }))
+
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[0]?.open()
+      MockWebSocket.instances[0]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+    const stream = MockMediaStream.instances[0]!
+
+    await act(async () => {
+      MockWebSocket.instances[0]?.emitError()
+    })
+
+    expect(result.current.status).toBe('error')
+    expect(stream.tracks[0]?.stopped).toBeGreaterThan(0)
+    expect(MockWebSocket.instances[0]?.closed).toBeGreaterThanOrEqual(1)
+    expect(MockAudioContext.instances[0]?.closed).toBeGreaterThanOrEqual(1)
+  })
+
+  it('start() after an error releases the prior session before acquiring new resources', async () => {
+    happyPathSession()
+    const { result } = renderHook(() => useDictation({ target }))
+
+    // Session 1 to 'recording' then errored by the server.
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[0]?.open()
+      MockWebSocket.instances[0]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+    const session1Stream = MockMediaStream.instances[0]!
+    const session1Socket = MockWebSocket.instances[0]!
+    const session1Context = MockAudioContext.instances[0]!
+
+    await act(async () => {
+      session1Socket.emitMessage(
+        JSON.stringify({
+          type: 'error',
+          code: 'TRANSCRIBE_FAILED',
+          message: 'oops',
+        }),
+      )
+    })
+    expect(result.current.status).toBe('error')
+    // After the server-error teardown, all prior resources are released.
+    expect(session1Stream.tracks[0]?.stopped).toBeGreaterThan(0)
+    expect(session1Socket.closed).toBeGreaterThanOrEqual(1)
+    expect(session1Context.closed).toBeGreaterThanOrEqual(1)
+
+    // Session 2: user clicks Dictate again. Should succeed cleanly.
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[1]?.open()
+      MockWebSocket.instances[1]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+
+    expect(result.current.status).toBe('recording')
+    expect(MockWebSocket.instances).toHaveLength(2)
+    expect(MockAudioContext.instances).toHaveLength(2)
+    // Session 2's resources are alive...
+    expect(MockWebSocket.instances[1]?.closed).toBe(0)
+    expect(MockAudioContext.instances[1]?.closed).toBe(0)
+  })
+
+  it("a stale socket's late onclose cannot tear down the new session", async () => {
+    happyPathSession()
+    const { result } = renderHook(() => useDictation({ target }))
+
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[0]?.open()
+      MockWebSocket.instances[0]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+    const session1Socket = MockWebSocket.instances[0]!
+
+    // Server errors out the first session; teardown closes the socket and
+    // detaches its handlers, but the test holds a reference and can still try
+    // to fire the stale onclose below.
+    await act(async () => {
+      session1Socket.emitMessage(
+        JSON.stringify({
+          type: 'error',
+          code: 'X',
+          message: 'fail',
+        }),
+      )
+    })
+    expect(result.current.status).toBe('error')
+
+    // Start a new session.
+    await act(async () => {
+      await result.current.start()
+      await MockWebSocket.instances[1]?.open()
+      MockWebSocket.instances[1]?.emitMessage(JSON.stringify({ type: 'ready' }))
+      await flush()
+    })
+    expect(result.current.status).toBe('recording')
+    const session2Socket = MockWebSocket.instances[1]!
+    const session2Context = MockAudioContext.instances[1]!
+
+    // Now simulate the stale onclose firing after the new session is alive.
+    // Because teardown() detached the handler, this must be a no-op.
+    await act(async () => {
+      session1Socket.emitClose()
+    })
+
+    expect(result.current.status).toBe('recording')
+    expect(session2Socket.closed).toBe(0)
+    expect(session2Context.closed).toBe(0)
   })
 })
