@@ -332,6 +332,10 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     }
     streamRef.current = stream
 
+    if (statusRef.current === 'stopping') {
+      teardown()
+      return
+    }
     updateStatus('connecting')
     let session
     try {
