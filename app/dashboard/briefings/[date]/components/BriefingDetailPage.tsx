@@ -1,6 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { LuDownload, LuVolume2, LuSquare } from 'react-icons/lu'
+import { Download, Volume2, Square } from 'lucide-react'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import PriorityIssueCard from './PriorityIssueCard'
