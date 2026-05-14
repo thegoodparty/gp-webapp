@@ -45,15 +45,36 @@ type ServerEvent =
 
 const PCM_WORKLET_PATH = '/dictation/pcm-worklet.js'
 
+// Safety net for stop(): when we send a graceful 'stop' to the server we rely
+// on the server's 'closed' event (and the socket's onclose) to drive cleanup.
+// If the network drops between the send and the response, those callbacks may
+// never fire and the hook would be permanently stuck in 'stopping'.
+const STOP_TIMEOUT_MS = 3000
+
 const buildAbsoluteWsUrl = (relativeOrAbsolute: string): string => {
+  const apiWsBase = API_ROOT.replace(/^http/, 'ws').replace(/\/$/, '')
   if (
     relativeOrAbsolute.startsWith('ws://') ||
     relativeOrAbsolute.startsWith('wss://')
   ) {
+    // Defense in depth: if a compromised or misconfigured gp-api returns an
+    // attacker-controlled URL here, the browser would otherwise stream live
+    // microphone audio to it. Compare host (host:port) rather than origin so
+    // the http→ws scheme difference doesn't cause a false mismatch.
+    let supplied: URL
+    let expected: URL
+    try {
+      supplied = new URL(relativeOrAbsolute)
+      expected = new URL(apiWsBase)
+    } catch {
+      throw new Error('Invalid WebSocket URL')
+    }
+    if (supplied.host !== expected.host) {
+      throw new Error(`Untrusted WebSocket host: ${supplied.host}`)
+    }
     return relativeOrAbsolute
   }
-  const apiBase = API_ROOT.replace(/^http/, 'ws').replace(/\/$/, '')
-  return `${apiBase}${relativeOrAbsolute}`
+  return `${apiWsBase}${relativeOrAbsolute}`
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -231,6 +252,18 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     [input.target.id, input.target.type, teardown, updateStatus],
   )
 
+  // If a stop() was issued while we were awaiting an external resource, abort
+  // the pipeline before it acquires more resources and silently overwrites
+  // statusRef. Returns true when the caller should bail out of start().
+  const handleStopRequestedDuringStart = useCallback((): boolean => {
+    if (statusRef.current !== 'stopping') {
+      return false
+    }
+    teardown()
+    updateStatus('idle')
+    return true
+  }, [teardown, updateStatus])
+
   const start = useCallback(async () => {
     if (BUSY_STATUSES.has(statusRef.current)) {
       return
@@ -265,7 +298,11 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       })
       return
     }
+    // Always assign before the cancellation check so teardown() can stop tracks.
     streamRef.current = stream
+    if (handleStopRequestedDuringStart()) {
+      return
+    }
 
     updateStatus('connecting')
     let session
@@ -287,8 +324,22 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       teardown()
       return
     }
+    if (handleStopRequestedDuringStart()) {
+      return
+    }
 
-    const wsUrl = buildAbsoluteWsUrl(session.data.wsUrl)
+    let wsUrl: string
+    try {
+      wsUrl = buildAbsoluteWsUrl(session.data.wsUrl)
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Invalid WebSocket URL'
+      sawErrorRef.current = true
+      setError(message)
+      updateStatus('error')
+      teardown()
+      return
+    }
     let socket: WebSocket
     try {
       socket = new WebSocket(wsUrl)
@@ -330,10 +381,23 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       }
     }
     socket.onopen = async () => {
+      const audioContext = new AudioContext({ sampleRate: 16000 })
+      audioContextRef.current = audioContext
       try {
-        const audioContext = new AudioContext({ sampleRate: 16000 })
-        audioContextRef.current = audioContext
         await audioContext.audioWorklet.addModule(PCM_WORKLET_PATH)
+        // teardown() may have run while addModule was awaiting (the user could
+        // have called stop()). The refs we just assigned have been nulled out;
+        // continuing here would leak a fresh AudioContext + worklet because
+        // teardown won't see the new instances we're about to construct.
+        if (handleStopRequestedDuringStart()) {
+          return
+        }
+        if (audioContextRef.current !== audioContext) {
+          // Pipeline was torn down (e.g. WebSocket closed) before addModule
+          // resolved. Close the orphaned context and abort.
+          void audioContext.close().catch(() => undefined)
+          return
+        }
         const sourceNode = audioContext.createMediaStreamSource(stream)
         sourceNodeRef.current = sourceNode
         const workletNode = new AudioWorkletNode(
@@ -372,7 +436,13 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         teardown()
       }
     }
-  }, [handleServerEvent, input.target, teardown, updateStatus])
+  }, [
+    handleServerEvent,
+    handleStopRequestedDuringStart,
+    input.target,
+    teardown,
+    updateStatus,
+  ])
 
   const stop = useCallback(async () => {
     const current = statusRef.current
@@ -385,14 +455,37 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       targetId: input.target.id,
       transcriptChars: transcript.length,
     })
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      try {
-        wsRef.current.send(JSON.stringify({ type: 'stop' }))
-      } catch {
-        // ignore
-      }
+
+    const socket = wsRef.current
+    if (socket?.readyState !== WebSocket.OPEN) {
+      // Socket is still CONNECTING or already CLOSING/CLOSED — no graceful
+      // server confirmation will arrive, so tear down directly.
+      teardown()
+      updateStatus('idle')
+      return
     }
-  }, [input.target.id, input.target.type, transcript.length, updateStatus])
+
+    try {
+      socket.send(JSON.stringify({ type: 'stop' }))
+    } catch {
+      teardown()
+      updateStatus('idle')
+      return
+    }
+
+    setTimeout(() => {
+      if (statusRef.current === 'stopping') {
+        teardown()
+        updateStatus('idle')
+      }
+    }, STOP_TIMEOUT_MS)
+  }, [
+    input.target.id,
+    input.target.type,
+    teardown,
+    transcript.length,
+    updateStatus,
+  ])
 
   useEffect(
     () => () => {

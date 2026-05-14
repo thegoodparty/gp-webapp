@@ -34,7 +34,11 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   const indexRef = useRef(0)
   const currentAudioRef = useRef<HTMLAudioElement | null>(null)
   const preloadAudioRef = useRef<HTMLAudioElement | null>(null)
-  const cancelledRef = useRef(false)
+  // Monotonically increasing counter that identifies the most recent play/stop
+  // intent. Each play() captures its own value before awaiting; a subsequent
+  // stop() or play() bumps the counter, causing in-flight async work from the
+  // prior call to detect the mismatch and bail out instead of racing.
+  const generationRef = useRef(0)
 
   const cleanupAudio = useCallback(() => {
     const audio = currentAudioRef.current
@@ -59,17 +63,18 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   }, [])
 
   const playFromIndex = useCallback(
-    (startIndex: number) => {
+    (startIndex: number, generation: number) => {
+      if (generation !== generationRef.current) {
+        return
+      }
       const segments = segmentsRef.current
-      if (cancelledRef.current || startIndex >= segments.length) {
-        if (!cancelledRef.current) {
-          setStatus('idle')
-          trackEvent(EVENTS.Briefings.ReadAloudCompleted, {
-            targetType: input.target.type,
-            targetId: input.target.id,
-            segmentCount: segments.length,
-          })
-        }
+      if (startIndex >= segments.length) {
+        setStatus('idle')
+        trackEvent(EVENTS.Briefings.ReadAloudCompleted, {
+          targetType: input.target.type,
+          targetId: input.target.id,
+          segmentCount: segments.length,
+        })
         cleanupAudio()
         return
       }
@@ -91,9 +96,9 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         preloadAudioRef.current = buildAudio(next)
       }
 
-      audio.onended = () => playFromIndex(startIndex + 1)
+      audio.onended = () => playFromIndex(startIndex + 1, generation)
       audio.onerror = () => {
-        if (cancelledRef.current) {
+        if (generation !== generationRef.current) {
           return
         }
         setStatus('error')
@@ -107,7 +112,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
       }
 
       void audio.play().catch((err: Error) => {
-        if (cancelledRef.current) {
+        if (generation !== generationRef.current) {
           return
         }
         setStatus('error')
@@ -124,7 +129,9 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   )
 
   const play = useCallback(async () => {
-    cancelledRef.current = false
+    generationRef.current += 1
+    const myGeneration = generationRef.current
+    cleanupAudio()
     setError(null)
     setStatus('loading')
     trackEvent(EVENTS.Briefings.ReadAloudStarted, {
@@ -144,7 +151,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
             }
           : {}),
       })
-      if (cancelledRef.current) {
+      if (myGeneration !== generationRef.current) {
         return
       }
       segmentsRef.current = response.data.segments
@@ -153,9 +160,9 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         return
       }
       setStatus('playing')
-      playFromIndex(0)
+      playFromIndex(0, myGeneration)
     } catch (err) {
-      if (cancelledRef.current) {
+      if (myGeneration !== generationRef.current) {
         return
       }
       const message =
@@ -168,10 +175,16 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         reason: 'synthesize_failed',
       })
     }
-  }, [input.engine, input.target, input.voiceId, playFromIndex])
+  }, [
+    cleanupAudio,
+    input.engine,
+    input.target,
+    input.voiceId,
+    playFromIndex,
+  ])
 
   const stop = useCallback(() => {
-    cancelledRef.current = true
+    generationRef.current += 1
     if (status === 'playing' || status === 'loading') {
       trackEvent(EVENTS.Briefings.ReadAloudStopped, {
         targetType: input.target.type,
@@ -186,7 +199,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
 
   useEffect(
     () => () => {
-      cancelledRef.current = true
+      generationRef.current += 1
       cleanupAudio()
     },
     [cleanupAudio],
