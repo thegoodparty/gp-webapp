@@ -1,8 +1,4 @@
 import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
-import type {
-  Briefing,
-  BriefingListItem,
-} from 'app/dashboard/briefings/shared/briefing-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
@@ -196,16 +192,6 @@ export type APIEndpoints = {
   'GET /v1/contact-engagement/:id/activities': {
     Request: { take?: number; after?: string }
     Response: GetIndividualActivitiesResponse
-  }
-
-  'GET /v1/meetings/briefings': {
-    Request: {}
-    Response: BriefingListItem[]
-  }
-
-  'GET /v1/meetings/briefings/:date': {
-    Request: {}
-    Response: Briefing
   }
 
   'GET /v1/elections/race-by-position': {
