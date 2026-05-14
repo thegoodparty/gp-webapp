@@ -58,10 +58,12 @@ test.describe('Custom office flow', () => {
     ).toBeVisible()
 
     await page.getByLabel('Office Name').fill('City Council')
-    await page.locator('select').first().selectOption('NC')
+    await page.getByRole('combobox', { name: /state/i }).click()
+    await page.getByRole('option', { name: 'NC' }).click()
     await page.getByLabel('City, Town Or County').fill('Hendersonville')
     await page.getByLabel('District (If Applicable)').fill('3')
-    await page.locator('select').nth(1).selectOption('4 years')
+    await page.getByRole('combobox', { name: /term length/i }).click()
+    await page.getByRole('option', { name: '4 years' }).click()
     await page.getByLabel('General Election Date').fill('2030-02-01')
 
     await expect(continueButton).toBeEnabled()

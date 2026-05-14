@@ -346,10 +346,6 @@ export const apiRoutes = {
         path: '/voters/voter-file/wake-up',
         method: 'GET',
       },
-      schedule: {
-        path: '/voters/voter-file/schedule',
-        method: 'POST',
-      },
       helpMessage: {
         path: '/voters/voter-file/help-message',
         method: 'POST',
@@ -428,6 +424,10 @@ export const apiRoutes = {
   elections: {
     racesByYear: {
       path: '/elections/races-by-year',
+      method: 'GET',
+    },
+    raceByPosition: {
+      path: '/elections/race-by-position',
       method: 'GET',
     },
     districts: {

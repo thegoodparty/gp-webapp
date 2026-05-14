@@ -1,13 +1,24 @@
 'use client'
 
-import { Button, Input, Label, Skeleton } from '@styleguide'
+import {
+  Button,
+  FilterPill,
+  FilterPillGroup,
+  Input,
+  InputWithButton,
+  RadioCardItem,
+  RadioGroup,
+  Skeleton,
+} from '@styleguide'
 import { useQuery } from '@tanstack/react-query'
 import Fuse, { type IFuseOptions } from 'fuse.js'
-import { CheckCircle2, Circle, Loader2 } from 'lucide-react'
-import { useId, useMemo, useState, useEffect } from 'react'
+import { Search } from 'lucide-react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
 import { reportErrorToSentry } from '@shared/sentry'
+import { useSnackbar } from 'helpers/useSnackbar'
 import type { Race } from '../[slug]/[step]/components/ballotOffices/types'
 import type { SelectedOffice } from './onboardingTypes'
 
@@ -17,6 +28,7 @@ interface OfficeSelectionStepProps {
   onZipChange: (zip: string) => void
   onSelect: (office: SelectedOffice | undefined) => void
   onCantFindOffice: () => void
+  onHydratingChange?: (isHydrating: boolean) => void
 }
 
 interface FilterOption {
@@ -178,7 +190,7 @@ const RaceListSkeleton = () => (
 )
 
 const EmptyState = ({ message }: { message: string }) => (
-  <div className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-base text-slate-700">
+  <div className="rounded-xl border border-dashed border-base-border px-4 py-8 text-center text-base text-foreground">
     {message}
   </div>
 )
@@ -189,12 +201,13 @@ export const OfficeSelectionStep = ({
   onZipChange,
   onSelect,
   onCantFindOffice,
+  onHydratingChange,
 }: OfficeSelectionStepProps): React.JSX.Element => {
-  const zipInputId = useId()
   const [zipInput, setZipInput] = useState(zip ?? '')
   const [submittedZip, setSubmittedZip] = useState<string | undefined>(zip)
   const [nameFilter, setNameFilter] = useState('')
   const [activeFilter, setActiveFilter] = useState<string>('')
+  const { errorSnackbar } = useSnackbar()
 
   const canSearch = isZipValid(zipInput)
 
@@ -264,8 +277,11 @@ export const OfficeSelectionStep = ({
     setSubmittedZip(cleaned)
     setActiveFilter('')
     setNameFilter('')
+    hydratedRacesRef.current.clear()
+    pendingHydrationRaceIdRef.current = null
     onZipChange(cleaned)
     onSelect(undefined)
+    onHydratingChange?.(false)
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -273,12 +289,77 @@ export const OfficeSelectionStep = ({
     handleSearch()
   }
 
-  const handleSelectRace = (race: Race) => {
-    if (selected?.raceId === race.id) {
-      onSelect(undefined)
-    } else {
-      onSelect(toSelectedOffice(race))
+  const hydratedRacesRef = useRef<Map<string, Race>>(new Map())
+  // Tracks the most recently clicked race so an in-flight hydration result
+  // for a previously clicked race can detect that it's stale and bail.
+  // Updated synchronously inside the click handler so it doesn't depend on
+  // the parent feeding the new `selected` prop back through a re-render.
+  const pendingHydrationRaceIdRef = useRef<string | null>(null)
+
+  const hydrateRace = async (race: Race): Promise<Race | null> => {
+    if (!race.brPositionId || !race.election?.electionDay || !submittedZip) {
+      errorSnackbar('Could not load this race. Please try a different one.')
+      return null
     }
+    try {
+      const { data } = await clientRequest(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: race.brPositionId,
+          zip: submittedZip,
+          electionDate: race.election.electionDay,
+        },
+      )
+      return { ...data, id: race.id }
+    } catch {
+      errorSnackbar('Could not load race details. Please try again.')
+      return null
+    }
+  }
+
+  const handleSelectRace = async (race: Race) => {
+    if (selected?.raceId === race.id) {
+      pendingHydrationRaceIdRef.current = null
+      onSelect(undefined)
+      onHydratingChange?.(false)
+      return
+    }
+
+    // Cached hydration: previous click on this race already enriched it.
+    const cached = hydratedRacesRef.current.get(race.id)
+    if (cached) {
+      pendingHydrationRaceIdRef.current = null
+      onSelect(toSelectedOffice(cached))
+      onHydratingChange?.(false)
+      return
+    }
+
+    // Optimistic select so the radio reflects the click immediately.
+    pendingHydrationRaceIdRef.current = race.id
+    onSelect(toSelectedOffice(race))
+    onHydratingChange?.(true)
+    const zipAtClick = submittedZip
+    const hydrated = await hydrateRace(race)
+
+    // The user may have clicked a different race, deselected, or changed zip
+    // while we were hydrating. If so, bail — the newer handler owns state.
+    if (pendingHydrationRaceIdRef.current !== race.id) {
+      // Only cache if the zip context still matches; otherwise this result
+      // belongs to a previous zip and would poison cache for the new one.
+      if (hydrated && submittedZip === zipAtClick) {
+        hydratedRacesRef.current.set(race.id, hydrated)
+      }
+      return
+    }
+
+    pendingHydrationRaceIdRef.current = null
+    if (hydrated) {
+      hydratedRacesRef.current.set(race.id, hydrated)
+      onSelect(toSelectedOffice(hydrated))
+    } else {
+      onSelect(undefined)
+    }
+    onHydratingChange?.(false)
   }
 
   const showResults = Boolean(submittedZip) && query.isSuccess
@@ -288,45 +369,31 @@ export const OfficeSelectionStep = ({
   return (
     <>
       <div className="space-y-6 text-left">
-        <form className="space-y-2" noValidate onSubmit={handleSubmit}>
-          <Label
-            className="text-sm font-medium text-slate-900"
-            htmlFor={zipInputId}
-          >
-            Zip code
-          </Label>
-          <div className="flex items-center gap-2">
-            <Input
-              id={zipInputId}
-              inputMode="numeric"
-              maxLength={5}
-              pattern="[0-9]{5}"
-              placeholder="ZIP"
-              value={zipInput}
-              onChange={(event) =>
-                setZipInput(event.target.value.replace(/\D/g, ''))
-              }
-              aria-invalid={
-                query.isError || (Boolean(zipInput) && !canSearch) || undefined
-              }
-              className="rounded-full bg-white px-4"
-            />
-            <Button
-              type="submit"
-              variant="secondary"
-              disabled={!canSearch || query.isFetching}
-            >
-              {query.isFetching ? (
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              ) : (
-                'Search'
-              )}
-            </Button>
-          </div>
+        <form noValidate onSubmit={handleSubmit}>
+          <InputWithButton
+            label="Zip code"
+            inputMode="numeric"
+            maxLength={5}
+            pattern="[0-9]{5}"
+            placeholder="ZIP"
+            value={zipInput}
+            onChange={(event) =>
+              setZipInput(event.target.value.replace(/\D/g, ''))
+            }
+            aria-invalid={
+              query.isError || (Boolean(zipInput) && !canSearch) || undefined
+            }
+            buttonLabel="Search"
+            buttonProps={{
+              type: 'submit',
+              disabled: !canSearch || query.isFetching,
+              loading: query.isFetching,
+            }}
+          />
         </form>
 
         {!submittedZip && !query.isFetching ? (
-          <EmptyState message="Enter your zip code to see offices" />
+          <EmptyState message="Enter your zip code to see offices." />
         ) : null}
 
         {query.isFetching ? <RaceListSkeleton /> : null}
@@ -339,41 +406,32 @@ export const OfficeSelectionStep = ({
           <div className="space-y-4">
             {submittedZip && isZipValid(submittedZip) ? (
               <Input
+                icon={<Search />}
                 aria-label="Search by office name"
                 placeholder="Search by office name"
                 value={nameFilter}
                 onChange={(event) => setNameFilter(event.target.value)}
-                className="rounded-full bg-white px-4"
+                className="bg-base-surface"
               />
             ) : null}
 
-            <div className="flex flex-col gap-3">
-              {filterOptions.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {filterOptions.map((option) => {
-                    const isActive = activeFilter === option.value
-                    return (
-                      <button
-                        type="button"
-                        key={option.value}
-                        onClick={() => {
-                          setActiveFilter(isActive ? '' : option.value)
-                          onSelect(undefined)
-                        }}
-                        aria-pressed={isActive}
-                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                          isActive
-                            ? 'border-slate-900 bg-slate-900 text-white'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                        }`}
-                      >
-                        {option.label} ({option.count})
-                      </button>
-                    )
-                  })}
-                </div>
-              ) : null}
-            </div>
+            {filterOptions.length > 0 ? (
+              <FilterPillGroup
+                value={activeFilter}
+                onValueChange={(value) => {
+                  setActiveFilter(value)
+                  pendingHydrationRaceIdRef.current = null
+                  onSelect(undefined)
+                  onHydratingChange?.(false)
+                }}
+              >
+                {filterOptions.map((option) => (
+                  <FilterPill key={option.value} value={option.value}>
+                    {option.label} ({option.count})
+                  </FilterPill>
+                ))}
+              </FilterPillGroup>
+            ) : null}
 
             {filteredCount === 0 ? (
               <EmptyState
@@ -386,17 +444,19 @@ export const OfficeSelectionStep = ({
                 }
               />
             ) : (
-              <div
-                role="radiogroup"
+              <RadioGroup
                 aria-label="Available offices"
-                className="space-y-6"
+                className="flex flex-col"
+                value={selected?.raceId ?? ''}
+                onValueChange={(raceId) => {
+                  const race = races.find((r) => r.id === raceId)
+                  if (race) void handleSelectRace(race)
+                }}
               >
-                <p className="text-sm leading-5 text-slate-500">
-                  {activeFilter !== ''
-                    ? `${filteredCount} office${filteredCount === 1 ? '' : 's'}`
-                    : `${totalOffices} office${
-                        totalOffices === 1 ? '' : 's'
-                      } showing. Please select your office.`}
+                <p className="text-sm text-muted-foreground">
+                  {`${filteredCount} office${
+                    filteredCount === 1 ? '' : 's'
+                  } showing. Please select yours.`}
                 </p>
                 {Array.from(officesByYear.entries()).map(
                   ([year, yearRaces]) => (
@@ -408,71 +468,46 @@ export const OfficeSelectionStep = ({
                     >
                       <div className="flex items-center gap-3">
                         <span
-                          className="shrink-0 text-sm text-slate-500"
+                          className="shrink-0 text-sm text-muted-foreground"
                           data-testid="race-form-year-header"
                         >
                           {year}
                         </span>
-                        <div className="h-px flex-1 bg-slate-200" />
+                        <div className="h-px flex-1 bg-base-border" />
                       </div>
                       {yearRaces.map((race) => {
-                        const isSelected = selected?.raceId === race.id
                         const positionName = race.position?.name ?? 'Office'
                         const cityLabel = race.city ? ` — ${race.city}` : ''
                         return (
-                          <button
-                            type="button"
+                          <RadioCardItem
                             key={race.id}
-                            role="radio"
-                            aria-checked={isSelected}
-                            onClick={() => handleSelectRace(race)}
-                            className={`flex w-full cursor-pointer items-start gap-3 rounded-md border bg-white p-4 text-left transition-colors hover:border-slate-300 ${
-                              isSelected
-                                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
-                                : 'border-slate-200'
-                            }`}
-                          >
-                            <span
-                              aria-hidden="true"
-                              className={`mt-0.5 flex size-5 shrink-0 items-center justify-center ${
-                                isSelected ? 'text-blue-600' : 'text-slate-300'
-                              }`}
-                            >
-                              {isSelected ? (
-                                <CheckCircle2 className="size-5 fill-blue-600 text-white" />
-                              ) : (
-                                <Circle className="size-5" />
-                              )}
-                            </span>
-                            <span className="flex-1 space-y-1">
-                              <span className="block text-sm font-semibold text-slate-950">
-                                {positionName}
-                                {cityLabel}
-                              </span>
-                              <span className="block text-xs text-slate-500">
-                                {formatElectionDate(race.election?.electionDay)}
-                              </span>
-                            </span>
-                          </button>
+                            value={race.id}
+                            id={`race-${race.id}`}
+                            title={`${positionName}${cityLabel}`}
+                            description={formatElectionDate(
+                              race.election?.electionDay,
+                            )}
+                          />
                         )
                       })}
                     </div>
                   ),
                 )}
-              </div>
+              </RadioGroup>
             )}
           </div>
         ) : null}
 
         {showResults ? (
           <div className="text-center">
-            <button
+            <Button
               type="button"
+              variant="link"
+              size="small"
               onClick={onCantFindOffice}
-              className="text-sm font-semibold text-blue-600 hover:underline"
             >
               I don&apos;t see my office
-            </button>
+            </Button>
           </div>
         ) : null}
       </div>

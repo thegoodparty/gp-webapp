@@ -4,7 +4,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'welcome',
     eyebrow: 'Campaign plan setup',
-    title: "Let's build your winning campaign plan in 5 mins",
+    title: "Let's build your winning campaign plan in 5 minutes",
     description:
       "All we need to know is what office you're running for and where, and we'll take it from there",
     summary:
@@ -25,9 +25,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'party-affiliation',
     eyebrow: 'Candidate eligibility',
-    title: 'Are you running with an official party affiliation?',
+    title: 'Are you running with an official party designation?',
     description:
-      'Party affiliation determines whether the candidate can continue with GoodParty.org support.',
+      'Party designation determines whether you can continue with GoodParty.org support.',
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:

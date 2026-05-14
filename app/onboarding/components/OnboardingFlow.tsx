@@ -1,15 +1,19 @@
 'use client'
 
-import { Button, Card, CardContent } from '@styleguide'
 import {
-  ArrowLeft,
-  ArrowRight,
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  Stepper,
+} from '@styleguide'
+import {
   CalendarCheck,
-  Compass,
+  CircleAlert,
   Target,
   UsersRound,
   Wand2,
-  X,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -22,6 +26,7 @@ import {
 
 const ONBOARDING_STEP_COMPLETE = 'onboarding-complete'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -141,41 +146,20 @@ const PartyAffiliationStep = ({
   value,
   onChange,
 }: PartyAffiliationStepProps): React.JSX.Element => {
-  const [dismissedFor, setDismissedFor] = useState<PartyAffiliation | null>(
-    null,
-  )
-  const showBlocker = isMajorPartyAffiliation(value) && dismissedFor !== value
-
   return (
     <div className="space-y-4">
-      {showBlocker ? (
-        <div
-          role="alert"
-          className="relative flex items-start gap-4 rounded-lg border border-red-200 bg-red-50 p-5 pr-12 text-left"
-        >
-          <div className="flex-1 space-y-2">
-            <p className="text-sm leading-6 font-semibold text-red-700">
-              Sorry, GoodParty.org is only for non-partisan and independent
-              candidates.
-            </p>
-          </div>
-          <button
-            type="button"
-            aria-label="Dismiss"
-            onClick={() => setDismissedFor(value ?? null)}
-            className="absolute top-3 right-3 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-100 hover:text-slate-600"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </button>
-        </div>
+      {isMajorPartyAffiliation(value) ? (
+        <Alert variant="destructive" icon={<CircleAlert />}>
+          <AlertDescription>
+            Sorry, GoodParty.org is only for non-partisan and independent
+            candidates.
+          </AlertDescription>
+        </Alert>
       ) : null}
       <RadioCardGroup
         name="party-affiliation"
         value={value}
-        onChange={(next) => {
-          setDismissedFor(null)
-          onChange(next)
-        }}
+        onChange={onChange}
         options={partyAffiliationOptions}
       />
     </div>
@@ -217,58 +201,15 @@ interface WhyWeAskProps {
 
 const WhyWeAsk = ({
   text,
-  title = 'Why we ask',
+  title = 'Why this matters',
   children,
 }: WhyWeAskProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-slate-200 p-5">
-    <div className="mb-3 flex items-center gap-2">
-      <Compass className="size-4 text-slate-400" aria-hidden="true" />
-      <span className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
-        {title}
-      </span>
-    </div>
-    <p className="text-sm leading-6 text-slate-700">{children ?? text}</p>
+  <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
+    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+      {title}
+    </span>
+    <p className="text-sm text-foreground">{children ?? text}</p>
   </aside>
-)
-
-interface StepProgressProps {
-  currentStep: number
-  numberOfSteps: number
-}
-
-const StepProgress = ({
-  currentStep,
-  numberOfSteps,
-}: StepProgressProps): React.JSX.Element => (
-  <div
-    className="space-y-3"
-    role="progressbar"
-    aria-label="Onboarding progress"
-    aria-valuemin={1}
-    aria-valuemax={numberOfSteps}
-    aria-valuenow={currentStep}
-  >
-    <div className="flex justify-end text-sm font-medium text-slate-500">
-      Step {currentStep} of {numberOfSteps}
-    </div>
-    <div
-      className="grid gap-2"
-      style={{
-        gridTemplateColumns: `repeat(${numberOfSteps}, minmax(0, 1fr))`,
-      }}
-    >
-      {Array.from({ length: numberOfSteps }, (_, index) => (
-        <div
-          key={index}
-          className={
-            index < currentStep
-              ? 'h-1.5 rounded-full bg-blue-600'
-              : 'h-1.5 rounded-full bg-slate-100'
-          }
-        />
-      ))}
-    </div>
-  </div>
 )
 
 interface StepBodyProps {
@@ -276,12 +217,14 @@ interface StepBodyProps {
   answers: OnboardingAnswers
   updateAnswers: (answers: Partial<OnboardingAnswers>) => void
   onCantFindOffice: () => void
+  onOfficeHydratingChange: (isHydrating: boolean) => void
   liveCampaign: Campaign | null
   onP2vLoadingChange: (loading: boolean) => void
   onP2vMetricsResolved: NonNullable<
     React.ComponentProps<typeof PathToVictoryStep>['onMetricsResolved']
   >
   p2vOfficeName: string | null
+  skipP2vReveal: boolean
 }
 
 const StepBody = ({
@@ -289,10 +232,12 @@ const StepBody = ({
   answers,
   updateAnswers,
   onCantFindOffice,
+  onOfficeHydratingChange,
   liveCampaign,
   onP2vLoadingChange,
   onP2vMetricsResolved,
   p2vOfficeName,
+  skipP2vReveal,
 }: StepBodyProps): React.JSX.Element => {
   if (activeStep.id === 'welcome') {
     return (
@@ -301,27 +246,25 @@ const StepBody = ({
           {welcomeCards.map(({ title, description, Icon }) => (
             <Card
               key={title}
-              className="rounded-xl border-slate-200 text-left shadow-none"
+              className="rounded-xl border-base-border text-left shadow-none"
             >
-              <CardContent className="space-y-4 p-6">
+              <CardContent className="space-y-4">
                 <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <div className="space-y-2">
-                  <h2 className="text-base leading-6 font-semibold text-slate-950">
+                  <h2 className="text-base font-semibold text-foreground">
                     {title}
                   </h2>
-                  <p className="text-sm leading-6 text-slate-500">
-                    {description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-muted-foreground">
           Ready? Hit{' '}
-          <span className="font-semibold text-slate-950">Continue</span> to get
+          <span className="font-semibold text-foreground">Continue</span> to get
           started.
         </p>
       </div>
@@ -363,6 +306,7 @@ const StepBody = ({
           })
         }
         onCantFindOffice={onCantFindOffice}
+        onHydratingChange={onOfficeHydratingChange}
       />
     )
   }
@@ -383,6 +327,7 @@ const StepBody = ({
         officeName={p2vOfficeName}
         onLoadingChange={onP2vLoadingChange}
         onMetricsResolved={onP2vMetricsResolved}
+        skipReveal={skipP2vReveal}
       />
     )
   }
@@ -403,8 +348,8 @@ const StepBody = ({
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
-      <p className="text-sm leading-6 text-slate-700">{activeStep.summary}</p>
+    <div className="rounded-lg border border-base-border bg-muted p-5">
+      <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
     </div>
   )
 }
@@ -425,12 +370,30 @@ export default function OnboardingFlow({
     firstOnboardingStepId,
   )
   const [isSavingOffice, setIsSavingOffice] = useState(false)
+  const [isHydratingOffice, setIsHydratingOffice] = useState(false)
   const isAdvancingRef = useRef(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
     initialCampaign,
   )
   const [isP2vLoading, setIsP2vLoading] = useState(true)
+  const [resolvedP2vOfficeKey, setResolvedP2vOfficeKey] = useState<
+    string | null
+  >(null)
   const queryClient = useQueryClient()
+
+  // Tracking the resolved office (rather than a boolean) lets the
+  // path-to-victory effect re-run when the user goes back and changes
+  // zip/office, so the new race's metrics replace the previous one.
+  // `||` (not `??`) so an empty-string id falls through to the next option
+  // instead of being treated as a valid identity.
+  const officeIdentityKey =
+    answers.structuredOffice?.positionId ||
+    answers.structuredOffice?.raceId ||
+    (answers.manualOfficeForm
+      ? `manual:${answers.manualOfficeForm.state}:${answers.manualOfficeForm.city}:${answers.manualOfficeForm.office}`
+      : null)
+  const hasResolvedPathToVictory =
+    Boolean(officeIdentityKey) && resolvedP2vOfficeKey === officeIdentityKey
 
   const visibleSteps = getVisibleOnboardingSteps(ONBOARDING_STEPS, answers)
   const activeIndex = Math.max(
@@ -443,13 +406,19 @@ export default function OnboardingFlow({
   const activeStepNumber = activeIndex + 1
   const isActiveStepValid = activeStep.isValid?.({ answers }) ?? true
   const isP2vBlocking = activeStep.id === 'path-to-victory' && isP2vLoading
+  const isOfficeHydrationBlocking =
+    activeStep.id === 'office-selection' && isHydratingOffice
   const p2vOfficeName =
     answers.structuredOffice?.positionName ||
     liveCampaign?.positionName ||
     liveCampaign?.organization?.customPositionName ||
     liveCampaign?.office ||
     null
-  const canContinue = isActiveStepValid && !isSavingOffice && !isP2vBlocking
+  const canContinue =
+    isActiveStepValid &&
+    !isSavingOffice &&
+    !isP2vBlocking &&
+    !isOfficeHydrationBlocking
 
   const handleP2vLoadingChange = useCallback((loading: boolean) => {
     setIsP2vLoading(loading)
@@ -463,6 +432,9 @@ export default function OnboardingFlow({
     (result) => {
       const campaignId = liveCampaign?.id ?? campaign?.id
       if (result.status === 'success') {
+        if (officeIdentityKey) {
+          setResolvedP2vOfficeKey(officeIdentityKey)
+        }
         trackEvent(EVENTS.Onboarding.PathToVictoryUpdated, {
           campaignId,
           projectedTurnout: result.projectedTurnout,
@@ -482,11 +454,24 @@ export default function OnboardingFlow({
         })
       }
     },
-    [liveCampaign, campaign, user?.id],
+    [liveCampaign, campaign, user?.id, officeIdentityKey],
   )
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [activeStepId])
+
+  useEffect(() => {
+    if (activeStepId !== 'office-selection') setIsHydratingOffice(false)
+  }, [activeStepId])
+
+  const handleOfficeHydratingChange = useCallback((hydrating: boolean) => {
+    setIsHydratingOffice(hydrating)
+  }, [])
+
+  useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
+    if (hasResolvedPathToVictory) return
     let cancelled = false
     setIsP2vLoading(true)
     void (async () => {
@@ -507,7 +492,7 @@ export default function OnboardingFlow({
     return () => {
       cancelled = true
     }
-  }, [activeStepId])
+  }, [activeStepId, hasResolvedPathToVictory])
 
   useEffect(() => {
     if (activeStepId !== 'path-to-victory') return
@@ -640,6 +625,12 @@ export default function OnboardingFlow({
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
     setLiveCampaign(newCampaign)
+    // CampaignProvider cached the prior 404 (no campaign yet) for this
+    // session. POST /campaigns returns the bare campaign without
+    // raceTargetMetrics — those are only computed by GET /campaigns/mine —
+    // so we invalidate instead of seeding the cache, forcing the next read
+    // to refetch the fully-hydrated record.
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: office.level,
@@ -732,6 +723,7 @@ export default function OnboardingFlow({
     if (!newCampaign) return false
     setCookie(ORG_SLUG_COOKIE, `campaign-${newCampaign.id}`)
     setLiveCampaign(newCampaign)
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: 'manual',
@@ -801,6 +793,11 @@ export default function OnboardingFlow({
       })
       return false
     }
+    // Launch flips isActive + recomputes raceTargetMetrics on the next read.
+    // Invalidate so /dashboard's CampaignProvider refetches the hydrated
+    // campaign instead of serving the stale (or missing-metrics) entry that
+    // was cached earlier in this session.
+    void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
     trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
     trackEvent(EVENTS.Onboarding.PledgeCompleted, {
       pledgeVersion: PLEDGE_VERSION,
@@ -836,6 +833,11 @@ export default function OnboardingFlow({
       trackEvent(EVENTS.Onboarding.PathToVictoryCompleted, {
         campaignId: trackedCampaign?.id,
         winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
+      })
+    }
+    if (activeStep.id === 'voter-demographics') {
+      trackEvent(EVENTS.Onboarding.KnowYourVotersCompleted, {
+        campaignId: campaign?.id,
       })
     }
     if (
@@ -932,16 +934,20 @@ export default function OnboardingFlow({
   }
 
   return (
-    <div className="min-h-screen bg-white pb-28 text-slate-950">
-      <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-8 sm:py-8">
-        <div>
-          <StepProgress
+    <div className="min-h-screen bg-base-surface pb-28 text-foreground">
+      <div className="fixed top-14 left-0 right-0 z-10 border-b border-slate-100 bg-base-surface">
+        <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
+          <Stepper
+            variant="bar"
             currentStep={activeStepNumber}
-            numberOfSteps={visibleSteps.length}
+            totalSteps={visibleSteps.length}
           />
-
+        </div>
+      </div>
+      <main className="mx-auto w-full max-w-4xl px-4 pt-28 pb-6 sm:px-8 sm:pb-8">
+        <div>
           <div
-            className={`mt-8 grid grid-cols-1 gap-8 sm:mt-5${
+            className={`grid grid-cols-1 gap-8${
               activeStep.whyWeAsk && !isP2vBlocking
                 ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
                 : ''
@@ -954,21 +960,15 @@ export default function OnboardingFlow({
             >
               {isP2vBlocking ? null : (
                 <div className="space-y-4">
-                  {activeStep.id === 'welcome' ||
-                  activeStep.id === 'pledge' ? null : (
-                    <p className="text-sm font-semibold text-blue-600">
-                      {activeStep.eyebrow}
-                    </p>
-                  )}
-                  <h1 className="text-4xl leading-[1.08] font-bold text-slate-950 sm:text-5xl">
+                  <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
-                  <p className="text-lg leading-8 text-slate-500 sm:text-base sm:leading-7">
+                  <p className="text-lg text-muted-foreground sm:text-base">
                     {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
                       <>
                         We use historical voter data and proprietary models to
                         get the most accurate projections for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -979,7 +979,7 @@ export default function OnboardingFlow({
                         We crunch the latest voter data, along with proprietary
                         behavior models, and local news to prioritize the issues
                         voters care about for{' '}
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {p2vOfficeName}
                         </span>
                         .
@@ -996,44 +996,51 @@ export default function OnboardingFlow({
                 answers={answers}
                 updateAnswers={updateAnswers}
                 onCantFindOffice={handleCantFindOffice}
+                onOfficeHydratingChange={handleOfficeHydratingChange}
                 liveCampaign={liveCampaign}
                 onP2vLoadingChange={handleP2vLoadingChange}
                 onP2vMetricsResolved={handleP2vMetricsResolved}
                 p2vOfficeName={p2vOfficeName}
+                skipP2vReveal={hasResolvedPathToVictory}
               />
             </section>
 
             {activeStep.whyWeAsk && !isP2vBlocking ? (
-              activeStep.id === 'path-to-victory' ? (
-                <WhyWeAsk title="You can do this!">
-                  Most candidates think they need to convince <em>everyone</em>.
-                  You don&apos;t. You need to find{' '}
-                  {liveCampaign?.raceTargetMetrics?.winNumber
-                    ? `${numberFormatter(
-                        liveCampaign.raceTargetMetrics.winNumber,
-                      )} people`
-                    : 'your win number'}
-                  , talk to them, and make sure they vote. We&apos;ll show you
-                  exactly what that takes.
-                </WhyWeAsk>
-              ) : (
-                <WhyWeAsk text={activeStep.whyWeAsk} />
-              )
+              <aside
+                className="md:fixed md:top-36 md:w-[280px]"
+                style={{
+                  right: 'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
+                }}
+              >
+                {activeStep.id === 'path-to-victory' ? (
+                  <WhyWeAsk title="You can do this!">
+                    Most candidates think they need to convince{' '}
+                    <em>everyone</em>. You don&apos;t. You need to find{' '}
+                    {liveCampaign?.raceTargetMetrics?.winNumber
+                      ? `${numberFormatter(
+                          liveCampaign.raceTargetMetrics.winNumber,
+                        )} people`
+                      : 'your win number'}
+                    , talk to them, and make sure they vote. We&apos;ll show you
+                    exactly what that takes.
+                  </WhyWeAsk>
+                ) : (
+                  <WhyWeAsk text={activeStep.whyWeAsk} />
+                )}
+              </aside>
             ) : null}
           </div>
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white">
+      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
           <Button
             type="button"
             variant="ghost"
             size="large"
-            icon={<ArrowLeft aria-hidden="true" />}
             onClick={goBack}
             disabled={!previousStep}
-            className="px-0 text-slate-500 disabled:opacity-50"
           >
             Back
           </Button>
@@ -1041,11 +1048,8 @@ export default function OnboardingFlow({
             type="button"
             variant="default"
             size="large"
-            icon={<ArrowRight aria-hidden="true" />}
-            iconPosition="right"
             onClick={goNext}
             disabled={!canContinue}
-            className="min-w-36"
           >
             {nextStep
               ? 'Continue'

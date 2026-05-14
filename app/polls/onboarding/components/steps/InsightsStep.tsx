@@ -57,7 +57,7 @@ export default function InsightsStep() {
         ))}
 
         <DataVisualizationInsight
-          chartType="horizontalGauge"
+          chartType="barList"
           percentage={true}
           title="Age Distribution"
           insight="This data is based on your voter file and may not be 100% accurate."
@@ -67,7 +67,7 @@ export default function InsightsStep() {
         />
 
         <DataVisualizationInsight
-          chartType="pie"
+          chartType="donut"
           percentage={true}
           title="Has Children Under 18"
           insight="This data is based on your voter file and may not be 100% accurate."
@@ -87,7 +87,7 @@ export default function InsightsStep() {
         />
 
         <DataVisualizationInsight
-          chartType="verticalBar"
+          chartType="barList"
           percentage={true}
           title="Estimated Income Range"
           insight="This data is based on your voter file and may not be 100% accurate."
@@ -97,7 +97,7 @@ export default function InsightsStep() {
         />
 
         <DataVisualizationInsight
-          chartType="horizontalBar"
+          chartType="barList"
           percentage={true}
           title="Education"
           insight="This data is based on your voter file and may not be 100% accurate."

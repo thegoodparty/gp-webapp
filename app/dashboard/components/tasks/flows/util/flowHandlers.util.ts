@@ -1,7 +1,5 @@
-import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { createP2pPhoneList, PhoneListInput } from 'helpers/createP2pPhoneList'
 import { noop, noopAsync } from '@shared/utils/noop'
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
@@ -47,11 +45,6 @@ export interface FlowState {
   phoneListId?: number | null
 }
 
-interface ScheduleOutreachParams {
-  budget?: number
-  audience?: AudienceState
-}
-
 interface CreateOutreachParams {
   type: OutreachType
   state: FlowState
@@ -93,36 +86,6 @@ type MappedAudience = Pick<
 >
 
 type MappedAudienceKey = keyof MappedAudience
-
-export const handleScheduleOutreach =
-  (
-    type: OutreachType,
-    errorSnackbar: (message: string) => void = noop,
-    successSnackbar: (message: string) => void = noop,
-    { budget, audience }: ScheduleOutreachParams = {},
-  ) =>
-  async (outreach: Outreach = { id: 0 }): Promise<void> => {
-    const outreachId = outreach?.id
-    if (!outreachId || outreachId <= 0) {
-      errorSnackbar('Cannot schedule: outreach was not created')
-      return
-    }
-    const { audience_request: audienceRequest } = audience || {}
-    const result = await scheduleVoterMessagingCampaign(
-      outreachId,
-      audienceRequest,
-    )
-    if (!result) {
-      errorSnackbar('There was an error scheduling your campaign')
-      return
-    }
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
-      medium: type,
-      price: budget,
-      voterContacts: audience!.count || 0,
-    })
-    successSnackbar('Request submitted successfully.')
-  }
 
 export const handleCreateOutreach =
   ({
@@ -198,6 +161,12 @@ export const mapAudienceForPersistence = ({
   //  to match the API once we redo that component so that we don't have to do
   //  this mapping: https://goodparty.atlassian.net/browse/WEB-4277
 
+  // If making a change, also update:
+  // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+  // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+  // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+  // gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+  // gp-webapp/app/dashboard/outreach/constants.tsx
   const mappedAudience: MappedAudience = {
     audienceSuperVoters,
     audienceLikelyVoters,

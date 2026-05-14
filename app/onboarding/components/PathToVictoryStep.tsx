@@ -2,7 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Check, Sparkles } from 'lucide-react'
-import { Card, CardContent } from '@styleguide'
+import {
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@styleguide'
 import { clientRequest } from 'gpApi/typed-request'
 import { numberFormatter } from 'helpers/numberHelper'
 import { reportErrorToSentry } from '@shared/sentry'
@@ -21,6 +30,7 @@ const CHECKLIST_ITEMS = [
   'Calculating the votes you need to win',
 ] as const
 
+const WIN_NUMBER_RANGE_PCT = 0.15
 const REVEAL_INTERVAL_MS = 700
 const RESULTS_HOLD_MS = 600
 
@@ -51,6 +61,7 @@ interface PathToVictoryStepProps {
   officeName?: string | null
   onLoadingChange?: (isLoading: boolean) => void
   onMetricsResolved?: (result: MetricsResolution) => void
+  skipReveal?: boolean
 }
 
 const formatOfficeName = (campaign: Campaign | null): string =>
@@ -85,24 +96,28 @@ const useRegisteredVoters = (campaignId: number | undefined) => {
   return registeredVoters
 }
 
-const useChecklistReveal = () => {
-  const [revealedCount, setRevealedCount] = useState(0)
-  const [showResults, setShowResults] = useState(false)
+const useChecklistReveal = (skipReveal: boolean) => {
+  const [revealedCount, setRevealedCount] = useState(
+    skipReveal ? CHECKLIST_ITEMS.length : 0,
+  )
+  const [showResults, setShowResults] = useState(skipReveal)
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount >= CHECKLIST_ITEMS.length) return
     const id = setTimeout(
       () => setRevealedCount((prev) => prev + 1),
       REVEAL_INTERVAL_MS,
     )
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   useEffect(() => {
+    if (skipReveal) return
     if (revealedCount < CHECKLIST_ITEMS.length) return
     const id = setTimeout(() => setShowResults(true), RESULTS_HOLD_MS)
     return () => clearTimeout(id)
-  }, [revealedCount])
+  }, [revealedCount, skipReveal])
 
   return { revealedCount, showResults }
 }
@@ -169,18 +184,20 @@ const ChecklistItem = ({
   isChecked,
 }: ChecklistItemProps): React.JSX.Element => (
   <li
-    className={`flex items-center gap-3 rounded-lg border bg-white px-4 py-3 transition-opacity ${
-      isChecked ? 'border-slate-200 opacity-100' : 'border-slate-100 opacity-60'
+    className={`flex items-center gap-3 rounded-lg border bg-base-surface px-4 py-3 transition-opacity ${
+      isChecked
+        ? 'border-base-border opacity-100'
+        : 'border-base-border opacity-60'
     }`}
   >
     <span
       className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
-        isChecked ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-300'
+        isChecked ? 'bg-blue-600 text-white' : 'bg-muted text-muted-foreground'
       }`}
     >
       <Check className="size-4" aria-hidden="true" />
     </span>
-    <span className="text-sm leading-6 text-slate-700">{text}</span>
+    <span className="text-sm leading-6 text-foreground">{text}</span>
   </li>
 )
 
@@ -195,16 +212,16 @@ const BuildingPathToVictory = ({
 }: BuildingPathToVictoryProps): React.JSX.Element => (
   <Card className="mx-auto max-w-2xl rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
     <CardContent className="space-y-6 p-8 text-center">
-      <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+      <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-blue-100 text-components-input-active">
         <Sparkles className="size-5" aria-hidden="true" />
       </span>
       <div className="space-y-2">
-        <h2 className="text-2xl leading-8 font-bold text-slate-950">
+        <h2 className="text-2xl leading-8 font-bold text-foreground">
           Building your path to victory
         </h2>
-        <p className="text-sm leading-6 text-slate-500">
+        <p className="text-sm leading-6 text-muted-foreground">
           Crunching real voter data for{' '}
-          <span className="font-semibold text-slate-950">{officeName}</span>
+          <span className="font-semibold text-foreground">{officeName}</span>
         </p>
       </div>
       <ul className="space-y-3 text-left">
@@ -221,8 +238,8 @@ const BuildingPathToVictory = ({
 )
 
 const MetricsUnavailable = (): React.JSX.Element => (
-  <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center">
-    <p className="text-sm leading-6 text-slate-700">
+  <div className="rounded-lg border border-base-border bg-muted p-6 text-center">
+    <p className="text-sm leading-6 text-foreground">
       We couldn&apos;t calculate vote projections for your district yet.
       We&apos;ll keep working on it in the background.
     </p>
@@ -237,28 +254,40 @@ interface WinNumberHeroCardProps {
 const WinNumberHeroCard = ({
   winNumber,
   officeName,
-}: WinNumberHeroCardProps): React.JSX.Element => (
-  <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
-    <CardContent className="space-y-2 p-8 text-center">
-      <p className="text-6xl leading-none font-bold text-slate-950 sm:text-7xl">
-        {numberFormatter(winNumber)}
-      </p>
-      <p className="text-xs font-semibold tracking-widest text-blue-600 uppercase">
-        Votes needed to win
-      </p>
-      <p className="text-base font-semibold text-slate-950">{officeName}</p>
-      <p className="pt-2 text-xs text-slate-500">
-        *Depending on the election&apos;s turnout
-      </p>
-    </CardContent>
-  </Card>
-)
+}: WinNumberHeroCardProps): React.JSX.Element => {
+  const lowEstimate = Math.max(
+    0,
+    Math.round(winNumber * (1 - WIN_NUMBER_RANGE_PCT)),
+  )
+  const highEstimate = Math.round(winNumber * (1 + WIN_NUMBER_RANGE_PCT))
+
+  return (
+    <Card className="overflow-hidden rounded-2xl border-blue-100 bg-linear-to-b from-blue-50 to-white shadow-none">
+      <CardContent className="space-y-2 p-8 text-center">
+        <p className="text-6xl leading-none font-bold text-foreground sm:text-7xl">
+          {numberFormatter(winNumber)}
+        </p>
+        <p className="text-xs font-semibold tracking-widest text-components-input-active uppercase">
+          Projected votes needed to win
+        </p>
+        <p className="text-base font-semibold text-foreground">{officeName}</p>
+        <p className="pt-2 text-xs text-muted-foreground">
+          Projected range:{' '}
+          <span className="font-semibold text-foreground">
+            {numberFormatter(lowEstimate)}–{numberFormatter(highEstimate)}
+          </span>{' '}
+          (~95% confidence)
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
 
 interface ProjectionStepProps {
   index: number
   title: string
   description: string
-  value: number
+  value: string
 }
 
 const ProjectionStep = ({
@@ -267,17 +296,15 @@ const ProjectionStep = ({
   description,
   value,
 }: ProjectionStepProps): React.JSX.Element => (
-  <li className="flex items-start gap-4 rounded-xl border border-slate-200 p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-500">
+  <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
       {index}
     </span>
     <div className="flex-1">
-      <p className="text-sm font-semibold text-slate-950">{title}</p>
-      <p className="text-xs text-slate-500">{description}</p>
+      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
     </div>
-    <span className="text-base font-bold text-slate-950">
-      {numberFormatter(value)}
-    </span>
+    <span className="text-base font-bold text-foreground">{value}</span>
   </li>
 )
 
@@ -297,29 +324,72 @@ const ProjectionExplanation = ({
 
   return (
     <div>
-      <p className="mb-3 text-sm font-medium text-slate-500">
-        Here&apos;s how our projections work:
-      </p>
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">
+          Here&apos;s how our projections work:
+        </p>
+        <Dialog>
+          <DialogTrigger className="cursor-pointer text-sm text-muted-foreground underline-offset-4 hover:underline">
+            Methodology
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Methodology</DialogTitle>
+            </DialogHeader>
+            <DialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  Our turnout projections are built on a national voter file
+                  covering more than 240 million voters and over 130,000
+                  elections each year.
+                </p>
+                <p>
+                  We analyze voter eligibility, historical voting behavior and
+                  election patterns to estimate the likelihood that each voter
+                  in your district will turn out in your race. Combining the
+                  voter-level predictions, we generate an accurate turnout
+                  projection and win number target tailored specifically to your
+                  election.
+                </p>
+                <p>
+                  In 2025, the model&rsquo;s predictions were calibrated within
+                  approximately 1.5 percentage points of actual voter turnout
+                  behavior on average. For more information, see{' '}
+                  <a
+                    href="https://goodparty.org/blog/article/calculate-win-numbers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-components-input-active hover:underline"
+                  >
+                    our blog post
+                  </a>
+                  {'.'}
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
+      </div>
       <ol className="space-y-3">
         {showRegisteredVoters ? (
           <ProjectionStep
             index={stepIndex++}
             title="Registered voters in your district"
             description="The total pool of voters eligible to cast a ballot in your race."
-            value={registeredVoters}
+            value={numberFormatter(registeredVoters)}
           />
         ) : null}
         <ProjectionStep
           index={stepIndex++}
-          title="Average voter turnout"
-          description="Based on our projections from the last three election cycles."
-          value={projectedTurnout}
+          title="Projected voter turnout"
+          description="The number of voters we expect to cast a ballot based on similar past elections."
+          value={numberFormatter(projectedTurnout)}
         />
         <ProjectionStep
           index={stepIndex++}
-          title="50% + 1 — Votes needed to win"
-          description="A simple majority of who actually votes."
-          value={winNumber}
+          title="Projected votes needed to win"
+          description="A simple majority of voters (50% + 1) who actually cast a ballot."
+          value={numberFormatter(winNumber)}
         />
       </ol>
     </div>
@@ -331,9 +401,10 @@ export const PathToVictoryStep = ({
   officeName: officeNameProp,
   onLoadingChange,
   onMetricsResolved,
+  skipReveal = false,
 }: PathToVictoryStepProps): React.JSX.Element => {
   const registeredVoters = useRegisteredVoters(campaign?.id)
-  const { revealedCount, showResults } = useChecklistReveal()
+  const { revealedCount, showResults } = useChecklistReveal(skipReveal)
 
   const officeName = officeNameProp || formatOfficeName(campaign)
   const metrics = campaign?.raceTargetMetrics ?? null

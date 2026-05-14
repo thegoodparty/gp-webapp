@@ -1,13 +1,14 @@
 'use client'
 import { useEffect, useMemo } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
-import { LuUsersRound } from 'react-icons/lu'
+import { UsersRound } from 'lucide-react'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 import { NumberInsight } from 'app/polls/onboarding/components/NumberInsight'
 import { DataVisualizationInsight } from 'app/polls/onboarding/components/DataVisualizationInsight'
 import { mapContactsStatsToCharts } from 'app/polls/onboarding/utils/mapContactsStatsToCharts'
 import { LocalNewsSourcesSection } from './LocalNewsSourcesSection'
+import { TopVoterIssuesSection } from './TopVoterIssuesSection'
 
 const onboardingDistrictStatsQueryOptions = (params: {
   ballotReadyPositionId?: string
@@ -72,14 +73,21 @@ export const VoterDemographicsStep = ({
 
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
+      <TopVoterIssuesSection
+        ballotReadyPositionId={ballotReadyPositionId}
+        city={city}
+        state={state}
+        office={office}
+      />
+
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-slate-950">
+        <h2 className="text-2xl font-semibold text-foreground">
           Voter Demographics
         </h2>
         {locationLabel ? (
-          <p className="text-sm leading-6 text-slate-500">
+          <p className="text-sm leading-6 text-muted-foreground">
             A snapshot of who lives, votes, and pays attention in{' '}
-            <span className="font-semibold text-slate-950">
+            <span className="font-semibold text-foreground">
               {locationLabel}
             </span>
             .
@@ -90,27 +98,27 @@ export const VoterDemographicsStep = ({
       <NumberInsight
         title="Total Voters"
         value={chartData.totalConstituents || 0}
-        icon={<LuUsersRound />}
+        icon={<UsersRound />}
         isLoading={isLoading}
         error={error}
         testID="onboarding-total-voters"
       />
 
       <DataVisualizationInsight
-        chartType="horizontalGauge"
+        chartType="barList"
         percentage={true}
         title="Age Distribution"
-        description="Use this to pick the right outreach mix — younger voters lean into SMS and social, older voters respond best to mail and door-knocks."
+        description="We'll help you tailor your outreach mix to each age group — leaning into SMS and social for younger voters, and prioritizing mail and door-knocks for older ones."
         data={chartData.ageDistribution}
         isLoading={isLoading}
         error={error}
       />
 
       <DataVisualizationInsight
-        chartType="pie"
+        chartType="donut"
         percentage={true}
         title="Has Children Under 18"
-        description="Households with kids prioritize schools, safety, and after-school programs — message and canvas these blocks accordingly."
+        description="We'll help you reach households with kids using messaging that resonates with them — schools, safety, and after-school programs."
         data={chartData.presenceOfChildren}
         isLoading={isLoading}
         error={error}
@@ -120,27 +128,27 @@ export const VoterDemographicsStep = ({
         chartType="donut"
         percentage={true}
         title="Homeowner"
-        description="Homeowners care about property taxes, zoning, and services — focus door-knocking and direct mail here when those issues are central to your platform."
+        description="We'll help you focus your door-knocking and direct mail on homeowners when property taxes, zoning, and services are central to your platform."
         data={chartData.homeowner}
         isLoading={isLoading}
         error={error}
       />
 
       <DataVisualizationInsight
-        chartType="verticalBar"
+        chartType="barList"
         percentage={true}
         title="Estimated Income Range"
-        description="Knowing the income mix helps you frame economic messaging in your SMS, email, and canvassing scripts so it lands with each segment."
+        description="We'll help you frame your economic messaging across SMS, email, and canvassing scripts so it lands with each income segment."
         data={chartData.estimatedIncomeRange}
         isLoading={isLoading}
         error={error}
       />
 
       <DataVisualizationInsight
-        chartType="horizontalBar"
+        chartType="barList"
         percentage={true}
         title="Education"
-        description="Education levels shape how voters consume info — tune the depth and channel of your outreach (SMS, email, literature drops) to match."
+        description="We'll help you tune the depth and channel of your outreach (SMS, email, literature drops) to match how each education segment consumes information."
         data={chartData.education}
         isLoading={isLoading}
         error={error}

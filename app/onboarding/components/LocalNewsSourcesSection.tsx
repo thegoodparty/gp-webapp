@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
-import { LuNewspaper, LuTv, LuRadioTower } from 'react-icons/lu'
+import { Newspaper, RadioTower, Tv } from 'lucide-react'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
@@ -50,18 +50,18 @@ export { localNewsQueryOptions }
 
 const typeIcon: Record<OutletType, React.JSX.Element> = {
   [OUTLET_TYPE.PRINT]: (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-      <LuNewspaper className="size-5" />
+    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-components-input-active">
+      <Newspaper className="size-5" />
     </span>
   ),
   [OUTLET_TYPE.TV]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
-      <LuTv className="size-5" />
+      <Tv className="size-5" />
     </span>
   ),
   [OUTLET_TYPE.RADIO]: (
     <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-      <LuRadioTower className="size-5" />
+      <RadioTower className="size-5" />
     </span>
   ),
 }
@@ -97,12 +97,12 @@ const LocalNewsHeader = ({
   jurisdiction,
 }: LocalNewsHeaderProps): React.JSX.Element => (
   <div className="space-y-2">
-    <h2 className="text-2xl font-semibold text-slate-950">
+    <h2 className="text-2xl font-semibold text-foreground">
       Local News Sources
     </h2>
-    <p className="text-sm leading-6 text-slate-500">
+    <p className="text-sm leading-6 text-muted-foreground">
       These are the local news sources we&apos;re monitoring for{' '}
-      <span className="font-semibold text-slate-950">{jurisdiction}</span> for
+      <span className="font-semibold text-foreground">{jurisdiction}</span> for
       campaign insights. You will be able to add / change and customize these
       later in your campaign plan.
     </p>
@@ -112,7 +112,7 @@ const LocalNewsHeader = ({
 const LocalNewsSkeleton = (): React.JSX.Element => (
   <div className="space-y-3">
     {Array.from({ length: SKELETON_PLACEHOLDER_COUNT }).map((_, index) => (
-      <div key={index} className="h-20 animate-pulse rounded-lg bg-slate-100" />
+      <div key={index} className="h-20 animate-pulse rounded-lg bg-muted" />
     ))}
   </div>
 )
@@ -129,23 +129,18 @@ const OutletRow = ({
   <div
     className={
       withDivider
-        ? 'flex items-start gap-4 border-t border-slate-100 pt-4'
+        ? 'flex items-start gap-4 border-t border-base-border pt-4'
         : 'flex items-start gap-4'
     }
   >
     {typeIcon[outlet.type]}
     <div className="min-w-0 flex-1">
-      <h3 className="text-base font-semibold text-slate-950">{outlet.name}</h3>
-      <p className="mt-1 text-sm leading-6 text-slate-500">
+      <h3 className="text-base font-semibold text-foreground">{outlet.name}</h3>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">
         {outlet.description}
       </p>
     </div>
-    <Badge
-      variant="default"
-      className="rounded-full bg-slate-950 px-4 py-1.5 text-xs font-semibold text-white hover:bg-slate-950"
-    >
-      {typeLabel[outlet.type]}
-    </Badge>
+    <Badge variant="soft">{typeLabel[outlet.type]}</Badge>
   </div>
 )
 
@@ -196,7 +191,7 @@ const OutletGroupCard = ({
   const additionalCount = group.outlets.length - COLLAPSED_OUTLETS_VISIBLE
 
   return (
-    <Card className="rounded-xl border-slate-200 shadow-none">
+    <Card className="rounded-xl border-base-border shadow-none">
       <CardContent className="flex flex-col gap-4 px-4 py-3">
         {visibleOutlets.map((outlet, index) => (
           <OutletRow
@@ -284,14 +279,14 @@ export const LocalNewsSourcesSection = ({
     if (query.isPending) return <LocalNewsSkeleton />
     if (query.error) {
       return (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           We couldn&apos;t load local news sources right now.
         </p>
       )
     }
     if (outlets.length === 0) {
       return (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           No local news sources found for this area yet.
         </p>
       )

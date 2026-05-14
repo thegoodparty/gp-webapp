@@ -23,9 +23,9 @@ const PLEDGE_ITEMS = [
 ] as const
 
 export const PledgeStep = (): React.JSX.Element => (
-  <Card className="rounded-2xl border-slate-200 shadow-none">
+  <Card className="rounded-2xl border-base-border shadow-none">
     <CardContent className="space-y-6 px-6 py-4 sm:px-8 sm:py-5">
-      <p className="text-xl font-bold leading-[1.08] text-slate-950">
+      <p className="text-xl font-bold leading-[1.08] text-foreground">
         I pledge to be...
       </p>
 
@@ -34,17 +34,17 @@ export const PledgeStep = (): React.JSX.Element => (
           <li key={title} className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <Icon
-                className="size-7 shrink-0 text-slate-700"
+                className="size-7 shrink-0 text-foreground"
                 aria-hidden="true"
               />
-              <h3 className="text-xl font-semibold text-slate-950">{title}</h3>
+              <h3 className="text-xl font-semibold text-foreground">{title}</h3>
             </div>
-            <p className="text-sm leading-6 text-slate-700">{body}</p>
+            <p className="text-sm text-muted-foreground">{body}</p>
           </li>
         ))}
       </ul>
 
-      <p className="border-t border-slate-200 pt-4 text-xs leading-5 text-slate-400">
+      <p className="border-t border-base-border pt-4 text-xs text-muted-foreground">
         By continuing, you agree to run a civil campaign focused on issues, not
         mudslinging or ad hominem attacks; also accepting GoodParty.org&apos;s{' '}
         <a

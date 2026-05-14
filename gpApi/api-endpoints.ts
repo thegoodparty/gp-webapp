@@ -1,3 +1,4 @@
+import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
 import type {
   Briefing,
   BriefingListItem,
@@ -101,6 +102,17 @@ export type APIEndpoints = {
         name: string
         type: 'TV' | 'print' | 'radio'
         description: string
+      }>
+    }
+  }
+
+  'GET /v1/onboarding/voter-issues': {
+    Request: {}
+    Response: {
+      issues: Array<{
+        label: string
+        score: number
+        priority: 'high' | 'medium' | 'low'
       }>
     }
   }
@@ -210,6 +222,15 @@ export type APIEndpoints = {
   'POST /v1/speech/transcribe/session': {
     Request: TranscribeSessionRequest
     Response: TranscribeSessionResponse
+  }
+
+  'GET /v1/elections/race-by-position': {
+    Request: {
+      brPositionId: string
+      zip: string
+      electionDate: string
+    }
+    Response: Race
   }
 }
 
