@@ -1,5 +1,5 @@
 'use client'
-import { LuMic, LuMicOff } from 'react-icons/lu'
+import { Mic, MicOff } from 'lucide-react'
 import { useDictation } from './useDictation'
 
 const FEATURE_FLAG_ENABLED =
