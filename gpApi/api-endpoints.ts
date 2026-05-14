@@ -194,6 +194,20 @@ export type APIEndpoints = {
     Response: GetIndividualActivitiesResponse
   }
 
+  // Legacy briefings endpoints kept until the team confirms gp-api has
+  // decommissioned them. The old briefing-types.ts file is deleted; these
+  // are typed as `unknown` so the entries remain registered without
+  // resurrecting dead types. Remove once confirmed unused server-side.
+  'GET /v1/meetings/briefings': {
+    Request: {}
+    Response: unknown[]
+  }
+
+  'GET /v1/meetings/briefings/:date': {
+    Request: {}
+    Response: unknown
+  }
+
   'GET /v1/elections/race-by-position': {
     Request: {
       brPositionId: string

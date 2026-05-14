@@ -1,6 +1,7 @@
 'use client'
 
 import { Sparkles, MessageSquare, Bug, X } from 'lucide-react'
+import { Button, IconButton } from '@styleguide'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 
 type Props = {
@@ -56,40 +57,38 @@ export default function HighlightToolbar({
       // Don't let mousedown on the toolbar collapse the selection.
       onMouseDown={(e) => e.preventDefault()}
     >
-      <button
+      <Button
         type="button"
+        size="small"
         onClick={() => {
           // TODO (phase 7): open Ask AI sheet with the anchor's quote preloaded.
         }}
-        className="inline-flex h-8 items-center gap-1.5 rounded-full bg-primary px-3 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         <Sparkles className="size-3.5" aria-hidden />
         Ask AI
-      </button>
-      <button
-        type="button"
-        onClick={onAddNote}
-        className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-xs font-semibold text-foreground transition-colors hover:bg-muted/60"
-      >
+      </Button>
+      <Button type="button" size="small" variant="outline" onClick={onAddNote}>
         <MessageSquare className="size-3.5" aria-hidden />
         Add Note
-      </button>
-      <button
+      </Button>
+      <IconButton
         type="button"
+        size="small"
+        variant="ghost"
         aria-label="Report or correct an error"
         onClick={onReportError}
-        className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/60"
       >
         <Bug className="size-4" aria-hidden />
-      </button>
-      <button
+      </IconButton>
+      <IconButton
         type="button"
+        size="small"
+        variant="ghost"
         aria-label="Dismiss"
         onClick={dismiss}
-        className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/60"
       >
         <X className="size-4" aria-hidden />
-      </button>
+      </IconButton>
     </div>
   )
 }

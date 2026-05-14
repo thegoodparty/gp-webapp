@@ -4,7 +4,14 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { List, ChevronUp, Download, Sparkles } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@styleguide'
+import {
+  Button,
+  IconButton,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@styleguide'
 import {
   briefingItemHref,
   briefingOverviewHref,
@@ -45,10 +52,11 @@ export default function MobileBottomBar({
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex items-end justify-between gap-2 px-4 pb-4 lg:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={() => setOpen(true)}
-          className="pointer-events-auto inline-flex max-w-[70%] items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-left text-sm font-medium text-foreground shadow-md hover:bg-muted/60"
+          className="pointer-events-auto max-w-[70%] shadow-md"
         >
           <List className="size-4 shrink-0 text-primary" aria-hidden />
           <span className="truncate">{currentLabel}</span>
@@ -56,7 +64,7 @@ export default function MobileBottomBar({
             className="size-4 shrink-0 text-muted-foreground"
             aria-hidden
           />
-        </button>
+        </Button>
         <SheetContent
           side="bottom"
           className="max-h-[70vh] rounded-t-2xl px-4 pb-6 pt-4"
@@ -102,26 +110,29 @@ export default function MobileBottomBar({
       </Sheet>
 
       <div className="pointer-events-auto flex flex-col gap-2">
-        <button
+        <IconButton
           type="button"
+          size="large"
+          variant="outline"
           aria-label="Download PDF"
           onClick={() => {
             // TODO: trigger PDF download via Swain's briefing API.
           }}
-          className="inline-flex size-12 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-md hover:bg-muted/60"
+          className="shadow-md"
         >
           <Download className="size-5" aria-hidden />
-        </button>
-        <button
+        </IconButton>
+        <IconButton
           type="button"
+          size="large"
           aria-label="Open briefing assistant"
           onClick={() => {
             // TODO (phase 7): open Ask AI sheet.
           }}
-          className="inline-flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+          className="shadow-md"
         >
           <Sparkles className="size-5" aria-hidden />
-        </button>
+        </IconButton>
       </div>
     </div>
   )

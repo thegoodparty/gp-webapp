@@ -13,34 +13,13 @@
 
 import type { ChatClient } from './chat-client'
 import type { ChatConversation, ChatMessage } from './types'
+import { newId, nowIso, safeStorage } from './storage-utils'
 
 const CONV_KEY = 'gp.briefings.chat.conversations'
 const MSG_PREFIX = 'gp.briefings.chat.messages.'
 const DEV_USER_ID = 1
 const CANNED_REPLY =
   "Here's what I can tell from the briefing context. Wire this to the real assistant once Collin's chat API is available."
-
-function safeStorage(): Storage | null {
-  if (typeof window === 'undefined') return null
-  try {
-    return window.localStorage
-  } catch {
-    return null
-  }
-}
-
-function newId(prefix: string) {
-  return (
-    prefix +
-    '_' +
-    Math.random().toString(36).slice(2, 10) +
-    Date.now().toString(36).slice(-4)
-  )
-}
-
-function nowIso() {
-  return new Date().toISOString()
-}
 
 function readConvs(): ChatConversation[] {
   const s = safeStorage()

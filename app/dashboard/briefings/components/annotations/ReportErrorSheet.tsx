@@ -1,7 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@styleguide'
+import {
+  Button,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  Textarea,
+} from '@styleguide'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { SheetState } from './AnnotationsScope'
 
@@ -101,13 +108,13 @@ export default function ReportErrorSheet({
             </blockquote>
           ) : null}
 
-          <textarea
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             disabled={isView}
             placeholder="Describe the error or suggested correction…"
             rows={6}
-            className="min-h-[160px] w-full resize-none rounded-2xl border border-input bg-background px-3 py-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-default disabled:opacity-90"
+            className="min-h-[160px] resize-none rounded-2xl disabled:cursor-default disabled:opacity-90"
           />
 
           {isView ? (
@@ -125,23 +132,24 @@ export default function ReportErrorSheet({
 
         <div className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0">
           {isView ? (
-            <button
+            <Button
               type="button"
+              variant="link"
               disabled={saving}
               onClick={handleDelete}
-              className="inline-flex h-10 w-full items-center justify-center rounded-full px-4 text-sm font-medium text-destructive hover:underline disabled:pointer-events-none disabled:opacity-50"
+              className="text-destructive"
             >
               Delete report
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="button"
               disabled={!canSubmit}
               onClick={handleSubmit}
-              className="inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+              className="w-full"
             >
               {saving ? 'Submitting…' : 'Submit'}
-            </button>
+            </Button>
           )}
         </div>
       </SheetContent>

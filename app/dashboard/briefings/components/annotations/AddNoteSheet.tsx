@@ -1,7 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@styleguide'
+import {
+  Button,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  Textarea,
+} from '@styleguide'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { SheetState } from './AnnotationsScope'
 
@@ -117,33 +124,34 @@ export default function AddNoteSheet({
             </p>
           ) : null}
 
-          <textarea
+          <Textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder="Write your note…"
             rows={6}
-            className="min-h-[160px] w-full resize-none rounded-2xl border border-input bg-background px-3 py-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="min-h-[160px] resize-none rounded-2xl"
           />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0">
-          <button
+          <Button
             type="button"
             disabled={!canSave}
             onClick={handleSave}
-            className="inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+            className="w-full"
           >
             {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Save note'}
-          </button>
+          </Button>
           {isEdit ? (
-            <button
+            <Button
               type="button"
+              variant="link"
               disabled={saving}
               onClick={handleDelete}
-              className="inline-flex h-10 w-full items-center justify-center rounded-full px-4 text-sm font-medium text-destructive hover:underline disabled:pointer-events-none disabled:opacity-50"
+              className="text-destructive"
             >
               Delete note
-            </button>
+            </Button>
           ) : null}
         </div>
       </SheetContent>

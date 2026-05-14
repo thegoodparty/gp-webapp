@@ -2,8 +2,8 @@
  * localStorage-backed AnnotationsClient for development.
  *
  * Persists annotations across reloads so the highlight layer can demo
- * end-to-end without the gp-api server. Swap for the real client in
- * app/shared/briefings/annotations-api.ts (to be added) once endpoints ship.
+ * end-to-end without the gp-api server. The real implementation lives in
+ * annotations-api.ts; swap the import in use-annotations.ts to pick.
  *
  * Storage layout under one key per briefing:
  *   gp.briefings.annotations.<briefingId> -> Annotation[]
@@ -21,21 +21,13 @@ import type {
 } from './types'
 import type { AnnotationsClient } from './annotations-client'
 import { chatStub } from './chat-stub'
+import { newId, nowIso, safeStorage } from './storage-utils'
 
 const STORAGE_PREFIX = 'gp.briefings.annotations.'
 const DEV_USER_ID = 1
 
 function storageKey(briefingId: string) {
   return STORAGE_PREFIX + briefingId
-}
-
-function safeStorage(): Storage | null {
-  if (typeof window === 'undefined') return null
-  try {
-    return window.localStorage
-  } catch {
-    return null
-  }
 }
 
 function readAll(briefingId: string): Annotation[] {
@@ -58,22 +50,14 @@ function writeAll(briefingId: string, items: Annotation[]) {
   s.setItem(storageKey(briefingId), JSON.stringify(items))
 }
 
-function newId(prefix: string) {
-  return (
-    prefix +
-    '_' +
-    Math.random().toString(36).slice(2, 10) +
-    Date.now().toString(36).slice(-4)
-  )
-}
-
-function nowIso() {
-  return new Date().toISOString()
-}
-
-function findOwning(
-  annotationId: string,
-): { briefingId: string; index: number; annotation: Annotation } | null {
+/**
+ * Locate the briefing that owns an annotation by id.
+ *
+ * Returns only the owning briefing id; callers re-read the annotation
+ * list at apply time so an intermediate mutation does not invalidate a
+ * cached array index.
+ */
+function findOwningBriefingId(annotationId: string): string | null {
   const s = safeStorage()
   if (!s) return null
   for (let i = 0; i < s.length; i++) {
@@ -81,11 +65,8 @@ function findOwning(
     if (!key || !key.startsWith(STORAGE_PREFIX)) continue
     const briefingId = key.slice(STORAGE_PREFIX.length)
     const items = readAll(briefingId)
-    const idx = items.findIndex((a) => a.id === annotationId)
-    if (idx >= 0) {
-      const annotation = items[idx]
-      if (!annotation) continue
-      return { briefingId, index: idx, annotation }
+    if (items.some((a) => a.id === annotationId)) {
+      return briefingId
     }
   }
   return null
@@ -168,12 +149,15 @@ export const annotationsStub: AnnotationsClient = {
   },
 
   async updateNote(annotationId, body) {
-    const owning = findOwning(annotationId)
-    if (!owning) {
-      throw new Error('annotation_not_found')
-    }
-    const { briefingId, index, annotation } = owning
-    if (annotation.kind !== 'note' || !annotation.note) {
+    const briefingId = findOwningBriefingId(annotationId)
+    if (!briefingId) throw new Error('annotation_not_found')
+    // Re-read the array right before mutating so a concurrent mutation
+    // cannot invalidate a cached index.
+    const items = readAll(briefingId)
+    const idx = items.findIndex((a) => a.id === annotationId)
+    if (idx < 0) throw new Error('annotation_not_found')
+    const annotation = items[idx]
+    if (!annotation || annotation.kind !== 'note' || !annotation.note) {
       throw new Error('annotation_not_a_note')
     }
     const updated: Annotation = {
@@ -181,21 +165,22 @@ export const annotationsStub: AnnotationsClient = {
       updatedAt: nowIso(),
       note: { ...annotation.note, body, updatedAt: nowIso() },
     }
-    const items = readAll(briefingId)
-    items[index] = updated
+    items[idx] = updated
     writeAll(briefingId, items)
     return updated
   },
 
   async delete(annotationId) {
-    const owning = findOwning(annotationId)
-    if (!owning) return
-    const { briefingId, index, annotation } = owning
-    if (annotation.kind === 'chat' && annotation.chat) {
+    const briefingId = findOwningBriefingId(annotationId)
+    if (!briefingId) return
+    const items = readAll(briefingId)
+    const idx = items.findIndex((a) => a.id === annotationId)
+    if (idx < 0) return
+    const annotation = items[idx]
+    if (annotation?.kind === 'chat' && annotation.chat) {
       await chatStub.softDelete(annotation.chat.id)
     }
-    const items = readAll(briefingId)
-    items.splice(index, 1)
+    items.splice(idx, 1)
     writeAll(briefingId, items)
   },
 }

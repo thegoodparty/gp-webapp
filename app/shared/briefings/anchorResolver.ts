@@ -80,10 +80,9 @@ export function resolveSelection(
  * Locate the text-bearing element for a given jsonPath in the current DOM.
  */
 export function findAnchorEl(jsonPath: string): HTMLElement | null {
-  const escaped =
-    typeof CSS !== 'undefined' && 'escape' in CSS
-      ? CSS.escape(jsonPath)
-      : jsonPath.replace(/"/g, '\\"')
+  // CSS.escape has been baseline since 2020 (Chrome 46+, Safari 10.1+,
+  // Firefox 31+). No fallback needed.
+  const escaped = CSS.escape(jsonPath)
   return document.querySelector(
     `[${ANCHOR_ATTR}="${escaped}"]`,
   ) as HTMLElement | null

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { getBriefingBySlug } from '@shared/briefings/server'
 import { briefingsLandingHref } from '@shared/briefings/routes'
+import serveAccess from '../../shared/serveAccess'
 import DetailHeader from '../components/detail/DetailHeader'
 import DetailToc from '../components/detail/DetailToc'
 import MobileBottomBar from '../components/detail/MobileBottomBar'
@@ -26,6 +27,7 @@ export default async function BriefingChromeLayout({
   params,
   children,
 }: Props): Promise<React.JSX.Element> {
+  await serveAccess()
   const { slug } = await params
   const briefing = await getBriefingBySlug(slug)
   if (!briefing) notFound()

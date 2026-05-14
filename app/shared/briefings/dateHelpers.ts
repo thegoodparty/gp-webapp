@@ -45,12 +45,10 @@ export function countdownLabel(
 export function formatDayTime(targetIso: string): string {
   const d = new Date(targetIso)
   const day = d.toLocaleDateString('en-US', { weekday: 'short' })
-  const time = d
-    .toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-    })
-    .replace(' ', ' ')
+  const time = d.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
   return `${day} ${time}`
 }
 
