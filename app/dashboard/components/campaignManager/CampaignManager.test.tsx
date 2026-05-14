@@ -10,6 +10,8 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 const mockUseCampaign = vi.fn()
 const mockClientFetch = vi.fn()
 const mockUseTaskGenerationStream = vi.fn()
+const mockUsePostElectionState = vi.fn()
+const mockStartGeneration = vi.fn()
 
 vi.mock('app/dashboard/shared/DashboardLayout', () => ({
   default: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -47,6 +49,22 @@ vi.mock('../voterGoalsHelpers', () => ({
 
 vi.mock('@shared/hooks/useCampaign', () => ({
   useCampaign: () => mockUseCampaign(),
+}))
+
+vi.mock('@shared/hooks/usePositionName', () => ({
+  usePositionName: () => 'Mayor',
+}))
+
+vi.mock('../usePostElectionState', () => ({
+  usePostElectionState: () => mockUsePostElectionState(),
+}))
+
+vi.mock('../ElectionOver', () => ({
+  default: () => <div>Election over</div>,
+}))
+
+vi.mock('../PrimaryResultModal', () => ({
+  default: () => null,
 }))
 
 vi.mock('gpApi/clientFetch', () => ({
@@ -105,8 +123,16 @@ beforeEach(() => {
     isGenerating: true,
     progress: { message: 'Generating tasks', progress: 50 },
     error: null,
-    startGeneration: vi.fn(),
+    startGeneration: mockStartGeneration,
     cancelGeneration: vi.fn(),
+  })
+  mockUsePostElectionState.mockReturnValue({
+    electionInPast: false,
+    primaryLost: false,
+    primaryResultModalOpen: false,
+    primaryElectionDate: undefined,
+    electionDate: '2026-11-03',
+    closePrimaryResultModal: vi.fn(),
   })
 })
 
@@ -155,5 +181,70 @@ describe('CampaignManager generation tracking', () => {
     expect(mockTrackEvent).not.toHaveBeenCalledWith(
       EVENTS.Dashboard.CampaignPlan.GenerationCompleted,
     )
+  })
+})
+
+describe('CampaignManager election-over branch', () => {
+  it('renders ElectionOver and hides header/progress/tasks when the election is in the past', () => {
+    mockUsePostElectionState.mockReturnValue({
+      electionInPast: true,
+      primaryLost: false,
+      primaryResultModalOpen: false,
+      primaryElectionDate: undefined,
+      electionDate: '2026-01-01',
+      closePrimaryResultModal: vi.fn(),
+    })
+    mockUseTaskGenerationStream.mockReturnValue({
+      isGenerating: false,
+      progress: null,
+      error: null,
+      startGeneration: mockStartGeneration,
+      cancelGeneration: vi.fn(),
+    })
+    mockClientFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      data: [],
+    })
+
+    render(<CampaignManager pathname="/dashboard" tcrCompliance={null} />)
+
+    expect(screen.getByText('Election over')).toBeInTheDocument()
+    expect(screen.queryByText('Header')).not.toBeInTheDocument()
+    expect(screen.queryByText('Progress')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tasks list')).not.toBeInTheDocument()
+  })
+
+  it('does not call startGeneration when the election is over even if there are no tasks', async () => {
+    mockUsePostElectionState.mockReturnValue({
+      electionInPast: true,
+      primaryLost: false,
+      primaryResultModalOpen: false,
+      primaryElectionDate: undefined,
+      electionDate: '2026-01-01',
+      closePrimaryResultModal: vi.fn(),
+    })
+    mockUseTaskGenerationStream.mockReturnValue({
+      isGenerating: false,
+      progress: null,
+      error: null,
+      startGeneration: mockStartGeneration,
+      cancelGeneration: vi.fn(),
+    })
+    mockClientFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      data: [],
+    })
+
+    render(<CampaignManager pathname="/dashboard" tcrCompliance={null} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Election over')).toBeInTheDocument()
+    })
+
+    expect(mockStartGeneration).not.toHaveBeenCalled()
   })
 })

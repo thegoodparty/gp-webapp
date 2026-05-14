@@ -18,7 +18,7 @@ export const setupElectedOfficeUser = async (
 ): Promise<SetupResult> => {
   const race = raceOptions ?? {
     zip: '82001',
-    office: 'Cheyenne City Council - Ward 2',
+    office: 'Cheyenne City Council - Ward 1',
   }
 
   const { user, client } = await authenticateTestUser(page, {
