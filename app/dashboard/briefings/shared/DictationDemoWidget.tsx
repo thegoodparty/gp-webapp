@@ -66,7 +66,7 @@ export default function DictationDemoWidget({
         </button>
       </div>
       {dictation.warningSecondsRemaining !== null ? (
-        <p className="text-xs text-amber-600 mb-2">
+        <p className="text-xs text-warning-600 mb-2">
           Recording will stop in {dictation.warningSecondsRemaining} seconds.
         </p>
       ) : null}
