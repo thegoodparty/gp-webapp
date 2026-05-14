@@ -147,7 +147,10 @@ class MockAudioContext {
     MockAudioContext.instances.push(this)
   }
 
-  createMediaStreamSource(_stream: unknown): { connect: () => void; disconnect: () => void } {
+  createMediaStreamSource(_stream: unknown): {
+    connect: () => void
+    disconnect: () => void
+  } {
     const node = {
       connect: () => undefined,
       disconnect: () => undefined,
@@ -573,7 +576,9 @@ describe('useDictation', () => {
       await result.current.start()
     })
     // Socket is open in the test harness only after we call open(); leave it CONNECTING here.
-    expect(MockWebSocket.instances[0]?.readyState).toBe(MockWebSocket.CONNECTING)
+    expect(MockWebSocket.instances[0]?.readyState).toBe(
+      MockWebSocket.CONNECTING,
+    )
 
     await act(async () => {
       await result.current.stop()

@@ -260,16 +260,14 @@ describe('useReadAloud', () => {
     const firstPromise = new Promise((resolve) => {
       resolveFirst = resolve
     })
-    clientRequestMock
-      .mockReturnValueOnce(firstPromise)
-      .mockResolvedValueOnce({
-        data: {
-          segments: [segment('s2', 'https://cdn.test/second.mp3')],
-          cacheHit: false,
-          voiceId: 'Joanna',
-          engine: 'neural',
-        },
-      })
+    clientRequestMock.mockReturnValueOnce(firstPromise).mockResolvedValueOnce({
+      data: {
+        segments: [segment('s2', 'https://cdn.test/second.mp3')],
+        cacheHit: false,
+        voiceId: 'Joanna',
+        engine: 'neural',
+      },
+    })
 
     const { result } = renderHook(() => useReadAloud({ target }))
 
@@ -321,16 +319,14 @@ describe('useReadAloud', () => {
     const firstPromise = new Promise((resolve) => {
       resolveFirst = resolve
     })
-    clientRequestMock
-      .mockReturnValueOnce(firstPromise)
-      .mockResolvedValueOnce({
-        data: {
-          segments: [segment('s2', 'https://cdn.test/second.mp3')],
-          cacheHit: false,
-          voiceId: 'Joanna',
-          engine: 'neural',
-        },
-      })
+    clientRequestMock.mockReturnValueOnce(firstPromise).mockResolvedValueOnce({
+      data: {
+        segments: [segment('s2', 'https://cdn.test/second.mp3')],
+        cacheHit: false,
+        voiceId: 'Joanna',
+        engine: 'neural',
+      },
+    })
 
     const { result } = renderHook(() => useReadAloud({ target }))
 

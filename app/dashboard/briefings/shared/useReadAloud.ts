@@ -175,13 +175,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         reason: 'synthesize_failed',
       })
     }
-  }, [
-    cleanupAudio,
-    input.engine,
-    input.target,
-    input.voiceId,
-    playFromIndex,
-  ])
+  }, [cleanupAudio, input.engine, input.target, input.voiceId, playFromIndex])
 
   const stop = useCallback(() => {
     generationRef.current += 1
