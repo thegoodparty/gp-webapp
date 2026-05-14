@@ -58,9 +58,9 @@ export default function DictationDemoWidget({
           className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground bg-background px-4 h-9 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isActive ? (
-            <LuMicOff className="h-4 w-4" />
+            <MicOff className="h-4 w-4" />
           ) : (
-            <LuMic className="h-4 w-4" />
+            <Mic className="h-4 w-4" />
           )}
           {buttonLabel}
         </button>

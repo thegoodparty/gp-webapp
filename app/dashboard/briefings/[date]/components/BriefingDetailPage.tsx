@@ -78,9 +78,9 @@ export default function BriefingDetailPage({
               {readAloudLabel}
               <span className="ml-2 order-1">
                 {isReading ? (
-                  <LuSquare className="h-4 w-4" />
+                  <Square className="h-4 w-4" />
                 ) : (
-                  <LuVolume2 className="h-4 w-4" />
+                  <Volume2 className="h-4 w-4" />
                 )}
               </span>
             </button>
@@ -101,7 +101,7 @@ export default function BriefingDetailPage({
             >
               Download
               <span className="ml-2 order-1">
-                <LuDownload className="h-4 w-4" />
+                <Download className="h-4 w-4" />
               </span>
             </button>
           </div>
