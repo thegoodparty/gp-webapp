@@ -2,6 +2,12 @@ import type {
   Briefing,
   BriefingListItem,
 } from 'app/dashboard/briefings/shared/briefing-types'
+import type {
+  SynthesizeSpeechRequest,
+  SynthesizeSpeechResponse,
+  TranscribeSessionRequest,
+  TranscribeSessionResponse,
+} from 'app/dashboard/briefings/shared/speech-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
@@ -194,6 +200,16 @@ export type APIEndpoints = {
   'GET /v1/meetings/briefings/:date': {
     Request: {}
     Response: Briefing
+  }
+
+  'POST /v1/speech/synthesize': {
+    Request: SynthesizeSpeechRequest
+    Response: SynthesizeSpeechResponse
+  }
+
+  'POST /v1/speech/transcribe/session': {
+    Request: TranscribeSessionRequest
+    Response: TranscribeSessionResponse
   }
 }
 

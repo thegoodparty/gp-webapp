@@ -518,6 +518,14 @@ export const EVENTS = {
     FeedbackHelpful: 'Briefings - Feedback: Helpful',
     FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
     ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
+    ReadAloudStarted: 'Briefings - Read Aloud Started',
+    ReadAloudStopped: 'Briefings - Read Aloud Stopped',
+    ReadAloudCompleted: 'Briefings - Read Aloud Completed',
+    ReadAloudFailed: 'Briefings - Read Aloud Failed',
+    DictationStarted: 'Briefings - Dictation Started',
+    DictationStopped: 'Briefings - Dictation Stopped',
+    DictationFailed: 'Briefings - Dictation Failed',
+    DictationMaxDurationReached: 'Briefings - Dictation Max Duration Reached',
   },
 } as const
 

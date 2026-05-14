@@ -1,11 +1,13 @@
 'use client'
 import { useEffect } from 'react'
-import { LuDownload } from 'react-icons/lu'
+import { LuDownload, LuVolume2, LuSquare } from 'react-icons/lu'
 import DashboardLayout from '../../../shared/DashboardLayout'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import PriorityIssueCard from './PriorityIssueCard'
 import FullAgendaAccordion from './FullAgendaAccordion'
 import { Briefing } from '../../shared/briefing-types'
+import { useReadAloud } from '../../shared/useReadAloud'
+import DictationDemoWidget from '../../shared/DictationDemoWidget'
 
 interface BriefingDetailPageProps {
   briefing: Briefing
@@ -15,6 +17,18 @@ export default function BriefingDetailPage({
   briefing,
 }: BriefingDetailPageProps) {
   const { meeting, priorityIssues, fullAgenda, fullAgendaSummary } = briefing
+
+  const readAloud = useReadAloud({
+    target: { type: 'MeetingBriefing', id: meeting.date },
+  })
+  const isReading =
+    readAloud.status === 'playing' || readAloud.status === 'loading'
+  const readAloudLabel =
+    readAloud.status === 'loading'
+      ? 'Loading\u2026'
+      : readAloud.status === 'playing'
+      ? 'Stop'
+      : 'Read Aloud'
 
   useEffect(() => {
     trackEvent(EVENTS.Briefings.BriefingViewed, {
@@ -50,6 +64,31 @@ export default function BriefingDetailPage({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => {
+                if (isReading) {
+                  readAloud.stop()
+                } else {
+                  void readAloud.play()
+                }
+              }}
+              disabled={readAloud.status === 'loading'}
+              className="inline-flex items-center justify-center gap-2 border bg-background hover:bg-accent hover:text-accent-foreground h-10 w-full sm:w-auto rounded-full border-foreground px-8 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {readAloudLabel}
+              <span className="ml-2 order-1">
+                {isReading ? (
+                  <LuSquare className="h-4 w-4" />
+                ) : (
+                  <LuVolume2 className="h-4 w-4" />
+                )}
+              </span>
+            </button>
+            {readAloud.status === 'error' && readAloud.error ? (
+              <span className="text-xs text-destructive">
+                {readAloud.error}
+              </span>
+            ) : null}
             <button
               onClick={() =>
                 trackEvent(EVENTS.Briefings.ClickDownload, {
@@ -105,6 +144,10 @@ export default function BriefingDetailPage({
                 summary={fullAgendaSummary}
               />
             )}
+
+            <div className="mt-6">
+              <DictationDemoWidget targetId={`briefing:${meeting.date}`} />
+            </div>
 
             {/* Footer */}
             <p className="mt-8 text-xs text-center text-muted-foreground/50">
