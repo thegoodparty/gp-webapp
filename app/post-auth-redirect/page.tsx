@@ -11,10 +11,12 @@ import {
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { resolveSlug } from '@shared/hooks/useSelectedOrgSlug'
+import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
+import { getReadyAnalytics } from '@shared/utils/analytics'
 import { LoaderCircle } from 'lucide-react'
 
 const PostAuthRedirectPage = () => {
-  const { isSignedIn, isLoaded } = useClerkUser()
+  const { isSignedIn, isLoaded, user: clerkUser } = useClerkUser()
   const ranRef = useRef(false)
 
   useEffect(() => {
@@ -73,6 +75,40 @@ const PostAuthRedirectPage = () => {
           ? (statusRes.data as CampaignStatus)
           : null
         const hasElectedOffice = electedRes.ok
+
+        // Fire the registration event only on a true fresh sign-up. The
+        // ?source=signup hint set by <SignUp /> is just a re-fire guard for
+        // back-to-back logout/login; the authoritative gate is the gp-api
+        // user record's createdAt, which is server-set at JIT-provisioning
+        // and cannot be forged by crafting a URL.
+        const REGISTRATION_FRESHNESS_MS = 5 * 60 * 1000
+        const sourceIsSignup =
+          new URLSearchParams(window.location.search).get('source') === 'signup'
+        if (userRes.ok && sourceIsSignup) {
+          try {
+            const userData = userRes.data as {
+              id: number
+              email?: string
+              createdAt: string | Date
+            }
+            const createdAtMs = new Date(userData.createdAt).getTime()
+            const isFreshlyCreated =
+              Number.isFinite(createdAtMs) &&
+              Date.now() - createdAtMs < REGISTRATION_FRESHNESS_MS
+            if (isFreshlyCreated) {
+              await trackRegistrationCompleted({
+                analytics: getReadyAnalytics(),
+                userId: String(userData.id),
+                email:
+                  userData.email ||
+                  clerkUser?.primaryEmailAddress?.emailAddress ||
+                  '',
+              })
+            }
+          } catch (e) {
+            console.error('registration tracking error', e)
+          }
+        }
 
         const path = resolvePostAuthRedirectPath(
           user,

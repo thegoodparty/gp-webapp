@@ -19,6 +19,10 @@ import { apiRoutes } from 'gpApi/routes'
 import { useTaskGenerationStream } from './useTaskGenerationStream'
 import { FailedToGenerate } from './FailedToGenerate'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import ElectionOver from '../ElectionOver'
+import PrimaryResultModal from '../PrimaryResultModal'
+import { usePostElectionState } from '../usePostElectionState'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -35,6 +39,16 @@ export default function CampaignManager({
   const generatedInSessionRef = useRef(false)
   const trackedGenerationCompleteRef = useRef(false)
   const [showLoadingState, setShowLoadingState] = useState(false)
+  const positionName = usePositionName()
+  const {
+    electionInPast,
+    primaryLost,
+    primaryResultModalOpen,
+    primaryElectionDate,
+    electionDate,
+    closePrimaryResultModal,
+  } = usePostElectionState()
+  const electionOver = electionInPast || primaryLost
 
   const hideLoadingChecklist = useCallback(() => {
     setShowLoadingState(false)
@@ -75,7 +89,7 @@ export default function CampaignManager({
       generatingRef.current = false
       return
     }
-    if (!campaign || generatingRef.current) return
+    if (!campaign || generatingRef.current || electionOver) return
 
     generatingRef.current = true
     void startGeneration()
@@ -84,7 +98,14 @@ export default function CampaignManager({
       generatingRef.current = false
       cancelGeneration()
     }
-  }, [isLoadingTasks, tasks, campaign, startGeneration, cancelGeneration])
+  }, [
+    isLoadingTasks,
+    tasks,
+    campaign,
+    startGeneration,
+    cancelGeneration,
+    electionOver,
+  ])
 
   useEffect(() => {
     if (error) {
@@ -122,34 +143,48 @@ export default function CampaignManager({
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
           <div className="mx-auto w-full max-w-160 flex flex-col gap-6 px-4 py-8 md:px-0">
-            <HeaderSection />
-            <ProgressSection />
-            {showLoadingState && (
-              <LoadingState
-                isStreamComplete={isStreamComplete}
-                hideCallback={hideLoadingChecklist}
-              />
-            )}
-            {error && !isGenerating && !showLoadingState && (
-              <FailedToGenerate retryGeneration={startGeneration} />
-            )}
-            {!showLoadingState && (
+            {electionOver ? (
+              <ElectionOver />
+            ) : (
               <>
-                {tasks.length > 0 || contactGoals ? (
-                  <TasksList
-                    campaign={campaign}
-                    tasks={tasks}
-                    tcrCompliance={tcrCompliance}
-                    isLegacyList={false}
+                <HeaderSection />
+                <ProgressSection />
+                {showLoadingState && (
+                  <LoadingState
+                    isStreamComplete={isStreamComplete}
+                    hideCallback={hideLoadingChecklist}
                   />
-                ) : (
-                  <div className="mt-4">
-                    <EmptyState />
-                  </div>
+                )}
+                {error && !isGenerating && !showLoadingState && (
+                  <FailedToGenerate retryGeneration={startGeneration} />
+                )}
+                {!showLoadingState && (
+                  <>
+                    {tasks.length > 0 || contactGoals ? (
+                      <TasksList
+                        campaign={campaign}
+                        tasks={tasks}
+                        tcrCompliance={tcrCompliance}
+                        isLegacyList={false}
+                      />
+                    ) : (
+                      <div className="mt-4">
+                        <EmptyState />
+                      </div>
+                    )}
+                  </>
                 )}
               </>
             )}
           </div>
+          {primaryElectionDate && electionDate && (
+            <PrimaryResultModal
+              open={primaryResultModalOpen}
+              onClose={closePrimaryResultModal}
+              electionDate={electionDate}
+              officeName={positionName}
+            />
+          )}
         </CampaignUpdateHistoryProvider>
       </VoterContactsProvider>
     </DashboardLayout>

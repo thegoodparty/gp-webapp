@@ -142,7 +142,7 @@ test('validate contacts filters', async ({ page }) => {
 
   await setupElectedOfficeUser(page, {
     zip: '82001',
-    office: 'Cheyenne City Council - Ward 2',
+    office: 'Cheyenne City Council - Ward 1',
   })
 
   await page.goto('/dashboard/contacts')
