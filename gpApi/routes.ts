@@ -655,4 +655,22 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  annotations: {
+    listForBriefing: {
+      path: '/v1/meeting-briefings/:briefingId/annotations',
+      method: 'GET',
+    },
+    createForBriefing: {
+      path: '/v1/meeting-briefings/:briefingId/annotations',
+      method: 'POST',
+    },
+    updateNote: {
+      path: '/v1/annotations/:annotationId/note',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/v1/annotations/:annotationId',
+      method: 'DELETE',
+    },
+  },
 } as const

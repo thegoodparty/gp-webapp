@@ -208,6 +208,26 @@ export type APIEndpoints = {
     Response: unknown
   }
 
+  // Briefing annotations. Backend ships responses in snake_case. The
+  // frontend AnnotationsApi client translates these to the camelCase
+  // Annotation shape consumed by components.
+  'GET /v1/meeting-briefings/:briefingId/annotations': {
+    Request: {}
+    Response: { annotations: ApiAnnotation[] }
+  }
+  'POST /v1/meeting-briefings/:briefingId/annotations': {
+    Request: ApiCreateAnnotationInput
+    Response: ApiAnnotation
+  }
+  'PUT /v1/annotations/:annotationId/note': {
+    Request: { body: string }
+    Response: ApiAnnotation
+  }
+  'DELETE /v1/annotations/:annotationId': {
+    Request: {}
+    Response: void
+  }
+
   'GET /v1/elections/race-by-position': {
     Request: {
       brPositionId: string
@@ -217,6 +237,64 @@ export type APIEndpoints = {
     Response: Race
   }
 }
+
+// Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts
+// in gp-api. The AnnotationsApi client maps to/from the camelCase shape
+// the rest of the frontend uses.
+export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report'
+export type ApiAnnotationResourceType = 'briefing'
+
+export interface ApiAnnotationAnchorInput {
+  json_path: string | null
+  start: number | null
+  end: number | null
+}
+
+export interface ApiAnnotationNote {
+  id: string
+  body: string
+  created_at: string
+  updated_at: string
+}
+
+export interface ApiAnnotationBugReport {
+  id: string
+  description: string
+  submitted_at: string
+}
+
+export interface ApiAnnotationChat {
+  id: string
+  created_at: string
+}
+
+export interface ApiAnnotation {
+  id: string
+  kind: ApiAnnotationKind
+  resource_type: ApiAnnotationResourceType
+  resource_id: string
+  author_user_id: number
+  json_path: string | null
+  start: number | null
+  end: number | null
+  created_at: string
+  updated_at: string
+  note?: ApiAnnotationNote
+  bug_report?: ApiAnnotationBugReport
+  chat?: ApiAnnotationChat
+}
+
+export type ApiCreateAnnotationInput =
+  | {
+      kind: 'note'
+      anchor: ApiAnnotationAnchorInput
+      payload: { body: string }
+    }
+  | {
+      kind: 'bug_report'
+      anchor: ApiAnnotationAnchorInput
+      payload: { description: string }
+    }
 
 export type Organization = {
   slug: string
