@@ -207,17 +207,15 @@ const POLLS_MENU_ITEM: MenuItem = {
   v2Icon: Send,
   v2Category: 'elected-office',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
-  isNew: true,
 }
 
 const BRIEFINGS_MENU_ITEM: MenuItem = {
   id: 'briefings-dashboard',
-  label: 'Briefings',
+  label: 'Meetings',
   link: '/dashboard/briefings',
   icon: <MdFactCheck />,
   v2Icon: ClipboardList,
   v2Category: 'elected-office',
-  isNew: true,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
 }
 
