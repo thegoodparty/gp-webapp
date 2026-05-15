@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import { getBriefingBySlug } from '@shared/briefings/server'
+import { renderBriefingForSpeech } from '@shared/briefings/renderForSpeech'
 import ExecutiveSummaryCard from '../components/detail/ExecutiveSummaryCard'
 import AgendaItemCard from '../components/detail/AgendaItemCard'
 
@@ -39,11 +40,19 @@ export default async function Page({
   const briefing = await getBriefingBySlug(slug)
   if (!briefing) notFound()
 
+  // Pre-render the briefing into a single plain-text blob for the speech
+  // service. Doing this here (rather than in the button) keeps the speech
+  // module a pure pipe: it accepts text and returns audio, with zero
+  // briefing-schema knowledge.
+  const speechText = renderBriefingForSpeech(briefing)
+
   return (
     <>
       <ExecutiveSummaryCard
         summary={briefing.executiveSummary}
         domId={EXECUTIVE_SUMMARY_DOM_ID}
+        speechText={speechText}
+        analyticsLabel="briefing"
       />
 
       {briefing.actionItems.map((item, i) => (

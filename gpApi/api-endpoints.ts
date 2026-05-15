@@ -1,4 +1,10 @@
 import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
+import type {
+  SynthesizeSpeechRequest,
+  SynthesizeSpeechResponse,
+  TranscribeSessionRequest,
+  TranscribeSessionResponse,
+} from 'app/dashboard/briefings/shared/speech-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
@@ -272,6 +278,16 @@ export type APIEndpoints = {
   'GET /v1/meetings/:date/briefing': {
     Request: { date: string }
     Response: MeetingBriefingResponseDto
+  }
+
+  'POST /v1/speech/synthesize': {
+    Request: SynthesizeSpeechRequest
+    Response: SynthesizeSpeechResponse
+  }
+
+  'POST /v1/speech/transcribe/session': {
+    Request: TranscribeSessionRequest
+    Response: TranscribeSessionResponse
   }
 
   'GET /v1/elections/race-by-position': {
