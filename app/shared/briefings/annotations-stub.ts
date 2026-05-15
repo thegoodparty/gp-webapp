@@ -109,7 +109,11 @@ async function createChat(
     id: conversation.id,
     createdAt: conversation.createdAt,
   }
-  return finalize(briefingId, 'chat', input, { chat })
+  const annotation = finalize(briefingId, 'chat', input, { chat })
+  // Record the annotation->conversation mapping so chatStub.softDelete and
+  // listMessages can resolve the conversation from the annotation id.
+  chatStub.recordAnnotationConversation(annotation.id, conversation.id)
+  return annotation
 }
 
 function finalize(
@@ -178,7 +182,7 @@ export const annotationsStub: AnnotationsClient = {
     if (idx < 0) return
     const annotation = items[idx]
     if (annotation?.kind === 'chat' && annotation.chat) {
-      await chatStub.softDelete(annotation.chat.id)
+      await chatStub.softDelete(annotation.id)
     }
     items.splice(idx, 1)
     writeAll(briefingId, items)

@@ -16,6 +16,7 @@ import type {
   GetConstituentIssuesResponse,
   GetIndividualActivitiesResponse,
 } from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
+import type { AnnotationAnchor, ChatMessage } from 'app/shared/briefings/types'
 
 export interface MeetingsListItemDto {
   meetingDate: string
@@ -374,6 +375,28 @@ export type APIEndpoints = {
       electionDate: string
     }
     Response: Race
+  }
+
+  'POST /v1/briefing-chats': {
+    Request: {
+      meetingDate: string
+      anchor: AnnotationAnchor
+    }
+    Response: {
+      annotationId: string
+      conversationId: string
+    }
+  }
+  'GET /v1/briefing-chats/:annotationId': {
+    Request: {}
+    Response: {
+      conversationId: string
+      messages: ChatMessage[]
+    }
+  }
+  'DELETE /v1/briefing-chats/:annotationId': {
+    Request: {}
+    Response: void
   }
 }
 
