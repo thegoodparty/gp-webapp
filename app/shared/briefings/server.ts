@@ -79,9 +79,7 @@ const toRecentNews = (
   url: dto.url,
 })
 
-const toBudgetImpact = (
-  dto: MeetingBriefingBudgetImpactDto,
-): BudgetImpact => ({
+const toBudgetImpact = (dto: MeetingBriefingBudgetImpactDto): BudgetImpact => ({
   summary: dto.summary,
   figures: dto.figures.map((f) => ({
     label: f.label,
@@ -146,7 +144,9 @@ const toBriefing = (
     executiveSummary: dto.executive_summary,
     items: dto.items.map(toItem),
     sources: dto.sources.map(toSource),
-    title: `${BRIEFING_TYPE_LABEL[dto.briefing_type]} briefing for ${formattedDate}`,
+    title: `${
+      BRIEFING_TYPE_LABEL[dto.briefing_type]
+    } briefing for ${formattedDate}`,
   }
 }
 
