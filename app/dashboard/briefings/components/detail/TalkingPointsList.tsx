@@ -13,10 +13,11 @@ export default function TalkingPointsList({
 }: Props): React.JSX.Element | null {
   if (points.length === 0) return null
   return (
-    <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-foreground">
+    <ul className="list-disc! space-y-1 pl-5 text-sm leading-6 text-foreground">
       {points.map((p, i) => (
         <li
           key={`${pathPrefix}/${i}`}
+          className="list-item!"
           data-briefing-json-path={`${pathPrefix}/${i}`}
         >
           {p}

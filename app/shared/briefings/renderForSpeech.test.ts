@@ -1,52 +1,75 @@
 import { describe, expect, it } from 'vitest'
 import { renderBriefingForSpeech } from './renderForSpeech'
-import type { Briefing } from './types'
+import type { Briefing, Item } from './types'
 
 const baseBriefing = (overrides: Partial<Briefing> = {}): Briefing => ({
-  id: 'b-1',
-  slug: 'city-council-june-1-2026',
-  meetingId: 'm-1',
-  title: 'City Council, June 1',
-  meetingDate: 'June 1, 2026',
-  status: 'briefing_ready',
-  readingTimeMinutes: 5,
+  experimentId: 'exp-1',
+  briefingType: 'city_council_meeting',
+  briefingStatus: 'briefing_ready',
   generatedAt: '2026-05-30T10:00:00Z',
-  meeting: {
-    id: 'm-1',
-    name: 'City Council Regular Meeting',
-    body: 'City Council',
-    type: 'city_council',
-    scheduledAt: '2026-06-01T19:00:00-04:00',
-    location: 'City Hall',
-  },
+  officialName: 'Jane Smith',
+  meetingDate: 'June 1, 2026',
+  estimatedReadMinutes: 5,
   executiveSummary: 'Three big items tonight.',
-  agenda: [],
-  actionItems: [],
+  items: [],
+  sources: [],
+  title: 'City Council meeting briefing for June 1, 2026',
+  ...overrides,
+})
+
+const featuredItem = (overrides: Partial<Item> = {}): Item => ({
+  id: 'a-1',
+  itemNumber: '1',
+  title: 'Approve budget',
+  tier: 'featured',
+  voteRequired: true,
+  tierReason: [],
+  display: {
+    summary: 'Adopts the FY27 operating budget.',
+    constituentSentiment: null,
+    recentNews: null,
+    budgetImpact: null,
+    talkingPoints: null,
+    sourceIds: [],
+  },
   ...overrides,
 })
 
 describe('renderBriefingForSpeech', () => {
-  it('joins title, executive summary, and action items into a single text blob', () => {
+  it('joins title, executive summary, and featured items into a single text blob', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
-        actionItems: [
-          {
-            id: 'a-1',
-            title: 'Approve budget',
-            overview: 'Adopts the FY27 operating budget.',
-            constituentSentiment: { summary: 'Mostly favorable.', sources: [] },
-            recentNews: [],
-            budgetImpact: { summary: '+$2M to capital reserves.', sources: [] },
-            talkingPoints: ['Lock in school funding.', 'Defer the new park.'],
-            sources: [],
-          },
+        items: [
+          featuredItem({
+            display: {
+              summary: 'Adopts the FY27 operating budget.',
+              constituentSentiment: {
+                summary: 'Mostly favorable.',
+                detail: null,
+                districtNote: null,
+                haystaqColumn: 'fiscal_responsibility',
+                meanScore: 0.6,
+                scoreDirection: 'positive',
+                voterCount: 1200,
+                haystaqStatus: 'ok',
+                haystaqSource: 'curated',
+              },
+              recentNews: null,
+              budgetImpact: {
+                summary: '+$2M to capital reserves.',
+                figures: [],
+              },
+              talkingPoints: ['Lock in school funding.', 'Defer the new park.'],
+              sourceIds: [],
+            },
+          }),
         ],
       }),
     )
 
-    expect(text).toContain('City Council, June 1')
+    expect(text).toContain('City Council meeting briefing for June 1, 2026')
     expect(text).toContain('Three big items tonight.')
-    expect(text).toContain('Action item: Approve budget.')
+    expect(text).toContain('Agenda item: Approve budget.')
     expect(text).toContain('Adopts the FY27 operating budget.')
     expect(text).toContain('Constituent sentiment: Mostly favorable.')
     expect(text).toContain('Budget impact: +$2M to capital reserves.')
@@ -69,24 +92,39 @@ describe('renderBriefingForSpeech', () => {
     expect(text).toContain('Bold italic code and a link.')
   })
 
-  it('skips empty optional sections without producing dangling whitespace', () => {
+  it('skips non-featured items and empty optional sections', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
         executiveSummary: '',
-        actionItems: [
-          {
-            id: 'a-1',
+        items: [
+          featuredItem({
             title: 'Quiet item',
-            overview: '',
-            constituentSentiment: null,
-            recentNews: [],
-            budgetImpact: null,
-            talkingPoints: [],
-            sources: [],
+            display: {
+              summary: '',
+              constituentSentiment: null,
+              recentNews: null,
+              budgetImpact: null,
+              talkingPoints: [],
+              sourceIds: [],
+            },
+          }),
+          {
+            id: 'q-1',
+            itemNumber: '2',
+            title: 'Procedural matters',
+            tier: 'queued',
+            voteRequired: false,
+            tierReason: [],
+            display: {
+              summary: 'Routine roll call.',
+              sourceIds: [],
+            },
           },
         ],
       }),
     )
-    expect(text).toBe('City Council, June 1\n\nAction item: Quiet item.')
+    expect(text).toBe(
+      'City Council meeting briefing for June 1, 2026\n\nAgenda item: Quiet item.',
+    )
   })
 })

@@ -32,59 +32,115 @@ export interface MeetingsListResponseDto {
   meetings: MeetingsListItemDto[]
 }
 
+// v2 artifact shape, snake_case as emitted by the meeting_briefing agent.
+// Schema: runbooks/experiments/meeting_briefing/manifest.json (output_schema).
+// Mapped to the camelCase frontend Briefing type by app/shared/briefings/server.ts.
+
+export type MeetingBriefingStatusDto =
+  | 'briefing_ready'
+  | 'awaiting_agenda'
+  | 'no_meeting_found'
+  | 'agenda_provided_by_user'
+  | 'error'
+
+export type MeetingBriefingTypeDto =
+  | 'city_council_meeting'
+  | 'county_legislature_meeting'
+  | 'school_board_meeting'
+
+export type MeetingBriefingItemTierDto = 'featured' | 'queued' | 'standard'
+
+export type MeetingBriefingArticleTypeDto =
+  | 'reporting'
+  | 'opinion'
+  | 'editorial'
+  | 'press_release'
+  | 'government_communication'
+
+export type MeetingBriefingSourceTypeDto =
+  | 'agenda_packet'
+  | 'news'
+  | 'government_website'
+  | 'campaign'
+  | 'haystaq'
+
+export interface MeetingBriefingConstituentSentimentDto {
+  summary: string
+  detail?: string | null
+  district_note?: string | null
+  haystaq_column: string
+  mean_score: number
+  score_direction: string
+  voter_count: number
+  haystaq_status: 'ok' | 'no_match' | 'city_mismatch' | 'no_column'
+  haystaq_source: 'curated' | 'dictionary_fallback'
+}
+
+export interface MeetingBriefingRecentNewsEntryDto {
+  headline: string
+  publication: string
+  article_type: MeetingBriefingArticleTypeDto
+  publication_date?: string | null
+  url: string
+}
+
+export interface MeetingBriefingBudgetImpactFigureDto {
+  label: string
+  value: string
+  source_id: string
+}
+
+export interface MeetingBriefingBudgetImpactDto {
+  summary: string
+  figures: MeetingBriefingBudgetImpactFigureDto[]
+}
+
+export interface MeetingBriefingItemDisplayDto {
+  summary: string
+  constituent_sentiment?: MeetingBriefingConstituentSentimentDto | null
+  recent_news?: MeetingBriefingRecentNewsEntryDto[] | null
+  budget_impact?: MeetingBriefingBudgetImpactDto | null
+  talking_points?: string[] | null
+  source_ids?: string[]
+}
+
+export interface MeetingBriefingItemDto {
+  id: string
+  item_number: string | null
+  title: string
+  tier: MeetingBriefingItemTierDto
+  vote_required: boolean
+  tier_reason: string[]
+  display: MeetingBriefingItemDisplayDto
+  // `research` is also on every item but is internal/QA-only; intentionally
+  // left out of the frontend type. Same for top-level claims,
+  // required_data_points, disclosure, run_metadata.
+}
+
 export interface MeetingBriefingSourceDto {
   id: string
-  label: string
-  kind: 'internal' | 'official' | 'news' | 'community'
-  iconInitial: string
-  url: string | null
-}
-
-export interface MeetingBriefingAgendaItemDto {
-  id: string
-  title: string
-  kind: 'procedural' | 'consent' | 'public_input' | 'action' | 'informational'
-  hasBriefing: boolean
-  whatToExpect?: string
-}
-
-export interface MeetingBriefingActionItemDto {
-  id: string
-  title: string
-  overview: string
-  constituentSentiment: {
-    summary: string
-    detail?: string
-    sources: string[]
-  } | null
-  recentNews: Array<{ title: string; outlet: string; url: string }>
-  budgetImpact: {
-    summary: string
-    sources: string[]
-  } | null
-  talkingPoints: string[]
-  sources: MeetingBriefingSourceDto[]
+  name: string
+  url?: string | null
+  source_type: MeetingBriefingSourceTypeDto
+  publisher?: string | null
+  article_type?: MeetingBriefingArticleTypeDto | null
+  article_date?: string | null
+  page_number?: number | null
+  section_heading?: string | null
+  score_value?: number | null
 }
 
 export interface MeetingBriefingResponseDto {
-  id: string
-  slug: string
-  meetingId: string
-  title: string
-  status: 'briefing_ready' | 'awaiting_agenda' | 'generating' | 'failed'
-  readingTimeMinutes: number
-  generatedAt: string
-  meeting: {
-    id: string
-    name: string
-    body: string
-    type: 'city_council' | 'planning_board' | 'town_hall'
-    scheduledAt: string
-    location: string
-  }
-  executiveSummary: string
-  agenda: MeetingBriefingAgendaItemDto[]
-  actionItems: MeetingBriefingActionItemDto[]
+  experiment_id: string
+  briefing_type: MeetingBriefingTypeDto
+  briefing_status: MeetingBriefingStatusDto
+  generated_at: string
+  official_name: string
+  meeting_date: string
+  estimated_read_minutes: number
+  executive_summary: string
+  items: MeetingBriefingItemDto[]
+  sources: MeetingBriefingSourceDto[]
 }
 
 export type APIEndpoints = {
@@ -290,6 +346,27 @@ export type APIEndpoints = {
     Response: TranscribeSessionResponse
   }
 
+  // Briefing annotations. Backend ships responses in snake_case. The
+  // frontend AnnotationsApi client translates these to the camelCase
+  // Annotation shape consumed by components. Briefings are addressed
+  // by meeting date (YYYY-MM-DD), matching `GET /v1/meetings/:date/briefing`.
+  'GET /v1/meetings/:date/briefing/annotations': {
+    Request: { date: string }
+    Response: { annotations: ApiAnnotation[] }
+  }
+  'POST /v1/meetings/:date/briefing/annotations': {
+    Request: ApiCreateAnnotationInput & { date: string }
+    Response: ApiAnnotation
+  }
+  'PUT /v1/annotations/:annotationId/note': {
+    Request: { body: string }
+    Response: ApiAnnotation
+  }
+  'DELETE /v1/annotations/:annotationId': {
+    Request: {}
+    Response: void
+  }
+
   'GET /v1/elections/race-by-position': {
     Request: {
       brPositionId: string
@@ -299,6 +376,64 @@ export type APIEndpoints = {
     Response: Race
   }
 }
+
+// Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts
+// in gp-api. The AnnotationsApi client maps to/from the camelCase shape
+// the rest of the frontend uses.
+export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report'
+export type ApiAnnotationResourceType = 'briefing'
+
+export interface ApiAnnotationAnchorInput {
+  json_path: string | null
+  start: number | null
+  end: number | null
+}
+
+export interface ApiAnnotationNote {
+  id: string
+  body: string
+  created_at: string
+  updated_at: string
+}
+
+export interface ApiAnnotationBugReport {
+  id: string
+  description: string
+  submitted_at: string
+}
+
+export interface ApiAnnotationChat {
+  id: string
+  created_at: string
+}
+
+export interface ApiAnnotation {
+  id: string
+  kind: ApiAnnotationKind
+  resource_type: ApiAnnotationResourceType
+  resource_id: string
+  author_user_id: number
+  json_path: string | null
+  start: number | null
+  end: number | null
+  created_at: string
+  updated_at: string
+  note?: ApiAnnotationNote
+  bug_report?: ApiAnnotationBugReport
+  chat?: ApiAnnotationChat
+}
+
+export type ApiCreateAnnotationInput =
+  | {
+      kind: 'note'
+      anchor: ApiAnnotationAnchorInput
+      payload: { body: string }
+    }
+  | {
+      kind: 'bug_report'
+      anchor: ApiAnnotationAnchorInput
+      payload: { description: string }
+    }
 
 export type Organization = {
   slug: string

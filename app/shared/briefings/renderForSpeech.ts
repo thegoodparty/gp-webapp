@@ -1,4 +1,4 @@
-import type { Briefing } from './types'
+import type { Briefing, Item } from './types'
 
 /**
  * Render a briefing into a single, sentence-friendly plain-text blob
@@ -19,8 +19,9 @@ export const renderBriefingForSpeech = (briefing: Briefing): string => {
   const sections: string[] = []
   sections.push(briefing.title)
   if (briefing.executiveSummary) sections.push(briefing.executiveSummary)
-  for (const item of briefing.actionItems) {
-    sections.push(renderActionItem(item))
+  for (const item of briefing.items) {
+    if (item.tier !== 'featured') continue
+    sections.push(renderItem(item))
   }
   return sections
     .map(normalize)
@@ -28,19 +29,22 @@ export const renderBriefingForSpeech = (briefing: Briefing): string => {
     .join('\n\n')
 }
 
-const renderActionItem = (item: Briefing['actionItems'][number]): string => {
+const renderItem = (item: Item): string => {
   const parts: string[] = []
-  parts.push(`Action item: ${item.title}.`)
-  if (item.overview) parts.push(item.overview)
-  if (item.constituentSentiment?.summary) {
-    parts.push(`Constituent sentiment: ${item.constituentSentiment.summary}`)
+  parts.push(`Agenda item: ${item.title}.`)
+  if (item.display.summary) parts.push(item.display.summary)
+  if (item.display.constituentSentiment?.summary) {
+    parts.push(
+      `Constituent sentiment: ${item.display.constituentSentiment.summary}`,
+    )
   }
-  if (item.budgetImpact?.summary) {
-    parts.push(`Budget impact: ${item.budgetImpact.summary}`)
+  if (item.display.budgetImpact?.summary) {
+    parts.push(`Budget impact: ${item.display.budgetImpact.summary}`)
   }
-  if (item.talkingPoints.length > 0) {
+  const talkingPoints = item.display.talkingPoints ?? []
+  if (talkingPoints.length > 0) {
     parts.push('Talking points.')
-    for (const point of item.talkingPoints) {
+    for (const point of talkingPoints) {
       parts.push(point)
     }
   }

@@ -1,13 +1,13 @@
-import type { ActionItem } from '@shared/briefings/types'
-import SourceButton from './SourceButton'
+import type { Item, Source } from '@shared/briefings/types'
 import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
 import SourcesCollapsible from './SourcesCollapsible'
 import FeedbackRow from './FeedbackRow'
 
 type Props = {
-  item: ActionItem
-  index: number
+  item: Item
+  itemIndex: number
+  sources: Source[]
   domId: string
 }
 
@@ -20,40 +20,32 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * One agenda item card on the briefing detail page.
- *
- * Sections rendered, in order: Overview, Constituent Sentiment, Recent News,
- * Budget Impact, Talking Points, Sources collapsible, feedback row.
- *
- * The Constituent Quote section is intentionally not rendered (out of scope).
+ * One item card on the briefing detail page. Sections rendered, in order:
+ * Summary, Constituent Sentiment, Recent News, Budget Impact, Talking Points,
+ * Sources collapsible, feedback row.
  *
  * Every string rendered as body text carries a `data-briefing-json-path`
- * attribute so phase 4's selection toolbar can build an anchor.
+ * attribute so phase 4's selection toolbar can build an anchor that maps to
+ * the v2 artifact shape.
  */
 export default function AgendaItemCard({
   item,
-  index,
+  itemIndex,
+  sources,
   domId,
 }: Props): React.JSX.Element {
-  const base = `/actionItems/${index}`
-  const sentiment = item.constituentSentiment
-  const budget = item.budgetImpact
+  const base = `/items/${itemIndex}`
+  const display = item.display
+  const sentiment = display.constituentSentiment
+  const budget = display.budgetImpact
+  const news = display.recentNews ?? []
+  const talkingPoints = display.talkingPoints ?? []
+  const sourceIds = display.sourceIds ?? []
 
-  const sourceById = new Map(item.sources.map((s) => [s.id, s]))
-
-  function inlineSourcesFor(ids: string[]): React.ReactNode {
-    if (ids.length === 0) return null
-    return (
-      <p className="inline-flex flex-wrap items-center gap-1.5 text-xs leading-5 text-muted-foreground">
-        <em className="italic">source:</em>
-        {ids.map((id) => {
-          const s = sourceById.get(id)
-          if (!s) return null
-          return <SourceButton key={id} source={s} />
-        })}
-      </p>
-    )
-  }
+  const sourceById = new Map(sources.map((s) => [s.id, s]))
+  const itemSources = sourceIds
+    .map((id) => sourceById.get(id))
+    .filter((s): s is Source => Boolean(s))
 
   return (
     <article
@@ -73,12 +65,12 @@ export default function AgendaItemCard({
       </header>
 
       <section className="flex flex-col gap-2">
-        <SectionLabel>Overview</SectionLabel>
+        <SectionLabel>Summary</SectionLabel>
         <p
           className="text-sm leading-6 text-foreground"
-          data-briefing-json-path={`${base}/overview`}
+          data-briefing-json-path={`${base}/display/summary`}
         >
-          {item.overview}
+          {display.summary}
         </p>
       </section>
 
@@ -87,28 +79,27 @@ export default function AgendaItemCard({
           <SectionLabel>Constituent sentiment</SectionLabel>
           <p
             className="text-sm leading-6 text-foreground"
-            data-briefing-json-path={`${base}/constituentSentiment/summary`}
+            data-briefing-json-path={`${base}/display/constituent_sentiment/summary`}
           >
             {sentiment.summary}
           </p>
           {sentiment.detail ? (
             <p
               className="text-sm leading-6 text-foreground"
-              data-briefing-json-path={`${base}/constituentSentiment/detail`}
+              data-briefing-json-path={`${base}/display/constituent_sentiment/detail`}
             >
               {sentiment.detail}
             </p>
           ) : null}
-          {inlineSourcesFor(sentiment.sources)}
         </section>
       ) : null}
 
-      {item.recentNews.length > 0 ? (
+      {news.length > 0 ? (
         <section className="flex flex-col gap-2">
           <SectionLabel>Recent news</SectionLabel>
           <RecentNewsList
-            items={item.recentNews}
-            pathPrefix={`${base}/recentNews`}
+            items={news}
+            pathPrefix={`${base}/display/recent_news`}
           />
         </section>
       ) : null}
@@ -118,25 +109,24 @@ export default function AgendaItemCard({
           <SectionLabel>Budget impact</SectionLabel>
           <p
             className="text-sm leading-6 text-foreground"
-            data-briefing-json-path={`${base}/budgetImpact/summary`}
+            data-briefing-json-path={`${base}/display/budget_impact/summary`}
           >
             {budget.summary}
           </p>
-          {inlineSourcesFor(budget.sources)}
         </section>
       ) : null}
 
-      {item.talkingPoints.length > 0 ? (
+      {talkingPoints.length > 0 ? (
         <section className="flex flex-col gap-2">
           <SectionLabel>Talking points</SectionLabel>
           <TalkingPointsList
-            points={item.talkingPoints}
-            pathPrefix={`${base}/talkingPoints`}
+            points={talkingPoints}
+            pathPrefix={`${base}/display/talking_points`}
           />
         </section>
       ) : null}
 
-      <SourcesCollapsible sources={item.sources} />
+      <SourcesCollapsible sources={itemSources} />
       <FeedbackRow />
     </article>
   )

@@ -7,10 +7,21 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@styleguide'
-import type { Source } from '@shared/briefings/types'
+import type { Source, SourceType } from '@shared/briefings/types'
 
 type Props = {
   sources: Source[]
+}
+
+const initialFor = (name: string): string =>
+  name.trim().charAt(0).toUpperCase() || '?'
+
+const SOURCE_TYPE_LABEL: Record<SourceType, string> = {
+  agenda_packet: 'Agenda packet',
+  news: 'News',
+  government_website: 'Government',
+  campaign: 'Campaign',
+  haystaq: 'Voter data',
 }
 
 /**
@@ -45,7 +56,7 @@ export default function SourcesCollapsible({
                 className="inline-flex items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
                 style={{ width: 16, height: 16 }}
               >
-                {s.iconInitial}
+                {initialFor(s.name)}
               </span>
               {s.url ? (
                 <a
@@ -54,14 +65,14 @@ export default function SourcesCollapsible({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 font-medium text-info hover:underline"
                 >
-                  <span>{s.label}</span>
+                  <span>{s.name}</span>
                   <ExternalLink aria-hidden className="size-3" />
                 </a>
               ) : (
-                <span className="font-medium text-foreground">{s.label}</span>
+                <span className="font-medium text-foreground">{s.name}</span>
               )}
               <span className="ml-auto text-xs uppercase tracking-wide text-muted-foreground">
-                {s.kind}
+                {SOURCE_TYPE_LABEL[s.sourceType]}
               </span>
             </li>
           ))}

@@ -1,44 +1,53 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { annotationsStub } from './annotations-stub'
+import { annotationsApi } from './annotations-api'
+import type { AnnotationsClient } from './annotations-client'
 import type { Annotation, CreateAnnotationInput } from './types'
 
-const QK = (briefingId: string) => ['briefings', briefingId, 'annotations']
+const QK = (meetingDate: string) => ['briefings', meetingDate, 'annotations']
 
 /**
- * TanStack Query wrapper over the AnnotationsClient. Currently bound to the
- * localStorage stub. Swap the import to the real API client (to be added in
- * phase 8) to point at gp-api.
+ * TanStack Query wrapper over the AnnotationsClient.
+ *
+ * Bound to the real gp-api client. The localStorage stub
+ * (`annotations-stub.ts`) is still available for development against
+ * fixtures by swapping the import below.
+ *
+ * `meetingDate` is the YYYY-MM-DD slug that addresses the briefing in
+ * `GET /v1/meetings/:date/briefing`; annotations endpoints nest under the
+ * same shape.
  */
-export function useAnnotations(briefingId: string) {
+const client: AnnotationsClient = annotationsApi
+
+export function useAnnotations(meetingDate: string) {
   const qc = useQueryClient()
 
   const list = useQuery<Annotation[]>({
-    queryKey: QK(briefingId),
-    queryFn: () => annotationsStub.list(briefingId),
+    queryKey: QK(meetingDate),
+    queryFn: () => client.list(meetingDate),
   })
 
   const create = useMutation({
     mutationFn: (input: CreateAnnotationInput) =>
-      annotationsStub.create(briefingId, input),
+      client.create(meetingDate, input),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(briefingId) })
+      qc.invalidateQueries({ queryKey: QK(meetingDate) })
     },
   })
 
   const updateNote = useMutation({
     mutationFn: ({ id, body }: { id: string; body: string }) =>
-      annotationsStub.updateNote(id, body),
+      client.updateNote(id, body),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(briefingId) })
+      qc.invalidateQueries({ queryKey: QK(meetingDate) })
     },
   })
 
   const remove = useMutation({
-    mutationFn: (id: string) => annotationsStub.delete(id),
+    mutationFn: (id: string) => client.delete(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(briefingId) })
+      qc.invalidateQueries({ queryKey: QK(meetingDate) })
     },
   })
 

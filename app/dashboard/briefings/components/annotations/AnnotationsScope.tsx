@@ -50,7 +50,12 @@ export function useAnnotationsCtx(): Ctx {
 }
 
 type Props = {
-  briefingId: string
+  /**
+   * The briefing's meeting date (YYYY-MM-DD), used to address the briefing
+   * on the API. Matches the slug in the briefing detail URL and the
+   * `:date` param in the meeting briefing endpoints.
+   */
+  meetingDate: string
   children: React.ReactNode
 }
 
@@ -69,11 +74,12 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  * the corresponding annotation's Sheet.
  */
 export default function AnnotationsScope({
-  briefingId,
+  meetingDate,
   children,
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
-  const { annotations, create, updateNote, remove } = useAnnotations(briefingId)
+  const { annotations, create, updateNote, remove } =
+    useAnnotations(meetingDate)
   const [sheet, setSheet] = useState<SheetState>({ kind: 'closed' })
 
   const openAddNoteFromSelection = useCallback(() => {
