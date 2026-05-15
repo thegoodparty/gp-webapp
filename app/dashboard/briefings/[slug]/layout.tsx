@@ -9,6 +9,7 @@ import DetailHeader from '../components/detail/DetailHeader'
 import DetailToc from '../components/detail/DetailToc'
 import MobileBottomBar from '../components/detail/MobileBottomBar'
 import AnnotationsScope from '../components/annotations/AnnotationsScope'
+import BriefingAwaitingPage from '../components/BriefingAwaitingPage'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -32,6 +33,18 @@ export default async function BriefingChromeLayout({
   const { slug } = await params
   const briefing = await getBriefingBySlug(slug)
   if (!briefing) notFound()
+
+  if ('status' in briefing) {
+    return (
+      <DashboardLayout
+        pathname="/dashboard/briefings"
+        showAlert={false}
+        wrapperClassName="!p-0"
+      >
+        <BriefingAwaitingPage briefing={briefing} />
+      </DashboardLayout>
+    )
+  }
 
   return (
     <DashboardLayout

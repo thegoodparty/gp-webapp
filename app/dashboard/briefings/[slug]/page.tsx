@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
-import { getBriefingBySlug } from '@shared/briefings/server'
+import { getBriefingBySlug, isFullBriefing } from '@shared/briefings/server'
 import { renderBriefingForSpeech } from '@shared/briefings/renderForSpeech'
 import ExecutiveSummaryCard from '../components/detail/ExecutiveSummaryCard'
 import AgendaItemCard from '../components/detail/AgendaItemCard'
@@ -11,7 +11,8 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
-  const briefing = await getBriefingBySlug(slug)
+  const result = await getBriefingBySlug(slug)
+  const briefing = result && isFullBriefing(result) ? result : null
   return pageMetaData({
     title: briefing
       ? `${briefing.title} | GoodParty.org`
@@ -37,8 +38,9 @@ export default async function Page({
   params,
 }: PageProps): Promise<React.JSX.Element> {
   const { slug } = await params
-  const briefing = await getBriefingBySlug(slug)
-  if (!briefing) notFound()
+  const result = await getBriefingBySlug(slug)
+  if (!result || !isFullBriefing(result)) notFound()
+  const briefing = result
 
   // Pre-render the briefing into a single plain-text blob for the speech
   // service. Doing this here (rather than in the button) keeps the speech

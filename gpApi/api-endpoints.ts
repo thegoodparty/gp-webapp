@@ -144,6 +144,16 @@ export interface MeetingBriefingResponseDto {
   sources: MeetingBriefingSourceDto[]
 }
 
+export interface MeetingBriefingAwaitingDto {
+  status: 'awaiting_agenda'
+  meetingDate: string
+  meetingName: string
+  meetingTime: string
+  meetingTimezone: string
+  location: string
+  durationMinutes: number
+}
+
 export type APIEndpoints = {
   'GET /v1/users/me': {
     Request: {}
@@ -334,7 +344,7 @@ export type APIEndpoints = {
 
   'GET /v1/meetings/:date/briefing': {
     Request: { date: string }
-    Response: MeetingBriefingResponseDto
+    Response: MeetingBriefingResponseDto | MeetingBriefingAwaitingDto
   }
 
   'POST /v1/speech/synthesize': {
