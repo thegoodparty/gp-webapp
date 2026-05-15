@@ -1,4 +1,4 @@
-export type SpeechSynthesisEngine = 'neural' | 'standard'
+export type SpeechSynthesisEngine = 'neural' | 'standard' | 'generative'
 
 /**
  * Speech is a domain-agnostic pure pipe. Callers render their own text
