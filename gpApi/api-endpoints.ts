@@ -377,6 +377,12 @@ export type APIEndpoints = {
     Response: Race
   }
 
+  // Briefing chat routes — cross-repo contract with gp-api PR #1607.
+  // Request/response shapes mirror gp-api's createBriefingChatSchema,
+  // getConversationResponseSchema, and sendMessageSchema. SSE message
+  // streaming is intentionally not modeled here because clientRequest
+  // can't consume an SSE body — see chat-api.ts streamMessage for the
+  // raw fetch path.
   'POST /v1/briefing-chats': {
     Request: {
       meetingDate: string
