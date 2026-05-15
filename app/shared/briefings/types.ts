@@ -170,17 +170,29 @@ export interface AnnotationAnchor {
   end: number | null
 }
 
+export type OcrStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'skipped'
+
 export interface AnnotationNoteAttachmentData {
   id: string
   fileName: string
   mimeType: string
   sizeBytes: number
+  ocrStatus: OcrStatus
+  ocrText: string | null
+  ocrError: string | null
+  ocrCompletedAt: string | null
   createdAt: string
 }
 
 export interface AnnotationNoteData {
   id: string
-  body: string
+  /** Optional once Phase 2's attachment-only flow ships. */
+  body: string | null
   attachments: AnnotationNoteAttachmentData[]
   createdAt: string
   updatedAt: string
@@ -217,7 +229,8 @@ export type CreateAnnotationInput =
   | {
       kind: 'note'
       anchor: AnnotationAnchor
-      payload: { body: string }
+      /** body is optional for attachment-only notes (Phase 2). */
+      payload: { body?: string }
     }
   | {
       kind: 'bug_report'

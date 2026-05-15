@@ -23,12 +23,33 @@ const QK = annotationsQueryKey
  */
 const client: AnnotationsClient = annotationsApi
 
+/**
+ * Poll while any attached file is mid-OCR. 5s feels tight enough that the
+ * UI doesn't look stuck and loose enough that we're not pounding the API.
+ */
+const OCR_POLL_INTERVAL_MS = 5_000
+
+const hasPendingOcr = (annotations: Annotation[] | undefined): boolean => {
+  if (!annotations) return false
+  for (const ann of annotations) {
+    if (!ann.note) continue
+    for (const att of ann.note.attachments) {
+      if (att.ocrStatus === 'pending' || att.ocrStatus === 'processing') {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 export function useAnnotations(meetingDate: string) {
   const qc = useQueryClient()
 
   const list = useQuery<Annotation[]>({
     queryKey: QK(meetingDate),
     queryFn: () => client.list(meetingDate),
+    refetchInterval: (query) =>
+      hasPendingOcr(query.state.data) ? OCR_POLL_INTERVAL_MS : false,
   })
 
   const create = useMutation({

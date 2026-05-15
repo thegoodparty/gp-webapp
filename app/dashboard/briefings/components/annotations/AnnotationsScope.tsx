@@ -27,6 +27,7 @@ import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
 import AddNotesDialog from '../notes-intake/AddNotesDialog'
+import { uploadAttachment } from '@shared/briefings/attachments-api'
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -375,11 +376,29 @@ export default function AnnotationsScope({
       <AddNotesDialog
         open={intakeOpen}
         onClose={() => setIntakeOpen(false)}
-        onSubmitTypedNote={async (body) => {
-          await create.mutateAsync({
+        onSubmit={async (input) => {
+          if (input.kind === 'typed') {
+            await create.mutateAsync({
+              kind: 'note',
+              anchor: { jsonPath: null, start: null, end: null },
+              payload: { body: input.body },
+            })
+            return
+          }
+          // File path: create the note row first (no body), then PUT to S3
+          // via presign + complete. The polled annotations list picks up the
+          // OCR status updates afterwards.
+          const created = await create.mutateAsync({
             kind: 'note',
             anchor: { jsonPath: null, start: null, end: null },
-            payload: { body },
+            payload: {},
+          })
+          await uploadAttachment({
+            annotationId: created.id,
+            file: input.file,
+          })
+          queryClient.invalidateQueries({
+            queryKey: annotationsQueryKey(meetingDate),
           })
         }}
       />
