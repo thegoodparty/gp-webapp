@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
-import { getBriefingBySlug } from '@shared/briefings/server'
+import { getBriefingBySlug, isFullBriefing } from '@shared/briefings/server'
 import AgendaItemCard from '../../components/detail/AgendaItemCard'
 
 type PageProps = {
@@ -9,7 +9,8 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug, itemId } = await params
-  const briefing = await getBriefingBySlug(slug)
+  const result = await getBriefingBySlug(slug)
+  const briefing = result && isFullBriefing(result) ? result : null
   const item = briefing?.items.find((i) => i.id === itemId)
   return pageMetaData({
     title:
@@ -31,8 +32,9 @@ export default async function Page({
   params,
 }: PageProps): Promise<React.JSX.Element> {
   const { slug, itemId } = await params
-  const briefing = await getBriefingBySlug(slug)
-  if (!briefing) notFound()
+  const result = await getBriefingBySlug(slug)
+  if (!result || !isFullBriefing(result)) notFound()
+  const briefing = result
   const index = briefing.items.findIndex((i) => i.id === itemId)
   const item = briefing.items[index]
   if (!item) notFound()

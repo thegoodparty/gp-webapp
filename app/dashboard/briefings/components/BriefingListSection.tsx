@@ -1,4 +1,5 @@
 import BriefingListRow from './BriefingListRow'
+import AwaitingAgendaRow from './AwaitingAgendaRow'
 import type { BriefingSummary } from '@shared/briefings/types'
 
 type Props = {
@@ -24,9 +25,13 @@ export default function BriefingListSection({
         {title}
       </div>
       <div className="divide-y divide-border">
-        {summaries.map((s) => (
-          <BriefingListRow key={s.id} summary={s} />
-        ))}
+        {summaries.map((s) =>
+          s.status === 'awaiting_agenda' ? (
+            <AwaitingAgendaRow key={s.id} summary={s} />
+          ) : (
+            <BriefingListRow key={s.id} summary={s} />
+          ),
+        )}
       </div>
     </div>
   )
