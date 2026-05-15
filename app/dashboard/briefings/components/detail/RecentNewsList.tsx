@@ -1,13 +1,13 @@
 import { ExternalLink } from 'lucide-react'
-import type { NewsItem } from '@shared/briefings/types'
+import type { RecentNewsEntry } from '@shared/briefings/types'
 
 type Props = {
-  items: NewsItem[]
+  items: RecentNewsEntry[]
   pathPrefix: string
 }
 
 /**
- * Bulleted list of recent news links. Each title is anchored for highlighting
+ * Bulleted list of recent news links. Each headline is anchored for highlighting
  * via `data-briefing-json-path` so phase 4's selection toolbar can resolve it.
  */
 export default function RecentNewsList({
@@ -16,20 +16,22 @@ export default function RecentNewsList({
 }: Props): React.JSX.Element | null {
   if (items.length === 0) return null
   return (
-    <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-foreground">
+    <ul className="list-disc! space-y-1 pl-5 text-sm leading-6 text-foreground">
       {items.map((n, i) => (
-        <li key={`${n.url}-${i}`}>
+        <li key={`${n.url}-${i}`} className="list-item!">
           <a
             href={n.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-start gap-1 font-medium text-info hover:underline"
-            data-briefing-json-path={`${pathPrefix}/${i}/title`}
+            data-briefing-json-path={`${pathPrefix}/${i}/headline`}
           >
-            <span>{n.title}</span>
+            <span>{n.headline}</span>
             <ExternalLink aria-hidden className="mt-1 size-3 shrink-0" />
           </a>{' '}
-          <span className="text-xs text-muted-foreground">— {n.outlet}</span>
+          <span className="text-xs text-muted-foreground">
+            — {n.publication}
+          </span>
         </li>
       ))}
     </ul>

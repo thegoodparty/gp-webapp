@@ -16,11 +16,11 @@ import {
   briefingItemHref,
   briefingOverviewHref,
 } from '@shared/briefings/routes'
-import type { AgendaItem } from '@shared/briefings/types'
+import type { Item } from '@shared/briefings/types'
 
 type Props = {
   briefingSlug: string
-  agenda: AgendaItem[]
+  items: Item[]
 }
 
 /**
@@ -34,7 +34,7 @@ type Props = {
  */
 export default function MobileBottomBar({
   briefingSlug,
-  agenda,
+  items,
 }: Props): React.JSX.Element {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
@@ -43,11 +43,11 @@ export default function MobileBottomBar({
 
   const currentLabel = useMemo(() => {
     if (pathname === overviewHref) return 'Executive Summary'
-    const match = agenda.find(
+    const match = items.find(
       (a) => pathname === briefingItemHref(briefingSlug, a.id),
     )
     return match?.title ?? 'Executive Summary'
-  }, [agenda, briefingSlug, overviewHref, pathname])
+  }, [items, briefingSlug, overviewHref, pathname])
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex items-end justify-between gap-2 px-4 pb-4 lg:hidden">
@@ -86,7 +86,7 @@ export default function MobileBottomBar({
                 Executive Summary
               </Link>
             </li>
-            {agenda.map((a) => {
+            {items.map((a) => {
               const href = briefingItemHref(briefingSlug, a.id)
               const isActive = pathname === href
               return (

@@ -46,6 +46,10 @@ export default async function Page({
   // briefing-schema knowledge.
   const speechText = renderBriefingForSpeech(briefing)
 
+  const featuredItems = briefing.items
+    .map((item, index) => ({ item, index }))
+    .filter(({ item }) => item.tier === 'featured')
+
   return (
     <>
       <ExecutiveSummaryCard
@@ -55,12 +59,13 @@ export default async function Page({
         analyticsLabel="briefing"
       />
 
-      {briefing.actionItems.map((item, i) => (
+      {featuredItems.map(({ item, index }) => (
         <AgendaItemCard
           key={item.id}
           item={item}
-          index={i}
-          domId={`briefing-${briefing.id}-item-${item.id}`}
+          itemIndex={index}
+          sources={briefing.sources}
+          domId={`briefing-item-${item.id}`}
         />
       ))}
     </>

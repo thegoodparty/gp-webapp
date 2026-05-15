@@ -44,7 +44,7 @@ export default async function BriefingChromeLayout({
           <div className="flex min-h-full flex-col bg-muted pb-20 lg:pb-12">
             <DetailHeader
               title={briefing.title}
-              readingTimeMinutes={briefing.readingTimeMinutes}
+              readingTimeMinutes={briefing.estimatedReadMinutes}
             />
 
             <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:px-8">
@@ -61,10 +61,7 @@ export default async function BriefingChromeLayout({
               <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
                 <aside className="hidden lg:block">
                   <div className="sticky top-[88px] max-h-[calc(100vh-104px)] overflow-y-auto rounded-2xl border border-border bg-card p-3">
-                    <DetailToc
-                      briefingSlug={briefing.slug}
-                      agenda={briefing.agenda}
-                    />
+                    <DetailToc briefingSlug={slug} items={briefing.items} />
                   </div>
                 </aside>
 
@@ -83,10 +80,7 @@ export default async function BriefingChromeLayout({
             </div>
           </div>
 
-          <MobileBottomBar
-            briefingSlug={briefing.slug}
-            agenda={briefing.agenda}
-          />
+          <MobileBottomBar briefingSlug={slug} items={briefing.items} />
         </div>
       </AnnotationsScope>
     </DashboardLayout>

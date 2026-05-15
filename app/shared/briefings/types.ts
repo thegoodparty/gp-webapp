@@ -1,105 +1,150 @@
 /**
  * Frontend types for briefings and annotations.
  *
- * These mirror the contracts package shapes that will live in
- * `@goodparty_org/contracts` once Melecia and Swain publish them. Once those
- * land, replace the type bodies here with `export type X = ContractsX` re-exports
- * so the rest of the app does not need to change imports.
+ * Briefing types mirror the v2 meeting_briefing artifact schema, sourced
+ * from the agent manifest at:
+ *   https://github.com/thegoodparty/runbooks/blob/main/experiments/meeting_briefing/manifest.json
+ * Snake_case lives at the API boundary (see gpApi/api-endpoints.ts); these
+ * types are camelCase, mapped by app/shared/briefings/server.ts.
+ *
+ * Internal QA fields from the artifact (claims, required_data_points,
+ * disclosure, run_metadata, per-item research) are intentionally NOT
+ * surfaced here yet; they can be added when we need to render them.
  */
 
 // ---------------------------------------------------------------------------
-// Briefing JSON (produced by Melecia, served by Swain)
+// Briefing (v2 artifact)
 // ---------------------------------------------------------------------------
 
 export type BriefingStatus =
   | 'briefing_ready'
   | 'awaiting_agenda'
-  | 'generating'
-  | 'failed'
+  | 'no_meeting_found'
+  | 'agenda_provided_by_user'
+  | 'error'
 
-export type AgendaItemKind =
-  | 'procedural'
-  | 'consent'
-  | 'public_input'
-  | 'action'
-  | 'informational'
+export type BriefingType =
+  | 'city_council_meeting'
+  | 'county_legislature_meeting'
+  | 'school_board_meeting'
 
-export type SourceKind = 'internal' | 'official' | 'news' | 'community'
+export type ItemTier = 'featured' | 'queued' | 'standard'
 
-export type MeetingType = 'city_council' | 'planning_board' | 'town_hall'
+export type ArticleType =
+  | 'reporting'
+  | 'opinion'
+  | 'editorial'
+  | 'press_release'
+  | 'government_communication'
 
-export interface Source {
-  id: string
-  label: string
-  kind: SourceKind
-  iconInitial: string
-  url: string | null
-}
+export type SourceType =
+  | 'agenda_packet'
+  | 'news'
+  | 'government_website'
+  | 'campaign'
+  | 'haystaq'
 
-export interface AgendaItem {
-  id: string
-  title: string
-  kind: AgendaItemKind
-  hasBriefing: boolean
-  /** Short description of what to expect for this item. Used for items
-   *  that do not warrant a full action briefing (procedural, consent,
-   *  public comment, informational). Optional. */
-  whatToExpect?: string
-}
+export type HaystaqStatus = 'ok' | 'no_match' | 'city_mismatch' | 'no_column'
+export type HaystaqSource = 'curated' | 'dictionary_fallback'
+
+// ---------------------------------------------------------------------------
+// Item display
+// ---------------------------------------------------------------------------
 
 export interface ConstituentSentiment {
   summary: string
-  detail?: string
-  sources: string[]
+  detail?: string | null
+  districtNote?: string | null
+  haystaqColumn: string
+  meanScore: number
+  scoreDirection: string
+  voterCount: number
+  haystaqStatus: HaystaqStatus
+  haystaqSource: HaystaqSource
 }
 
-export interface NewsItem {
-  title: string
-  outlet: string
+export interface RecentNewsEntry {
+  headline: string
+  publication: string
+  articleType: ArticleType
+  publicationDate?: string | null
   url: string
+}
+
+export interface BudgetImpactFigure {
+  label: string
+  value: string
+  sourceId: string
 }
 
 export interface BudgetImpact {
   summary: string
-  sources: string[]
+  figures: BudgetImpactFigure[]
 }
 
-export interface ActionItem {
+export interface ItemDisplay {
+  summary: string
+  constituentSentiment?: ConstituentSentiment | null
+  recentNews?: RecentNewsEntry[] | null
+  budgetImpact?: BudgetImpact | null
+  talkingPoints?: string[] | null
+  sourceIds?: string[]
+}
+
+// ---------------------------------------------------------------------------
+// Item
+// ---------------------------------------------------------------------------
+
+export interface Item {
   id: string
+  itemNumber: string | null
   title: string
-  overview: string
-  constituentSentiment: ConstituentSentiment | null
-  recentNews: NewsItem[]
-  budgetImpact: BudgetImpact | null
-  talkingPoints: string[]
-  sources: Source[]
+  tier: ItemTier
+  voteRequired: boolean
+  tierReason: string[]
+  display: ItemDisplay
 }
 
-export interface Meeting {
+// ---------------------------------------------------------------------------
+// Source
+// ---------------------------------------------------------------------------
+
+export interface Source {
   id: string
   name: string
-  body: string
-  type: MeetingType
-  scheduledAt: string // ISO 8601 with timezone
-  location: string
+  url?: string | null
+  sourceType: SourceType
+  publisher?: string | null
+  articleType?: ArticleType | null
+  publicationDate?: string | null
+  pageNumber?: number | null
+  sectionHeading?: string | null
+  scoreValue?: number | null
 }
+
+// ---------------------------------------------------------------------------
+// Briefing
+// ---------------------------------------------------------------------------
 
 export interface Briefing {
-  id: string
-  slug: string
-  meetingId: string
-  title: string
-  meetingDate: string // human-readable, e.g. "June 1, 2026"
-  status: BriefingStatus
-  readingTimeMinutes: number
+  experimentId: string
+  briefingType: BriefingType
+  briefingStatus: BriefingStatus
   generatedAt: string
-  meeting: Meeting
+  officialName: string
+  meetingDate: string
+  estimatedReadMinutes: number
   executiveSummary: string
-  agenda: AgendaItem[]
-  actionItems: ActionItem[]
+  items: Item[]
+  sources: Source[]
+  /**
+   * Computed display title. The v2 artifact does not carry one; we build
+   * it in server.ts from briefingType + meetingDate.
+   */
+  title: string
 }
 
-/** Slim shape for the landing list. */
+/** Slim shape for the landing list. Coming from `GET /v1/meetings`. */
 export interface BriefingSummary {
   id: string
   slug: string
@@ -107,11 +152,11 @@ export interface BriefingSummary {
   meetingName: string
   scheduledAt: string
   location: string
-  status: BriefingStatus
+  status: 'briefing_ready' | 'awaiting_agenda'
 }
 
 // ---------------------------------------------------------------------------
-// Annotations (my system)
+// Annotations (my system) — unchanged
 // ---------------------------------------------------------------------------
 
 export type AnnotationKind = 'note' | 'chat' | 'bug_report'
@@ -140,7 +185,7 @@ export interface AnnotationNoteData {
 }
 
 export interface AnnotationChatData {
-  id: string // ChatConversation id
+  id: string
   createdAt: string
 }
 

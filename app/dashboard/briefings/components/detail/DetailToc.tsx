@@ -7,11 +7,11 @@ import {
   briefingItemHref,
   briefingOverviewHref,
 } from '@shared/briefings/routes'
-import type { AgendaItem } from '@shared/briefings/types'
+import type { Item } from '@shared/briefings/types'
 
 type Props = {
   briefingSlug: string
-  agenda: AgendaItem[]
+  items: Item[]
 }
 
 type Entry = {
@@ -28,7 +28,7 @@ type Entry = {
  */
 export default function DetailToc({
   briefingSlug,
-  agenda,
+  items,
 }: Props): React.JSX.Element {
   const pathname = usePathname()
 
@@ -41,7 +41,7 @@ export default function DetailToc({
         href: overviewHref,
       },
     ]
-    for (const item of agenda) {
+    for (const item of items) {
       list.push({
         key: item.id,
         label: item.title,
@@ -49,7 +49,7 @@ export default function DetailToc({
       })
     }
     return list
-  }, [agenda, briefingSlug, overviewHref])
+  }, [items, briefingSlug, overviewHref])
 
   return (
     <ul className="flex list-none flex-col gap-0.5">
