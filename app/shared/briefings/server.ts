@@ -67,6 +67,7 @@ const toSentiment = (
   voterCount: dto.voter_count,
   haystaqStatus: dto.haystaq_status,
   haystaqSource: dto.haystaq_source,
+  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
 })
 
 const toRecentNews = (
@@ -86,6 +87,7 @@ const toBudgetImpact = (dto: MeetingBriefingBudgetImpactDto): BudgetImpact => ({
     value: f.value,
     sourceId: f.source_id,
   })),
+  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
 })
 
 const toDisplay = (dto: MeetingBriefingItemDisplayDto): ItemDisplay => ({

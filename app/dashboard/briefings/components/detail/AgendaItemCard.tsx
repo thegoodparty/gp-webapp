@@ -20,6 +20,57 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
+const initialFor = (name: string): string =>
+  name.trim().charAt(0).toUpperCase() || '?'
+
+const SectionSourcePills = ({
+  sourceIds,
+  sourceById,
+}: {
+  sourceIds: string[]
+  sourceById: Map<string, Source>
+}): React.JSX.Element | null => {
+  const resolved = sourceIds
+    .map((id) => sourceById.get(id))
+    .filter((s): s is Source => Boolean(s))
+  if (resolved.length === 0) return null
+  return (
+    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+      <span className="italic text-muted-foreground">source:</span>
+      {resolved.map((s) => {
+        const pillClass =
+          'inline-flex max-w-[200px] items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 text-foreground'
+        const inner = (
+          <>
+            <span
+              aria-hidden
+              className="inline-flex size-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary"
+            >
+              {initialFor(s.name)}
+            </span>
+            <span className="truncate font-medium">{s.name}</span>
+          </>
+        )
+        return s.url ? (
+          <a
+            key={s.id}
+            href={s.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${pillClass} hover:bg-muted`}
+          >
+            {inner}
+          </a>
+        ) : (
+          <span key={s.id} className={pillClass}>
+            {inner}
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
 /**
  * One item card on the briefing detail page. Sections rendered, in order:
  * Summary, Constituent Sentiment, Recent News, Budget Impact, Talking Points,
@@ -93,6 +144,12 @@ export default function AgendaItemCard({
               {sentiment.detail}
             </p>
           ) : null}
+          {sentiment.sourceIds.length > 0 ? (
+            <SectionSourcePills
+              sourceIds={sentiment.sourceIds}
+              sourceById={sourceById}
+            />
+          ) : null}
         </section>
       ) : null}
 
@@ -115,6 +172,12 @@ export default function AgendaItemCard({
           >
             {budget.summary}
           </p>
+          {budget.sourceIds.length > 0 ? (
+            <SectionSourcePills
+              sourceIds={budget.sourceIds}
+              sourceById={sourceById}
+            />
+          ) : null}
         </section>
       ) : null}
 
