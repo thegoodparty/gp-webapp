@@ -367,6 +367,19 @@ export type APIEndpoints = {
     Response: void
   }
 
+  'GET /v1/meetings/:date/briefing/feedback': {
+    Request: { date: string }
+    Response: { feedback: ApiArtifactFeedback[] }
+  }
+  'PUT /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: { date: string; itemId: string; feedback: ApiArtifactFeedbackKind }
+    Response: ApiArtifactFeedback
+  }
+  'DELETE /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: { date: string; itemId: string }
+    Response: void
+  }
+
   'GET /v1/elections/race-by-position': {
     Request: {
       brPositionId: string
@@ -434,6 +447,20 @@ export type ApiCreateAnnotationInput =
       anchor: ApiAnnotationAnchorInput
       payload: { description: string }
     }
+
+export type ApiArtifactResourceType = 'agenda_item'
+export type ApiArtifactFeedbackKind = 'positive' | 'negative'
+
+export interface ApiArtifactFeedback {
+  id: string
+  organization_slug: string
+  submitter_user_id: number
+  artifact_type: ApiArtifactResourceType
+  artifact_id: string
+  feedback: ApiArtifactFeedbackKind
+  created_at: string
+  updated_at: string
+}
 
 export type Organization = {
   slug: string

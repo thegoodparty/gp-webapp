@@ -9,6 +9,7 @@ type Props = {
   itemIndex: number
   sources: Source[]
   domId: string
+  meetingDate: string
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -33,6 +34,7 @@ export default function AgendaItemCard({
   itemIndex,
   sources,
   domId,
+  meetingDate,
 }: Props): React.JSX.Element {
   const base = `/items/${itemIndex}`
   const display = item.display
@@ -127,7 +129,7 @@ export default function AgendaItemCard({
       ) : null}
 
       <SourcesCollapsible sources={itemSources} />
-      <FeedbackRow />
+      <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
     </article>
   )
 }
