@@ -145,7 +145,7 @@ const toBriefing = (
     items: dto.items.map(toItem),
     sources: dto.sources.map(toSource),
     title: `${
-      BRIEFING_TYPE_LABEL[dto.briefing_type]
+      BRIEFING_TYPE_LABEL[dto.briefing_type] ?? 'Meeting'
     } briefing for ${formattedDate}`,
   }
 }
