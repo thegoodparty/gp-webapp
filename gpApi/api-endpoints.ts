@@ -1,4 +1,10 @@
 import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
+import type {
+  SynthesizeSpeechRequest,
+  SynthesizeSpeechResponse,
+  TranscribeSessionRequest,
+  TranscribeSessionResponse,
+} from 'app/dashboard/briefings/shared/speech-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
@@ -10,6 +16,76 @@ import type {
   GetConstituentIssuesResponse,
   GetIndividualActivitiesResponse,
 } from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
+
+export interface MeetingsListItemDto {
+  meetingDate: string
+  meetingTime: string
+  meetingTimezone: string
+  durationMinutes: number
+  meetingName: string
+  location: string
+  hasBriefing: boolean
+}
+
+export interface MeetingsListResponseDto {
+  scheduleKnown: boolean
+  meetings: MeetingsListItemDto[]
+}
+
+export interface MeetingBriefingSourceDto {
+  id: string
+  label: string
+  kind: 'internal' | 'official' | 'news' | 'community'
+  iconInitial: string
+  url: string | null
+}
+
+export interface MeetingBriefingAgendaItemDto {
+  id: string
+  title: string
+  kind: 'procedural' | 'consent' | 'public_input' | 'action' | 'informational'
+  hasBriefing: boolean
+  whatToExpect?: string
+}
+
+export interface MeetingBriefingActionItemDto {
+  id: string
+  title: string
+  overview: string
+  constituentSentiment: {
+    summary: string
+    detail?: string
+    sources: string[]
+  } | null
+  recentNews: Array<{ title: string; outlet: string; url: string }>
+  budgetImpact: {
+    summary: string
+    sources: string[]
+  } | null
+  talkingPoints: string[]
+  sources: MeetingBriefingSourceDto[]
+}
+
+export interface MeetingBriefingResponseDto {
+  id: string
+  slug: string
+  meetingId: string
+  title: string
+  status: 'briefing_ready' | 'awaiting_agenda' | 'generating' | 'failed'
+  readingTimeMinutes: number
+  generatedAt: string
+  meeting: {
+    id: string
+    name: string
+    body: string
+    type: 'city_council' | 'planning_board' | 'town_hall'
+    scheduledAt: string
+    location: string
+  }
+  executiveSummary: string
+  agenda: MeetingBriefingAgendaItemDto[]
+  actionItems: MeetingBriefingActionItemDto[]
+}
 
 export type APIEndpoints = {
   'GET /v1/users/me': {
@@ -194,18 +270,24 @@ export type APIEndpoints = {
     Response: GetIndividualActivitiesResponse
   }
 
-  // Legacy briefings endpoints kept until the team confirms gp-api has
-  // decommissioned them. The old briefing-types.ts file is deleted; these
-  // are typed as `unknown` so the entries remain registered without
-  // resurrecting dead types. Remove once confirmed unused server-side.
-  'GET /v1/meetings/briefings': {
+  'GET /v1/meetings': {
     Request: {}
-    Response: unknown[]
+    Response: MeetingsListResponseDto
   }
 
-  'GET /v1/meetings/briefings/:date': {
-    Request: {}
-    Response: unknown
+  'GET /v1/meetings/:date/briefing': {
+    Request: { date: string }
+    Response: MeetingBriefingResponseDto
+  }
+
+  'POST /v1/speech/synthesize': {
+    Request: SynthesizeSpeechRequest
+    Response: SynthesizeSpeechResponse
+  }
+
+  'POST /v1/speech/transcribe/session': {
+    Request: TranscribeSessionRequest
+    Response: TranscribeSessionResponse
   }
 
   // Briefing annotations. Backend ships responses in snake_case. The

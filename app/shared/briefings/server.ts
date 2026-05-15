@@ -1,18 +1,71 @@
-import { cache } from 'react'
-import { briefingsBySlug } from './fixtures'
-import type { Briefing } from './types'
+import { format, parseISO } from 'date-fns'
+import { FetchError } from 'ofetch'
+import { serverRequest } from 'gpApi/server-request'
+import type {
+  MeetingsListItemDto,
+  MeetingBriefingResponseDto,
+} from 'gpApi/api-endpoints'
+import type { Briefing, BriefingSummary } from './types'
 
-/**
- * Resolve a briefing by slug.
- *
- * Wrapped in `cache()` so a layout and its nested page can both call this
- * within a single request without duplicating work. Returns null if the
- * briefing does not exist.
- *
- * TODO: replace fixture lookup with Swain's BriefingsApi once available.
- */
-export const getBriefingBySlug = cache(
-  async (slug: string): Promise<Briefing | null> => {
-    return briefingsBySlug[slug] ?? null
-  },
-)
+const getOffsetForZone = (instant: Date, timeZone: string): string => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    timeZoneName: 'longOffset',
+  }).formatToParts(instant)
+  const tzName =
+    parts.find((p) => p.type === 'timeZoneName')?.value ?? 'GMT+00:00'
+  const offset = tzName.replace('GMT', '')
+  return offset === '' ? '+00:00' : offset
+}
+
+const buildScheduledAt = (item: MeetingsListItemDto): string => {
+  const probe = new Date(`${item.meetingDate}T${item.meetingTime}:00Z`)
+  const offset = getOffsetForZone(probe, item.meetingTimezone)
+  return `${item.meetingDate}T${item.meetingTime}:00${offset}`
+}
+
+const toSummary = (item: MeetingsListItemDto): BriefingSummary => ({
+  id: item.meetingDate,
+  slug: item.meetingDate,
+  meetingDate: format(parseISO(item.meetingDate), 'MMMM d, yyyy'),
+  meetingName: item.meetingName,
+  scheduledAt: buildScheduledAt(item),
+  location: item.location,
+  status: item.hasBriefing ? 'briefing_ready' : 'awaiting_agenda',
+})
+
+export const getBriefingsList = async (): Promise<BriefingSummary[]> => {
+  const { data } = await serverRequest('GET /v1/meetings', {})
+  return data.meetings.map(toSummary)
+}
+
+const toBriefing = (
+  dto: MeetingBriefingResponseDto,
+  date: string,
+): Briefing => ({
+  ...dto,
+  meetingDate: format(parseISO(date), 'MMMM d, yyyy'),
+  actionItems: (dto.actionItems ?? []).map((item) => ({
+    ...item,
+    budgetImpact: item.budgetImpact
+      ? {
+          summary: item.budgetImpact.summary,
+          sources: item.budgetImpact.sources,
+        }
+      : null,
+  })),
+})
+
+export const getBriefingBySlug = async (
+  slug: string,
+): Promise<Briefing | null> => {
+  try {
+    const { data } = await serverRequest('GET /v1/meetings/:date/briefing', {
+      date: slug,
+    })
+    return toBriefing(data, slug)
+  } catch (e) {
+    if (e instanceof FetchError && e.status === 404) return null
+    throw e
+  }
+}
