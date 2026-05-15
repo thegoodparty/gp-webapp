@@ -1,6 +1,5 @@
 'use client'
 import { IconButton } from '@styleguide'
-import { clientRequest, type RequestOptions } from 'gpApi/typed-request'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { type SegmentResponse } from './shared/contacts-types'
 import { dateUsHelper } from 'helpers/dateHelper'
@@ -19,31 +18,41 @@ export default function Download() {
   const { customSegments, currentSegment, canUseProFeatures } =
     useContactsTable()
 
-  const handleDownload = async (): Promise<void> => {
+  // Trigger the contacts CSV download via a top-level browser navigation so
+  // bytes stream directly to disk. Avoids buffering the entire response (up
+  // to ~700 MB for a 1M-row district) into a JS Blob, which would OOM mid-
+  // tier laptops and show no download progress. Auth + the
+  // `x-organization-slug` header are added automatically by Next.js
+  // middleware in `helpers/handleApiRequestRewrite.ts` when the request
+  // passes through `/api/v1/...`.
+  const handleDownload = (): void => {
     if (!canUseProFeatures) {
       showProUpgradeModal(true)
       return
     }
-    try {
-      const { data: blob } = await clientRequest(
-        'GET /v1/contacts/download',
-        { ...(currentSegment ? { segment: currentSegment } : {}) },
-        { responseType: 'blob' } as unknown as RequestOptions,
-      )
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      const dateStr = dateUsHelper(new Date()).replace(/ /g, '_')
-      link.setAttribute('download', `contacts_${dateStr}.csv`)
-      document.body.appendChild(link)
-      link.click()
 
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(link)
-      trackEvent(EVENTS.Contacts.Download, generateProperties())
-    } catch (err) {
-      console.error('Failed to download contacts', err)
+    const query = new URLSearchParams()
+    if (currentSegment) {
+      query.set('segment', currentSegment)
     }
+    const queryString = query.toString()
+    const href = `/api/v1/contacts/download${
+      queryString ? `?${queryString}` : ''
+    }`
+    const dateStr = dateUsHelper(new Date()).replace(/ /g, '_')
+
+    const link = document.createElement('a')
+    link.href = href
+    link.setAttribute('download', `contacts_${dateStr}.csv`)
+    link.rel = 'noopener'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+
+    // We cannot observe completion of a top-level download, so fire the
+    // analytics event at click time. The download will continue in the
+    // browser's native UI even if the user navigates away.
+    trackEvent(EVENTS.Contacts.Download, generateProperties())
   }
 
   const generateProperties = (): Record<
