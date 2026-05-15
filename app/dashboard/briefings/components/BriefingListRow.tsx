@@ -16,7 +16,7 @@ function pillFor(status: BriefingStatus): PillVariant | null {
   if (status === 'briefing_ready') {
     return {
       label: 'Briefing ready',
-      className: 'bg-accent text-accent-foreground',
+      className: 'bg-success-100 text-success-700',
     }
   }
   if (status === 'awaiting_agenda') {
