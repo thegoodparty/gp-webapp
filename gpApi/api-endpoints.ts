@@ -1,9 +1,5 @@
 import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
 import type {
-  Briefing,
-  BriefingListItem,
-} from 'app/dashboard/briefings/shared/briefing-types'
-import type {
   SynthesizeSpeechRequest,
   SynthesizeSpeechResponse,
   TranscribeSessionRequest,
@@ -204,14 +200,18 @@ export type APIEndpoints = {
     Response: GetIndividualActivitiesResponse
   }
 
+  // Legacy briefings endpoints kept until the team confirms gp-api has
+  // decommissioned them. The old briefing-types.ts file is deleted; these
+  // are typed as `unknown` so the entries remain registered without
+  // resurrecting dead types. Remove once confirmed unused server-side.
   'GET /v1/meetings/briefings': {
     Request: {}
-    Response: BriefingListItem[]
+    Response: unknown[]
   }
 
   'GET /v1/meetings/briefings/:date': {
     Request: {}
-    Response: Briefing
+    Response: unknown
   }
 
   'POST /v1/speech/synthesize': {

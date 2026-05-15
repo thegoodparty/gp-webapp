@@ -1,25 +1,24 @@
 import pageMetaData from 'helpers/metadataHelper'
+import { briefingsLandingFixture } from '@shared/briefings/fixtures'
 import serveAccess from '../shared/serveAccess'
-import { listBriefings } from './shared/serverApiCalls'
-import { redirect } from 'next/navigation'
-import BriefingsPage from './components/BriefingsPage'
+import DashboardLayout from '../shared/DashboardLayout'
+import BriefingsLanding from './components/BriefingsLanding'
 
-export const metadata = pageMetaData({
+const meta = pageMetaData({
   title: 'Briefings | GoodParty.org',
-  description: 'Meeting briefings for your upcoming council meetings',
+  description: 'Meeting briefings',
   slug: '/dashboard/briefings',
 })
-
+export const metadata = meta
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
+export default async function Page(): Promise<React.JSX.Element> {
   await serveAccess()
-  const briefings = await listBriefings()
-
-  // Redirect to most recent briefing if one exists — matches Lovable design
-  if (briefings.length > 0 && briefings[0]) {
-    redirect(`/dashboard/briefings/${briefings[0].date}`)
-  }
-
-  return <BriefingsPage pathname="/dashboard/briefings" />
+  // TODO: replace fixture with Swain's BriefingsApi once available.
+  const summaries = briefingsLandingFixture
+  return (
+    <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
+      <BriefingsLanding summaries={summaries} />
+    </DashboardLayout>
+  )
 }
