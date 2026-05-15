@@ -509,84 +509,121 @@ export default function AskAiChatBody({
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="relative flex min-h-0 flex-1 flex-col">
-      <div
-        ref={scrollRef}
-        className={
-          bodyClassName ??
-          'flex max-h-[60vh] min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-3'
-        }
-        data-testid="ask-ai-conversation"
-      >
-        {creating && (
-          <div className="text-sm text-muted-foreground">Loading chat...</div>
-        )}
+        <div
+          ref={scrollRef}
+          className={
+            bodyClassName ??
+            'flex max-h-[60vh] min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-3'
+          }
+          data-testid="ask-ai-conversation"
+        >
+          {creating && (
+            <div className="text-sm text-muted-foreground">Loading chat...</div>
+          )}
 
-        {showEmptyState && (
-          <div className="flex flex-col gap-3">
-            {showInlineHeader && (
-              <div className="flex items-center gap-2">
-                <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Sparkles className="size-4" aria-hidden />
+          {showEmptyState && (
+            <div className="flex flex-col gap-3">
+              {showInlineHeader && (
+                <div className="flex items-center gap-2">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Sparkles className="size-4" aria-hidden />
+                  </span>
+                  <span className="text-sm font-semibold">
+                    Briefing assistant
+                  </span>
+                </div>
+              )}
+              <p className="text-sm leading-5 text-muted-foreground">
+                Ask anything about this briefing — I can summarize sections,
+                compare options, or pull out the asks.
+              </p>
+              <div className="flex flex-col gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Suggested
                 </span>
-                <span className="text-sm font-semibold">
-                  Briefing assistant
-                </span>
-              </div>
-            )}
-            <p className="text-sm leading-5 text-muted-foreground">
-              Ask anything about this briefing — I can summarize sections,
-              compare options, or pull out the asks.
-            </p>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Suggested
-              </span>
-              <AskAiSuggestedPills
-                onSelect={onSelectSuggestion}
-                disabled={sending}
-              />
-            </div>
-          </div>
-        )}
-
-        {displayedHistory.map((item) => {
-          if (item.kind === 'interrupted') {
-            return (
-              <div
-                key={item.id}
-                className="flex flex-col items-start gap-2 self-start rounded-2xl border border-dashed border-base-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground"
-              >
-                <span>Something went wrong.</span>
-                <Button
-                  type="button"
-                  size="small"
-                  variant="outline"
-                  onClick={() => void onRetryInterrupted(item.id)}
+                <AskAiSuggestedPills
+                  onSelect={onSelectSuggestion}
                   disabled={sending}
-                >
-                  Retry
-                </Button>
+                />
               </div>
-            )
-          }
-          if (item.kind === 'user') {
+            </div>
+          )}
+
+          {displayedHistory.map((item) => {
+            if (item.kind === 'interrupted') {
+              return (
+                <div
+                  key={item.id}
+                  className="flex flex-col items-start gap-2 self-start rounded-2xl border border-dashed border-base-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground"
+                >
+                  <span>Something went wrong.</span>
+                  <Button
+                    type="button"
+                    size="small"
+                    variant="outline"
+                    onClick={() => void onRetryInterrupted(item.id)}
+                    disabled={sending}
+                  >
+                    Retry
+                  </Button>
+                </div>
+              )
+            }
+            if (item.kind === 'user') {
+              return (
+                <div
+                  key={item.id}
+                  className="self-end rounded-2xl bg-primary px-3 py-2 text-sm text-primary-foreground"
+                >
+                  {item.content}
+                </div>
+              )
+            }
             return (
               <div
                 key={item.id}
-                className="self-end rounded-2xl bg-primary px-3 py-2 text-sm text-primary-foreground"
+                className="self-start max-w-full rounded-2xl bg-muted px-3 py-2 text-sm text-foreground space-y-2 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_p]:!block [&_p]:!flex-none [&_p]:!whitespace-normal [&_strong]:!inline [&_strong]:font-semibold [&_em]:!inline [&_em]:italic [&_a]:!inline [&_a]:underline [&_code]:!inline [&_code]:rounded [&_code]:bg-foreground/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_li]:!list-item [&_li]:my-0 [&_ul]:!block [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:!block [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_h1]:!block [&_h1]:text-base [&_h1]:font-semibold [&_h2]:!block [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:!block [&_h3]:text-sm [&_h3]:font-semibold [&_table]:!table [&_table]:!w-full [&_table]:!border-collapse [&_table]:my-2 [&_thead]:!table-header-group [&_tbody]:!table-row-group [&_tr]:!table-row [&_tr]:!border-b [&_tr]:border-foreground/15 [&_th]:!table-cell [&_th]:px-2 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-semibold [&_th]:!border-b-2 [&_th]:!border-foreground/30 [&_td]:!table-cell [&_td]:px-2 [&_td]:py-1.5 [&_td]:align-top"
               >
-                {item.content}
+                {item.toolsUsed && item.toolsUsed.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {item.toolsUsed.map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex items-center gap-1 rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                      >
+                        <Search className="size-3" aria-hidden />
+                        {toolDisplayName(t)}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {item.content}
+                </ReactMarkdown>
               </div>
             )
-          }
-          return (
-            <div
-              key={item.id}
-              className="self-start max-w-full rounded-2xl bg-muted px-3 py-2 text-sm text-foreground space-y-2 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_p]:!block [&_p]:!flex-none [&_p]:!whitespace-normal [&_strong]:!inline [&_strong]:font-semibold [&_em]:!inline [&_em]:italic [&_a]:!inline [&_a]:underline [&_code]:!inline [&_code]:rounded [&_code]:bg-foreground/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_li]:!list-item [&_li]:my-0 [&_ul]:!block [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:!block [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_h1]:!block [&_h1]:text-base [&_h1]:font-semibold [&_h2]:!block [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:!block [&_h3]:text-sm [&_h3]:font-semibold [&_table]:!table [&_table]:!w-full [&_table]:!border-collapse [&_table]:my-2 [&_thead]:!table-header-group [&_tbody]:!table-row-group [&_tr]:!table-row [&_tr]:!border-b [&_tr]:border-foreground/15 [&_th]:!table-cell [&_th]:px-2 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-semibold [&_th]:!border-b-2 [&_th]:!border-foreground/30 [&_td]:!table-cell [&_td]:px-2 [&_td]:py-1.5 [&_td]:align-top"
-            >
-              {item.toolsUsed && item.toolsUsed.length > 0 && (
+          })}
+
+          {showBareUserRetry && (
+            <div className="flex flex-col items-start gap-2 self-start rounded-2xl border border-dashed border-base-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+              <span>Something went wrong.</span>
+              <Button
+                type="button"
+                size="small"
+                variant="outline"
+                onClick={() => void onRetryLastUser()}
+                disabled={sending}
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+
+          {streaming && (
+            <div className="self-start max-w-full rounded-2xl bg-muted px-3 py-2 text-sm text-foreground space-y-2 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_strong]:font-semibold [&_em]:italic [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_li]:my-0 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_code]:rounded [&_code]:bg-foreground/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_a]:underline">
+              {activeTools.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
-                  {item.toolsUsed.map((t) => (
+                  {activeTools.map((t) => (
                     <span
                       key={t}
                       className="inline-flex items-center gap-1 rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-muted-foreground"
@@ -597,85 +634,48 @@ export default function AskAiChatBody({
                   ))}
                 </div>
               )}
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {item.content}
-              </ReactMarkdown>
+              {streaming.content ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {streaming.content}
+                </ReactMarkdown>
+              ) : activeTools.length === 0 ? (
+                <span className="text-muted-foreground">Thinking...</span>
+              ) : null}
             </div>
-          )
-        })}
+          )}
 
-        {showBareUserRetry && (
-          <div className="flex flex-col items-start gap-2 self-start rounded-2xl border border-dashed border-base-border bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
-            <span>Something went wrong.</span>
-            <Button
-              type="button"
-              size="small"
-              variant="outline"
-              onClick={() => void onRetryLastUser()}
-              disabled={sending}
+          {error && (
+            <div
+              role="alert"
+              className="flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
             >
-              Retry
-            </Button>
-          </div>
-        )}
+              <span>{error.message}</span>
+              {error.retryable && (
+                <Button
+                  type="button"
+                  size="small"
+                  variant="outline"
+                  onClick={onRetry}
+                  disabled={sending}
+                >
+                  Retry
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
 
-        {streaming && (
-          <div className="self-start max-w-full rounded-2xl bg-muted px-3 py-2 text-sm text-foreground space-y-2 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_strong]:font-semibold [&_em]:italic [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_li]:my-0 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_code]:rounded [&_code]:bg-foreground/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs [&_a]:underline">
-            {activeTools.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {activeTools.map((t) => (
-                  <span
-                    key={t}
-                    className="inline-flex items-center gap-1 rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-medium text-muted-foreground"
-                  >
-                    <Search className="size-3" aria-hidden />
-                    {toolDisplayName(t)}
-                  </span>
-                ))}
-              </div>
-            )}
-            {streaming.content ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {streaming.content}
-              </ReactMarkdown>
-            ) : activeTools.length === 0 ? (
-              <span className="text-muted-foreground">Thinking...</span>
-            ) : null}
-          </div>
-        )}
-
-        {error && (
-          <div
-            role="alert"
-            className="flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        {showJumpPill && (
+          <button
+            type="button"
+            onClick={jumpToBottom}
+            aria-label="Jump to latest message"
+            className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-foreground/85 px-3 py-1.5 text-xs font-medium text-background shadow-md backdrop-blur transition-colors hover:bg-foreground"
           >
-            <span>{error.message}</span>
-            {error.retryable && (
-              <Button
-                type="button"
-                size="small"
-                variant="outline"
-                onClick={onRetry}
-                disabled={sending}
-              >
-                Retry
-              </Button>
-            )}
-          </div>
+            <ArrowDown className="size-3.5" aria-hidden />
+            <span>New text below</span>
+          </button>
         )}
-      </div>
-
-      {showJumpPill && (
-        <button
-          type="button"
-          onClick={jumpToBottom}
-          aria-label="Jump to latest message"
-          className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-foreground/85 px-3 py-1.5 text-xs font-medium text-background shadow-md backdrop-blur transition-colors hover:bg-foreground"
-        >
-          <ArrowDown className="size-3.5" aria-hidden />
-          <span>New text below</span>
-        </button>
-      )}
       </div>
 
       {composerVariant === 'block' ? (
@@ -694,9 +694,7 @@ export default function AskAiChatBody({
             onClick={() => {
               void onSend()
             }}
-            disabled={
-              !annotationId || composer.trim().length === 0
-            }
+            disabled={!annotationId || composer.trim().length === 0}
             loading={sending || creating}
             icon={<Send className="size-4" aria-hidden />}
             iconPosition="left"
