@@ -3,19 +3,17 @@ import type { OnboardingStepConfig, NonEmptyArray } from './onboardingTypes'
 export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'welcome',
-    eyebrow: 'Campaign plan setup',
     title: "Let's build your winning campaign plan in 5 minutes",
     description:
-      "All we need to know is what office you're running for and where, and we'll take it from there",
+      "All we need to know is what office you're running for. We'll take it from there.",
     summary:
       'This step introduces the value of the flow before collecting candidate details.',
   },
   {
     id: 'ballot-status',
-    eyebrow: 'Candidate status',
     title: 'Are you already on the ballot?',
     description:
-      'We tailor your strategy to where you actually are in your campaign.',
+      "We'll tailor your strategy based on where you are in your campaign.",
     summary:
       'The answer is stored in onboarding state and can be submitted with the final payload.',
     whyWeAsk:
@@ -24,10 +22,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'party-affiliation',
-    eyebrow: 'Candidate eligibility',
-    title: 'Are you running with an official party designation?',
+    title: 'Are you running with a party designation?',
     description:
-      'Party designation determines whether you can continue with GoodParty.org support.',
+      'Pick the party label voters will see on the ballot as an official designation for your race, not your personal voting history or party preference.',
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:
@@ -38,10 +35,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'office-selection',
-    eyebrow: 'Office selection',
     title: 'What office are you running for?',
     description:
-      "We'll use this to analyze local voter data, trends, & news to create your campaign plan.",
+      "We'll use this to pull local voter data and shape your plan around your race.",
     summary:
       'Structured office selection feeds Path to Victory. Manual office entry follows a shorter path.',
     whyWeAsk:
@@ -51,10 +47,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'manual-office-entry',
-    eyebrow: 'Office details',
     title: 'Tell us about your office',
     description:
-      "We couldn't find a structured match. Enter your office details and our team will follow up.",
+      "We couldn't find your race in our database. Tell us a few details and our team will follow up.",
     summary:
       'The manualOffice and unmatchedOffice flags are stored in onboarding state.',
     whyWeAsk:
@@ -89,8 +84,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'path-to-victory',
-    eyebrow: 'Vote goal',
-    title: "Here's how many votes you need to win",
+    title: 'Projected votes needed to win',
     description:
       'We use historical voter data and proprietary models to get the most accurate projections for your race.',
     summary:
@@ -101,10 +95,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'voter-demographics',
-    eyebrow: 'Voter demographics',
-    title: "Here's everything to know about your voters",
+    title: 'Voter insights for your district',
     description:
-      'We crunch the latest voter data, along with proprietary behavior models, to give you a snapshot of who lives, votes, and pays attention in your community.',
+      'We use survey and voter data along with your district demographics to project likely top issues for your race.',
     summary:
       'Voter demographic charts are rendered from the structured-office district stats.',
     whyWeAsk:
@@ -112,11 +105,21 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
-    id: 'pledge',
-    eyebrow: 'Final step',
-    title: 'Take our pledge to get your campaign plan',
+    id: 'outreach-plan',
+    title: 'Projected minimum resources needed',
     description:
-      'We only work with candidates who are independent of both major parties, big-money influence, and are anti-corruption.',
+      'Commit at least this much money and time, and you’ll have a real shot at winning your race.',
+    summary:
+      'Translates the voter contact goal into a minimum budget and a minimum weekly time commitment.',
+    whyWeAsk:
+      'These two minimums are the foundation of your campaign plan. Everything else — your weekly tasks, volunteer asks, outreach mix — is sized against what you can commit here.',
+    shouldSkip: ({ answers }) => answers.officePath === 'manual',
+  },
+  {
+    id: 'pledge',
+    title: 'Almost there...',
+    description:
+      'Take the pledge below. Your campaign plan is waiting for you.',
     summary:
       'The final payload keeps collected answers available for future integrations.',
   },

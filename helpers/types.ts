@@ -331,6 +331,20 @@ export interface RaceTargetMetrics {
   projectedTurnout: number
   winNumber: number
   voterContactGoal: number
+  /**
+   * Estimated filing fee for the race, in dollars, sourced from BallotReady
+   * `filing_requirements` via election-api. `null` when the fee can't be
+   * extracted unambiguously (multiple dollar amounts, missing data, or no
+   * regex match). Optional for forward-compat with API responses that pre-
+   * date the field.
+   */
+  filingFee?: number | null
+  /**
+   * Raw `filing_requirements` text from BallotReady. Always present when the
+   * upstream record had any text, so the UI can show "fee varies — see full
+   * text" even when `filingFee` is null.
+   */
+  filingRequirementsText?: string | null
 }
 
 export interface IssuePosition {

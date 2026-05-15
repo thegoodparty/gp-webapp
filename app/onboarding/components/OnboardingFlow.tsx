@@ -43,7 +43,9 @@ import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
+import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
 import { PledgeStep } from './PledgeStep'
+import { WhyWeAsk } from './WhyWeAsk'
 import {
   VoterDemographicsStep,
   onboardingDistrictStatsQueryOptions,
@@ -193,25 +195,6 @@ const welcomeCards = [
   },
 ]
 
-interface WhyWeAskProps {
-  text?: string
-  title?: string
-  children?: React.ReactNode
-}
-
-const WhyWeAsk = ({
-  text,
-  title = 'Why this matters',
-  children,
-}: WhyWeAskProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
-    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-      {title}
-    </span>
-    <p className="text-sm text-foreground">{children ?? text}</p>
-  </aside>
-)
-
 interface StepBodyProps {
   activeStep: OnboardingStepConfig
   answers: OnboardingAnswers
@@ -341,6 +324,10 @@ const StepBody = ({
         office={answers.structuredOffice?.positionName}
       />
     )
+  }
+
+  if (activeStep.id === 'outreach-plan') {
+    return <OutreachPlanStep campaign={liveCampaign} />
   }
 
   if (activeStep.id === 'pledge') {
@@ -973,17 +960,12 @@ export default function OnboardingFlow({
                         </span>
                         .
                       </>
-                    ) : activeStep.id === 'voter-demographics' &&
-                      p2vOfficeName ? (
-                      <>
-                        We crunch the latest voter data, along with proprietary
-                        behavior models, and local news to prioritize the issues
-                        voters care about for{' '}
-                        <span className="font-semibold text-foreground">
-                          {p2vOfficeName}
-                        </span>
-                        .
-                      </>
+                    ) : activeStep.id === 'outreach-plan' ? (
+                      `You need ${numberFormatter(
+                        liveCampaign?.raceTargetMetrics?.winNumber ?? 0,
+                      )} projected voters to win with at least ${computeWeeksRemaining(
+                        liveCampaign?.details?.electionDate ?? null,
+                      )} weeks to campaign before Election Day.`
                     ) : (
                       activeStep.description
                     )}

@@ -296,12 +296,12 @@ const ProjectionStep = ({
   description,
   value,
 }: ProjectionStepProps): React.JSX.Element => (
-  <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+  <li className="flex items-start gap-4 p-4">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-grayscale-200 text-sm font-semibold text-foreground">
       {index}
     </span>
     <div className="flex-1">
-      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-base font-medium text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>
     <span className="text-base font-bold text-foreground">{value}</span>
@@ -370,7 +370,7 @@ const ProjectionExplanation = ({
           </DialogContent>
         </Dialog>
       </div>
-      <ol className="space-y-3">
+      <ol className="divide-y divide-base-border rounded-xl border border-base-border">
         {showRegisteredVoters ? (
           <ProjectionStep
             index={stepIndex++}
