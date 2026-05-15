@@ -969,9 +969,7 @@ export default function OnboardingFlow({
                     {activeStep.id === 'outreach-plan'
                       ? `You need ${numberFormatter(
                           liveCampaign?.raceTargetMetrics?.winNumber ?? 0,
-                        )} projected voters to win with at least ${computeWeeksRemaining(
-                          liveCampaign?.details?.electionDate ?? null,
-                        )} weeks to campaign before Election Day.`
+                        )} projected voters to win. Here's the budget and time it'll take.`
                       : activeStep.description}
                   </p>
                 </div>
