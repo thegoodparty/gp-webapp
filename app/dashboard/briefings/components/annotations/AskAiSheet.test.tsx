@@ -354,7 +354,7 @@ describe('<AskAiSheet>', () => {
     let resolveCreate: (value: {
       annotationId: string
       conversationId: string
-    }) => void = () => {}
+    }) => void = vi.fn()
     mockChatApi.createBriefingChat.mockReturnValue(
       new Promise<{ annotationId: string; conversationId: string }>(
         (resolve) => {
