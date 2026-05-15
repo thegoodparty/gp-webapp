@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns'
+import { FetchError } from 'ofetch'
 import { serverRequest } from 'gpApi/server-request'
 import type {
   MeetingsListItemDto,
@@ -63,7 +64,8 @@ export const getBriefingBySlug = async (
       date: slug,
     })
     return toBriefing(data, slug)
-  } catch {
-    return null
+  } catch (e) {
+    if (e instanceof FetchError && e.status === 404) return null
+    throw e
   }
 }
