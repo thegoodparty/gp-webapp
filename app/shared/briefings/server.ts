@@ -38,10 +38,13 @@ export const getBriefingsList = async (): Promise<BriefingSummary[]> => {
   return data.meetings.map(toSummary)
 }
 
-const toBriefing = (dto: MeetingBriefingResponseDto): Briefing => ({
+const toBriefing = (
+  dto: MeetingBriefingResponseDto,
+  date: string,
+): Briefing => ({
   ...dto,
-  meetingDate: format(parseISO(dto.meetingDate), 'MMMM d, yyyy'),
-  actionItems: dto.actionItems.map((item) => ({
+  meetingDate: format(parseISO(date), 'MMMM d, yyyy'),
+  actionItems: (dto.actionItems ?? []).map((item) => ({
     ...item,
     budgetImpact: item.budgetImpact
       ? {
@@ -59,7 +62,7 @@ export const getBriefingBySlug = async (
     const { data } = await serverRequest('GET /v1/meetings/:date/briefing', {
       date: slug,
     })
-    return toBriefing(data)
+    return toBriefing(data, slug)
   } catch {
     return null
   }

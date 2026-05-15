@@ -65,7 +65,6 @@ export interface MeetingBriefingResponseDto {
   slug: string
   meetingId: string
   title: string
-  meetingDate: string
   status: 'briefing_ready' | 'awaiting_agenda' | 'generating' | 'failed'
   readingTimeMinutes: number
   generatedAt: string
