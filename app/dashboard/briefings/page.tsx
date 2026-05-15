@@ -1,5 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper'
-import { briefingsLandingFixture } from '@shared/briefings/fixtures'
+import { getBriefingsList } from '@shared/briefings/server'
 import serveAccess from '../shared/serveAccess'
 import DashboardLayout from '../shared/DashboardLayout'
 import BriefingsLanding from './components/BriefingsLanding'
@@ -14,8 +14,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page(): Promise<React.JSX.Element> {
   await serveAccess()
-  // TODO: replace fixture with Swain's BriefingsApi once available.
-  const summaries = briefingsLandingFixture
+  const summaries = await getBriefingsList()
   return (
     <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
       <BriefingsLanding summaries={summaries} />

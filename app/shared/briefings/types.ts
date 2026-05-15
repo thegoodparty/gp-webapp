@@ -105,7 +105,6 @@ export interface BriefingSummary {
   slug: string
   meetingDate: string
   meetingName: string
-  meetingType: MeetingType
   scheduledAt: string
   location: string
   status: BriefingStatus
