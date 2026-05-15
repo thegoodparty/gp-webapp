@@ -1,4 +1,3 @@
-import { cache } from 'react'
 import { format, parseISO } from 'date-fns'
 import { serverRequest } from 'gpApi/server-request'
 import type {
@@ -34,11 +33,10 @@ const toSummary = (item: MeetingsListItemDto): BriefingSummary => ({
   status: item.hasBriefing ? 'briefing_ready' : 'awaiting_agenda',
 })
 
-export const getBriefingsList = cache(async (): Promise<BriefingSummary[]> => {
+export const getBriefingsList = async (): Promise<BriefingSummary[]> => {
   const { data } = await serverRequest('GET /v1/meetings', {})
-  if (!data.scheduleKnown) return []
   return data.meetings.map(toSummary)
-})
+}
 
 const toBriefing = (dto: MeetingBriefingResponseDto): Briefing => ({
   ...dto,
@@ -54,15 +52,15 @@ const toBriefing = (dto: MeetingBriefingResponseDto): Briefing => ({
   })),
 })
 
-export const getBriefingBySlug = cache(
-  async (slug: string): Promise<Briefing | null> => {
-    try {
-      const { data } = await serverRequest('GET /v1/meetings/:date/briefing', {
-        date: slug,
-      })
-      return toBriefing(data)
-    } catch {
-      return null
-    }
-  },
-)
+export const getBriefingBySlug = async (
+  slug: string,
+): Promise<Briefing | null> => {
+  try {
+    const { data } = await serverRequest('GET /v1/meetings/:date/briefing', {
+      date: slug,
+    })
+    return toBriefing(data)
+  } catch {
+    return null
+  }
+}

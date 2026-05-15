@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page(): Promise<React.JSX.Element> {
   await serveAccess()
+
   const summaries = await getBriefingsList()
   return (
     <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
