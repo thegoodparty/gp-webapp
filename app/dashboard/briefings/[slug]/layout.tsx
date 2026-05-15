@@ -48,7 +48,7 @@ export default async function BriefingChromeLayout({
             />
 
             <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:px-8">
-              <div className="hidden lg:mb-4 lg:block">
+              <div className="mb-4">
                 <Link
                   href={briefingsLandingHref()}
                   className="inline-flex h-9 items-center gap-2 rounded-full pl-2 pr-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -65,17 +65,7 @@ export default async function BriefingChromeLayout({
                   </div>
                 </aside>
 
-                <div className="flex flex-col gap-4">
-                  <Link
-                    href={briefingsLandingHref()}
-                    className="inline-flex h-9 items-center gap-2 self-start rounded-full pl-2 pr-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground lg:hidden"
-                  >
-                    <ArrowLeft className="size-4" aria-hidden />
-                    Back to meetings
-                  </Link>
-
-                  {children}
-                </div>
+                <div className="flex flex-col gap-4">{children}</div>
               </div>
             </div>
           </div>
