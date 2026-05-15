@@ -63,8 +63,9 @@ export function useBriefingFeedback(meetingDate: string) {
         qc.setQueryData(queryKey, ctx.previous)
       }
     },
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey })
+    onSettled: async () => {
+      await qc.cancelQueries({ queryKey })
+      await qc.invalidateQueries({ queryKey })
     },
   })
 
@@ -83,20 +84,24 @@ export function useBriefingFeedback(meetingDate: string) {
         qc.setQueryData(queryKey, ctx.previous)
       }
     },
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey })
+    onSettled: async () => {
+      await qc.cancelQueries({ queryKey })
+      await qc.invalidateQueries({ queryKey })
     },
   })
 
+  const setFeedbackMutate = setMutation.mutate
+  const clearFeedbackMutate = clearMutation.mutate
+
   const setFeedback = useCallback(
     (itemId: string, feedback: ArtifactFeedbackKind) =>
-      setMutation.mutate({ itemId, feedback }),
-    [setMutation],
+      setFeedbackMutate({ itemId, feedback }),
+    [setFeedbackMutate],
   )
 
   const clearFeedback = useCallback(
-    (itemId: string) => clearMutation.mutate(itemId),
-    [clearMutation],
+    (itemId: string) => clearFeedbackMutate(itemId),
+    [clearFeedbackMutate],
   )
 
   return {
