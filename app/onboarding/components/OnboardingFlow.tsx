@@ -31,18 +31,23 @@ import { useUser } from '@shared/hooks/useUser'
 import { clientRequest } from 'gpApi/typed-request'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { numberFormatter } from 'helpers/numberHelper'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { reportErrorToSentry } from '@shared/sentry'
-import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
 import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
 import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
-import { PathToVictoryStep } from './PathToVictoryStep'
+import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
+import {
+  PathToVictoryAside,
+  PathToVictoryHeader,
+  PathToVictoryStep,
+} from './PathToVictoryStep'
 import { PledgeStep } from './PledgeStep'
 import {
   VoterDemographicsStep,
@@ -341,6 +346,10 @@ const StepBody = ({
         office={answers.structuredOffice?.positionName}
       />
     )
+  }
+
+  if (activeStep.id === 'outreach-plan') {
+    return <OutreachPlanStep campaign={liveCampaign} />
   }
 
   if (activeStep.id === 'pledge') {
@@ -898,7 +907,7 @@ export default function OnboardingFlow({
       if (!effectiveCampaign) return
       const ok = await persistPledgeAndComplete()
       if (!ok) return
-      router.push('/dashboard')
+      router.push('/onboarding/success')
       return
     }
     if (nextStep) {
@@ -958,35 +967,25 @@ export default function OnboardingFlow({
                 activeStep.id === 'welcome' ? ' text-center' : ''
               }`}
             >
-              {isP2vBlocking ? null : (
+              {isP2vBlocking ? null : activeStep.id === 'path-to-victory' ? (
+                <PathToVictoryHeader
+                  title={activeStep.title}
+                  fallbackDescription={activeStep.description}
+                  officeName={p2vOfficeName}
+                />
+              ) : (
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
                     {activeStep.title}
                   </h1>
                   <p className="text-lg text-muted-foreground sm:text-base">
-                    {activeStep.id === 'path-to-victory' && p2vOfficeName ? (
-                      <>
-                        We use historical voter data and proprietary models to
-                        get the most accurate projections for{' '}
-                        <span className="font-semibold text-foreground">
-                          {p2vOfficeName}
-                        </span>
-                        .
-                      </>
-                    ) : activeStep.id === 'voter-demographics' &&
-                      p2vOfficeName ? (
-                      <>
-                        We crunch the latest voter data, along with proprietary
-                        behavior models, and local news to prioritize the issues
-                        voters care about for{' '}
-                        <span className="font-semibold text-foreground">
-                          {p2vOfficeName}
-                        </span>
-                        .
-                      </>
-                    ) : (
-                      activeStep.description
-                    )}
+                    {activeStep.id === 'outreach-plan'
+                      ? `You need ${numberFormatter(
+                          liveCampaign?.raceTargetMetrics?.winNumber ?? 0,
+                        )} projected voters to win with at least ${computeWeeksRemaining(
+                          liveCampaign?.details?.electionDate ?? null,
+                        )} weeks to campaign before Election Day.`
+                      : activeStep.description}
                   </p>
                 </div>
               )}
@@ -1013,17 +1012,9 @@ export default function OnboardingFlow({
                 }}
               >
                 {activeStep.id === 'path-to-victory' ? (
-                  <WhyWeAsk title="You can do this!">
-                    Most candidates think they need to convince{' '}
-                    <em>everyone</em>. You don&apos;t. You need to find{' '}
-                    {liveCampaign?.raceTargetMetrics?.winNumber
-                      ? `${numberFormatter(
-                          liveCampaign.raceTargetMetrics.winNumber,
-                        )} people`
-                      : 'your win number'}
-                    , talk to them, and make sure they vote. We&apos;ll show you
-                    exactly what that takes.
-                  </WhyWeAsk>
+                  <PathToVictoryAside
+                    winNumber={liveCampaign?.raceTargetMetrics?.winNumber}
+                  />
                 ) : (
                   <WhyWeAsk text={activeStep.whyWeAsk} />
                 )}
@@ -1051,11 +1042,7 @@ export default function OnboardingFlow({
             onClick={goNext}
             disabled={!canContinue}
           >
-            {nextStep
-              ? 'Continue'
-              : activeStep.id === 'pledge'
-              ? 'Agree & Create My Plan'
-              : 'Complete'}
+            {nextStep ? 'Continue' : activeStep.nextLabel ?? 'Complete'}
           </Button>
         </div>
       </div>

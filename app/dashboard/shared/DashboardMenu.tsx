@@ -17,6 +17,7 @@ import {
   Circle,
   CircleUserRound,
   ClipboardList,
+  Compass,
   DoorClosed,
   ExternalLink,
   FileText,
@@ -100,6 +101,15 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     v2Category: 'campaign',
     id: 'campaign-tracker-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
+  },
+  {
+    label: 'Campaign plan',
+    icon: <Compass />,
+    v2Icon: Compass,
+    link: '/dashboard/strategy',
+    v2Category: 'campaign',
+    id: 'strategy-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickStrategy),
   },
   {
     label: 'Voter Outreach',

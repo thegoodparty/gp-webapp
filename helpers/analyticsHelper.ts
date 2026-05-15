@@ -127,6 +127,7 @@ export const EVENTS = {
     },
     Dashboard: {
       ClickDashboard: 'Navigation - Dashboard: Click Dashboard',
+      ClickStrategy: 'Navigation - Dashboard: Click Strategy',
       ClickAIAssistant: 'Navigation - Dashboard: Click AI Assistant',
       ClickVoterData: 'Navigation - Dashboard: Click Voter Data',
       ClickDoorKnocking: 'Navigation - Dashboard: Click Door Knocking',

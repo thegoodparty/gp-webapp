@@ -19,6 +19,55 @@ import type { Campaign } from 'helpers/types'
 
 const OFFICE_TEMPLATE_TOKEN = '{office}'
 const DEFAULT_OFFICE_NAME = 'your office'
+
+interface PathToVictoryHeaderProps {
+  title: string
+  fallbackDescription: string
+  officeName?: string | null
+}
+
+export const PathToVictoryHeader = ({
+  title,
+  fallbackDescription,
+  officeName,
+}: PathToVictoryHeaderProps): React.JSX.Element => (
+  <div className="space-y-4">
+    <h1 className="text-4xl font-bold text-foreground sm:text-5xl">{title}</h1>
+    <p className="text-lg text-muted-foreground sm:text-base">
+      {officeName ? (
+        <>
+          We use historical voter data and proprietary models to get the most
+          accurate projections for{' '}
+          <span className="font-semibold text-foreground">{officeName}</span>.
+        </>
+      ) : (
+        fallbackDescription
+      )}
+    </p>
+  </div>
+)
+
+interface PathToVictoryAsideProps {
+  winNumber?: number
+}
+
+export const PathToVictoryAside = ({
+  winNumber,
+}: PathToVictoryAsideProps): React.JSX.Element => (
+  <aside className="flex flex-col gap-2 rounded-xl border border-base-border p-5">
+    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+      You can do this!
+    </span>
+    <p className="text-sm text-foreground">
+      Most candidates think they need to convince <em>everyone</em>. You
+      don&apos;t. You need to find{' '}
+      {winNumber ? `${numberFormatter(winNumber)} people` : 'your win number'},
+      talk to them, and make sure they vote. We&apos;ll show you exactly what
+      that takes.
+    </p>
+  </aside>
+)
+
 const CONTACTS_STATS_ROUTE = 'GET /v1/contacts/stats'
 const SENTRY_CONTEXT_FETCH_CONTACTS_STATS =
   'onboarding.pathToVictory.fetchContactsStats'
@@ -296,12 +345,12 @@ const ProjectionStep = ({
   description,
   value,
 }: ProjectionStepProps): React.JSX.Element => (
-  <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+  <li className="flex items-start gap-4 p-4">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-grayscale-200 text-sm font-semibold text-foreground">
       {index}
     </span>
     <div className="flex-1">
-      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-base font-medium text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>
     <span className="text-base font-bold text-foreground">{value}</span>
@@ -370,7 +419,7 @@ const ProjectionExplanation = ({
           </DialogContent>
         </Dialog>
       </div>
-      <ol className="space-y-3">
+      <ol className="divide-y divide-base-border rounded-xl border border-base-border">
         {showRegisteredVoters ? (
           <ProjectionStep
             index={stepIndex++}

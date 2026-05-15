@@ -46,12 +46,12 @@ vi.mock('@styleguide', async (importOriginal) => {
   }
 })
 
-const makeCampaign = (voterContactGoal = 1000): Campaign =>
+const makeCampaign = (winNumber = 1000): Campaign =>
   ({
     raceTargetMetrics: {
       projectedTurnout: 0,
-      winNumber: 0,
-      voterContactGoal,
+      winNumber,
+      voterContactGoal: winNumber * 5,
     },
   } as unknown as Campaign)
 
@@ -85,26 +85,28 @@ const renderWithProviders = (
   )
 
 describe('ProgressSection', () => {
-  it('displays formatted contacted and needed counts', () => {
+  it('displays likely votes (contacts / 5) and the win number needed', () => {
     renderWithProviders(
-      makeCampaign(5000),
+      makeCampaign(1000),
       makeVoterContacts({ doorKnocking: 100, calls: 200 }),
     )
-    expect(screen.getByText('300 voters contacted')).toBeInTheDocument()
+    // 300 contacts ÷ 5 = 60 likely votes
+    expect(screen.getByText('60 likely votes')).toBeInTheDocument()
     expect(
-      screen.getByText('5,000 voter contacts needed to win'),
+      screen.getByText('1,000 likely votes needed to win'),
     ).toBeInTheDocument()
   })
 
-  it('displays zero contacted when no voter contacts reported', () => {
+  it('displays zero likely votes when no voter contacts reported', () => {
     renderWithProviders(makeCampaign(1000), makeVoterContacts())
-    expect(screen.getByText('0 voters contacted')).toBeInTheDocument()
+    expect(screen.getByText('0 likely votes')).toBeInTheDocument()
   })
 
-  it('caps progress bar at 100% when contacted exceeds needed', () => {
+  it('caps progress bar at 100% when likely votes exceed needed', () => {
+    // 5 contacts → 1 likely vote; needed = 1 → progress hits 100% at 5 contacts.
     renderWithProviders(
-      makeCampaign(100),
-      makeVoterContacts({ doorKnocking: 200 }),
+      makeCampaign(1),
+      makeVoterContacts({ doorKnocking: 1000 }),
     )
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar.getAttribute('aria-valuenow')).toBe('100')
@@ -125,20 +127,22 @@ describe('ProgressSection', () => {
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
-    await user.click(screen.getByText('1,000 voter contacts needed to win'))
+    await user.click(screen.getByText('1,000 likely votes needed to win'))
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Voter contacts needed')).toBeInTheDocument()
+    expect(
+      screen.getAllByText('Projected votes needed to win').length,
+    ).toBeGreaterThan(0)
   })
 
   it('closes info modal when clicking the needed-to-win text again', async () => {
     const user = userEvent.setup()
     renderWithProviders(makeCampaign(1000))
 
-    await user.click(screen.getByText('1,000 voter contacts needed to win'))
+    await user.click(screen.getByText('1,000 likely votes needed to win'))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
 
-    await user.click(screen.getByText('1,000 voter contacts needed to win'))
+    await user.click(screen.getByText('1,000 likely votes needed to win'))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })
