@@ -88,18 +88,18 @@ function fromApi(row: ApiAnnotation): Annotation {
 }
 
 export const annotationsApi: AnnotationsClient = {
-  async list(briefingId) {
+  async list(meetingDate) {
     const res = await clientRequest(
-      'GET /v1/meeting-briefings/:briefingId/annotations',
-      { briefingId },
+      'GET /v1/meetings/:date/briefing/annotations',
+      { date: meetingDate },
     )
     return res.data.annotations.map(fromApi)
   },
 
-  async create(briefingId, input) {
+  async create(meetingDate, input) {
     const res = await clientRequest(
-      'POST /v1/meeting-briefings/:briefingId/annotations',
-      { briefingId, ...apiInput(input) },
+      'POST /v1/meetings/:date/briefing/annotations',
+      { date: meetingDate, ...apiInput(input) },
     )
     return fromApi(res.data)
   },

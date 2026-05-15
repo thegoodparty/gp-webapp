@@ -39,7 +39,7 @@ export default async function BriefingChromeLayout({
       showAlert={false}
       wrapperClassName="!p-0"
     >
-      <AnnotationsScope briefingId={briefing.id}>
+      <AnnotationsScope meetingDate={slug}>
         <div className="relative">
           <div className="flex min-h-full flex-col bg-muted pb-20 lg:pb-12">
             <DetailHeader

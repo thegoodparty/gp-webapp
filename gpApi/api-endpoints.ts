@@ -292,13 +292,14 @@ export type APIEndpoints = {
 
   // Briefing annotations. Backend ships responses in snake_case. The
   // frontend AnnotationsApi client translates these to the camelCase
-  // Annotation shape consumed by components.
-  'GET /v1/meeting-briefings/:briefingId/annotations': {
-    Request: {}
+  // Annotation shape consumed by components. Briefings are addressed
+  // by meeting date (YYYY-MM-DD), matching `GET /v1/meetings/:date/briefing`.
+  'GET /v1/meetings/:date/briefing/annotations': {
+    Request: { date: string }
     Response: { annotations: ApiAnnotation[] }
   }
-  'POST /v1/meeting-briefings/:briefingId/annotations': {
-    Request: ApiCreateAnnotationInput
+  'POST /v1/meetings/:date/briefing/annotations': {
+    Request: ApiCreateAnnotationInput & { date: string }
     Response: ApiAnnotation
   }
   'PUT /v1/annotations/:annotationId/note': {

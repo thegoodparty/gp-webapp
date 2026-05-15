@@ -657,11 +657,11 @@ export const apiRoutes = {
   },
   annotations: {
     listForBriefing: {
-      path: '/v1/meeting-briefings/:briefingId/annotations',
+      path: '/v1/meetings/:date/briefing/annotations',
       method: 'GET',
     },
     createForBriefing: {
-      path: '/v1/meeting-briefings/:briefingId/annotations',
+      path: '/v1/meetings/:date/briefing/annotations',
       method: 'POST',
     },
     updateNote: {
