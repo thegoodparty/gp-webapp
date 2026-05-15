@@ -1,3 +1,4 @@
+import { CalendarClock } from 'lucide-react'
 import UpcomingCountdownCard from './UpcomingCountdownCard'
 import BriefingListSection from './BriefingListSection'
 import type { BriefingSummary } from '@shared/briefings/types'
@@ -13,6 +14,22 @@ const distanceFromNow = (s: BriefingSummary): number =>
 
 const compareScheduledAt = (a: BriefingSummary, b: BriefingSummary): number =>
   new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime()
+
+const EmptyState = () => (
+  <section className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <span className="inline-flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <CalendarClock className="size-5" aria-hidden />
+    </span>
+    <h2 className="text-xl font-semibold leading-7 text-foreground">
+      We&apos;re tracking down your meetings
+    </h2>
+    <p className="text-sm text-muted-foreground">
+      We&apos;re finding your upcoming council meetings and building briefings
+      from the public agenda packets. As soon as the first one is ready,
+      we&apos;ll email you so you can review it before you walk in.
+    </p>
+  </section>
+)
 
 export default function BriefingsLanding({
   summaries,
@@ -44,8 +61,14 @@ export default function BriefingsLanding({
       </div>
 
       <div className="mx-auto flex w-full max-w-[640px] flex-col gap-4 px-4 pb-20 pt-6 lg:px-0">
-        {featured ? <UpcomingCountdownCard summary={featured} /> : null}
-        <BriefingListSection title="Upcoming" summaries={upcoming} />
+        {featured ? (
+          <>
+            <UpcomingCountdownCard summary={featured} />
+            <BriefingListSection title="Upcoming" summaries={upcoming} />
+          </>
+        ) : (
+          <EmptyState />
+        )}
       </div>
     </div>
   )
