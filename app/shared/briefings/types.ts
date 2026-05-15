@@ -61,6 +61,7 @@ export interface ConstituentSentiment {
   voterCount: number
   haystaqStatus: HaystaqStatus
   haystaqSource: HaystaqSource
+  sourceIds: string[]
 }
 
 export interface RecentNewsEntry {
@@ -80,6 +81,7 @@ export interface BudgetImpactFigure {
 export interface BudgetImpact {
   summary: string
   figures: BudgetImpactFigure[]
+  sourceIds: string[]
 }
 
 export interface ItemDisplay {
