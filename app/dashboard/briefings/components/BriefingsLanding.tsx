@@ -6,25 +6,29 @@ type Props = {
   summaries: BriefingSummary[]
 }
 
-function compareScheduledAt(a: BriefingSummary, b: BriefingSummary): number {
-  return new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime()
-}
+const MAX_UPCOMING = 5
 
-/**
- * Briefings landing page.
- *
- * Top: full-width page header with title and subtitle.
- * Middle: UPCOMING countdown callout for the nearest upcoming briefing.
- * Bottom: list of remaining upcoming briefings.
- *
- * Past briefings are intentionally not rendered in v1.
- */
+const distanceFromNow = (s: BriefingSummary): number =>
+  Math.abs(new Date(s.scheduledAt).getTime() - Date.now())
+
+const compareScheduledAt = (a: BriefingSummary, b: BriefingSummary): number =>
+  new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime()
+
 export default function BriefingsLanding({
   summaries,
 }: Props): React.JSX.Element {
-  const sorted = [...summaries].sort(compareScheduledAt)
-  const featured = sorted[0]
-  const rest = sorted.slice(1)
+  const featured = [...summaries].sort(
+    (a, b) => distanceFromNow(a) - distanceFromNow(b),
+  )[0]
+
+  const upcoming = summaries
+    .filter(
+      (s) =>
+        s.id !== featured?.id &&
+        new Date(s.scheduledAt).getTime() >= Date.now(),
+    )
+    .sort(compareScheduledAt)
+    .slice(0, MAX_UPCOMING)
 
   return (
     <div className="flex min-h-screen flex-col bg-muted">
@@ -41,7 +45,7 @@ export default function BriefingsLanding({
 
       <div className="mx-auto flex w-full max-w-[640px] flex-col gap-4 px-4 pb-20 pt-6 lg:px-0">
         {featured ? <UpcomingCountdownCard summary={featured} /> : null}
-        <BriefingListSection title="Upcoming" summaries={rest} />
+        <BriefingListSection title="Upcoming" summaries={upcoming} />
       </div>
     </div>
   )
