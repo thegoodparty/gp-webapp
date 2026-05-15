@@ -5,16 +5,14 @@ import { useDictation } from './useDictation'
 const FEATURE_FLAG_ENABLED =
   process.env.NEXT_PUBLIC_DICTATION_DEMO_ENABLED === 'true'
 
-type DictationDemoWidgetProps = {
-  targetId: string
-}
-
-export default function DictationDemoWidget({
-  targetId,
-}: DictationDemoWidgetProps) {
-  const dictation = useDictation({
-    target: { type: 'note', id: targetId },
-  })
+/**
+ * Throwaway demo widget that exercises the dictation pipe end-to-end.
+ * Behind a feature flag because there is no persistence — the transcript
+ * is only displayed locally for verification. Once a real notes UI ships,
+ * persistence will live there and call `useDictation` directly.
+ */
+export default function DictationDemoWidget() {
+  const dictation = useDictation({ analyticsLabel: 'dictation_demo' })
 
   if (!FEATURE_FLAG_ENABLED) {
     return null

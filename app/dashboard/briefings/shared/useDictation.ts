@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { API_ROOT } from 'appEnv'
 import { clientRequest } from 'gpApi/typed-request'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import type { TranscribeSessionRequest } from './speech-types'
 
 export type DictationStatus =
   | 'idle'
@@ -20,10 +19,19 @@ const BUSY_STATUSES: ReadonlySet<DictationStatus> = new Set([
   'stopping',
 ])
 
+/**
+ * Domain-agnostic input. The hook surfaces transcript text via callbacks
+ * and state; persisting it to whatever domain object owns it (a note,
+ * etc.) is the caller's responsibility against that domain's own API.
+ *
+ * `analyticsLabel` is forwarded to dictation analytics events so we can
+ * still slice usage by surface in dashboards without coupling the hook
+ * to a domain.
+ */
 export type DictationInput = {
-  target: TranscribeSessionRequest['target']
   onFinalTranscript?: (text: string) => void
   onPartialTranscript?: (text: string) => void
+  analyticsLabel?: string
 }
 
 export type UseDictationResult = {
@@ -135,7 +143,9 @@ const parseServerEvent = (raw: string): ServerEvent | null => {
   }
 }
 
-export const useDictation = (input: DictationInput): UseDictationResult => {
+export const useDictation = (
+  input: DictationInput = {},
+): UseDictationResult => {
   const [status, setStatus] = useState<DictationStatus>('idle')
   const [error, setError] = useState<string | null>(null)
   const [transcript, setTranscript] = useState('')
@@ -151,6 +161,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null)
   const onFinalRef = useRef(input.onFinalTranscript)
   const onPartialRef = useRef(input.onPartialTranscript)
+  const analyticsLabelRef = useRef(input.analyticsLabel)
   const statusRef = useRef<DictationStatus>('idle')
   const sawErrorRef = useRef(false)
   // Monotonically increasing generation that identifies the most recent
@@ -164,7 +175,8 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
   useEffect(() => {
     onFinalRef.current = input.onFinalTranscript
     onPartialRef.current = input.onPartialTranscript
-  }, [input.onFinalTranscript, input.onPartialTranscript])
+    analyticsLabelRef.current = input.analyticsLabel
+  }, [input.analyticsLabel, input.onFinalTranscript, input.onPartialTranscript])
 
   useEffect(() => {
     statusRef.current = status
@@ -248,8 +260,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
           setError(event.message)
           updateStatus('error')
           trackEvent(EVENTS.Briefings.DictationFailed, {
-            targetType: input.target.type,
-            targetId: input.target.id,
+            label: analyticsLabelRef.current,
             code: event.code,
           })
           // Release mic / WebSocket / AudioContext immediately so a subsequent
@@ -259,8 +270,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         case 'closed':
           if (event.reason === 'max_duration') {
             trackEvent(EVENTS.Briefings.DictationMaxDurationReached, {
-              targetType: input.target.type,
-              targetId: input.target.id,
+              label: analyticsLabelRef.current,
             })
           }
           setWarningSecondsRemaining(null)
@@ -270,7 +280,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
           teardown()
       }
     },
-    [input.target.id, input.target.type, teardown, updateStatus],
+    [teardown, updateStatus],
   )
 
   const start = useCallback(async () => {
@@ -316,8 +326,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       setError(message)
       updateStatus('error')
       trackEvent(EVENTS.Briefings.DictationFailed, {
-        targetType: input.target.type,
-        targetId: input.target.id,
+        label: analyticsLabelRef.current,
         code: 'MIC_DENIED',
       })
       return
@@ -339,9 +348,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     updateStatus('connecting')
     let session
     try {
-      session = await clientRequest('POST /v1/speech/transcribe/session', {
-        target: input.target,
-      })
+      session = await clientRequest('POST /v1/speech/transcribe/session', {})
     } catch (err) {
       if (isCancelled()) {
         return
@@ -352,8 +359,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       setError(message)
       updateStatus('error')
       trackEvent(EVENTS.Briefings.DictationFailed, {
-        targetType: input.target.type,
-        targetId: input.target.id,
+        label: analyticsLabelRef.current,
         code: 'SESSION_FAILED',
       })
       teardown()
@@ -404,8 +410,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
       setError('WebSocket error')
       updateStatus('error')
       trackEvent(EVENTS.Briefings.DictationFailed, {
-        targetType: input.target.type,
-        targetId: input.target.id,
+        label: analyticsLabelRef.current,
         code: 'WS_ERROR',
       })
       teardown()
@@ -452,8 +457,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         sourceNode.connect(workletNode)
         workletNode.connect(audioContext.destination)
         trackEvent(EVENTS.Briefings.DictationStarted, {
-          targetType: input.target.type,
-          targetId: input.target.id,
+          label: analyticsLabelRef.current,
         })
       } catch (err) {
         if (isCancelled()) {
@@ -469,14 +473,13 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         setError(message)
         updateStatus('error')
         trackEvent(EVENTS.Briefings.DictationFailed, {
-          targetType: input.target.type,
-          targetId: input.target.id,
+          label: analyticsLabelRef.current,
           code: 'AUDIO_PIPELINE_FAILED',
         })
         teardown()
       }
     }
-  }, [handleServerEvent, input.target, teardown, updateStatus])
+  }, [handleServerEvent, teardown, updateStatus])
 
   const stop = useCallback(async () => {
     const current = statusRef.current
@@ -488,8 +491,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
     generationRef.current += 1
     updateStatus('stopping')
     trackEvent(EVENTS.Briefings.DictationStopped, {
-      targetType: input.target.type,
-      targetId: input.target.id,
+      label: analyticsLabelRef.current,
       transcriptChars: transcript.length,
     })
 
@@ -516,13 +518,7 @@ export const useDictation = (input: DictationInput): UseDictationResult => {
         updateStatus('idle')
       }
     }, STOP_TIMEOUT_MS)
-  }, [
-    input.target.id,
-    input.target.type,
-    teardown,
-    transcript.length,
-    updateStatus,
-  ])
+  }, [teardown, transcript.length, updateStatus])
 
   useEffect(
     () => () => {

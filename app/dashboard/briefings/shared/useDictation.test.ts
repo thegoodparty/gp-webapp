@@ -180,7 +180,7 @@ class MockAudioWorkletNode {
   }
 }
 
-const target = { type: 'note' as const, id: 'note-1' }
+const ANALYTICS_LABEL = 'dictation_demo'
 
 const setupNavigator = (
   getUserMedia:
@@ -222,9 +222,25 @@ const happyPathSession = () =>
   })
 
 describe('useDictation', () => {
+  it('sends an empty body to the session endpoint (pure pipe)', async () => {
+    happyPathSession()
+    const { result } = renderHook(() => useDictation())
+
+    await act(async () => {
+      await result.current.start()
+    })
+
+    expect(clientRequestMock).toHaveBeenCalledWith(
+      'POST /v1/speech/transcribe/session',
+      {},
+    )
+    const body = clientRequestMock.mock.calls[0]?.[1] as Record<string, unknown>
+    expect(body).not.toHaveProperty('target')
+  })
+
   it('start() while busy is a no-op', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -250,7 +266,9 @@ describe('useDictation', () => {
   it('getUserMedia rejection moves to error', async () => {
     setupNavigator(() => Promise.reject(new Error('Mic denied')))
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() =>
+      useDictation({ analyticsLabel: ANALYTICS_LABEL }),
+    )
 
     await act(async () => {
       await result.current.start()
@@ -260,14 +278,17 @@ describe('useDictation', () => {
     expect(result.current.error).toBe('Mic denied')
     expect(trackEventMock).toHaveBeenCalledWith(
       'DictationFailed',
-      expect.objectContaining({ code: 'MIC_DENIED' }),
+      expect.objectContaining({
+        code: 'MIC_DENIED',
+        label: ANALYTICS_LABEL,
+      }),
     )
     expect(MockWebSocket.instances).toHaveLength(0)
   })
 
   it('session API failure moves to error and tears down mic', async () => {
     clientRequestMock.mockRejectedValue(new Error('500'))
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -283,7 +304,7 @@ describe('useDictation', () => {
 
   it('WebSocket onerror moves to error', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -301,7 +322,7 @@ describe('useDictation', () => {
 
   it('server "closed" event returns the hook to idle', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -320,7 +341,7 @@ describe('useDictation', () => {
   })
 
   it('stop() while idle or in error is a no-op', async () => {
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
     expect(result.current.status).toBe('idle')
 
     await act(async () => {
@@ -332,7 +353,7 @@ describe('useDictation', () => {
 
   it('unmount during recording calls teardown', async () => {
     happyPathSession()
-    const { result, unmount } = renderHook(() => useDictation({ target }))
+    const { result, unmount } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -354,7 +375,6 @@ describe('useDictation', () => {
     const onFinal = vi.fn()
     const { result } = renderHook(() =>
       useDictation({
-        target,
         onPartialTranscript: onPartial,
         onFinalTranscript: onFinal,
       }),
@@ -395,7 +415,9 @@ describe('useDictation', () => {
 
   it('warning events expose secondsRemaining and max_duration emits analytics', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() =>
+      useDictation({ analyticsLabel: ANALYTICS_LABEL }),
+    )
 
     await act(async () => {
       await result.current.start()
@@ -422,13 +444,13 @@ describe('useDictation', () => {
     })
     expect(trackEventMock).toHaveBeenCalledWith(
       'DictationMaxDurationReached',
-      expect.objectContaining({ targetType: target.type }),
+      expect.objectContaining({ label: ANALYTICS_LABEL }),
     )
   })
 
   it('ignores malformed server frames without crashing', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -460,7 +482,7 @@ describe('useDictation', () => {
         maxDurationSeconds: 600,
       },
     })
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -468,7 +490,6 @@ describe('useDictation', () => {
 
     expect(result.current.status).toBe('error')
     expect(result.current.error).toMatch(/Untrusted WebSocket host/i)
-    // Crucially, no WebSocket should have been opened.
     expect(MockWebSocket.instances).toHaveLength(0)
   })
 
@@ -480,7 +501,7 @@ describe('useDictation', () => {
         maxDurationSeconds: 600,
       },
     })
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -501,7 +522,7 @@ describe('useDictation', () => {
     setupNavigator(() => micPromise)
     happyPathSession()
 
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     let startPromise: Promise<void>
     act(() => {
@@ -509,15 +530,11 @@ describe('useDictation', () => {
     })
     expect(result.current.status).toBe('requesting_mic')
 
-    // stop() runs while the mic promise is still pending. Because no socket is
-    // OPEN yet, stop() goes straight from 'stopping' to 'idle' synchronously.
     await act(async () => {
       await result.current.stop()
     })
     expect(result.current.status).toBe('idle')
 
-    // Now the late-arriving mic resolves. The race fix must keep start() from
-    // continuing past this point and re-acquiring the pipeline.
     const stream = new MockMediaStream()
     await act(async () => {
       resolveMic(stream)
@@ -525,9 +542,7 @@ describe('useDictation', () => {
     })
 
     expect(result.current.status).toBe('idle')
-    // The freshly-resolved mic stream must be torn down, not left open.
     expect(stream.tracks[0]?.stopped).toBeGreaterThan(0)
-    // Pipeline must not have proceeded to open a WebSocket.
     expect(MockWebSocket.instances).toHaveLength(0)
   })
 
@@ -538,7 +553,7 @@ describe('useDictation', () => {
         resolveSession = resolve
       }),
     )
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     let startPromise: Promise<void>
     await act(async () => {
@@ -550,7 +565,6 @@ describe('useDictation', () => {
     await act(async () => {
       await result.current.stop()
     })
-    // No OPEN socket exists yet, so stop() resolves to 'idle' synchronously.
     expect(result.current.status).toBe('idle')
 
     await act(async () => {
@@ -570,12 +584,11 @@ describe('useDictation', () => {
 
   it('stop() while WebSocket is CONNECTING tears down immediately instead of getting stuck', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
     })
-    // Socket is open in the test harness only after we call open(); leave it CONNECTING here.
     expect(MockWebSocket.instances[0]?.readyState).toBe(
       MockWebSocket.CONNECTING,
     )
@@ -584,7 +597,6 @@ describe('useDictation', () => {
       await result.current.stop()
     })
 
-    // No graceful 'stop' frame was sent (socket wasn't OPEN), and the hook is back to idle.
     expect(MockWebSocket.instances[0]?.sent).toHaveLength(0)
     expect(MockWebSocket.instances[0]?.closed).toBeGreaterThanOrEqual(1)
     expect(result.current.status).toBe('idle')
@@ -593,7 +605,7 @@ describe('useDictation', () => {
   it('stop() with an OPEN socket forces teardown when the server never confirms (safety timeout)', async () => {
     vi.useFakeTimers()
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -607,10 +619,8 @@ describe('useDictation', () => {
       await result.current.stop()
     })
     expect(result.current.status).toBe('stopping')
-    // Graceful stop frame was sent on the OPEN socket.
     expect(MockWebSocket.instances[0]?.sent).toHaveLength(1)
 
-    // Server never replies — timeout must force-recover.
     await act(async () => {
       vi.advanceTimersByTime(3001)
     })
@@ -619,7 +629,7 @@ describe('useDictation', () => {
 
   it('server "error" event tears down mic, socket, and AudioContext', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -647,7 +657,7 @@ describe('useDictation', () => {
 
   it('socket onerror tears down mic, socket, and AudioContext', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -669,9 +679,8 @@ describe('useDictation', () => {
 
   it('start() after an error releases the prior session before acquiring new resources', async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
-    // Session 1 to 'recording' then errored by the server.
     await act(async () => {
       await result.current.start()
       await MockWebSocket.instances[0]?.open()
@@ -692,12 +701,10 @@ describe('useDictation', () => {
       )
     })
     expect(result.current.status).toBe('error')
-    // After the server-error teardown, all prior resources are released.
     expect(session1Stream.tracks[0]?.stopped).toBeGreaterThan(0)
     expect(session1Socket.closed).toBeGreaterThanOrEqual(1)
     expect(session1Context.closed).toBeGreaterThanOrEqual(1)
 
-    // Session 2: user clicks Dictate again. Should succeed cleanly.
     await act(async () => {
       await result.current.start()
       await MockWebSocket.instances[1]?.open()
@@ -708,14 +715,13 @@ describe('useDictation', () => {
     expect(result.current.status).toBe('recording')
     expect(MockWebSocket.instances).toHaveLength(2)
     expect(MockAudioContext.instances).toHaveLength(2)
-    // Session 2's resources are alive...
     expect(MockWebSocket.instances[1]?.closed).toBe(0)
     expect(MockAudioContext.instances[1]?.closed).toBe(0)
   })
 
   it("a stale socket's late onclose cannot tear down the new session", async () => {
     happyPathSession()
-    const { result } = renderHook(() => useDictation({ target }))
+    const { result } = renderHook(() => useDictation())
 
     await act(async () => {
       await result.current.start()
@@ -725,9 +731,6 @@ describe('useDictation', () => {
     })
     const session1Socket = MockWebSocket.instances[0]!
 
-    // Server errors out the first session; teardown closes the socket and
-    // detaches its handlers, but the test holds a reference and can still try
-    // to fire the stale onclose below.
     await act(async () => {
       session1Socket.emitMessage(
         JSON.stringify({
@@ -739,7 +742,6 @@ describe('useDictation', () => {
     })
     expect(result.current.status).toBe('error')
 
-    // Start a new session.
     await act(async () => {
       await result.current.start()
       await MockWebSocket.instances[1]?.open()
@@ -750,8 +752,6 @@ describe('useDictation', () => {
     const session2Socket = MockWebSocket.instances[1]!
     const session2Context = MockAudioContext.instances[1]!
 
-    // Now simulate the stale onclose firing after the new session is alive.
-    // Because teardown() detached the handler, this must be a no-op.
     await act(async () => {
       session1Socket.emitClose()
     })

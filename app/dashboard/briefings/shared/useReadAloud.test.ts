@@ -79,7 +79,8 @@ class MockAudio {
   }
 }
 
-const target = { type: 'MeetingBriefing' as const, id: '2026-05-14' }
+const TEXT = 'Welcome to the briefing.'
+const ANALYTICS_LABEL = 'briefing'
 
 const segment = (id: string, url: string) => ({
   id,
@@ -112,7 +113,9 @@ describe('useReadAloud', () => {
       },
     })
 
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() =>
+      useReadAloud({ text: TEXT, analyticsLabel: ANALYTICS_LABEL }),
+    )
 
     expect(result.current.status).toBe('idle')
 
@@ -132,13 +135,64 @@ describe('useReadAloud', () => {
     expect(result.current.status).toBe('idle')
     expect(trackEventMock).toHaveBeenCalledWith(
       'ReadAloudCompleted',
-      expect.objectContaining({ targetType: target.type, targetId: target.id }),
+      expect.objectContaining({ label: ANALYTICS_LABEL }),
+    )
+  })
+
+  it('forwards the text payload (and no domain target fields) to the synthesize request', async () => {
+    clientRequestMock.mockResolvedValue({
+      data: {
+        segments: [],
+        cacheHit: false,
+        voiceId: 'Joanna',
+        engine: 'neural',
+      },
+    })
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
+
+    await act(async () => {
+      await result.current.play()
+    })
+
+    expect(clientRequestMock).toHaveBeenCalledWith(
+      'POST /v1/speech/synthesize',
+      expect.objectContaining({ text: TEXT }),
+    )
+    const body = clientRequestMock.mock.calls[0]?.[1] as Record<string, unknown>
+    expect(body).not.toHaveProperty('target')
+  })
+
+  it('threads voiceId and engine into the options envelope when provided', async () => {
+    clientRequestMock.mockResolvedValue({
+      data: {
+        segments: [],
+        cacheHit: false,
+        voiceId: 'Matthew',
+        engine: 'standard',
+      },
+    })
+    const { result } = renderHook(() =>
+      useReadAloud({ text: TEXT, voiceId: 'Matthew', engine: 'standard' }),
+    )
+
+    await act(async () => {
+      await result.current.play()
+    })
+
+    expect(clientRequestMock).toHaveBeenCalledWith(
+      'POST /v1/speech/synthesize',
+      {
+        text: TEXT,
+        options: { voiceId: 'Matthew', engine: 'standard' },
+      },
     )
   })
 
   it('transitions to error state when the synthesize request rejects', async () => {
     clientRequestMock.mockRejectedValue(new Error('Boom'))
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() =>
+      useReadAloud({ text: TEXT, analyticsLabel: ANALYTICS_LABEL }),
+    )
 
     await act(async () => {
       await result.current.play()
@@ -148,7 +202,10 @@ describe('useReadAloud', () => {
     expect(result.current.error).toBe('Boom')
     expect(trackEventMock).toHaveBeenCalledWith(
       'ReadAloudFailed',
-      expect.objectContaining({ reason: 'synthesize_failed' }),
+      expect.objectContaining({
+        reason: 'synthesize_failed',
+        label: ANALYTICS_LABEL,
+      }),
     )
   })
 
@@ -161,7 +218,7 @@ describe('useReadAloud', () => {
         engine: 'neural',
       },
     })
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
 
     await act(async () => {
       await result.current.play()
@@ -191,7 +248,7 @@ describe('useReadAloud', () => {
         engine: 'neural',
       },
     })
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
 
     await act(async () => {
       await result.current.play()
@@ -221,7 +278,7 @@ describe('useReadAloud', () => {
         engine: 'neural',
       },
     })
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
 
     await act(async () => {
       await result.current.play()
@@ -240,7 +297,7 @@ describe('useReadAloud', () => {
         engine: 'neural',
       },
     })
-    const { result, unmount } = renderHook(() => useReadAloud({ target }))
+    const { result, unmount } = renderHook(() => useReadAloud({ text: TEXT }))
 
     await act(async () => {
       await result.current.play()
@@ -269,16 +326,14 @@ describe('useReadAloud', () => {
       },
     })
 
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
 
-    // Kick off the first play — it will hang on the API response.
     let firstPlay: Promise<void>
     act(() => {
       firstPlay = result.current.play()
     })
     expect(result.current.status).toBe('loading')
 
-    // Stop, then immediately Play again before the first response arrives.
     act(() => {
       result.current.stop()
     })
@@ -288,7 +343,6 @@ describe('useReadAloud', () => {
       await secondPlay
     })
 
-    // Now resolve the FIRST request — the stale generation must NOT touch state.
     await act(async () => {
       resolveFirst({
         data: {
@@ -302,7 +356,6 @@ describe('useReadAloud', () => {
       await flush()
     })
 
-    // Exactly one Audio instance from the second call should exist (and be playing it).
     const playingAudios = MockAudio.instances.filter(
       (a) => a.src === 'https://cdn.test/second.mp3',
     )
@@ -328,7 +381,7 @@ describe('useReadAloud', () => {
       },
     })
 
-    const { result } = renderHook(() => useReadAloud({ target }))
+    const { result } = renderHook(() => useReadAloud({ text: TEXT }))
 
     let firstPlay: Promise<void>
     act(() => {
@@ -360,7 +413,6 @@ describe('useReadAloud', () => {
     const cursorsForSecond = MockAudio.instances.filter(
       (a) => a.src === 'https://cdn.test/second.mp3' && a.playCalls > 0,
     )
-    // The stale first response must not start playback.
     expect(cursorsForFirst).toHaveLength(0)
     expect(cursorsForSecond).toHaveLength(1)
   })

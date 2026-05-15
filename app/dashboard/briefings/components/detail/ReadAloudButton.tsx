@@ -6,25 +6,26 @@ import { useReadAloud } from '../../shared/useReadAloud'
 
 type Props = {
   /**
-   * The meeting date in YYYY-MM-DD form. Used as the speech synthesis
-   * target id; the backend resolves it to the current user's elected
-   * office and looks up that day's MeetingBriefing artifact.
+   * The plain text to read aloud. Callers render this from whatever
+   * domain object they're playing (briefing, note, etc.) — the speech
+   * service is a pure pipe and has no knowledge of the source domain.
    */
-  meetingDate: string
+  text: string
+  /** Optional label forwarded to analytics so usage can be sliced by surface. */
+  analyticsLabel?: string
 }
 
 /**
- * Read aloud control. Plays the synthesized briefing audio via the speech
- * service. Idle / loading / playing / error states are driven by
- * `useReadAloud`. Disabled while loading; shows the underlying error from
- * the hook to anyone using a screen reader via aria-label.
+ * Read aloud control. Plays the synthesized text via the speech service.
+ * Idle / loading / playing / error states are driven by `useReadAloud`.
+ * Disabled while loading; shows the underlying error from the hook to
+ * anyone using a screen reader via aria-label.
  */
 export default function ReadAloudButton({
-  meetingDate,
+  text,
+  analyticsLabel,
 }: Props): React.JSX.Element {
-  const { status, error, play, stop } = useReadAloud({
-    target: { type: 'MeetingBriefing', id: meetingDate },
-  })
+  const { status, error, play, stop } = useReadAloud({ text, analyticsLabel })
 
   const isBusy = status === 'loading' || status === 'playing'
   const ariaLabel =

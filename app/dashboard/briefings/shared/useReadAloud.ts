@@ -3,20 +3,25 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { clientRequest } from 'gpApi/typed-request'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type {
-  SynthesizeSpeechRequest,
+  SpeechSynthesisEngine,
   SynthesizeSpeechSegment,
 } from './speech-types'
 
 export type ReadAloudStatus = 'idle' | 'loading' | 'playing' | 'error'
 
+/**
+ * Domain-agnostic input. Callers render their own text from whatever
+ * domain object they're playing (briefings, notes, etc.) and pass the
+ * raw string here; the speech service has no knowledge of the source.
+ *
+ * `analyticsLabel` is forwarded to analytics events so we can still slice
+ * usage by surface in dashboards without coupling the hook to a domain.
+ */
 export type ReadAloudInput = {
-  target: SynthesizeSpeechRequest['target']
+  text: string
   voiceId?: string
-  engine?: SynthesizeSpeechRequest['options'] extends infer T
-    ? T extends { engine?: infer E }
-      ? E
-      : never
-    : never
+  engine?: SpeechSynthesisEngine
+  analyticsLabel?: string
 }
 
 export type UseReadAloudResult = {
@@ -71,8 +76,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
       if (startIndex >= segments.length) {
         setStatus('idle')
         trackEvent(EVENTS.Briefings.ReadAloudCompleted, {
-          targetType: input.target.type,
-          targetId: input.target.id,
+          label: input.analyticsLabel,
           segmentCount: segments.length,
         })
         cleanupAudio()
@@ -104,8 +108,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         setStatus('error')
         setError('Audio playback failed')
         trackEvent(EVENTS.Briefings.ReadAloudFailed, {
-          targetType: input.target.type,
-          targetId: input.target.id,
+          label: input.analyticsLabel,
           reason: 'audio_error',
         })
         cleanupAudio()
@@ -118,14 +121,13 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         setStatus('error')
         setError(err.message || 'Playback was blocked')
         trackEvent(EVENTS.Briefings.ReadAloudFailed, {
-          targetType: input.target.type,
-          targetId: input.target.id,
+          label: input.analyticsLabel,
           reason: 'play_rejected',
         })
         cleanupAudio()
       })
     },
-    [buildAudio, cleanupAudio, input.target.id, input.target.type],
+    [buildAudio, cleanupAudio, input.analyticsLabel],
   )
 
   const play = useCallback(async () => {
@@ -135,13 +137,12 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     setError(null)
     setStatus('loading')
     trackEvent(EVENTS.Briefings.ReadAloudStarted, {
-      targetType: input.target.type,
-      targetId: input.target.id,
+      label: input.analyticsLabel,
     })
 
     try {
       const response = await clientRequest('POST /v1/speech/synthesize', {
-        target: input.target,
+        text: input.text,
         ...(input.voiceId || input.engine
           ? {
               options: {
@@ -170,26 +171,31 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
       setStatus('error')
       setError(message)
       trackEvent(EVENTS.Briefings.ReadAloudFailed, {
-        targetType: input.target.type,
-        targetId: input.target.id,
+        label: input.analyticsLabel,
         reason: 'synthesize_failed',
       })
     }
-  }, [cleanupAudio, input.engine, input.target, input.voiceId, playFromIndex])
+  }, [
+    cleanupAudio,
+    input.analyticsLabel,
+    input.engine,
+    input.text,
+    input.voiceId,
+    playFromIndex,
+  ])
 
   const stop = useCallback(() => {
     generationRef.current += 1
     if (status === 'playing' || status === 'loading') {
       trackEvent(EVENTS.Briefings.ReadAloudStopped, {
-        targetType: input.target.type,
-        targetId: input.target.id,
+        label: input.analyticsLabel,
         atSegmentIndex: indexRef.current,
         totalSegments: segmentsRef.current.length,
       })
     }
     cleanupAudio()
     setStatus('idle')
-  }, [cleanupAudio, input.target.id, input.target.type, status])
+  }, [cleanupAudio, input.analyticsLabel, status])
 
   useEffect(
     () => () => {
