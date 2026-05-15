@@ -67,6 +67,18 @@ export default function AskAiPopover({
   onChatCreated,
 }: Props): React.JSX.Element {
   const [internalOpen, setInternalOpen] = useState(false)
+  const [createdAnnotationId, setCreatedAnnotationId] = useState<
+    string | undefined
+  >(existingAnnotationId)
+  const resolvedAnnotationId = existingAnnotationId ?? createdAnnotationId
+
+  const handleChatCreated = useCallback(
+    (info: { annotationId: string; conversationId: string }) => {
+      setCreatedAnnotationId(info.annotationId)
+      onChatCreated?.({ ...info, anchor })
+    },
+    [anchor, onChatCreated],
+  )
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : internalOpen
 
@@ -130,14 +142,10 @@ export default function AskAiPopover({
         <AskAiChatBody
           meetingDate={meetingDate}
           anchor={anchor}
-          annotationIdOverride={existingAnnotationId}
+          annotationIdOverride={resolvedAnnotationId}
           showInlineHeader={false}
           active={open}
-          onChatCreated={
-            onChatCreated
-              ? (info) => onChatCreated({ ...info, anchor })
-              : undefined
-          }
+          onChatCreated={handleChatCreated}
         />
       </PopoverContent>
     </Popover>

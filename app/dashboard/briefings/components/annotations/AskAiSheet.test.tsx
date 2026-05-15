@@ -405,7 +405,7 @@ describe('<AskAiSheet>', () => {
     mockChatApi.streamMessage.mockReturnValueOnce(iter)
     const onClose = vi.fn()
 
-    render(
+    const { unmount } = render(
       <AskAiSheet
         sheet={anchoredSheet()}
         meetingDate="briefing_x"
@@ -427,8 +427,17 @@ describe('<AskAiSheet>', () => {
     expect(signal?.aborted).toBe(false)
 
     await user.keyboard('{Escape}')
-
     expect(onClose).toHaveBeenCalled()
+
+    // Simulate the parent responding to onClose by removing the sheet from
+    // the DOM — this is what AnnotationsScope does in production. The
+    // AskAiChatBody unmount cleanup effect fires ctrl.abort().
+    unmount()
+
+    await waitFor(() => {
+      expect(signal?.aborted).toBe(true)
+    })
+
     close()
   })
 })
