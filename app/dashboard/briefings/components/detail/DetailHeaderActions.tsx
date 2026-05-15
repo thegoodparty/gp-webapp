@@ -1,13 +1,13 @@
 'use client'
 
-import { Download, MessageSquare, Sparkles } from 'lucide-react'
+import { Download, NotebookPen, Sparkles } from 'lucide-react'
 import { Button } from '@styleguide'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
 /**
  * Sticky header actions on desktop. Download triggers a PDF download (TODO),
- * Add notes opens the AddNoteSheet with no anchor (top-level briefing note),
- * Ask AI opens the briefing assistant Sheet (TODO, phase 7).
+ * Add notes opens the intake dialog (camera / upload / type), Ask AI opens
+ * the briefing assistant Sheet (TODO, phase 7).
  */
 export default function DetailHeaderActions(): React.JSX.Element {
   const { openAddNoteTopLevel } = useAnnotationsCtx()
@@ -23,7 +23,7 @@ export default function DetailHeaderActions(): React.JSX.Element {
         Download
       </Button>
       <Button variant="outline" onClick={openAddNoteTopLevel}>
-        <MessageSquare className="size-4" aria-hidden />
+        <NotebookPen className="size-4" aria-hidden />
         Add notes
       </Button>
       <Button

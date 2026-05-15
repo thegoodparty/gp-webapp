@@ -18,6 +18,7 @@ import HighlightToolbar from './HighlightToolbar'
 import AddNoteSheet from './AddNoteSheet'
 import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
+import AddNotesDialog from '../notes-intake/AddNotesDialog'
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -81,13 +82,17 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [sheet, setSheet] = useState<SheetState>({ kind: 'closed' })
+  const [intakeOpen, setIntakeOpen] = useState(false)
 
   const openAddNoteFromSelection = useCallback(() => {
     setSheet({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
+  // The top-level "Add notes" button on the header / mobile bar opens the new
+  // intake dialog (camera / upload / type). Phase 1 only wires the type path;
+  // camera and upload render as Coming soon.
   const openAddNoteTopLevel = useCallback(() => {
-    setSheet({ kind: 'add_note_new', anchor: null })
+    setIntakeOpen(true)
   }, [])
 
   const openReportErrorFromSelection = useCallback(() => {
@@ -222,6 +227,17 @@ export default function AnnotationsScope({
           }}
         />
       )}
+      <AddNotesDialog
+        open={intakeOpen}
+        onClose={() => setIntakeOpen(false)}
+        onSubmitTypedNote={async (body) => {
+          await create.mutateAsync({
+            kind: 'note',
+            anchor: { jsonPath: null, start: null, end: null },
+            payload: { body },
+          })
+        }}
+      />
     </AnnotationsCtx.Provider>
   )
 }
