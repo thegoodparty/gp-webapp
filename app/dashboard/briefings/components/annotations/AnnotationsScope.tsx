@@ -154,6 +154,17 @@ export default function AnnotationsScope({
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
   const [intakeOpen, setIntakeOpen] = useState(false)
+  const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
+    () => new Set(),
+  )
+
+  // Top-level notes (no anchor) — what the intake dialog renders as pills.
+  // Filter once here so the dialog's deps are simple references.
+  const topLevelNotes = useMemo(
+    () =>
+      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
+    [annotations],
+  )
 
   const handleChatCreated = useCallback(
     (_info: {
@@ -376,27 +387,48 @@ export default function AnnotationsScope({
       <AddNotesDialog
         open={intakeOpen}
         onClose={() => setIntakeOpen(false)}
-        onSubmit={async (input) => {
-          if (input.kind === 'typed') {
-            await create.mutateAsync({
+        existingNotes={topLevelNotes}
+        deletingIds={deletingNoteIds}
+        onDeleteExisting={async (id) => {
+          setDeletingNoteIds((prev) => {
+            const next = new Set(prev)
+            next.add(id)
+            return next
+          })
+          try {
+            await remove.mutateAsync(id)
+          } finally {
+            setDeletingNoteIds((prev) => {
+              const next = new Set(prev)
+              next.delete(id)
+              return next
+            })
+          }
+        }}
+        onSubmit={async (drafts) => {
+          // Commit each staged pill as its own note. Typed pills are a single
+          // create call; file pills create the note then run the presign →
+          // PUT → complete sequence. We run serially to keep the network
+          // pattern boring and easy to retry; can fan out later if needed.
+          for (const draft of drafts) {
+            if (draft.kind === 'typed') {
+              await create.mutateAsync({
+                kind: 'note',
+                anchor: { jsonPath: null, start: null, end: null },
+                payload: { body: draft.body },
+              })
+              continue
+            }
+            const created = await create.mutateAsync({
               kind: 'note',
               anchor: { jsonPath: null, start: null, end: null },
-              payload: { body: input.body },
+              payload: {},
             })
-            return
+            await uploadAttachment({
+              annotationId: created.id,
+              file: draft.file,
+            })
           }
-          // File path: create the note row first (no body), then PUT to S3
-          // via presign + complete. The polled annotations list picks up the
-          // OCR status updates afterwards.
-          const created = await create.mutateAsync({
-            kind: 'note',
-            anchor: { jsonPath: null, start: null, end: null },
-            payload: {},
-          })
-          await uploadAttachment({
-            annotationId: created.id,
-            file: input.file,
-          })
           queryClient.invalidateQueries({
             queryKey: annotationsQueryKey(meetingDate),
           })
