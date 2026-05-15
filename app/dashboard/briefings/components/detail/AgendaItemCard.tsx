@@ -9,6 +9,7 @@ type Props = {
   itemIndex: number
   sources: Source[]
   domId: string
+  showFeedback: boolean
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -33,6 +34,7 @@ export default function AgendaItemCard({
   itemIndex,
   sources,
   domId,
+  showFeedback,
 }: Props): React.JSX.Element {
   const base = `/items/${itemIndex}`
   const display = item.display
@@ -65,7 +67,7 @@ export default function AgendaItemCard({
       </header>
 
       <section className="flex flex-col gap-2">
-        <SectionLabel>Summary</SectionLabel>
+        <SectionLabel>What to expect</SectionLabel>
         <p
           className="text-sm leading-6 text-foreground"
           data-briefing-json-path={`${base}/display/summary`}
@@ -127,7 +129,7 @@ export default function AgendaItemCard({
       ) : null}
 
       <SourcesCollapsible sources={itemSources} />
-      <FeedbackRow />
+      {showFeedback ? <FeedbackRow /> : null}
     </article>
   )
 }

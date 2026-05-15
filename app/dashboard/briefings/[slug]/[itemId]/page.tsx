@@ -43,6 +43,7 @@ export default async function Page({
       itemIndex={index}
       sources={briefing.sources}
       domId={`briefing-item-${item.id}`}
+      showFeedback={item.tier === 'featured'}
     />
   )
 }

@@ -236,7 +236,7 @@ const getDashboardMenuItems = (
   if (isElectedOffice) {
     menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
     if (briefingsEnabled) {
-      menuItems.splice(voterDataIndex, 0, BRIEFINGS_MENU_ITEM)
+      menuItems.unshift(BRIEFINGS_MENU_ITEM)
     }
   }
 
