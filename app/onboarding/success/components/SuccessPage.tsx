@@ -1,15 +1,17 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, Card, CardContent, GoodPartyOrgLogo } from '@styleguide'
+import { Button } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import type { User } from 'helpers/types'
 import ConfettiCanvas from './ConfettiCanvas'
-import { MOCK_PLAN_SECTIONS } from './mockPlanContent'
+import HeroCard from './HeroCard'
+import PlanSections from './PlanSections'
+import { buildPlanData, type PlanInput } from './planContent'
 
 interface SuccessPageProps {
   initialUser: User | null
@@ -22,6 +24,8 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
 
+  // Onboarding flips campaign state server-side right before this page mounts;
+  // the client cache from earlier in the session is stale.
   useEffect(() => {
     void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
   }, [queryClient])
@@ -39,7 +43,73 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     campaign?.organization?.customPositionName ||
     campaign?.office ||
     ''
+  const stateValue = campaign?.details?.state ?? campaign?.state ?? ''
+  const city = campaign?.details?.city ?? campaign?.city ?? ''
+  const district = campaign?.details?.district ?? ''
+  const partisanType = campaign?.details?.partisanType ?? ''
+  const electionDateIso =
+    campaign?.details?.electionDate ?? campaign?.electionDate ?? null
+  const filingDateStartIso = campaign?.details?.filingPeriodsStart ?? null
+  const filingDateEndIso = campaign?.details?.filingPeriodsEnd ?? null
+  const runningAgainstRef = campaign?.details?.runningAgainst
+  const customIssuesRef = campaign?.details?.customIssues
+  const stancesRef = campaign?.Stances
+  const hubspotIncumbent =
+    campaign?.data?.hubSpotUpdates?.incumbent?.trim() || null
+  const metrics = campaign?.raceTargetMetrics
+  const winNumber = metrics?.winNumber ?? 0
+  const projectedTurnout = metrics?.projectedTurnout ?? 0
+  const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
+  const filingFee = metrics?.filingFee ?? null
+  const filingRequirementsText = metrics?.filingRequirementsText ?? null
 
+  const plan = useMemo(() => {
+    const input: PlanInput = {
+      candidateName,
+      race,
+      district,
+      city,
+      state: stateValue,
+      partisanType,
+      electionDateIso,
+      filingDateStartIso,
+      filingDateEndIso,
+      winNumber,
+      projectedTurnout,
+      voterContactGoal,
+      runningAgainst: runningAgainstRef ?? [],
+      customIssues: customIssuesRef ?? [],
+      stances: (stancesRef ?? []).map((s) => ({
+        issueName: s.Issue?.name,
+        statement: s.stanceStatement,
+      })),
+      hubspotIncumbent,
+      filingFee,
+      filingRequirementsText,
+    }
+    return buildPlanData(input)
+  }, [
+    candidateName,
+    race,
+    district,
+    city,
+    stateValue,
+    partisanType,
+    electionDateIso,
+    filingDateStartIso,
+    filingDateEndIso,
+    winNumber,
+    projectedTurnout,
+    voterContactGoal,
+    runningAgainstRef,
+    customIssuesRef,
+    stancesRef,
+    hubspotIncumbent,
+    filingFee,
+    filingRequirementsText,
+  ])
+
+  const handleShare = () => undefined
   const handleContinue = () => router.push('/dashboard')
 
   return (
@@ -47,38 +117,22 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       <div className="pointer-events-none fixed inset-0 z-40">
         <ConfettiCanvas play />
       </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-4 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
-        <div className="relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 pt-12 pb-10 text-center sm:px-12 sm:pt-16">
-          <GoodPartyOrgLogo className="!h-12 !w-auto sm:!h-14" />
-          <div className="flex flex-col items-center gap-2">
-            <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
-              Your initial campaign plan
-            </h1>
-            {candidateName && race ? (
-              <p className="text-xl font-bold text-foreground sm:text-2xl">
-                {candidateName} for {race}
-              </p>
-            ) : null}
-          </div>
-        </div>
 
-        <div className="mt-8 grid gap-4 sm:mt-12">
-          {MOCK_PLAN_SECTIONS.map((section) => (
-            <Card key={section.id}>
-              <CardContent className="space-y-2 py-6">
-                <h2 className="text-xl font-semibold text-foreground">
-                  {section.title}
-                </h2>
-                <p className="text-base text-muted-foreground">
-                  {section.body}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+      <main className="mx-auto w-full max-w-4xl px-4 pt-4 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
+        <HeroCard
+          candidateName={plan.candidateName}
+          race={plan.race}
+          state={stateValue}
+          electionDate={plan.electionDate}
+          onShare={handleShare}
+        />
+
+        <div className="mt-10 sm:mt-14">
+          <PlanSections plan={plan} onShare={handleShare} />
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-end gap-3 px-4 sm:px-8">
           <Button
             type="button"
