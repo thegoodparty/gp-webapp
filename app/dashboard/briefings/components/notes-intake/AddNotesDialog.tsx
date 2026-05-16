@@ -150,7 +150,11 @@ export default function AddNotesDialog({
 
   const trimmedDraft = typedDraft.trim()
   const canAddTyped = trimmedDraft.length > 0 && !submitting
-  const canSubmit = staged.length > 0 && !submitting
+  // Submit commits the staged pills plus any unstaged textarea text. "+ Add"
+  // is still there for queueing multiple typed notes in one Submit, but it's
+  // not required for the common "type one note, click Submit" case.
+  const canSubmit =
+    (staged.length > 0 || trimmedDraft.length > 0) && !submitting
 
   const visibleExisting = useMemo(() => {
     if (submitting && frozenExistingIdsRef.current) {
@@ -236,10 +240,15 @@ export default function AddNotesDialog({
 
   const handleSubmit = async () => {
     if (!canSubmit) return
+    // Sweep any unstaged textarea content into the drafts list so the user
+    // doesn't have to click "+ Add" before Submit for the single-note case.
+    const drafts: StagedDraft[] = trimmedDraft.length
+      ? [...staged, { id: newId(), kind: 'typed', body: trimmedDraft }]
+      : staged
     frozenExistingIdsRef.current = new Set(existingNotes.map((a) => a.id))
     setSubmitting(true)
     try {
-      await onSubmit(staged)
+      await onSubmit(drafts)
       onClose()
     } finally {
       setSubmitting(false)
