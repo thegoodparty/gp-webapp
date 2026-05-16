@@ -152,7 +152,7 @@ const SectionSourcePills = ({
 
 const formatSentimentLine = (meanScore: number): string => {
   const support = Math.round(meanScore)
-  const oppose = Math.round(100 - meanScore)
+  const oppose = 100 - support
   return `${support}% support · ${oppose}% oppose`
 }
 

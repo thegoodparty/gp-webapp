@@ -450,16 +450,13 @@ export default function AnnotationsScope({
                 anchor: { jsonPath: null, start: null, end: null },
                 payload: {},
               })
+              let attachmentId: string
               try {
-                const { attachmentId } = await uploadAttachment({
+                const result = await uploadAttachment({
                   annotationId: created.id,
                   file: draft.file,
                 })
-                // Block until OCR has a terminal status so the recap/assistant
-                // can see extracted text. Caps at 60s; if we time out we
-                // proceed silently and the polled annotations query will
-                // catch up.
-                await waitForOcr(meetingDate, attachmentId)
+                attachmentId = result.attachmentId
               } catch (uploadErr) {
                 // Best-effort rollback of the empty annotation. We swallow
                 // the rollback error specifically so the original upload
@@ -471,6 +468,15 @@ export default function AnnotationsScope({
                      useful than masking it with a rollback failure */
                 }
                 throw uploadErr
+              }
+              // Block until OCR has a terminal status so the recap/assistant
+              // can see extracted text. Caps at 60s; poll errors are
+              // non-fatal — the upload already succeeded, the polled
+              // annotations query will catch up.
+              try {
+                await waitForOcr(meetingDate, attachmentId)
+              } catch {
+                /* poll failure must not roll back a successful upload */
               }
             }
           } finally {
