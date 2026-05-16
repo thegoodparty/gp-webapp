@@ -58,9 +58,10 @@ const formatDate = (iso?: string | null): string | null => {
 
 const buildDescription = (s: Source): string | null => {
   const parts: string[] = []
-  if (s.articleType && ARTICLE_TYPE_LABEL[s.articleType]) {
-    parts.push(ARTICLE_TYPE_LABEL[s.articleType])
-  }
+  const articleLabel = s.articleType
+    ? ARTICLE_TYPE_LABEL[s.articleType]
+    : undefined
+  if (articleLabel) parts.push(articleLabel)
   if (s.sectionHeading) parts.push(s.sectionHeading)
   if (typeof s.pageNumber === 'number') parts.push(`p. ${s.pageNumber}`)
   const date = formatDate(s.publicationDate)

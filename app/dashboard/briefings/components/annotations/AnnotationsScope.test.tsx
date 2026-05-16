@@ -117,7 +117,11 @@ describe('<AnnotationsScope>', () => {
   describe('AddNotesDialog onSubmit', () => {
     const mountAndCaptureOnSubmit = async () => {
       testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
-      render(<AnnotationsScope meetingDate="briefing_x" />)
+      render(
+        <AnnotationsScope meetingDate="briefing_x">
+          <div />
+        </AnnotationsScope>,
+      )
       await waitFor(() => {
         expect(capturedOnSubmit).not.toBeNull()
       })
