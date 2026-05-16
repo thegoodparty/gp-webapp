@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
+import { APP_BASE } from 'appEnv'
 import { getBriefingBySlug } from '@shared/briefings/server'
 import { briefingsLandingHref } from '@shared/briefings/routes'
 import serveAccess from '../../shared/serveAccess'
@@ -56,8 +57,9 @@ export default async function BriefingChromeLayout({
         <div className="relative">
           <div className="flex min-h-full flex-col bg-muted pb-20 lg:pb-12">
             <DetailHeader
-              title={briefing.title}
-              readingTimeMinutes={briefing.estimatedReadMinutes}
+              briefing={briefing}
+              preparedForLine={briefing.officialName}
+              liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
             />
 
             <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:px-8">
