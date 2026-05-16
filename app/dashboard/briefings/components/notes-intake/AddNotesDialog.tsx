@@ -111,6 +111,7 @@ export default function AddNotesDialog({
   const [staged, setStaged] = useState<StagedDraft[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [fileError, setFileError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [typeExpanded, setTypeExpanded] = useState(false)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const uploadInputRef = useRef<HTMLInputElement | null>(null)
@@ -139,6 +140,7 @@ export default function AddNotesDialog({
       setStaged([])
       setSubmitting(false)
       setFileError(null)
+      setSubmitError(null)
       setTypeExpanded(hasExistingTypedNotes)
       frozenExistingIdsRef.current = null
     }
@@ -246,10 +248,14 @@ export default function AddNotesDialog({
       ? [...staged, { id: newId(), kind: 'typed', body: trimmedDraft }]
       : staged
     frozenExistingIdsRef.current = new Set(existingNotes.map((a) => a.id))
+    setSubmitError(null)
     setSubmitting(true)
     try {
       await onSubmit(drafts)
       onClose()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setSubmitError(`Couldn't save your notes: ${msg}`)
     } finally {
       setSubmitting(false)
       frozenExistingIdsRef.current = null
@@ -398,6 +404,9 @@ export default function AddNotesDialog({
 
       {fileError ? (
         <p className="text-xs text-destructive">{fileError}</p>
+      ) : null}
+      {submitError ? (
+        <p className="text-sm text-destructive">{submitError}</p>
       ) : null}
 
       <input

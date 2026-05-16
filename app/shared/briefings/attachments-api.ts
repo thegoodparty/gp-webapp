@@ -20,6 +20,28 @@ export type UploadAttachmentResult = {
   attachmentId: string
 }
 
+const EXTENSION_MIME: Record<string, string> = {
+  pdf: 'application/pdf',
+  txt: 'text/plain',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+}
+
+/**
+ * `file.type` can be empty on some Android / Linux file pickers (notably for
+ * .docx and .txt). The presign endpoint enforces a MIME whitelist, so an
+ * empty value would 400. Fall back to extension-based detection.
+ */
+export const resolveMimeType = (file: File): string => {
+  if (file.type) return file.type
+  const dot = file.name.lastIndexOf('.')
+  if (dot < 0) return ''
+  const ext = file.name.slice(dot + 1).toLowerCase()
+  return EXTENSION_MIME[ext] ?? ''
+}
+
 /**
  * Uploads `file` against `annotationId` and resolves once the server has
  * accepted the completion and enqueued OCR. Throws on any step's failure.
@@ -28,13 +50,14 @@ export const uploadAttachment = async (
   input: UploadAttachmentInput,
 ): Promise<UploadAttachmentResult> => {
   const { annotationId, file } = input
+  const mimeType = resolveMimeType(file)
 
   const { data: presign } = await clientRequest(
     'POST /v1/annotations/:annotationId/note/attachments/presign',
     {
       annotationId,
       file_name: file.name,
-      mime_type: file.type,
+      mime_type: mimeType,
       size_bytes: file.size,
     },
   )
@@ -42,7 +65,7 @@ export const uploadAttachment = async (
   const putResponse = await fetch(presign.upload_url, {
     method: 'PUT',
     body: file,
-    headers: { 'Content-Type': file.type },
+    headers: { 'Content-Type': mimeType },
   })
   if (!putResponse.ok) {
     throw new Error(`s3_upload_failed:${putResponse.status}`)

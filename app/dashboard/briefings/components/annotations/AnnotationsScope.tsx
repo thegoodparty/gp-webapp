@@ -410,28 +410,49 @@ export default function AnnotationsScope({
           // create call; file pills create the note then run the presign →
           // PUT → complete sequence. We run serially to keep the network
           // pattern boring and easy to retry; can fan out later if needed.
-          for (const draft of drafts) {
-            if (draft.kind === 'typed') {
-              await create.mutateAsync({
+          //
+          // If a file upload fails after the note row was created, we delete
+          // the orphan note so users don't end up with a dead "(empty note)"
+          // pill they can't see or recover from. The original error is
+          // re-thrown so the dialog surfaces it.
+          try {
+            for (const draft of drafts) {
+              if (draft.kind === 'typed') {
+                await create.mutateAsync({
+                  kind: 'note',
+                  anchor: { jsonPath: null, start: null, end: null },
+                  payload: { body: draft.body },
+                })
+                continue
+              }
+              const created = await create.mutateAsync({
                 kind: 'note',
                 anchor: { jsonPath: null, start: null, end: null },
-                payload: { body: draft.body },
+                payload: {},
               })
-              continue
+              try {
+                await uploadAttachment({
+                  annotationId: created.id,
+                  file: draft.file,
+                })
+              } catch (uploadErr) {
+                // Best-effort rollback of the empty annotation. We swallow
+                // the rollback error specifically so the original upload
+                // error reaches the caller.
+                try {
+                  await remove.mutateAsync(created.id)
+                } catch {
+                  /* leave the orphan; surfacing the upload error is more
+                     useful than masking it with a rollback failure */
+                }
+                throw uploadErr
+              }
             }
-            const created = await create.mutateAsync({
-              kind: 'note',
-              anchor: { jsonPath: null, start: null, end: null },
-              payload: {},
-            })
-            await uploadAttachment({
-              annotationId: created.id,
-              file: draft.file,
+          } finally {
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
             })
           }
-          queryClient.invalidateQueries({
-            queryKey: annotationsQueryKey(meetingDate),
-          })
         }}
       />
     </AnnotationsCtx.Provider>
