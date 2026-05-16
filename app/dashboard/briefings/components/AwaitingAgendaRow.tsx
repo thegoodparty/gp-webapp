@@ -34,7 +34,7 @@ export default function AwaitingAgendaRow({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-accent focus:bg-accent focus:outline-none"
+          className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/60 focus:bg-muted/60 focus:outline-none"
         >
           <span
             aria-hidden
