@@ -66,7 +66,17 @@ function fromApi(row: ApiAnnotation): Annotation {
     result.note = {
       id: row.note.id,
       body: row.note.body,
-      attachments: [],
+      attachments: row.note.attachments.map((a) => ({
+        id: a.id,
+        fileName: a.file_name,
+        mimeType: a.mime_type,
+        sizeBytes: a.size_bytes,
+        ocrStatus: a.ocr_status,
+        ocrText: a.ocr_text,
+        ocrError: a.ocr_error,
+        ocrCompletedAt: a.ocr_completed_at,
+        createdAt: a.created_at,
+      })),
       createdAt: row.note.created_at,
       updatedAt: row.note.updated_at,
     }

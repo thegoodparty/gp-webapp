@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { List, ChevronUp, Download, Sparkles } from 'lucide-react'
+import { List, ChevronUp, Download, NotebookPen, Sparkles } from 'lucide-react'
 import {
   Button,
   IconButton,
@@ -30,7 +30,7 @@ type Props = {
  *
  *  - Left pill: name of the current page (Executive Summary or agenda item)
  *    + chevron, opens a bottom Sheet for navigation.
- *  - Right FABs: Download and Ask AI.
+ *  - Right FABs: Download, Add notes, and Ask AI.
  *
  * Selecting an entry navigates to that page; the Sheet closes on tap.
  */
@@ -40,7 +40,8 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const { meetingDate, onChatCreated } = useAnnotationsCtx()
+  const { meetingDate, openAddNoteTopLevel, onChatCreated } =
+    useAnnotationsCtx()
 
   const overviewHref = briefingOverviewHref(briefingSlug)
 
@@ -124,6 +125,16 @@ export default function MobileBottomBar({
           className="shadow-md"
         >
           <Download className="size-5" aria-hidden />
+        </IconButton>
+        <IconButton
+          type="button"
+          size="large"
+          variant="outline"
+          aria-label="Add notes"
+          onClick={openAddNoteTopLevel}
+          className="shadow-md"
+        >
+          <NotebookPen className="size-5" aria-hidden />
         </IconButton>
         <AskAiPopover
           meetingDate={meetingDate}
