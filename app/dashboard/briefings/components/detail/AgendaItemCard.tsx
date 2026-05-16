@@ -9,6 +9,7 @@ type Props = {
   itemIndex: number
   sources: Source[]
   domId: string
+  meetingDate: string
   showFeedback: boolean
 }
 
@@ -85,6 +86,7 @@ export default function AgendaItemCard({
   itemIndex,
   sources,
   domId,
+  meetingDate,
   showFeedback,
 }: Props): React.JSX.Element {
   const base = `/items/${itemIndex}`
@@ -192,7 +194,9 @@ export default function AgendaItemCard({
       ) : null}
 
       <SourcesCollapsible sources={itemSources} />
-      {showFeedback ? <FeedbackRow /> : null}
+      {showFeedback ? (
+        <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
+      ) : null}
     </article>
   )
 }
