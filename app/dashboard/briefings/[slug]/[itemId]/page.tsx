@@ -47,6 +47,7 @@ export default async function Page({
       domId={`briefing-item-${item.id}`}
       meetingDate={slug}
       showFeedback={item.tier === 'featured'}
+      variant={item.tier === 'featured' ? 'full' : 'whatToExpectOnly'}
     />
   )
 }

@@ -456,4 +456,31 @@
   --color-components-input-focus: rgba(37, 99, 235, 0.3);
   --color-components-tooltip-base: #262626;
   --color-components-tooltip-foreground: #ffffff;
+
+  /* ==========================================================================
+   * RADIX COLLAPSIBLE ANIMATIONS
+   * Use: data-[state=open]:animate-collapsible-down,
+   *      data-[state=closed]:animate-collapsible-up
+   * Reads --radix-collapsible-content-height set by Radix on the content node.
+   * ========================================================================== */
+  --animate-collapsible-down: collapsible-down 250ms ease-out;
+  --animate-collapsible-up: collapsible-up 250ms ease-out;
+}
+
+@keyframes collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
