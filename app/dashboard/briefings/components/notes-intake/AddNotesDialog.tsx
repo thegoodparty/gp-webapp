@@ -111,8 +111,27 @@ export default function AddNotesDialog({
   const [staged, setStaged] = useState<StagedDraft[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [fileError, setFileError] = useState<string | null>(null)
+  const [typeExpanded, setTypeExpanded] = useState(false)
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const uploadInputRef = useRef<HTMLInputElement | null>(null)
+
+  // While submitting, freeze the snapshot of existing-note IDs so newly
+  // committed notes don't pop into the pill list mid-flight (they'd briefly
+  // render as "(empty note)" until their attachment row catches up).
+  const frozenExistingIdsRef = useRef<Set<string> | null>(null)
+
+  // Auto-expand the Type card when the briefing already has typed notes —
+  // the user wants to see / be able to add more without an extra click. For
+  // briefings with no typed notes yet, the textarea + Dictate stay hidden
+  // until the user explicitly taps the Type card.
+  const hasExistingTypedNotes = useMemo(
+    () =>
+      existingNotes.some((ann) => {
+        const att = ann.note?.attachments?.[0]
+        return !att && (ann.note?.body ?? '').trim().length > 0
+      }),
+    [existingNotes],
+  )
 
   useEffect(() => {
     if (open) {
@@ -120,12 +139,26 @@ export default function AddNotesDialog({
       setStaged([])
       setSubmitting(false)
       setFileError(null)
+      setTypeExpanded(hasExistingTypedNotes)
+      frozenExistingIdsRef.current = null
     }
+    // hasExistingTypedNotes is read once on open; if the briefing's notes
+    // change while the dialog is open we don't want to clobber the user's
+    // toggle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   const trimmedDraft = typedDraft.trim()
   const canAddTyped = trimmedDraft.length > 0 && !submitting
   const canSubmit = staged.length > 0 && !submitting
+
+  const visibleExisting = useMemo(() => {
+    if (submitting && frozenExistingIdsRef.current) {
+      const allowed = frozenExistingIdsRef.current
+      return existingNotes.filter((a) => allowed.has(a.id))
+    }
+    return existingNotes
+  }, [existingNotes, submitting])
 
   const pillsBySection = useMemo(() => {
     const out: Record<Section, PillRow[]> = {
@@ -133,7 +166,7 @@ export default function AddNotesDialog({
       upload: [],
       typed: [],
     }
-    for (const ann of existingNotes) {
+    for (const ann of visibleExisting) {
       const section = sectionForExisting(ann)
       const att = ann.note?.attachments?.[0]
       const kind: NotePillKind =
@@ -166,7 +199,7 @@ export default function AddNotesDialog({
       }
     }
     return out
-  }, [existingNotes, staged, deletingIds])
+  }, [visibleExisting, staged, deletingIds])
 
   const removeStaged = (id: string) => {
     setStaged((prev) => prev.filter((d) => d.id !== id))
@@ -203,12 +236,14 @@ export default function AddNotesDialog({
 
   const handleSubmit = async () => {
     if (!canSubmit) return
+    frozenExistingIdsRef.current = new Set(existingNotes.map((a) => a.id))
     setSubmitting(true)
     try {
       await onSubmit(staged)
       onClose()
     } finally {
       setSubmitting(false)
+      frozenExistingIdsRef.current = null
     }
   }
 
@@ -292,45 +327,57 @@ export default function AddNotesDialog({
     pills: pillsBySection.upload,
   })
 
+  // Type card collapses to icon + title + description by default; clicking
+  // the header expands it to reveal the textarea + Dictate + Add button.
+  // Auto-expanded on open if the briefing already has typed notes.
   const typeCard = (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
-      <header className="flex items-start gap-3">
+      <button
+        type="button"
+        onClick={() => setTypeExpanded(true)}
+        disabled={submitting || typeExpanded}
+        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:hover:bg-transparent"
+      >
         <span
           aria-hidden
           className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground"
         >
           <Pencil className="size-5" />
         </span>
-        <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="flex min-w-0 flex-col gap-0.5">
           <span className="text-base font-semibold text-foreground">
             Type, dictate or paste my notes
           </span>
           <span className="text-sm leading-5 text-muted-foreground">
             Type your notes, use dictation, or paste from app
           </span>
-        </div>
-      </header>
+        </span>
+      </button>
 
-      <TypeIntake
-        body={typedDraft}
-        onBodyChange={setTypedDraft}
-        disabled={submitting}
-      />
+      {renderPills(pillsBySection.typed)}
 
-      <div className="flex flex-wrap items-center gap-2">
-        {renderPills(pillsBySection.typed)}
-        <Button
-          type="button"
-          variant="outline"
-          size="small"
-          onClick={handleAddTyped}
-          disabled={!canAddTyped}
-          className="border-dashed"
-        >
-          <Plus className="size-4" aria-hidden />
-          Add
-        </Button>
-      </div>
+      {typeExpanded ? (
+        <>
+          <TypeIntake
+            body={typedDraft}
+            onBodyChange={setTypedDraft}
+            disabled={submitting}
+          />
+          <div>
+            <Button
+              type="button"
+              variant="outline"
+              size="small"
+              onClick={handleAddTyped}
+              disabled={!canAddTyped}
+              className="border-dashed"
+            >
+              <Plus className="size-4" aria-hidden />
+              Add
+            </Button>
+          </div>
+        </>
+      ) : null}
     </div>
   )
 
