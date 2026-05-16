@@ -1,8 +1,12 @@
 import type { Item, Source } from '@shared/briefings/types'
+import { Popover, PopoverContent, PopoverTrigger } from '@styleguide'
+import { toDisplaySource } from '@shared/briefings/displaySource'
 import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
 import SourcesCollapsible from './SourcesCollapsible'
 import FeedbackRow from './FeedbackRow'
+
+type Variant = 'full' | 'whatToExpectOnly'
 
 type Props = {
   item: Item
@@ -11,18 +15,14 @@ type Props = {
   domId: string
   meetingDate: string
   showFeedback: boolean
+  variant?: Variant
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-[12px] font-bold uppercase tracking-wide text-foreground">
-      {children}
-    </span>
-  )
-}
-
-const initialFor = (name: string): string =>
-  name.trim().charAt(0).toUpperCase() || '?'
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-[12px] font-bold uppercase tracking-wide text-foreground">
+    {children}
+  </span>
+)
 
 const SectionSourcePills = ({
   sourceIds,
@@ -34,24 +34,43 @@ const SectionSourcePills = ({
   const resolved = sourceIds
     .map((id) => sourceById.get(id))
     .filter((s): s is Source => Boolean(s))
+    .map(toDisplaySource)
   if (resolved.length === 0) return null
+  const pillClass =
+    'inline-flex max-w-[200px] items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 text-foreground'
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
       <span className="italic text-muted-foreground">source:</span>
       {resolved.map((s) => {
-        const pillClass =
-          'inline-flex max-w-[200px] items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 text-foreground'
         const inner = (
           <>
             <span
               aria-hidden
               className="inline-flex size-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary"
             >
-              {initialFor(s.name)}
+              {s.initial}
             </span>
-            <span className="truncate font-medium">{s.name}</span>
+            <span className="truncate font-medium">{s.displayName}</span>
           </>
         )
+        if (s.isProprietary) {
+          return (
+            <Popover key={s.id}>
+              <PopoverTrigger
+                className={`${pillClass} hover:bg-muted`}
+                title={s.displayName}
+              >
+                {inner}
+              </PopoverTrigger>
+              <PopoverContent className="w-72 text-sm">
+                <p className="font-medium text-foreground">{s.displayName}</p>
+                {s.displayBlurb ? (
+                  <p className="mt-1 text-muted-foreground">{s.displayBlurb}</p>
+                ) : null}
+              </PopoverContent>
+            </Popover>
+          )
+        }
         return s.url ? (
           <a
             key={s.id}
@@ -59,17 +78,24 @@ const SectionSourcePills = ({
             target="_blank"
             rel="noopener noreferrer"
             className={`${pillClass} hover:bg-muted`}
+            title={s.displayName}
           >
             {inner}
           </a>
         ) : (
-          <span key={s.id} className={pillClass}>
+          <span key={s.id} className={pillClass} title={s.displayName}>
             {inner}
           </span>
         )
       })}
     </div>
   )
+}
+
+const formatSentimentLine = (meanScore: number): string => {
+  const support = Math.round(meanScore)
+  const oppose = Math.round(100 - meanScore)
+  return `${support}% support · ${oppose}% oppose`
 }
 
 /**
@@ -81,26 +107,35 @@ const SectionSourcePills = ({
  * attribute so phase 4's selection toolbar can build an anchor that maps to
  * the v2 artifact shape.
  */
-export default function AgendaItemCard({
+const AgendaItemCard = ({
   item,
   itemIndex,
   sources,
   domId,
   meetingDate,
   showFeedback,
-}: Props): React.JSX.Element {
+  variant = 'full',
+}: Props): React.JSX.Element => {
   const base = `/items/${itemIndex}`
   const display = item.display
   const sentiment = display.constituentSentiment
   const budget = display.budgetImpact
   const news = display.recentNews ?? []
   const talkingPoints = display.talkingPoints ?? []
-  const sourceIds = display.sourceIds ?? []
 
   const sourceById = new Map(sources.map((s) => [s.id, s]))
-  const itemSources = sourceIds
+
+  const aggregatedSourceIds = [
+    ...(display.sourceIds ?? []),
+    ...(sentiment?.sourceIds ?? []),
+    ...(budget?.sourceIds ?? []),
+  ]
+  const uniqueIds = Array.from(new Set(aggregatedSourceIds))
+  const itemSources = uniqueIds
     .map((id) => sourceById.get(id))
     .filter((s): s is Source => Boolean(s))
+
+  const isWhatToExpectOnly = variant === 'whatToExpectOnly'
 
   return (
     <article
@@ -129,74 +164,90 @@ export default function AgendaItemCard({
         </p>
       </section>
 
-      {sentiment ? (
-        <section className="flex flex-col gap-2">
-          <SectionLabel>Constituent sentiment</SectionLabel>
-          <p
-            className="text-sm leading-6 text-foreground"
-            data-briefing-json-path={`${base}/display/constituent_sentiment/summary`}
-          >
-            {sentiment.summary}
-          </p>
-          {sentiment.detail ? (
-            <p
-              className="text-sm leading-6 text-foreground"
-              data-briefing-json-path={`${base}/display/constituent_sentiment/detail`}
-            >
-              {sentiment.detail}
-            </p>
+      {isWhatToExpectOnly ? null : (
+        <>
+          {sentiment ? (
+            <section className="flex flex-col gap-2">
+              <SectionLabel>Constituent sentiment</SectionLabel>
+              {sentiment.haystaqStatus === 'ok' &&
+              typeof sentiment.meanScore === 'number' ? (
+                <p className="text-sm font-semibold text-foreground">
+                  {formatSentimentLine(sentiment.meanScore)}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No sentiment data yet for {item.title}.
+                </p>
+              )}
+              <p
+                className="text-sm leading-6 text-foreground"
+                data-briefing-json-path={`${base}/display/constituent_sentiment/summary`}
+              >
+                {sentiment.summary}
+              </p>
+              {sentiment.detail ? (
+                <p
+                  className="text-sm leading-6 text-foreground"
+                  data-briefing-json-path={`${base}/display/constituent_sentiment/detail`}
+                >
+                  {sentiment.detail}
+                </p>
+              ) : null}
+              {sentiment.sourceIds.length > 0 ? (
+                <SectionSourcePills
+                  sourceIds={sentiment.sourceIds}
+                  sourceById={sourceById}
+                />
+              ) : null}
+            </section>
           ) : null}
-          {sentiment.sourceIds.length > 0 ? (
-            <SectionSourcePills
-              sourceIds={sentiment.sourceIds}
-              sourceById={sourceById}
-            />
+
+          {news.length > 0 ? (
+            <section className="flex flex-col gap-2">
+              <SectionLabel>Recent news</SectionLabel>
+              <RecentNewsList
+                items={news}
+                pathPrefix={`${base}/display/recent_news`}
+              />
+            </section>
           ) : null}
-        </section>
-      ) : null}
 
-      {news.length > 0 ? (
-        <section className="flex flex-col gap-2">
-          <SectionLabel>Recent news</SectionLabel>
-          <RecentNewsList
-            items={news}
-            pathPrefix={`${base}/display/recent_news`}
-          />
-        </section>
-      ) : null}
-
-      {budget ? (
-        <section className="flex flex-col gap-2">
-          <SectionLabel>Budget impact</SectionLabel>
-          <p
-            className="text-sm leading-6 text-foreground"
-            data-briefing-json-path={`${base}/display/budget_impact/summary`}
-          >
-            {budget.summary}
-          </p>
-          {budget.sourceIds.length > 0 ? (
-            <SectionSourcePills
-              sourceIds={budget.sourceIds}
-              sourceById={sourceById}
-            />
+          {budget ? (
+            <section className="flex flex-col gap-2">
+              <SectionLabel>Budget impact</SectionLabel>
+              <p
+                className="text-sm leading-6 text-foreground"
+                data-briefing-json-path={`${base}/display/budget_impact/summary`}
+              >
+                {budget.summary}
+              </p>
+              {budget.sourceIds.length > 0 ? (
+                <SectionSourcePills
+                  sourceIds={budget.sourceIds}
+                  sourceById={sourceById}
+                />
+              ) : null}
+            </section>
           ) : null}
-        </section>
-      ) : null}
 
-      {talkingPoints.length > 0 ? (
-        <section className="flex flex-col gap-2">
-          <SectionLabel>Talking points</SectionLabel>
-          <TalkingPointsList
-            points={talkingPoints}
-            pathPrefix={`${base}/display/talking_points`}
-          />
-        </section>
-      ) : null}
+          {talkingPoints.length > 0 ? (
+            <section className="flex flex-col gap-2">
+              <SectionLabel>Talking points</SectionLabel>
+              <TalkingPointsList
+                points={talkingPoints}
+                pathPrefix={`${base}/display/talking_points`}
+              />
+            </section>
+          ) : null}
 
-      <SourcesCollapsible sources={itemSources} />
-      {showFeedback ? (
-        <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
-      ) : null}
+          <SourcesCollapsible sources={itemSources} />
+          {showFeedback ? (
+            <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
+          ) : null}
+        </>
+      )}
     </article>
   )
 }
+
+export default AgendaItemCard
