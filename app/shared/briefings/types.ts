@@ -61,6 +61,7 @@ export interface ConstituentSentiment {
   voterCount: number
   haystaqStatus: HaystaqStatus
   haystaqSource: HaystaqSource
+  sourceIds: string[]
 }
 
 export interface RecentNewsEntry {
@@ -80,6 +81,7 @@ export interface BudgetImpactFigure {
 export interface BudgetImpact {
   summary: string
   figures: BudgetImpactFigure[]
+  sourceIds: string[]
 }
 
 export interface ItemDisplay {
@@ -142,6 +144,21 @@ export interface Briefing {
    * it in server.ts from briefingType + meetingDate.
    */
   title: string
+}
+
+/**
+ * Returned by getBriefingBySlug when the API signals no agenda yet.
+ * Meeting metadata is populated from the org's known schedule.
+ */
+export interface AwaitingBriefing {
+  status: 'awaiting_agenda'
+  slug: string
+  meetingName: string
+  meetingDate: string
+  meetingTime: string
+  meetingTimezone: string
+  location: string
+  durationMinutes: number
 }
 
 /** Slim shape for the landing list. Coming from `GET /v1/meetings`. */

@@ -13,6 +13,7 @@ import type {
   MeetingsListItemDto,
 } from 'gpApi/api-endpoints'
 import type {
+  AwaitingBriefing,
   Briefing,
   BriefingSummary,
   BudgetImpact,
@@ -67,6 +68,7 @@ const toSentiment = (
   voterCount: dto.voter_count,
   haystaqStatus: dto.haystaq_status,
   haystaqSource: dto.haystaq_source,
+  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
 })
 
 const toRecentNews = (
@@ -86,6 +88,7 @@ const toBudgetImpact = (dto: MeetingBriefingBudgetImpactDto): BudgetImpact => ({
     value: f.value,
     sourceId: f.source_id,
   })),
+  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
 })
 
 const toDisplay = (dto: MeetingBriefingItemDisplayDto): ItemDisplay => ({
@@ -150,14 +153,29 @@ const toBriefing = (
   }
 }
 
+export const isFullBriefing = (b: Briefing | AwaitingBriefing): b is Briefing =>
+  !('status' in b)
+
 export const getBriefingBySlug = async (
   slug: string,
-): Promise<Briefing | null> => {
+): Promise<Briefing | AwaitingBriefing | null> => {
   try {
     const { data } = await serverRequest('GET /v1/meetings/:date/briefing', {
       date: slug,
     })
-    return toBriefing(data, slug)
+    if ('status' in data && data.status === 'awaiting_agenda') {
+      return {
+        status: 'awaiting_agenda',
+        slug,
+        meetingName: data.meetingName,
+        meetingDate: format(parseISO(slug), 'MMMM d, yyyy'),
+        meetingTime: data.meetingTime,
+        meetingTimezone: data.meetingTimezone,
+        location: data.location,
+        durationMinutes: data.durationMinutes,
+      }
+    }
+    return toBriefing(data as MeetingBriefingResponseDto, slug)
   } catch (e) {
     if (e instanceof FetchError && e.status === 404) return null
     throw e

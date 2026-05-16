@@ -10,6 +10,7 @@ type Props = {
   sources: Source[]
   domId: string
   meetingDate: string
+  showFeedback: boolean
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -17,6 +18,57 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <span className="text-[12px] font-bold uppercase tracking-wide text-foreground">
       {children}
     </span>
+  )
+}
+
+const initialFor = (name: string): string =>
+  name.trim().charAt(0).toUpperCase() || '?'
+
+const SectionSourcePills = ({
+  sourceIds,
+  sourceById,
+}: {
+  sourceIds: string[]
+  sourceById: Map<string, Source>
+}): React.JSX.Element | null => {
+  const resolved = sourceIds
+    .map((id) => sourceById.get(id))
+    .filter((s): s is Source => Boolean(s))
+  if (resolved.length === 0) return null
+  return (
+    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+      <span className="italic text-muted-foreground">source:</span>
+      {resolved.map((s) => {
+        const pillClass =
+          'inline-flex max-w-[200px] items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 text-foreground'
+        const inner = (
+          <>
+            <span
+              aria-hidden
+              className="inline-flex size-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary"
+            >
+              {initialFor(s.name)}
+            </span>
+            <span className="truncate font-medium">{s.name}</span>
+          </>
+        )
+        return s.url ? (
+          <a
+            key={s.id}
+            href={s.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${pillClass} hover:bg-muted`}
+          >
+            {inner}
+          </a>
+        ) : (
+          <span key={s.id} className={pillClass}>
+            {inner}
+          </span>
+        )
+      })}
+    </div>
   )
 }
 
@@ -35,6 +87,7 @@ export default function AgendaItemCard({
   sources,
   domId,
   meetingDate,
+  showFeedback,
 }: Props): React.JSX.Element {
   const base = `/items/${itemIndex}`
   const display = item.display
@@ -67,7 +120,7 @@ export default function AgendaItemCard({
       </header>
 
       <section className="flex flex-col gap-2">
-        <SectionLabel>Summary</SectionLabel>
+        <SectionLabel>What to expect</SectionLabel>
         <p
           className="text-sm leading-6 text-foreground"
           data-briefing-json-path={`${base}/display/summary`}
@@ -93,6 +146,12 @@ export default function AgendaItemCard({
               {sentiment.detail}
             </p>
           ) : null}
+          {sentiment.sourceIds.length > 0 ? (
+            <SectionSourcePills
+              sourceIds={sentiment.sourceIds}
+              sourceById={sourceById}
+            />
+          ) : null}
         </section>
       ) : null}
 
@@ -115,6 +174,12 @@ export default function AgendaItemCard({
           >
             {budget.summary}
           </p>
+          {budget.sourceIds.length > 0 ? (
+            <SectionSourcePills
+              sourceIds={budget.sourceIds}
+              sourceById={sourceById}
+            />
+          ) : null}
         </section>
       ) : null}
 
@@ -129,7 +194,9 @@ export default function AgendaItemCard({
       ) : null}
 
       <SourcesCollapsible sources={itemSources} />
-      <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
+      {showFeedback ? (
+        <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
+      ) : null}
     </article>
   )
 }

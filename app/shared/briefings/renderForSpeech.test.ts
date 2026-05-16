@@ -53,11 +53,13 @@ describe('renderBriefingForSpeech', () => {
                 voterCount: 1200,
                 haystaqStatus: 'ok',
                 haystaqSource: 'curated',
+                sourceIds: [],
               },
               recentNews: null,
               budgetImpact: {
                 summary: '+$2M to capital reserves.',
                 figures: [],
+                sourceIds: [],
               },
               talkingPoints: ['Lock in school funding.', 'Defer the new park.'],
               sourceIds: [],

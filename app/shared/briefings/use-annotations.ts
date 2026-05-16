@@ -5,7 +5,10 @@ import { annotationsApi } from './annotations-api'
 import type { AnnotationsClient } from './annotations-client'
 import type { Annotation, CreateAnnotationInput } from './types'
 
-const QK = (meetingDate: string) => ['briefings', meetingDate, 'annotations']
+export const annotationsQueryKey = (meetingDate: string) =>
+  ['briefings', meetingDate, 'annotations'] as const
+
+const QK = annotationsQueryKey
 
 /**
  * TanStack Query wrapper over the AnnotationsClient.

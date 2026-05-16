@@ -8,13 +8,14 @@ type Props = {
   anchor: ResolvedAnchor | null
   onAddNote: () => void
   onReportError: () => void
+  onAskAi: () => void
 }
 
 /**
  * Floating pill that appears anchored to the user's text selection.
  *
  * Four buttons:
- *   - Ask AI    (no-op stub, wired in phase 7)
+ *   - Ask AI    (opens the AskAiPopover anchored to the selection)
  *   - Add Note  (opens the AddNoteSheet with the resolved anchor)
  *   - Bug icon  (no-op stub, wired in phase 6)
  *   - X dismiss (clears selection)
@@ -26,6 +27,7 @@ export default function HighlightToolbar({
   anchor,
   onAddNote,
   onReportError,
+  onAskAi,
 }: Props): React.JSX.Element | null {
   if (!anchor) return null
   const rect = anchor.rect
@@ -57,13 +59,7 @@ export default function HighlightToolbar({
       // Don't let mousedown on the toolbar collapse the selection.
       onMouseDown={(e) => e.preventDefault()}
     >
-      <Button
-        type="button"
-        size="small"
-        onClick={() => {
-          // TODO (phase 7): open Ask AI sheet with the anchor's quote preloaded.
-        }}
-      >
+      <Button type="button" size="small" onClick={onAskAi}>
         <Sparkles className="size-3.5" aria-hidden />
         Ask AI
       </Button>
