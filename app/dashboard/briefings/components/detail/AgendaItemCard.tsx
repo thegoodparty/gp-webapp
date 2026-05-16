@@ -198,7 +198,7 @@ const AgendaItemCard = ({
   return (
     <article
       id={domId}
-      className="flex flex-col gap-4 divide-y divide-border rounded-2xl border border-border bg-card p-6"
+      className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6"
     >
       <header className="flex flex-col gap-1">
         <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">
@@ -298,7 +298,11 @@ const AgendaItemCard = ({
             </section>
           ) : null}
 
-          <SourcesCollapsible sources={itemSources} />
+          {itemSources.length > 0 ? (
+            <div className="border-y border-border py-4">
+              <SourcesCollapsible sources={itemSources} />
+            </div>
+          ) : null}
           {showFeedback ? (
             <FeedbackRow meetingDate={meetingDate} itemId={item.id} />
           ) : null}
