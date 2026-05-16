@@ -299,7 +299,7 @@ const AgendaItemCard = ({
           ) : null}
 
           {itemSources.length > 0 ? (
-            <div className="border-y border-border py-4">
+            <div className="border-y border-border py-2">
               <SourcesCollapsible sources={itemSources} />
             </div>
           ) : null}

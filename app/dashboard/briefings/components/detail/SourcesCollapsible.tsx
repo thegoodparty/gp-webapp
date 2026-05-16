@@ -22,7 +22,7 @@ const SourcesCollapsible = ({ sources }: Props): React.JSX.Element | null => {
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger
         data-state={open ? 'open' : 'closed'}
-        className="flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-semibold text-foreground transition-colors hover:bg-muted/60 [&[data-state=open]>svg]:rotate-45"
+        className="flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-semibold text-foreground transition-colors [&[data-state=open]>svg]:rotate-45"
       >
         <span>Sources ({sources.length})</span>
         <Plus
