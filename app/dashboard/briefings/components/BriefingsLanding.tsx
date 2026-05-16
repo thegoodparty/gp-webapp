@@ -1,10 +1,12 @@
 import { CalendarClock } from 'lucide-react'
 import UpcomingCountdownCard from './UpcomingCountdownCard'
 import BriefingListSection from './BriefingListSection'
+import DevAgentTriggerBar from './DevAgentTriggerBar'
 import type { BriefingSummary } from '@shared/briefings/types'
 
 type Props = {
   summaries: BriefingSummary[]
+  devElectedOfficeId?: string | null
 }
 
 const MAX_UPCOMING = 5
@@ -41,6 +43,7 @@ const EmptyState = () => (
 
 export default function BriefingsLanding({
   summaries,
+  devElectedOfficeId,
 }: Props): React.JSX.Element {
   const featured = summaries
     .filter(isFeaturedEligible)
@@ -69,6 +72,9 @@ export default function BriefingsLanding({
       </div>
 
       <div className="mx-auto flex w-full max-w-[640px] flex-col gap-4 px-4 pb-20 pt-6 lg:px-0">
+        {devElectedOfficeId && (
+          <DevAgentTriggerBar electedOfficeId={devElectedOfficeId} />
+        )}
         {featured ? (
           <>
             <UpcomingCountdownCard summary={featured} />
