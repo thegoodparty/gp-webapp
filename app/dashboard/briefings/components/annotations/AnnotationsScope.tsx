@@ -28,6 +28,26 @@ import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
 import AddNotesDialog from '../notes-intake/AddNotesDialog'
 import { uploadAttachment } from '@shared/briefings/attachments-api'
+import { annotationsApi } from '@shared/briefings/annotations-api'
+
+const OCR_TERMINAL_STATUSES = new Set(['completed', 'failed', 'skipped'])
+const OCR_POLL_INTERVAL_MS = 2_000
+const OCR_POLL_TIMEOUT_MS = 60_000
+
+const waitForOcr = async (
+  meetingDate: string,
+  attachmentId: string,
+): Promise<void> => {
+  const started = Date.now()
+  while (Date.now() - started < OCR_POLL_TIMEOUT_MS) {
+    const list = await annotationsApi.list(meetingDate)
+    for (const ann of list) {
+      const att = ann.note?.attachments?.find((a) => a.id === attachmentId)
+      if (att && OCR_TERMINAL_STATUSES.has(att.ocrStatus)) return
+    }
+    await new Promise((r) => setTimeout(r, OCR_POLL_INTERVAL_MS))
+  }
+}
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -431,10 +451,15 @@ export default function AnnotationsScope({
                 payload: {},
               })
               try {
-                await uploadAttachment({
+                const { attachmentId } = await uploadAttachment({
                   annotationId: created.id,
                   file: draft.file,
                 })
+                // Block until OCR has a terminal status so the recap/assistant
+                // can see extracted text. Caps at 60s; if we time out we
+                // proceed silently and the polled annotations query will
+                // catch up.
+                await waitForOcr(meetingDate, attachmentId)
               } catch (uploadErr) {
                 // Best-effort rollback of the empty annotation. We swallow
                 // the rollback error specifically so the original upload
