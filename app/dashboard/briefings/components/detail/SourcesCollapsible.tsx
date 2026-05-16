@@ -27,57 +27,62 @@ const SourcesCollapsible = ({ sources }: Props): React.JSX.Element | null => {
         <span>Sources ({sources.length})</span>
         <Plus
           aria-hidden
-          className="size-4 shrink-0 text-muted-foreground transition-transform duration-200"
+          className="size-4 shrink-0 text-muted-foreground transition-transform duration-[250ms] ease-out"
         />
       </CollapsibleTrigger>
-      <CollapsibleContent>
-        <ul className="mt-1 flex flex-col gap-3">
-          {sources.map((raw) => {
-            const s = toDisplaySource(raw)
-            return (
-              <li key={s.id} className="flex items-start gap-2">
-                <span
-                  aria-hidden
-                  className="mt-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
-                >
-                  {s.initial}
-                </span>
-                <div className="flex min-w-0 flex-col gap-0.5">
-                  <span className="truncate text-[11px] text-muted-foreground">
-                    {s.publisher}
+      <CollapsibleContent
+        forceMount
+        className="grid overflow-hidden transition-[grid-template-rows] duration-[250ms] ease-out data-[state=closed]:grid-rows-[0fr] data-[state=open]:grid-rows-[1fr]"
+      >
+        <div className="overflow-hidden">
+          <ul className="mt-1 flex flex-col gap-3">
+            {sources.map((raw) => {
+              const s = toDisplaySource(raw)
+              return (
+                <li key={s.id} className="flex items-start gap-2">
+                  <span
+                    aria-hidden
+                    className="mt-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
+                  >
+                    {s.initial}
                   </span>
-                  {s.isProprietary ? (
-                    <span className="text-sm font-semibold text-foreground">
-                      {s.displayName}
+                  <div className="flex min-w-0 flex-col gap-0.5">
+                    <span className="truncate text-[11px] text-muted-foreground">
+                      {s.publisher}
                     </span>
-                  ) : s.url ? (
-                    <a
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-start gap-1 text-sm font-semibold text-info-600 hover:underline"
-                    >
-                      <span>{s.displayName}</span>
-                      <ExternalLink
-                        aria-hidden
-                        className="mt-1 size-3 shrink-0"
-                      />
-                    </a>
-                  ) : (
-                    <span className="text-sm font-semibold text-foreground">
-                      {s.displayName}
-                    </span>
-                  )}
-                  {s.description ? (
-                    <span className="text-xs leading-5 text-muted-foreground">
-                      {s.description}
-                    </span>
-                  ) : null}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+                    {s.isProprietary ? (
+                      <span className="text-sm font-semibold text-foreground">
+                        {s.displayName}
+                      </span>
+                    ) : s.url ? (
+                      <a
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-start gap-1 text-sm font-semibold text-info-600 hover:underline"
+                      >
+                        <span>{s.displayName}</span>
+                        <ExternalLink
+                          aria-hidden
+                          className="mt-1 size-3 shrink-0"
+                        />
+                      </a>
+                    ) : (
+                      <span className="text-sm font-semibold text-foreground">
+                        {s.displayName}
+                      </span>
+                    )}
+                    {s.description ? (
+                      <span className="text-xs leading-5 text-muted-foreground">
+                        {s.description}
+                      </span>
+                    ) : null}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   )
