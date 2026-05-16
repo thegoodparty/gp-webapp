@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Download, Loader2, NotebookPen, Sparkles } from 'lucide-react'
 import { Button } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
+import { reportErrorToSentry } from '@shared/sentry'
 import type { Briefing } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import AskAiPopover from '../annotations/AskAiPopover'
@@ -39,6 +40,8 @@ export default function DetailHeaderActions({
         meetingMetaLine,
         liveBriefingUrl,
       })
+    } catch (err) {
+      reportErrorToSentry(err, { experimentId: briefing.experimentId })
     } finally {
       setDownloading(false)
     }
