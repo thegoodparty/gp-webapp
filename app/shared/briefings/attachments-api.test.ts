@@ -25,7 +25,9 @@ const okPresign = (attachmentId = 'att_1') => ({
 // `server.use()` adds runtime-scoped handlers that the api-mocking beforeEach
 // resets between tests.
 const mockS3Put = (status = 200) => {
-  const spy = vi.fn(() => new HttpResponse(null, { status }))
+  const spy = vi.fn(
+    (_args: { request: Request }) => new HttpResponse(null, { status }),
+  )
   mswServer.use(http.put(S3_PUT_URL, ({ request }) => spy({ request })))
   return spy
 }
@@ -128,7 +130,7 @@ describe('uploadAttachment happy path', () => {
     })
     // S3 PUT request must carry the same Content-Type so the presigned URL
     // signature matches.
-    const call = putSpy.mock.calls[0]?.[0] as { request: Request } | undefined
+    const call = putSpy.mock.calls[0]?.[0]
     expect(call?.request.headers.get('content-type')).toBe(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     )
