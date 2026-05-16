@@ -85,7 +85,7 @@ describe('DevAgentTriggerBar', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/^Failed to dispatch schedule: /),
+        screen.getByText('Failed to dispatch schedule: boom'),
       ).toBeInTheDocument()
     })
   })
