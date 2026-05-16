@@ -8,12 +8,20 @@ type Props = {
 }
 
 const MAX_UPCOMING = 5
+const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000
 
 const distanceFromNow = (s: BriefingSummary): number =>
   Math.abs(new Date(s.scheduledAt).getTime() - Date.now())
 
 const compareScheduledAt = (a: BriefingSummary, b: BriefingSummary): number =>
   new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime()
+
+const isFeaturedEligible = (s: BriefingSummary): boolean => {
+  const t = new Date(s.scheduledAt).getTime()
+  const now = Date.now()
+  if (t >= now) return true
+  return s.status === 'briefing_ready' && now - t <= FOUR_DAYS_MS
+}
 
 const EmptyState = () => (
   <section className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm">
@@ -34,9 +42,9 @@ const EmptyState = () => (
 export default function BriefingsLanding({
   summaries,
 }: Props): React.JSX.Element {
-  const featured = [...summaries].sort(
-    (a, b) => distanceFromNow(a) - distanceFromNow(b),
-  )[0]
+  const featured = summaries
+    .filter(isFeaturedEligible)
+    .sort((a, b) => distanceFromNow(a) - distanceFromNow(b))[0]
 
   const upcoming = summaries
     .filter(
