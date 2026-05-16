@@ -61,8 +61,6 @@ const SourcePill = ({ source }: { source: DisplaySource }) => {
         title={source.displayLabel}
         onMouseEnter={handleEnter}
         onMouseLeave={scheduleClose}
-        onFocus={handleEnter}
-        onBlur={scheduleClose}
       >
         <span
           aria-hidden
@@ -79,6 +77,8 @@ const SourcePill = ({ source }: { source: DisplaySource }) => {
         className="w-80 rounded-xl p-3 text-sm"
         onMouseEnter={handleEnter}
         onMouseLeave={scheduleClose}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <div className="flex flex-col gap-3 text-left">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
