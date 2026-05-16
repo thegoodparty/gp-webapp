@@ -19,7 +19,6 @@ import {
   SheetTitle,
 } from '@styleguide'
 import type { Annotation } from '@shared/briefings/types'
-import IntakeOptionCard from './IntakeOptionCard'
 import TypeIntake from './TypeIntake'
 import NotePill, { type NotePillKind } from './NotePill'
 
@@ -28,6 +27,8 @@ const UPLOAD_ACCEPT = '.pdf,.doc,.docx,.txt,image/*'
 const MAX_BYTES = 20 * 1024 * 1024
 const PILL_PREVIEW_CHARS = 32
 
+type Section = 'camera' | 'upload' | 'typed'
+
 export type StagedDraft =
   | { id: string; kind: 'typed'; body: string }
   | { id: string; kind: 'file'; file: File; from: 'camera' | 'upload' }
@@ -35,14 +36,11 @@ export type StagedDraft =
 type Props = {
   open: boolean
   onClose: () => void
-  /**
-   * Top-level notes already committed for this briefing. Rendered as
-   * existing pills with X-delete.
-   */
+  /** Top-level notes already committed for this briefing. */
   existingNotes: Annotation[]
   /**
-   * Commit all currently-staged drafts as new notes. Resolves once every
-   * draft is server-side.
+   * Commit every staged draft as its own note. Resolves when all writes
+   * settle so the dialog can disable Submit while in flight.
    */
   onSubmit: (drafts: StagedDraft[]) => Promise<void> | void
   /**
@@ -52,6 +50,15 @@ type Props = {
   onDeleteExisting: (annotationId: string) => Promise<void> | void
   /** Set of annotation ids currently being deleted (spinner on pill). */
   deletingIds?: Set<string>
+}
+
+type PillRow = {
+  id: string
+  kind: NotePillKind
+  text: string
+  busy?: boolean
+  /** When true, X removes from the local staging buffer; otherwise it calls onDeleteExisting. */
+  staged: boolean
 }
 
 const formatBytes = (n: number): string => {
@@ -69,20 +76,27 @@ const newId = (): string =>
     : `draft-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 /**
+ * Categorize an existing note into which intake card's pill list it should
+ * appear under. Image attachments go to the Camera card, other attachments
+ * go to Upload, body-only notes go to Type. The server doesn't remember
+ * which intake method was used; mime type is the closest reliable proxy.
+ */
+const sectionForExisting = (ann: Annotation): Section => {
+  const att = ann.note?.attachments?.[0]
+  if (!att) return 'typed'
+  if (att.mimeType.startsWith('image/')) return 'camera'
+  return 'upload'
+}
+
+/**
  * Top-level "Add notes" intake. Pills inside the dialog represent every
  * top-level note that exists for this briefing (committed + currently
- * staged). Each pill has an X to remove it. The pills are the only place
- * top-level notes are visible in the UI.
+ * staged). Pills appear under the card that captured them — camera shots
+ * under the camera card, files under the upload card, typed notes under
+ * the type card. Each pill has an X to remove it.
  *
- * Flow:
- *   - Type method: type → "Add note" → pill stages locally
- *   - Camera method: tap card → device camera → captured image stages locally
- *   - Upload method: tap card → file picker → selected file stages locally
- *   - Submit: commits every staged pill (one note per pill); each file pill
- *     creates a note then runs presign → PUT → complete
- *
- * Desktop / tablet (≥ md): Radix Dialog, centered.
- * Mobile (< md): Sheet from the bottom, swipe-to-dismiss.
+ * Submit commits each staged pill as its own note (typed → POST; file →
+ * POST + presign + PUT + complete).
  */
 export default function AddNotesDialog({
   open,
@@ -100,7 +114,6 @@ export default function AddNotesDialog({
   const cameraInputRef = useRef<HTMLInputElement | null>(null)
   const uploadInputRef = useRef<HTMLInputElement | null>(null)
 
-  // Reset local state whenever the dialog opens.
   useEffect(() => {
     if (open) {
       setTypedDraft('')
@@ -114,44 +127,58 @@ export default function AddNotesDialog({
   const canAddTyped = trimmedDraft.length > 0 && !submitting
   const canSubmit = staged.length > 0 && !submitting
 
-  const existingPills = useMemo(() => {
-    return existingNotes.map((ann) => {
+  const pillsBySection = useMemo(() => {
+    const out: Record<Section, PillRow[]> = {
+      camera: [],
+      upload: [],
+      typed: [],
+    }
+    for (const ann of existingNotes) {
+      const section = sectionForExisting(ann)
       const att = ann.note?.attachments?.[0]
-      let kind: NotePillKind = 'typed'
-      let text = ''
-      if (att) {
-        kind = att.mimeType.startsWith('image/') ? 'image' : 'file'
-        text = att.fileName
-      } else {
-        text = ann.note?.body ?? '(empty note)'
-      }
-      return {
+      const kind: NotePillKind =
+        section === 'typed' ? 'typed' : section === 'camera' ? 'image' : 'file'
+      const text = att ? att.fileName : ann.note?.body ?? '(empty note)'
+      out[section].push({
         id: ann.id,
         kind,
         text: truncate(text, PILL_PREVIEW_CHARS),
         busy: deletingIds?.has(ann.id) ?? false,
-      }
-    })
-  }, [existingNotes, deletingIds])
-
-  const stagedPills = useMemo(() => {
-    return staged.map((d) => {
+        staged: false,
+      })
+    }
+    for (const d of staged) {
       if (d.kind === 'typed') {
-        return {
+        out.typed.push({
           id: d.id,
-          kind: 'typed' as NotePillKind,
+          kind: 'typed',
           text: truncate(d.body, PILL_PREVIEW_CHARS),
-        }
+          staged: true,
+        })
+      } else {
+        const section: Section = d.from
+        out[section].push({
+          id: d.id,
+          kind: d.file.type.startsWith('image/') ? 'image' : 'file',
+          text: truncate(d.file.name, PILL_PREVIEW_CHARS),
+          staged: true,
+        })
       }
-      return {
-        id: d.id,
-        kind: (d.file.type.startsWith('image/')
-          ? 'image'
-          : 'file') as NotePillKind,
-        text: truncate(d.file.name, PILL_PREVIEW_CHARS),
-      }
-    })
-  }, [staged])
+    }
+    return out
+  }, [existingNotes, staged, deletingIds])
+
+  const removeStaged = (id: string) => {
+    setStaged((prev) => prev.filter((d) => d.id !== id))
+  }
+
+  const handlePillDelete = (row: PillRow) => {
+    if (row.staged) {
+      removeStaged(row.id)
+    } else {
+      void onDeleteExisting(row.id)
+    }
+  }
 
   const handleAddTyped = () => {
     if (!canAddTyped) return
@@ -172,10 +199,6 @@ export default function AddNotesDialog({
       return
     }
     setStaged((prev) => [...prev, { id: newId(), kind: 'file', file, from }])
-  }
-
-  const removeStaged = (id: string) => {
-    setStaged((prev) => prev.filter((d) => d.id !== id))
   }
 
   const handleSubmit = async () => {
@@ -202,33 +225,72 @@ export default function AddNotesDialog({
     uploadInputRef.current?.click()
   }
 
-  const allPills = (
-    <>
-      {existingPills.length === 0 && stagedPills.length === 0 ? null : (
-        <div className="flex flex-wrap items-center gap-2">
-          {existingPills.map((p) => (
-            <NotePill
-              key={`existing-${p.id}`}
-              kind={p.kind}
-              text={p.text}
-              busy={p.busy}
-              onDelete={() => {
-                void onDeleteExisting(p.id)
-              }}
-            />
-          ))}
-          {stagedPills.map((p) => (
-            <NotePill
-              key={`staged-${p.id}`}
-              kind={p.kind}
-              text={p.text}
-              onDelete={() => removeStaged(p.id)}
-            />
-          ))}
-        </div>
-      )}
-    </>
+  const renderPills = (rows: PillRow[]) =>
+    rows.length === 0 ? null : (
+      <div className="flex flex-wrap items-center gap-2">
+        {rows.map((row) => (
+          <NotePill
+            key={`${row.staged ? 'staged' : 'existing'}-${row.id}`}
+            kind={row.kind}
+            text={row.text}
+            busy={row.busy}
+            onDelete={() => handlePillDelete(row)}
+          />
+        ))}
+      </div>
+    )
+
+  // Card chrome (icon + title + description) is the click target; pills sit
+  // below as siblings so their own X buttons don't nest inside the card
+  // button (invalid HTML).
+  const fileCard = (args: {
+    onClick: () => void
+    icon: typeof Camera
+    title: string
+    description: string
+    pills: PillRow[]
+  }) => (
+    <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
+      <button
+        type="button"
+        onClick={args.onClick}
+        disabled={submitting}
+        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <span
+          aria-hidden
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground"
+        >
+          <args.icon className="size-5" />
+        </span>
+        <span className="flex min-w-0 flex-col gap-0.5">
+          <span className="text-base font-semibold text-foreground">
+            {args.title}
+          </span>
+          <span className="text-sm leading-5 text-muted-foreground">
+            {args.description}
+          </span>
+        </span>
+      </button>
+      {renderPills(args.pills)}
+    </div>
   )
+
+  const cameraCard = fileCard({
+    onClick: pickCamera,
+    icon: Camera,
+    title: 'Take a picture of my notes',
+    description: 'Use your camera to scan handwritten notes',
+    pills: pillsBySection.camera,
+  })
+
+  const uploadCard = fileCard({
+    onClick: pickUpload,
+    icon: FileText,
+    title: 'Upload meeting minutes or note files',
+    description: 'PDF, image, Word doc, or plain text',
+    pills: pillsBySection.upload,
+  })
 
   const typeCard = (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
@@ -256,7 +318,7 @@ export default function AddNotesDialog({
       />
 
       <div className="flex flex-wrap items-center gap-2">
-        {allPills}
+        {renderPills(pillsBySection.typed)}
         <Button
           type="button"
           variant="outline"
@@ -274,20 +336,8 @@ export default function AddNotesDialog({
 
   const cards = (
     <div className="flex flex-col gap-3">
-      <IntakeOptionCard
-        icon={Camera}
-        title="Take a picture of my notes"
-        description="Use your camera to scan handwritten notes"
-        selected={false}
-        onClick={pickCamera}
-      />
-      <IntakeOptionCard
-        icon={FileText}
-        title="Upload meeting minutes or note files"
-        description="PDF, image, Word doc, or plain text"
-        selected={false}
-        onClick={pickUpload}
-      />
+      {cameraCard}
+      {uploadCard}
       {typeCard}
 
       {fileError ? (
