@@ -6,6 +6,7 @@ import { Button } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 import type { Briefing } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import AskAiPopover from '../annotations/AskAiPopover'
 
 type Props = {
   briefing: Briefing
@@ -26,7 +27,8 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { openAddNoteTopLevel } = useAnnotationsCtx()
+  const { meetingDate, openAddNoteTopLevel, onChatCreated } =
+    useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -56,14 +58,19 @@ export default function DetailHeaderActions({
         <NotebookPen className="size-4" aria-hidden />
         Add notes
       </Button>
-      <Button
-        onClick={() => {
-          // TODO (phase 7): open Ask AI sheet, no anchor preloaded.
-        }}
-      >
-        <Sparkles className="size-4" aria-hidden />
-        Ask AI
-      </Button>
+      <AskAiPopover
+        meetingDate={meetingDate}
+        anchor={null}
+        align="end"
+        side="bottom"
+        onChatCreated={onChatCreated}
+        trigger={
+          <Button>
+            <Sparkles className="size-4" aria-hidden />
+            Ask AI
+          </Button>
+        }
+      />
     </div>
   )
 }
