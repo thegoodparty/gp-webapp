@@ -377,6 +377,31 @@ export type APIEndpoints = {
     Request: {}
     Response: void
   }
+  'POST /v1/annotations/:annotationId/note/attachments/presign': {
+    Request: { annotationId: string } & ApiAttachmentPresignRequest
+    Response: ApiAttachmentPresignResponse
+  }
+  'POST /v1/annotations/:annotationId/note/attachments/:attachmentId/complete': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: void
+  }
+  'DELETE /v1/annotations/:annotationId/note/attachments/:attachmentId': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: void
+  }
+
+  'GET /v1/meetings/:date/briefing/feedback': {
+    Request: { date: string }
+    Response: { feedback: ApiArtifactFeedback[] }
+  }
+  'PUT /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: { date: string; itemId: string; feedback: ApiArtifactFeedbackKind }
+    Response: ApiArtifactFeedback
+  }
+  'DELETE /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: { date: string; itemId: string }
+    Response: void
+  }
 
   'GET /v1/elections/race-by-position': {
     Request: {
@@ -428,11 +453,44 @@ export interface ApiAnnotationAnchorInput {
   end: number | null
 }
 
+export type ApiOcrStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'skipped'
+
+export interface ApiAnnotationNoteAttachment {
+  id: string
+  file_name: string
+  mime_type: string
+  size_bytes: number
+  ocr_status: ApiOcrStatus
+  ocr_text: string | null
+  ocr_error: string | null
+  ocr_completed_at: string | null
+  created_at: string
+}
+
 export interface ApiAnnotationNote {
   id: string
-  body: string
+  /** Optional once attachment-only notes ship (Phase 2). */
+  body: string | null
+  attachments: ApiAnnotationNoteAttachment[]
   created_at: string
   updated_at: string
+}
+
+export interface ApiAttachmentPresignRequest {
+  file_name: string
+  mime_type: string
+  size_bytes: number
+}
+
+export interface ApiAttachmentPresignResponse {
+  attachment_id: string
+  upload_url: string
+  storage_key: string
 }
 
 export interface ApiAnnotationBugReport {
@@ -466,13 +524,28 @@ export type ApiCreateAnnotationInput =
   | {
       kind: 'note'
       anchor: ApiAnnotationAnchorInput
-      payload: { body: string }
+      /** body is optional for attachment-only notes (Phase 2). */
+      payload: { body?: string }
     }
   | {
       kind: 'bug_report'
       anchor: ApiAnnotationAnchorInput
       payload: { description: string }
     }
+
+export type ApiArtifactResourceType = 'agenda_item'
+export type ApiArtifactFeedbackKind = 'positive' | 'negative'
+
+export interface ApiArtifactFeedback {
+  id: string
+  organization_slug: string
+  submitter_user_id: number
+  artifact_type: ApiArtifactResourceType
+  artifact_id: string
+  feedback: ApiArtifactFeedbackKind
+  created_at: string
+  updated_at: string
+}
 
 export type Organization = {
   slug: string

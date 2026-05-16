@@ -44,7 +44,7 @@ export default function BriefingListRow({ summary }: Props): React.JSX.Element {
   return (
     <Link
       href={`/dashboard/briefings/${summary.slug}`}
-      className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-accent focus:bg-accent focus:outline-none"
+      className="group flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/60 focus:bg-muted/60 focus:outline-none"
     >
       {/* Indicator dot - open circle for upcoming */}
       <span

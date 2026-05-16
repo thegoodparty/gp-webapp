@@ -1,17 +1,31 @@
 'use client'
 
-import { useState } from 'react'
 import { ThumbsUp, ThumbsDown } from 'lucide-react'
 import { IconButton } from '@styleguide'
+import { useBriefingFeedback } from '@shared/briefings/use-briefing-feedback'
+import type { ArtifactFeedbackKind } from '@shared/briefings/feedback-api'
 
-type Vote = 'up' | 'down' | null
+type Props = {
+  meetingDate: string
+  itemId: string
+}
 
-/**
- * "Was this summary helpful?" thumbs feedback at the bottom of an agenda
- * item card. Local state only in v1; no persistence.
- */
-export default function FeedbackRow(): React.JSX.Element {
-  const [vote, setVote] = useState<Vote>(null)
+export default function FeedbackRow({
+  meetingDate,
+  itemId,
+}: Props): React.JSX.Element {
+  const { feedbackByItemId, setFeedback, clearFeedback } =
+    useBriefingFeedback(meetingDate)
+  const current = feedbackByItemId[itemId]
+
+  function vote(target: ArtifactFeedbackKind) {
+    if (current === target) {
+      clearFeedback(itemId)
+    } else {
+      setFeedback(itemId, target)
+    }
+  }
+
   return (
     <div className="flex items-center gap-3">
       <span className="text-sm text-muted-foreground">
@@ -22,10 +36,12 @@ export default function FeedbackRow(): React.JSX.Element {
         size="small"
         variant="ghost"
         aria-label="Yes"
-        aria-pressed={vote === 'up'}
-        onClick={() => setVote((v) => (v === 'up' ? null : 'up'))}
+        aria-pressed={current === 'positive'}
+        onClick={() => vote('positive')}
         className={
-          vote === 'up' ? 'bg-muted text-foreground' : 'text-muted-foreground'
+          current === 'positive'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground'
         }
       >
         <ThumbsUp className="size-4" aria-hidden />
@@ -35,10 +51,12 @@ export default function FeedbackRow(): React.JSX.Element {
         size="small"
         variant="ghost"
         aria-label="No"
-        aria-pressed={vote === 'down'}
-        onClick={() => setVote((v) => (v === 'down' ? null : 'down'))}
+        aria-pressed={current === 'negative'}
+        onClick={() => vote('negative')}
         className={
-          vote === 'down' ? 'bg-muted text-foreground' : 'text-muted-foreground'
+          current === 'negative'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground'
         }
       >
         <ThumbsDown className="size-4" aria-hidden />

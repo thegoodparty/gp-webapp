@@ -78,7 +78,7 @@ async function createNote(
 ): Promise<Annotation> {
   const note: AnnotationNoteData = {
     id: newId('note'),
-    body: input.payload.body,
+    body: input.payload.body ?? null,
     attachments: [],
     createdAt: nowIso(),
     updatedAt: nowIso(),

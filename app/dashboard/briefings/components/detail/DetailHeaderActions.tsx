@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, Loader2, MessageSquare, Sparkles } from 'lucide-react'
+import { Download, Loader2, NotebookPen, Sparkles } from 'lucide-react'
 import { Button } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 import type { Briefing } from '@shared/briefings/types'
@@ -53,7 +53,7 @@ export default function DetailHeaderActions({
         {downloading ? 'Preparing…' : 'Download'}
       </Button>
       <Button variant="outline" onClick={openAddNoteTopLevel}>
-        <MessageSquare className="size-4" aria-hidden />
+        <NotebookPen className="size-4" aria-hidden />
         Add notes
       </Button>
       <Button
