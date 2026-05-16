@@ -177,7 +177,7 @@ export default function AddNotesDialog({
       const att = ann.note?.attachments?.[0]
       const kind: NotePillKind =
         section === 'typed' ? 'typed' : section === 'camera' ? 'image' : 'file'
-      const text = att ? att.fileName : ann.note?.body ?? '(empty note)'
+      const text = att ? att.fileName : (ann.note?.body ?? '(empty note)')
       out[section].push({
         id: ann.id,
         kind,
@@ -305,7 +305,7 @@ export default function AddNotesDialog({
         type="button"
         onClick={args.onClick}
         disabled={submitting}
-        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
       >
         <span
           aria-hidden
@@ -351,7 +351,7 @@ export default function AddNotesDialog({
         type="button"
         onClick={() => setTypeExpanded(true)}
         disabled={submitting || typeExpanded}
-        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:hover:bg-transparent"
+        className="-m-2 flex items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-muted/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:hover:bg-transparent"
       >
         <span
           aria-hidden
