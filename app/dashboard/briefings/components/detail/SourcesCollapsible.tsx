@@ -1,103 +1,79 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Minus, ExternalLink } from 'lucide-react'
+import { Plus, ExternalLink } from 'lucide-react'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from '@styleguide'
-import type { Source, SourceType } from '@shared/briefings/types'
+import type { Source } from '@shared/briefings/types'
 import { toDisplaySource } from '@shared/briefings/displaySource'
 
 type Props = {
   sources: Source[]
 }
 
-const SOURCE_TYPE_LABEL: Record<SourceType, string> = {
-  agenda_packet: 'Agenda packet',
-  news: 'News',
-  government_website: 'Government',
-  campaign: 'Campaign',
-  haystaq: 'Voter data',
-}
-
-/**
- * "Sources (N)" inline expander at the bottom of each agenda item card.
- * Uses the new Collapsible primitive added to the styleguide.
- */
 const SourcesCollapsible = ({ sources }: Props): React.JSX.Element | null => {
   const [open, setOpen] = useState(false)
   if (sources.length === 0) return null
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
-      <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-medium text-foreground transition-colors hover:bg-muted/60">
+      <CollapsibleTrigger
+        data-state={open ? 'open' : 'closed'}
+        className="flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-semibold text-foreground transition-colors hover:bg-muted/60 [&[data-state=open]>svg]:rotate-45"
+      >
         <span>Sources ({sources.length})</span>
-        {open ? (
-          <Minus aria-hidden className="size-4 text-muted-foreground" />
-        ) : (
-          <Plus aria-hidden className="size-4 text-muted-foreground" />
-        )}
+        <Plus
+          aria-hidden
+          className="size-4 shrink-0 text-muted-foreground transition-transform duration-200"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <ul className="mt-2 flex flex-col gap-2">
+        <ul className="mt-1 flex flex-col gap-3">
           {sources.map((raw) => {
             const s = toDisplaySource(raw)
-            const avatar = (
-              <span
-                aria-hidden
-                className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary"
-              >
-                {s.initial}
-              </span>
-            )
-            const typeLabel = (
-              <span className="ml-auto text-xs uppercase tracking-wide text-muted-foreground">
-                {SOURCE_TYPE_LABEL[raw.sourceType]}
-              </span>
-            )
             return (
-              <li
-                key={s.id}
-                className="flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm"
-              >
-                {avatar}
-                {s.isProprietary ? (
-                  <Popover>
-                    <PopoverTrigger className="inline-flex items-center gap-1 font-medium text-info hover:underline">
-                      <span>{s.displayName}</span>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-72 text-sm">
-                      <p className="font-medium text-foreground">
-                        {s.displayName}
-                      </p>
-                      {s.displayBlurb ? (
-                        <p className="mt-1 text-muted-foreground">
-                          {s.displayBlurb}
-                        </p>
-                      ) : null}
-                    </PopoverContent>
-                  </Popover>
-                ) : s.url ? (
-                  <a
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-medium text-info hover:underline"
-                  >
-                    <span>{s.displayName}</span>
-                    <ExternalLink aria-hidden className="size-3" />
-                  </a>
-                ) : (
-                  <span className="font-medium text-foreground">
-                    {s.displayName}
+              <li key={s.id} className="flex items-start gap-2">
+                <span
+                  aria-hidden
+                  className="mt-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
+                >
+                  {s.initial}
+                </span>
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <span className="truncate text-[11px] text-muted-foreground">
+                    {s.publisher}
                   </span>
-                )}
-                {typeLabel}
+                  {s.isProprietary ? (
+                    <span className="text-sm font-semibold text-foreground">
+                      {s.displayName}
+                    </span>
+                  ) : s.url ? (
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-start gap-1 text-sm font-semibold text-info-600 hover:underline"
+                    >
+                      <span>{s.displayName}</span>
+                      <ExternalLink
+                        aria-hidden
+                        className="mt-1 size-3 shrink-0"
+                      />
+                    </a>
+                  ) : (
+                    <span className="text-sm font-semibold text-foreground">
+                      {s.displayName}
+                    </span>
+                  )}
+                  {s.description ? (
+                    <span className="text-xs leading-5 text-muted-foreground">
+                      {s.description}
+                    </span>
+                  ) : null}
+                </div>
               </li>
             )
           })}

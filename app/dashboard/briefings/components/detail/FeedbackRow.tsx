@@ -40,8 +40,8 @@ export default function FeedbackRow({
         onClick={() => vote('positive')}
         className={
           current === 'positive'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground'
+            ? 'text-success-600 hover:text-success-600'
+            : 'text-muted-foreground hover:text-foreground'
         }
       >
         <ThumbsUp className="size-4" aria-hidden />
@@ -55,8 +55,8 @@ export default function FeedbackRow({
         onClick={() => vote('negative')}
         className={
           current === 'negative'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground'
+            ? 'text-destructive hover:text-destructive'
+            : 'text-muted-foreground hover:text-foreground'
         }
       >
         <ThumbsDown className="size-4" aria-hidden />

@@ -1,5 +1,6 @@
 import type { Item, Source } from '@shared/briefings/types'
 import { Popover, PopoverContent, PopoverTrigger } from '@styleguide'
+import { ExternalLink } from 'lucide-react'
 import { toDisplaySource } from '@shared/briefings/displaySource'
 import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
@@ -37,57 +38,71 @@ const SectionSourcePills = ({
     .map(toDisplaySource)
   if (resolved.length === 0) return null
   const pillClass =
-    'inline-flex max-w-[200px] items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 text-foreground'
+    'inline-flex max-w-[180px] items-center gap-1 rounded-sm bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground hover:bg-muted hover:text-foreground'
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
       <span className="italic text-muted-foreground">source:</span>
-      {resolved.map((s) => {
-        const inner = (
-          <>
+      {resolved.map((s) => (
+        <Popover key={s.id}>
+          <PopoverTrigger className={pillClass} title={s.displayLabel}>
             <span
               aria-hidden
-              className="inline-flex size-4 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary"
+              className="inline-flex size-3.5 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[9px] font-bold text-primary"
             >
               {s.initial}
             </span>
-            <span className="truncate font-medium">{s.displayName}</span>
-          </>
-        )
-        if (s.isProprietary) {
-          return (
-            <Popover key={s.id}>
-              <PopoverTrigger
-                className={`${pillClass} hover:bg-muted`}
-                title={s.displayName}
-              >
-                {inner}
-              </PopoverTrigger>
-              <PopoverContent className="w-72 text-sm">
-                <p className="font-medium text-foreground">{s.displayName}</p>
-                {s.displayBlurb ? (
-                  <p className="mt-1 text-muted-foreground">{s.displayBlurb}</p>
+            <span className="truncate">{s.displayLabel}</span>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-80 rounded-xl p-3 text-sm">
+            <div className="flex flex-col gap-3 text-left">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Source</span>
+                <span>1 source</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1.5">
+                  <span
+                    aria-hidden
+                    className="inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
+                  >
+                    {s.initial}
+                  </span>
+                  <span className="truncate text-[11px] text-muted-foreground">
+                    {s.publisher}
+                  </span>
+                </div>
+                {s.isProprietary ? (
+                  <span className="text-sm font-semibold text-foreground">
+                    {s.displayName}
+                  </span>
+                ) : s.url ? (
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-start gap-1 text-sm font-semibold leading-5 text-info-600 hover:underline"
+                  >
+                    <span>{s.displayName}</span>
+                    <ExternalLink
+                      aria-hidden
+                      className="mt-1 size-3 shrink-0"
+                    />
+                  </a>
+                ) : (
+                  <span className="text-sm font-semibold text-foreground">
+                    {s.displayName}
+                  </span>
+                )}
+                {s.description ? (
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    {s.description}
+                  </p>
                 ) : null}
-              </PopoverContent>
-            </Popover>
-          )
-        }
-        return s.url ? (
-          <a
-            key={s.id}
-            href={s.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${pillClass} hover:bg-muted`}
-            title={s.displayName}
-          >
-            {inner}
-          </a>
-        ) : (
-          <span key={s.id} className={pillClass} title={s.displayName}>
-            {inner}
-          </span>
-        )
-      })}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      ))}
     </div>
   )
 }
@@ -143,7 +158,7 @@ const AgendaItemCard = ({
       className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6"
     >
       <header className="flex flex-col gap-1">
-        <span className="text-[12px] font-bold uppercase tracking-wide text-primary">
+        <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">
           Agenda item
         </span>
         <h3
