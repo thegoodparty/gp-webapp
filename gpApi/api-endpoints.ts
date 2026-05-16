@@ -211,6 +211,14 @@ export type APIEndpoints = {
     Response: ElectedOffice
   }
 
+  'POST /v1/meetings/briefings/dispatch': {
+    Request: {
+      electedOfficeId: string
+      kind: 'schedule' | 'briefing'
+    }
+    Response: { dispatched: true; kind: 'schedule' | 'briefing' }
+  }
+
   'GET /v1/contacts/stats': {
     Request: {}
     Response: ContactsStats

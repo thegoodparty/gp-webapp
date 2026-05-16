@@ -1,5 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { getBriefingsList } from '@shared/briefings/server'
+import { serverRequest } from 'gpApi/server-request'
+import { IS_PROD } from 'appEnv'
 import serveAccess from '../shared/serveAccess'
 import DashboardLayout from '../shared/DashboardLayout'
 import BriefingsLanding from './components/BriefingsLanding'
@@ -12,13 +14,29 @@ const meta = pageMetaData({
 export const metadata = meta
 export const dynamic = 'force-dynamic'
 
+const loadElectedOfficeId = async (): Promise<string | null> => {
+  if (IS_PROD) return null
+  try {
+    const { data } = await serverRequest('GET /v1/elected-office/current', {})
+    return data.id ?? null
+  } catch {
+    return null
+  }
+}
+
 export default async function Page(): Promise<React.JSX.Element> {
   await serveAccess()
 
-  const summaries = await getBriefingsList()
+  const [summaries, devElectedOfficeId] = await Promise.all([
+    getBriefingsList(),
+    loadElectedOfficeId(),
+  ])
   return (
     <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
-      <BriefingsLanding summaries={summaries} />
+      <BriefingsLanding
+        summaries={summaries}
+        devElectedOfficeId={devElectedOfficeId}
+      />
     </DashboardLayout>
   )
 }
