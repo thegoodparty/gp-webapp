@@ -198,7 +198,7 @@ const AgendaItemCard = ({
   return (
     <article
       id={domId}
-      className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6"
+      className="flex flex-col gap-4 divide-y divide-border rounded-2xl border border-border bg-card p-6"
     >
       <header className="flex flex-col gap-1">
         <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">

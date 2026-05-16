@@ -31,11 +31,11 @@ const SourcesCollapsible = ({ sources }: Props): React.JSX.Element | null => {
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-        <ul className="mt-1 flex flex-col divide-y divide-border border-y border-border">
+        <ul className="mt-1 flex flex-col gap-3">
           {sources.map((raw) => {
             const s = toDisplaySource(raw)
             return (
-              <li key={s.id} className="flex items-start gap-2 py-3">
+              <li key={s.id} className="flex items-start gap-2">
                 <span
                   aria-hidden
                   className="mt-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-sm bg-primary/15 text-[10px] font-bold text-primary"
