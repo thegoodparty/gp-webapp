@@ -38,11 +38,12 @@ describe('DevAgentTriggerBar', () => {
 
   it('disables both buttons while a dispatch is in flight', async () => {
     const user = userEvent.setup()
-    let resolveDispatch: (() => void) | null = null
+    let resolveDispatch: () => void = () => undefined
+    const dispatchGate = new Promise<void>((resolve) => {
+      resolveDispatch = resolve
+    })
     api.mock('POST /v1/meetings/briefings/dispatch', async () => {
-      await new Promise<void>((resolve) => {
-        resolveDispatch = resolve
-      })
+      await dispatchGate
       return { status: 200, data: { dispatched: true, kind: 'schedule' } }
     })
 
@@ -63,7 +64,7 @@ describe('DevAgentTriggerBar', () => {
     })
     expect(briefingBtn).toBeDisabled()
 
-    resolveDispatch?.()
+    resolveDispatch()
 
     await waitFor(() => {
       expect(scheduleBtn).not.toBeDisabled()
