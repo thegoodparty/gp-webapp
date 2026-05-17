@@ -275,8 +275,7 @@ const WinNumberHeroCard = ({
           Projected range:{' '}
           <span className="font-semibold text-foreground">
             {numberFormatter(lowEstimate)}–{numberFormatter(highEstimate)}
-          </span>{' '}
-          (~95% confidence)
+          </span>
         </p>
       </CardContent>
     </Card>
