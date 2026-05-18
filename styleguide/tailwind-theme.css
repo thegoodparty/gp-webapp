@@ -26,7 +26,7 @@
   /* Font families */
   --font-outfit: var(--outfit-font);
   --font-sfpro: var(--sfpro-font);
-  --font-opensans: var(--open-sans-font);
+  --font-opensans: var(--open-sans-font), sans-serif;
   --font-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
 

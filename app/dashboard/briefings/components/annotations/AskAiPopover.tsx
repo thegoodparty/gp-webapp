@@ -118,7 +118,7 @@ export default function AskAiPopover({
       <PopoverContent
         align={align}
         side={side}
-        className="flex w-[400px] max-w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl p-0 shadow-xl"
+        className="font-opensans flex w-[400px] max-w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl p-0 shadow-xl"
         onEscapeKeyDown={() => setOpen(false)}
       >
         <div className="flex items-center gap-3 border-b border-base-border px-4 py-3">

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import { getBriefingBySlug, isFullBriefing } from '@shared/briefings/server'
+import { renderItemForSpeech } from '@shared/briefings/renderForSpeech'
 import AgendaItemCard from '../../components/detail/AgendaItemCard'
 
 type PageProps = {
@@ -48,6 +49,8 @@ export default async function Page({
       meetingDate={slug}
       showFeedback={item.tier === 'featured'}
       variant={item.tier === 'featured' ? 'full' : 'whatToExpectOnly'}
+      speechText={renderItemForSpeech(item)}
+      analyticsLabel={`briefing-item-${item.id}`}
     />
   )
 }

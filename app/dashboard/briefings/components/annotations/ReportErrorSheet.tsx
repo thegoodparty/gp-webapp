@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react'
 import {
   Button,
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
   Textarea,
 } from '@styleguide'
+import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { SheetState } from './AnnotationsScope'
+import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
 
 type Props = {
   sheet: SheetState
@@ -45,6 +47,9 @@ export default function ReportErrorSheet({
   onDelete,
 }: Props): React.JSX.Element {
   const open = isReportState(sheet)
+  const isDesktop = !useIsMobile()
+  const direction = isDesktop ? 'right' : 'bottom'
+
   const initialDescription =
     sheet.kind === 'report_error_view'
       ? sheet.annotation.bugReport?.description ?? ''
@@ -59,6 +64,10 @@ export default function ReportErrorSheet({
       setDescription('')
     }
   }, [sheet])
+
+  // Clear the user's text selection once the drawer opens — leaving a live
+  // selection blocks Vaul's drag-to-dismiss.
+  useClearSelectionOnOpen(open)
 
   const quote = quoteFor(sheet)
   const isView = sheet.kind === 'report_error_view'
@@ -88,23 +97,25 @@ export default function ReportErrorSheet({
   const canSubmit = description.trim().length > 0 && !saving
 
   return (
-    <Sheet open={open} onOpenChange={(v) => (v ? null : onClose())}>
-      <SheetContent
-        side="right"
-        onPointerDownOutside={() => onClose()}
-        onEscapeKeyDown={() => onClose()}
-        className="flex w-full flex-col gap-0 p-0 sm:max-w-[480px]"
-      >
-        <SheetHeader className="px-6 pb-4 pr-12 pt-6">
-          <SheetTitle className="text-2xl font-semibold tracking-tight text-foreground">
+    <Drawer
+      open={open}
+      onOpenChange={(v) => (v ? null : onClose())}
+      direction={direction}
+    >
+      <DrawerContent className="flex flex-col gap-0 p-0 lg:max-w-[480px]">
+        <DrawerHeader className="px-6 pb-4 pr-12 pt-6">
+          <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             Report or Correct an Error
-          </SheetTitle>
-        </SheetHeader>
+          </DrawerTitle>
+        </DrawerHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4">
+        <div
+          data-vaul-no-drag
+          className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4"
+        >
           {quote ? (
-            <blockquote className="rounded-md border-l-2 border-destructive/40 bg-muted/40 px-3 py-2 text-sm italic text-foreground">
-              &ldquo;{quote}&rdquo;
+            <blockquote className="border-l-2 border-destructive/40 pl-3 text-sm italic leading-6 text-foreground">
+              {quote}
             </blockquote>
           ) : null}
 
@@ -130,7 +141,10 @@ export default function ReportErrorSheet({
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0">
+        <div
+          data-vaul-no-drag
+          className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0"
+        >
           {isView ? (
             <Button
               type="button"
@@ -152,7 +166,7 @@ export default function ReportErrorSheet({
             </Button>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   )
 }
