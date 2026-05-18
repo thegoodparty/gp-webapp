@@ -37,7 +37,7 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   const electedOfficeResp = await serverFetch(apiRoutes.electedOffice.current)
   if (electedOfficeResp?.ok && electedOfficeResp?.data) {
-    return redirect('/dashboard/polls')
+    return redirect('/dashboard/briefings')
   }
 
   const [tasks, tcrComplianceResponse] = await Promise.all([
