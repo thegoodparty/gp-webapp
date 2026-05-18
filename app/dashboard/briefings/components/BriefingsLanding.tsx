@@ -34,9 +34,9 @@ const EmptyState = () => (
       We&apos;re tracking down your meetings
     </h2>
     <p className="text-sm text-muted-foreground">
-      We&apos;re finding your upcoming council meetings and building briefings
-      from the public agenda packets. As soon as the first one is ready,
-      we&apos;ll email you so you can review it before you walk in.
+      We&apos;re finding your upcoming meetings and building briefings from the
+      public agendas. As soon as the first one is ready, we&apos;ll email you so
+      you can review it before you walk in.
     </p>
   </section>
 )
