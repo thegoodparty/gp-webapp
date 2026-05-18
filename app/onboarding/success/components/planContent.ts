@@ -1029,7 +1029,9 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     },
     {
       metric: 'Voter Contact Target',
-      target: `${voterContactGoal.toLocaleString('en-US')} total voter contacts`,
+      target: `${voterContactGoal.toLocaleString(
+        'en-US',
+      )} total voter contacts`,
       source: 'Voter Contacts × Votes Needed to Win.',
     },
     {
