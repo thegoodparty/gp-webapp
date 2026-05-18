@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Share2 } from 'lucide-react'
 import {
-  Button,
   Select,
   SelectContent,
   SelectItem,
@@ -18,7 +16,6 @@ export interface PlanSectionRef {
 
 interface PlanSectionNavProps {
   sections: PlanSectionRef[]
-  onShare?: () => void
   onStuckChange?: (stuck: boolean) => void
 }
 
@@ -28,7 +25,6 @@ const OBSERVER_ROOT_MARGIN = '-120px 0px -55% 0px'
 
 const PlanSectionNav = ({
   sections,
-  onShare,
   onStuckChange,
 }: PlanSectionNavProps): React.JSX.Element => {
   const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? '')
@@ -98,41 +94,23 @@ const PlanSectionNav = ({
       }
     >
       <div
-        className={
-          isStuck
-            ? 'mx-auto flex w-full max-w-4xl items-center gap-3 px-4 py-2 sm:px-8'
-            : ''
-        }
+        className={isStuck ? 'mx-auto w-full max-w-4xl px-4 py-2 sm:px-8' : ''}
       >
-        <div className={isStuck ? 'min-w-0 flex-1' : ''}>
-          <p className="px-1 pt-1 text-xs font-medium text-muted-foreground">
-            Jump to
-          </p>
-          <Select value={activeId} onValueChange={handleChange}>
-            <SelectTrigger className="h-10 w-full border-none px-1 shadow-none focus-visible:ring-0">
-              <SelectValue placeholder="Jump to a section" />
-            </SelectTrigger>
-            <SelectContent>
-              {sections.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        {isStuck && onShare ? (
-          <div className="flex shrink-0 items-center gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="medium"
-              icon={<Share2 className="size-5" />}
-              onClick={onShare}
-              aria-label="Share campaign plan"
-            />
-          </div>
-        ) : null}
+        <p className="px-1 pt-1 text-xs font-medium text-muted-foreground">
+          Jump to
+        </p>
+        <Select value={activeId} onValueChange={handleChange}>
+          <SelectTrigger className="h-10 w-full border-none px-1 shadow-none focus-visible:ring-0">
+            <SelectValue placeholder="Jump to a section" />
+          </SelectTrigger>
+          <SelectContent>
+            {sections.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   )

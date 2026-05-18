@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button } from '@styleguide'
+import { Download } from 'lucide-react'
+import { Button, IconButton } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
@@ -11,6 +12,7 @@ import type { User } from 'helpers/types'
 import ConfettiCanvas from './ConfettiCanvas'
 import HeroCard from './HeroCard'
 import PlanSections from './PlanSections'
+import SharePlanModal from './SharePlanModal'
 import { buildPlanData, type PlanInput } from './planContent'
 
 interface SuccessPageProps {
@@ -23,6 +25,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const [clientUser] = useUser()
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
+  const [shareOpen, setShareOpen] = useState(false)
 
   // Onboarding flips campaign state server-side right before this page mounts;
   // the client cache from earlier in the session is stale.
@@ -109,8 +112,11 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     filingRequirementsText,
   ])
 
-  const handleShare = () => undefined
+  const handleShare = () => setShareOpen(true)
+  const handleDownload = () => undefined
   const handleContinue = () => router.push('/dashboard')
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
 
   return (
     <div className="relative min-h-screen w-full bg-base-surface pb-28 text-foreground">
@@ -127,13 +133,33 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
           onShare={handleShare}
         />
 
-        <div className="mt-10 sm:mt-14">
-          <PlanSections plan={plan} onShare={handleShare} />
+        <div className="mt-8 sm:mt-14">
+          <PlanSections plan={plan} />
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-base-border bg-base-surface">
-        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-end gap-3 px-4 sm:px-8">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-base-border bg-base-surface">
+        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between gap-3 px-4 sm:px-8">
+          <IconButton
+            type="button"
+            variant="outline"
+            size="large"
+            onClick={handleDownload}
+            aria-label="Download campaign plan"
+            className="sm:hidden"
+          >
+            <Download className="size-5" />
+          </IconButton>
+          <Button
+            type="button"
+            variant="outline"
+            size="large"
+            icon={<Download className="size-5" />}
+            onClick={handleDownload}
+            className="hidden sm:inline-flex"
+          >
+            Download
+          </Button>
           <Button
             type="button"
             variant="default"
@@ -144,6 +170,13 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
           </Button>
         </div>
       </div>
+
+      <SharePlanModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        url={shareUrl}
+        candidateName={plan.candidateName}
+      />
     </div>
   )
 }
