@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { ChevronRight, MapPin } from 'lucide-react'
 import {
   Dialog,
@@ -9,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@styleguide'
-import { buttonVariants } from '@styleguide'
 import {
   countdownLabel,
   formatDayTime,
@@ -27,7 +25,6 @@ export default function AwaitingAgendaRow({
   const shortDate = formatShortDate(summary.scheduledAt)
   const dayTime = formatDayTime(summary.scheduledAt)
   const countdown = countdownLabel(summary.scheduledAt)
-  const detailHref = `/dashboard/briefings/${summary.slug}`
 
   return (
     <Dialog>
@@ -90,12 +87,6 @@ export default function AwaitingAgendaRow({
         <p className="text-sm">
           <span className="font-medium">Status:</span> Agenda not posted yet
         </p>
-
-        <div className="pt-1">
-          <Link href={detailHref} className={buttonVariants()}>
-            View briefing
-          </Link>
-        </div>
       </DialogContent>
     </Dialog>
   )
