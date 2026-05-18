@@ -12,6 +12,7 @@ import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
 import SourcesCollapsible from './SourcesCollapsible'
 import FeedbackRow from './FeedbackRow'
+import ReadAloudButton from './ReadAloudButton'
 
 type Variant = 'full' | 'whatToExpectOnly'
 
@@ -23,6 +24,15 @@ type Props = {
   meetingDate: string
   showFeedback: boolean
   variant?: Variant
+  /**
+   * Pre-rendered plain-text for the speech service. When provided, the
+   * card header renders a compact read-aloud control. Non-priority item
+   * pages pass this; the featured-items overview omits it (the page-level
+   * Executive Summary card already exposes read-aloud for the briefing).
+   */
+  speechText?: string
+  /** Optional label forwarded to analytics so usage can be sliced by surface. */
+  analyticsLabel?: string
 }
 
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
@@ -173,6 +183,8 @@ const AgendaItemCard = ({
   meetingDate,
   showFeedback,
   variant = 'full',
+  speechText,
+  analyticsLabel,
 }: Props): React.JSX.Element => {
   const base = `/items/${itemIndex}`
   const display = item.display
@@ -200,16 +212,25 @@ const AgendaItemCard = ({
       id={domId}
       className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6"
     >
-      <header className="flex flex-col gap-1">
-        <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">
-          Agenda item
-        </span>
-        <h3
-          className="text-lg font-semibold text-foreground"
-          data-briefing-json-path={`${base}/title`}
-        >
-          {item.title}
-        </h3>
+      <header className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">
+            Agenda item
+          </span>
+          <h3
+            className="text-lg font-semibold text-foreground"
+            data-briefing-json-path={`${base}/title`}
+          >
+            {item.title}
+          </h3>
+        </div>
+        {speechText ? (
+          <ReadAloudButton
+            text={speechText}
+            analyticsLabel={analyticsLabel}
+            compact
+          />
+        ) : null}
       </header>
 
       <section className="flex flex-col gap-2">

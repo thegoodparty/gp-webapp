@@ -245,6 +245,20 @@ describe('<AskAiSheet>', () => {
     expect(screen.getByText(/hello/)).toBeInTheDocument()
   })
 
+  it('renders the anchor quote inside a blockquote without surrounding quote characters', async () => {
+    setupEmptyHistory()
+    render(
+      <AskAiSheet
+        sheet={anchoredSheet()}
+        meetingDate="briefing_x"
+        onClose={vi.fn()}
+      />,
+    )
+    const quote = await screen.findByText('hello')
+    expect(quote.tagName).toBe('BLOCKQUOTE')
+    expect(quote.textContent).toBe('hello')
+  })
+
   it('skips create and loads existing messages for an existing-chat overlay', async () => {
     const messages: ChatMessage[] = [
       {

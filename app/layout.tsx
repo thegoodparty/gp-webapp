@@ -10,7 +10,11 @@ import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
-const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--open-sans-font',
+  adjustFontFallback: false,
+})
 
 const sfPro = localFont({
   // @ts-expect-error - localFont types are not correct

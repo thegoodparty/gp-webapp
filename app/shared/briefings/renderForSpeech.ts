@@ -29,6 +29,9 @@ export const renderBriefingForSpeech = (briefing: Briefing): string => {
     .join('\n\n')
 }
 
+export const renderItemForSpeech = (item: Item): string =>
+  normalize(renderItem(item))
+
 const renderItem = (item: Item): string => {
   const parts: string[] = []
   parts.push(`Agenda item: ${item.title}.`)

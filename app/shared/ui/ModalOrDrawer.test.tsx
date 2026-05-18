@@ -38,6 +38,7 @@ vi.mock('@styleguide/components/ui/drawer', () => ({
     className?: string
   }) => (
     <div className={className} data-slot="drawer-content">
+      <button aria-label="Close" data-slot="drawer-auto-close" />
       {children}
     </div>
   ),
@@ -48,23 +49,6 @@ vi.mock('@styleguide/components/ui/drawer', () => ({
     children: React.ReactNode
     className?: string
   }) => <h2 className={className}>{children}</h2>,
-  DrawerClose: ({
-    children,
-    onClick,
-    ...rest
-  }: {
-    children: React.ReactNode
-    onClick?: () => void
-    className?: string
-  }) => (
-    <button {...rest} onClick={onClick}>
-      {children}
-    </button>
-  ),
-}))
-
-vi.mock('@styleguide/components/ui/icons', () => ({
-  XMarkIcon: () => <span>×</span>,
 }))
 
 vi.mock('@shared/hooks/useTailwindBreakpoints', () => ({
@@ -111,7 +95,8 @@ describe('ModalOrDrawer', () => {
       )
       expect(screen.getByText('Test Title')).toBeInTheDocument()
       expect(screen.getByText('Drawer content')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
+      const closeButtons = screen.getAllByRole('button', { name: /close/i })
+      expect(closeButtons).toHaveLength(1)
     },
   )
 
@@ -165,7 +150,7 @@ describe('ModalOrDrawer', () => {
         <p>Content</p>
       </ModalOrDrawer>,
     )
-    const closeButton = screen.getByRole('button', { name: /close/i })
-    expect(closeButton).toBeInTheDocument()
+    const closeButtons = screen.getAllByRole('button', { name: /close/i })
+    expect(closeButtons).toHaveLength(1)
   })
 })
