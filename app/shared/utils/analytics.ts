@@ -70,10 +70,16 @@ export const identifyUser = async (
       return false
     }
 
+    const hutk = document.cookie
+      .split('; ')
+      .find((r) => r.startsWith('hubspotutk='))
+      ?.split('=')[1]
+    const enrichedTraits = hutk ? { ...traits, hutk } : traits
+
     if (userId) {
-      analyticsInstance.identify(String(userId), traits)
+      analyticsInstance.identify(String(userId), enrichedTraits)
     } else {
-      analyticsInstance.identify(traits)
+      analyticsInstance.identify(enrichedTraits)
     }
     return true
   } catch (error) {
