@@ -1,25 +1,42 @@
 import pageMetaData from 'helpers/metadataHelper'
+import { getBriefingsList } from '@shared/briefings/server'
+import { serverRequest } from 'gpApi/server-request'
+import { IS_DEV, IS_LOCAL } from 'appEnv'
 import serveAccess from '../shared/serveAccess'
-import { listBriefings } from './shared/serverApiCalls'
-import { redirect } from 'next/navigation'
-import BriefingsPage from './components/BriefingsPage'
+import DashboardLayout from '../shared/DashboardLayout'
+import BriefingsLanding from './components/BriefingsLanding'
 
-export const metadata = pageMetaData({
+const meta = pageMetaData({
   title: 'Briefings | GoodParty.org',
-  description: 'Meeting briefings for your upcoming council meetings',
+  description: 'Meeting briefings',
   slug: '/dashboard/briefings',
 })
-
+export const metadata = meta
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
-  await serveAccess()
-  const briefings = await listBriefings()
-
-  // Redirect to most recent briefing if one exists — matches Lovable design
-  if (briefings.length > 0 && briefings[0]) {
-    redirect(`/dashboard/briefings/${briefings[0].date}`)
+const loadElectedOfficeId = async (): Promise<string | null> => {
+  if (!IS_LOCAL && !IS_DEV) return null
+  try {
+    const { data } = await serverRequest('GET /v1/elected-office/current', {})
+    return data.id ?? null
+  } catch {
+    return null
   }
+}
 
-  return <BriefingsPage pathname="/dashboard/briefings" />
+export default async function Page(): Promise<React.JSX.Element> {
+  await serveAccess()
+
+  const [summaries, devElectedOfficeId] = await Promise.all([
+    getBriefingsList(),
+    loadElectedOfficeId(),
+  ])
+  return (
+    <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
+      <BriefingsLanding
+        summaries={summaries}
+        devElectedOfficeId={devElectedOfficeId}
+      />
+    </DashboardLayout>
+  )
 }
