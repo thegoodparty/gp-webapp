@@ -1,11 +1,30 @@
 'use client'
 
+import { SourceCitation } from '@styleguide'
+import { VoterDemographicsStep } from 'app/onboarding/components/VoterDemographicsStep'
 import PlanSectionNav, { type PlanSectionRef } from './PlanSectionNav'
 import type { PlanData } from './planContent'
+
+interface VoterInsightsContext {
+  ballotReadyPositionId?: string
+  city?: string
+  state?: string
+  office?: string
+}
+
+const GoodPartySourceLogo = (): React.JSX.Element => (
+  <img
+    src="/images/logo/heart.svg"
+    alt=""
+    aria-hidden="true"
+    className="size-full object-contain"
+  />
+)
 
 interface PlanSectionsProps {
   plan: PlanData
   onStuckChange?: (stuck: boolean) => void
+  voterInsightsContext?: VoterInsightsContext
 }
 
 interface SectionProps {
@@ -45,10 +64,10 @@ const Section = ({
 const PLAN_SECTIONS: PlanSectionRef[] = [
   { id: 'plan-section-1', label: '1. Executive Summary' },
   { id: 'plan-section-2', label: '2. Strategic Landscape' },
-  { id: 'plan-section-3', label: '3. Voter Insights For Your District' },
-  { id: 'plan-section-4', label: '4. Electoral Goals & Key Metrics' },
-  { id: 'plan-section-5', label: '5. Campaign Timeline' },
-  { id: 'plan-section-6', label: '6. Projected Minimum Resources Needed' },
+  { id: 'plan-section-3', label: '3. Electoral Goals & Key Metrics' },
+  { id: 'plan-section-4', label: '4. Voter Insights For Your District' },
+  { id: 'plan-section-5', label: '5. Projected Minimum Resources Needed' },
+  { id: 'plan-section-6', label: '6. Campaign Timeline' },
   { id: 'plan-section-7', label: '7. Community Engagement & Earned Media' },
   { id: 'plan-section-8', label: '8. Voter Contact Plan' },
   { id: 'plan-section-9', label: '9. Measurement & Accountability' },
@@ -335,6 +354,7 @@ const districtLabel = (plan: PlanData): string =>
 const PlanSections = ({
   plan,
   onStuckChange,
+  voterInsightsContext,
 }: PlanSectionsProps): React.JSX.Element => (
   <div className="text-left">
     <PlanSectionNav sections={PLAN_SECTIONS} onStuckChange={onStuckChange} />
@@ -362,16 +382,8 @@ const PlanSections = ({
             <span className="font-semibold text-foreground">
               {plan.projectedTurnout.toLocaleString('en-US')} voters
             </span>{' '}
-            (
-            <a
-              href="https://goodparty.org/blog/article/calculate-win-numbers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-components-input-active hover:underline"
-            >
-              we were within 1.5 percentage points on average
-            </a>
-            ), putting the threshold for a win at{' '}
+            (we were within 1.5 percentage points on average), putting the
+            threshold for a win at{' '}
             <span className="font-semibold text-foreground">
               {plan.winNumber.toLocaleString('en-US')} votes
             </span>
@@ -383,6 +395,16 @@ const PlanSections = ({
               {plan.voterContactGoal.toLocaleString('en-US')} voter contacts
             </span>{' '}
             across the cycle (roughly 5 contacts per targeted voter).
+          </p>
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>source:</span>
+            <SourceCitation
+              organization="Good Party"
+              organizationLogo={<GoodPartySourceLogo />}
+              title="How GoodParty.org calculates win numbers"
+              description="GoodParty.org's methodology for projecting voter turnout and the votes you need to win, calibrated within 1.5 percentage points across recent races."
+              url="https://goodparty.org/blog/article/calculate-win-numbers"
+            />
           </p>
         </Subsection>
 
@@ -445,41 +467,10 @@ const PlanSections = ({
         </Subsection>
       </Section>
 
-      {/* 3. Voter Insights For Your District */}
+      {/* 3. Electoral Goals & Key Metrics */}
       <Section
         id="plan-section-3"
         number={3}
-        title="Voter Insights For Your District"
-        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
-      >
-        <p className="text-sm text-muted-foreground">
-          We use survey and voter data along with your district demographics to
-          project the likely top issues in your race.{' '}
-          {plan.voterInsightsSource === 'candidate' ? (
-            <>
-              The issues below are the ones you flagged during onboarding. Keep
-              them updated in Campaign Manager as your platform evolves.
-            </>
-          ) : (
-            <>
-              You haven&apos;t set issue priorities yet — these are common top
-              issues in races at this level. Personalize them in Campaign
-              Manager to align your plan with the actual race.
-            </>
-          )}
-        </p>
-        <DefinitionList
-          items={plan.voterInsightsIssues.map((i) => ({
-            title: i.title,
-            body: i.description,
-          }))}
-        />
-      </Section>
-
-      {/* 4. Electoral Goals & Key Metrics */}
-      <Section
-        id="plan-section-4"
-        number={4}
         title="Electoral Goals & Key Metrics"
         transition="These projections come straight from public voter data and proprietary models. Once you confirm your platform issues in Campaign Manager, we can re-forecast against the audience you're actually targeting."
       >
@@ -538,38 +529,27 @@ const PlanSections = ({
         </Subsection>
       </Section>
 
-      {/* 5. Campaign Timeline */}
+      {/* 4. Voter Insights For Your District */}
       <Section
-        id="plan-section-5"
-        number={5}
-        title="Campaign Timeline"
-        transition="The key dates you need to know about your race have been established. What it doesn't yet reflect is your launch event, your fundraising rollout, and the issue moments you want to own. Share those with us on your Campaign Manager and we'll turn this into a working plan."
+        id="plan-section-4"
+        number={4}
+        title="Voter Insights For Your District"
+        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
       >
-        <p className="text-sm text-muted-foreground">
-          Dates below are the hard gates the campaign must hit. Each is followed
-          by an internal working deadline (one week earlier wherever possible)
-          to preserve a buffer.
-        </p>
-        <PlanTable
-          columns={['Date', 'Milestone', 'Notes']}
-          rows={plan.timeline.map((t) => [
-            <span key="d" className="font-semibold whitespace-nowrap">
-              {t.date}
-            </span>,
-            <span key="m" className="text-foreground">
-              {t.milestone}
-            </span>,
-            <span key="n" className="text-muted-foreground">
-              {t.notes}
-            </span>,
-          ])}
+        <VoterDemographicsStep
+          ballotReadyPositionId={voterInsightsContext?.ballotReadyPositionId}
+          city={voterInsightsContext?.city}
+          state={voterInsightsContext?.state}
+          office={voterInsightsContext?.office}
+          showLocalNewsSources={false}
+          headingsAsSubsections
         />
       </Section>
 
-      {/* 6. Projected Minimum Resources Needed */}
+      {/* 5. Projected Minimum Resources Needed */}
       <Section
-        id="plan-section-6"
-        number={6}
+        id="plan-section-5"
+        number={5}
         title="Projected Minimum Resources Needed"
         transition={`The $${plan.totalBudget.toLocaleString(
           'en-US',
@@ -662,6 +642,34 @@ const PlanSections = ({
             ])}
           />
         </Subsection>
+      </Section>
+
+      {/* 6. Campaign Timeline */}
+      <Section
+        id="plan-section-6"
+        number={6}
+        title="Campaign Timeline"
+        transition="The key dates you need to know about your race have been established. What it doesn't yet reflect is your launch event, your fundraising rollout, and the issue moments you want to own. Share those with us on your Campaign Manager and we'll turn this into a working plan."
+      >
+        <p className="text-sm text-muted-foreground">
+          Dates below are the hard gates the campaign must hit. Each is followed
+          by an internal working deadline (one week earlier wherever possible)
+          to preserve a buffer.
+        </p>
+        <PlanTable
+          columns={['Date', 'Milestone', 'Notes']}
+          rows={plan.timeline.map((t) => [
+            <span key="d" className="font-semibold whitespace-nowrap">
+              {t.date}
+            </span>,
+            <span key="m" className="text-foreground">
+              {t.milestone}
+            </span>,
+            <span key="n" className="text-muted-foreground">
+              {t.notes}
+            </span>,
+          ])}
+        />
       </Section>
 
       {/* 7. Community Engagement & Earned Media */}

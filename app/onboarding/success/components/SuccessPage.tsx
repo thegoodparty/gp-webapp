@@ -26,6 +26,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
   const [shareOpen, setShareOpen] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   // Onboarding flips campaign state server-side right before this page mounts;
   // the client cache from earlier in the session is stale.
@@ -65,6 +66,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
   const filingFee = metrics?.filingFee ?? null
   const filingRequirementsText = metrics?.filingRequirementsText ?? null
+  const ballotReadyPositionId = campaign?.organization?.positionId ?? undefined
 
   const plan = useMemo(() => {
     const input: PlanInput = {
@@ -113,8 +115,36 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   ])
 
   const handleShare = () => setShareOpen(true)
-  const handleDownload = () => undefined
   const handleContinue = () => router.push('/dashboard')
+
+  const handleDownload = async () => {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      const [{ pdf }, { CampaignPlanPdf }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./CampaignPlanPdf'),
+      ])
+      const blob = await pdf(
+        <CampaignPlanPdf plan={plan} city={city} />,
+      ).toBlob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const safeName =
+        (plan.candidateName || 'campaign-plan')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '') || 'campaign-plan'
+      a.download = `${safeName}-campaign-plan.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
 
@@ -134,7 +164,15 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
         />
 
         <div className="mt-8 sm:mt-14">
-          <PlanSections plan={plan} />
+          <PlanSections
+            plan={plan}
+            voterInsightsContext={{
+              ballotReadyPositionId,
+              city,
+              state: stateValue,
+              office: race,
+            }}
+          />
         </div>
       </main>
 
@@ -145,6 +183,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             variant="outline"
             size="large"
             onClick={handleDownload}
+            loading={downloading}
             aria-label="Download campaign plan"
             className="sm:hidden"
           >
@@ -156,6 +195,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             size="large"
             icon={<Download className="size-5" />}
             onClick={handleDownload}
+            loading={downloading}
             className="hidden sm:inline-flex"
           >
             Download
