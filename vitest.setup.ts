@@ -4,8 +4,9 @@ import { router } from 'helpers/test-utils/router-mocking'
 import { beforeEach, vi } from 'vitest'
 
 if (typeof Element !== 'undefined' && !Element.prototype.setPointerCapture) {
-  Element.prototype.setPointerCapture = () => {}
-  Element.prototype.releasePointerCapture = () => {}
+  const noop = (): void => undefined
+  Element.prototype.setPointerCapture = noop
+  Element.prototype.releasePointerCapture = noop
   Element.prototype.hasPointerCapture = () => false
 }
 

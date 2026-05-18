@@ -1,12 +1,7 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@styleguide'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import type { AnnotationAnchor } from '@shared/briefings/types'
 import type { OverlayState } from './AnnotationsScope'
@@ -101,7 +96,7 @@ export default function AskAiSheet({
       onOpenChange={(v) => (v ? null : onClose())}
       direction={direction}
     >
-      <DrawerContent className="font-opensans flex flex-col gap-0 p-0 lg:max-w-[480px]">
+      <DrawerContent className="font-opensans flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
         <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
           <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             Ask AI

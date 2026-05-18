@@ -323,8 +323,7 @@ export default function AnnotationsScope({
   }, [annotations])
 
   const topLevelChatAnnotationId = useMemo(
-    () =>
-      annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
+    () => annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
     [annotations],
   )
 

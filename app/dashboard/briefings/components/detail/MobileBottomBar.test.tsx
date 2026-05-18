@@ -39,7 +39,9 @@ describe('<MobileBottomBar>', () => {
 
     const selector = screen.getByRole('button', { name: /executive summary/i })
     const download = screen.getByRole('button', { name: /download pdf/i })
-    const askAi = screen.getByRole('button', { name: /open briefing assistant/i })
+    const askAi = screen.getByRole('button', {
+      name: /open briefing assistant/i,
+    })
 
     // All three controls share a common ancestor (the dock row) so they
     // render as a single horizontal group instead of being scattered.

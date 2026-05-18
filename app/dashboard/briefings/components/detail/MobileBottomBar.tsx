@@ -40,8 +40,12 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const { meetingDate, openAddNoteTopLevel, onChatCreated } =
-    useAnnotationsCtx()
+  const {
+    meetingDate,
+    openAddNoteTopLevel,
+    onChatCreated,
+    topLevelChatAnnotationId,
+  } = useAnnotationsCtx()
 
   const overviewHref = briefingOverviewHref(briefingSlug)
 
@@ -139,6 +143,7 @@ export default function MobileBottomBar({
           anchor={null}
           align="end"
           side="top"
+          existingAnnotationId={topLevelChatAnnotationId}
           onChatCreated={onChatCreated}
           trigger={
             <IconButton
