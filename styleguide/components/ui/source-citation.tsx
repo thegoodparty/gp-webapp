@@ -141,9 +141,7 @@ function SourceBody({
 const CHIP_CLASS_BASE =
   'inline-flex items-center gap-1.5 rounded-md border border-base-border bg-base-surface px-2 py-1 text-xs text-foreground transition-colors hover:bg-accent focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none'
 
-function DesktopSourceCitation(
-  props: SourceCitationProps,
-): React.JSX.Element {
+function DesktopSourceCitation(props: SourceCitationProps): React.JSX.Element {
   const {
     organization,
     title,
