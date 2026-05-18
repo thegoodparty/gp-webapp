@@ -14,6 +14,7 @@ import HeroCard from './HeroCard'
 import PlanSections from './PlanSections'
 import SharePlanModal from './SharePlanModal'
 import { buildPlanData, type PlanInput } from './planContent'
+import { downloadCampaignPlanPdf } from '../pdf/downloadCampaignPlanPdf'
 
 interface SuccessPageProps {
   initialUser: User | null
@@ -26,6 +27,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
   const [shareOpen, setShareOpen] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   // Onboarding flips campaign state server-side right before this page mounts;
   // the client cache from earlier in the session is stale.
@@ -115,9 +117,18 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
 
   const handleShare = () => setShareOpen(true)
   const handleContinue = () => router.push('/dashboard')
-  const handleDownload = () => undefined
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
+
+  const handleDownload = async () => {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      await downloadCampaignPlanPdf(plan, { liveUrl: shareUrl || undefined })
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   return (
     <div className="relative min-h-screen w-full bg-base-surface pb-28 text-foreground">
@@ -154,6 +165,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             variant="outline"
             size="large"
             onClick={handleDownload}
+            loading={downloading}
             aria-label="Download campaign plan"
             className="sm:hidden"
           >
@@ -165,6 +177,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             size="large"
             icon={<Download className="size-5" />}
             onClick={handleDownload}
+            loading={downloading}
             className="hidden sm:inline-flex"
           >
             Download
