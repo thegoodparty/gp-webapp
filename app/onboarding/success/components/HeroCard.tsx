@@ -22,7 +22,7 @@ const HeroCard = ({
   const raceLine = [race, state].filter(Boolean).join(' • ')
 
   return (
-    <section className="relative flex flex-col items-center gap-8 rounded-3xl border border-base-border bg-brand-cream px-6 pt-12 pb-10 text-center sm:px-12 sm:pt-16 sm:pb-12">
+    <section className="relative flex flex-col items-center gap-6 rounded-3xl border border-base-border bg-brand-cream px-6 pt-8 pb-6 text-center sm:px-12 sm:pt-16 sm:pb-12">
       {onShare ? (
         <IconButton
           type="button"
@@ -36,32 +36,32 @@ const HeroCard = ({
         </IconButton>
       ) : null}
 
-      <Image
-        src="/images/heart.svg"
-        alt=""
-        width={56}
-        height={45}
-        priority
-        className="h-12 w-auto sm:h-14"
-      />
+      <div className="flex flex-col items-center gap-3">
+        <Image
+          src="/images/heart.svg"
+          alt=""
+          width={56}
+          height={45}
+          priority
+          className="h-12 w-auto sm:h-14"
+        />
+        <h1 className="text-3xl font-bold text-foreground sm:text-5xl">
+          Initial campaign plan
+        </h1>
+      </div>
 
-      <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
-        Initial campaign plan
-      </h1>
-
-      {candidateName ? (
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-            Prepared for
-          </p>
-          <p className="text-2xl font-bold text-foreground sm:text-3xl">
-            {candidateName}
-          </p>
-        </div>
-      ) : null}
-
-      {raceLine || electionDate ? (
+      {candidateName || raceLine || electionDate ? (
         <div className="flex flex-col items-center gap-1">
+          {candidateName ? (
+            <>
+              <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+                Prepared for
+              </p>
+              <p className="text-xl font-bold text-foreground sm:text-3xl">
+                {candidateName}
+              </p>
+            </>
+          ) : null}
           {raceLine ? (
             <p className="text-base text-muted-foreground sm:text-lg">
               {raceLine}

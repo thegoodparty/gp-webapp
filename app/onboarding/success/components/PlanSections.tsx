@@ -1,12 +1,30 @@
 'use client'
 
+import { SourceCitation } from '@styleguide'
+import { VoterDemographicsStep } from 'app/onboarding/components/VoterDemographicsStep'
 import PlanSectionNav, { type PlanSectionRef } from './PlanSectionNav'
 import type { PlanData } from './planContent'
 
+interface VoterInsightsContext {
+  ballotReadyPositionId?: string
+  city?: string
+  state?: string
+  office?: string
+}
+
+const GoodPartySourceLogo = (): React.JSX.Element => (
+  <img
+    src="/images/logo/heart.svg"
+    alt=""
+    aria-hidden="true"
+    className="size-full object-contain"
+  />
+)
+
 interface PlanSectionsProps {
   plan: PlanData
-  onShare?: () => void
   onStuckChange?: (stuck: boolean) => void
+  voterInsightsContext?: VoterInsightsContext
 }
 
 interface SectionProps {
@@ -46,10 +64,10 @@ const Section = ({
 const PLAN_SECTIONS: PlanSectionRef[] = [
   { id: 'plan-section-1', label: '1. Executive Summary' },
   { id: 'plan-section-2', label: '2. Strategic Landscape' },
-  { id: 'plan-section-3', label: '3. Voter Insights For Your District' },
-  { id: 'plan-section-4', label: '4. Electoral Goals & Key Metrics' },
-  { id: 'plan-section-5', label: '5. Campaign Timeline' },
-  { id: 'plan-section-6', label: '6. Projected Minimum Resources Needed' },
+  { id: 'plan-section-3', label: '3. Electoral Goals & Key Metrics' },
+  { id: 'plan-section-4', label: '4. Voter Insights For Your District' },
+  { id: 'plan-section-5', label: '5. Projected Minimum Resources Needed' },
+  { id: 'plan-section-6', label: '6. Campaign Timeline' },
   { id: 'plan-section-7', label: '7. Community Engagement & Earned Media' },
   { id: 'plan-section-8', label: '8. Voter Contact Plan' },
   { id: 'plan-section-9', label: '9. Measurement & Accountability' },
@@ -142,7 +160,8 @@ const PlanTable = ({ columns, rows }: PlanTableProps): React.JSX.Element => (
 const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
   const districtFragment = plan.hasDistrict ? (
     <>
-      {' '}representing{' '}
+      {' '}
+      representing{' '}
       <span className="font-semibold text-foreground">{plan.districtName}</span>
     </>
   ) : null
@@ -151,15 +170,13 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
     plan.electionType === 'partisan'
       ? 'partisan'
       : plan.electionType === 'nonpartisan'
-        ? 'nonpartisan'
-        : null
+      ? 'nonpartisan'
+      : null
 
   const electionTypeFragment = electionTypeLabel ? (
     <>
       a{' '}
-      <span className="font-semibold text-foreground">
-        {electionTypeLabel}
-      </span>{' '}
+      <span className="font-semibold text-foreground">{electionTypeLabel}</span>{' '}
       election{' '}
     </>
   ) : (
@@ -198,7 +215,8 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
         </span>
         , the race is {electionTypeFragment}with{' '}
         <span className="font-semibold text-foreground">
-          {plan.opponentCount} {plan.opponentCount === 1 ? 'opponent' : 'opponents'}
+          {plan.opponentCount}{' '}
+          {plan.opponentCount === 1 ? 'opponent' : 'opponents'}
         </span>
         , including the incumbent{' '}
         <span className="font-semibold text-foreground">
@@ -224,7 +242,8 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
       </span>
       , the race is {electionTypeFragment}with{' '}
       <span className="font-semibold text-foreground">
-        {plan.opponentCount} {plan.opponentCount === 1 ? 'opponent' : 'opponents'}
+        {plan.opponentCount}{' '}
+        {plan.opponentCount === 1 ? 'opponent' : 'opponents'}
       </span>
       . Election Day is{' '}
       <span className="font-semibold text-foreground">{plan.electionDate}</span>
@@ -264,9 +283,8 @@ const OppositionResearch = ({
           <span className="font-semibold text-foreground">
             {plan.filingDateStart}
           </span>{' '}
-          and update this section as candidates enter the race. If you hear of
-          a likely opponent before we do, you can flag them in Campaign
-          Manager.
+          and update this section as candidates enter the race. If you hear of a
+          likely opponent before we do, you can flag them in Campaign Manager.
         </p>
       )
     }
@@ -335,15 +353,11 @@ const districtLabel = (plan: PlanData): string =>
 
 const PlanSections = ({
   plan,
-  onShare,
   onStuckChange,
+  voterInsightsContext,
 }: PlanSectionsProps): React.JSX.Element => (
   <div className="text-left">
-    <PlanSectionNav
-      sections={PLAN_SECTIONS}
-      onShare={onShare}
-      onStuckChange={onStuckChange}
-    />
+    <PlanSectionNav sections={PLAN_SECTIONS} onStuckChange={onStuckChange} />
 
     <div className="mt-8 space-y-12">
       {/* 1. Executive Summary */}
@@ -368,16 +382,8 @@ const PlanSections = ({
             <span className="font-semibold text-foreground">
               {plan.projectedTurnout.toLocaleString('en-US')} voters
             </span>{' '}
-            (
-            <a
-              href="https://goodparty.org/blog/article/calculate-win-numbers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-components-input-active hover:underline"
-            >
-              we were within 1.5 percentage points on average
-            </a>
-            ), putting the threshold for a win at{' '}
+            (we were within 1.5 percentage points on average), putting the
+            threshold for a win at{' '}
             <span className="font-semibold text-foreground">
               {plan.winNumber.toLocaleString('en-US')} votes
             </span>
@@ -389,6 +395,16 @@ const PlanSections = ({
               {plan.voterContactGoal.toLocaleString('en-US')} voter contacts
             </span>{' '}
             across the cycle (roughly 5 contacts per targeted voter).
+          </p>
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>source:</span>
+            <SourceCitation
+              organization="Good Party"
+              organizationLogo={<GoodPartySourceLogo />}
+              title="How GoodParty.org calculates win numbers"
+              description="GoodParty.org's methodology for projecting voter turnout and the votes you need to win, calibrated within 1.5 percentage points across recent races."
+              url="https://goodparty.org/blog/article/calculate-win-numbers"
+            />
           </p>
         </Subsection>
 
@@ -451,41 +467,10 @@ const PlanSections = ({
         </Subsection>
       </Section>
 
-      {/* 3. Voter Insights For Your District */}
+      {/* 3. Electoral Goals & Key Metrics */}
       <Section
         id="plan-section-3"
         number={3}
-        title="Voter Insights For Your District"
-        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
-      >
-        <p className="text-sm text-muted-foreground">
-          We use survey and voter data along with your district demographics to
-          project the likely top issues in your race.{' '}
-          {plan.voterInsightsSource === 'candidate' ? (
-            <>
-              The issues below are the ones you flagged during onboarding. Keep
-              them updated in Campaign Manager as your platform evolves.
-            </>
-          ) : (
-            <>
-              You haven&apos;t set issue priorities yet — these are common top
-              issues in races at this level. Personalize them in Campaign
-              Manager to align your plan with the actual race.
-            </>
-          )}
-        </p>
-        <DefinitionList
-          items={plan.voterInsightsIssues.map((i) => ({
-            title: i.title,
-            body: i.description,
-          }))}
-        />
-      </Section>
-
-      {/* 4. Electoral Goals & Key Metrics */}
-      <Section
-        id="plan-section-4"
-        number={4}
         title="Electoral Goals & Key Metrics"
         transition="These projections come straight from public voter data and proprietary models. Once you confirm your platform issues in Campaign Manager, we can re-forecast against the audience you're actually targeting."
       >
@@ -519,8 +504,8 @@ const PlanSections = ({
             unanswered calls, wrong numbers), and (2) voters typically need
             multiple exposures before a name or message sticks. For{' '}
             <span className="font-semibold text-foreground">
-              {plan.winNumber.toLocaleString('en-US')} projected votes needed
-              to win
+              {plan.winNumber.toLocaleString('en-US')} projected votes needed to
+              win
             </span>
             ,{' '}
             <span className="font-semibold text-foreground">
@@ -537,45 +522,34 @@ const PlanSections = ({
             <span className="font-semibold text-foreground">
               {plan.volunteerHourTarget.toLocaleString('en-US')} hour floor
             </span>{' '}
-            is a conservative estimate of what it takes to personally cover
-            your event schedule, run a door-knocking campaign, and monitor
-            Election Day operations.
+            is a conservative estimate of what it takes to personally cover your
+            event schedule, run a door-knocking campaign, and monitor Election
+            Day operations.
           </p>
         </Subsection>
       </Section>
 
-      {/* 5. Campaign Timeline */}
+      {/* 4. Voter Insights For Your District */}
       <Section
-        id="plan-section-5"
-        number={5}
-        title="Campaign Timeline"
-        transition="The key dates you need to know about your race have been established. What it doesn't yet reflect is your launch event, your fundraising rollout, and the issue moments you want to own. Share those with us on your Campaign Manager and we'll turn this into a working plan."
+        id="plan-section-4"
+        number={4}
+        title="Voter Insights For Your District"
+        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
       >
-        <p className="text-sm text-muted-foreground">
-          Dates below are the hard gates the campaign must hit. Each is
-          followed by an internal working deadline (one week earlier wherever
-          possible) to preserve a buffer.
-        </p>
-        <PlanTable
-          columns={['Date', 'Milestone', 'Notes']}
-          rows={plan.timeline.map((t) => [
-            <span key="d" className="font-semibold whitespace-nowrap">
-              {t.date}
-            </span>,
-            <span key="m" className="text-foreground">
-              {t.milestone}
-            </span>,
-            <span key="n" className="text-muted-foreground">
-              {t.notes}
-            </span>,
-          ])}
+        <VoterDemographicsStep
+          ballotReadyPositionId={voterInsightsContext?.ballotReadyPositionId}
+          city={voterInsightsContext?.city}
+          state={voterInsightsContext?.state}
+          office={voterInsightsContext?.office}
+          showLocalNewsSources={false}
+          headingsAsSubsections
         />
       </Section>
 
-      {/* 6. Projected Minimum Resources Needed */}
+      {/* 5. Projected Minimum Resources Needed */}
       <Section
-        id="plan-section-6"
-        number={6}
+        id="plan-section-5"
+        number={5}
         title="Projected Minimum Resources Needed"
         transition={`The $${plan.totalBudget.toLocaleString(
           'en-US',
@@ -625,18 +599,18 @@ const PlanSections = ({
             <span className="font-semibold text-foreground">
               ${plan.totalBudget.toLocaleString('en-US')}
             </span>{' '}
-            sounds like real money. For most candidates at this level, it
-            comes from a surprisingly small number of people, typically 20 to
-            40 donors giving $25 to $100 each. No extra cushion is needed on
-            top of that target; the budget already builds in a reserve for
-            unexpected costs.
+            sounds like real money. For most candidates at this level, it comes
+            from a surprisingly small number of people, typically 20 to 40
+            donors giving $25 to $100 each. No extra cushion is needed on top of
+            that target; the budget already builds in a reserve for unexpected
+            costs.
           </p>
           <p>
             The right fundraising mix is candidate-specific, but every source
-            compounds the others — an online donor becomes a house party
-            host, a family loan gets paid back by small-dollar supporters you
-            never expected. For a race like yours, the default starting mix
-            looks like this:
+            compounds the others — an online donor becomes a house party host, a
+            family loan gets paid back by small-dollar supporters you never
+            expected. For a race like yours, the default starting mix looks like
+            this:
           </p>
           <PlanTable
             columns={['Source', 'Share']}
@@ -668,6 +642,34 @@ const PlanSections = ({
             ])}
           />
         </Subsection>
+      </Section>
+
+      {/* 6. Campaign Timeline */}
+      <Section
+        id="plan-section-6"
+        number={6}
+        title="Campaign Timeline"
+        transition="The key dates you need to know about your race have been established. What it doesn't yet reflect is your launch event, your fundraising rollout, and the issue moments you want to own. Share those with us on your Campaign Manager and we'll turn this into a working plan."
+      >
+        <p className="text-sm text-muted-foreground">
+          Dates below are the hard gates the campaign must hit. Each is followed
+          by an internal working deadline (one week earlier wherever possible)
+          to preserve a buffer.
+        </p>
+        <PlanTable
+          columns={['Date', 'Milestone', 'Notes']}
+          rows={plan.timeline.map((t) => [
+            <span key="d" className="font-semibold whitespace-nowrap">
+              {t.date}
+            </span>,
+            <span key="m" className="text-foreground">
+              {t.milestone}
+            </span>,
+            <span key="n" className="text-muted-foreground">
+              {t.notes}
+            </span>,
+          ])}
+        />
       </Section>
 
       {/* 7. Community Engagement & Earned Media */}
@@ -749,9 +751,9 @@ const PlanSections = ({
         <p className="text-sm text-muted-foreground">
           The contact cadence below is designed so that every likely voter
           receives at least 1 introductory voter contact, at least 1 persuasion
-          voter contact, at least 1 early vote reminder, and at least 1
-          Election Day push. Texts are the primary workhorse; robocalls layer
-          on top to catch landline-only voters.
+          voter contact, at least 1 early vote reminder, and at least 1 Election
+          Day push. Texts are the primary workhorse; robocalls layer on top to
+          catch landline-only voters.
         </p>
         <PlanTable
           columns={['Date', 'Tactic', 'Purpose']}
@@ -799,9 +801,9 @@ const PlanSections = ({
       >
         <p className="text-sm text-foreground">
           Every week, log into your Campaign Manager to check your progress. We
-          estimate the number of likely votes you are on track to receive
-          based on the activity you complete. Our proprietary models predict
-          the number of likely votes you get, based on the{' '}
+          estimate the number of likely votes you are on track to receive based
+          on the activity you complete. Our proprietary models predict the
+          number of likely votes you get, based on the{' '}
           <span className="font-semibold">quality</span> and{' '}
           <span className="font-semibold">frequency</span> of{' '}
           <span className="font-semibold">voter contacts</span>.
@@ -821,9 +823,8 @@ const PlanSections = ({
               needed to win, stay the course.
             </li>
             <li>
-              If you are falling behind, prioritize scheduling your next text
-              or robocall campaign and look for additional outreach
-              opportunities.
+              If you are falling behind, prioritize scheduling your next text or
+              robocall campaign and look for additional outreach opportunities.
             </li>
             <li>
               Check in at least once a week — small gaps caught early are easy
@@ -845,8 +846,8 @@ const PlanSections = ({
           historical election results, and our proprietary models. Every metric
           in this document is an estimate derived from the sources below. Where
           applicable, we include our best-estimate confidence interval so that
-          the candidate and campaign manager can understand how firm each
-          number is.
+          the candidate and campaign manager can understand how firm each number
+          is.
         </p>
         <Subsection title="Data Sources">
           <PlanTable
@@ -873,7 +874,12 @@ const PlanSections = ({
         </Subsection>
         <Subsection title="Confidence & Standard Error">
           <PlanTable
-            columns={['Estimate', 'Point Value', 'Est. Range (95% CI)', 'Notes']}
+            columns={[
+              'Estimate',
+              'Point Value',
+              'Est. Range (95% CI)',
+              'Notes',
+            ]}
             rows={plan.confidenceEstimates.map((c) => [
               <span key="e" className="text-foreground">
                 {c.estimate}
@@ -890,11 +896,11 @@ const PlanSections = ({
             ])}
           />
           <p className="text-sm text-muted-foreground">
-            Standard-error ranges above reflect modeling uncertainty only.
-            They do not account for late-breaking external events (weather,
-            news cycles, last-minute challengers). The campaign should treat
-            the point values as planning numbers and revisit them weekly as
-            turnout signals harden.
+            Standard-error ranges above reflect modeling uncertainty only. They
+            do not account for late-breaking external events (weather, news
+            cycles, last-minute challengers). The campaign should treat the
+            point values as planning numbers and revisit them weekly as turnout
+            signals harden.
           </p>
         </Subsection>
         <Subsection title="What This Plan Does Not Do">

@@ -10,6 +10,7 @@ interface TopVoterIssuesSectionProps {
   city?: string
   state?: string
   office?: string
+  headingsAsSubsections?: boolean
 }
 
 const VOTER_ISSUES_QUERY_KEY = 'onboarding-voter-issues'
@@ -57,6 +58,7 @@ export const TopVoterIssuesSection = ({
   city,
   state,
   office,
+  headingsAsSubsections = false,
 }: TopVoterIssuesSectionProps): React.JSX.Element | null => {
   const query = useQuery(
     voterIssuesQueryOptions({ ballotReadyPositionId, city, state, office }),
@@ -90,12 +92,17 @@ export const TopVoterIssuesSection = ({
     : issues.slice(0, COLLAPSED_ISSUES_VISIBLE)
   const additionalCount = issues.length - COLLAPSED_ISSUES_VISIBLE
 
+  const HeadingTag = headingsAsSubsections ? 'h3' : 'h2'
+  const headingClass = headingsAsSubsections
+    ? 'text-lg font-semibold text-foreground'
+    : 'text-2xl font-semibold text-slate-950'
+
   return (
     <div className="space-y-4 text-left">
       <div className="space-y-1">
-        <h2 className="text-2xl font-semibold text-slate-950">
+        <HeadingTag className={headingClass}>
           Top issues for your voters
-        </h2>
+        </HeadingTag>
         <p className="text-sm leading-6 text-slate-500">
           {audienceLabel ? (
             <>
