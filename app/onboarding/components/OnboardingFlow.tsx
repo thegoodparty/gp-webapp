@@ -193,17 +193,17 @@ const welcomeCards = [
   },
 ]
 
-interface WhyWeAskProps {
+interface WhyThisMattersProps {
   text?: string
   title?: string
   children?: React.ReactNode
 }
 
-const WhyWeAsk = ({
+const WhyThisMatters = ({
   text,
   title = 'Why this matters',
   children,
-}: WhyWeAskProps): React.JSX.Element => (
+}: WhyThisMattersProps): React.JSX.Element => (
   <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
     <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
       {title}
@@ -238,7 +238,7 @@ const StepBody = ({
   onP2vMetricsResolved,
   p2vOfficeName,
   skipP2vReveal,
-}: StepBodyProps): React.JSX.Element => {
+}: StepBodyProps): React.JSX.Element | null => {
   if (activeStep.id === 'welcome') {
     return (
       <div className="space-y-8">
@@ -347,11 +347,7 @@ const StepBody = ({
     return <PledgeStep />
   }
 
-  return (
-    <div className="rounded-lg border border-base-border bg-muted p-5">
-      <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
-    </div>
-  )
+  return null
 }
 
 export default function OnboardingFlow({
@@ -948,7 +944,7 @@ export default function OnboardingFlow({
         <div>
           <div
             className={`grid grid-cols-1 gap-8${
-              activeStep.whyWeAsk && !isP2vBlocking
+              activeStep.whyThisMatters && !isP2vBlocking
                 ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
                 : ''
             }`}
@@ -994,7 +990,7 @@ export default function OnboardingFlow({
               />
             </section>
 
-            {activeStep.whyWeAsk && !isP2vBlocking ? (
+            {activeStep.whyThisMatters && !isP2vBlocking ? (
               <aside
                 className="md:fixed md:top-36 md:w-[280px]"
                 style={{
@@ -1002,7 +998,7 @@ export default function OnboardingFlow({
                 }}
               >
                 {activeStep.id === 'path-to-victory' ? (
-                  <WhyWeAsk title="You can do this!">
+                  <WhyThisMatters title="You can do this!">
                     Most candidates think they need to convince{' '}
                     <em>everyone</em>. You don&apos;t. You need to find{' '}
                     {liveCampaign?.raceTargetMetrics?.winNumber
@@ -1012,9 +1008,9 @@ export default function OnboardingFlow({
                       : 'your win number'}
                     , talk to them, and make sure they vote. We&apos;ll show you
                     exactly what that takes.
-                  </WhyWeAsk>
+                  </WhyThisMatters>
                 ) : (
-                  <WhyWeAsk text={activeStep.whyWeAsk} />
+                  <WhyThisMatters text={activeStep.whyThisMatters} />
                 )}
               </aside>
             ) : null}
