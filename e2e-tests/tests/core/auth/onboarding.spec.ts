@@ -80,7 +80,7 @@ async function completePartyAffiliationStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', {
       level: 1,
-      name: /official party designation/i,
+      name: /party designation/i,
     }),
   ).toBeVisible()
   await page.getByRole('radio').first().click({ force: true })
