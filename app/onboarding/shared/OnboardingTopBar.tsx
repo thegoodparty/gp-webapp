@@ -11,7 +11,7 @@ const OnboardingTopBar = ({
 }: OnboardingTopBarProps): React.JSX.Element => (
   <div className="fixed top-0 inset-x-0 z-10 border-b border-base-border bg-base-surface">
     <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8 sm:py-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <GoodPartyOrgLogo />
         <span className="text-sm font-medium text-muted-foreground">
           Step {currentStep} of {totalSteps}
