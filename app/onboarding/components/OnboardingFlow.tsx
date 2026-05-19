@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   CardContent,
-  Stepper,
 } from '@styleguide'
 import {
   CalendarCheck,
@@ -44,6 +43,7 @@ import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
 import { PledgeStep } from './PledgeStep'
+import OnboardingTopBar from '../shared/OnboardingTopBar'
 import {
   VoterDemographicsStep,
   onboardingDistrictStatsQueryOptions,
@@ -931,16 +931,11 @@ export default function OnboardingFlow({
 
   return (
     <div className="min-h-screen bg-base-surface pb-28 text-foreground">
-      <div className="fixed top-14 left-0 right-0 z-10 border-b border-slate-100 bg-base-surface">
-        <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
-          <Stepper
-            variant="bar"
-            currentStep={activeStepNumber}
-            totalSteps={visibleSteps.length}
-          />
-        </div>
-      </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-28 pb-6 sm:px-8 sm:pb-8">
+      <OnboardingTopBar
+        currentStep={activeStepNumber}
+        totalSteps={visibleSteps.length}
+      />
+      <main className="mx-auto w-full max-w-4xl px-4 pt-32 pb-6 sm:px-8 sm:pt-36 sm:pb-8">
         <div>
           <div
             className={`grid grid-cols-1 gap-8${

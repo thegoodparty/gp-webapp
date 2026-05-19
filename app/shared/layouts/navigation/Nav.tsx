@@ -8,15 +8,14 @@ import { usePathname } from 'next/navigation'
 
 const Nav = (): React.JSX.Element => {
   const pathname = usePathname()
-  const isDashboardPath = pathname?.startsWith('/dashboard')
+  const hideGlobalNav =
+    pathname?.startsWith('/dashboard') || pathname?.startsWith('/onboarding')
 
   return (
     <>
       <div
         id="top-nav"
-        className={`fixed w-screen h-14 z-50${
-          isDashboardPath ? ' hidden' : ''
-        }`}
+        className={`fixed w-screen h-14 z-50${hideGlobalNav ? ' hidden' : ''}`}
       >
         <div className="relative bg-indigo-50 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 z-50 h-14">
           <div
@@ -26,16 +25,16 @@ const Nav = (): React.JSX.Element => {
             <div className="flex items-center">
               <HeaderLogo />
 
-              {!isDashboardPath && <LeftSide />}
+              {!hideGlobalNav && <LeftSide />}
             </div>
-            {!isDashboardPath && <RightSide />}
+            {!hideGlobalNav && <RightSide />}
           </div>
         </div>
       </div>
-      {!isDashboardPath && <RightSideMobile />}
+      {!hideGlobalNav && <RightSideMobile />}
       <div
         id="top-nav-spacer"
-        className={`h-14 relative${isDashboardPath ? ' hidden' : ''}`}
+        className={`h-14 relative${hideGlobalNav ? ' hidden' : ''}`}
       >
         &nbsp;
       </div>
