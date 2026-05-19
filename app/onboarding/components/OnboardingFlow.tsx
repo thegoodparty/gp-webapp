@@ -935,7 +935,7 @@ export default function OnboardingFlow({
         currentStep={activeStepNumber}
         totalSteps={visibleSteps.length}
       />
-      <main className="mx-auto w-full max-w-4xl px-4 pt-32 pb-6 sm:px-8 sm:pt-36 sm:pb-8">
+      <main className="mx-auto w-full max-w-4xl px-4 pt-24 pb-6 sm:px-8 sm:pt-28 sm:pb-8">
         <div>
           <div
             className={`grid grid-cols-1 gap-8${
@@ -987,7 +987,7 @@ export default function OnboardingFlow({
 
             {activeStep.whyThisMatters && !isP2vBlocking ? (
               <aside
-                className="md:fixed md:top-36 md:w-[280px]"
+                className="md:fixed md:top-28 md:w-[280px]"
                 style={{
                   right: 'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
                 }}
@@ -1013,8 +1013,8 @@ export default function OnboardingFlow({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
-        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
+      <div className="fixed inset-x-0 bottom-0 bg-base-surface">
+        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8 border-t border-base-border">
           <Button
             type="button"
             variant="ghost"
