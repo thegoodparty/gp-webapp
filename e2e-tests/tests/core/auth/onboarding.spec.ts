@@ -125,7 +125,7 @@ async function completePathToVictoryStep(page: Page): Promise<void> {
 async function completeVoterDemographicsStep(page: Page): Promise<void> {
   console.log('Step: Voter demographics')
   await expect(
-    page.getByRole('heading', { level: 1, name: /your voters/i }),
+    page.getByRole('heading', { level: 1, name: /voter insights/i }),
   ).toBeVisible({ timeout: 15000 })
   await clickContinue(page)
 }
@@ -133,7 +133,7 @@ async function completeVoterDemographicsStep(page: Page): Promise<void> {
 async function completePledgeStep(page: Page): Promise<void> {
   console.log('Step: Pledge')
   await expect(
-    page.getByRole('heading', { level: 1, name: /pledge/i }),
+    page.getByRole('heading', { level: 1, name: /almost there/i }),
   ).toBeVisible()
   const submit = page
     .getByRole('button', { name: /agree.*create my plan/i })
