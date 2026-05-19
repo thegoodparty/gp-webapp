@@ -190,9 +190,9 @@ const RaceListSkeleton = () => (
 )
 
 const EmptyState = ({ message }: { message: string }) => (
-  <div className="rounded-xl border border-dashed border-base-border px-4 py-8 text-center text-base text-foreground">
+  <p className="rounded-xl border border-base-border px-4 py-8 text-center text-sm text-muted-foreground">
     {message}
-  </div>
+  </p>
 )
 
 export const OfficeSelectionStep = ({
@@ -371,11 +371,11 @@ export const OfficeSelectionStep = ({
       <div className="space-y-6 text-left">
         <form noValidate onSubmit={handleSubmit}>
           <InputWithButton
-            label="Zip code"
+            label="ZIP code"
             inputMode="numeric"
             maxLength={5}
             pattern="[0-9]{5}"
-            placeholder="ZIP"
+            placeholder="Enter your ZIP code"
             value={zipInput}
             onChange={(event) =>
               setZipInput(event.target.value.replace(/\D/g, ''))
@@ -393,7 +393,7 @@ export const OfficeSelectionStep = ({
         </form>
 
         {!submittedZip && !query.isFetching ? (
-          <EmptyState message="Enter your zip code to see offices." />
+          <EmptyState message="Enter your ZIP code above to see available offices." />
         ) : null}
 
         {query.isFetching ? <RaceListSkeleton /> : null}
@@ -437,7 +437,7 @@ export const OfficeSelectionStep = ({
               <EmptyState
                 message={
                   totalOffices === 0
-                    ? "We couldn't find any offices for that ZIP. Try a different ZIP or enter your office manually below."
+                    ? "We couldn't find any offices for that ZIP code. Try a different ZIP code or enter your office manually below."
                     : activeFilter || nameFilter.trim()
                     ? 'No offices match that filter. Try clearing filters or another office type.'
                     : 'No offices available right now. Please try again or enter your office manually below.'

@@ -28,8 +28,12 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { meetingDate, openAddNoteTopLevel, onChatCreated } =
-    useAnnotationsCtx()
+  const {
+    meetingDate,
+    openAddNoteTopLevel,
+    onChatCreated,
+    topLevelChatAnnotationId,
+  } = useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -66,6 +70,7 @@ export default function DetailHeaderActions({
         anchor={null}
         align="end"
         side="bottom"
+        existingAnnotationId={topLevelChatAnnotationId}
         onChatCreated={onChatCreated}
         trigger={
           <Button>

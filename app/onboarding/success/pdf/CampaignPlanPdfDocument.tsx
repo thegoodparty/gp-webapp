@@ -430,9 +430,8 @@ const RunningHeader = ({ headerMeta }: { headerMeta: string }) => (
 
 const RunningFooterLeft = () => (
   <Text style={styles.runningFooterLeft} fixed>
-    Prepared by{' '}
-    <Text style={styles.footerBoldWordmark}>GoodParty.org</Text> · Empowering
-    people to run, win, and serve
+    Prepared by <Text style={styles.footerBoldWordmark}>GoodParty.org</Text> ·
+    Empowering people to run, win, and serve
   </Text>
 )
 
@@ -449,9 +448,7 @@ const RunningFooterPageNumber = () => (
   />
 )
 
-const RunningFooterRule = () => (
-  <View style={styles.runningFooterRule} fixed />
-)
+const RunningFooterRule = () => <View style={styles.runningFooterRule} fixed />
 
 const Bullets = ({ items }: { items: React.ReactNode[] }) => (
   <View>
@@ -502,7 +499,10 @@ const KeyValueTable = ({
   </View>
 )
 
-type CellRenderer = (row: Record<string, string>, key: string) => React.ReactNode
+type CellRenderer = (
+  row: Record<string, string>,
+  key: string,
+) => React.ReactNode
 
 type ColumnDef = {
   key: string
@@ -529,10 +529,7 @@ const PlanTable = ({
     <View style={styles.table}>
       <View style={styles.tableHeaderRow}>
         {columns.map((c) => (
-          <Text
-            key={c.key}
-            style={[styles.tableHeaderCell, colStyle(c)]}
-          >
+          <Text key={c.key} style={[styles.tableHeaderCell, colStyle(c)]}>
             {c.header}
           </Text>
         ))}
@@ -627,10 +624,7 @@ const CoverPage = ({
         </Text>
         {plan.hasDistrict || plan.location ? (
           <Text style={styles.coverRace}>
-            {[
-              plan.hasDistrict ? plan.districtName : '',
-              plan.location,
-            ]
+            {[plan.hasDistrict ? plan.districtName : '', plan.location]
               .filter(Boolean)
               .join(', ')}
           </Text>
@@ -647,9 +641,7 @@ const CoverPage = ({
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={liveQrDataUrl} style={styles.coverQr} />
             <View>
-              <Text style={styles.coverLiveLinkLabel}>
-                VIEW YOUR LIVE PLAN
-              </Text>
+              <Text style={styles.coverLiveLinkLabel}>VIEW YOUR LIVE PLAN</Text>
               <Text style={styles.coverLiveLinkUrl}>{liveUrl}</Text>
             </View>
           </View>
@@ -658,8 +650,7 @@ const CoverPage = ({
 
       <Text style={styles.coverFooterDisclaimer}>
         Campaign plan prepared by GoodParty.org&apos;s Campaign Intelligence
-        System using public voter data and historical election results. ·
-        {' '}
+        System using public voter data and historical election results. ·{' '}
         {plan.planGenerationDate}
       </Text>
     </View>
@@ -672,8 +663,8 @@ const theRaceCopy = (plan: PlanData): string => {
     plan.electionType === 'partisan'
       ? 'a partisan election'
       : plan.electionType === 'nonpartisan'
-        ? 'a nonpartisan election'
-        : 'a race'
+      ? 'a nonpartisan election'
+      : 'a race'
 
   if (plan.opponentCount === 0) {
     return `You are running for ${plan.race}${district}. As of ${plan.planGenerationDate}, the race is uncontested — we'll update this plan as we become aware of candidates entering the race. Election Day is ${plan.electionDate}. Because the electorate is small and no party cue appears on the ballot, the race is decided by name recognition and turnout, not by ideological persuasion.`
@@ -772,7 +763,9 @@ export const CampaignPlanPdfDocument = ({
         number={2}
         title="Strategic Landscape"
         headerMeta={headerMeta}
-        intro={`${districtLabel(plan)} is an electorate where name recognition and turnout (not ideological persuasion) decide most races. The following opportunities and challenges are framed against that reality.`}
+        intro={`${districtLabel(
+          plan,
+        )} is an electorate where name recognition and turnout (not ideological persuasion) decide most races. The following opportunities and challenges are framed against that reality.`}
         transition="The strategic landscape is drawn from public data and historical election results. Head to your Campaign Manager to share your platform and your opponents, and we'll reframe these around what you stand for."
       >
         <View style={styles.twoColRow}>
@@ -835,7 +828,9 @@ export const CampaignPlanPdfDocument = ({
         number={4}
         title="Electoral Goals & Key Metrics"
         headerMeta={headerMeta}
-        intro={`The numbers below are projected from historical voter data and proprietary models for ${districtLabel(plan)}.`}
+        intro={`The numbers below are projected from historical voter data and proprietary models for ${districtLabel(
+          plan,
+        )}.`}
         transition="These projections come straight from public voter data and proprietary models. Once you confirm your platform in Campaign Manager, we can re-forecast against the audience you're actually targeting."
       >
         <PlanTable
@@ -879,8 +874,18 @@ export const CampaignPlanPdfDocument = ({
         number={6}
         title="Projected Minimum Resources Needed"
         headerMeta={headerMeta}
-        intro={`We project that you need at least ${plan.winNumber.toLocaleString('en-US')} votes to win, with at least ${plan.weeksRemaining} weeks left to campaign. Recommended total budget is approximately $${plan.totalBudget.toLocaleString('en-US')} for outreach, compliance and fees, while ${plan.totalCampaignHours.toLocaleString('en-US')} volunteer hours are needed for in-person campaigning, events, and volunteers.`}
-        transition={`The $${plan.totalBudget.toLocaleString('en-US')} floor covers your minimum voter contact goal across digital and phone channels at a generic cost-per-vote benchmark. The real budget and how it gets spent depends on two things we don't yet know: what you can raise, and which voter you should specifically target.`}
+        intro={`We project that you need at least ${plan.winNumber.toLocaleString(
+          'en-US',
+        )} votes to win, with at least ${
+          plan.weeksRemaining
+        } weeks left to campaign. Recommended total budget is approximately $${plan.totalBudget.toLocaleString(
+          'en-US',
+        )} for outreach, compliance and fees, while ${plan.totalCampaignHours.toLocaleString(
+          'en-US',
+        )} volunteer hours are needed for in-person campaigning, events, and volunteers.`}
+        transition={`The $${plan.totalBudget.toLocaleString(
+          'en-US',
+        )} floor covers your minimum voter contact goal across digital and phone channels at a generic cost-per-vote benchmark. The real budget and how it gets spent depends on two things we don't yet know: what you can raise, and which voter you should specifically target.`}
       >
         <Text style={styles.h3}>
           Budget Breakdown (based on {plan.weeksRemaining} weeks in campaign)
@@ -1020,8 +1025,8 @@ export const CampaignPlanPdfDocument = ({
           <Text style={styles.paraBold}>
             {plan.winNumber.toLocaleString('en-US')} voters
           </Text>
-          , more than the 5 contacts per likely voter. Expected realized
-          contact (accounting for deliverability and answer rates) is{' '}
+          , more than the 5 contacts per likely voter. Expected realized contact
+          (accounting for deliverability and answer rates) is{' '}
           <Text style={styles.paraBold}>~60–70%</Text> of voter contacts, which
           clears the threshold for reliable name recognition in a nonpartisan
           race.
@@ -1073,7 +1078,12 @@ export const CampaignPlanPdfDocument = ({
           columns={[
             { key: 'metric', header: 'Metric', flex: 1.4 },
             { key: 'source', header: 'Source', flex: 2, muted: true },
-            { key: 'lastUpdated', header: 'Last Updated', flex: 1.2, muted: true },
+            {
+              key: 'lastUpdated',
+              header: 'Last Updated',
+              flex: 1.2,
+              muted: true,
+            },
           ]}
           rows={plan.dataSources.map((d) => ({
             metric: d.metric,
@@ -1106,11 +1116,7 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       {/* 11. Glossary */}
-      <SectionPage
-        number={11}
-        title="Glossary"
-        headerMeta={headerMeta}
-      >
+      <SectionPage number={11} title="Glossary" headerMeta={headerMeta}>
         <PlanTable
           columns={[
             { key: 'term', header: 'Term', flex: 1, bold: true },

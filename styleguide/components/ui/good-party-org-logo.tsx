@@ -1,11 +1,31 @@
+import { cn } from '@styleguide/lib/utils'
+
 interface GoodPartyOrgLogoProps {
   className?: string
+  /**
+   * Visual size of the logo (applies Tailwind width/height utilities).
+   * – small  : 24 × 20
+   * – default: 34 × 28
+   * – large  : 50 × 42
+   * – xl     : 80 × 67
+   */
+  size?: 'small' | 'default' | 'large' | 'xl'
 }
 
-export const GoodPartyOrgLogo = ({ className = '' }: GoodPartyOrgLogoProps) => (
+const sizeClasses = {
+  small: 'w-6 h-5',
+  default: 'w-[34px] h-[28px]',
+  large: 'w-[50px] h-[42px]',
+  xl: 'w-20 h-[67px]',
+} as const
+
+export const GoodPartyOrgLogo = ({
+  className = '',
+  size = 'default',
+}: GoodPartyOrgLogoProps) => (
   <svg
     data-slot="good-party-org-logo"
-    className={`w-[34px] h-[28px] lg:w-[50px] lg:h-[42px] ${className}`}
+    className={cn(sizeClasses[size], className)}
     viewBox="0 0 160 130"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

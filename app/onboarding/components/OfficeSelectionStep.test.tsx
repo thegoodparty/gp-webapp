@@ -317,8 +317,6 @@ describe('OfficeSelectionStep', () => {
 
   it('shows an empty state until a search has been run', () => {
     renderStep()
-    expect(
-      screen.getByText(/enter your zip code to see offices/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/enter your zip code/i)).toBeInTheDocument()
   })
 })
