@@ -113,7 +113,7 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
 async function completePathToVictoryStep(page: Page): Promise<void> {
   console.log('Step: Path to victory')
   await expect(
-    page.getByRole('heading', { level: 1, name: /votes you need/i }),
+    page.getByRole('heading', { level: 1, name: /votes needed to win/i }),
   ).toBeVisible({ timeout: 30000 })
   // Wait for the metrics card to render before continuing.
   await expect(page.getByText(/votes needed to win/i).first()).toBeVisible({
