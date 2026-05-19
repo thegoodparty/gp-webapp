@@ -6,7 +6,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     eyebrow: 'Campaign plan setup',
     title: "Let's build your winning campaign plan in 5 minutes",
     description:
-      "All we need to know is what office you're running for and where, and we'll take it from there",
+      "All we need to know is what office you're running for. We'll take it from there.",
     summary:
       'This step introduces the value of the flow before collecting candidate details.',
   },
@@ -25,9 +25,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'party-affiliation',
     eyebrow: 'Candidate eligibility',
-    title: 'Are you running with an official party designation?',
+    title: 'Are you running with a party designation?',
     description:
-      'Party designation determines whether you can continue with GoodParty.org support.',
+      'Pick the party label voters would see on their official ballots for you as a candidate, not your personal voting history or party preference.',
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:
@@ -41,7 +41,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     eyebrow: 'Office selection',
     title: 'What office are you running for?',
     description:
-      "We'll use this to analyze local voter data, trends, & news to create your campaign plan.",
+      "We'll use this to pull local voter data and shape your plan around your race.",
     summary:
       'Structured office selection feeds Path to Victory. Manual office entry follows a shorter path.',
     whyWeAsk:
@@ -90,7 +90,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'path-to-victory',
     eyebrow: 'Vote goal',
-    title: "Here's how many votes you need to win",
+    title: "Projected votes needed to win",
     description:
       'We use historical voter data and proprietary models to get the most accurate projections for your race.',
     summary:
@@ -102,9 +102,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'voter-demographics',
     eyebrow: 'Voter demographics',
-    title: "Here's everything to know about your voters",
+    title: "Voter insights for your district",
     description:
-      'We crunch the latest voter data, along with proprietary behavior models, to give you a snapshot of who lives, votes, and pays attention in your community.',
+      'We use survey and voter data along with your district demographics to project likely top issues for your race.',
     summary:
       'Voter demographic charts are rendered from the structured-office district stats.',
     whyWeAsk:
@@ -114,9 +114,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'pledge',
     eyebrow: 'Final step',
-    title: 'Take our pledge to get your campaign plan',
+    title: 'Almost there...',
     description:
-      'We only work with candidates who are independent of both major parties, big-money influence, and are anti-corruption.',
+      'Take our pledge to get your campaign plan.',
     summary:
       'The final payload keeps collected answers available for future integrations.',
   },

@@ -973,17 +973,6 @@ export default function OnboardingFlow({
                         </span>
                         .
                       </>
-                    ) : activeStep.id === 'voter-demographics' &&
-                      p2vOfficeName ? (
-                      <>
-                        We crunch the latest voter data, along with proprietary
-                        behavior models, and local news to prioritize the issues
-                        voters care about for{' '}
-                        <span className="font-semibold text-foreground">
-                          {p2vOfficeName}
-                        </span>
-                        .
-                      </>
                     ) : (
                       activeStep.description
                     )}
