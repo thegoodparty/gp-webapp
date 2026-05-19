@@ -74,7 +74,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'path-to-victory',
-    title: "Projected votes needed to win",
+    title: 'Projected votes needed to win',
     description:
       'We use historical voter data and proprietary models to get the most accurate projections for your race.',
     whyThisMatters:
@@ -83,7 +83,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'voter-demographics',
-    title: "Voter insights for your district",
+    title: 'Voter insights for your district',
     description:
       'We use survey and voter data along with your district demographics to project likely top issues for your race.',
     whyThisMatters:
@@ -93,8 +93,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   {
     id: 'pledge',
     title: 'Almost there...',
-    description:
-      'Take our pledge to get your campaign plan.',
+    description: 'Take our pledge to get your campaign plan.',
   },
 ]
 

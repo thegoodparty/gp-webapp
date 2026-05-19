@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-} from '@styleguide'
+import { Alert, AlertDescription, Button, Card, CardContent } from '@styleguide'
 import {
   CalendarCheck,
   CircleAlert,
