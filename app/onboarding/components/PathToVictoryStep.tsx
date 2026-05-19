@@ -273,7 +273,7 @@ const WinNumberHeroCard = ({
         <p className="text-base font-semibold text-foreground">{officeName}</p>
         <p className="pt-2 text-xs text-muted-foreground">
           Projected range:{' '}
-          <span className="font-semibold text-foreground">
+          <span className="font-semibold">
             {numberFormatter(lowEstimate)}–{numberFormatter(highEstimate)}
           </span>{' '}
           (~95% confidence)
@@ -297,14 +297,14 @@ const ProjectionStep = ({
   value,
 }: ProjectionStepProps): React.JSX.Element => (
   <li className="flex items-start gap-4 rounded-xl border border-base-border p-4">
-    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+    <span className="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold bg-blue-50 text-components-input-active">
       {index}
     </span>
     <div className="flex-1">
-      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-base font-semibold text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>
-    <span className="text-base font-bold text-foreground">{value}</span>
+    <span className="text-base font-semibold text-foreground">{value}</span>
   </li>
 )
 
