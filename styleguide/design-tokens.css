@@ -743,7 +743,7 @@
   --theme-primary-foreground: #ffffff;
   --theme-primary-focus: color-mix(
     in srgb,
-    var(--tw-blue-600) 40%,
+    var(--tw-blue-600) 30%,
     transparent
   );
   --theme-secondary: var(--color-midnight-900);

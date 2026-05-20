@@ -12,17 +12,20 @@ const JSON_GROUP_BY_STORIES_KEY = {
   sidebar: 'sidebar',
 }
 
-// "{tailwind colors.blue.600}" → "tw-blue-600"
-// "{midnight.900}" / "{warning.600}" → "midnight-900" / "warning-600"
+// Normalizes Figma token refs to their actual CSS variable names so the chain
+// in the swatch card shows real, copy-pasteable identifiers (e.g.
+// "--theme-primary → --tw-blue-600").
+// "{tailwind colors.blue.600}" → "--tw-blue-600"
+// "{midnight.900}" / "{warning.600}" → "--color-midnight-900" / "--color-warning-600"
 // Raw hex (focus alpha tokens) → null
 function prettifyJsonRef(value) {
   if (typeof value !== 'string') return null
   if (!value.startsWith('{') || !value.endsWith('}')) return null
   const inner = value.slice(1, -1)
   if (inner.startsWith('tailwind colors.')) {
-    return 'tw-' + inner.slice('tailwind colors.'.length).replaceAll('.', '-')
+    return '--tw-' + inner.slice('tailwind colors.'.length).replaceAll('.', '-')
   }
-  return inner.replaceAll('.', '-')
+  return '--color-' + inner.replaceAll('.', '-')
 }
 
 function buildBaseRefMap(json, storiesGroupKey) {
