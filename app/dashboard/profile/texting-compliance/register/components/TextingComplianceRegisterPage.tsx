@@ -5,29 +5,19 @@ import TextingComplianceHeader from 'app/dashboard/profile/texting-compliance/sh
 import TextingComplianceRegistrationForm, {
   validateRegistrationForm,
 } from './TextingComplianceRegistrationForm'
-
-interface RegistrationFormData {
-  electionFilingLink: string
-  campaignCommitteeName: string
-  officeLevel: string
-  ein: string
-  phone: string
-  address: { formatted_address: string; place_id: string }
-  website: string
-  email: string
-  fecCommitteeId?: string
-  committeeType?: string
-}
 import { FormDataProvider, FormDataState } from '@shared/hooks/useFormData'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { mapFormData } from 'app/dashboard/profile/texting-compliance/util/mapFormData.util'
 import { trackEvent } from 'helpers/analyticsHelper'
 import { EVENTS } from 'helpers/analyticsHelper'
 import { User, Campaign, Website } from 'helpers/types'
+import {
+  RegistrationFormData,
+  submitTcrCompliance,
+  toRegistrationFormData,
+} from 'app/dashboard/profile/texting-compliance/util/registrationFormData.util'
 
 type RegistrationValidationResult = {
   validations: Partial<Record<string, string | boolean | null>>
@@ -37,49 +27,6 @@ type RegistrationValidationResult = {
 const validateRegistrationFormTyped: (
   data: FormDataState,
 ) => RegistrationValidationResult = validateRegistrationForm
-
-const isAddressValue = (
-  value: FormDataState[keyof FormDataState] | undefined,
-): value is RegistrationFormData['address'] =>
-  Boolean(
-    value &&
-      typeof value === 'object' &&
-      'formatted_address' in value &&
-      'place_id' in value,
-  )
-
-const toRegistrationFormData = (
-  formData: FormDataState,
-): RegistrationFormData => ({
-  electionFilingLink: String(formData.electionFilingLink || ''),
-  campaignCommitteeName: String(formData.campaignCommitteeName || ''),
-  officeLevel: String(formData.officeLevel || ''),
-  ein: String(formData.ein || ''),
-  phone: String(formData.phone || ''),
-  address: isAddressValue(formData.address)
-    ? formData.address
-    : { formatted_address: '', place_id: '' },
-  website: String(formData.website || ''),
-  email: String(formData.email || ''),
-  fecCommitteeId: formData.fecCommitteeId
-    ? String(formData.fecCommitteeId)
-    : undefined,
-  committeeType: formData.committeeType
-    ? String(formData.committeeType)
-    : undefined,
-})
-
-const createTcrCompliance = async (formData: RegistrationFormData) => {
-  const mappedData = mapFormData(formData)
-  const response = await clientFetch(apiRoutes.campaign.tcrCompliance.create, {
-    ...mappedData,
-  })
-  if (!response.ok) {
-    throw new Error('Failed to create TCR compliance')
-  }
-
-  return response.data
-}
 
 interface WebsiteWithDomain {
   domain?: { name?: string } | null
@@ -133,7 +80,11 @@ const TextingComplianceRegisterPage = ({
   const handleFormSubmit = async (formData: FormDataState) => {
     setLoading(true)
     try {
-      await createTcrCompliance(toRegistrationFormData(formData))
+      await submitTcrCompliance(
+        apiRoutes.campaign.tcrCompliance.create,
+        toRegistrationFormData(formData),
+        'Failed to create TCR compliance',
+      )
 
       // Track 10 DLC compliance status change to Pending
       trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {

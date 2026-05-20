@@ -23,6 +23,13 @@ export const Secondary: Story = {
   },
 }
 
+export const Soft: Story = {
+  args: {
+    variant: 'soft',
+    children: 'Soft',
+  },
+}
+
 export const Outline: Story = {
   args: {
     variant: 'outline',

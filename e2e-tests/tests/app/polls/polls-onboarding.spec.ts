@@ -4,14 +4,17 @@ import { expect, type Page, test } from '@playwright/test'
 import type { MessageElement } from '@slack/web-api/dist/types/response/ConversationsHistoryResponse'
 import { parse as parseCSV } from 'csv-parse/sync'
 import { addBusinessDays, format, subDays } from 'date-fns'
+import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { clerkThrottle } from 'tests/utils/throttle-requests-with-retry'
 import {
-  authenticateTestUser,
-  type AuthenticatedUser,
-} from 'tests/utils/api-registration'
+  setupElectedOfficeUser,
+  switchOrganization,
+} from 'src/helpers/organizations'
+import { type AuthenticatedUser } from 'tests/utils/api-registration'
 import { eventually } from 'tests/utils/eventually'
 import { downloadSlackFile, waitForSlackMessage } from 'tests/utils/slack'
 
@@ -129,8 +132,8 @@ const buildPollResponseJson = (params: {
 
 const district = {
   zip: '82001',
-  office: 'Cheyenne City Council - Ward 2',
-  constituents: 13000,
+  office: 'Cheyenne City Council - Ward 1',
+  constituents: 8717,
 }
 
 const expectToBeWithin = (
@@ -310,29 +313,19 @@ test.beforeEach(async ({ page }) => {
 test.describe.serial('poll onboarding', () => {
   // Shared state between tests
   let sharedUser: AuthenticatedUser
-  let sharedToken: string
   let sharedPollId: string
   let sharedContact: CsvRow
 
   test('poll onboarding and expansion', async ({ page }) => {
     // Set this test's timeout to 10 minutes
     test.setTimeout(10 * 60 * 1000)
-    const { user, client } = await authenticateTestUser(page, {
-      isolated: true,
-      race: { zip: district.zip, office: district.office },
+    const { user, client } = await setupElectedOfficeUser(page, {
+      zip: district.zip,
+      office: district.office,
     })
-
-    // Become a Serve user
-    await page.goto('/dashboard/election-result')
-    await page.getByRole('button', { name: 'I won my race' }).click()
-    await page.waitForTimeout(3000)
 
     // Store for reuse in subsequent tests
     sharedUser = user
-    sharedToken = (
-      client.defaults.headers.common.Authorization as string
-    ).replace('Bearer ', '')
-    await page.goto('/polls/welcome')
     await NavigationHelper.dismissOverlays(page)
 
     await page.getByRole('button', { name: "Let's get started" }).click()
@@ -756,29 +749,16 @@ test.describe.serial('poll onboarding', () => {
   }) => {
     test.setTimeout(2 * 60 * 1000)
 
-    // Re-authenticate with the same user by setting cookies on the new page context.
-    const baseURL = process.env.BASE_URL || 'http://localhost:4000'
-    const domain = baseURL.replace('http://', '').replace('https://', '')
-    await page.context().addCookies([
-      {
-        name: 'token',
-        value: sharedToken,
-        domain,
-        path: '/',
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax',
-      },
-      {
-        name: 'user',
-        value: JSON.stringify(sharedUser),
-        domain,
-        path: '/',
-        sameSite: 'Lax',
-      },
-    ])
+    await setupClerkTestingToken({ page })
+    await page.goto('/')
+    await clerkThrottle(
+      () => clerk.signIn({ page, emailAddress: sharedUser.email }),
+      5,
+    )
 
     // Navigate to contacts page
+    await page.goto('/dashboard')
+    await switchOrganization(page, district.office)
     await page.goto('/dashboard/contacts')
     await NavigationHelper.dismissOverlays(page)
 

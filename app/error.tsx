@@ -2,7 +2,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser as useClerkUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { apiRoutes } from 'gpApi/routes'
@@ -32,23 +32,25 @@ export const sendError = async (payload: ErrorPayload): Promise<boolean> => {
 }
 
 export default function Error({ error }: ErrorPageProps): React.JSX.Element {
+  const { user: clerkUser, isLoaded } = useClerkUser()
+
   useEffect(() => {
     reportErrorToSentry(error)
-    logError()
     if (error?.message?.startsWith('Loading chunk')) {
       window.location.reload()
     }
   }, [error])
 
-  const logError = async (): Promise<void> => {
-    const user = getUserCookie(true)
-    await sendError({
+  useEffect(() => {
+    if (!isLoaded) return
+    sendError({
       message: error?.message,
       url: window.location.href,
-      userEmail: user && typeof user === 'object' ? user.email : undefined,
+      userEmail: clerkUser?.primaryEmailAddress?.emailAddress,
       userAgent: window?.navigator?.userAgent,
     })
-  }
+  }, [isLoaded, error, clerkUser?.primaryEmailAddress?.emailAddress])
+
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">

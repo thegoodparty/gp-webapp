@@ -1,3 +1,6 @@
+'use client'
+
+import { useProUpgradeFlag } from '@shared/experiments/proUpgradeFlag'
 import DashboardLayout from '../../shared/DashboardLayout'
 import CampaignSection from './CampaignSection'
 import FunFactSection from './FunFactSection'
@@ -5,13 +8,11 @@ import IssuesSection from './IssuesSection'
 import OfficeSection from './OfficeSection'
 import RunningAgainstSection from './RunningAgainstSection'
 import WhySection from './WhySection'
+import WhyRunningSection from './WhyRunningSection'
+import PolicyPrioritiesSection from './PolicyPrioritiesSection'
 import { CandidatePositionsProvider } from 'app/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
-import {
-  Campaign,
-  User,
-  PathToVictoryData,
-  CandidatePosition,
-} from 'helpers/types'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { Campaign, User, CandidatePosition } from 'helpers/types'
 
 interface TopIssue {
   id: number
@@ -21,26 +22,39 @@ interface TopIssue {
 
 interface DetailsPageProps {
   pathname: string
-  campaign: Campaign
+  campaign: Campaign | undefined
   candidatePositions: CandidatePosition[]
   topIssues: TopIssue[]
-  pathToVictory?: PathToVictoryData
   user?: User | null
 }
 
 export default function DetailsPage(
   props: DetailsPageProps,
 ): React.JSX.Element {
+  const [campaign] = useCampaign()
+  const campaignProps = { ...props, campaign: campaign ?? undefined }
+  const { ready, enabled } = useProUpgradeFlag()
+  const useNewSections = ready && enabled
+
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
         <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
-          <CampaignSection {...props} />
-          <OfficeSection {...props} />
-          <RunningAgainstSection {...props} />
-          <WhySection {...props} />
-          <FunFactSection {...props} />
-          <IssuesSection {...props} />
+          {campaign && <CampaignSection {...campaignProps} />}
+          <OfficeSection campaign={campaign ?? undefined} />
+          {useNewSections ? (
+            <>
+              <WhyRunningSection />
+              <PolicyPrioritiesSection />
+            </>
+          ) : (
+            <>
+              {campaign && <RunningAgainstSection {...campaignProps} />}
+              {campaign && <WhySection {...campaignProps} />}
+              {campaign && <FunFactSection {...campaignProps} />}
+              {campaign && <IssuesSection {...campaignProps} />}
+            </>
+          )}
         </div>
       </CandidatePositionsProvider>
     </DashboardLayout>

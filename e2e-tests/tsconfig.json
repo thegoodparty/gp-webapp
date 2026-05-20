@@ -1,8 +1,10 @@
 {
+  "include": ["./**/*.ts"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@helpers": ["helpers/navHelpers.ts"]
+      "@helpers": ["helpers/navHelpers.ts"],
+      "@playwright/test": ["../node_modules/@playwright/test"]
     },
     "target": "ES2020",
     "module": "commonjs",

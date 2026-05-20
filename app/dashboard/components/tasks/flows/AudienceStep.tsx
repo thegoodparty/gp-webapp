@@ -3,15 +3,19 @@
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Alert, AlertDescription, AlertTitle } from '@styleguide'
+import { MdError } from 'react-icons/md'
 import CustomVoterAudienceFilters, {
   TRACKING_KEYS,
   AudienceFiltersState,
   AudienceFilterKey,
 } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
-import { useEffect, useMemo, useState } from 'react'
-import { countVoterFile } from 'app/dashboard/voter-records/[type]/components/RecordCount'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  countVoterFile,
+  CountVoterFileError,
+} from 'app/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
-import { debounce } from 'helpers/debounceHelper'
 import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
@@ -25,6 +29,12 @@ import { PhoneListInput } from 'helpers/createP2pPhoneList'
 const TEXT_PRICE = 0.035
 const CALL_PRICE = 0.04
 const CALL_W_VOICEMAIL_PRICE = 0.055
+
+const MISSING_L2_DISTRICT_DATA_ERROR_CODE = 'MISSING_L2_DISTRICT_DATA'
+const MISSING_L2_DISTRICT_DATA_DEFAULT_MESSAGE =
+  'Voter data is not available for your selected office. Please contact support at help@goodparty.org so we can update your district information.'
+const GENERIC_COUNT_ERROR_MESSAGE =
+  'We were unable to count voters for this audience. Please try again, or contact support if the problem persists.'
 
 const isAudienceFilterKey = (
   key: string,
@@ -72,6 +82,14 @@ export default function AudienceStep({
   const { p2pUxEnabled } = useP2pUxEnabled()
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [countError, setCountError] = useState<CountVoterFileError | null>(null)
+  // Tracks the latest count request so out-of-order responses can be dropped.
+  // See useEffect below.
+  const countRequestIdRef = useRef(0)
+  // Component-scoped debounce timer. We don't use the shared `debounce` helper
+  // because it stores its handle on `window.timer` — any other caller in the
+  // app can clear our pending fetch.
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
@@ -88,16 +106,31 @@ export default function AudienceStep({
   )
 
   const handleOnNext = async () => {
+    if (countError) {
+      return
+    }
+
     setLoading(true)
 
     const isTextType =
       type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text
 
     const voterFileFilter = await onCreateVoterFileFilter()
-    const phoneListToken =
-      p2pUxEnabled && isTextType
-        ? await onCreatePhoneList(voterFileFilter)
-        : null
+    if (!voterFileFilter) {
+      setLoading(false)
+      return
+    }
+
+    const needsPhoneList = p2pUxEnabled && isTextType
+    const phoneListToken = needsPhoneList
+      ? await onCreatePhoneList(voterFileFilter)
+      : null
+
+    if (needsPhoneList && !phoneListToken) {
+      setLoading(false)
+      return
+    }
+
     setLoading(false)
     onChangeCallback({
       voterFileFilter,
@@ -107,10 +140,24 @@ export default function AudienceStep({
   }
 
   useEffect(() => {
-    if (!hasValues) return
+    // Bump the request ID up front so any in-flight response from a prior
+    // filter combination is dropped on arrival. countVoterFile has no abort
+    // support, so the network call still completes — we just ignore it.
+    const requestId = ++countRequestIdRef.current
 
-    debounce(async () => {
-      setLoading(true)
+    if (!hasValues) {
+      setCountError(null)
+      setCount(0)
+      setLoading(false)
+      onChangeCallback('voterCount', 0)
+      return
+    }
+
+    setLoading(true)
+
+    debounceTimerRef.current = setTimeout(async () => {
+      if (requestId !== countRequestIdRef.current) return
+
       const selectedAudience = Object.keys(audience).filter(
         (key) => isAudienceFilterKey(key, audience) && audience[key] === true,
       )
@@ -118,13 +165,35 @@ export default function AudienceStep({
         filters: selectedAudience,
       })
 
-      if (res !== false) {
+      if (requestId !== countRequestIdRef.current) {
+        console.warn(
+          `[AudienceStep] Dropping stale voter-count response (req #${requestId}, current #${countRequestIdRef.current})`,
+        )
+        return
+      }
+
+      if (typeof res === 'number') {
+        setCountError(null)
         setCount(res)
         onChangeCallback('voterCount', res)
+      } else {
+        setCountError(res)
+        setCount(0)
+        onChangeCallback('voterCount', 0)
       }
       setLoading(false)
     }, 300)
-  }, [audience, isCustom, type, hasValues])
+
+    return () => {
+      // Invalidate any pending debounced fetch or in-flight response so it
+      // can't fire after this effect tears down (filter change, unmount).
+      countRequestIdRef.current += 1
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        debounceTimerRef.current = null
+      }
+    }
+  }, [audience, isCustom, type, hasValues, onChangeCallback])
 
   const handleChangeAudience = (newState: AudienceFiltersState) => {
     onChangeCallback('audience', newState)
@@ -151,6 +220,17 @@ export default function AudienceStep({
     }
     return textCount * (price ?? 0)
   }
+
+  const isMissingDistrictData =
+    countError?.errorCode === MISSING_L2_DISTRICT_DATA_ERROR_CODE
+  const inlineCountErrorMessage = countError
+    ? isMissingDistrictData
+      ? countError.message || MISSING_L2_DISTRICT_DATA_DEFAULT_MESSAGE
+      : countError.message || GENERIC_COUNT_ERROR_MESSAGE
+    : null
+  const hasCountError = !!countError
+  const isNextDisabled =
+    !hasValues || loading || hasCountError || (hasValues && count === 0)
 
   return (
     <div className="p-4 w-[80vw] max-w-4xl">
@@ -192,6 +272,13 @@ export default function AudienceStep({
             </>
           )}
         </div>
+        {inlineCountErrorMessage ? (
+          <Alert variant="destructive" className="mb-4 text-left">
+            <MdError />
+            <AlertTitle>Voter data unavailable</AlertTitle>
+            <AlertDescription>{inlineCountErrorMessage}</AlertDescription>
+          </Alert>
+        ) : null}
         <div className="text-left">
           <CustomVoterAudienceFilters
             trackingKey={TRACKING_KEYS.scheduleCampaign}
@@ -216,7 +303,7 @@ export default function AudienceStep({
               size="large"
               color="secondary"
               onClick={handleOnNext}
-              disabled={!hasValues || loading}
+              disabled={isNextDisabled}
               loading={loading}
               {...nextTrackingAttrs}
             >

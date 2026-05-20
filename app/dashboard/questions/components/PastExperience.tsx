@@ -5,7 +5,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import H3 from '@shared/typography/H3'
 import { useState } from 'react'
-import { Campaign } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 type FieldKey = 'responsibility' | 'achievements' | 'skills'
 
@@ -44,14 +44,12 @@ interface PastExperienceValue {
 interface PastExperienceProps {
   value: PastExperienceValue
   saveCallback: (keys: string[], values: PastExperienceState[]) => void
-  campaign: Campaign
   campaignKey: string
 }
 
 export default function PastExperience({
   value,
   saveCallback,
-  campaign,
   campaignKey,
 }: PastExperienceProps) {
   const [state, setState] = useState<PastExperienceState>({
@@ -78,8 +76,8 @@ export default function PastExperience({
       state.skills !== ''
     )
   }
-  const office =
-    campaign.details.otherOffice || campaign.office || 'your office'
+  const positionName = usePositionName()
+  const office = positionName || 'your office'
   return (
     <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>

@@ -3,7 +3,7 @@ import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import Link from 'next/link'
 
 interface NeedHelpSuccessProps {
@@ -13,13 +13,13 @@ interface NeedHelpSuccessProps {
 export default function NeedHelpSuccess({
   closeCallback,
 }: NeedHelpSuccessProps): React.JSX.Element {
-  const user = getUserCookie(true)
+  const [user] = useUser()
   return (
     <div className="text-center">
       <H1>Request Submitted</H1>
       <Body1 className="mt-4 mb-2">
         A confirmation has been sent to{' '}
-        <span className="font-bold">{user && user.email}</span>.<br />
+        <span className="font-bold">{user?.email}</span>.<br />
         We will be reaching out to you shortly.
       </Body1>
 

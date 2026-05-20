@@ -4,135 +4,91 @@ Candidates can create/manage their campaign websites here.
 
 ## Quick Overview
 
-- **Main page**: `/dashboard/website` - Shows website status, contacts, and visits graph
+- **Main page**: `/dashboard/website` - Status, contacts, visits graph
 - **Create**: `/dashboard/website/create` - New website setup flow
 - **Editor**: `/dashboard/website/editor` - Edit existing website
+- **Domain**: `/dashboard/website/domain` - Custom domain management
 
-## Key Files
+## Layout
 
-### Pages
-
-- `page.js` - Main dashboard (handles empty/draft/published states)
-- `create/page.js` - Website creation flow
-- `editor/page.js` - Website editor
+```
+website/
+  page.tsx                  # main dashboard
+  components/               # main dashboard UI
+  create/
+    page.tsx
+    components/             # WebsiteCreateFlow, WebsiteCreatePage
+  editor/
+    page.tsx
+    components/             # WebsiteEditFlow + step components (shared with create)
+  domain/
+    page.tsx
+    components/
+  shared/
+    websiteConstants.const.ts
+  util/
+    website.util.ts         # API calls + helpers
+    domain.util.ts
+    domainFetch.util.ts
+```
 
 ## Dashboard Page (`website/`)
 
-**Components**
+Components in `website/components/`:
 
-- `WebsiteProvider.js` - Context for website/contacts state **used for all of these pages**
-- `WebsitePage.js` - Main page component, renders different states depending on website status
-- `WebsiteCard.js` - Website info display
-- `WebsiteVisits.js` - Graph of visits for the last 7 days
-- `WebsiteInbox.js` - Table of contact form submissions
+- `WebsiteProvider.tsx` - Context for website/contacts state, used across all website pages
+- `WebsitePage.tsx` - Main page; renders different states (empty / draft / published) based on website status
+- `WebsiteCard.tsx` - Website info display
+- `WebsiteVisits.tsx` - 7-day visits graph
+- `WebsiteInbox.tsx` - Table of contact form submissions
+- `EmptyState.tsx`, `DraftState.tsx`, `PublishedState.tsx` - Per-status views
+- `ShareButtons.tsx`, `ShareModal.tsx`, `StatusChip.tsx`, `StepList.tsx`
 
-**Utils**
+Utils in `website/util/`:
 
-- `website.util.js` - API calls and helpers
+- `website.util.ts` - API calls and helpers
 
-## Create Flow (`website/create`)
+## Create Flow (`website/create/`)
 
-**Purpose**: Step-by-step website creation for new candidates
+Step-by-step website creation for new candidates.
 
-**Components**:
+Components in `create/components/`:
 
-- `WebsiteCreatePage.js` - Page component with dashboard layout
-- `WebsiteCreateFlow.js` - Main creation flow entry
+- `WebsiteCreatePage.tsx` - Page component with dashboard layout
+- `WebsiteCreateFlow.tsx` - Main creation flow entry; consumes the step components from `editor/components/`
 
-**Steps** (6 total):
+Steps (in order):
 
 1. **Vanity Path** - Custom URL path selection
 2. **Logo** - Upload campaign logo
-3. **Theme** - Color scheme selection (themes are hardcoded in `WEBSITE_THEMES` constant)
+3. **Theme** - Color scheme selection (themes hardcoded in `WEBSITE_THEMES`)
 4. **Hero** - Title, tagline, hero image
 5. **About** - Bio and key issues
 6. **Contact** - Address, email, phone
-7. **Complete** - Success view after publishing, displays share buttons
+7. **Complete** - Success view + share buttons
 
-## Editor Flow (`website/editor`)
+## Editor Flow (`website/editor/`)
 
-**Purpose**: Edit existing website content
+Edit existing website content.
 
-**Components**:
+Components in `editor/components/`:
 
-- `WebsiteEditorPage.js` - Page component with dashboard layout
-- `WebsiteEditFlow.js` - Main editor flow entry
+- `WebsiteEditorPage.tsx` - Page component with dashboard layout
+- `WebsiteEditFlow.tsx` - Main editor flow entry
+- `WebsiteEditorPageCaption.tsx`, `WebsiteEditorPageStepper.tsx`, `WebsitePreview.tsx`
+- `EditSection.tsx`, `EditSectionButton.tsx`, `EditSettingsMenu.tsx`
 
-**Editable Sections**:
+Step components (shared with the create flow):
 
-- **Link** - Custom URL (read-only)
-- **Logo** - Campaign logo upload
-- **Theme** - Color scheme
-- **Title** - Title, tagline, hero image
-- **About** - Bio and key issues
-- **Contact** - Address, email, phone
+- `VanityPathStep.tsx` - Custom URL path selection and validation
+- `LogoStep.tsx` - Campaign logo upload (uses `ImageInput` from shared)
+- `ThemeStep.tsx` - Color theme selection (`WEBSITE_THEMES` constant)
+- `HeroStep.tsx` - Title, tagline, hero image (uses `ImageInput`)
+- `AboutStep.tsx` - Bio + key issues (`IssuesForm.tsx`)
+- `ContactStep.tsx` - Contact info (uses `AddressAutocomplete`, a thin wrapper over Google Places)
+- `CompleteStep.tsx` - Success view after publishing
+- `Label.tsx`, `ThemeSwatch.tsx` - Shared UI atoms
 
-## Shared flow components
+## Domain (`website/domain/`)
 
-The create and editor flows share these Step components from the editor folder:
-
-### `VanityPathStep.js`
-
-- **Purpose**: Custom URL path selection and validation
-
-### `LogoStep.js`
-
-- **Purpose**: Campaign logo upload
-- **Notes**:
-  - Uses new `ImageInput` component (see shared folder)
-
-### `ThemeStep.js`
-
-- **Purpose**: Color theme selection
-- **Notes**:
-  - Uses hardcoded `WEBSITE_THEMES` constant, these came from the original Lovable mock
-
-### `HeroStep.js`
-
-- **Purpose**: Title, tagline, and hero image setup
-- **Notes**:
-  - Also uses `ImageInput` component
-
-### `AboutStep.js`
-
-- **Purpose**: Bio and key issues setup
-
-### `ContactStep.js`
-
-- **Purpose**: Contact information setup
-- **Notes**
-  - Uses `AddressAutocomplete` component that has simple google API searching.
-  - Easy to replace with pre-packaged component at some point.
-
-### `CompleteStep.js`
-
-- **Purpose**: Success view after publishing
-
-## Published Website (`(candidateWebsite)/c/[vanityPath]/`)
-
-**Purpose**: Publicly accessible campaign website
-
-**Components**:
-
-- `page.js` - Main published website page
-- `WebsiteContent.js` - Renders website sections
-- `WebsiteViewTracker.js` - Tracks page views
-- `WebsiteHeader.js` - Header with logo/nav
-- `HeroSection.js` - Main hero content
-- `AboutSection.js` - Bio and issues
-- `ContactSection.js` - Contact form and info
-- `WebsiteFooter.js` - Footer with privacy policy
-- `PrivacyPolicyModal.js` - Privacy policy popup
-
-**URL Structure**: `/c/{vanityPath}`
-
-## Preview Website (`(candidateWebsite)/c/[vanityPath]/preview/`)
-
-**Purpose**: Authenticated preview for unpublished websites
-
-**Components**:
-
-- `page.js` - Preview page (no tracking)
-- Uses same `WebsiteContent.js` as published site
-
-**URL Structure**: `/c/{vanityPath}/preview`
+Custom-domain configuration. See `util/domain.util.ts` and `util/domainFetch.util.ts`.

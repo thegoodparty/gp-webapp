@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { blockSlowScripts } from '../../../src/helpers/navigation.helper'
+import {
+  blockSlowScripts,
+  NavigationHelper,
+} from '../../../src/helpers/navigation.helper'
 import { authenticateTestUser } from 'tests/utils/api-registration'
 
 test.describe('Custom office flow', () => {
@@ -16,49 +19,61 @@ test.describe('Custom office flow', () => {
     })
 
     await page.goto('/onboarding/office-selection')
+    await NavigationHelper.dismissOverlays(page)
 
-    await page.getByLabel('Zip Code').fill('28739')
+    // Step through Welcome → Ballot status → Party affiliation → Office selection.
+    const continueButton = page
+      .getByRole('button', { name: /continue/i })
+      .first()
+    await continueButton.waitFor({ state: 'visible', timeout: 15000 })
 
-    // Wait for offices to load
-    await page.waitForFunction(
-      () => {
-        const text = document.body.textContent || ''
-        return text.includes('offices found') || text.includes('office found')
-      },
-      { timeout: 30000 },
-    )
+    // Welcome
+    await continueButton.click()
 
-    // Open "I don't see my office" modal
-    const cantFindLink = page.getByText("I don't see my office")
-    await cantFindLink.waitFor({ state: 'visible', timeout: 10000 })
-    await cantFindLink.click()
-    await expect(page.getByText('Troubleshooting')).toBeVisible()
+    // Ballot status
+    await page.getByRole('radio').first().click({ force: true })
+    await continueButton.click()
 
-    // Navigate to custom office form
-    const stillDontSee = page.getByText("I still don't see my office")
-    await stillDontSee.waitFor({ state: 'visible' })
-    await stillDontSee.click()
-    await expect(page.getByText('Request help')).toBeVisible()
+    // Party affiliation
+    await page.getByRole('radio').first().click({ force: true })
+    await continueButton.click()
 
-    // Fill custom office form (scoped to modal via MUI presentation role)
-    const modal = page.locator('[role="presentation"]')
-    await modal.getByLabel('Office Name').fill('City Council')
-    await modal.locator('select').first().selectOption('NC')
-    await modal.getByLabel('City, Town Or County').fill('Hendersonville')
-    await modal.getByLabel('District (If Applicable)').fill('3')
-    await modal.locator('select').nth(1).selectOption('4 years')
+    // Office selection — search by zip first
+    await page.getByLabel(/zip code/i).fill('82001')
+    await page.getByRole('button', { name: /search/i }).click()
 
-    await modal.getByLabel('General Election Date').fill('2030-02-01')
-
-    // Submit
-    const sendButton = modal.getByRole('button', { name: 'Send request' })
-    await expect(sendButton).toBeEnabled()
-    await sendButton.click()
-
-    await page.waitForURL((url) => url.toString().includes('/2'), {
-      timeout: 15000,
+    // Open the manual-office-entry step
+    const cantFindLink = page.getByRole('button', {
+      name: /i don't see my office/i,
     })
-    await expect(page).toHaveURL(/\/onboarding\/.*\/2/)
+    await cantFindLink.waitFor({ state: 'visible', timeout: 30000 })
+    await cantFindLink.click()
+
+    // Manual entry form
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: /tell us about your office/i,
+      }),
+    ).toBeVisible()
+
+    await page.getByLabel('Office Name').fill('City Council')
+    await page.getByRole('combobox', { name: /state/i }).click()
+    await page.getByRole('option', { name: 'NC' }).click()
+    await page.getByLabel('City, Town Or County').fill('Hendersonville')
+    await page.getByLabel('District (If Applicable)').fill('3')
+    await page.getByRole('combobox', { name: /term length/i }).click()
+    await page.getByRole('option', { name: '4 years' }).click()
+    await page.getByLabel('General Election Date').fill('2030-02-01')
+
+    await expect(continueButton).toBeEnabled()
+    await continueButton.click()
+
+    // Manual flow skips P2V/voter-demographics; lands on the pledge step
+    // (H1 reads "Almost there..." since the renamed copy).
+    await expect(
+      page.getByRole('heading', { level: 1, name: /almost there/i }),
+    ).toBeVisible({ timeout: 15000 })
 
     type OrganizationsResponse = {
       organizations: {
@@ -66,6 +81,9 @@ test.describe('Custom office flow', () => {
         campaignId: number
         name: string
         electedOfficeId: number | null
+        district: string | null
+        position: string | null
+        positionName: string
       }[]
     }
 
@@ -91,6 +109,7 @@ test.describe('Custom office flow', () => {
       electedOfficeId: null,
       district: null,
       position: null,
+      positionName: 'City Council',
     })
 
     const { data: campaign } = await client.get<{
@@ -99,26 +118,24 @@ test.describe('Custom office flow', () => {
         electionDate: string
         city: string
         district: string
-        office: string
         officeTermLength: string
         state: string
-        otherOffice: string
-        positionId: string | null
         electionId: string | null
         zip: string | null
       }
-    }>('/v1/campaigns/mine')
+    }>('/v1/campaigns/mine', {
+      headers: {
+        'x-organization-slug': data.organizations[0]!.slug,
+      },
+    })
     expect(campaign).toMatchObject({
       id: expect.any(Number),
       details: {
         electionDate: '2030-02-01',
         city: 'Hendersonville',
         district: '3',
-        office: 'City Council',
         officeTermLength: '4 years',
         state: 'NC',
-        otherOffice: '',
-        positionId: null,
         electionId: null,
         zip: null,
       },

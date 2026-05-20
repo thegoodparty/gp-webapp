@@ -34,9 +34,9 @@ export const waitForSlackMessage = async (params: {
       return match
     },
     {
-      minTimeout: 500,
-      maxTimeout: 10000,
-      retries: 10,
+      minTimeout: 1000,
+      maxTimeout: 3000,
+      retries: 3,
     },
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode, useEffect } from 'react'
+import Link from 'next/link'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
@@ -11,7 +12,8 @@ import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
 import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
 import { MdClose, MdMenu } from 'react-icons/md'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useOrganization } from '@shared/organization-picker'
+import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -29,14 +31,14 @@ const DashboardLayout = ({
   showAlert = true,
   wrapperClassName = '',
   hideMenu = false,
-}: DashboardLayoutProps): React.JSX.Element => {
+}: DashboardLayoutProps): React.JSX.Element | null => {
   const [user] = useUser()
   const [hookCampaign] = useCampaign()
+  const organization = useOrganization()
   const router = useRouter()
   const hookPathname = usePathname()
-  const currentPath = pathname || hookPathname
-  const { on: navRefreshEnabled } = useFlagOn('win-serve-split')
 
+  const currentPath = pathname || hookPathname
   const activeCampaign = campaign || hookCampaign
   const details = activeCampaign?.details
   const goals =
@@ -69,56 +71,31 @@ const DashboardLayout = ({
     }
   }, [currentPath, details?.wonGeneral, electionDate, router])
 
-  if (navRefreshEnabled) {
-    return (
-      <EcanvasserProvider>
-        <SidebarProvider>
-          {!hideMenu && (
-            <Sidebar>
-              <DashboardMenu pathname={currentPath} />
-            </Sidebar>
-          )}
-          <SidebarInset className="bg-[#f5f5f5]">
-            {!hideMenu && <MobileMenuTrigger />}
-            <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
-              {activeCampaign && showAlert && (
-                <AlertSection campaign={activeCampaign} />
-              )}
-              <ProUpgradePrompt
-                campaign={activeCampaign}
-                user={user}
-                pathname={currentPath || undefined}
-              />
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </EcanvasserProvider>
-    )
-  }
-
   return (
     <EcanvasserProvider>
-      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
+      <SidebarProvider>
         {!hideMenu && (
-          <div className="hidden lg:block">
+          <Sidebar>
             <DashboardMenu pathname={currentPath} />
-          </div>
+          </Sidebar>
         )}
-        <main
-          className={`${!hideMenu ? 'lg:ml-4' : ''} flex-1 ` + wrapperClassName}
-        >
-          {activeCampaign && showAlert && (
-            <AlertSection campaign={activeCampaign} />
-          )}
-          <ProUpgradePrompt
-            campaign={activeCampaign}
-            user={user}
-            pathname={currentPath || undefined}
-          />
-          {children}
-        </main>
-      </div>
+        <SidebarInset className="bg-[#f5f5f5]">
+          {!hideMenu && <MobileMenuTrigger />}
+          <ImpersonationBanner />
+          <div className={`flex-1 p-2 md:p-4 ${wrapperClassName}`}>
+            {activeCampaign && showAlert && (
+              <AlertSection campaign={activeCampaign} />
+            )}
+            <ProUpgradePrompt
+              campaign={activeCampaign}
+              user={user}
+              pathname={currentPath || undefined}
+              isElectedOffice={!!organization?.electedOfficeId}
+            />
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </EcanvasserProvider>
   )
 }
@@ -128,12 +105,15 @@ const MobileMenuTrigger = () => {
   return (
     <>
       <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-        <img
-          src="/images/logo/heart.svg"
-          alt="GoodParty.org"
-          className="h-6 w-8 object-contain"
-        />
+        <Link href="/dashboard">
+          <img
+            src="/images/logo/heart.svg"
+            alt="GoodParty.org"
+            className="h-6 w-8 object-contain"
+          />
+        </Link>
         <button
+          data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"

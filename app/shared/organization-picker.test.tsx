@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { render } from 'helpers/test-utils/render'
+import { render, testQueryClient } from 'helpers/test-utils/render'
 import { api } from 'helpers/test-utils/api-mocking'
-import { queryClient } from '@shared/query-client'
 import { Organization } from 'gpApi/api-endpoints'
 import { SidebarProvider } from '@styleguide'
 import {
@@ -11,6 +10,15 @@ import {
   OrganizationPicker,
   useOrganization,
 } from './organization-picker'
+
+vi.mock('next/navigation', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('next/navigation')>()
+  return {
+    ...actual,
+    useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn() })),
+    usePathname: vi.fn(() => '/dashboard'),
+  }
+})
 
 vi.mock('./experiments/FeatureFlagsProvider', () => ({
   useFlagOn: vi.fn(() => ({ on: true })),
@@ -24,18 +32,19 @@ vi.mock('./layouts/navigation/HeaderLogo', () => ({
   HeaderLogo: () => <div data-testid="header-logo" />,
 }))
 
-const mockSetCookie = vi.fn()
-const mockDeleteCookie = vi.fn()
+const mockSetCookie = vi.fn<(name: string, value: string) => void>()
+const mockGetCookie = vi.fn<(name: string) => string | false>(() => false)
 vi.mock('helpers/cookieHelper', () => ({
-  getCookie: vi.fn(() => false),
-  setCookie: (...args: unknown[]) => mockSetCookie(...args),
-  deleteCookie: (...args: unknown[]) => mockDeleteCookie(...args),
+  getCookie: (name: string) => mockGetCookie(name),
+  setCookie: (name: string, value: string) => mockSetCookie(name, value),
+  deleteCookie: vi.fn(),
 }))
 
 const orgs: Organization[] = [
   {
     slug: 'org-one',
     name: 'Organization One',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: null,
@@ -44,6 +53,7 @@ const orgs: Organization[] = [
   {
     slug: 'org-two',
     name: 'Organization Two',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: 'eo-1',
@@ -52,6 +62,7 @@ const orgs: Organization[] = [
   {
     slug: 'org-three',
     name: 'Organization Three',
+    positionName: null,
     position: null,
     district: null,
     electedOfficeId: null,
@@ -60,16 +71,15 @@ const orgs: Organization[] = [
 ]
 
 beforeEach(() => {
-  localStorage.clear()
   mockSetCookie.mockClear()
-  mockDeleteCookie.mockClear()
+  mockGetCookie.mockReset().mockReturnValue(false)
 })
 
 describe('OrganizationProvider', () => {
-  it('provides the first organization as default when nothing is selected', () => {
+  it('provides the first organization as default when no cookie is set', () => {
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -79,14 +89,17 @@ describe('OrganizationProvider', () => {
     )
 
     expect(screen.getByTestId('org')).toHaveTextContent('org-one')
+    expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
   })
 
-  it('selects the org matching the localStorage slug', () => {
-    localStorage.setItem('selected-organization-slug', 'org-two')
+  it('selects the org matching the cookie slug', () => {
+    mockGetCookie.mockImplementation((name: string) =>
+      name === 'organization-slug' ? 'org-two' : false,
+    )
 
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -98,12 +111,14 @@ describe('OrganizationProvider', () => {
     expect(screen.getByTestId('org')).toHaveTextContent('org-two')
   })
 
-  it('falls back to first org when localStorage slug does not match any org', () => {
-    localStorage.setItem('selected-organization-slug', 'nonexistent')
+  it('falls back to first org when cookie slug does not match any org', () => {
+    mockGetCookie.mockImplementation((name: string) =>
+      name === 'organization-slug' ? 'nonexistent' : false,
+    )
 
     const Probe = () => {
       const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
+      return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
@@ -113,44 +128,7 @@ describe('OrganizationProvider', () => {
     )
 
     expect(screen.getByTestId('org')).toHaveTextContent('org-one')
-  })
-
-  it('sets the org slug cookie when a slug is selected', async () => {
-    localStorage.setItem('selected-organization-slug', 'org-one')
-
-    const Probe = () => {
-      const org = useOrganization()
-      return <div data-testid="org">{org.slug}</div>
-    }
-
-    render(
-      <OrganizationProvider initialOrganizations={orgs}>
-        <Probe />
-      </OrganizationProvider>,
-    )
-
-    await waitFor(() => {
-      expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
-    })
-  })
-
-  it('deletes the cookie when the feature flag is off', async () => {
-    const { useFlagOn } = await import('./experiments/FeatureFlagsProvider')
-    vi.mocked(useFlagOn).mockReturnValue({ on: false } as any)
-
-    const Probe = () => <div>child</div>
-
-    render(
-      <OrganizationProvider initialOrganizations={orgs}>
-        <Probe />
-      </OrganizationProvider>,
-    )
-
-    await waitFor(() => {
-      expect(mockDeleteCookie).toHaveBeenCalledWith('organization-slug')
-    })
-
-    vi.mocked(useFlagOn).mockReturnValue({ on: true } as any)
+    expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
   })
 
   it('renders children without context when no organizations exist', () => {
@@ -161,6 +139,22 @@ describe('OrganizationProvider', () => {
     )
 
     expect(screen.getByTestId('child')).toHaveTextContent('hello')
+  })
+
+  it('does not throw when reading electedOfficeId with no organizations (dashboard layout pattern)', () => {
+    const Probe = () => {
+      const organization = useOrganization()
+      const isElectedOffice = !!organization?.electedOfficeId
+      return <div data-testid="elected">{String(isElectedOffice)}</div>
+    }
+
+    render(
+      <OrganizationProvider initialOrganizations={[]}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    expect(screen.getByTestId('elected')).toHaveTextContent('false')
   })
 
   it('throws when useOrganization is used outside the provider', () => {
@@ -207,18 +201,6 @@ describe('OrganizationPicker', () => {
     expect(screen.getByText('Organization Three')).toBeInTheDocument()
   })
 
-  it('switches the selected org when clicking a different option', async () => {
-    const user = userEvent.setup()
-    renderPicker()
-
-    await user.click(screen.getByText('Organization One'))
-    await user.click(screen.getByText('Organization Two'))
-
-    await waitFor(() => {
-      expect(localStorage.getItem('selected-organization-slug')).toBe('org-two')
-    })
-  })
-
   it('sets the cookie when switching orgs', async () => {
     const user = userEvent.setup()
     renderPicker()
@@ -236,6 +218,7 @@ describe('OrganizationPicker', () => {
       {
         slug: 'fetched',
         name: 'Fetched Org',
+        positionName: null,
         position: null,
         district: null,
         electedOfficeId: null,
@@ -248,7 +231,7 @@ describe('OrganizationPicker', () => {
       data: { organizations: updatedOrgs },
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 0, retry: false },
     })
 
@@ -258,7 +241,7 @@ describe('OrganizationPicker', () => {
       expect(screen.getByText('Fetched Org')).toBeInTheDocument()
     })
 
-    queryClient.setDefaultOptions({
+    testQueryClient.setDefaultOptions({
       queries: { staleTime: 1000 * 60 * 5, retry: 2 },
     })
   })
@@ -266,8 +249,7 @@ describe('OrganizationPicker', () => {
 
 describe('X-Organization-Slug header attachment', () => {
   it('gpFetch attaches the header when the org cookie is set', async () => {
-    const { getCookie } = await import('helpers/cookieHelper')
-    vi.mocked(getCookie).mockImplementation((name: string) =>
+    mockGetCookie.mockImplementation((name: string) =>
       name === 'organization-slug' ? 'org-one' : false,
     )
 
@@ -284,13 +266,10 @@ describe('X-Organization-Slug header attachment', () => {
     await gpFetch({ url: '/api/v1/organizations', method: 'GET' })
 
     expect(capturedHeader).toBe('org-one')
-
-    vi.mocked(getCookie).mockReturnValue(false)
   })
 
   it('gpFetch does not attach the header when no org cookie exists', async () => {
-    const { getCookie } = await import('helpers/cookieHelper')
-    vi.mocked(getCookie).mockReturnValue(false)
+    mockGetCookie.mockReturnValue(false)
 
     let capturedHeader: string | undefined
     api.mock('GET /v1/organizations', ({ headers }) => {
@@ -330,7 +309,7 @@ describe('X-Organization-Slug header attachment', () => {
       value: reqUrl,
     })
 
-    await handleApiRequestRewrite(request as any)
+    await handleApiRequestRewrite(request as any, null)
 
     expect(headersSpy).toHaveBeenCalledWith('X-Organization-Slug', 'org-two')
   })
@@ -355,7 +334,7 @@ describe('X-Organization-Slug header attachment', () => {
       value: reqUrl,
     })
 
-    await handleApiRequestRewrite(request as any)
+    await handleApiRequestRewrite(request as any, null)
 
     expect(headersSpy).not.toHaveBeenCalledWith(
       'X-Organization-Slug',

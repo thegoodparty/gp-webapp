@@ -28,9 +28,25 @@ interface ServiceAgreementPageProps {
 
 const ACKNOWLEDGEMENTS: Acknowledgement[] = [
   {
-    title: 'Independent',
+    title: 'Independent, People-Powered, and Anti-Corruption',
     emoticon: <MdPerson className="mr-2" />,
-    body: 'I confirm that I am running as a 3rd party or non-partisan candidate and my campaign is not registered with either the Republican or the Democratic parties.',
+    body: (
+      <ul className="list-disc pl-5 space-y-2">
+        <li>
+          <strong>Independent:</strong> You must be independent of big money and
+          the two major political parties.
+        </li>
+        <li>
+          <strong>People-Powered:</strong> Your campaign or administration must
+          be centered on serving the people, only raising funds from real,
+          living people (not corporations or special interests).
+        </li>
+        <li>
+          <strong>Anti-Corruption:</strong> You must serve with integrity,
+          transparency, and be accountable to the people.
+        </li>
+      </ul>
+    ),
   },
   {
     title: 'Terms & Termination',

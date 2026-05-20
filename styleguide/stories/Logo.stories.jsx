@@ -5,12 +5,30 @@ import { GoodPartyOrgLogoWordmark } from '../components/ui/good-party-org-logo-w
 // renders the logo icon at identical physical size regardless of wordmark visibility.
 // Widths are proportional: logo = height × (160/130), wordmark = height × (967/130)
 const SIZE_MAP = {
-  small:   { logoClass: '!w-[20px] !h-[16px]', wordmarkClass: '!w-[119px] !h-[16px]', label: 'Small (16px)' },
-  default: { logoClass: '!w-[30px] !h-[24px]', wordmarkClass: '!w-[178px] !h-[24px]', label: 'Default (24px)' },
-  medium:  { logoClass: '!w-[39px] !h-[32px]', wordmarkClass: '!w-[238px] !h-[32px]', label: 'Medium (32px)' },
-  large:   { logoClass: '!w-[49px] !h-[40px]', wordmarkClass: '!w-[297px] !h-[40px]', label: 'Large (40px)' },
-  xl:      { logoClass: '!w-[59px] !h-[48px]', wordmarkClass: '!w-[357px] !h-[48px]', label: 'Extra Large (48px)' },
-  xxl:     { logoClass: '!w-[79px] !h-[64px]', wordmarkClass: '!w-[476px] !h-[64px]', label: 'XXL (64px)' },
+  small: {
+    logoClass: '!w-[20px] !h-[16px]',
+    wordmarkClass: '!w-[119px] !h-[16px]',
+  },
+  default: {
+    logoClass: '!w-[30px] !h-[24px]',
+    wordmarkClass: '!w-[178px] !h-[24px]',
+  },
+  medium: {
+    logoClass: '!w-[39px] !h-[32px]',
+    wordmarkClass: '!w-[238px] !h-[32px]',
+  },
+  large: {
+    logoClass: '!w-[49px] !h-[40px]',
+    wordmarkClass: '!w-[297px] !h-[40px]',
+  },
+  xl: {
+    logoClass: '!w-[59px] !h-[48px]',
+    wordmarkClass: '!w-[357px] !h-[48px]',
+  },
+  xxl: {
+    logoClass: '!w-[79px] !h-[64px]',
+    wordmarkClass: '!w-[476px] !h-[64px]',
+  },
 }
 
 const meta = {

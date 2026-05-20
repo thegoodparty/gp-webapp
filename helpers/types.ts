@@ -52,10 +52,6 @@ export interface User {
   passwordResetToken?: string | null
 }
 
-export interface UserResponse {
-  data: User
-}
-
 // ===== CampaignUpdateHistory Types =====
 
 export enum CampaignUpdateHistoryType {
@@ -127,8 +123,6 @@ export interface CampaignDetails {
   city?: string | null
   county?: string | null
   normalizedOffice?: string | null
-  otherOffice?: string
-  office?: string
   ballotOffice?: boolean | null
   party?: string
   otherParty?: string
@@ -151,9 +145,6 @@ export interface CampaignDetails {
   officeTermLength?: string
   partisanType?: string
   priorElectionDates?: string[]
-  // Legacy BallotReady position ID: keep writing for compatibility.
-  // Read identity from raceId + electionId instead.
-  positionId?: string | null
   electionId?: string | null
   tier?: string
   einNumber?: string | null
@@ -219,7 +210,6 @@ export interface CampaignData {
   adminUserEmail?: string
   hubspotId?: string
   name?: string
-  p2vNotNeeded?: boolean
 }
 
 export interface HubSpotUpdates {
@@ -337,52 +327,10 @@ export interface CampaignAiContent {
     | undefined
 }
 
-export interface ViabilityScore {
-  score?: number
-  tier?: string
-}
-
-export interface PathToVictoryData {
-  p2vStatus?: string
-  p2vAttempts?: number
-  p2vCompleteDate?: string
-  completedBy?: number
-  electionType?: string
-  electionLocation?: string
-  voterContactGoal?: number
-  winNumber?: number
-  p2vNotNeeded?: boolean
-  totalRegisteredVoters?: number
-  republicans?: number
-  democrats?: number
-  indies?: number
-  women?: number
-  men?: number
-  white?: number
-  asian?: number
-  africanAmerican?: number
-  hispanic?: number
-  averageTurnout?: number
-  projectedTurnout?: number
-  viability?: ViabilityScore
-  source?: string
-  districtId?: string
-  districtManuallySet?: boolean
-  officeContextFingerprint?: string
-  voteGoal?: number
-  voterProjection?: number
-  budgetLow?: number
-  budgetHigh?: number
-  voterMap?: string
-  finalVotes?: number
-}
-
-export interface PathToVictory {
-  id: number
-  createdAt: Date | string
-  updatedAt: Date | string
-  campaignId: number
-  data: PathToVictoryData
+export interface RaceTargetMetrics {
+  projectedTurnout: number
+  winNumber: number
+  voterContactGoal: number
 }
 
 export interface IssuePosition {
@@ -437,10 +385,11 @@ export interface Campaign {
   details: CampaignDetails
   aiContent: CampaignAiContent
   vendorTsData: VendorTsData
-  pathToVictory?: PathToVictory
+  raceTargetMetrics?: RaceTargetMetrics | null
   user?: User
   organization?: {
     positionId?: string | null
+    customPositionName?: string | null
   } | null
   userId: number
   canDownloadFederal: boolean
@@ -479,14 +428,7 @@ export interface CandidateStance {
 }
 
 export interface VendorTsData {
-  pathToVictory?: PathToVictoryData
-  [key: string]:
-    | PathToVictoryData
-    | string
-    | number
-    | boolean
-    | object
-    | undefined
+  [key: string]: string | number | boolean | object | undefined
 }
 
 export interface WebsiteIssue {

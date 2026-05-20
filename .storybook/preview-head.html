@@ -15,4 +15,10 @@
     --outfit-font: 'Outfit', sans-serif;
     --sfpro-font: 'Open Sans', sans-serif;
   }
+  /* Tailwind v4 preflight wipes the default body font. Restore it here so
+     stories render in Open Sans without per-element inline overrides
+     (next/font handles this on <html> in the running app). */
+  body {
+    font-family: 'Open Sans', sans-serif;
+  }
 </style>

@@ -181,4 +181,4 @@ api.mockOrdered = (route, handlerOrResponses) => {
 }
 api.reset = () => server.resetHandlers()
 
-export { api }
+export { api, server as mswServer }

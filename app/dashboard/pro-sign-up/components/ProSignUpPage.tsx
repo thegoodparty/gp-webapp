@@ -2,7 +2,6 @@
 import { FocusedExperienceWrapper } from 'app/dashboard/shared/FocusedExperienceWrapper'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import { campaignOfficeFields } from 'helpers/campaignOfficeFields'
 import { useState } from 'react'
 import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeInputFields'
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
@@ -12,6 +11,7 @@ import Button from '@shared/buttons/Button'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { Campaign } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 interface ProSignUpPageProps {
   campaign: Campaign | null
@@ -22,7 +22,14 @@ const ProSignUpPage = ({ campaign }: ProSignUpPageProps): React.JSX.Element => {
   const [showModal, setShowModal] = useState(false)
   const [campaignStatus] = useCampaignStatus()
   const isVerified = campaignStatus?.isVerified
-  const officeFields = campaignOfficeFields(campaignState?.details)
+  const positionName = usePositionName()
+  const officeFields = {
+    office: positionName,
+    state: campaignState?.details?.state || '',
+    electionDate: campaignState?.details?.electionDate || '',
+    primaryElectionDate: campaignState?.details?.primaryElectionDate || '',
+    officeTermLength: campaignState?.details?.officeTermLength || '',
+  }
 
   const onSelect = async () => {
     trackEvent(EVENTS.ProUpgrade.SubmitEditOffice)

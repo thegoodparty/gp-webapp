@@ -68,9 +68,17 @@ const getFailingFields = (
   return fields
 }
 
+interface ValidateOpts {
+  // When false, allows blank `website` (new agentic flow purchases the domain
+  // after this form submits, before sending to peerly).
+  requireWebsite?: boolean
+}
+
 export const validateRegistrationForm = (
   data: FormDataState,
+  opts: ValidateOpts = {},
 ): ValidationResult => {
+  const { requireWebsite = true } = opts
   const {
     electionFilingLink,
     campaignCommitteeName,
@@ -107,8 +115,9 @@ export const validateRegistrationForm = (
     //  and elsewhere, to have higher degree of confidence that the address
     //  entered is valid
     address: validateAddress(addressValue),
-    // Website must exist (official purchased domain)
-    website: isFilled(websiteValue) && isURL(websiteValue),
+    website: requireWebsite
+      ? isFilled(websiteValue) && isURL(websiteValue)
+      : !isFilled(websiteValue) || isURL(websiteValue),
     email: isEmail(emailValue),
     fecCommitteeId: true, // Not required for non-federal
     committeeType: true, // Not required for non-federal
@@ -140,12 +149,14 @@ interface TextingComplianceRegistrationFormProps {
   onSubmit?: (formData: FormDataState) => void
   loading?: boolean
   hasSubmissionError?: boolean
+  requireWebsite?: boolean
 }
 
 const TextingComplianceRegistrationForm = ({
   onSubmit = noop,
   loading = false,
   hasSubmissionError = false,
+  requireWebsite = true,
 }: TextingComplianceRegistrationFormProps): React.JSX.Element => {
   const { formData, handleChange } = useFormData()
   const {
@@ -157,7 +168,7 @@ const TextingComplianceRegistrationForm = ({
     address,
     email,
   } = formData
-  const formValidation = validateRegistrationForm(formData)
+  const formValidation = validateRegistrationForm(formData, { requireWebsite })
   const { isValid, validations } = formValidation
   const failingFields = getFailingFields(validations)
 

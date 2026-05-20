@@ -1,8 +1,12 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 import cookie from 'js-cookie'
-import { getUserCookie } from './cookieHelper'
 import type { Analytics } from '@segment/analytics-next'
+
+let isImpersonating = false
+export const setImpersonating = (value: boolean): void => {
+  isImpersonating = value
+}
 
 const UTM_KEYS = [
   'utm_source',
@@ -51,6 +55,7 @@ export const EVENTS = {
   SignIn: {
     ClickCreateAccount: 'Sign In: Click Create Account',
     ClickForgotPassword: 'Sign In: Click Forgot Password',
+    LoginCompleted: 'Sign In: Login Completed',
   },
   Password: {
     PasswordResetRequested: 'Account - Password Reset Requested',
@@ -83,6 +88,15 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
+    WelcomeCompleted: 'Onboarding - Welcome Completed',
+    BallotStatusCompleted: 'Onboarding - Ballot Status Completed',
+    KnowYourVotersCompleted: 'Onboarding - Know Your Voters Completed',
+    PartySelectionCompleted: 'Onboarding - Party Selection Completed',
+    OfficeSelectionCompleted: 'Onboarding - Office Selection Completed',
+    PathToVictoryUpdated: 'Onboarding - Path To Victory Updated',
+    PathToVictoryErrored: 'Onboarding - Path To Victory Errored',
+    PathToVictoryCompleted: 'Onboarding - Path To Victory Completed',
+    PledgeCompleted: 'Onboarding - Pledge Completed',
   },
   ServeOnboarding: {
     GettingStartedViewed: 'Serve Onboarding - Getting Started Viewed',
@@ -106,6 +120,7 @@ export const EVENTS = {
       ClickAvatarDropdown: 'Navigation - Top: Click Avatar Dropdown',
       AvatarDropdown: {
         CloseDropdown: 'Navigation - Top - Avatar Dropdown: Close Dropdown',
+        ClickProfile: 'Navigation Top - Avatar Dropdown: Click Profile',
         ClickSettings: 'Navigation Top - Avatar Dropdown: Click Settings',
         ClickLogout: 'Navigation Top - Avatar Dropdown: Click Logout',
       },
@@ -124,11 +139,22 @@ export const EVENTS = {
       ClickVoterOutreach: 'Navigation - Dashboard: Click Voter Outreach',
       ClickContacts: 'Navigation - Dashboard: Click Contacts',
       ClickPolls: 'Navigation - Dashboard: Click Polls',
+      ClickBriefings: 'Navigation - Dashboard: Click Briefings',
     },
   },
 
   Dashboard: {
     Viewed: 'Dashboard - Candidate Dashboard Viewed',
+    CampaignPlan: {
+      GenerationCompleted: 'Dashboard - Campaign Plan Generation Completed',
+      Viewed: 'Dashboard - Campaign Plan Viewed',
+      WeekNavigated: 'Dashboard - Campaign Plan Week Navigated',
+      TaskCTAClicked: 'Dashboard - Campaign Plan Task CTA Clicked',
+      TaskStatusUpdated: 'Dashboard - Campaign Task Status Updated',
+      ViewModeToggled: 'Dashboard - Campaign Plan View Mode Toggled',
+      VoterContactDialogViewed: 'Dashboard - Voter Contact Dialog Viewed',
+      VoterContactRecorded: 'Dashboard - Voter Contact Recorded',
+    },
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',
@@ -393,6 +419,9 @@ export const EVENTS = {
     Why: {
       ClickSave: 'Profile - Why Section: Click Save',
     },
+    WhyRunning: {
+      ClickSave: 'Profile - Why Running: Click Save',
+    },
     FunFact: {
       ClickSave: 'Profile - Fun Fact: Click Save',
     },
@@ -404,6 +433,23 @@ export const EVENTS = {
       ClickDelete: 'Profile - Top Issues: Click Delete',
       SubmitDelete: 'Profile - Top Issues: Submit Delete',
       CancelDelete: 'Profile - Top Issues: Cancel Delete',
+    },
+    PolicyPriorities: {
+      ClickAdd: 'Profile - Policy Priorities: Click Add',
+      ClickEdit: 'Profile - Policy Priorities: Click Edit',
+      SubmitAdd: 'Profile - Policy Priorities: Submit Add',
+      SubmitEdit: 'Profile - Policy Priorities: Submit Edit',
+      CancelAdd: 'Profile - Policy Priorities: Cancel Add',
+      CancelEdit: 'Profile - Policy Priorities: Cancel Edit',
+      ClickDelete: 'Profile - Policy Priorities: Click Delete',
+      SubmitDelete: 'Profile - Policy Priorities: Submit Delete',
+      CancelDelete: 'Profile - Policy Priorities: Cancel Delete',
+      ClickSave: 'Profile - Policy Priorities: Click Save',
+    },
+    CandidateProfile: {
+      ClickSubmit: 'Profile - Candidate Profile: Click Submit',
+      SubmitSuccess: 'Profile - Candidate Profile: Submit Success',
+      SubmitError: 'Profile - Candidate Profile: Submit Error',
     },
   },
   Settings: {
@@ -466,14 +512,23 @@ export const EVENTS = {
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
+  Briefings: {
+    BriefingViewed: 'Briefings - Briefing Viewed',
+    IssueDetailViewed: 'Briefings - Issue Detail Viewed',
+    ClickDownload: 'Briefings - Click Download',
+    FeedbackHelpful: 'Briefings - Feedback: Helpful',
+    FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
+    ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
+    ReadAloudStarted: 'Briefings - Read Aloud Started',
+    ReadAloudStopped: 'Briefings - Read Aloud Stopped',
+    ReadAloudCompleted: 'Briefings - Read Aloud Completed',
+    ReadAloudFailed: 'Briefings - Read Aloud Failed',
+    DictationStarted: 'Briefings - Dictation Started',
+    DictationStopped: 'Briefings - Dictation Stopped',
+    DictationFailed: 'Briefings - Dictation Failed',
+    DictationMaxDurationReached: 'Briefings - Dictation Max Duration Reached',
+  },
 } as const
-
-interface UserCookie {
-  email?: string
-  metaData?: {
-    hubspotId?: string
-  }
-}
 
 export const getStoredSessionId = (): number => {
   return Number(cookie.get('analytics_session_id') ?? 0)
@@ -484,7 +539,7 @@ export const storeSessionId = (id: number): void => {
 }
 
 export const extractClids = (
-  searchParams: URLSearchParams,
+  searchParams: Pick<URLSearchParams, 'entries'>,
 ): Record<string, string> => {
   const clids: Record<string, string> = {}
 
@@ -623,25 +678,6 @@ export const getPersistedClids = (): Record<string, string | null> => {
   return clids
 }
 
-const getUserProperties = (): Record<string, string> => {
-  const userCookie = getUserCookie(true) as UserCookie | false
-  if (!userCookie) {
-    return {}
-  }
-
-  const properties: Record<string, string | undefined> = {
-    email: userCookie.email,
-    hubspotId: userCookie.metaData?.hubspotId,
-  }
-
-  return Object.entries(properties).reduce((acc, [key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      acc[key] = value
-    }
-    return acc
-  }, {} as Record<string, string>)
-}
-
 export const trackEvent = (
   name: string,
   properties?: Record<
@@ -652,8 +688,8 @@ export const trackEvent = (
   try {
     const commonProperties = {
       ...getPersistedUtms(),
-      ...getUserProperties(),
       ...properties,
+      impersonation: isImpersonating,
     }
     segmentTrackEvent(name, commonProperties)
   } catch (e) {

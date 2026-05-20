@@ -4,7 +4,7 @@ import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
-import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
+import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import type { TcrComplianceStatus } from 'helpers/types'
 
 interface ComplianceModalProps {

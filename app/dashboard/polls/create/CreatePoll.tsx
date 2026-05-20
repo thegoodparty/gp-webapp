@@ -1,5 +1,4 @@
 'use client'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import DashboardLayout from '../../shared/DashboardLayout'
 import { useState, useEffect, useMemo } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -41,7 +40,7 @@ import {
 import { PollPreview } from '../components/PollPreview'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { PRICE_PER_POLL_TEXT } from '../shared/constants'
-import { useOrganizationIfEnabled } from '@shared/organization-picker'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 type Details = {
   title: string
@@ -186,14 +185,8 @@ const DetailsForm: React.FC<{
   )
 
   const [user] = useUser()
-  const [campaign] = useCampaign()
-  const organization = useOrganizationIfEnabled()
-  const office = grammarizeOfficeName(
-    organization?.name ||
-      campaign?.details?.otherOffice ||
-      campaign?.details?.office ||
-      '',
-  )
+  const positionName = usePositionName()
+  const office = grammarizeOfficeName(positionName)
 
   const introductionOptions = introOptions({
     eoName: `${user?.firstName?.trim() || ''} ${

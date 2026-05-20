@@ -20,12 +20,10 @@ const apiRewriteUrl = (ReqNextUrl: URL): string => {
 
 export const handleApiRequestRewrite = async (
   req: NextRequest,
+  clerkToken: string | null,
 ): Promise<NextResponse> => {
-  const impersonateToken = req.cookies.get('impersonateToken')?.value
-  const token = req.cookies.get('token')?.value
-
-  if (impersonateToken || token) {
-    req.headers.set('Authorization', `Bearer ${impersonateToken || token}`)
+  if (clerkToken) {
+    req.headers.set('Authorization', `Bearer ${clerkToken}`)
   }
 
   const orgSlug = req.cookies.get(ORG_SLUG_COOKIE)?.value

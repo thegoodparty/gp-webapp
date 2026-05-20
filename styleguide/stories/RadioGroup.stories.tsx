@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group'
+import {
+  RadioGroup,
+  RadioGroupItem,
+  RadioCardItem,
+} from '../components/ui/radio-group'
 import { Label } from '../components/ui/label'
 
 const meta: Meta<typeof RadioGroup> = {
@@ -64,6 +68,25 @@ export const Disabled: Story = {
           Option 2 (Disabled)
         </Label>
       </div>
+    </RadioGroup>
+  ),
+}
+
+export const CardVariant: Story = {
+  render: () => (
+    <RadioGroup defaultValue="option-1">
+      <RadioCardItem
+        value="option-1"
+        id="card-option-1"
+        title="Radio Button Text"
+        description="This is a radio description."
+      />
+      <RadioCardItem
+        value="option-2"
+        id="card-option-2"
+        title="Radio Button Text"
+        description="This is a radio description."
+      />
     </RadioGroup>
   ),
 }

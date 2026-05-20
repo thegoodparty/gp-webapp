@@ -1,4 +1,9 @@
 import { ofetch, type FetchOptions } from 'ofetch'
+import { getCookie } from 'helpers/cookieHelper'
+import {
+  ORG_SLUG_COOKIE,
+  ORG_SLUG_HEADER,
+} from '@shared/organizations/constants'
 import { APIEndpoints } from './api-endpoints'
 
 /**
@@ -126,5 +131,11 @@ export const createRequest =
 export const clientRequest = createRequest(async (opts) => {
   opts.baseURL = '/api'
   opts.credentials = 'include'
+
+  const orgSlug = getCookie(ORG_SLUG_COOKIE)
+  if (orgSlug) {
+    opts.headers = { ...opts.headers, [ORG_SLUG_HEADER]: orgSlug }
+  }
+
   return opts
 })

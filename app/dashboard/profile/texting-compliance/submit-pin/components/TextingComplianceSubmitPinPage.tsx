@@ -16,10 +16,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { trackEvent } from 'helpers/analyticsHelper'
 import { EVENTS } from 'helpers/analyticsHelper'
 import { useUser } from '@shared/hooks/useUser'
-
-interface TcrCompliance {
-  id: number
-}
+import type { TcrCompliance } from 'helpers/types'
 
 interface TextingComplianceSubmitPinPageProps {
   tcrCompliance: TcrCompliance
@@ -29,7 +26,7 @@ const initialFormState: PinFormData = {
   pin: '',
 }
 
-const submitCvPin = async (tcrComplianceId: number, formData: PinFormData) => {
+const submitCvPin = async (tcrComplianceId: string, formData: PinFormData) => {
   const response = await clientFetch(
     apiRoutes.campaign.tcrCompliance.submitCvPin,
     { ...formData, tcrComplianceId },

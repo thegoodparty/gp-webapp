@@ -1,8 +1,7 @@
 'use client'
 import DashboardLayout from '../shared/DashboardLayout'
-import { weeksTill } from 'helpers/dateHelper'
-import { useCallback, useEffect, useState } from 'react'
-import { calculateContactGoals } from './voterGoalsHelpers'
+import { useEffect } from 'react'
+import { calculateContactGoalsFromCampaign } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
 import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
@@ -14,43 +13,34 @@ import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHisto
 import TasksList from './tasks/TasksList'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type { Task } from './tasks/TaskItem'
-import type { Campaign, TcrCompliance } from 'helpers/types'
+import type { TcrCompliance } from 'helpers/types'
+import { usePositionName } from '@shared/hooks/usePositionName'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { usePostElectionState } from './usePostElectionState'
 
 interface DashboardPageProps {
   pathname: string
   tasks: Task[]
-  campaign: Campaign | null
   tcrCompliance: TcrCompliance | null
 }
 
 const DashboardPage = ({
   pathname,
   tasks,
-  campaign: campaignProp,
   tcrCompliance,
 }: DashboardPageProps): React.JSX.Element => {
   const [_, setUser] = useUser()
-  const [campaign, setCampaign] = useState<Campaign | null>(campaignProp)
-  const { pathToVictory: p2vObject, goals, details } = campaign || {}
-  const pathToVictory = p2vObject?.data || {}
-  const { primaryElectionDate } = details || {}
-  type PrimaryResult = 'won' | 'lost'
-  type PrimaryResultState = {
-    modalOpen: boolean
-    modalDismissed: boolean
-    primaryResult: PrimaryResult | null | undefined
-  }
-  const [primaryResultState, setPrimaryResultState] =
-    useState<PrimaryResultState>({
-      modalOpen: false,
-      modalDismissed: false,
-      primaryResult: campaignProp?.details?.primaryResult,
-    })
+  const [campaign] = useCampaign()
+  const {
+    electionInPast,
+    primaryLost,
+    primaryResultModalOpen,
+    primaryElectionDate,
+    electionDate,
+    closePrimaryResultModal,
+  } = usePostElectionState()
 
-  const officeName =
-    details?.office?.toLowerCase() === 'other'
-      ? details?.otherOffice
-      : details?.office
+  const positionName = usePositionName()
 
   useEffect(() => {
     // TODO: we're only having to do this, because we're caching the user object in the cookie and
@@ -67,87 +57,13 @@ const DashboardPage = ({
     updateUserCookie()
   }, [])
 
-  const electionDate = details?.electionDate || goals?.electionDate
-  const { voterContactGoal, voteGoal } = pathToVictory || {}
-  let resolvedContactGoal = voterContactGoal ?? voteGoal! * 5
-  const now = new Date()
-  let resolvedDate = electionDate
-
-  if (primaryElectionDate) {
-    const primaryElectionDateObj = new Date(primaryElectionDate)
-    const { modalOpen, primaryResult, modalDismissed } = primaryResultState
-
-    if (primaryElectionDateObj > now) {
-      resolvedDate = primaryElectionDate
-    } else if (!primaryResult && !modalOpen && !modalDismissed) {
-      // Primary date has passed, open up results modal
-      setPrimaryResultState((state) => ({
-        ...state,
-        modalOpen: true,
-      }))
-    }
-  }
-
-  const weeksUntil = weeksTill(resolvedDate)
-  const contactGoals = calculateContactGoals(resolvedContactGoal)
-
-  const primaryResultCloseCallback = useCallback(
-    (selectedResult?: PrimaryResult) => {
-      if (selectedResult) {
-        // user selected their primary election result
-        setPrimaryResultState((state) => ({
-          ...state,
-          modalOpen: false,
-          primaryResult: selectedResult,
-        }))
-
-        //update local campaign object
-        setCampaign((campaign) =>
-          campaign
-            ? {
-                ...campaign,
-                details: {
-                  ...campaign.details,
-                  primaryResult: selectedResult,
-                },
-              }
-            : campaign,
-        )
-      } else {
-        // user pressed Cancel to dismiss modal for now
-        setPrimaryResultState({
-          modalOpen: false,
-          modalDismissed: true,
-          primaryResult: undefined,
-        })
-      }
-    },
-    [],
-  )
+  const contactGoals = campaign
+    ? calculateContactGoalsFromCampaign(campaign)
+    : false
 
   trackEvent(EVENTS.Dashboard.Viewed, {
-    p2vCompleted: `${
-      pathToVictory && pathToVictory?.p2vStatus === 'Complete'
-        ? 'true'
-        : 'false'
-    }`,
+    p2vCompleted: `${campaign?.raceTargetMetrics ? 'true' : 'false'}`,
   })
-
-  const weeksUntilValue =
-    typeof weeksUntil === 'object' && weeksUntil ? weeksUntil.weeks : NaN
-  const electionInPast =
-    weeksUntilValue < 0 && resolvedDate !== primaryElectionDate
-  const primaryLost = primaryResultState.primaryResult === 'lost'
-
-  if (electionInPast || primaryLost) {
-    console.log(
-      `displaying election over - electionInPast: ${electionInPast}, primaryLost: ${primaryLost}, resolvedDate: ${resolvedDate}, weeksUntil: ${JSON.stringify(
-        weeksUntil,
-      )}, primaryElectionDate: ${primaryElectionDate}, electionDate: ${electionDate}, primaryResult: ${
-        primaryResultState.primaryResult
-      }, now: ${now.toISOString()}`,
-    )
-  }
 
   return (
     <VoterContactsProvider>
@@ -169,15 +85,15 @@ const DashboardPage = ({
                     )}
                   </>
                 ) : (
-                  <EmptyState campaign={campaign} />
+                  <EmptyState />
                 )}
               </div>
-              {primaryElectionDate && (
+              {primaryElectionDate && electionDate && (
                 <PrimaryResultModal
-                  open={primaryResultState.modalOpen}
-                  onClose={primaryResultCloseCallback}
-                  electionDate={electionDate!}
-                  officeName={officeName || ''}
+                  open={primaryResultModalOpen}
+                  onClose={closePrimaryResultModal}
+                  electionDate={electionDate}
+                  officeName={positionName}
                 />
               )}
             </>

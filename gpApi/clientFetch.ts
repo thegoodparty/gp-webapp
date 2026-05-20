@@ -1,4 +1,9 @@
 import { buildUrl } from '@shared/utils/buildUrl'
+import { getCookie } from 'helpers/cookieHelper'
+import {
+  ORG_SLUG_COOKIE,
+  ORG_SLUG_HEADER,
+} from '@shared/organizations/constants'
 import { ApiRoute } from './routes'
 
 export interface ApiResponse<T = unknown> {
@@ -15,6 +20,11 @@ interface FetchOptions {
   extraHeaders?: Record<string, string>
 }
 
+/**
+ * @deprecated Use `clientRequest` from `gpApi/typed-request.ts` (with a route
+ * key in `gpApi/api-endpoints.ts`). See `gpApi/CLAUDE.md` for the migration
+ * recipe.
+ */
 export async function clientFetch(
   endpoint: ApiRoute,
   data: Partial<Record<string, unknown>> | FormData | undefined,
@@ -42,6 +52,11 @@ export async function clientFetch<T = unknown>(
   const headers: Record<string, string> = { ...extraHeaders }
   if (serverToken) {
     headers.Authorization = `Bearer ${serverToken}`
+  }
+
+  const orgSlug = getCookie(ORG_SLUG_COOKIE)
+  if (orgSlug) {
+    headers[ORG_SLUG_HEADER] = orgSlug
   }
 
   const shouldSetJsonContentType =

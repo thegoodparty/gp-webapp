@@ -13,7 +13,7 @@ import {
   P2P_MODAL_VARIANTS,
 } from 'app/dashboard/shared/P2PUpgradeModal'
 import { ComplianceModal } from 'app/dashboard/shared/ComplianceModal'
-import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
+import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
 import type { TcrCompliance } from 'helpers/types'
