@@ -22,9 +22,9 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'party-affiliation',
-    title: 'Are you running with a party designation?',
+    title: 'Are you running with an official party designation?',
     description:
-      'Pick the party label voters will see on the ballot as an official designation for your race, not your personal voting history or party preference.',
+      'Pick the party label voters would see on their official ballots for you as a candidate, not your personal voting history or party preference.',
     summary:
       'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
     whyWeAsk:
