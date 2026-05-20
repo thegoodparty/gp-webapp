@@ -3,9 +3,10 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
-import { authenticateTestUser } from 'tests/utils/api-registration'
 import { visualSnapshot } from 'src/helpers/visual.helper'
-import { wait } from 'tests/utils/eventually'
+import { filtersSheet, personContactPanel } from 'src/helpers/contacts-e2e'
+import { setupElectedOfficeUser } from 'src/helpers/organizations'
+import { eventually } from 'tests/utils/eventually'
 
 test.describe('Contacts Page', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,16 +15,7 @@ test.describe('Contacts Page', () => {
 
   test('contacts page functionality', async ({ page }) => {
     test.setTimeout(120 * 1000)
-    await authenticateTestUser(page, { isolated: true })
-    await page.goto('/dashboard/election-result', {
-      waitUntil: 'domcontentloaded',
-    })
-    await wait(500)
-    await page
-      .getByRole('button', { name: 'I won my race' })
-      .click({ timeout: 10000 })
-
-    await page.waitForURL('**/polls/welcome', { timeout: 15000 })
+    await setupElectedOfficeUser(page)
 
     await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
@@ -119,8 +111,19 @@ test.describe('Contacts Page', () => {
     await searchInput.fill(searchTerm)
     await searchInput.press('Enter')
 
-    const searchResults = table.locator('tbody tr')
-    await expect(searchResults).toHaveCount(1, { timeout: 20000 })
+    await eventually({ that: 'the search results are narrowed' }, async () => {
+      const numSearchResults = await table.locator('tbody tr').count()
+      expect(numSearchResults).toBeGreaterThanOrEqual(1)
+      // The per-row check below is what verifies the filter actually ran:
+      // if the search were a no-op, unrelated rows would not contain the term.
+      // Don't gate on an absolute row-count ceiling, common first names
+      // (e.g. "John") legitimately produce many matches in larger districts.
+      for (const row of await table.locator('tbody tr').all()) {
+        await expect(row).toContainText(searchTerm, {
+          ignoreCase: true,
+        })
+      }
+    })
 
     await expect(
       pagination.getByRole('link', { name: '1' }).first(),

@@ -9,13 +9,12 @@ import { useUser } from '@shared/hooks/useUser'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import NavButton from './NavButton'
 import Button from '@shared/buttons/Button'
-import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 import { getMarketingUrl } from 'helpers/linkhelper'
 
 const RightSide = (): React.JSX.Element => {
-  const [user] = useUser() as [User | null, (user: User | null) => void]
+  const [user] = useUser()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [dashboardOpen, setDashboardOpen] = useState(false)
@@ -42,21 +41,7 @@ const RightSide = (): React.JSX.Element => {
   }
 
   if (isOnboardingPath) {
-    return (
-      <Button
-        href="/"
-        onClick={() =>
-          trackEvent(EVENTS.Onboarding.ClickFinishLater, {
-            pathname: pathname,
-          })
-        }
-        id="nav-onboarding-finish-later"
-        className="hidden lg:block relative z-60 font-medium text-base! py-2! leading-6!"
-        variant="text"
-      >
-        Finish Later
-      </Button>
-    )
+    return <></>
   }
 
   return (
@@ -69,19 +54,18 @@ const RightSide = (): React.JSX.Element => {
             toggleCallback={toggleProfile}
             user={user as User}
           />
-          {!userHasRole(user, USER_ROLES.SALES) &&
-            (isDashboardPath ? (
-              <TopDashboardMenu
-                open={dashboardOpen}
-                toggleCallback={toggleDashboard}
-                pathname={pathname || ''}
-              />
-            ) : (
-              <DashboardOrContinue
-                isDashboardPath={isDashboardPath}
-                closeAll={closeAll}
-              />
-            ))}
+          {isDashboardPath ? (
+            <TopDashboardMenu
+              open={dashboardOpen}
+              toggleCallback={toggleDashboard}
+              pathname={pathname || ''}
+            />
+          ) : (
+            <DashboardOrContinue
+              isDashboardPath={isDashboardPath}
+              closeAll={closeAll}
+            />
+          )}
         </>
       ) : (
         <>

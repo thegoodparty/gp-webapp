@@ -50,7 +50,7 @@ const WebsiteEditorPageStepper = ({
           {cantSaveReason}
         </div>
       )}
-      <div className="flex gap-4 md:gap-16 flex-wrap md:flex-nowrap w-full pb-6">
+      <div className="flex gap-4 md:gap-16 flex-wrap md:flex-nowrap w-full pb-6 pr-16 lg:pr-0">
         <div className="md:order-2 flex grow items-center justify-between gap-x-2 w-full">
           {Array.from({ length: totalSteps }, (_, idx) => (
             <div

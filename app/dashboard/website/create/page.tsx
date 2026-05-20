@@ -2,6 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import WebsiteCreatePage from './components/WebsiteCreatePage'
 import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { redirect } from 'next/navigation'
+import { getMarketingUrl } from 'helpers/linkhelper'
 import { WebsiteProvider } from '../components/WebsiteProvider'
 import candidateAccess from '../../shared/candidateAccess'
 import { combineIssues, WEBSITE_STATUS } from '../util/website.util'
@@ -28,7 +29,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   }
 
   if (!campaign) {
-    redirect('/run-for-office')
+    redirect(getMarketingUrl('/run-for-office'))
   }
 
   const issues = await serverLoadCandidatePosition(campaign.id)

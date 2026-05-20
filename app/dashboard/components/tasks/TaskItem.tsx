@@ -1,10 +1,14 @@
 import {
   DISPLAY_TASK_TYPES,
   TASK_TYPES,
+  formatTaskDate,
+  isTextFlowType,
 } from '../../shared/constants/tasks.const'
-import { dateUsHelper } from 'helpers/dateHelper'
 import CampaignPlanTaskItem from 'app/dashboard/campaign-plan/components/CampaignPlanTaskItem'
-import { subDays } from 'date-fns'
+import AwarenessTaskItem from './AwarenessTaskItem'
+import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
+import type { TcrCompliance } from 'helpers/types'
 
 export interface Task {
   id: string
@@ -26,6 +30,8 @@ interface TaskItemProps {
   daysUntilElection: number
   electionDate: string | undefined
   isPro: boolean
+  isLegacyList?: boolean
+  tcrCompliance?: TcrCompliance | null
   onCheck: (task: Task) => void
   onAction: (task: Task) => void
 }
@@ -35,6 +41,8 @@ export default function TaskItem({
   daysUntilElection,
   electionDate,
   isPro,
+  isLegacyList = true,
+  tcrCompliance,
   onCheck,
   onAction,
 }: TaskItemProps): React.JSX.Element {
@@ -49,39 +57,84 @@ export default function TaskItem({
     proRequired,
   } = task
 
+  const { p2pUxEnabled } = useP2pUxEnabled()
+  const isTextCompliant =
+    tcrCompliance?.status === TCR_COMPLIANCE_STATUS.APPROVED
+
+  const formattedDate = formatTaskDate(date, electionDate, deadline)
+
+  if (flowType === TASK_TYPES.awareness) {
+    return (
+      <li className="border-t border-black/12">
+        <AwarenessTaskItem
+          title={title}
+          description={description}
+          date={formattedDate}
+          onClick={() => onAction(task)}
+        />
+      </li>
+    )
+  }
+
+  const textRequiresCompliance =
+    isTextFlowType(flowType) &&
+    isPro &&
+    p2pUxEnabled &&
+    !isTextCompliant &&
+    !completed
+
   const isExpired = deadline ? daysUntilElection < deadline : false
   const noLongerAvailable = isExpired && !completed
-  const locked = noLongerAvailable || Boolean(proRequired && !isPro)
+  const locked =
+    noLongerAvailable ||
+    Boolean(proRequired && !isPro) ||
+    textRequiresCompliance
   let lockedReason = ''
   if (noLongerAvailable) {
     lockedReason = 'This task is no longer available'
   } else if (proRequired && !isPro) {
     lockedReason = 'This task is only available to Pro users'
+  } else if (textRequiresCompliance) {
+    switch (tcrCompliance?.status) {
+      case TCR_COMPLIANCE_STATUS.PENDING:
+        lockedReason = 'Compliance review in progress'
+        break
+      case TCR_COMPLIANCE_STATUS.REJECTED:
+        lockedReason = '10DLC registration needs attention'
+        break
+      case TCR_COMPLIANCE_STATUS.ERROR:
+        lockedReason = '10DLC registration error'
+        break
+      default:
+        lockedReason = 'Click to complete your 10DLC compliance'
+    }
   }
 
-  const displayTaskType = DISPLAY_TASK_TYPES[flowType] ?? flowType
+  const displayTaskType = flowType
+    ? DISPLAY_TASK_TYPES[flowType] ?? flowType
+    : ''
+
+  const linkForRow =
+    (isLegacyList && completed) ||
+    (!isLegacyList && flowType === TASK_TYPES.events)
+      ? undefined
+      : link
+
+  const suppressRowAction = completed && !isLegacyList && !link
 
   return (
     <li className="border-t border-black/12">
       <CampaignPlanTaskItem
         title={title}
         description={description}
-        date={
-          date
-            ? dateUsHelper(new Date(date.replace(/-/g, '/')))
-            : electionDate && deadline
-            ? dateUsHelper(
-                subDays(new Date(electionDate.replace(/-/g, '/')), deadline)
-              )
-            : ''
-        }
+        date={formattedDate}
         type={displayTaskType}
         checked={completed}
         locked={locked}
         lockedReason={lockedReason}
         onCheckedChange={() => onCheck(task)}
-        onClick={() => onAction(task)}
-        link={link}
+        onClick={suppressRowAction ? undefined : () => onAction(task)}
+        link={linkForRow}
         noLongerAvailable={noLongerAvailable}
       />
     </li>

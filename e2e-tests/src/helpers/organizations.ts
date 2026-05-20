@@ -5,20 +5,20 @@ import {
   type AuthenticatedUser,
   type TestUserOptions,
 } from 'tests/utils/api-registration'
-import { wait } from 'tests/utils/eventually'
+import { eventually, wait } from 'tests/utils/eventually'
 
 type SetupResult = {
   user: AuthenticatedUser
   client: AxiosInstance
 }
 
-export const setupWinServeUser = async (
+export const setupElectedOfficeUser = async (
   page: Page,
   raceOptions?: TestUserOptions['race'],
 ): Promise<SetupResult> => {
   const race = raceOptions ?? {
     zip: '82001',
-    office: 'Cheyenne City Council - Ward 2',
+    office: 'Cheyenne City Council - Ward 1',
   }
 
   const { user, client } = await authenticateTestUser(page, {
@@ -32,6 +32,26 @@ export const setupWinServeUser = async (
     .getByRole('button', { name: 'I won my race' })
     .click({ timeout: 10000 })
   await page.waitForURL('**/polls/welcome', { timeout: 15000 })
+
+  const electedOfficeOrgSlug = await eventually(
+    { that: 'an elected office organization is created' },
+    async () => {
+      const { data } = await client.get<{ organizations: { slug: string }[] }>(
+        '/v1/organizations',
+      )
+
+      const electedOfficeOrg = data.organizations.find((org) =>
+        org.slug.startsWith('eo-'),
+      )
+
+      if (!electedOfficeOrg) {
+        throw new Error('No elected office organization found')
+      }
+
+      return electedOfficeOrg.slug
+    },
+  )
+  client.defaults.headers['x-organization-slug'] = electedOfficeOrgSlug
 
   return { user, client }
 }

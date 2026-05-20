@@ -64,7 +64,6 @@ export class NavigationHelper {
       for (const selector of cookieSelectors) {
         try {
           if (await selector.first().isVisible({ timeout: 2000 })) {
-            console.log('🍪 Dismissing cookie banner')
             await selector.first().click()
             await selector.first().waitFor({ state: 'hidden', timeout: 5000 })
             return
@@ -96,6 +95,16 @@ export class NavigationHelper {
   }
 
   static async openMobileMenu(page: Page): Promise<void> {
-    await page.getByTestId('mobile-menu-trigger').click()
+    const openMenu = page.getByRole('button', { name: /open menu/i })
+    if (await openMenu.isVisible().catch(() => false)) {
+      await openMenu.click()
+      return
+    }
+    const trigger = page.getByTestId('mobile-menu-trigger')
+    if (await trigger.isVisible().catch(() => false)) {
+      await trigger.click()
+      return
+    }
+    await NavigationHelper.openMobileNavMenu(page)
   }
 }

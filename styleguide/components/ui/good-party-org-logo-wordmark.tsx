@@ -1,9 +1,11 @@
+import { cn } from '@styleguide/lib/utils'
+
 interface GoodPartyOrgLogoWordmarkProps {
   className?: string
   /**
    * Visual size of the word-mark (applies Tailwind width/height utilities).
    * – small  : 149 × 20
-   * – default: 208 × 28 (base)
+   * – default: 208 × 28
    * – large  : 313 × 42
    * – xl     : 500 × 67
    */
@@ -14,6 +16,13 @@ interface GoodPartyOrgLogoWordmarkProps {
   textVariant?: 'light' | 'dark'
 }
 
+const sizeClasses = {
+  small: 'w-[149px] h-[20px]',
+  default: 'w-[208px] h-[28px]',
+  large: 'w-[313px] h-[42px]',
+  xl: 'w-[500px] h-[67px]',
+} as const
+
 export const GoodPartyOrgLogoWordmark = ({
   className = '',
   size = 'default',
@@ -21,17 +30,10 @@ export const GoodPartyOrgLogoWordmark = ({
 }: GoodPartyOrgLogoWordmarkProps) => {
   const textFill = textVariant === 'dark' ? '#000000' : '#FFFFFF'
 
-  const sizeClasses = {
-    small: 'w-[149px] h-[20px]',
-    default: 'w-[208px] h-[28px] lg:w-[313px] lg:h-[42px]',
-    large: 'w-[313px] h-[42px]',
-    xl: 'w-[500px] h-[67px]',
-  } as const
-
   return (
     <svg
       data-slot="good-party-org-logo-wordmark"
-      className={`${sizeClasses[size]} ${className}`}
+      className={cn(sizeClasses[size], className)}
       viewBox="0 0 967 130"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

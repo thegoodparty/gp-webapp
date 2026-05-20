@@ -4,6 +4,12 @@ import {
 } from 'app/dashboard/outreach/constants'
 import { VoterFileFilters } from 'helpers/types'
 
+// If making a change, also update:
+// gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+// gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+// gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+// gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+// gp-webapp/app/dashboard/outreach/constants.tsx
 const AUDIENCE_KEYS: AudienceLabelKey[] = [
   'audienceSuperVoters',
   'audienceLikelyVoters',
@@ -19,6 +25,7 @@ const AUDIENCE_KEYS: AudienceLabelKey[] = [
   'age50Plus',
   'genderMale',
   'genderFemale',
+  'genderUnknown',
 ]
 
 export const formatAudienceLabels = ({
@@ -36,6 +43,7 @@ export const formatAudienceLabels = ({
   age50Plus,
   genderMale,
   genderFemale,
+  genderUnknown,
 }: VoterFileFilters = {}): string[] => {
   const filtersFields: VoterFileFilters = {
     audienceSuperVoters,
@@ -52,6 +60,7 @@ export const formatAudienceLabels = ({
     age50Plus,
     genderMale,
     genderFemale,
+    genderUnknown,
   }
   return AUDIENCE_KEYS.filter((k) => Boolean(filtersFields[k]))
     .map((k) => AUDIENCE_LABELS_MAPPING[k])

@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { API_ROOT } from 'appEnv'
+import {
+  ORG_SLUG_COOKIE,
+  ORG_SLUG_HEADER,
+} from '@shared/organizations/constants'
 
 const apiRootUrl = new URL(API_ROOT)
 
@@ -16,12 +20,15 @@ const apiRewriteUrl = (ReqNextUrl: URL): string => {
 
 export const handleApiRequestRewrite = async (
   req: NextRequest,
+  clerkToken: string | null,
 ): Promise<NextResponse> => {
-  const impersonateToken = req.cookies.get('impersonateToken')?.value
-  const token = req.cookies.get('token')?.value
+  if (clerkToken) {
+    req.headers.set('Authorization', `Bearer ${clerkToken}`)
+  }
 
-  if (impersonateToken || token) {
-    req.headers.set('Authorization', `Bearer ${impersonateToken || token}`)
+  const orgSlug = req.cookies.get(ORG_SLUG_COOKIE)?.value
+  if (orgSlug) {
+    req.headers.set(ORG_SLUG_HEADER, orgSlug)
   }
 
   return NextResponse.rewrite(apiRewriteUrl(req.nextUrl), {

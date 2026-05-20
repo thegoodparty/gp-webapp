@@ -8,7 +8,6 @@ import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
 import { Outreach } from 'app/dashboard/outreach/hooks/OutreachContext'
-import { noopAsync } from '@shared/utils/noop'
 
 interface ScheduleState {
   date?: Date | string
@@ -20,7 +19,8 @@ interface ScheduleStepProps {
   nextCallback: () => void
   backCallback: () => void
   onCreateOutreach?: () => Promise<Outreach | undefined>
-  onScheduleOutreach?: (outreach?: Outreach) => Promise<void>
+  /** Returns true to advance to the next step, false to stay (e.g., on failure). */
+  onScheduleOutreach?: (outreach?: Outreach) => Promise<boolean>
   type: string
   schedule?: ScheduleState
   isLastStep?: boolean
@@ -31,7 +31,7 @@ export default function ScheduleStep({
   nextCallback,
   backCallback,
   onCreateOutreach = async () => undefined,
-  onScheduleOutreach = noopAsync,
+  onScheduleOutreach = async () => true,
   type,
   schedule,
   isLastStep,
@@ -64,9 +64,9 @@ export default function ScheduleStep({
 
   const handleNext = async () => {
     setIsLoading(true)
-    await onScheduleOutreach(await onCreateOutreach())
+    const ok = await onScheduleOutreach(await onCreateOutreach())
     setIsLoading(false)
-    nextCallback()
+    if (ok) nextCallback()
   }
 
   // This conversion has to be done to appease MUI's date-type TextField

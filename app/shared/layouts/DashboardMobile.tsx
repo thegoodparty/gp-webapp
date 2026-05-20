@@ -15,7 +15,7 @@ const DashboardMobile: React.FC<DashboardMobileProps> = ({
     <H3 className="mb-8">
       {user.firstName} {user.lastName}
     </H3>
-    <DashboardMenu pathname={pathname} mobileMode toggleCallback={undefined} />
+    <DashboardMenu pathname={pathname} />
   </div>
 )
 

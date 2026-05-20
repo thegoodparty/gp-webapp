@@ -1,4 +1,4 @@
-import { Campaign } from 'helpers/types'
+import type { Campaign, RaceTargetMetrics } from 'helpers/types'
 
 export interface ContactGoalBreakdown {
   total: number
@@ -64,11 +64,6 @@ export interface ReportedVoterGoals {
   socialMedia?: number
 }
 
-export interface PathToVictoryGoals {
-  voterContactGoal?: number
-  voteGoal?: number
-}
-
 const WEEK_PERCENTAGES: ContactGoals = {
   week12: { total: 2.7, doorKnocking: 0, calls: 0, digital: 0 },
   week11: { total: 4.05, doorKnocking: 0, calls: 0, digital: 0 },
@@ -96,9 +91,7 @@ const createContactGoalBreakdown = (
 export function calculateContactGoalsFromCampaign(
   campaign: Campaign,
 ): ContactGoals | false {
-  const p2vData = campaign.pathToVictory?.data
-  const resolvedContactGoal = getVoterContactsGoal(p2vData || {})
-  return calculateContactGoals(resolvedContactGoal)
+  return calculateContactGoals(getVoterContactsGoal(campaign.raceTargetMetrics))
 }
 
 export function calculateContactGoals(total: number): ContactGoals | false {
@@ -312,11 +305,12 @@ export function calculateAccumulatedByWeek(
   return accumulatedTotal
 }
 
-export const getVoterContactsGoal = ({
-  voterContactGoal,
-  voteGoal,
-}: PathToVictoryGoals): number =>
-  parseInt(String(voterContactGoal ?? (voteGoal ?? 0) * 5), 10)
+export const getVoterContactsGoal = (
+  metrics: RaceTargetMetrics | null | undefined,
+): number => {
+  const goal = metrics?.voterContactGoal ?? 0
+  return goal > 0 ? goal : 0
+}
 
 export const getVoterContactsTotal = ({
   doorKnocking,
@@ -347,11 +341,9 @@ export interface VoterContactCounts {
 }
 
 export const calculateVoterContactCounts = (
-  pathToVictory: PathToVictoryGoals | undefined,
+  metrics: RaceTargetMetrics | null | undefined,
   reportedVoterGoals: ReportedVoterGoals | undefined,
-): VoterContactCounts => {
-  return {
-    needed: getVoterContactsGoal(pathToVictory || {}),
-    contacted: getVoterContactsTotal(reportedVoterGoals || {}),
-  }
-}
+): VoterContactCounts => ({
+  needed: getVoterContactsGoal(metrics),
+  contacted: getVoterContactsTotal(reportedVoterGoals || {}),
+})

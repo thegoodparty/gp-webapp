@@ -2,6 +2,7 @@ import { noop } from '@shared/utils/noop'
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { VoterFileFilters } from 'helpers/types'
 import { AudienceState } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
+import type { AudienceFilterKey } from 'app/dashboard/voter-records/components/CustomVoterAudienceFilters'
 
 interface DownloadVoterListParams {
   voterFileFilter?: VoterFileFilters | AudienceState
@@ -33,11 +34,21 @@ export const downloadVoterList = async (
     age50Plus,
     genderMale,
     genderFemale,
+    genderUnknown,
   } = resolvedFilter
 
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
   //  https://goodparty.atlassian.net/browse/WEB-4277
-  const audience: Record<string, boolean | undefined> = {
+  // If making a change, also update:
+  // gp-webapp/app/dashboard/outreach/util/downloadVoterList.util.ts
+  // gp-webapp/app/dashboard/components/tasks/flows/util/flowHandlers.util.ts
+  // gp-webapp/app/dashboard/outreach/util/convertAudienceFiltersForModal.util.ts
+  // gp-webapp/app/dashboard/outreach/util/formatAudienceLabels.util.ts
+  // gp-webapp/app/dashboard/outreach/constants.tsx
+  const audience: Record<
+    Exclude<AudienceFilterKey, 'audience_request'>,
+    boolean | undefined
+  > = {
     audience_superVoters: audienceSuperVoters,
     audience_likelyVoters: audienceLikelyVoters,
     audience_unreliableVoters: audienceUnreliableVoters,
@@ -52,10 +63,11 @@ export const downloadVoterList = async (
     age_50_plus: age50Plus,
     gender_male: genderMale,
     gender_female: genderFemale,
+    gender_unknown: genderUnknown,
   }
-  const selectedAudience = Object.keys(audience).filter(
-    (key) => audience[key] === true,
-  )
+  const selectedAudience = Object.entries(audience)
+    .filter(([, value]) => value === true)
+    .map(([key]) => key)
 
   try {
     await voterFileDownload(outreachType, { filters: selectedAudience })

@@ -10,7 +10,7 @@ import { visualSnapshot } from '../../../src/helpers/visual.helper'
 function campaignPageGreetingHeading(page: Page) {
   return page
     .getByRole('heading', { level: 1 })
-    .filter({ hasText: /Hello|until|General|Primary|Election|concluded/ })
+    .filter({ hasText: /Hi|Hello|until|General|Primary|Election|concluded/ })
     .first()
 }
 
@@ -33,7 +33,7 @@ test.describe('Mobile Navigation', () => {
     await expect(page).toHaveURL(/\/dashboard$/)
 
     await expect(campaignPageGreetingHeading(page)).toBeVisible({
-      timeout: 90000,
+      timeout: 15000,
     })
 
     await visualSnapshot(page, 'mobile-dashboard.png', {
@@ -78,7 +78,7 @@ test.describe('Mobile Navigation', () => {
     await page.getByRole('link', { name: 'AI Assistant' }).click()
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }),
-    ).toBeVisible({ timeout: 60000 })
+    ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
     await visualSnapshot(page, 'mobile-ai-assistant.png', {
@@ -90,10 +90,10 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
 
     await NavigationHelper.openMobileMenu(page)
-    await page.getByRole('link', { name: 'Content Builder' }).click()
+    await page.locator('#my-content-dashboard').click()
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }),
-    ).toBeVisible({ timeout: 60000 })
+    ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
     await visualSnapshot(page, 'mobile-content-builder.png', {
@@ -109,8 +109,8 @@ test.describe('Mobile Navigation', () => {
     await page.waitForURL(/\/dashboard\/profile/)
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page.getByRole('heading', { name: 'Personal Information' }).first(),
-    ).toBeVisible({ timeout: 60000 })
+      page.getByRole('heading', { name: 'Contact Information' }).first(),
+    ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const bodyContent = page.locator('body')

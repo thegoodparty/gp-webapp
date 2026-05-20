@@ -1,5 +1,17 @@
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { config as loadEnv } from 'dotenv'
 import { defineConfig, devices } from '@playwright/test'
-import 'dotenv/config'
+
+const e2eRoot = __dirname
+const dotEnv = resolve(e2eRoot, '.env')
+const dotEnvLocal = resolve(e2eRoot, '.env.local')
+if (existsSync(dotEnv)) {
+  loadEnv({ path: dotEnv })
+}
+if (existsSync(dotEnvLocal)) {
+  loadEnv({ path: dotEnvLocal, override: true })
+}
 
 process.env.TZ = 'UTC'
 if (!process.env.BASE_URL) {
@@ -8,12 +20,12 @@ if (!process.env.BASE_URL) {
 
 export default defineConfig({
   testDir: './tests',
+  outputDir: './test-results',
   snapshotPathTemplate:
     '{testDir}/__visual_snapshots__/{testFileDir}/{testFileName}/{arg}{ext}',
-  // Removed globalSetup/globalTeardown in favor of setup/cleanup projects
-  timeout: 120000, // Long flows (dashboard hydration, contacts, isolated user bootstrap)
+  timeout: 120000,
   expect: {
-    timeout: 15000, // Increased from 10s to 15s
+    timeout: 15000,
     toHaveScreenshot: {
       // Full-viewport captures vary with layout/fonts; branch UI changes can exceed
       // pixel-only caps. Ratio + high pixel cap keeps CI green while still catching big regressions.
@@ -40,6 +52,12 @@ export default defineConfig({
     {
       name: 'default',
       use: devices['Desktop Chrome'],
+      dependencies: ['global setup'],
+    },
+    {
+      name: 'global setup',
+      testDir: './',
+      testMatch: /global-setup\.ts/,
     },
   ],
 
@@ -57,13 +75,14 @@ export default defineConfig({
     // Browser args optimized for stability
     launchOptions: {
       args: [
-        '--no-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-web-security',
-        '--disable-features=VizDisplayCompositor', // Helps with stability
         '--disable-background-timer-throttling', // Prevents timeouts
         '--disable-backgrounding-occluded-windows',
+        '--disable-blink-features=AutomationControlled',
+        '--disable-dev-shm-usage',
+        '--disable-features=VizDisplayCompositor', // Helps with stability
         '--disable-renderer-backgrounding',
+        // '--disable-web-security',
+        '--no-sandbox',
       ],
     },
 
@@ -71,5 +90,6 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    ...devices['Desktop Chrome'],
   },
 })

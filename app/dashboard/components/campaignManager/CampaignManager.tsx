@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import DashboardLayout from 'app/dashboard/shared/DashboardLayout'
-import LoadingState, { AI_CAMPAIGN_CHECKLIST_COOKIE } from './LoadingState'
-import { getCookie } from 'helpers/cookieHelper'
+import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ProgressSection from './ProgressSection'
@@ -19,6 +18,11 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useTaskGenerationStream } from './useTaskGenerationStream'
 import { FailedToGenerate } from './FailedToGenerate'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import ElectionOver from '../ElectionOver'
+import PrimaryResultModal from '../PrimaryResultModal'
+import { usePostElectionState } from '../usePostElectionState'
+import { usePositionName } from '@shared/hooks/usePositionName'
 
 const TASKS_QUERY_KEY = ['campaignTasks']
 
@@ -32,10 +36,19 @@ export default function CampaignManager({
   const [campaign] = useCampaign()
   const queryClient = useQueryClient()
   const generatingRef = useRef(false)
-  const showLoadingStateCookie = getCookie(AI_CAMPAIGN_CHECKLIST_COOKIE)
-  const [showLoadingState, setShowLoadingState] = useState(
-    () => !showLoadingStateCookie,
-  )
+  const generatedInSessionRef = useRef(false)
+  const trackedGenerationCompleteRef = useRef(false)
+  const [showLoadingState, setShowLoadingState] = useState(false)
+  const positionName = usePositionName()
+  const {
+    electionInPast,
+    primaryLost,
+    primaryResultModalOpen,
+    primaryElectionDate,
+    electionDate,
+    closePrimaryResultModal,
+  } = usePostElectionState()
+  const electionOver = electionInPast || primaryLost
 
   const hideLoadingChecklist = useCallback(() => {
     setShowLoadingState(false)
@@ -59,8 +72,16 @@ export default function CampaignManager({
     [queryClient],
   )
 
-  const { isGenerating, progress, error, startGeneration, cancelGeneration } =
+  const { isGenerating, error, startGeneration, cancelGeneration } =
     useTaskGenerationStream(onTasksReceived)
+
+  useEffect(() => {
+    if (isGenerating) {
+      generatedInSessionRef.current = true
+      trackedGenerationCompleteRef.current = false
+      setShowLoadingState(true)
+    }
+  }, [isGenerating])
 
   useEffect(() => {
     if (isLoadingTasks) return
@@ -68,7 +89,7 @@ export default function CampaignManager({
       generatingRef.current = false
       return
     }
-    if (!campaign || generatingRef.current) return
+    if (!campaign || generatingRef.current || electionOver) return
 
     generatingRef.current = true
     void startGeneration()
@@ -77,61 +98,92 @@ export default function CampaignManager({
       generatingRef.current = false
       cancelGeneration()
     }
-  }, [isLoadingTasks, tasks, campaign, startGeneration, cancelGeneration])
+  }, [
+    isLoadingTasks,
+    tasks,
+    campaign,
+    startGeneration,
+    cancelGeneration,
+    electionOver,
+  ])
 
   useEffect(() => {
     if (error) {
       generatingRef.current = false
+      setShowLoadingState(false)
     }
   }, [error])
+
+  useEffect(() => {
+    if (
+      !showLoadingState &&
+      tasks.length > 0 &&
+      generatedInSessionRef.current &&
+      !trackedGenerationCompleteRef.current
+    ) {
+      trackEvent(EVENTS.Dashboard.CampaignPlan.GenerationCompleted)
+      trackedGenerationCompleteRef.current = true
+    }
+  }, [showLoadingState, tasks.length])
 
   if (!campaign) {
     return null
   }
 
   const contactGoals = calculateContactGoalsFromCampaign(campaign)
+  const isStreamComplete =
+    !isGenerating && !error && generatedInSessionRef.current
 
   return (
-    <DashboardLayout pathname={pathname} campaign={campaign}>
+    <DashboardLayout
+      pathname={pathname}
+      campaign={campaign}
+      wrapperClassName="!p-0"
+    >
       <VoterContactsProvider>
         <CampaignUpdateHistoryProvider>
-          <HeaderSection />
-          <ProgressSection />
-          <LoadingState hideCallback={hideLoadingChecklist} />
-          {isGenerating && progress && showLoadingState && (
-            <div className="mt-4 rounded-lg border bg-white p-4">
-              <p className="mb-2 text-sm font-medium text-gray-700">
-                {progress.message || 'Generating AI tasks...'}
-              </p>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-500"
-                  style={{ width: `${Math.min(progress.progress, 100)}%` }}
-                />
-              </div>
-              <p className="mt-1 text-xs text-gray-500">
-                {Math.round(progress.progress)}% complete
-              </p>
-            </div>
-          )}
-          {error && !isGenerating && !showLoadingState && (
-            <FailedToGenerate retryGeneration={startGeneration} />
-          )}
-          {!showLoadingState && (
-            <>
-              {contactGoals ? (
-                <TasksList
-                  campaign={campaign}
-                  tasks={tasks}
-                  tcrCompliance={tcrCompliance}
-                  isLegacyList={false}
-                />
-              ) : (
-                <div className="mt-4">
-                  <EmptyState />
-                </div>
-              )}
-            </>
+          <div className="mx-auto w-full max-w-160 flex flex-col gap-6 px-4 py-8 md:px-0">
+            {electionOver ? (
+              <ElectionOver />
+            ) : (
+              <>
+                <HeaderSection />
+                <ProgressSection />
+                {showLoadingState && (
+                  <LoadingState
+                    isStreamComplete={isStreamComplete}
+                    hideCallback={hideLoadingChecklist}
+                  />
+                )}
+                {error && !isGenerating && !showLoadingState && (
+                  <FailedToGenerate retryGeneration={startGeneration} />
+                )}
+                {!showLoadingState && (
+                  <>
+                    {tasks.length > 0 || contactGoals ? (
+                      <TasksList
+                        campaign={campaign}
+                        tasks={tasks}
+                        tcrCompliance={tcrCompliance}
+                        isLegacyList={false}
+                      />
+                    ) : (
+                      <div className="mt-4">
+                        <EmptyState />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+          {primaryElectionDate && electionDate && (
+            <PrimaryResultModal
+              open={primaryResultModalOpen}
+              onClose={closePrimaryResultModal}
+              electionDate={electionDate}
+              officeName={positionName}
+            />
           )}
         </CampaignUpdateHistoryProvider>
       </VoterContactsProvider>

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import {
-  setupWinServeUser,
+  setupElectedOfficeUser,
   switchOrganization,
   getSelectedOrgName,
   getOrgPickerOptions,
@@ -11,7 +11,7 @@ import {
 } from 'src/helpers/navigation.helper'
 import { WaitHelper } from 'src/helpers/wait.helper'
 
-test.describe('Dashboard Regression with Win-Serve Toggle', () => {
+test.describe('Dashboard Regression with Elected Office', () => {
   test.beforeEach(async ({ page }) => {
     await blockSlowScripts(page)
   })
@@ -19,7 +19,7 @@ test.describe('Dashboard Regression with Win-Serve Toggle', () => {
   test('campaign pages remain accessible under campaign org', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -45,12 +45,12 @@ test.describe('Dashboard Regression with Win-Serve Toggle', () => {
     await page.goto('/dashboard/profile', { waitUntil: 'domcontentloaded' })
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page.getByRole('heading', { name: 'Personal Information' }),
+      page.getByRole('heading', { name: 'Contact Information' }),
     ).toBeVisible({ timeout: 10000 })
   })
 
   test('polls page accessible under elected office org', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await WaitHelper.waitForPageReady(page)
     await NavigationHelper.dismissOverlays(page)
@@ -60,7 +60,7 @@ test.describe('Dashboard Regression with Win-Serve Toggle', () => {
   })
 
   test('contacts page loads under elected office org', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/contacts', { waitUntil: 'domcontentloaded' })
     await WaitHelper.waitForPageReady(page)
     await NavigationHelper.dismissOverlays(page)

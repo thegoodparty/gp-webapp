@@ -2,6 +2,11 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { API_VERSION_PREFIX } from 'appEnv'
+import { getCookie } from 'helpers/cookieHelper'
+import {
+  ORG_SLUG_COOKIE,
+  ORG_SLUG_HEADER,
+} from '@shared/organizations/constants'
 import type { Task } from '../tasks/TaskItem'
 
 interface TaskGenerationProgress {
@@ -73,10 +78,14 @@ export function useTaskGenerationStream(
 
     try {
       const url = `/api${API_VERSION_PREFIX}/campaigns/tasks/generate/stream`
+      const orgSlug = getCookie(ORG_SLUG_COOKIE)
       const response = await fetch(url, {
         credentials: 'include',
         signal: controller.signal,
-        headers: { Accept: 'text/event-stream' },
+        headers: {
+          Accept: 'text/event-stream',
+          ...(orgSlug && { [ORG_SLUG_HEADER]: orgSlug }),
+        },
       })
 
       if (!response.ok || !response.body) {

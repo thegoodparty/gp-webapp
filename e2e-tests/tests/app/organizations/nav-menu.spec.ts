@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import {
-  setupWinServeUser,
+  setupElectedOfficeUser,
   switchOrganization,
   getSelectedOrgName,
   getOrgPickerOptions,
@@ -16,7 +16,7 @@ test.describe('Navigation Menu by Org Type', () => {
   })
 
   test('campaign org shows campaign menu items', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -43,7 +43,7 @@ test.describe('Navigation Menu by Org Type', () => {
   })
 
   test('elected office org shows serve menu items', async ({ page }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 

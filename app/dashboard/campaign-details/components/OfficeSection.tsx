@@ -11,18 +11,19 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 import {
   ORGANIZATIONS_QUERY_KEY,
-  useOrganizationIfEnabled,
+  useOrganization,
 } from '@shared/organization-picker'
 import { usePositionName } from '@shared/hooks/usePositionName'
-import { queryClient } from '@shared/query-client'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface OfficeSectionProps {
   campaign?: Campaign
 }
 
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
-  const organization = useOrganizationIfEnabled()
+  const organization = useOrganization()
   const positionName = usePositionName()
+  const queryClient = useQueryClient()
   const initialState: OfficeFieldState = {
     office: '',
     state: '',
@@ -48,10 +49,10 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         primaryElectionDate: details.primaryElectionDate || '',
         officeTermLength: details.officeTermLength || '',
       })
-    } else if (organization) {
+    } else {
       setState({
         office: positionName,
-        state: organization.position?.state || '',
+        state: organization?.position?.state || '',
         electionDate: '',
         primaryElectionDate: '',
         officeTermLength: '',

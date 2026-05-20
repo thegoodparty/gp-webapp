@@ -7,25 +7,21 @@ import Body2 from '@shared/typography/Body2'
 import H6 from '@shared/typography/H6'
 import H2 from '@shared/typography/H2'
 import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper'
-
-interface PathToVictoryData {
-  projectedTurnout?: number
-  voterContactGoal?: number
-  winNumber?: number
-}
+import { RaceTargetMetrics } from 'helpers/types'
 
 interface ContactCountsInfoModalProps {
   open?: boolean
   setOpen?: () => void
-  pathToVictory?: PathToVictoryData
+  raceTargetMetrics?: RaceTargetMetrics | null
 }
 
 export const ContactCountsInfoModal = ({
   open = true,
   setOpen = noop,
-  pathToVictory = {},
+  raceTargetMetrics,
 }: ContactCountsInfoModalProps): React.JSX.Element => {
-  const { projectedTurnout, voterContactGoal, winNumber } = pathToVictory
+  const { projectedTurnout, voterContactGoal, winNumber } =
+    raceTargetMetrics ?? {}
 
   return (
     <Modal

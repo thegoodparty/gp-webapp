@@ -32,16 +32,21 @@ interface ProUpgradePromptProps {
   campaign?: Campaign | null
   user?: User | null
   pathname?: string
+  isElectedOffice?: boolean
 }
 
 export function ProUpgradePrompt({
   campaign,
   user,
   pathname,
+  isElectedOffice,
 }: ProUpgradePromptProps): React.JSX.Element | null {
   const isPro = campaign?.isPro || false
   const sessionCount = user?.metaData?.sessionCount || 0
-  const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
+  const vendorP2v = campaign?.vendorTsData?.['pathToVictory'] as
+    | { viability?: { score?: number } }
+    | undefined
+  const viablityScore = vendorP2v?.viability?.score || 0
 
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -49,7 +54,7 @@ export function ProUpgradePrompt({
   })
 
   useEffect(() => {
-    if (isPro) {
+    if (isPro || isElectedOffice) {
       setModalState((current) => ({ ...current, isOpen: false }))
       return
     }
@@ -95,10 +100,9 @@ export function ProUpgradePrompt({
         variant: variant,
       })
     }
-  }, [sessionCount, viablityScore, isPro, pathname])
+  }, [sessionCount, viablityScore, isPro, isElectedOffice, pathname])
 
-  // Don't want to show modal if campaign is already pro
-  if (isPro) return null
+  if (isPro || isElectedOffice) return null
 
   function closeModal(): void {
     localStorage.setItem(LOCAL_STORAGE_KEY, String(sessionCount))

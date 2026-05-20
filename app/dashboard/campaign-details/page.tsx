@@ -36,7 +36,6 @@ export default async function Page(): Promise<React.JSX.Element> {
     campaign: campaign ?? undefined,
     candidatePositions,
     topIssues,
-    pathToVictory: campaign?.pathToVictory?.data,
     user,
   }
 

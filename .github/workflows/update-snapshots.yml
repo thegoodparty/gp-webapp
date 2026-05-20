@@ -2,7 +2,7 @@ name: Update Visual Snapshots
 
 on:
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 jobs:
   update-snapshots:
@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     if: >-
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/update-snapshots') &&
-      (github.event.comment.author_association == 'OWNER' ||
+      github.event.issue.pull_request && contains(github.event.comment.body,
+      '/update-snapshots') && (github.event.comment.author_association ==
+      'OWNER' ||
        github.event.comment.author_association == 'MEMBER' ||
        github.event.comment.author_association == 'COLLABORATOR')
     permissions:
@@ -130,6 +130,8 @@ jobs:
         env:
           BASE_URL: ${{ steps.preview.outputs.url }}
           TEST_RUN_NAME: "Update Visual Snapshots"
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Commit updated baselines
         run: |
@@ -139,7 +141,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No snapshot changes to commit"
           else
-            git commit -m "chore: update visual snapshots from CI [skip ci]"
+            git commit -m "chore: update visual snapshots from CI"
             git push origin HEAD:${{ steps.pr.outputs.branch }}
           fi
 

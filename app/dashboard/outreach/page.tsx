@@ -7,6 +7,7 @@ import { createOutreach } from 'app/dashboard/outreach/util/createOutreach.util'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
+import { getMarketingUrl } from 'helpers/linkhelper'
 import { Outreach } from './hooks/OutreachContext'
 import { TcrCompliance } from 'helpers/types'
 
@@ -34,7 +35,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   const campaign = await fetchUserCampaign()
 
   if (!campaign) {
-    redirect('/run-for-office')
+    redirect(getMarketingUrl('/run-for-office'))
   }
 
   const [outreaches, tcrComplianceResponse] = await Promise.all([

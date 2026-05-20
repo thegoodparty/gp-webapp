@@ -10,11 +10,11 @@ import {
   AlertDialogTrigger,
   Button,
 } from '@styleguide'
-import { deleteCustomSegment } from '../shared/ajaxActions'
+import { clientRequest } from 'gpApi/typed-request'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { useState } from 'react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { type SegmentResponse } from '../shared/ajaxActions'
+import { type SegmentResponse } from '../shared/contacts-types'
 
 interface DeleteSegmentProps {
   segment: SegmentResponse
@@ -33,7 +33,9 @@ export default function DeleteSegment({
   const handleDelete = async (): Promise<void> => {
     try {
       setIsDeleting(true)
-      await deleteCustomSegment(id)
+      await clientRequest('DELETE /v1/voters/voter-file/filter/:id', {
+        id: String(id),
+      })
       refreshCustomSegments()
       afterDeleteCallback()
       trackEvent(EVENTS.Contacts.SegmentDeleted)

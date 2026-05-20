@@ -8,6 +8,12 @@ export interface ApiRoute {
 }
 
 export const apiRoutes = {
+  authentication: {
+    sendSetPasswordEmail: {
+      path: '/authentication/send-set-password-email',
+      method: 'POST',
+    },
+  },
   contactEngagement: {
     issues: {
       path: '/contact-engagement/:id/issues',
@@ -77,36 +83,11 @@ export const apiRoutes = {
       path: '/subscribe',
       method: 'POST',
     },
-  },
-  authentication: {
-    register: {
-      path: '/authentication/register',
-      method: 'POST',
-    },
-    login: {
-      path: '/authentication/login',
-      method: 'POST',
-    },
-    logout: {
-      path: '/logout',
-      method: 'DELETE',
-      nextApiRoute: true,
-    },
-    forgotPassword: {
-      path: '/authentication/send-recover-password-email',
-      method: 'POST',
-    },
-    resetPassword: {
-      path: '/authentication/reset-password',
-      method: 'POST',
-    },
-    socialLogin: {
-      path: '/authentication/social-login/:socialProvider',
-      method: 'POST',
-    },
-    sendSetPasswordEmail: {
-      path: '/authentication/send-set-password-email',
-      method: 'POST',
+    declarationSignatures: {
+      list: {
+        path: '/declare/list',
+        method: 'GET',
+      },
     },
   },
   user: {
@@ -126,10 +107,6 @@ export const apiRoutes = {
       path: '/users/me',
       method: 'GET',
     },
-    changePassword: {
-      path: '/users/:id/password',
-      method: 'PUT',
-    },
     deleteAccount: {
       path: '/users/:id',
       method: 'DELETE',
@@ -146,12 +123,6 @@ export const apiRoutes = {
     },
   },
   campaign: {
-    pathToVictory: {
-      create: {
-        path: '/campaigns/mine/path-to-victory',
-        method: 'POST',
-      },
-    },
     create: {
       path: '/campaigns',
       method: 'POST',
@@ -291,8 +262,16 @@ export const apiRoutes = {
         path: '/campaigns/tasks/complete/:taskId',
         method: 'PUT',
       },
+      revert: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'DELETE',
+      },
       delete: {
         path: '/campaigns/tasks/:taskId',
+        method: 'DELETE',
+      },
+      deleteAll: {
+        path: '/campaigns/tasks',
         method: 'DELETE',
       },
     },
@@ -308,16 +287,6 @@ export const apiRoutes = {
       submitCvPin: {
         path: '/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
         method: 'POST',
-      },
-    },
-    raceTargetDetails: {
-      update: {
-        path: '/campaigns/mine/race-target-details',
-        method: 'PUT',
-      },
-      adminUpdate: {
-        path: '/campaigns/admin/:slug/race-target-details',
-        method: 'PUT',
       },
     },
   },
@@ -376,10 +345,6 @@ export const apiRoutes = {
       wakeUp: {
         path: '/voters/voter-file/wake-up',
         method: 'GET',
-      },
-      schedule: {
-        path: '/voters/voter-file/schedule',
-        method: 'POST',
       },
       helpMessage: {
         path: '/voters/voter-file/help-message',
@@ -450,16 +415,8 @@ export const apiRoutes = {
         path: '/admin/campaigns/:id',
         method: 'DELETE',
       },
-      victoryMail: {
-        path: '/admin/campaigns/:id/send-victory-email',
-        method: 'POST',
-      },
       proNoVoterFile: {
         path: '/admin/campaigns/pro-no-voter-file',
-        method: 'GET',
-      },
-      p2vStats: {
-        path: '/admin/campaigns/p2v-stats',
         method: 'GET',
       },
     },
@@ -467,6 +424,10 @@ export const apiRoutes = {
   elections: {
     racesByYear: {
       path: '/elections/races-by-year',
+      method: 'GET',
+    },
+    raceByPosition: {
+      path: '/elections/race-by-position',
       method: 'GET',
     },
     districts: {
@@ -505,11 +466,6 @@ export const apiRoutes = {
   logError: {
     path: '/error-logger',
     method: 'POST',
-  },
-  setCookie: {
-    path: '/set-cookie',
-    method: 'POST',
-    nextApiRoute: true,
   },
   ecanvasser: {
     list: {

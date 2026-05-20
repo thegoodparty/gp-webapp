@@ -31,7 +31,8 @@ const AmplitudeInit = (): null => {
     }
 
     let cancelled = false
-    const wantReplay = isSessionReplayRoute(pathname) && !!user
+    const isAppHost = window.location.hostname === 'app.goodparty.org'
+    const wantReplay = isAppHost && isSessionReplayRoute(pathname) && !!user
 
     if (wantReplay && !replayActive.current) {
       ;(async () => {

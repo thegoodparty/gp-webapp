@@ -19,7 +19,7 @@ test('"I won my race" creates an EO org and auto-selects it', async ({
 }) => {
   await authenticateTestUser(page, {
     isolated: true,
-    race: { zip: '82001', office: 'Cheyenne City Council - Ward 2' },
+    race: { zip: '82001', office: 'Cheyenne City Council - Ward 1' },
   })
 
   await NavigationHelper.navigateToPage(page, '/dashboard')

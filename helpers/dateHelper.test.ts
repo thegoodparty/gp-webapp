@@ -67,9 +67,9 @@ describe('timeToNextElection', () => {
     expect(result).toBe(false)
   })
 
-  it('returns false on today (0 days away)', () => {
+  it('returns election-day sentinel on today (0 days away)', () => {
     const today = toLocalDateString(new Date())
     const result = timeToNextElection(today)
-    expect(result).toBe(false)
+    expect(result).toBe('election-day')
   })
 })

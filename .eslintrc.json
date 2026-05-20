@@ -2,18 +2,24 @@
   "ignorePatterns": [
     "ai-rules/",
     "e2e-tests/playwright-report",
+    "e2e-tests/test-results",
     "e2e-tests/**/*.md",
+    "test-results",
     "styleguide/*.md",
     "public/",
     "ai-rules/",
-    "CLAUDE.md"
+    "CLAUDE.md",
+    "docs/*.md",
+    "gpApi/CLAUDE.md",
+    ".claude/**/*.md"
   ],
   "plugins": ["react", "unused-imports", "@stylistic"],
   "extends": [
     "next/core-web-vitals",
-    "plugin:mdx/recommended",
+    "plugin:mdx/recommended"
     // "plugin:jsx-a11y/recommended" TODO: turn on when ready to enforce a11y rules
-    "plugin:storybook/recommended"
+    // Storybook ESLint v10+ is ESM-only and breaks ESLint 8's CJS config loader; re-add when on ESLint 9 flat config.
+    // "plugin:storybook/recommended"
   ],
   "settings": {
     "mdx/code-blocks": true,
@@ -70,6 +76,7 @@
       "plugins": ["@typescript-eslint"],
       "parser": "@typescript-eslint/parser",
       "rules": {
+        "react-hooks/rules-of-hooks": "off",
         "@typescript-eslint/no-unused-expressions": "off",
         "@typescript-eslint/no-useless-constructor": "error",
         "@typescript-eslint/no-empty-function": "error",

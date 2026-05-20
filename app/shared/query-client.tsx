@@ -1,7 +1,12 @@
 'use client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryClientConfig,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { useState } from 'react'
 
-export const queryClient = new QueryClient({
+export const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       // Total of 3 attempts (1 initial + 2 retries)
@@ -14,11 +19,12 @@ export const queryClient = new QueryClient({
       retry: false,
     },
   },
-})
+}
 
 export const ReactQueryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [queryClient] = useState(() => new QueryClient(queryClientConfig))
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )

@@ -3,7 +3,7 @@ import { CampaignCountdown } from 'app/dashboard/components/CampaignCountdown'
 import { VoterContactsCount } from 'app/dashboard/components/VoterContactsCount'
 import { RemainingTasks } from 'app/dashboard/components/RemainingTasks'
 import { CampaignProgress } from 'app/dashboard/components/CampaignProgress'
-import { Campaign, PathToVictoryData } from 'helpers/types'
+import { Campaign } from 'helpers/types'
 
 export interface DashboardTask {
   id: string
@@ -19,8 +19,7 @@ export const DashboardHeader = ({
   campaign,
   tasks = [],
 }: DashboardHeaderProps): React.JSX.Element => {
-  const { pathToVictory: p2vObject, details: campaignDetails } = campaign || {}
-  const pathToVictory: PathToVictoryData = p2vObject?.data || {}
+  const { raceTargetMetrics, details: campaignDetails } = campaign || {}
   const { electionDate } = campaignDetails || {}
 
   const numOfRemainingTasks = tasks.filter((task) => !task.completed).length
@@ -28,9 +27,9 @@ export const DashboardHeader = ({
   return (
     <section className="mb-6">
       <CampaignCountdown electionDate={electionDate} />
-      <VoterContactsCount pathToVictory={pathToVictory} />
+      <VoterContactsCount raceTargetMetrics={raceTargetMetrics} />
       <RemainingTasks numOfRemainingTasks={numOfRemainingTasks} />
-      <CampaignProgress pathToVictory={pathToVictory} />
+      <CampaignProgress raceTargetMetrics={raceTargetMetrics} />
     </section>
   )
 }

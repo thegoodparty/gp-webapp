@@ -5,7 +5,7 @@ import ServerDataTable from './ServerDataTable'
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { type ColumnDef } from '@tanstack/react-table'
 import { type ReactNode } from 'react'
-import { Person } from './shared/ajaxActions'
+import { Person } from './shared/contacts-types'
 import { formatPersonName } from './person/PersonOverlay'
 
 interface MaybeBlurredContentProps {

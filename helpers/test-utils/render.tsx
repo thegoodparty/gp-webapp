@@ -1,10 +1,14 @@
-import { queryClient } from '@shared/query-client'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { queryClientConfig } from '@shared/query-client'
 import { render as _render, RenderOptions } from '@testing-library/react'
+
+export const testQueryClient = new QueryClient(queryClientConfig)
 
 const TestProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={testQueryClient}>
+      {children}
+    </QueryClientProvider>
   )
 }
 

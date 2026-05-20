@@ -48,24 +48,3 @@ export const OFFICE_INPUT_FIELDS: OfficeInputField[] = [
     type: 'text',
   },
 ]
-
-interface CampaignDetailsInput {
-  office?: string
-  otherOffice?: string
-  state?: string
-  electionDate?: string
-  primaryElectionDate?: string
-  officeTermLength?: string
-}
-
-export const campaignOfficeFields = (
-  campaignDetails: CampaignDetailsInput = {},
-): OfficeFieldState => {
-  return {
-    office: campaignDetails.otherOffice || campaignDetails.office || '',
-    state: campaignDetails.state || '',
-    electionDate: campaignDetails.electionDate || '',
-    primaryElectionDate: campaignDetails.primaryElectionDate || '',
-    officeTermLength: campaignDetails.officeTermLength || '',
-  }
-}

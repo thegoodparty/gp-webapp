@@ -22,8 +22,8 @@ test.describe('Profile Management', () => {
     await page.waitForURL(/\/dashboard\/profile/)
     await WaitHelper.waitForPageReady(page)
     await expect(
-      page.getByRole('heading', { name: 'Personal Information' }).first(),
-    ).toBeVisible({ timeout: 60000 })
+      page.getByRole('heading', { name: 'Contact Information' }).first(),
+    ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const personalFields = page.locator('[data-testid*="personal"]')

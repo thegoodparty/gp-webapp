@@ -11,6 +11,7 @@ import H3 from '@shared/typography/H3'
 import CantFindRaceModal from './CantFindRaceModal'
 import { useRouter } from 'next/navigation'
 import { clientFetch } from 'gpApi/clientFetch'
+import { clientRequest } from 'gpApi/typed-request'
 import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body2 from '@shared/typography/Body2'
@@ -18,6 +19,7 @@ import Fuse, { IFuseOptions } from 'fuse.js'
 import { useQuery } from '@tanstack/react-query'
 import { Campaign } from 'helpers/types'
 import { Race } from './types'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 interface BallotRacesCampaign extends Campaign {
   currentStep?: number
@@ -144,21 +146,54 @@ export default function BallotRaces({
     selectedOffice || false,
   )
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [hydratingId, setHydratingId] = useState<string | null>(null)
 
   const router = useRouter()
+  const { errorSnackbar } = useSnackbar()
 
   if (!zip) {
     return <div>No valid zip</div>
   }
 
-  const handleSelect = (race: { id: string }) => {
+  const hydrateRace = async (race: Race): Promise<Race | null> => {
+    if (!race.brPositionId || !race.election?.electionDay || !zip) {
+      errorSnackbar('Could not load this race. Please try a different one.')
+      return null
+    }
+    try {
+      const { data } = await clientRequest(
+        'GET /v1/elections/race-by-position',
+        {
+          brPositionId: race.brPositionId,
+          zip,
+          electionDate: race.election.electionDay,
+        },
+      )
+      return { ...data, id: race.id }
+    } catch {
+      errorSnackbar('Could not load race details. Please try again.')
+      return null
+    }
+  }
+
+  const handleSelect = async (race: { id: string }) => {
+    if (race.id === (selected && 'id' in selected ? selected.id : undefined)) {
+      setSelected(false)
+      onSelect(false)
+      return
+    }
     const matchedRace = races.find(({ id }) => id === race.id)
-    const selectedRace =
-      race?.id === (selected && 'id' in selected ? selected.id : undefined)
-        ? false
-        : matchedRace || false
-    setSelected(selectedRace)
-    onSelect(selectedRace)
+    if (!matchedRace) {
+      setSelected(false)
+      onSelect(false)
+      return
+    }
+    setHydratingId(race.id)
+    const hydrated = await hydrateRace(matchedRace)
+    setHydratingId(null)
+    if (!hydrated) return
+    setSelected(hydrated)
+    onSelect(hydrated)
   }
 
   const handleShowModal = () => {
@@ -172,13 +207,13 @@ export default function BallotRaces({
 
   const handleSaveCustomOffice = async (
     updated: Campaign & { currentStep?: number },
+    officeName: string,
   ) => {
+    const customPositionName = officeName || null
+
     const baseAttr = [
-      { key: 'details.otherOffice', value: '' },
       { key: 'details.raceId', value: null },
-      { key: 'details.positionId', value: null },
       { key: 'details.electionId', value: null },
-      { key: 'details.office', value: updated.details.office },
       { key: 'details.city', value: updated.details.city },
       { key: 'details.district', value: updated.details.district },
       {
@@ -197,6 +232,7 @@ export default function BallotRaces({
       const attr = [
         { key: 'data.currentStep', value: currentStep },
         ...baseAttr,
+        { key: 'customPositionName', value: customPositionName },
       ]
       const newCampaign = await createCampaignWithOffice(attr)
       if (newCampaign) {
@@ -212,12 +248,22 @@ export default function BallotRaces({
         ...baseAttr,
       ]
       await updateCampaign(attr)
+      await clientRequest('PATCH /v1/organizations/:slug', {
+        slug: `campaign-${campaign.id}`,
+        customPositionName,
+      })
       router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     } else {
       if (adminMode && campaign) {
         await updateCampaign(baseAttr, campaign.slug)
       } else {
         await updateCampaign(baseAttr)
+      }
+      if (campaign) {
+        await clientRequest('PATCH /v1/organizations/:slug', {
+          slug: `campaign-${campaign.id}`,
+          customPositionName,
+        })
       }
       if (updateCallback) {
         updateCallback()
@@ -269,6 +315,7 @@ export default function BallotRaces({
                   race?.id ===
                   (selected && 'id' in selected ? selected.id : undefined)
                 }
+                isHydrating={hydratingId === race.id}
                 selectCallback={handleSelect}
               />
             ))

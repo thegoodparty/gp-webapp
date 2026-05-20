@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import {
-  setupWinServeUser,
+  setupElectedOfficeUser,
   switchOrganization,
   getSelectedOrgName,
   getOrgPickerOptions,
@@ -9,6 +9,7 @@ import {
   blockSlowScripts,
   NavigationHelper,
 } from 'src/helpers/navigation.helper'
+import { WaitHelper } from 'src/helpers/wait.helper'
 
 test.describe('Organization Header Propagation', () => {
   test.beforeEach(async ({ page }) => {
@@ -18,7 +19,7 @@ test.describe('Organization Header Propagation', () => {
   test('organization slug cookie is set and updates on switch', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -50,7 +51,7 @@ test.describe('Organization Header Propagation', () => {
   test('switching orgs updates the header on subsequent requests', async ({
     page,
   }) => {
-    await setupWinServeUser(page)
+    await setupElectedOfficeUser(page)
     await page.goto('/dashboard/polls', { waitUntil: 'domcontentloaded' })
     await NavigationHelper.dismissOverlays(page)
 
@@ -78,7 +79,7 @@ test.describe('Organization Header Propagation', () => {
     })
 
     await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
-    await page.waitForLoadState('networkidle')
+    await WaitHelper.waitForPageReady(page)
 
     expect(capturedHeaders.length).toBeGreaterThan(0)
     for (const header of capturedHeaders) {

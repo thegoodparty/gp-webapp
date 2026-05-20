@@ -9,6 +9,8 @@ import Button from '@shared/buttons/Button'
 import PartyAnimation from '@shared/animations/PartyAnimation'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useQueryClient } from '@tanstack/react-query'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
 interface WonMessageProps {
   electionDate: string
@@ -77,6 +79,8 @@ export default function PrimaryResultModal({
     setPrimaryResult(key === 'won' || key === 'lost' ? key : null)
   }
 
+  const queryClient = useQueryClient()
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
@@ -86,9 +90,12 @@ export default function PrimaryResultModal({
     })
 
     try {
-      await updateCampaign([
+      const updatedCampaign = await updateCampaign([
         { key: 'details.primaryResult', value: primaryResult },
       ])
+      if (updatedCampaign) {
+        queryClient.setQueryData(CAMPAIGN_QUERY_KEY, updatedCampaign)
+      }
 
       trackEvent(EVENTS.Candidacy.CampaignCompleted, {
         winner: primaryResult === 'won',

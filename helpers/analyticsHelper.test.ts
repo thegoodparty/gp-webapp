@@ -8,20 +8,12 @@ vi.mock('app/shared/utils/analytics', () => ({
   getReadyAnalytics: vi.fn(),
 }))
 
-import { trackEvent } from './analyticsHelper'
+import { trackEvent, setImpersonating } from './analyticsHelper'
 import { segmentTrackEvent } from './segmentHelper'
-
-const clearCookies = () => {
-  document.cookie.split(';').forEach((c) => {
-    document.cookie = c
-      .replace(/^ +/, '')
-      .replace(/=.*/, '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/')
-  })
-}
 
 describe('trackEvent', () => {
   beforeEach(() => {
-    clearCookies()
+    setImpersonating(false)
     vi.clearAllMocks()
     sessionStorage.clear()
   })
@@ -39,7 +31,7 @@ describe('trackEvent', () => {
   })
 
   it('includes impersonation: true when impersonating', () => {
-    document.cookie = 'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
+    setImpersonating(true)
 
     trackEvent('Test Event', { foo: 'bar' })
 
@@ -53,7 +45,7 @@ describe('trackEvent', () => {
   })
 
   it('impersonation cannot be overridden by caller properties', () => {
-    document.cookie = 'impersonateUser=' + encodeURI(JSON.stringify({ id: 1 }))
+    setImpersonating(true)
 
     trackEvent('Test Event', { impersonation: false })
 

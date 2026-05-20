@@ -1,8 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { KeyboardEvent } from 'react'
-import { handleLogOut } from '@shared/user/handleLogOut'
-import { DashboardMenuItem } from 'app/dashboard/shared/DashboardMenuItem'
 import {
   MdAccountCircle,
   MdAutoAwesome,
@@ -19,19 +16,18 @@ import {
   Bot,
   Circle,
   CircleUserRound,
+  ClipboardList,
   DoorClosed,
   ExternalLink,
   FileText,
   Globe,
   LayoutDashboard,
   LogOut,
-  Plus,
   Send,
   Settings,
-  StopCircle,
+  UserCog,
   UserRound,
   UsersRound,
-  Wand,
   type LucideIcon,
 } from 'lucide-react'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -40,7 +36,7 @@ import { useEffect, useMemo } from 'react'
 import { syncEcanvasser } from '@shared/utils/syncEcanvasser'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { useUser as useClerkUser } from '@clerk/nextjs'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useElectedOffice } from '@shared/hooks/useElectedOffice'
 import { Campaign } from 'helpers/types'
@@ -63,12 +59,11 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@styleguide'
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
-import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
 import {
   OrganizationPicker,
   useOrganization,
 } from '@shared/organization-picker'
+import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 interface MenuItem {
   id: string
@@ -85,8 +80,6 @@ interface MenuItem {
 
 interface DashboardMenuProps {
   pathname: string | null
-  toggleCallback?: () => void
-  mobileMode?: boolean
 }
 
 const VOTER_DATA_UPGRADE_ITEM: MenuItem = {
@@ -214,7 +207,16 @@ const POLLS_MENU_ITEM: MenuItem = {
   v2Icon: Send,
   v2Category: 'elected-office',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
-  isNew: true,
+}
+
+const BRIEFINGS_MENU_ITEM: MenuItem = {
+  id: 'briefings-dashboard',
+  label: 'Meetings',
+  link: '/dashboard/briefings',
+  icon: <MdFactCheck />,
+  v2Icon: ClipboardList,
+  v2Category: 'elected-office',
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
 }
 
 const getDashboardMenuItems = (
@@ -231,7 +233,8 @@ const getDashboardMenuItems = (
     menuItems[voterDataIndex] = VOTER_RECORDS_MENU_ITEM
   }
   if (isElectedOffice) {
-    menuItems.splice(voterDataIndex + 1, 0, POLLS_MENU_ITEM)
+    menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
+    menuItems.unshift(BRIEFINGS_MENU_ITEM)
   }
 
   return menuItems
@@ -239,8 +242,6 @@ const getDashboardMenuItems = (
 
 export default function DashboardMenu({
   pathname,
-  toggleCallback,
-  mobileMode,
 }: DashboardMenuProps): React.JSX.Element {
   const [campaign] = useCampaign()
   const [ecanvasser] = useEcanvasser()
@@ -268,65 +269,7 @@ export default function DashboardMenu({
     }
   }, [campaign, ecanvasser])
 
-  const handleEnterPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key == 'Enter') handleLogOut()
-  }
-
-  const { on: useNewNav } = useFlagOn('win-serve-split')
-
-  if (useNewNav) {
-    return <NewNavMenu menuItems={menuItems} pathname={pathname} />
-  }
-
-  const handleMenuItemClick = (item: MenuItem) => {
-    item?.onClick?.()
-    toggleCallback?.()
-  }
-
-  return (
-    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300 leading-[1.3]">
-      {menuItems.map((item) => {
-        const { id, link, icon, label, target, isNew } = item
-        return (
-          <DashboardMenuItem
-            key={label}
-            id={id}
-            link={link}
-            icon={icon}
-            onClick={() => handleMenuItemClick(item)}
-            pathname={pathname || ''}
-            target={target}
-            isNew={isNew}
-          >
-            {label}
-          </DashboardMenuItem>
-        )
-      })}
-      {mobileMode && (
-        <div className="mt-4 border-t border-indigo-400 pt-4">
-          <Link
-            href="/dashboard/profile"
-            className="no-underline block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
-            id="nav-dash-settings"
-          >
-            <div className="ml-2">Settings</div>
-          </Link>
-
-          <div
-            role="link"
-            tabIndex={0}
-            className="block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
-            onClick={handleLogOut}
-            onKeyDown={(e) => handleEnterPress(e)}
-          >
-            <div id="nav-log-out" className="ml-2">
-              Logout
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
+  return <NewNavMenu menuItems={menuItems} pathname={pathname} />
 }
 
 type AccountManagementItem = {
@@ -346,13 +289,13 @@ const NewNavMenu = ({
   pathname: string | null
 }) => {
   const [user] = useUser()
-  const {
-    clear: clearImpersonation,
-    token: impersonateToken,
-    user: impersonateUser,
-  } = useImpersonateUser()
-  const impersonating = impersonateToken && impersonateUser
+  const { user: clerkUser, isLoaded: isClerkUserLoaded } = useClerkUser()
   const { setOpenMobile, isMobile } = useSidebar()
+
+  const menuFirstName =
+    (isClerkUserLoaded && clerkUser?.firstName?.trim()) || user?.firstName || ''
+  const menuLastName =
+    (isClerkUserLoaded && clerkUser?.lastName?.trim()) || user?.lastName || ''
 
   const organization = useOrganization()
 
@@ -375,27 +318,11 @@ const NewNavMenu = ({
       id: 'nav-dash-settings',
       href: '/dashboard/profile',
     },
-    addCampaign: {
-      label: 'Add Campaign',
-      icon: Plus,
-      id: 'nav-dash-add-campaign',
-      href: '/sales/add-campaign',
-    },
-    admin: {
-      label: 'Admin',
-      icon: Wand,
-      id: 'nav-dash-admin',
-      href: '/admin',
-    },
-    stopImpersonating: {
-      label: 'Stop Impersonating',
-      icon: StopCircle,
-      id: 'nav-dash-stop-impersonating',
-      href: '/admin',
-      onClick: () => {
-        clearImpersonation()
-        window.location.href = '/admin'
-      },
+    account: {
+      label: 'Account',
+      icon: UserCog,
+      id: 'nav-dash-account',
+      href: '/dashboard/account',
     },
     community: {
       label: 'Community Forum',
@@ -463,7 +390,7 @@ const NewNavMenu = ({
             <SidebarMenu>
               {menuItems
                 .filter((i) =>
-                  organization.electedOfficeId
+                  organization?.electedOfficeId
                     ? i.v2Category === 'elected-office'
                     : i.v2Category === 'campaign',
                 )
@@ -494,7 +421,7 @@ const NewNavMenu = ({
                         </Link>
                       </SidebarMenuButton>
                       {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1">
+                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
                           NEW
                         </SidebarMenuBadge>
                       )}
@@ -508,14 +435,7 @@ const NewNavMenu = ({
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.profile)}
                   {sidebarItem(accountManagementMenuItems.settings)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
-                    sidebarItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    !impersonating &&
-                    sidebarItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    sidebarItem(accountManagementMenuItems.stopImpersonating)}
+                  {sidebarItem(accountManagementMenuItems.account)}
                   <SidebarSeparator />
                   {sidebarItem(accountManagementMenuItems.logout)}
                   <SidebarSeparator />
@@ -543,7 +463,7 @@ const NewNavMenu = ({
                         data-testid="user-menu-name"
                         className="truncate text-sm font-semibold"
                       >
-                        {user?.firstName} {user?.lastName}
+                        {menuFirstName} {menuLastName}
                       </span>
                       <span className="truncate text-xs">Manage account</span>
                     </div>
@@ -557,14 +477,7 @@ const NewNavMenu = ({
                 >
                   {dropDownItem(accountManagementMenuItems.profile)}
                   {dropDownItem(accountManagementMenuItems.settings)}
-                  {userHasRole(user, USER_ROLES.SALES) &&
-                    !impersonating &&
-                    dropDownItem(accountManagementMenuItems.addCampaign)}
-                  {userIsAdmin(user) &&
-                    !impersonating &&
-                    dropDownItem(accountManagementMenuItems.admin)}
-                  {!!impersonating &&
-                    dropDownItem(accountManagementMenuItems.stopImpersonating)}
+                  {dropDownItem(accountManagementMenuItems.account)}
                   <DropdownMenuSeparator />
                   {dropDownItem(accountManagementMenuItems.community)}
                   <DropdownMenuSeparator />

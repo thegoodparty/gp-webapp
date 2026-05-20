@@ -28,19 +28,19 @@ export const DifferentSizes: Story = {
     <div className="flex flex-col gap-6 items-center">
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-sm font-medium">Small (24px)</h3>
-        <GoodPartyOrgLogo className="w-6 h-5" />
+        <GoodPartyOrgLogo size="small" />
       </div>
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-sm font-medium">Default (34px × 28px)</h3>
-        <GoodPartyOrgLogo />
+        <GoodPartyOrgLogo size="default" />
       </div>
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-sm font-medium">Large (50px × 42px)</h3>
-        <GoodPartyOrgLogo className="w-[50px] h-[42px]" />
+        <GoodPartyOrgLogo size="large" />
       </div>
       <div className="flex flex-col items-center gap-2">
         <h3 className="text-sm font-medium">Extra Large (80px × 67px)</h3>
-        <GoodPartyOrgLogo className="w-20 h-[67px]" />
+        <GoodPartyOrgLogo size="xl" />
       </div>
     </div>
   ),

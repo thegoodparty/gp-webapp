@@ -3,7 +3,7 @@ import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import { getUserCookie } from 'helpers/cookieHelper'
+import { useUser } from '@shared/hooks/useUser'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Link from 'next/link'
 
@@ -14,8 +14,8 @@ interface FlowCompleteProps {
 const FlowComplete = ({
   resetCallback,
 }: FlowCompleteProps): React.JSX.Element => {
-  const user = getUserCookie(true)
-  const userEmail = user && user.email ? user.email : ''
+  const [user] = useUser()
+  const userEmail = user?.email ?? ''
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
