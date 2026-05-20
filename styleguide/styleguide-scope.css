@@ -352,22 +352,46 @@
    */
   --theme-primary: var(--tw-blue-300);
   --theme-primary-foreground: var(--tw-neutral-950);
-  --theme-primary-focus: color-mix(in srgb, var(--tw-blue-300) 50%, transparent);
+  --theme-primary-focus: color-mix(
+    in srgb,
+    var(--tw-blue-300) 50%,
+    transparent
+  );
   --theme-secondary: var(--goodparty-cream);
   --theme-secondary-foreground: var(--tw-neutral-950);
-  --theme-secondary-focus: color-mix(in srgb, var(--goodparty-cream) 50%, transparent);
+  --theme-secondary-focus: color-mix(
+    in srgb,
+    var(--goodparty-cream) 50%,
+    transparent
+  );
   --theme-destructive: var(--color-red-300);
   --theme-destructive-foreground: var(--tw-neutral-950);
-  --theme-destructive-focus: color-mix(in srgb, var(--color-red-300) 50%, transparent);
+  --theme-destructive-focus: color-mix(
+    in srgb,
+    var(--color-red-300) 50%,
+    transparent
+  );
   --theme-success: var(--color-green-300);
   --theme-success-foreground: var(--tw-neutral-950);
-  --theme-success-focus: color-mix(in srgb, var(--color-green-300) 50%, transparent);
+  --theme-success-focus: color-mix(
+    in srgb,
+    var(--color-green-300) 50%,
+    transparent
+  );
   --theme-info: var(--color-blue-300);
   --theme-info-foreground: var(--tw-neutral-950);
-  --theme-info-focus: color-mix(in srgb, var(--color-blue-300) 50%, transparent);
+  --theme-info-focus: color-mix(
+    in srgb,
+    var(--color-blue-300) 50%,
+    transparent
+  );
   --theme-warning: var(--color-warning-400);
   --theme-warning-foreground: #000000;
-  --theme-warning-focus: color-mix(in srgb, var(--color-warning-400) 50%, transparent);
+  --theme-warning-focus: color-mix(
+    in srgb,
+    var(--color-warning-400) 50%,
+    transparent
+  );
   --theme-link: var(--tw-blue-300);
 
   /*
@@ -381,7 +405,11 @@
   --component-input-base: var(--tw-neutral-950);
   --component-input-active: var(--tw-blue-300);
   --component-input-foreground: var(--tw-neutral-950);
-  --component-input-focus: color-mix(in srgb, var(--tw-blue-300) 50%, transparent);
+  --component-input-focus: color-mix(
+    in srgb,
+    var(--tw-blue-300) 50%,
+    transparent
+  );
   --component-tooltip-base: var(--tw-neutral-100);
   --component-tooltip-foreground: var(--tw-neutral-950);
 

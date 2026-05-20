@@ -4,9 +4,7 @@
       "value": "{tailwind colors.neutral.700}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Highlight color for active or focused elements"
@@ -15,9 +13,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on accent-colored elements"
@@ -26,9 +22,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Main application background"
@@ -37,9 +31,7 @@
       "value": "{tailwind colors.neutral.600}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Default border color"
@@ -48,9 +40,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Primary text color on the background"
@@ -59,9 +49,7 @@
       "value": "{tailwind colors.neutral.800}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Subdued background for less important elements"
@@ -70,9 +58,7 @@
       "value": "{tailwind colors.neutral.400}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "De-emphasized text (captions, labels)"
@@ -81,9 +67,7 @@
       "value": "{tailwind colors.neutral.800}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Background for dropdown menus and popovers"
@@ -92,9 +76,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons within popovers"
@@ -103,9 +85,7 @@
       "value": "{tailwind colors.neutral.500}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Focus indicator color"
@@ -114,9 +94,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "The color of the space between a focused element and its ring outline"
@@ -125,9 +103,7 @@
       "value": "#a3a3a380",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -136,9 +112,7 @@
       "value": "#ffffff80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -147,9 +121,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Primary text color on the background"
@@ -158,9 +130,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Main application background"
@@ -171,9 +141,7 @@
       "value": "{tailwind colors.neutral.900}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Card component background"
@@ -182,9 +150,7 @@
       "value": "{tailwind colors.base.white}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons within cards"
@@ -193,9 +159,7 @@
       "value": "{tailwind colors.neutral.600}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Form inputs and button borders"
@@ -204,9 +168,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
@@ -215,9 +177,7 @@
       "value": "{tailwind colors.blue.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
@@ -226,9 +186,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in UI elements that have background color variable in light mode and input/30 variable in dark mode"
@@ -237,9 +195,7 @@
       "value": "{tailwind colors.neutral.100}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -247,9 +203,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -257,9 +211,7 @@
       "value": "#93c5fd80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -270,9 +222,7 @@
       "value": "{error.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Error and deletion action color"
@@ -281,9 +231,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on destructive-colored elements"
@@ -292,9 +240,7 @@
       "value": "{tailwind colors.blue.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Brand color for primary actions (buttons, highlights)"
@@ -303,9 +249,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on primary-colored elements"
@@ -314,9 +258,7 @@
       "value": "{goodparty.cream}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Less prominent action color"
@@ -325,9 +267,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on secondary-colored elements"
@@ -336,9 +276,7 @@
       "value": "#f56c6a80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in UI elements that have destructive/20 color variable in light mode and destructive/40 variable in dark mode"
@@ -347,9 +285,7 @@
       "value": "{info.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Error and deletion action color"
@@ -358,9 +294,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on destructive-colored elements"
@@ -369,9 +303,7 @@
       "value": "#75affe80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -380,9 +312,7 @@
       "value": "#93c5fd80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -391,9 +321,7 @@
       "value": "#fcf8f380",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Used in focus effect"
@@ -402,9 +330,7 @@
       "value": "{success.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Error and deletion action color"
@@ -413,9 +339,7 @@
       "value": "{tailwind colors.neutral.950}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons on destructive-colored elements"
@@ -424,9 +348,7 @@
       "value": "#86e38280",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Error and deletion action color"
@@ -462,9 +384,7 @@
       "value": "{tailwind colors.blue.300}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     }
@@ -474,9 +394,7 @@
       "value": "#0a0a0af2",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -484,9 +402,7 @@
       "value": "#0a0a0ae6",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -494,9 +410,7 @@
       "value": "#0a0a0acc",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -504,9 +418,7 @@
       "value": "#0a0a0ab3",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -514,9 +426,7 @@
       "value": "#0a0a0a99",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -524,9 +434,7 @@
       "value": "#0a0a0a80",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -534,9 +442,7 @@
       "value": "#0a0a0a66",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -544,9 +450,7 @@
       "value": "#0a0a0a4d",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -554,9 +458,7 @@
       "value": "#0a0a0a33",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     },
@@ -564,9 +466,7 @@
       "value": "#0a0a0a1a",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       }
     }
@@ -576,9 +476,7 @@
       "value": "{lavender.400}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Data visualization colors"
@@ -587,9 +485,7 @@
       "value": "{halo green.200}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Data visualization colors"
@@ -598,9 +494,7 @@
       "value": "{bright yellow.400}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Data visualization colors"
@@ -609,9 +503,7 @@
       "value": "{waxflower.200}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Data visualization colors"
@@ -620,9 +512,7 @@
       "value": "{midnight.200}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Data visualization colors"
@@ -633,9 +523,7 @@
       "value": "{tailwind colors.neutral.50}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text on sidebar primary elements"
@@ -644,9 +532,7 @@
       "value": "{tailwind colors.blue.600}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Primary actions within sidebar"
@@ -655,9 +541,7 @@
       "value": "{tailwind colors.neutral.50}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text and icons within sidebar"
@@ -666,9 +550,7 @@
       "value": "{tailwind colors.neutral.900}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Sidebar background"
@@ -677,9 +559,7 @@
       "value": "{tailwind colors.neutral.800}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Highlighted elements within sidebar"
@@ -688,9 +568,7 @@
       "value": "{tailwind colors.neutral.50}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Text on sidebar accent elements"
@@ -699,9 +577,7 @@
       "value": "#ffffff1a",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Sidebar divider lines or borders"
@@ -710,9 +586,7 @@
       "value": "{tailwind colors.neutral.600}",
       "type": "color",
       "$extensions": {
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ],
+        "com.figma.scopes": ["ALL_SCOPES"],
         "com.figma.hiddenFromPublishing": false
       },
       "description": "Focus indicators within sidebar"
