@@ -139,8 +139,9 @@ function messageToItem(msg: ChatMessage): ChatItem | null {
 
 /**
  * Shared chat body — message list, composer, suggested pills, streaming
- * logic. Rendered inside both `AskAiPopover` (popover container) and
- * `AskAiSheet` (right drawer).
+ * logic. Rendered inside `AskAiSheet` (the right-side drawer on desktop,
+ * bottom drawer on mobile) for all three Ask AI entry points: top-level,
+ * anchored selection, and reopening an existing chat annotation.
  *
  * Lifecycle:
  *  1. On mount, mint a briefing chat (annotationId + conversationId) unless
@@ -229,9 +230,8 @@ export default function AskAiChatBody({
   }, [active, initialize])
 
   // Abort any in-flight stream when the surface closes. State reset is
-  // unnecessary — both AskAiPopover (via Radix Portal) and AskAiSheet
-  // (via conditional mount in AnnotationsScope) unmount this component
-  // on close, so the next open gets fresh state from a fresh mount.
+  // unnecessary — AskAiSheet is conditionally mounted in AnnotationsScope,
+  // so the next open gets fresh state from a fresh mount.
   useEffect(() => {
     if (active) return
     const ctrl = abortRef.current

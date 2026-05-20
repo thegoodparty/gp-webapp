@@ -15,9 +15,9 @@ type Props = {
  * Floating pill that appears anchored to the user's text selection.
  *
  * Four buttons:
- *   - Ask AI    (opens the AskAiPopover anchored to the selection)
+ *   - Ask AI    (opens the AskAiSheet anchored to the selection)
  *   - Add Note  (opens the AddNoteSheet with the resolved anchor)
- *   - Bug icon  (no-op stub, wired in phase 6)
+ *   - Report    (opens the ReportErrorSheet with the resolved anchor)
  *   - X dismiss (clears selection)
  *
  * Positioned via fixed coordinates derived from the selection rect. Hidden
@@ -34,7 +34,7 @@ export default function HighlightToolbar({
 
   // Center horizontally over the selection, sit ~44px above its top edge.
   // Clamp to viewport with a small margin.
-  const toolbarApproxWidth = 240
+  const toolbarApproxWidth = 300
   const margin = 8
   const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1280
   const rawLeft = rect.left + rect.width / 2 - toolbarApproxWidth / 2
@@ -67,15 +67,15 @@ export default function HighlightToolbar({
         <MessageSquare className="size-3.5" aria-hidden />
         Add Note
       </Button>
-      <IconButton
+      <Button
         type="button"
         size="small"
-        variant="ghost"
-        aria-label="Report or correct an error"
+        variant="outline"
         onClick={onReportError}
       >
-        <Bug className="size-4" aria-hidden />
-      </IconButton>
+        <Bug className="size-3.5" aria-hidden />
+        Report
+      </Button>
       <IconButton
         type="button"
         size="small"
