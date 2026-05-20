@@ -371,8 +371,12 @@ export const TypeScale = () => (
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold text-5xl"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
+            className="py-4 px-4 font-outfit font-semibold"
+            style={{
+              fontSize: '48px',
+              lineHeight: '60px',
+              fontFamily: "'Outfit', sans-serif",
+            }}
           >
             Aa
           </td>
@@ -405,8 +409,12 @@ export const TypeScale = () => (
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold text-3xl"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
+            className="py-4 px-4 font-outfit font-semibold"
+            style={{
+              fontSize: '30px',
+              lineHeight: '40px',
+              fontFamily: "'Outfit', sans-serif",
+            }}
           >
             Aa
           </td>
