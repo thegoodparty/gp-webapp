@@ -1,40 +1,37 @@
 import { useState, useEffect, useRef } from 'react'
-import tailwindJson from '../tokens/Tailwind.json'
-import themeLightJson from '../tokens/ThemeLight.json'
-import themeDarkJson from '../tokens/ThemeDark.json'
 
-// Stories groupKey → JSON top-level key (note: JSON uses "components" plural)
-const JSON_GROUP_BY_STORIES_KEY = {
-  base: 'base',
-  theme: 'theme',
-  component: 'components',
-  data: 'data',
-  sidebar: 'sidebar',
-}
-
-// Normalizes Figma token refs to their actual CSS variable names so the chain
-// in the swatch card shows real, copy-pasteable identifiers (e.g.
-// "--theme-primary → --tw-blue-600").
-// "{tailwind colors.blue.600}" → "--tw-blue-600"
-// "{midnight.900}" / "{warning.600}" → "--color-midnight-900" / "--color-warning-600"
-// Raw hex (focus alpha tokens) → null
-function prettifyJsonRef(value) {
-  if (typeof value !== 'string') return null
-  if (!value.startsWith('{') || !value.endsWith('}')) return null
-  const inner = value.slice(1, -1)
-  if (inner.startsWith('tailwind colors.')) {
-    return '--tw-' + inner.slice('tailwind colors.'.length).replaceAll('.', '-')
+// design-tokens.css is the source of truth. The chain label under each swatch
+// (e.g. "↳ --theme-primary → --tw-blue-600") is extracted directly from the
+// live stylesheet — getComputedStyle resolves to the final hex, but raw
+// `cssRules[*].style.getPropertyValue(...)` returns the un-resolved `var(--…)`
+// reference, which is what we want.
+function readVarChain(varName) {
+  for (const sheet of document.styleSheets) {
+    let rules
+    try {
+      rules = sheet.cssRules || []
+    } catch {
+      // Cross-origin stylesheet — skip (won't have our tokens anyway).
+      continue
+    }
+    for (const rule of rules) {
+      if (!(rule instanceof CSSStyleRule)) continue
+      // Only look at :root / .dark blocks where our tokens live.
+      if (!/(^|,\s*):root|\.dark/.test(rule.selectorText || '')) continue
+      const raw = rule.style.getPropertyValue(varName).trim()
+      if (!raw) continue
+      const match = raw.match(/^var\(\s*(--[a-zA-Z0-9-]+)/)
+      if (match) return match[1]
+    }
   }
-  return '--color-' + inner.replaceAll('.', '-')
+  return null
 }
 
-function buildBaseRefMap(json, storiesGroupKey) {
-  const group = json[JSON_GROUP_BY_STORIES_KEY[storiesGroupKey]]
-  if (!group) return {}
+function buildBaseRefMap(prefix, names) {
   const map = {}
-  for (const [name, token] of Object.entries(group)) {
-    const pretty = prettifyJsonRef(token?.value)
-    if (pretty) map[name] = pretty
+  for (const name of names) {
+    const chain = readVarChain(`--${prefix}-${name}`)
+    if (chain) map[name] = chain
   }
   return map
 }
@@ -131,6 +128,19 @@ function readCSSTokenGroup(el, prefix, names) {
     result[name] = { hex: readCSSVar(el, varName), ref: varName }
   }
   return result
+}
+
+// Reads the Tailwind palette CSS variable for a given scale step. Tailwind v4
+// only emits --color-{scale}-{step} vars for utility classes the codebase
+// actually references — so a missing value here means nothing in the app uses
+// bg-{scale}-{step}. We filter those out rather than fabricating defaults,
+// keeping the displayed palette honest about what consumers can actually render.
+function readTailwindScale(scaleName, steps) {
+  const el = document.documentElement
+  return steps.flatMap((step) => {
+    const hex = readCSSVar(el, `--color-${scaleName}-${step}`)
+    return hex ? [{ step, hex }] : []
+  })
 }
 
 const SCALE_STEPS = [
@@ -472,13 +482,12 @@ export const ThemeColors = ({ mode }) => {
   const [tokens, setTokens] = useState(null)
   const isDark = mode === 'dark'
 
-  const themeJson = isDark ? themeDarkJson : themeLightJson
   const baseRefs = {
-    base: buildBaseRefMap(themeJson, 'base'),
-    theme: buildBaseRefMap(themeJson, 'theme'),
-    component: buildBaseRefMap(themeJson, 'component'),
-    data: buildBaseRefMap(themeJson, 'data'),
-    sidebar: buildBaseRefMap(themeJson, 'sidebar'),
+    base: buildBaseRefMap('base', BASE_TOKEN_NAMES),
+    theme: buildBaseRefMap('theme', THEME_TOKEN_NAMES),
+    component: buildBaseRefMap('component', COMPONENT_TOKEN_NAMES),
+    data: buildBaseRefMap('data', DATA_TOKEN_NAMES),
+    sidebar: buildBaseRefMap('component-sidebar', SIDEBAR_TOKEN_NAMES),
   }
 
   useEffect(() => {
@@ -770,16 +779,6 @@ SemanticColors.parameters = STORY_PARAMS
 // Tailwind Colors
 // =============================================================================
 
-const twScales = tailwindJson['tailwind colors']
-
-// Converts a Tailwind scale object to [{ step, hex }] array
-function parseTwScale(scaleObj) {
-  return Object.entries(scaleObj).map(([step, token]) => ({
-    step,
-    hex: token.value,
-  }))
-}
-
 const TW_SCALE_NAMES = [
   'slate',
   'gray',
@@ -805,34 +804,58 @@ const TW_SCALE_NAMES = [
   'rose',
 ]
 
-export const TailwindColors = () => (
-  <div style={PAGE_STYLE} className="space-y-10">
-    <PageHeader
-      title="Tailwind Colors"
-      description="The full standard Tailwind CSS color palette, sourced directly from the Figma design token export."
-    />
+const TW_BASE_STEPS = ['black', 'white', 'transparent']
 
-    <Section title="Base" description="Black, white, and transparent.">
-      <SwatchRow>
-        {parseTwScale(twScales.base).map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
+export const TailwindColors = () => {
+  const [data, setData] = useState(null)
 
-    {TW_SCALE_NAMES.map((scaleName) => (
-      <ScaleRow
-        key={scaleName}
-        scaleName={scaleName.charAt(0).toUpperCase() + scaleName.slice(1)}
-        prefix={`bg-${scaleName}`}
-        colors={parseTwScale(twScales[scaleName])}
+  useEffect(() => {
+    const el = document.documentElement
+    setData({
+      base: TW_BASE_STEPS.flatMap((step) => {
+        const hex = readCSSVar(el, `--color-${step}`)
+        return hex ? [{ step, hex }] : []
+      }),
+      scales: TW_SCALE_NAMES.map((scaleName) => ({
+        scaleName,
+        colors: readTailwindScale(scaleName, SCALE_STEPS),
+      })).filter(({ colors }) => colors.length > 0),
+    })
+  }, [])
+
+  if (!data) return null
+
+  return (
+    <div style={PAGE_STYLE} className="space-y-10">
+      <PageHeader
+        title="Tailwind Colors"
+        description="The Tailwind palette steps this codebase actually compiles. Read live from --color-{scale}-{step} CSS variables — steps no utility class references aren't shown."
       />
-    ))}
-  </div>
-)
+
+      {data.base.length > 0 && (
+        <Section title="Base" description="Black, white, and transparent.">
+          <SwatchRow>
+            {data.base.map(({ step, hex }) => (
+              <Swatch
+                key={step}
+                name={step}
+                hex={hex}
+                tailwindClass={`bg-${step}`}
+              />
+            ))}
+          </SwatchRow>
+        </Section>
+      )}
+
+      {data.scales.map(({ scaleName, colors }) => (
+        <ScaleRow
+          key={scaleName}
+          scaleName={scaleName.charAt(0).toUpperCase() + scaleName.slice(1)}
+          prefix={`bg-${scaleName}`}
+          colors={colors}
+        />
+      ))}
+    </div>
+  )
+}
 TailwindColors.parameters = STORY_PARAMS

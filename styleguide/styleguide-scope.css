@@ -305,7 +305,8 @@
 /*
  * =============================================================================
  * DARK MODE SCOPED VARIABLES
- * Values derived from Figma ThemeDark.json export.
+ * These values, alongside design-tokens.css, are the canonical source of
+ * truth for dark mode tokens. The Figma file mirrors them.
  * =============================================================================
  */
 .dark
