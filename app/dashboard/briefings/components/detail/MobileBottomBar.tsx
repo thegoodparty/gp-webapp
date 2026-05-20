@@ -3,7 +3,13 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { List, ChevronUp, Download, NotebookPen, Sparkles } from 'lucide-react'
+import {
+  List,
+  ChevronUp,
+  Download,
+  MessageSquare,
+  Sparkles,
+} from 'lucide-react'
 import {
   Button,
   IconButton,
@@ -130,7 +136,7 @@ export default function MobileBottomBar({
           aria-label="Add notes"
           onClick={openAddNoteTopLevel}
         >
-          <NotebookPen className="size-5" aria-hidden />
+          <MessageSquare className="size-5" aria-hidden />
         </IconButton>
         <IconButton
           type="button"
