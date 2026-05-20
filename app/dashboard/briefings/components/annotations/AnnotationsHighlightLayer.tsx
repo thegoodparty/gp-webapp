@@ -51,7 +51,7 @@ const STYLE_RULES = `
 ::highlight(${HIGHLIGHT_NAMES.chat}) {
   /* Ask AI annotations render as hyperlinks rather than highlighted text. */
   color: var(--info, #1b6afc);
-  text-decoration: underline;
+  text-decoration: underline dotted;
   text-decoration-color: color-mix(in srgb, var(--info, #1b6afc) 60%, transparent);
   text-underline-offset: 0.15em;
 }
