@@ -88,7 +88,7 @@ export const Footer = ({
               alt="GoodParty.org"
             />
             <div
-              className="font-sfpro font-normal text-slate-200 text-[16px] leading-[24px] mt-4 max-w-lg"
+              className="font-normal text-slate-200 text-[16px] leading-[24px] mt-4 max-w-lg"
               data-cy="footer-join-us"
             >
               Not a political party. We&apos;re building free tools to change
@@ -109,7 +109,7 @@ export const Footer = ({
         <div className="grid grid-cols-12 mt-12">
           <div className="col-span-12 md:col-span-9">
             <div
-              className="font-sfpro text-start lg:text-left text-slate-200"
+              className="text-start lg:text-left text-slate-200"
               data-cy="footer-copyright"
             >
               Copyright &copy; {year} GoodParty.org. All rights reserved. &nbsp;
