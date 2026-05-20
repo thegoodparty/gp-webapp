@@ -284,13 +284,15 @@ export default function AnnotationsScope({
       const target = e.target as HTMLElement | null
       if (!target) return
 
-      // The bug-icon overlay lives outside the briefing content. Match it
-      // first so clicks on the icon open the matching report sheet.
-      const bugMarker = target.closest(
-        '.briefing-bug-marker[data-annotation-id]',
+      // Marker icons (note + bug) are inline DOM nodes inserted at the end
+      // of each annotation's range. Pointer hits on them should open the
+      // matching annotation overlay; pointToOffset can't see them because
+      // they're outside the briefing's text run.
+      const marker = target.closest(
+        '.briefing-note-marker[data-annotation-id], .briefing-bug-marker[data-annotation-id]',
       ) as HTMLElement | null
-      if (bugMarker) {
-        const id = bugMarker.dataset.annotationId
+      if (marker) {
+        const id = marker.dataset.annotationId
         const ann = id ? annotations.find((a) => a.id === id) : null
         if (ann) {
           openAnnotation(ann)

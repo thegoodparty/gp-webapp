@@ -24,6 +24,7 @@ const HIGHLIGHT_NAMES: Record<AnnotationKind, string> = {
   bug_report: 'briefing-annotation-bug',
 }
 const HOVER_NAME = 'briefing-annotation-hover'
+const NOTE_MARKER_CLASS = 'briefing-note-marker'
 const BUG_MARKER_CLASS = 'briefing-bug-marker'
 const STYLE_TAG_ID = 'briefing-annotation-highlight-style'
 
@@ -32,16 +33,26 @@ const STYLE_TAG_ID = 'briefing-annotation-highlight-style'
  * (Turbopack's CSS parser) currently rejects `::highlight()`. Once it
  * supports the spec, move these into globals.css.
  *
- * Bug-marker hover state is driven via a `data-hover` attribute synced
- * from the same mousemove handler that paints the hover highlight, so the
- * icon and its text highlight darken together whichever one the user
- * actually points at.
+ * Each highlight kind has its own visual treatment:
+ *   - note      → blue tint background + a notebook icon at the end
+ *   - chat      → no background; rendered as a hyperlink (colored + underlined)
+ *   - bug_report → red tint background + line-through + bug icon at the end
+ *
+ * Marker hover state is driven via a `data-hover` attribute synced from the
+ * same mousemove handler that paints the hover highlight, so the icon and
+ * its text highlight darken together whichever one the user points at.
  */
 const STYLE_RULES = `
-::highlight(${HIGHLIGHT_NAMES.note}),
-::highlight(${HIGHLIGHT_NAMES.chat}) {
+::highlight(${HIGHLIGHT_NAMES.note}) {
   background-color: color-mix(in srgb, var(--info, #1b6afc) 22%, transparent);
   color: inherit;
+}
+::highlight(${HIGHLIGHT_NAMES.chat}) {
+  /* Ask AI annotations render as hyperlinks rather than highlighted text. */
+  color: var(--info, #1b6afc);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--info, #1b6afc) 60%, transparent);
+  text-underline-offset: 0.15em;
 }
 ::highlight(${HIGHLIGHT_NAMES.bug_report}) {
   background-color: color-mix(in srgb, var(--error, #e00c30) 20%, transparent);
@@ -52,6 +63,7 @@ const STYLE_RULES = `
 ::highlight(${HOVER_NAME}) {
   background-color: color-mix(in srgb, var(--foreground, #161f31) 12%, transparent);
 }
+.${NOTE_MARKER_CLASS},
 .${BUG_MARKER_CLASS} {
   display: inline-flex;
   align-items: center;
@@ -67,8 +79,6 @@ const STYLE_RULES = `
   top: -0.13em;
   margin: 0 4px 0 0;
   padding: 0 4px;
-  background-color: color-mix(in srgb, var(--error, #e00c30) 20%, transparent);
-  color: var(--error, #e00c30);
   cursor: pointer;
   /* Atomic: the icon is part of the annotation, not a separate selectable
      token. Selection skips it; copy doesn't include it. */
@@ -76,11 +86,24 @@ const STYLE_RULES = `
   -webkit-user-select: none;
   -moz-user-select: none;
 }
+.${NOTE_MARKER_CLASS} {
+  background-color: color-mix(in srgb, var(--info, #1b6afc) 22%, transparent);
+  color: var(--info, #1b6afc);
+}
+.${BUG_MARKER_CLASS} {
+  background-color: color-mix(in srgb, var(--error, #e00c30) 20%, transparent);
+  color: var(--error, #e00c30);
+}
+.${NOTE_MARKER_CLASS} svg,
 .${BUG_MARKER_CLASS} svg {
   display: block;
   width: 14px;
   height: 14px;
   pointer-events: none;
+}
+.${NOTE_MARKER_CLASS}[data-hover='true'] {
+  background-color: color-mix(in srgb, var(--info, #1b6afc) 32%, transparent);
+  color: color-mix(in srgb, var(--info, #1b6afc) 80%, black);
 }
 .${BUG_MARKER_CLASS}[data-hover='true'] {
   background-color: color-mix(in srgb, var(--error, #e00c30) 30%, transparent);
@@ -89,28 +112,42 @@ const STYLE_RULES = `
 `
 
 const BUG_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>`
+// Lucide NotebookPen — mirrors the icon used by the Add Notes dialog button.
+const NOTE_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>`
 
-function removeBugMarkers() {
+const MARKER_SELECTOR = `.${NOTE_MARKER_CLASS}[data-annotation-id], .${BUG_MARKER_CLASS}[data-annotation-id]`
+
+function removeAllMarkers() {
   if (typeof document === 'undefined') return
-  const nodes = document.querySelectorAll('.' + BUG_MARKER_CLASS)
+  const nodes = document.querySelectorAll(
+    `.${NOTE_MARKER_CLASS}, .${BUG_MARKER_CLASS}`,
+  )
   for (const n of Array.from(nodes)) n.remove()
 }
 
-function insertBugMarker(range: Range, annotationId: string) {
+function insertMarker(
+  range: Range,
+  annotationId: string,
+  kind: 'note' | 'bug_report',
+) {
   const span = document.createElement('span')
-  span.className = BUG_MARKER_CLASS
+  span.className = kind === 'note' ? NOTE_MARKER_CLASS : BUG_MARKER_CLASS
   span.dataset.annotationId = annotationId
   span.setAttribute('contenteditable', 'false')
-  span.setAttribute('aria-label', 'Open bug report')
-  span.innerHTML = BUG_ICON_SVG
+  span.setAttribute(
+    'aria-label',
+    kind === 'note' ? 'Open note' : 'Open bug report',
+  )
+  span.innerHTML = kind === 'note' ? NOTE_ICON_SVG : BUG_ICON_SVG
   const at = range.cloneRange()
   at.collapse(false)
   at.insertNode(span)
 }
 
-function findBugMarker(annotationId: string): HTMLElement | null {
+function findMarker(annotationId: string): HTMLElement | null {
+  const escaped = CSS.escape(annotationId)
   return document.querySelector(
-    `.${BUG_MARKER_CLASS}[data-annotation-id="${CSS.escape(annotationId)}"]`,
+    `.${NOTE_MARKER_CLASS}[data-annotation-id="${escaped}"], .${BUG_MARKER_CLASS}[data-annotation-id="${escaped}"]`,
   )
 }
 
@@ -143,7 +180,7 @@ export default function AnnotationsHighlightLayer({
       document.head.appendChild(tag)
     }
 
-    removeBugMarkers()
+    removeAllMarkers()
 
     const rangesByKind: Record<AnnotationKind, Range[]> = {
       note: [],
@@ -161,8 +198,8 @@ export default function AnnotationsHighlightLayer({
       rangesByKind[a.kind].push(range)
       resolved.push({ annotation: a, range })
 
-      if (a.kind === 'bug_report') {
-        insertBugMarker(range, a.id)
+      if (a.kind === 'note' || a.kind === 'bug_report') {
+        insertMarker(range, a.id, a.kind)
       }
     }
 
@@ -177,9 +214,9 @@ export default function AnnotationsHighlightLayer({
     }
 
     // Hover state. The mouse can be over either the highlighted text or
-    // the inline bug icon — both should count as hovering the same
-    // annotation. We sync the icon's `data-hover` so its background
-    // darkens together with the text highlight.
+    // an inline marker icon (note or bug) — both should count as hovering
+    // the same annotation. We sync the marker's `data-hover` so its
+    // background darkens together with the text highlight.
     let hoveredId: string | null = null
     let hoveredMarker: HTMLElement | null = null
     let raf = 0
@@ -193,9 +230,7 @@ export default function AnnotationsHighlightLayer({
 
       const elAtPoint = document.elementFromPoint(pendingX, pendingY)
       const markerEl = elAtPoint
-        ? (elAtPoint.closest(
-            `.${BUG_MARKER_CLASS}[data-annotation-id]`,
-          ) as HTMLElement | null)
+        ? (elAtPoint.closest(MARKER_SELECTOR) as HTMLElement | null)
         : null
       if (markerEl?.dataset.annotationId) {
         const id = markerEl.dataset.annotationId
@@ -224,13 +259,13 @@ export default function AnnotationsHighlightLayer({
       if (nextId === hoveredId) return
       hoveredId = nextId
 
-      // Sync icon hover state (only relevant for bug reports).
+      // Sync icon hover state (relevant for both note and bug markers).
       if (hoveredMarker) {
         hoveredMarker.removeAttribute('data-hover')
         hoveredMarker = null
       }
       if (nextId) {
-        const marker = findBugMarker(nextId)
+        const marker = findMarker(nextId)
         if (marker) {
           marker.setAttribute('data-hover', 'true')
           hoveredMarker = marker
@@ -262,7 +297,7 @@ export default function AnnotationsHighlightLayer({
       document.body.style.cursor = ''
       if (hoveredMarker) hoveredMarker.removeAttribute('data-hover')
       resolvedRef.current = []
-      removeBugMarkers()
+      removeAllMarkers()
     }
   }, [annotations, pathname])
 
