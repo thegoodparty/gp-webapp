@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
 
 // design-tokens.css is the source of truth. The chain label under each swatch
 // (e.g. "↳ --theme-primary → --tw-blue-600") is extracted directly from the
@@ -305,40 +306,6 @@ function Section({ title, description, children }) {
 function SwatchRow({ children }) {
   return <div className="flex flex-wrap gap-2">{children}</div>
 }
-
-const PAGE_STYLE = {
-  backgroundColor: '#ffffff',
-  padding: 24,
-  minHeight: '100vh',
-}
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2
-        style={{
-          fontSize: 24,
-          fontWeight: 700,
-          color: 'var(--color-foreground)',
-          margin: 0,
-        }}
-      >
-        {title}
-      </h2>
-      <p
-        style={{
-          fontSize: 14,
-          color: 'var(--color-muted-foreground)',
-          marginTop: 4,
-        }}
-      >
-        {description}
-      </p>
-    </div>
-  )
-}
-
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
 
 function ScaleRow({ scaleName, prefix, colors }) {
   return (

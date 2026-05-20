@@ -1,3 +1,5 @@
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
+
 const meta = {
   title: 'Foundations/Typography',
   parameters: {
@@ -11,39 +13,6 @@ const meta = {
 }
 
 export default meta
-
-const PAGE_STYLE = {
-  backgroundColor: '#ffffff',
-  padding: 24,
-  minHeight: '100vh',
-}
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2
-        style={{
-          fontSize: 24,
-          fontWeight: 700,
-          color: 'var(--color-foreground)',
-          margin: 0,
-        }}
-      >
-        {title}
-      </h2>
-      <p
-        style={{
-          fontSize: 14,
-          color: 'var(--color-muted-foreground)',
-          marginTop: 4,
-        }}
-      >
-        {description}
-      </p>
-    </div>
-  )
-}
 
 const sampleText = 'Almost before we knew it, we had left the ground.'
 const longText =
