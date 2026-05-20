@@ -25,7 +25,7 @@ export const FontFamilies = () => (
   <div style={PAGE_STYLE} className="space-y-10">
     <PageHeader
       title="Font Families"
-      description="Four font families used across the design system. Headings use Outfit, body text uses Open Sans, and system/code uses Geist."
+      description="Three font families used across the design system. Open Sans covers headings and body text; Geist and Geist Mono handle system and code."
     />
 
     <table className="w-full border-collapse">
@@ -75,19 +75,6 @@ export const FontFamilies = () => (
           </td>
         </tr>
         <tr className="border-b border-gray-100">
-          <td className="py-4 px-4 font-semibold text-gray-900">font-outfit</td>
-          <td className="py-4 px-4 text-gray-600">Outfit</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">
-            font-outfit
-          </td>
-          <td
-            className="py-4 px-4 font-outfit"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
-          </td>
-        </tr>
-        <tr className="border-b border-gray-100">
           <td className="py-4 px-4 font-semibold text-gray-900">
             font-opensans
           </td>
@@ -124,12 +111,7 @@ export const FontWeights = () => (
           <th className="py-3 px-4 text-sm font-bold text-gray-900 w-40">
             Tailwind Class
           </th>
-          <th className="py-3 px-4 text-sm font-bold text-gray-900">
-            Sample (Outfit)
-          </th>
-          <th className="py-3 px-4 text-sm font-bold text-gray-900">
-            Sample (Open Sans)
-          </th>
+          <th className="py-3 px-4 text-sm font-bold text-gray-900">Sample</th>
         </tr>
       </thead>
       <tbody>
@@ -141,12 +123,6 @@ export const FontWeights = () => (
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             font-light
           </td>
-          <td
-            className="py-4 px-4 font-outfit font-light"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
-          </td>
           <td className="py-4 px-4 font-opensans font-light">{sampleText}</td>
         </tr>
         <tr className="border-b border-gray-100">
@@ -156,12 +132,6 @@ export const FontWeights = () => (
           <td className="py-4 px-4 font-mono text-sm text-gray-500">400</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             font-normal
-          </td>
-          <td
-            className="py-4 px-4 font-outfit font-normal"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
           </td>
           <td className="py-4 px-4 font-opensans font-normal">{sampleText}</td>
         </tr>
@@ -173,12 +143,6 @@ export const FontWeights = () => (
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             font-medium
           </td>
-          <td
-            className="py-4 px-4 font-outfit font-medium"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
-          </td>
           <td className="py-4 px-4 font-opensans font-medium">{sampleText}</td>
         </tr>
         <tr className="border-b border-gray-100">
@@ -188,12 +152,6 @@ export const FontWeights = () => (
           <td className="py-4 px-4 font-mono text-sm text-gray-500">600</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             font-semibold
-          </td>
-          <td
-            className="py-4 px-4 font-outfit font-semibold"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
           </td>
           <td className="py-4 px-4 font-opensans font-semibold">
             {sampleText}
@@ -206,12 +164,6 @@ export const FontWeights = () => (
           <td className="py-4 px-4 font-mono text-sm text-gray-500">700</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             font-bold
-          </td>
-          <td
-            className="py-4 px-4 font-outfit font-bold"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            {sampleText}
           </td>
           <td className="py-4 px-4 font-opensans font-bold">{sampleText}</td>
         </tr>
@@ -230,7 +182,7 @@ export const TypeScale = () => (
   <div style={PAGE_STYLE} className="space-y-10">
     <PageHeader
       title="Type Scale"
-      description="Full typography scale from the Figma design system. Sizes 9xl–xl use Outfit (headings), lg–xs use Open Sans (body)."
+      description="Full typography scale from the Figma design system. All sizes render in Open Sans. Headings (9xl–xl) use larger sizes and heavier weights; body sizes (lg–xs) use lighter weights."
     />
 
     <table className="w-full border-collapse">
@@ -259,16 +211,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">9xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">128px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">160px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '128px',
               lineHeight: '160px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -278,16 +231,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">8xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">96px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">120px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '96px',
               lineHeight: '120px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -297,16 +251,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">7xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">72px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">90px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '72px',
               lineHeight: '90px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -316,16 +271,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">6xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">60px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">72px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '60px',
               lineHeight: '72px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -335,16 +291,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">5xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">48px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">60px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '48px',
               lineHeight: '60px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -354,16 +311,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">4xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">40px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">52px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '40px',
               lineHeight: '52px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -373,16 +331,17 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">3xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">30px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">40px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
           <td
-            className="py-4 px-4 font-outfit font-semibold"
+            className="py-4 px-4 font-opensans font-semibold"
             style={{
               fontSize: '30px',
               lineHeight: '40px',
-              fontFamily: "'Outfit', sans-serif",
             }}
           >
             Aa
@@ -392,31 +351,25 @@ export const TypeScale = () => (
           <td className="py-4 px-4 font-mono text-sm font-semibold">2xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">24px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">32px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
-          <td
-            className="py-4 px-4 font-outfit font-semibold text-2xl"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            Aa
-          </td>
+          <td className="py-4 px-4 font-opensans font-semibold text-2xl">Aa</td>
         </tr>
         <tr className="border-b border-gray-100">
           <td className="py-4 px-4 font-mono text-sm font-semibold">xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">20px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">28px</td>
-          <td className="py-4 px-4 font-mono text-sm text-gray-500">Outfit</td>
+          <td className="py-4 px-4 font-mono text-sm text-gray-500">
+            Open Sans
+          </td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
             Semibold (600)
           </td>
-          <td
-            className="py-4 px-4 font-outfit font-semibold text-xl"
-            style={{ fontFamily: "'Outfit', sans-serif" }}
-          >
-            Aa
-          </td>
+          <td className="py-4 px-4 font-opensans font-semibold text-xl">Aa</td>
         </tr>
         <tr className="border-b border-gray-100 bg-gray-50/50">
           <td className="py-4 px-4 font-mono text-sm font-semibold">lg</td>
@@ -488,18 +441,16 @@ export const Headings = () => (
   <div style={PAGE_STYLE} className="space-y-10">
     <PageHeader
       title="Headings"
-      description="Semantic heading elements h1–h6, styled using Outfit. Use these for page titles, section headers, and content hierarchy."
+      description="Semantic heading elements h1–h6, styled using Open Sans. Use these for page titles, section headers, and content hierarchy."
     />
     <div className="space-y-6">
       <div>
-        <code className="text-xs text-muted">h1 · 48px · Bold · Outfit</code>
+        <code className="text-xs text-muted">h1 · 48px · Bold · Open Sans</code>
         <h1
           style={{
             fontSize: 48,
             fontWeight: 700,
             lineHeight: 1.25,
-            letterSpacing: '-0.025em',
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
@@ -507,14 +458,12 @@ export const Headings = () => (
         </h1>
       </div>
       <div>
-        <code className="text-xs text-muted">h2 · 36px · Bold · Outfit</code>
+        <code className="text-xs text-muted">h2 · 36px · Bold · Open Sans</code>
         <h2
           style={{
             fontSize: 36,
             fontWeight: 700,
             lineHeight: 1.25,
-            letterSpacing: '-0.025em',
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
@@ -523,15 +472,13 @@ export const Headings = () => (
       </div>
       <div>
         <code className="text-xs text-muted">
-          h3 · 30px · Semibold · Outfit
+          h3 · 30px · Semibold · Open Sans
         </code>
         <h3
           style={{
             fontSize: 30,
             fontWeight: 600,
             lineHeight: 1.375,
-            letterSpacing: '-0.025em',
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
@@ -540,14 +487,13 @@ export const Headings = () => (
       </div>
       <div>
         <code className="text-xs text-muted">
-          h4 · 24px · Semibold · Outfit
+          h4 · 24px · Semibold · Open Sans
         </code>
         <h4
           style={{
             fontSize: 24,
             fontWeight: 600,
             lineHeight: 1.375,
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
@@ -555,13 +501,14 @@ export const Headings = () => (
         </h4>
       </div>
       <div>
-        <code className="text-xs text-muted">h5 · 20px · Medium · Outfit</code>
+        <code className="text-xs text-muted">
+          h5 · 20px · Medium · Open Sans
+        </code>
         <h5
           style={{
             fontSize: 20,
             fontWeight: 500,
             lineHeight: 1.5,
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
@@ -569,13 +516,14 @@ export const Headings = () => (
         </h5>
       </div>
       <div>
-        <code className="text-xs text-muted">h6 · 18px · Medium · Outfit</code>
+        <code className="text-xs text-muted">
+          h6 · 18px · Medium · Open Sans
+        </code>
         <h6
           style={{
             fontSize: 18,
             fontWeight: 500,
             lineHeight: 1.5,
-            fontFamily: "'Outfit', sans-serif",
             margin: 0,
           }}
         >
