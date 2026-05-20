@@ -93,11 +93,10 @@ const STYLE_RULES = `
   color: var(--info, #1b6afc);
 }
 .${CHAT_MARKER_CLASS} {
-  /* Chat annotations themselves render as hyperlinks (no background), so the
-     marker carries the only visual tint for them. Same blue family as notes
-     since both are "info"-class affordances; the Sparkles icon and absence
-     of a text-background differentiate them. */
-  background-color: color-mix(in srgb, var(--info, #1b6afc) 18%, transparent);
+  /* Chat annotations render as hyperlinks, not highlighted spans — so the
+     marker matches: no background pill, just the Sparkles icon in the same
+     info color as the underlined text. */
+  background-color: transparent;
   color: var(--info, #1b6afc);
 }
 .${BUG_MARKER_CLASS} {
@@ -117,7 +116,6 @@ const STYLE_RULES = `
   color: color-mix(in srgb, var(--info, #1b6afc) 80%, black);
 }
 .${CHAT_MARKER_CLASS}[data-hover='true'] {
-  background-color: color-mix(in srgb, var(--info, #1b6afc) 28%, transparent);
   color: color-mix(in srgb, var(--info, #1b6afc) 80%, black);
 }
 .${BUG_MARKER_CLASS}[data-hover='true'] {
