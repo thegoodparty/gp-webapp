@@ -5,7 +5,14 @@ import { useState, useEffect, useRef } from 'react'
 // live stylesheet — getComputedStyle resolves to the final hex, but raw
 // `cssRules[*].style.getPropertyValue(...)` returns the un-resolved `var(--…)`
 // reference, which is what we want.
-function readVarChain(varName) {
+//
+// Light-mode tokens live in :root (design-tokens.css). Dark-mode overrides
+// live under `.dark [data-slot]…` (styleguide-scope.css). When isDark is
+// true, prefer the dark-mode value and fall back to light if the token has
+// no dark override.
+function readVarChain(varName, isDark) {
+  let darkChain = null
+  let lightChain = null
   for (const sheet of document.styleSheets) {
     let rules
     try {
@@ -16,21 +23,25 @@ function readVarChain(varName) {
     }
     for (const rule of rules) {
       if (!(rule instanceof CSSStyleRule)) continue
-      // Only look at :root / .dark blocks where our tokens live.
-      if (!/(^|,\s*):root|\.dark/.test(rule.selectorText || '')) continue
+      const selector = rule.selectorText || ''
+      const isDarkRule = /\.dark\b/.test(selector)
+      const isLightRule = /(^|,\s*):root\b/.test(selector)
+      if (!isDarkRule && !isLightRule) continue
       const raw = rule.style.getPropertyValue(varName).trim()
       if (!raw) continue
       const match = raw.match(/^var\(\s*(--[a-zA-Z0-9-]+)/)
-      if (match) return match[1]
+      if (!match) continue
+      if (isDarkRule) darkChain = match[1]
+      else lightChain = match[1]
     }
   }
-  return null
+  return isDark ? darkChain ?? lightChain : lightChain
 }
 
-function buildBaseRefMap(prefix, names) {
+function buildBaseRefMap(prefix, names, isDark) {
   const map = {}
   for (const name of names) {
-    const chain = readVarChain(`--${prefix}-${name}`)
+    const chain = readVarChain(`--${prefix}-${name}`, isDark)
     if (chain) map[name] = chain
   }
   return map
@@ -483,11 +494,11 @@ export const ThemeColors = ({ mode }) => {
   const isDark = mode === 'dark'
 
   const baseRefs = {
-    base: buildBaseRefMap('base', BASE_TOKEN_NAMES),
-    theme: buildBaseRefMap('theme', THEME_TOKEN_NAMES),
-    component: buildBaseRefMap('component', COMPONENT_TOKEN_NAMES),
-    data: buildBaseRefMap('data', DATA_TOKEN_NAMES),
-    sidebar: buildBaseRefMap('component-sidebar', SIDEBAR_TOKEN_NAMES),
+    base: buildBaseRefMap('base', BASE_TOKEN_NAMES, isDark),
+    theme: buildBaseRefMap('theme', THEME_TOKEN_NAMES, isDark),
+    component: buildBaseRefMap('component', COMPONENT_TOKEN_NAMES, isDark),
+    data: buildBaseRefMap('data', DATA_TOKEN_NAMES, isDark),
+    sidebar: buildBaseRefMap('component-sidebar', SIDEBAR_TOKEN_NAMES, isDark),
   }
 
   useEffect(() => {
