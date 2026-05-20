@@ -6,9 +6,7 @@ interface Body2Props {
 }
 
 const Body2 = ({ children, className = '' }: Body2Props) => (
-  <div className={`font-normal font-sfpro text-sm ${className}`}>
-    {children}
-  </div>
+  <div className={`font-normal text-sm ${className}`}>{children}</div>
 )
 
 export default Body2

@@ -6,9 +6,7 @@ interface CaptionProps {
 }
 
 const Caption = ({ children, className = '' }: CaptionProps) => (
-  <div className={`font-semibold font-sfpro text-xs ${className}`}>
-    {children}
-  </div>
+  <div className={`font-semibold text-xs ${className}`}>{children}</div>
 )
 
 export default Caption

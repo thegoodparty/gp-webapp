@@ -184,7 +184,7 @@ export function ProUpgradeModal({
         <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
         <Body2 className="my-4">{description}</Body2>
         <Body2 className="leading-4">
-          <ul className="list-none list-inside p-0 font-sfpro m-0">
+          <ul className="list-none list-inside p-0 m-0">
             {items.map((item, index) => (
               <li key={index}>✔&nbsp; {item}</li>
             ))}

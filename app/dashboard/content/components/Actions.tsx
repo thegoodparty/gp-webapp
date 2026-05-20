@@ -141,7 +141,7 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaPencilAlt className="text-[14px]" />
-                    <div className="ml-3 font-sfpro text-[17px]">Rename</div>
+                    <div className="ml-3 text-[17px]">Rename</div>
                   </div>
                 </span>
               </Button>
@@ -156,9 +156,7 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
                   <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                     <div className="whitespace-nowrap text-lg flex items-center w-full">
                       <FaGlobe className="text-[14px]" />
-                      <div className="ml-3 font-sfpro text-[17px]">
-                        Translate
-                      </div>
+                      <div className="ml-3 text-[17px]">Translate</div>
                     </div>
                   </span>
                 </Button>
@@ -173,7 +171,7 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaCopy className="text-[14px]" />
-                    <div className="ml-3 font-sfpro text-[17px]">Duplicate</div>
+                    <div className="ml-3 text-[17px]">Duplicate</div>
                   </div>
                 </span>
               </Button> */}
@@ -194,7 +192,7 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
                 <span className="text-red-400 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaTrashAlt className="text-[14px]" />
-                    <div className="ml-3 font-sfpro text-[17px]">Delete</div>
+                    <div className="ml-3 text-[17px]">Delete</div>
                   </div>
                 </span>
               </Button>

@@ -547,7 +547,7 @@
 body {
   width: 100%;
   height: 100%;
-  font-family: var(--outfit-font);
+  font-family: var(--open-sans-font);
 }
 
 a:hover {
@@ -579,6 +579,20 @@ a:hover {
   input[type='reset'],
   summary {
     cursor: pointer;
+  }
+
+  /*
+   * Headings use Outfit (the display font). Tailwind v4 preflight wipes
+   * browser heading defaults and we've set the body to Open Sans, so without
+   * this rule headings would inherit Open Sans too.
+   */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--outfit-font);
   }
 
   /*

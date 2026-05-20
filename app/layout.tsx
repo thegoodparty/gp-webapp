@@ -1,5 +1,4 @@
 import { Open_Sans, Outfit } from 'next/font/google'
-import localFont from 'next/font/local'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import PageWrapper from './shared/layouts/PageWrapper'
@@ -16,36 +15,6 @@ const openSans = Open_Sans({
   adjustFontFallback: false,
 })
 
-const sfPro = localFont({
-  // @ts-expect-error - localFont types are not correct
-  subsets: ['latin'],
-  src: [
-    {
-      path: '../public/fonts/SFProDisplay-Light.woff2',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Semibold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-  ],
-  formatHint: 'woff2',
-  variable: '--sfpro-font',
-  display: 'swap',
-})
-
 export const metadata = {
   applicationName: 'GoodParty',
   metadataBase: new URL(APP_BASE),
@@ -55,10 +24,7 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <html
-    lang="en"
-    className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}
-  >
+  <html lang="en" className={`${outfit.variable} ${openSans.variable}`}>
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
