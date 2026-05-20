@@ -40,8 +40,12 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const { meetingDate, openAddNoteTopLevel, onChatCreated } =
-    useAnnotationsCtx()
+  const {
+    meetingDate,
+    openAddNoteTopLevel,
+    onChatCreated,
+    topLevelChatAnnotationId,
+  } = useAnnotationsCtx()
 
   const overviewHref = briefingOverviewHref(briefingSlug)
 
@@ -54,85 +58,83 @@ export default function MobileBottomBar({
   }, [items, briefingSlug, overviewHref, pathname])
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex items-end justify-between gap-2 px-4 pb-4 lg:hidden">
-      <Sheet open={open} onOpenChange={setOpen}>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setOpen(true)}
-          className="pointer-events-auto max-w-[70%] shadow-md"
-        >
-          <List className="size-4 shrink-0 text-primary" aria-hidden />
-          <span className="truncate">{currentLabel}</span>
-          <ChevronUp
-            className="size-4 shrink-0 text-muted-foreground"
-            aria-hidden
-          />
-        </Button>
-        <SheetContent
-          side="bottom"
-          className="max-h-[70vh] rounded-t-2xl px-4 pb-6 pt-4"
-        >
-          <SheetHeader className="px-0">
-            <SheetTitle>Jump to section</SheetTitle>
-          </SheetHeader>
-          <ul className="mt-3 flex list-none flex-col gap-0.5 overflow-y-auto">
-            <li>
-              <Link
-                href={overviewHref}
-                onClick={() => setOpen(false)}
-                className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
-                  pathname === overviewHref
-                    ? 'bg-muted font-semibold text-foreground'
-                    : 'text-foreground hover:bg-muted/60'
-                }`}
-              >
-                Executive Summary
-              </Link>
-            </li>
-            {items.map((a) => {
-              const href = briefingItemHref(briefingSlug, a.id)
-              const isActive = pathname === href
-              return (
-                <li key={a.id}>
-                  <Link
-                    href={href}
-                    onClick={() => setOpen(false)}
-                    className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
-                      isActive
-                        ? 'bg-muted font-semibold text-foreground'
-                        : 'text-foreground hover:bg-muted/60'
-                    }`}
-                  >
-                    {a.title}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </SheetContent>
-      </Sheet>
+    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/80 lg:hidden">
+      <div className="mx-auto flex w-full max-w-[800px] items-center gap-2 px-4 py-3">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(true)}
+            className="min-w-0 flex-1 justify-between"
+          >
+            <List className="size-4 shrink-0 text-primary" aria-hidden />
+            <span className="truncate">{currentLabel}</span>
+            <ChevronUp
+              className="size-4 shrink-0 text-muted-foreground"
+              aria-hidden
+            />
+          </Button>
+          <SheetContent
+            side="bottom"
+            className="max-h-[70vh] rounded-t-2xl px-4 pb-6 pt-4"
+          >
+            <SheetHeader className="px-0">
+              <SheetTitle>Jump to section</SheetTitle>
+            </SheetHeader>
+            <ul className="mt-3 flex list-none flex-col gap-0.5 overflow-y-auto">
+              <li>
+                <Link
+                  href={overviewHref}
+                  onClick={() => setOpen(false)}
+                  className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
+                    pathname === overviewHref
+                      ? 'bg-muted font-semibold text-foreground'
+                      : 'text-foreground hover:bg-muted/60'
+                  }`}
+                >
+                  Executive Summary
+                </Link>
+              </li>
+              {items.map((a) => {
+                const href = briefingItemHref(briefingSlug, a.id)
+                const isActive = pathname === href
+                return (
+                  <li key={a.id}>
+                    <Link
+                      href={href}
+                      onClick={() => setOpen(false)}
+                      className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
+                        isActive
+                          ? 'bg-muted font-semibold text-foreground'
+                          : 'text-foreground hover:bg-muted/60'
+                      }`}
+                    >
+                      {a.title}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </SheetContent>
+        </Sheet>
 
-      <div className="pointer-events-auto flex flex-col gap-2">
         <IconButton
           type="button"
-          size="large"
+          size="medium"
           variant="outline"
           aria-label="Download PDF"
           onClick={() => {
             // TODO: trigger PDF download via Swain's briefing API.
           }}
-          className="shadow-md"
         >
           <Download className="size-5" aria-hidden />
         </IconButton>
         <IconButton
           type="button"
-          size="large"
+          size="medium"
           variant="outline"
           aria-label="Add notes"
           onClick={openAddNoteTopLevel}
-          className="shadow-md"
         >
           <NotebookPen className="size-5" aria-hidden />
         </IconButton>
@@ -141,13 +143,13 @@ export default function MobileBottomBar({
           anchor={null}
           align="end"
           side="top"
+          existingAnnotationId={topLevelChatAnnotationId}
           onChatCreated={onChatCreated}
           trigger={
             <IconButton
               type="button"
-              size="large"
+              size="medium"
               aria-label="Open briefing assistant"
-              className="shadow-md"
             >
               <Sparkles className="size-5" aria-hidden />
             </IconButton>

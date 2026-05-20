@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-  Stepper,
-} from '@styleguide'
+import { Alert, AlertDescription, Button, Card, CardContent } from '@styleguide'
 import {
   CalendarCheck,
   CircleAlert,
@@ -45,7 +38,8 @@ import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
 import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
 import { PledgeStep } from './PledgeStep'
-import { WhyWeAsk } from './WhyWeAsk'
+import OnboardingTopBar from '../shared/OnboardingTopBar'
+import { WhyThisMatters } from './WhyThisMatters'
 import {
   VoterDemographicsStep,
   onboardingDistrictStatsQueryOptions,
@@ -221,7 +215,7 @@ const StepBody = ({
   onP2vMetricsResolved,
   p2vOfficeName,
   skipP2vReveal,
-}: StepBodyProps): React.JSX.Element => {
+}: StepBodyProps): React.JSX.Element | null => {
   if (activeStep.id === 'welcome') {
     return (
       <div className="space-y-8">
@@ -334,11 +328,7 @@ const StepBody = ({
     return <PledgeStep />
   }
 
-  return (
-    <div className="rounded-lg border border-base-border bg-muted p-5">
-      <p className="text-sm leading-6 text-foreground">{activeStep.summary}</p>
-    </div>
-  )
+  return null
 }
 
 export default function OnboardingFlow({
@@ -922,20 +912,15 @@ export default function OnboardingFlow({
 
   return (
     <div className="min-h-screen bg-base-surface pb-28 text-foreground">
-      <div className="fixed top-14 left-0 right-0 z-10 border-b border-slate-100 bg-base-surface">
-        <div className="mx-auto w-full max-w-4xl px-4 py-4 sm:px-8">
-          <Stepper
-            variant="bar"
-            currentStep={activeStepNumber}
-            totalSteps={visibleSteps.length}
-          />
-        </div>
-      </div>
-      <main className="mx-auto w-full max-w-4xl px-4 pt-28 pb-6 sm:px-8 sm:pb-8">
+      <OnboardingTopBar
+        currentStep={activeStepNumber}
+        totalSteps={visibleSteps.length}
+      />
+      <main className="mx-auto w-full max-w-4xl px-4 pt-24 pb-6 sm:px-8 sm:pt-28 sm:pb-8">
         <div>
           <div
             className={`grid grid-cols-1 gap-8${
-              activeStep.whyWeAsk && !isP2vBlocking
+              activeStep.whyThisMatters && !isP2vBlocking
                 ? ' md:grid-cols-[minmax(0,1fr)_280px] md:items-start'
                 : ''
             }`}
@@ -987,15 +972,15 @@ export default function OnboardingFlow({
               />
             </section>
 
-            {activeStep.whyWeAsk && !isP2vBlocking ? (
+            {activeStep.whyThisMatters && !isP2vBlocking ? (
               <aside
-                className="md:fixed md:top-36 md:w-[280px]"
+                className="md:fixed md:top-28 md:w-[280px]"
                 style={{
                   right: 'max(2rem, calc((100vw - 56rem) / 2 + 2rem))',
                 }}
               >
                 {activeStep.id === 'path-to-victory' ? (
-                  <WhyWeAsk title="You can do this!">
+                  <WhyThisMatters title="You can do this!">
                     Most candidates think they need to convince{' '}
                     <em>everyone</em>. You don&apos;t. You need to find{' '}
                     {liveCampaign?.raceTargetMetrics?.winNumber
@@ -1005,9 +990,9 @@ export default function OnboardingFlow({
                       : 'your win number'}
                     , talk to them, and make sure they vote. We&apos;ll show you
                     exactly what that takes.
-                  </WhyWeAsk>
+                  </WhyThisMatters>
                 ) : (
-                  <WhyWeAsk text={activeStep.whyWeAsk} />
+                  <WhyThisMatters text={activeStep.whyThisMatters} />
                 )}
               </aside>
             ) : null}
@@ -1015,8 +1000,8 @@ export default function OnboardingFlow({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-base-border bg-base-surface">
-        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8">
+      <div className="fixed inset-x-0 bottom-0 bg-base-surface">
+        <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between px-4 sm:px-8 border-t border-base-border">
           <Button
             type="button"
             variant="ghost"

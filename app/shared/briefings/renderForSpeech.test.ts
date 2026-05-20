@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { renderBriefingForSpeech } from './renderForSpeech'
+import { renderBriefingForSpeech, renderItemForSpeech } from './renderForSpeech'
 import type { Briefing, Item } from './types'
 
 const baseBriefing = (overrides: Partial<Briefing> = {}): Briefing => ({
@@ -127,6 +127,113 @@ describe('renderBriefingForSpeech', () => {
     )
     expect(text).toBe(
       'City Council meeting briefing for June 1, 2026\n\nAgenda item: Quiet item.',
+    )
+  })
+})
+
+const itemWithDisplay = (overrides: Partial<Item['display']> = {}): Item => ({
+  id: 'i-1',
+  itemNumber: '1',
+  title: 'Untitled',
+  tier: 'featured',
+  voteRequired: false,
+  tierReason: [],
+  display: {
+    summary: '',
+    constituentSentiment: null,
+    recentNews: null,
+    budgetImpact: null,
+    talkingPoints: null,
+    sourceIds: [],
+    ...overrides,
+  },
+})
+
+describe('renderItemForSpeech', () => {
+  it('joins title, summary, sentiment, budget, and talking points with single spaces', () => {
+    const item: Item = {
+      id: 'i-2',
+      itemNumber: '3',
+      title: 'Approve new park funding',
+      tier: 'featured',
+      voteRequired: true,
+      tierReason: [],
+      display: {
+        summary: 'Council will vote on a 2 million dollar park proposal.',
+        constituentSentiment: {
+          summary: 'Strong support across the district.',
+          detail: null,
+          districtNote: null,
+          haystaqColumn: 'parks',
+          meanScore: 0.7,
+          scoreDirection: 'positive',
+          voterCount: 800,
+          haystaqStatus: 'ok',
+          haystaqSource: 'curated',
+          sourceIds: [],
+        },
+        recentNews: null,
+        budgetImpact: {
+          summary: 'Adds 2 million to the capital budget.',
+          figures: [],
+          sourceIds: [],
+        },
+        talkingPoints: [
+          'Parks improve public health.',
+          'Funding comes from reserves.',
+        ],
+        sourceIds: [],
+      },
+    }
+
+    expect(renderItemForSpeech(item)).toBe(
+      'Agenda item: Approve new park funding. Council will vote on a 2 million dollar park proposal. Constituent sentiment: Strong support across the district. Budget impact: Adds 2 million to the capital budget. Talking points. Parks improve public health. Funding comes from reserves.',
+    )
+  })
+
+  it('strips markdown markers from the rendered output', () => {
+    const item = itemWithDisplay({
+      summary: '*bold* _italic_ `code` # heading > quote ~strike~',
+    })
+    item.title = 'Ordinance review'
+
+    const output = renderItemForSpeech(item)
+
+    expect(output).not.toMatch(/[*_`#>~]/)
+    expect(output).toBe(
+      'Agenda item: Ordinance review. bold italic code heading quote strike',
+    )
+  })
+
+  it('collapses internal whitespace (newlines, tabs, repeated spaces) to single spaces', () => {
+    const item = itemWithDisplay({
+      summary: 'First line.\n\nSecond\tline.   Third    line.',
+    })
+    item.title = 'Zoning update'
+
+    const output = renderItemForSpeech(item)
+
+    expect(output).not.toMatch(/\n/)
+    expect(output).not.toMatch(/\t/)
+    expect(output).not.toMatch(/ {2,}/)
+    expect(output).toBe(
+      'Agenda item: Zoning update. First line. Second line. Third line.',
+    )
+  })
+
+  it('omits optional section labels when sentiment, budget, and talking points are missing', () => {
+    const item = itemWithDisplay({
+      summary: 'Procedural items only.',
+    })
+    item.title = 'Routine consent agenda'
+
+    const output = renderItemForSpeech(item)
+
+    expect(output).not.toContain('Constituent sentiment:')
+    expect(output).not.toContain('Budget impact:')
+    expect(output).not.toContain('Talking points.')
+    expect(output).toBe(
+      'Agenda item: Routine consent agenda. Procedural items only.',
     )
   })
 })

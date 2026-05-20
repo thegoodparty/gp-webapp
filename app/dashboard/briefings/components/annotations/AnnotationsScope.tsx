@@ -105,6 +105,13 @@ export type SheetState = OverlayState
 
 type Ctx = {
   meetingDate: string
+  /**
+   * Id of the user's existing top-level chat annotation on this briefing,
+   * if any. Passed to AskAiPopover so reopens skip `createBriefingChat`
+   * and load prior messages directly. Undefined when no top-level chat
+   * exists yet — first open will mint one.
+   */
+  topLevelChatAnnotationId?: string
   openAddNoteFromSelection: () => void
   openAddNoteTopLevel: () => void
   openReportErrorFromSelection: () => void
@@ -315,9 +322,15 @@ export default function AnnotationsScope({
     return () => document.removeEventListener('click', onClick)
   }, [annotations])
 
+  const topLevelChatAnnotationId = useMemo(
+    () => annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
+    [annotations],
+  )
+
   const ctxValue: Ctx = useMemo(
     () => ({
       meetingDate,
+      topLevelChatAnnotationId,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
@@ -331,6 +344,7 @@ export default function AnnotationsScope({
     }),
     [
       meetingDate,
+      topLevelChatAnnotationId,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,

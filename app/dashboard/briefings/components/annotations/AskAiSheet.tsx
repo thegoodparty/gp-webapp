@@ -1,10 +1,12 @@
 'use client'
 
 import { useCallback, useMemo } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@styleguide'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
+import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import type { AnnotationAnchor } from '@shared/briefings/types'
 import type { OverlayState } from './AnnotationsScope'
 import AskAiChatBody from './AskAiChatBody'
+import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
 
 type Props = {
   sheet: OverlayState
@@ -51,7 +53,8 @@ function annotationIdOverrideFor(state: OverlayState): string | undefined {
 }
 
 /**
- * Right-side Sheet for the Ask AI chat surface.
+ * Ask AI chat surface. Renders as a right-side drawer at lg+ and as a
+ * bottom drawer with drag-to-dismiss + drag handle on mobile.
  *
  * Two open states:
  *  - `ask_ai_anchored`: selection-spawned chat; renders the anchor quote and
@@ -60,7 +63,7 @@ function annotationIdOverrideFor(state: OverlayState): string | undefined {
  *    and loads prior messages directly.
  *
  * Top-of-page Ask AI uses `AskAiPopover` anchored to its button — not this
- * Sheet.
+ * drawer.
  */
 export default function AskAiSheet({
   sheet,
@@ -72,6 +75,13 @@ export default function AskAiSheet({
   const quote = quoteFor(sheet)
   const anchor = useMemo(() => anchorFor(sheet), [sheet])
   const annotationIdOverride = annotationIdOverrideFor(sheet)
+  const isDesktop = !useIsMobile()
+  const direction = isDesktop ? 'right' : 'bottom'
+
+  // Clear the user's text selection once the drawer opens. The anchor is
+  // already captured in state; leaving the selection live blocks Vaul's
+  // drag-to-dismiss (vaul refuses to drag while text is selected).
+  useClearSelectionOnOpen(open)
 
   const handleChatCreated = useCallback(
     (info: { annotationId: string; conversationId: string }) => {
@@ -81,25 +91,27 @@ export default function AskAiSheet({
   )
 
   return (
-    <Sheet open={open} onOpenChange={(v) => (v ? null : onClose())}>
-      <SheetContent
-        side="right"
-        onPointerDownOutside={() => onClose()}
-        onEscapeKeyDown={() => onClose()}
-        className="flex w-full flex-col gap-0 p-0 sm:max-w-[480px]"
-      >
-        <SheetHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
-          <SheetTitle className="text-2xl font-semibold tracking-tight text-foreground">
+    <Drawer
+      open={open}
+      onOpenChange={(v) => (v ? null : onClose())}
+      direction={direction}
+    >
+      <DrawerContent className="font-opensans flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
+        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
+          <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             Ask AI
-          </SheetTitle>
+          </DrawerTitle>
           {quote ? (
-            <p className="text-sm italic text-muted-foreground">
-              &ldquo;{quote}&rdquo;
-            </p>
+            <blockquote className="border-l-2 border-border pl-3 text-sm italic leading-6 text-muted-foreground">
+              {quote}
+            </blockquote>
           ) : null}
-        </SheetHeader>
+        </DrawerHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-0 px-0 pb-0">
+        <div
+          data-vaul-no-drag
+          className="flex min-h-0 flex-1 flex-col gap-0 px-0 pb-0"
+        >
           <AskAiChatBody
             meetingDate={meetingDate}
             anchor={anchor}
@@ -111,7 +123,7 @@ export default function AskAiSheet({
             onChatCreated={onChatCreated ? handleChatCreated : undefined}
           />
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   )
 }

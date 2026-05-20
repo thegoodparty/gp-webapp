@@ -6,17 +6,13 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: "Let's build your winning campaign plan in 5 minutes",
     description:
       "All we need to know is what office you're running for. We'll take it from there.",
-    summary:
-      'This step introduces the value of the flow before collecting candidate details.',
   },
   {
     id: 'ballot-status',
     title: 'Are you already on the ballot?',
     description:
-      "We'll tailor your strategy based on where you are in your campaign.",
-    summary:
-      'The answer is stored in onboarding state and can be submitted with the final payload.',
-    whyWeAsk:
+      'We tailor your strategy to where you actually are in your campaign.',
+    whyThisMatters:
       'Knowing whether you’re already on the ballot lets us tailor your timeline and the next steps in your campaign plan.',
     isValid: ({ answers }) => Boolean(answers.ballotStatus),
   },
@@ -25,9 +21,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: 'Are you running with an official party designation?',
     description:
       'Pick the party label voters would see on their official ballots for you as a candidate, not your personal voting history or party preference.',
-    summary:
-      'Eligible candidates continue; major-party candidates will be blocked by this step implementation.',
-    whyWeAsk:
+    whyThisMatters:
       'GoodParty.org only works with non-partisan candidates or those who are independent of both major parties and big money, so they can run, win and serve empowered by our verifiably anti-corrupt platform.',
     isValid: ({ answers }) =>
       answers.partyAffiliation === 'nonpartisan' ||
@@ -38,9 +32,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: 'What office are you running for?',
     description:
       "We'll use this to pull local voter data and shape your plan around your race.",
-    summary:
-      'Structured office selection feeds Path to Victory. Manual office entry follows a shorter path.',
-    whyWeAsk:
+    whyThisMatters:
       "We use this to find the district you're running in, pull registered voter data, historical voter turnout, partisan data, and local issues to build your campaign plan.",
     isValid: ({ answers }) =>
       Boolean(answers.structuredOffice) || answers.officePath === 'manual',
@@ -49,10 +41,8 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     id: 'manual-office-entry',
     title: 'Tell us about your office',
     description:
-      "We couldn't find your race in our database. Tell us a few details and our team will follow up.",
-    summary:
-      'The manualOffice and unmatchedOffice flags are stored in onboarding state.',
-    whyWeAsk:
+      "We couldn't find a structured match. Enter your office details and our team will follow up.",
+    whyThisMatters:
       'We capture your office details manually so we can still generate a tailored campaign plan, even without structured election data.',
     shouldSkip: ({ answers }) => answers.officePath !== 'manual',
     isValid: ({ answers }) => {
@@ -87,9 +77,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: 'Projected votes needed to win',
     description:
       'We use historical voter data and proprietary models to get the most accurate projections for your race.',
-    summary:
-      'Manual-office users skip this step because the required structured election data is unavailable.',
-    whyWeAsk:
+    whyThisMatters:
       "Most candidates think they need to convince everyone. You don't. You need to find your win number, talk to them, and make sure they vote. We'll show you exactly what that takes.",
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
@@ -98,9 +86,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: 'Voter insights for your district',
     description:
       'We use survey and voter data along with your district demographics to project likely top issues for your race.',
-    summary:
-      'Voter demographic charts are rendered from the structured-office district stats.',
-    whyWeAsk:
+    whyThisMatters:
       'We use this data to help you understand what voters care most about, and to customize your campaign plan.',
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
@@ -109,19 +95,14 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
     title: 'Projected minimum resources needed',
     description:
       'Commit at least this much money and time, and you’ll have a real shot at winning your race.',
-    summary:
-      'Translates the voter contact goal into a minimum budget and a minimum weekly time commitment.',
-    whyWeAsk:
+    whyThisMatters:
       'These two minimums are the foundation of your campaign plan. Everything else — your weekly tasks, volunteer asks, outreach mix — is sized against what you can commit here.',
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
     id: 'pledge',
     title: 'Almost there...',
-    description:
-      'Take the pledge below. Your campaign plan is waiting for you.',
-    summary:
-      'The final payload keeps collected answers available for future integrations.',
+    description: 'Take our pledge to get your campaign plan.',
   },
 ]
 

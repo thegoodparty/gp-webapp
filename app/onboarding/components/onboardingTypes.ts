@@ -77,8 +77,7 @@ export interface OnboardingStepConfig {
   id: OnboardingStepId
   title: string
   description: string
-  summary: string
-  whyWeAsk?: string
+  whyThisMatters?: string
   shouldSkip?: (context: OnboardingStepContext) => boolean
   isValid?: (context: OnboardingStepContext) => boolean
 }

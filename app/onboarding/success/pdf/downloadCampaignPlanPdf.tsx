@@ -43,7 +43,9 @@ export const downloadCampaignPlanPdf = async (
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `${slugify(plan.candidateName || 'campaign-plan')}-campaign-plan.pdf`
+  a.download = `${slugify(
+    plan.candidateName || 'campaign-plan',
+  )}-campaign-plan.pdf`
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
