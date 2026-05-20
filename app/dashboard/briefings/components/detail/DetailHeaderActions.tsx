@@ -1,13 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, Loader2, NotebookPen, Sparkles } from 'lucide-react'
+import { Download, Loader2, MessageSquare, Sparkles } from 'lucide-react'
 import { Button } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 import { reportErrorToSentry } from '@shared/sentry'
 import type { Briefing } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import AskAiPopover from '../annotations/AskAiPopover'
 
 type Props = {
   briefing: Briefing
@@ -20,7 +19,8 @@ type Props = {
  * Sticky header actions on desktop. Download builds the briefing PDF in the
  * browser via @react-pdf/renderer, Add notes opens the AddNoteSheet with
  * no anchor (top-level briefing note), Ask AI opens the briefing assistant
- * Sheet (TODO, phase 7).
+ * in the right-side AskAiSheet (same surface used for anchored and
+ * existing-chat overlays).
  */
 export default function DetailHeaderActions({
   briefing,
@@ -28,12 +28,7 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const {
-    meetingDate,
-    openAddNoteTopLevel,
-    onChatCreated,
-    topLevelChatAnnotationId,
-  } = useAnnotationsCtx()
+  const { openAddNoteTopLevel, openAskAiTopLevel } = useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -62,23 +57,13 @@ export default function DetailHeaderActions({
         {downloading ? 'Preparing…' : 'Download'}
       </Button>
       <Button variant="outline" onClick={openAddNoteTopLevel}>
-        <NotebookPen className="size-4" aria-hidden />
+        <MessageSquare className="size-4" aria-hidden />
         Add notes
       </Button>
-      <AskAiPopover
-        meetingDate={meetingDate}
-        anchor={null}
-        align="end"
-        side="bottom"
-        existingAnnotationId={topLevelChatAnnotationId}
-        onChatCreated={onChatCreated}
-        trigger={
-          <Button>
-            <Sparkles className="size-4" aria-hidden />
-            Ask AI
-          </Button>
-        }
-      />
+      <Button onClick={openAskAiTopLevel}>
+        <Sparkles className="size-4" aria-hidden />
+        Ask AI
+      </Button>
     </div>
   )
 }

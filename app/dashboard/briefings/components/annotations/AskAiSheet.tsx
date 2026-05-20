@@ -11,6 +11,13 @@ import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
 type Props = {
   sheet: OverlayState
   meetingDate: string
+  /**
+   * Id of the user's existing top-level chat annotation for this briefing,
+   * if any. Used only when `sheet.kind === 'ask_ai_top_level'` — reopens
+   * skip `createBriefingChat` and load prior messages directly. Ignored for
+   * anchored or `ask_ai_existing` states (those carry their own id).
+   */
+  topLevelChatAnnotationId?: string
   onClose: () => void
   onChatCreated?: (info: {
     annotationId: string
@@ -20,7 +27,11 @@ type Props = {
 }
 
 function isAskAiSheetState(state: OverlayState): boolean {
-  return state.kind === 'ask_ai_anchored' || state.kind === 'ask_ai_existing'
+  return (
+    state.kind === 'ask_ai_anchored' ||
+    state.kind === 'ask_ai_existing' ||
+    state.kind === 'ask_ai_top_level'
+  )
 }
 
 function quoteFor(state: OverlayState): string | null {
@@ -47,8 +58,12 @@ function anchorFor(state: OverlayState): AnnotationAnchor | null {
   return null
 }
 
-function annotationIdOverrideFor(state: OverlayState): string | undefined {
+function annotationIdOverrideFor(
+  state: OverlayState,
+  topLevelChatAnnotationId?: string,
+): string | undefined {
   if (state.kind === 'ask_ai_existing') return state.annotationId
+  if (state.kind === 'ask_ai_top_level') return topLevelChatAnnotationId
   return undefined
 }
 
@@ -56,25 +71,29 @@ function annotationIdOverrideFor(state: OverlayState): string | undefined {
  * Ask AI chat surface. Renders as a right-side drawer at lg+ and as a
  * bottom drawer with drag-to-dismiss + drag handle on mobile.
  *
- * Two open states:
+ * Three open states:
+ *  - `ask_ai_top_level`: header-spawned chat with no anchor. Reuses the
+ *    user's existing top-level chat annotation when `topLevelChatAnnotationId`
+ *    is set; otherwise mints a new one.
  *  - `ask_ai_anchored`: selection-spawned chat; renders the anchor quote and
  *    mints a new briefing chat against the anchor.
  *  - `ask_ai_existing`: reopening an existing chat annotation; skips create
  *    and loads prior messages directly.
- *
- * Top-of-page Ask AI uses `AskAiPopover` anchored to its button — not this
- * drawer.
  */
 export default function AskAiSheet({
   sheet,
   meetingDate,
+  topLevelChatAnnotationId,
   onClose,
   onChatCreated,
 }: Props): React.JSX.Element {
   const open = isAskAiSheetState(sheet)
   const quote = quoteFor(sheet)
   const anchor = useMemo(() => anchorFor(sheet), [sheet])
-  const annotationIdOverride = annotationIdOverrideFor(sheet)
+  const annotationIdOverride = annotationIdOverrideFor(
+    sheet,
+    topLevelChatAnnotationId,
+  )
   const isDesktop = !useIsMobile()
   const direction = isDesktop ? 'right' : 'bottom'
 

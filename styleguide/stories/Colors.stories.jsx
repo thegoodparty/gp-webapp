@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
 
 // design-tokens.css is the source of truth. The chain label under each swatch
 // (e.g. "↳ --theme-primary → --tw-blue-600") is extracted directly from the
@@ -48,7 +49,7 @@ function buildBaseRefMap(prefix, names, isDark) {
 }
 
 const meta = {
-  title: 'Design System/Colors',
+  title: 'Foundations/Colors',
   parameters: {
     docs: {
       description: {
@@ -271,10 +272,7 @@ function Swatch({
   )
 }
 
-function Section({ title, description, children, isDark }) {
-  const titleColor = isDark ? '#ffffff' : '#111827'
-  const descColor = isDark ? '#a3a3a3' : '#6b7280'
-
+function Section({ title, description, children }) {
   return (
     <div className="space-y-4">
       <div>
@@ -282,14 +280,20 @@ function Section({ title, description, children, isDark }) {
           style={{
             fontSize: 18,
             fontWeight: 600,
-            color: titleColor,
+            color: 'var(--color-foreground)',
             margin: 0,
           }}
         >
           {title}
         </h3>
         {description && (
-          <p style={{ fontSize: 14, color: descColor, margin: '4px 0 0' }}>
+          <p
+            style={{
+              fontSize: 14,
+              color: 'var(--color-muted-foreground)',
+              margin: '4px 0 0',
+            }}
+          >
             {description}
           </p>
         )}
@@ -302,29 +306,6 @@ function Section({ title, description, children, isDark }) {
 function SwatchRow({ children }) {
   return <div className="flex flex-wrap gap-2">{children}</div>
 }
-
-const PAGE_STYLE = {
-  backgroundColor: '#ffffff',
-  padding: 24,
-  minHeight: '100vh',
-}
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2
-        style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0 }}
-      >
-        {title}
-      </h2>
-      <p style={{ fontSize: 14, color: '#737373', marginTop: 4 }}>
-        {description}
-      </p>
-    </div>
-  )
-}
-
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
 
 function ScaleRow({ scaleName, prefix, colors }) {
   return (
@@ -544,7 +525,11 @@ export const ThemeColors = ({ mode }) => {
             Theme Colors — {isDark ? 'Dark' : 'Light'} Mode
           </h2>
           <p
-            style={{ fontSize: 14, color: mutedForegroundColor, marginTop: 4 }}
+            style={{
+              fontSize: 14,
+              color: mutedForegroundColor,
+              marginTop: 4,
+            }}
           >
             Core theme tokens read from CSS custom properties. Use the Mode
             control above to toggle between light and dark.
@@ -554,12 +539,7 @@ export const ThemeColors = ({ mode }) => {
         {tokens &&
           Object.entries(TOKEN_GROUP_META).map(
             ([groupKey, { title, description }]) => (
-              <Section
-                key={groupKey}
-                title={title}
-                description={description}
-                isDark={isDark}
-              >
+              <Section key={groupKey} title={title} description={description}>
                 {groupKey === 'theme' ||
                 groupKey === 'base' ||
                 groupKey === 'component' ? (

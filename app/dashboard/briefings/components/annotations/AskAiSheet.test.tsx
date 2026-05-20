@@ -126,6 +126,10 @@ function anchoredSheet(): OverlayState {
   return { kind: 'ask_ai_anchored', anchor: fakeAnchor() }
 }
 
+function topLevelSheet(): OverlayState {
+  return { kind: 'ask_ai_top_level' }
+}
+
 function existingSheet(annotationId: string): OverlayState {
   return { kind: 'ask_ai_existing', annotationId }
 }
@@ -257,6 +261,45 @@ describe('<AskAiSheet>', () => {
     const quote = await screen.findByText('hello')
     expect(quote.tagName).toBe('BLOCKQUOTE')
     expect(quote.textContent).toBe('hello')
+  })
+
+  it('creates a top-level chat with a null anchor when no existing id is provided', async () => {
+    setupEmptyHistory()
+
+    render(
+      <AskAiSheet
+        sheet={topLevelSheet()}
+        meetingDate="briefing_x"
+        onClose={vi.fn()}
+      />,
+    )
+
+    await waitFor(() => {
+      expect(mockChatApi.createBriefingChat).toHaveBeenCalledTimes(1)
+    })
+    expect(mockChatApi.createBriefingChat).toHaveBeenCalledWith({
+      meetingDate: 'briefing_x',
+      anchor: { jsonPath: null, start: null, end: null },
+    })
+    expect(mockChatApi.listMessages).toHaveBeenCalledWith('ann_1')
+  })
+
+  it('reuses the user’s top-level chat annotation id when one is provided', async () => {
+    setupPriorHistory([])
+
+    render(
+      <AskAiSheet
+        sheet={topLevelSheet()}
+        meetingDate="briefing_x"
+        topLevelChatAnnotationId="ann_top_level"
+        onClose={vi.fn()}
+      />,
+    )
+
+    await waitFor(() => {
+      expect(mockChatApi.listMessages).toHaveBeenCalledWith('ann_top_level')
+    })
+    expect(mockChatApi.createBriefingChat).not.toHaveBeenCalled()
   })
 
   it('skips create and loads existing messages for an existing-chat overlay', async () => {
