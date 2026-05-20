@@ -524,7 +524,7 @@ export const Headings = () => (
     <div className="space-y-6">
       <div>
         <code className="text-xs text-muted">h1 · 48px · Bold · Outfit</code>
-        <p
+        <h1
           style={{
             fontSize: 48,
             fontWeight: 700,
@@ -535,11 +535,11 @@ export const Headings = () => (
           }}
         >
           Heading Level 1
-        </p>
+        </h1>
       </div>
       <div>
         <code className="text-xs text-muted">h2 · 36px · Bold · Outfit</code>
-        <p
+        <h2
           style={{
             fontSize: 36,
             fontWeight: 700,
@@ -550,13 +550,13 @@ export const Headings = () => (
           }}
         >
           Heading Level 2
-        </p>
+        </h2>
       </div>
       <div>
         <code className="text-xs text-muted">
           h3 · 30px · Semibold · Outfit
         </code>
-        <p
+        <h3
           style={{
             fontSize: 30,
             fontWeight: 600,
@@ -567,13 +567,13 @@ export const Headings = () => (
           }}
         >
           Heading Level 3
-        </p>
+        </h3>
       </div>
       <div>
         <code className="text-xs text-muted">
           h4 · 24px · Semibold · Outfit
         </code>
-        <p
+        <h4
           style={{
             fontSize: 24,
             fontWeight: 600,
@@ -583,11 +583,11 @@ export const Headings = () => (
           }}
         >
           Heading Level 4
-        </p>
+        </h4>
       </div>
       <div>
         <code className="text-xs text-muted">h5 · 20px · Medium · Outfit</code>
-        <p
+        <h5
           style={{
             fontSize: 20,
             fontWeight: 500,
@@ -597,11 +597,11 @@ export const Headings = () => (
           }}
         >
           Heading Level 5
-        </p>
+        </h5>
       </div>
       <div>
         <code className="text-xs text-muted">h6 · 18px · Medium · Outfit</code>
-        <p
+        <h6
           style={{
             fontSize: 18,
             fontWeight: 500,
@@ -611,7 +611,7 @@ export const Headings = () => (
           }}
         >
           Heading Level 6
-        </p>
+        </h6>
       </div>
     </div>
   </div>
