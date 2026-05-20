@@ -67,7 +67,22 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
   const filingFee = metrics?.filingFee ?? null
   const filingRequirementsText = metrics?.filingRequirementsText ?? null
-  const ballotReadyPositionId = campaign?.organization?.positionId ?? undefined
+  // The BR position ID is in-memory on `answers.structuredOffice.positionId`
+  // during onboarding. After pledge submit, `OnboardingFlow` persists the
+  // whole `answers` object under `campaign.data.onboarding`, so it survives
+  // the navigation to /onboarding/success.
+  //
+  // gp-api separately resolves the BR ID to an internal Position UUID and
+  // stores that on `organization.positionId` — which is NOT what the
+  // /onboarding/contacts/stats endpoint expects, so we read directly from
+  // the persisted onboarding answers instead.
+  const onboardingAnswers = (
+    campaign?.data as
+      | { onboarding?: { structuredOffice?: { positionId?: string } } }
+      | undefined
+  )?.onboarding
+  const ballotReadyPositionId =
+    onboardingAnswers?.structuredOffice?.positionId ?? undefined
 
   const plan = useMemo(() => {
     const input: PlanInput = {
