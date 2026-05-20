@@ -25,6 +25,7 @@ const HIGHLIGHT_NAMES: Record<AnnotationKind, string> = {
 }
 const HOVER_NAME = 'briefing-annotation-hover'
 const NOTE_MARKER_CLASS = 'briefing-note-marker'
+const CHAT_MARKER_CLASS = 'briefing-chat-marker'
 const BUG_MARKER_CLASS = 'briefing-bug-marker'
 const STYLE_TAG_ID = 'briefing-annotation-highlight-style'
 
@@ -64,6 +65,7 @@ const STYLE_RULES = `
   background-color: color-mix(in srgb, var(--foreground, #161f31) 12%, transparent);
 }
 .${NOTE_MARKER_CLASS},
+.${CHAT_MARKER_CLASS},
 .${BUG_MARKER_CLASS} {
   display: inline-flex;
   align-items: center;
@@ -90,11 +92,20 @@ const STYLE_RULES = `
   background-color: color-mix(in srgb, var(--info, #1b6afc) 22%, transparent);
   color: var(--info, #1b6afc);
 }
+.${CHAT_MARKER_CLASS} {
+  /* Chat annotations themselves render as hyperlinks (no background), so the
+     marker carries the only visual tint for them. Same blue family as notes
+     since both are "info"-class affordances; the Sparkles icon and absence
+     of a text-background differentiate them. */
+  background-color: color-mix(in srgb, var(--info, #1b6afc) 18%, transparent);
+  color: var(--info, #1b6afc);
+}
 .${BUG_MARKER_CLASS} {
   background-color: color-mix(in srgb, var(--error, #e00c30) 20%, transparent);
   color: var(--error, #e00c30);
 }
 .${NOTE_MARKER_CLASS} svg,
+.${CHAT_MARKER_CLASS} svg,
 .${BUG_MARKER_CLASS} svg {
   display: block;
   width: 14px;
@@ -103,6 +114,10 @@ const STYLE_RULES = `
 }
 .${NOTE_MARKER_CLASS}[data-hover='true'] {
   background-color: color-mix(in srgb, var(--info, #1b6afc) 32%, transparent);
+  color: color-mix(in srgb, var(--info, #1b6afc) 80%, black);
+}
+.${CHAT_MARKER_CLASS}[data-hover='true'] {
+  background-color: color-mix(in srgb, var(--info, #1b6afc) 28%, transparent);
   color: color-mix(in srgb, var(--info, #1b6afc) 80%, black);
 }
 .${BUG_MARKER_CLASS}[data-hover='true'] {
@@ -114,31 +129,47 @@ const STYLE_RULES = `
 const BUG_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg>`
 // Lucide NotebookPen — mirrors the icon used by the Add Notes dialog button.
 const NOTE_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>`
+// Lucide Sparkles — same icon the Ask AI header button uses, so chat
+// annotations carry the same visual "AI" cue everywhere in the briefing.
+const CHAT_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>`
 
-const MARKER_SELECTOR = `.${NOTE_MARKER_CLASS}[data-annotation-id], .${BUG_MARKER_CLASS}[data-annotation-id]`
+const MARKER_SELECTOR = `.${NOTE_MARKER_CLASS}[data-annotation-id], .${CHAT_MARKER_CLASS}[data-annotation-id], .${BUG_MARKER_CLASS}[data-annotation-id]`
+
+type MarkerKind = 'note' | 'chat' | 'bug_report'
+
+const MARKER_CLASS_FOR_KIND: Record<MarkerKind, string> = {
+  note: NOTE_MARKER_CLASS,
+  chat: CHAT_MARKER_CLASS,
+  bug_report: BUG_MARKER_CLASS,
+}
+
+const MARKER_ICON_FOR_KIND: Record<MarkerKind, string> = {
+  note: NOTE_ICON_SVG,
+  chat: CHAT_ICON_SVG,
+  bug_report: BUG_ICON_SVG,
+}
+
+const MARKER_ARIA_LABEL_FOR_KIND: Record<MarkerKind, string> = {
+  note: 'Open note',
+  chat: 'Open AI chat',
+  bug_report: 'Open bug report',
+}
 
 function removeAllMarkers() {
   if (typeof document === 'undefined') return
   const nodes = document.querySelectorAll(
-    `.${NOTE_MARKER_CLASS}, .${BUG_MARKER_CLASS}`,
+    `.${NOTE_MARKER_CLASS}, .${CHAT_MARKER_CLASS}, .${BUG_MARKER_CLASS}`,
   )
   for (const n of Array.from(nodes)) n.remove()
 }
 
-function insertMarker(
-  range: Range,
-  annotationId: string,
-  kind: 'note' | 'bug_report',
-) {
+function insertMarker(range: Range, annotationId: string, kind: MarkerKind) {
   const span = document.createElement('span')
-  span.className = kind === 'note' ? NOTE_MARKER_CLASS : BUG_MARKER_CLASS
+  span.className = MARKER_CLASS_FOR_KIND[kind]
   span.dataset.annotationId = annotationId
   span.setAttribute('contenteditable', 'false')
-  span.setAttribute(
-    'aria-label',
-    kind === 'note' ? 'Open note' : 'Open bug report',
-  )
-  span.innerHTML = kind === 'note' ? NOTE_ICON_SVG : BUG_ICON_SVG
+  span.setAttribute('aria-label', MARKER_ARIA_LABEL_FOR_KIND[kind])
+  span.innerHTML = MARKER_ICON_FOR_KIND[kind]
   const at = range.cloneRange()
   at.collapse(false)
   at.insertNode(span)
@@ -147,7 +178,7 @@ function insertMarker(
 function findMarker(annotationId: string): HTMLElement | null {
   const escaped = CSS.escape(annotationId)
   return document.querySelector(
-    `.${NOTE_MARKER_CLASS}[data-annotation-id="${escaped}"], .${BUG_MARKER_CLASS}[data-annotation-id="${escaped}"]`,
+    `.${NOTE_MARKER_CLASS}[data-annotation-id="${escaped}"], .${CHAT_MARKER_CLASS}[data-annotation-id="${escaped}"], .${BUG_MARKER_CLASS}[data-annotation-id="${escaped}"]`,
   )
 }
 
@@ -198,9 +229,11 @@ export default function AnnotationsHighlightLayer({
       rangesByKind[a.kind].push(range)
       resolved.push({ annotation: a, range })
 
-      if (a.kind === 'note' || a.kind === 'bug_report') {
-        insertMarker(range, a.id, a.kind)
-      }
+      // Every annotation kind gets an inline marker icon at the end of its
+      // range — notebook for notes, sparkles for AI chats, bug for bug
+      // reports. The marker is the click target the scope handler listens
+      // to.
+      insertMarker(range, a.id, a.kind)
     }
 
     resolvedRef.current = resolved

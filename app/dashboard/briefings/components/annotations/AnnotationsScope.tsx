@@ -284,12 +284,12 @@ export default function AnnotationsScope({
       const target = e.target as HTMLElement | null
       if (!target) return
 
-      // Marker icons (note + bug) are inline DOM nodes inserted at the end
-      // of each annotation's range. Pointer hits on them should open the
-      // matching annotation overlay; pointToOffset can't see them because
-      // they're outside the briefing's text run.
+      // Marker icons (note / chat / bug) are inline DOM nodes inserted at
+      // the end of each annotation's range. Pointer hits on them should
+      // open the matching annotation overlay; pointToOffset can't see them
+      // because they're outside the briefing's text run.
       const marker = target.closest(
-        '.briefing-note-marker[data-annotation-id], .briefing-bug-marker[data-annotation-id]',
+        '.briefing-note-marker[data-annotation-id], .briefing-chat-marker[data-annotation-id], .briefing-bug-marker[data-annotation-id]',
       ) as HTMLElement | null
       if (marker) {
         const id = marker.dataset.annotationId
