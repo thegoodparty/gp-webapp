@@ -107,9 +107,9 @@ type Ctx = {
   meetingDate: string
   /**
    * Id of the user's existing top-level chat annotation on this briefing,
-   * if any. Passed to AskAiPopover so reopens skip `createBriefingChat`
-   * and load prior messages directly. Undefined when no top-level chat
-   * exists yet — first open will mint one.
+   * if any. Passed to AskAiSheet so a top-level reopen skips
+   * `createBriefingChat` and loads prior messages directly. Undefined when
+   * no top-level chat exists yet — first open will mint one.
    */
   topLevelChatAnnotationId?: string
   openAddNoteFromSelection: () => void
@@ -125,8 +125,8 @@ type Ctx = {
    * Invalidates the annotations React Query cache after a chat annotation
    * is created server-side via `POST /v1/briefing-chats`. Chat creation
    * doesn't go through `useAnnotations.create`, so the list won't refetch
-   * unless we invalidate manually. Top-level Ask AI surfaces
-   * (AskAiPopover) and the right-side AskAiSheet both call this.
+   * unless we invalidate manually. AskAiSheet calls this for all three
+   * Ask AI entry points (top-level, anchored, existing).
    */
   onChatCreated: (info: {
     annotationId: string
@@ -164,9 +164,9 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  *  - The AnnotationsHighlightLayer (persistent backgrounds for existing notes)
  *  - The AddNoteSheet, ReportErrorSheet, and AskAiSheet (single instances)
  *
- * The top-of-page Ask AI Popover is owned by DetailHeaderActions / the
- * mobile bottom bar — selection-spawned and existing-chat overlays open
- * the right-side AskAiSheet instead.
+ * All three Ask AI entry points (top-of-page button, selection action, and
+ * re-opening an existing chat highlight) open the same right-side AskAiSheet
+ * via the overlay state.
  *
  * Also handles click-to-open: clicking inside an existing highlight opens
  * the corresponding annotation's overlay.
@@ -229,9 +229,6 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'report_error_view', annotation })
   }, [])
 
-  // Top-level Ask AI is anchored to the header button's own Popover (see
-  // DetailHeaderActions / MobileBottomBar); the overlay state covers
-  // selection-spawned chats and re-opens of existing chat annotations only.
   const openAskAiTopLevel = useCallback(() => {
     setOverlay({ kind: 'ask_ai_top_level' })
   }, [])
@@ -361,7 +358,9 @@ export default function AnnotationsScope({
   )
 
   const askAiSheetOpen =
-    overlay.kind === 'ask_ai_anchored' || overlay.kind === 'ask_ai_existing'
+    overlay.kind === 'ask_ai_anchored' ||
+    overlay.kind === 'ask_ai_existing' ||
+    overlay.kind === 'ask_ai_top_level'
 
   return (
     <AnnotationsCtx.Provider value={ctxValue}>
@@ -416,6 +415,7 @@ export default function AnnotationsScope({
         <AskAiSheet
           sheet={overlay}
           meetingDate={meetingDate}
+          topLevelChatAnnotationId={topLevelChatAnnotationId}
           onClose={closeSheet}
           onChatCreated={handleChatCreated}
         />

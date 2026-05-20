@@ -17,7 +17,6 @@ import {
   briefingOverviewHref,
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
-import AskAiPopover from '../annotations/AskAiPopover'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
 type Props = {
@@ -40,12 +39,7 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const {
-    meetingDate,
-    openAddNoteTopLevel,
-    onChatCreated,
-    topLevelChatAnnotationId,
-  } = useAnnotationsCtx()
+  const { openAddNoteTopLevel, openAskAiTopLevel } = useAnnotationsCtx()
 
   const overviewHref = briefingOverviewHref(briefingSlug)
 
@@ -138,23 +132,14 @@ export default function MobileBottomBar({
         >
           <NotebookPen className="size-5" aria-hidden />
         </IconButton>
-        <AskAiPopover
-          meetingDate={meetingDate}
-          anchor={null}
-          align="end"
-          side="top"
-          existingAnnotationId={topLevelChatAnnotationId}
-          onChatCreated={onChatCreated}
-          trigger={
-            <IconButton
-              type="button"
-              size="medium"
-              aria-label="Open briefing assistant"
-            >
-              <Sparkles className="size-5" aria-hidden />
-            </IconButton>
-          }
-        />
+        <IconButton
+          type="button"
+          size="medium"
+          aria-label="Open briefing assistant"
+          onClick={openAskAiTopLevel}
+        >
+          <Sparkles className="size-5" aria-hidden />
+        </IconButton>
       </div>
     </div>
   )

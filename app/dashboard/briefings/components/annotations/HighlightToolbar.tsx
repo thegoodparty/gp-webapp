@@ -15,7 +15,7 @@ type Props = {
  * Floating pill that appears anchored to the user's text selection.
  *
  * Four buttons:
- *   - Ask AI    (opens the AskAiPopover anchored to the selection)
+ *   - Ask AI    (opens the AskAiSheet anchored to the selection)
  *   - Add Note  (opens the AddNoteSheet with the resolved anchor)
  *   - Report    (opens the ReportErrorSheet with the resolved anchor)
  *   - X dismiss (clears selection)
