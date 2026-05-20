@@ -250,10 +250,7 @@ function Swatch({
   )
 }
 
-function Section({ title, description, children, isDark }) {
-  const titleColor = isDark ? '#ffffff' : '#111827'
-  const descColor = isDark ? '#a3a3a3' : '#6b7280'
-
+function Section({ title, description, children }) {
   return (
     <div className="space-y-4">
       <div>
@@ -261,7 +258,7 @@ function Section({ title, description, children, isDark }) {
           style={{
             fontSize: 18,
             fontWeight: 600,
-            color: titleColor,
+            color: 'var(--color-foreground)',
             margin: 0,
           }}
         >
@@ -271,7 +268,7 @@ function Section({ title, description, children, isDark }) {
           <p
             style={{
               fontSize: 14,
-              color: descColor,
+              color: 'var(--color-muted-foreground)',
               margin: '4px 0 0',
             }}
           >
@@ -555,12 +552,7 @@ export const ThemeColors = ({ mode }) => {
         {tokens &&
           Object.entries(TOKEN_GROUP_META).map(
             ([groupKey, { title, description }]) => (
-              <Section
-                key={groupKey}
-                title={title}
-                description={description}
-                isDark={isDark}
-              >
+              <Section key={groupKey} title={title} description={description}>
                 {groupKey === 'theme' ||
                 groupKey === 'base' ||
                 groupKey === 'component' ? (
