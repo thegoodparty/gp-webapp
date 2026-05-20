@@ -582,20 +582,6 @@ a:hover {
   }
 
   /*
-   * Headings use Outfit (the display font). Tailwind v4 preflight wipes
-   * browser heading defaults and we've set the body to Open Sans, so without
-   * this rule headings would inherit Open Sans too.
-   */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--outfit-font);
-  }
-
-  /*
    * Restore heading letter-spacing from Tailwind v3 preflight.
    * v4 preflight doesn't include this, causing headings to look different.
    * -0.02em is the standard tight tracking for headings.

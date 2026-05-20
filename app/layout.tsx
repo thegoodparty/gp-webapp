@@ -1,4 +1,4 @@
-import { Open_Sans, Outfit } from 'next/font/google'
+import { Open_Sans } from 'next/font/google'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import PageWrapper from './shared/layouts/PageWrapper'
@@ -8,7 +8,6 @@ import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 
-const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 const openSans = Open_Sans({
   subsets: ['latin'],
   variable: '--open-sans-font',
@@ -24,7 +23,7 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <html lang="en" className={`${outfit.variable} ${openSans.variable}`}>
+  <html lang="en" className={openSans.variable}>
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />

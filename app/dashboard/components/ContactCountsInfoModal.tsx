@@ -51,7 +51,6 @@ export const ContactCountsInfoModal = ({
               list-inside
               [&>li]:marker:font-normal
               [&>li]:marker:text-base
-              [&>li]:font-outfit
               [&>li]:mb-2
             "
           >
