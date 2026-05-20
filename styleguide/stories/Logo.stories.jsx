@@ -69,7 +69,7 @@ export const Logo = {
   render: ({ size, wordmark, mode }) => {
     const isDark = mode === 'dark'
     const bg = isDark ? '#0a0a0a' : '#ffffff'
-    const { logoClass, wordmarkClass } = SIZE_MAP[size]
+    const { logoClass, wordmarkClass } = SIZE_MAP[size] ?? SIZE_MAP['default']
 
     return (
       <div
