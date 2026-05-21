@@ -59,10 +59,10 @@ export const Playground: Story = {
     collapsible: true,
     disabled: false,
   },
-  render: (args) => (
-    <Accordion {...args} className="w-full max-w-md">
+  render: ({ disabled, ...rootArgs }) => (
+    <Accordion {...rootArgs} className="w-full max-w-md">
       {items.map(({ value, question, answer }) => (
-        <AccordionItem key={value} value={value}>
+        <AccordionItem key={value} value={value} disabled={disabled}>
           <AccordionTrigger>{question}</AccordionTrigger>
           <AccordionContent>{answer}</AccordionContent>
         </AccordionItem>
