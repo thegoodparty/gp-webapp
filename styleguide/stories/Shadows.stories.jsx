@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
 
 const meta = {
   title: 'Foundations/Shadows',
@@ -14,19 +15,7 @@ const meta = {
 
 export default meta
 
-const PAGE_STYLE = { backgroundColor: '#ffffff', padding: 24, minHeight: '100vh' }
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
-
 const SAMPLE_BG = '#b4cef0' // midnight-200
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#737373', marginTop: 4, fontFamily: "'Open Sans', sans-serif" }}>{description}</p>
-    </div>
-  )
-}
 
 // =============================================================================
 // Box Shadows
@@ -54,11 +43,13 @@ const BOX_SHADOWS = [
   },
   {
     token: 'shadow-lg',
-    boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)',
+    boxShadow:
+      '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)',
   },
   {
     token: 'shadow-xl',
-    boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
+    boxShadow:
+      '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
   },
   {
     token: 'shadow-2xl',
@@ -86,8 +77,12 @@ export function BoxShadows() {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-gray-200 text-left">
-            <th className="py-3 px-4 text-sm font-bold text-gray-900 w-36">Token</th>
-            <th className="py-3 px-4 text-sm font-bold text-gray-900">Sample</th>
+            <th className="py-3 px-4 text-sm font-bold text-gray-900 w-36">
+              Token
+            </th>
+            <th className="py-3 px-4 text-sm font-bold text-gray-900">
+              Sample
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -96,10 +91,7 @@ export function BoxShadows() {
             return (
               <tr key={token} className="border-b border-gray-200">
                 <td className="py-6 px-4">
-                  <code
-                    className="text-sm bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded whitespace-nowrap"
-                    style={{ fontFamily: 'monospace' }}
-                  >
+                  <code className="text-sm bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded whitespace-nowrap">
                     {token}
                   </code>
                 </td>
@@ -122,7 +114,13 @@ export function BoxShadows() {
                     }}
                   >
                     {isCopied && (
-                      <span style={{ fontSize: 10, color: '#2563eb', fontFamily: "'Open Sans', sans-serif", fontWeight: 600 }}>
+                      <span
+                        style={{
+                          fontSize: 10,
+                          color: '#2563eb',
+                          fontWeight: 600,
+                        }}
+                      >
                         Copied!
                       </span>
                     )}
@@ -158,7 +156,8 @@ const DROP_SHADOWS = [
   },
   {
     token: 'drop-shadow',
-    filter: 'drop-shadow(0 1px 2px rgb(0 0 0/0.1)) drop-shadow(0 1px 1px rgb(0 0 0/0.06))',
+    filter:
+      'drop-shadow(0 1px 2px rgb(0 0 0/0.1)) drop-shadow(0 1px 1px rgb(0 0 0/0.06))',
   },
   {
     token: 'drop-shadow-md',
@@ -198,8 +197,12 @@ export function DropShadows() {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-gray-200 text-left">
-            <th className="py-3 px-4 text-sm font-bold text-gray-900 w-36">Token</th>
-            <th className="py-3 px-4 text-sm font-bold text-gray-900">Sample</th>
+            <th className="py-3 px-4 text-sm font-bold text-gray-900 w-36">
+              Token
+            </th>
+            <th className="py-3 px-4 text-sm font-bold text-gray-900">
+              Sample
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -208,10 +211,7 @@ export function DropShadows() {
             return (
               <tr key={token} className="border-b border-gray-200">
                 <td className="py-6 px-4">
-                  <code
-                    className="text-sm bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded whitespace-nowrap"
-                    style={{ fontFamily: 'monospace' }}
-                  >
+                  <code className="text-sm bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded whitespace-nowrap">
                     {token}
                   </code>
                 </td>
@@ -234,7 +234,13 @@ export function DropShadows() {
                     }}
                   >
                     {isCopied && (
-                      <span style={{ fontSize: 10, color: '#2563eb', fontFamily: "'Open Sans', sans-serif", fontWeight: 600 }}>
+                      <span
+                        style={{
+                          fontSize: 10,
+                          color: '#2563eb',
+                          fontWeight: 600,
+                        }}
+                      >
                         Copied!
                       </span>
                     )}

@@ -1,5 +1,6 @@
 import { icons } from 'lucide-react'
 import { createElement, useState } from 'react'
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
 
 const meta = {
   title: 'Foundations/Icons',
@@ -14,18 +15,6 @@ const meta = {
 }
 
 export default meta
-
-const PAGE_STYLE = { backgroundColor: '#ffffff', padding: 24, minHeight: '100vh' }
-const STORY_PARAMS = { layout: 'fullscreen', backgrounds: { disable: true } }
-
-function PageHeader({ title, description }) {
-  return (
-    <div>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0a0a0a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#737373', marginTop: 4, fontFamily: "'Open Sans', sans-serif" }}>{description}</p>
-    </div>
-  )
-}
 
 // lucide-react's `icons` export is a plain object of { PascalCaseName: IconComponent }
 // This is more reliable than namespace imports in Vite's ESM bundler
@@ -77,7 +66,6 @@ export const IconGallery = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            style={{ fontFamily: "'Open Sans', sans-serif" }}
           />
           {search && (
             <button
@@ -99,14 +87,13 @@ export const IconGallery = () => {
                   ? 'bg-gray-900 text-white'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
-              style={{ fontFamily: "'Open Sans', sans-serif" }}
             >
               {s}
             </button>
           ))}
         </div>
 
-        <p className="text-sm text-gray-400" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+        <p className="text-sm text-gray-400">
           {filtered.length === ALL_ICONS.length
             ? `${ALL_ICONS.length} icons`
             : `${filtered.length} of ${ALL_ICONS.length}`}
@@ -116,7 +103,7 @@ export const IconGallery = () => {
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="py-20 text-center">
-          <p className="text-gray-400 text-sm" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+          <p className="text-gray-400 text-sm">
             No icons match &ldquo;{search}&rdquo;
           </p>
         </div>
@@ -131,7 +118,15 @@ export const IconGallery = () => {
           {filtered.map(([name, Icon]) => {
             const isCopied = copied === name
             return (
-              <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div
+                key={name}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
                 <button
                   onClick={() => handleCopy(name)}
                   title={`Click to copy: ${name}`}
@@ -140,23 +135,26 @@ export const IconGallery = () => {
                       ? 'border-blue-200 bg-blue-50'
                       : 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-white'
                   }`}
-                  style={{ aspectRatio: '1', cursor: 'pointer', background: undefined }}
+                  style={{ aspectRatio: '1', cursor: 'pointer' }}
                 >
                   {isCopied ? (
                     <span
                       className="text-blue-600 font-medium"
-                      style={{ fontSize: 11, fontFamily: "'Open Sans', sans-serif" }}
+                      style={{ fontSize: 11 }}
                     >
                       Copied!
                     </span>
                   ) : (
-                    createElement(Icon, { size, strokeWidth: 1.5, style: { color: 'var(--base-foreground, #0a0a0a)' } })
+                    createElement(Icon, {
+                      size,
+                      strokeWidth: 1.5,
+                      style: { color: 'var(--base-foreground, #0a0a0a)' },
+                    })
                   )}
                 </button>
                 <span
-                  className="text-gray-500 text-center w-full"
+                  className="text-gray-500 text-center w-full font-mono"
                   style={{
-                    fontFamily: 'monospace',
                     fontSize: 11,
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',

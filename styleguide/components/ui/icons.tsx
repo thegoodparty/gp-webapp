@@ -4,7 +4,7 @@ export {
   ArrowRight as ArrowRightIcon,
   LogOut as LogOutIcon,
   PanelLeft as PanelLeftIcon,
-  Menu as GripVerticalIcon,
+  GripVertical as GripVerticalIcon,
   Calendar as CalendarIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
