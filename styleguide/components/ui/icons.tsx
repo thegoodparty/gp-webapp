@@ -1,6 +1,7 @@
 export {
   ArrowLeft as ArrowLeftIcon,
   ArrowRight as ArrowRightIcon,
+  Calendar as CalendarIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
   ChevronLeft as ChevronLeftIcon,

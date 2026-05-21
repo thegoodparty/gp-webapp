@@ -155,3 +155,24 @@ Always use `lucide-react` for icons. Never use `react-icons` or other icon libra
 ### Figma
 
 When implementing or matching a Figma design, read the generated code structure — not just the screenshot. The code shows exact token names, sizing, and state logic. The screenshot can mislead.
+
+### Component authoring
+
+When authoring a new styleguide component that wraps a Radix primitive (or similar), the consumer's `className` must land on the element the public TS prop signature references. If the signature is `React.ComponentProps<typeof X>`, `className` must merge onto `X` — not onto a wrapper div, an inner padding div, or a portal. Inner styling that doesn't belong to the consumer (padding, layout-only spacing) goes in fixed class strings on the inner elements; consumers should never need to "reach past" a wrapper to override styles on the typed-by-signature element. Sibling components in the same file must be consistent: if `AccordionItem` and `AccordionTrigger` merge `className` onto their primitive, `AccordionContent` must too.
+
+`data-slot` attributes only forward through real DOM elements. Radix `Portal` wraps `React.createPortal` and accepts only `container`, `forceMount`, and `children` — any other prop (including `data-slot`) is silently dropped. Put `data-slot` on the Content/Trigger/Item primitives, not on Portal.
+
+### Storybook stories
+
+Use CSF 3 (object stories) throughout. Every story file should set `meta.component` to the typed component and `tags: ['autodocs']` so Storybook generates a Docs page and can infer controls from prop types.
+
+Each component story file has two kinds of stories:
+
+1. **One `Playground` story** — args-driven, listed first. Declares `args` for the root component's primitive props plus `argTypes` overrides where the inferred control needs help (selects, number ranges, custom labels). The render function consumes `args` so the Controls panel actually does something. This is the interactive sandbox for designers and engineers.
+2. **Named variant stories** — static showcase renders (`Default`, `Multiple`, `DefaultOpen`, `Disabled`, etc.). No `args`, no Controls noise. These document specific states or compositions and are not meant to be tweaked.
+
+For compound components (Radix-style root + parts), the `render` escape hatch is correct — children structure cannot be expressed as a flat arg. The Playground still uses `args` for the root's primitive props and hardcodes a representative children tree.
+
+Init-only props (`default*` like `defaultOpen` / `defaultValue`) don't belong in Controls — Storybook re-renders the story without remounting, and Radix ignores changes to `default*` props after first render, so toggling the control does nothing. Demonstrate those via a named variant instead.
+
+Use `play` functions only for interaction examples worth testing (click trigger, verify content appears). Optional, not required.
