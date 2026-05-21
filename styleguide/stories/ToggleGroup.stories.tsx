@@ -47,6 +47,7 @@ export const Playground: Story = {
   },
   render: ({ type, variant, size, disabled }) => (
     <ToggleGroup
+      key={type}
       type={type}
       variant={variant}
       size={size}
@@ -74,7 +75,7 @@ export const Single: Story = {
         <ToggleGroup
           type="single"
           value={value}
-          onValueChange={(v) => v && setValue(v)}
+          onValueChange={setValue}
           aria-label="Text alignment"
         >
           <ToggleGroupItem value="left" aria-label="Align left">
