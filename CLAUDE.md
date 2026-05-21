@@ -156,6 +156,12 @@ Always use `lucide-react` for icons. Never use `react-icons` or other icon libra
 
 When implementing or matching a Figma design, read the generated code structure — not just the screenshot. The code shows exact token names, sizing, and state logic. The screenshot can mislead.
 
+### Component authoring
+
+When authoring a new styleguide component that wraps a Radix primitive (or similar), the consumer's `className` must land on the element the public TS prop signature references. If the signature is `React.ComponentProps<typeof X>`, `className` must merge onto `X` — not onto a wrapper div, an inner padding div, or a portal. Inner styling that doesn't belong to the consumer (padding, layout-only spacing) goes in fixed class strings on the inner elements; consumers should never need to "reach past" a wrapper to override styles on the typed-by-signature element. Sibling components in the same file must be consistent: if `AccordionItem` and `AccordionTrigger` merge `className` onto their primitive, `AccordionContent` must too.
+
+`data-slot` attributes only forward through real DOM elements. Radix `Portal` wraps `React.createPortal` and accepts only `container`, `forceMount`, and `children` — any other prop (including `data-slot`) is silently dropped. Put `data-slot` on the Content/Trigger/Item primitives, not on Portal.
+
 ### Storybook stories
 
 Use CSF 3 (object stories) throughout. Every story file should set `meta.component` to the typed component and `tags: ['autodocs']` so Storybook generates a Docs page and can infer controls from prop types.
