@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
-import { ChevronsUpDown } from 'lucide-react'
+import { ChevronsUpDownIcon } from '../components/ui/icons'
 import {
   Collapsible,
   CollapsibleContent,
@@ -36,7 +36,7 @@ export const Playground: Story = {
           disabled={args.disabled}
         >
           Show details
-          <ChevronsUpDown className="size-4" />
+          <ChevronsUpDownIcon className="size-4" />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up overflow-hidden">
@@ -64,7 +64,7 @@ export const Default: Story = {
             <h4 className="text-sm font-semibold">Recent activity</h4>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="icon" className="size-8">
-                <ChevronsUpDown className="size-4" />
+                <ChevronsUpDownIcon className="size-4" />
                 <span className="sr-only">Toggle</span>
               </Button>
             </CollapsibleTrigger>
@@ -93,7 +93,7 @@ export const DefaultOpen: Story = {
       <CollapsibleTrigger asChild>
         <Button variant="outline" className="w-full justify-between">
           Show details
-          <ChevronsUpDown className="size-4" />
+          <ChevronsUpDownIcon className="size-4" />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up overflow-hidden">
@@ -114,7 +114,7 @@ export const Disabled: Story = {
       <CollapsibleTrigger asChild>
         <Button variant="outline" className="w-full justify-between" disabled>
           Disabled trigger
-          <ChevronsUpDown className="size-4" />
+          <ChevronsUpDownIcon className="size-4" />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon } from '../components/ui/icons'
 import {
   HoverCard,
   HoverCardContent,
