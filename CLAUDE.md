@@ -143,6 +143,8 @@ Always pass a defined `value` to controlled Radix components — never use `valu
 
 Always use `lucide-react` for icons. Never use `react-icons` or other icon libraries. Check `lucide-react` for an equivalent before considering any alternative.
 
+**Approved-icons gate.** New icon usage must go through `styleguide/components/ui/icons.tsx`, not directly from `lucide-react`. That file is the curated set of icons the team has approved for use in the design system; importing from it (rather than `lucide-react`) keeps the catalog auditable and consistent. If the icon you need isn't there, add it to `icons.tsx` first (using the existing `Foo as FooIcon` alias pattern), then import from `./icons`. The full lucide catalog is browseable in Storybook (`Foundations/Icons`). Existing direct `lucide-react` imports in `app/` are grandfathered; do not add new ones.
+
 ### Design Tokens
 
 - Never use raw hex colors, hardcoded pixel values, or Tailwind default color palette (e.g. `blue-600`, `slate-300`) in component code. Always reference a design token.
