@@ -1,4 +1,7 @@
 export {
+  AlignCenter as AlignCenterIcon,
+  AlignLeft as AlignLeftIcon,
+  AlignRight as AlignRightIcon,
   ArrowLeft as ArrowLeftIcon,
   ArrowRight as ArrowRightIcon,
   Calendar as CalendarIcon,
@@ -10,7 +13,9 @@ export {
   Download as DownloadIcon,
   GripVertical as GripVerticalIcon,
   Menu as MenuIcon,
+  Minus as MinusIcon,
   MoreHorizontal as MoreHorizontalIcon,
+  Search as SearchIcon,
   Star as StarIcon,
   User as UserIcon,
   X as XMarkIcon,

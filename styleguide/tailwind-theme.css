@@ -472,6 +472,12 @@
    * ========================================================================== */
   --animate-accordion-down: accordion-down 250ms ease-out;
   --animate-accordion-up: accordion-up 250ms ease-out;
+
+  /* ==========================================================================
+   * INPUT OTP CARET BLINK
+   * Use: animate-caret-blink on the synthetic caret element.
+   * ========================================================================== */
+  --animate-caret-blink: caret-blink 1s ease-out infinite;
 }
 
 @keyframes collapsible-down {
@@ -507,5 +513,17 @@
   }
   to {
     height: 0;
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  50% {
+    opacity: 0;
   }
 }
