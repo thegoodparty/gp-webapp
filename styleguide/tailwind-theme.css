@@ -463,6 +463,15 @@
    * ========================================================================== */
   --animate-collapsible-down: collapsible-down 250ms ease-out;
   --animate-collapsible-up: collapsible-up 250ms ease-out;
+
+  /* ==========================================================================
+   * RADIX ACCORDION ANIMATIONS
+   * Use: data-[state=open]:animate-accordion-down,
+   *      data-[state=closed]:animate-accordion-up
+   * Reads --radix-accordion-content-height set by Radix on the content node.
+   * ========================================================================== */
+  --animate-accordion-down: accordion-down 250ms ease-out;
+  --animate-accordion-up: accordion-up 250ms ease-out;
 }
 
 @keyframes collapsible-down {
@@ -477,6 +486,24 @@
 @keyframes collapsible-up {
   from {
     height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
   }
   to {
     height: 0;
