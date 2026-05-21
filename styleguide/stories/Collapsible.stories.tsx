@@ -13,10 +13,6 @@ const meta: Meta<typeof Collapsible> = {
   component: Collapsible,
   tags: ['autodocs'],
   argTypes: {
-    defaultOpen: {
-      control: 'boolean',
-      description: 'Whether the collapsible starts open.',
-    },
     disabled: {
       control: 'boolean',
       description: 'Disable the trigger so the content cannot be toggled.',
@@ -29,7 +25,6 @@ type Story = StoryObj<typeof Collapsible>
 
 export const Playground: Story = {
   args: {
-    defaultOpen: false,
     disabled: false,
   },
   render: (args) => (
@@ -46,9 +41,9 @@ export const Playground: Story = {
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up overflow-hidden">
         <div className="text-muted-foreground rounded-md border p-4 text-sm">
-          The Playground story consumes <code>args</code>. Toggle{' '}
-          <code>defaultOpen</code> and <code>disabled</code> in the Controls
-          panel to see the component respond.
+          Toggle <code>disabled</code> in the Controls panel to see the trigger
+          respond. See the <code>DefaultOpen</code> variant for the
+          starts-expanded layout.
         </div>
       </CollapsibleContent>
     </Collapsible>

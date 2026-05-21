@@ -167,4 +167,6 @@ Each component story file has two kinds of stories:
 
 For compound components (Radix-style root + parts), the `render` escape hatch is correct — children structure cannot be expressed as a flat arg. The Playground still uses `args` for the root's primitive props and hardcodes a representative children tree.
 
+Init-only props (`default*` like `defaultOpen` / `defaultValue`) don't belong in Controls — Storybook re-renders the story without remounting, and Radix ignores changes to `default*` props after first render, so toggling the control does nothing. Demonstrate those via a named variant instead.
+
 Use `play` functions only for interaction examples worth testing (click trigger, verify content appears). Optional, not required.
