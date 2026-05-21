@@ -8,6 +8,7 @@ export {
   ChevronsUpDown as ChevronsUpDownIcon,
   Download as DownloadIcon,
   GripVertical as GripVerticalIcon,
+  Menu as MenuIcon,
   MoreHorizontal as MoreHorizontalIcon,
   Star as StarIcon,
   User as UserIcon,
