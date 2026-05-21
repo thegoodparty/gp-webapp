@@ -20,13 +20,6 @@ export default meta
 // This is more reliable than namespace imports in Vite's ESM bundler
 const ALL_ICONS = Object.entries(icons).sort(([a], [b]) => a.localeCompare(b))
 
-function toKebabCase(name) {
-  return name
-    .replace(/([A-Z])/g, '-$1')
-    .toLowerCase()
-    .replace(/^-/, '')
-}
-
 const SIZES = [16, 20, 24, 32]
 
 // =============================================================================
@@ -162,7 +155,7 @@ export const IconGallery = () => {
                     display: 'block',
                   }}
                 >
-                  {toKebabCase(name)}
+                  {name}
                 </span>
               </div>
             )

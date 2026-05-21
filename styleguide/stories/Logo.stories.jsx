@@ -1,5 +1,6 @@
 import { GoodPartyOrgLogo } from '../components/ui/good-party-org-logo'
 import { GoodPartyOrgLogoWordmark } from '../components/ui/good-party-org-logo-wordmark'
+import { STORY_PARAMS } from './_storyShell'
 
 // Both SVGs share a 130px viewBox height, so applying the same CSS height to either
 // renders the logo icon at identical physical size regardless of wordmark visibility.
@@ -33,10 +34,7 @@ const SIZE_MAP = {
 
 const meta = {
   title: 'Foundations/Logo',
-  parameters: {
-    layout: 'fullscreen',
-    backgrounds: { disable: true },
-  },
+  parameters: STORY_PARAMS,
   argTypes: {
     size: {
       control: 'select',
