@@ -2,33 +2,33 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import {
   CalendarIcon,
-  ChevronRightIcon,
-  MenuIcon,
-  SearchIcon,
-  StarIcon,
-  UserIcon,
+  CircleUserRoundIcon,
+  FileTextIcon,
+  LayoutDashboardIcon,
+  LogOutIcon,
+  SendIcon,
+  SettingsIcon,
+  UserCogIcon,
 } from '../components/ui/icons'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '../components/ui/collapsible'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger,
 } from '../components/ui/sidebar'
@@ -52,28 +52,29 @@ const meta: Meta<typeof Sidebar> = {
       control: 'inline-radio',
       options: ['offcanvas', 'icon', 'none'],
       description:
-        'How the sidebar collapses: offcanvas slides it out, icon keeps a narrow rail, none disables collapse.',
+        'offcanvas slides the sidebar out; icon keeps a narrow rail; none disables collapse.',
     },
   },
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component:
+          'These stories document the generic Sidebar primitive. The GoodParty dashboard sidebar (`app/dashboard/shared/DashboardMenu.tsx`) composes this primitive with auth, campaign, and feature-flag providers — it is not rendered here. Use this page to understand the Sidebar API; verify production-fidelity by running the dev server.',
+      },
+    },
   },
 }
 
 export default meta
 type Story = StoryObj<typeof Sidebar>
 
-const navItems = [
-  { key: 'profile', label: 'Profile', icon: UserIcon },
-  { key: 'events', label: 'Events', icon: CalendarIcon },
-  { key: 'search', label: 'Search', icon: SearchIcon },
-  { key: 'saved', label: 'Saved', icon: StarIcon },
-]
-
-const subItems = [
-  { key: 'calls', label: 'Calls' },
-  { key: 'texts', label: 'Texts' },
-  { key: 'door-knocks', label: 'Door-knocks' },
+const menuItems = [
+  { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboardIcon },
+  { key: 'inbox', label: 'Inbox', icon: SendIcon },
+  { key: 'calendar', label: 'Calendar', icon: CalendarIcon },
+  { key: 'documents', label: 'Documents', icon: FileTextIcon },
+  { key: 'settings', label: 'Settings', icon: SettingsIcon },
 ]
 
 type DemoProps = {
@@ -87,7 +88,7 @@ function SidebarDemo({
   side = 'left',
   collapsible = 'offcanvas',
 }: DemoProps) {
-  const [activeKey, setActiveKey] = useState('events')
+  const [activeKey, setActiveKey] = useState('dashboard')
   return (
     <SidebarProvider>
       <Sidebar variant={variant} side={side} collapsible={collapsible}>
@@ -95,13 +96,13 @@ function SidebarDemo({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg">
-                <Avatar className="size-8 shrink-0 rounded-lg border">
-                  <AvatarFallback className="rounded-lg">SC</AvatarFallback>
-                </Avatar>
+                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg text-xs font-bold">
+                  AC
+                </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Sarah Chen</span>
+                  <span className="truncate font-semibold">Acme Corp</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    City Council, District 4
+                    Workspace
                   </span>
                 </div>
               </SidebarMenuButton>
@@ -110,10 +111,9 @@ function SidebarDemo({
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navItems.map(({ key, label, icon: Icon }) => (
+                {menuItems.map(({ key, label, icon: Icon }) => (
                   <SidebarMenuItem key={key}>
                     <SidebarMenuButton
                       isActive={activeKey === key}
@@ -124,31 +124,6 @@ function SidebarDemo({
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
-                <Collapsible className="group/collapsible">
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton>
-                        <MenuIcon />
-                        <span>Outreach</span>
-                        <ChevronRightIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {subItems.map(({ key, label }) => (
-                          <SidebarMenuSubItem key={key}>
-                            <SidebarMenuSubButton
-                              isActive={activeKey === key}
-                              onClick={() => setActiveKey(key)}
-                            >
-                              {label}
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -156,10 +131,41 @@ function SidebarDemo({
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>
-                <UserIcon />
-                <span>Account</span>
-              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent h-auto gap-2 p-2">
+                    <Avatar className="size-8 shrink-0 rounded-lg border">
+                      <AvatarFallback className="rounded-lg">U</AvatarFallback>
+                    </Avatar>
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-left leading-none">
+                      <span className="truncate text-sm font-semibold">
+                        User Name
+                      </span>
+                      <span className="truncate text-xs">user@example.com</span>
+                    </div>
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="min-w-56 rounded-lg"
+                  side="right"
+                  align="end"
+                  sideOffset={4}
+                >
+                  <DropdownMenuItem>
+                    <CircleUserRoundIcon className="size-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <UserCogIcon className="size-4" />
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <LogOutIcon className="size-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
@@ -167,10 +173,10 @@ function SidebarDemo({
       <SidebarInset>
         <header className="flex h-14 items-center gap-2 border-b px-4">
           <SidebarTrigger />
-          <span className="font-medium">Dashboard</span>
+          <span className="font-medium">Page title</span>
         </header>
         <main className="text-muted-foreground p-6 text-sm">
-          Main content area. The sidebar renders alongside it via{' '}
+          Page content. The sidebar renders alongside it via{' '}
           <code>SidebarInset</code>.
         </main>
       </SidebarInset>
@@ -195,20 +201,4 @@ export const Playground: Story = {
 
 export const Default: Story = {
   render: () => <SidebarDemo />,
-}
-
-export const Floating: Story = {
-  render: () => <SidebarDemo variant="floating" />,
-}
-
-export const Inset: Story = {
-  render: () => <SidebarDemo variant="inset" />,
-}
-
-export const IconCollapsible: Story = {
-  render: () => <SidebarDemo collapsible="icon" />,
-}
-
-export const RightSide: Story = {
-  render: () => <SidebarDemo side="right" />,
 }
