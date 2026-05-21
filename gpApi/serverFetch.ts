@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { getServerToken } from 'helpers/userServerHelper'
+import { getServerToken } from 'helpers/tokenHelper'
 import {
   ORG_SLUG_COOKIE,
   ORG_SLUG_HEADER,
@@ -12,6 +12,11 @@ interface ServerFetchOptions {
   returnFullResponse?: boolean
 }
 
+/**
+ * @deprecated Use `serverRequest` from `gpApi/server-request.ts` (with a route
+ * key in `gpApi/api-endpoints.ts`). See `gpApi/CLAUDE.md` for the migration
+ * recipe.
+ */
 export async function serverFetch(
   endpoint: ApiRoute,
   data: Record<string, unknown> | FormData | undefined,
@@ -43,7 +48,7 @@ export async function serverFetch<T = unknown>(
   if (options.returnFullResponse) {
     return clientFetch(endpoint, data, {
       revalidate: options.revalidate,
-      serverToken: token || undefined,
+      serverToken: token,
       returnFullResponse: true,
       extraHeaders,
     })

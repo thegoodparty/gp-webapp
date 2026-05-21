@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { faker } from '@faker-js/faker'
 import {
   blockSlowScripts,
   NavigationHelper,
@@ -92,6 +93,16 @@ test.describe('Website Management', () => {
     await expect(
       page.getByRole('heading', { name: 'How can voters contact you?' }),
     ).toBeVisible()
+
+    const emailInput = page.locator('input[name="email"]')
+    const phoneInput = page.locator('input[name="phone"]')
+
+    if (!(await emailInput.inputValue())) {
+      await emailInput.fill(faker.internet.email())
+    }
+    if (!(await phoneInput.inputValue())) {
+      await phoneInput.fill(faker.phone.number({ style: 'national' }))
+    }
 
     await page.getByRole('button', { name: 'Publish website' }).click()
     await WaitHelper.waitForLoadingToComplete(page)

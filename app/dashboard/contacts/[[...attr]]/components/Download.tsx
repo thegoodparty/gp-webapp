@@ -1,7 +1,8 @@
 'use client'
 import { IconButton } from '@styleguide'
+import { clientRequest, type RequestOptions } from 'gpApi/typed-request'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
-import { fetchContactsCsv, type SegmentResponse } from './shared/ajaxActions'
+import { type SegmentResponse } from './shared/contacts-types'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import {
@@ -23,10 +24,12 @@ export default function Download() {
       showProUpgradeModal(true)
       return
     }
-    const res = await fetchContactsCsv(currentSegment)
-
-    if (res.ok) {
-      const blob = await res.blob()
+    try {
+      const { data: blob } = await clientRequest(
+        'GET /v1/contacts/download',
+        { ...(currentSegment ? { segment: currentSegment } : {}) },
+        { responseType: 'blob' } as unknown as RequestOptions,
+      )
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
@@ -37,11 +40,9 @@ export default function Download() {
 
       window.URL.revokeObjectURL(url)
       document.body.removeChild(link)
-      const properties = generateProperties()
-
-      trackEvent(EVENTS.Contacts.Download, properties)
-    } else {
-      console.error('Failed to download contacts', res)
+      trackEvent(EVENTS.Contacts.Download, generateProperties())
+    } catch (err) {
+      console.error('Failed to download contacts', err)
     }
   }
 

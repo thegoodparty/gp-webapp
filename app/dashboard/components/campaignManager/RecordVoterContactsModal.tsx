@@ -15,6 +15,7 @@ import {
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
+import { useSnackbar } from 'helpers/useSnackbar'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { identifyUser } from '@shared/utils/analytics'
 import { ModalOrDrawer } from '@shared/ui/ModalOrDrawer'
@@ -109,6 +110,7 @@ export const RecordVoterContactsModal = ({
   const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts()
   const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
   const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE)
+  const { errorSnackbar } = useSnackbar()
 
   const hasInput = Object.values(formState).some(
     (v) => v !== '' && Number(v) > 0,
@@ -153,7 +155,14 @@ export const RecordVoterContactsModal = ({
       }
     }
 
-    const newHistoryItems = await Promise.all(historyItemPromises)
+    let newHistoryItems: CampaignUpdateHistoryWithUser[]
+    try {
+      newHistoryItems = await Promise.all(historyItemPromises)
+    } catch {
+      errorSnackbar('Failed to save voter contacts')
+      return
+    }
+
     const newContactTotals = calculateIncrementedFields(
       recordedVoterGoals,
       updatedFields,

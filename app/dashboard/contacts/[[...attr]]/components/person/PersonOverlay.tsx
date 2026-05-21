@@ -23,7 +23,7 @@ import {
 } from 'react-icons/lu'
 import { format } from 'date-fns'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
-import { Person } from '../shared/ajaxActions'
+import { Person } from '../shared/contacts-types'
 import { isNotNil } from 'es-toolkit'
 import { ReactNode } from 'react'
 import Map from '@shared/utils/Map'

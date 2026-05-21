@@ -14,6 +14,19 @@ interface ChartData {
   education: ChartDataPoint[]
 }
 
+const EDUCATION_ORDER = [
+  'None',
+  'High School Diploma',
+  'Some College',
+  'Technical School',
+  'College Degree',
+  'Graduate Degree',
+] as const
+
+const EDUCATION_LABEL_OVERRIDES: Record<string, string> = {
+  None: 'No High School',
+}
+
 export const mapContactsStatsToCharts = (
   contactsStats: ContactsStats | undefined,
 ): ChartData => {
@@ -37,11 +50,14 @@ export const mapContactsStatsToCharts = (
   }
   const toChartData = (
     buckets: { label: string; percent: number }[],
-  ): ChartDataPoint[] =>
-    buckets.map((bucket) => ({
+  ): ChartDataPoint[] => {
+    const known = buckets.filter((b) => b.label !== 'Unknown')
+    const unknown = buckets.filter((b) => b.label === 'Unknown')
+    return [...known, ...unknown].map((bucket) => ({
       name: bucket.label,
       value: toPercent(bucket.percent),
     }))
+  }
 
   const mapEstimatedIncomeRange = (): ChartDataPoint[] => {
     const buckets = categories.estimatedIncomeRange
@@ -85,12 +101,27 @@ export const mapContactsStatsToCharts = (
     )
   }
 
+  const mapEducation = (): ChartDataPoint[] => {
+    const orderIndex = (label: string): number => {
+      const i = (EDUCATION_ORDER as readonly string[]).indexOf(label)
+      return i === -1 ? EDUCATION_ORDER.length : i
+    }
+    return toChartData(
+      [...categories.education]
+        .sort((a, b) => orderIndex(a.label) - orderIndex(b.label))
+        .map((bucket) => ({
+          ...bucket,
+          label: EDUCATION_LABEL_OVERRIDES[bucket.label] ?? bucket.label,
+        })),
+    )
+  }
+
   return {
     totalConstituents: contactsStats.totalConstituents,
     ageDistribution: toChartData(categories.age),
     presenceOfChildren: toChartData(categories.presenceOfChildren),
     homeowner: toChartData(categories.homeowner),
     estimatedIncomeRange: mapEstimatedIncomeRange(),
-    education: toChartData(categories.education),
+    education: mapEducation(),
   }
 }

@@ -4,8 +4,8 @@ import H3 from '@shared/typography/H3'
 import Body2 from '@shared/typography/Body2'
 import ComplianceSteps, {
   getTcrComplianceStepCompletions,
-  TCR_COMPLIANCE_STATUS as TCR_COMPLIANCE,
 } from 'app/dashboard/profile/texting-compliance/components/ComplianceSteps'
+import { TCR_COMPLIANCE_STATUS as TCR_COMPLIANCE } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import { formatPhoneNumber } from 'helpers/numberHelper'
 import { HiOutlineCheckBadge } from 'react-icons/hi2'
 import { Website, TcrCompliance } from 'helpers/types'
@@ -16,13 +16,13 @@ interface TDlcNumberProps {
 
 const TDlcNumber = ({ tdlcNumber }: TDlcNumberProps): React.JSX.Element => (
   <div className="bg-gray-50 border border-gray-300 rounded-lg p-6 flex justify-center items-center">
-    <span className="font-outfit font-medium text-lg leading-6 text-black w-full text-left block">
+    <span className="font-medium text-lg leading-6 text-black w-full text-left block">
       {formatPhoneNumber(tdlcNumber)}
     </span>
   </div>
 )
 
-interface TextingComplianceProps {
+export interface TextingComplianceProps {
   website?: Website | null
   domainStatus?: string | null
   tcrCompliance?: TcrCompliance | null

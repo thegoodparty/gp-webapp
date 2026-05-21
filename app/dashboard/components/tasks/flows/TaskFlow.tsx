@@ -23,7 +23,6 @@ import {
   handleCreateOutreach,
   handleCreatePhoneList,
   handleCreateVoterFileFilter,
-  handleScheduleOutreach,
   FlowState,
   AudienceState,
 } from 'app/dashboard/components/tasks/flows/util/flowHandlers.util'
@@ -42,7 +41,6 @@ import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pU
 import { getEffectiveOutreachType } from 'app/dashboard/outreach/util/getEffectiveOutreachType'
 import { Campaign } from 'helpers/types'
 import { OutreachType } from 'gpApi/types/outreach.types'
-import { noopAsync } from '@shared/utils/noop'
 import { useQueryClient } from '@tanstack/react-query'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 
@@ -80,6 +78,7 @@ type TaskFlowProps = {
   isCustom?: boolean
   forceOpen?: boolean
   onClose?: () => void
+  onComplete?: () => void | Promise<void>
   defaultAiTemplateId?: string | number
 }
 
@@ -90,6 +89,7 @@ const TaskFlow = ({
   campaign,
   isCustom,
   onClose,
+  onComplete,
   defaultAiTemplateId,
 }: TaskFlowProps): React.JSX.Element => {
   const { p2pUxEnabled } = useP2pUxEnabled()
@@ -124,22 +124,25 @@ const TaskFlow = ({
     [type],
   )
 
-  const handleChange = (
-    changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
-    value?: TaskFlowState[keyof TaskFlowState],
-  ) => {
-    if (typeof changeSetOrKey === 'object') {
-      setState((prevState) => ({
-        ...prevState,
-        ...changeSetOrKey,
-      }))
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        [changeSetOrKey]: value,
-      }))
-    }
-  }
+  const handleChange = useCallback(
+    (
+      changeSetOrKey: Partial<TaskFlowState> | keyof TaskFlowState | string,
+      value?: TaskFlowState[keyof TaskFlowState],
+    ) => {
+      if (typeof changeSetOrKey === 'object') {
+        setState((prevState) => ({
+          ...prevState,
+          ...changeSetOrKey,
+        }))
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          [changeSetOrKey]: value,
+        }))
+      }
+    },
+    [],
+  )
 
   const handleClose = () => {
     if (isObjectEqual(state, DEFAULT_STATE) || isLastStep) {
@@ -164,8 +167,17 @@ const TaskFlow = ({
     onClose?.()
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isLastStep) {
+      if (stepName !== STEPS.purchase) {
+        const contactField = getVoterContactField(type)
+        await updateVoterContacts((currentContacts) => ({
+          ...currentContacts,
+          [contactField]:
+            (currentContacts[contactField] || 0) + (state.voterCount || 0),
+        }))
+      }
+      await onComplete?.()
       handleCloseConfirm()
       return
     }
@@ -193,7 +205,7 @@ const TaskFlow = ({
     setState(DEFAULT_STATE)
   }
 
-  const handleAddScriptOnComplete = (
+  const handleAddScriptOnComplete = async (
     scriptKeyOrText: string | null,
     scriptContent?: string,
   ) => {
@@ -209,7 +221,7 @@ const TaskFlow = ({
       : scriptKeyValue
 
     handleChange('scriptText', scriptText)
-    handleNext()
+    await handleNext()
   }
 
   const callbackProps = {
@@ -240,12 +252,12 @@ const TaskFlow = ({
     [
       type,
       state,
-      campaign,
       outreaches,
       setOutreaches,
       errorSnackbar,
       refreshCampaign,
       p2pUxEnabled,
+      campaignId,
     ],
   )
 
@@ -275,12 +287,12 @@ const TaskFlow = ({
         errorSnackbar('Campaign could not be created. Please try again.')
         return
       }
-      await handleScheduleOutreach(
-        type,
-        errorSnackbar,
-        successSnackbar,
-        state,
-      )(outreach)
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
+        medium: type,
+        price: state.budget,
+        voterContacts: state.audience?.count || 0,
+      })
+      successSnackbar('Request submitted successfully.')
 
       const contactField = getVoterContactField(type)
       await updateVoterContacts((currentContacts) => ({
@@ -289,7 +301,7 @@ const TaskFlow = ({
           (currentContacts[contactField] || 0) + (state.voterCount || 0),
       }))
 
-      handleNext()
+      await handleNext()
     } finally {
       isPurchaseCompletingRef.current = false
     }
@@ -400,13 +412,25 @@ const TaskFlow = ({
             }
             onScheduleOutreach={
               isLastStep
-                ? handleScheduleOutreach(
-                    type,
-                    errorSnackbar,
-                    successSnackbar,
-                    state,
-                  )
-                : noopAsync
+                ? async (outreach) => {
+                    if (!outreach?.id) {
+                      errorSnackbar(
+                        'Campaign could not be created. Please try again.',
+                      )
+                      return false
+                    }
+                    trackEvent(
+                      EVENTS.Dashboard.VoterContact.CampaignCompleted,
+                      {
+                        medium: type,
+                        price: state.budget,
+                        voterContacts: state.audience?.count || 0,
+                      },
+                    )
+                    successSnackbar('Request submitted successfully.')
+                    return true
+                  }
+                : async () => true
             }
             isLastStep
           />

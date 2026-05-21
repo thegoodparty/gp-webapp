@@ -45,7 +45,10 @@ export function ProUpgradeModal({
   const [user] = useUser()
   const [campaign] = useCampaign()
   const sessionCount = user?.metaData?.sessionCount || 0
-  const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
+  const vendorP2v = campaign?.vendorTsData?.['pathToVictory'] as
+    | { viability?: { score?: number } }
+    | undefined
+  const viablityScore = vendorP2v?.viability?.score || 0
 
   let title: string,
     description: string,
@@ -181,7 +184,7 @@ export function ProUpgradeModal({
         <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
         <Body2 className="my-4">{description}</Body2>
         <Body2 className="leading-4">
-          <ul className="list-none list-inside p-0 font-sfpro m-0">
+          <ul className="list-none list-inside p-0 m-0">
             {items.map((item, index) => (
               <li key={index}>✔&nbsp; {item}</li>
             ))}

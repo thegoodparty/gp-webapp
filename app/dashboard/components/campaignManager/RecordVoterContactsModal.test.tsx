@@ -42,6 +42,11 @@ vi.mock('@shared/utils/analytics', () => ({
   identifyUser: vi.fn(() => Promise.resolve(true)),
 }))
 
+const mockErrorSnackbar = vi.fn()
+vi.mock('helpers/useSnackbar', () => ({
+  useSnackbar: () => ({ errorSnackbar: mockErrorSnackbar }),
+}))
+
 import {
   createUpdateHistory,
   createIrresponsiblyMassagedHistoryItem,
@@ -94,9 +99,9 @@ const renderModal = ({
   updateHistory?: CampaignUpdateHistoryWithUser[]
 } = {}) =>
   render(
-    <UserContext.Provider value={[user, vi.fn()]}>
+    <UserContext.Provider value={[user, vi.fn(), false]}>
       <VoterContactsContext.Provider
-        value={[voterContacts, mockSetVoterContacts]}
+        value={[voterContacts, mockSetVoterContacts, vi.fn()]}
       >
         <CampaignUpdateHistoryContext.Provider
           value={[updateHistory, mockSetUpdateHistory]}

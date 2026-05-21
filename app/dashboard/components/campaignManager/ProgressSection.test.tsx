@@ -19,6 +19,10 @@ vi.mock('@shared/ui/ModalOrDrawer', () => ({
   }) => (open ? <div role="dialog">{children}</div> : null),
 }))
 
+vi.mock('helpers/useSnackbar', () => ({
+  useSnackbar: () => ({ errorSnackbar: vi.fn() }),
+}))
+
 vi.mock('@styleguide', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>()
   return {
@@ -42,10 +46,12 @@ vi.mock('@styleguide', async (importOriginal) => {
   }
 })
 
-const makeCampaign = (voterContactGoal = 1000, voteGoal = 200): Campaign =>
+const makeCampaign = (voterContactGoal = 1000): Campaign =>
   ({
-    pathToVictory: {
-      data: { voterContactGoal, voteGoal },
+    raceTargetMetrics: {
+      projectedTurnout: 0,
+      winNumber: 0,
+      voterContactGoal,
     },
   } as unknown as Campaign)
 
@@ -72,7 +78,7 @@ const renderWithProviders = (
 ) =>
   render(
     <CampaignContext.Provider value={[campaign]}>
-      <VoterContactsContext.Provider value={[voterContacts, vi.fn()]}>
+      <VoterContactsContext.Provider value={[voterContacts, vi.fn(), vi.fn()]}>
         <ProgressSection />
       </VoterContactsContext.Provider>
     </CampaignContext.Provider>,
@@ -106,7 +112,7 @@ describe('ProgressSection', () => {
 
   it('sets progress bar to 0 when needed is 0', () => {
     renderWithProviders(
-      makeCampaign(0, 0),
+      makeCampaign(0),
       makeVoterContacts({ doorKnocking: 50 }),
     )
     const progressBar = screen.getByRole('progressbar')

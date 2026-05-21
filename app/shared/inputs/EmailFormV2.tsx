@@ -117,7 +117,6 @@ const EmailFormV2 = ({
                 text-black
                 placeholder:text-gray-400
                 placeholder:font-normal
-                placeholder:font-sfpro
                 placeholder:tracking-wider"
             />
 

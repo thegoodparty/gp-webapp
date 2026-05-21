@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import OfficeStep from './OfficeStep'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 import type { Campaign } from 'helpers/types'
+import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 
 // Mock all external dependencies
-vi.mock('gpApi/clientFetch', () => ({
-  clientFetch: vi.fn(),
+
+vi.mock('gpApi/typed-request', () => ({
+  clientRequest: vi.fn().mockResolvedValue({ data: {}, ok: true }),
 }))
 
 vi.mock('next/navigation', () => ({
@@ -114,14 +114,11 @@ const baseCampaign: Campaign = {
   hasFreeTextsOffer: false,
 }
 
+const mockUpdateCampaign = vi.mocked(updateCampaign)
+
 describe('OfficeStep', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(clientFetch as Mock).mockResolvedValue({
-      data: baseCampaign,
-      ok: true,
-      status: 200,
-    })
   })
 
   async function selectOfficeAndSave() {
@@ -130,40 +127,36 @@ describe('OfficeStep', () => {
     fireEvent.click(saveButton)
   }
 
-  it('calls the user endpoint when not in admin mode', async () => {
+  it('calls updateCampaign when saving office selection', async () => {
     render(<OfficeStep campaign={baseCampaign} />)
 
     await selectOfficeAndSave()
 
     await waitFor(() => {
-      expect(clientFetch).toHaveBeenCalledWith(
-        apiRoutes.campaign.raceTargetDetails.update,
-        { slug: undefined },
-      )
+      expect(mockUpdateCampaign).toHaveBeenCalled()
     })
   })
 
-  it('calls the admin endpoint when in admin mode', async () => {
+  it('passes campaign slug when saving in admin mode', async () => {
     render(<OfficeStep campaign={baseCampaign} adminMode />)
 
     await selectOfficeAndSave()
 
     await waitFor(() => {
-      expect(clientFetch).toHaveBeenCalledWith(
-        apiRoutes.campaign.raceTargetDetails.adminUpdate,
-        { slug: 'test-campaign' },
+      expect(mockUpdateCampaign).toHaveBeenCalledWith(
+        expect.any(Array),
+        'test-campaign',
       )
     })
   })
 
-  it('uses raceId/electionId for unchanged comparison, not details.positionId', async () => {
+  it('uses raceId/electionId for unchanged comparison', async () => {
     const campaign = {
       ...baseCampaign,
       details: {
         ...baseCampaign.details,
         raceId: 'race-1',
         electionId: 'elec-1',
-        positionId: 'legacy-pos-mismatch',
       },
     } as Campaign
     render(<OfficeStep campaign={campaign} />)

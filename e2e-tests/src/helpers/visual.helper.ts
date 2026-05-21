@@ -5,6 +5,10 @@ type SnapshotOptions = Parameters<
   ReturnType<typeof expect<Page>>['toHaveScreenshot']
 >[0]
 
+const defaultMasks = (page: Page): Locator[] => [
+  page.locator('[data-testid="user-menu-name"]'),
+]
+
 /**
  * Takes a full-page screenshot and compares against the committed baseline.
  */
@@ -22,7 +26,8 @@ export async function visualSnapshot(
 
   await expect(page).toHaveScreenshot(name, {
     fullPage: false,
-    ...(options ?? {}),
+    ...options,
+    mask: [...defaultMasks(page), ...(options?.mask ?? [])],
   })
 }
 

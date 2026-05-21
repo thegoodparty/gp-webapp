@@ -124,7 +124,7 @@ export default function WebsiteInbox(): React.JSX.Element {
       <Paper className="border-dashed text-center !p-6">
         <LuInbox className="inline mb-1" size={24} />
         <H6>No form submissions yet</H6>
-        <Body2 className="text-gray-500 text-xs !font-outfit">
+        <Body2 className="text-gray-500 text-xs">
           Your website contact form submissions will appear here.
         </Body2>
       </Paper>
@@ -169,7 +169,7 @@ function ContactModal({
   return (
     <ResponsiveModal open={!!contact} onClose={onClose}>
       {contact && (
-        <div className="p-8 [&>*]:!font-outfit">
+        <div className="p-8">
           <ContactInfo
             label="Date"
             value={dateUsHelper(contact.createdAt)}

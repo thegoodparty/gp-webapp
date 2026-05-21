@@ -1,3 +1,4 @@
+import { auth } from '@clerk/nextjs/server'
 import { getServerUser } from 'helpers/userServerHelper'
 import { redirect } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
@@ -18,9 +19,14 @@ export const metadata = meta
 type ProfilePageProps = ComponentProps<typeof ProfilePage>
 
 const Page = async (): Promise<React.JSX.Element> => {
+  const { userId } = await auth()
+  if (!userId) {
+    redirect('/login')
+  }
+
   const user = await getServerUser()
   if (!user) {
-    redirect('/login')
+    throw new Error('Failed to load user profile. Please try again.')
   }
   const campaign = await fetchUserCampaign()
   const { subscriptionCancelAt } = campaign?.details || {}

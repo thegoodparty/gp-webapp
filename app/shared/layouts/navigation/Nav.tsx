@@ -5,21 +5,17 @@ import RightSide from './RightSide'
 import RightSideMobile from './RightSideMobile'
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo'
 import { usePathname } from 'next/navigation'
-import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 
 const Nav = (): React.JSX.Element => {
   const pathname = usePathname()
-  const isDashboardPath = pathname?.startsWith('/dashboard')
-  const { on: useNewNav } = useFlagOn('win-serve-split')
-  const dashboardNewNav = isDashboardPath && useNewNav
+  const hideGlobalNav =
+    pathname?.startsWith('/dashboard') || pathname?.startsWith('/onboarding')
 
   return (
     <>
       <div
         id="top-nav"
-        className={`fixed w-screen h-14 z-50${
-          dashboardNewNav ? ' hidden' : ''
-        }`}
+        className={`fixed w-screen h-14 z-50${hideGlobalNav ? ' hidden' : ''}`}
       >
         <div className="relative bg-indigo-50 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 z-50 h-14">
           <div
@@ -29,16 +25,16 @@ const Nav = (): React.JSX.Element => {
             <div className="flex items-center">
               <HeaderLogo />
 
-              {!dashboardNewNav && <LeftSide />}
+              {!hideGlobalNav && <LeftSide />}
             </div>
-            {!dashboardNewNav && <RightSide />}
+            {!hideGlobalNav && <RightSide />}
           </div>
         </div>
       </div>
-      {!dashboardNewNav && <RightSideMobile />}
+      {!hideGlobalNav && <RightSideMobile />}
       <div
         id="top-nav-spacer"
-        className={`h-14 relative${dashboardNewNav ? ' hidden' : ''}`}
+        className={`h-14 relative${hideGlobalNav ? ' hidden' : ''}`}
       >
         &nbsp;
       </div>

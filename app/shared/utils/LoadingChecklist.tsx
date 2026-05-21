@@ -8,7 +8,7 @@ export type Status = 'pending' | 'loading' | 'complete'
 const STATUS_PENDING: Status = 'pending'
 const STATUS_LOADING: Status = 'loading'
 const STATUS_COMPLETE: Status = 'complete'
-const LOADING_DELAY = 1250
+const LOADING_DELAY = 2000
 
 export interface LoadingItem {
   label: string
@@ -18,12 +18,15 @@ export interface LoadingItem {
 interface LoadingChecklistProps {
   items: LoadingItem[]
   onComplete: () => void
+  isComplete?: boolean
 }
 
 export default function LoadingChecklist({
   items,
   onComplete,
+  isComplete,
 }: LoadingChecklistProps) {
+  const waitForSignal = isComplete !== undefined
   const [loadingItems, setLoadingItems] = useState(items)
 
   useEffect(() => {
@@ -34,6 +37,12 @@ export default function LoadingChecklist({
         )
 
         if (currentLoadingIndex === -1) {
+          clearInterval(timer)
+          return prevItems
+        }
+
+        const isLastItem = currentLoadingIndex === prevItems.length - 1
+        if (waitForSignal && isLastItem) {
           clearInterval(timer)
           return prevItems
         }
@@ -60,6 +69,14 @@ export default function LoadingChecklist({
   }, [])
 
   useEffect(() => {
+    if (isComplete) {
+      setLoadingItems((prevItems) =>
+        prevItems.map((item) => ({ ...item, status: STATUS_COMPLETE })),
+      )
+    }
+  }, [isComplete])
+
+  useEffect(() => {
     if (
       loadingItems.length > 0 &&
       loadingItems.every((item) => item.status === STATUS_COMPLETE)
@@ -83,10 +100,10 @@ export default function LoadingChecklist({
               />
             )}
             {item.status === STATUS_COMPLETE && (
-              <FaCheck className="text-success" />
+              <FaCheck className="text-foreground" />
             )}
           </div>
-          <p className="text-base">{item.label}</p>
+          <p className="text-base font-normal">{item.label}</p>
         </div>
       ))}
     </div>

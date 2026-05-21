@@ -1,8 +1,10 @@
 import { randomUUID } from 'node:crypto'
-import { type Page, test } from '@playwright/test'
+import { BrowserContext, type Page, test } from '@playwright/test'
 import axios, { type AxiosInstance } from 'axios'
-import { uniqBy } from 'es-toolkit'
+import { createClerkClient } from '@clerk/backend'
+import { clerk, setupClerkTestingToken } from '@clerk/testing/playwright'
 import { TestDataHelper } from 'src/helpers/data.helper'
+import { clerkThrottle } from './throttle-requests-with-retry'
 
 const baseURL = process.env.BASE_URL
 
@@ -10,12 +12,28 @@ if (!baseURL) {
   throw new Error('BASE_URL is not set')
 }
 
-const apiURL = process.env.API_BASE_URL || `${baseURL}/api`
+const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY
+
+if (!CLERK_SECRET_KEY) {
+  throw new Error('CLERK_SECRET_KEY is not set')
+}
+
+const clerkBackend = createClerkClient({ secretKey: CLERK_SECRET_KEY })
+
+const apiBaseURL = process.env.API_BASE_URL || baseURL
+const apiURL = `${apiBaseURL}/api`
+
+const COOKIE_DOMAIN =
+  baseURL.replace('http://', '').replace('https://', '').split('/')[0] ?? ''
 
 type BaseTestUserOptions = {
   /**
    * If true, a dedicated user will be created for the test.
    * Otherwise, the user will be shared with other tests.
+   *
+   * Either way, the user is not deleted after the test — gp-api's
+   * scheduled `deleteTestUsers` sweep removes stale @test.goodparty.org
+   * users older than 3 hours.
    */
   isolated?: boolean
   user?: Partial<{
@@ -49,21 +67,23 @@ export type AuthenticatedUser = {
   name: string
   zip: string
   phone: string
+  password: string
 }
 
 type Race = {
   id: string
-  filingPeriods: { startOn: string; endOn: string }[]
+  brPositionId: string
+  filingPeriods?: { startOn: string; endOn: string }[]
   election: {
-    id: string
+    id?: string
     electionDay: string
-    name: string
-    state: string
+    name?: string
+    state?: string
   }
   position: {
-    id: string
-    hasPrimary: boolean
-    partisanType: string
+    id?: string
+    hasPrimary?: boolean
+    partisanType?: string
     level: string
     name: string
     state: string
@@ -74,52 +94,102 @@ type BootstrappedUser = {
   user: AuthenticatedUser
   token: string
   client: AxiosInstance
+  clerkUserId: string
+  campaignId: number | undefined
 }
+
+type PlaywrightCookie = Parameters<BrowserContext['addCookies']>[0][0]
 
 // Global cache for shared users per worker
 let cachedUser: BootstrappedUser | null = null
 
+async function signInAndGetToken(page: Page, email: string): Promise<string> {
+  await setupClerkTestingToken({ page })
+  await page.goto('/')
+  await page.waitForFunction(() => window.Clerk?.loaded, null, {
+    timeout: 15000,
+  })
+
+  await clerkThrottle(
+    () =>
+      clerk.signIn({
+        page,
+        emailAddress: email,
+      }),
+    5,
+  )
+
+  const token = await page.evaluate(() => window.Clerk!.session!.getToken())
+
+  if (!token) {
+    throw new Error('Failed to get Clerk session token after sign-in')
+  }
+
+  return token
+}
+
 const bootstrapTestUser = async (
+  page: Page,
   options?: TestUserOptions,
 ): Promise<BootstrappedUser> => {
-  // If isolated is false/undefined and we have a cached user, return it
   if (!options?.isolated && cachedUser) {
     return cachedUser
   }
 
-  const client = axios.create({ baseURL: apiURL })
-
-  const generated = TestDataHelper.generateTestUser()
-
+  const generated = TestDataHelper.generateTestUserData()
+  const password = `Test${randomUUID()}!`
   const zip = options?.race?.zip || generated.zipCode
 
-  const registerResponse = await client.post<{
-    user: AuthenticatedUser
-    token: string
-  }>('/v1/authentication/register', {
-    ...TestDataHelper.generateTestUser(),
-    signUpMode: 'candidate',
-    ...generated,
-    zipCode: zip,
-    password: randomUUID(),
+  const clerkUser = await clerkThrottle(() =>
+    clerkBackend.users.createUser({
+      emailAddress: [generated.email],
+      password,
+      firstName: generated.firstName,
+      lastName: generated.lastName,
+      skipPasswordChecks: true,
+    }),
+  )
+
+  const token = await signInAndGetToken(page, generated.email)
+
+  const client = axios.create({
+    baseURL: apiURL,
+    headers: {
+      common: { Authorization: `Bearer ${token}` },
+    },
   })
 
-  client.defaults.headers.common.Authorization = `Bearer ${registerResponse.data.token}`
+  const { data: apiUser } = await client.get<{
+    id: number
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+  }>('/v1/users/me')
 
-  const user = registerResponse.data.user
+  const user: AuthenticatedUser = {
+    id: apiUser.id,
+    firstName: apiUser.firstName,
+    lastName: apiUser.lastName,
+    email: apiUser.email,
+    name: `${apiUser.firstName} ${apiUser.lastName}`,
+    zip,
+    phone: apiUser.phone || generated.phone,
+    password,
+  }
 
   const result: BootstrappedUser = {
     user,
+    token,
     client,
-    token: registerResponse.data.token,
-  }
-
-  // Cache the user if not isolated
-  if (!options?.isolated) {
-    cachedUser = result
+    clerkUserId: clerkUser.id,
+    campaignId: undefined,
   }
 
   if (options?.skipCampaignCreation) {
+    if (!options?.isolated) {
+      cachedUser = result
+    }
     return result
   }
 
@@ -132,8 +202,7 @@ const bootstrapTestUser = async (
     },
   )
 
-  const desiredRace =
-    options?.race?.office ?? 'Flat Rock Village Council - District 1'
+  const desiredRace = options?.race?.office ?? 'Cheyenne City Council - Ward 1'
   const race = races.find((race) => {
     if (typeof desiredRace === 'function') {
       return desiredRace(race.position.name)
@@ -146,24 +215,53 @@ const bootstrapTestUser = async (
     throw new Error('No race found for the specific office selector')
   }
 
-  await client.post('/v1/campaigns', {
-    details: {
-      positionId: race.position.id,
-      electionId: race.election.id,
-      raceId: race.id,
-      state: race.election.state,
-      office: 'Other',
-      otherOffice: race.position.name,
-      ballotLevel: race.position.level,
-      electionDate: race.election.electionDay,
-      partisanType: race.position.partisanType,
-      hasPrimary: race.position.hasPrimary,
-      filingPeriodsStart: race.filingPeriods[0]?.startOn,
-      filingPeriodsEnd: race.filingPeriods[0]?.endOn,
+  const { data: campaign } = await client.post<{ id: number }>(
+    '/v1/campaigns',
+    {
+      ballotReadyPositionId: race.brPositionId,
+      details: {
+        // electionId: the /v1/elections/races-by-year response does not include
+        // election.id; CreateCampaignSchema treats this field as `nullish`, so
+        // omitting it is well-formed (not a silent malformed campaign).
+        electionId: race.election.id,
+        raceId: race.id,
+        // state is sourced from race.position.state (always present) rather
+        // than race.election.state (not returned by the elections endpoint).
+        state: race.position.state,
+        ballotLevel: race.position.level?.toUpperCase(),
+        electionDate: race.election.electionDay,
+        partisanType: race.position.partisanType,
+        hasPrimary: race.position.hasPrimary,
+        filingPeriodsStart: race.filingPeriods?.[0]?.startOn,
+        filingPeriodsEnd: race.filingPeriods?.[0]?.endOn,
+      },
+      data: { currentStep: 'onboarding-1' },
     },
-    data: { currentStep: 'onboarding-1' },
-  })
-  await client.put('/v1/campaigns/mine/race-target-details', {})
+  )
+
+  if (!campaign?.id) {
+    throw new Error('Campaign creation did not return a valid id')
+  }
+
+  if (process.env.DEBUG) {
+    console.log(
+      `[${test.info().title}] Created campaign ${campaign.id} for user ${
+        user.email
+      }`,
+    )
+  }
+
+  result.campaignId = campaign.id
+
+  // Cache the user if not isolated
+  if (!options?.isolated) {
+    cachedUser = result
+  }
+
+  client.defaults.headers.common[
+    'x-organization-slug'
+  ] = `campaign-${campaign.id}`
+
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },
     details: { otherParty: 'Independent', pledged: true },
@@ -172,17 +270,9 @@ const bootstrapTestUser = async (
   return result
 }
 
-const createdUsers: {
-  user: AuthenticatedUser
-  cleanup: () => Promise<void>
-}[] = []
-
 // biome-ignore lint/correctness/noEmptyPattern: Playwright forces us to use destructuring here.
 test.afterAll(async ({}) => {
-  const users = uniqBy(createdUsers, ({ user }) => user.id)
-  for (const { cleanup } of users) {
-    await cleanup()
-  }
+  cachedUser = null
 })
 
 export const authenticateTestUser = async (
@@ -190,35 +280,31 @@ export const authenticateTestUser = async (
   options?: TestUserOptions,
 ) => {
   const start = Date.now()
-  const { user, token, client } = await bootstrapTestUser(options)
+  const { user, token, client, clerkUserId, campaignId } =
+    await bootstrapTestUser(page, options)
 
   const { title } = test.info()
 
-  createdUsers.push({
-    user,
-    cleanup: async () => {
-      await client.delete(`/v1/users/${user.id}`)
-      console.log(`[${title}] Deleted user ${user.email} (id: ${user.id})`)
-    },
-  })
-
   const userCreated = Date.now()
-  if (options?.isolated) {
-    console.log(
-      `[${title}] Created new user ${user.email} (id: ${user.id}) in ${
-        userCreated - start
-      }ms`,
-    )
-  } else {
-    console.log(`[${title}] Using cached user ${user.email} (id: ${user.id})`)
+  const elapsed = Date.now() - start
+
+  if (process.env.DEBUG) {
+    if (options?.isolated) {
+      console.log(
+        `[${title}] Created new user ${user.email} (id: ${user.id}, clerk: ${clerkUserId}) in ${elapsed}ms`,
+      )
+    } else {
+      console.log(
+        `[${title}] Using cached user ${user.email} (id: ${user.id}, clerk: ${clerkUserId})`,
+      )
+    }
   }
 
-  const domain = baseURL.replace('http://', '').replace('https://', '')
-  await page.context().addCookies([
+  const cookies: PlaywrightCookie[] = [
     {
       name: 'token',
       value: token,
-      domain,
+      domain: COOKIE_DOMAIN,
       path: '/',
       httpOnly: true,
       secure: true,
@@ -227,18 +313,31 @@ export const authenticateTestUser = async (
     {
       name: 'user',
       value: JSON.stringify(user),
-      domain,
+      domain: COOKIE_DOMAIN,
       path: '/',
       sameSite: 'Lax',
     },
-  ])
+  ]
+
+  if (campaignId) {
+    cookies.push({
+      name: 'organization-slug',
+      value: `campaign-${campaignId}`,
+      domain: COOKIE_DOMAIN,
+      path: '/',
+      sameSite: 'Lax',
+    })
+  }
+  await page.context().addCookies(cookies)
 
   const loginTime = Date.now()
-  console.log(
-    `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
-      loginTime - userCreated
-    }ms`,
-  )
+  if (process.env.DEBUG) {
+    console.log(
+      `[${title}] Logged in user ${user.email} (id: ${user.id}) in ${
+        loginTime - userCreated
+      }ms`,
+    )
+  }
 
   return { user, client }
 }

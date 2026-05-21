@@ -78,6 +78,13 @@ invalid_urls.csv
 # AI Tools
 /.ai/
 /.cursor
-.claude
+.superpowers/
+.claude/settings.json
+.claude/settings.local.json
+.claude/cache/
+.claude/logs/
+.claude/.credentials*
 
 *repomix*
+
+.clerk
