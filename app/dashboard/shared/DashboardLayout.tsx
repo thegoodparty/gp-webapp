@@ -11,7 +11,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { weeksTill } from 'helpers/dateHelper'
 import { Campaign } from 'helpers/types'
 import { Sidebar, SidebarInset, SidebarProvider, useSidebar } from '@styleguide'
-import { MdClose, MdMenu } from 'react-icons/md'
+import { MenuIcon, XMarkIcon } from '@styleguide/components/ui/icons'
 import { useOrganization } from '@shared/organization-picker'
 import ImpersonationBanner from '@shared/user/ImpersonationBanner'
 
@@ -118,16 +118,16 @@ const MobileMenuTrigger = () => {
           className="flex items-center justify-center rounded-full size-9"
           aria-label="Open menu"
         >
-          <MdMenu size={16} />
+          <MenuIcon size={20} />
         </button>
       </div>
       {openMobile && (
         <button
           onClick={() => setOpenMobile(false)}
-          className="fixed z-[60] top-4 right-4 flex items-center justify-center size-10 rounded-full bg-white shadow-md"
+          className="fixed z-[60] top-3 right-3.5 flex items-center justify-center size-10 rounded-full bg-white shadow-md"
           aria-label="Close menu"
         >
-          <MdClose size={16} />
+          <XMarkIcon size={20} />
         </button>
       )}
     </>

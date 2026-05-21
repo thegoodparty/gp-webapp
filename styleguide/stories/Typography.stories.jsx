@@ -44,7 +44,7 @@ export const FontFamilies = () => (
         </tr>
       </thead>
       <tbody>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-semibold text-gray-900">font-geist</td>
           <td className="py-4 px-4 text-gray-600">Geist</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">
@@ -59,7 +59,7 @@ export const FontFamilies = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-semibold text-gray-900">
             font-geist-mono
           </td>
@@ -74,7 +74,7 @@ export const FontFamilies = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-semibold text-gray-900">
             font-opensans
           </td>
@@ -115,7 +115,7 @@ export const FontWeights = () => (
         </tr>
       </thead>
       <tbody>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4" style={{ fontWeight: 300 }}>
             light
           </td>
@@ -125,7 +125,7 @@ export const FontWeights = () => (
           </td>
           <td className="py-4 px-4 font-opensans font-light">{sampleText}</td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4" style={{ fontWeight: 400 }}>
             normal
           </td>
@@ -135,7 +135,7 @@ export const FontWeights = () => (
           </td>
           <td className="py-4 px-4 font-opensans font-normal">{sampleText}</td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4" style={{ fontWeight: 500 }}>
             medium
           </td>
@@ -145,7 +145,7 @@ export const FontWeights = () => (
           </td>
           <td className="py-4 px-4 font-opensans font-medium">{sampleText}</td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4" style={{ fontWeight: 600 }}>
             semibold
           </td>
@@ -157,7 +157,7 @@ export const FontWeights = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4" style={{ fontWeight: 700 }}>
             bold
           </td>
@@ -207,7 +207,7 @@ export const TypeScale = () => (
         </tr>
       </thead>
       <tbody>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">9xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">128px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">160px</td>
@@ -227,7 +227,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">8xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">96px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">120px</td>
@@ -247,7 +247,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">7xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">72px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">90px</td>
@@ -267,7 +267,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">6xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">60px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">72px</td>
@@ -287,7 +287,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">5xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">48px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">60px</td>
@@ -307,7 +307,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">4xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">40px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">52px</td>
@@ -327,7 +327,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">3xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">30px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">40px</td>
@@ -347,7 +347,7 @@ export const TypeScale = () => (
             Aa
           </td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">2xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">24px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">32px</td>
@@ -359,7 +359,7 @@ export const TypeScale = () => (
           </td>
           <td className="py-4 px-4 font-opensans font-semibold text-2xl">Aa</td>
         </tr>
-        <tr className="border-b border-gray-100">
+        <tr className="border-b border-gray-200">
           <td className="py-4 px-4 font-mono text-sm font-semibold">xl</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">20px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">28px</td>
@@ -371,7 +371,7 @@ export const TypeScale = () => (
           </td>
           <td className="py-4 px-4 font-opensans font-semibold text-xl">Aa</td>
         </tr>
-        <tr className="border-b border-gray-100 bg-gray-50/50">
+        <tr className="border-b border-gray-200 bg-gray-50/50">
           <td className="py-4 px-4 font-mono text-sm font-semibold">lg</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">18px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">28px</td>
@@ -385,7 +385,7 @@ export const TypeScale = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100 bg-gray-50/50">
+        <tr className="border-b border-gray-200 bg-gray-50/50">
           <td className="py-4 px-4 font-mono text-sm font-semibold">base</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">16px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">24px</td>
@@ -399,7 +399,7 @@ export const TypeScale = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100 bg-gray-50/50">
+        <tr className="border-b border-gray-200 bg-gray-50/50">
           <td className="py-4 px-4 font-mono text-sm font-semibold">sm</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">14px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">20px</td>
@@ -413,7 +413,7 @@ export const TypeScale = () => (
             {sampleText}
           </td>
         </tr>
-        <tr className="border-b border-gray-100 bg-gray-50/50">
+        <tr className="border-b border-gray-200 bg-gray-50/50">
           <td className="py-4 px-4 font-mono text-sm font-semibold">xs</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">12px</td>
           <td className="py-4 px-4 font-mono text-sm text-gray-500">16px</td>

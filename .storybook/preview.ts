@@ -11,7 +11,20 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Foundations', 'Components', 'Campaign Plan'],
+        order: [
+          'Foundations',
+          [
+            'Borders',
+            'Colors',
+            'Icons',
+            'Logo',
+            'Shadows',
+            'Spacing',
+            'Typography',
+          ],
+          'Components',
+          'Campaign Plan',
+        ],
       },
     },
     controls: {
