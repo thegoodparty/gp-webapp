@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useArgs } from 'storybook/preview-api'
-import { StarIcon } from '../components/ui/icons'
+import { BoldIcon } from '../components/ui/icons'
 import { Toggle } from '../components/ui/toggle'
 
 const meta: Meta<typeof Toggle> = {
@@ -48,9 +48,9 @@ export const Playground: Story = {
         variant={variant}
         size={size}
         onPressedChange={(next) => updateArgs({ pressed: next })}
-        aria-label="Toggle favorite"
+        aria-label="Toggle bold"
       >
-        <StarIcon />
+        <BoldIcon />
       </Toggle>
     )
   },
@@ -58,20 +58,20 @@ export const Playground: Story = {
 
 export const Default: Story = {
   render: () => (
-    <Toggle aria-label="Toggle favorite">
-      <StarIcon />
+    <Toggle aria-label="Toggle bold">
+      <BoldIcon />
     </Toggle>
   ),
 }
 
 export const WithText: Story = {
-  render: () => <Toggle aria-label="Toggle published">Published</Toggle>,
+  render: () => <Toggle aria-label="Toggle bold">Bold</Toggle>,
 }
 
 export const Outline: Story = {
   render: () => (
-    <Toggle variant="outline" aria-label="Toggle favorite">
-      <StarIcon />
+    <Toggle variant="outline" aria-label="Toggle bold">
+      <BoldIcon />
     </Toggle>
   ),
 }
@@ -79,14 +79,14 @@ export const Outline: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-2">
-      <Toggle size="sm" aria-label="Toggle small">
-        <StarIcon />
+      <Toggle size="sm" aria-label="Toggle bold small">
+        <BoldIcon />
       </Toggle>
-      <Toggle aria-label="Toggle default">
-        <StarIcon />
+      <Toggle aria-label="Toggle bold default">
+        <BoldIcon />
       </Toggle>
-      <Toggle size="lg" aria-label="Toggle large">
-        <StarIcon />
+      <Toggle size="lg" aria-label="Toggle bold large">
+        <BoldIcon />
       </Toggle>
     </div>
   ),
@@ -94,8 +94,8 @@ export const Sizes: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <Toggle disabled aria-label="Toggle disabled">
-      <StarIcon />
+    <Toggle disabled aria-label="Toggle bold disabled">
+      <BoldIcon />
     </Toggle>
   ),
 }

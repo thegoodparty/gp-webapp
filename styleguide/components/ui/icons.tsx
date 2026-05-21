@@ -4,6 +4,7 @@ export {
   AlignRight as AlignRightIcon,
   ArrowLeft as ArrowLeftIcon,
   ArrowRight as ArrowRightIcon,
+  Bold as BoldIcon,
   Calendar as CalendarIcon,
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
