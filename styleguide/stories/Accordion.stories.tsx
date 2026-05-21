@@ -21,6 +21,7 @@ const meta: Meta<typeof Accordion> = {
       control: 'boolean',
       description:
         'Only applies when type is "single". Allows closing the open item.',
+      if: { arg: 'type', eq: 'single' },
     },
     disabled: {
       control: 'boolean',
@@ -59,8 +60,12 @@ export const Playground: Story = {
     collapsible: true,
     disabled: false,
   },
-  render: ({ disabled, ...rootArgs }) => (
-    <Accordion {...rootArgs} className="w-full max-w-md">
+  render: ({ disabled, collapsible, ...rootArgs }) => (
+    <Accordion
+      {...rootArgs}
+      {...(rootArgs.type === 'single' ? { collapsible } : {})}
+      className="w-full max-w-md"
+    >
       {items.map(({ value, question, answer }) => (
         <AccordionItem key={value} value={value} disabled={disabled}>
           <AccordionTrigger>{question}</AccordionTrigger>
