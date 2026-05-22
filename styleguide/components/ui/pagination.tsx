@@ -43,7 +43,7 @@ function PaginationItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const paginationLinkVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-transparent px-3 text-sm font-normal text-foreground no-underline transition-colors outline-none hover:bg-accent focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-transparent px-3 text-sm font-normal text-foreground no-underline transition-colors outline-none hover:bg-base-accent focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
   {
     variants: {
       isActive: {
