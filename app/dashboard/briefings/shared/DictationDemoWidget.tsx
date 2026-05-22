@@ -53,7 +53,7 @@ export default function DictationDemoWidget() {
             dictation.status === 'connecting' ||
             dictation.status === 'stopping'
           }
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground bg-background px-4 h-9 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground bg-background px-4 h-9 text-sm font-semibold transition-colors hover:bg-base-accent hover:text-base-accent-foreground disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isActive ? (
             <MicOff className="h-4 w-4" />
