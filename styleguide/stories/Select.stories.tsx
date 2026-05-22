@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   Select,
   SelectContent,
@@ -13,10 +14,59 @@ const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
   tags: ['autodocs'],
+  argTypes: {
+    disabled: { control: 'boolean' },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof Select>
+
+type PlaygroundArgs = {
+  value: string
+  disabled: boolean
+  placeholder: string
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    value: '',
+    disabled: false,
+    placeholder: 'Select a fruit',
+  },
+  argTypes: {
+    value: {
+      control: 'select',
+      options: ['', 'apple', 'banana', 'blueberry', 'grapes', 'pineapple'],
+      description: 'Controlled selection. Empty string means nothing selected.',
+    },
+    placeholder: { control: 'text' },
+  },
+  render: ({ value, disabled, placeholder }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <Select
+        value={value}
+        onValueChange={(next) => updateArgs({ value: next })}
+        disabled={disabled}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Fruits</SelectLabel>
+            <SelectItem value="apple">Apple</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="blueberry">Blueberry</SelectItem>
+            <SelectItem value="grapes">Grapes</SelectItem>
+            <SelectItem value="pineapple">Pineapple</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
