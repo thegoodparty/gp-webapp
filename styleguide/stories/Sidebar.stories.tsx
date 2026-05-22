@@ -30,7 +30,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from '../components/ui/sidebar'
 
 const meta: Meta<typeof Sidebar> = {
@@ -171,10 +170,6 @@ function SidebarDemo({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
-          <span className="font-medium">Page title</span>
-        </header>
         <main className="text-muted-foreground p-6 text-sm">
           Page content. The sidebar renders alongside it via{' '}
           <code>SidebarInset</code>.
