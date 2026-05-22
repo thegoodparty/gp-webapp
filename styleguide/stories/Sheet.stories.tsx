@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   Sheet,
   SheetContent,
@@ -8,6 +9,9 @@ import {
   SheetTrigger,
 } from '../components/ui/sheet'
 import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Textarea } from '../components/ui/textarea'
 
 const meta: Meta<typeof Sheet> = {
   title: 'Components/Sheet',
@@ -17,6 +21,47 @@ const meta: Meta<typeof Sheet> = {
 
 export default meta
 type Story = StoryObj<typeof Sheet>
+
+type PlaygroundArgs = {
+  open: boolean
+  side: 'top' | 'right' | 'bottom' | 'left'
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    open: false,
+    side: 'right',
+  },
+  argTypes: {
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state.',
+    },
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+    },
+  },
+  render: ({ open, side }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <Sheet open={open} onOpenChange={(next) => updateArgs({ open: next })}>
+        <SheetTrigger asChild>
+          <Button variant="outline">Open Sheet</Button>
+        </SheetTrigger>
+        <SheetContent side={side} className="bg-white">
+          <SheetHeader>
+            <SheetTitle>Edit profile</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done.
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
@@ -33,23 +78,23 @@ export const Default: Story = {
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <label htmlFor="name" className="text-right">
+            <Label htmlFor="sheet-name" className="text-right">
               Name
-            </label>
-            <input
-              id="name"
+            </Label>
+            <Input
+              id="sheet-name"
               defaultValue="Pedro Duarte"
-              className="col-span-3 rounded-md border p-2"
+              className="col-span-3"
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <label htmlFor="username" className="text-right">
+            <Label htmlFor="sheet-username" className="text-right">
               Username
-            </label>
-            <input
-              id="username"
+            </Label>
+            <Input
+              id="sheet-username"
               defaultValue="@peduarte"
-              className="col-span-3 rounded-md border p-2"
+              className="col-span-3"
             />
           </div>
         </div>
@@ -58,39 +103,6 @@ export const Default: Story = {
         </div>
       </SheetContent>
     </Sheet>
-  ),
-}
-
-export const WithSide: Story = {
-  render: () => (
-    <div className="flex gap-4">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline">Left Sheet</Button>
-        </SheetTrigger>
-        <SheetContent side="left">
-          <SheetHeader>
-            <SheetTitle>Left Sheet</SheetTitle>
-            <SheetDescription>
-              This sheet appears from the left side.
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline">Right Sheet</Button>
-        </SheetTrigger>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Right Sheet</SheetTitle>
-            <SheetDescription>
-              This sheet appears from the right side.
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
-    </div>
   ),
 }
 
@@ -109,30 +121,16 @@ export const WithForm: Story = {
         </SheetHeader>
         <form className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <label htmlFor="project-name">Project Name</label>
-            <input
-              id="project-name"
-              className="rounded-md border p-2"
-              placeholder="Enter project name"
-            />
+            <Label htmlFor="project-name">Project Name</Label>
+            <Input id="project-name" placeholder="Enter project name" />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              className="rounded-md border p-2"
+            <Label htmlFor="project-description">Description</Label>
+            <Textarea
+              id="project-description"
               placeholder="Enter project description"
               rows={4}
             />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="category">Category</label>
-            <select id="category" className="rounded-md border p-2">
-              <option value="">Select a category</option>
-              <option value="web">Web Development</option>
-              <option value="mobile">Mobile Development</option>
-              <option value="design">Design</option>
-            </select>
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline">Cancel</Button>
