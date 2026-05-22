@@ -1,11 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 import { Button } from '../components/ui/button'
-import {
-  CheckCircleIcon,
-  InfoIcon,
-  XCircleIcon,
-} from '../components/ui/icons'
+import { CheckCircleIcon, InfoIcon, XCircleIcon } from '../components/ui/icons'
 
 const meta: Meta<typeof Alert> = {
   title: 'Components/Alert',
@@ -54,7 +50,10 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     description: { control: 'text' },
   },
   render: ({ variant, showIcon, title, description }) => (
-    <Alert variant={variant} icon={showIcon ? variantIcons[variant] : undefined}>
+    <Alert
+      variant={variant}
+      icon={showIcon ? variantIcons[variant] : undefined}
+    >
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
     </Alert>
