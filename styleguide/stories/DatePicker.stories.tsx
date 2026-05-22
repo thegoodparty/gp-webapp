@@ -36,6 +36,92 @@ function formatDate(date: Date | undefined) {
   })
 }
 
+type PlaygroundArgs = {
+  mode: 'single' | 'range'
+  disabled: boolean
+  numberOfMonths: number
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    mode: 'single',
+    disabled: false,
+    numberOfMonths: 1,
+  },
+  argTypes: {
+    mode: {
+      control: 'inline-radio',
+      options: ['single', 'range'],
+      description: 'Selection mode passed to the Calendar.',
+    },
+    disabled: { control: 'boolean' },
+    numberOfMonths: {
+      control: { type: 'number', min: 1, max: 3, step: 1 },
+      description: 'How many months the Calendar renders side by side.',
+    },
+  },
+  render: ({ mode, disabled, numberOfMonths }) => {
+    const Demo = () => {
+      const [date, setDate] = useState<Date | undefined>()
+      const [range, setRange] = useState<
+        { from: Date | undefined; to?: Date | undefined } | undefined
+      >()
+      const label =
+        mode === 'single'
+          ? date
+            ? formatDate(date)
+            : 'Pick a date'
+          : range?.from
+            ? range.to
+              ? `${formatDate(range.from)} – ${formatDate(range.to)}`
+              : formatDate(range.from)
+            : 'Pick a date range'
+      const triggerWidth = mode === 'single' ? 'w-72' : 'w-96'
+      return (
+        <div className={cn('flex flex-col gap-2', triggerWidth)}>
+          <Label htmlFor="playground-date">Election day</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="playground-date"
+                variant="outline"
+                disabled={disabled}
+                className={cn(
+                  'w-full justify-start text-left font-normal',
+                  !date && !range?.from && 'text-muted-foreground',
+                )}
+              >
+                <CalendarIcon className="mr-2 size-4" />
+                {label}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              {mode === 'single' ? (
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={numberOfMonths}
+                  autoFocus
+                />
+              ) : (
+                <Calendar
+                  mode="range"
+                  selected={range}
+                  onSelect={setRange}
+                  numberOfMonths={numberOfMonths}
+                  autoFocus
+                />
+              )}
+            </PopoverContent>
+          </Popover>
+        </div>
+      )
+    }
+    return <Demo />
+  },
+}
+
 export const Single: Story = {
   render: () => {
     const Demo = () => {

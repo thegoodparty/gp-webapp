@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import { useState } from 'react'
 import { CheckIcon, ChevronsUpDownIcon } from '../components/ui/icons'
 import { Button } from '../components/ui/button'
@@ -42,6 +43,75 @@ const offices = [
   { value: 'us-house', label: 'US House' },
   { value: 'us-senate', label: 'US Senate' },
 ]
+
+type PlaygroundArgs = {
+  value: string
+  disabled: boolean
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    value: '',
+    disabled: false,
+  },
+  argTypes: {
+    value: {
+      control: 'select',
+      options: ['', ...offices.map((o) => o.value)],
+      description:
+        'Controlled selection. Empty string means nothing selected.',
+    },
+    disabled: { control: 'boolean' },
+  },
+  render: ({ value, disabled }) => {
+    const [, updateArgs] = useArgs()
+    const selected = offices.find((o) => o.value === value)
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            disabled={disabled}
+            className="w-64 justify-between"
+          >
+            {selected ? selected.label : 'Select an office...'}
+            <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-64 p-0">
+          <Command>
+            <CommandInput placeholder="Search offices..." />
+            <CommandList>
+              <CommandEmpty>No office found.</CommandEmpty>
+              <CommandGroup>
+                {offices.map((office) => (
+                  <CommandItem
+                    key={office.value}
+                    value={office.value}
+                    onSelect={(currentValue) => {
+                      updateArgs({
+                        value: currentValue === value ? '' : currentValue,
+                      })
+                    }}
+                  >
+                    <CheckIcon
+                      className={cn(
+                        'mr-2 size-4',
+                        value === office.value ? 'opacity-100' : 'opacity-0',
+                      )}
+                    />
+                    {office.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    )
+  },
+}
 
 export const Single: Story = {
   render: () => {
