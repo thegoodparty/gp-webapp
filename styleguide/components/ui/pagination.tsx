@@ -1,8 +1,8 @@
 import * as React from 'react'
+import { cva } from 'class-variance-authority'
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from './icons'
 
 import { cn } from '../../lib/utils'
-import { Button, buttonVariants } from './button'
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
@@ -42,10 +42,32 @@ function PaginationItem({ className, ...props }: React.ComponentProps<'li'>) {
   )
 }
 
+const paginationLinkVariants = cva(
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-transparent px-3 text-sm font-normal text-foreground no-underline transition-colors outline-none hover:bg-accent focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+  {
+    variants: {
+      isActive: {
+        true: 'border-base-border',
+        false: '',
+      },
+      size: {
+        xSmall: 'h-6',
+        small: 'h-8',
+        medium: 'h-10',
+        large: 'h-12',
+      },
+    },
+    defaultVariants: {
+      isActive: false,
+      size: 'small',
+    },
+  },
+)
+
 type PaginationLinkProps = {
   isActive?: boolean
-} & Pick<React.ComponentProps<typeof Button>, 'size'> &
-  React.ComponentProps<'a'>
+  size?: 'xSmall' | 'small' | 'medium' | 'large'
+} & React.ComponentProps<'a'>
 
 function PaginationLink({
   className,
@@ -58,14 +80,7 @@ function PaginationLink({
       aria-current={isActive ? 'page' : undefined}
       data-slot="pagination-link"
       data-active={isActive}
-      className={cn(
-        buttonVariants({
-          variant: isActive ? 'outline' : 'ghost',
-          size,
-        }),
-        '!text-sm !font-normal !text-foreground !no-underline !rounded-sm !px-3',
-        className,
-      )}
+      className={cn(paginationLinkVariants({ isActive, size }), className)}
       {...props}
     />
   )
