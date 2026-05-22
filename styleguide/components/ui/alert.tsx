@@ -9,7 +9,7 @@ const alertVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-card text-card-foreground border-border [&>svg]:text-muted-foreground',
+          'bg-card text-card-foreground border-neutral-400 [&>svg]:text-muted-foreground',
         info: 'bg-card text-blue-900 border-blue-400 [&>svg]:text-blue-900',
         success:
           'bg-card text-brand-halo-green-900 border-brand-halo-green-400 [&>svg]:text-brand-halo-green-900',
