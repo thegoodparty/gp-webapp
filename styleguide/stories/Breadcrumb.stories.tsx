@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import {
   Breadcrumb,
@@ -62,16 +63,18 @@ export const Playground: StoryObj<PlaygroundArgs> = {
             if (collapseMiddle && i > 0 && i < last) {
               if (i === 1) {
                 return (
-                  <span key="ellipsis" className="contents">
-                    <BreadcrumbEllipsis />
+                  <Fragment key="ellipsis">
+                    <BreadcrumbItem>
+                      <BreadcrumbEllipsis />
+                    </BreadcrumbItem>
                     <BreadcrumbSeparator />
-                  </span>
+                  </Fragment>
                 )
               }
               return null
             }
             return (
-              <span key={name} className="contents">
+              <Fragment key={name}>
                 <BreadcrumbItem>
                   {i === last ? (
                     <BreadcrumbPage>{name}</BreadcrumbPage>
@@ -80,7 +83,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
                   )}
                 </BreadcrumbItem>
                 {i !== last ? <BreadcrumbSeparator /> : null}
-              </span>
+              </Fragment>
             )
           })}
         </BreadcrumbList>
@@ -121,7 +124,9 @@ export const WithEllipsis: Story = {
           <BreadcrumbLink href="#">Category</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbEllipsis />
+        <BreadcrumbItem>
+          <BreadcrumbEllipsis />
+        </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink href="#">Subcategory</BreadcrumbLink>
