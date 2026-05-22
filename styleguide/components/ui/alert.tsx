@@ -12,7 +12,7 @@ const alertVariants = cva(
           'bg-card text-card-foreground border-neutral-400 [&>svg]:text-muted-foreground',
         info: 'bg-card text-blue-900 border-blue-400 [&>svg]:text-blue-900',
         success:
-          'bg-card text-[#115449] border-[#63D1A0] [&>svg]:text-[#115449]',
+          'bg-card text-brand-halo-green-900 border-brand-halo-green-400 [&>svg]:text-brand-halo-green-900',
         destructive: 'bg-card text-red-900 border-red-400 [&>svg]:text-red-900',
       },
     },

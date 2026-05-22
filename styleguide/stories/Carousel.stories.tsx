@@ -11,6 +11,12 @@ const meta: Meta<typeof Carousel> = {
   title: 'Components/Carousel',
   component: Carousel,
   tags: ['autodocs'],
+  argTypes: {
+    orientation: {
+      control: 'inline-radio',
+      options: ['horizontal', 'vertical'],
+    },
+  },
 }
 
 export default meta
@@ -34,6 +40,61 @@ const images = [
     alt: 'Photo by Christina Morillo',
   },
 ]
+
+type PlaygroundArgs = {
+  orientation: 'horizontal' | 'vertical'
+  loop: boolean
+  align: 'start' | 'center' | 'end'
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    orientation: 'horizontal',
+    loop: false,
+    align: 'center',
+  },
+  argTypes: {
+    loop: {
+      control: 'boolean',
+      description: 'embla-carousel loop option.',
+    },
+    align: {
+      control: 'inline-radio',
+      options: ['start', 'center', 'end'],
+      description: 'embla-carousel slide alignment option.',
+    },
+  },
+  render: ({ orientation, loop, align }) => (
+    <Carousel
+      orientation={orientation}
+      opts={{ loop, align }}
+      className={orientation === 'horizontal' ? 'w-full max-w-xs' : 'h-72'}
+    >
+      <CarouselContent
+        className={orientation === 'vertical' ? '-mt-1 h-72' : undefined}
+      >
+        {images.map((image, index) => (
+          <CarouselItem
+            key={index}
+            className={
+              orientation === 'vertical' ? 'pt-1 basis-1/2' : undefined
+            }
+          >
+            <div className="p-1">
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="aspect-square h-full w-full rounded-md object-cover"
+              />
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  ),
+}
 
 export const Default: Story = {
   render: () => (
@@ -59,12 +120,7 @@ export const Default: Story = {
 
 export const WithMultipleItems: Story = {
   render: () => (
-    <Carousel
-      opts={{
-        align: 'start',
-      }}
-      className="w-full"
-    >
+    <Carousel opts={{ align: 'start' }} className="w-full">
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
@@ -84,15 +140,9 @@ export const WithMultipleItems: Story = {
   ),
 }
 
-export const WithAutoPlay: Story = {
+export const Loop: Story = {
   render: () => (
-    <Carousel
-      opts={{
-        align: 'start',
-        loop: true,
-      }}
-      className="w-full max-w-xs"
-    >
+    <Carousel opts={{ loop: true }} className="w-full max-w-xs">
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>
@@ -108,58 +158,6 @@ export const WithAutoPlay: Story = {
       </CarouselContent>
       <CarouselPrevious />
       <CarouselNext />
-    </Carousel>
-  ),
-}
-
-export const WithCustomControls: Story = {
-  render: () => (
-    <Carousel className="w-full max-w-xs">
-      <CarouselContent>
-        {images.map((image, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="aspect-square h-full w-full rounded-md object-cover"
-              />
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <div className="flex items-center justify-center gap-2 pt-4">
-        <CarouselPrevious className="static translate-y-0" />
-        <CarouselNext className="static translate-y-0" />
-      </div>
-    </Carousel>
-  ),
-}
-
-export const WithCustomStyles: Story = {
-  render: () => (
-    <Carousel className="w-full max-w-xs">
-      <CarouselContent>
-        {images.map((image, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <div className="relative overflow-hidden rounded-lg">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="aspect-square h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-4 text-white">
-                  <p className="text-sm font-medium">Image {index + 1}</p>
-                </div>
-              </div>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-2" />
-      <CarouselNext className="right-2" />
     </Carousel>
   ),
 }

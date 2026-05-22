@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
+  RadioCardItem,
   RadioGroup,
   RadioGroupItem,
-  RadioCardItem,
 } from '../components/ui/radio-group'
 import { Label } from '../components/ui/label'
 
@@ -10,10 +11,62 @@ const meta: Meta<typeof RadioGroup> = {
   title: 'Components/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs'],
+  argTypes: {
+    disabled: {
+      control: 'boolean',
+      description: 'Disable every item in the group.',
+    },
+    orientation: {
+      control: 'inline-radio',
+      options: ['horizontal', 'vertical'],
+    },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof RadioGroup>
+
+type PlaygroundArgs = {
+  value: string
+  disabled: boolean
+  orientation: 'horizontal' | 'vertical'
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    value: 'comfortable',
+    disabled: false,
+    orientation: 'vertical',
+  },
+  argTypes: {
+    value: {
+      control: 'select',
+      options: ['default', 'comfortable', 'compact'],
+      description: 'Controlled selection.',
+    },
+  },
+  render: ({ value, disabled, orientation }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <RadioGroup
+        value={value}
+        onValueChange={(next) => updateArgs({ value: next })}
+        disabled={disabled}
+        orientation={orientation}
+        className={orientation === 'horizontal' ? 'flex gap-4' : undefined}
+      >
+        {['default', 'comfortable', 'compact'].map((option) => (
+          <div key={option} className="flex items-center space-x-2">
+            <RadioGroupItem value={option} id={`playground-${option}`} />
+            <Label htmlFor={`playground-${option}`} className="capitalize">
+              {option}
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
@@ -59,12 +112,12 @@ export const Disabled: Story = {
   render: () => (
     <RadioGroup defaultValue="option-1">
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="option-1" id="option-1" />
-        <Label htmlFor="option-1">Option 1</Label>
+        <RadioGroupItem value="option-1" id="d-option-1" />
+        <Label htmlFor="d-option-1">Option 1</Label>
       </div>
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="option-2" id="option-2" disabled />
-        <Label htmlFor="option-2" className="text-muted-foreground">
+        <RadioGroupItem value="option-2" id="d-option-2" disabled />
+        <Label htmlFor="d-option-2" className="text-muted-foreground">
           Option 2 (Disabled)
         </Label>
       </div>
@@ -87,25 +140,6 @@ export const CardVariant: Story = {
         title="Radio Button Text"
         description="This is a radio description."
       />
-    </RadioGroup>
-  ),
-}
-
-export const Vertical: Story = {
-  render: () => (
-    <RadioGroup defaultValue="comfortable" className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="default" id="default" />
-        <Label htmlFor="default">Default</Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="comfortable" id="comfortable" />
-        <Label htmlFor="comfortable">Comfortable</Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="compact" id="compact" />
-        <Label htmlFor="compact">Compact</Label>
-      </div>
     </RadioGroup>
   ),
 }
