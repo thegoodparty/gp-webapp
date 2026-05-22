@@ -49,7 +49,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
         <SheetTrigger asChild>
           <Button variant="outline">Open Sheet</Button>
         </SheetTrigger>
-        <SheetContent side={side} className="bg-white">
+        <SheetContent side={side}>
           <SheetHeader>
             <SheetTitle>Edit profile</SheetTitle>
             <SheetDescription>
@@ -69,7 +69,7 @@ export const Default: Story = {
       <SheetTrigger asChild>
         <Button variant="outline">Open Sheet</Button>
       </SheetTrigger>
-      <SheetContent className="bg-white">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle>Edit profile</SheetTitle>
           <SheetDescription>
