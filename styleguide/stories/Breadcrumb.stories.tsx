@@ -32,11 +32,13 @@ export const Playground: StoryObj<PlaygroundArgs> = {
   argTypes: {
     depth: {
       control: { type: 'number', min: 2, max: 8, step: 1 },
-      description: 'Number of crumbs to render, including Home and the current page.',
+      description:
+        'Number of crumbs to render, including Home and the current page.',
     },
     withEllipsis: {
       control: 'boolean',
-      description: 'Collapse middle crumbs into an ellipsis (only meaningful when depth > 3).',
+      description:
+        'Collapse middle crumbs into an ellipsis (only meaningful when depth > 3).',
     },
   },
   render: ({ depth, withEllipsis }) => {

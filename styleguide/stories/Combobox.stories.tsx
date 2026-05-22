@@ -58,8 +58,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     value: {
       control: 'select',
       options: ['', ...offices.map((o) => o.value)],
-      description:
-        'Controlled selection. Empty string means nothing selected.',
+      description: 'Controlled selection. Empty string means nothing selected.',
     },
     disabled: { control: 'boolean' },
   },

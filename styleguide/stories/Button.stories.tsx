@@ -91,7 +91,9 @@ export const Playground: StoryObj<PlaygroundArgs> = {
       buttonArgs.variant === 'whiteOutline' ||
       buttonArgs.variant === 'whiteGhost'
     ) {
-      return <div className="rounded-lg bg-base-background-dark p-8">{button}</div>
+      return (
+        <div className="rounded-lg bg-base-background-dark p-8">{button}</div>
+      )
     }
     return button
   },

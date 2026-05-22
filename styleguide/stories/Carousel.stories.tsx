@@ -76,7 +76,9 @@ export const Playground: StoryObj<PlaygroundArgs> = {
         {images.map((image, index) => (
           <CarouselItem
             key={index}
-            className={orientation === 'vertical' ? 'pt-1 basis-1/2' : undefined}
+            className={
+              orientation === 'vertical' ? 'pt-1 basis-1/2' : undefined
+            }
           >
             <div className="p-1">
               <img
