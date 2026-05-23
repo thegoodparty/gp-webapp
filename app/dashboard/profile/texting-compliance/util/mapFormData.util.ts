@@ -35,7 +35,7 @@ interface MappedFormData {
   placeId: string
   formattedAddress: string
   committeeName: string
-  websiteDomain: string
+  websiteDomain?: string
   filingUrl: string
   email: string
   phone: string
@@ -98,7 +98,7 @@ export const mapFormData = ({
   placeId: place_id,
   formattedAddress: formatted_address,
   committeeName: campaignCommitteeName,
-  websiteDomain: website,
+  websiteDomain: website || undefined,
   filingUrl: electionFilingLink,
   email,
   phone,
