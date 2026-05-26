@@ -377,13 +377,35 @@ export default function AnnotationsScope({
         <AddNoteSheet
           sheet={overlay}
           onClose={closeSheet}
-          onCreate={async (anchor, body) => {
-            await create.mutateAsync({
+          onCreate={async (anchor, body, attachments) => {
+            const created = await create.mutateAsync({
               kind: 'note',
               anchor: anchorPayload(anchor),
               payload: { body },
             })
             window.getSelection()?.removeAllRanges()
+            // Upload any staged attachments against the freshly created
+            // annotation. Run serially to keep retry behaviour predictable.
+            // Failures don't roll back the note — the body is already on
+            // the server and worth keeping; the user can retry uploads
+            // separately if we surface that path later.
+            for (const a of attachments) {
+              try {
+                await uploadAttachment({
+                  annotationId: created.id,
+                  file: a.file,
+                })
+              } catch {
+                /* swallow per-file failure; let the React Query refetch
+                   below sync server state. We'll wire surfaced errors in
+                   a follow-up. */
+              }
+            }
+            if (attachments.length > 0) {
+              queryClient.invalidateQueries({
+                queryKey: annotationsQueryKey(meetingDate),
+              })
+            }
           }}
           onUpdate={async (id, body) => {
             await updateNote.mutateAsync({ id, body })

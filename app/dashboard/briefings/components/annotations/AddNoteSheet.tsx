@@ -13,6 +13,18 @@ import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { SheetState } from './AnnotationsScope'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
+import NoteAttachmentPicker, {
+  makeStagedAttachment,
+  type StagedAttachment,
+} from './NoteAttachmentPicker'
+
+const MAX_BYTES = 20 * 1024 * 1024
+
+const formatBytes = (n: number): string => {
+  if (n < 1024) return `${n} B`
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`
+}
 
 type Props = {
   sheet: SheetState
@@ -20,6 +32,7 @@ type Props = {
   onCreate: (
     anchor: ResolvedAnchor | null,
     body: string,
+    attachments: StagedAttachment[],
   ) => Promise<void> | void
   onUpdate: (annotationId: string, body: string) => Promise<void> | void
   onDelete: (annotationId: string) => Promise<void> | void
@@ -62,14 +75,18 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
+  const [attachments, setAttachments] = useState<StagedAttachment[]>([])
+  const [attachmentError, setAttachmentError] = useState<string | null>(null)
 
-  // Reset body when the sheet transitions states.
+  // Reset body + staged attachments when the sheet transitions states.
   useEffect(() => {
     if (sheet.kind === 'add_note_edit') {
       setBody(sheet.annotation.note?.body ?? '')
     } else if (sheet.kind === 'add_note_new') {
       setBody('')
     }
+    setAttachments([])
+    setAttachmentError(null)
   }, [sheet])
 
   // Clear the user's text selection once the drawer opens — leaving a live
@@ -79,6 +96,24 @@ export default function AddNoteSheet({
   const quote = quoteFor(sheet)
   const isEdit = sheet.kind === 'add_note_edit'
 
+  function handleAddAttachment(
+    file: File,
+    source: 'photos' | 'camera' | 'document',
+  ) {
+    setAttachmentError(null)
+    if (file.size > MAX_BYTES) {
+      setAttachmentError(
+        `File too large. Max 20 MB; ${formatBytes(file.size)} given.`,
+      )
+      return
+    }
+    setAttachments((prev) => [...prev, makeStagedAttachment(file, source)])
+  }
+
+  function handleRemoveAttachment(id: string) {
+    setAttachments((prev) => prev.filter((a) => a.id !== id))
+  }
+
   async function handleSave() {
     if (saving) return
     setSaving(true)
@@ -86,7 +121,7 @@ export default function AddNoteSheet({
       if (sheet.kind === 'add_note_edit') {
         await onUpdate(sheet.annotation.id, body)
       } else if (sheet.kind === 'add_note_new') {
-        await onCreate(sheet.anchor, body)
+        await onCreate(sheet.anchor, body, attachments)
       }
       onClose()
     } finally {
@@ -105,7 +140,15 @@ export default function AddNoteSheet({
     }
   }
 
-  const canSave = body.trim().length > 0 && !saving
+  // New-note saves are allowed with just attachments and no body — the
+  // server's note payload already treats `body` as optional. Edit mode
+  // still requires non-empty body (the editor isn't wired for adding
+  // attachments to an existing note yet).
+  const canSave =
+    !saving &&
+    (isEdit
+      ? body.trim().length > 0
+      : body.trim().length > 0 || attachments.length > 0)
 
   return (
     <Drawer
@@ -132,6 +175,16 @@ export default function AddNoteSheet({
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
               This note is for the whole briefing.
             </p>
+          ) : null}
+
+          {!isEdit ? (
+            <NoteAttachmentPicker
+              attachments={attachments}
+              onAdd={handleAddAttachment}
+              onRemove={handleRemoveAttachment}
+              disabled={saving}
+              error={attachmentError}
+            />
           ) : null}
 
           <Textarea
