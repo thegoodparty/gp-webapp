@@ -27,7 +27,8 @@ interface BallotRacesCampaign extends Campaign {
 
 interface SelectedOffice {
   id?: string | number
-  election?: { id?: string | number | null }
+  election?: { id?: string | number | null; electionDay?: string }
+  brPositionId?: string
 }
 
 interface BallotRacesProps {
@@ -98,19 +99,15 @@ const getHighlightedText = (text: string, searchTerm: string): ReactNode => {
 }
 
 // Returns true when the selected item refers to the same race as `race`.
-// Uses (brPositionId + electionDay) composite when both sides have it (hydrated
-// Race or lean RaceListItem in the list), and falls back to plain id matching
-// when `selected` is just the persisted-from-prop shape ({ id, election }) —
-// preserving the existing "initial highlight from saved selection" behavior
-// without re-introducing the `id: race.id` override on hydrated races, which
-// silently overwrites the BallotReady race hash that downstream filing-fee
-// lookups depend on.
+// Uses (brPositionId + electionDay) composite when both sides have it — both
+// hydrated Race objects and the persisted-from-prop shape (which OfficeStep
+// now enriches with `brPositionId` + `election.electionDay`) carry the data.
+// Falls back to plain id matching for older saved selections where only
+// `{ id, election: { id } }` is available, preserving the "initial highlight
+// from saved selection" behavior for legacy UUID-format raceIds in the DB.
 const matchesSelected = (
   race: Race,
-  selected:
-    | Race
-    | { id?: string | number; election?: { id?: string | number | null } }
-    | false,
+  selected: Race | SelectedOffice | false,
 ): boolean => {
   if (!selected) return false
   const selectedAsRace = selected as Race
@@ -119,12 +116,12 @@ const matchesSelected = (
   const selectedDay = selectedAsRace.election?.electionDay
   if (selectedBrPos && selectedDay) {
     const raceBrPos = race.brPositionId ?? race.position?.id
-    return raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+    return (
+      raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+    )
   }
   return (
-    'id' in selected &&
-    selected.id !== undefined &&
-    race.id === selected.id
+    'id' in selected && selected.id !== undefined && race.id === selected.id
   )
 }
 

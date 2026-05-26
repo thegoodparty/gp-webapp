@@ -159,9 +159,11 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
     raceId: race.id,
     // Lean RaceListItem carries the BR position id at the top level
     // (`brPositionId`); the hydrated RaceFull surfaces it as `position.id`.
-    // Fall back across both shapes so `selected.positionId` is always the BR
-    // position id, regardless of which stage of selection we're at.
-    positionId: race.position?.id ?? race.brPositionId,
+    // Priority matches `rowKey` below so `selectedRowKey` and `rowKey` always
+    // resolve to the same string for the same race — otherwise the radio
+    // loses its highlight after hydration when both fields exist with
+    // different values.
+    positionId: race.brPositionId ?? race.position?.id,
     positionName: race.position?.name ?? '',
     level: race.position?.level,
     city: race.city ?? undefined,
@@ -185,7 +187,9 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
 // unchanged keeps the BallotReady race hash on `selected.raceId`, which is what
 // downstream (filing-fee lookup, etc.) actually wants.
 const rowKey = (race: Race): string =>
-  `${race.brPositionId ?? race.position?.id ?? ''}|${race.election?.electionDay ?? ''}`
+  `${race.brPositionId ?? race.position?.id ?? ''}|${
+    race.election?.electionDay ?? ''
+  }`
 
 const selectedRowKey = (selected: SelectedOffice | undefined): string =>
   selected ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}` : ''
