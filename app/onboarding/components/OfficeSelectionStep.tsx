@@ -186,13 +186,21 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
 // without us needing to override the race's `id`. Letting `id` flow through
 // unchanged keeps the BallotReady race hash on `selected.raceId`, which is what
 // downstream (filing-fee lookup, etc.) actually wants.
+// `partisanType` is the tiebreaker — two Race rows can share the same
+// (brPositionId, electionDay) for partisan vs non-partisan variants of the
+// same office. Without it, `races.find(r => rowKey(r) === key)` always
+// resolves to the first match and React warns about duplicate keys.
 const rowKey = (race: Race): string =>
   `${race.brPositionId ?? race.position?.id ?? ''}|${
     race.election?.electionDay ?? ''
-  }`
+  }|${race.position?.partisanType ?? ''}`
 
 const selectedRowKey = (selected: SelectedOffice | undefined): string =>
-  selected ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}` : ''
+  selected
+    ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}|${
+        selected.partisanType ?? ''
+      }`
+    : ''
 
 const RaceListSkeleton = () => (
   <div aria-label="Loading offices" className="space-y-6" role="status">

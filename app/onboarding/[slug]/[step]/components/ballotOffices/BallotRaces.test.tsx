@@ -269,4 +269,55 @@ describe('BallotRaces', () => {
 
     expect(onSelect).not.toHaveBeenCalled()
   })
+
+  it('pre-highlights the matching card via the (brPositionId, electionDay) composite when selectedOffice has only the persisted enrichment', async () => {
+    // OfficeStep now hands a "lean persisted" selectedOffice (no `position`,
+    // no top-level Race shape — just `id`, `election.electionDay`, and
+    // `brPositionId`). matchesSelected has to use the composite path; the
+    // id-fallback would miss because lean list rows carry the ZipToPosition
+    // UUID on `id` while the persisted shape carries the BR race hash there.
+    const mayor: Race = {
+      id: 'zip-to-pos-uuid-1',
+      brPositionId: 'br-pos-mayor',
+      position: { id: 'pos-1', name: 'Mayor' },
+      election: { id: 'elec-1', electionDay: '2026-11-03' },
+    }
+    const councilSeat1: Race = {
+      id: 'zip-to-pos-uuid-2',
+      brPositionId: 'br-pos-council',
+      position: { id: 'pos-2', name: 'Council Seat 1' },
+      election: { id: 'elec-1', electionDay: '2026-11-03' },
+    }
+
+    useQueryMock.mockReturnValue({
+      isPending: false,
+      data: {
+        sortedRaces: [mayor, councilSeat1],
+        fuse: {
+          search: () => [{ item: mayor }, { item: councilSeat1 }],
+        },
+      },
+    })
+
+    render(
+      <BallotRaces
+        campaign={campaign}
+        onSelect={vi.fn()}
+        zip="78701"
+        selectedOffice={{
+          id: 'br-race-hash-1',
+          election: { id: 'elec-1', electionDay: '2026-11-03' },
+          brPositionId: 'br-pos-mayor',
+        }}
+      />,
+    )
+
+    const mayorCard = screen.getByText('Mayor').closest('div[class*="border"]')
+    const councilCard = screen
+      .getByText('Council Seat 1')
+      .closest('div[class*="border"]')
+
+    expect(mayorCard?.className).toContain('border-black')
+    expect(councilCard?.className).not.toContain('border-black')
+  })
 })
