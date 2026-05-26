@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { reportErrorToSentry } from '@shared/sentry'
 import { annotationsApi } from './annotations-api'
 import type { AnnotationsClient } from './annotations-client'
 import type { Annotation, CreateAnnotationInput } from './types'
@@ -55,24 +56,56 @@ export function useAnnotations(meetingDate: string) {
   const create = useMutation({
     mutationFn: (input: CreateAnnotationInput) =>
       client.create(meetingDate, input),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(meetingDate) })
+    onSuccess: (created) => {
+      // Write the new annotation into the cache synchronously so consumers
+      // that immediately open a surface focused on `created.id` (e.g.
+      // AnnotationsScope's "open notes surface after save" flow) find it
+      // present before any refetch settles. Without this, there's a brief
+      // window where the new id isn't in `annotations[]`, which used to trip
+      // the dangling-reference guard and close the surface mid-mount.
+      qc.setQueryData<Annotation[]>(QK(meetingDate), (prev) => {
+        const list = prev ?? []
+        if (list.some((a) => a.id === created.id)) return list
+        return [...list, created]
+      })
     },
+    onError: (err) =>
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'create',
+        meetingDate,
+      }),
   })
 
   const updateNote = useMutation({
     mutationFn: ({ id, body }: { id: string; body: string }) =>
       client.updateNote(id, body),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(meetingDate) })
+    onSuccess: (updated) => {
+      qc.setQueryData<Annotation[]>(QK(meetingDate), (prev) =>
+        prev?.map((a) => (a.id === updated.id ? updated : a)),
+      )
     },
+    onError: (err) =>
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'updateNote',
+        meetingDate,
+      }),
   })
 
   const remove = useMutation({
     mutationFn: (id: string) => client.delete(id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QK(meetingDate) })
+    onSuccess: (_, removedId) => {
+      qc.setQueryData<Annotation[]>(QK(meetingDate), (prev) =>
+        prev?.filter((a) => a.id !== removedId),
+      )
     },
+    onError: (err) =>
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'remove',
+        meetingDate,
+      }),
   })
 
   return {

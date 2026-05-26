@@ -17,10 +17,9 @@ type Props = {
 
 /**
  * Sticky header actions on desktop. Download builds the briefing PDF in the
- * browser via @react-pdf/renderer, Add notes opens the AddNoteSheet with
- * no anchor (top-level briefing note), Ask AI opens the briefing assistant
- * in the right-side AskAiSheet (same surface used for anchored and
- * existing-chat overlays).
+ * browser via @react-pdf/renderer; the "Add notes" and "Briefing assistant"
+ * buttons open the cycler surfaces (notes / chats) so the user lands on
+ * existing annotations first, with a new-item CTA inside the empty state.
  */
 export default function DetailHeaderActions({
   briefing,
@@ -28,7 +27,7 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { openAddNoteTopLevel, openAskAiTopLevel } = useAnnotationsCtx()
+  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -56,13 +55,13 @@ export default function DetailHeaderActions({
         )}
         {downloading ? 'Preparing…' : 'Download'}
       </Button>
-      <Button variant="outline" onClick={openAddNoteTopLevel}>
+      <Button variant="outline" onClick={() => openNotesSurface()}>
         <MessageSquare className="size-4" aria-hidden />
-        Add notes
+        Notes
       </Button>
-      <Button onClick={openAskAiTopLevel}>
+      <Button onClick={() => openChatsSurface()}>
         <Sparkles className="size-4" aria-hidden />
-        Ask AI
+        Briefing assistant
       </Button>
     </div>
   )

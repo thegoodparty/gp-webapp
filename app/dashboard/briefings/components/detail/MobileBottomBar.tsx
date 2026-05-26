@@ -5,6 +5,7 @@ import {
   List,
   ChevronUp,
   Download,
+  Loader2,
   MessageSquare,
   Sparkles,
 } from 'lucide-react'
@@ -20,12 +21,18 @@ import {
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
   briefingItemDomId,
 } from '@shared/briefings/routes'
-import type { Item } from '@shared/briefings/types'
+import type { Briefing, Item } from '@shared/briefings/types'
+import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
+import { reportErrorToSentry } from '@shared/sentry'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
 type Props = {
+  briefing: Briefing
   briefingSlug: string
   items: Item[]
+  preparedForLine?: string
+  meetingMetaLine?: string
+  liveBriefingUrl?: string
 }
 
 type Entry = {
@@ -45,11 +52,31 @@ type Entry = {
  * closes on tap.
  */
 export default function MobileBottomBar({
+  briefing,
   briefingSlug,
   items,
+  preparedForLine,
+  meetingMetaLine,
+  liveBriefingUrl,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const { openAddNoteTopLevel, openAskAiTopLevel } = useAnnotationsCtx()
+  const [downloading, setDownloading] = useState(false)
+  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
+
+  const onDownload = async () => {
+    setDownloading(true)
+    try {
+      await downloadBriefingPdf(briefing, {
+        preparedForLine,
+        meetingMetaLine,
+        liveBriefingUrl,
+      })
+    } catch (err) {
+      reportErrorToSentry(err, { experimentId: briefing.experimentId })
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -215,18 +242,21 @@ export default function MobileBottomBar({
           size="medium"
           variant="outline"
           aria-label="Download PDF"
-          onClick={() => {
-            // TODO: trigger PDF download via Swain's briefing API.
-          }}
+          onClick={onDownload}
+          disabled={downloading}
         >
-          <Download className="size-5" aria-hidden />
+          {downloading ? (
+            <Loader2 className="size-5 animate-spin" aria-hidden />
+          ) : (
+            <Download className="size-5" aria-hidden />
+          )}
         </IconButton>
         <IconButton
           type="button"
           size="medium"
           variant="outline"
-          aria-label="Add notes"
-          onClick={openAddNoteTopLevel}
+          aria-label="Open notes"
+          onClick={() => openNotesSurface()}
         >
           <MessageSquare className="size-5" aria-hidden />
         </IconButton>
@@ -234,7 +264,7 @@ export default function MobileBottomBar({
           type="button"
           size="medium"
           aria-label="Open briefing assistant"
-          onClick={openAskAiTopLevel}
+          onClick={() => openChatsSurface()}
         >
           <Sparkles className="size-5" aria-hidden />
         </IconButton>

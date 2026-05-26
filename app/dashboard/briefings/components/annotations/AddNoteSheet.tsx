@@ -10,12 +10,16 @@ import {
   Textarea,
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
+import { reportErrorToSentry } from '@shared/sentry'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { SheetState } from './AnnotationsScope'
+import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
+import { AnchoredQuote } from './AnchoredQuote'
 
 type Props = {
   sheet: SheetState
+  position: PredictedPosition | null
   onClose: () => void
   onCreate: (
     anchor: ResolvedAnchor | null,
@@ -49,6 +53,7 @@ function isAddNoteState(state: SheetState): boolean {
  */
 export default function AddNoteSheet({
   sheet,
+  position,
   onClose,
   onCreate,
   onUpdate,
@@ -62,6 +67,7 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Reset body when the sheet transitions states.
   useEffect(() => {
@@ -70,6 +76,7 @@ export default function AddNoteSheet({
     } else if (sheet.kind === 'add_note_new') {
       setBody('')
     }
+    setErrorMessage(null)
   }, [sheet])
 
   // Clear the user's text selection once the drawer opens — leaving a live
@@ -89,6 +96,12 @@ export default function AddNoteSheet({
         await onCreate(sheet.anchor, body)
       }
       onClose()
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: isEdit ? 'updateNote' : 'create',
+      })
+      setErrorMessage("Couldn't save note. Try again.")
     } finally {
       setSaving(false)
     }
@@ -100,6 +113,12 @@ export default function AddNoteSheet({
     try {
       await onDelete(sheet.annotation.id)
       onClose()
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'remove',
+      })
+      setErrorMessage("Couldn't delete note. Try again.")
     } finally {
       setSaving(false)
     }
@@ -114,10 +133,20 @@ export default function AddNoteSheet({
       direction={direction}
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
-        <DrawerHeader className="px-6 pb-4 pr-12 pt-6">
+        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
           <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             {isEdit ? 'Edit note' : 'Add a Note'}
           </DrawerTitle>
+          {position ? (
+            <p className="text-center text-sm font-medium text-foreground">
+              Note {position.position} of {position.total}
+            </p>
+          ) : null}
+          {!isEdit ? (
+            <p className="text-balance text-center text-sm leading-relaxed text-muted-foreground">
+              Highlight any text to add a note.
+            </p>
+          ) : null}
         </DrawerHeader>
 
         <div
@@ -125,9 +154,7 @@ export default function AddNoteSheet({
           className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4"
         >
           {quote ? (
-            <blockquote className="border-l-2 border-border pl-3 text-sm italic leading-6 text-muted-foreground">
-              {quote}
-            </blockquote>
+            <AnchoredQuote text={quote} showLabel={false} />
           ) : !isEdit ? (
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
               This note is for the whole briefing.
@@ -136,7 +163,10 @@ export default function AddNoteSheet({
 
           <Textarea
             value={body}
-            onChange={(e) => setBody(e.target.value)}
+            onChange={(e) => {
+              setBody(e.target.value)
+              if (errorMessage) setErrorMessage(null)
+            }}
             placeholder="Write your note…"
             rows={6}
             className="min-h-[160px] resize-none rounded-2xl"
@@ -147,6 +177,11 @@ export default function AddNoteSheet({
           data-vaul-no-drag
           className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0"
         >
+          {errorMessage ? (
+            <p role="alert" className="text-sm text-destructive">
+              {errorMessage}
+            </p>
+          ) : null}
           <Button
             type="button"
             disabled={!canSave}

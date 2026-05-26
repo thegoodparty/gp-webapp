@@ -4,8 +4,7 @@ import { Button } from '@styleguide'
 
 export const ASK_AI_SUGGESTIONS = [
   'Explain this',
-  'Give me more details',
-  'Verify this — show source',
+  'Verify that this is true',
 ] as const
 
 type Props = {

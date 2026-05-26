@@ -537,15 +537,10 @@ export default function AskAiChatBody({
                 Ask anything about this briefing — I can summarize sections,
                 compare options, or pull out the asks.
               </p>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Suggested
-                </span>
-                <AskAiSuggestedPills
-                  onSelect={onSelectSuggestion}
-                  disabled={sending}
-                />
-              </div>
+              <AskAiSuggestedPills
+                onSelect={onSelectSuggestion}
+                disabled={sending}
+              />
             </div>
           )}
 
@@ -683,11 +678,11 @@ export default function AskAiChatBody({
           <Textarea
             value={composer}
             onChange={(e) => setComposer(e.target.value)}
-            placeholder="Ask a question and the AI answers"
+            placeholder="Ask anything..."
             disabled={sending || creating || !annotationId}
             rows={3}
             className="min-h-[96px] resize-none rounded-2xl"
-            aria-label="Ask AI message"
+            aria-label="Ask Assistant message"
           />
           <Button
             type="button"
@@ -696,11 +691,11 @@ export default function AskAiChatBody({
             }}
             disabled={!annotationId || composer.trim().length === 0}
             loading={sending || creating}
-            icon={<Send className="size-4" aria-hidden />}
+            icon={<Sparkles className="size-4" aria-hidden />}
             iconPosition="left"
             className="w-full"
           >
-            Ask AI
+            Ask Assistant
           </Button>
         </div>
       ) : (
