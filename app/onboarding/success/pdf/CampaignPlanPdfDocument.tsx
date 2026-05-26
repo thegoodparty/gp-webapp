@@ -13,16 +13,7 @@ import {
 } from '@react-pdf/renderer'
 import type { PlanData } from '../components/planContent'
 
-const FONT_OUTFIT = 'Outfit'
 const FONT_OPEN_SANS = 'Open Sans'
-
-Font.register({
-  family: FONT_OUTFIT,
-  fonts: [
-    { src: '/fonts/Outfit-Regular.ttf', fontWeight: 400 },
-    { src: '/fonts/Outfit-Bold.ttf', fontWeight: 700 },
-  ],
-})
 
 Font.register({
   family: FONT_OPEN_SANS,
@@ -87,7 +78,7 @@ const styles = StyleSheet.create({
   },
   coverWordmark: {
     fontSize: 26,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.body,
     marginTop: 18,
@@ -106,7 +97,7 @@ const styles = StyleSheet.create({
   },
   coverEyebrow: {
     fontSize: 30,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.navy,
     letterSpacing: 2,
@@ -120,7 +111,7 @@ const styles = StyleSheet.create({
   },
   coverCandidate: {
     fontSize: 22,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.body,
     marginTop: 6,
@@ -189,7 +180,7 @@ const styles = StyleSheet.create({
   },
   runningHeaderWordmark: {
     fontSize: 11,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.body,
   },
@@ -243,7 +234,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 22,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.navy,
     marginBottom: 16,
@@ -257,7 +248,7 @@ const styles = StyleSheet.create({
 
   h3: {
     fontSize: 13,
-    fontFamily: FONT_OUTFIT,
+    fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
     color: COLOR.navy,
     marginTop: 14,
