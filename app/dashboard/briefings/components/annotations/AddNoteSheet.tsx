@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, Paperclip, Trash2, X } from 'lucide-react'
 import {
   Button,
@@ -148,8 +148,22 @@ export default function AddNoteSheet({
     () => new Set(),
   )
 
-  // Reset body + staged attachments when the sheet transitions states.
+  // The sheet prop is a fresh object on every parent render — including
+  // ones caused by optimistic cache updates (which produce new annotation
+  // references). We only want to reset local state on a logical sheet
+  // transition: kind change, or in edit mode, a different annotation id.
+  // Otherwise, the user's in-progress textarea typing would get clobbered
+  // every time an attachment upload patches the cache.
+  const sheetIdentity =
+    sheet.kind === 'add_note_edit'
+      ? `edit:${sheet.annotation.id}`
+      : sheet.kind === 'add_note_new'
+      ? `new:${sheet.anchor ? sheet.anchor.jsonPath : 'top'}`
+      : sheet.kind
+  const prevIdentityRef = useRef<string | null>(null)
   useEffect(() => {
+    if (prevIdentityRef.current === sheetIdentity) return
+    prevIdentityRef.current = sheetIdentity
     if (sheet.kind === 'add_note_edit') {
       setBody(sheet.annotation.note?.body ?? '')
     } else if (sheet.kind === 'add_note_new') {
@@ -160,7 +174,7 @@ export default function AddNoteSheet({
     setSaveError(null)
     setBusyAttachmentIds(new Set())
     setDeletingNoteIds(new Set())
-  }, [sheet])
+  }, [sheet, sheetIdentity])
 
   // Clear the user's text selection once the drawer opens — leaving a live
   // selection blocks Vaul's drag-to-dismiss.
@@ -289,7 +303,14 @@ export default function AddNoteSheet({
       onClose()
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
-      setSaveError(`Couldn't save your note: ${msg}`)
+      // If the inner handler already framed its own message (e.g. a
+      // partial save where the note was created but uploads failed),
+      // surface that text directly instead of double-prefixing it.
+      setSaveError(
+        /^(Saved|Couldn|Failed)/i.test(msg)
+          ? msg
+          : `Couldn't save your note: ${msg}`,
+      )
     } finally {
       setSaving(false)
     }

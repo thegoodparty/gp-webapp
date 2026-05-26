@@ -393,9 +393,12 @@ export default function AnnotationsScope({
             window.getSelection()?.removeAllRanges()
             // Upload any staged attachments against the freshly created
             // annotation. Run serially to keep retry behaviour predictable.
-            // Failures don't roll back the note — the body is already on
-            // the server and worth keeping; the user can retry uploads
-            // separately if we surface that path later.
+            // Per-file failures don't roll back the note — the body is
+            // already on the server and worth keeping. Collect the
+            // failures and throw at the end so AddNoteSheet's handleSave
+            // catches them and surfaces the error inline (the sheet stays
+            // open in that case).
+            const failures: string[] = []
             for (const a of attachments) {
               try {
                 await uploadAttachment({
@@ -403,15 +406,18 @@ export default function AnnotationsScope({
                   file: a.file,
                 })
               } catch {
-                /* swallow per-file failure; let the React Query refetch
-                   below sync server state. We'll wire surfaced errors in
-                   a follow-up. */
+                failures.push(a.file.name)
               }
             }
             if (attachments.length > 0) {
               queryClient.invalidateQueries({
                 queryKey: annotationsQueryKey(meetingDate),
               })
+            }
+            if (failures.length > 0) {
+              throw new Error(
+                `Saved your note, but couldn't upload: ${failures.join(', ')}`,
+              )
             }
           }}
           onUpdate={async (id, body) => {
