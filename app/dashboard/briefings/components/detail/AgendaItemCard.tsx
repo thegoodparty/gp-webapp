@@ -213,9 +213,6 @@ const AgendaItemCard = ({
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <span className="text-[12px] font-bold uppercase tracking-wide text-info-600">
-            Agenda item
-          </span>
           <h3
             className="text-lg font-semibold text-foreground"
             data-briefing-json-path={`${base}/title`}
