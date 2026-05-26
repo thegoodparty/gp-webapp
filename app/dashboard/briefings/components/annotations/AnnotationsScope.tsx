@@ -301,6 +301,15 @@ export default function AnnotationsScope({
     [annotations],
   )
 
+  // Briefing-wide notes (no anchor) — surfaced inside the top-level
+  // AddNoteSheet so the user can see, edit, or delete them. They have
+  // no DOM anchor so the highlight layer doesn't render them anywhere.
+  const topLevelNotes = useMemo(
+    () =>
+      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
+    [annotations],
+  )
+
   // Keep the edit-mode overlay's annotation snapshot in sync with the
   // live annotations query. Without this, attachments added/removed
   // while the sheet is open (e.g. via the picker in edit mode) wouldn't
@@ -479,6 +488,8 @@ export default function AnnotationsScope({
               queryKey: annotationsQueryKey(meetingDate),
             })
           }}
+          topLevelNotes={topLevelNotes}
+          onEditNote={openEditNote}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
