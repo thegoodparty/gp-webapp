@@ -10,9 +10,8 @@ import {
 } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  buildRangeIn,
-  findAnchorEl,
   pointToOffset,
+  resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
 import {
@@ -20,34 +19,21 @@ import {
   useAnnotations,
 } from '@shared/briefings/use-annotations'
 import { useSelection } from '@shared/briefings/use-selection'
-import type { Annotation, AnnotationAnchor } from '@shared/briefings/types'
+import type {
+  Annotation,
+  AnnotationAnchor,
+  AnnotationNoteAttachmentData,
+} from '@shared/briefings/types'
 import HighlightToolbar from './HighlightToolbar'
 import AddNoteSheet from './AddNoteSheet'
 import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
-import AddNotesDialog from '../notes-intake/AddNotesDialog'
-import { uploadAttachment } from '@shared/briefings/attachments-api'
-import { annotationsApi } from '@shared/briefings/annotations-api'
-
-const OCR_TERMINAL_STATUSES = new Set(['completed', 'failed', 'skipped'])
-const OCR_POLL_INTERVAL_MS = 2_000
-const OCR_POLL_TIMEOUT_MS = 60_000
-
-const waitForOcr = async (
-  meetingDate: string,
-  attachmentId: string,
-): Promise<void> => {
-  const started = Date.now()
-  while (Date.now() - started < OCR_POLL_TIMEOUT_MS) {
-    const list = await annotationsApi.list(meetingDate)
-    for (const ann of list) {
-      const att = ann.note?.attachments?.find((a) => a.id === attachmentId)
-      if (att && OCR_TERMINAL_STATUSES.has(att.ocrStatus)) return
-    }
-    await new Promise((r) => setTimeout(r, OCR_POLL_INTERVAL_MS))
-  }
-}
+import {
+  deleteAttachment,
+  resolveMimeType,
+  uploadAttachment,
+} from '@shared/briefings/attachments-api'
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -56,25 +42,33 @@ const waitForOcr = async (
 export type PendingAnchor = ResolvedAnchor | null
 
 /**
- * Reconstruct the highlighted text from an annotation's jsonPath/start/end
- * by walking the live DOM. The server schema does not store the original
- * quote, so we resolve it here at open-time. Returns an empty object when
- * the annotation lacks a usable anchor or the DOM no longer matches.
+ * Resolve both the highlighted text and the anchor coordinates for an
+ * existing annotation. The chat overlay state carries both fields so the
+ * sheet can render the quote AND mint a new chat against the same anchor
+ * without re-walking the DOM. Returns an empty object when the annotation
+ * has no anchor or the DOM no longer matches.
  */
 function resolveAnnotationQuote(annotation: Annotation): {
   quote?: string
   anchor?: { jsonPath: string; start: number; end: number }
 } {
-  if (typeof document === 'undefined') return {}
-  const { jsonPath, start, end } = annotation
-  if (jsonPath === null || start === null || end === null) return {}
-  const el = findAnchorEl(jsonPath)
-  if (!el) return {}
-  const range = buildRangeIn(el, start, end)
-  if (!range) return {}
-  const quote = range.toString().trim()
-  if (!quote) return {}
-  return { quote, anchor: { jsonPath, start, end } }
+  const quote = resolveQuoteFromAnchor(annotation)
+  if (
+    quote === null ||
+    annotation.jsonPath === null ||
+    annotation.start === null ||
+    annotation.end === null
+  ) {
+    return {}
+  }
+  return {
+    quote,
+    anchor: {
+      jsonPath: annotation.jsonPath,
+      start: annotation.start,
+      end: annotation.end,
+    },
+  }
 }
 
 /**
@@ -180,18 +174,6 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
-  const [intakeOpen, setIntakeOpen] = useState(false)
-  const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
-    () => new Set(),
-  )
-
-  // Top-level notes (no anchor) — what the intake dialog renders as pills.
-  // Filter once here so the dialog's deps are simple references.
-  const topLevelNotes = useMemo(
-    () =>
-      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
-    [annotations],
-  )
 
   const handleChatCreated = useCallback(
     (_info: {
@@ -210,11 +192,11 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
-  // The top-level "Add notes" button on the header / mobile bar opens the new
-  // intake dialog (camera / upload / type). Phase 1 only wires the type path;
-  // camera and upload render as Coming soon.
+  // The top-level "Add notes" button on the header / mobile bar opens the
+  // same AddNoteSheet used for anchored notes — just with `anchor: null`,
+  // so the note is scoped to the whole briefing rather than a passage.
   const openAddNoteTopLevel = useCallback(() => {
-    setIntakeOpen(true)
+    setOverlay({ kind: 'add_note_new', anchor: null })
   }, [])
 
   const openReportErrorFromSelection = useCallback(() => {
@@ -326,6 +308,33 @@ export default function AnnotationsScope({
     [annotations],
   )
 
+  // Briefing-wide notes (no anchor) — surfaced inside the top-level
+  // AddNoteSheet so the user can see, edit, or delete them. They have
+  // no DOM anchor so the highlight layer doesn't render them anywhere.
+  const topLevelNotes = useMemo(
+    () =>
+      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
+    [annotations],
+  )
+
+  // Keep the edit-mode overlay's annotation snapshot in sync with the
+  // live annotations query. Without this, attachments added/removed
+  // while the sheet is open (e.g. via the picker in edit mode) wouldn't
+  // appear until the user closed and reopened the sheet — the snapshot
+  // captured at openEditNote stays frozen otherwise. Closes the sheet
+  // if the annotation has been deleted from under us.
+  useEffect(() => {
+    if (overlay.kind !== 'add_note_edit') return
+    const fresh = annotations.find((a) => a.id === overlay.annotation.id)
+    if (!fresh) {
+      setOverlay({ kind: 'closed' })
+      return
+    }
+    if (fresh !== overlay.annotation) {
+      setOverlay({ kind: 'add_note_edit', annotation: fresh })
+    }
+  }, [annotations, overlay])
+
   const ctxValue: Ctx = useMemo(
     () => ({
       meetingDate,
@@ -377,13 +386,46 @@ export default function AnnotationsScope({
         <AddNoteSheet
           sheet={overlay}
           onClose={closeSheet}
-          onCreate={async (anchor, body) => {
-            await create.mutateAsync({
+          onCreate={async (anchor, body, attachments) => {
+            // The contract validates body as `string().min(1).optional()` —
+            // so an empty string 400s, but omitting body entirely is fine
+            // (the server stores null). Drop the field when the user only
+            // attached files without typing anything.
+            const trimmedBody = body.trim()
+            const created = await create.mutateAsync({
               kind: 'note',
               anchor: anchorPayload(anchor),
-              payload: { body },
+              payload: trimmedBody.length > 0 ? { body: trimmedBody } : {},
             })
             window.getSelection()?.removeAllRanges()
+            // Upload any staged attachments against the freshly created
+            // annotation. Run serially to keep retry behaviour predictable.
+            // Per-file failures don't roll back the note — the body is
+            // already on the server and worth keeping. Collect the
+            // failures and throw at the end so AddNoteSheet's handleSave
+            // catches them and surfaces the error inline (the sheet stays
+            // open in that case).
+            const failures: string[] = []
+            for (const a of attachments) {
+              try {
+                await uploadAttachment({
+                  annotationId: created.id,
+                  file: a.file,
+                })
+              } catch {
+                failures.push(a.file.name)
+              }
+            }
+            if (attachments.length > 0) {
+              queryClient.invalidateQueries({
+                queryKey: annotationsQueryKey(meetingDate),
+              })
+            }
+            if (failures.length > 0) {
+              throw new Error(
+                `Saved your note, but couldn't upload: ${failures.join(', ')}`,
+              )
+            }
           }}
           onUpdate={async (id, body) => {
             await updateNote.mutateAsync({ id, body })
@@ -391,6 +433,76 @@ export default function AnnotationsScope({
           onDelete={async (id) => {
             await remove.mutateAsync(id)
           }}
+          onAttachmentAdd={async (annotationId, file) => {
+            const { attachmentId } = await uploadAttachment({
+              annotationId,
+              file,
+            })
+            // Inject the new attachment into the cached annotations list
+            // synchronously so the edit sheet shows it the moment the
+            // upload resolves. `invalidateQueries` below still kicks off
+            // a refetch to sync server-side fields the client can't
+            // compute (OCR status, completion time, etc.).
+            const optimistic: AnnotationNoteAttachmentData = {
+              id: attachmentId,
+              fileName: file.name,
+              mimeType: resolveMimeType(file),
+              sizeBytes: file.size,
+              ocrStatus: 'pending',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: new Date().toISOString(),
+            }
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: [
+                            ...(ann.note.attachments ?? []),
+                            optimistic,
+                          ],
+                        },
+                      }
+                    : ann,
+                ),
+            )
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
+          }}
+          onAttachmentDelete={async (annotationId, attachmentId) => {
+            await deleteAttachment({ annotationId, attachmentId })
+            // Drop the row from the cache optimistically so the pill
+            // disappears immediately without waiting for a refetch.
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: (ann.note.attachments ?? []).filter(
+                            (a) => a.id !== attachmentId,
+                          ),
+                        },
+                      }
+                    : ann,
+                ),
+            )
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
+          }}
+          topLevelNotes={topLevelNotes}
+          onEditNote={openEditNote}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
@@ -420,88 +532,6 @@ export default function AnnotationsScope({
           onChatCreated={handleChatCreated}
         />
       )}
-      <AddNotesDialog
-        open={intakeOpen}
-        onClose={() => setIntakeOpen(false)}
-        existingNotes={topLevelNotes}
-        deletingIds={deletingNoteIds}
-        onDeleteExisting={async (id) => {
-          setDeletingNoteIds((prev) => {
-            const next = new Set(prev)
-            next.add(id)
-            return next
-          })
-          try {
-            await remove.mutateAsync(id)
-          } finally {
-            setDeletingNoteIds((prev) => {
-              const next = new Set(prev)
-              next.delete(id)
-              return next
-            })
-          }
-        }}
-        onSubmit={async (drafts) => {
-          // Commit each staged pill as its own note. Typed pills are a single
-          // create call; file pills create the note then run the presign →
-          // PUT → complete sequence. We run serially to keep the network
-          // pattern boring and easy to retry; can fan out later if needed.
-          //
-          // If a file upload fails after the note row was created, we delete
-          // the orphan note so users don't end up with a dead "(empty note)"
-          // pill they can't see or recover from. The original error is
-          // re-thrown so the dialog surfaces it.
-          try {
-            for (const draft of drafts) {
-              if (draft.kind === 'typed') {
-                await create.mutateAsync({
-                  kind: 'note',
-                  anchor: { jsonPath: null, start: null, end: null },
-                  payload: { body: draft.body },
-                })
-                continue
-              }
-              const created = await create.mutateAsync({
-                kind: 'note',
-                anchor: { jsonPath: null, start: null, end: null },
-                payload: {},
-              })
-              let attachmentId: string
-              try {
-                const result = await uploadAttachment({
-                  annotationId: created.id,
-                  file: draft.file,
-                })
-                attachmentId = result.attachmentId
-              } catch (uploadErr) {
-                // Best-effort rollback of the empty annotation. We swallow
-                // the rollback error specifically so the original upload
-                // error reaches the caller.
-                try {
-                  await remove.mutateAsync(created.id)
-                } catch {
-                  /* leave the orphan; surfacing the upload error is more
-                     useful than masking it with a rollback failure */
-                }
-                throw uploadErr
-              }
-              // Block until OCR has a terminal status so the recap/assistant
-              // can see extracted text. Caps at 60s; poll errors are
-              // non-fatal — the upload already succeeded, the polled
-              // annotations query will catch up.
-              try {
-                await waitForOcr(meetingDate, attachmentId)
-              } catch {
-                /* poll failure must not roll back a successful upload */
-              }
-            }
-          } finally {
-            queryClient.invalidateQueries({
-              queryKey: annotationsQueryKey(meetingDate),
-            })
-          }
-        }}
-      />
     </AnnotationsCtx.Provider>
   )
 }
