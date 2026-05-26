@@ -26,31 +26,10 @@ import AddNoteSheet from './AddNoteSheet'
 import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
-import AddNotesDialog from '../notes-intake/AddNotesDialog'
 import {
   deleteAttachment,
   uploadAttachment,
 } from '@shared/briefings/attachments-api'
-import { annotationsApi } from '@shared/briefings/annotations-api'
-
-const OCR_TERMINAL_STATUSES = new Set(['completed', 'failed', 'skipped'])
-const OCR_POLL_INTERVAL_MS = 2_000
-const OCR_POLL_TIMEOUT_MS = 60_000
-
-const waitForOcr = async (
-  meetingDate: string,
-  attachmentId: string,
-): Promise<void> => {
-  const started = Date.now()
-  while (Date.now() - started < OCR_POLL_TIMEOUT_MS) {
-    const list = await annotationsApi.list(meetingDate)
-    for (const ann of list) {
-      const att = ann.note?.attachments?.find((a) => a.id === attachmentId)
-      if (att && OCR_TERMINAL_STATUSES.has(att.ocrStatus)) return
-    }
-    await new Promise((r) => setTimeout(r, OCR_POLL_INTERVAL_MS))
-  }
-}
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -183,18 +162,6 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
-  const [intakeOpen, setIntakeOpen] = useState(false)
-  const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
-    () => new Set(),
-  )
-
-  // Top-level notes (no anchor) — what the intake dialog renders as pills.
-  // Filter once here so the dialog's deps are simple references.
-  const topLevelNotes = useMemo(
-    () =>
-      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
-    [annotations],
-  )
 
   const handleChatCreated = useCallback(
     (_info: {
@@ -213,11 +180,11 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
-  // The top-level "Add notes" button on the header / mobile bar opens the new
-  // intake dialog (camera / upload / type). Phase 1 only wires the type path;
-  // camera and upload render as Coming soon.
+  // The top-level "Add notes" button on the header / mobile bar opens the
+  // same AddNoteSheet used for anchored notes — just with `anchor: null`,
+  // so the note is scoped to the whole briefing rather than a passage.
   const openAddNoteTopLevel = useCallback(() => {
-    setIntakeOpen(true)
+    setOverlay({ kind: 'add_note_new', anchor: null })
   }, [])
 
   const openReportErrorFromSelection = useCallback(() => {
@@ -457,88 +424,6 @@ export default function AnnotationsScope({
           onChatCreated={handleChatCreated}
         />
       )}
-      <AddNotesDialog
-        open={intakeOpen}
-        onClose={() => setIntakeOpen(false)}
-        existingNotes={topLevelNotes}
-        deletingIds={deletingNoteIds}
-        onDeleteExisting={async (id) => {
-          setDeletingNoteIds((prev) => {
-            const next = new Set(prev)
-            next.add(id)
-            return next
-          })
-          try {
-            await remove.mutateAsync(id)
-          } finally {
-            setDeletingNoteIds((prev) => {
-              const next = new Set(prev)
-              next.delete(id)
-              return next
-            })
-          }
-        }}
-        onSubmit={async (drafts) => {
-          // Commit each staged pill as its own note. Typed pills are a single
-          // create call; file pills create the note then run the presign →
-          // PUT → complete sequence. We run serially to keep the network
-          // pattern boring and easy to retry; can fan out later if needed.
-          //
-          // If a file upload fails after the note row was created, we delete
-          // the orphan note so users don't end up with a dead "(empty note)"
-          // pill they can't see or recover from. The original error is
-          // re-thrown so the dialog surfaces it.
-          try {
-            for (const draft of drafts) {
-              if (draft.kind === 'typed') {
-                await create.mutateAsync({
-                  kind: 'note',
-                  anchor: { jsonPath: null, start: null, end: null },
-                  payload: { body: draft.body },
-                })
-                continue
-              }
-              const created = await create.mutateAsync({
-                kind: 'note',
-                anchor: { jsonPath: null, start: null, end: null },
-                payload: {},
-              })
-              let attachmentId: string
-              try {
-                const result = await uploadAttachment({
-                  annotationId: created.id,
-                  file: draft.file,
-                })
-                attachmentId = result.attachmentId
-              } catch (uploadErr) {
-                // Best-effort rollback of the empty annotation. We swallow
-                // the rollback error specifically so the original upload
-                // error reaches the caller.
-                try {
-                  await remove.mutateAsync(created.id)
-                } catch {
-                  /* leave the orphan; surfacing the upload error is more
-                     useful than masking it with a rollback failure */
-                }
-                throw uploadErr
-              }
-              // Block until OCR has a terminal status so the recap/assistant
-              // can see extracted text. Caps at 60s; poll errors are
-              // non-fatal — the upload already succeeded, the polled
-              // annotations query will catch up.
-              try {
-                await waitForOcr(meetingDate, attachmentId)
-              } catch {
-                /* poll failure must not roll back a successful upload */
-              }
-            }
-          } finally {
-            queryClient.invalidateQueries({
-              queryKey: annotationsQueryKey(meetingDate),
-            })
-          }
-        }}
-      />
     </AnnotationsCtx.Provider>
   )
 }
