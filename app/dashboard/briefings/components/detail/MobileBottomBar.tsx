@@ -1,8 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import {
   List,
   ChevronUp,
@@ -19,8 +17,8 @@ import {
   SheetTitle,
 } from '@styleguide'
 import {
-  briefingItemHref,
-  briefingOverviewHref,
+  BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  briefingItemDomId,
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
@@ -30,32 +28,104 @@ type Props = {
   items: Item[]
 }
 
+type Entry = {
+  key: string
+  label: string
+  domId: string
+}
+
 /**
  * Mobile-only bottom dock visible below the lg breakpoint:
  *
- *  - Left pill: name of the current page (Executive Summary or agenda item)
- *    + chevron, opens a bottom Sheet for navigation.
+ *  - Left pill: name of the section currently in view + chevron, opens a
+ *    bottom Sheet listing every section.
  *  - Right FABs: Download, Add notes, and Ask AI.
  *
- * Selecting an entry navigates to that page; the Sheet closes on tap.
+ * Tapping an entry scrolls to that section on the same page; the Sheet
+ * closes on tap.
  */
 export default function MobileBottomBar({
   briefingSlug,
   items,
 }: Props): React.JSX.Element {
-  const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const { openAddNoteTopLevel, openAskAiTopLevel } = useAnnotationsCtx()
 
-  const overviewHref = briefingOverviewHref(briefingSlug)
+  const entries: Entry[] = useMemo(() => {
+    const list: Entry[] = [
+      {
+        key: 'overview',
+        label: 'Executive Summary',
+        domId: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+      },
+    ]
+    for (const item of items) {
+      list.push({
+        key: item.id,
+        label: item.title,
+        domId: briefingItemDomId(item.id),
+      })
+    }
+    return list
+  }, [items])
 
-  const currentLabel = useMemo(() => {
-    if (pathname === overviewHref) return 'Executive Summary'
-    const match = items.find(
-      (a) => pathname === briefingItemHref(briefingSlug, a.id),
-    )
-    return match?.title ?? 'Executive Summary'
-  }, [items, briefingSlug, overviewHref, pathname])
+  const [activeKey, setActiveKey] = useState<string>(entries[0]?.key ?? '')
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (entries.length === 0) return
+
+    let raf = 0
+
+    function pickActive() {
+      raf = 0
+      let bestKey = entries[0]?.key ?? ''
+      let bestTop = -Infinity
+      for (const e of entries) {
+        const el = document.getElementById(e.domId)
+        if (!el) continue
+        const top = el.getBoundingClientRect().top
+        // Mirror DetailToc's scroll-spy: pick the section whose top is
+        // closest to (but above) the sticky-header offset line.
+        if (top - 104 <= 1 && top > bestTop) {
+          bestTop = top
+          bestKey = e.key
+        }
+      }
+      setActiveKey(bestKey)
+    }
+
+    function onScroll() {
+      if (raf === 0) raf = requestAnimationFrame(pickActive)
+    }
+
+    pickActive()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf !== 0) cancelAnimationFrame(raf)
+    }
+  }, [entries, briefingSlug])
+
+  const currentLabel =
+    entries.find((e) => e.key === activeKey)?.label ?? 'Executive Summary'
+
+  function onJump(
+    ev: React.MouseEvent<HTMLAnchorElement>,
+    domId: string,
+  ): void {
+    if (typeof window === 'undefined') return
+    const target = document.getElementById(domId)
+    if (!target) return
+    ev.preventDefault()
+    setOpen(false)
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', `#${domId}`)
+    }
+  }
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/80 lg:hidden">
@@ -82,35 +152,21 @@ export default function MobileBottomBar({
               <SheetTitle>Jump to section</SheetTitle>
             </SheetHeader>
             <ul className="mt-3 flex list-none flex-col gap-0.5 overflow-y-auto">
-              <li>
-                <Link
-                  href={overviewHref}
-                  onClick={() => setOpen(false)}
-                  className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
-                    pathname === overviewHref
-                      ? 'bg-muted font-semibold text-foreground'
-                      : 'text-foreground hover:bg-muted/60'
-                  }`}
-                >
-                  Executive Summary
-                </Link>
-              </li>
-              {items.map((a) => {
-                const href = briefingItemHref(briefingSlug, a.id)
-                const isActive = pathname === href
+              {entries.map((e) => {
+                const isActive = activeKey === e.key
                 return (
-                  <li key={a.id}>
-                    <Link
-                      href={href}
-                      onClick={() => setOpen(false)}
+                  <li key={e.key}>
+                    <a
+                      href={`#${e.domId}`}
+                      onClick={(ev) => onJump(ev, e.domId)}
                       className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
                         isActive
                           ? 'bg-muted font-semibold text-foreground'
                           : 'text-foreground hover:bg-muted/60'
                       }`}
                     >
-                      {a.title}
-                    </Link>
+                      {e.label}
+                    </a>
                   </li>
                 )
               })}
