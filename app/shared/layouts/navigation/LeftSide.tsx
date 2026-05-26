@@ -10,6 +10,7 @@ const HIDE_NAV_PATHS = [
   '/dashboard',
   '/dashboard/profile',
   '/polls',
+  '/suggestions',
 ]
 
 const LeftSide = (): React.JSX.Element | null => {

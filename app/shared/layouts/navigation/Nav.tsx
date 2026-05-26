@@ -8,7 +8,8 @@ import { usePathname } from 'next/navigation'
 
 const Nav = (): React.JSX.Element => {
   const pathname = usePathname()
-  const isDashboardPath = pathname?.startsWith('/dashboard')
+  const isDashboardPath =
+    pathname?.startsWith('/dashboard') || pathname?.startsWith('/suggestions')
 
   return (
     <>

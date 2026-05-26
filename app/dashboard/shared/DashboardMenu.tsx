@@ -22,6 +22,7 @@ import {
   FileText,
   Globe,
   LayoutDashboard,
+  Lightbulb,
   LogOut,
   Send,
   Settings,
@@ -76,6 +77,7 @@ interface MenuItem {
   onClick?: () => void
   target?: string
   isNew?: boolean
+  badge?: string
 }
 
 interface DashboardMenuProps {
@@ -100,6 +102,15 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
     v2Category: 'campaign',
     id: 'campaign-tracker-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
+  },
+  {
+    label: 'Campaign Manager',
+    icon: <MdAutoAwesome />,
+    v2Icon: Lightbulb,
+    link: '/suggestions',
+    v2Category: 'campaign',
+    id: 'suggestions-dashboard',
+    badge: '3',
   },
   {
     label: 'Voter Outreach',
@@ -401,6 +412,7 @@ const NewNavMenu = ({
                     label,
                     target,
                     isNew,
+                    badge,
                     v2Icon: V2Icon,
                   } = item
                   return (
@@ -420,10 +432,16 @@ const NewNavMenu = ({
                           <span>{item.v2Name || label}</span>
                         </Link>
                       </SidebarMenuButton>
-                      {isNew && (
-                        <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
-                          NEW
+                      {badge ? (
+                        <SidebarMenuBadge className="bg-primary text-primary-foreground text-xs font-semibold rounded px-1.5 mt-1 mx-4">
+                          {badge}
                         </SidebarMenuBadge>
+                      ) : (
+                        isNew && (
+                          <SidebarMenuBadge className="bg-blue-500 text-white text-xs font-semibold rounded px-1.5 mt-1 mx-4">
+                            NEW
+                          </SidebarMenuBadge>
+                        )
                       )}
                     </SidebarMenuItemComponent>
                   )
