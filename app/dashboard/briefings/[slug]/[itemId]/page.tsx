@@ -16,9 +16,7 @@ export const dynamic = 'force-dynamic'
  * hash anchor so existing bookmarks and PDF cross-references keep
  * working.
  */
-export default async function Page({
-  params,
-}: PageProps): Promise<never> {
+export default async function Page({ params }: PageProps): Promise<never> {
   const { slug, itemId } = await params
   redirect(`${briefingOverviewHref(slug)}#${briefingItemDomId(itemId)}`)
 }
