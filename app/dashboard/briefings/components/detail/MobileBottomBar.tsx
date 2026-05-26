@@ -70,24 +70,36 @@ export default function MobileBottomBar({
   }, [items])
 
   const [activeKey, setActiveKey] = useState<string>(entries[0]?.key ?? '')
+  // Pinned on tap; cleared on any real wheel/touch/key scroll. Lets the
+  // tapped entry stay current even when the scroll container can't bring
+  // its section all the way to the active line.
+  const [pinnedKey, setPinnedKey] = useState<string | null>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
     if (entries.length === 0) return
 
     let raf = 0
+    const pane = document.getElementById('briefing-detail-pane')
 
     function pickActive() {
       raf = 0
+      // Mirror DetailToc: measure relative to whichever container actually
+      // scrolls — window on mobile, the briefing pane at lg+.
+      const paneScrolls =
+        !!pane && window.matchMedia('(min-width: 1024px)').matches
+      const containerTop = paneScrolls
+        ? pane.getBoundingClientRect().top
+        : 0
+      const offset = paneScrolls ? 12 : 104
+
       let bestKey = entries[0]?.key ?? ''
       let bestTop = -Infinity
       for (const e of entries) {
         const el = document.getElementById(e.domId)
         if (!el) continue
-        const top = el.getBoundingClientRect().top
-        // Mirror DetailToc's scroll-spy: pick the section whose top is
-        // closest to (but above) the sticky-header offset line.
-        if (top - 104 <= 1 && top > bestTop) {
+        const top = el.getBoundingClientRect().top - containerTop
+        if (top - offset <= 1 && top > bestTop) {
           bestTop = top
           bestKey = e.key
         }
@@ -99,37 +111,51 @@ export default function MobileBottomBar({
       if (raf === 0) raf = requestAnimationFrame(pickActive)
     }
 
+    function onUserInput() {
+      setPinnedKey(null)
+    }
+
     // Listen on both window (mobile document scroll) and the briefing
     // content pane (desktop, where the right column scrolls). Element
     // scroll events don't bubble, so we attach directly to the pane.
-    const pane = document.getElementById('briefing-detail-pane')
+    // Wheel/touch/key clear any tap-pinned highlight; the smooth-scroll
+    // animation doesn't fire them, so the pin survives the animation.
     pickActive()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
+    window.addEventListener('wheel', onUserInput, { passive: true })
+    window.addEventListener('touchstart', onUserInput, { passive: true })
+    window.addEventListener('keydown', onUserInput)
     pane?.addEventListener('scroll', onScroll, { passive: true })
+    pane?.addEventListener('wheel', onUserInput, { passive: true })
+    pane?.addEventListener('touchstart', onUserInput, { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
+      window.removeEventListener('wheel', onUserInput)
+      window.removeEventListener('touchstart', onUserInput)
+      window.removeEventListener('keydown', onUserInput)
       pane?.removeEventListener('scroll', onScroll)
+      pane?.removeEventListener('wheel', onUserInput)
+      pane?.removeEventListener('touchstart', onUserInput)
       if (raf !== 0) cancelAnimationFrame(raf)
     }
   }, [entries, briefingSlug])
 
+  const displayedKey = pinnedKey ?? activeKey
   const currentLabel =
-    entries.find((e) => e.key === activeKey)?.label ?? 'Executive Summary'
+    entries.find((e) => e.key === displayedKey)?.label ?? 'Executive Summary'
 
-  function onJump(
-    ev: React.MouseEvent<HTMLAnchorElement>,
-    domId: string,
-  ): void {
+  function onJump(ev: React.MouseEvent<HTMLAnchorElement>, entry: Entry): void {
     if (typeof window === 'undefined') return
-    const target = document.getElementById(domId)
+    const target = document.getElementById(entry.domId)
     if (!target) return
     ev.preventDefault()
+    setPinnedKey(entry.key)
     setOpen(false)
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
     if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, '', `#${domId}`)
+      window.history.replaceState(null, '', `#${entry.domId}`)
     }
   }
 
@@ -159,12 +185,12 @@ export default function MobileBottomBar({
             </SheetHeader>
             <ul className="mt-3 flex list-none flex-col gap-0.5 overflow-y-auto">
               {entries.map((e) => {
-                const isActive = activeKey === e.key
+                const isActive = displayedKey === e.key
                 return (
                   <li key={e.key}>
                     <a
                       href={`#${e.domId}`}
-                      onClick={(ev) => onJump(ev, e.domId)}
+                      onClick={(ev) => onJump(ev, e)}
                       className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
                         isActive
                           ? 'bg-muted font-semibold text-foreground'
