@@ -20,7 +20,11 @@ import {
   useAnnotations,
 } from '@shared/briefings/use-annotations'
 import { useSelection } from '@shared/briefings/use-selection'
-import type { Annotation, AnnotationAnchor } from '@shared/briefings/types'
+import type {
+  Annotation,
+  AnnotationAnchor,
+  AnnotationNoteAttachmentData,
+} from '@shared/briefings/types'
 import HighlightToolbar from './HighlightToolbar'
 import AddNoteSheet from './AddNoteSheet'
 import ReportErrorSheet from './ReportErrorSheet'
@@ -28,6 +32,7 @@ import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
 import {
   deleteAttachment,
+  resolveMimeType,
   uploadAttachment,
 } from '@shared/briefings/attachments-api'
 
@@ -296,6 +301,24 @@ export default function AnnotationsScope({
     [annotations],
   )
 
+  // Keep the edit-mode overlay's annotation snapshot in sync with the
+  // live annotations query. Without this, attachments added/removed
+  // while the sheet is open (e.g. via the picker in edit mode) wouldn't
+  // appear until the user closed and reopened the sheet — the snapshot
+  // captured at openEditNote stays frozen otherwise. Closes the sheet
+  // if the annotation has been deleted from under us.
+  useEffect(() => {
+    if (overlay.kind !== 'add_note_edit') return
+    const fresh = annotations.find((a) => a.id === overlay.annotation.id)
+    if (!fresh) {
+      setOverlay({ kind: 'closed' })
+      return
+    }
+    if (fresh !== overlay.annotation) {
+      setOverlay({ kind: 'add_note_edit', annotation: fresh })
+    }
+  }, [annotations, overlay])
+
   const ctxValue: Ctx = useMemo(
     () => ({
       meetingDate,
@@ -384,13 +407,69 @@ export default function AnnotationsScope({
             await remove.mutateAsync(id)
           }}
           onAttachmentAdd={async (annotationId, file) => {
-            await uploadAttachment({ annotationId, file })
+            const { attachmentId } = await uploadAttachment({
+              annotationId,
+              file,
+            })
+            // Inject the new attachment into the cached annotations list
+            // synchronously so the edit sheet shows it the moment the
+            // upload resolves. `invalidateQueries` below still kicks off
+            // a refetch to sync server-side fields the client can't
+            // compute (OCR status, completion time, etc.).
+            const optimistic: AnnotationNoteAttachmentData = {
+              id: attachmentId,
+              fileName: file.name,
+              mimeType: resolveMimeType(file),
+              sizeBytes: file.size,
+              ocrStatus: 'pending',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: new Date().toISOString(),
+            }
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: [
+                            ...(ann.note.attachments ?? []),
+                            optimistic,
+                          ],
+                        },
+                      }
+                    : ann,
+                ),
+            )
             queryClient.invalidateQueries({
               queryKey: annotationsQueryKey(meetingDate),
             })
           }}
           onAttachmentDelete={async (annotationId, attachmentId) => {
             await deleteAttachment({ annotationId, attachmentId })
+            // Drop the row from the cache optimistically so the pill
+            // disappears immediately without waiting for a refetch.
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: (ann.note.attachments ?? []).filter(
+                            (a) => a.id !== attachmentId,
+                          ),
+                        },
+                      }
+                    : ann,
+                ),
+            )
             queryClient.invalidateQueries({
               queryKey: annotationsQueryKey(meetingDate),
             })
