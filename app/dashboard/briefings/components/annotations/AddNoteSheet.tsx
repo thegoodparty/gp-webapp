@@ -12,8 +12,7 @@ import {
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import {
-  buildRangeIn,
-  findAnchorEl,
+  resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
 import type { Annotation } from '@shared/briefings/types'
@@ -61,32 +60,12 @@ type Props = {
   onEditNote: (annotation: Annotation) => void
 }
 
-/**
- * Resolve the highlighted text for an existing annotation by walking the
- * live DOM. The server doesn't store the original quote, so we rebuild
- * it on demand from the annotation's `jsonPath` + `start`/`end` offsets.
- * Returns null when the annotation has no anchor (top-level note) or
- * when the DOM no longer matches (e.g. content changed since the note
- * was written).
- */
-function resolveExistingQuote(annotation: Annotation): string | null {
-  if (typeof document === 'undefined') return null
-  const { jsonPath, start, end } = annotation
-  if (jsonPath === null || start === null || end === null) return null
-  const el = findAnchorEl(jsonPath)
-  if (!el) return null
-  const range = buildRangeIn(el, start, end)
-  if (!range) return null
-  const quote = range.toString().trim()
-  return quote.length > 0 ? quote : null
-}
-
 function quoteFor(state: SheetState): string | null {
   if (state.kind === 'add_note_new') {
     return state.anchor?.quote ?? null
   }
   if (state.kind === 'add_note_edit') {
-    return resolveExistingQuote(state.annotation)
+    return resolveQuoteFromAnchor(state.annotation)
   }
   return null
 }

@@ -10,9 +10,8 @@ import {
 } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  buildRangeIn,
-  findAnchorEl,
   pointToOffset,
+  resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
 import {
@@ -43,25 +42,33 @@ import {
 export type PendingAnchor = ResolvedAnchor | null
 
 /**
- * Reconstruct the highlighted text from an annotation's jsonPath/start/end
- * by walking the live DOM. The server schema does not store the original
- * quote, so we resolve it here at open-time. Returns an empty object when
- * the annotation lacks a usable anchor or the DOM no longer matches.
+ * Resolve both the highlighted text and the anchor coordinates for an
+ * existing annotation. The chat overlay state carries both fields so the
+ * sheet can render the quote AND mint a new chat against the same anchor
+ * without re-walking the DOM. Returns an empty object when the annotation
+ * has no anchor or the DOM no longer matches.
  */
 function resolveAnnotationQuote(annotation: Annotation): {
   quote?: string
   anchor?: { jsonPath: string; start: number; end: number }
 } {
-  if (typeof document === 'undefined') return {}
-  const { jsonPath, start, end } = annotation
-  if (jsonPath === null || start === null || end === null) return {}
-  const el = findAnchorEl(jsonPath)
-  if (!el) return {}
-  const range = buildRangeIn(el, start, end)
-  if (!range) return {}
-  const quote = range.toString().trim()
-  if (!quote) return {}
-  return { quote, anchor: { jsonPath, start, end } }
+  const quote = resolveQuoteFromAnchor(annotation)
+  if (
+    quote === null ||
+    annotation.jsonPath === null ||
+    annotation.start === null ||
+    annotation.end === null
+  ) {
+    return {}
+  }
+  return {
+    quote,
+    anchor: {
+      jsonPath: annotation.jsonPath,
+      start: annotation.start,
+      end: annotation.end,
+    },
+  }
 }
 
 /**
