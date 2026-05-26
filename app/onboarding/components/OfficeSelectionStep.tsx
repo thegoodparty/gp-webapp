@@ -185,7 +185,9 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
 // unchanged keeps the BallotReady race hash on `selected.raceId`, which is what
 // downstream (filing-fee lookup, etc.) actually wants.
 const rowKey = (race: Race): string =>
-  `${race.brPositionId ?? race.position?.id ?? ''}|${race.election?.electionDay ?? ''}`
+  `${race.brPositionId ?? race.position?.id ?? ''}|${
+    race.election?.electionDay ?? ''
+  }`
 
 const selectedRowKey = (selected: SelectedOffice | undefined): string =>
   selected ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}` : ''

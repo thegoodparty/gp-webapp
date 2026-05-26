@@ -119,12 +119,12 @@ const matchesSelected = (
   const selectedDay = selectedAsRace.election?.electionDay
   if (selectedBrPos && selectedDay) {
     const raceBrPos = race.brPositionId ?? race.position?.id
-    return raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+    return (
+      raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+    )
   }
   return (
-    'id' in selected &&
-    selected.id !== undefined &&
-    race.id === selected.id
+    'id' in selected && selected.id !== undefined && race.id === selected.id
   )
 }
 
