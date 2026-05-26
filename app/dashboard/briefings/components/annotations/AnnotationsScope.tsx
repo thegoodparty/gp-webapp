@@ -371,10 +371,15 @@ export default function AnnotationsScope({
           sheet={overlay}
           onClose={closeSheet}
           onCreate={async (anchor, body, attachments) => {
+            // The contract validates body as `string().min(1).optional()` —
+            // so an empty string 400s, but omitting body entirely is fine
+            // (the server stores null). Drop the field when the user only
+            // attached files without typing anything.
+            const trimmedBody = body.trim()
             const created = await create.mutateAsync({
               kind: 'note',
               anchor: anchorPayload(anchor),
-              payload: { body },
+              payload: trimmedBody.length > 0 ? { body: trimmedBody } : {},
             })
             window.getSelection()?.removeAllRanges()
             // Upload any staged attachments against the freshly created

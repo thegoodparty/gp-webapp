@@ -122,6 +122,7 @@ export default function AddNoteSheet({
     StagedAttachment[]
   >([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
   // Per-attachment busy state for edit mode — keyed by either the staged
   // upload's temp id (while the upload is in flight, before the server
   // attachment id is known) or the server attachment id (while a delete
@@ -139,6 +140,7 @@ export default function AddNoteSheet({
     }
     setStagedAttachments([])
     setAttachmentError(null)
+    setSaveError(null)
     setBusyAttachmentIds(new Set())
   }, [sheet])
 
@@ -236,6 +238,7 @@ export default function AddNoteSheet({
   async function handleSave() {
     if (saving) return
     setSaving(true)
+    setSaveError(null)
     try {
       if (sheet.kind === 'add_note_edit') {
         await onUpdate(sheet.annotation.id, body)
@@ -243,6 +246,9 @@ export default function AddNoteSheet({
         await onCreate(sheet.anchor, body, stagedAttachments)
       }
       onClose()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setSaveError(`Couldn't save your note: ${msg}`)
     } finally {
       setSaving(false)
     }
@@ -251,9 +257,13 @@ export default function AddNoteSheet({
   async function handleDeleteNote() {
     if (sheet.kind !== 'add_note_edit' || saving) return
     setSaving(true)
+    setSaveError(null)
     try {
       await onDelete(sheet.annotation.id)
       onClose()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setSaveError(`Couldn't delete this note: ${msg}`)
     } finally {
       setSaving(false)
     }
@@ -353,6 +363,11 @@ export default function AddNoteSheet({
               {saving ? 'Saving…' : 'Save'}
             </Button>
           </div>
+          {saveError ? (
+            <p role="alert" className="text-sm text-destructive">
+              {saveError}
+            </p>
+          ) : null}
           {isEdit ? (
             <Button
               type="button"
