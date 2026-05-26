@@ -190,8 +190,10 @@ describe('OfficeSelectionStep', () => {
         expect.objectContaining({
           // After hydration, raceId is the BallotReady race hash returned by
           // /race-by-position (no longer overridden by the lean search row's id).
+          // positionId prefers brPositionId to stay aligned with `rowKey` so the
+          // radio's selected key matches the row's key after hydration.
           raceId: 'race-server',
-          positionId: 'pos-1',
+          positionId: 'br-pos-1',
           positionName: 'City Council',
           officeTermLength: '4 years',
           electionDay: '2026-11-03',

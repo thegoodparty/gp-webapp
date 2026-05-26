@@ -234,15 +234,28 @@ export default function OfficeStep({
     }
   }
 
+  // Carry electionDay + position id alongside the raw raceId so BallotRaces
+  // `matchesSelected` can highlight the saved selection via the composite
+  // (brPositionId, electionDay) path. Plain id matching no longer works for
+  // campaigns saved after the office-picker fix, since `details.raceId` is
+  // now a BR race hash and lean list `race.id` is a ZipToPosition UUID.
   const selectedOffice:
     | {
         id: string | number | undefined
-        election: { id: string | number | null | undefined }
+        election: {
+          id: string | number | null | undefined
+          electionDay?: string
+        }
+        brPositionId?: string
       }
     | false = existingRaceId
     ? {
         id: existingRaceId,
-        election: { id: existingElectionId },
+        election: {
+          id: existingElectionId,
+          electionDay: campaign?.details?.electionDate,
+        },
+        brPositionId: campaign?.organization?.positionId ?? undefined,
       }
     : false
 
