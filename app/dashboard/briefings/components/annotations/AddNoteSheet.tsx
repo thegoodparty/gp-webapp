@@ -306,7 +306,7 @@ export default function AddNoteSheet({
 
         <div
           data-vaul-no-drag
-          className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4"
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-3"
         >
           {quote ? (
             <blockquote className="border-l-2 border-border pl-3 text-sm italic leading-6 text-muted-foreground">
@@ -317,7 +317,17 @@ export default function AddNoteSheet({
               This note is for the whole briefing.
             </p>
           ) : null}
+        </div>
 
+        {/* Composer pinned at the bottom. The attachment picker sits above
+            the input/Save row, right-aligned so its button and pills hug
+            the side near the Save action. Delete (edit mode only) sits
+            below the composer so the destructive action stays one tap
+            away but never sits beside the text input. */}
+        <div
+          data-vaul-no-drag
+          className="flex flex-col gap-2 bg-background px-4 py-3"
+        >
           <NoteAttachmentPicker
             items={pickerItems}
             onAdd={handleAdd}
@@ -325,35 +335,30 @@ export default function AddNoteSheet({
             disabled={saving}
             error={attachmentError}
           />
-
-          <Textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Write your note…"
-            rows={6}
-            className="min-h-[160px] resize-none rounded-2xl"
-          />
-        </div>
-
-        <div
-          data-vaul-no-drag
-          className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0"
-        >
-          <Button
-            type="button"
-            disabled={!canSave}
-            onClick={handleSave}
-            className="w-full"
-          >
-            {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Save note'}
-          </Button>
+          <div className="flex items-end gap-2">
+            <Textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="Write your note…"
+              rows={3}
+              className="max-h-[180px] min-h-[60px] flex-1 resize-none rounded-2xl"
+            />
+            <Button
+              type="button"
+              disabled={!canSave}
+              onClick={handleSave}
+              className="shrink-0"
+            >
+              {saving ? 'Saving…' : 'Save'}
+            </Button>
+          </div>
           {isEdit ? (
             <Button
               type="button"
               variant="link"
               disabled={saving}
               onClick={handleDeleteNote}
-              className="text-destructive"
+              className="self-start text-destructive"
             >
               Delete note
             </Button>
