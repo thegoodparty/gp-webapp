@@ -88,9 +88,7 @@ export default function MobileBottomBar({
       // scrolls — window on mobile, the briefing pane at lg+.
       const paneScrolls =
         !!pane && window.matchMedia('(min-width: 1024px)').matches
-      const containerTop = paneScrolls
-        ? pane.getBoundingClientRect().top
-        : 0
+      const containerTop = paneScrolls ? pane.getBoundingClientRect().top : 0
       const offset = paneScrolls ? 12 : 104
 
       let bestKey = entries[0]?.key ?? ''

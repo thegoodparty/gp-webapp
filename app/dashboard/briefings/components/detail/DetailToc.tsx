@@ -83,9 +83,7 @@ export default function DetailToc({
       // lg breakpoint switches modes without a remount.
       const paneScrolls =
         !!pane && window.matchMedia('(min-width: 1024px)').matches
-      const containerTop = paneScrolls
-        ? pane.getBoundingClientRect().top
-        : 0
+      const containerTop = paneScrolls ? pane.getBoundingClientRect().top : 0
       const offset = paneScrolls ? DESKTOP_PANE_OFFSET : MOBILE_HEADER_OFFSET
 
       let bestKey = entries[0]?.key ?? ''
@@ -141,10 +139,7 @@ export default function DetailToc({
     }
   }, [entries, briefingSlug])
 
-  function onJump(
-    e: React.MouseEvent<HTMLAnchorElement>,
-    entry: Entry,
-  ) {
+  function onJump(e: React.MouseEvent<HTMLAnchorElement>, entry: Entry) {
     if (typeof window === 'undefined') return
     const target = document.getElementById(entry.domId)
     if (!target) return
