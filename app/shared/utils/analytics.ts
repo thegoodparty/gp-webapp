@@ -1,4 +1,5 @@
 import { AnalyticsBrowser, Analytics } from '@segment/analytics-next'
+import cookie from 'js-cookie'
 import { NEXT_PUBLIC_SEGMENT_WRITE_KEY } from 'appEnv'
 
 interface UserTraits {
@@ -70,10 +71,7 @@ export const identifyUser = async (
       return false
     }
 
-    const hutk = document.cookie
-      .split('; ')
-      .find((r) => r.startsWith('hubspotutk='))
-      ?.split('=')[1]
+    const hutk = cookie.get('hubspotutk')
     const enrichedTraits = hutk ? { ...traits, hutk } : traits
 
     if (userId) {
