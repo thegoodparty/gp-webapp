@@ -188,7 +188,9 @@ describe('OfficeSelectionStep', () => {
     await waitFor(() => {
       expect(onSelect).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          raceId: 'race-1',
+          // After hydration, raceId is the BallotReady race hash returned by
+          // /race-by-position (no longer overridden by the lean search row's id).
+          raceId: 'race-server',
           positionId: 'pos-1',
           positionName: 'City Council',
           officeTermLength: '4 years',
