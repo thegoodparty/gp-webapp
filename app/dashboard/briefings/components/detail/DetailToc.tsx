@@ -167,12 +167,18 @@ export default function DetailToc({
             <a
               href={`#${e.domId}`}
               onClick={(ev) => onJump(ev, e)}
-              className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 transition-colors ${
+              className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 transition-colors ${
                 isActive
                   ? 'bg-muted font-semibold text-foreground'
                   : 'text-foreground hover:bg-muted/60'
               }`}
             >
+              <span
+                aria-hidden
+                className={`size-2 shrink-0 rounded-full ${
+                  isActive ? 'bg-info-600' : 'bg-transparent'
+                }`}
+              />
               <span className="min-w-0">{e.label}</span>
             </a>
           </li>
