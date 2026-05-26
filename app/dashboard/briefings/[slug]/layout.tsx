@@ -55,14 +55,19 @@ export default async function BriefingChromeLayout({
     >
       <AnnotationsScope meetingDate={slug}>
         <div className="relative">
-          <div className="flex min-h-full flex-col bg-muted pb-20 lg:pb-12">
+          {/* lg+: constrain the whole briefing area to viewport height and
+              disable document-level scroll. The sidebar pane stays
+              visually fixed because it doesn't scroll; only the content
+              pane scrolls. Mobile keeps the original document-scroll
+              model so the bottom bar / page chrome behave as before. */}
+          <div className="flex min-h-full flex-col bg-muted pb-20 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-0">
             <DetailHeader
               briefing={briefing}
               preparedForLine={briefing.officialName}
               liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
             />
 
-            <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:px-8">
+            <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:px-8">
               <div className="mb-4">
                 <Link
                   href={briefingsLandingHref()}
@@ -73,14 +78,18 @@ export default async function BriefingChromeLayout({
                 </Link>
               </div>
 
-              <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
-                <aside className="hidden lg:block">
-                  <div className="sticky top-[88px] max-h-[calc(100vh-104px)] overflow-y-auto rounded-2xl border border-border bg-card p-3">
-                    <DetailToc briefingSlug={slug} items={briefing.items} />
-                  </div>
+              <div className="lg:flex lg:min-h-0 lg:flex-1 lg:items-stretch lg:gap-8 lg:overflow-hidden">
+                <aside className="hidden rounded-2xl border border-border bg-card p-3 lg:block lg:w-[260px] lg:shrink-0 lg:overflow-y-auto">
+                  <DetailToc briefingSlug={slug} items={briefing.items} />
                 </aside>
 
-                <div className="flex flex-col gap-4">{children}</div>
+                <div
+                  id="briefing-detail-pane"
+                  data-briefing-scroll-container
+                  className="flex flex-col gap-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+                >
+                  {children}
+                </div>
               </div>
             </div>
           </div>

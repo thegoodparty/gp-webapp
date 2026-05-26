@@ -85,12 +85,19 @@ export default function DetailToc({
       if (raf === 0) raf = requestAnimationFrame(pickActive)
     }
 
+    // Listen on both window (mobile, where the document scrolls) and the
+    // briefing content pane (desktop, where the right column scrolls
+    // independently). Element scroll events don't bubble, so we have to
+    // attach directly to the pane.
+    const pane = document.getElementById('briefing-detail-pane')
     pickActive()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
+    pane?.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
+      pane?.removeEventListener('scroll', onScroll)
       if (raf !== 0) cancelAnimationFrame(raf)
     }
   }, [entries, briefingSlug])
