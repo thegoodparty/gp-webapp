@@ -27,7 +27,10 @@ import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
 import AskAiSheet from './AskAiSheet'
 import AddNotesDialog from '../notes-intake/AddNotesDialog'
-import { uploadAttachment } from '@shared/briefings/attachments-api'
+import {
+  deleteAttachment,
+  uploadAttachment,
+} from '@shared/briefings/attachments-api'
 import { annotationsApi } from '@shared/briefings/annotations-api'
 
 const OCR_TERMINAL_STATUSES = new Set(['completed', 'failed', 'skipped'])
@@ -412,6 +415,18 @@ export default function AnnotationsScope({
           }}
           onDelete={async (id) => {
             await remove.mutateAsync(id)
+          }}
+          onAttachmentAdd={async (annotationId, file) => {
+            await uploadAttachment({ annotationId, file })
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
+          }}
+          onAttachmentDelete={async (annotationId, attachmentId) => {
+            await deleteAttachment({ annotationId, attachmentId })
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
           }}
         />
       )}

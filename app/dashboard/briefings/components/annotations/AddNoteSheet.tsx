@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Drawer,
@@ -15,6 +15,7 @@ import type { SheetState } from './AnnotationsScope'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
 import NoteAttachmentPicker, {
   makeStagedAttachment,
+  type PickerItem,
   type StagedAttachment,
 } from './NoteAttachmentPicker'
 
@@ -36,6 +37,13 @@ type Props = {
   ) => Promise<void> | void
   onUpdate: (annotationId: string, body: string) => Promise<void> | void
   onDelete: (annotationId: string) => Promise<void> | void
+  /** Edit mode: upload one file against an existing annotation. */
+  onAttachmentAdd: (annotationId: string, file: File) => Promise<void>
+  /** Edit mode: delete one attachment from an existing annotation. */
+  onAttachmentDelete: (
+    annotationId: string,
+    attachmentId: string,
+  ) => Promise<void>
 }
 
 function quoteFor(state: SheetState): string | null {
@@ -57,8 +65,11 @@ function isAddNoteState(state: SheetState): boolean {
  * Three states:
  *   - closed
  *   - add_note_new (with optional anchor for selection-driven notes,
- *                   or null for top-level notes)
- *   - add_note_edit (existing annotation, edit body or delete)
+ *                   or null for top-level notes). Attachments stage
+ *                   locally and upload on Save.
+ *   - add_note_edit (existing annotation, edit body or delete). Existing
+ *                   attachments render as pills with X. Add/remove are
+ *                   immediate (no Save step) — the body still uses Save.
  */
 export default function AddNoteSheet({
   sheet,
@@ -66,6 +77,8 @@ export default function AddNoteSheet({
   onCreate,
   onUpdate,
   onDelete,
+  onAttachmentAdd,
+  onAttachmentDelete,
 }: Props): React.JSX.Element {
   const open = isAddNoteState(sheet)
   const isDesktop = !useIsMobile()
@@ -75,8 +88,20 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
-  const [attachments, setAttachments] = useState<StagedAttachment[]>([])
+  // Used in new-note mode only. Edit mode talks to the server directly
+  // via onAttachmentAdd / onAttachmentDelete and shows the live list of
+  // attachments from `sheet.annotation.note.attachments`.
+  const [stagedAttachments, setStagedAttachments] = useState<
+    StagedAttachment[]
+  >([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
+  // Per-attachment busy state for edit mode — keyed by either the staged
+  // upload's temp id (while the upload is in flight, before the server
+  // attachment id is known) or the server attachment id (while a delete
+  // is in flight). Cleared once the action resolves.
+  const [busyAttachmentIds, setBusyAttachmentIds] = useState<Set<string>>(
+    () => new Set(),
+  )
 
   // Reset body + staged attachments when the sheet transitions states.
   useEffect(() => {
@@ -85,8 +110,9 @@ export default function AddNoteSheet({
     } else if (sheet.kind === 'add_note_new') {
       setBody('')
     }
-    setAttachments([])
+    setStagedAttachments([])
     setAttachmentError(null)
+    setBusyAttachmentIds(new Set())
   }, [sheet])
 
   // Clear the user's text selection once the drawer opens — leaving a live
@@ -95,11 +121,58 @@ export default function AddNoteSheet({
 
   const quote = quoteFor(sheet)
   const isEdit = sheet.kind === 'add_note_edit'
+  const existingAttachments =
+    sheet.kind === 'add_note_edit'
+      ? sheet.annotation.note?.attachments ?? []
+      : []
 
-  function handleAddAttachment(
+  function markBusy(id: string, busy: boolean) {
+    setBusyAttachmentIds((prev) => {
+      const next = new Set(prev)
+      if (busy) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  async function handleEditModeAdd(
+    annotationId: string,
     file: File,
     source: 'photos' | 'camera' | 'document',
   ) {
+    const staged = makeStagedAttachment(file, source)
+    setStagedAttachments((prev) => [...prev, staged])
+    markBusy(staged.id, true)
+    try {
+      await onAttachmentAdd(annotationId, file)
+      // Refetch will replace the staged row with the server row. Drop
+      // the staged entry now so the pill list doesn't briefly show both.
+      setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
+    } catch (err) {
+      setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
+      const msg = err instanceof Error ? err.message : String(err)
+      setAttachmentError(`Couldn't upload ${file.name}: ${msg}`)
+    } finally {
+      markBusy(staged.id, false)
+    }
+  }
+
+  async function handleEditModeRemove(
+    annotationId: string,
+    attachmentId: string,
+  ) {
+    markBusy(attachmentId, true)
+    try {
+      await onAttachmentDelete(annotationId, attachmentId)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setAttachmentError(`Couldn't remove attachment: ${msg}`)
+    } finally {
+      markBusy(attachmentId, false)
+    }
+  }
+
+  function handleAdd(file: File, source: 'photos' | 'camera' | 'document') {
     setAttachmentError(null)
     if (file.size > MAX_BYTES) {
       setAttachmentError(
@@ -107,11 +180,30 @@ export default function AddNoteSheet({
       )
       return
     }
-    setAttachments((prev) => [...prev, makeStagedAttachment(file, source)])
+    if (sheet.kind === 'add_note_edit') {
+      void handleEditModeAdd(sheet.annotation.id, file, source)
+      return
+    }
+    setStagedAttachments((prev) => [
+      ...prev,
+      makeStagedAttachment(file, source),
+    ])
   }
 
-  function handleRemoveAttachment(id: string) {
-    setAttachments((prev) => prev.filter((a) => a.id !== id))
+  function handleRemove(id: string) {
+    if (sheet.kind === 'add_note_edit') {
+      // In edit mode the id is either a server attachment id or a staged
+      // upload's temp id (if the user clicks X mid-upload). Server ids
+      // go through the delete API; staged-only entries just disappear.
+      const isStaged = stagedAttachments.some((a) => a.id === id)
+      if (isStaged) {
+        setStagedAttachments((prev) => prev.filter((a) => a.id !== id))
+        return
+      }
+      void handleEditModeRemove(sheet.annotation.id, id)
+      return
+    }
+    setStagedAttachments((prev) => prev.filter((a) => a.id !== id))
   }
 
   async function handleSave() {
@@ -121,7 +213,7 @@ export default function AddNoteSheet({
       if (sheet.kind === 'add_note_edit') {
         await onUpdate(sheet.annotation.id, body)
       } else if (sheet.kind === 'add_note_new') {
-        await onCreate(sheet.anchor, body, attachments)
+        await onCreate(sheet.anchor, body, stagedAttachments)
       }
       onClose()
     } finally {
@@ -129,7 +221,7 @@ export default function AddNoteSheet({
     }
   }
 
-  async function handleDelete() {
+  async function handleDeleteNote() {
     if (sheet.kind !== 'add_note_edit' || saving) return
     setSaving(true)
     try {
@@ -140,15 +232,38 @@ export default function AddNoteSheet({
     }
   }
 
-  // New-note saves are allowed with just attachments and no body — the
-  // server's note payload already treats `body` as optional. Edit mode
-  // still requires non-empty body (the editor isn't wired for adding
-  // attachments to an existing note yet).
+  // The list the picker renders. In new-note mode it's just staged files;
+  // in edit mode it's the server-side attachments plus any uploads still
+  // in flight.
+  const pickerItems: PickerItem[] = useMemo(() => {
+    if (sheet.kind === 'add_note_edit') {
+      const existing: PickerItem[] = existingAttachments.map((att) => ({
+        id: att.id,
+        label: att.fileName,
+        busy: busyAttachmentIds.has(att.id),
+      }))
+      const inflight: PickerItem[] = stagedAttachments.map((s) => ({
+        id: s.id,
+        label: s.file.name,
+        busy: busyAttachmentIds.has(s.id),
+      }))
+      return [...existing, ...inflight]
+    }
+    return stagedAttachments.map((s) => ({
+      id: s.id,
+      label: s.file.name,
+    }))
+  }, [sheet, existingAttachments, stagedAttachments, busyAttachmentIds])
+
+  // New-note saves allow body-only or attachment-only. Edit mode's Save
+  // commits the body; attachment changes happen immediately, so Save is
+  // enabled whenever the body still has content (we treat fully empty
+  // body as "delete the note" — handled by the explicit Delete action).
   const canSave =
     !saving &&
     (isEdit
       ? body.trim().length > 0
-      : body.trim().length > 0 || attachments.length > 0)
+      : body.trim().length > 0 || stagedAttachments.length > 0)
 
   return (
     <Drawer
@@ -177,15 +292,13 @@ export default function AddNoteSheet({
             </p>
           ) : null}
 
-          {!isEdit ? (
-            <NoteAttachmentPicker
-              attachments={attachments}
-              onAdd={handleAddAttachment}
-              onRemove={handleRemoveAttachment}
-              disabled={saving}
-              error={attachmentError}
-            />
-          ) : null}
+          <NoteAttachmentPicker
+            items={pickerItems}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+            disabled={saving}
+            error={attachmentError}
+          />
 
           <Textarea
             value={body}
@@ -213,7 +326,7 @@ export default function AddNoteSheet({
               type="button"
               variant="link"
               disabled={saving}
-              onClick={handleDelete}
+              onClick={handleDeleteNote}
               className="text-destructive"
             >
               Delete note

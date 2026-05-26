@@ -1,7 +1,14 @@
 'use client'
 
 import { useId, useRef, useState } from 'react'
-import { Camera, FileText, ImageIcon, Paperclip, X } from 'lucide-react'
+import {
+  Camera,
+  FileText,
+  ImageIcon,
+  Loader2,
+  Paperclip,
+  X,
+} from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 
@@ -13,8 +20,17 @@ export type StagedAttachment = {
   source: Source
 }
 
+/** Generic shape rendered as a pill. The caller maps its own data (staged
+ * File objects, server-side AnnotationNoteAttachmentData, etc.) into this. */
+export type PickerItem = {
+  id: string
+  label: string
+  /** When true, renders a spinner inside the pill in place of the X. */
+  busy?: boolean
+}
+
 type Props = {
-  attachments: StagedAttachment[]
+  items: PickerItem[]
   onAdd: (file: File, source: Source) => void
   onRemove: (id: string) => void
   /** Disables the picker (e.g. while a save is in flight). */
@@ -32,15 +48,21 @@ const newId = (): string =>
     : `att-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 /**
- * "Add attachment" pill + the list of staged file pills below it.
+ * "Add attachment" pill + the list of attachment pills below it.
  *
  * On desktop the pill opens the native OS file dialog directly. On mobile
  * the pill opens a bottom drawer with three sources — Photos (gallery),
  * Camera (capture), and Document (native document picker) — matching the
  * WhatsApp-style attachment menu the spec calls for.
+ *
+ * The component is data-agnostic: it renders whatever items the caller
+ * gives it and emits add/remove events. New-note flows stage files
+ * locally and commit on Save; edit-mode flows upload/delete immediately
+ * against an existing annotation. Both map their state into the same
+ * `PickerItem` shape.
  */
 export default function NoteAttachmentPicker({
-  attachments,
+  items,
   onAdd,
   onRemove,
   disabled = false,
@@ -97,24 +119,33 @@ export default function NoteAttachmentPicker({
         </button>
       </div>
 
-      {attachments.length > 0 ? (
+      {items.length > 0 ? (
         <ul className="flex list-none flex-wrap items-center gap-2">
-          {attachments.map((a) => (
-            <li key={a.id}>
+          {items.map((it) => (
+            <li key={it.id}>
               <div
                 className="inline-flex max-w-[240px] items-center gap-2 rounded-full bg-muted py-1 pl-3 pr-1 text-sm text-foreground"
-                title={a.file.name}
+                title={it.label}
               >
-                <span className="truncate">{a.file.name}</span>
-                <button
-                  type="button"
-                  onClick={() => onRemove(a.id)}
-                  disabled={disabled}
-                  aria-label={`Remove ${a.file.name}`}
-                  className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <X className="size-3.5" aria-hidden />
-                </button>
+                <span className="truncate">{it.label}</span>
+                {it.busy ? (
+                  <span
+                    aria-hidden
+                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+                  >
+                    <Loader2 className="size-3.5 animate-spin" />
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => onRemove(it.id)}
+                    disabled={disabled}
+                    aria-label={`Remove ${it.label}`}
+                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <X className="size-3.5" aria-hidden />
+                  </button>
+                )}
               </div>
             </li>
           ))}
