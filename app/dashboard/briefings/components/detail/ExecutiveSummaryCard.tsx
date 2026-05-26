@@ -27,7 +27,7 @@ export default function ExecutiveSummaryCard({
   return (
     <article
       id={domId}
-      className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-6"
+      className="flex scroll-mt-[104px] flex-col gap-2 rounded-2xl border border-border bg-card p-6 lg:scroll-mt-3"
     >
       <div className="flex items-start justify-between gap-3">
         <h2 className="text-2xl font-semibold text-foreground">

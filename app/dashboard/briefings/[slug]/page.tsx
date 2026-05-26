@@ -1,7 +1,14 @@
 import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import { getBriefingBySlug, isFullBriefing } from '@shared/briefings/server'
-import { renderBriefingForSpeech } from '@shared/briefings/renderForSpeech'
+import {
+  renderBriefingForSpeech,
+  renderItemForSpeech,
+} from '@shared/briefings/renderForSpeech'
+import {
+  BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  briefingItemDomId,
+} from '@shared/briefings/routes'
 import ExecutiveSummaryCard from '../components/detail/ExecutiveSummaryCard'
 import AgendaItemCard from '../components/detail/AgendaItemCard'
 
@@ -24,15 +31,14 @@ export async function generateMetadata({ params }: PageProps) {
 
 export const dynamic = 'force-dynamic'
 
-const EXECUTIVE_SUMMARY_DOM_ID = 'briefing-executive-summary'
-
 /**
- * Briefing overview page.
+ * Briefing detail page.
  *
- * Renders the Executive Summary plus the top issues (action items) inline
- * so the user can scan the priorities at a glance. Non-action items (Call
- * to order, Public comment period, etc.) have their own per-item pages
- * reached via the sidebar TOC.
+ * Renders the Executive Summary followed by every agenda item inline.
+ * Featured items show the full card (talking points, recent news, budget,
+ * sentiment, feedback); non-featured items render in the lightweight
+ * "What to expect" variant. The sidebar TOC and mobile jump-to-section
+ * sheet scroll within this page via hash anchors — no sub-routes.
  */
 export default async function Page({
   params,
@@ -48,30 +54,32 @@ export default async function Page({
   // briefing-schema knowledge.
   const speechText = renderBriefingForSpeech(briefing)
 
-  const featuredItems = briefing.items
-    .map((item, index) => ({ item, index }))
-    .filter(({ item }) => item.tier === 'featured')
-
   return (
     <>
       <ExecutiveSummaryCard
         summary={briefing.executiveSummary}
-        domId={EXECUTIVE_SUMMARY_DOM_ID}
+        domId={BRIEFING_EXECUTIVE_SUMMARY_DOM_ID}
         speechText={speechText}
         analyticsLabel="briefing"
       />
 
-      {featuredItems.map(({ item, index }) => (
-        <AgendaItemCard
-          key={item.id}
-          item={item}
-          itemIndex={index}
-          sources={briefing.sources}
-          domId={`briefing-item-${item.id}`}
-          meetingDate={slug}
-          showFeedback
-        />
-      ))}
+      {briefing.items.map((item, index) => {
+        const isFeatured = item.tier === 'featured'
+        return (
+          <AgendaItemCard
+            key={item.id}
+            item={item}
+            itemIndex={index}
+            sources={briefing.sources}
+            domId={briefingItemDomId(item.id)}
+            meetingDate={slug}
+            showFeedback={isFeatured}
+            variant={isFeatured ? 'full' : 'whatToExpectOnly'}
+            speechText={isFeatured ? renderItemForSpeech(item) : undefined}
+            analyticsLabel={`briefing-item-${item.id}`}
+          />
+        )
+      })}
     </>
   )
 }
