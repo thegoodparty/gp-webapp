@@ -119,7 +119,7 @@ export function P2PUpgradeModal({
               <H1 className="m-0 text-2xl lg:text-3xl">{content.title}</H1>
 
               <Body2 className="leading-6">
-                <ul className="list-none list-inside p-0 font-sfpro m-0 space-y-1">
+                <ul className="list-none list-inside p-0 m-0 space-y-1">
                   {content.items.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <span className="mr-2 mt-1 flex-shrink-0">✓</span>

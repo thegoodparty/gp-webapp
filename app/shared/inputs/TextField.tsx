@@ -52,9 +52,10 @@ export default function TextField<Variant extends TextFieldVariants>({
         ...restProps.InputProps,
         // Preserve any existing endAdornment from callers (e.g., Autocomplete)
         endAdornment: mergedEndAdornment ?? restProps.InputProps?.endAdornment,
-        // Ensure font family styling is applied while preserving caller styles
+        // MUI defaults to its own font (Roboto). Force inherit so the input
+        // uses the page body font without depending on a specific family.
         sx: [
-          { fontFamily: 'var(--outfit-font)' },
+          { fontFamily: 'inherit' },
           ...getInputPropsSx(restProps.InputProps),
         ],
         style: restProps.InputProps?.style,

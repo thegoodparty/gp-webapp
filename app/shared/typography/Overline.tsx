@@ -9,7 +9,7 @@ interface OverlineProps
 
 const Overline = ({ children, className = '', ...rest }: OverlineProps) => (
   <div
-    className={clsx(' font-sfpro text-xs uppercase tracking-widest', className)}
+    className={clsx('text-xs uppercase tracking-widest', className)}
     {...rest}
   >
     {children}

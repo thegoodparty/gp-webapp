@@ -150,7 +150,7 @@ export default function SpanTextArea({
             </div>
           )}
           {!value && !showLoadingDots && !hidePlaceholder && (
-            <div className="text-base md:text-sm font-normal absolute top-3 left-4 pointer-events-none text-gray-400 pr-2 font-outfit leading-normal">
+            <div className="text-base md:text-sm font-normal absolute top-3 left-4 pointer-events-none text-gray-400 pr-2 leading-normal">
               {placeholder}
             </div>
           )}

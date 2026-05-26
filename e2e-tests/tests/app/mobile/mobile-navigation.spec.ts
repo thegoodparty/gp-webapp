@@ -47,28 +47,8 @@ test.describe('Mobile Navigation', () => {
     const mobileMenuButton = page.getByTestId('mobile-menu-trigger')
 
     await expect(mobileMenuButton).toBeAttached()
-
-    const isHidden = await mobileMenuButton.isHidden()
-    if (!isHidden) {
-      await expect(mobileMenuButton).toBeVisible()
-      console.log('✅ Mobile menu button is visible')
-    } else {
-      const tilts = page.getByTestId('tilt')
-      const count = await tilts.count()
-      let sawVisible = false
-      for (let i = 0; i < count; i++) {
-        const t = tilts.nth(i)
-        if (await t.isVisible().catch(() => false)) {
-          await expect(t).toBeVisible()
-          sawVisible = true
-          break
-        }
-      }
-      if (!sawVisible && count > 0) {
-        await expect(tilts.first()).toBeAttached()
-      }
-    }
-    console.log('✅ Mobile menu control is present')
+    await expect(mobileMenuButton).toBeVisible()
+    console.log('✅ Mobile menu button is visible')
   })
 
   test('should navigate to AI Assistant on mobile', async ({ page }) => {

@@ -116,7 +116,7 @@ export default function PromoCodeSection({
             placeholder="Enter promo code"
             value={promoCode}
             onChange={(e) => setPromoCode(e.target.value)}
-            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-base font-[var(--outfit-font)] outline-none focus:border-primary-main focus:ring-1 focus:ring-primary-main"
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-base outline-none focus:border-primary-main focus:ring-1 focus:ring-primary-main"
           />
           <Button
             type="button"

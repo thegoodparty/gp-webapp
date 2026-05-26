@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   Drawer,
   DrawerClose,
@@ -10,6 +11,9 @@ import {
   DrawerTrigger,
 } from '../components/ui/drawer'
 import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Textarea } from '../components/ui/textarea'
 
 const meta: Meta<typeof Drawer> = {
   title: 'Components/Drawer',
@@ -19,6 +23,59 @@ const meta: Meta<typeof Drawer> = {
 
 export default meta
 type Story = StoryObj<typeof Drawer>
+
+type PlaygroundArgs = {
+  open: boolean
+  direction: 'top' | 'bottom' | 'left' | 'right'
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    open: false,
+    direction: 'bottom',
+  },
+  argTypes: {
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state.',
+    },
+    direction: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
+    },
+  },
+  render: ({ open, direction }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <Drawer
+        open={open}
+        direction={direction}
+        onOpenChange={(next) => updateArgs({ open: next })}
+      >
+        <DrawerTrigger asChild>
+          <Button variant="outline">Open Drawer</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Drawer Title</DrawerTitle>
+            <DrawerDescription>
+              Toggle direction in Controls to see how the drawer slides in.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4">
+            <p>Drawer content goes here.</p>
+          </div>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+            <Button>Submit</Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
@@ -62,30 +119,16 @@ export const WithForm: Story = {
         </DrawerHeader>
         <form className="grid gap-4 p-4">
           <div className="grid gap-2">
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              className="rounded-md border p-2"
-              placeholder="Enter name"
-            />
+            <Label htmlFor="drawer-name">Name</Label>
+            <Input id="drawer-name" placeholder="Enter name" />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              className="rounded-md border p-2"
+            <Label htmlFor="drawer-description">Description</Label>
+            <Textarea
+              id="drawer-description"
               placeholder="Enter description"
               rows={4}
             />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="type">Type</label>
-            <select id="type" className="rounded-md border p-2">
-              <option value="">Select a type</option>
-              <option value="type1">Type 1</option>
-              <option value="type2">Type 2</option>
-              <option value="type3">Type 3</option>
-            </select>
           </div>
         </form>
         <DrawerFooter>
@@ -128,52 +171,6 @@ export const WithCustomHeight: Story = {
           <DrawerClose asChild>
             <Button variant="outline">Close</Button>
           </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  ),
-}
-
-export const WithNestedContent: Story = {
-  render: () => (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Open Nested Drawer</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Nested Content</DrawerTitle>
-          <DrawerDescription>
-            This drawer contains nested content sections.
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="p-4">
-          <div className="space-y-6">
-            <section className="space-y-2">
-              <h3 className="font-medium">Section 1</h3>
-              <div className="rounded-lg border p-4">
-                <p>Content for section 1</p>
-              </div>
-            </section>
-            <section className="space-y-2">
-              <h3 className="font-medium">Section 2</h3>
-              <div className="rounded-lg border p-4">
-                <p>Content for section 2</p>
-              </div>
-            </section>
-            <section className="space-y-2">
-              <h3 className="font-medium">Section 3</h3>
-              <div className="rounded-lg border p-4">
-                <p>Content for section 3</p>
-              </div>
-            </section>
-          </div>
-        </div>
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline">Close</Button>
-          </DrawerClose>
-          <Button>Save Changes</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

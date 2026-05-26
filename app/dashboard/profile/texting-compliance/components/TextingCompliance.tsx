@@ -16,7 +16,7 @@ interface TDlcNumberProps {
 
 const TDlcNumber = ({ tdlcNumber }: TDlcNumberProps): React.JSX.Element => (
   <div className="bg-gray-50 border border-gray-300 rounded-lg p-6 flex justify-center items-center">
-    <span className="font-outfit font-medium text-lg leading-6 text-black w-full text-left block">
+    <span className="font-medium text-lg leading-6 text-black w-full text-left block">
       {formatPhoneNumber(tdlcNumber)}
     </span>
   </div>

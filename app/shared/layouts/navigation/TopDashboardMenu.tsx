@@ -1,6 +1,6 @@
 'use client'
 import DashboardMenu from 'app/dashboard/shared/DashboardMenu'
-import Hamburger from '@shared/utils/Hamburger'
+import { MenuIcon, XMarkIcon } from '@styleguide/components/ui/icons'
 import { useEffect } from 'react'
 import { noop } from '@shared/utils/noop'
 
@@ -36,12 +36,15 @@ const TopDashboardMenu = ({
 
   return (
     <div className="lg:hidden">
-      <Hamburger
-        hideOutline={false}
-        toggled={open}
-        toggle={toggleCallback}
-        size={20}
-      />
+      <button
+        type="button"
+        onClick={toggleCallback}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+        className="flex h-12 w-12 items-center justify-center"
+      >
+        {open ? <XMarkIcon size={24} /> : <MenuIcon size={24} />}
+      </button>
       {open && (
         <div className="fixed top-14 left-0 w-screen h-[calc(100vh-56px)] bg-indigo-50 p-2 overflow-x-hidden overflow-y-auto">
           <DashboardMenu pathname={pathname} />

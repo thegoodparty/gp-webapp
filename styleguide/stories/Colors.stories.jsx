@@ -1,5 +1,55 @@
+import { useState, useEffect, useRef } from 'react'
+import { PAGE_STYLE, PageHeader, STORY_PARAMS } from './_storyShell'
+
+// design-tokens.css is the source of truth. The chain label under each swatch
+// (e.g. "↳ --theme-primary → --tw-blue-600") is extracted directly from the
+// live stylesheet — getComputedStyle resolves to the final hex, but raw
+// `cssRules[*].style.getPropertyValue(...)` returns the un-resolved `var(--…)`
+// reference, which is what we want.
+//
+// Light-mode tokens live in :root (design-tokens.css). Dark-mode overrides
+// live under `.dark [data-slot]…` (styleguide-scope.css). When isDark is
+// true, prefer the dark-mode value and fall back to light if the token has
+// no dark override.
+function readVarChain(varName, isDark) {
+  let darkChain = null
+  let lightChain = null
+  for (const sheet of document.styleSheets) {
+    let rules
+    try {
+      rules = sheet.cssRules || []
+    } catch {
+      // Cross-origin stylesheet — skip (won't have our tokens anyway).
+      continue
+    }
+    for (const rule of rules) {
+      if (!(rule instanceof CSSStyleRule)) continue
+      const selector = rule.selectorText || ''
+      const isDarkRule = /\.dark\b/.test(selector)
+      const isLightRule = /(^|,\s*):root\b/.test(selector)
+      if (!isDarkRule && !isLightRule) continue
+      const raw = rule.style.getPropertyValue(varName).trim()
+      if (!raw) continue
+      const match = raw.match(/^var\(\s*(--[a-zA-Z0-9-]+)/)
+      if (!match) continue
+      if (isDarkRule) darkChain = match[1]
+      else lightChain = match[1]
+    }
+  }
+  return isDark ? darkChain ?? lightChain : lightChain
+}
+
+function buildBaseRefMap(prefix, names, isDark) {
+  const map = {}
+  for (const name of names) {
+    const chain = readVarChain(`--${prefix}-${name}`, isDark)
+    if (chain) map[name] = chain
+  }
+  return map
+}
+
 const meta = {
-  title: 'Design System/Colors',
+  title: 'Foundations/Colors',
   parameters: {
     docs: {
       description: {
@@ -12,23 +62,211 @@ const meta = {
 
 export default meta
 
-const sampleText = 'Aa'
+function hexToRgba(hex) {
+  const clean = hex.replace('#', '')
+  if (clean.length !== 6 && clean.length !== 8) return hex
+  const r = parseInt(clean.slice(0, 2), 16)
+  const g = parseInt(clean.slice(2, 4), 16)
+  const b = parseInt(clean.slice(4, 6), 16)
+  const a =
+    clean.length === 8
+      ? (parseInt(clean.slice(6, 8), 16) / 255).toFixed(2)
+      : '1.00'
+  return `rgba(${r},${g},${b},${a})`
+}
 
-function Swatch({ name, hex, tailwindClass, dark }) {
+function formatHex(hex) {
+  const clean = hex.replace('#', '')
+  if (clean.length !== 8) return hex.toUpperCase()
+  const alpha = Math.round((parseInt(clean.slice(6, 8), 16) / 255) * 100)
+  return `#${clean.slice(0, 6).toUpperCase()} / ${alpha}%`
+}
+
+function resolveColor(cssValue) {
+  if (!cssValue) return ''
+  const trimmed = cssValue.trim()
+  if (!trimmed) return ''
+  if (trimmed.startsWith('#')) return trimmed
+  const el = document.createElement('div')
+  el.style.color = trimmed
+  el.style.display = 'none'
+  document.body.appendChild(el)
+  const resolved = getComputedStyle(el).color
+  document.body.removeChild(el)
+  const toHex = (n) => Math.round(parseFloat(n)).toString(16).padStart(2, '0')
+
+  const rgba = resolved.match(
+    /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?\s*\)/,
+  )
+  if (rgba) {
+    const hex = `#${toHex(rgba[1])}${toHex(rgba[2])}${toHex(rgba[3])}`
+    if (rgba[4] !== undefined && parseFloat(rgba[4]) < 1) {
+      return hex + toHex(String(parseFloat(rgba[4]) * 255))
+    }
+    return hex
+  }
+
+  const srgb = resolved.match(
+    /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\)/,
+  )
+  if (srgb) {
+    const hex = `#${toHex(String(parseFloat(srgb[1]) * 255))}${toHex(
+      String(parseFloat(srgb[2]) * 255),
+    )}${toHex(String(parseFloat(srgb[3]) * 255))}`
+    if (srgb[4] !== undefined && parseFloat(srgb[4]) < 1) {
+      return hex + toHex(String(parseFloat(srgb[4]) * 255))
+    }
+    return hex
+  }
+
+  return trimmed
+}
+
+function readCSSVar(el, name) {
+  return resolveColor(getComputedStyle(el).getPropertyValue(name).trim())
+}
+
+function readCSSScale(el, prefix, steps) {
+  return steps.map((step) => ({
+    step,
+    hex: readCSSVar(el, `--${prefix}-${step}`),
+  }))
+}
+
+function readCSSTokenGroup(el, prefix, names) {
+  const result = {}
+  for (const name of names) {
+    const varName = `--${prefix}-${name}`
+    result[name] = { hex: readCSSVar(el, varName), ref: varName }
+  }
+  return result
+}
+
+// Reads the Tailwind palette CSS variable for a given scale step. Tailwind v4
+// only emits --color-{scale}-{step} vars for utility classes the codebase
+// actually references — so a missing value here means nothing in the app uses
+// bg-{scale}-{step}. We filter those out rather than fabricating defaults,
+// keeping the displayed palette honest about what consumers can actually render.
+function readTailwindScale(scaleName, steps) {
+  const el = document.documentElement
+  return steps.flatMap((step) => {
+    const hex = readCSSVar(el, `--color-${scaleName}-${step}`)
+    return hex ? [{ step, hex }] : []
+  })
+}
+
+const SCALE_STEPS = [
+  '50',
+  '100',
+  '200',
+  '300',
+  '400',
+  '500',
+  '600',
+  '700',
+  '800',
+  '900',
+  '950',
+]
+
+function Swatch({
+  name,
+  hex,
+  alias,
+  tailwindClass,
+  isDark,
+  cardBg,
+  borderColor,
+  foregroundColor,
+  mutedForegroundColor,
+  cardHeight,
+}) {
+  const _cardBg = cardBg ?? (isDark ? '#171717' : '#ffffff')
+  const _borderColor = borderColor ?? (isDark ? '#404040' : '#e5e5e5')
+  const _foregroundColor = foregroundColor ?? (isDark ? '#ffffff' : '#0a0a0a')
+  const _mutedForegroundColor =
+    mutedForegroundColor ?? (isDark ? '#a3a3a3' : '#737373')
+
   return (
     <div
-      className="flex flex-col items-start shrink-0 rounded overflow-hidden border border-gray-200 shadow-xs"
-      style={{ width: 120 }}
+      style={{
+        width: 160,
+        height: cardHeight ?? 220,
+        border: `1px solid ${_borderColor}`,
+        borderRadius: 4,
+        overflow: 'hidden',
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
-      <div style={{ backgroundColor: hex, height: 80, width: '100%' }} />
-      <div className="p-2 w-full bg-white space-y-0.5">
-        <p className="text-xs font-semibold text-gray-900 truncate">{name}</p>
-        {tailwindClass && (
-          <p className="text-[10px] text-gray-500 truncate font-mono">
-            {tailwindClass}
+      <div
+        style={{
+          backgroundColor: hex,
+          height: 100,
+          width: '100%',
+          flexShrink: 0,
+          borderBottom: `1px solid ${_borderColor}`,
+        }}
+      />
+      <div
+        style={{
+          padding: 8,
+          backgroundColor: _cardBg,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          flexGrow: 1,
+        }}
+      >
+        <p
+          style={{
+            fontSize: 14,
+            fontWeight: 400,
+            color: _foregroundColor,
+            margin: 0,
+            lineHeight: '20px',
+          }}
+        >
+          {tailwindClass ?? name}
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <p
+            style={{
+              fontSize: 9,
+              fontFamily: 'monospace',
+              color: _mutedForegroundColor,
+              margin: 0,
+            }}
+          >
+            {formatHex(hex)}
           </p>
-        )}
-        <p className="text-[10px] text-gray-400 uppercase font-mono">{hex}</p>
+          <p
+            style={{
+              fontSize: 9,
+              fontFamily: 'monospace',
+              color: _mutedForegroundColor,
+              margin: 0,
+            }}
+          >
+            {hexToRgba(hex)}
+          </p>
+          {alias && (
+            <p
+              style={{
+                fontSize: 9,
+                fontFamily: 'monospace',
+                color: _mutedForegroundColor,
+                margin: '4px 0 0',
+                opacity: 0.6,
+                borderTop: `1px solid ${_borderColor}`,
+                paddingTop: 4,
+              }}
+            >
+              ↳ {alias}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -38,8 +276,27 @@ function Section({ title, description, children }) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        {description && <p className="text-sm text-gray-500">{description}</p>}
+        <h3
+          style={{
+            fontSize: 18,
+            fontWeight: 600,
+            color: 'var(--color-foreground)',
+            margin: 0,
+          }}
+        >
+          {title}
+        </h3>
+        {description && (
+          <p
+            style={{
+              fontSize: 14,
+              color: 'var(--color-muted-foreground)',
+              margin: '4px 0 0',
+            }}
+          >
+            {description}
+          </p>
+        )}
       </div>
       {children}
     </div>
@@ -68,539 +325,528 @@ function ScaleRow({ scaleName, prefix, colors }) {
 }
 
 // =============================================================================
+// Token name arrays (CSS variable suffixes for each group)
+// =============================================================================
+
+const BASE_TOKEN_NAMES = [
+  'foreground',
+  'background',
+  'muted-foreground',
+  'muted',
+  'border',
+  'accent',
+  'accent-foreground',
+  'surface',
+  'surface-foreground',
+  'focus-ring',
+  'ring-offset',
+  'foreground-focus',
+  'foreground-dark-focus',
+  'foreground-dark',
+  'background-dark',
+]
+
+const THEME_TOKEN_NAMES = [
+  'primary',
+  'primary-foreground',
+  'primary-focus',
+  'secondary',
+  'secondary-foreground',
+  'secondary-focus',
+  'destructive',
+  'destructive-foreground',
+  'destructive-focus',
+  'success',
+  'success-foreground',
+  'success-focus',
+  'info',
+  'info-foreground',
+  'info-focus',
+  'warning',
+  'warning-foreground',
+  'warning-focus',
+  'link',
+]
+
+const COMPONENT_TOKEN_NAMES = [
+  'card-base',
+  'card-foreground',
+  'tooltip-base',
+  'tooltip-foreground',
+  'input-base',
+  'input-foreground',
+  'input-border',
+  'input-active',
+  'input-focus',
+]
+
+const DATA_TOKEN_NAMES = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5']
+
+const SIDEBAR_TOKEN_NAMES = [
+  'background',
+  'foreground',
+  'primary',
+  'primary-foreground',
+  'accent',
+  'accent-foreground',
+  'border',
+  'ring',
+]
+
+// =============================================================================
 // Theme Colors
 // =============================================================================
-export const ThemeColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Theme Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Core theme tokens from Figma (theme/*). These define the
-        application&apos;s primary palette and are scoped via CSS variables.
-      </p>
+
+const SIDEBAR_EXCLUDED = new Set(['primary', 'primary-foreground', 'ring'])
+
+const THEME_GROUPS = [
+  [
+    'primary',
+    'primary-foreground',
+    'primary-focus',
+    'secondary',
+    'secondary-foreground',
+    'secondary-focus',
+  ],
+  [
+    'destructive',
+    'destructive-foreground',
+    'destructive-focus',
+    'success',
+    'success-foreground',
+    'success-focus',
+  ],
+  [
+    'info',
+    'info-foreground',
+    'info-focus',
+    'warning',
+    'warning-foreground',
+    'warning-focus',
+  ],
+  ['link'],
+]
+
+const BASE_GROUPS = [
+  ['background', 'foreground', 'surface', 'surface-foreground', 'border'],
+  ['muted', 'muted-foreground', 'accent', 'accent-foreground'],
+  ['focus-ring', 'ring-offset', 'foreground-focus', 'foreground-dark-focus'],
+]
+
+const COMPONENT_GROUPS = [
+  ['card-base', 'card-foreground', 'tooltip-base', 'tooltip-foreground'],
+  [
+    'input-base',
+    'input-foreground',
+    'input-border',
+    'input-active',
+    'input-focus',
+  ],
+]
+
+const TOKEN_GROUP_META = {
+  theme: {
+    title: 'Theme',
+    description:
+      'Semantic action colors — primary, secondary, destructive, success, info.',
+  },
+  base: {
+    title: 'Base',
+    description:
+      'Foundational surface tokens — backgrounds, foregrounds, borders, focus rings.',
+  },
+  component: {
+    title: 'Components',
+    description: 'Component-specific tokens — cards, inputs, tooltips.',
+  },
+  sidebar: {
+    title: 'Sidebar',
+    description: 'Tokens scoped to the sidebar navigation.',
+  },
+  data: {
+    title: 'Data / Chart',
+    description: 'Colors for data visualization and charts.',
+  },
+}
+
+export const ThemeColors = ({ mode }) => {
+  const containerRef = useRef(null)
+  const [tokens, setTokens] = useState(null)
+  const isDark = mode === 'dark'
+
+  const baseRefs = {
+    base: buildBaseRefMap('base', BASE_TOKEN_NAMES, isDark),
+    theme: buildBaseRefMap('theme', THEME_TOKEN_NAMES, isDark),
+    component: buildBaseRefMap('component', COMPONENT_TOKEN_NAMES, isDark),
+    data: buildBaseRefMap('data', DATA_TOKEN_NAMES, isDark),
+    sidebar: buildBaseRefMap('component-sidebar', SIDEBAR_TOKEN_NAMES, isDark),
+  }
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    const el = containerRef.current
+    setTokens({
+      base: readCSSTokenGroup(el, 'base', BASE_TOKEN_NAMES),
+      theme: readCSSTokenGroup(el, 'theme', THEME_TOKEN_NAMES),
+      component: readCSSTokenGroup(el, 'component', COMPONENT_TOKEN_NAMES),
+      data: readCSSTokenGroup(el, 'data', DATA_TOKEN_NAMES),
+      sidebar: readCSSTokenGroup(el, 'component-sidebar', SIDEBAR_TOKEN_NAMES),
+    })
+  }, [isDark])
+
+  const pageBg =
+    tokens?.base?.['background']?.hex ?? (isDark ? '#0a0a0a' : '#ffffff')
+  const cardBg =
+    tokens?.component?.['card-base']?.hex ?? (isDark ? '#171717' : '#ffffff')
+  const borderColor =
+    tokens?.base?.['border']?.hex ?? (isDark ? '#525252' : '#e5e5e5')
+  const foregroundColor =
+    tokens?.base?.['foreground']?.hex ?? (isDark ? '#ffffff' : '#0a0a0a')
+  const mutedForegroundColor =
+    tokens?.base?.['muted-foreground']?.hex ?? (isDark ? '#a3a3a3' : '#737373')
+
+  return (
+    <div
+      ref={containerRef}
+      data-slot="theme-colors"
+      className={isDark ? 'dark' : undefined}
+      style={{ backgroundColor: pageBg, padding: 24, minHeight: '100vh' }}
+    >
+      <div className="space-y-10">
+        <div>
+          <h2
+            style={{
+              fontSize: 24,
+              fontWeight: 700,
+              color: foregroundColor,
+              margin: 0,
+            }}
+          >
+            Theme Colors — {isDark ? 'Dark' : 'Light'} Mode
+          </h2>
+          <p
+            style={{
+              fontSize: 14,
+              color: mutedForegroundColor,
+              marginTop: 4,
+            }}
+          >
+            Core theme tokens read from CSS custom properties. Use the Mode
+            control above to toggle between light and dark.
+          </p>
+        </div>
+
+        {tokens &&
+          Object.entries(TOKEN_GROUP_META).map(
+            ([groupKey, { title, description }]) => (
+              <Section key={groupKey} title={title} description={description}>
+                {groupKey === 'theme' ||
+                groupKey === 'base' ||
+                groupKey === 'component' ? (
+                  <div
+                    style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                  >
+                    {(groupKey === 'theme'
+                      ? THEME_GROUPS
+                      : groupKey === 'base'
+                      ? BASE_GROUPS
+                      : COMPONENT_GROUPS
+                    ).map((keys) => (
+                      <SwatchRow key={keys[0]}>
+                        {keys.map((name) => {
+                          const token = tokens[groupKey]?.[name]
+                          if (!token) return null
+                          const baseRef = baseRefs[groupKey]?.[name]
+                          const alias = baseRef
+                            ? `${token.ref} → ${baseRef}`
+                            : token.ref
+                          return (
+                            <Swatch
+                              key={name}
+                              name={name}
+                              hex={token.hex}
+                              alias={alias}
+                              isDark={isDark}
+                              cardBg={cardBg}
+                              borderColor={borderColor}
+                              foregroundColor={foregroundColor}
+                              mutedForegroundColor={mutedForegroundColor}
+                              cardHeight={260}
+                            />
+                          )
+                        })}
+                      </SwatchRow>
+                    ))}
+                  </div>
+                ) : (
+                  <SwatchRow>
+                    {Object.entries(tokens[groupKey] || {})
+                      .filter(
+                        ([name]) =>
+                          groupKey !== 'sidebar' || !SIDEBAR_EXCLUDED.has(name),
+                      )
+                      .map(([name, { hex, ref: tokenRef }]) => {
+                        const baseRef = baseRefs[groupKey]?.[name]
+                        const alias = baseRef
+                          ? `${tokenRef} → ${baseRef}`
+                          : tokenRef
+                        return (
+                          <Swatch
+                            key={name}
+                            name={name}
+                            hex={hex}
+                            alias={alias}
+                            isDark={isDark}
+                            cardBg={cardBg}
+                            borderColor={borderColor}
+                            foregroundColor={foregroundColor}
+                            mutedForegroundColor={mutedForegroundColor}
+                            cardHeight={260}
+                          />
+                        )
+                      })}
+                  </SwatchRow>
+                )}
+              </Section>
+            ),
+          )}
+      </div>
     </div>
+  )
+}
 
-    <Section
-      title="Primary"
-      description="Main brand action color — buttons, links, focus rings."
-    >
-      <SwatchRow>
-        <Swatch name="primary" hex="#2563EB" tailwindClass="bg-primary" />
-        <Swatch
-          name="primary-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-primary-foreground"
-        />
-        <Swatch
-          name="primary-dark"
-          hex="#0D3CB5"
-          tailwindClass="bg-primary-dark"
-        />
-        <Swatch
-          name="primary-light"
-          hex="#75AFFE"
-          tailwindClass="bg-primary-light"
-        />
-        <Swatch
-          name="primary-background"
-          hex="#E3F1FF"
-          tailwindClass="bg-primary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Secondary"
-      description="Supporting color — secondary actions, subtle emphasis."
-    >
-      <SwatchRow>
-        <Swatch name="secondary" hex="#0B1529" tailwindClass="bg-secondary" />
-        <Swatch
-          name="secondary-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-secondary-foreground"
-        />
-        <Swatch
-          name="secondary-dark"
-          hex="#060B17"
-          tailwindClass="bg-secondary-dark"
-        />
-        <Swatch
-          name="secondary-light"
-          hex="#1D305C"
-          tailwindClass="bg-secondary-light"
-        />
-        <Swatch
-          name="secondary-background"
-          hex="#ECF5FF"
-          tailwindClass="bg-secondary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Tertiary"
-      description="Accent color — highlights, decorative elements."
-    >
-      <SwatchRow>
-        <Swatch name="tertiary" hex="#63D1A0" tailwindClass="bg-tertiary" />
-        <Swatch
-          name="tertiary-dark"
-          hex="#257F68"
-          tailwindClass="bg-tertiary-dark"
-        />
-        <Swatch
-          name="tertiary-light"
-          hex="#7FDCB2"
-          tailwindClass="bg-tertiary-light"
-        />
-        <Swatch
-          name="tertiary-background"
-          hex="#DDF2E8"
-          tailwindClass="bg-tertiary-background"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Destructive"
-      description="Destructive actions — delete, remove, errors."
-    >
-      <SwatchRow>
-        <Swatch
-          name="destructive"
-          hex="#E00C30"
-          tailwindClass="bg-destructive"
-        />
-        <Swatch
-          name="destructive-foreground"
-          hex="#FFFFFF"
-          tailwindClass="text-destructive-foreground"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Success"
-      description="Positive outcomes — completed, saved, approved."
-    >
-      <SwatchRow>
-        <Swatch name="success" hex="#30A541" tailwindClass="bg-success" />
-        <Swatch name="success-foreground" hex="#FFFFFF" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Info" description="Informational — tips, help, status.">
-      <SwatchRow>
-        <Swatch name="info" hex="#1B6AFC" tailwindClass="bg-info" />
-        <Swatch name="info-foreground" hex="#FFFFFF" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Warning" description="Caution — alerts, pending, at-risk.">
-      <SwatchRow>
-        <Swatch name="warning" hex="#FF9800" tailwindClass="bg-warning" />
-        <Swatch name="warning-foreground" hex="#000000" />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Base / Neutral"
-      description="Foundational tokens — backgrounds, foregrounds, borders."
-    >
-      <SwatchRow>
-        <Swatch name="background" hex="#FFFFFF" tailwindClass="bg-background" />
-        <Swatch
-          name="foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-foreground"
-        />
-        <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-muted" />
-        <Swatch
-          name="muted-foreground"
-          hex="#737373"
-          tailwindClass="text-muted-foreground"
-        />
-        <Swatch name="border" hex="#D4D4D4" tailwindClass="border-border" />
-        <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-accent" />
-        <Swatch name="card" hex="#FFFFFF" tailwindClass="bg-card" />
-        <Swatch name="ring" hex="#1B6AFC" tailwindClass="ring-ring" />
-      </SwatchRow>
-    </Section>
-  </div>
-)
+ThemeColors.args = { mode: 'light' }
+ThemeColors.argTypes = {
+  mode: {
+    control: { type: 'radio' },
+    options: ['light', 'dark'],
+    description: 'Toggle between light and dark mode token values',
+  },
+}
+ThemeColors.parameters = {
+  layout: 'fullscreen',
+  backgrounds: { disable: true },
+}
 
 // =============================================================================
 // Branding Colors
 // =============================================================================
-export const BrandingColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Branding Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Colors that represent GoodParty.org&apos;s visual identity. Defined as
-        static values in tailwind-theme.css.
-      </p>
+export const BrandingColors = () => {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const el = document.documentElement
+    const readScale = (prefix) => readCSSScale(el, prefix, SCALE_STEPS)
+    const read = (name) => readCSSVar(el, name)
+
+    setData({
+      coreBrand: [
+        {
+          name: 'Red',
+          hex: read('--goodparty-red'),
+          tailwindClass: 'bg-brand-red',
+        },
+        {
+          name: 'Red Light',
+          hex: read('--goodparty-red-light'),
+          tailwindClass: 'bg-brand-red-light',
+        },
+        {
+          name: 'Blue',
+          hex: read('--goodparty-blue'),
+          tailwindClass: 'bg-brand-blue',
+        },
+        {
+          name: 'Blue Light',
+          hex: read('--goodparty-blue-light'),
+          tailwindClass: 'bg-brand-blue-light',
+        },
+        {
+          name: 'Cream',
+          hex: read('--goodparty-cream'),
+          tailwindClass: 'bg-brand-cream',
+        },
+      ],
+      midnight: readScale('color-midnight'),
+      lavender: readScale('color-lavender'),
+      waxflower: readScale('color-waxflower'),
+      haloGreen: readScale('color-halo-green'),
+      brightYellow: readScale('color-bright-yellow'),
+    })
+  }, [])
+
+  if (!data) return null
+
+  return (
+    <div style={PAGE_STYLE} className="space-y-10">
+      <PageHeader
+        title="Branding Colors"
+        description="Colors that represent GoodParty.org's visual identity. Read from CSS custom properties defined in design-tokens.css."
+      />
+
+      <Section
+        title="Core Brand"
+        description="Primary brand identifiers — logo, key surfaces."
+      >
+        <SwatchRow>
+          {data.coreBrand.map(({ name, hex, tailwindClass }) => (
+            <Swatch
+              key={name}
+              name={name}
+              hex={hex}
+              tailwindClass={tailwindClass}
+            />
+          ))}
+        </SwatchRow>
+      </Section>
+
+      <ScaleRow
+        scaleName="Midnight"
+        prefix="bg-brand-midnight"
+        colors={data.midnight}
+      />
+      <ScaleRow
+        scaleName="Lavender"
+        prefix="bg-brand-lavender"
+        colors={data.lavender}
+      />
+      <ScaleRow
+        scaleName="Waxflower"
+        prefix="bg-brand-waxflower"
+        colors={data.waxflower}
+      />
+      <ScaleRow
+        scaleName="Halo Green"
+        prefix="bg-brand-halo-green"
+        colors={data.haloGreen}
+      />
+      <ScaleRow
+        scaleName="Bright Yellow"
+        prefix="bg-brand-bright-yellow"
+        colors={data.brightYellow}
+      />
     </div>
-
-    <Section
-      title="Core Brand"
-      description="Primary brand identifiers — logo, key surfaces."
-    >
-      <SwatchRow>
-        <Swatch name="Red" hex="#DC1438" tailwindClass="bg-brand-red" />
-        <Swatch
-          name="Red Light"
-          hex="#F7BAC5"
-          tailwindClass="bg-brand-red-light"
-        />
-        <Swatch name="Blue" hex="#0048C2" tailwindClass="bg-brand-blue" />
-        <Swatch
-          name="Blue Light"
-          hex="#A4C2F5"
-          tailwindClass="bg-brand-blue-light"
-        />
-        <Swatch name="Cream" hex="#FCF8F3" tailwindClass="bg-brand-cream" />
-      </SwatchRow>
-    </Section>
-
-    <ScaleRow
-      scaleName="Midnight"
-      prefix="bg-brand-midnight"
-      colors={[
-        { step: '50', hex: '#ECF5FF' },
-        { step: '100', hex: '#D8E7F7' },
-        { step: '200', hex: '#B4CEF0' },
-        { step: '300', hex: '#84A3D2' },
-        { step: '400', hex: '#5975A6' },
-        { step: '500', hex: '#3E527C' },
-        { step: '600', hex: '#293F6C' },
-        { step: '700', hex: '#1D305C' },
-        { step: '800', hex: '#14234D' },
-        { step: '900', hex: '#0B1529' },
-        { step: '950', hex: '#060B17' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Halo Green"
-      prefix="bg-brand-halo-green"
-      colors={[
-        { step: '50', hex: '#DDF2E8' },
-        { step: '100', hex: '#CCEADD' },
-        { step: '200', hex: '#B2E1CC' },
-        { step: '300', hex: '#7FDCB2' },
-        { step: '400', hex: '#63D1A0' },
-        { step: '500', hex: '#55BC8E' },
-        { step: '600', hex: '#3A9D7B' },
-        { step: '700', hex: '#257F68' },
-        { step: '800', hex: '#16695C' },
-        { step: '900', hex: '#115449' },
-        { step: '950', hex: '#043630' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Lavender"
-      prefix="bg-brand-lavender"
-      colors={[
-        { step: '50', hex: '#F8ECFF' },
-        { step: '100', hex: '#F1E5FF' },
-        { step: '200', hex: '#EDDCFF' },
-        { step: '300', hex: '#E5CDFF' },
-        { step: '400', hex: '#DCBCFF' },
-        { step: '500', hex: '#D7B2FF' },
-        { step: '600', hex: '#CDA1FF' },
-        { step: '700', hex: '#9E6BEB' },
-        { step: '800', hex: '#783DDE' },
-        { step: '900', hex: '#441E9F' },
-        { step: '950', hex: '#200B6A' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Waxflower"
-      prefix="bg-brand-waxflower"
-      colors={[
-        { step: '50', hex: '#FFEBD8' },
-        { step: '100', hex: '#FFE0C1' },
-        { step: '200', hex: '#FFCAA2' },
-        { step: '300', hex: '#FFB67F' },
-        { step: '400', hex: '#FF9364' },
-        { step: '500', hex: '#F27E4B' },
-        { step: '600', hex: '#DB6B49' },
-        { step: '700', hex: '#B74932' },
-        { step: '800', hex: '#AE3920' },
-        { step: '900', hex: '#932B1F' },
-        { step: '950', hex: '#511508' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Bright Yellow"
-      prefix="bg-brand-bright-yellow"
-      colors={[
-        { step: '50', hex: '#FFFADF' },
-        { step: '100', hex: '#FFF1C9' },
-        { step: '200', hex: '#FFEDBA' },
-        { step: '300', hex: '#FFE291' },
-        { step: '400', hex: '#FFE06C' },
-        { step: '500', hex: '#FFD759' },
-        { step: '600', hex: '#FFC523' },
-        { step: '700', hex: '#DBA219' },
-        { step: '800', hex: '#B78211' },
-        { step: '900', hex: '#93640B' },
-        { step: '950', hex: '#7A4F06' },
-      ]}
-    />
-  </div>
-)
+  )
+}
+BrandingColors.parameters = STORY_PARAMS
 
 // =============================================================================
 // Semantic Colors
 // =============================================================================
-export const SemanticColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Semantic Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Colors that define logic used when applied to digital interfaces. Each
-        scale runs from 50 (lightest) to 950 (darkest).
-      </p>
+export const SemanticColors = () => {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const el = document.documentElement
+    const readScale = (prefix) => readCSSScale(el, prefix, SCALE_STEPS)
+
+    setData({
+      error: readScale('color-red'),
+      success: readScale('color-green'),
+      info: readScale('color-blue'),
+      warning: readScale('color-warning'),
+    })
+  }, [])
+
+  if (!data) return null
+
+  return (
+    <div style={PAGE_STYLE} className="space-y-10">
+      <PageHeader
+        title="Semantic Colors"
+        description="Colors that define logic used when applied to digital interfaces. Each scale runs from 50 (lightest) to 950 (darkest). Read from CSS custom properties."
+      />
+
+      <ScaleRow scaleName="Error" prefix="bg-error" colors={data.error} />
+      <ScaleRow scaleName="Success" prefix="bg-success" colors={data.success} />
+      <ScaleRow scaleName="Info" prefix="bg-info" colors={data.info} />
+      <ScaleRow scaleName="Warning" prefix="bg-warning" colors={data.warning} />
     </div>
-
-    <ScaleRow
-      scaleName="Error"
-      prefix="bg-error"
-      colors={[
-        { step: '50', hex: '#FFE8E8' },
-        { step: '100', hex: '#FDCDCD' },
-        { step: '200', hex: '#FFAEAE' },
-        { step: '300', hex: '#F56C6A' },
-        { step: '400', hex: '#EC4451' },
-        { step: '500', hex: '#E00C30' },
-        { step: '600', hex: '#B90A27' },
-        { step: '700', hex: '#93081F' },
-        { step: '800', hex: '#6C0617' },
-        { step: '900', hex: '#560311' },
-        { step: '950', hex: '#370009' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Success"
-      prefix="bg-success"
-      colors={[
-        { step: '50', hex: '#EEFFE9' },
-        { step: '100', hex: '#DFFAD6' },
-        { step: '200', hex: '#B9F6B0' },
-        { step: '300', hex: '#86E382' },
-        { step: '400', hex: '#5EC963' },
-        { step: '500', hex: '#30A541' },
-        { step: '600', hex: '#187637' },
-        { step: '700', hex: '#0F5F31' },
-        { step: '800', hex: '#094F2D' },
-        { step: '900', hex: '#033A20' },
-        { step: '950', hex: '#002212' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Info"
-      prefix="bg-info"
-      colors={[
-        { step: '50', hex: '#E3F1FF' },
-        { step: '100', hex: '#D1E7FE' },
-        { step: '200', hex: '#A3CDFE' },
-        { step: '300', hex: '#75AFFE' },
-        { step: '400', hex: '#5395FD' },
-        { step: '500', hex: '#1B6AFC' },
-        { step: '600', hex: '#1351D8' },
-        { step: '700', hex: '#0D3CB5' },
-        { step: '800', hex: '#082A92' },
-        { step: '900', hex: '#051D78' },
-        { step: '950', hex: '#01114D' },
-      ]}
-    />
-
-    <ScaleRow
-      scaleName="Warning"
-      prefix="bg-warning"
-      colors={[
-        { step: '50', hex: '#FFF5D5' },
-        { step: '100', hex: '#FFEEB7' },
-        { step: '200', hex: '#FDE19A' },
-        { step: '300', hex: '#FFCD66' },
-        { step: '400', hex: '#FFB93F' },
-        { step: '500', hex: '#FF9800' },
-        { step: '600', hex: '#DB7900' },
-        { step: '700', hex: '#B75E00' },
-        { step: '800', hex: '#934500' },
-        { step: '900', hex: '#7A3400' },
-        { step: '950', hex: '#471E00' },
-      ]}
-    />
-  </div>
-)
+  )
+}
+SemanticColors.parameters = STORY_PARAMS
 
 // =============================================================================
-// Tailwind Colors (Grayscale, Base, Data/Chart)
+// Tailwind Colors
 // =============================================================================
-export const TailwindColors = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Tailwind Colors</h2>
-      <p className="text-sm text-gray-500 mb-6">
-        An expertly-crafted, default color palette. Includes grayscale, base
-        tokens, and chart colors.
-      </p>
+
+const TW_SCALE_NAMES = [
+  'slate',
+  'gray',
+  'zinc',
+  'neutral',
+  'stone',
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'cyan',
+  'sky',
+  'blue',
+  'indigo',
+  'violet',
+  'purple',
+  'fuchsia',
+  'pink',
+  'rose',
+]
+
+const TW_BASE_STEPS = ['black', 'white', 'transparent']
+
+export const TailwindColors = () => {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const el = document.documentElement
+    setData({
+      base: TW_BASE_STEPS.flatMap((step) => {
+        const hex = readCSSVar(el, `--color-${step}`)
+        return hex ? [{ step, hex }] : []
+      }),
+      scales: TW_SCALE_NAMES.map((scaleName) => ({
+        scaleName,
+        colors: readTailwindScale(scaleName, SCALE_STEPS),
+      })).filter(({ colors }) => colors.length > 0),
+    })
+  }, [])
+
+  if (!data) return null
+
+  return (
+    <div style={PAGE_STYLE} className="space-y-10">
+      <PageHeader
+        title="Tailwind Colors"
+        description="The Tailwind palette steps this codebase actually compiles. Read live from --color-{scale}-{step} CSS variables — steps no utility class references aren't shown."
+      />
+
+      {data.base.length > 0 && (
+        <Section title="Base" description="Black, white, and transparent.">
+          <SwatchRow>
+            {data.base.map(({ step, hex }) => (
+              <Swatch
+                key={step}
+                name={step}
+                hex={hex}
+                tailwindClass={`bg-${step}`}
+              />
+            ))}
+          </SwatchRow>
+        </Section>
+      )}
+
+      {data.scales.map(({ scaleName, colors }) => (
+        <ScaleRow
+          key={scaleName}
+          scaleName={scaleName.charAt(0).toUpperCase() + scaleName.slice(1)}
+          prefix={`bg-${scaleName}`}
+          colors={colors}
+        />
+      ))}
     </div>
-
-    <ScaleRow
-      scaleName="Grayscale"
-      prefix="bg-grayscale"
-      colors={[
-        { step: '50', hex: '#F7FAFB' },
-        { step: '100', hex: '#EEF3F6' },
-        { step: '200', hex: '#E0E6EC' },
-        { step: '300', hex: '#D1D8DF' },
-        { step: '400', hex: '#B9C3CC' },
-        { step: '500', hex: '#879099' },
-        { step: '600', hex: '#70757A' },
-        { step: '700', hex: '#595C5F' },
-        { step: '800', hex: '#3E4042' },
-        { step: '900', hex: '#2D2E30' },
-        { step: '950', hex: '#1E1F20' },
-      ]}
-    />
-
-    <Section
-      title="Base Tokens"
-      description="Foundational color tokens used across all components."
-    >
-      <SwatchRow>
-        <Swatch
-          name="foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-base-foreground"
-        />
-        <Swatch
-          name="background"
-          hex="#FFFFFF"
-          tailwindClass="bg-base-background"
-        />
-        <Swatch
-          name="muted-foreground"
-          hex="#737373"
-          tailwindClass="text-base-muted-foreground"
-        />
-        <Swatch name="muted" hex="#F5F5F5" tailwindClass="bg-base-muted" />
-        <Swatch
-          name="border"
-          hex="#D4D4D4"
-          tailwindClass="border-base-border"
-        />
-        <Swatch name="accent" hex="#F5F5F5" tailwindClass="bg-base-accent" />
-        <Swatch
-          name="accent-foreground"
-          hex="#0A0A0A"
-          tailwindClass="text-base-accent-foreground"
-        />
-        <Swatch name="surface" hex="#FFFFFF" tailwindClass="bg-base-surface" />
-        <Swatch
-          name="focus-ring"
-          hex="#A3A3A3"
-          tailwindClass="ring-base-focus-ring"
-        />
-      </SwatchRow>
-    </Section>
-
-    <Section
-      title="Data / Chart"
-      description="Colors for data visualization and charts."
-    >
-      <SwatchRow>
-        <Swatch name="chart-1" hex="#5975A6" tailwindClass="bg-data-chart-1" />
-        <Swatch name="chart-2" hex="#CDA1FF" tailwindClass="bg-data-chart-2" />
-        <Swatch name="chart-3" hex="#63D1A0" tailwindClass="bg-data-chart-3" />
-        <Swatch name="chart-4" hex="#FFC523" tailwindClass="bg-data-chart-4" />
-        <Swatch name="chart-5" hex="#FF9364" tailwindClass="bg-data-chart-5" />
-      </SwatchRow>
-    </Section>
-
-    <Section title="Blue" description="Standard Tailwind blue scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#E3F1FF' },
-          { step: '100', hex: '#D1E7FE' },
-          { step: '200', hex: '#A3CDFE' },
-          { step: '300', hex: '#75AFFE' },
-          { step: '400', hex: '#2563EB' },
-          { step: '500', hex: '#1B6AFC' },
-          { step: '600', hex: '#1351D8' },
-          { step: '700', hex: '#0D3CB5' },
-          { step: '800', hex: '#082A92' },
-          { step: '900', hex: '#051D78' },
-          { step: '950', hex: '#01114D' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-blue-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
-
-    <Section title="Green" description="Standard Tailwind green scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#EEFFE9' },
-          { step: '100', hex: '#DFFAD6' },
-          { step: '200', hex: '#B9F6B0' },
-          { step: '300', hex: '#86E382' },
-          { step: '400', hex: '#5EC963' },
-          { step: '500', hex: '#30A541' },
-          { step: '600', hex: '#187637' },
-          { step: '700', hex: '#0F5F31' },
-          { step: '800', hex: '#094F2D' },
-          { step: '900', hex: '#033A20' },
-          { step: '950', hex: '#002212' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-green-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
-
-    <Section title="Red" description="Standard Tailwind red scale.">
-      <SwatchRow>
-        {[
-          { step: '50', hex: '#FFE8E8' },
-          { step: '100', hex: '#FDCDCD' },
-          { step: '200', hex: '#FFAEAE' },
-          { step: '300', hex: '#F56C6A' },
-          { step: '400', hex: '#EC4451' },
-          { step: '500', hex: '#E00C30' },
-          { step: '600', hex: '#B90A27' },
-          { step: '700', hex: '#93081F' },
-          { step: '800', hex: '#6C0617' },
-          { step: '900', hex: '#560311' },
-          { step: '950', hex: '#370009' },
-        ].map(({ step, hex }) => (
-          <Swatch
-            key={step}
-            name={step}
-            hex={hex}
-            tailwindClass={`bg-red-${step}`}
-          />
-        ))}
-      </SwatchRow>
-    </Section>
-  </div>
-)
+  )
+}
+TailwindColors.parameters = STORY_PARAMS

@@ -20,6 +20,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  ProBadge,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -159,11 +160,7 @@ export const OrganizationPicker = () => {
                   <p className="truncate text-sm font-opensans">
                     GoodParty.org
                   </p>
-                  {campaign?.isPro && (
-                    <div className="bg-primary text-white text-[8px]/[12px] font-opensans font-bold rounded h-[12px] px-1">
-                      PRO
-                    </div>
-                  )}
+                  {campaign?.isPro && <ProBadge size="small" />}
                 </div>
                 <span className="truncate text-sm font-opensans font-semibold">
                   {selected.name}

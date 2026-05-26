@@ -161,7 +161,7 @@ const Table = <T,>({
 
   return (
     <div className={styles.wrapper}>
-      <table className="font-sfpro text-lg text-indigo-800 font-normal shrink-0">
+      <table className="text-lg text-indigo-800 font-normal shrink-0">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

@@ -1,5 +1,5 @@
 'use client'
-import Hamburger from '@shared/utils/Hamburger'
+import { MenuIcon, XMarkIcon } from '@styleguide/components/ui/icons'
 import { useState } from 'react'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import Caption from '@shared/typography/Caption'
@@ -76,13 +76,15 @@ const RightSideMobile = (): React.JSX.Element => {
               <div></div>
             </>
           )}
-          <Hamburger
-            hideOutline={false}
-            toggled={isOpen}
-            toggle={setOpen}
-            size={24}
-            rounded
-          />
+          <button
+            type="button"
+            onClick={() => setOpen(!isOpen)}
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+            className="flex h-12 w-12 items-center justify-center"
+          >
+            {isOpen ? <XMarkIcon size={28} /> : <MenuIcon size={28} />}
+          </button>
         </div>
         <SwipeableDrawer
           open={isOpen}

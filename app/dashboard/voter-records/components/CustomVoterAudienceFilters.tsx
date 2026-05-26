@@ -309,7 +309,7 @@ const CustomVoterAudienceFilters = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChangeAudience('audience_request', e.target.value)
           }
-          InputLabelProps={{ shrink: true, className: 'font-sfpro text-black' }}
+          InputLabelProps={{ shrink: true, className: 'text-black' }}
           multiline
           rows={3}
         ></TextField>

@@ -437,7 +437,7 @@ export default function ContentEditor({
       </div>
 
       <div className="flex w-full h-auto justify-items-center justify-center">
-        <div className="max-w-6xl w-full h-auto p-10 font-sfpro">
+        <div className="max-w-6xl w-full h-auto p-10">
           <section key={section} className="my-3">
             <div className="">
               {loading ? (
