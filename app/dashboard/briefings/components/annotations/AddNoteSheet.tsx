@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Trash2 } from 'lucide-react'
 import {
   Button,
   Drawer,
@@ -355,11 +356,13 @@ export default function AddNoteSheet({
           {isEdit ? (
             <Button
               type="button"
+              size="small"
               variant="link"
               disabled={saving}
               onClick={handleDeleteNote}
-              className="self-start text-destructive"
+              className="self-center gap-1.5 text-destructive"
             >
+              <Trash2 className="size-4" aria-hidden />
               Delete note
             </Button>
           ) : null}
