@@ -219,7 +219,9 @@ describe('BallotRaces', () => {
     await waitFor(() => {
       expect(onSelect).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: 'race-1',
+          // After hydration, id is the BallotReady race hash from
+          // /race-by-position (no longer overridden by the lean row's id).
+          id: 'br-original-id',
           brPositionId: 'br-pos-123',
           filingPeriods: [{ startOn: '2026-01-01', endOn: '2026-02-01' }],
           position: expect.objectContaining({ partisanType: 'partisan' }),

@@ -97,6 +97,37 @@ const getHighlightedText = (text: string, searchTerm: string): ReactNode => {
   )
 }
 
+// Returns true when the selected item refers to the same race as `race`.
+// Uses (brPositionId + electionDay) composite when both sides have it (hydrated
+// Race or lean RaceListItem in the list), and falls back to plain id matching
+// when `selected` is just the persisted-from-prop shape ({ id, election }) —
+// preserving the existing "initial highlight from saved selection" behavior
+// without re-introducing the `id: race.id` override on hydrated races, which
+// silently overwrites the BallotReady race hash that downstream filing-fee
+// lookups depend on.
+const matchesSelected = (
+  race: Race,
+  selected:
+    | Race
+    | { id?: string | number; election?: { id?: string | number | null } }
+    | false,
+): boolean => {
+  if (!selected) return false
+  const selectedAsRace = selected as Race
+  const selectedBrPos =
+    selectedAsRace.brPositionId ?? selectedAsRace.position?.id
+  const selectedDay = selectedAsRace.election?.electionDay
+  if (selectedBrPos && selectedDay) {
+    const raceBrPos = race.brPositionId ?? race.position?.id
+    return raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+  }
+  return (
+    'id' in selected &&
+    selected.id !== undefined &&
+    race.id === selected.id
+  )
+}
+
 export default function BallotRaces({
   campaign,
   onSelect,
@@ -169,7 +200,11 @@ export default function BallotRaces({
           electionDate: race.election.electionDay,
         },
       )
-      return { ...data, id: race.id }
+      // Pass the hydrated race through unchanged so `data.id` (the BallotReady
+      // race hash) ends up on the selected race. The card-selected check uses
+      // `matchesSelected` which compares via (brPositionId, electionDay), so
+      // dropping the previous `id: race.id` override no longer breaks the UI.
+      return data
     } catch {
       errorSnackbar('Could not load race details. Please try again.')
       return null
@@ -177,13 +212,13 @@ export default function BallotRaces({
   }
 
   const handleSelect = async (race: { id: string }) => {
-    if (race.id === (selected && 'id' in selected ? selected.id : undefined)) {
+    const matchedRace = races.find(({ id }) => id === race.id)
+    if (!matchedRace) {
       setSelected(false)
       onSelect(false)
       return
     }
-    const matchedRace = races.find(({ id }) => id === race.id)
-    if (!matchedRace) {
+    if (matchesSelected(matchedRace, selected)) {
       setSelected(false)
       onSelect(false)
       return
@@ -311,10 +346,7 @@ export default function BallotRaces({
                     ),
                   },
                 }}
-                selected={
-                  race?.id ===
-                  (selected && 'id' in selected ? selected.id : undefined)
-                }
+                selected={matchesSelected(race, selected)}
                 isHydrating={hydratingId === race.id}
                 selectCallback={handleSelect}
               />
