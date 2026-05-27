@@ -206,10 +206,10 @@ export function scrollAnchorIntoView(annotation: {
     const elDocY = elRect.top + currentScrollTop
     const newScrollTop = Math.max(0, elDocY - targetViewportTop)
     // Vaul's modal Drawer registers global wheel/touchmove listeners that
-    // can swallow programmatic smooth scrolls. Direct scrollTop assignment
-    // bypasses those listeners. Sacrifice the smooth animation for a
-    // reliable jump — the user's primary signal is that the right anchor
-    // is visible behind the drawer, not the scroll motion itself.
+    // swallow `scrollTo({behavior:'smooth'})` and `scrollIntoView`. Direct
+    // scrollTop assignment bypasses those listeners. Instant jump — we
+    // tried `scroll-behavior: smooth` to get the animation back, but it
+    // re-triggers the same vaul interception, so we keep the jump.
     document.documentElement.scrollTop = newScrollTop
     return
   }
