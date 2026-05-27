@@ -42,9 +42,7 @@ describe('<BugReportsSurface>', () => {
   })
 
   it('renders the empty state when there are no annotations', () => {
-    render(
-      <BugReportsSurface open onClose={vi.fn()} annotations={[]} />,
-    )
+    render(<BugReportsSurface open onClose={vi.fn()} annotations={[]} />)
 
     expect(screen.getByText(/no bug reports yet/i)).toBeInTheDocument()
   })
@@ -61,11 +59,7 @@ describe('<BugReportsSurface>', () => {
     })
 
     render(
-      <BugReportsSurface
-        open
-        onClose={vi.fn()}
-        annotations={[annotation]}
-      />,
+      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
     )
 
     expect(
@@ -110,11 +104,7 @@ describe('<BugReportsSurface>', () => {
     ]
 
     render(
-      <BugReportsSurface
-        open
-        onClose={vi.fn()}
-        annotations={annotations}
-      />,
+      <BugReportsSurface open onClose={vi.fn()} annotations={annotations} />,
     )
 
     expect(screen.getByText('First bug description')).toBeInTheDocument()
@@ -122,20 +112,14 @@ describe('<BugReportsSurface>', () => {
     await user.click(screen.getByRole('button', { name: /next/i }))
 
     expect(screen.getByText('Second bug description')).toBeInTheDocument()
-    expect(
-      screen.queryByText('First bug description'),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText('First bug description')).not.toBeInTheDocument()
   })
 
   it('renders no Edit button or destructive action (read-only surface)', () => {
     const annotation = bugReport()
 
     render(
-      <BugReportsSurface
-        open
-        onClose={vi.fn()}
-        annotations={[annotation]}
-      />,
+      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
     )
 
     expect(
@@ -144,9 +128,7 @@ describe('<BugReportsSurface>', () => {
     expect(
       screen.queryByRole('button', { name: /delete/i }),
     ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole('textbox'),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
   })
 
   it('does not enrich annotations while the surface is closed', () => {
@@ -169,11 +151,7 @@ describe('<BugReportsSurface>', () => {
     const annotation = bugReport()
 
     render(
-      <BugReportsSurface
-        open
-        onClose={vi.fn()}
-        annotations={[annotation]}
-      />,
+      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
     )
 
     const arbitraryPxPattern = /text-\[\d+px\]/

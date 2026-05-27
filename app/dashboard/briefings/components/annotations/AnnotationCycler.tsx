@@ -1,11 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, type ReactNode } from 'react'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  IconButton,
-} from '@styleguide'
+import { ChevronLeftIcon, ChevronRightIcon, IconButton } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { cn } from '@styleguide/lib/utils'
 
@@ -43,7 +39,7 @@ export function AnnotationCycler<T>({
   const isMobile = useIsMobile()
   const isEmpty = items.length === 0
   const safeIndex = Math.max(0, Math.min(items.length - 1, currentIndex))
-  const current: T | null = isEmpty ? null : (items[safeIndex] ?? null)
+  const current: T | null = isEmpty ? null : items[safeIndex] ?? null
   const prevDisabled = isEmpty || safeIndex === 0
   const nextDisabled = isEmpty || safeIndex >= items.length - 1
 
@@ -84,10 +80,7 @@ export function AnnotationCycler<T>({
           : `Annotation cycler, ${safeIndex + 1} of ${items.length}`
       }
       tabIndex={0}
-      className={cn(
-        'flex h-full min-h-0 flex-col outline-none',
-        className,
-      )}
+      className={cn('flex h-full min-h-0 flex-col outline-none', className)}
     >
       <header className="flex flex-col gap-2 px-6 pb-3 pt-6">
         {title ? (
@@ -129,16 +122,16 @@ export function AnnotationCycler<T>({
       </header>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 pb-4">
-        {isEmpty ? (emptyState ?? null) : current !== null
-          ? (
-            <div
-              key={getKey(current, safeIndex)}
-              className="flex min-h-0 min-w-0 flex-1 flex-col"
-            >
-              {renderItem(current, safeIndex)}
-            </div>
-          )
-          : null}
+        {isEmpty ? (
+          emptyState ?? null
+        ) : current !== null ? (
+          <div
+            key={getKey(current, safeIndex)}
+            className="flex min-h-0 min-w-0 flex-1 flex-col"
+          >
+            {renderItem(current, safeIndex)}
+          </div>
+        ) : null}
       </div>
 
       {footer ? <div className="px-6 pb-6 pt-2">{footer}</div> : null}

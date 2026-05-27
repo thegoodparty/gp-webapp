@@ -28,7 +28,8 @@ function BugReportBody({ item }: { item: EnrichedAnnotation }) {
         {item.bugReport?.description ?? ''}
       </div>
       <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-        Submitted {item.bugReport
+        Submitted{' '}
+        {item.bugReport
           ? new Date(item.bugReport.submittedAt).toLocaleString()
           : ''}
       </div>

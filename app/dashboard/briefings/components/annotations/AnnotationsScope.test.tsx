@@ -5,7 +5,8 @@ import { render, testQueryClient } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { annotationsQueryKey } from '@shared/briefings/use-annotations'
 import type { Annotation } from '@shared/briefings/types'
-import type { StagedDraft } from '../notes-intake/AddNotesDialog'
+import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
+import type { StagedAttachment } from './NoteAttachmentPicker'
 import AnnotationsScope, { useAnnotationsCtx } from './AnnotationsScope'
 
 vi.mock('next/navigation', () => ({
@@ -33,27 +34,19 @@ vi.mock('@shared/briefings/annotations-api', () => ({
 }))
 
 const mockUploadAttachment = vi.fn()
+const mockDeleteAttachment = vi.fn()
+const mockResolveMimeType = vi.fn((file: File) => file.type)
 vi.mock('@shared/briefings/attachments-api', () => ({
-  uploadAttachment: (...args: unknown[]) => mockUploadAttachment(...args),
-}))
-
-let capturedOnSubmit: ((drafts: StagedDraft[]) => Promise<void> | void) | null =
-  null
-vi.mock('../notes-intake/AddNotesDialog', () => ({
-  default: ({
-    onSubmit,
-  }: {
-    onSubmit: (drafts: StagedDraft[]) => Promise<void> | void
-  }) => {
-    capturedOnSubmit = onSubmit
-    return null
-  },
+  uploadAttachment: (input: unknown) => mockUploadAttachment(input),
+  deleteAttachment: (input: unknown) => mockDeleteAttachment(input),
+  resolveMimeType: (file: File) => mockResolveMimeType(file),
 }))
 
 type NoteSheetCallbacks = {
   onCreate?: (
-    anchor: { jsonPath: string | null; start: number | null; end: number | null } | null,
+    anchor: ResolvedAnchor | null,
     body: string,
+    attachments: StagedAttachment[],
   ) => Promise<void> | void
   onClose?: () => void
 }
@@ -73,7 +66,11 @@ vi.mock('./AddNoteSheet', () => ({
 
 type BugSheetCallbacks = {
   onCreate?: (
-    anchor: { jsonPath: string | null; start: number | null; end: number | null } | null,
+    anchor: {
+      jsonPath: string | null
+      start: number | null
+      end: number | null
+    } | null,
     description: string,
   ) => Promise<void> | void
   onClose?: () => void
@@ -136,6 +133,15 @@ function AddNoteFromSelectionTrigger() {
   return (
     <button type="button" onClick={openAddNoteFromSelection}>
       open add note
+    </button>
+  )
+}
+
+function ContextAddNoteTrigger() {
+  const { openAddNoteTopLevel } = useAnnotationsCtx()
+  return (
+    <button type="button" onClick={openAddNoteTopLevel}>
+      open top-level add note
     </button>
   )
 }
@@ -234,6 +240,29 @@ function makeNoteAnnotation(id: string): Annotation {
   }
 }
 
+type AddNoteSheetOnCreate = NonNullable<NoteSheetCallbacks['onCreate']>
+
+async function captureOnCreate(): Promise<AddNoteSheetOnCreate> {
+  const user = userEvent.setup()
+  testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
+  render(
+    <AnnotationsScope meetingDate="briefing_x">
+      <ContextAddNoteTrigger />
+    </AnnotationsScope>,
+  )
+  await user.click(
+    await screen.findByRole('button', { name: /open top-level add note/i }),
+  )
+  await waitFor(() => {
+    expect(captured_AddNoteSheet.onCreate).toBeDefined()
+  })
+  return captured_AddNoteSheet.onCreate!
+}
+
+function makeStaged(file: File): StagedAttachment {
+  return { id: `staged-${file.name}`, file, source: 'document' }
+}
+
 describe('<AnnotationsScope>', () => {
   beforeEach(() => {
     mockAnnotationsApi.list.mockReset()
@@ -241,8 +270,8 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.updateNote.mockReset()
     mockAnnotationsApi.delete.mockReset()
     mockUploadAttachment.mockReset()
+    mockDeleteAttachment.mockReset()
     mockAnnotationsApi.list.mockResolvedValue([])
-    capturedOnSubmit = null
     captured_AddNoteSheet = {}
     captured_ReportErrorSheet = {}
     testQueryClient.clear()
@@ -256,7 +285,10 @@ describe('<AnnotationsScope>', () => {
     const user = userEvent.setup()
     const annX = makeNoteAnnotation('ann_X')
     const annY = makeNoteAnnotation('ann_Y')
-    testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [annX, annY])
+    testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [
+      annX,
+      annY,
+    ])
 
     render(
       <AnnotationsScope meetingDate="briefing_x">
@@ -270,9 +302,10 @@ describe('<AnnotationsScope>', () => {
 
     // Surface is open — vaul renders the drawer overlay with data-state="open".
     await waitFor(() => {
-      expect(
-        document.querySelector('[data-vaul-overlay]'),
-      ).toHaveAttribute('data-state', 'open')
+      expect(document.querySelector('[data-vaul-overlay]')).toHaveAttribute(
+        'data-state',
+        'open',
+      )
     })
 
     expect(screen.getByTestId('notes-count')).toHaveTextContent('2')
@@ -292,9 +325,10 @@ describe('<AnnotationsScope>', () => {
 
     // Surface stays open — AnnotationSurfaceSheet's internal fallback selects
     // the remaining annotation.
-    expect(
-      document.querySelector('[data-vaul-overlay]'),
-    ).toHaveAttribute('data-state', 'open')
+    expect(document.querySelector('[data-vaul-overlay]')).toHaveAttribute(
+      'data-state',
+      'open',
+    )
   })
 
   it('opens the notes surface focused on the newly-created note after AddNoteSheet save', async () => {
@@ -319,7 +353,7 @@ describe('<AnnotationsScope>', () => {
 
     // Drive the AddNoteSheet save → close flow directly via captured props.
     await act(async () => {
-      await captured_AddNoteSheet.onCreate?.(null, 'hello world')
+      await captured_AddNoteSheet.onCreate?.(null, 'hello world', [])
       captured_AddNoteSheet.onClose?.()
     })
 
@@ -419,7 +453,7 @@ describe('<AnnotationsScope>', () => {
     // 'surface_notes' even though the user is still in the AddNoteSheet
     // (overlay.kind === 'add_note_new'), clobbering the open sheet.
     await act(async () => {
-      await captured_AddNoteSheet.onCreate?.(null, 'hello')
+      await captured_AddNoteSheet.onCreate?.(null, 'hello', [])
       await Promise.resolve()
     })
 
@@ -494,7 +528,7 @@ describe('<AnnotationsScope>', () => {
       await screen.findByRole('button', { name: /open add note/i }),
     )
     await act(async () => {
-      await captured_AddNoteSheet.onCreate?.(null, 'hi')
+      await captured_AddNoteSheet.onCreate?.(null, 'hi', [])
       await Promise.resolve()
     })
 
@@ -536,29 +570,15 @@ describe('<AnnotationsScope>', () => {
     })
   })
 
-  describe('AddNotesDialog onSubmit', () => {
-    const mountAndCaptureOnSubmit = async () => {
-      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
-      render(
-        <AnnotationsScope meetingDate="briefing_x">
-          <div />
-        </AnnotationsScope>,
-      )
-      await waitFor(() => {
-        expect(capturedOnSubmit).not.toBeNull()
-      })
-      return capturedOnSubmit!
-    }
-
-    it('commits a typed draft via annotationsApi.create and invalidates the query', async () => {
+  describe('AddNoteSheet onCreate', () => {
+    it('creates a typed-only note and skips the upload path', async () => {
       mockAnnotationsApi.create.mockResolvedValue({
         id: 'ann_typed',
         kind: 'note',
       })
-      const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
-      const onSubmit = await mountAndCaptureOnSubmit()
+      const onCreate = await captureOnCreate()
 
-      await onSubmit([{ id: 't1', kind: 'typed', body: 'hello world' }])
+      await onCreate(null, 'hello world', [])
 
       expect(mockAnnotationsApi.create).toHaveBeenCalledWith('briefing_x', {
         kind: 'note',
@@ -566,31 +586,18 @@ describe('<AnnotationsScope>', () => {
         payload: { body: 'hello world' },
       })
       expect(mockUploadAttachment).not.toHaveBeenCalled()
-      expect(invalidateSpy).toHaveBeenCalledWith({
-        queryKey: annotationsQueryKey('briefing_x'),
-      })
     })
 
-    it('commits a file draft via create → uploadAttachment → waitForOcr and invalidates the query', async () => {
+    it('omits the body field for attachment-only saves so the contract accepts an empty payload', async () => {
       mockAnnotationsApi.create.mockResolvedValue({
-        id: 'ann_file',
+        id: 'ann_attach_only',
         kind: 'note',
       })
       mockUploadAttachment.mockResolvedValue({ attachmentId: 'att_1' })
-      mockAnnotationsApi.list.mockResolvedValue([
-        {
-          id: 'ann_file',
-          kind: 'note',
-          note: {
-            attachments: [{ id: 'att_1', ocrStatus: 'completed' }],
-          },
-        },
-      ])
-      const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
-      const onSubmit = await mountAndCaptureOnSubmit()
+      const onCreate = await captureOnCreate()
 
-      const file = new File(['contents'], 'note.txt', { type: 'text/plain' })
-      await onSubmit([{ id: 'f1', kind: 'file', file, from: 'upload' }])
+      const file = new File(['x'], 'memo.pdf', { type: 'application/pdf' })
+      await onCreate(null, '   ', [makeStaged(file)])
 
       expect(mockAnnotationsApi.create).toHaveBeenCalledWith('briefing_x', {
         kind: 'note',
@@ -598,33 +605,60 @@ describe('<AnnotationsScope>', () => {
         payload: {},
       })
       expect(mockUploadAttachment).toHaveBeenCalledWith({
-        annotationId: 'ann_file',
+        annotationId: 'ann_attach_only',
         file,
       })
-      expect(mockAnnotationsApi.list).toHaveBeenCalledWith('briefing_x')
-      expect(mockAnnotationsApi.delete).not.toHaveBeenCalled()
+    })
+
+    it('uploads each staged attachment after creating the note and invalidates the query', async () => {
+      mockAnnotationsApi.create.mockResolvedValue({
+        id: 'ann_with_files',
+        kind: 'note',
+      })
+      mockUploadAttachment
+        .mockResolvedValueOnce({ attachmentId: 'att_1' })
+        .mockResolvedValueOnce({ attachmentId: 'att_2' })
+      const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
+      const onCreate = await captureOnCreate()
+
+      const fileA = new File(['a'], 'a.png', { type: 'image/png' })
+      const fileB = new File(['b'], 'b.pdf', { type: 'application/pdf' })
+      await onCreate(null, 'two files', [makeStaged(fileA), makeStaged(fileB)])
+
+      expect(mockUploadAttachment).toHaveBeenCalledTimes(2)
+      expect(mockUploadAttachment).toHaveBeenNthCalledWith(1, {
+        annotationId: 'ann_with_files',
+        file: fileA,
+      })
+      expect(mockUploadAttachment).toHaveBeenNthCalledWith(2, {
+        annotationId: 'ann_with_files',
+        file: fileB,
+      })
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: annotationsQueryKey('briefing_x'),
       })
     })
 
-    it('rolls back the created annotation when uploadAttachment fails, and re-throws', async () => {
+    it('surfaces a partial-failure error when an upload rejects, listing the failed file names', async () => {
       mockAnnotationsApi.create.mockResolvedValue({
-        id: 'ann_rollback',
+        id: 'ann_partial',
         kind: 'note',
       })
-      mockAnnotationsApi.delete.mockResolvedValue(undefined)
-      mockUploadAttachment.mockRejectedValue(new Error('s3_upload_failed:500'))
+      mockUploadAttachment
+        .mockResolvedValueOnce({ attachmentId: 'att_ok' })
+        .mockRejectedValueOnce(new Error('s3_upload_failed:500'))
       const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
-      const onSubmit = await mountAndCaptureOnSubmit()
+      const onCreate = await captureOnCreate()
 
-      const file = new File(['contents'], 'note.txt', { type: 'text/plain' })
+      const ok = new File(['x'], 'ok.png', { type: 'image/png' })
+      const bad = new File(['y'], 'bad.pdf', { type: 'application/pdf' })
       await expect(
-        onSubmit([{ id: 'f1', kind: 'file', file, from: 'upload' }]),
-      ).rejects.toThrow('s3_upload_failed:500')
+        onCreate(null, 'hi', [makeStaged(ok), makeStaged(bad)]),
+      ).rejects.toThrow(/Saved your note, but couldn't upload: bad\.pdf/i)
 
-      expect(mockAnnotationsApi.create).toHaveBeenCalled()
-      expect(mockAnnotationsApi.delete).toHaveBeenCalledWith('ann_rollback')
+      expect(mockAnnotationsApi.create).toHaveBeenCalledOnce()
+      // The cache is still invalidated so the saved note + successful
+      // attachment show up.
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: annotationsQueryKey('briefing_x'),
       })

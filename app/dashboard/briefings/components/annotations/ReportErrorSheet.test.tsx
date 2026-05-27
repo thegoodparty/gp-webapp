@@ -11,8 +11,7 @@ vi.mock('@styleguide/hooks/use-mobile', () => ({
 
 const reportErrorToSentryMock = vi.fn()
 vi.mock('@shared/sentry', () => ({
-  reportErrorToSentry: (...args: unknown[]) =>
-    reportErrorToSentryMock(...args),
+  reportErrorToSentry: (...args: unknown[]) => reportErrorToSentryMock(...args),
 }))
 
 function makeNewSheet(): SheetState {
@@ -55,9 +54,7 @@ describe('<ReportErrorSheet>', () => {
   it('shows an inline error banner, keeps the sheet open, preserves description, and reports to Sentry when onCreate rejects', async () => {
     reportErrorToSentryMock.mockClear()
     const user = userEvent.setup()
-    const onCreate = vi
-      .fn()
-      .mockRejectedValue(new Error('network down'))
+    const onCreate = vi.fn().mockRejectedValue(new Error('network down'))
     const onClose = vi.fn()
 
     render(
@@ -87,9 +84,7 @@ describe('<ReportErrorSheet>', () => {
   it('shows an inline error banner and reports to Sentry when onDelete rejects in view mode', async () => {
     reportErrorToSentryMock.mockClear()
     const user = userEvent.setup()
-    const onDelete = vi
-      .fn()
-      .mockRejectedValue(new Error('network down'))
+    const onDelete = vi.fn().mockRejectedValue(new Error('network down'))
     const onClose = vi.fn()
 
     render(

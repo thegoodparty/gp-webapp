@@ -190,7 +190,11 @@ describe('AnnotationCycler', () => {
           currentIndex={idx}
           onIndexChange={setIdx}
           renderItem={() => (
-            <div data-testid="editable" contentEditable suppressContentEditableWarning>
+            <div
+              data-testid="editable"
+              contentEditable
+              suppressContentEditableWarning
+            >
               type here
             </div>
           )}

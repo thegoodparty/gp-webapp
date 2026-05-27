@@ -11,8 +11,7 @@ vi.mock('@styleguide/hooks/use-mobile', () => ({
 
 const reportErrorToSentryMock = vi.fn()
 vi.mock('@shared/sentry', () => ({
-  reportErrorToSentry: (...args: unknown[]) =>
-    reportErrorToSentryMock(...args),
+  reportErrorToSentry: (...args: unknown[]) => reportErrorToSentryMock(...args),
 }))
 
 function makeEditAnnotation(body = 'existing note body'): Annotation {
@@ -56,16 +55,20 @@ describe('<AddNoteSheet> error surfacing', () => {
         onCreate={onCreate}
         onUpdate={onUpdate}
         onDelete={onDelete}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        topLevelNotes={[]}
+        onEditNote={vi.fn()}
       />,
     )
 
     const textarea = await screen.findByPlaceholderText(/write your note/i)
     await user.type(textarea, 'a new note')
 
-    await user.click(screen.getByRole('button', { name: /save note/i }))
+    await user.click(screen.getByRole('button', { name: /^save$/i }))
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent(/couldn't save note\. try again\./i)
+    expect(alert).toHaveTextContent(/couldn't save your note/i)
     expect(onClose).not.toHaveBeenCalled()
     expect((textarea as HTMLTextAreaElement).value).toBe('a new note')
     expect(reportErrorToSentryMock).toHaveBeenCalledTimes(1)
@@ -92,6 +95,10 @@ describe('<AddNoteSheet> error surfacing', () => {
         onCreate={onCreate}
         onUpdate={onUpdate}
         onDelete={onDelete}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        topLevelNotes={[]}
+        onEditNote={vi.fn()}
       />,
     )
 
@@ -99,10 +106,10 @@ describe('<AddNoteSheet> error surfacing', () => {
     await user.clear(textarea)
     await user.type(textarea, 'edited body')
 
-    await user.click(screen.getByRole('button', { name: /save changes/i }))
+    await user.click(screen.getByRole('button', { name: /^save$/i }))
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent(/couldn't save note\. try again\./i)
+    expect(alert).toHaveTextContent(/couldn't save your note/i)
     expect(onClose).not.toHaveBeenCalled()
     expect((textarea as HTMLTextAreaElement).value).toBe('edited body')
     expect(reportErrorToSentryMock).toHaveBeenCalledTimes(1)
@@ -129,13 +136,17 @@ describe('<AddNoteSheet> error surfacing', () => {
         onCreate={onCreate}
         onUpdate={onUpdate}
         onDelete={onDelete}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        topLevelNotes={[]}
+        onEditNote={vi.fn()}
       />,
     )
 
     await user.click(screen.getByRole('button', { name: /delete note/i }))
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent(/couldn't delete note\. try again\./i)
+    expect(alert).toHaveTextContent(/couldn't delete this note/i)
     expect(onClose).not.toHaveBeenCalled()
     expect(reportErrorToSentryMock).toHaveBeenCalledTimes(1)
   })

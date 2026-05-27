@@ -77,7 +77,7 @@ export function AnnotationSurfaceSheet({
     ? items.findIndex((i) => i.id === selectedId)
     : -1
   const safeIndex = foundIndex >= 0 ? foundIndex : 0
-  const current = foundIndex >= 0 ? (items[foundIndex] ?? null) : null
+  const current = foundIndex >= 0 ? items[foundIndex] ?? null : null
 
   const handleIndexChange = useCallback(
     (next: number) => {

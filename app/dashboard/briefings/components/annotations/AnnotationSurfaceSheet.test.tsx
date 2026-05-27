@@ -259,12 +259,7 @@ describe('<AnnotationSurfaceSheet>', () => {
     // newly-minted chat hands off — parent re-renders with the new id while
     // the surface stays open. The cycler must land on the new annotation,
     // not stay on items[0].
-    const items = [
-      makeItem('a'),
-      makeItem('b'),
-      makeItem('c'),
-      makeItem('d'),
-    ]
+    const items = [makeItem('a'), makeItem('b'), makeItem('c'), makeItem('d')]
 
     const { rerender } = render(
       <AnnotationSurfaceSheet

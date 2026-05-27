@@ -152,9 +152,9 @@ export const EMPTY_ANCHOR: AnnotationAnchor = Object.freeze({
  * Smooth-scroll the briefing canvas to an annotation's anchor. No-op when
  * the annotation has no anchor or the anchor's DOM node has been removed.
  */
-export function scrollAnchorIntoView(
-  annotation: { jsonPath: string | null },
-): void {
+export function scrollAnchorIntoView(annotation: {
+  jsonPath: string | null
+}): void {
   if (typeof document === 'undefined') return
   if (!annotation.jsonPath) return
   const el = findAnchorEl(annotation.jsonPath)
@@ -224,4 +224,30 @@ export function buildRangeIn(
   range.setStart(startNode, startOffset)
   range.setEnd(endNode, endOffset)
   return range
+}
+
+/**
+ * Read the highlighted text for an existing annotation by walking the live
+ * DOM. The server doesn't persist the original quote — it's rebuilt on
+ * demand from the stored `jsonPath` + start/end offsets so the briefing
+ * UI can show the anchored passage without round-tripping.
+ *
+ * Returns null when the annotation has no anchor (top-level note) or when
+ * the DOM no longer matches (e.g. content changed since the note was
+ * written) or when we're in an SSR / non-browser context.
+ */
+export function resolveQuoteFromAnchor(anchor: {
+  jsonPath: string | null
+  start: number | null
+  end: number | null
+}): string | null {
+  if (typeof document === 'undefined') return null
+  const { jsonPath, start, end } = anchor
+  if (jsonPath === null || start === null || end === null) return null
+  const el = findAnchorEl(jsonPath)
+  if (!el) return null
+  const range = buildRangeIn(el, start, end)
+  if (!range) return null
+  const quote = range.toString().trim()
+  return quote.length > 0 ? quote : null
 }
