@@ -45,9 +45,15 @@ export default function HighlightToolbar({
   const top = Math.max(margin, rect.top - 48)
 
   function dismiss() {
-    if (typeof window !== 'undefined') {
-      window.getSelection()?.removeAllRanges()
-    }
+    if (typeof window === 'undefined') return
+    window.getSelection()?.removeAllRanges()
+    // On touch devices, useSelection clears the native selection right
+    // after capture (to dismiss iOS's edit menu), so by the time the
+    // user clicks X the live selection is already empty — removeAllRanges
+    // is a no-op and no `selectionchange` event fires on its own. Dispatch
+    // one manually so the hook drops the captured anchor and the toolbar
+    // unmounts.
+    document.dispatchEvent(new Event('selectionchange'))
   }
 
   return (
