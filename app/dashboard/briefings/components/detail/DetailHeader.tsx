@@ -28,7 +28,7 @@ export default function DetailHeader({
             {briefing.title}
           </h1>
           <p className="whitespace-nowrap text-sm text-muted-foreground">
-            {briefing.estimatedReadMinutes} minute read
+            {briefing.estimated_read_minutes} minute read
           </p>
         </div>
         <DetailHeaderActions

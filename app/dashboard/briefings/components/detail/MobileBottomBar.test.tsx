@@ -51,34 +51,38 @@ function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
 }
 
 function makeItems(n: number): Item[] {
-  return Array.from({ length: n }, (_, i) => ({
-    id: `item_${i + 1}`,
-    itemNumber: String(i + 1),
-    title: `Item ${i + 1}`,
-    tier: 'standard',
-    voteRequired: false,
-    tierReason: [],
-    display: { summary: '' },
-  }))
+  return Array.from(
+    { length: n },
+    (_, i) =>
+      ({
+        id: `item_${i + 1}`,
+        item_number: String(i + 1),
+        title: `Item ${i + 1}`,
+        tier: 'standard',
+        vote_required: false,
+        tier_reason: ['procedural'],
+        display: { summary: '' },
+      } as unknown as Item),
+  )
 }
 
 // Minimal briefing stub — the component only forwards it to the PDF download
 // path, which tests assert is called but don't exercise end-to-end. Typed as
 // the full `Briefing` so the test fails to compile if the contract grows new
 // required fields.
-const briefingStub: Briefing = {
-  experimentId: 'x',
-  briefingType: 'city_council_meeting',
-  briefingStatus: 'briefing_ready',
-  generatedAt: '2026-01-01T00:00:00.000Z',
-  officialName: 'Town Hall',
-  meetingDate: '2026-01-01',
-  estimatedReadMinutes: 5,
-  executiveSummary: '',
+const briefingStub = {
+  experiment_id: 'x',
+  briefing_type: 'city_council_meeting',
+  briefing_status: 'briefing_ready',
+  generated_at: '2026-01-01T00:00:00.000Z',
+  official_name: 'Town Hall',
+  meeting_date: '2026-01-01',
+  estimated_read_minutes: 5,
+  executive_summary: { items: [], lead_in: '' },
   items: [],
   sources: [],
   title: 'City Council — Jan 1',
-}
+} as unknown as Briefing
 
 describe('<MobileBottomBar>', () => {
   beforeEach(() => {
