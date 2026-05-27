@@ -11,11 +11,17 @@ import {
   useOrganization,
 } from './organization-picker'
 
+const mockRouterPush = vi.fn()
+const mockRouterReplace = vi.fn()
+
 vi.mock('next/navigation', async (importOriginal) => {
   const actual = await importOriginal<typeof import('next/navigation')>()
   return {
     ...actual,
-    useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn() })),
+    useRouter: vi.fn(() => ({
+      push: mockRouterPush,
+      replace: mockRouterReplace,
+    })),
     usePathname: vi.fn(() => '/dashboard'),
   }
 })
@@ -73,6 +79,8 @@ const orgs: Organization[] = [
 beforeEach(() => {
   mockSetCookie.mockClear()
   mockGetCookie.mockReset().mockReturnValue(false)
+  mockRouterPush.mockClear()
+  mockRouterReplace.mockClear()
 })
 
 describe('OrganizationProvider', () => {
@@ -211,6 +219,34 @@ describe('OrganizationPicker', () => {
     await waitFor(() => {
       expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-two')
     })
+  })
+
+  it('routes to /dashboard/briefings when switching to an elected office org', async () => {
+    const user = userEvent.setup()
+    renderPicker()
+
+    await user.click(screen.getByText('Organization One'))
+    await user.click(screen.getByText('Organization Two'))
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/dashboard/briefings')
+    })
+  })
+
+  it('routes to /dashboard when switching to a non-elected-office org', async () => {
+    const user = userEvent.setup()
+    mockGetCookie.mockImplementation((name: string) =>
+      name === 'organization-slug' ? 'org-two' : false,
+    )
+    renderPicker()
+
+    await user.click(screen.getByText('Organization Two'))
+    await user.click(screen.getByText('Organization One'))
+
+    await waitFor(() => {
+      expect(mockRouterPush).toHaveBeenCalledWith('/dashboard')
+    })
+    expect(mockRouterPush).not.toHaveBeenCalledWith('/dashboard/briefings')
   })
 
   it('fetches organizations from the API', async () => {
