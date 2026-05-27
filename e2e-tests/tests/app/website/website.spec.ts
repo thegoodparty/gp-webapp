@@ -15,7 +15,11 @@ test.describe('Website Management', () => {
   test('should create and publish website through complete flow', async ({
     page,
   }) => {
-    await authenticateTestUser(page, { isolated: true })
+    const { client } = await authenticateTestUser(page, { isolated: true })
+    await client.put('/v1/campaigns/mine', {
+      formattedAddress: '1600 Pennsylvania Ave NW, Washington, DC',
+      placeId: 'ChIJGVtI4by3t4kRr51d_Qm_x58',
+    })
     await NavigationHelper.navigateToPage(page, '/dashboard/website')
     await NavigationHelper.dismissOverlays(page)
 
@@ -57,6 +61,13 @@ test.describe('Website Management', () => {
     ).toBeVisible()
     // Banner upload is skipped in CI due to CORS in test env; validate navigation only. Will re-enable once file uploads are supported in Vercel test environments.
     // await page.locator('input[type="file"]').setInputFiles('src/fixtures/heart.png');
+    const websiteTitleInput = page
+      .locator('label', { hasText: 'Title' })
+      .locator('xpath=following-sibling::*[1]//input')
+      .first()
+    await websiteTitleInput.fill(
+      `${faker.person.firstName()} for ${faker.location.city()}`,
+    )
 
     await page.getByRole('button', { name: 'Next', exact: true }).click()
     await WaitHelper.waitForLoadingToComplete(page)
@@ -96,13 +107,53 @@ test.describe('Website Management', () => {
 
     const emailInput = page.locator('input[name="email"]')
     const phoneInput = page.locator('input[name="phone"]')
+    const committeeInput = page
+      .locator('label', { hasText: 'Campaign Committee Name' })
+      .locator('xpath=following-sibling::*[1]//input')
+      .first()
 
-    if (!(await emailInput.inputValue())) {
-      await emailInput.fill(faker.internet.email())
-    }
-    if (!(await phoneInput.inputValue())) {
-      await phoneInput.fill(faker.phone.number({ style: 'national' }))
-    }
+    await page.evaluate(() => {
+      const addressInput = document.querySelector(
+        'input[placeholder="Enter your address"]',
+      )
+      if (!addressInput) {
+        throw new Error('Address input not found')
+      }
+      const fiberKey = Object.keys(addressInput).find((key) =>
+        key.startsWith('__reactFiber$'),
+      )
+      if (!fiberKey) {
+        throw new Error('React fiber key not found for address input')
+      }
+      let fiber: unknown = (
+        addressInput as unknown as Record<string, unknown>
+      )[fiberKey] as unknown
+      while (fiber) {
+        const props = (fiber as { memoizedProps?: Record<string, unknown> })
+          .memoizedProps
+        const onAddressSelect =
+          props && typeof props.onAddressSelect === 'function'
+            ? (props.onAddressSelect as (place: {
+                formatted_address: string
+                place_id: string
+              }) => void)
+            : null
+        if (onAddressSelect) {
+          onAddressSelect({
+            formatted_address: '1600 Pennsylvania Ave NW, Washington, DC',
+            place_id: 'ChIJGVtI4by3t4kRr51d_Qm_x58',
+          })
+          return
+        }
+        fiber = (fiber as { return?: unknown }).return
+      }
+      throw new Error('onAddressSelect handler not found')
+    })
+    await emailInput.fill(faker.internet.email())
+    await phoneInput.fill('(202) 555-0123')
+    await committeeInput.fill(
+      `Friends of ${faker.person.firstName()} ${faker.person.lastName()}`,
+    )
 
     await page.getByRole('button', { name: 'Publish website' }).click()
     await WaitHelper.waitForLoadingToComplete(page)
