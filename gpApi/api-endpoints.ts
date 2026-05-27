@@ -238,13 +238,19 @@ export type APIEndpoints = {
       state: string
       office: string
     }
-    Response: {
-      outlets: Array<{
-        name: string
-        type: 'TV' | 'print' | 'radio'
-        description: string
-      }>
-    }
+    Response:
+      | { status: 'pending' }
+      | {
+          status: 'ready'
+          outlets: Array<{
+            name: string
+            type: 'TV' | 'print' | 'radio'
+            description: string
+            email?: string | null
+            phone?: string | null
+            address?: string | null
+          }>
+        }
   }
 
   'GET /v1/onboarding/voter-issues': {

@@ -17,11 +17,19 @@ const LOCAL_NEWS_ROUTE = 'GET /v1/onboarding/local-news'
 const SENTRY_CONTEXT_FETCH_OUTLETS = 'onboarding.localNews.fetchOutlets'
 const COLLAPSED_OUTLETS_VISIBLE = 1
 const SKELETON_PLACEHOLDER_COUNT = 3
+// gp-api runs the AI call as a background promise and persists the result on
+// the campaign record. The endpoint returns either { status: 'pending' } or
+// { status: 'ready', outlets }. Poll while pending so we never hold an open
+// request across the Next.js proxy's 30s ceiling.
+const LOCAL_NEWS_POLL_INTERVAL_MS = 3_000
 
 interface Outlet {
   name: string
   type: OutletType
   description: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
 }
 
 interface OutletGroup {
@@ -43,6 +51,15 @@ const localNewsQueryOptions = (params: {
         state: params.state ?? '',
         office: params.office ?? '',
       }).then((res) => res.data),
+    refetchInterval: (query) =>
+      query.state.data?.status === 'pending'
+        ? LOCAL_NEWS_POLL_INTERVAL_MS
+        : false,
+    // Once we've got ready data, don't re-poll on remount or Strict-Mode
+    // effect double-runs.
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 1,
   })
 
 export { localNewsQueryOptions }
@@ -229,8 +246,8 @@ export const LocalNewsSourcesSection = ({
   }, [query.error, state, office])
 
   const outlets: Outlet[] = useMemo(
-    () => query.data?.outlets ?? [],
-    [query.data?.outlets],
+    () => (query.data?.status === 'ready' ? query.data.outlets : []),
+    [query.data],
   )
 
   const groupedOutlets = useMemo(() => groupOutletsByType(outlets), [outlets])
@@ -256,7 +273,8 @@ export const LocalNewsSourcesSection = ({
   })
 
   const renderBody = () => {
-    if (query.isPending) return <LocalNewsSkeleton />
+    if (query.isPending || query.data?.status === 'pending')
+      return <LocalNewsSkeleton />
     if (query.error) {
       return (
         <p className="text-sm text-muted-foreground">
