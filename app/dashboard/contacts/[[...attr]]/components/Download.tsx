@@ -12,11 +12,54 @@ import {
 import { useShowContactProModal } from '../hooks/ContactProModal'
 import { Lock } from '@mui/icons-material'
 import { LuDownload } from 'react-icons/lu'
+import { useEffect, useRef, useState } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { getCookie } from 'helpers/cookieHelper'
+
+const DOWNLOAD_COOKIE_NAME = 'gp_download'
+const DOWNLOAD_COOKIE_POLL_MS = 250
+// Fallback in case the server-side cookie handshake is missing (older deploy,
+// proxy stripped Set-Cookie, etc.). Long enough to overlap with first byte on
+// large districts, short enough to avoid leaving a stuck spinner forever.
+const DOWNLOAD_FALLBACK_TIMEOUT_MS = 15000
+
+// `getCookie` returns `string | false`; normalize to `string | null` and
+// guard against `decodeURI` throwing on a malformed cookie value (which
+// would otherwise surface as an uncaught error inside the 250ms poll).
+const readDownloadCookie = (): string | null => {
+  try {
+    const value = getCookie(DOWNLOAD_COOKIE_NAME)
+    return value === false ? null : value
+  } catch {
+    return null
+  }
+}
 
 export default function Download() {
   const showProUpgradeModal = useShowContactProModal()
   const { customSegments, currentSegment, canUseProFeatures } =
     useContactsTable()
+  const { successSnackbar } = useSnackbar()
+  const [isPreparing, setIsPreparing] = useState(false)
+  const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const fallbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearDownloadWatchers = (): void => {
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current)
+      pollIntervalRef.current = null
+    }
+    if (fallbackTimeoutRef.current) {
+      clearTimeout(fallbackTimeoutRef.current)
+      fallbackTimeoutRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      clearDownloadWatchers()
+    }
+  }, [])
 
   // Trigger the contacts CSV download via a top-level browser navigation so
   // bytes stream directly to disk. Avoids buffering the entire response (up
@@ -30,6 +73,16 @@ export default function Download() {
       showProUpgradeModal(true)
       return
     }
+
+    // Snapshot the current value of the download cookie so a stale token from
+    // a previous download doesn't make the spinner clear instantly.
+    const cookieBeforeClick = readDownloadCookie()
+
+    setIsPreparing(true)
+    successSnackbar(
+      'Preparing your download. Large districts can take 10-15 seconds...',
+      { autoHideDuration: 12000 },
+    )
 
     const query = new URLSearchParams()
     if (currentSegment) {
@@ -48,6 +101,26 @@ export default function Download() {
     document.body.appendChild(link)
     link.click()
     link.remove()
+
+    clearDownloadWatchers()
+
+    // Poll for the gp_download cookie set by gp-api. The browser commits
+    // cookies from a download response, so the moment the cookie appears we
+    // know the server has actually started streaming and can swap the
+    // "preparing" feedback for a "started" confirmation.
+    pollIntervalRef.current = setInterval(() => {
+      const current = readDownloadCookie()
+      if (current && current !== cookieBeforeClick) {
+        clearDownloadWatchers()
+        setIsPreparing(false)
+        successSnackbar('Download started', { autoHideDuration: 3000 })
+      }
+    }, DOWNLOAD_COOKIE_POLL_MS)
+
+    fallbackTimeoutRef.current = setTimeout(() => {
+      clearDownloadWatchers()
+      setIsPreparing(false)
+    }, DOWNLOAD_FALLBACK_TIMEOUT_MS)
 
     // We cannot observe completion of a top-level download, so fire the
     // analytics event at click time. The download will continue in the
@@ -104,6 +177,7 @@ export default function Download() {
       <IconButton
         variant="outline"
         onClick={handleDownload}
+        loading={isPreparing}
         className="hidden md:flex"
       >
         {!canUseProFeatures ? <Lock /> : <LuDownload />}
