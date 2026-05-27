@@ -4,13 +4,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   type ReactNode,
 } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { setCookie } from 'helpers/cookieHelper'
+import { getCookie, setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { useSelectedOrgSlug } from '@shared/hooks/useSelectedOrgSlug'
 import {
@@ -91,6 +92,21 @@ export const OrganizationProvider = ({
       organizations.find((o) => o.slug === selectedSlug) ?? organizations[0],
     [organizations, selectedSlug],
   )
+
+  // If the resolved slug diverges from the cookie (e.g. cookie pointed at an
+  // org the user no longer has access to, so pickSlug fell back to
+  // organizations[0]), rewrite the cookie. gpFetch, clientFetch, and middleware
+  // read the cookie directly for the X-Organization-Slug header, so a stale
+  // cookie would make the API see the wrong slug while the UI shows the
+  // fallback. This fires only on a genuine mismatch — SSR/client agree on
+  // first render because initialSlug is sourced from the cookie server-side.
+  useEffect(() => {
+    const resolved = selectedOrganization?.slug
+    if (!resolved) return
+    if (resolved !== getCookie(ORG_SLUG_COOKIE)) {
+      setCookie(ORG_SLUG_COOKIE, resolved)
+    }
+  }, [selectedOrganization?.slug])
 
   const setSelectedSlug = useCallback(
     (slug: string) => {

@@ -169,6 +169,81 @@ describe('OrganizationProvider', () => {
     expect(screen.getByTestId('elected')).toHaveTextContent('false')
   })
 
+  it('resolves the org after initialOrganizations transitions from empty to populated', async () => {
+    const Probe = () => {
+      const org = useOrganization()
+      return <div data-testid="org">{org?.slug ?? 'none'}</div>
+    }
+
+    const { rerender } = render(
+      <OrganizationProvider initialOrganizations={[]}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    expect(screen.getByTestId('org')).toHaveTextContent('none')
+
+    rerender(
+      <OrganizationProvider initialOrganizations={orgs}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('org')).toHaveTextContent('org-one')
+    })
+  })
+
+  it('resolves to the cookie-pointed org after initialOrganizations populates (effect-path fallback)', async () => {
+    mockGetCookie.mockImplementation((name: string) =>
+      name === 'organization-slug' ? 'org-two' : false,
+    )
+
+    const Probe = () => {
+      const org = useOrganization()
+      return <div data-testid="org">{org?.slug ?? 'none'}</div>
+    }
+
+    const { rerender } = render(
+      <OrganizationProvider initialOrganizations={[]}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    rerender(
+      <OrganizationProvider initialOrganizations={orgs}>
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('org')).toHaveTextContent('org-two')
+    })
+  })
+
+  it('rewrites the cookie when initialSlug points to an org not in the list (stale-cookie fallback)', async () => {
+    mockGetCookie.mockImplementation((name: string) =>
+      name === 'organization-slug' ? 'stale-org' : false,
+    )
+
+    const Probe = () => {
+      const org = useOrganization()
+      return <div data-testid="org">{org?.slug ?? 'none'}</div>
+    }
+
+    render(
+      <OrganizationProvider initialOrganizations={orgs} initialSlug="stale-org">
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    expect(screen.getByTestId('org')).toHaveTextContent('org-one')
+
+    await waitFor(() => {
+      expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
+    })
+  })
+
   it('throws when useOrganization is used outside the provider', () => {
     const Probe = () => {
       useOrganization()
