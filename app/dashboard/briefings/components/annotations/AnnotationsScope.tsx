@@ -41,6 +41,7 @@ import {
   resolveMimeType,
   uploadAttachment,
 } from '@shared/briefings/attachments-api'
+import { reportErrorToSentry } from '@shared/sentry'
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -417,15 +418,16 @@ export default function AnnotationsScope({
   }, [annotations, overlay])
 
   // Keep edit-mode overlay snapshot synced with the live annotations query
-  // so attachments added/removed via the picker show without reopening; close
-  // if the annotation gets deleted from under us.
+  // so attachments added/removed via the picker show without reopening.
+  // If the annotation has vanished from the cache (refetch race, concurrent
+  // delete from another tab), do NOT force-close — that silently drops the
+  // user's in-progress typing held in AddNoteSheet's body state. Let the
+  // user finish typing; if they hit Save, updateNote will hit the server,
+  // get a 404, and the existing error-banner path surfaces the issue.
   useEffect(() => {
     if (overlay.kind !== 'add_note_edit') return
     const fresh = annotations.find((a) => a.id === overlay.annotation.id)
-    if (!fresh) {
-      setOverlay({ kind: 'closed' })
-      return
-    }
+    if (!fresh) return
     if (fresh !== overlay.annotation) {
       setOverlay({ kind: 'add_note_edit', annotation: fresh })
     }
@@ -509,7 +511,9 @@ export default function AnnotationsScope({
             window.getSelection()?.removeAllRanges()
             // Upload any staged attachments serially. Per-file failures
             // don't roll back the note — collect names and throw at the end
-            // so AddNoteSheet's handleSave surfaces the error inline.
+            // so AddNoteSheet's handleSave surfaces the error inline. Each
+            // failure is reported to Sentry with surface/op/annotationId/
+            // fileName context so we can triage from the dashboard.
             const failures: string[] = []
             for (const a of attachments) {
               try {
@@ -517,7 +521,13 @@ export default function AnnotationsScope({
                   annotationId: created.id,
                   file: a.file,
                 })
-              } catch {
+              } catch (err) {
+                reportErrorToSentry(err, {
+                  surface: 'briefing-annotations',
+                  op: 'uploadAttachment',
+                  annotationId: created.id,
+                  fileName: a.file.name,
+                })
                 failures.push(a.file.name)
               }
             }
@@ -526,14 +536,23 @@ export default function AnnotationsScope({
                 queryKey: annotationsQueryKey(meetingDate),
               })
             }
-            // Stash id for the cycler handoff (watch effect swaps overlay
-            // to surface_notes once the new note lands in `annotations`).
-            pendingNewNoteIdRef.current = created.id
             if (failures.length > 0) {
+              // The note was saved server-side, but one or more attachment
+              // uploads failed. Transition the overlay into edit mode
+              // against the just-created annotation so a Save retry hits
+              // onUpdate (no duplicate note) and the user can retry failed
+              // attachments through the per-pill onAttachmentAdd path. We
+              // deliberately do NOT set pendingNewNoteIdRef here — the
+              // cycler handoff is for clean success only.
+              setOverlay({ kind: 'add_note_edit', annotation: created })
               throw new Error(
                 `Saved your note, but couldn't upload: ${failures.join(', ')}`,
               )
             }
+            // Success: stash id for the cycler handoff (watch effect swaps
+            // overlay to surface_notes once the new note lands in
+            // `annotations`).
+            pendingNewNoteIdRef.current = created.id
           }}
           onUpdate={async (id, body) => {
             await updateNote.mutateAsync({ id, body })

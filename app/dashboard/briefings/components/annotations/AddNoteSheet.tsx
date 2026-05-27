@@ -215,6 +215,12 @@ export default function AddNoteSheet({
       setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
     } catch (err) {
       setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'uploadAttachment',
+        annotationId,
+        fileName: file.name,
+      })
       const msg = err instanceof Error ? err.message : String(err)
       setAttachmentError(`Couldn't upload ${file.name}: ${msg}`)
     } finally {
@@ -230,6 +236,11 @@ export default function AddNoteSheet({
     try {
       await onAttachmentDelete(annotationId, attachmentId)
     } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'deleteAttachment',
+        annotationId,
+      })
       const msg = err instanceof Error ? err.message : String(err)
       setAttachmentError(`Couldn't remove attachment: ${msg}`)
     } finally {

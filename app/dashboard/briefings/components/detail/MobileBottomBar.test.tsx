@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import MobileBottomBar from './MobileBottomBar'
-import type { Item } from '@shared/briefings/types'
+import type { Briefing, Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 
@@ -26,8 +26,10 @@ vi.mock('next/navigation', async () => {
 const mockedUseAnnotationsCtx = vi.mocked(useAnnotationsCtx)
 const mockedDownloadBriefingPdf = vi.mocked(downloadBriefingPdf)
 
-function setCtx(overrides: Partial<ReturnType<typeof useAnnotationsCtx>> = {}) {
-  mockedUseAnnotationsCtx.mockReturnValue({
+type AnnotationsCtxValue = ReturnType<typeof useAnnotationsCtx>
+
+function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
+  const ctx: AnnotationsCtxValue = {
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
     openAddNoteFromSelection: vi.fn(),
@@ -44,8 +46,8 @@ function setCtx(overrides: Partial<ReturnType<typeof useAnnotationsCtx>> = {}) {
     closeSheet: vi.fn(),
     onChatCreated: vi.fn(),
     ...overrides,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any)
+  }
+  mockedUseAnnotationsCtx.mockReturnValue(ctx)
 }
 
 function makeItems(n: number): Item[] {
@@ -61,13 +63,22 @@ function makeItems(n: number): Item[] {
 }
 
 // Minimal briefing stub — the component only forwards it to the PDF download
-// path, which tests assert is called but don't exercise end-to-end.
-const briefingStub = {
+// path, which tests assert is called but don't exercise end-to-end. Typed as
+// the full `Briefing` so the test fails to compile if the contract grows new
+// required fields.
+const briefingStub: Briefing = {
   experimentId: 'x',
+  briefingType: 'city_council_meeting',
+  briefingStatus: 'briefing_ready',
+  generatedAt: '2026-01-01T00:00:00.000Z',
+  officialName: 'Town Hall',
+  meetingDate: '2026-01-01',
+  estimatedReadMinutes: 5,
+  executiveSummary: '',
   items: [],
   sources: [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any
+  title: 'City Council — Jan 1',
+}
 
 describe('<MobileBottomBar>', () => {
   beforeEach(() => {

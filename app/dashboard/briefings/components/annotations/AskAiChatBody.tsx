@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Button, IconButton, Input, Textarea } from '@styleguide'
 import { chatApi } from '@shared/briefings/chat-api'
+import { EMPTY_ANCHOR } from '@shared/briefings/anchorResolver'
 import { reportErrorToSentry } from '@shared/sentry'
 import type { AnnotationAnchor, ChatMessage } from '@shared/briefings/types'
 import type {
@@ -120,10 +121,6 @@ function newClientMessageId(): string {
   return `cmid_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
 }
 
-function emptyAnchor(): AnnotationAnchor {
-  return { jsonPath: null, start: null, end: null }
-}
-
 function messageToItem(msg: ChatMessage): ChatItem | null {
   if (msg.role === 'user') {
     return { kind: 'user', id: msg.id, content: msg.content }
@@ -187,7 +184,7 @@ export default function AskAiChatBody({
       if (!activeId) {
         const created = await chatApi.createBriefingChat({
           meetingDate,
-          anchor: anchor ?? emptyAnchor(),
+          anchor: anchor ?? EMPTY_ANCHOR,
         })
         activeId = created.annotationId
         onChatCreated?.({

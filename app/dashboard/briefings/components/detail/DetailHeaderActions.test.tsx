@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
+import type { Briefing } from '@shared/briefings/types'
 import DetailHeaderActions from './DetailHeaderActions'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
@@ -11,7 +12,9 @@ vi.mock('../annotations/AnnotationsScope', () => ({
 
 const mockedUseAnnotationsCtx = vi.mocked(useAnnotationsCtx)
 
-function setCtx(overrides: Partial<ReturnType<typeof useAnnotationsCtx>> = {}) {
+type Ctx = ReturnType<typeof useAnnotationsCtx>
+
+function setCtx(overrides: Partial<Ctx> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue({
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
@@ -29,18 +32,24 @@ function setCtx(overrides: Partial<ReturnType<typeof useAnnotationsCtx>> = {}) {
     closeSheet: vi.fn(),
     onChatCreated: vi.fn(),
     ...overrides,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any)
+  } satisfies Ctx)
 }
 
 // Minimal briefing stub — the component only forwards it to the PDF download
 // path, which the tests don't exercise.
 const briefingStub = {
   experimentId: 'x',
+  briefingType: 'city_council_meeting',
+  briefingStatus: 'briefing_ready',
+  generatedAt: '2026-01-01T00:00:00Z',
+  officialName: 'Test Official',
+  meetingDate: '2026-01-01',
+  estimatedReadMinutes: 1,
+  executiveSummary: '',
   items: [],
   sources: [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any
+  title: 'Test briefing',
+} satisfies Briefing
 
 describe('<DetailHeaderActions>', () => {
   beforeEach(() => {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -49,19 +50,30 @@ type NoteSheetCallbacks = {
     attachments: StagedAttachment[],
   ) => Promise<void> | void
   onClose?: () => void
+  sheet?: { kind: string; annotation?: Annotation }
 }
 let captured_AddNoteSheet: NoteSheetCallbacks = {}
+let addNoteSheetIsMounted = false
+function AddNoteSheetMock({
+  sheet,
+  onCreate,
+  onClose,
+}: {
+  sheet: { kind: string; annotation?: Annotation }
+  onCreate: NoteSheetCallbacks['onCreate']
+  onClose: () => void
+}) {
+  captured_AddNoteSheet = { onCreate, onClose, sheet }
+  useEffect(() => {
+    addNoteSheetIsMounted = true
+    return () => {
+      addNoteSheetIsMounted = false
+    }
+  }, [])
+  return null
+}
 vi.mock('./AddNoteSheet', () => ({
-  default: ({
-    onCreate,
-    onClose,
-  }: {
-    onCreate: NoteSheetCallbacks['onCreate']
-    onClose: () => void
-  }) => {
-    captured_AddNoteSheet = { onCreate, onClose }
-    return null
-  },
+  default: AddNoteSheetMock,
 }))
 
 type BugSheetCallbacks = {
@@ -87,6 +99,11 @@ vi.mock('./ReportErrorSheet', () => ({
     captured_ReportErrorSheet = { onCreate, onClose }
     return null
   },
+}))
+
+const reportErrorToSentryMock = vi.fn()
+vi.mock('@shared/sentry', () => ({
+  reportErrorToSentry: (...args: unknown[]) => reportErrorToSentryMock(...args),
 }))
 
 vi.mock('@shared/briefings/chat-api', () => ({
@@ -198,6 +215,18 @@ function ReportErrorThenSwitchSurfacesTrigger() {
   )
 }
 
+function EditNoteTrigger({ annotation }: { annotation: Annotation }) {
+  const { openEditNote, notesCount } = useAnnotationsCtx()
+  return (
+    <>
+      <button type="button" onClick={() => openEditNote(annotation)}>
+        open edit note
+      </button>
+      <span data-testid="edit-notes-count">{notesCount}</span>
+    </>
+  )
+}
+
 function makeBugAnnotation(id: string): Annotation {
   return {
     id,
@@ -274,6 +303,8 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([])
     captured_AddNoteSheet = {}
     captured_ReportErrorSheet = {}
+    addNoteSheetIsMounted = false
+    reportErrorToSentryMock.mockReset()
     testQueryClient.clear()
   })
 
@@ -662,6 +693,129 @@ describe('<AnnotationsScope>', () => {
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: annotationsQueryKey('briefing_x'),
       })
+    })
+
+    it('reports each attachment upload failure to Sentry with surface, op, annotationId, and fileName context', async () => {
+      mockAnnotationsApi.create.mockResolvedValue({
+        id: 'ann_sentry',
+        kind: 'note',
+      })
+      const uploadErr = new Error('s3_upload_failed:500')
+      mockUploadAttachment.mockRejectedValueOnce(uploadErr)
+      const onCreate = await captureOnCreate()
+
+      const file = new File(['y'], 'doc.pdf', { type: 'application/pdf' })
+      await expect(onCreate(null, 'hi', [makeStaged(file)])).rejects.toThrow()
+
+      expect(reportErrorToSentryMock).toHaveBeenCalledTimes(1)
+      expect(reportErrorToSentryMock).toHaveBeenCalledWith(uploadErr, {
+        surface: 'briefing-annotations',
+        op: 'uploadAttachment',
+        annotationId: 'ann_sentry',
+        fileName: 'doc.pdf',
+      })
+    })
+
+    it('transitions overlay to add_note_edit on partial attachment failure so a retry does not create a duplicate note', async () => {
+      const user = userEvent.setup()
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
+      const createdAnnotation: Annotation = {
+        id: 'ann_retry',
+        kind: 'note',
+        resourceType: 'briefing',
+        resourceId: 'briefing_x',
+        authorUserId: 1,
+        jsonPath: null,
+        start: null,
+        end: null,
+        createdAt: '2025-01-01T00:00:00.000Z',
+        updatedAt: '2025-01-01T00:00:00.000Z',
+        note: {
+          id: 'note_ann_retry',
+          body: 'hi',
+          attachments: [],
+          createdAt: '2025-01-01T00:00:00.000Z',
+          updatedAt: '2025-01-01T00:00:00.000Z',
+        },
+      }
+      mockAnnotationsApi.create.mockResolvedValue(createdAnnotation)
+      mockUploadAttachment.mockRejectedValueOnce(new Error('s3 down'))
+
+      render(
+        <AnnotationsScope meetingDate="briefing_x">
+          <ContextAddNoteTrigger />
+        </AnnotationsScope>,
+      )
+
+      await user.click(
+        await screen.findByRole('button', {
+          name: /open top-level add note/i,
+        }),
+      )
+      await waitFor(() => {
+        expect(captured_AddNoteSheet.onCreate).toBeDefined()
+      })
+
+      const file = new File(['y'], 'bad.pdf', { type: 'application/pdf' })
+      await act(async () => {
+        await expect(
+          captured_AddNoteSheet.onCreate?.(null, 'hi', [makeStaged(file)]),
+        ).rejects.toThrow()
+      })
+
+      // Sheet is still mounted, now in edit mode against the just-created
+      // annotation. A subsequent Save will hit onUpdate (no duplicate note).
+      expect(addNoteSheetIsMounted).toBe(true)
+      expect(captured_AddNoteSheet.sheet?.kind).toBe('add_note_edit')
+      expect(captured_AddNoteSheet.sheet?.annotation?.id).toBe('ann_retry')
+      // Only one annotation was ever created.
+      expect(mockAnnotationsApi.create).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe('edit-mode sync', () => {
+    it('does not force-close the sheet when the edited annotation disappears from the cache mid-edit', async () => {
+      const user = userEvent.setup()
+      const ann = makeNoteAnnotation('ann_editing')
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [ann])
+      mockAnnotationsApi.list.mockResolvedValue([ann])
+
+      render(
+        <AnnotationsScope meetingDate="briefing_x">
+          <EditNoteTrigger annotation={ann} />
+        </AnnotationsScope>,
+      )
+
+      await user.click(
+        await screen.findByRole('button', { name: /open edit note/i }),
+      )
+
+      // Sheet is mounted in edit mode.
+      await waitFor(() => {
+        expect(addNoteSheetIsMounted).toBe(true)
+      })
+      expect(captured_AddNoteSheet.sheet?.kind).toBe('add_note_edit')
+
+      // Now simulate the annotation being deleted from another tab — the
+      // refetch lands with the annotation gone.
+      mockAnnotationsApi.list.mockResolvedValue([])
+      await act(async () => {
+        testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
+      })
+
+      // Wait for the cache update to propagate through useAnnotations →
+      // the wrapper component re-renders with notesCount === 0. Any effect
+      // in AnnotationsScope that runs in response to annotations changing
+      // has had a chance to fire by this point.
+      await waitFor(() => {
+        expect(screen.getByTestId('edit-notes-count')).toHaveTextContent('0')
+      })
+
+      // The sheet should still be mounted — the user's in-progress typing
+      // (held in AddNoteSheet's body state) must not be silently dropped.
+      // If they hit Save, the existing error-banner path surfaces the issue.
+      expect(addNoteSheetIsMounted).toBe(true)
+      expect(captured_AddNoteSheet.sheet?.kind).toBe('add_note_edit')
     })
   })
 })
