@@ -136,10 +136,9 @@ export default function Download() {
       clearDownloadWatchers()
       deleteCookie(DOWNLOAD_COOKIE_NAME)
       setIsPreparing(false)
-      errorSnackbar(
-        "If your download hasn't started, please try again.",
-        { autoHideDuration: 6000 },
-      )
+      errorSnackbar("If your download hasn't started, please try again.", {
+        autoHideDuration: 6000,
+      })
     }, DOWNLOAD_FALLBACK_TIMEOUT_MS)
 
     // We cannot observe completion of a top-level download, so fire the
