@@ -8,8 +8,25 @@
 
 export const BRIEFING_EXECUTIVE_SUMMARY_DOM_ID = 'briefing-executive-summary'
 
+/**
+ * Canonical jsonPath identifying the Executive Summary card as a whole
+ * (not a specific passage inside it). Used as the anchor for card-level
+ * notes — `start`/`end` are null in that case.
+ */
+export const BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH = '/executiveSummary'
+
 export function briefingItemDomId(itemId: string): string {
   return `briefing-item-${itemId}`
+}
+
+/**
+ * Canonical jsonPath identifying an agenda item card as a whole. A
+ * card-level note carries this as its `jsonPath` with `start`/`end` set
+ * to null. Inline highlights inside the card keep using path suffixes
+ * (`/items/{idx}/title`, `/items/{idx}/display/summary`, etc.).
+ */
+export function briefingItemCardPath(itemIndex: number): string {
+  return `/items/${itemIndex}`
 }
 
 export function briefingsLandingHref(): string {

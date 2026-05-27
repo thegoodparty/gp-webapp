@@ -18,6 +18,9 @@ function setCtx(overrides: Partial<Ctx> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue({
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
+    annotations: [],
+    activeCard: null,
+    setActiveCard: vi.fn(),
     openAddNoteFromSelection: vi.fn(),
     openAddNoteTopLevel: vi.fn(),
     openReportErrorFromSelection: vi.fn(),

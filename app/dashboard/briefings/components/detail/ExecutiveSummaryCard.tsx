@@ -1,7 +1,12 @@
 'use client'
 
 import { MeetingBriefingOutput } from 'gpApi/generated/agent-job-contracts'
-import { briefingItemDomId } from '@shared/briefings/routes'
+import {
+  BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+  briefingItemDomId,
+} from '@shared/briefings/routes'
+import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import CardLevelNotesList from './CardLevelNotesList'
 import ReadAloudButton from './ReadAloudButton'
 
 type Props = {
@@ -42,10 +47,24 @@ export default function ExecutiveSummaryCard({
   speechText,
   analyticsLabel,
 }: Props): React.JSX.Element {
+  const { activeCard, setActiveCard } = useAnnotationsCtx()
+  const isActive = activeCard?.key === domId
+  const activate = () =>
+    setActiveCard({
+      key: domId,
+      jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+      title: 'Executive Summary',
+    })
   return (
     <article
       id={domId}
-      className="flex scroll-mt-[104px] flex-col gap-3 rounded-2xl border border-border bg-card p-6 lg:scroll-mt-3"
+      onClick={activate}
+      aria-current={isActive ? 'true' : undefined}
+      className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-3 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
+        isActive
+          ? 'border-info-600 ring-2 ring-info-600/40'
+          : 'border-border hover:border-foreground/20'
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <h2 className="text-2xl font-semibold text-foreground">
@@ -85,6 +104,7 @@ export default function ExecutiveSummaryCard({
           })}
         </ul>
       ) : null}
+      <CardLevelNotesList cardPath={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH} />
     </article>
   )
 }

@@ -55,13 +55,15 @@ type Props = {
     attachmentId: string,
   ) => Promise<void>
   /**
-   * All existing top-level notes for this briefing. Rendered as a list
-   * above the composer when the sheet is in top-level new mode so the
-   * user can see, tap-to-edit, or delete previously-added briefing-wide
-   * notes (those have no anchor and don't render as highlights).
+   * Existing card-level notes for the currently-active card. Rendered as
+   * a list above the composer when the sheet is in card-level new mode
+   * (anchor=null) so the user can see, tap-to-edit, or delete
+   * previously-added notes attached to this card.
    */
-  topLevelNotes: Annotation[]
-  /** Open an existing note in edit mode (from the top-level list). */
+  notesForActiveCard: Annotation[]
+  /** Title of the active card — drives the "Note on {title}" copy. */
+  activeCardTitle: string | null
+  /** Open an existing note in edit mode (from the card-level list). */
   onEditNote: (annotation: Annotation) => void
 }
 
@@ -100,7 +102,8 @@ export default function AddNoteSheet({
   onDelete,
   onAttachmentAdd,
   onAttachmentDelete,
-  topLevelNotes,
+  notesForActiveCard,
+  activeCardTitle,
   onEditNote,
 }: Props): React.JSX.Element {
   const open = isAddNoteState(sheet)
@@ -394,9 +397,10 @@ export default function AddNoteSheet({
         >
           {quote ? (
             <AnchoredQuote text={quote} showLabel={false} />
-          ) : !isEdit ? (
+          ) : !isEdit && activeCardTitle ? (
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
-              This note is for the whole briefing.
+              Note on{' '}
+              <span className="font-medium not-italic">{activeCardTitle}</span>
             </p>
           ) : null}
 
@@ -406,7 +410,7 @@ export default function AddNoteSheet({
             // This covers the brief window between create.mutateAsync
             // resolving and the attachment uploads' refetch landing —
             // rendering them would flash "(empty note)" for a frame.
-            const visibleNotes = topLevelNotes.filter(
+            const visibleNotes = notesForActiveCard.filter(
               (n) =>
                 (n.note?.body ?? '').trim().length > 0 ||
                 (n.note?.attachments?.length ?? 0) > 0,

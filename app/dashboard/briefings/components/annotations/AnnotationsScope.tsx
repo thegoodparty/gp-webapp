@@ -77,6 +77,27 @@ export type OverlayState =
  */
 export type SheetState = OverlayState
 
+/**
+ * The user-active card on the briefing detail page. Drives the blue
+ * outline rendered on the card itself and the highlighted entry in the
+ * sidebar legend. Also determines where the top-of-page "Add note"
+ * button attaches new notes — they get this card's `jsonPath` as their
+ * anchor (with `start`/`end` null, marking them as card-level rather
+ * than passage-level).
+ */
+export type ActiveCard = {
+  /** Stable identity used by the legend to highlight the matching entry. */
+  key: string
+  /**
+   * Canonical jsonPath for this card as a whole (no field suffix).
+   * `/executiveSummary` for the exec summary, `/items/{index}` for an
+   * agenda item.
+   */
+  jsonPath: string
+  /** Display title — used by AddNoteSheet for the "Note on …" copy. */
+  title: string
+}
+
 type Ctx = {
   meetingDate: string
   /**
@@ -86,6 +107,15 @@ type Ctx = {
    * no top-level chat exists yet — first open will mint one.
    */
   topLevelChatAnnotationId?: string
+  /** Live annotations list — exposed so cards can render their own
+   *  card-level notes inline without re-fetching. */
+  annotations: Annotation[]
+  /** Currently-focused card. Null only briefly before the layout sets a
+   *  default; the header "Add note" button is disabled while null. */
+  activeCard: ActiveCard | null
+  /** Set when the user clicks the card body or a legend entry. Pure
+   *  state; does NOT scroll the pane (legend handles scrolling). */
+  setActiveCard: (card: ActiveCard) => void
   openAddNoteFromSelection: () => void
   openAddNoteTopLevel: () => void
   openReportErrorFromSelection: () => void
@@ -127,6 +157,12 @@ type Props = {
    * `:date` param in the meeting briefing endpoints.
    */
   meetingDate: string
+  /**
+   * The card that should be active before the user clicks anything —
+   * typically the Executive Summary. Optional only because some test
+   * mounts don't need an active card.
+   */
+  initialActiveCard?: ActiveCard
   children: React.ReactNode
 }
 
@@ -150,6 +186,7 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  */
 export default function AnnotationsScope({
   meetingDate,
+  initialActiveCard,
   children,
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
@@ -157,6 +194,9 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
+  const [activeCard, setActiveCard] = useState<ActiveCard | null>(
+    initialActiveCard ?? null,
+  )
   // Holds the id of a chat freshly-minted from a pending-anchor preempt.
   // Defer the handoff until React Query refetch settles and the new chat
   // appears in `annotations`; otherwise the cycler binds to an id
@@ -187,12 +227,15 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
-  // The top-level "Add notes" button on the header / mobile bar opens the
-  // same AddNoteSheet used for anchored notes — just with `anchor: null`,
-  // so the note is scoped to the whole briefing rather than a passage.
+  // The top-level "Add notes" button on the header / mobile bar attaches
+  // the note to whichever card is currently active. The sheet receives a
+  // null `anchor` (no passage selection) and the scope's onCreate handler
+  // resolves the card's jsonPath at save time — see the AddNoteSheet
+  // onCreate prop below. If no card is active, the button does nothing.
   const openAddNoteTopLevel = useCallback(() => {
+    if (!activeCard) return
     setOverlay({ kind: 'add_note_new', anchor: null })
-  }, [])
+  }, [activeCard])
 
   const openReportErrorFromSelection = useCallback(() => {
     setOverlay({ kind: 'report_error_new', anchor: liveAnchor })
@@ -359,24 +402,46 @@ export default function AnnotationsScope({
     [annotations],
   )
 
+  // Legacy briefing-wide notes (jsonPath === null) come from the old
+  // top-level intake that no longer exists. They aren't surfaced in any
+  // UI any more — neither as inline card rows nor in the NotesSurface
+  // list nor in the count badge — but the rows are kept in the database
+  // so we can recover or migrate them later if needed. Everything else
+  // (real card-level + passage-anchored notes) flows through unchanged.
+  const visibleAnnotations = useMemo(
+    () =>
+      annotations.filter((a) => !(a.kind === 'note' && a.jsonPath === null)),
+    [annotations],
+  )
+
   const { notesCount, chatsCount, bugReportsCount } = useMemo(() => {
     let n = 0
     let c = 0
     let b = 0
-    for (const a of annotations) {
+    for (const a of visibleAnnotations) {
       if (a.kind === 'note') n++
       else if (a.kind === 'chat') c++
       else if (a.kind === 'bug_report') b++
     }
     return { notesCount: n, chatsCount: c, bugReportsCount: b }
-  }, [annotations])
+  }, [visibleAnnotations])
 
-  // Briefing-wide notes (no anchor) — surfaced inside the top-level
-  // AddNoteSheet so the user can see, edit, or delete them.
-  const topLevelNotes = useMemo(
+  // Card-level notes for the active card — jsonPath matches the card, no
+  // passage offsets. Surfaced inside the AddNoteSheet's card-level mode
+  // list and inline at the bottom of the card itself. Returns [] when no
+  // card is active so the sheet renders nothing.
+  const notesForActiveCard = useMemo(
     () =>
-      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
-    [annotations],
+      activeCard
+        ? annotations.filter(
+            (ann) =>
+              ann.kind === 'note' &&
+              ann.jsonPath === activeCard.jsonPath &&
+              ann.start === null &&
+              ann.end === null,
+          )
+        : [],
+    [annotations, activeCard],
   )
 
   // Memoize position calculations — both helpers scan annotations and the
@@ -438,6 +503,9 @@ export default function AnnotationsScope({
     () => ({
       meetingDate,
       topLevelChatAnnotationId,
+      annotations: visibleAnnotations,
+      activeCard,
+      setActiveCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
@@ -455,6 +523,8 @@ export default function AnnotationsScope({
     [
       meetingDate,
       topLevelChatAnnotationId,
+      visibleAnnotations,
+      activeCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
@@ -504,9 +574,18 @@ export default function AnnotationsScope({
             // body is `string().min(1).optional()` server-side — omit when
             // the user only attached files without typing.
             const trimmedBody = body.trim()
+            // anchor=null from the top-of-page "Add note" button means
+            // "attach to the active card." We translate that here so the
+            // note carries the card's jsonPath with null start/end — the
+            // schema convention for card-level (not passage-level) notes.
+            const resolvedAnchor: AnnotationAnchor = anchor
+              ? anchorPayload(anchor)
+              : activeCard
+              ? { jsonPath: activeCard.jsonPath, start: null, end: null }
+              : EMPTY_ANCHOR
             const created = await create.mutateAsync({
               kind: 'note',
-              anchor: anchorPayload(anchor),
+              anchor: resolvedAnchor,
               payload: trimmedBody.length > 0 ? { body: trimmedBody } : {},
             })
             window.getSelection()?.removeAllRanges()
@@ -629,7 +708,8 @@ export default function AnnotationsScope({
               queryKey: annotationsQueryKey(meetingDate),
             })
           }}
-          topLevelNotes={topLevelNotes}
+          notesForActiveCard={notesForActiveCard}
+          activeCardTitle={activeCard?.title ?? null}
           onEditNote={openEditNote}
         />
       )}
@@ -662,7 +742,7 @@ export default function AnnotationsScope({
       <NotesSurface
         open={overlay.kind === 'surface_notes'}
         onClose={closeSheet}
-        annotations={annotations}
+        annotations={visibleAnnotations}
         onEditNote={(ann) =>
           setOverlay({ kind: 'add_note_edit', annotation: ann })
         }

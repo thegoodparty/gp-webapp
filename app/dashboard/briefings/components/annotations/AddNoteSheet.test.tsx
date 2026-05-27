@@ -63,7 +63,8 @@ describe('<AddNoteSheet> error surfacing', () => {
         onDelete={onDelete}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
+        notesForActiveCard={[]}
+        activeCardTitle="Executive Summary"
         onEditNote={vi.fn()}
       />,
     )
@@ -103,7 +104,8 @@ describe('<AddNoteSheet> error surfacing', () => {
         onDelete={onDelete}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
+        notesForActiveCard={[]}
+        activeCardTitle="Executive Summary"
         onEditNote={vi.fn()}
       />,
     )
@@ -144,7 +146,8 @@ describe('<AddNoteSheet> error surfacing', () => {
         onDelete={onDelete}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
+        notesForActiveCard={[]}
+        activeCardTitle="Executive Summary"
         onEditNote={vi.fn()}
       />,
     )
@@ -180,7 +183,8 @@ describe('<AddNoteSheet> edit-mode attachment error reporting', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={onAttachmentAdd}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
+        notesForActiveCard={[]}
+        activeCardTitle="Executive Summary"
         onEditNote={vi.fn()}
       />,
     )
@@ -240,7 +244,8 @@ describe('<AddNoteSheet> edit-mode attachment error reporting', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={onAttachmentDelete}
-        topLevelNotes={[]}
+        notesForActiveCard={[]}
+        activeCardTitle="Executive Summary"
         onEditNote={vi.fn()}
       />,
     )

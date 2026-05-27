@@ -306,7 +306,9 @@ function makeNoteAnnotation(id: string): Annotation {
     resourceType: 'briefing',
     resourceId: 'briefing_x',
     authorUserId: 1,
-    jsonPath: null,
+    // Card-level note: jsonPath points at a card, start/end null. Legacy
+    // null-jsonPath notes are intentionally filtered out by the scope.
+    jsonPath: '/executiveSummary',
     start: null,
     end: null,
     createdAt: '2025-01-01T00:00:00.000Z',
@@ -327,7 +329,14 @@ async function captureOnCreate(): Promise<AddNoteSheetOnCreate> {
   const user = userEvent.setup()
   testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
   render(
-    <AnnotationsScope meetingDate="briefing_x">
+    <AnnotationsScope
+      meetingDate="briefing_x"
+      initialActiveCard={{
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        title: 'Executive Summary',
+      }}
+    >
       <ContextAddNoteTrigger />
     </AnnotationsScope>,
   )
@@ -378,7 +387,14 @@ describe('<AnnotationsScope>', () => {
     ])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <OpenNotesSurfaceTrigger annotationId="ann_X" />
       </AnnotationsScope>,
     )
@@ -428,7 +444,14 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([newAnn])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <AddNoteFromSelectionTrigger />
       </AnnotationsScope>,
     )
@@ -446,7 +469,9 @@ describe('<AnnotationsScope>', () => {
 
     expect(mockAnnotationsApi.create).toHaveBeenCalledWith('briefing_x', {
       kind: 'note',
-      anchor: { jsonPath: null, start: null, end: null },
+      // No live selection in this test → null anchor on the sheet → the
+      // scope falls back to the active card (Executive Summary).
+      anchor: { jsonPath: '/executiveSummary', start: null, end: null },
       payload: { body: 'hello world' },
     })
 
@@ -479,7 +504,14 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([newBug])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <ReportErrorFromSelectionTrigger />
       </AnnotationsScope>,
     )
@@ -524,7 +556,14 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([newAnn])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <AddNoteThenSwitchSurfacesTrigger />
       </AnnotationsScope>,
     )
@@ -560,7 +599,14 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([newBug])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <ReportErrorThenSwitchSurfacesTrigger />
       </AnnotationsScope>,
     )
@@ -601,7 +647,14 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([newAnn])
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <AddNoteThenSwitchSurfacesTrigger />
       </AnnotationsScope>,
     )
@@ -641,7 +694,14 @@ describe('<AnnotationsScope>', () => {
     const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
 
     render(
-      <AnnotationsScope meetingDate="briefing_x">
+      <AnnotationsScope
+        meetingDate="briefing_x"
+        initialActiveCard={{
+          key: 'briefing-executive-summary',
+          jsonPath: '/executiveSummary',
+          title: 'Executive Summary',
+        }}
+      >
         <ContextChatCreatedTrigger />
       </AnnotationsScope>,
     )
@@ -687,7 +747,16 @@ describe('<AnnotationsScope>', () => {
       })
 
       render(
-        <AnnotationsScope meetingDate="briefing_x">{null}</AnnotationsScope>,
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            title: 'Executive Summary',
+          }}
+        >
+          {null}
+        </AnnotationsScope>,
       )
 
       // Click "Ask AI" on the selection → overlay flips to surface_chats
@@ -745,7 +814,7 @@ describe('<AnnotationsScope>', () => {
 
       expect(mockAnnotationsApi.create).toHaveBeenCalledWith('briefing_x', {
         kind: 'note',
-        anchor: { jsonPath: null, start: null, end: null },
+        anchor: { jsonPath: '/executiveSummary', start: null, end: null },
         payload: { body: 'hello world' },
       })
       expect(mockUploadAttachment).not.toHaveBeenCalled()
@@ -764,7 +833,7 @@ describe('<AnnotationsScope>', () => {
 
       expect(mockAnnotationsApi.create).toHaveBeenCalledWith('briefing_x', {
         kind: 'note',
-        anchor: { jsonPath: null, start: null, end: null },
+        anchor: { jsonPath: '/executiveSummary', start: null, end: null },
         payload: {},
       })
       expect(mockUploadAttachment).toHaveBeenCalledWith({
@@ -874,7 +943,14 @@ describe('<AnnotationsScope>', () => {
       mockUploadAttachment.mockRejectedValueOnce(new Error('s3 down'))
 
       render(
-        <AnnotationsScope meetingDate="briefing_x">
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            title: 'Executive Summary',
+          }}
+        >
           <ContextAddNoteTrigger />
         </AnnotationsScope>,
       )
@@ -913,7 +989,14 @@ describe('<AnnotationsScope>', () => {
       mockAnnotationsApi.list.mockResolvedValue([ann])
 
       render(
-        <AnnotationsScope meetingDate="briefing_x">
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            title: 'Executive Summary',
+          }}
+        >
           <EditNoteTrigger annotation={ann} />
         </AnnotationsScope>,
       )

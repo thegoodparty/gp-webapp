@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { APP_BASE } from 'appEnv'
 import { getBriefingBySlug } from '@shared/briefings/server'
-import { briefingsLandingHref } from '@shared/briefings/routes'
+import {
+  BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+  BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  briefingsLandingHref,
+} from '@shared/briefings/routes'
 import serveAccess from '../../shared/serveAccess'
 import DashboardLayout from '../../shared/DashboardLayout'
 import DetailHeader from '../components/detail/DetailHeader'
@@ -53,7 +57,14 @@ export default async function BriefingChromeLayout({
       showAlert={false}
       wrapperClassName="!p-0"
     >
-      <AnnotationsScope meetingDate={slug}>
+      <AnnotationsScope
+        meetingDate={slug}
+        initialActiveCard={{
+          key: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+          jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+          title: 'Executive Summary',
+        }}
+      >
         <div className="relative">
           {/* lg+: constrain the whole briefing area to viewport height and
               disable document-level scroll. The sidebar pane stays
