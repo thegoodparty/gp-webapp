@@ -12,22 +12,18 @@ describe('EMPTY_ANCHOR', () => {
 
 describe('scrollAnchorIntoView', () => {
   const originalScrollIntoView = Element.prototype.scrollIntoView
-  const originalScrollBy = window.scrollBy
   let scrollIntoViewSpy: ReturnType<typeof vi.fn>
-  let scrollBySpy: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     document.body.innerHTML = ''
     scrollIntoViewSpy = vi.fn()
-    scrollBySpy = vi.fn()
     Element.prototype.scrollIntoView =
       scrollIntoViewSpy as unknown as Element['scrollIntoView']
-    window.scrollBy = scrollBySpy as unknown as typeof window.scrollBy
+    document.documentElement.scrollTop = 0
   })
 
   afterEach(() => {
     Element.prototype.scrollIntoView = originalScrollIntoView
-    window.scrollBy = originalScrollBy
   })
 
   function makeAnchorEl(jsonPath: string, rect: Partial<DOMRect>): HTMLElement {
@@ -81,29 +77,41 @@ describe('scrollAnchorIntoView', () => {
       behavior: 'smooth',
       block: 'center',
     })
-    expect(scrollBySpy).not.toHaveBeenCalled()
+    expect(document.documentElement.scrollTop).toBe(0)
   })
 
-  it('scrolls the anchor into the visible band above an open bottom drawer (mobile)', () => {
-    // Drawer occupies the bottom of the viewport; the visible band above
-    // the drawer goes from y=0 to y=200. Band center is y=100.
+  it('directly assigns documentElement.scrollTop when a bottom drawer is open — scrollIntoView/scrollTo are no-ops against vaul body lock + listeners', () => {
+    // Drawer band: visible 0..200, band center 100, anchor center should
+    // land at 100 → anchor top at y=80.
     makeBottomDrawer({ top: 200, height: 568 })
-    // Anchor's current viewport position: center at y=500 (top=480, height=40).
-    makeAnchorEl('path.a', { top: 480, height: 40 })
+    // Anchor 200px below current viewport, page scrolled to 500.
+    // elDocY = 200 + 500 = 700; targetViewportTop = 80; new = 620.
+    document.documentElement.scrollTop = 500
+    makeAnchorEl('path.a', { top: 200, height: 40 })
 
     scrollAnchorIntoView({ jsonPath: 'path.a' })
 
-    // To move anchor center from y=500 to y=100, scroll document down by 400.
-    expect(scrollBySpy).toHaveBeenCalledTimes(1)
-    expect(scrollBySpy).toHaveBeenCalledWith({ top: 400, behavior: 'smooth' })
+    expect(document.documentElement.scrollTop).toBe(620)
     expect(scrollIntoViewSpy).not.toHaveBeenCalled()
   })
 
+  it('clamps newScrollTop to 0 when the anchor is near the top of the document', () => {
+    makeBottomDrawer({ top: 200, height: 568 })
+    document.documentElement.scrollTop = 0
+    makeAnchorEl('path.a', { top: 0, height: 40 })
+
+    scrollAnchorIntoView({ jsonPath: 'path.a' })
+
+    expect(document.documentElement.scrollTop).toBe(0)
+  })
+
   it('does nothing when the anchor element is missing from the DOM', () => {
+    document.documentElement.scrollTop = 500
+
     scrollAnchorIntoView({ jsonPath: 'path.missing' })
 
     expect(scrollIntoViewSpy).not.toHaveBeenCalled()
-    expect(scrollBySpy).not.toHaveBeenCalled()
+    expect(document.documentElement.scrollTop).toBe(500)
   })
 
   it('ignores closed bottom drawers and falls through to scrollIntoView', () => {
@@ -111,11 +119,12 @@ describe('scrollAnchorIntoView', () => {
     drawer.setAttribute('data-vaul-drawer-direction', 'bottom')
     drawer.setAttribute('data-state', 'closed')
     document.body.appendChild(drawer)
+    document.documentElement.scrollTop = 200
     makeAnchorEl('path.a', { top: 100, height: 40 })
 
     scrollAnchorIntoView({ jsonPath: 'path.a' })
 
     expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1)
-    expect(scrollBySpy).not.toHaveBeenCalled()
+    expect(document.documentElement.scrollTop).toBe(200)
   })
 })

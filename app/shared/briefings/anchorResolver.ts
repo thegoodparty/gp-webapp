@@ -166,11 +166,16 @@ export function isPageWideChat(annotation: {
  * Smooth-scroll the briefing canvas to an annotation's anchor. No-op when
  * the annotation has no anchor or the anchor's DOM node has been removed.
  *
- * On mobile the cycler renders as a bottom Drawer that covers most of the
- * viewport. `scrollIntoView({ block: 'center' })` would center the anchor
- * in the full viewport — behind the drawer. Instead we detect the open
- * bottom drawer and scroll the document so the anchor lands centered in
- * the visible band above the drawer.
+ * Mobile path: when vaul's bottom Drawer is open, `body` has `overflow:
+ * hidden` AND vaul registers global wheel/touchmove listeners. Under that
+ * lock, `el.scrollIntoView()`, `window.scrollBy()`, AND
+ * `window.scrollTo()` are all effectively no-ops. Direct
+ * `documentElement.scrollTop = X` is the one mutation vaul doesn't
+ * intercept, so we compute the absolute target scroll position (anchor
+ * centered in the band above the drawer) and assign it.
+ *
+ * Desktop path: the right-side drawer doesn't lock body, so the standard
+ * `scrollIntoView({ block: 'center' })` works fine.
  */
 export function scrollAnchorIntoView(annotation: {
   jsonPath: string | null
@@ -184,12 +189,28 @@ export function scrollAnchorIntoView(annotation: {
     '[data-vaul-drawer-direction="bottom"][data-state="open"]',
   )
   if (bottomDrawer instanceof HTMLElement) {
+    // Vaul applies `overflow: hidden` to body while the drawer is open.
+    // Under that lock, `el.scrollIntoView()` and `window.scrollBy()` are
+    // both no-ops — but `window.scrollTo()` (and direct
+    // `documentElement.scrollTop = X`) still work. So we compute the
+    // absolute document scroll position needed to land the anchor centered
+    // in the visible band above the drawer, then `scrollTo` to it.
     const drawerRect = bottomDrawer.getBoundingClientRect()
     const elRect = el.getBoundingClientRect()
-    const targetCenter = drawerRect.top / 2
-    const currentCenter = elRect.top + elRect.height / 2
-    const delta = currentCenter - targetCenter
-    window.scrollBy({ top: delta, behavior: 'smooth' })
+    const targetViewportTop = Math.max(
+      0,
+      drawerRect.top / 2 - elRect.height / 2,
+    )
+    const currentScrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop
+    const elDocY = elRect.top + currentScrollTop
+    const newScrollTop = Math.max(0, elDocY - targetViewportTop)
+    // Vaul's modal Drawer registers global wheel/touchmove listeners that
+    // can swallow programmatic smooth scrolls. Direct scrollTop assignment
+    // bypasses those listeners. Sacrifice the smooth animation for a
+    // reliable jump — the user's primary signal is that the right anchor
+    // is visible behind the drawer, not the scroll motion itself.
+    document.documentElement.scrollTop = newScrollTop
     return
   }
 
