@@ -125,9 +125,9 @@ test.describe('Website Management', () => {
       if (!fiberKey) {
         throw new Error('React fiber key not found for address input')
       }
-      let fiber: unknown = (
-        addressInput as unknown as Record<string, unknown>
-      )[fiberKey] as unknown
+      let fiber: unknown = (addressInput as unknown as Record<string, unknown>)[
+        fiberKey
+      ] as unknown
       while (fiber) {
         const props = (fiber as { memoizedProps?: Record<string, unknown> })
           .memoizedProps
