@@ -10,6 +10,7 @@ import {
 } from '@shared/briefings/routes'
 import serveAccess from '../../shared/serveAccess'
 import DashboardLayout from '../../shared/DashboardLayout'
+import ActiveCardScrollSpy from '../components/detail/ActiveCardScrollSpy'
 import DetailHeader from '../components/detail/DetailHeader'
 import DetailToc from '../components/detail/DetailToc'
 import MobileBottomBar from '../components/detail/MobileBottomBar'
@@ -65,6 +66,7 @@ export default async function BriefingChromeLayout({
           title: 'Executive Summary',
         }}
       >
+        <ActiveCardScrollSpy items={briefing.items} />
         <div className="relative">
           {/* lg+: constrain the whole briefing area to viewport height and
               disable document-level scroll. The sidebar pane stays
