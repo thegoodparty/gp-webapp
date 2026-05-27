@@ -6,9 +6,7 @@ import type { Annotation } from '@shared/briefings/types'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
-import AttachmentThumbnail, {
-  type AttachmentItem,
-} from './AttachmentThumbnail'
+import AttachmentThumbnail, { type AttachmentItem } from './AttachmentThumbnail'
 import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { SurfaceEmptyState } from './SurfaceEmptyState'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'

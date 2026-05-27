@@ -4,9 +4,7 @@ import { useId, useRef, useState } from 'react'
 import { Camera, FileText, ImageIcon, Paperclip } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
-import AttachmentThumbnail, {
-  type AttachmentItem,
-} from './AttachmentThumbnail'
+import AttachmentThumbnail, { type AttachmentItem } from './AttachmentThumbnail'
 
 type Source = 'photos' | 'camera' | 'document'
 
