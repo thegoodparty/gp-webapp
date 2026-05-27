@@ -101,6 +101,58 @@ vi.mock('./ReportErrorSheet', () => ({
   },
 }))
 
+// Mock BriefingAssistantSurface so we can capture its props (especially
+// `pendingAnchor` and the inline `onChatCreated`) and drive the handoff
+// flow from the test. Renders nothing; tests assert on the captured props.
+type BriefingAssistantSurfaceProps = {
+  open: boolean
+  initialAnnotationId?: string
+  pendingAnchor?: {
+    jsonPath: string | null
+    start: number | null
+    end: number | null
+  }
+  onChatCreated?: (info: {
+    annotationId: string
+    conversationId: string
+  }) => void
+}
+let captured_BriefingAssistantSurface: BriefingAssistantSurfaceProps = {
+  open: false,
+}
+vi.mock('./BriefingAssistantSurface', () => ({
+  BriefingAssistantSurface: (props: BriefingAssistantSurfaceProps) => {
+    captured_BriefingAssistantSurface = props
+    return null
+  },
+}))
+
+// Mock HighlightToolbar so we can fire its `onAskAi` callback from the
+// test — the production path triggers it when the user clicks "Ask AI"
+// on a live selection, which is the entry to the pending-anchor flow.
+let captured_HighlightToolbar_onAskAi: (() => void) | null = null
+vi.mock('./HighlightToolbar', () => ({
+  default: ({ onAskAi }: { onAskAi: () => void }) => {
+    captured_HighlightToolbar_onAskAi = onAskAi
+    return null
+  },
+}))
+
+// Mock useSelection so we can supply a live anchor without driving a real
+// DOM selection. AnnotationsScope's HighlightToolbar onAskAi reads this.
+const mockUseSelection = vi.fn<
+  () => {
+    jsonPath: string
+    start: number
+    end: number
+    quote: string
+    rect: DOMRect
+  } | null
+>()
+vi.mock('@shared/briefings/use-selection', () => ({
+  useSelection: () => mockUseSelection(),
+}))
+
 const reportErrorToSentryMock = vi.fn()
 vi.mock('@shared/sentry', () => ({
   reportErrorToSentry: (...args: unknown[]) => reportErrorToSentryMock(...args),
@@ -303,6 +355,10 @@ describe('<AnnotationsScope>', () => {
     mockAnnotationsApi.list.mockResolvedValue([])
     captured_AddNoteSheet = {}
     captured_ReportErrorSheet = {}
+    captured_BriefingAssistantSurface = { open: false }
+    captured_HighlightToolbar_onAskAi = null
+    mockUseSelection.mockReset()
+    mockUseSelection.mockReturnValue(null)
     addNoteSheetIsMounted = false
     reportErrorToSentryMock.mockReset()
     testQueryClient.clear()
@@ -598,6 +654,82 @@ describe('<AnnotationsScope>', () => {
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: annotationsQueryKey('briefing_x'),
       })
+    })
+  })
+
+  describe('Pending-anchor → cycler handoff', () => {
+    it('hands off from preempt empty-composer to cycler-focused-on-new-chat once the new annotation lands in the cache', async () => {
+      // The new chat the user's about to mint. We pre-stage it on the API
+      // mock so the `handleChatCreated` invalidate-and-refetch picks it up
+      // — without this, the refetch races our setQueryData and wins.
+      const newChat: Annotation = {
+        id: 'ann_new_chat',
+        kind: 'chat',
+        resourceType: 'briefing',
+        resourceId: 'briefing_x',
+        authorUserId: 1,
+        jsonPath: 'agenda.0.title',
+        start: 0,
+        end: 5,
+        createdAt: '2026-05-27T00:00:00.000Z',
+        updatedAt: '2026-05-27T00:00:00.000Z',
+      }
+      mockAnnotationsApi.list.mockResolvedValue([newChat])
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [])
+
+      // User has a live selection.
+      mockUseSelection.mockReturnValue({
+        jsonPath: 'agenda.0.title',
+        start: 0,
+        end: 5,
+        quote: 'hello',
+        rect: {} as DOMRect,
+      })
+
+      render(
+        <AnnotationsScope meetingDate="briefing_x">{null}</AnnotationsScope>,
+      )
+
+      // Click "Ask AI" on the selection → overlay flips to surface_chats
+      // with pendingAnchor; BriefingAssistantSurface receives the preempt.
+      await waitFor(() => {
+        expect(captured_HighlightToolbar_onAskAi).not.toBeNull()
+      })
+      act(() => {
+        captured_HighlightToolbar_onAskAi?.()
+      })
+
+      await waitFor(() => {
+        expect(captured_BriefingAssistantSurface.open).toBe(true)
+      })
+      expect(captured_BriefingAssistantSurface.pendingAnchor).toEqual({
+        jsonPath: 'agenda.0.title',
+        start: 0,
+        end: 5,
+      })
+      expect(
+        captured_BriefingAssistantSurface.initialAnnotationId,
+      ).toBeUndefined()
+
+      // First send: BriefingAssistantSurface fires onChatCreated with the
+      // new annotation id. The inline handler in AnnotationsScope stashes
+      // it in pendingNewChatIdRef and invalidates the annotations query.
+      act(() => {
+        captured_BriefingAssistantSurface.onChatCreated?.({
+          annotationId: 'ann_new_chat',
+          conversationId: 'conv_new',
+        })
+      })
+
+      // The watch effect on [annotations, overlay] runs once the refetch
+      // settles with the new chat — swaps overlay from "preempt with
+      // pendingAnchor" to "cycler focused on initialAnnotationId=new_id".
+      await waitFor(() => {
+        expect(captured_BriefingAssistantSurface.initialAnnotationId).toBe(
+          'ann_new_chat',
+        )
+      })
+      expect(captured_BriefingAssistantSurface.pendingAnchor).toBeUndefined()
     })
   })
 

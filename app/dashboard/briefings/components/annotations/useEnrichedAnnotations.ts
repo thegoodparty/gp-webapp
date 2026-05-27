@@ -6,7 +6,14 @@ function signatureOf(
   annotations: Annotation[],
   kind: Annotation['kind'],
 ): string {
-  let s = `${kind}:${annotations.length}`
+  // Count only annotations of this kind — using total `annotations.length`
+  // would churn the signature on every add/remove of an unrelated kind and
+  // trigger pointless re-enrichment.
+  let count = 0
+  for (const a of annotations) {
+    if (a.kind === kind) count++
+  }
+  let s = `${kind}:${count}`
   for (const a of annotations) {
     if (a.kind !== kind) continue
     s += `|${a.id}:${a.updatedAt}:${a.jsonPath ?? ''}`

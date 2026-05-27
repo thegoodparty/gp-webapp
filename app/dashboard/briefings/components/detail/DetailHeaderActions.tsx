@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, Loader2, MessageSquare, Sparkles } from 'lucide-react'
-import { Button } from '@styleguide'
+import { Download, MessageSquare, Sparkles } from 'lucide-react'
+import { Button, Loader2Icon } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 import { reportErrorToSentry } from '@shared/sentry'
 import type { Briefing } from '@shared/briefings/types'
@@ -49,7 +49,7 @@ export default function DetailHeaderActions({
     <div className="hidden items-center gap-2 lg:flex">
       <Button variant="outline" onClick={onDownload} disabled={downloading}>
         {downloading ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden />
+          <Loader2Icon className="size-4 animate-spin" aria-hidden />
         ) : (
           <Download className="size-4" aria-hidden />
         )}

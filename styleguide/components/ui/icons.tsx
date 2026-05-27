@@ -22,6 +22,7 @@ export {
   GripVertical as GripVerticalIcon,
   Info as InfoIcon,
   LayoutDashboard as LayoutDashboardIcon,
+  Loader2 as Loader2Icon,
   LogOut as LogOutIcon,
   Menu as MenuIcon,
   Minus as MinusIcon,

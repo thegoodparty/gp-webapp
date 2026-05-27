@@ -5,13 +5,13 @@ import {
   List,
   ChevronUp,
   Download,
-  Loader2,
   MessageSquare,
   Sparkles,
 } from 'lucide-react'
 import {
   Button,
   IconButton,
+  Loader2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -246,7 +246,7 @@ export default function MobileBottomBar({
           disabled={downloading}
         >
           {downloading ? (
-            <Loader2 className="size-5 animate-spin" aria-hidden />
+            <Loader2Icon className="size-5 animate-spin" aria-hidden />
           ) : (
             <Download className="size-5" aria-hidden />
           )}

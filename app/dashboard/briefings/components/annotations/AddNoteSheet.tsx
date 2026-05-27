@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Loader2, Paperclip, Trash2, X } from 'lucide-react'
+import { Paperclip, Trash2, X } from 'lucide-react'
 import {
   Button,
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  Loader2Icon,
   Textarea,
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
@@ -454,7 +455,7 @@ export default function AddNoteSheet({
                           className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           {busy ? (
-                            <Loader2
+                            <Loader2Icon
                               className="size-4 animate-spin"
                               aria-hidden
                             />
