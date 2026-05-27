@@ -1,14 +1,13 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Paperclip, Trash2, X } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import {
   Button,
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  Loader2Icon,
   Textarea,
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
@@ -17,7 +16,6 @@ import {
   resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
-import type { Annotation } from '@shared/briefings/types'
 import type { SheetState } from './AnnotationsScope'
 import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
@@ -54,15 +52,8 @@ type Props = {
     annotationId: string,
     attachmentId: string,
   ) => Promise<void>
-  /**
-   * All existing top-level notes for this briefing. Rendered as a list
-   * above the composer when the sheet is in top-level new mode so the
-   * user can see, tap-to-edit, or delete previously-added briefing-wide
-   * notes (those have no anchor and don't render as highlights).
-   */
-  topLevelNotes: Annotation[]
-  /** Open an existing note in edit mode (from the top-level list). */
-  onEditNote: (annotation: Annotation) => void
+  /** Title of the active card — drives the "Note on {title}" copy. */
+  activeCardTitle: string | null
 }
 
 function quoteFor(state: SheetState): string | null {
@@ -100,8 +91,7 @@ export default function AddNoteSheet({
   onDelete,
   onAttachmentAdd,
   onAttachmentDelete,
-  topLevelNotes,
-  onEditNote,
+  activeCardTitle,
 }: Props): React.JSX.Element {
   const open = isAddNoteState(sheet)
   const isDesktop = !useIsMobile()
@@ -122,11 +112,6 @@ export default function AddNoteSheet({
   // Per-attachment busy state for edit mode — keyed by staged temp id (in
   // flight upload) or server attachment id (in flight delete).
   const [busyAttachmentIds, setBusyAttachmentIds] = useState<Set<string>>(
-    () => new Set(),
-  )
-  // Top-level list rows being deleted — drives the spinner on the X
-  // button. Distinct from busyAttachmentIds.
-  const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
     () => new Set(),
   )
 
@@ -155,7 +140,6 @@ export default function AddNoteSheet({
     setAttachmentError(null)
     setSaveError(null)
     setBusyAttachmentIds(new Set())
-    setDeletingNoteIds(new Set())
   }, [sheet, sheetIdentity])
 
   // Clear the user's text selection once the drawer opens — leaving a live
@@ -164,33 +148,6 @@ export default function AddNoteSheet({
 
   const quote = quoteFor(sheet)
   const isEdit = sheet.kind === 'add_note_edit'
-  const existingAttachments =
-    sheet.kind === 'add_note_edit'
-      ? sheet.annotation.note?.attachments ?? []
-      : []
-  // True when the sheet is opened for a brand-new top-level (briefing-wide)
-  // note. In that case we render the user's existing top-level notes
-  // above the composer so they can see what's already saved without the
-  // drawer needing to be closed and reopened.
-  const isTopLevelNew = sheet.kind === 'add_note_new' && sheet.anchor === null
-
-  async function handleListDelete(annotationId: string) {
-    if (deletingNoteIds.has(annotationId)) return
-    setDeletingNoteIds((prev) => new Set(prev).add(annotationId))
-    setSaveError(null)
-    try {
-      await onDelete(annotationId)
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      setSaveError(`Couldn't delete this note: ${msg}`)
-    } finally {
-      setDeletingNoteIds((prev) => {
-        const next = new Set(prev)
-        next.delete(annotationId)
-        return next
-      })
-    }
-  }
 
   function markBusy(id: string, busy: boolean) {
     setBusyAttachmentIds((prev) => {
@@ -334,10 +291,14 @@ export default function AddNoteSheet({
 
   // The list the picker renders. In new-note mode it's just staged files;
   // in edit mode it's the server-side attachments plus any uploads still
-  // in flight.
+  // in flight. We re-derive `existingAttachments` inside the memo so the
+  // `?? []` fallback doesn't churn its identity across renders and trip
+  // react-hooks/exhaustive-deps.
   const pickerItems: PickerItem[] = useMemo(() => {
     if (sheet.kind === 'add_note_edit') {
-      const existing: PickerItem[] = existingAttachments.map((att) => ({
+      const existing: PickerItem[] = (
+        sheet.annotation.note?.attachments ?? []
+      ).map((att) => ({
         id: att.id,
         label: att.fileName,
         busy: busyAttachmentIds.has(att.id),
@@ -353,7 +314,7 @@ export default function AddNoteSheet({
       id: s.id,
       label: s.file.name,
     }))
-  }, [sheet, existingAttachments, stagedAttachments, busyAttachmentIds])
+  }, [sheet, stagedAttachments, busyAttachmentIds])
 
   // New-note saves allow body-only or attachment-only. Edit mode's Save
   // commits the body; attachment changes happen immediately, so Save is
@@ -394,82 +355,12 @@ export default function AddNoteSheet({
         >
           {quote ? (
             <AnchoredQuote text={quote} showLabel={false} />
-          ) : !isEdit ? (
+          ) : !isEdit && activeCardTitle ? (
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
-              This note is for the whole briefing.
+              Note on{' '}
+              <span className="font-medium not-italic">{activeCardTitle}</span>
             </p>
           ) : null}
-
-          {(() => {
-            if (!isTopLevelNew) return null
-            // Hide notes that have neither a body nor any attachments yet.
-            // This covers the brief window between create.mutateAsync
-            // resolving and the attachment uploads' refetch landing —
-            // rendering them would flash "(empty note)" for a frame.
-            const visibleNotes = topLevelNotes.filter(
-              (n) =>
-                (n.note?.body ?? '').trim().length > 0 ||
-                (n.note?.attachments?.length ?? 0) > 0,
-            )
-            if (visibleNotes.length === 0) return null
-            return (
-              <ul className="flex list-none flex-col gap-2">
-                {visibleNotes.map((n) => {
-                  const attachCount = n.note?.attachments?.length ?? 0
-                  const preview = (n.note?.body ?? '').trim()
-                  const label =
-                    preview.length > 0
-                      ? preview
-                      : `${attachCount} attachment${
-                          attachCount === 1 ? '' : 's'
-                        }`
-                  const busy = deletingNoteIds.has(n.id)
-                  return (
-                    <li key={n.id}>
-                      <div className="group flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 transition-colors hover:bg-muted/60">
-                        <button
-                          type="button"
-                          onClick={() => onEditNote(n)}
-                          className="flex min-w-0 flex-1 items-center gap-2 text-left text-sm focus:outline-none"
-                        >
-                          <span className="line-clamp-2 min-w-0 flex-1 text-foreground">
-                            {label}
-                          </span>
-                          {attachCount > 0 ? (
-                            <span
-                              aria-label={`${attachCount} attached file${
-                                attachCount === 1 ? '' : 's'
-                              }`}
-                              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                            >
-                              <Paperclip className="size-3" aria-hidden />
-                              {attachCount}
-                            </span>
-                          ) : null}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => void handleListDelete(n.id)}
-                          disabled={busy}
-                          aria-label="Delete note"
-                          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {busy ? (
-                            <Loader2Icon
-                              className="size-4 animate-spin"
-                              aria-hidden
-                            />
-                          ) : (
-                            <X className="size-4" aria-hidden />
-                          )}
-                        </button>
-                      </div>
-                    </li>
-                  )
-                })}
-              </ul>
-            )
-          })()}
         </div>
 
         {/* Composer pinned at the bottom. The attachment picker sits above

@@ -18,10 +18,20 @@ const mockedUseShareScope = vi.mocked(useShareScope)
 
 type Ctx = ReturnType<typeof useAnnotationsCtx>
 
+const ACTIVE_CARD = {
+  key: 'briefing-executive-summary',
+  jsonPath: '/executiveSummary',
+  titleJsonPath: '/executive_summary/title',
+  title: 'Executive Summary',
+}
+
 function setCtx(overrides: Partial<Ctx> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue({
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
+    annotations: [],
+    activeCard: null,
+    setActiveCard: vi.fn(),
     openAddNoteFromSelection: vi.fn(),
     openAddNoteTopLevel: vi.fn(),
     openReportErrorFromSelection: vi.fn(),
@@ -29,6 +39,7 @@ function setCtx(overrides: Partial<Ctx> = {}) {
     openViewReport: vi.fn(),
     openNotesSurface: vi.fn(),
     openChatsSurface: vi.fn(),
+    openCardLevelChat: vi.fn(),
     openBugReportsSurface: vi.fn(),
     notesCount: 0,
     chatsCount: 0,
@@ -53,20 +64,22 @@ describe('<DetailHeaderActions>', () => {
     mockedUseShareScope.mockReset()
   })
 
-  it('renders Share, Notes, and Briefing assistant buttons', () => {
-    setCtx()
+  it('renders Share, Add note, and Briefing assistant buttons when a card is active', () => {
+    setCtx({ activeCard: ACTIVE_CARD })
     setShareScope()
     render(<DetailHeaderActions />)
 
     expect(screen.getByRole('button', { name: /^share$/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^add note$/i }),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /briefing assistant/i }),
     ).toBeInTheDocument()
   })
 
   it('asks the share scope to open the drawer when Share is clicked', async () => {
-    setCtx()
+    setCtx({ activeCard: ACTIVE_CARD })
     const openShareDrawer = setShareScope()
     render(<DetailHeaderActions />)
 
@@ -79,39 +92,54 @@ describe('<DetailHeaderActions>', () => {
     // gp-api's response hasn't grown `briefing_id` yet. `canShare` is
     // false in that case and the button must drop out entirely so we
     // don't render a control that points at a broken URL.
-    setCtx()
+    setCtx({ activeCard: ACTIVE_CARD })
     setShareScope({ canShare: false })
     render(<DetailHeaderActions />)
 
     expect(
       screen.queryByRole('button', { name: /^share$/i }),
     ).not.toBeInTheDocument()
-    // Notes and Briefing assistant are unaffected.
-    expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^add note$/i }),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /briefing assistant/i }),
     ).toBeInTheDocument()
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
-    const openNotesSurface = vi.fn()
-    setCtx({ openNotesSurface })
+  it('calls openAddNoteTopLevel when the Add note button is clicked with an active card', async () => {
+    const openAddNoteTopLevel = vi.fn()
+    setCtx({ openAddNoteTopLevel, activeCard: ACTIVE_CARD })
     setShareScope()
     render(<DetailHeaderActions />)
-
-    await userEvent.click(screen.getByRole('button', { name: /^notes$/i }))
-    expect(openNotesSurface).toHaveBeenCalledTimes(1)
+    await userEvent.click(screen.getByRole('button', { name: /^add note$/i }))
+    expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
   })
 
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
-    const openChatsSurface = vi.fn()
-    setCtx({ openChatsSurface })
+  it('disables Add note when no card is active', () => {
+    setCtx({ activeCard: null })
     setShareScope()
     render(<DetailHeaderActions />)
+    expect(screen.getByRole('button', { name: /^add note$/i })).toBeDisabled()
+  })
 
+  it('calls openCardLevelChat when the Briefing assistant button is clicked with an active card', async () => {
+    const openCardLevelChat = vi.fn()
+    setCtx({ openCardLevelChat, activeCard: ACTIVE_CARD })
+    setShareScope()
+    render(<DetailHeaderActions />)
     await userEvent.click(
       screen.getByRole('button', { name: /briefing assistant/i }),
     )
-    expect(openChatsSurface).toHaveBeenCalledTimes(1)
+    expect(openCardLevelChat).toHaveBeenCalledTimes(1)
+  })
+
+  it('disables the Briefing assistant button when no card is active', () => {
+    setCtx({ activeCard: null })
+    setShareScope()
+    render(<DetailHeaderActions />)
+    expect(
+      screen.getByRole('button', { name: /briefing assistant/i }),
+    ).toBeDisabled()
   })
 })
