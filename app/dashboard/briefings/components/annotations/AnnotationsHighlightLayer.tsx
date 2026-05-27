@@ -6,11 +6,19 @@ import {
   buildRangeIn,
   findAnchorEl,
   pointToOffset,
+  type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
 import type { Annotation, AnnotationKind } from '@shared/briefings/types'
 
 type Props = {
   annotations: Annotation[]
+  /**
+   * The user's live (or just-captured) selection. On touch devices
+   * useSelection wipes the native Selection immediately to suppress
+   * iOS's edit menu, so we repaint the same range here as a CSS
+   * Highlight to keep the visual "this is what you selected" cue.
+   */
+  pendingAnchor: ResolvedAnchor | null
 }
 
 type ResolvedRange = {
@@ -24,6 +32,11 @@ const HIGHLIGHT_NAMES: Record<AnnotationKind, string> = {
   bug_report: 'briefing-annotation-bug',
 }
 const HOVER_NAME = 'briefing-annotation-hover'
+// Painted as a stand-in for the native OS selection on touch devices —
+// useSelection clears the native Selection right after capturing the
+// anchor (to dismiss iOS's edit menu), so without this overlay the user
+// would see no visible cue for what they just selected.
+const PENDING_SELECTION_NAME = 'briefing-pending-selection'
 const NOTE_MARKER_CLASS = 'briefing-note-marker'
 const CHAT_MARKER_CLASS = 'briefing-chat-marker'
 const BUG_MARKER_CLASS = 'briefing-bug-marker'
@@ -72,6 +85,12 @@ const STYLE_RULES = `
 }
 ::highlight(${HOVER_NAME}) {
   background-color: color-mix(in srgb, var(--foreground, #161f31) 12%, transparent);
+}
+::highlight(${PENDING_SELECTION_NAME}) {
+  /* Mimics the iOS / desktop blue selection tint so the user still sees
+     what they selected after we've wiped the native Selection. */
+  background-color: color-mix(in srgb, var(--info, #1b6afc) 28%, transparent);
+  color: inherit;
 }
 .${NOTE_MARKER_CLASS},
 .${CHAT_MARKER_CLASS},
@@ -192,6 +211,7 @@ function findMarker(annotationId: string): HTMLElement | null {
 
 export default function AnnotationsHighlightLayer({
   annotations,
+  pendingAnchor,
 }: Props): null {
   const pathname = usePathname()
   const resolvedRef = useRef<ResolvedRange[]>([])
@@ -341,6 +361,51 @@ export default function AnnotationsHighlightLayer({
       removeAllMarkers()
     }
   }, [annotations, pathname])
+
+  // Pending-selection overlay. Repaints whenever the live anchor changes
+  // (including null → cleared). Independent of the annotations effect
+  // above so capturing a selection doesn't churn the persistent
+  // annotation highlights.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const CSSAny = CSS as unknown as {
+      highlights?: {
+        set(name: string, h: unknown): void
+        delete(name: string): void
+      }
+    }
+    const HighlightCtorMaybe = (
+      window as unknown as {
+        Highlight?: new (...ranges: Range[]) => unknown
+      }
+    ).Highlight
+    if (!CSSAny.highlights || !HighlightCtorMaybe) return
+    const HighlightCtor = HighlightCtorMaybe
+
+    if (
+      !pendingAnchor ||
+      pendingAnchor.jsonPath === null ||
+      pendingAnchor.start === null ||
+      pendingAnchor.end === null
+    ) {
+      CSSAny.highlights.delete(PENDING_SELECTION_NAME)
+      return
+    }
+    const el = findAnchorEl(pendingAnchor.jsonPath)
+    if (!el) {
+      CSSAny.highlights.delete(PENDING_SELECTION_NAME)
+      return
+    }
+    const range = buildRangeIn(el, pendingAnchor.start, pendingAnchor.end)
+    if (!range) {
+      CSSAny.highlights.delete(PENDING_SELECTION_NAME)
+      return
+    }
+    CSSAny.highlights.set(PENDING_SELECTION_NAME, new HighlightCtor(range))
+    return () => {
+      CSSAny.highlights?.delete(PENDING_SELECTION_NAME)
+    }
+  }, [pendingAnchor])
 
   return null
 }

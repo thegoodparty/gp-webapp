@@ -560,7 +560,10 @@ export default function AnnotationsScope({
   return (
     <AnnotationsCtx.Provider value={ctxValue}>
       {children}
-      <AnnotationsHighlightLayer annotations={annotations} />
+      <AnnotationsHighlightLayer
+        annotations={annotations}
+        pendingAnchor={liveAnchor}
+      />
       <HighlightToolbar
         anchor={liveAnchor}
         onAddNote={openAddNoteFromSelection}
