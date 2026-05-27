@@ -16,7 +16,7 @@ const TrackBriefingViewed = ({ briefingId }: Props): null => {
   useEffect(() => {
     trackEvent(EVENTS.Briefings.BriefingViewed, {
       briefing_id: briefingId,
-      came_from: resolveCameFrom(searchParams.get('utm_source')),
+      came_from: resolveCameFrom(searchParams?.get('utm_source') ?? null),
     })
   }, [briefingId, searchParams])
   return null
