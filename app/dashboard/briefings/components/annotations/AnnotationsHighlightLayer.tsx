@@ -44,6 +44,15 @@ const STYLE_TAG_ID = 'briefing-annotation-highlight-style'
  * its text highlight darken together whichever one the user points at.
  */
 const STYLE_RULES = `
+/* Suppress the OS text-selection callout (iOS Safari's Copy / Look Up /
+   Share menu, the native long-press handler) on annotation-enabled
+   passages so only the briefing's HighlightToolbar surfaces on
+   selection. We still allow selection itself — the toolbar reads the
+   live selection — and the callout suppression is iOS-specific, which
+   is where the conflict is most visible. */
+[data-briefing-json-path] {
+  -webkit-touch-callout: none;
+}
 ::highlight(${HIGHLIGHT_NAMES.note}) {
   background-color: color-mix(in srgb, var(--info, #1b6afc) 22%, transparent);
   color: inherit;

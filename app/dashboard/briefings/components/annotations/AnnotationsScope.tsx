@@ -12,6 +12,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import {
   EMPTY_ANCHOR,
+  findAnchorEl,
   pointToOffset,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
@@ -77,6 +78,36 @@ export type OverlayState =
  */
 export type SheetState = OverlayState
 
+/**
+ * The user-active card on the briefing detail page. Drives the blue
+ * outline rendered on the card itself and the highlighted entry in the
+ * sidebar legend. Also determines where the top-of-page "Add note"
+ * button attaches new notes — they get this card's `jsonPath` as their
+ * anchor (with `start`/`end` null, marking them as card-level rather
+ * than passage-level).
+ */
+export type ActiveCard = {
+  /** Stable identity used by the legend to highlight the matching entry. */
+  key: string
+  /**
+   * Canonical jsonPath for this card as a whole (no field suffix).
+   * `/executiveSummary` for the exec summary, `/items/{index}` for an
+   * agenda item. Card-level notes use this directly with null offsets.
+   */
+  jsonPath: string
+  /**
+   * JsonPath of the card's title element. Used when the user starts a
+   * card-level chat from the header — the new chat is anchored to the
+   * title (jsonPath + start=0 + end=title.length) just as if the user
+   * had highlighted the title themselves. There must be a DOM element
+   * carrying this path under `data-briefing-json-path` so the anchor
+   * resolves back to a quote.
+   */
+  titleJsonPath: string
+  /** Display title — used by AddNoteSheet for the "Note on …" copy. */
+  title: string
+}
+
 type Ctx = {
   meetingDate: string
   /**
@@ -86,6 +117,15 @@ type Ctx = {
    * no top-level chat exists yet — first open will mint one.
    */
   topLevelChatAnnotationId?: string
+  /** Live annotations list — exposed so cards can render their own
+   *  card-level notes inline without re-fetching. */
+  annotations: Annotation[]
+  /** Currently-focused card. Null only briefly before the layout sets a
+   *  default; the header "Add note" button is disabled while null. */
+  activeCard: ActiveCard | null
+  /** Set when the user clicks the card body or a legend entry. Pure
+   *  state; does NOT scroll the pane (legend handles scrolling). */
+  setActiveCard: (card: ActiveCard) => void
   openAddNoteFromSelection: () => void
   openAddNoteTopLevel: () => void
   openReportErrorFromSelection: () => void
@@ -93,6 +133,14 @@ type Ctx = {
   openViewReport: (annotation: Annotation) => void
   openNotesSurface: (initialAnnotationId?: string) => void
   openChatsSurface: (initialAnnotationId?: string) => void
+  /**
+   * Opens a chat scoped to the active card. If one already exists at
+   * the card's title anchor, focuses the cycler on it; otherwise mints
+   * a new chat against the title (jsonPath + start=0 + end=title.length).
+   * Header "Briefing assistant" + mobile FAB route here so the chat
+   * always carries a meaningful card-level anchor.
+   */
+  openCardLevelChat: () => void
   openBugReportsSurface: (initialAnnotationId?: string) => void
   notesCount: number
   chatsCount: number
@@ -127,6 +175,12 @@ type Props = {
    * `:date` param in the meeting briefing endpoints.
    */
   meetingDate: string
+  /**
+   * The card that should be active before the user clicks anything —
+   * typically the Executive Summary. Optional only because some test
+   * mounts don't need an active card.
+   */
+  initialActiveCard?: ActiveCard
   children: React.ReactNode
 }
 
@@ -150,6 +204,7 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  */
 export default function AnnotationsScope({
   meetingDate,
+  initialActiveCard,
   children,
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
@@ -157,6 +212,9 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
+  const [activeCard, setActiveCard] = useState<ActiveCard | null>(
+    initialActiveCard ?? null,
+  )
   // Holds the id of a chat freshly-minted from a pending-anchor preempt.
   // Defer the handoff until React Query refetch settles and the new chat
   // appears in `annotations`; otherwise the cycler binds to an id
@@ -187,12 +245,29 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
-  // The top-level "Add notes" button on the header / mobile bar opens the
-  // same AddNoteSheet used for anchored notes — just with `anchor: null`,
-  // so the note is scoped to the whole briefing rather than a passage.
+  // The top-level "Add notes" button on the header / mobile bar attaches
+  // the note to whichever card is currently active. A card may carry at
+  // most one card-level note — if the active card already has one, open
+  // the notes cycler focused on it (matching the click-into-a-passage-
+  // anchored-highlight flow, so users can page between notes from the
+  // same entry point). Otherwise open the new-note sheet with a null
+  // `anchor`; the scope's onCreate handler resolves the card's jsonPath
+  // at save time. If no card is active, the button does nothing.
   const openAddNoteTopLevel = useCallback(() => {
+    if (!activeCard) return
+    const existing = annotations.find(
+      (a) =>
+        a.kind === 'note' &&
+        a.jsonPath === activeCard.jsonPath &&
+        a.start === null &&
+        a.end === null,
+    )
+    if (existing) {
+      setOverlay({ kind: 'surface_notes', initialAnnotationId: existing.id })
+      return
+    }
     setOverlay({ kind: 'add_note_new', anchor: null })
-  }, [])
+  }, [activeCard, annotations])
 
   const openReportErrorFromSelection = useCallback(() => {
     setOverlay({ kind: 'report_error_new', anchor: liveAnchor })
@@ -213,6 +288,40 @@ export default function AnnotationsScope({
   const openChatsSurface = useCallback((initialAnnotationId?: string) => {
     setOverlay({ kind: 'surface_chats', initialAnnotationId })
   }, [])
+
+  // Card-level chat entry point. If a chat already exists anchored to
+  // the active card's title, open the cycler focused on it; otherwise
+  // mint a new chat with a pendingAnchor pointing at the title (start=0
+  // → end=title.length, equivalent to highlighting the title manually).
+  // Bails when no card is active.
+  const openCardLevelChat = useCallback(() => {
+    if (!activeCard) return
+    const titlePath = activeCard.titleJsonPath
+    const existing = annotations.find(
+      (a) => a.kind === 'chat' && a.jsonPath === titlePath,
+    )
+    if (existing) {
+      setOverlay({
+        kind: 'surface_chats',
+        initialAnnotationId: existing.id,
+      })
+      return
+    }
+    // Resolve the title element so we can capture its current text
+    // length as the anchor end. If the element is missing (briefing
+    // hasn't hydrated yet, schema mismatch), fall back to opening the
+    // generic chats surface — better than throwing.
+    const el = findAnchorEl(titlePath)
+    const titleLen = el?.textContent?.length ?? 0
+    if (titleLen === 0) {
+      setOverlay({ kind: 'surface_chats' })
+      return
+    }
+    setOverlay({
+      kind: 'surface_chats',
+      pendingAnchor: { jsonPath: titlePath, start: 0, end: titleLen },
+    })
+  }, [activeCard, annotations])
 
   const openBugReportsSurface = useCallback((initialAnnotationId?: string) => {
     setOverlay({ kind: 'surface_bug_reports', initialAnnotationId })
@@ -354,8 +463,40 @@ export default function AnnotationsScope({
     return () => document.removeEventListener('click', onClick)
   }, [annotations])
 
+  // Suppress the OS context menu / selection callout on annotation-
+  // enabled passages so only the briefing's HighlightToolbar surfaces
+  // on text selection. iOS's long-press menu is handled via
+  // `-webkit-touch-callout: none` in AnnotationsHighlightLayer's CSS,
+  // but Android Chrome and desktop browsers still fire `contextmenu` on
+  // long-press / right-click — preventDefault here suppresses that
+  // path. Selection itself still works (the toolbar reads it via
+  // useSelection); we're only blocking the system menu.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    function onContextMenu(e: MouseEvent) {
+      if (!(e.target instanceof HTMLElement)) return
+      if (e.target.closest('[data-briefing-json-path]')) {
+        e.preventDefault()
+      }
+    }
+    document.addEventListener('contextmenu', onContextMenu)
+    return () => document.removeEventListener('contextmenu', onContextMenu)
+  }, [])
+
   const topLevelChatAnnotationId = useMemo(
     () => annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
+    [annotations],
+  )
+
+  // Legacy briefing-wide notes (jsonPath === null) come from the old
+  // top-level intake that no longer exists. They aren't surfaced in any
+  // UI any more — neither as inline card rows nor in the NotesSurface
+  // list nor in the count badge — but the rows are kept in the database
+  // so we can recover or migrate them later if needed. Everything else
+  // (real card-level + passage-anchored notes) flows through unchanged.
+  const visibleAnnotations = useMemo(
+    () =>
+      annotations.filter((a) => !(a.kind === 'note' && a.jsonPath === null)),
     [annotations],
   )
 
@@ -363,21 +504,13 @@ export default function AnnotationsScope({
     let n = 0
     let c = 0
     let b = 0
-    for (const a of annotations) {
+    for (const a of visibleAnnotations) {
       if (a.kind === 'note') n++
       else if (a.kind === 'chat') c++
       else if (a.kind === 'bug_report') b++
     }
     return { notesCount: n, chatsCount: c, bugReportsCount: b }
-  }, [annotations])
-
-  // Briefing-wide notes (no anchor) — surfaced inside the top-level
-  // AddNoteSheet so the user can see, edit, or delete them.
-  const topLevelNotes = useMemo(
-    () =>
-      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
-    [annotations],
-  )
+  }, [visibleAnnotations])
 
   // Memoize position calculations — both helpers scan annotations and the
   // predict path walks the DOM via querySelectorAll, so we don't want them
@@ -438,6 +571,9 @@ export default function AnnotationsScope({
     () => ({
       meetingDate,
       topLevelChatAnnotationId,
+      annotations: visibleAnnotations,
+      activeCard,
+      setActiveCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
@@ -445,6 +581,7 @@ export default function AnnotationsScope({
       openViewReport,
       openNotesSurface,
       openChatsSurface,
+      openCardLevelChat,
       openBugReportsSurface,
       notesCount,
       chatsCount,
@@ -455,6 +592,8 @@ export default function AnnotationsScope({
     [
       meetingDate,
       topLevelChatAnnotationId,
+      visibleAnnotations,
+      activeCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
@@ -462,6 +601,7 @@ export default function AnnotationsScope({
       openViewReport,
       openNotesSurface,
       openChatsSurface,
+      openCardLevelChat,
       openBugReportsSurface,
       notesCount,
       chatsCount,
@@ -504,9 +644,18 @@ export default function AnnotationsScope({
             // body is `string().min(1).optional()` server-side — omit when
             // the user only attached files without typing.
             const trimmedBody = body.trim()
+            // anchor=null from the top-of-page "Add note" button means
+            // "attach to the active card." We translate that here so the
+            // note carries the card's jsonPath with null start/end — the
+            // schema convention for card-level (not passage-level) notes.
+            const resolvedAnchor: AnnotationAnchor = anchor
+              ? anchorPayload(anchor)
+              : activeCard
+              ? { jsonPath: activeCard.jsonPath, start: null, end: null }
+              : EMPTY_ANCHOR
             const created = await create.mutateAsync({
               kind: 'note',
-              anchor: anchorPayload(anchor),
+              anchor: resolvedAnchor,
               payload: trimmedBody.length > 0 ? { body: trimmedBody } : {},
             })
             window.getSelection()?.removeAllRanges()
@@ -629,8 +778,7 @@ export default function AnnotationsScope({
               queryKey: annotationsQueryKey(meetingDate),
             })
           }}
-          topLevelNotes={topLevelNotes}
-          onEditNote={openEditNote}
+          activeCardTitle={activeCard?.title ?? null}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
@@ -662,7 +810,7 @@ export default function AnnotationsScope({
       <NotesSurface
         open={overlay.kind === 'surface_notes'}
         onClose={closeSheet}
-        annotations={annotations}
+        annotations={visibleAnnotations}
         onEditNote={(ann) =>
           setOverlay({ kind: 'add_note_edit', annotation: ann })
         }

@@ -1,7 +1,13 @@
 'use client'
 
 import { MeetingBriefingOutput } from 'gpApi/generated/agent-job-contracts'
-import { briefingItemDomId } from '@shared/briefings/routes'
+import {
+  BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+  BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
+  briefingItemDomId,
+} from '@shared/briefings/routes'
+import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import CardLevelNotesList from './CardLevelNotesList'
 import ReadAloudButton from './ReadAloudButton'
 
 type Props = {
@@ -42,13 +48,40 @@ export default function ExecutiveSummaryCard({
   speechText,
   analyticsLabel,
 }: Props): React.JSX.Element {
+  const { activeCard, setActiveCard } = useAnnotationsCtx()
+  const isActive = activeCard?.key === domId
+  const activate = () =>
+    setActiveCard({
+      key: domId,
+      jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+      titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
+      title: 'Executive Summary',
+    })
   return (
     <article
       id={domId}
-      className="flex scroll-mt-[104px] flex-col gap-3 rounded-2xl border border-border bg-card p-6 lg:scroll-mt-3"
+      onClick={activate}
+      // Make the card root addressable in the cycler's DOM-order index.
+      // Card-level notes carry this path; without it, the enricher
+      // couldn't slot them into document order.
+      data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH}
+      aria-current={isActive ? 'true' : undefined}
+      className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-3 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
+        isActive
+          ? 'border-info-600 ring-2 ring-info-600/40'
+          : 'border-border hover:border-foreground/20'
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <h2 className="text-2xl font-semibold text-foreground">
+        {/* `data-briefing-json-path` makes the title resolvable as an
+            anchor target — card-level chats hang off this element.
+            `select-none` reserves the title for that role: the user
+            doesn't need to highlight it themselves; the "Briefing
+            assistant" button anchors here automatically. */}
+        <h2
+          className="select-none text-2xl font-semibold text-foreground"
+          data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
+        >
           Executive Summary
         </h2>
         <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
@@ -85,6 +118,7 @@ export default function ExecutiveSummaryCard({
           })}
         </ul>
       ) : null}
+      <CardLevelNotesList cardPath={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH} />
     </article>
   )
 }

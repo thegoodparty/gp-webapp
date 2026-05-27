@@ -18,6 +18,9 @@ function setCtx(overrides: Partial<Ctx> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue({
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
+    annotations: [],
+    activeCard: null,
+    setActiveCard: vi.fn(),
     openAddNoteFromSelection: vi.fn(),
     openAddNoteTopLevel: vi.fn(),
     openReportErrorFromSelection: vi.fn(),
@@ -25,6 +28,7 @@ function setCtx(overrides: Partial<Ctx> = {}) {
     openViewReport: vi.fn(),
     openNotesSurface: vi.fn(),
     openChatsSurface: vi.fn(),
+    openCardLevelChat: vi.fn(),
     openBugReportsSurface: vi.fn(),
     notesCount: 0,
     chatsCount: 0,
@@ -57,30 +61,69 @@ describe('<DetailHeaderActions>', () => {
     mockedUseAnnotationsCtx.mockReset()
   })
 
-  it('renders Notes and Briefing assistant buttons', () => {
-    setCtx()
+  it('renders Add note and Briefing assistant buttons', () => {
+    setCtx({
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(<DetailHeaderActions briefing={briefingStub} />)
-    expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^add note$/i }),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /briefing assistant/i }),
     ).toBeInTheDocument()
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
-    const openNotesSurface = vi.fn()
-    setCtx({ openNotesSurface })
+  it('calls openAddNoteTopLevel when the Add note button is clicked with an active card', async () => {
+    const openAddNoteTopLevel = vi.fn()
+    setCtx({
+      openAddNoteTopLevel,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(<DetailHeaderActions briefing={briefingStub} />)
-    await userEvent.click(screen.getByRole('button', { name: /^notes$/i }))
-    expect(openNotesSurface).toHaveBeenCalledTimes(1)
+    await userEvent.click(screen.getByRole('button', { name: /^add note$/i }))
+    expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
   })
 
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
-    const openChatsSurface = vi.fn()
-    setCtx({ openChatsSurface })
+  it('disables Add note when no card is active', () => {
+    setCtx({ activeCard: null })
+    render(<DetailHeaderActions briefing={briefingStub} />)
+    expect(screen.getByRole('button', { name: /^add note$/i })).toBeDisabled()
+  })
+
+  it('calls openCardLevelChat when the Briefing assistant button is clicked with an active card', async () => {
+    const openCardLevelChat = vi.fn()
+    setCtx({
+      openCardLevelChat,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(<DetailHeaderActions briefing={briefingStub} />)
     await userEvent.click(
       screen.getByRole('button', { name: /briefing assistant/i }),
     )
-    expect(openChatsSurface).toHaveBeenCalledTimes(1)
+    expect(openCardLevelChat).toHaveBeenCalledTimes(1)
+  })
+
+  it('disables the Briefing assistant button when no card is active', () => {
+    setCtx({ activeCard: null })
+    render(<DetailHeaderActions briefing={briefingStub} />)
+    expect(
+      screen.getByRole('button', { name: /briefing assistant/i }),
+    ).toBeDisabled()
   })
 })

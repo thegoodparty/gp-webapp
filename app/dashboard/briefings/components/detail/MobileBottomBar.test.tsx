@@ -32,6 +32,9 @@ function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
   const ctx: AnnotationsCtxValue = {
     meetingDate: '2026-01-01',
     topLevelChatAnnotationId: undefined,
+    annotations: [],
+    activeCard: null,
+    setActiveCard: vi.fn(),
     openAddNoteFromSelection: vi.fn(),
     openAddNoteTopLevel: vi.fn(),
     openReportErrorFromSelection: vi.fn(),
@@ -39,6 +42,7 @@ function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
     openViewReport: vi.fn(),
     openNotesSurface: vi.fn(),
     openChatsSurface: vi.fn(),
+    openCardLevelChat: vi.fn(),
     openBugReportsSurface: vi.fn(),
     notesCount: 0,
     chatsCount: 0,
@@ -91,7 +95,14 @@ describe('<MobileBottomBar>', () => {
   })
 
   it('renders the page-selector pill, Download, and Ask AI as siblings in one row on a solid panel', () => {
-    setCtx()
+    setCtx({
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(
       <MobileBottomBar
         briefing={briefingStub}
@@ -100,10 +111,16 @@ describe('<MobileBottomBar>', () => {
       />,
     )
 
-    const selector = screen.getByRole('button', { name: /executive summary/i })
+    const selectorMatches = screen.getAllByRole('button', {
+      name: /executive summary/i,
+    })
+    // The page-selector pill is the first button whose label is just the
+    // section name; the "Ask AI about Executive Summary" button also matches.
+    const selector = selectorMatches[0]
+    if (!selector) throw new Error('selector button not rendered')
     const download = screen.getByRole('button', { name: /download pdf/i })
     const askAi = screen.getByRole('button', {
-      name: /open briefing assistant/i,
+      name: /ask ai about executive summary/i,
     })
 
     // All three controls share a common ancestor (the dock row) so they
@@ -120,23 +137,17 @@ describe('<MobileBottomBar>', () => {
     expect(dock?.className ?? '').not.toMatch(/pointer-events-none/)
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
-    const openNotesSurface = vi.fn()
-    setCtx({ openNotesSurface })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-      />,
-    )
-    await userEvent.click(screen.getByRole('button', { name: /open notes/i }))
-    expect(openNotesSurface).toHaveBeenCalledTimes(1)
-  })
-
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
-    const openChatsSurface = vi.fn()
-    setCtx({ openChatsSurface })
+  it('calls openAddNoteTopLevel when the Add note button is clicked with an active card', async () => {
+    const openAddNoteTopLevel = vi.fn()
+    setCtx({
+      openAddNoteTopLevel,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(
       <MobileBottomBar
         briefing={briefingStub}
@@ -145,9 +156,33 @@ describe('<MobileBottomBar>', () => {
       />,
     )
     await userEvent.click(
-      screen.getByRole('button', { name: /open briefing assistant/i }),
+      screen.getByRole('button', { name: /add a note to executive summary/i }),
     )
-    expect(openChatsSurface).toHaveBeenCalledTimes(1)
+    expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
+  })
+
+  it('calls openCardLevelChat when the Briefing assistant button is tapped with an active card', async () => {
+    const openCardLevelChat = vi.fn()
+    setCtx({
+      openCardLevelChat,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
+    render(
+      <MobileBottomBar
+        briefing={briefingStub}
+        briefingSlug="town-hall"
+        items={makeItems(1)}
+      />,
+    )
+    await userEvent.click(
+      screen.getByRole('button', { name: /ask ai about executive summary/i }),
+    )
+    expect(openCardLevelChat).toHaveBeenCalledTimes(1)
   })
 
   it('calls downloadBriefingPdf with the briefing and lines when Download is clicked', async () => {

@@ -61,7 +61,8 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
   const [downloading, setDownloading] = useState(false)
-  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
+  const { openAddNoteTopLevel, openCardLevelChat, activeCard } =
+    useAnnotationsCtx()
 
   const onDownload = async () => {
     setDownloading(true)
@@ -255,16 +256,26 @@ export default function MobileBottomBar({
           type="button"
           size="medium"
           variant="outline"
-          aria-label="Open notes"
-          onClick={() => openNotesSurface()}
+          aria-label={
+            activeCard
+              ? `Add a note to ${activeCard.title}`
+              : 'Click a card to make it active first'
+          }
+          onClick={openAddNoteTopLevel}
+          disabled={!activeCard}
         >
           <MessageSquare className="size-5" aria-hidden />
         </IconButton>
         <IconButton
           type="button"
           size="medium"
-          aria-label="Open briefing assistant"
-          onClick={() => openChatsSurface()}
+          aria-label={
+            activeCard
+              ? `Ask AI about ${activeCard.title}`
+              : 'Click a card to make it active first'
+          }
+          onClick={openCardLevelChat}
+          disabled={!activeCard}
         >
           <Sparkles className="size-5" aria-hidden />
         </IconButton>
