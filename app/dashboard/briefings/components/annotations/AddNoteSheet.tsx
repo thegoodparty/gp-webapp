@@ -289,30 +289,41 @@ export default function AddNoteSheet({
     }
   }
 
-  // The list the picker renders. In new-note mode it's just staged files;
-  // in edit mode it's the server-side attachments plus any uploads still
-  // in flight. We re-derive `existingAttachments` inside the memo so the
-  // `?? []` fallback doesn't churn its identity across renders and trip
-  // react-hooks/exhaustive-deps.
+  // The list the picker renders. Edit mode mixes server attachments
+  // (fetched-on-demand signed URLs for thumbnails) with inflight staged
+  // uploads; new-note mode is just staged files (blob URL thumbnails).
+  // We re-derive `existingAttachments` inside the memo so the `?? []`
+  // fallback doesn't churn its identity across renders.
   const pickerItems: PickerItem[] = useMemo(() => {
     if (sheet.kind === 'add_note_edit') {
+      const annotationId = sheet.annotation.id
       const existing: PickerItem[] = (
         sheet.annotation.note?.attachments ?? []
       ).map((att) => ({
+        kind: 'server' as const,
         id: att.id,
         label: att.fileName,
+        mimeType: att.mimeType,
+        annotationId,
+        attachmentId: att.id,
         busy: busyAttachmentIds.has(att.id),
       }))
       const inflight: PickerItem[] = stagedAttachments.map((s) => ({
+        kind: 'staged' as const,
         id: s.id,
         label: s.file.name,
+        mimeType: s.file.type,
+        file: s.file,
         busy: busyAttachmentIds.has(s.id),
       }))
       return [...existing, ...inflight]
     }
     return stagedAttachments.map((s) => ({
+      kind: 'staged' as const,
       id: s.id,
       label: s.file.name,
+      mimeType: s.file.type,
+      file: s.file,
     }))
   }, [sheet, stagedAttachments, busyAttachmentIds])
 

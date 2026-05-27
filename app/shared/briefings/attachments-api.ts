@@ -88,3 +88,25 @@ export const deleteAttachment = async (input: {
     input,
   )
 }
+
+export type AttachmentDownloadUrl = {
+  url: string
+  expiresAt: string
+}
+
+/**
+ * Fetches a short-lived presigned S3 GET URL for an attachment. Used
+ * for `<img src>` on image thumbnails and `window.open` on document
+ * attachments — bytes never pass through gp-api. URL is good for ~15
+ * min; callers should re-fetch if `expiresAt` is in the past.
+ */
+export const getAttachmentDownloadUrl = async (input: {
+  annotationId: string
+  attachmentId: string
+}): Promise<AttachmentDownloadUrl> => {
+  const { data } = await clientRequest(
+    'GET /v1/annotations/:annotationId/note/attachments/:attachmentId/download-url',
+    input,
+  )
+  return { url: data.download_url, expiresAt: data.expires_at }
+}

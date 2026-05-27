@@ -292,6 +292,10 @@ export type APIEndpoints = {
     Request: { annotationId: string; attachmentId: string }
     Response: void
   }
+  'GET /v1/annotations/:annotationId/note/attachments/:attachmentId/download-url': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: ApiAttachmentDownloadUrlResponse
+  }
 
   'GET /v1/meetings/:date/briefing/feedback': {
     Request: { date: string }
@@ -394,6 +398,11 @@ export interface ApiAttachmentPresignResponse {
   attachment_id: string
   upload_url: string
   storage_key: string
+}
+
+export interface ApiAttachmentDownloadUrlResponse {
+  download_url: string
+  expires_at: string
 }
 
 export interface ApiAnnotationBugReport {
