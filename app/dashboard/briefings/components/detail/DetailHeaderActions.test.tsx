@@ -39,8 +39,11 @@ function setCtx(overrides: Partial<Ctx> = {}) {
   } satisfies Ctx)
 }
 
-function setShareScope(openShareDrawer = vi.fn()) {
-  mockedUseShareScope.mockReturnValue({ openShareDrawer })
+function setShareScope({
+  canShare = true,
+  openShareDrawer = vi.fn(),
+}: { canShare?: boolean; openShareDrawer?: () => void } = {}) {
+  mockedUseShareScope.mockReturnValue({ canShare, openShareDrawer })
   return openShareDrawer
 }
 
@@ -69,6 +72,25 @@ describe('<DetailHeaderActions>', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /^share$/i }))
     expect(openShareDrawer).toHaveBeenCalledTimes(1)
+  })
+
+  it('hides the Share button when share scope reports !canShare', () => {
+    // Rolling-deploy window: gp-webapp has the share-drawer code but
+    // gp-api's response hasn't grown `briefing_id` yet. `canShare` is
+    // false in that case and the button must drop out entirely so we
+    // don't render a control that points at a broken URL.
+    setCtx()
+    setShareScope({ canShare: false })
+    render(<DetailHeaderActions />)
+
+    expect(
+      screen.queryByRole('button', { name: /^share$/i }),
+    ).not.toBeInTheDocument()
+    // Notes and Briefing assistant are unaffected.
+    expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /briefing assistant/i }),
+    ).toBeInTheDocument()
   })
 
   it('opens the notes surface when the Notes button is clicked', async () => {

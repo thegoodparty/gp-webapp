@@ -50,17 +50,16 @@ const BRIEFING_TYPE_LABEL: Record<BriefingType, string> = {
 
 const isFullArtifact = (
   data: { briefing_status?: string } | { status?: string },
-): data is MeetingBriefingFull & { briefing_id: string } => {
+): data is MeetingBriefingFull => {
+  // Narrow on the status discriminator alone. `briefing_id` (the share
+  // token used by the drawer) was originally also checked here, but doing
+  // so makes the entire briefing page 404 during a rolling-deploy window
+  // where gp-webapp has the share-drawer code but gp-api hasn't shipped
+  // the `briefing_id` augmentation yet — a much worse failure mode than
+  // a broken share button. The drawer code in `ShareScope` now suppresses
+  // the share UI when `briefing_id` is absent so we degrade gracefully.
   const status = 'briefing_status' in data ? data.briefing_status : undefined
-  if (status !== 'briefing_ready' && status !== 'agenda_provided_by_user') {
-    return false
-  }
-  // Also verify the `briefing_id` augmentation arrived from gp-api. Without
-  // this guard, a stale gp-api response (pre-share-drawer deploy) would
-  // narrow to `Briefing` and downstream `buildShareUrl` would produce a
-  // `/api/v1/briefings/undefined` link instead of failing fast.
-  const briefingId = (data as { briefing_id?: unknown }).briefing_id
-  return typeof briefingId === 'string' && briefingId.length > 0
+  return status === 'briefing_ready' || status === 'agenda_provided_by_user'
 }
 
 export const isFullBriefing = (b: Briefing | AwaitingBriefing): b is Briefing =>
@@ -87,8 +86,18 @@ export const getBriefingBySlug = async (
     }
     if (!isFullArtifact(data)) return null
     const formattedDate = format(parseISO(slug), 'MMMM d, yyyy')
+    // `briefing_id` is the augmentation that gp-api adds onto the artifact
+    // payload alongside this PR. During a rolling-deploy window where the
+    // server hasn't shipped that yet, the field will be undefined; default
+    // to an empty string so the page still renders and let downstream
+    // consumers (the share drawer) detect the empty value and hide
+    // share-only UI. Once the contracts package catches up, this fallback
+    // becomes dead code that should be removed alongside the augmentation
+    // declaration in `types.ts`.
+    const briefingId = (data as { briefing_id?: unknown }).briefing_id ?? ''
     return {
       ...data,
+      briefing_id: typeof briefingId === 'string' ? briefingId : '',
       title: `${
         BRIEFING_TYPE_LABEL[data.briefing_type] ?? 'Meeting'
       } briefing for ${formattedDate}`,

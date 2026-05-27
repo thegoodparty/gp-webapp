@@ -18,14 +18,16 @@ import { useShareScope } from './ShareScope'
  */
 export default function DetailHeaderActions(): React.JSX.Element {
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-  const { openShareDrawer } = useShareScope()
+  const { canShare, openShareDrawer } = useShareScope()
 
   return (
     <div className="hidden items-center gap-2 lg:flex">
-      <Button variant="outline" onClick={openShareDrawer}>
-        <Share2Icon className="size-4" aria-hidden />
-        Share
-      </Button>
+      {canShare && (
+        <Button variant="outline" onClick={openShareDrawer}>
+          <Share2Icon className="size-4" aria-hidden />
+          Share
+        </Button>
+      )}
       <Button variant="outline" onClick={() => openNotesSurface()}>
         <MessageSquare className="size-4" aria-hidden />
         Notes

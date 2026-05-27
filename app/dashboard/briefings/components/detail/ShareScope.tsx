@@ -22,6 +22,14 @@ import ShareBriefingDrawer from './ShareBriefingDrawer'
  * an `openShareDrawer()` callback the two action surfaces consume.
  */
 type ShareScopeValue = {
+  /**
+   * `true` when the briefing carries a usable `briefing_id` (the server-side
+   * PDF share token). Consumers should hide share entry-points when this is
+   * `false` — typically during a rolling-deploy window where gp-webapp
+   * shipped before gp-api added the field to its response. Falsy here means
+   * "we can't build a working share URL right now".
+   */
+  canShare: boolean
   openShareDrawer: () => void
 }
 
@@ -37,21 +45,30 @@ export default function ShareScope({
   children,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const openShareDrawer = useCallback(() => setOpen(true), [])
+  const canShare = Boolean(briefing.briefing_id)
+  const openShareDrawer = useCallback(() => {
+    // Guard at the dispatch site so a stale UI that still renders the
+    // entry-point can't accidentally open a drawer pointed at
+    // `/api/v1/briefings/undefined`.
+    if (!canShare) return
+    setOpen(true)
+  }, [canShare])
 
   const value = useMemo<ShareScopeValue>(
-    () => ({ openShareDrawer }),
-    [openShareDrawer],
+    () => ({ canShare, openShareDrawer }),
+    [canShare, openShareDrawer],
   )
 
   return (
     <ShareScopeContext.Provider value={value}>
       {children}
-      <ShareBriefingDrawer
-        briefing={briefing}
-        open={open}
-        onOpenChange={setOpen}
-      />
+      {canShare && (
+        <ShareBriefingDrawer
+          briefing={briefing}
+          open={open}
+          onOpenChange={setOpen}
+        />
+      )}
     </ShareScopeContext.Provider>
   )
 }

@@ -49,8 +49,11 @@ function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue(ctx)
 }
 
-function setShareScope(openShareDrawer = vi.fn()) {
-  mockedUseShareScope.mockReturnValue({ openShareDrawer })
+function setShareScope({
+  canShare = true,
+  openShareDrawer = vi.fn(),
+}: { canShare?: boolean; openShareDrawer?: () => void } = {}) {
+  mockedUseShareScope.mockReturnValue({ canShare, openShareDrawer })
   return openShareDrawer
 }
 
@@ -126,5 +129,23 @@ describe('<MobileBottomBar>', () => {
       screen.getByRole('button', { name: /share briefing/i }),
     )
     expect(openShareDrawer).toHaveBeenCalledTimes(1)
+  })
+
+  it('hides the share icon when share scope reports !canShare', () => {
+    // During a rolling-deploy window where the briefing artifact lacks
+    // `briefing_id`, the dock must not render a Share button — clicking
+    // one would otherwise produce a broken `/api/v1/briefings/undefined`
+    // URL via the drawer.
+    setCtx()
+    setShareScope({ canShare: false })
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+
+    expect(
+      screen.queryByRole('button', { name: /share briefing/i }),
+    ).not.toBeInTheDocument()
+    // Other dock controls still render so the rest of the toolbar works.
+    expect(
+      screen.getByRole('button', { name: /open notes/i }),
+    ).toBeInTheDocument()
   })
 })

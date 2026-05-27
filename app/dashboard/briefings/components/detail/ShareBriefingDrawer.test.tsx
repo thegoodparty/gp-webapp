@@ -5,6 +5,8 @@ import { render } from 'helpers/test-utils/render'
 import type { Briefing } from '@shared/briefings/types'
 import ShareBriefingDrawer from './ShareBriefingDrawer'
 
+const COPIED_FEEDBACK_MS = 1500
+
 vi.mock('appEnv', () => ({
   APP_BASE: 'https://goodparty.example',
 }))
@@ -162,6 +164,46 @@ describe('<ShareBriefingDrawer>', () => {
     expect(
       await screen.findByRole('button', { name: /^copied$/i }),
     ).toBeInTheDocument()
+  })
+
+  it('resets "Copied" feedback when the drawer is closed mid-timer', async () => {
+    // The drawer lives at the layout level inside `ShareScope` so closing
+    // it doesn't unmount it; without an explicit reset effect, the
+    // "Copied" label would persist for the remainder of `COPIED_FEEDBACK_MS`
+    // when the user closes and re-opens the drawer rapidly.
+    mockClipboard(async () => undefined)
+    const { rerender } = render(
+      <ShareBriefingDrawer
+        briefing={briefingStub}
+        open
+        onOpenChange={vi.fn()}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: /^copy$/i }))
+    expect(
+      await screen.findByRole('button', { name: /^copied$/i }),
+    ).toBeInTheDocument()
+    // Close the drawer well before the COPIED_FEEDBACK_MS timer fires.
+    expect(COPIED_FEEDBACK_MS).toBeGreaterThan(100)
+    rerender(
+      <ShareBriefingDrawer
+        briefing={briefingStub}
+        open={false}
+        onOpenChange={vi.fn()}
+      />,
+    )
+    // Re-open and confirm the inline button is back to its idle label.
+    rerender(
+      <ShareBriefingDrawer
+        briefing={briefingStub}
+        open
+        onOpenChange={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('button', { name: /^copy$/i })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /^copied$/i }),
+    ).not.toBeInTheDocument()
   })
 
   it('does not surface "Copied" feedback if clipboard.writeText rejects', async () => {

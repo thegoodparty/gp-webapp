@@ -86,6 +86,27 @@ export default function ShareBriefingDrawer({
     }
   }, [])
 
+  // The drawer lives at the layout level inside `ShareScope` and only its
+  // visibility — not its mount — toggles with `open`. The unmount cleanup
+  // above therefore only fires on full page teardown. Without this second
+  // effect, closing the drawer mid-feedback (within `COPIED_FEEDBACK_MS`)
+  // and reopening it would surface a stale "Copied" label until the timer
+  // expired. Cancel any pending timer and reset the labels every time the
+  // drawer closes so each open starts clean.
+  useEffect(() => {
+    if (open) return
+    if (copiedIconTimerRef.current !== null) {
+      clearTimeout(copiedIconTimerRef.current)
+      copiedIconTimerRef.current = null
+    }
+    if (copiedInlineTimerRef.current !== null) {
+      clearTimeout(copiedInlineTimerRef.current)
+      copiedInlineTimerRef.current = null
+    }
+    setCopiedIcon(false)
+    setCopiedInline(false)
+  }, [open])
+
   const writeClipboard = useCallback(async () => {
     if (typeof navigator === 'undefined' || !navigator.clipboard) return false
     try {

@@ -46,7 +46,7 @@ export default function MobileBottomBar({
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-  const { openShareDrawer } = useShareScope()
+  const { canShare, openShareDrawer } = useShareScope()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -207,15 +207,17 @@ export default function MobileBottomBar({
           </SheetContent>
         </Sheet>
 
-        <IconButton
-          type="button"
-          size="medium"
-          variant="outline"
-          aria-label="Share briefing"
-          onClick={openShareDrawer}
-        >
-          <Share2Icon className="size-5" aria-hidden />
-        </IconButton>
+        {canShare && (
+          <IconButton
+            type="button"
+            size="medium"
+            variant="outline"
+            aria-label="Share briefing"
+            onClick={openShareDrawer}
+          >
+            <Share2Icon className="size-5" aria-hidden />
+          </IconButton>
+        )}
         <IconButton
           type="button"
           size="medium"
