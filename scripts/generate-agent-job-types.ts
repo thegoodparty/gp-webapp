@@ -42,7 +42,7 @@ const main = async () => {
     }
   }
 
-  const outputPath = 'src/generated/agent-job-contracts.ts'
+  const outputPath = 'gpApi/generated/agent-job-contracts.ts'
 
   const types = await compile(
     {
