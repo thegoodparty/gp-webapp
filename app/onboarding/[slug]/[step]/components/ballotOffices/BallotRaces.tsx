@@ -29,7 +29,6 @@ interface SelectedOffice {
   id?: string | number
   election?: { id?: string | number | null; electionDay?: string }
   brPositionId?: string
-  partisanType?: string
 }
 
 interface BallotRacesProps {
@@ -99,10 +98,11 @@ const getHighlightedText = (text: string, searchTerm: string): ReactNode => {
   )
 }
 
-// Composite (brPositionId, electionDay, partisanType) match when available;
-// id fallback for legacy UUID-format raceIds persisted before the
-// office-picker fix. partisanType is the tiebreaker for partisan/non-partisan
-// variants of the same office in the same election.
+// Composite (brPositionId, electionDay) match when available; id fallback
+// for legacy UUID-format raceIds persisted before the office-picker fix.
+// partisanType is intentionally not part of the composite — the lean list
+// from /races-by-year doesn't carry it, so including it would diverge from
+// the hydrated shape and drop the radio's highlight after hydration.
 const matchesSelected = (
   race: Race,
   selected: Race | SelectedOffice | false,
@@ -114,14 +114,8 @@ const matchesSelected = (
   const selectedDay = selectedAsRace.election?.electionDay
   if (selectedBrPos && selectedDay) {
     const raceBrPos = race.brPositionId ?? race.position?.id
-    const selectedPartisan =
-      (selected as SelectedOffice).partisanType ??
-      selectedAsRace.position?.partisanType ??
-      ''
     return (
-      raceBrPos === selectedBrPos &&
-      race.election?.electionDay === selectedDay &&
-      (race.position?.partisanType ?? '') === selectedPartisan
+      raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
     )
   }
   return (
