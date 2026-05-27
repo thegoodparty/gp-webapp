@@ -12,6 +12,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import {
   EMPTY_ANCHOR,
+  findAnchorEl,
   pointToOffset,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
@@ -91,9 +92,18 @@ export type ActiveCard = {
   /**
    * Canonical jsonPath for this card as a whole (no field suffix).
    * `/executiveSummary` for the exec summary, `/items/{index}` for an
-   * agenda item.
+   * agenda item. Card-level notes use this directly with null offsets.
    */
   jsonPath: string
+  /**
+   * JsonPath of the card's title element. Used when the user starts a
+   * card-level chat from the header — the new chat is anchored to the
+   * title (jsonPath + start=0 + end=title.length) just as if the user
+   * had highlighted the title themselves. There must be a DOM element
+   * carrying this path under `data-briefing-json-path` so the anchor
+   * resolves back to a quote.
+   */
+  titleJsonPath: string
   /** Display title — used by AddNoteSheet for the "Note on …" copy. */
   title: string
 }
@@ -123,6 +133,14 @@ type Ctx = {
   openViewReport: (annotation: Annotation) => void
   openNotesSurface: (initialAnnotationId?: string) => void
   openChatsSurface: (initialAnnotationId?: string) => void
+  /**
+   * Opens a chat scoped to the active card. If one already exists at
+   * the card's title anchor, focuses the cycler on it; otherwise mints
+   * a new chat against the title (jsonPath + start=0 + end=title.length).
+   * Header "Briefing assistant" + mobile FAB route here so the chat
+   * always carries a meaningful card-level anchor.
+   */
+  openCardLevelChat: () => void
   openBugReportsSurface: (initialAnnotationId?: string) => void
   notesCount: number
   chatsCount: number
@@ -270,6 +288,40 @@ export default function AnnotationsScope({
   const openChatsSurface = useCallback((initialAnnotationId?: string) => {
     setOverlay({ kind: 'surface_chats', initialAnnotationId })
   }, [])
+
+  // Card-level chat entry point. If a chat already exists anchored to
+  // the active card's title, open the cycler focused on it; otherwise
+  // mint a new chat with a pendingAnchor pointing at the title (start=0
+  // → end=title.length, equivalent to highlighting the title manually).
+  // Bails when no card is active.
+  const openCardLevelChat = useCallback(() => {
+    if (!activeCard) return
+    const titlePath = activeCard.titleJsonPath
+    const existing = annotations.find(
+      (a) => a.kind === 'chat' && a.jsonPath === titlePath,
+    )
+    if (existing) {
+      setOverlay({
+        kind: 'surface_chats',
+        initialAnnotationId: existing.id,
+      })
+      return
+    }
+    // Resolve the title element so we can capture its current text
+    // length as the anchor end. If the element is missing (briefing
+    // hasn't hydrated yet, schema mismatch), fall back to opening the
+    // generic chats surface — better than throwing.
+    const el = findAnchorEl(titlePath)
+    const titleLen = el?.textContent?.length ?? 0
+    if (titleLen === 0) {
+      setOverlay({ kind: 'surface_chats' })
+      return
+    }
+    setOverlay({
+      kind: 'surface_chats',
+      pendingAnchor: { jsonPath: titlePath, start: 0, end: titleLen },
+    })
+  }, [activeCard, annotations])
 
   const openBugReportsSurface = useCallback((initialAnnotationId?: string) => {
     setOverlay({ kind: 'surface_bug_reports', initialAnnotationId })
@@ -529,6 +581,7 @@ export default function AnnotationsScope({
       openViewReport,
       openNotesSurface,
       openChatsSurface,
+      openCardLevelChat,
       openBugReportsSurface,
       notesCount,
       chatsCount,
@@ -548,6 +601,7 @@ export default function AnnotationsScope({
       openViewReport,
       openNotesSurface,
       openChatsSurface,
+      openCardLevelChat,
       openBugReportsSurface,
       notesCount,
       chatsCount,

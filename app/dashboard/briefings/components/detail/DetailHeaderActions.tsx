@@ -19,7 +19,9 @@ type Props = {
  * Sticky header actions on desktop. Download builds the briefing PDF in
  * the browser via @react-pdf/renderer. "Add note" attaches a new note to
  * the currently-active card (disabled when no card is active). "Briefing
- * assistant" opens the chats cycler.
+ * assistant" opens (or creates) a chat anchored to the active card's
+ * title — the same shape a manual highlight-then-Ask-AI on the title
+ * would produce.
  */
 export default function DetailHeaderActions({
   briefing,
@@ -27,7 +29,7 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { openAddNoteTopLevel, openChatsSurface, activeCard } =
+  const { openAddNoteTopLevel, openCardLevelChat, activeCard } =
     useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
@@ -69,7 +71,15 @@ export default function DetailHeaderActions({
         <MessageSquare className="size-4" aria-hidden />
         Add note
       </Button>
-      <Button onClick={() => openChatsSurface()}>
+      <Button
+        onClick={openCardLevelChat}
+        disabled={!activeCard}
+        title={
+          activeCard
+            ? `Ask AI about ${activeCard.title}`
+            : 'Click a card to make it active first'
+        }
+      >
         <Sparkles className="size-4" aria-hidden />
         Briefing assistant
       </Button>

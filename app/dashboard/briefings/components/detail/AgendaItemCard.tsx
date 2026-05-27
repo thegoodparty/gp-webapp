@@ -8,7 +8,10 @@ import {
   toDisplaySource,
   type DisplaySource,
 } from '@shared/briefings/displaySource'
-import { briefingItemCardPath } from '@shared/briefings/routes'
+import {
+  briefingItemCardPath,
+  briefingItemTitlePath,
+} from '@shared/briefings/routes'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
@@ -189,10 +192,16 @@ const AgendaItemCard = ({
   analyticsLabel,
 }: Props): React.JSX.Element => {
   const base = briefingItemCardPath(itemIndex)
+  const titlePath = briefingItemTitlePath(itemIndex)
   const { activeCard, setActiveCard } = useAnnotationsCtx()
   const isActive = activeCard?.key === domId
   const activate = () =>
-    setActiveCard({ key: domId, jsonPath: base, title: item.title })
+    setActiveCard({
+      key: domId,
+      jsonPath: base,
+      titleJsonPath: titlePath,
+      title: item.title,
+    })
   const display = item.display
   const sentiment = display.constituent_sentiment
   const budget = display.budget_impact
@@ -230,9 +239,13 @@ const AgendaItemCard = ({
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
+          {/* `select-none` reserves the title as the card-level chat
+              anchor — see openCardLevelChat. Users don't need (and we
+              don't want) to highlight it themselves. Body text inside
+              the card remains selectable. */}
           <h3
-            className="text-lg font-semibold text-foreground"
-            data-briefing-json-path={`${base}/title`}
+            className="select-none text-lg font-semibold text-foreground"
+            data-briefing-json-path={titlePath}
           >
             {item.title}
           </h3>

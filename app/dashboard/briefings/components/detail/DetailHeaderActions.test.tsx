@@ -28,6 +28,7 @@ function setCtx(overrides: Partial<Ctx> = {}) {
     openViewReport: vi.fn(),
     openNotesSurface: vi.fn(),
     openChatsSurface: vi.fn(),
+    openCardLevelChat: vi.fn(),
     openBugReportsSurface: vi.fn(),
     notesCount: 0,
     chatsCount: 0,
@@ -65,6 +66,7 @@ describe('<DetailHeaderActions>', () => {
       activeCard: {
         key: 'briefing-executive-summary',
         jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
         title: 'Executive Summary',
       },
     })
@@ -84,6 +86,7 @@ describe('<DetailHeaderActions>', () => {
       activeCard: {
         key: 'briefing-executive-summary',
         jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
         title: 'Executive Summary',
       },
     })
@@ -98,13 +101,29 @@ describe('<DetailHeaderActions>', () => {
     expect(screen.getByRole('button', { name: /^add note$/i })).toBeDisabled()
   })
 
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
-    const openChatsSurface = vi.fn()
-    setCtx({ openChatsSurface })
+  it('calls openCardLevelChat when the Briefing assistant button is clicked with an active card', async () => {
+    const openCardLevelChat = vi.fn()
+    setCtx({
+      openCardLevelChat,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
+        title: 'Executive Summary',
+      },
+    })
     render(<DetailHeaderActions briefing={briefingStub} />)
     await userEvent.click(
       screen.getByRole('button', { name: /briefing assistant/i }),
     )
-    expect(openChatsSurface).toHaveBeenCalledTimes(1)
+    expect(openCardLevelChat).toHaveBeenCalledTimes(1)
+  })
+
+  it('disables the Briefing assistant button when no card is active', () => {
+    setCtx({ activeCard: null })
+    render(<DetailHeaderActions briefing={briefingStub} />)
+    expect(
+      screen.getByRole('button', { name: /briefing assistant/i }),
+    ).toBeDisabled()
   })
 })

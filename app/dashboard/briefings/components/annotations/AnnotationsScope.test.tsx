@@ -334,6 +334,7 @@ async function captureOnCreate(): Promise<AddNoteSheetOnCreate> {
       initialActiveCard={{
         key: 'briefing-executive-summary',
         jsonPath: '/executiveSummary',
+        titleJsonPath: '/executive_summary/title',
         title: 'Executive Summary',
       }}
     >
@@ -392,6 +393,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -449,6 +451,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -509,6 +512,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -561,6 +565,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -604,6 +609,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -652,6 +658,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -699,6 +706,7 @@ describe('<AnnotationsScope>', () => {
         initialActiveCard={{
           key: 'briefing-executive-summary',
           jsonPath: '/executiveSummary',
+          titleJsonPath: '/executive_summary/title',
           title: 'Executive Summary',
         }}
       >
@@ -752,6 +760,7 @@ describe('<AnnotationsScope>', () => {
           initialActiveCard={{
             key: 'briefing-executive-summary',
             jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
             title: 'Executive Summary',
           }}
         >
@@ -829,6 +838,7 @@ describe('<AnnotationsScope>', () => {
           initialActiveCard={{
             key: 'briefing-executive-summary',
             jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
             title: 'Executive Summary',
           }}
         >
@@ -874,6 +884,7 @@ describe('<AnnotationsScope>', () => {
           initialActiveCard={{
             key: 'briefing-executive-summary',
             jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
             title: 'Executive Summary',
           }}
         >
@@ -1037,6 +1048,7 @@ describe('<AnnotationsScope>', () => {
           initialActiveCard={{
             key: 'briefing-executive-summary',
             jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
             title: 'Executive Summary',
           }}
         >
@@ -1083,6 +1095,7 @@ describe('<AnnotationsScope>', () => {
           initialActiveCard={{
             key: 'briefing-executive-summary',
             jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
             title: 'Executive Summary',
           }}
         >

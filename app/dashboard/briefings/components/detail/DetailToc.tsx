@@ -4,8 +4,10 @@ import { useMemo } from 'react'
 import {
   BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
   briefingItemCardPath,
   briefingItemDomId,
+  briefingItemTitlePath,
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
@@ -20,6 +22,7 @@ type Entry = {
   label: string
   domId: string
   jsonPath: string
+  titleJsonPath: string
 }
 
 /**
@@ -44,6 +47,7 @@ export default function DetailToc({
         label: 'Executive Summary',
         domId: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
         jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+        titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
       },
     ]
     items.forEach((item, idx) => {
@@ -52,6 +56,7 @@ export default function DetailToc({
         label: item.title,
         domId: briefingItemDomId(item.id),
         jsonPath: briefingItemCardPath(idx),
+        titleJsonPath: briefingItemTitlePath(idx),
       })
     })
     return list
@@ -63,6 +68,7 @@ export default function DetailToc({
     setActiveCard({
       key: entry.key,
       jsonPath: entry.jsonPath,
+      titleJsonPath: entry.titleJsonPath,
       title: entry.label,
     })
     const target = document.getElementById(entry.domId)

@@ -15,6 +15,13 @@ export const BRIEFING_EXECUTIVE_SUMMARY_DOM_ID = 'briefing-executive-summary'
  */
 export const BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH = '/executiveSummary'
 
+/**
+ * JsonPath of the Executive Summary card's title element. A DOM
+ * element under this path is required so card-level chat anchors
+ * resolve back to a quote — see ExecutiveSummaryCard.
+ */
+export const BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH = '/executive_summary/title'
+
 export function briefingItemDomId(itemId: string): string {
   return `briefing-item-${itemId}`
 }
@@ -27,6 +34,16 @@ export function briefingItemDomId(itemId: string): string {
  */
 export function briefingItemCardPath(itemIndex: number): string {
   return `/items/${itemIndex}`
+}
+
+/**
+ * JsonPath of an agenda item card's title element. Card-level chats
+ * anchor here with `start`/`end` spanning the title's full text — that
+ * mirrors what would happen if the user highlighted the title and
+ * tapped "Ask AI" themselves.
+ */
+export function briefingItemTitlePath(itemIndex: number): string {
+  return `/items/${itemIndex}/title`
 }
 
 export function briefingsLandingHref(): string {

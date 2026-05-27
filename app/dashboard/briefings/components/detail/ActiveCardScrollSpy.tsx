@@ -4,8 +4,10 @@ import { useEffect, useMemo, useRef } from 'react'
 import {
   BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
   briefingItemCardPath,
   briefingItemDomId,
+  briefingItemTitlePath,
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import {
@@ -51,6 +53,7 @@ export default function ActiveCardScrollSpy({
       {
         key: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
         jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+        titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
         title: 'Executive Summary',
         domId: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
       },
@@ -59,6 +62,7 @@ export default function ActiveCardScrollSpy({
       list.push({
         key: briefingItemDomId(item.id),
         jsonPath: briefingItemCardPath(idx),
+        titleJsonPath: briefingItemTitlePath(idx),
         title: item.title,
         domId: briefingItemDomId(item.id),
       })
@@ -120,6 +124,7 @@ export default function ActiveCardScrollSpy({
       setActiveCard({
         key: matched.key,
         jsonPath: matched.jsonPath,
+        titleJsonPath: matched.titleJsonPath,
         title: matched.title,
       })
     }

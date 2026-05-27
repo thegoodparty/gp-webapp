@@ -6,6 +6,7 @@ import { getBriefingBySlug } from '@shared/briefings/server'
 import {
   BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
+  BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
   briefingsLandingHref,
 } from '@shared/briefings/routes'
 import serveAccess from '../../shared/serveAccess'
@@ -63,6 +64,7 @@ export default async function BriefingChromeLayout({
         initialActiveCard={{
           key: BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
           jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+          titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
           title: 'Executive Summary',
         }}
       >

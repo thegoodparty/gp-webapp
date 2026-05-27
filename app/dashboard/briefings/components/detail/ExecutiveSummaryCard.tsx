@@ -3,6 +3,7 @@
 import { MeetingBriefingOutput } from 'gpApi/generated/agent-job-contracts'
 import {
   BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+  BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
   briefingItemDomId,
 } from '@shared/briefings/routes'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
@@ -53,6 +54,7 @@ export default function ExecutiveSummaryCard({
     setActiveCard({
       key: domId,
       jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
+      titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
       title: 'Executive Summary',
     })
   return (
@@ -71,7 +73,15 @@ export default function ExecutiveSummaryCard({
       }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <h2 className="text-2xl font-semibold text-foreground">
+        {/* `data-briefing-json-path` makes the title resolvable as an
+            anchor target — card-level chats hang off this element.
+            `select-none` reserves the title for that role: the user
+            doesn't need to highlight it themselves; the "Briefing
+            assistant" button anchors here automatically. */}
+        <h2
+          className="select-none text-2xl font-semibold text-foreground"
+          data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
+        >
           Executive Summary
         </h2>
         <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
