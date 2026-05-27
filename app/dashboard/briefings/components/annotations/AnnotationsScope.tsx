@@ -439,24 +439,6 @@ export default function AnnotationsScope({
     return { notesCount: n, chatsCount: c, bugReportsCount: b }
   }, [visibleAnnotations])
 
-  // Card-level notes for the active card — jsonPath matches the card, no
-  // passage offsets. Surfaced inside the AddNoteSheet's card-level mode
-  // list and inline at the bottom of the card itself. Returns [] when no
-  // card is active so the sheet renders nothing.
-  const notesForActiveCard = useMemo(
-    () =>
-      activeCard
-        ? annotations.filter(
-            (ann) =>
-              ann.kind === 'note' &&
-              ann.jsonPath === activeCard.jsonPath &&
-              ann.start === null &&
-              ann.end === null,
-          )
-        : [],
-    [annotations, activeCard],
-  )
-
   // Memoize position calculations — both helpers scan annotations and the
   // predict path walks the DOM via querySelectorAll, so we don't want them
   // re-running on every parent render while a sheet is open.
@@ -721,9 +703,7 @@ export default function AnnotationsScope({
               queryKey: annotationsQueryKey(meetingDate),
             })
           }}
-          notesForActiveCard={notesForActiveCard}
           activeCardTitle={activeCard?.title ?? null}
-          onEditNote={openEditNote}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
