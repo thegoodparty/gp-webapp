@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import type { Annotation, AnnotationAnchor } from '@shared/briefings/types'
-import { EMPTY_ANCHOR } from '@shared/briefings/anchorResolver'
+import { EMPTY_ANCHOR, isPageWideChat } from '@shared/briefings/anchorResolver'
 import AskAiChatBody from './AskAiChatBody'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
+import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'
 
 interface Props {
@@ -31,6 +33,7 @@ interface Props {
     annotationId: string
     conversationId: string
   }) => void
+  onDeleteChat: (annotation: Annotation) => Promise<void>
 }
 
 function anchorFromAnnotation(item: EnrichedAnnotation): AnnotationAnchor {
@@ -44,10 +47,12 @@ function ChatBody({
   item,
   meetingDate,
   active,
+  onSendingChange,
 }: {
   item: EnrichedAnnotation
   meetingDate: string
   active: boolean
+  onSendingChange: (sending: boolean) => void
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
@@ -66,6 +71,7 @@ function ChatBody({
         bodyClassName="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
         composerVariant="block"
         active={active}
+        onSendingChange={onSendingChange}
       />
     </div>
   )
@@ -79,6 +85,7 @@ export function BriefingAssistantSurface({
   initialAnnotationId,
   pendingAnchor,
   onChatCreated,
+  onDeleteChat,
 }: Props) {
   const items = useEnrichedAnnotations(open, annotations, 'chat')
   // When the user is mid-selection-to-anchored-chat, preempt the cycler with
@@ -87,6 +94,11 @@ export function BriefingAssistantSurface({
   // unanchored page-level chat) and the user's selection would be silently
   // dropped.
   const itemsForCycler = pendingAnchor ? [] : items
+  // Mid-stream guard for delete. AskAiChatBody fires onSendingChange when
+  // its `sending || creating` flips; while true, the Delete chat button is
+  // disabled so the user can't pull the annotation out from under an
+  // in-flight stream / chat-create request.
+  const [isStreaming, setIsStreaming] = useState(false)
   return (
     <AnnotationSurfaceSheet
       open={open}
@@ -95,8 +107,29 @@ export function BriefingAssistantSurface({
       positionLabel="Chat"
       items={itemsForCycler}
       renderItem={(item) => (
-        <ChatBody item={item} meetingDate={meetingDate} active={open} />
+        <ChatBody
+          item={item}
+          meetingDate={meetingDate}
+          active={open}
+          onSendingChange={setIsStreaming}
+        />
       )}
+      footer={(current) =>
+        // Hide Delete chat for the page-wide (unanchored) AI chat — that
+        // conversation is the briefing's primary assistant thread and
+        // deleting it from the cycler would lose context with no recovery
+        // path. Anchored chats remain deletable.
+        current && !isPageWideChat(current) ? (
+          <DeleteAnnotationButton
+            current={current}
+            label="Delete chat"
+            title="Delete this chat?"
+            description="The conversation and all its messages will be permanently removed. You can't undo this."
+            onDelete={onDeleteChat}
+            disabled={isStreaming}
+          />
+        ) : null
+      }
       emptyState={
         <AskAiChatBody
           meetingDate={meetingDate}

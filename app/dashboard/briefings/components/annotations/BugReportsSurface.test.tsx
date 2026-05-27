@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import { BugReportsSurface } from './BugReportsSurface'
@@ -42,40 +42,40 @@ describe('<BugReportsSurface>', () => {
   })
 
   it('renders the empty state when there are no annotations', () => {
-    render(<BugReportsSurface open onClose={vi.fn()} annotations={[]} />)
+    render(
+      <BugReportsSurface
+        open
+        onClose={vi.fn()}
+        annotations={[]}
+        onDeleteBugReport={vi.fn()}
+      />,
+    )
 
     expect(screen.getByText(/no bug reports yet/i)).toBeInTheDocument()
   })
 
-  it('renders the description and formatted submittedAt for a bug report', () => {
-    const submittedAt = '2026-05-26T15:30:00.000Z'
+  it('renders the description for a bug report', () => {
     const annotation = bugReport({
       id: 'ann_1',
       bugReport: {
         id: 'bug_1',
         description: 'The agenda item is mislabeled.',
-        submittedAt,
+        submittedAt: '2026-05-26T15:30:00.000Z',
       },
     })
 
     render(
-      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
+      <BugReportsSurface
+        open
+        onClose={vi.fn()}
+        annotations={[annotation]}
+        onDeleteBugReport={vi.fn()}
+      />,
     )
 
     expect(
       screen.getByText('The agenda item is mislabeled.'),
     ).toBeInTheDocument()
-    const formatted = new Date(submittedAt).toLocaleString()
-    const submittedNode = screen
-      .getAllByText((_content, node) => {
-        if (!node) return false
-        if (node.children.length > 0) return false
-        return node.textContent?.includes(formatted) ?? false
-      })
-      .find((n) =>
-        n.parentElement?.textContent?.includes(`Submitted ${formatted}`),
-      )
-    expect(submittedNode).toBeDefined()
   })
 
   it('cycles to the next annotation when Next is clicked', async () => {
@@ -104,7 +104,12 @@ describe('<BugReportsSurface>', () => {
     ]
 
     render(
-      <BugReportsSurface open onClose={vi.fn()} annotations={annotations} />,
+      <BugReportsSurface
+        open
+        onClose={vi.fn()}
+        annotations={annotations}
+        onDeleteBugReport={vi.fn()}
+      />,
     )
 
     expect(screen.getByText('First bug description')).toBeInTheDocument()
@@ -115,20 +120,82 @@ describe('<BugReportsSurface>', () => {
     expect(screen.queryByText('First bug description')).not.toBeInTheDocument()
   })
 
-  it('renders no Edit button or destructive action (read-only surface)', () => {
-    const annotation = bugReport()
+  describe('Delete confirmation', () => {
+    it('opens a confirm dialog instead of deleting immediately when Delete bug report is clicked', async () => {
+      const user = userEvent.setup()
+      const onDeleteBugReport = vi.fn()
 
-    render(
-      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
-    )
+      render(
+        <BugReportsSurface
+          open
+          onClose={vi.fn()}
+          annotations={[bugReport()]}
+          onDeleteBugReport={onDeleteBugReport}
+        />,
+      )
 
-    expect(
-      screen.queryByRole('button', { name: /edit/i }),
-    ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: /delete/i }),
-    ).not.toBeInTheDocument()
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+      await user.click(
+        screen.getByRole('button', { name: /delete bug report/i }),
+      )
+
+      await screen.findByRole('alertdialog')
+      expect(
+        screen.getByRole('heading', { name: /delete this bug report\?/i }),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/can't undo this/i)).toBeInTheDocument()
+      expect(onDeleteBugReport).not.toHaveBeenCalled()
+    })
+
+    it('closes the dialog and does not invoke onDeleteBugReport when Cancel is clicked', async () => {
+      const user = userEvent.setup()
+      const onDeleteBugReport = vi.fn()
+
+      render(
+        <BugReportsSurface
+          open
+          onClose={vi.fn()}
+          annotations={[bugReport()]}
+          onDeleteBugReport={onDeleteBugReport}
+        />,
+      )
+
+      await user.click(
+        screen.getByRole('button', { name: /delete bug report/i }),
+      )
+      await screen.findByRole('alertdialog')
+      await user.click(screen.getByRole('button', { name: /cancel/i }))
+
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+      expect(onDeleteBugReport).not.toHaveBeenCalled()
+    })
+
+    it('invokes onDeleteBugReport with the focused annotation when the destructive confirm is clicked', async () => {
+      const user = userEvent.setup()
+      const annotation = bugReport()
+      const onDeleteBugReport = vi.fn()
+
+      render(
+        <BugReportsSurface
+          open
+          onClose={vi.fn()}
+          annotations={[annotation]}
+          onDeleteBugReport={onDeleteBugReport}
+        />,
+      )
+
+      await user.click(
+        screen.getByRole('button', { name: /delete bug report/i }),
+      )
+      const dialog = await screen.findByRole('alertdialog')
+      const confirm = within(dialog).getByRole('button', { name: /^delete$/i })
+      await user.click(confirm)
+
+      expect(onDeleteBugReport).toHaveBeenCalledTimes(1)
+      expect(onDeleteBugReport).toHaveBeenCalledWith(
+        expect.objectContaining({ id: annotation.id }),
+      )
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    })
   })
 
   it('does not enrich annotations while the surface is closed', () => {
@@ -140,6 +207,7 @@ describe('<BugReportsSurface>', () => {
         open={false}
         onClose={vi.fn()}
         annotations={annotations}
+        onDeleteBugReport={vi.fn()}
       />,
     )
 
@@ -151,7 +219,12 @@ describe('<BugReportsSurface>', () => {
     const annotation = bugReport()
 
     render(
-      <BugReportsSurface open onClose={vi.fn()} annotations={[annotation]} />,
+      <BugReportsSurface
+        open
+        onClose={vi.fn()}
+        annotations={[annotation]}
+        onDeleteBugReport={vi.fn()}
+      />,
     )
 
     const arbitraryPxPattern = /text-\[\d+px\]/

@@ -55,6 +55,7 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
         onClose={vi.fn()}
         meetingDate="2026-05-14"
         annotations={[pageLevelChat()]}
+        onDeleteChat={vi.fn()}
         pendingAnchor={{
           jsonPath: '/items/3/title',
           start: 0,
@@ -79,6 +80,7 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
         onClose={vi.fn()}
         meetingDate="2026-05-14"
         annotations={[]}
+        onDeleteChat={vi.fn()}
         pendingAnchor={{
           jsonPath: '/items/3/title',
           start: 0,
@@ -99,6 +101,7 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
         onClose={vi.fn()}
         meetingDate="2026-05-14"
         annotations={[pageLevelChat()]}
+        onDeleteChat={vi.fn()}
       />,
     )
 

@@ -41,6 +41,7 @@ import {
   resolveMimeType,
   uploadAttachment,
 } from '@shared/briefings/attachments-api'
+import { chatApi } from '@shared/briefings/chat-api'
 import { reportErrorToSentry } from '@shared/sentry'
 
 /**
@@ -665,6 +666,7 @@ export default function AnnotationsScope({
         onEditNote={(ann) =>
           setOverlay({ kind: 'add_note_edit', annotation: ann })
         }
+        onDeleteNote={(ann) => remove.mutateAsync(ann.id).then(() => undefined)}
         initialAnnotationId={
           overlay.kind === 'surface_notes'
             ? overlay.initialAnnotationId
@@ -698,11 +700,31 @@ export default function AnnotationsScope({
             pendingNewChatIdRef.current = info.annotationId
           }
         }}
+        onDeleteChat={async (ann) => {
+          try {
+            await chatApi.softDelete(ann.id)
+          } catch (err) {
+            reportErrorToSentry(err, {
+              surface: 'briefing-annotations',
+              op: 'softDeleteChat',
+              annotationId: ann.id,
+              meetingDate,
+            })
+            throw err
+          }
+          queryClient.setQueryData<Annotation[]>(
+            annotationsQueryKey(meetingDate),
+            (prev) => prev?.filter((a) => a.id !== ann.id),
+          )
+        }}
       />
       <BugReportsSurface
         open={overlay.kind === 'surface_bug_reports'}
         onClose={closeSheet}
         annotations={annotations}
+        onDeleteBugReport={(ann) =>
+          remove.mutateAsync(ann.id).then(() => undefined)
+        }
         initialAnnotationId={
           overlay.kind === 'surface_bug_reports'
             ? overlay.initialAnnotationId

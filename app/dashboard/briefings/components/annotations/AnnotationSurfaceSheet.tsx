@@ -67,10 +67,31 @@ export function AnnotationSurfaceSheet({
     if (target) scrollAnchorIntoView(target)
   }, [open, initialAnnotationId, items])
 
+  // Track the most recent index the selected id occupied. When the id
+  // disappears (typically because the user just deleted it), we use this
+  // ref to snap to whatever now sits at the same slot — i.e. the next
+  // item slides in. If the deleted item was at the end of the list,
+  // fall back to its predecessor.
+  const lastIndexRef = useRef<number>(-1)
+  useEffect(() => {
+    if (!selectedId) return
+    const idx = items.findIndex((i) => i.id === selectedId)
+    if (idx >= 0) lastIndexRef.current = idx
+  }, [items, selectedId])
+
   useEffect(() => {
     if (!selectedId) return
     if (items.some((i) => i.id === selectedId)) return
-    setSelectedId(items[0]?.id ?? null)
+    if (items.length === 0) {
+      setSelectedId(null)
+      return
+    }
+    const lastIdx = lastIndexRef.current
+    // Prefer the item now at the same index (a successor slid up),
+    // then the predecessor (we were at the end), then the first item
+    // as a last resort.
+    const next = items[lastIdx] ?? items[Math.max(0, lastIdx - 1)] ?? items[0]
+    if (next) setSelectedId(next.id)
   }, [items, selectedId])
 
   const foundIndex = selectedId

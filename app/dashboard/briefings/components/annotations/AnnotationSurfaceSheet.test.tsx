@@ -206,7 +206,11 @@ describe('<AnnotationSurfaceSheet>', () => {
     expect(mockScrollAnchorIntoView).not.toHaveBeenCalled()
   })
 
-  it('falls back to the first surviving item when the selected item is removed, passing the new current to the footer', () => {
+  it('stays at the same index when the selected item is removed mid-list (the next item slides into the slot)', () => {
+    // Scenario: user is on item 'b' (index 1 of [a, b, c]). They delete it.
+    // The cycler should land on what was at index 2 — 'c' — which has
+    // slid into index 1. This is the standard list-deletion pattern
+    // (Gmail / Photos): "stay at index", not "snap to start".
     const a = makeItem('a')
     const b = makeItem('b')
     const c = makeItem('c')
@@ -230,8 +234,6 @@ describe('<AnnotationSurfaceSheet>', () => {
       />,
     )
     expect(screen.getByTestId('surface-item')).toHaveTextContent('b')
-    // Pre-rerender baseline: footer was called with the matching annotation.
-    expect(footerCalls.at(-1)).toEqual(expect.objectContaining({ id: 'b' }))
     footerCalls.length = 0
 
     rerender(
@@ -247,10 +249,78 @@ describe('<AnnotationSurfaceSheet>', () => {
       />,
     )
 
-    // After the fallback runs, the surface displays 'a' and the footer is
-    // called with the new current annotation.
+    // 'c' has slid into the index 'b' previously occupied.
+    expect(screen.getByTestId('surface-item')).toHaveTextContent('c')
+    expect(footerCalls.at(-1)).toEqual(expect.objectContaining({ id: 'c' }))
+  })
+
+  it('falls back to the previous item when the selected item was at the end of the list', () => {
+    // Scenario: user is on the last item 'c' (index 2 of [a, b, c]). They
+    // delete it. items[2] is now undefined, so we fall back to items[1] —
+    // the new last item — which is 'b'.
+    const a = makeItem('a')
+    const b = makeItem('b')
+    const c = makeItem('c')
+
+    const { rerender } = render(
+      <AnnotationSurfaceSheet
+        open
+        onClose={vi.fn()}
+        title="Notes"
+        subtitle="sub"
+        items={[a, b, c]}
+        renderItem={renderItem}
+        initialAnnotationId="c"
+      />,
+    )
+    expect(screen.getByTestId('surface-item')).toHaveTextContent('c')
+
+    rerender(
+      <AnnotationSurfaceSheet
+        open
+        onClose={vi.fn()}
+        title="Notes"
+        subtitle="sub"
+        items={[a, b]}
+        renderItem={renderItem}
+        initialAnnotationId="c"
+      />,
+    )
+
+    expect(screen.getByTestId('surface-item')).toHaveTextContent('b')
+  })
+
+  it('clears selection when the only remaining item is removed', () => {
+    const a = makeItem('a')
+
+    const { rerender } = render(
+      <AnnotationSurfaceSheet
+        open
+        onClose={vi.fn()}
+        title="Notes"
+        subtitle="sub"
+        items={[a]}
+        renderItem={renderItem}
+        initialAnnotationId="a"
+      />,
+    )
     expect(screen.getByTestId('surface-item')).toHaveTextContent('a')
-    expect(footerCalls.at(-1)).toEqual(expect.objectContaining({ id: 'a' }))
+
+    rerender(
+      <AnnotationSurfaceSheet
+        open
+        onClose={vi.fn()}
+        title="Notes"
+        subtitle="sub"
+        items={[]}
+        renderItem={renderItem}
+        initialAnnotationId="a"
+        emptyState={<div data-testid="empty">empty</div>}
+      />,
+    )
+
+    expect(screen.queryByTestId('surface-item')).not.toBeInTheDocument()
+    expect(screen.getByTestId('empty')).toBeInTheDocument()
   })
 
   it('binds selection to a new initialAnnotationId that arrives after the surface is already open (no reopen)', () => {

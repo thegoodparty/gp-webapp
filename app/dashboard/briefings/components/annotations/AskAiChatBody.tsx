@@ -56,6 +56,13 @@ type Props = {
    * `block`; popover keeps `inline`.
    */
   composerVariant?: 'inline' | 'block'
+  /**
+   * Fires when the chat's internal `sending || creating` flips. The host
+   * surface uses this to disable destructive actions (e.g. Delete chat)
+   * while a stream or chat-creation request is in flight — preventing the
+   * annotation from being removed mid-network-call.
+   */
+  onSendingChange?: (sending: boolean) => void
 }
 
 type StreamingMessage = {
@@ -157,6 +164,7 @@ export default function AskAiChatBody({
   active = true,
   onChatCreated,
   composerVariant = 'inline',
+  onSendingChange,
 }: Props): React.JSX.Element {
   const [annotationId, setAnnotationId] = useState<string | null>(null)
   const [history, setHistory] = useState<ChatItem[]>([])
@@ -225,6 +233,12 @@ export default function AskAiChatBody({
       void initialize()
     }
   }, [active, initialize])
+
+  // Notify the host surface whenever `sending || creating` flips, so it
+  // can gate destructive actions (Delete chat) on the active annotation.
+  useEffect(() => {
+    onSendingChange?.(sending || creating)
+  }, [sending, creating, onSendingChange])
 
   // Abort any in-flight stream when the surface closes. State reset is
   // unnecessary — AskAiSheet is conditionally mounted in AnnotationsScope,
@@ -671,7 +685,7 @@ export default function AskAiChatBody({
       </div>
 
       {composerVariant === 'block' ? (
-        <div className="flex flex-col gap-3 border-t border-base-border bg-background px-4 py-4">
+        <div className="flex flex-col gap-3 border-t border-base-border bg-background pb-2 pt-4">
           <Textarea
             value={composer}
             onChange={(e) => setComposer(e.target.value)}

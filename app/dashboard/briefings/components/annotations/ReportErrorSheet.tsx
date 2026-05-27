@@ -158,18 +158,6 @@ export default function ReportErrorSheet({
             rows={6}
             className="min-h-[160px] resize-none rounded-2xl disabled:cursor-default disabled:opacity-90"
           />
-
-          {isView ? (
-            <p className="text-xs text-muted-foreground">
-              Submitted{' '}
-              {sheet.kind === 'report_error_view' && sheet.annotation.bugReport
-                ? new Date(
-                    sheet.annotation.bugReport.submittedAt,
-                  ).toLocaleString()
-                : ''}
-              .
-            </p>
-          ) : null}
         </div>
 
         <div

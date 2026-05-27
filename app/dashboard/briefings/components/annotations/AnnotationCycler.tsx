@@ -121,7 +121,7 @@ export function AnnotationCycler<T>({
         ) : null}
       </header>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 pb-4">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6">
         {isEmpty ? (
           emptyState ?? null
         ) : current !== null ? (
@@ -134,7 +134,7 @@ export function AnnotationCycler<T>({
         ) : null}
       </div>
 
-      {footer ? <div className="px-6 pb-6 pt-2">{footer}</div> : null}
+      {footer ? <div className="px-6 pb-6 pt-0">{footer}</div> : null}
     </div>
   )
 }

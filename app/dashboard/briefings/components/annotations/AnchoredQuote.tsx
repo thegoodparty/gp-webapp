@@ -7,6 +7,13 @@ interface AnchoredQuoteProps {
   variant?: AnchoredQuoteVariant
   showLabel?: boolean
   strike?: boolean
+  /**
+   * When true, renders the quote inside a soft muted card with rounded
+   * corners (border-left stays as the accent bar). Used for the notes
+   * drawer where the quote sits as a discrete container, not a hanging
+   * blockquote.
+   */
+  filled?: boolean
 }
 
 const VARIANT_BORDER: Record<AnchoredQuoteVariant, string> = {
@@ -20,6 +27,7 @@ export function AnchoredQuote({
   variant = 'default',
   showLabel = true,
   strike = false,
+  filled = false,
 }: AnchoredQuoteProps) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -31,7 +39,8 @@ export function AnchoredQuote({
       <blockquote
         className={cn(
           VARIANT_BORDER[variant],
-          'pl-3 text-sm italic leading-snug text-muted-foreground',
+          'text-sm italic leading-snug text-muted-foreground',
+          filled ? 'rounded-md bg-muted/40 py-2.5 pl-3 pr-3' : 'pl-3',
           strike && 'line-through',
         )}
       >

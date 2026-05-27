@@ -149,6 +149,20 @@ export const EMPTY_ANCHOR: AnnotationAnchor = Object.freeze({
 }) as AnnotationAnchor
 
 /**
+ * True when a chat annotation is page-wide (unanchored to any passage).
+ * Treats both null and empty-string `jsonPath` as unanchored — the schema
+ * stores null, but the empty-string defense covers server-side drift so
+ * the briefing-wide "Delete chat" guard can't be bypassed by a coerced
+ * empty string. Consumers use this to hide destructive actions on the
+ * primary assistant thread.
+ */
+export function isPageWideChat(annotation: {
+  jsonPath: string | null
+}): boolean {
+  return annotation.jsonPath === null || annotation.jsonPath === ''
+}
+
+/**
  * Smooth-scroll the briefing canvas to an annotation's anchor. No-op when
  * the annotation has no anchor or the anchor's DOM node has been removed.
  */

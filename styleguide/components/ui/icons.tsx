@@ -26,6 +26,8 @@ export {
   Menu as MenuIcon,
   Minus as MinusIcon,
   MoreHorizontal as MoreHorizontalIcon,
+  Paperclip as PaperclipIcon,
+  Pencil as PencilIcon,
   Search as SearchIcon,
   Send as SendIcon,
   Settings as SettingsIcon,
