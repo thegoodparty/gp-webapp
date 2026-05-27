@@ -36,9 +36,9 @@ describe('NotesSurface', () => {
     render(
       <NotesSurface
         open
-        onClose={() => {}}
+        onClose={vi.fn()}
         annotations={[]}
-        onEditNote={() => {}}
+        onEditNote={vi.fn()}
       />,
     )
     expect(screen.getByText(/no notes yet/i)).toBeInTheDocument()
@@ -58,9 +58,9 @@ describe('NotesSurface', () => {
     render(
       <NotesSurface
         open
-        onClose={() => {}}
+        onClose={vi.fn()}
         annotations={[note]}
-        onEditNote={() => {}}
+        onEditNote={vi.fn()}
       />,
     )
     expect(
@@ -97,7 +97,7 @@ describe('NotesSurface', () => {
     render(
       <NotesSurface
         open
-        onClose={() => {}}
+        onClose={vi.fn()}
         annotations={[noteA, noteB]}
         onEditNote={onEditNote}
       />,
