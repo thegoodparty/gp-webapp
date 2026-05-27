@@ -9,6 +9,7 @@ import type {
   BriefingSummary,
   BriefingType,
 } from './types'
+import { normalizeBriefingArtifact } from './normalizeArtifact'
 
 const getOffsetForZone = (instant: Date, timeZone: string): string => {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -78,11 +79,12 @@ export const getBriefingBySlug = async (
       }
     }
     if (!isFullArtifact(data)) return null
+    const normalized = normalizeBriefingArtifact(data)
     const formattedDate = format(parseISO(slug), 'MMMM d, yyyy')
     return {
-      ...data,
+      ...normalized,
       title: `${
-        BRIEFING_TYPE_LABEL[data.briefing_type] ?? 'Meeting'
+        BRIEFING_TYPE_LABEL[normalized.briefing_type] ?? 'Meeting'
       } briefing for ${formattedDate}`,
     }
   } catch (e) {
