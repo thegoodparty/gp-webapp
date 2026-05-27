@@ -1,10 +1,15 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Check, Copy, Download, Link2, Mail, MessageSquare } from 'lucide-react'
 import {
   Button,
+  CheckIcon,
+  CopyIcon,
+  DownloadIcon,
   IconButton,
+  Link2Icon,
+  MailIcon,
+  MessageSquareIcon,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -139,21 +144,21 @@ export default function ShareBriefingDrawer({
             ariaLabel="Copy link"
           >
             {copiedIcon ? (
-              <Check className="size-5" aria-hidden />
+              <CheckIcon className="size-5" aria-hidden />
             ) : (
-              <Copy className="size-5" aria-hidden />
+              <CopyIcon className="size-5" aria-hidden />
             )}
           </ShareAction>
 
           <ShareAction asChild label="Email" ariaLabel="Share via email">
             <a href={mailtoHref}>
-              <Mail className="size-5" aria-hidden />
+              <MailIcon className="size-5" aria-hidden />
             </a>
           </ShareAction>
 
           <ShareAction asChild label="Message" ariaLabel="Share via message">
             <a href={smsHref}>
-              <MessageSquare className="size-5" aria-hidden />
+              <MessageSquareIcon className="size-5" aria-hidden />
             </a>
           </ShareAction>
 
@@ -162,7 +167,7 @@ export default function ShareBriefingDrawer({
                 sends `Content-Disposition: inline` so a non-saving open
                 in a new tab also works fine. */}
             <a href={shareUrl} download>
-              <Download className="size-5" aria-hidden />
+              <DownloadIcon className="size-5" aria-hidden />
             </a>
           </ShareAction>
         </div>
@@ -172,7 +177,7 @@ export default function ShareBriefingDrawer({
             'mt-4 flex items-center gap-2 rounded-full border border-border bg-muted/40 py-1 pl-3 pr-1',
           )}
         >
-          <Link2
+          <Link2Icon
             className="size-4 shrink-0 text-muted-foreground"
             aria-hidden
           />
@@ -186,10 +191,12 @@ export default function ShareBriefingDrawer({
             type="button"
             variant="default"
             size="xSmall"
-            // Force the GoodParty primary blue so the Copy CTA is visually
-            // distinct from the muted URL pill it sits inside, regardless of
-            // any contextual button styling further up the cascade.
-            className="border-blue-600 bg-blue-600 text-white hover:border-blue-700 hover:bg-blue-700"
+            // Use the design-system `primary` token (mapped to GoodParty's
+            // brand blue) rather than the raw Tailwind palette, per the
+            // root CLAUDE.md design-tokens rule. The Copy CTA stays
+            // visually distinct from the muted URL pill via the solid
+            // primary color, regardless of context.
+            className="border-primary bg-primary text-primary-foreground hover:border-primary/90 hover:bg-primary/90"
             onClick={onCopyInline}
           >
             {copiedInline ? 'Copied' : 'Copy'}

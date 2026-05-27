@@ -1,7 +1,7 @@
 'use client'
 
-import { MessageSquare, Share2, Sparkles } from 'lucide-react'
-import { Button } from '@styleguide'
+import { MessageSquare, Sparkles } from 'lucide-react'
+import { Button, Share2Icon } from '@styleguide'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import { useShareScope } from './ShareScope'
 
@@ -23,7 +23,7 @@ export default function DetailHeaderActions(): React.JSX.Element {
   return (
     <div className="hidden items-center gap-2 lg:flex">
       <Button variant="outline" onClick={openShareDrawer}>
-        <Share2 className="size-4" aria-hidden />
+        <Share2Icon className="size-4" aria-hidden />
         Share
       </Button>
       <Button variant="outline" onClick={() => openNotesSurface()}>

@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { List, ChevronUp, MessageSquare, Share2, Sparkles } from 'lucide-react'
+import { List, ChevronUp, MessageSquare, Sparkles } from 'lucide-react'
 import {
   Button,
   IconButton,
+  Share2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -213,7 +214,7 @@ export default function MobileBottomBar({
           aria-label="Share briefing"
           onClick={openShareDrawer}
         >
-          <Share2 className="size-5" aria-hidden />
+          <Share2Icon className="size-5" aria-hidden />
         </IconButton>
         <IconButton
           type="button"
