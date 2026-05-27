@@ -6,6 +6,9 @@ import type { Annotation } from '@shared/briefings/types'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
+import AttachmentThumbnail, {
+  type AttachmentItem,
+} from './AttachmentThumbnail'
 import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { SurfaceEmptyState } from './SurfaceEmptyState'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'
@@ -30,6 +33,15 @@ function relativeTime(iso: string): string {
 }
 
 function NoteBody({ item }: { item: EnrichedAnnotation }) {
+  const attachments = item.note?.attachments ?? []
+  const attachmentItems: AttachmentItem[] = attachments.map((att) => ({
+    kind: 'server',
+    id: att.id,
+    label: att.fileName,
+    mimeType: att.mimeType,
+    annotationId: item.id,
+    attachmentId: att.id,
+  }))
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
       {item.highlightedText ? (
@@ -45,6 +57,15 @@ function NoteBody({ item }: { item: EnrichedAnnotation }) {
         <div className="whitespace-pre-wrap text-base">
           {item.note?.body ?? ''}
         </div>
+        {attachmentItems.length > 0 ? (
+          <ul className="flex list-none flex-wrap items-start gap-2 pt-2">
+            {attachmentItems.map((att) => (
+              <li key={att.id}>
+                <AttachmentThumbnail item={att} />
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </div>
   )

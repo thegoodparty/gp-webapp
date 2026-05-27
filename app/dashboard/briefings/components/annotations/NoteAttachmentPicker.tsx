@@ -1,17 +1,12 @@
 'use client'
 
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import {
-  Camera,
-  FileText,
-  ImageIcon,
-  Loader2,
-  Paperclip,
-  X,
-} from 'lucide-react'
+import { useId, useRef, useState } from 'react'
+import { Camera, FileText, ImageIcon, Paperclip } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
-import { useAttachmentDownloadUrl } from '@shared/briefings/use-attachment-download-url'
+import AttachmentThumbnail, {
+  type AttachmentItem,
+} from './AttachmentThumbnail'
 
 type Source = 'photos' | 'camera' | 'document'
 
@@ -22,32 +17,10 @@ export type StagedAttachment = {
 }
 
 /**
- * Picker item shape. Two variants:
- *
- *   - `staged` — file the user just picked but hasn't uploaded yet. We
- *     pass the File through and render the thumbnail via
- *     URL.createObjectURL, which works for any MIME type. Clicking the
- *     thumbnail opens the blob URL in a new tab.
- *   - `server` — an already-uploaded attachment. The picker fetches a
- *     short-lived presigned S3 GET URL via React Query and uses it for
- *     image thumbnails / open-in-new-tab.
+ * Picker items reuse the shared `AttachmentThumbnail` shape so the same
+ * data drives both the editable picker and the read-only view surface.
  */
-type CommonItem = {
-  id: string
-  /** File name; shown beneath / beside the thumbnail. */
-  label: string
-  /** Mime type drives the thumbnail decision (image vs file icon). */
-  mimeType: string
-  /** When true, renders a spinner inside the pill in place of the X. */
-  busy?: boolean
-}
-export type PickerItem =
-  | (CommonItem & { kind: 'staged'; file: File })
-  | (CommonItem & {
-      kind: 'server'
-      annotationId: string
-      attachmentId: string
-    })
+export type PickerItem = AttachmentItem
 
 type Props = {
   items: PickerItem[]
@@ -66,123 +39,6 @@ const newId = (): string =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? crypto.randomUUID()
     : `att-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-const isImageMime = (mime: string): boolean => mime.startsWith('image/')
-
-/**
- * Renders one attachment as a thumbnail tile. Images show the actual
- * image; non-images show a generic file-icon thumbnail. The tile itself
- * is the click target (opens the URL in a new tab); the X overlay is
- * the delete button. Separating the click targets lets the user delete
- * without accidentally opening the file in a new tab.
- */
-function AttachmentTile({
-  item,
-  onRemove,
-  disabled,
-}: {
-  item: PickerItem
-  onRemove: (id: string) => void
-  disabled: boolean
-}): React.JSX.Element {
-  // For staged items we have a File in hand and can synthesize a blob
-  // URL right away — no network round-trip required. We tear it down
-  // when the tile unmounts to free memory. Guarded because some test
-  // environments (older jsdom builds) lack `URL.createObjectURL`; the
-  // tile just falls back to a non-clickable thumbnail in that case.
-  const objectUrl = useMemo(() => {
-    if (item.kind !== 'staged') return null
-    if (typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function')
-      return null
-    try {
-      return URL.createObjectURL(item.file)
-    } catch {
-      return null
-    }
-  }, [item])
-  useEffect(() => {
-    if (!objectUrl) return
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [objectUrl])
-
-  // Server items pull the signed S3 URL on demand. The hook caches by
-  // (annotationId, attachmentId) so re-opens of the same edit sheet
-  // hit the cache instead of re-issuing the request.
-  const isServer = item.kind === 'server'
-  const annotationId = isServer ? item.annotationId : ''
-  const attachmentId = isServer ? item.attachmentId : ''
-  const downloadUrlQuery = useAttachmentDownloadUrl(
-    annotationId,
-    attachmentId,
-    { enabled: isServer },
-  )
-
-  const url =
-    item.kind === 'staged' ? objectUrl : downloadUrlQuery.data?.url ?? null
-  const isImage = isImageMime(item.mimeType)
-  const isLoading = isServer && downloadUrlQuery.isPending
-
-  const tileClass =
-    'group relative inline-flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted text-muted-foreground'
-
-  // Common interactive thumbnail — both the link and the placeholder
-  // share the same dimensions so the layout doesn't jump when the URL
-  // loads. We use `<a target=_blank rel=noopener>` because the link is
-  // to a presigned S3 URL (no app navigation needed).
-  const thumbnailContent =
-    isImage && url ? (
-      // eslint-disable-next-line @next/next/no-img-element -- presigned S3 URL, not a stable Next image route
-      <img src={url} alt={item.label} className="size-full object-cover" />
-    ) : isImage && isLoading ? (
-      <Loader2 className="size-6 animate-spin" aria-hidden />
-    ) : (
-      <FileText className="size-8" aria-hidden />
-    )
-
-  return (
-    <div className={tileClass} title={item.label}>
-      {url ? (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block size-full"
-          aria-label={`Open ${item.label}`}
-        >
-          {thumbnailContent}
-        </a>
-      ) : (
-        <span className="flex size-full items-center justify-center">
-          {thumbnailContent}
-        </span>
-      )}
-      {/* Floating X — sits over the top-right corner. Stops propagation
-          so clicking it doesn't also fire the thumbnail's anchor. */}
-      {item.busy ? (
-        <span
-          aria-hidden
-          className="absolute right-1 top-1 inline-flex size-5 items-center justify-center rounded-full bg-card text-muted-foreground"
-        >
-          <Loader2 className="size-3 animate-spin" />
-        </span>
-      ) : (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            onRemove(item.id)
-          }}
-          disabled={disabled}
-          aria-label={`Remove ${item.label}`}
-          className="absolute right-1 top-1 inline-flex size-5 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <X className="size-3" aria-hidden />
-        </button>
-      )}
-    </div>
-  )
-}
 
 /**
  * "Add attachment" pill + the list of attachment thumbnails below it.
@@ -259,7 +115,7 @@ export default function NoteAttachmentPicker({
         <ul className="flex list-none flex-wrap items-start gap-2">
           {items.map((it) => (
             <li key={it.id}>
-              <AttachmentTile
+              <AttachmentThumbnail
                 item={it}
                 onRemove={onRemove}
                 disabled={disabled}
