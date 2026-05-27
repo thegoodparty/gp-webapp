@@ -5,14 +5,9 @@ import { render } from 'helpers/test-utils/render'
 import MobileBottomBar from './MobileBottomBar'
 import type { Briefing, Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 
 vi.mock('../annotations/AnnotationsScope', () => ({
   useAnnotationsCtx: vi.fn(),
-}))
-
-vi.mock('@shared/briefings/pdf/downloadBriefingPdf', () => ({
-  downloadBriefingPdf: vi.fn(),
 }))
 
 vi.mock('next/navigation', async () => {
@@ -24,7 +19,6 @@ vi.mock('next/navigation', async () => {
 })
 
 const mockedUseAnnotationsCtx = vi.mocked(useAnnotationsCtx)
-const mockedDownloadBriefingPdf = vi.mocked(downloadBriefingPdf)
 
 type AnnotationsCtxValue = ReturnType<typeof useAnnotationsCtx>
 
@@ -66,17 +60,19 @@ function makeItems(n: number): Item[] {
   )
 }
 
-// Minimal briefing stub — the component only forwards it to the PDF download
-// path, which tests assert is called but don't exercise end-to-end. Typed as
-// the full `Briefing` so the test fails to compile if the contract grows new
-// required fields.
+// Minimal briefing stub — the share drawer reads briefing_id and meta to
+// build the share URL/subtext. Cast through unknown because the generated
+// artifact type has many required fields that don't matter here.
 const briefingStub = {
   experiment_id: 'x',
+  briefing_id: '01923456-7891-7abc-8def-0123456789ab',
   briefing_type: 'city_council_meeting',
   briefing_status: 'briefing_ready',
   generated_at: '2026-01-01T00:00:00.000Z',
   official_name: 'Town Hall',
   meeting_date: '2026-01-01',
+  meeting_name: 'City Council',
+  location: 'City Hall',
   estimated_read_minutes: 5,
   executive_summary: { items: [], lead_in: '' },
   items: [],
@@ -87,10 +83,9 @@ const briefingStub = {
 describe('<MobileBottomBar>', () => {
   beforeEach(() => {
     mockedUseAnnotationsCtx.mockReset()
-    mockedDownloadBriefingPdf.mockReset()
   })
 
-  it('renders the page-selector pill, Download, and Ask AI as siblings in one row on a solid panel', () => {
+  it('renders the page-selector pill, Share, Notes, and Ask AI as siblings in one row on a solid panel', () => {
     setCtx()
     render(
       <MobileBottomBar
@@ -101,16 +96,16 @@ describe('<MobileBottomBar>', () => {
     )
 
     const selector = screen.getByRole('button', { name: /executive summary/i })
-    const download = screen.getByRole('button', { name: /download pdf/i })
+    const share = screen.getByRole('button', { name: /share briefing/i })
     const askAi = screen.getByRole('button', {
       name: /open briefing assistant/i,
     })
 
-    // All three controls share a common ancestor (the dock row) so they
-    // render as a single horizontal group instead of being scattered.
+    // All controls share a common ancestor (the dock row) so they render as
+    // a single horizontal group instead of being scattered.
     const row = selector.parentElement
     expect(row).not.toBeNull()
-    expect(row).toContainElement(download)
+    expect(row).toContainElement(share)
     expect(row).toContainElement(askAi)
 
     // The dock itself must be a solid panel with a top border — not a
@@ -150,25 +145,19 @@ describe('<MobileBottomBar>', () => {
     expect(openChatsSurface).toHaveBeenCalledTimes(1)
   })
 
-  it('calls downloadBriefingPdf with the briefing and lines when Download is clicked', async () => {
+  it('opens the share drawer when the Share button is clicked', async () => {
     setCtx()
-    mockedDownloadBriefingPdf.mockResolvedValue(undefined)
     render(
       <MobileBottomBar
         briefing={briefingStub}
         briefingSlug="town-hall"
         items={makeItems(1)}
-        preparedForLine="Mayor Jane Doe"
-        meetingMetaLine="City Council — Jan 1"
-        liveBriefingUrl="https://example.com/briefings/town-hall"
       />,
     )
-    await userEvent.click(screen.getByRole('button', { name: /download pdf/i }))
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledTimes(1)
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledWith(briefingStub, {
-      preparedForLine: 'Mayor Jane Doe',
-      meetingMetaLine: 'City Council — Jan 1',
-      liveBriefingUrl: 'https://example.com/briefings/town-hall',
-    })
+    await userEvent.click(screen.getByRole('button', { name: /share briefing/i }))
+    // The drawer surfaces a dialog with title "Share Briefing".
+    expect(
+      screen.getByRole('dialog', { name: /share briefing/i }),
+    ).toBeInTheDocument()
   })
 })

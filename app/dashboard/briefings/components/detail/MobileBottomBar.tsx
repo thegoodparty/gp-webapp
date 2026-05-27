@@ -4,14 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   List,
   ChevronUp,
-  Download,
   MessageSquare,
+  Share2,
   Sparkles,
 } from 'lucide-react'
 import {
   Button,
   IconButton,
-  Loader2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -22,17 +21,13 @@ import {
   briefingItemDomId,
 } from '@shared/briefings/routes'
 import type { Briefing, Item } from '@shared/briefings/types'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
-import { reportErrorToSentry } from '@shared/sentry'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import ShareBriefingDrawer from './ShareBriefingDrawer'
 
 type Props = {
   briefing: Briefing
   briefingSlug: string
   items: Item[]
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
 }
 
 type Entry = {
@@ -46,7 +41,7 @@ type Entry = {
  *
  *  - Left pill: name of the section currently in view + chevron, opens a
  *    bottom Sheet listing every section.
- *  - Right FABs: Download, Add notes, and Ask AI.
+ *  - Right FABs: Share (opens the share drawer), Add notes, and Ask AI.
  *
  * Tapping an entry scrolls to that section on the same page; the Sheet
  * closes on tap.
@@ -55,28 +50,10 @@ export default function MobileBottomBar({
   briefing,
   briefingSlug,
   items,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const [downloading, setDownloading] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-
-  const onDownload = async () => {
-    setDownloading(true)
-    try {
-      await downloadBriefingPdf(briefing, {
-        preparedForLine,
-        meetingMetaLine,
-        liveBriefingUrl,
-      })
-    } catch (err) {
-      reportErrorToSentry(err, { experimentId: briefing.experiment_id })
-    } finally {
-      setDownloading(false)
-    }
-  }
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -241,15 +218,10 @@ export default function MobileBottomBar({
           type="button"
           size="medium"
           variant="outline"
-          aria-label="Download PDF"
-          onClick={onDownload}
-          disabled={downloading}
+          aria-label="Share briefing"
+          onClick={() => setShareOpen(true)}
         >
-          {downloading ? (
-            <Loader2Icon className="size-5 animate-spin" aria-hidden />
-          ) : (
-            <Download className="size-5" aria-hidden />
-          )}
+          <Share2 className="size-5" aria-hidden />
         </IconButton>
         <IconButton
           type="button"
@@ -269,6 +241,12 @@ export default function MobileBottomBar({
           <Sparkles className="size-5" aria-hidden />
         </IconButton>
       </div>
+
+      <ShareBriefingDrawer
+        briefing={briefing}
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+      />
     </div>
   )
 }

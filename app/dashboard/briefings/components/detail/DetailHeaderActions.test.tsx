@@ -35,16 +35,19 @@ function setCtx(overrides: Partial<Ctx> = {}) {
   } satisfies Ctx)
 }
 
-// Minimal briefing stub — the component only forwards it to the PDF download
-// path, which the tests don't exercise. Cast through unknown because the
-// generated artifact type has many required fields that don't matter here.
+// Minimal briefing stub — share + annotation surfaces only need briefing_id,
+// meta, and title.  Cast through unknown because the generated artifact type
+// has many required fields that don't matter here.
 const briefingStub = {
   experiment_id: 'x',
+  briefing_id: '01923456-7891-7abc-8def-0123456789ab',
   briefing_type: 'city_council_meeting',
   briefing_status: 'briefing_ready',
   generated_at: '2026-01-01T00:00:00Z',
   official_name: 'Test Official',
   meeting_date: '2026-01-01',
+  meeting_name: 'City Council',
+  location: 'City Hall',
   estimated_read_minutes: 1,
   executive_summary: { items: [], lead_in: '' },
   items: [],
@@ -57,12 +60,22 @@ describe('<DetailHeaderActions>', () => {
     mockedUseAnnotationsCtx.mockReset()
   })
 
-  it('renders Notes and Briefing assistant buttons', () => {
+  it('renders Share, Notes, and Briefing assistant buttons', () => {
     setCtx()
     render(<DetailHeaderActions briefing={briefingStub} />)
+    expect(screen.getByRole('button', { name: /^share$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /briefing assistant/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('opens the share drawer when the Share button is clicked', async () => {
+    setCtx()
+    render(<DetailHeaderActions briefing={briefingStub} />)
+    await userEvent.click(screen.getByRole('button', { name: /^share$/i }))
+    expect(
+      screen.getByRole('dialog', { name: /share briefing/i }),
     ).toBeInTheDocument()
   })
 

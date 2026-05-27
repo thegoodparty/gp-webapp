@@ -245,9 +245,17 @@ export type APIEndpoints = {
     Response: MeetingsListResponseDto
   }
 
+  // The full-briefing branch is augmented with `briefing_id` (the Prisma row
+  // UUID) so the UI can build public share URLs of the form
+  // `goodparty.org/api/v1/briefings/{uuid}` without a second round-trip.
   'GET /v1/meetings/:date/briefing': {
     Request: { date: string }
-    Response: MeetingBriefingOutput | MeetingBriefingAwaitingDto
+    Response:
+      | (Extract<
+          MeetingBriefingOutput,
+          { briefing_status: 'briefing_ready' | 'agenda_provided_by_user' }
+        > & { briefing_id: string })
+      | MeetingBriefingAwaitingDto
   }
 
   'POST /v1/speech/synthesize': {

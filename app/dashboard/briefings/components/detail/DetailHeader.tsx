@@ -3,22 +3,15 @@ import DetailHeaderActions from './DetailHeaderActions'
 
 type Props = {
   briefing: Briefing
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
 }
 
 /**
  * Sticky top bar on the briefing detail page. Title + reading time on the
- * left; desktop-only Download and Ask AI buttons on the right.
- *
- * Mobile actions live in MobileFabs.
+ * left; desktop-only Share, Notes, and Briefing assistant buttons on the
+ * right. Mobile actions live in MobileBottomBar.
  */
 export default function DetailHeader({
   briefing,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
 }: Props): React.JSX.Element {
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
@@ -31,12 +24,7 @@ export default function DetailHeader({
             {briefing.estimated_read_minutes} minute read
           </p>
         </div>
-        <DetailHeaderActions
-          briefing={briefing}
-          preparedForLine={preparedForLine}
-          meetingMetaLine={meetingMetaLine}
-          liveBriefingUrl={liveBriefingUrl}
-        />
+        <DetailHeaderActions briefing={briefing} />
       </div>
     </div>
   )

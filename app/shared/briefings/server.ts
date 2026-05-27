@@ -50,7 +50,7 @@ const BRIEFING_TYPE_LABEL: Record<BriefingType, string> = {
 
 const isFullArtifact = (
   data: { briefing_status?: string } | { status?: string },
-): data is MeetingBriefingFull => {
+): data is MeetingBriefingFull & { briefing_id: string } => {
   const status = 'briefing_status' in data ? data.briefing_status : undefined
   return status === 'briefing_ready' || status === 'agenda_provided_by_user'
 }

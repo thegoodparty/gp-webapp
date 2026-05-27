@@ -36,6 +36,7 @@ const nextConfig: NextConfig = {
     ]
   },
   async rewrites() {
+    const apiBase = process.env.NEXT_PUBLIC_API_BASE ?? ''
     return [
       {
         source: '/sitemap.xml',
@@ -48,6 +49,14 @@ const nextConfig: NextConfig = {
       {
         source: '/robots.txt',
         destination: '/api/robots',
+      },
+      // Public PDF share link for meeting briefings. Proxies to gp-api so the
+      // shareable URL lives on the marketing domain (e.g.
+      // `goodparty.org/api/v1/briefings/{uuid}`) instead of leaking the API
+      // subdomain into mailto:/sms: payloads.
+      {
+        source: '/api/v1/briefings/:uuid',
+        destination: `${apiBase}/v1/briefings/:uuid`,
       },
     ]
   },

@@ -1,59 +1,33 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, MessageSquare, Sparkles } from 'lucide-react'
-import { Button, Loader2Icon } from '@styleguide'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
-import { reportErrorToSentry } from '@shared/sentry'
+import { MessageSquare, Share2, Sparkles } from 'lucide-react'
+import { Button } from '@styleguide'
 import type { Briefing } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import ShareBriefingDrawer from './ShareBriefingDrawer'
 
 type Props = {
   briefing: Briefing
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
 }
 
 /**
- * Sticky header actions on desktop. Download builds the briefing PDF in the
- * browser via @react-pdf/renderer; the "Add notes" and "Briefing assistant"
- * buttons open the cycler surfaces (notes / chats) so the user lands on
- * existing annotations first, with a new-item CTA inside the empty state.
+ * Sticky header actions on desktop. Share opens the bottom drawer whose
+ * Copy/Email/Message/Download buttons all point at the public PDF URL
+ * served by `gp-api` via the `/api/v1/briefings/:uuid` Vercel rewrite.
+ * Notes and Briefing assistant open the annotation surfaces.
  */
 export default function DetailHeaderActions({
   briefing,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
 }: Props): React.JSX.Element {
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-  const [downloading, setDownloading] = useState(false)
-
-  const onDownload = async () => {
-    setDownloading(true)
-    try {
-      await downloadBriefingPdf(briefing, {
-        preparedForLine,
-        meetingMetaLine,
-        liveBriefingUrl,
-      })
-    } catch (err) {
-      reportErrorToSentry(err, { experimentId: briefing.experiment_id })
-    } finally {
-      setDownloading(false)
-    }
-  }
+  const [shareOpen, setShareOpen] = useState(false)
 
   return (
     <div className="hidden items-center gap-2 lg:flex">
-      <Button variant="outline" onClick={onDownload} disabled={downloading}>
-        {downloading ? (
-          <Loader2Icon className="size-4 animate-spin" aria-hidden />
-        ) : (
-          <Download className="size-4" aria-hidden />
-        )}
-        {downloading ? 'Preparing…' : 'Download'}
+      <Button variant="outline" onClick={() => setShareOpen(true)}>
+        <Share2 className="size-4" aria-hidden />
+        Share
       </Button>
       <Button variant="outline" onClick={() => openNotesSurface()}>
         <MessageSquare className="size-4" aria-hidden />
@@ -63,6 +37,11 @@ export default function DetailHeaderActions({
         <Sparkles className="size-4" aria-hidden />
         Briefing assistant
       </Button>
+      <ShareBriefingDrawer
+        briefing={briefing}
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+      />
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { APP_BASE } from 'appEnv'
 import { getBriefingBySlug } from '@shared/briefings/server'
 import { briefingsLandingHref } from '@shared/briefings/routes'
 import serveAccess from '../../shared/serveAccess'
@@ -61,11 +60,7 @@ export default async function BriefingChromeLayout({
               pane scrolls. Mobile keeps the original document-scroll
               model so the bottom bar / page chrome behave as before. */}
           <div className="flex min-h-full flex-col bg-muted pb-20 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-0">
-            <DetailHeader
-              briefing={briefing}
-              preparedForLine={briefing.official_name}
-              liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
-            />
+            <DetailHeader briefing={briefing} />
 
             <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:px-8">
               <div className="mb-4">
@@ -98,8 +93,6 @@ export default async function BriefingChromeLayout({
             briefing={briefing}
             briefingSlug={slug}
             items={briefing.items}
-            preparedForLine={briefing.official_name}
-            liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
           />
         </div>
       </AnnotationsScope>
