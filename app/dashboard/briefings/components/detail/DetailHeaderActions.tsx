@@ -1,31 +1,28 @@
 'use client'
 
-import { useState } from 'react'
 import { MessageSquare, Share2, Sparkles } from 'lucide-react'
 import { Button } from '@styleguide'
-import type { Briefing } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import ShareBriefingDrawer from './ShareBriefingDrawer'
-
-type Props = {
-  briefing: Briefing
-}
+import { useShareScope } from './ShareScope'
 
 /**
  * Sticky header actions on desktop. Share opens the bottom drawer whose
  * Copy/Email/Message/Download buttons all point at the public PDF URL
  * served by `gp-api` via the `/api/v1/briefings/:uuid` Vercel rewrite.
  * Notes and Briefing assistant open the annotation surfaces.
+ *
+ * The actual `<ShareBriefingDrawer>` lives in `<ShareScope>` at the layout
+ * level — this component just dispatches the open call. That keeps a
+ * single Radix Sheet instance on the page so focus / portal management
+ * doesn't race with the mirror in `MobileBottomBar`.
  */
-export default function DetailHeaderActions({
-  briefing,
-}: Props): React.JSX.Element {
+export default function DetailHeaderActions(): React.JSX.Element {
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-  const [shareOpen, setShareOpen] = useState(false)
+  const { openShareDrawer } = useShareScope()
 
   return (
     <div className="hidden items-center gap-2 lg:flex">
-      <Button variant="outline" onClick={() => setShareOpen(true)}>
+      <Button variant="outline" onClick={openShareDrawer}>
         <Share2 className="size-4" aria-hidden />
         Share
       </Button>
@@ -37,11 +34,6 @@ export default function DetailHeaderActions({
         <Sparkles className="size-4" aria-hidden />
         Briefing assistant
       </Button>
-      <ShareBriefingDrawer
-        briefing={briefing}
-        open={shareOpen}
-        onOpenChange={setShareOpen}
-      />
     </div>
   )
 }

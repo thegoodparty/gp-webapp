@@ -72,7 +72,6 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.6",
     "@react-google-maps/api": "^2.20.6",
-    "@react-pdf/renderer": "^4.5.1",
     "@segment/analytics-next": "^1.81.1",
     "@sentry/nextjs": "^10.39.0",
     "@sentry/profiling-node": "^10.39.0",

@@ -10,9 +10,7 @@ type Props = {
  * left; desktop-only Share, Notes, and Briefing assistant buttons on the
  * right. Mobile actions live in MobileBottomBar.
  */
-export default function DetailHeader({
-  briefing,
-}: Props): React.JSX.Element {
+export default function DetailHeader({ briefing }: Props): React.JSX.Element {
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
       <div className="flex w-full items-center justify-between gap-4 px-4 py-4 lg:px-8">
@@ -24,7 +22,7 @@ export default function DetailHeader({
             {briefing.estimated_read_minutes} minute read
           </p>
         </div>
-        <DetailHeaderActions briefing={briefing} />
+        <DetailHeaderActions />
       </div>
     </div>
   )

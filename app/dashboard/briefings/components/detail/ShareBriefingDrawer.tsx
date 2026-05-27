@@ -1,7 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
-import { format, parseISO } from 'date-fns'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, Copy, Download, Link2, Mail, MessageSquare } from 'lucide-react'
 import {
   Button,
@@ -15,12 +14,18 @@ import {
 import { APP_BASE } from 'appEnv'
 import { cn } from '@styleguide/lib/utils'
 import type { Briefing } from '@shared/briefings/types'
+import {
+  formatBriefingMeetingDate,
+  formatBriefingMeetingTime,
+} from '@shared/briefings/dateHelpers'
 
 type Props = {
   briefing: Briefing
   open: boolean
   onOpenChange: (open: boolean) => void
 }
+
+const COPIED_FEEDBACK_MS = 1500
 
 /**
  * Bottom-anchored share sheet. Four circular actions (Copy link, Email,
@@ -56,6 +61,26 @@ export default function ShareBriefingDrawer({
   const [copiedIcon, setCopiedIcon] = useState(false)
   const [copiedInline, setCopiedInline] = useState(false)
 
+  // Cache the active feedback timers in refs so that:
+  //  (a) Component unmount cancels them — preventing the "setState on
+  //      unmounted component" warning when the drawer is closed quickly.
+  //  (b) Rapid double-clicks reset the timer rather than stacking handlers.
+  const copiedIconTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const copiedInlineTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  )
+
+  useEffect(() => {
+    return () => {
+      if (copiedIconTimerRef.current !== null) {
+        clearTimeout(copiedIconTimerRef.current)
+      }
+      if (copiedInlineTimerRef.current !== null) {
+        clearTimeout(copiedInlineTimerRef.current)
+      }
+    }
+  }, [])
+
   const writeClipboard = useCallback(async () => {
     if (typeof navigator === 'undefined' || !navigator.clipboard) return false
     try {
@@ -69,17 +94,27 @@ export default function ShareBriefingDrawer({
   }, [shareUrl])
 
   const onCopyIcon = useCallback(async () => {
-    if (await writeClipboard()) {
-      setCopiedIcon(true)
-      window.setTimeout(() => setCopiedIcon(false), 1500)
+    if (!(await writeClipboard())) return
+    setCopiedIcon(true)
+    if (copiedIconTimerRef.current !== null) {
+      clearTimeout(copiedIconTimerRef.current)
     }
+    copiedIconTimerRef.current = setTimeout(() => {
+      setCopiedIcon(false)
+      copiedIconTimerRef.current = null
+    }, COPIED_FEEDBACK_MS)
   }, [writeClipboard])
 
   const onCopyInline = useCallback(async () => {
-    if (await writeClipboard()) {
-      setCopiedInline(true)
-      window.setTimeout(() => setCopiedInline(false), 1500)
+    if (!(await writeClipboard())) return
+    setCopiedInline(true)
+    if (copiedInlineTimerRef.current !== null) {
+      clearTimeout(copiedInlineTimerRef.current)
     }
+    copiedInlineTimerRef.current = setTimeout(() => {
+      setCopiedInline(false)
+      copiedInlineTimerRef.current = null
+    }, COPIED_FEEDBACK_MS)
   }, [writeClipboard])
 
   return (
@@ -204,31 +239,10 @@ function buildShareUrl(briefingId: string): string {
 function buildSubtext(briefing: Briefing): string {
   const parts: string[] = []
   if (briefing.meeting_name) parts.push(briefing.meeting_name)
-  const formattedDate = formatMeetingDate(briefing.meeting_date)
+  const formattedDate = formatBriefingMeetingDate(briefing.meeting_date)
   if (formattedDate) parts.push(formattedDate)
-  const formattedTime = formatMeetingTime(briefing.meeting_time)
+  const formattedTime = formatBriefingMeetingTime(briefing.meeting_time)
   if (formattedTime) parts.push(formattedTime)
   if (briefing.location) parts.push(briefing.location)
   return parts.join(' · ')
-}
-
-function formatMeetingDate(meetingDate: string | undefined): string {
-  if (!meetingDate) return ''
-  try {
-    return format(parseISO(meetingDate), 'EEE MMM d')
-  } catch {
-    return meetingDate
-  }
-}
-
-function formatMeetingTime(meetingTime: string | undefined): string {
-  if (!meetingTime) return ''
-  // Briefing artifact gives us `HH:MM` in local meeting tz. Render as `h:mm a`.
-  const [hhRaw, mmRaw] = meetingTime.split(':')
-  const h24 = Number(hhRaw)
-  const mm = mmRaw ?? ''
-  if (!Number.isFinite(h24) || mm.length !== 2) return meetingTime
-  const ampm = h24 >= 12 ? 'PM' : 'AM'
-  const h12 = h24 % 12 === 0 ? 12 : h24 % 12
-  return `${h12}:${mm} ${ampm}`
 }

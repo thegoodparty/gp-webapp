@@ -4,6 +4,7 @@
  * Server-side rendered so countdowns are stable per request and there is no
  * hydration mismatch with the client.
  */
+import { format, parseISO } from 'date-fns'
 
 /**
  * Whole days between today and the target date, comparing at day boundaries
@@ -60,4 +61,43 @@ export function formatShortDate(targetIso: string): string {
     month: 'short',
     day: 'numeric',
   })
+}
+
+/**
+ * Format a briefing meeting date (`yyyy-MM-dd` in the meeting's local
+ * timezone) as a compact "EEE MMM d" string, e.g. `Tue May 26`. Empty
+ * input or unparseable input falls back to the raw string so the share
+ * sheet / PDF never blank out the line entirely.
+ */
+export function formatBriefingMeetingDate(
+  meetingDate: string | undefined,
+): string {
+  if (!meetingDate) return ''
+  // date-fns is already a transitive dep across the briefings UI; it gives
+  // us a comma-free "EEE MMM d" output that `Intl.DateTimeFormat` would
+  // require post-processing to match.
+  try {
+    return format(parseISO(meetingDate), 'EEE MMM d')
+  } catch {
+    return meetingDate
+  }
+}
+
+/**
+ * Format a briefing meeting time (`HH:MM` 24h in the meeting's local
+ * timezone) as a 12-hour clock string, e.g. `7:00 PM`. Returns an empty
+ * string if `meetingTime` is missing; returns the raw string if it can't
+ * be parsed (defense-in-depth for malformed artifacts).
+ */
+export function formatBriefingMeetingTime(
+  meetingTime: string | undefined,
+): string {
+  if (!meetingTime) return ''
+  const [hhRaw, mmRaw] = meetingTime.split(':')
+  const h24 = Number(hhRaw)
+  const mm = mmRaw ?? ''
+  if (!Number.isFinite(h24) || mm.length !== 2) return meetingTime
+  const ampm = h24 >= 12 ? 'PM' : 'AM'
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12
+  return `${h12}:${mm} ${ampm}`
 }

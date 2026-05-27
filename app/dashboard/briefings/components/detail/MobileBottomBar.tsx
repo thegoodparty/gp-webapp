@@ -1,13 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import {
-  List,
-  ChevronUp,
-  MessageSquare,
-  Share2,
-  Sparkles,
-} from 'lucide-react'
+import { List, ChevronUp, MessageSquare, Share2, Sparkles } from 'lucide-react'
 import {
   Button,
   IconButton,
@@ -20,12 +14,11 @@ import {
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
   briefingItemDomId,
 } from '@shared/briefings/routes'
-import type { Briefing, Item } from '@shared/briefings/types'
+import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import ShareBriefingDrawer from './ShareBriefingDrawer'
+import { useShareScope } from './ShareScope'
 
 type Props = {
-  briefing: Briefing
   briefingSlug: string
   items: Item[]
 }
@@ -47,13 +40,12 @@ type Entry = {
  * closes on tap.
  */
 export default function MobileBottomBar({
-  briefing,
   briefingSlug,
   items,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const [shareOpen, setShareOpen] = useState(false)
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
+  const { openShareDrawer } = useShareScope()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -219,7 +211,7 @@ export default function MobileBottomBar({
           size="medium"
           variant="outline"
           aria-label="Share briefing"
-          onClick={() => setShareOpen(true)}
+          onClick={openShareDrawer}
         >
           <Share2 className="size-5" aria-hidden />
         </IconButton>
@@ -241,12 +233,6 @@ export default function MobileBottomBar({
           <Sparkles className="size-5" aria-hidden />
         </IconButton>
       </div>
-
-      <ShareBriefingDrawer
-        briefing={briefing}
-        open={shareOpen}
-        onOpenChange={setShareOpen}
-      />
     </div>
   )
 }
