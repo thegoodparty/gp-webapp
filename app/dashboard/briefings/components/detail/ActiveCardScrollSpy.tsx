@@ -19,13 +19,18 @@ type Props = {
 
 type Entry = ActiveCard & { domId: string }
 
-// Active line offsets, mirroring CardLevelNotesList / scroll-mt: the
-// document-scroll model on mobile lands cards 104px below the viewport
-// (under the sticky DetailHeader); the pane-scroll model at lg+ has no
-// sticky header inside the pane, so a much smaller breathing margin
-// (12px) is enough to mark a card as "in view."
-const MOBILE_HEADER_OFFSET = 104
-const DESKTOP_PANE_OFFSET = 12
+// Where the "active line" sits inside the scroll container. Activation
+// fires when a card's top crosses (i.e. scrolls above) this line — so a
+// large fraction means the card has to be substantially in view before
+// it becomes active, avoiding the jitter where merely revealing the
+// bottom of card N+1 prematurely activated it. 35% of the container
+// height feels close to "the user is reading this card now," matching
+// the behaviour of standard docs scroll-spies.
+const ACTIVE_LINE_FRACTION = 0.35
+// Mobile scroll uses the document, so the sticky DetailHeader sits on
+// top of the viewport. Reserve its height before applying the fraction
+// so the active line lands inside the visible briefing content.
+const MOBILE_HEADER_BAND = 88
 
 /**
  * Watches the briefing scroll container and updates `activeCard` to
@@ -80,8 +85,18 @@ export default function ActiveCardScrollSpy({
       raf = 0
       const paneScrolls =
         !!pane && window.matchMedia('(min-width: 1024px)').matches
-      const containerTop = paneScrolls ? pane.getBoundingClientRect().top : 0
-      const offset = paneScrolls ? DESKTOP_PANE_OFFSET : MOBILE_HEADER_OFFSET
+      const containerRect = paneScrolls
+        ? pane.getBoundingClientRect()
+        : { top: 0, height: window.innerHeight }
+      const containerTop = containerRect.top
+      const visibleHeight = paneScrolls
+        ? containerRect.height
+        : Math.max(0, window.innerHeight - MOBILE_HEADER_BAND)
+      // Active line sits ~a third of the way down the visible scroll
+      // area. A card becomes active only once its top has scrolled past
+      // this line — i.e. it's been "read into" by the user, not merely
+      // peeking up from the bottom of the viewport.
+      const offset = Math.max(40, visibleHeight * ACTIVE_LINE_FRACTION)
 
       // Pick the card whose top sits closest to (but above) the offset
       // line. Same algorithm the legend used to drive its dot indicator,
