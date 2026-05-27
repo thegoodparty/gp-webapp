@@ -11,6 +11,7 @@ import {
 } from '@shared/briefings/routes'
 import ExecutiveSummaryCard from '../components/detail/ExecutiveSummaryCard'
 import AgendaItemCard from '../components/detail/AgendaItemCard'
+import TrackBriefingViewed from '../components/TrackBriefingViewed'
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -56,6 +57,7 @@ export default async function Page({
 
   return (
     <>
+      <TrackBriefingViewed briefingId={slug} />
       <ExecutiveSummaryCard
         summary={briefing.executiveSummary}
         domId={BRIEFING_EXECUTIVE_SUMMARY_DOM_ID}

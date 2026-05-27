@@ -513,6 +513,7 @@ export const EVENTS = {
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
   Briefings: {
+    ListViewed: 'Briefings - List Viewed',
     BriefingViewed: 'Briefings - Briefing Viewed',
     IssueDetailViewed: 'Briefings - Issue Detail Viewed',
     ClickDownload: 'Briefings - Click Download',
