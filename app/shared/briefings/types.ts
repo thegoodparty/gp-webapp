@@ -1,150 +1,54 @@
 /**
  * Frontend types for briefings and annotations.
  *
- * Briefing types mirror the v2 meeting_briefing artifact schema, sourced
- * from the agent manifest at:
- *   https://github.com/thegoodparty/runbooks/blob/main/experiments/meeting_briefing/manifest.json
- * Snake_case lives at the API boundary (see gpApi/api-endpoints.ts); these
- * types are camelCase, mapped by app/shared/briefings/server.ts.
+ * Briefing types are sourced from the generated agent contract at
+ *   gpApi/generated/agent-job-contracts.ts
+ * which mirrors runbooks/experiments/meeting_briefing/manifest.json. Field
+ * names stay snake_case (the agent emits snake_case JSON and gp-api passes
+ * the artifact through untouched).
  *
  * Internal QA fields from the artifact (claims, required_data_points,
- * disclosure, run_metadata, per-item research) are intentionally NOT
- * surfaced here yet; they can be added when we need to render them.
+ * disclosure, run_metadata, per-item research) are present on the type but
+ * not currently rendered.
  */
+
+import type {
+  MeetingBriefingFull,
+  MeetingBriefingPlaceholder,
+} from 'gpApi/generated/agent-job-contracts'
 
 // ---------------------------------------------------------------------------
 // Briefing (v2 artifact)
 // ---------------------------------------------------------------------------
 
 export type BriefingStatus =
-  | 'briefing_ready'
-  | 'awaiting_agenda'
-  | 'no_meeting_found'
-  | 'agenda_provided_by_user'
-  | 'error'
+  | MeetingBriefingFull['briefing_status']
+  | MeetingBriefingPlaceholder['briefing_status']
 
-export type BriefingType =
-  | 'city_council_meeting'
-  | 'county_legislature_meeting'
-  | 'school_board_meeting'
+export type BriefingType = MeetingBriefingFull['briefing_type']
 
-export type ItemTier = 'featured' | 'queued' | 'standard'
+export type Item = MeetingBriefingFull['items'][number]
+export type ItemTier = Item['tier']
+export type ItemDisplay = Item['display']
 
-export type ArticleType =
-  | 'reporting'
-  | 'opinion'
-  | 'editorial'
-  | 'press_release'
-  | 'government_communication'
+export type ConstituentSentiment = NonNullable<
+  ItemDisplay['constituent_sentiment']
+>
+export type RecentNewsEntry = NonNullable<ItemDisplay['recent_news']>[number]
+export type BudgetImpact = NonNullable<ItemDisplay['budget_impact']>
+export type BudgetImpactFigure = BudgetImpact['figures'][number]
 
-export type SourceType =
-  | 'agenda_packet'
-  | 'news'
-  | 'government_website'
-  | 'campaign'
-  | 'haystaq'
+export type Source = MeetingBriefingFull['sources'][number]
+export type SourceType = Source['source_type']
+export type ArticleType = NonNullable<Source['article_type']>
 
-export type HaystaqStatus = 'ok' | 'no_match' | 'city_mismatch' | 'no_column'
-export type HaystaqSource = 'curated' | 'dictionary_fallback'
+export type HaystaqStatus = ConstituentSentiment['haystaq_status']
 
-// ---------------------------------------------------------------------------
-// Item display
-// ---------------------------------------------------------------------------
-
-export interface ConstituentSentiment {
-  summary: string
-  detail?: string | null
-  districtNote?: string | null
-  haystaqColumn: string
-  meanScore: number
-  scoreDirection: string
-  voterCount: number
-  haystaqStatus: HaystaqStatus
-  haystaqSource: HaystaqSource
-  sourceIds: string[]
-}
-
-export interface RecentNewsEntry {
-  headline: string
-  publication: string
-  articleType: ArticleType
-  publicationDate?: string | null
-  url: string
-}
-
-export interface BudgetImpactFigure {
-  label: string
-  value: string
-  sourceId: string
-}
-
-export interface BudgetImpact {
-  summary: string
-  figures: BudgetImpactFigure[]
-  sourceIds: string[]
-}
-
-export interface ItemDisplay {
-  summary: string
-  constituentSentiment?: ConstituentSentiment | null
-  recentNews?: RecentNewsEntry[] | null
-  budgetImpact?: BudgetImpact | null
-  talkingPoints?: string[] | null
-  sourceIds?: string[]
-}
-
-// ---------------------------------------------------------------------------
-// Item
-// ---------------------------------------------------------------------------
-
-export interface Item {
-  id: string
-  itemNumber: string | null
-  title: string
-  tier: ItemTier
-  voteRequired: boolean
-  tierReason: string[]
-  display: ItemDisplay
-}
-
-// ---------------------------------------------------------------------------
-// Source
-// ---------------------------------------------------------------------------
-
-export interface Source {
-  id: string
-  name: string
-  url?: string | null
-  sourceType: SourceType
-  publisher?: string | null
-  articleType?: ArticleType | null
-  publicationDate?: string | null
-  pageNumber?: number | null
-  sectionHeading?: string | null
-  scoreValue?: number | null
-}
-
-// ---------------------------------------------------------------------------
-// Briefing
-// ---------------------------------------------------------------------------
-
-export interface Briefing {
-  experimentId: string
-  briefingType: BriefingType
-  briefingStatus: BriefingStatus
-  generatedAt: string
-  officialName: string
-  meetingDate: string
-  estimatedReadMinutes: number
-  executiveSummary: string
-  items: Item[]
-  sources: Source[]
-  /**
-   * Computed display title. The v2 artifact does not carry one; we build
-   * it in server.ts from briefingType + meetingDate.
-   */
-  title: string
-}
+/**
+ * Full briefing artifact plus a computed display title built in
+ * `app/shared/briefings/server.ts` from briefing_type + meeting_date.
+ */
+export type Briefing = MeetingBriefingFull & { title: string }
 
 /**
  * Returned by getBriefingBySlug when the API signals no agenda yet.

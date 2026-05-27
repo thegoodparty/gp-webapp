@@ -58,13 +58,13 @@ const formatDate = (iso?: string | null): string | null => {
 
 const buildDescription = (s: Source): string | null => {
   const parts: string[] = []
-  const articleLabel = s.articleType
-    ? ARTICLE_TYPE_LABEL[s.articleType]
+  const articleLabel = s.article_type
+    ? ARTICLE_TYPE_LABEL[s.article_type]
     : undefined
   if (articleLabel) parts.push(articleLabel)
-  if (s.sectionHeading) parts.push(s.sectionHeading)
-  if (typeof s.pageNumber === 'number') parts.push(`p. ${s.pageNumber}`)
-  const date = formatDate(s.publicationDate)
+  if (s.section_heading) parts.push(s.section_heading)
+  if (typeof s.page_number === 'number') parts.push(`p. ${s.page_number}`)
+  const date = formatDate(s.article_date)
   if (date) parts.push(date)
   return parts.length > 0 ? parts.join(' · ') : null
 }
@@ -73,7 +73,7 @@ const truncate = (text: string, max: number): string =>
   text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`
 
 export const toDisplaySource = (s: Source): DisplaySource => {
-  if (s.sourceType === 'haystaq') {
+  if (s.source_type === 'haystaq') {
     return {
       id: s.id,
       displayName: PROPRIETARY_NAME,

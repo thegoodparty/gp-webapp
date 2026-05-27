@@ -36,20 +36,21 @@ function setCtx(overrides: Partial<Ctx> = {}) {
 }
 
 // Minimal briefing stub — the component only forwards it to the PDF download
-// path, which the tests don't exercise.
+// path, which the tests don't exercise. Cast through unknown because the
+// generated artifact type has many required fields that don't matter here.
 const briefingStub = {
-  experimentId: 'x',
-  briefingType: 'city_council_meeting',
-  briefingStatus: 'briefing_ready',
-  generatedAt: '2026-01-01T00:00:00Z',
-  officialName: 'Test Official',
-  meetingDate: '2026-01-01',
-  estimatedReadMinutes: 1,
-  executiveSummary: '',
+  experiment_id: 'x',
+  briefing_type: 'city_council_meeting',
+  briefing_status: 'briefing_ready',
+  generated_at: '2026-01-01T00:00:00Z',
+  official_name: 'Test Official',
+  meeting_date: '2026-01-01',
+  estimated_read_minutes: 1,
+  executive_summary: { items: [], lead_in: '' },
   items: [],
   sources: [],
   title: 'Test briefing',
-} satisfies Briefing
+} as unknown as Briefing
 
 describe('<DetailHeaderActions>', () => {
   beforeEach(() => {

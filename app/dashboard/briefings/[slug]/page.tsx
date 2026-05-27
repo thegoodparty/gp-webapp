@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps) {
     title: briefing
       ? `${briefing.title} | GoodParty.org`
       : 'Briefing | GoodParty.org',
-    description: briefing?.executiveSummary ?? 'Meeting briefing',
+    description: briefing?.executive_summary.lead_in ?? 'Meeting briefing',
     slug: `/dashboard/briefings/${slug}`,
   })
 }
@@ -57,7 +57,7 @@ export default async function Page({
   return (
     <>
       <ExecutiveSummaryCard
-        summary={briefing.executiveSummary}
+        summary={briefing.executive_summary}
         domId={BRIEFING_EXECUTIVE_SUMMARY_DOM_ID}
         speechText={speechText}
         analyticsLabel="briefing"

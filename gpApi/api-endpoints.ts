@@ -17,6 +17,7 @@ import type {
   GetIndividualActivitiesResponse,
 } from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
 import type { AnnotationAnchor, ChatMessage } from 'app/shared/briefings/types'
+import { MeetingBriefingOutput } from './generated/agent-job-contracts'
 
 export interface MeetingsListItemDto {
   meetingDate: string
@@ -33,117 +34,11 @@ export interface MeetingsListResponseDto {
   meetings: MeetingsListItemDto[]
 }
 
-// v2 artifact shape, snake_case as emitted by the meeting_briefing agent.
-// Schema: runbooks/experiments/meeting_briefing/manifest.json (output_schema).
-// Mapped to the camelCase frontend Briefing type by app/shared/briefings/server.ts.
-
-export type MeetingBriefingStatusDto =
-  | 'briefing_ready'
-  | 'awaiting_agenda'
-  | 'no_meeting_found'
-  | 'agenda_provided_by_user'
-  | 'error'
-
-export type MeetingBriefingTypeDto =
-  | 'city_council_meeting'
-  | 'county_legislature_meeting'
-  | 'school_board_meeting'
-
-export type MeetingBriefingItemTierDto = 'featured' | 'queued' | 'standard'
-
-export type MeetingBriefingArticleTypeDto =
-  | 'reporting'
-  | 'opinion'
-  | 'editorial'
-  | 'press_release'
-  | 'government_communication'
-
-export type MeetingBriefingSourceTypeDto =
-  | 'agenda_packet'
-  | 'news'
-  | 'government_website'
-  | 'campaign'
-  | 'haystaq'
-
-export interface MeetingBriefingConstituentSentimentDto {
-  summary: string
-  detail?: string | null
-  district_note?: string | null
-  haystaq_column: string
-  mean_score: number
-  score_direction: string
-  voter_count: number
-  haystaq_status: 'ok' | 'no_match' | 'city_mismatch' | 'no_column'
-  haystaq_source: 'curated' | 'dictionary_fallback'
-}
-
-export interface MeetingBriefingRecentNewsEntryDto {
-  headline: string
-  publication: string
-  article_type: MeetingBriefingArticleTypeDto
-  publication_date?: string | null
-  url: string
-}
-
-export interface MeetingBriefingBudgetImpactFigureDto {
-  label: string
-  value: string
-  source_id: string
-}
-
-export interface MeetingBriefingBudgetImpactDto {
-  summary: string
-  figures: MeetingBriefingBudgetImpactFigureDto[]
-}
-
-export interface MeetingBriefingItemDisplayDto {
-  summary: string
-  constituent_sentiment?: MeetingBriefingConstituentSentimentDto | null
-  recent_news?: MeetingBriefingRecentNewsEntryDto[] | null
-  budget_impact?: MeetingBriefingBudgetImpactDto | null
-  talking_points?: string[] | null
-  source_ids?: string[]
-}
-
-export interface MeetingBriefingItemDto {
-  id: string
-  item_number: string | null
-  title: string
-  tier: MeetingBriefingItemTierDto
-  vote_required: boolean
-  tier_reason: string[]
-  display: MeetingBriefingItemDisplayDto
-  // `research` is also on every item but is internal/QA-only; intentionally
-  // left out of the frontend type. Same for top-level claims,
-  // required_data_points, disclosure, run_metadata.
-}
-
-export interface MeetingBriefingSourceDto {
-  id: string
-  name: string
-  url?: string | null
-  source_type: MeetingBriefingSourceTypeDto
-  publisher?: string | null
-  article_type?: MeetingBriefingArticleTypeDto | null
-  article_date?: string | null
-  page_number?: number | null
-  section_heading?: string | null
-  score_value?: number | null
-}
-
-export interface MeetingBriefingResponseDto {
-  experiment_id: string
-  briefing_type: MeetingBriefingTypeDto
-  briefing_status: MeetingBriefingStatusDto
-  generated_at: string
-  official_name: string
-  meeting_date: string
-  estimated_read_minutes: number
-  executive_summary: string
-  items: MeetingBriefingItemDto[]
-  sources: MeetingBriefingSourceDto[]
-}
-
+/**
+ * gp-api emits this shape (not part of the agent artifact) when no
+ * MeetingBriefing row exists for the requested date. Distinguished from a
+ * `MeetingBriefingPlaceholder` artifact by the top-level `status` field.
+ */
 export interface MeetingBriefingAwaitingDto {
   status: 'awaiting_agenda'
   meetingDate: string
@@ -352,7 +247,7 @@ export type APIEndpoints = {
 
   'GET /v1/meetings/:date/briefing': {
     Request: { date: string }
-    Response: MeetingBriefingResponseDto | MeetingBriefingAwaitingDto
+    Response: MeetingBriefingOutput | MeetingBriefingAwaitingDto
   }
 
   'POST /v1/speech/synthesize': {

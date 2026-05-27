@@ -412,7 +412,7 @@ const CoverPage = ({
         {meetingMetaLine ? (
           <Text style={styles.coverMeta}>{meetingMetaLine}</Text>
         ) : (
-          <Text style={styles.coverMeta}>{briefing.meetingDate}</Text>
+          <Text style={styles.coverMeta}>{briefing.meeting_date}</Text>
         )}
 
         {liveBriefingQrDataUrl && liveBriefingUrl ? (
@@ -480,7 +480,7 @@ const ExecutiveSummaryPage = ({
 
     <View style={styles.bodyStart}>
       <Text style={styles.h1}>Executive Summary</Text>
-      <Text style={styles.h1Sub}>{briefing.executiveSummary}</Text>
+      <Text style={styles.h1Sub}>{briefing.executive_summary.lead_in}</Text>
 
       {featured.length > 0 ? (
         <View style={styles.table}>
@@ -526,7 +526,7 @@ const ItemPage = ({
   totalCount,
 }: DocProps & { item: Item; position: number; totalCount: number }) => {
   const d = item.display
-  const sentiment = d.constituentSentiment
+  const sentiment = d.constituent_sentiment
   return (
     <Page size="LETTER" style={styles.page}>
       <RunningHeader meetingMetaLine={meetingMetaLine} />
@@ -535,19 +535,19 @@ const ItemPage = ({
         <Text style={styles.h1}>
           {position}. {item.title}
         </Text>
-        {item.itemNumber ? (
+        {item.item_number ? (
           <Text style={styles.h1Sub}>
-            Agenda item {item.itemNumber} of {totalCount}.
+            Agenda item {item.item_number} of {totalCount}.
           </Text>
         ) : null}
 
         <Text style={styles.h2}>Overview</Text>
         <Text style={styles.para}>{d.summary}</Text>
 
-        {d.budgetImpact ? (
+        {d.budget_impact ? (
           <>
             <Text style={styles.h2}>Budget impact</Text>
-            <Text style={styles.para}>{d.budgetImpact.summary}</Text>
+            <Text style={styles.para}>{d.budget_impact.summary}</Text>
           </>
         ) : null}
 
@@ -561,11 +561,11 @@ const ItemPage = ({
           </>
         ) : null}
 
-        {d.recentNews && d.recentNews.length > 0 ? (
+        {d.recent_news && d.recent_news.length > 0 ? (
           <>
             <Text style={styles.h2}>Recent news</Text>
             <Bullets
-              items={d.recentNews.map((n, i) => (
+              items={d.recent_news.map((n, i) => (
                 <Text key={i}>
                   {n.headline} —{' '}
                   <Text style={styles.newsOutlet}>{n.publication}</Text>
@@ -575,10 +575,10 @@ const ItemPage = ({
           </>
         ) : null}
 
-        {d.talkingPoints && d.talkingPoints.length > 0 ? (
+        {d.talking_points && d.talking_points.length > 0 ? (
           <>
             <Text style={styles.h2}>Talking points</Text>
-            <Bullets items={d.talkingPoints} />
+            <Bullets items={d.talking_points} />
           </>
         ) : null}
       </View>
@@ -621,7 +621,7 @@ const FullAgendaPage = ({
             return (
               <View key={item.id} style={[styles.tableRow, alt]}>
                 <Text style={[styles.tableCell, styles.colNum, bold ?? {}]}>
-                  {item.itemNumber ?? i + 1}
+                  {item.item_number ?? i + 1}
                 </Text>
                 <Text style={[styles.tableCell, styles.colItem, bold ?? {}]}>
                   {item.title}

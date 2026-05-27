@@ -63,7 +63,7 @@ export default async function BriefingChromeLayout({
           <div className="flex min-h-full flex-col bg-muted pb-20 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-0">
             <DetailHeader
               briefing={briefing}
-              preparedForLine={briefing.officialName}
+              preparedForLine={briefing.official_name}
               liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
             />
 
@@ -98,7 +98,7 @@ export default async function BriefingChromeLayout({
             briefing={briefing}
             briefingSlug={slug}
             items={briefing.items}
-            preparedForLine={briefing.officialName}
+            preparedForLine={briefing.official_name}
             liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
           />
         </div>

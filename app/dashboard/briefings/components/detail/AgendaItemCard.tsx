@@ -187,17 +187,16 @@ const AgendaItemCard = ({
 }: Props): React.JSX.Element => {
   const base = `/items/${itemIndex}`
   const display = item.display
-  const sentiment = display.constituentSentiment
-  const budget = display.budgetImpact
-  const news = display.recentNews ?? []
-  const talkingPoints = display.talkingPoints ?? []
+  const sentiment = display.constituent_sentiment
+  const budget = display.budget_impact
+  const news = display.recent_news ?? []
+  const talkingPoints = display.talking_points ?? []
 
   const sourceById = new Map(sources.map((s) => [s.id, s]))
 
   const aggregatedSourceIds = [
-    ...(display.sourceIds ?? []),
-    ...(sentiment?.sourceIds ?? []),
-    ...(budget?.sourceIds ?? []),
+    ...(sentiment?.source_ids ?? []),
+    ...(budget?.source_ids ?? []),
   ]
   const uniqueIds = Array.from(new Set(aggregatedSourceIds))
   const itemSources = uniqueIds
@@ -244,10 +243,10 @@ const AgendaItemCard = ({
           {sentiment ? (
             <section className="flex flex-col gap-2">
               <SectionLabel>Constituent sentiment</SectionLabel>
-              {sentiment.haystaqStatus === 'ok' &&
-              typeof sentiment.meanScore === 'number' ? (
+              {sentiment.haystaq_status === 'ok' &&
+              typeof sentiment.mean_score === 'number' ? (
                 <p className="text-sm font-semibold text-foreground">
-                  {formatSentimentLine(sentiment.meanScore)}
+                  {formatSentimentLine(sentiment.mean_score)}
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -268,9 +267,9 @@ const AgendaItemCard = ({
                   {sentiment.detail}
                 </p>
               ) : null}
-              {sentiment.sourceIds.length > 0 ? (
+              {sentiment.source_ids.length > 0 ? (
                 <SectionSourcePills
-                  sourceIds={sentiment.sourceIds}
+                  sourceIds={sentiment.source_ids}
                   sourceById={sourceById}
                 />
               ) : null}
@@ -296,9 +295,9 @@ const AgendaItemCard = ({
               >
                 {budget.summary}
               </p>
-              {budget.sourceIds.length > 0 ? (
+              {budget.source_ids.length > 0 ? (
                 <SectionSourcePills
-                  sourceIds={budget.sourceIds}
+                  sourceIds={budget.source_ids}
                   sourceById={sourceById}
                 />
               ) : null}

@@ -72,7 +72,7 @@ export default function MobileBottomBar({
         liveBriefingUrl,
       })
     } catch (err) {
-      reportErrorToSentry(err, { experimentId: briefing.experimentId })
+      reportErrorToSentry(err, { experimentId: briefing.experiment_id })
     } finally {
       setDownloading(false)
     }

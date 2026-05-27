@@ -16,16 +16,16 @@ vi.mock('../../shared/useReadAloud', () => ({
 function makeItem(overrides: Partial<Item> = {}): Item {
   return {
     id: 'item_1',
-    itemNumber: '1',
+    item_number: '1',
     title: 'Call to order',
     tier: 'standard',
-    voteRequired: false,
-    tierReason: [],
+    vote_required: false,
+    tier_reason: ['procedural'],
     display: {
       summary: 'The mayor or chair opens the meeting.',
     },
     ...overrides,
-  }
+  } as unknown as Item
 }
 
 const noSources: Source[] = []

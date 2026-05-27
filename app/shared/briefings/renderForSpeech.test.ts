@@ -2,38 +2,48 @@ import { describe, expect, it } from 'vitest'
 import { renderBriefingForSpeech, renderItemForSpeech } from './renderForSpeech'
 import type { Briefing, Item } from './types'
 
-const baseBriefing = (overrides: Partial<Briefing> = {}): Briefing => ({
-  experimentId: 'exp-1',
-  briefingType: 'city_council_meeting',
-  briefingStatus: 'briefing_ready',
-  generatedAt: '2026-05-30T10:00:00Z',
-  officialName: 'Jane Smith',
-  meetingDate: 'June 1, 2026',
-  estimatedReadMinutes: 5,
-  executiveSummary: 'Three big items tonight.',
-  items: [],
-  sources: [],
-  title: 'City Council meeting briefing for June 1, 2026',
-  ...overrides,
-})
+const baseBriefing = (overrides: Record<string, unknown> = {}): Briefing =>
+  ({
+    experiment_id: 'exp-1',
+    briefing_type: 'city_council_meeting',
+    briefing_status: 'briefing_ready',
+    generated_at: '2026-05-30T10:00:00Z',
+    official_name: 'Jane Smith',
+    meeting_date: 'June 1, 2026',
+    meeting_name: 'City Council',
+    location: 'City Hall',
+    estimated_read_minutes: 5,
+    executive_summary: { items: [], lead_in: 'Three big items tonight.' },
+    items: [],
+    sources: [],
+    claims: [],
+    disclosure: '',
+    required_data_points: [],
+    run_metadata: {
+      agenda_packet_url: null,
+      source_bundle_retrieved_at: '2026-05-30T10:00:00Z',
+    },
+    title: 'City Council meeting briefing for June 1, 2026',
+    ...overrides,
+  } as unknown as Briefing)
 
-const featuredItem = (overrides: Partial<Item> = {}): Item => ({
-  id: 'a-1',
-  itemNumber: '1',
-  title: 'Approve budget',
-  tier: 'featured',
-  voteRequired: true,
-  tierReason: [],
-  display: {
-    summary: 'Adopts the FY27 operating budget.',
-    constituentSentiment: null,
-    recentNews: null,
-    budgetImpact: null,
-    talkingPoints: null,
-    sourceIds: [],
-  },
-  ...overrides,
-})
+const featuredItem = (overrides: Record<string, unknown> = {}): Item =>
+  ({
+    id: 'a-1',
+    item_number: '1',
+    title: 'Approve budget',
+    tier: 'featured',
+    vote_required: true,
+    tier_reason: ['vote_required'],
+    display: {
+      summary: 'Adopts the FY27 operating budget.',
+      constituent_sentiment: null,
+      recent_news: null,
+      budget_impact: null,
+      talking_points: null,
+    },
+    ...overrides,
+  } as unknown as Item)
 
 describe('renderBriefingForSpeech', () => {
   it('joins title, executive summary, and featured items into a single text blob', () => {
@@ -43,26 +53,30 @@ describe('renderBriefingForSpeech', () => {
           featuredItem({
             display: {
               summary: 'Adopts the FY27 operating budget.',
-              constituentSentiment: {
+              constituent_sentiment: {
                 summary: 'Mostly favorable.',
                 detail: null,
-                districtNote: null,
-                haystaqColumn: 'fiscal_responsibility',
-                meanScore: 0.6,
-                scoreDirection: 'positive',
-                voterCount: 1200,
-                haystaqStatus: 'ok',
-                haystaqSource: 'curated',
-                sourceIds: [],
+                district_note: null,
+                haystaq_column: 'fiscal_responsibility',
+                mean_score: 0.6,
+                score_direction: 'positive',
+                voter_count: 1200,
+                haystaq_status: 'ok',
+                source_ids: [],
               },
-              recentNews: null,
-              budgetImpact: {
+              recent_news: null,
+              budget_impact: {
                 summary: '+$2M to capital reserves.',
-                figures: [],
-                sourceIds: [],
+                figures: [
+                  { label: 'reserves', value: '+$2M', source_id: 's1' },
+                ],
+                source_ids: [],
               },
-              talkingPoints: ['Lock in school funding.', 'Defer the new park.'],
-              sourceIds: [],
+              talking_points: [
+                'Lock in school funding.',
+                'Defer the new park.',
+                'Keep transit funded.',
+              ],
             },
           }),
         ],
@@ -83,8 +97,11 @@ describe('renderBriefingForSpeech', () => {
   it('strips markdown markers and link syntax that Polly would otherwise read literally', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
-        executiveSummary:
-          '**Bold** _italic_ `code` and a [link](https://example.com).',
+        executive_summary: {
+          items: [],
+          lead_in:
+            '**Bold** _italic_ `code` and a [link](https://example.com).',
+        },
       }),
     )
     expect(text).not.toContain('**')
@@ -97,30 +114,26 @@ describe('renderBriefingForSpeech', () => {
   it('skips non-featured items and empty optional sections', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
-        executiveSummary: '',
+        executive_summary: { items: [], lead_in: '' },
         items: [
           featuredItem({
             title: 'Quiet item',
             display: {
               summary: '',
-              constituentSentiment: null,
-              recentNews: null,
-              budgetImpact: null,
-              talkingPoints: [],
-              sourceIds: [],
+              constituent_sentiment: null,
+              recent_news: null,
+              budget_impact: null,
+              talking_points: null,
             },
           }),
           {
             id: 'q-1',
-            itemNumber: '2',
+            item_number: '2',
             title: 'Procedural matters',
             tier: 'queued',
-            voteRequired: false,
-            tierReason: [],
-            display: {
-              summary: 'Routine roll call.',
-              sourceIds: [],
-            },
+            vote_required: false,
+            tier_reason: ['procedural'],
+            display: { summary: 'Routine roll call.' },
           },
         ],
       }),
@@ -131,63 +144,62 @@ describe('renderBriefingForSpeech', () => {
   })
 })
 
-const itemWithDisplay = (overrides: Partial<Item['display']> = {}): Item => ({
-  id: 'i-1',
-  itemNumber: '1',
-  title: 'Untitled',
-  tier: 'featured',
-  voteRequired: false,
-  tierReason: [],
-  display: {
-    summary: '',
-    constituentSentiment: null,
-    recentNews: null,
-    budgetImpact: null,
-    talkingPoints: null,
-    sourceIds: [],
-    ...overrides,
-  },
-})
+const itemWithDisplay = (overrides: Record<string, unknown> = {}): Item =>
+  ({
+    id: 'i-1',
+    item_number: '1',
+    title: 'Untitled',
+    tier: 'featured',
+    vote_required: false,
+    tier_reason: ['placeholder'],
+    display: {
+      summary: '',
+      constituent_sentiment: null,
+      recent_news: null,
+      budget_impact: null,
+      talking_points: null,
+      ...overrides,
+    },
+  } as unknown as Item)
 
 describe('renderItemForSpeech', () => {
   it('joins title, summary, sentiment, budget, and talking points with single spaces', () => {
-    const item: Item = {
+    const item = {
       id: 'i-2',
-      itemNumber: '3',
+      item_number: '3',
       title: 'Approve new park funding',
       tier: 'featured',
-      voteRequired: true,
-      tierReason: [],
+      vote_required: true,
+      tier_reason: ['vote_required'],
       display: {
         summary: 'Council will vote on a 2 million dollar park proposal.',
-        constituentSentiment: {
+        constituent_sentiment: {
           summary: 'Strong support across the district.',
           detail: null,
-          districtNote: null,
-          haystaqColumn: 'parks',
-          meanScore: 0.7,
-          scoreDirection: 'positive',
-          voterCount: 800,
-          haystaqStatus: 'ok',
-          haystaqSource: 'curated',
-          sourceIds: [],
+          district_note: null,
+          haystaq_column: 'parks',
+          mean_score: 0.7,
+          score_direction: 'positive',
+          voter_count: 800,
+          haystaq_status: 'ok',
+          source_ids: [],
         },
-        recentNews: null,
-        budgetImpact: {
+        recent_news: null,
+        budget_impact: {
           summary: 'Adds 2 million to the capital budget.',
-          figures: [],
-          sourceIds: [],
+          figures: [{ label: 'capital', value: '+$2M', source_id: 's1' }],
+          source_ids: [],
         },
-        talkingPoints: [
+        talking_points: [
           'Parks improve public health.',
           'Funding comes from reserves.',
+          'Construction begins in spring.',
         ],
-        sourceIds: [],
       },
-    }
+    } as unknown as Item
 
     expect(renderItemForSpeech(item)).toBe(
-      'Agenda item: Approve new park funding. Council will vote on a 2 million dollar park proposal. Constituent sentiment: Strong support across the district. Budget impact: Adds 2 million to the capital budget. Talking points. Parks improve public health. Funding comes from reserves.',
+      'Agenda item: Approve new park funding. Council will vote on a 2 million dollar park proposal. Constituent sentiment: Strong support across the district. Budget impact: Adds 2 million to the capital budget. Talking points. Parks improve public health. Funding comes from reserves. Construction begins in spring.',
     )
   })
 
