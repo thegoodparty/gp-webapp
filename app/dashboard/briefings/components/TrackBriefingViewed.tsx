@@ -13,12 +13,13 @@ const resolveCameFrom = (utmSource: string | null): string => {
 
 const TrackBriefingViewed = ({ briefingId }: Props): null => {
   const searchParams = useSearchParams()
+  const utmSource = searchParams?.get('utm_source') ?? null
   useEffect(() => {
     trackEvent(EVENTS.Briefings.BriefingViewed, {
       briefing_id: briefingId,
-      came_from: resolveCameFrom(searchParams?.get('utm_source') ?? null),
+      came_from: resolveCameFrom(utmSource),
     })
-  }, [briefingId, searchParams])
+  }, [briefingId, utmSource])
   return null
 }
 
