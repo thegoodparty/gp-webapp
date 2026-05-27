@@ -148,10 +148,6 @@ export default function AddNoteSheet({
 
   const quote = quoteFor(sheet)
   const isEdit = sheet.kind === 'add_note_edit'
-  const existingAttachments =
-    sheet.kind === 'add_note_edit'
-      ? sheet.annotation.note?.attachments ?? []
-      : []
 
   function markBusy(id: string, busy: boolean) {
     setBusyAttachmentIds((prev) => {
@@ -295,10 +291,14 @@ export default function AddNoteSheet({
 
   // The list the picker renders. In new-note mode it's just staged files;
   // in edit mode it's the server-side attachments plus any uploads still
-  // in flight.
+  // in flight. We re-derive `existingAttachments` inside the memo so the
+  // `?? []` fallback doesn't churn its identity across renders and trip
+  // react-hooks/exhaustive-deps.
   const pickerItems: PickerItem[] = useMemo(() => {
     if (sheet.kind === 'add_note_edit') {
-      const existing: PickerItem[] = existingAttachments.map((att) => ({
+      const existing: PickerItem[] = (
+        sheet.annotation.note?.attachments ?? []
+      ).map((att) => ({
         id: att.id,
         label: att.fileName,
         busy: busyAttachmentIds.has(att.id),
@@ -314,7 +314,7 @@ export default function AddNoteSheet({
       id: s.id,
       label: s.file.name,
     }))
-  }, [sheet, existingAttachments, stagedAttachments, busyAttachmentIds])
+  }, [sheet, stagedAttachments, busyAttachmentIds])
 
   // New-note saves allow body-only or attachment-only. Edit mode's Save
   // commits the body; attachment changes happen immediately, so Save is

@@ -117,6 +117,7 @@ describe('<MobileBottomBar>', () => {
     // The page-selector pill is the first button whose label is just the
     // section name; the "Ask AI about Executive Summary" button also matches.
     const selector = selectorMatches[0]
+    if (!selector) throw new Error('selector button not rendered')
     const download = screen.getByRole('button', { name: /download pdf/i })
     const askAi = screen.getByRole('button', {
       name: /ask ai about executive summary/i,
