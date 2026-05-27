@@ -52,7 +52,15 @@ const isFullArtifact = (
   data: { briefing_status?: string } | { status?: string },
 ): data is MeetingBriefingFull & { briefing_id: string } => {
   const status = 'briefing_status' in data ? data.briefing_status : undefined
-  return status === 'briefing_ready' || status === 'agenda_provided_by_user'
+  if (status !== 'briefing_ready' && status !== 'agenda_provided_by_user') {
+    return false
+  }
+  // Also verify the `briefing_id` augmentation arrived from gp-api. Without
+  // this guard, a stale gp-api response (pre-share-drawer deploy) would
+  // narrow to `Briefing` and downstream `buildShareUrl` would produce a
+  // `/api/v1/briefings/undefined` link instead of failing fast.
+  const briefingId = (data as { briefing_id?: unknown }).briefing_id
+  return typeof briefingId === 'string' && briefingId.length > 0
 }
 
 export const isFullBriefing = (b: Briefing | AwaitingBriefing): b is Briefing =>
