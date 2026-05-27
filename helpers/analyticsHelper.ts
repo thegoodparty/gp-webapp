@@ -572,10 +572,12 @@ export const trackRegistrationCompleted = async ({
       if (typeof analyticsInstance.ready === 'function') {
         await analyticsInstance.ready()
       }
+      const hutk = cookie.get('hubspotutk')
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
         ...(email ? { email } : {}),
+        ...(hutk ? { hutk } : {}),
       })
     }
   } catch (error) {
