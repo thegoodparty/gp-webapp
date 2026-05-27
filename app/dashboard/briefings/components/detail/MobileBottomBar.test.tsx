@@ -123,9 +123,16 @@ describe('<MobileBottomBar>', () => {
     expect(dock?.className ?? '').not.toMatch(/pointer-events-none/)
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
-    const openNotesSurface = vi.fn()
-    setCtx({ openNotesSurface })
+  it('calls openAddNoteTopLevel when the Add note button is clicked with an active card', async () => {
+    const openAddNoteTopLevel = vi.fn()
+    setCtx({
+      openAddNoteTopLevel,
+      activeCard: {
+        key: 'briefing-executive-summary',
+        jsonPath: '/executiveSummary',
+        title: 'Executive Summary',
+      },
+    })
     render(
       <MobileBottomBar
         briefing={briefingStub}
@@ -133,8 +140,10 @@ describe('<MobileBottomBar>', () => {
         items={makeItems(1)}
       />,
     )
-    await userEvent.click(screen.getByRole('button', { name: /open notes/i }))
-    expect(openNotesSurface).toHaveBeenCalledTimes(1)
+    await userEvent.click(
+      screen.getByRole('button', { name: /add a note to executive summary/i }),
+    )
+    expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
   })
 
   it('opens the chats surface when the Briefing assistant button is clicked', async () => {

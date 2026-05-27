@@ -16,10 +16,10 @@ type Props = {
 }
 
 /**
- * Sticky header actions on desktop. Download builds the briefing PDF in the
- * browser via @react-pdf/renderer; the "Add notes" and "Briefing assistant"
- * buttons open the cycler surfaces (notes / chats) so the user lands on
- * existing annotations first, with a new-item CTA inside the empty state.
+ * Sticky header actions on desktop. Download builds the briefing PDF in
+ * the browser via @react-pdf/renderer. "Add note" attaches a new note to
+ * the currently-active card (disabled when no card is active). "Briefing
+ * assistant" opens the chats cycler.
  */
 export default function DetailHeaderActions({
   briefing,
@@ -27,7 +27,8 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
+  const { openAddNoteTopLevel, openChatsSurface, activeCard } =
+    useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -55,9 +56,18 @@ export default function DetailHeaderActions({
         )}
         {downloading ? 'Preparing…' : 'Download'}
       </Button>
-      <Button variant="outline" onClick={() => openNotesSurface()}>
+      <Button
+        variant="outline"
+        onClick={openAddNoteTopLevel}
+        disabled={!activeCard}
+        title={
+          activeCard
+            ? `Add a note to ${activeCard.title}`
+            : 'Click a card to make it active first'
+        }
+      >
         <MessageSquare className="size-4" aria-hidden />
-        Notes
+        Add note
       </Button>
       <Button onClick={() => openChatsSurface()}>
         <Sparkles className="size-4" aria-hidden />
