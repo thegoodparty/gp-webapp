@@ -27,7 +27,8 @@ interface BallotRacesCampaign extends Campaign {
 
 interface SelectedOffice {
   id?: string | number
-  election?: { id?: string | number | null }
+  election?: { id?: string | number | null; electionDay?: string }
+  brPositionId?: string
 }
 
 interface BallotRacesProps {
@@ -94,6 +95,31 @@ const getHighlightedText = (text: string, searchTerm: string): ReactNode => {
     ) : (
       part
     ),
+  )
+}
+
+// Composite (brPositionId, electionDay) match when available; id fallback
+// for legacy UUID-format raceIds persisted before the office-picker fix.
+// partisanType is intentionally not part of the composite — the lean list
+// from /races-by-year doesn't carry it, so including it would diverge from
+// the hydrated shape and drop the radio's highlight after hydration.
+const matchesSelected = (
+  race: Race,
+  selected: Race | SelectedOffice | false,
+): boolean => {
+  if (!selected) return false
+  const selectedAsRace = selected as Race
+  const selectedBrPos =
+    selectedAsRace.brPositionId ?? selectedAsRace.position?.id
+  const selectedDay = selectedAsRace.election?.electionDay
+  if (selectedBrPos && selectedDay) {
+    const raceBrPos = race.brPositionId ?? race.position?.id
+    return (
+      raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+    )
+  }
+  return (
+    'id' in selected && selected.id !== undefined && race.id === selected.id
   )
 }
 
@@ -169,7 +195,11 @@ export default function BallotRaces({
           electionDate: race.election.electionDay,
         },
       )
-      return { ...data, id: race.id }
+      // Pass the hydrated race through unchanged so `data.id` (the BallotReady
+      // race hash) ends up on the selected race. The card-selected check uses
+      // `matchesSelected` which compares via (brPositionId, electionDay), so
+      // dropping the previous `id: race.id` override no longer breaks the UI.
+      return data
     } catch {
       errorSnackbar('Could not load race details. Please try again.')
       return null
@@ -177,13 +207,13 @@ export default function BallotRaces({
   }
 
   const handleSelect = async (race: { id: string }) => {
-    if (race.id === (selected && 'id' in selected ? selected.id : undefined)) {
+    const matchedRace = races.find(({ id }) => id === race.id)
+    if (!matchedRace) {
       setSelected(false)
       onSelect(false)
       return
     }
-    const matchedRace = races.find(({ id }) => id === race.id)
-    if (!matchedRace) {
+    if (matchesSelected(matchedRace, selected)) {
       setSelected(false)
       onSelect(false)
       return
@@ -311,10 +341,7 @@ export default function BallotRaces({
                     ),
                   },
                 }}
-                selected={
-                  race?.id ===
-                  (selected && 'id' in selected ? selected.id : undefined)
-                }
+                selected={matchesSelected(race, selected)}
                 isHydrating={hydratingId === race.id}
                 selectCallback={handleSelect}
               />
