@@ -11,6 +11,8 @@
  * on the page.
  */
 
+import type { AnnotationAnchor } from './types'
+
 const ANCHOR_ATTR = 'data-briefing-json-path'
 const ANCHOR_SELECTOR = '[data-briefing-json-path]'
 
@@ -136,6 +138,110 @@ export function pointToOffset(
 }
 
 /**
+ * Canonical "no anchor" sentinel — annotations that aren't pinned to a
+ * specific passage (page-level chats, top-level notes). Reference-equal
+ * across calls so consumers can use it as a stable prop.
+ */
+export const EMPTY_ANCHOR: AnnotationAnchor = Object.freeze({
+  jsonPath: null,
+  start: null,
+  end: null,
+}) as AnnotationAnchor
+
+/**
+ * True when a chat annotation is page-wide (unanchored to any passage).
+ * Treats both null and empty-string `jsonPath` as unanchored — the schema
+ * stores null, but the empty-string defense covers server-side drift so
+ * the briefing-wide "Delete chat" guard can't be bypassed by a coerced
+ * empty string. Consumers use this to hide destructive actions on the
+ * primary assistant thread.
+ */
+export function isPageWideChat(annotation: {
+  jsonPath: string | null
+}): boolean {
+  return annotation.jsonPath === null || annotation.jsonPath === ''
+}
+
+/**
+ * Smooth-scroll the briefing canvas to an annotation's anchor. No-op when
+ * the annotation has no anchor or the anchor's DOM node has been removed.
+ *
+ * Mobile path: when vaul's bottom Drawer is open, `body` has `overflow:
+ * hidden` AND vaul registers global wheel/touchmove listeners. Under that
+ * lock, `el.scrollIntoView()`, `window.scrollBy()`, AND
+ * `window.scrollTo()` are all effectively no-ops. Direct
+ * `documentElement.scrollTop = X` is the one mutation vaul doesn't
+ * intercept, so we compute the absolute target scroll position (anchor
+ * centered in the band above the drawer) and assign it.
+ *
+ * Desktop path: the right-side drawer doesn't lock body, so the standard
+ * `scrollIntoView({ block: 'center' })` works fine.
+ */
+export function scrollAnchorIntoView(annotation: {
+  jsonPath: string | null
+}): void {
+  if (typeof document === 'undefined') return
+  if (!annotation.jsonPath) return
+  const el = findAnchorEl(annotation.jsonPath)
+  if (!el) return
+
+  const bottomDrawer = document.querySelector(
+    '[data-vaul-drawer-direction="bottom"][data-state="open"]',
+  )
+  if (bottomDrawer instanceof HTMLElement) {
+    // Vaul applies `overflow: hidden` to body while the drawer is open.
+    // Under that lock, `el.scrollIntoView()` and `window.scrollBy()` are
+    // both no-ops — but `window.scrollTo()` (and direct
+    // `documentElement.scrollTop = X`) still work. So we compute the
+    // absolute document scroll position needed to land the anchor centered
+    // in the visible band above the drawer, then `scrollTo` to it.
+    const drawerRect = bottomDrawer.getBoundingClientRect()
+    const elRect = el.getBoundingClientRect()
+    const targetViewportTop = Math.max(
+      0,
+      drawerRect.top / 2 - elRect.height / 2,
+    )
+    const elDocY = elRect.top + document.documentElement.scrollTop
+    const newScrollTop = Math.max(0, elDocY - targetViewportTop)
+    // Vaul's modal Drawer registers global wheel/touchmove listeners that
+    // swallow `scrollTo({behavior:'smooth'})` and `scrollIntoView`. Direct
+    // scrollTop assignment bypasses those listeners. Instant jump — we
+    // tried `scroll-behavior: smooth` to get the animation back, but it
+    // re-triggers the same vaul interception, so we keep the jump.
+    document.documentElement.scrollTop = newScrollTop
+    return
+  }
+
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+export type AnchorElementLookup = (jsonPath: string) => HTMLElement | null
+
+/**
+ * Reconstruct the highlighted quote from an annotation's anchor by walking
+ * the live DOM. Returns null when the anchor is incomplete, the DOM has no
+ * matching element, or the resolved range is empty.
+ *
+ * `lookup` defaults to `findAnchorEl`; callers iterating over many
+ * annotations should pass a cached lookup (e.g. a Map keyed by jsonPath)
+ * to avoid N querySelectorAll calls.
+ */
+export function resolveAnnotationHighlight(
+  annotation: AnnotationAnchor,
+  lookup: AnchorElementLookup = findAnchorEl,
+): string | null {
+  if (typeof document === 'undefined') return null
+  const { jsonPath, start, end } = annotation
+  if (jsonPath === null || start === null || end === null) return null
+  const el = lookup(jsonPath)
+  if (!el) return null
+  const range = buildRangeIn(el, start, end)
+  if (!range) return null
+  const quote = range.toString().trim()
+  return quote.length > 0 ? quote : null
+}
+
+/**
  * Build a Range covering text offsets `[start, end)` inside `container`.
  * Returns null if the offsets are out of bounds.
  */
@@ -172,4 +278,30 @@ export function buildRangeIn(
   range.setStart(startNode, startOffset)
   range.setEnd(endNode, endOffset)
   return range
+}
+
+/**
+ * Read the highlighted text for an existing annotation by walking the live
+ * DOM. The server doesn't persist the original quote — it's rebuilt on
+ * demand from the stored `jsonPath` + start/end offsets so the briefing
+ * UI can show the anchored passage without round-tripping.
+ *
+ * Returns null when the annotation has no anchor (top-level note) or when
+ * the DOM no longer matches (e.g. content changed since the note was
+ * written) or when we're in an SSR / non-browser context.
+ */
+export function resolveQuoteFromAnchor(anchor: {
+  jsonPath: string | null
+  start: number | null
+  end: number | null
+}): string | null {
+  if (typeof document === 'undefined') return null
+  const { jsonPath, start, end } = anchor
+  if (jsonPath === null || start === null || end === null) return null
+  const el = findAnchorEl(jsonPath)
+  if (!el) return null
+  const range = buildRangeIn(el, start, end)
+  if (!range) return null
+  const quote = range.toString().trim()
+  return quote.length > 0 ? quote : null
 }

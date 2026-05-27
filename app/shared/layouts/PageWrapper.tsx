@@ -20,6 +20,8 @@ import { OrganizationProvider } from '@shared/organization-picker'
 import { getCurrentUserOrganizations } from 'helpers/getCurrentUserOrganizations'
 import { ClerkProvider } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
+import { cookies } from 'next/headers'
+import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { ReactQueryProvider } from '@shared/query-client'
 import { FeatureFlagsProvider } from '@shared/experiments/FeatureFlagsProvider'
 
@@ -33,11 +35,13 @@ const PageWrapper = async ({
   const { userId } = await auth()
   const isAuthed = !!userId
 
-  const [pathname, campaign, organizations] = await Promise.all([
+  const [pathname, campaign, organizations, cookieStore] = await Promise.all([
     getReqPathname(),
     isAuthed ? fetchUserCampaign() : Promise.resolve(null),
     isAuthed ? getCurrentUserOrganizations() : Promise.resolve([]),
+    cookies(),
   ])
+  const initialOrgSlug = cookieStore.get(ORG_SLUG_COOKIE)?.value ?? null
 
   return (
     <ClerkProvider>
@@ -46,7 +50,10 @@ const PageWrapper = async ({
           <FeatureFlagsProvider>
             <AmplitudeInit />
             <ImpersonatingTracker />
-            <OrganizationProvider initialOrganizations={organizations}>
+            <OrganizationProvider
+              initialOrganizations={organizations}
+              initialSlug={initialOrgSlug}
+            >
               <CampaignProvider campaign={campaign}>
                 <SentryIdentifier />
                 <CampaignStatusProvider>

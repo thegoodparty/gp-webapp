@@ -18,7 +18,8 @@ import type { Briefing, Item } from './types'
 export const renderBriefingForSpeech = (briefing: Briefing): string => {
   const sections: string[] = []
   sections.push(briefing.title)
-  if (briefing.executiveSummary) sections.push(briefing.executiveSummary)
+  if (briefing.executive_summary.lead_in)
+    sections.push(briefing.executive_summary.lead_in)
   for (const item of briefing.items) {
     if (item.tier !== 'featured') continue
     sections.push(renderItem(item))
@@ -36,15 +37,15 @@ const renderItem = (item: Item): string => {
   const parts: string[] = []
   parts.push(`Agenda item: ${item.title}.`)
   if (item.display.summary) parts.push(item.display.summary)
-  if (item.display.constituentSentiment?.summary) {
+  if (item.display.constituent_sentiment?.summary) {
     parts.push(
-      `Constituent sentiment: ${item.display.constituentSentiment.summary}`,
+      `Constituent sentiment: ${item.display.constituent_sentiment.summary}`,
     )
   }
-  if (item.display.budgetImpact?.summary) {
-    parts.push(`Budget impact: ${item.display.budgetImpact.summary}`)
+  if (item.display.budget_impact?.summary) {
+    parts.push(`Budget impact: ${item.display.budget_impact.summary}`)
   }
-  const talkingPoints = item.display.talkingPoints ?? []
+  const talkingPoints = item.display.talking_points ?? []
   if (talkingPoints.length > 0) {
     parts.push('Talking points.')
     for (const point of talkingPoints) {

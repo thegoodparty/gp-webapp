@@ -4,6 +4,18 @@ import { render } from 'helpers/test-utils/render'
 import AgendaItemCard from './AgendaItemCard'
 import type { Item, Source } from '@shared/briefings/types'
 
+// AgendaItemCard now consumes AnnotationsScope context for active-card
+// state and inline card-level notes. Stub it out so the card renders in
+// isolation — active-state behaviour is exercised in the scope's own tests.
+vi.mock('../annotations/AnnotationsScope', () => ({
+  useAnnotationsCtx: () => ({
+    annotations: [],
+    activeCard: null,
+    setActiveCard: vi.fn(),
+    openEditNote: vi.fn(),
+  }),
+}))
+
 vi.mock('../../shared/useReadAloud', () => ({
   useReadAloud: () => ({
     status: 'idle',
@@ -16,16 +28,16 @@ vi.mock('../../shared/useReadAloud', () => ({
 function makeItem(overrides: Partial<Item> = {}): Item {
   return {
     id: 'item_1',
-    itemNumber: '1',
+    item_number: '1',
     title: 'Call to order',
     tier: 'standard',
-    voteRequired: false,
-    tierReason: [],
+    vote_required: false,
+    tier_reason: ['procedural'],
     display: {
       summary: 'The mayor or chair opens the meeting.',
     },
     ...overrides,
-  }
+  } as unknown as Item
 }
 
 const noSources: Source[] = []

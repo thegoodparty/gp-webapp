@@ -9,6 +9,12 @@ import { resolveSelection, type ResolvedAnchor } from './anchorResolver'
  * `data-briefing-json-path`.
  *
  * Returns the resolved anchor, or null if there is no valid selection.
+ *
+ * Note on iOS Safari's selection menu: there's no DOM API to suppress
+ * the post-selection edit menu while keeping the native drag handles
+ * working — both are tied to the live Selection. We accept that the
+ * iOS menu may appear alongside our HighlightToolbar; the trade-off is
+ * preserving the native drag-to-extend gesture that users expect.
  */
 export function useSelection(): ResolvedAnchor | null {
   const [anchor, setAnchor] = useState<ResolvedAnchor | null>(null)

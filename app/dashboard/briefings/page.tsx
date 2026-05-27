@@ -5,6 +5,7 @@ import { IS_DEV, IS_LOCAL } from 'appEnv'
 import serveAccess from '../shared/serveAccess'
 import DashboardLayout from '../shared/DashboardLayout'
 import BriefingsLanding from './components/BriefingsLanding'
+import TrackBriefingListViewed from './components/TrackBriefingListViewed'
 
 const meta = pageMetaData({
   title: 'Briefings | GoodParty.org',
@@ -33,6 +34,7 @@ export default async function Page(): Promise<React.JSX.Element> {
   ])
   return (
     <DashboardLayout pathname="/dashboard/briefings" showAlert={false}>
+      <TrackBriefingListViewed />
       <BriefingsLanding
         summaries={summaries}
         devElectedOfficeId={devElectedOfficeId}

@@ -1,27 +1,13 @@
 import { format, parseISO } from 'date-fns'
 import { FetchError } from 'ofetch'
 import { serverRequest } from 'gpApi/server-request'
-import type {
-  MeetingBriefingBudgetImpactDto,
-  MeetingBriefingConstituentSentimentDto,
-  MeetingBriefingItemDto,
-  MeetingBriefingItemDisplayDto,
-  MeetingBriefingRecentNewsEntryDto,
-  MeetingBriefingResponseDto,
-  MeetingBriefingSourceDto,
-  MeetingBriefingTypeDto,
-  MeetingsListItemDto,
-} from 'gpApi/api-endpoints'
+import type { MeetingsListItemDto } from 'gpApi/api-endpoints'
+import type { MeetingBriefingFull } from 'gpApi/generated/agent-job-contracts'
 import type {
   AwaitingBriefing,
   Briefing,
   BriefingSummary,
-  BudgetImpact,
-  ConstituentSentiment,
-  Item,
-  ItemDisplay,
-  RecentNewsEntry,
-  Source,
+  BriefingType,
 } from './types'
 
 const getOffsetForZone = (instant: Date, timeZone: string): string => {
@@ -56,101 +42,24 @@ export const getBriefingsList = async (): Promise<BriefingSummary[]> => {
   return data.meetings.map(toSummary)
 }
 
-const toSentiment = (
-  dto: MeetingBriefingConstituentSentimentDto,
-): ConstituentSentiment => ({
-  summary: dto.summary,
-  detail: dto.detail ?? null,
-  districtNote: dto.district_note ?? null,
-  haystaqColumn: dto.haystaq_column,
-  meanScore: dto.mean_score,
-  scoreDirection: dto.score_direction,
-  voterCount: dto.voter_count,
-  haystaqStatus: dto.haystaq_status,
-  haystaqSource: dto.haystaq_source,
-  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
-})
-
-const toRecentNews = (
-  dto: MeetingBriefingRecentNewsEntryDto,
-): RecentNewsEntry => ({
-  headline: dto.headline,
-  publication: dto.publication,
-  articleType: dto.article_type,
-  publicationDate: dto.publication_date ?? null,
-  url: dto.url,
-})
-
-const toBudgetImpact = (dto: MeetingBriefingBudgetImpactDto): BudgetImpact => ({
-  summary: dto.summary,
-  figures: dto.figures.map((f) => ({
-    label: f.label,
-    value: f.value,
-    sourceId: f.source_id,
-  })),
-  sourceIds: (dto as { source_ids?: string[] }).source_ids ?? [],
-})
-
-const toDisplay = (dto: MeetingBriefingItemDisplayDto): ItemDisplay => ({
-  summary: dto.summary,
-  constituentSentiment: dto.constituent_sentiment
-    ? toSentiment(dto.constituent_sentiment)
-    : null,
-  recentNews: dto.recent_news ? dto.recent_news.map(toRecentNews) : null,
-  budgetImpact: dto.budget_impact ? toBudgetImpact(dto.budget_impact) : null,
-  talkingPoints: dto.talking_points ?? null,
-  sourceIds: dto.source_ids ?? [],
-})
-
-const toItem = (dto: MeetingBriefingItemDto): Item => ({
-  id: dto.id,
-  itemNumber: dto.item_number,
-  title: dto.title,
-  tier: dto.tier,
-  voteRequired: dto.vote_required,
-  tierReason: dto.tier_reason,
-  display: toDisplay(dto.display),
-})
-
-const toSource = (dto: MeetingBriefingSourceDto): Source => ({
-  id: dto.id,
-  name: dto.name,
-  url: dto.url ?? null,
-  sourceType: dto.source_type,
-  publisher: dto.publisher ?? null,
-  articleType: dto.article_type ?? null,
-  publicationDate: dto.article_date ?? null,
-  pageNumber: dto.page_number ?? null,
-  sectionHeading: dto.section_heading ?? null,
-  scoreValue: dto.score_value ?? null,
-})
-
-const BRIEFING_TYPE_LABEL: Record<MeetingBriefingTypeDto, string> = {
+const BRIEFING_TYPE_LABEL: Record<BriefingType, string> = {
   city_council_meeting: 'City Council meeting',
   county_legislature_meeting: 'County Legislature meeting',
   school_board_meeting: 'School Board meeting',
 }
 
-const toBriefing = (
-  dto: MeetingBriefingResponseDto,
-  date: string,
-): Briefing => {
-  const formattedDate = format(parseISO(date), 'MMMM d, yyyy')
-  return {
-    experimentId: dto.experiment_id,
-    briefingType: dto.briefing_type,
-    briefingStatus: dto.briefing_status,
-    generatedAt: dto.generated_at,
-    officialName: dto.official_name,
-    meetingDate: formattedDate,
-    estimatedReadMinutes: dto.estimated_read_minutes,
-    executiveSummary: dto.executive_summary,
-    items: dto.items.map(toItem),
-    sources: dto.sources.map(toSource),
-    title: `${
-      BRIEFING_TYPE_LABEL[dto.briefing_type] ?? 'Meeting'
-    } briefing for ${formattedDate}`,
-  }
+const isFullArtifact = (
+  data: { briefing_status?: string } | { status?: string },
+): data is MeetingBriefingFull => {
+  // Narrow on the status discriminator alone. `briefing_id` (the share
+  // token used by the drawer) was originally also checked here, but doing
+  // so makes the entire briefing page 404 during a rolling-deploy window
+  // where gp-webapp has the share-drawer code but gp-api hasn't shipped
+  // the `briefing_id` augmentation yet — a much worse failure mode than
+  // a broken share button. The drawer code in `ShareScope` now suppresses
+  // the share UI when `briefing_id` is absent so we degrade gracefully.
+  const status = 'briefing_status' in data ? data.briefing_status : undefined
+  return status === 'briefing_ready' || status === 'agenda_provided_by_user'
 }
 
 export const isFullBriefing = (b: Briefing | AwaitingBriefing): b is Briefing =>
@@ -175,7 +84,24 @@ export const getBriefingBySlug = async (
         durationMinutes: data.durationMinutes,
       }
     }
-    return toBriefing(data as MeetingBriefingResponseDto, slug)
+    if (!isFullArtifact(data)) return null
+    const formattedDate = format(parseISO(slug), 'MMMM d, yyyy')
+    // `briefing_id` is the augmentation that gp-api adds onto the artifact
+    // payload alongside this PR. During a rolling-deploy window where the
+    // server hasn't shipped that yet, the field will be undefined; default
+    // to an empty string so the page still renders and let downstream
+    // consumers (the share drawer) detect the empty value and hide
+    // share-only UI. Once the contracts package catches up, this fallback
+    // becomes dead code that should be removed alongside the augmentation
+    // declaration in `types.ts`.
+    const briefingId = (data as { briefing_id?: unknown }).briefing_id ?? ''
+    return {
+      ...data,
+      briefing_id: typeof briefingId === 'string' ? briefingId : '',
+      title: `${
+        BRIEFING_TYPE_LABEL[data.briefing_type] ?? 'Meeting'
+      } briefing for ${formattedDate}`,
+    }
   } catch (e) {
     if (e instanceof FetchError && e.status === 404) return null
     throw e

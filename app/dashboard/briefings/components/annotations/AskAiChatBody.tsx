@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Button, IconButton, Input, Textarea } from '@styleguide'
 import { chatApi } from '@shared/briefings/chat-api'
+import { EMPTY_ANCHOR } from '@shared/briefings/anchorResolver'
 import { reportErrorToSentry } from '@shared/sentry'
 import type { AnnotationAnchor, ChatMessage } from '@shared/briefings/types'
 import type {
@@ -55,6 +56,13 @@ type Props = {
    * `block`; popover keeps `inline`.
    */
   composerVariant?: 'inline' | 'block'
+  /**
+   * Fires when the chat's internal `sending || creating` flips. The host
+   * surface uses this to disable destructive actions (e.g. Delete chat)
+   * while a stream or chat-creation request is in flight — preventing the
+   * annotation from being removed mid-network-call.
+   */
+  onSendingChange?: (sending: boolean) => void
 }
 
 type StreamingMessage = {
@@ -120,10 +128,6 @@ function newClientMessageId(): string {
   return `cmid_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
 }
 
-function emptyAnchor(): AnnotationAnchor {
-  return { jsonPath: null, start: null, end: null }
-}
-
 function messageToItem(msg: ChatMessage): ChatItem | null {
   if (msg.role === 'user') {
     return { kind: 'user', id: msg.id, content: msg.content }
@@ -160,6 +164,7 @@ export default function AskAiChatBody({
   active = true,
   onChatCreated,
   composerVariant = 'inline',
+  onSendingChange,
 }: Props): React.JSX.Element {
   const [annotationId, setAnnotationId] = useState<string | null>(null)
   const [history, setHistory] = useState<ChatItem[]>([])
@@ -187,7 +192,7 @@ export default function AskAiChatBody({
       if (!activeId) {
         const created = await chatApi.createBriefingChat({
           meetingDate,
-          anchor: anchor ?? emptyAnchor(),
+          anchor: anchor ?? EMPTY_ANCHOR,
         })
         activeId = created.annotationId
         onChatCreated?.({
@@ -228,6 +233,12 @@ export default function AskAiChatBody({
       void initialize()
     }
   }, [active, initialize])
+
+  // Notify the host surface whenever `sending || creating` flips, so it
+  // can gate destructive actions (Delete chat) on the active annotation.
+  useEffect(() => {
+    onSendingChange?.(sending || creating)
+  }, [sending, creating, onSendingChange])
 
   // Abort any in-flight stream when the surface closes. State reset is
   // unnecessary — AskAiSheet is conditionally mounted in AnnotationsScope,
@@ -537,15 +548,10 @@ export default function AskAiChatBody({
                 Ask anything about this briefing — I can summarize sections,
                 compare options, or pull out the asks.
               </p>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Suggested
-                </span>
-                <AskAiSuggestedPills
-                  onSelect={onSelectSuggestion}
-                  disabled={sending}
-                />
-              </div>
+              <AskAiSuggestedPills
+                onSelect={onSelectSuggestion}
+                disabled={sending}
+              />
             </div>
           )}
 
@@ -679,15 +685,15 @@ export default function AskAiChatBody({
       </div>
 
       {composerVariant === 'block' ? (
-        <div className="flex flex-col gap-3 border-t border-base-border bg-background px-4 py-4">
+        <div className="flex flex-col gap-3 border-t border-base-border bg-background pb-2 pt-4">
           <Textarea
             value={composer}
             onChange={(e) => setComposer(e.target.value)}
-            placeholder="Ask a question and the AI answers"
+            placeholder="Ask anything..."
             disabled={sending || creating || !annotationId}
             rows={3}
             className="min-h-[96px] resize-none rounded-2xl"
-            aria-label="Ask AI message"
+            aria-label="Ask Assistant message"
           />
           <Button
             type="button"
@@ -696,11 +702,11 @@ export default function AskAiChatBody({
             }}
             disabled={!annotationId || composer.trim().length === 0}
             loading={sending || creating}
-            icon={<Send className="size-4" aria-hidden />}
+            icon={<Sparkles className="size-4" aria-hidden />}
             iconPosition="left"
             className="w-full"
           >
-            Ask AI
+            Ask Assistant
           </Button>
         </div>
       ) : (

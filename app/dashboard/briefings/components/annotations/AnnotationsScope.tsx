@@ -6,11 +6,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  buildRangeIn,
+  EMPTY_ANCHOR,
   findAnchorEl,
   pointToOffset,
   type ResolvedAnchor,
@@ -20,34 +21,29 @@ import {
   useAnnotations,
 } from '@shared/briefings/use-annotations'
 import { useSelection } from '@shared/briefings/use-selection'
-import type { Annotation, AnnotationAnchor } from '@shared/briefings/types'
+import type {
+  Annotation,
+  AnnotationAnchor,
+  AnnotationNoteAttachmentData,
+} from '@shared/briefings/types'
 import HighlightToolbar from './HighlightToolbar'
 import AddNoteSheet from './AddNoteSheet'
 import ReportErrorSheet from './ReportErrorSheet'
 import AnnotationsHighlightLayer from './AnnotationsHighlightLayer'
-import AskAiSheet from './AskAiSheet'
-import AddNotesDialog from '../notes-intake/AddNotesDialog'
-import { uploadAttachment } from '@shared/briefings/attachments-api'
-import { annotationsApi } from '@shared/briefings/annotations-api'
-
-const OCR_TERMINAL_STATUSES = new Set(['completed', 'failed', 'skipped'])
-const OCR_POLL_INTERVAL_MS = 2_000
-const OCR_POLL_TIMEOUT_MS = 60_000
-
-const waitForOcr = async (
-  meetingDate: string,
-  attachmentId: string,
-): Promise<void> => {
-  const started = Date.now()
-  while (Date.now() - started < OCR_POLL_TIMEOUT_MS) {
-    const list = await annotationsApi.list(meetingDate)
-    for (const ann of list) {
-      const att = ann.note?.attachments?.find((a) => a.id === attachmentId)
-      if (att && OCR_TERMINAL_STATUSES.has(att.ocrStatus)) return
-    }
-    await new Promise((r) => setTimeout(r, OCR_POLL_INTERVAL_MS))
-  }
-}
+import { NotesSurface } from './NotesSurface'
+import { BriefingAssistantSurface } from './BriefingAssistantSurface'
+import { BugReportsSurface } from './BugReportsSurface'
+import {
+  findAnnotationPosition,
+  predictNewAnnotationPosition,
+} from './enrichForCycler'
+import {
+  deleteAttachment,
+  resolveMimeType,
+  uploadAttachment,
+} from '@shared/briefings/attachments-api'
+import { chatApi } from '@shared/briefings/chat-api'
+import { reportErrorToSentry } from '@shared/sentry'
 
 /**
  * Either an in-progress selection-driven anchor, or null for a top-level
@@ -56,30 +52,10 @@ const waitForOcr = async (
 export type PendingAnchor = ResolvedAnchor | null
 
 /**
- * Reconstruct the highlighted text from an annotation's jsonPath/start/end
- * by walking the live DOM. The server schema does not store the original
- * quote, so we resolve it here at open-time. Returns an empty object when
- * the annotation lacks a usable anchor or the DOM no longer matches.
- */
-function resolveAnnotationQuote(annotation: Annotation): {
-  quote?: string
-  anchor?: { jsonPath: string; start: number; end: number }
-} {
-  if (typeof document === 'undefined') return {}
-  const { jsonPath, start, end } = annotation
-  if (jsonPath === null || start === null || end === null) return {}
-  const el = findAnchorEl(jsonPath)
-  if (!el) return {}
-  const range = buildRangeIn(el, start, end)
-  if (!range) return {}
-  const quote = range.toString().trim()
-  if (!quote) return {}
-  return { quote, anchor: { jsonPath, start, end } }
-}
-
-/**
- * Overlay state — covers both Sheet-based overlays (notes / bug reports)
- * and Popover-based overlays (Ask AI). One overlay is open at a time.
+ * Overlay state — covers the right-side cycler surfaces and the legacy
+ * AddNote / ReportError single-annotation sheets. One overlay is open at
+ * a time. Chats no longer have their own legacy sheet; they share the
+ * cycler surface with the rest of the annotation kinds.
  */
 export type OverlayState =
   | { kind: 'closed' }
@@ -87,14 +63,13 @@ export type OverlayState =
   | { kind: 'add_note_edit'; annotation: Annotation }
   | { kind: 'report_error_new'; anchor: PendingAnchor }
   | { kind: 'report_error_view'; annotation: Annotation }
-  | { kind: 'ask_ai_top_level' }
-  | { kind: 'ask_ai_anchored'; anchor: ResolvedAnchor }
+  | { kind: 'surface_notes'; initialAnnotationId?: string }
   | {
-      kind: 'ask_ai_existing'
-      annotationId: string
-      quote?: string
-      anchor?: { jsonPath: string; start: number; end: number }
+      kind: 'surface_chats'
+      initialAnnotationId?: string
+      pendingAnchor?: AnnotationAnchor
     }
+  | { kind: 'surface_bug_reports'; initialAnnotationId?: string }
 
 /**
  * Legacy alias retained for external imports — overlays now include
@@ -102,6 +77,36 @@ export type OverlayState =
  * cross-file rename.
  */
 export type SheetState = OverlayState
+
+/**
+ * The user-active card on the briefing detail page. Drives the blue
+ * outline rendered on the card itself and the highlighted entry in the
+ * sidebar legend. Also determines where the top-of-page "Add note"
+ * button attaches new notes — they get this card's `jsonPath` as their
+ * anchor (with `start`/`end` null, marking them as card-level rather
+ * than passage-level).
+ */
+export type ActiveCard = {
+  /** Stable identity used by the legend to highlight the matching entry. */
+  key: string
+  /**
+   * Canonical jsonPath for this card as a whole (no field suffix).
+   * `/executiveSummary` for the exec summary, `/items/{index}` for an
+   * agenda item. Card-level notes use this directly with null offsets.
+   */
+  jsonPath: string
+  /**
+   * JsonPath of the card's title element. Used when the user starts a
+   * card-level chat from the header — the new chat is anchored to the
+   * title (jsonPath + start=0 + end=title.length) just as if the user
+   * had highlighted the title themselves. There must be a DOM element
+   * carrying this path under `data-briefing-json-path` so the anchor
+   * resolves back to a quote.
+   */
+  titleJsonPath: string
+  /** Display title — used by AddNoteSheet for the "Note on …" copy. */
+  title: string
+}
 
 type Ctx = {
   meetingDate: string
@@ -112,14 +117,34 @@ type Ctx = {
    * no top-level chat exists yet — first open will mint one.
    */
   topLevelChatAnnotationId?: string
+  /** Live annotations list — exposed so cards can render their own
+   *  card-level notes inline without re-fetching. */
+  annotations: Annotation[]
+  /** Currently-focused card. Null only briefly before the layout sets a
+   *  default; the header "Add note" button is disabled while null. */
+  activeCard: ActiveCard | null
+  /** Set when the user clicks the card body or a legend entry. Pure
+   *  state; does NOT scroll the pane (legend handles scrolling). */
+  setActiveCard: (card: ActiveCard) => void
   openAddNoteFromSelection: () => void
   openAddNoteTopLevel: () => void
   openReportErrorFromSelection: () => void
   openEditNote: (annotation: Annotation) => void
   openViewReport: (annotation: Annotation) => void
-  openAskAiTopLevel: () => void
-  openAskAiFromSelection: () => void
-  openAskAiForAnnotation: (annotation: Annotation) => void
+  openNotesSurface: (initialAnnotationId?: string) => void
+  openChatsSurface: (initialAnnotationId?: string) => void
+  /**
+   * Opens a chat scoped to the active card. If one already exists at
+   * the card's title anchor, focuses the cycler on it; otherwise mints
+   * a new chat against the title (jsonPath + start=0 + end=title.length).
+   * Header "Briefing assistant" + mobile FAB route here so the chat
+   * always carries a meaningful card-level anchor.
+   */
+  openCardLevelChat: () => void
+  openBugReportsSurface: (initialAnnotationId?: string) => void
+  notesCount: number
+  chatsCount: number
+  bugReportsCount: number
   closeSheet: () => void
   /**
    * Invalidates the annotations React Query cache after a chat annotation
@@ -150,11 +175,17 @@ type Props = {
    * `:date` param in the meeting briefing endpoints.
    */
   meetingDate: string
+  /**
+   * The card that should be active before the user clicks anything —
+   * typically the Executive Summary. Optional only because some test
+   * mounts don't need an active card.
+   */
+  initialActiveCard?: ActiveCard
   children: React.ReactNode
 }
 
 function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
-  if (!anchor) return { jsonPath: null, start: null, end: null }
+  if (!anchor) return EMPTY_ANCHOR
   return { jsonPath: anchor.jsonPath, start: anchor.start, end: anchor.end }
 }
 
@@ -173,6 +204,7 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  */
 export default function AnnotationsScope({
   meetingDate,
+  initialActiveCard,
   children,
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
@@ -180,18 +212,21 @@ export default function AnnotationsScope({
   const { annotations, create, updateNote, remove } =
     useAnnotations(meetingDate)
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
-  const [intakeOpen, setIntakeOpen] = useState(false)
-  const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
-    () => new Set(),
+  const [activeCard, setActiveCard] = useState<ActiveCard | null>(
+    initialActiveCard ?? null,
   )
-
-  // Top-level notes (no anchor) — what the intake dialog renders as pills.
-  // Filter once here so the dialog's deps are simple references.
-  const topLevelNotes = useMemo(
-    () =>
-      annotations.filter((ann) => ann.kind === 'note' && ann.jsonPath === null),
-    [annotations],
-  )
+  // Holds the id of a chat freshly-minted from a pending-anchor preempt.
+  // Defer the handoff until React Query refetch settles and the new chat
+  // appears in `annotations`; otherwise the cycler binds to an id
+  // `items.findIndex(...)` can't yet resolve and falls back to index 0.
+  const pendingNewChatIdRef = useRef<string | null>(null)
+  // Same pattern for notes and bug reports created via AddNoteSheet /
+  // ReportErrorSheet. Those sheets call `onClose()` after `onCreate`
+  // resolves, which clobbers any synchronous setOverlay(surface_*). Stash
+  // the new id and a watch effect swaps overlay once the optimistic cache
+  // write makes the annotation visible.
+  const pendingNewNoteIdRef = useRef<string | null>(null)
+  const pendingNewBugReportIdRef = useRef<string | null>(null)
 
   const handleChatCreated = useCallback(
     (_info: {
@@ -210,12 +245,29 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'add_note_new', anchor: liveAnchor })
   }, [liveAnchor])
 
-  // The top-level "Add notes" button on the header / mobile bar opens the new
-  // intake dialog (camera / upload / type). Phase 1 only wires the type path;
-  // camera and upload render as Coming soon.
+  // The top-level "Add notes" button on the header / mobile bar attaches
+  // the note to whichever card is currently active. A card may carry at
+  // most one card-level note — if the active card already has one, open
+  // the notes cycler focused on it (matching the click-into-a-passage-
+  // anchored-highlight flow, so users can page between notes from the
+  // same entry point). Otherwise open the new-note sheet with a null
+  // `anchor`; the scope's onCreate handler resolves the card's jsonPath
+  // at save time. If no card is active, the button does nothing.
   const openAddNoteTopLevel = useCallback(() => {
-    setIntakeOpen(true)
-  }, [])
+    if (!activeCard) return
+    const existing = annotations.find(
+      (a) =>
+        a.kind === 'note' &&
+        a.jsonPath === activeCard.jsonPath &&
+        a.start === null &&
+        a.end === null,
+    )
+    if (existing) {
+      setOverlay({ kind: 'surface_notes', initialAnnotationId: existing.id })
+      return
+    }
+    setOverlay({ kind: 'add_note_new', anchor: null })
+  }, [activeCard, annotations])
 
   const openReportErrorFromSelection = useCallback(() => {
     setOverlay({ kind: 'report_error_new', anchor: liveAnchor })
@@ -229,30 +281,121 @@ export default function AnnotationsScope({
     setOverlay({ kind: 'report_error_view', annotation })
   }, [])
 
-  const openAskAiTopLevel = useCallback(() => {
-    setOverlay({ kind: 'ask_ai_top_level' })
+  const openNotesSurface = useCallback((initialAnnotationId?: string) => {
+    setOverlay({ kind: 'surface_notes', initialAnnotationId })
   }, [])
 
-  const openAskAiFromSelection = useCallback(() => {
-    if (!liveAnchor) {
-      setOverlay({ kind: 'ask_ai_top_level' })
+  const openChatsSurface = useCallback((initialAnnotationId?: string) => {
+    setOverlay({ kind: 'surface_chats', initialAnnotationId })
+  }, [])
+
+  // Card-level chat entry point. If a chat already exists anchored to
+  // the active card's title, open the cycler focused on it; otherwise
+  // mint a new chat with a pendingAnchor pointing at the title (start=0
+  // → end=title.length, equivalent to highlighting the title manually).
+  // Bails when no card is active.
+  const openCardLevelChat = useCallback(() => {
+    if (!activeCard) return
+    const titlePath = activeCard.titleJsonPath
+    const existing = annotations.find(
+      (a) => a.kind === 'chat' && a.jsonPath === titlePath,
+    )
+    if (existing) {
+      setOverlay({
+        kind: 'surface_chats',
+        initialAnnotationId: existing.id,
+      })
       return
     }
-    setOverlay({ kind: 'ask_ai_anchored', anchor: liveAnchor })
-  }, [liveAnchor])
-
-  const openAskAiForAnnotation = useCallback((annotation: Annotation) => {
-    if (annotation.kind !== 'chat' || !annotation.chat) return
+    // Resolve the title element so we can capture its current text
+    // length as the anchor end. If the element is missing (briefing
+    // hasn't hydrated yet, schema mismatch), fall back to opening the
+    // generic chats surface — better than throwing.
+    const el = findAnchorEl(titlePath)
+    const titleLen = el?.textContent?.length ?? 0
+    if (titleLen === 0) {
+      setOverlay({ kind: 'surface_chats' })
+      return
+    }
     setOverlay({
-      kind: 'ask_ai_existing',
-      annotationId: annotation.id,
-      ...resolveAnnotationQuote(annotation),
+      kind: 'surface_chats',
+      pendingAnchor: { jsonPath: titlePath, start: 0, end: titleLen },
     })
+  }, [activeCard, annotations])
+
+  const openBugReportsSurface = useCallback((initialAnnotationId?: string) => {
+    setOverlay({ kind: 'surface_bug_reports', initialAnnotationId })
   }, [])
 
   const closeSheet = useCallback(() => {
     setOverlay({ kind: 'closed' })
   }, [])
+
+  // Pending-anchor handoff: after a fresh chat is minted from the empty
+  // composer, wait for it to appear in `annotations` (post-refetch), then
+  // swap the overlay from "preempt with pendingAnchor" to "cycler focused
+  // on the new chat at its sorted position".
+  useEffect(() => {
+    const targetId = pendingNewChatIdRef.current
+    if (!targetId) return
+    if (overlay.kind !== 'surface_chats') return
+    if (!overlay.pendingAnchor) return
+    if (!annotations.some((a) => a.id === targetId)) return
+    pendingNewChatIdRef.current = null
+    setOverlay({
+      kind: 'surface_chats',
+      initialAnnotationId: targetId,
+    })
+  }, [annotations, overlay])
+
+  // Note create handoff: after AddNoteSheet's onCreate resolves and onClose
+  // runs (overlay → closed), the optimistic write in create.onSuccess lands
+  // the new note in `annotations`. This effect then swaps the overlay to the
+  // notes cycler focused on the new note.
+  //
+  // Guarded to only fire when overlay is `closed` so a stale ref can't
+  // overwrite a different overlay the user has opened in the meantime
+  // (e.g. close → open bug reports surface while the optimistic write is
+  // still mid-flight).
+  useEffect(() => {
+    if (overlay.kind !== 'closed') return
+    const targetId = pendingNewNoteIdRef.current
+    if (!targetId) return
+    if (!annotations.some((a) => a.id === targetId)) return
+    pendingNewNoteIdRef.current = null
+    setOverlay({
+      kind: 'surface_notes',
+      initialAnnotationId: targetId,
+    })
+  }, [annotations, overlay.kind])
+
+  // Bug report create handoff — mirrors the note handoff above, with the
+  // same overlay-kind guard.
+  useEffect(() => {
+    if (overlay.kind !== 'closed') return
+    const targetId = pendingNewBugReportIdRef.current
+    if (!targetId) return
+    if (!annotations.some((a) => a.id === targetId)) return
+    pendingNewBugReportIdRef.current = null
+    setOverlay({
+      kind: 'surface_bug_reports',
+      initialAnnotationId: targetId,
+    })
+  }, [annotations, overlay.kind])
+
+  // Stale pending-id cleanup. When the overlay returns to `closed`, drop
+  // any pending refs so a later annotation arrival can't pop a surface open
+  // against the user's intent. The watch effects above clear refs on
+  // success, but if the user closes a surface before the optimistic write
+  // lands (or before the refetch settles), the ref would otherwise leak
+  // forever and bind a future overlay swap to a stale annotation id.
+  useEffect(() => {
+    if (overlay.kind === 'closed') {
+      pendingNewChatIdRef.current = null
+      pendingNewNoteIdRef.current = null
+      pendingNewBugReportIdRef.current = null
+    }
+  }, [overlay.kind])
 
   // Click-to-open: if the user clicks (collapsed mouseup) inside a region
   // covered by an existing annotation, open that annotation's overlay.
@@ -261,15 +404,14 @@ export default function AnnotationsScope({
 
     function openAnnotation(ann: Annotation) {
       if (ann.kind === 'note') {
-        setOverlay({ kind: 'add_note_edit', annotation: ann })
+        setOverlay({ kind: 'surface_notes', initialAnnotationId: ann.id })
       } else if (ann.kind === 'bug_report') {
-        setOverlay({ kind: 'report_error_view', annotation: ann })
-      } else if (ann.kind === 'chat') {
         setOverlay({
-          kind: 'ask_ai_existing',
-          annotationId: ann.id,
-          ...resolveAnnotationQuote(ann),
+          kind: 'surface_bug_reports',
+          initialAnnotationId: ann.id,
         })
+      } else if (ann.kind === 'chat') {
+        setOverlay({ kind: 'surface_chats', initialAnnotationId: ann.id })
       }
     }
 
@@ -278,8 +420,8 @@ export default function AnnotationsScope({
       const sel = window.getSelection()
       if (sel && !sel.isCollapsed && sel.toString().length > 0) return
 
-      const target = e.target as HTMLElement | null
-      if (!target) return
+      if (!(e.target instanceof HTMLElement)) return
+      const target = e.target
 
       // Marker icons (note / chat / bug) are inline DOM nodes inserted at
       // the end of each annotation's range. Pointer hits on them should
@@ -287,8 +429,8 @@ export default function AnnotationsScope({
       // because they're outside the briefing's text run.
       const marker = target.closest(
         '.briefing-note-marker[data-annotation-id], .briefing-chat-marker[data-annotation-id], .briefing-bug-marker[data-annotation-id]',
-      ) as HTMLElement | null
-      if (marker) {
+      )
+      if (marker instanceof HTMLElement) {
         const id = marker.dataset.annotationId
         const ann = id ? annotations.find((a) => a.id === id) : null
         if (ann) {
@@ -321,46 +463,153 @@ export default function AnnotationsScope({
     return () => document.removeEventListener('click', onClick)
   }, [annotations])
 
+  // Suppress the OS context menu / selection callout on annotation-
+  // enabled passages so only the briefing's HighlightToolbar surfaces
+  // on text selection. iOS's long-press menu is handled via
+  // `-webkit-touch-callout: none` in AnnotationsHighlightLayer's CSS,
+  // but Android Chrome and desktop browsers still fire `contextmenu` on
+  // long-press / right-click — preventDefault here suppresses that
+  // path. Selection itself still works (the toolbar reads it via
+  // useSelection); we're only blocking the system menu.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    function onContextMenu(e: MouseEvent) {
+      if (!(e.target instanceof HTMLElement)) return
+      if (e.target.closest('[data-briefing-json-path]')) {
+        e.preventDefault()
+      }
+    }
+    document.addEventListener('contextmenu', onContextMenu)
+    return () => document.removeEventListener('contextmenu', onContextMenu)
+  }, [])
+
   const topLevelChatAnnotationId = useMemo(
     () => annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
     [annotations],
   )
 
+  // Legacy briefing-wide notes (jsonPath === null) come from the old
+  // top-level intake that no longer exists. They aren't surfaced in any
+  // UI any more — neither as inline card rows nor in the NotesSurface
+  // list nor in the count badge — but the rows are kept in the database
+  // so we can recover or migrate them later if needed. Everything else
+  // (real card-level + passage-anchored notes) flows through unchanged.
+  const visibleAnnotations = useMemo(
+    () =>
+      annotations.filter((a) => !(a.kind === 'note' && a.jsonPath === null)),
+    [annotations],
+  )
+
+  const { notesCount, chatsCount, bugReportsCount } = useMemo(() => {
+    let n = 0
+    let c = 0
+    let b = 0
+    for (const a of visibleAnnotations) {
+      if (a.kind === 'note') n++
+      else if (a.kind === 'chat') c++
+      else if (a.kind === 'bug_report') b++
+    }
+    return { notesCount: n, chatsCount: c, bugReportsCount: b }
+  }, [visibleAnnotations])
+
+  // Memoize position calculations — both helpers scan annotations and the
+  // predict path walks the DOM via querySelectorAll, so we don't want them
+  // re-running on every parent render while a sheet is open.
+  const notePosition = useMemo(() => {
+    if (overlay.kind === 'add_note_new') {
+      return predictNewAnnotationPosition(
+        annotations,
+        'note',
+        overlay.anchor
+          ? { jsonPath: overlay.anchor.jsonPath, start: overlay.anchor.start }
+          : null,
+      )
+    }
+    if (overlay.kind === 'add_note_edit') {
+      return findAnnotationPosition(annotations, 'note', overlay.annotation.id)
+    }
+    return null
+  }, [annotations, overlay])
+
+  const bugReportPosition = useMemo(() => {
+    if (overlay.kind === 'report_error_new') {
+      return predictNewAnnotationPosition(
+        annotations,
+        'bug_report',
+        overlay.anchor
+          ? { jsonPath: overlay.anchor.jsonPath, start: overlay.anchor.start }
+          : null,
+      )
+    }
+    if (overlay.kind === 'report_error_view') {
+      return findAnnotationPosition(
+        annotations,
+        'bug_report',
+        overlay.annotation.id,
+      )
+    }
+    return null
+  }, [annotations, overlay])
+
+  // Keep edit-mode overlay snapshot synced with the live annotations query
+  // so attachments added/removed via the picker show without reopening.
+  // If the annotation has vanished from the cache (refetch race, concurrent
+  // delete from another tab), do NOT force-close — that silently drops the
+  // user's in-progress typing held in AddNoteSheet's body state. Let the
+  // user finish typing; if they hit Save, updateNote will hit the server,
+  // get a 404, and the existing error-banner path surfaces the issue.
+  useEffect(() => {
+    if (overlay.kind !== 'add_note_edit') return
+    const fresh = annotations.find((a) => a.id === overlay.annotation.id)
+    if (!fresh) return
+    if (fresh !== overlay.annotation) {
+      setOverlay({ kind: 'add_note_edit', annotation: fresh })
+    }
+  }, [annotations, overlay])
+
   const ctxValue: Ctx = useMemo(
     () => ({
       meetingDate,
       topLevelChatAnnotationId,
+      annotations: visibleAnnotations,
+      activeCard,
+      setActiveCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
       openEditNote,
       openViewReport,
-      openAskAiTopLevel,
-      openAskAiFromSelection,
-      openAskAiForAnnotation,
+      openNotesSurface,
+      openChatsSurface,
+      openCardLevelChat,
+      openBugReportsSurface,
+      notesCount,
+      chatsCount,
+      bugReportsCount,
       closeSheet,
       onChatCreated: handleChatCreated,
     }),
     [
       meetingDate,
       topLevelChatAnnotationId,
+      visibleAnnotations,
+      activeCard,
       openAddNoteFromSelection,
       openAddNoteTopLevel,
       openReportErrorFromSelection,
       openEditNote,
       openViewReport,
-      openAskAiTopLevel,
-      openAskAiFromSelection,
-      openAskAiForAnnotation,
+      openNotesSurface,
+      openChatsSurface,
+      openCardLevelChat,
+      openBugReportsSurface,
+      notesCount,
+      chatsCount,
+      bugReportsCount,
       closeSheet,
       handleChatCreated,
     ],
   )
-
-  const askAiSheetOpen =
-    overlay.kind === 'ask_ai_anchored' ||
-    overlay.kind === 'ask_ai_existing' ||
-    overlay.kind === 'ask_ai_top_level'
 
   return (
     <AnnotationsCtx.Provider value={ctxValue}>
@@ -370,20 +619,90 @@ export default function AnnotationsScope({
         anchor={liveAnchor}
         onAddNote={openAddNoteFromSelection}
         onReportError={openReportErrorFromSelection}
-        onAskAi={openAskAiFromSelection}
+        onAskAi={() => {
+          if (liveAnchor) {
+            setOverlay({
+              kind: 'surface_chats',
+              pendingAnchor: {
+                jsonPath: liveAnchor.jsonPath,
+                start: liveAnchor.start,
+                end: liveAnchor.end,
+              },
+            })
+          } else {
+            openChatsSurface()
+          }
+        }}
       />
       {(overlay.kind === 'add_note_new' ||
         overlay.kind === 'add_note_edit') && (
         <AddNoteSheet
           sheet={overlay}
+          position={notePosition}
           onClose={closeSheet}
-          onCreate={async (anchor, body) => {
-            await create.mutateAsync({
+          onCreate={async (anchor, body, attachments) => {
+            // body is `string().min(1).optional()` server-side — omit when
+            // the user only attached files without typing.
+            const trimmedBody = body.trim()
+            // anchor=null from the top-of-page "Add note" button means
+            // "attach to the active card." We translate that here so the
+            // note carries the card's jsonPath with null start/end — the
+            // schema convention for card-level (not passage-level) notes.
+            const resolvedAnchor: AnnotationAnchor = anchor
+              ? anchorPayload(anchor)
+              : activeCard
+              ? { jsonPath: activeCard.jsonPath, start: null, end: null }
+              : EMPTY_ANCHOR
+            const created = await create.mutateAsync({
               kind: 'note',
-              anchor: anchorPayload(anchor),
-              payload: { body },
+              anchor: resolvedAnchor,
+              payload: trimmedBody.length > 0 ? { body: trimmedBody } : {},
             })
             window.getSelection()?.removeAllRanges()
+            // Upload any staged attachments serially. Per-file failures
+            // don't roll back the note — collect names and throw at the end
+            // so AddNoteSheet's handleSave surfaces the error inline. Each
+            // failure is reported to Sentry with surface/op/annotationId/
+            // fileName context so we can triage from the dashboard.
+            const failures: string[] = []
+            for (const a of attachments) {
+              try {
+                await uploadAttachment({
+                  annotationId: created.id,
+                  file: a.file,
+                })
+              } catch (err) {
+                reportErrorToSentry(err, {
+                  surface: 'briefing-annotations',
+                  op: 'uploadAttachment',
+                  annotationId: created.id,
+                  fileName: a.file.name,
+                })
+                failures.push(a.file.name)
+              }
+            }
+            if (attachments.length > 0) {
+              queryClient.invalidateQueries({
+                queryKey: annotationsQueryKey(meetingDate),
+              })
+            }
+            if (failures.length > 0) {
+              // The note was saved server-side, but one or more attachment
+              // uploads failed. Transition the overlay into edit mode
+              // against the just-created annotation so a Save retry hits
+              // onUpdate (no duplicate note) and the user can retry failed
+              // attachments through the per-pill onAttachmentAdd path. We
+              // deliberately do NOT set pendingNewNoteIdRef here — the
+              // cycler handoff is for clean success only.
+              setOverlay({ kind: 'add_note_edit', annotation: created })
+              throw new Error(
+                `Saved your note, but couldn't upload: ${failures.join(', ')}`,
+              )
+            }
+            // Success: stash id for the cycler handoff (watch effect swaps
+            // overlay to surface_notes once the new note lands in
+            // `annotations`).
+            pendingNewNoteIdRef.current = created.id
           }}
           onUpdate={async (id, body) => {
             await updateNote.mutateAsync({ id, body })
@@ -391,116 +710,174 @@ export default function AnnotationsScope({
           onDelete={async (id) => {
             await remove.mutateAsync(id)
           }}
+          onAttachmentAdd={async (annotationId, file) => {
+            const { attachmentId } = await uploadAttachment({
+              annotationId,
+              file,
+            })
+            // Inject the new attachment into the cached annotations list
+            // synchronously so the edit sheet shows it the moment the
+            // upload resolves. `invalidateQueries` below still kicks off
+            // a refetch to sync server-side fields the client can't
+            // compute (OCR status, completion time, etc.).
+            const optimistic: AnnotationNoteAttachmentData = {
+              id: attachmentId,
+              fileName: file.name,
+              mimeType: resolveMimeType(file),
+              sizeBytes: file.size,
+              ocrStatus: 'pending',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: new Date().toISOString(),
+            }
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: [
+                            ...(ann.note.attachments ?? []),
+                            optimistic,
+                          ],
+                        },
+                      }
+                    : ann,
+                ),
+            )
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
+          }}
+          onAttachmentDelete={async (annotationId, attachmentId) => {
+            await deleteAttachment({ annotationId, attachmentId })
+            // Drop the row from the cache optimistically so the pill
+            // disappears immediately without waiting for a refetch.
+            queryClient.setQueryData<Annotation[]>(
+              annotationsQueryKey(meetingDate),
+              (prev) =>
+                prev?.map((ann) =>
+                  ann.id === annotationId && ann.note
+                    ? {
+                        ...ann,
+                        note: {
+                          ...ann.note,
+                          attachments: (ann.note.attachments ?? []).filter(
+                            (a) => a.id !== attachmentId,
+                          ),
+                        },
+                      }
+                    : ann,
+                ),
+            )
+            queryClient.invalidateQueries({
+              queryKey: annotationsQueryKey(meetingDate),
+            })
+          }}
+          activeCardTitle={activeCard?.title ?? null}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
         overlay.kind === 'report_error_view') && (
         <ReportErrorSheet
           sheet={overlay}
+          position={bugReportPosition}
           onClose={closeSheet}
           onCreate={async (anchor, description) => {
-            await create.mutateAsync({
+            const created = await create.mutateAsync({
               kind: 'bug_report',
               anchor: anchorPayload(anchor),
               payload: { description },
             })
             window.getSelection()?.removeAllRanges()
+            // ReportErrorSheet calls onClose() synchronously after onCreate
+            // resolves — that fires after any microtask we'd schedule here,
+            // so a setOverlay(surface_bug_reports) right here gets clobbered.
+            // Instead stash the id; the watch effect above swaps overlay
+            // to the cycler once the optimistic cache write makes the new
+            // bug report visible in `annotations`.
+            pendingNewBugReportIdRef.current = created.id
           }}
           onDelete={async (id) => {
             await remove.mutateAsync(id)
           }}
         />
       )}
-      {askAiSheetOpen && (
-        <AskAiSheet
-          sheet={overlay}
-          meetingDate={meetingDate}
-          topLevelChatAnnotationId={topLevelChatAnnotationId}
-          onClose={closeSheet}
-          onChatCreated={handleChatCreated}
-        />
-      )}
-      <AddNotesDialog
-        open={intakeOpen}
-        onClose={() => setIntakeOpen(false)}
-        existingNotes={topLevelNotes}
-        deletingIds={deletingNoteIds}
-        onDeleteExisting={async (id) => {
-          setDeletingNoteIds((prev) => {
-            const next = new Set(prev)
-            next.add(id)
-            return next
-          })
-          try {
-            await remove.mutateAsync(id)
-          } finally {
-            setDeletingNoteIds((prev) => {
-              const next = new Set(prev)
-              next.delete(id)
-              return next
-            })
+      <NotesSurface
+        open={overlay.kind === 'surface_notes'}
+        onClose={closeSheet}
+        annotations={visibleAnnotations}
+        onEditNote={(ann) =>
+          setOverlay({ kind: 'add_note_edit', annotation: ann })
+        }
+        onDeleteNote={(ann) => remove.mutateAsync(ann.id).then(() => undefined)}
+        initialAnnotationId={
+          overlay.kind === 'surface_notes'
+            ? overlay.initialAnnotationId
+            : undefined
+        }
+      />
+      <BriefingAssistantSurface
+        open={overlay.kind === 'surface_chats'}
+        onClose={closeSheet}
+        meetingDate={meetingDate}
+        annotations={annotations}
+        initialAnnotationId={
+          overlay.kind === 'surface_chats'
+            ? overlay.initialAnnotationId
+            : undefined
+        }
+        pendingAnchor={
+          overlay.kind === 'surface_chats' ? overlay.pendingAnchor : undefined
+        }
+        onChatCreated={(info) => {
+          const anchor =
+            overlay.kind === 'surface_chats' && overlay.pendingAnchor
+              ? overlay.pendingAnchor
+              : null
+          handleChatCreated({ ...info, anchor })
+          // Stash the id; the watch effect below swaps overlay to the
+          // cycler view once React Query refetches and the new chat lands
+          // in `annotations`. Doing it synchronously here races the
+          // refetch and leaves the cycler at "Chat 1 of N".
+          if (overlay.kind === 'surface_chats' && overlay.pendingAnchor) {
+            pendingNewChatIdRef.current = info.annotationId
           }
         }}
-        onSubmit={async (drafts) => {
-          // Commit each staged pill as its own note. Typed pills are a single
-          // create call; file pills create the note then run the presign →
-          // PUT → complete sequence. We run serially to keep the network
-          // pattern boring and easy to retry; can fan out later if needed.
-          //
-          // If a file upload fails after the note row was created, we delete
-          // the orphan note so users don't end up with a dead "(empty note)"
-          // pill they can't see or recover from. The original error is
-          // re-thrown so the dialog surfaces it.
+        onDeleteChat={async (ann) => {
           try {
-            for (const draft of drafts) {
-              if (draft.kind === 'typed') {
-                await create.mutateAsync({
-                  kind: 'note',
-                  anchor: { jsonPath: null, start: null, end: null },
-                  payload: { body: draft.body },
-                })
-                continue
-              }
-              const created = await create.mutateAsync({
-                kind: 'note',
-                anchor: { jsonPath: null, start: null, end: null },
-                payload: {},
-              })
-              let attachmentId: string
-              try {
-                const result = await uploadAttachment({
-                  annotationId: created.id,
-                  file: draft.file,
-                })
-                attachmentId = result.attachmentId
-              } catch (uploadErr) {
-                // Best-effort rollback of the empty annotation. We swallow
-                // the rollback error specifically so the original upload
-                // error reaches the caller.
-                try {
-                  await remove.mutateAsync(created.id)
-                } catch {
-                  /* leave the orphan; surfacing the upload error is more
-                     useful than masking it with a rollback failure */
-                }
-                throw uploadErr
-              }
-              // Block until OCR has a terminal status so the recap/assistant
-              // can see extracted text. Caps at 60s; poll errors are
-              // non-fatal — the upload already succeeded, the polled
-              // annotations query will catch up.
-              try {
-                await waitForOcr(meetingDate, attachmentId)
-              } catch {
-                /* poll failure must not roll back a successful upload */
-              }
-            }
-          } finally {
-            queryClient.invalidateQueries({
-              queryKey: annotationsQueryKey(meetingDate),
+            await chatApi.softDelete(ann.id)
+          } catch (err) {
+            reportErrorToSentry(err, {
+              surface: 'briefing-annotations',
+              op: 'softDeleteChat',
+              annotationId: ann.id,
+              meetingDate,
             })
+            throw err
           }
+          queryClient.setQueryData<Annotation[]>(
+            annotationsQueryKey(meetingDate),
+            (prev) => prev?.filter((a) => a.id !== ann.id),
+          )
         }}
+      />
+      <BugReportsSurface
+        open={overlay.kind === 'surface_bug_reports'}
+        onClose={closeSheet}
+        annotations={annotations}
+        onDeleteBugReport={(ann) =>
+          remove.mutateAsync(ann.id).then(() => undefined)
+        }
+        initialAnnotationId={
+          overlay.kind === 'surface_bug_reports'
+            ? overlay.initialAnnotationId
+            : undefined
+        }
       />
     </AnnotationsCtx.Provider>
   )

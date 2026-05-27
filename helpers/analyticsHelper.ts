@@ -513,6 +513,7 @@ export const EVENTS = {
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
   Briefings: {
+    ListViewed: 'Briefings - List Viewed',
     BriefingViewed: 'Briefings - Briefing Viewed',
     IssueDetailViewed: 'Briefings - Issue Detail Viewed',
     ClickDownload: 'Briefings - Click Download',
@@ -572,10 +573,12 @@ export const trackRegistrationCompleted = async ({
       if (typeof analyticsInstance.ready === 'function') {
         await analyticsInstance.ready()
       }
+      const hutk = cookie.get('hubspotutk')
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
         ...(email ? { email } : {}),
+        ...(hutk ? { hutk } : {}),
       })
     }
   } catch (error) {
