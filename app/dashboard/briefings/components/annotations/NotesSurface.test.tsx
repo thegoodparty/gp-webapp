@@ -1,8 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { Annotation } from '@shared/briefings/types'
+import { render } from 'helpers/test-utils/render'
+import type {
+  Annotation,
+  AnnotationNoteAttachmentData,
+} from '@shared/briefings/types'
 import { NotesSurface } from './NotesSurface'
+
+// AttachmentThumbnail fetches a presigned S3 GET URL via React Query when
+// it sees a server attachment. Stub the hook so the test doesn't make a
+// real network call and the anchor / image render synchronously off the
+// hook's `data`.
+vi.mock('@shared/briefings/use-attachment-download-url', () => ({
+  useAttachmentDownloadUrl: (annotationId: string, attachmentId: string) => ({
+    data: {
+      url: `https://s3.example/${annotationId}/${attachmentId}.signed`,
+      expiresAt: '2026-05-26T13:00:00.000Z',
+    },
+    isPending: false,
+  }),
+}))
 
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn()
@@ -223,6 +241,91 @@ describe('NotesSurface', () => {
       expect(screen.queryByText(/-\d+\s*d\s*ago/i)).not.toBeInTheDocument()
       // Future timestamps should produce `date-fns` "in ..." output.
       expect(screen.getByText(/^in\s+/i)).toBeInTheDocument()
+    })
+  })
+
+  describe('Server attachments', () => {
+    const imageAttachment: AnnotationNoteAttachmentData = {
+      id: 'att-img-1',
+      fileName: 'photo.jpg',
+      mimeType: 'image/jpeg',
+      sizeBytes: 1024,
+      ocrStatus: 'completed',
+      ocrText: null,
+      ocrError: null,
+      ocrCompletedAt: null,
+      createdAt: '2026-05-01T12:00:00.000Z',
+    }
+    const docAttachment: AnnotationNoteAttachmentData = {
+      ...imageAttachment,
+      id: 'att-doc-1',
+      fileName: 'minutes.pdf',
+      mimeType: 'application/pdf',
+    }
+
+    it('renders an image attachment thumbnail with the presigned URL', () => {
+      const note = makeNote({
+        id: 'note-with-image',
+        note: {
+          id: 'data-with-image',
+          body: 'Photo attached',
+          attachments: [imageAttachment],
+          createdAt: '2026-05-01T12:00:00.000Z',
+          updatedAt: '2026-05-01T12:00:00.000Z',
+        },
+      })
+      render(
+        <NotesSurface
+          open
+          onClose={vi.fn()}
+          annotations={[note]}
+          onEditNote={vi.fn()}
+          onDeleteNote={vi.fn()}
+        />,
+      )
+
+      const link = screen.getByRole('link', { name: /open photo\.jpg/i })
+      expect(link).toHaveAttribute(
+        'href',
+        'https://s3.example/note-with-image/att-img-1.signed',
+      )
+      expect(link).toHaveAttribute('target', '_blank')
+      const img = within(link).getByRole('img', { name: 'photo.jpg' })
+      expect(img).toHaveAttribute(
+        'src',
+        'https://s3.example/note-with-image/att-img-1.signed',
+      )
+      expect(screen.getByText('photo.jpg')).toBeInTheDocument()
+    })
+
+    it('does not render an X remove overlay in view mode', () => {
+      const note = makeNote({
+        id: 'note-with-doc',
+        note: {
+          id: 'data-with-doc',
+          body: 'PDF attached',
+          attachments: [docAttachment],
+          createdAt: '2026-05-01T12:00:00.000Z',
+          updatedAt: '2026-05-01T12:00:00.000Z',
+        },
+      })
+      render(
+        <NotesSurface
+          open
+          onClose={vi.fn()}
+          annotations={[note]}
+          onEditNote={vi.fn()}
+          onDeleteNote={vi.fn()}
+        />,
+      )
+
+      expect(
+        screen.queryByRole('button', { name: /remove minutes\.pdf/i }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.getByRole('link', { name: /open minutes\.pdf/i }),
+      ).toBeInTheDocument()
+      expect(screen.getByText('minutes.pdf')).toBeInTheDocument()
     })
   })
 
