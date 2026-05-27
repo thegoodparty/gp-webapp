@@ -135,6 +135,13 @@ export default function ActiveCardScrollSpy({
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     pane?.addEventListener('scroll', onScroll, { passive: true })
+
+    // Sync once on mount so deep-link hashes, browser scroll restoration,
+    // and Next.js scroll preservation don't leave the active card stuck
+    // on whichever card was the layout default (usually Executive
+    // Summary). Defer to the next frame so layout has settled and DOM
+    // measurements are correct.
+    raf = requestAnimationFrame(pick)
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)

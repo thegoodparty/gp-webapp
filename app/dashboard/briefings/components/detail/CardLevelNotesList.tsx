@@ -62,8 +62,8 @@ export default function CardLevelNotesList({
           body.length > 0
             ? truncate(body, PREVIEW_CHARS)
             : attachmentCount > 0
-              ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
-              : '(empty note)'
+            ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
+            : '(empty note)'
         return (
           <li key={n.id}>
             <button
@@ -78,12 +78,11 @@ export default function CardLevelNotesList({
                 Note:
               </span>
               {/* Visually mirrors the passage-anchored note highlight:
-                  same info-tinted background, same trailing note marker.
-                  Padding + rounded corners give it the "highlight pill"
-                  look the highlight-layer paints via CSS Highlights.
+                  info-tinted pill, trailing note marker. Tokens — not
+                  raw CSS-var brackets — per CLAUDE.md (Design Tokens).
                   Sized to its content with a cap so a long note doesn't
                   span the whole card. */}
-              <span className="inline-flex max-w-[260px] items-center gap-1.5 rounded-sm bg-[color-mix(in_srgb,var(--info,#1b6afc)_22%,transparent)] px-1.5 py-0.5 transition-colors group-hover:bg-[color-mix(in_srgb,var(--info,#1b6afc)_32%,transparent)]">
+              <span className="inline-flex max-w-[260px] items-center gap-1.5 rounded-sm bg-info-50 px-1.5 py-0.5 transition-colors group-hover:bg-info-100">
                 <span className="min-w-0 truncate">{preview}</span>
                 <MessageSquare
                   className="size-3.5 shrink-0 text-info-600"

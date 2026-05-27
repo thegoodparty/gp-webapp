@@ -802,6 +802,95 @@ describe('<AnnotationsScope>', () => {
     })
   })
 
+  describe('openAddNoteTopLevel routing', () => {
+    it('opens the notes surface focused on the existing card-level note when one is already attached to the active card', async () => {
+      // Seed a card-level note matching the default active card (Executive
+      // Summary): jsonPath set to the card root, start/end null. The
+      // "Add note" header button should open the notes cycler focused on
+      // this note rather than the new-note sheet — that's the new
+      // single-card-note-per-card constraint.
+      const user = userEvent.setup()
+      const existing: Annotation = {
+        ...makeNoteAnnotation('ann_existing_card'),
+        // makeNoteAnnotation already uses /executiveSummary as the
+        // jsonPath, but spell it out here so the linkage to the active
+        // card's jsonPath is obvious.
+        jsonPath: '/executiveSummary',
+        start: null,
+        end: null,
+      }
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [
+        existing,
+      ])
+
+      render(
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            title: 'Executive Summary',
+          }}
+        >
+          <ContextAddNoteTrigger />
+        </AnnotationsScope>,
+      )
+
+      await user.click(
+        await screen.findByRole('button', { name: /open top-level add note/i }),
+      )
+
+      // The notes cycler (vaul drawer) should be open. AddNoteSheet (the
+      // single-note edit sheet, mocked above) must NOT have mounted —
+      // we route directly to the cycler so pagination between notes
+      // works the same as for passage-anchored notes.
+      await waitFor(() => {
+        expect(document.querySelector('[data-vaul-overlay]')).toHaveAttribute(
+          'data-state',
+          'open',
+        )
+      })
+      expect(addNoteSheetIsMounted).toBe(false)
+    })
+
+    it('opens the new-note sheet when the active card has no card-level note yet', async () => {
+      // Seed only a passage-anchored note (start/end set) — that
+      // shouldn't count as a card-level note for the active card, so
+      // the header button should open the new-note sheet as usual.
+      const user = userEvent.setup()
+      const passageNote: Annotation = {
+        ...makeNoteAnnotation('ann_passage'),
+        jsonPath: '/executiveSummary',
+        start: 0,
+        end: 5,
+      }
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [
+        passageNote,
+      ])
+
+      render(
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            title: 'Executive Summary',
+          }}
+        >
+          <ContextAddNoteTrigger />
+        </AnnotationsScope>,
+      )
+
+      await user.click(
+        await screen.findByRole('button', { name: /open top-level add note/i }),
+      )
+
+      await waitFor(() => {
+        expect(addNoteSheetIsMounted).toBe(true)
+      })
+    })
+  })
+
   describe('AddNoteSheet onCreate', () => {
     it('creates a typed-only note and skips the upload path', async () => {
       mockAnnotationsApi.create.mockResolvedValue({
