@@ -14,7 +14,7 @@ import { Lock } from '@mui/icons-material'
 import { LuDownload } from 'react-icons/lu'
 import { useEffect, useRef, useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { getCookie } from 'helpers/cookieHelper'
+import { deleteCookie, getCookie } from 'helpers/cookieHelper'
 
 const DOWNLOAD_COOKIE_NAME = 'gp_download'
 const DOWNLOAD_COOKIE_POLL_MS = 250
@@ -39,7 +39,7 @@ export default function Download() {
   const showProUpgradeModal = useShowContactProModal()
   const { customSegments, currentSegment, canUseProFeatures } =
     useContactsTable()
-  const { successSnackbar } = useSnackbar()
+  const { successSnackbar, errorSnackbar } = useSnackbar()
   const [isPreparing, setIsPreparing] = useState(false)
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const fallbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -107,19 +107,39 @@ export default function Download() {
     // Poll for the gp_download cookie set by gp-api. The browser commits
     // cookies from a download response, so the moment the cookie appears we
     // know the server has actually started streaming and can swap the
-    // "preparing" feedback for a "started" confirmation.
+    // "preparing" feedback for a "started" confirmation. Each download mints
+    // a fresh UUID server-side and overwrites the previous value, so the
+    // `current !== cookieBeforeClick` check still detects subsequent
+    // downloads, but we proactively clear the cookie on success/timeout to
+    // avoid stale state surviving across navigations.
     pollIntervalRef.current = setInterval(() => {
       const current = readDownloadCookie()
       if (current && current !== cookieBeforeClick) {
         clearDownloadWatchers()
+        deleteCookie(DOWNLOAD_COOKIE_NAME)
         setIsPreparing(false)
         successSnackbar('Download started', { autoHideDuration: 3000 })
       }
     }, DOWNLOAD_COOKIE_POLL_MS)
 
+    // The fallback fires for two distinct cases we cannot disambiguate from
+    // the client (top-level downloads expose no programmatic completion):
+    //   1. A real error path (4xx/5xx, network failure) — the cookie never
+    //      arrives and the user genuinely needs to retry.
+    //   2. A successful download whose handshake we missed (proxy stripped
+    //      Set-Cookie, or TTFB exceeded the fallback window for a very large
+    //      district). In this case bytes ARE streaming to disk.
+    // A categorical "Download failed" message would lie to users in case 2,
+    // so we surface a neutral conditional prompt that's actionable in case 1
+    // and harmless in case 2.
     fallbackTimeoutRef.current = setTimeout(() => {
       clearDownloadWatchers()
+      deleteCookie(DOWNLOAD_COOKIE_NAME)
       setIsPreparing(false)
+      errorSnackbar(
+        "If your download hasn't started, please try again.",
+        { autoHideDuration: 6000 },
+      )
     }, DOWNLOAD_FALLBACK_TIMEOUT_MS)
 
     // We cannot observe completion of a top-level download, so fire the
