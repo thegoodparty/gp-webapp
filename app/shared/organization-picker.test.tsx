@@ -299,8 +299,9 @@ describe('X-Organization-Slug header attachment', () => {
   })
 
   it('handleApiRequestRewrite attaches the header from cookies', async () => {
-    const { handleApiRequestRewrite } =
-      await import('helpers/handleApiRequestRewrite')
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
 
     const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
     const request = new Request(reqUrl.toString())
@@ -326,8 +327,9 @@ describe('X-Organization-Slug header attachment', () => {
   })
 
   it('handleApiRequestRewrite does not attach header when no org cookie exists', async () => {
-    const { handleApiRequestRewrite } =
-      await import('helpers/handleApiRequestRewrite')
+    const { handleApiRequestRewrite } = await import(
+      'helpers/handleApiRequestRewrite'
+    )
 
     const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
     const request = new Request(reqUrl.toString())
