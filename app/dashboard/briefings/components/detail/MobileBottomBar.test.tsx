@@ -80,7 +80,7 @@ function makeItems(n: number): Item[] {
         vote_required: false,
         tier_reason: ['procedural'],
         display: { summary: '' },
-      }) as unknown as Item,
+      } as unknown as Item),
   )
 }
 
