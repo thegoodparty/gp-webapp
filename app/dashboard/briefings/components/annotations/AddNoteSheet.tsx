@@ -1,23 +1,27 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Loader2, Paperclip, Trash2, X } from 'lucide-react'
+import { Paperclip, Trash2, X } from 'lucide-react'
 import {
   Button,
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  Loader2Icon,
   Textarea,
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
+import { reportErrorToSentry } from '@shared/sentry'
 import {
   resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
 import type { Annotation } from '@shared/briefings/types'
 import type { SheetState } from './AnnotationsScope'
+import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
+import { AnchoredQuote } from './AnchoredQuote'
 import NoteAttachmentPicker, {
   makeStagedAttachment,
   type PickerItem,
@@ -34,6 +38,7 @@ const formatBytes = (n: number): string => {
 
 type Props = {
   sheet: SheetState
+  position: PredictedPosition | null
   onClose: () => void
   onCreate: (
     anchor: ResolvedAnchor | null,
@@ -88,6 +93,7 @@ function isAddNoteState(state: SheetState): boolean {
  */
 export default function AddNoteSheet({
   sheet,
+  position,
   onClose,
   onCreate,
   onUpdate,
@@ -105,24 +111,21 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
-  // Used in new-note mode only. Edit mode talks to the server directly
-  // via onAttachmentAdd / onAttachmentDelete and shows the live list of
-  // attachments from `sheet.annotation.note.attachments`.
+  // New-note mode only. Edit mode talks to the server directly via
+  // onAttachmentAdd / onAttachmentDelete and shows the live attachments
+  // from `sheet.annotation.note.attachments`.
   const [stagedAttachments, setStagedAttachments] = useState<
     StagedAttachment[]
   >([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
-  // Per-attachment busy state for edit mode — keyed by either the staged
-  // upload's temp id (while the upload is in flight, before the server
-  // attachment id is known) or the server attachment id (while a delete
-  // is in flight). Cleared once the action resolves.
+  // Per-attachment busy state for edit mode — keyed by staged temp id (in
+  // flight upload) or server attachment id (in flight delete).
   const [busyAttachmentIds, setBusyAttachmentIds] = useState<Set<string>>(
     () => new Set(),
   )
-  // Top-level list rows currently being deleted — drives the spinner on
-  // the row's X button. Distinct from busyAttachmentIds (which tracks
-  // attachment upload/delete inside an open note).
+  // Top-level list rows being deleted — drives the spinner on the X
+  // button. Distinct from busyAttachmentIds.
   const [deletingNoteIds, setDeletingNoteIds] = useState<Set<string>>(
     () => new Set(),
   )
@@ -213,6 +216,12 @@ export default function AddNoteSheet({
       setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
     } catch (err) {
       setStagedAttachments((prev) => prev.filter((a) => a.id !== staged.id))
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'uploadAttachment',
+        annotationId,
+        fileName: file.name,
+      })
       const msg = err instanceof Error ? err.message : String(err)
       setAttachmentError(`Couldn't upload ${file.name}: ${msg}`)
     } finally {
@@ -228,6 +237,11 @@ export default function AddNoteSheet({
     try {
       await onAttachmentDelete(annotationId, attachmentId)
     } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'deleteAttachment',
+        annotationId,
+      })
       const msg = err instanceof Error ? err.message : String(err)
       setAttachmentError(`Couldn't remove attachment: ${msg}`)
     } finally {
@@ -281,10 +295,14 @@ export default function AddNoteSheet({
       }
       onClose()
     } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: isEdit ? 'updateNote' : 'create',
+      })
       const msg = err instanceof Error ? err.message : String(err)
-      // If the inner handler already framed its own message (e.g. a
-      // partial save where the note was created but uploads failed),
-      // surface that text directly instead of double-prefixing it.
+      // If the inner handler already framed its own message (e.g. a partial
+      // save where the note saved but uploads failed), surface that text
+      // directly instead of double-prefixing it.
       setSaveError(
         /^(Saved|Couldn|Failed)/i.test(msg)
           ? msg
@@ -303,6 +321,10 @@ export default function AddNoteSheet({
       await onDelete(sheet.annotation.id)
       onClose()
     } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'remove',
+      })
       const msg = err instanceof Error ? err.message : String(err)
       setSaveError(`Couldn't delete this note: ${msg}`)
     } finally {
@@ -350,10 +372,20 @@ export default function AddNoteSheet({
       direction={direction}
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
-        <DrawerHeader className="px-6 pb-4 pr-12 pt-6">
+        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
           <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             {isEdit ? 'Edit note' : 'Add a Note'}
           </DrawerTitle>
+          {position ? (
+            <p className="text-center text-sm font-medium text-foreground">
+              Note {position.position} of {position.total}
+            </p>
+          ) : null}
+          {!isEdit ? (
+            <p className="text-balance text-center text-sm leading-relaxed text-muted-foreground">
+              Highlight any text to add a note.
+            </p>
+          ) : null}
         </DrawerHeader>
 
         <div
@@ -361,9 +393,7 @@ export default function AddNoteSheet({
           className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-3"
         >
           {quote ? (
-            <blockquote className="border-l-2 border-border pl-3 text-sm italic leading-6 text-muted-foreground">
-              {quote}
-            </blockquote>
+            <AnchoredQuote text={quote} showLabel={false} />
           ) : !isEdit ? (
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
               This note is for the whole briefing.
@@ -425,7 +455,7 @@ export default function AddNoteSheet({
                           className="inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           {busy ? (
-                            <Loader2
+                            <Loader2Icon
                               className="size-4 animate-spin"
                               aria-hidden
                             />

@@ -94,7 +94,13 @@ export default async function BriefingChromeLayout({
             </div>
           </div>
 
-          <MobileBottomBar briefingSlug={slug} items={briefing.items} />
+          <MobileBottomBar
+            briefing={briefing}
+            briefingSlug={slug}
+            items={briefing.items}
+            preparedForLine={briefing.officialName}
+            liveBriefingUrl={`${APP_BASE}/dashboard/briefings/${slug}`}
+          />
         </div>
       </AnnotationsScope>
     </DashboardLayout>

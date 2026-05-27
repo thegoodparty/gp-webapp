@@ -11,11 +11,15 @@ import {
 } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
+import { reportErrorToSentry } from '@shared/sentry'
 import type { SheetState } from './AnnotationsScope'
+import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
+import { AnchoredQuote } from './AnchoredQuote'
 
 type Props = {
   sheet: SheetState
+  position: PredictedPosition | null
   onClose: () => void
   onCreate: (
     anchor: ResolvedAnchor | null,
@@ -42,6 +46,7 @@ function isReportState(state: SheetState): boolean {
  */
 export default function ReportErrorSheet({
   sheet,
+  position,
   onClose,
   onCreate,
   onDelete,
@@ -56,6 +61,7 @@ export default function ReportErrorSheet({
       : ''
   const [description, setDescription] = useState(initialDescription)
   const [saving, setSaving] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (sheet.kind === 'report_error_view') {
@@ -63,6 +69,7 @@ export default function ReportErrorSheet({
     } else if (sheet.kind === 'report_error_new') {
       setDescription('')
     }
+    setErrorMessage(null)
   }, [sheet])
 
   // Clear the user's text selection once the drawer opens — leaving a live
@@ -75,9 +82,16 @@ export default function ReportErrorSheet({
   async function handleSubmit() {
     if (saving || sheet.kind !== 'report_error_new') return
     setSaving(true)
+    setErrorMessage(null)
     try {
       await onCreate(sheet.anchor, description)
       onClose()
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'createBugReport',
+      })
+      setErrorMessage("Couldn't submit. Try again.")
     } finally {
       setSaving(false)
     }
@@ -86,9 +100,16 @@ export default function ReportErrorSheet({
   async function handleDelete() {
     if (saving || sheet.kind !== 'report_error_view') return
     setSaving(true)
+    setErrorMessage(null)
     try {
       await onDelete(sheet.annotation.id)
       onClose()
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'remove',
+      })
+      setErrorMessage("Couldn't delete report. Try again.")
     } finally {
       setSaving(false)
     }
@@ -103,10 +124,15 @@ export default function ReportErrorSheet({
       direction={direction}
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
-        <DrawerHeader className="px-6 pb-4 pr-12 pt-6">
+        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
           <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             Report or Correct an Error
           </DrawerTitle>
+          {position ? (
+            <p className="text-center text-sm font-medium text-foreground">
+              Bug {position.position} of {position.total}
+            </p>
+          ) : null}
         </DrawerHeader>
 
         <div
@@ -114,37 +140,35 @@ export default function ReportErrorSheet({
           className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4"
         >
           {quote ? (
-            <blockquote className="border-l-2 border-destructive/40 pl-3 text-sm italic leading-6 text-foreground">
-              {quote}
-            </blockquote>
+            <AnchoredQuote
+              text={quote}
+              variant="destructive"
+              showLabel={false}
+            />
           ) : null}
 
           <Textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value)
+              if (!isView) setErrorMessage(null)
+            }}
             disabled={isView}
             placeholder="Describe the error or suggested correction…"
             rows={6}
             className="min-h-[160px] resize-none rounded-2xl disabled:cursor-default disabled:opacity-90"
           />
-
-          {isView ? (
-            <p className="text-xs text-muted-foreground">
-              Submitted{' '}
-              {sheet.kind === 'report_error_view' && sheet.annotation.bugReport
-                ? new Date(
-                    sheet.annotation.bugReport.submittedAt,
-                  ).toLocaleString()
-                : ''}
-              .
-            </p>
-          ) : null}
         </div>
 
         <div
           data-vaul-no-drag
           className="flex flex-col gap-2 border-t border-border bg-background px-4 py-3 lg:border-t-0"
         >
+          {errorMessage ? (
+            <p role="alert" className="text-sm text-destructive">
+              {errorMessage}
+            </p>
+          ) : null}
           {isView ? (
             <Button
               type="button"
