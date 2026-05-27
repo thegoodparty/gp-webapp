@@ -411,6 +411,26 @@ export default function AnnotationsScope({
     return () => document.removeEventListener('click', onClick)
   }, [annotations])
 
+  // Suppress the OS context menu / selection callout on annotation-
+  // enabled passages so only the briefing's HighlightToolbar surfaces
+  // on text selection. iOS's long-press menu is handled via
+  // `-webkit-touch-callout: none` in AnnotationsHighlightLayer's CSS,
+  // but Android Chrome and desktop browsers still fire `contextmenu` on
+  // long-press / right-click — preventDefault here suppresses that
+  // path. Selection itself still works (the toolbar reads it via
+  // useSelection); we're only blocking the system menu.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    function onContextMenu(e: MouseEvent) {
+      if (!(e.target instanceof HTMLElement)) return
+      if (e.target.closest('[data-briefing-json-path]')) {
+        e.preventDefault()
+      }
+    }
+    document.addEventListener('contextmenu', onContextMenu)
+    return () => document.removeEventListener('contextmenu', onContextMenu)
+  }, [])
+
   const topLevelChatAnnotationId = useMemo(
     () => annotations.find((a) => a.kind === 'chat' && a.jsonPath === null)?.id,
     [annotations],
