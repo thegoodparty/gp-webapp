@@ -29,6 +29,7 @@ interface SelectedOffice {
   id?: string | number
   election?: { id?: string | number | null; electionDay?: string }
   brPositionId?: string
+  partisanType?: string
 }
 
 interface BallotRacesProps {
@@ -98,13 +99,10 @@ const getHighlightedText = (text: string, searchTerm: string): ReactNode => {
   )
 }
 
-// Returns true when the selected item refers to the same race as `race`.
-// Uses (brPositionId + electionDay) composite when both sides have it — both
-// hydrated Race objects and the persisted-from-prop shape (which OfficeStep
-// now enriches with `brPositionId` + `election.electionDay`) carry the data.
-// Falls back to plain id matching for older saved selections where only
-// `{ id, election: { id } }` is available, preserving the "initial highlight
-// from saved selection" behavior for legacy UUID-format raceIds in the DB.
+// Composite (brPositionId, electionDay, partisanType) match when available;
+// id fallback for legacy UUID-format raceIds persisted before the
+// office-picker fix. partisanType is the tiebreaker for partisan/non-partisan
+// variants of the same office in the same election.
 const matchesSelected = (
   race: Race,
   selected: Race | SelectedOffice | false,
@@ -116,8 +114,14 @@ const matchesSelected = (
   const selectedDay = selectedAsRace.election?.electionDay
   if (selectedBrPos && selectedDay) {
     const raceBrPos = race.brPositionId ?? race.position?.id
+    const selectedPartisan =
+      (selected as SelectedOffice).partisanType ??
+      selectedAsRace.position?.partisanType ??
+      ''
     return (
-      raceBrPos === selectedBrPos && race.election?.electionDay === selectedDay
+      raceBrPos === selectedBrPos &&
+      race.election?.electionDay === selectedDay &&
+      (race.position?.partisanType ?? '') === selectedPartisan
     )
   }
   return (
