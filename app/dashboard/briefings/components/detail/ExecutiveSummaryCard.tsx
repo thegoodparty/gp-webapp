@@ -59,6 +59,10 @@ export default function ExecutiveSummaryCard({
     <article
       id={domId}
       onClick={activate}
+      // Make the card root addressable in the cycler's DOM-order index.
+      // Card-level notes carry this path; without it, the enricher
+      // couldn't slot them into document order.
+      data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH}
       aria-current={isActive ? 'true' : undefined}
       className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-3 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
         isActive

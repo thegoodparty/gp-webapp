@@ -216,6 +216,11 @@ const AgendaItemCard = ({
     <article
       id={domId}
       onClick={activate}
+      // Make the card root addressable in the cycler's DOM-order index.
+      // Card-level notes use this exact path as their jsonPath; without
+      // an element carrying it, `enrichForCycler` couldn't place them in
+      // document order and dropped them to the end of the list.
+      data-briefing-json-path={base}
       aria-current={isActive ? 'true' : undefined}
       className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-4 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
         isActive
