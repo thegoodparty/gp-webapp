@@ -3,19 +3,21 @@
 import { useEffect, useState } from 'react'
 import { resolveSelection, type ResolvedAnchor } from './anchorResolver'
 
-// On touch devices, iOS shows its "edit menu" (Copy / Look Up / Share /
-// etc.) any time the document carries a non-empty selection. Suppressing
-// the long-press callout via `-webkit-touch-callout: none` doesn't help
-// here — that property only covers the long-press fallback, not the
-// menu that follows a drag-select. The only reliable way to dismiss it
-// while preserving our own HighlightToolbar is to capture the anchor
-// state from the selection, then clear the OS selection programmatically.
+// iOS Safari shows its system edit menu (Copy / Look Up / Share / etc.)
+// as long as the document carries a non-empty selection. `-webkit-touch
+// -callout: none` only blocks the long-press callout fallback, not the
+// post-selection menu; clearing the selection on `touchend` is too late
+// because iOS shows the menu as soon as the first `selectionchange`
+// event lands. The only reliable way to keep the menu suppressed while
+// still acting on the user's selection is to capture the anchor into
+// React state on the very first `selectionchange` and clear the native
+// selection in the same tick. iOS never gets a window where it could
+// render its menu.
 //
-// `pendingClearUntil` is a short timestamp window during which we ignore
-// the resulting `selectionchange(null)` events so our captured anchor
-// survives. The window is intentionally short — long enough to absorb
-// browser-level event jitter, short enough that a follow-up user action
-// (new selection, dismiss) isn't suppressed.
+// Side effect: the user can't drag iOS's selection handles to extend the
+// initial word, because the native selection is gone immediately. They
+// must re-select to pick a different range — an acceptable trade-off
+// for an exclusive briefing toolbar on touch devices.
 const PROGRAMMATIC_CLEAR_WINDOW_MS = 200
 
 /**
@@ -23,14 +25,19 @@ const PROGRAMMATIC_CLEAR_WINDOW_MS = 200
  * briefing anchor when the user highlights text inside an element
  * carrying `data-briefing-json-path`.
  *
- * On touch devices the hook also clears the native selection right
- * after capturing the anchor — that's what suppresses the iOS edit
- * menu. The toolbar continues to render because the captured anchor is
- * held in React state, independent of the live `Selection` object.
+ * Two paths, branched on the device's input primary:
+ *   - Touch (hover:none + pointer:coarse): capture-and-clear on every
+ *     `selectionchange`. The captured anchor stays in React state so
+ *     the HighlightToolbar still renders; iOS never has a live
+ *     selection long enough to show its system menu.
+ *   - Mouse/desktop: legacy behavior — track the live selection via
+ *     `selectionchange` / `mouseup` / `keyup`. The visible OS selection
+ *     stays (useful for drag-to-read), and the system context menu on
+ *     right-click is suppressed elsewhere via a contextmenu listener.
  *
- * The X dismiss in HighlightToolbar must call into here to actually
- * reset state, not just `removeAllRanges()` — see the dispatched
- * `selectionchange` event in HighlightToolbar.dismiss for the wire-up.
+ * The X dismiss in HighlightToolbar must dispatch a synthetic
+ * `selectionchange` event so this hook drops state when the native
+ * selection is already empty (which it is, post-capture on touch).
  */
 export function useSelection(): ResolvedAnchor | null {
   const [anchor, setAnchor] = useState<ResolvedAnchor | null>(null)
@@ -38,18 +45,21 @@ export function useSelection(): ResolvedAnchor | null {
   useEffect(() => {
     if (typeof window === 'undefined') return
 
+    const isTouchPrimary = window.matchMedia(
+      '(hover: none) and (pointer: coarse)',
+    ).matches
     let pendingClearUntil = 0
 
     function update() {
-      // While we're inside the programmatic-clear window, ignore any
-      // `selectionchange(null)` echoes. The captured anchor must
-      // survive so the HighlightToolbar stays mounted.
+      // While inside the programmatic-clear window, ignore `selection
+      // change(null)` echoes from our own `removeAllRanges` call. The
+      // captured anchor must survive so the HighlightToolbar stays.
       if (Date.now() < pendingClearUntil) return
       const sel = window.getSelection()
       setAnchor(resolveSelection(sel))
     }
 
-    function captureAndClearForTouch() {
+    function captureAndClear() {
       const sel = window.getSelection()
       const next = resolveSelection(sel)
       if (!next) return
@@ -58,18 +68,23 @@ export function useSelection(): ResolvedAnchor | null {
       sel?.removeAllRanges()
     }
 
-    document.addEventListener('selectionchange', update)
-    document.addEventListener('mouseup', update)
-    document.addEventListener('keyup', update)
-    // Touch-only path: after the gesture lifts, capture the anchor and
-    // wipe the OS selection. Desktop keeps the legacy mouseup path so
-    // dragging to read/measure still leaves the selection visible.
-    document.addEventListener('touchend', captureAndClearForTouch)
+    if (isTouchPrimary) {
+      // Order matters: the eager capture-and-clear runs first, then the
+      // suppression window blocks the `update` echo. addEventListener
+      // dispatches in registration order, so we register the capturer
+      // before the consumer.
+      document.addEventListener('selectionchange', captureAndClear)
+      document.addEventListener('selectionchange', update)
+    } else {
+      document.addEventListener('selectionchange', update)
+      document.addEventListener('mouseup', update)
+      document.addEventListener('keyup', update)
+    }
     return () => {
+      document.removeEventListener('selectionchange', captureAndClear)
       document.removeEventListener('selectionchange', update)
       document.removeEventListener('mouseup', update)
       document.removeEventListener('keyup', update)
-      document.removeEventListener('touchend', captureAndClearForTouch)
     }
   }, [])
 
