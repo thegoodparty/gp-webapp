@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   type ReactNode,
 } from 'react'
@@ -61,6 +60,7 @@ export const useSetOrganizationSlug = () => {
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]
+  initialSlug?: string | null
 }
 
 export const ORGANIZATIONS_QUERY_KEY = ['organizations']
@@ -68,6 +68,7 @@ export const ORGANIZATIONS_QUERY_KEY = ['organizations']
 export const OrganizationProvider = ({
   children,
   initialOrganizations,
+  initialSlug = null,
 }: OrganizationProviderProps) => {
   const queryClient = useQueryClient()
 
@@ -80,20 +81,16 @@ export const OrganizationProvider = ({
     initialData: initialOrganizations,
   })
 
-  const [selectedSlug, setRawSelectedSlug] =
-    useSelectedOrgSlug(initialOrganizations)
+  const [selectedSlug, setRawSelectedSlug] = useSelectedOrgSlug(
+    initialOrganizations,
+    initialSlug,
+  )
 
   const selectedOrganization = useMemo(
     () =>
       organizations.find((o) => o.slug === selectedSlug) ?? organizations[0],
     [organizations, selectedSlug],
   )
-
-  useEffect(() => {
-    if (selectedOrganization) {
-      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
-    }
-  }, [selectedOrganization])
 
   const setSelectedSlug = useCallback(
     (slug: string) => {

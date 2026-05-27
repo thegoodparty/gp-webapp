@@ -13,10 +13,21 @@ import { ORGANIZATIONS_QUERY_KEY } from '@shared/organization-picker'
 // prior unauthenticated session (an empty array). This hook keeps the
 // cache and selected slug in sync with the latest server-provided
 // organizations so the provider never serves stale/empty state.
-export const useSelectedOrgSlug = (initialOrganizations: Organization[]) => {
+//
+// The initial slug must be sourced from the server (via next/headers) and
+// passed in: useState initializers can't read document.cookie during SSR,
+// so resolving the cookie client-side only would briefly render the
+// fallback org on the server and then mismatch on hydration.
+export const useSelectedOrgSlug = (
+  initialOrganizations: Organization[],
+  initialSlug: string | null,
+) => {
   const queryClient = useQueryClient()
   const [selectedSlug, setSelectedSlug] = useState(() =>
-    resolveSlug(initialOrganizations),
+    pickSlug(
+      initialOrganizations,
+      (initialSlug ?? getCookie(ORG_SLUG_COOKIE)) || null,
+    ),
   )
 
   useEffect(() => {
@@ -27,15 +38,23 @@ export const useSelectedOrgSlug = (initialOrganizations: Organization[]) => {
         const stillValid = initialOrganizations.some((o) => o.slug === prev)
         if (stillValid) return prev
       }
-      return resolveSlug(initialOrganizations)
+      return pickSlug(
+        initialOrganizations,
+        (initialSlug ?? getCookie(ORG_SLUG_COOKIE)) || null,
+      )
     })
-  }, [initialOrganizations, queryClient])
+  }, [initialOrganizations, initialSlug, queryClient])
 
   return [selectedSlug, setSelectedSlug] as const
 }
 
-export const resolveSlug = (organizations: Organization[]): string | null => {
-  const cookieSlug = getCookie(ORG_SLUG_COOKIE) || null
-  const isValid = organizations.some((o) => o.slug === cookieSlug)
-  return isValid ? cookieSlug : organizations[0]?.slug ?? null
+const pickSlug = (
+  organizations: Organization[],
+  candidate: string | null | false,
+): string | null => {
+  const isValid = candidate && organizations.some((o) => o.slug === candidate)
+  return isValid ? (candidate as string) : (organizations[0]?.slug ?? null)
 }
+
+export const resolveSlug = (organizations: Organization[]): string | null =>
+  pickSlug(organizations, getCookie(ORG_SLUG_COOKIE) || null)

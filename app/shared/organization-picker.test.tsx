@@ -76,7 +76,7 @@ beforeEach(() => {
 })
 
 describe('OrganizationProvider', () => {
-  it('provides the first organization as default when no cookie is set', () => {
+  it('provides the first organization as default when no initial slug is set', () => {
     const Probe = () => {
       const org = useOrganization()
       return <div data-testid="org">{org?.slug}</div>
@@ -89,10 +89,24 @@ describe('OrganizationProvider', () => {
     )
 
     expect(screen.getByTestId('org')).toHaveTextContent('org-one')
-    expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
   })
 
-  it('selects the org matching the cookie slug', () => {
+  it('selects the org matching the initialSlug prop', () => {
+    const Probe = () => {
+      const org = useOrganization()
+      return <div data-testid="org">{org?.slug}</div>
+    }
+
+    render(
+      <OrganizationProvider initialOrganizations={orgs} initialSlug="org-two">
+        <Probe />
+      </OrganizationProvider>,
+    )
+
+    expect(screen.getByTestId('org')).toHaveTextContent('org-two')
+  })
+
+  it('falls back to the cookie when no initialSlug is provided', () => {
     mockGetCookie.mockImplementation((name: string) =>
       name === 'organization-slug' ? 'org-two' : false,
     )
@@ -111,24 +125,22 @@ describe('OrganizationProvider', () => {
     expect(screen.getByTestId('org')).toHaveTextContent('org-two')
   })
 
-  it('falls back to first org when cookie slug does not match any org', () => {
-    mockGetCookie.mockImplementation((name: string) =>
-      name === 'organization-slug' ? 'nonexistent' : false,
-    )
-
+  it('falls back to first org when initialSlug does not match any org', () => {
     const Probe = () => {
       const org = useOrganization()
       return <div data-testid="org">{org?.slug}</div>
     }
 
     render(
-      <OrganizationProvider initialOrganizations={orgs}>
+      <OrganizationProvider
+        initialOrganizations={orgs}
+        initialSlug="nonexistent"
+      >
         <Probe />
       </OrganizationProvider>,
     )
 
     expect(screen.getByTestId('org')).toHaveTextContent('org-one')
-    expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
   })
 
   it('renders children without context when no organizations exist', () => {
@@ -287,9 +299,8 @@ describe('X-Organization-Slug header attachment', () => {
   })
 
   it('handleApiRequestRewrite attaches the header from cookies', async () => {
-    const { handleApiRequestRewrite } = await import(
-      'helpers/handleApiRequestRewrite'
-    )
+    const { handleApiRequestRewrite } =
+      await import('helpers/handleApiRequestRewrite')
 
     const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
     const request = new Request(reqUrl.toString())
@@ -315,9 +326,8 @@ describe('X-Organization-Slug header attachment', () => {
   })
 
   it('handleApiRequestRewrite does not attach header when no org cookie exists', async () => {
-    const { handleApiRequestRewrite } = await import(
-      'helpers/handleApiRequestRewrite'
-    )
+    const { handleApiRequestRewrite } =
+      await import('helpers/handleApiRequestRewrite')
 
     const reqUrl = new URL('http://localhost:4000/api/v1/organizations')
     const request = new Request(reqUrl.toString())
