@@ -13,7 +13,10 @@ type Props = {
   cardPath: string
 }
 
-const PREVIEW_CHARS = 120
+// Roughly "a word or two" — typical card-level note rows show e.g.
+// "Follow up with..." rather than a sentence. The CSS truncate on the
+// snippet span will further cut it off if the row's max width is reached.
+const PREVIEW_CHARS = 24
 
 const truncate = (text: string, max: number): string =>
   text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text
@@ -51,7 +54,7 @@ export default function CardLevelNotesList({
   if (cardNotes.length === 0) return null
 
   return (
-    <ul className="flex list-none flex-col gap-1.5 pt-1">
+    <ul className="flex list-none flex-col items-start gap-1.5 pt-1">
       {cardNotes.map((n) => {
         const body = (n.note?.body ?? '').trim()
         const attachmentCount = n.note?.attachments?.length ?? 0
@@ -69,7 +72,7 @@ export default function CardLevelNotesList({
                 e.stopPropagation()
                 openEditNote(n)
               }}
-              className="group flex w-full items-baseline gap-2 rounded-md px-1 py-1 text-left text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-info-600/60"
+              className="group inline-flex max-w-full items-baseline gap-2 rounded-md px-1 py-1 text-left text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-info-600/60"
             >
               <span className="shrink-0 font-semibold text-foreground">
                 Note:
@@ -77,9 +80,11 @@ export default function CardLevelNotesList({
               {/* Visually mirrors the passage-anchored note highlight:
                   same info-tinted background, same trailing note marker.
                   Padding + rounded corners give it the "highlight pill"
-                  look the highlight-layer paints via CSS Highlights. */}
-              <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 rounded-sm bg-[color-mix(in_srgb,var(--info,#1b6afc)_22%,transparent)] px-1.5 py-0.5 transition-colors group-hover:bg-[color-mix(in_srgb,var(--info,#1b6afc)_32%,transparent)]">
-                <span className="min-w-0 flex-1 truncate">{preview}</span>
+                  look the highlight-layer paints via CSS Highlights.
+                  Sized to its content with a cap so a long note doesn't
+                  span the whole card. */}
+              <span className="inline-flex max-w-[260px] items-center gap-1.5 rounded-sm bg-[color-mix(in_srgb,var(--info,#1b6afc)_22%,transparent)] px-1.5 py-0.5 transition-colors group-hover:bg-[color-mix(in_srgb,var(--info,#1b6afc)_32%,transparent)]">
+                <span className="min-w-0 truncate">{preview}</span>
                 <MessageSquare
                   className="size-3.5 shrink-0 text-info-600"
                   aria-hidden

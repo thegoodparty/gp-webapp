@@ -228,14 +228,27 @@ export default function AnnotationsScope({
   }, [liveAnchor])
 
   // The top-level "Add notes" button on the header / mobile bar attaches
-  // the note to whichever card is currently active. The sheet receives a
-  // null `anchor` (no passage selection) and the scope's onCreate handler
-  // resolves the card's jsonPath at save time — see the AddNoteSheet
-  // onCreate prop below. If no card is active, the button does nothing.
+  // the note to whichever card is currently active. A card may carry at
+  // most one card-level note — if the active card already has one, open
+  // it for editing rather than starting a second. Otherwise open the
+  // new-note sheet with a null `anchor`; the scope's onCreate handler
+  // resolves the card's jsonPath at save time (see the AddNoteSheet
+  // onCreate prop below). If no card is active, the button does nothing.
   const openAddNoteTopLevel = useCallback(() => {
     if (!activeCard) return
+    const existing = annotations.find(
+      (a) =>
+        a.kind === 'note' &&
+        a.jsonPath === activeCard.jsonPath &&
+        a.start === null &&
+        a.end === null,
+    )
+    if (existing) {
+      setOverlay({ kind: 'add_note_edit', annotation: existing })
+      return
+    }
     setOverlay({ kind: 'add_note_new', anchor: null })
-  }, [activeCard])
+  }, [activeCard, annotations])
 
   const openReportErrorFromSelection = useCallback(() => {
     setOverlay({ kind: 'report_error_new', anchor: liveAnchor })
