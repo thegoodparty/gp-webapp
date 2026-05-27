@@ -165,6 +165,12 @@ export function isPageWideChat(annotation: {
 /**
  * Smooth-scroll the briefing canvas to an annotation's anchor. No-op when
  * the annotation has no anchor or the anchor's DOM node has been removed.
+ *
+ * On mobile the cycler renders as a bottom Drawer that covers most of the
+ * viewport. `scrollIntoView({ block: 'center' })` would center the anchor
+ * in the full viewport — behind the drawer. Instead we detect the open
+ * bottom drawer and scroll the document so the anchor lands centered in
+ * the visible band above the drawer.
  */
 export function scrollAnchorIntoView(annotation: {
   jsonPath: string | null
@@ -172,7 +178,22 @@ export function scrollAnchorIntoView(annotation: {
   if (typeof document === 'undefined') return
   if (!annotation.jsonPath) return
   const el = findAnchorEl(annotation.jsonPath)
-  el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  if (!el) return
+
+  const bottomDrawer = document.querySelector(
+    '[data-vaul-drawer-direction="bottom"][data-state="open"]',
+  )
+  if (bottomDrawer instanceof HTMLElement) {
+    const drawerRect = bottomDrawer.getBoundingClientRect()
+    const elRect = el.getBoundingClientRect()
+    const targetCenter = drawerRect.top / 2
+    const currentCenter = elRect.top + elRect.height / 2
+    const delta = currentCenter - targetCenter
+    window.scrollBy({ top: delta, behavior: 'smooth' })
+    return
+  }
+
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 export type AnchorElementLookup = (jsonPath: string) => HTMLElement | null
