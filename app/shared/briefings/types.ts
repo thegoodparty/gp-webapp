@@ -46,9 +46,24 @@ export type HaystaqStatus = ConstituentSentiment['haystaq_status']
 
 /**
  * Full briefing artifact plus a computed display title built in
- * `app/shared/briefings/server.ts` from briefing_type + meeting_date.
+ * `app/shared/briefings/server.ts` from briefing_type + meeting_date, and the
+ * Prisma row UUID (`briefing_id`) returned alongside the artifact by
+ * `GET /v1/meetings/:date/briefing`. The UUID powers public share URLs of
+ * the form `goodparty.org/api/v1/briefings/{uuid}`.
  */
-export type Briefing = MeetingBriefingFull & { title: string }
+export type Briefing = MeetingBriefingFull & {
+  title: string
+  briefing_id: string
+  /**
+   * Local meeting start time as `HH:MM` (24h). Present in the gp-api briefing
+   * artifact even though the generated `MeetingBriefingFull` type is stale and
+   * doesn't list it yet. Marked optional to remain safe if the artifact omits
+   * the field.
+   */
+  meeting_time?: string
+  /** IANA tz name for `meeting_time`. Same caveat as `meeting_time`. */
+  meeting_timezone?: string
+}
 
 /**
  * Returned by getBriefingBySlug when the API signals no agenda yet.
