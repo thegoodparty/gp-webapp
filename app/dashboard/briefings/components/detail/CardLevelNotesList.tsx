@@ -20,10 +20,14 @@ const truncate = (text: string, max: number): string =>
 
 /**
  * Renders the card-level notes attached to a given card as inline rows at
- * the bottom of the card. Each row mirrors the highlight-layer treatment
- * (info-tinted background, note icon, "Note:" prefix) so users can tell at
- * a glance that the row is a saved note. Clicking a row opens it in the
- * annotation edit sheet.
+ * the bottom of the card. Each row is laid out as
+ *
+ *   Note: [ {snippet}  📝 ]
+ *
+ * where the bracketed span mirrors the highlight-layer treatment used for
+ * passage-anchored notes — same info-tinted background, same trailing
+ * note marker — so the row reads as "this is a saved note about this
+ * card." Clicking a row opens it in the annotation edit sheet.
  *
  * Renders nothing when there are no matching notes — callers can mount it
  * unconditionally without leaving an empty container behind.
@@ -55,8 +59,8 @@ export default function CardLevelNotesList({
           body.length > 0
             ? truncate(body, PREVIEW_CHARS)
             : attachmentCount > 0
-            ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
-            : '(empty note)'
+              ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
+              : '(empty note)'
         return (
           <li key={n.id}>
             <button
@@ -65,14 +69,21 @@ export default function CardLevelNotesList({
                 e.stopPropagation()
                 openEditNote(n)
               }}
-              className="flex w-full items-center gap-2 rounded-md bg-info-600/15 px-3 py-2 text-left text-sm text-info-700 transition-colors hover:bg-info-600/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-info-600/60"
+              className="group flex w-full items-baseline gap-2 rounded-md px-1 py-1 text-left text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-info-600/60"
             >
-              <MessageSquare
-                className="size-4 shrink-0 text-info-600"
-                aria-hidden
-              />
-              <span className="min-w-0 flex-1 truncate">
-                <span className="font-semibold">Note:</span> {preview}
+              <span className="shrink-0 font-semibold text-foreground">
+                Note:
+              </span>
+              {/* Visually mirrors the passage-anchored note highlight:
+                  same info-tinted background, same trailing note marker.
+                  Padding + rounded corners give it the "highlight pill"
+                  look the highlight-layer paints via CSS Highlights. */}
+              <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 rounded-sm bg-[color-mix(in_srgb,var(--info,#1b6afc)_22%,transparent)] px-1.5 py-0.5 transition-colors group-hover:bg-[color-mix(in_srgb,var(--info,#1b6afc)_32%,transparent)]">
+                <span className="min-w-0 flex-1 truncate">{preview}</span>
+                <MessageSquare
+                  className="size-3.5 shrink-0 text-info-600"
+                  aria-hidden
+                />
               </span>
             </button>
           </li>
