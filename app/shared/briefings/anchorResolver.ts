@@ -201,9 +201,7 @@ export function scrollAnchorIntoView(annotation: {
       0,
       drawerRect.top / 2 - elRect.height / 2,
     )
-    const currentScrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop
-    const elDocY = elRect.top + currentScrollTop
+    const elDocY = elRect.top + document.documentElement.scrollTop
     const newScrollTop = Math.max(0, elDocY - targetViewportTop)
     // Vaul's modal Drawer registers global wheel/touchmove listeners that
     // swallow `scrollTo({behavior:'smooth'})` and `scrollIntoView`. Direct

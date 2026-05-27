@@ -12,13 +12,12 @@ describe('EMPTY_ANCHOR', () => {
 
 describe('scrollAnchorIntoView', () => {
   const originalScrollIntoView = Element.prototype.scrollIntoView
-  let scrollIntoViewSpy: ReturnType<typeof vi.fn>
+  let scrollIntoViewSpy: ReturnType<typeof vi.fn<Element['scrollIntoView']>>
 
   beforeEach(() => {
     document.body.innerHTML = ''
-    scrollIntoViewSpy = vi.fn()
-    Element.prototype.scrollIntoView =
-      scrollIntoViewSpy as unknown as Element['scrollIntoView']
+    scrollIntoViewSpy = vi.fn<Element['scrollIntoView']>()
+    Element.prototype.scrollIntoView = scrollIntoViewSpy
     document.documentElement.scrollTop = 0
   })
 
@@ -103,6 +102,20 @@ describe('scrollAnchorIntoView', () => {
     scrollAnchorIntoView({ jsonPath: 'path.a' })
 
     expect(document.documentElement.scrollTop).toBe(0)
+  })
+
+  it('clamps targetViewportTop to 0 when the anchor is taller than the visible band — the anchor lands at viewport top', () => {
+    // Visible band: 0..100 (drawer top at 100). Anchor height: 400 (taller
+    // than the band). drawerRect.top/2 - elRect.height/2 = 50 - 200 = -150,
+    // which clamps to 0. So newScrollTop = elDocY - 0 = elDocY.
+    makeBottomDrawer({ top: 100, height: 668 })
+    document.documentElement.scrollTop = 1000
+    makeAnchorEl('path.a', { top: 500, height: 400 })
+    // elDocY = 500 + 1000 = 1500
+
+    scrollAnchorIntoView({ jsonPath: 'path.a' })
+
+    expect(document.documentElement.scrollTop).toBe(1500)
   })
 
   it('does nothing when the anchor element is missing from the DOM', () => {
