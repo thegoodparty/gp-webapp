@@ -38,7 +38,7 @@ const truncate = (text: string, max: number): string =>
 export default function CardLevelNotesList({
   cardPath,
 }: Props): React.JSX.Element | null {
-  const { annotations, openEditNote } = useAnnotationsCtx()
+  const { annotations, openNotesSurface } = useAnnotationsCtx()
   const cardNotes = useMemo(
     () =>
       annotations.filter(
@@ -70,7 +70,7 @@ export default function CardLevelNotesList({
               type="button"
               onClick={(e) => {
                 e.stopPropagation()
-                openEditNote(n)
+                openNotesSurface(n.id)
               }}
               className="group inline-flex max-w-full items-baseline gap-2 rounded-md px-1 py-1 text-left text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-info-600/60"
             >

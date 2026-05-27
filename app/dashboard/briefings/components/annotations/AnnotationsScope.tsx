@@ -230,10 +230,11 @@ export default function AnnotationsScope({
   // The top-level "Add notes" button on the header / mobile bar attaches
   // the note to whichever card is currently active. A card may carry at
   // most one card-level note — if the active card already has one, open
-  // it for editing rather than starting a second. Otherwise open the
-  // new-note sheet with a null `anchor`; the scope's onCreate handler
-  // resolves the card's jsonPath at save time (see the AddNoteSheet
-  // onCreate prop below). If no card is active, the button does nothing.
+  // the notes cycler focused on it (matching the click-into-a-passage-
+  // anchored-highlight flow, so users can page between notes from the
+  // same entry point). Otherwise open the new-note sheet with a null
+  // `anchor`; the scope's onCreate handler resolves the card's jsonPath
+  // at save time. If no card is active, the button does nothing.
   const openAddNoteTopLevel = useCallback(() => {
     if (!activeCard) return
     const existing = annotations.find(
@@ -244,7 +245,7 @@ export default function AnnotationsScope({
         a.end === null,
     )
     if (existing) {
-      setOverlay({ kind: 'add_note_edit', annotation: existing })
+      setOverlay({ kind: 'surface_notes', initialAnnotationId: existing.id })
       return
     }
     setOverlay({ kind: 'add_note_new', anchor: null })
