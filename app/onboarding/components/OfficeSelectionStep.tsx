@@ -180,27 +180,19 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
   }
 }
 
-// Stable per-row identity for UI selection state. Composed of BR position id +
-// electionDay because those exist on both the lean RaceListItem and the
-// hydrated RaceFull, so the radio key survives the lean → hydrated transition
-// without us needing to override the race's `id`. Letting `id` flow through
-// unchanged keeps the BallotReady race hash on `selected.raceId`, which is what
-// downstream (filing-fee lookup, etc.) actually wants.
-// `partisanType` is the tiebreaker — two Race rows can share the same
-// (brPositionId, electionDay) for partisan vs non-partisan variants of the
-// same office. Without it, `races.find(r => rowKey(r) === key)` always
-// resolves to the first match and React warns about duplicate keys.
+// Composite (brPositionId, electionDay) row key — both fields exist on the
+// lean RaceListItem and the hydrated RaceFull, so the key stays stable
+// across the optimistic→hydrated transition. partisanType is intentionally
+// NOT included: the lean schema doesn't carry it, so adding it would make
+// selectedRowKey (which picks up partisanType after hydration) diverge
+// from rowKey on the lean list and drop the radio's highlight.
 const rowKey = (race: Race): string =>
   `${race.brPositionId ?? race.position?.id ?? ''}|${
     race.election?.electionDay ?? ''
-  }|${race.position?.partisanType ?? ''}`
+  }`
 
 const selectedRowKey = (selected: SelectedOffice | undefined): string =>
-  selected
-    ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}|${
-        selected.partisanType ?? ''
-      }`
-    : ''
+  selected ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}` : ''
 
 const RaceListSkeleton = () => (
   <div aria-label="Loading offices" className="space-y-6" role="status">

@@ -240,10 +240,10 @@ export default function OfficeStep({
     }
   }
 
-  // Enrich with electionDay + brPositionId + partisanType so matchesSelected
-  // can use the composite path on page reload for campaigns saved in the new
-  // BR-hash format. partisanType disambiguates partisan/non-partisan variants
-  // of the same office in the same election.
+  // Enrich with electionDay + brPositionId so matchesSelected can use the
+  // composite path on page reload for campaigns saved in the new BR-hash
+  // format. partisanType isn't carried — the lean list shape doesn't have
+  // it either, so the composite stops at (brPositionId, electionDay).
   const selectedOffice:
     | {
         id: string | number | undefined
@@ -252,7 +252,6 @@ export default function OfficeStep({
           electionDay?: string
         }
         brPositionId?: string
-        partisanType?: string
       }
     | false = existingRaceId
     ? {
@@ -262,7 +261,6 @@ export default function OfficeStep({
           electionDay: campaign?.details?.electionDate,
         },
         brPositionId: campaign?.organization?.positionId ?? undefined,
-        partisanType: campaign?.details?.partisanType ?? undefined,
       }
     : false
 
