@@ -1,21 +1,27 @@
-import { useState, useEffect } from 'react'
-import { fetchCampaignVersions } from '../../onboarding/shared/ajaxActions'
+'use client'
+import { queryOptions, useQuery } from '@tanstack/react-query'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
-export default function useVersions(): Partial<
+export type CampaignVersions = Partial<
   Record<string, string | number | boolean | object | null>
-> {
-  const [versions, setVersions] = useState<
-    Partial<Record<string, string | number | boolean | object | null>>
-  >({})
+>
 
-  useEffect(() => {
-    loadVersions()
-  }, [])
+export const campaignVersionsQueryOptions = queryOptions({
+  queryKey: ['campaign', 'plan-version'] as const,
+  queryFn: async (): Promise<CampaignVersions> => {
+    const res = await clientFetch<CampaignVersions>(
+      apiRoutes.campaign.planVersion,
+    )
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch campaign versions (${res.status} ${res.statusText})`,
+      )
+    }
+    return res.data
+  },
+})
 
-  const loadVersions = async (): Promise<void> => {
-    const versions = await fetchCampaignVersions()
-    setVersions(versions)
-  }
-
-  return versions
+export default function useVersions() {
+  return useQuery(campaignVersionsQueryOptions)
 }
