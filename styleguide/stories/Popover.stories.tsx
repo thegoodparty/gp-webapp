@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '../components/ui/popover'
 import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { InfoIcon } from '../components/ui/icons'
 
 const meta: Meta<typeof Popover> = {
   title: 'Components/Popover',
@@ -15,13 +19,64 @@ const meta: Meta<typeof Popover> = {
 export default meta
 type Story = StoryObj<typeof Popover>
 
+type PlaygroundArgs = {
+  open: boolean
+  side: 'top' | 'right' | 'bottom' | 'left'
+  align: 'start' | 'center' | 'end'
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    open: false,
+    side: 'bottom',
+    align: 'center',
+  },
+  argTypes: {
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state.',
+    },
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+    },
+    align: {
+      control: 'inline-radio',
+      options: ['start', 'center', 'end'],
+    },
+  },
+  render: ({ open, side, align }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <div className="flex h-[200px] items-center justify-center">
+        <Popover
+          open={open}
+          onOpenChange={(next) => updateArgs({ open: next })}
+        >
+          <PopoverTrigger asChild>
+            <Button variant="outline">Open popover</Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" side={side} align={align}>
+            <div className="space-y-4">
+              <h4 className="font-medium leading-none">Dimensions</h4>
+              <p className="text-sm text-muted-foreground">
+                Set the dimensions for the layer.
+              </p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+    )
+  },
+}
+
 export const Default: Story = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline">Open popover</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 ">
+      <PopoverContent className="w-80">
         <div className="space-y-4">
           <h4 className="font-medium leading-none">Dimensions</h4>
           <p className="text-sm text-muted-foreground">
@@ -43,20 +98,12 @@ export const WithForm: Story = {
         <div className="space-y-4">
           <h4 className="font-medium leading-none">Settings</h4>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Width</label>
-            <input
-              type="number"
-              className="w-full rounded-md border p-2"
-              defaultValue={100}
-            />
+            <Label htmlFor="popover-width">Width</Label>
+            <Input id="popover-width" type="number" defaultValue={100} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Height</label>
-            <input
-              type="number"
-              className="w-full rounded-md border p-2"
-              defaultValue={100}
-            />
+            <Label htmlFor="popover-height">Height</Label>
+            <Input id="popover-height" type="number" defaultValue={100} />
           </div>
           <Button className="w-full">Apply</Button>
         </div>
@@ -70,22 +117,7 @@ export const WithIcon: Story = {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="small">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
+          <InfoIcon className="size-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -97,26 +129,6 @@ export const WithIcon: Story = {
         </div>
       </PopoverContent>
     </Popover>
-  ),
-}
-
-export const WithCustomPosition: Story = {
-  render: () => (
-    <div className="flex h-[200px] items-center justify-center">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Open popover</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80" side="right" align="start">
-          <div className="space-y-4">
-            <h4 className="font-medium leading-none">Custom Position</h4>
-            <p className="text-sm text-muted-foreground">
-              This popover is positioned to the right of the trigger.
-            </p>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
   ),
 }
 

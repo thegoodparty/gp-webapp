@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from '../components/ui/alert-dialog'
 import { Button } from '../components/ui/button'
+import { Trash2Icon } from '../components/ui/icons'
 
 const meta: Meta<typeof AlertDialog> = {
   title: 'Components/AlertDialog',
@@ -20,6 +22,52 @@ const meta: Meta<typeof AlertDialog> = {
 
 export default meta
 type Story = StoryObj<typeof AlertDialog>
+
+type PlaygroundArgs = {
+  open: boolean
+  title: string
+  description: string
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    open: false,
+    title: 'Are you absolutely sure?',
+    description:
+      'This action cannot be undone. This will permanently delete your account and remove your data from our servers.',
+  },
+  argTypes: {
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state.',
+    },
+    title: { control: 'text' },
+    description: { control: 'text' },
+  },
+  render: ({ open, title, description }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <AlertDialog
+        open={open}
+        onOpenChange={(next) => updateArgs({ open: next })}
+      >
+        <AlertDialogTrigger asChild>
+          <Button variant="outline">Open Alert Dialog</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
@@ -44,7 +92,7 @@ export const Default: Story = {
   ),
 }
 
-export const WithCustomButtons: Story = {
+export const Destructive: Story = {
   render: () => (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -60,8 +108,8 @@ export const WithCustomButtons: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>No, keep it</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-            Yes, delete it
+          <AlertDialogAction asChild>
+            <Button variant="destructive">Yes, delete it</Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -74,22 +122,7 @@ export const WithIcon: Story = {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mr-2 h-4 w-4"
-          >
-            <path d="M3 6h18" />
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-          </svg>
+          <Trash2Icon className="mr-2 size-4" />
           Delete Item
         </Button>
       </AlertDialogTrigger>
@@ -104,42 +137,6 @@ export const WithIcon: Story = {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  ),
-}
-
-export const WithLongContent: Story = {
-  render: () => (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">Show Details</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Important Information</AlertDialogTitle>
-          <AlertDialogDescription className="space-y-4">
-            <p>
-              This is a detailed explanation of the action you are about to
-              take. Please read carefully before proceeding.
-            </p>
-            <p>The following changes will be made to your account:</p>
-            <ul className="list-disc pl-4 space-y-2">
-              <li>All your data will be permanently deleted</li>
-              <li>Your account will be deactivated</li>
-              <li>You will lose access to all features</li>
-              <li>This action cannot be undone</li>
-            </ul>
-            <p>
-              If you have any questions, please contact our support team before
-              proceeding.
-            </p>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>I understand, proceed</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

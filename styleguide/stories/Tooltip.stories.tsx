@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import {
   Tooltip,
   TooltipContent,
@@ -6,6 +7,7 @@ import {
   TooltipTrigger,
 } from '../components/ui/tooltip'
 import { Button } from '../components/ui/button'
+import { StarIcon } from '../components/ui/icons'
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
@@ -15,6 +17,52 @@ const meta: Meta<typeof Tooltip> = {
 
 export default meta
 type Story = StoryObj<typeof Tooltip>
+
+type PlaygroundArgs = {
+  open: boolean
+  side: 'top' | 'right' | 'bottom' | 'left'
+  delayDuration: number
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    open: false,
+    side: 'top',
+    delayDuration: 200,
+  },
+  argTypes: {
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state.',
+    },
+    side: {
+      control: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+    },
+    delayDuration: {
+      control: { type: 'number', min: 0, max: 2000, step: 50 },
+      description: 'Delay before the tooltip appears, in ms.',
+    },
+  },
+  render: ({ open, side, delayDuration }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <TooltipProvider delayDuration={delayDuration}>
+        <Tooltip
+          open={open}
+          onOpenChange={(next) => updateArgs({ open: next })}
+        >
+          <TooltipTrigger asChild>
+            <Button variant="outline">Hover me</Button>
+          </TooltipTrigger>
+          <TooltipContent side={side}>
+            <p>Add to library</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
@@ -36,40 +84,12 @@ export const WithIcon: Story = {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
+          <Button variant="ghost" size="small">
+            <StarIcon className="size-4" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
           <p>Add to favorites</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ),
-}
-
-export const WithDelay: Story = {
-  render: () => (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="outline">Hover with delay</Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>This tooltip has a 300ms delay</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

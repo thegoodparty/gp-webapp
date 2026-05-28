@@ -16,6 +16,18 @@ import { cn } from '@/styleguide/lib/utils'
 
 ---
 
+## Source of Truth
+
+**`design-tokens.css` is the canonical source of truth for design tokens.** Figma is a mirror.
+
+This matches the modern CSS-first convention used by Tailwind v4, shadcn/ui, Radix, and geist: tokens live in CSS, are consumed via `var(--…)`, and are read live by tooling (Storybook stories, computed styles, devtools). Nothing in the codebase depends on a JSON export of Figma tokens.
+
+When Figma and `design-tokens.css` disagree, treat the CSS file as correct and update Figma to match. Conversely, when a designer changes a token in Figma, the change is not "in the system" until it lands in `design-tokens.css`.
+
+The Storybook Colors stories illustrate this: each swatch and its `↳ --token → --base-token` chain label are read live from `document.styleSheets`, so the panel always reflects what consumers actually render.
+
+---
+
 ## File Structure
 
 ```
@@ -34,7 +46,7 @@ styleguide/
 
 | File                   | Purpose                                               | When to Edit                     |
 | ---------------------- | ----------------------------------------------------- | -------------------------------- |
-| `design-tokens.css`    | Raw Figma tokens (colors, spacing, typography)        | Sync when Figma changes          |
+| `design-tokens.css`    | Canonical design tokens (colors, spacing, typography) | Edit here first, mirror to Figma |
 | `tailwind-theme.css`   | Single `@theme` block - generates Tailwind utilities  | Add new Tailwind color utilities |
 | `styleguide-scope.css` | Overrides CSS variables for styleguide components     | Add new color mappings           |
 | `typography.css`       | Typography utilities (`.text-lead`, `.button-text-*`) | Add typography classes           |
@@ -231,14 +243,16 @@ Use Figma token names directly as Tailwind classes.
 
 ---
 
-## Syncing Design Tokens from Figma
+## Updating Design Tokens
 
-When Figma tokens change:
+`design-tokens.css` is canonical. When a token needs to change — whether the conversation started in Figma or in code — the workflow is the same:
 
-1. **Get values from Figma** using Figma MCP tool or manual inspection
-2. **Edit `design-tokens.css`** with new raw values
-3. **Update `tailwind-theme.css`** if new Tailwind utilities needed
-4. **Update `styleguide-scope.css`** if new variable mappings needed for scoping
+1. **Edit `design-tokens.css`** with the new value
+2. **Update `tailwind-theme.css`** if a new Tailwind utility is needed
+3. **Update `styleguide-scope.css`** if a new variable mapping is needed for scoping
+4. **Mirror the change in Figma** so the design file reflects current truth
+
+If a value is in Figma but not in `design-tokens.css`, it is not yet part of the system.
 
 ### Figma Design System URLs
 

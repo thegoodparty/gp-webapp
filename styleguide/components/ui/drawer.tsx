@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 
 import { cn } from '@styleguide/lib/utils'
+import { XMarkIcon } from './icons'
 
 function Drawer({
   ...props
@@ -63,7 +64,13 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        <DrawerPrimitive.Close
+          className="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none z-10"
+          aria-label="Close"
+        >
+          <XMarkIcon className="size-6" />
+          <span className="sr-only">Close</span>
+        </DrawerPrimitive.Close>
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>

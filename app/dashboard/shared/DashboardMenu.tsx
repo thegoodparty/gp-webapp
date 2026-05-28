@@ -207,17 +207,15 @@ const POLLS_MENU_ITEM: MenuItem = {
   v2Icon: Send,
   v2Category: 'elected-office',
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickPolls),
-  isNew: true,
 }
 
 const BRIEFINGS_MENU_ITEM: MenuItem = {
   id: 'briefings-dashboard',
-  label: 'Briefings',
+  label: 'Briefing Assistant',
   link: '/dashboard/briefings',
   icon: <MdFactCheck />,
   v2Icon: ClipboardList,
   v2Category: 'elected-office',
-  isNew: true,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickBriefings),
 }
 
@@ -225,7 +223,6 @@ const getDashboardMenuItems = (
   campaign: Campaign | null,
   serveAccessEnabled: boolean,
   isElectedOffice: boolean,
-  briefingsEnabled: boolean,
 ): MenuItem[] => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
 
@@ -237,9 +234,7 @@ const getDashboardMenuItems = (
   }
   if (isElectedOffice) {
     menuItems.splice(voterDataIndex, 0, POLLS_MENU_ITEM)
-    if (briefingsEnabled) {
-      menuItems.splice(voterDataIndex, 0, BRIEFINGS_MENU_ITEM)
-    }
+    menuItems.unshift(BRIEFINGS_MENU_ITEM)
   }
 
   return menuItems
@@ -253,14 +248,12 @@ export default function DashboardMenu({
   const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
-  const { on: briefingsEnabled } = useFlagOn('serve-briefings')
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
       campaign,
       serveAccessEnabled,
       !!electedOffice,
-      briefingsEnabled,
     )
 
     if (ecanvasser) {
@@ -268,13 +261,7 @@ export default function DashboardMenu({
     }
 
     return items
-  }, [
-    campaign,
-    serveAccessEnabled,
-    briefingsEnabled,
-    ecanvasser,
-    electedOffice,
-  ])
+  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice])
 
   useEffect(() => {
     if (campaign && ecanvasser) {

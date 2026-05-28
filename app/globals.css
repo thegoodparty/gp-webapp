@@ -547,7 +547,7 @@
 body {
   width: 100%;
   height: 100%;
-  font-family: var(--outfit-font);
+  font-family: var(--open-sans-font);
 }
 
 a:hover {

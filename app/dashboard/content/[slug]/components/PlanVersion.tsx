@@ -74,7 +74,7 @@ export default function PlanVersion({
             >
               <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                 <div className="whitespace-nowrap text-lg flex items-center w-full">
-                  <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
+                  <div className="ml-3 text-slate-50 text-[17px]">
                     Latest Version
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export default function PlanVersion({
               >
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
-                    <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
+                    <div className="ml-3 text-slate-50 text-[17px]">
                       {dateWithTime(version.date)}{' '}
                       {version?.language &&
                         version.language !== 'English' &&

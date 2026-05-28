@@ -1,14 +1,81 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 
 const meta: Meta<typeof Tabs> = {
   title: 'Components/Tabs',
   component: Tabs,
   tags: ['autodocs'],
+  argTypes: {
+    orientation: {
+      control: 'inline-radio',
+      options: ['horizontal', 'vertical'],
+    },
+    activationMode: {
+      control: 'inline-radio',
+      options: ['automatic', 'manual'],
+      description:
+        'Automatic activates a tab when it receives focus; manual requires Enter or Space to activate.',
+    },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof Tabs>
+
+type PlaygroundArgs = {
+  orientation: 'horizontal' | 'vertical'
+  activationMode: 'automatic' | 'manual'
+  value: string
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    orientation: 'horizontal',
+    activationMode: 'automatic',
+    value: 'account',
+  },
+  argTypes: {
+    value: {
+      control: 'select',
+      options: ['account', 'password'],
+      description: 'Controlled active tab.',
+    },
+  },
+  render: ({ orientation, activationMode, value }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <Tabs
+        orientation={orientation}
+        activationMode={activationMode}
+        value={value}
+        onValueChange={(next) => updateArgs({ value: next })}
+        className="w-[400px]"
+      >
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium">Account Settings</h4>
+            <p className="text-sm text-muted-foreground">
+              Make changes to your account settings and set your preferences.
+            </p>
+          </div>
+        </TabsContent>
+        <TabsContent value="password">
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium">Password Settings</h4>
+            <p className="text-sm text-muted-foreground">
+              Change your password and manage your security settings.
+            </p>
+          </div>
+        </TabsContent>
+      </Tabs>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (

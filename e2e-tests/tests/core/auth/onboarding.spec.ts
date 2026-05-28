@@ -80,7 +80,7 @@ async function completePartyAffiliationStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', {
       level: 1,
-      name: /official party designation/i,
+      name: /party designation/i,
     }),
   ).toBeVisible()
   await page.getByRole('radio').first().click({ force: true })
@@ -113,7 +113,7 @@ async function completeOfficeSelectionStep(page: Page): Promise<void> {
 async function completePathToVictoryStep(page: Page): Promise<void> {
   console.log('Step: Path to victory')
   await expect(
-    page.getByRole('heading', { level: 1, name: /votes you need/i }),
+    page.getByRole('heading', { level: 1, name: /votes needed to win/i }),
   ).toBeVisible({ timeout: 30000 })
   // Wait for the metrics card to render before continuing.
   await expect(page.getByText(/votes needed to win/i).first()).toBeVisible({
@@ -125,7 +125,7 @@ async function completePathToVictoryStep(page: Page): Promise<void> {
 async function completeVoterDemographicsStep(page: Page): Promise<void> {
   console.log('Step: Voter demographics')
   await expect(
-    page.getByRole('heading', { level: 1, name: /your voters/i }),
+    page.getByRole('heading', { level: 1, name: /voter insights/i }),
   ).toBeVisible({ timeout: 15000 })
   await clickContinue(page)
 }
@@ -133,7 +133,7 @@ async function completeVoterDemographicsStep(page: Page): Promise<void> {
 async function completePledgeStep(page: Page): Promise<void> {
   console.log('Step: Pledge')
   await expect(
-    page.getByRole('heading', { level: 1, name: /pledge/i }),
+    page.getByRole('heading', { level: 1, name: /almost there/i }),
   ).toBeVisible()
   const submit = page
     .getByRole('button', { name: /agree.*create my plan/i })

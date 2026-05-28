@@ -40,7 +40,7 @@ export default function ElectionFiling(): React.JSX.Element {
     setHasSubmissionError(false)
     try {
       await submitTcrCompliance(
-        apiRoutes.campaign.tcrCompliance.create,
+        apiRoutes.campaign.tcrCompliance.createAgentic,
         toRegistrationFormData(formData),
         'Failed to submit election filing',
       )

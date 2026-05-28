@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useArgs } from 'storybook/preview-api'
 import { Checkbox } from '../components/ui/checkbox'
 import { Label } from '../components/ui/label'
 
@@ -6,10 +7,51 @@ const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
+  argTypes: {
+    disabled: { control: 'boolean' },
+    checked: {
+      control: 'boolean',
+      description:
+        'Controlled checked state. Toggling this in Controls updates the checkbox immediately.',
+    },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof Checkbox>
+
+type PlaygroundArgs = {
+  checked: boolean
+  disabled: boolean
+  labelText: string
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    checked: false,
+    disabled: false,
+    labelText: 'Accept terms and conditions',
+  },
+  argTypes: {
+    labelText: { control: 'text' },
+  },
+  render: ({ checked, disabled, labelText }) => {
+    const [, updateArgs] = useArgs()
+    return (
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="playground"
+          checked={checked}
+          disabled={disabled}
+          onCheckedChange={(next) =>
+            updateArgs({ checked: next === 'indeterminate' ? false : next })
+          }
+        />
+        <Label htmlFor="playground">{labelText}</Label>
+      </div>
+    )
+  },
+}
 
 export const Default: Story = {
   render: () => (
