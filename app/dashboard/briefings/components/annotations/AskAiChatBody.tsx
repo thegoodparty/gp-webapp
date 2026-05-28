@@ -273,14 +273,13 @@ export default function AskAiChatBody({
         meetingDate,
         anchor: anchor ?? EMPTY_ANCHOR,
       })
-      // Issue a verification GET before returning the id. The eager
-      // pre-refactor flow always did `listMessages` right after create;
-      // dropping it exposed a server-side settling window where the
-      // very next `POST /messages` would fail with the new annotation
-      // still not yet visible to its loadContext check. The GET both
-      // confirms readability and gives the server a beat to settle.
-      // Empty result for a freshly-minted chat is expected.
-      await chatApi.listMessages(created.annotationId)
+      // Commit state BEFORE the verification GET. If `listMessages`
+      // throws (server settling, transient 5xx, etc.), the chat row
+      // already exists server-side — a retry that re-runs this function
+      // must NOT call `createBriefingChat` again, or it'd produce a
+      // duplicate annotation. With `annotationId` set, the early-exit
+      // at the top of this function (`if (annotationId) return ...`)
+      // kicks in on retry and we go straight to `runStream`.
       setAnnotationId(created.annotationId)
       // Tell the host the annotation now exists so it can render
       // Delete chat against it. Distinct from `onChatCreated` (which
@@ -296,6 +295,14 @@ export default function AskAiChatBody({
         annotationId: created.annotationId,
         conversationId: created.conversationId,
       }
+      // Issue a verification GET. The eager pre-refactor flow always
+      // did `listMessages` right after create; dropping it exposed a
+      // server-side settling window where the very next `POST /messages`
+      // would fail with the new annotation still not yet visible to its
+      // loadContext check. The GET both confirms readability and gives
+      // the server a beat to settle. Empty result for a freshly-minted
+      // chat is expected.
+      await chatApi.listMessages(created.annotationId)
       return created.annotationId
     } catch (err) {
       reportErrorToSentry(err, {

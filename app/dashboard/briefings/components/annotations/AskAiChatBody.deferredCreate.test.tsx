@@ -208,6 +208,55 @@ describe('<AskAiChatBody> deferred creation', () => {
     await waitFor(() => expect(streamMessageMock).toHaveBeenCalledTimes(1))
   })
 
+  it('does NOT call createBriefingChat twice when the post-create verification GET fails and the user retries', async () => {
+    // Regression guard for the delegate-reviewer finding: if state
+    // commits happen AFTER `listMessages`, a thrown verification GET
+    // leaves `annotationId` null and the retry path re-creates the chat
+    // row server-side. Asserts the create is invoked exactly once even
+    // when the verification GET throws.
+    const user = userEvent.setup()
+    createMock.mockResolvedValue({
+      annotationId: 'ann_no_dup',
+      conversationId: 'conv_no_dup',
+    })
+    listMessagesMock.mockRejectedValueOnce(new Error('verification failed'))
+    streamMessageMock.mockReturnValue(makeOkStream())
+
+    render(
+      <AskAiChatBody
+        meetingDate={MEETING_DATE}
+        anchor={null}
+        composerVariant="block"
+        active
+      />,
+    )
+
+    const textarea = await screen.findByLabelText(/ask assistant message/i)
+    await user.type(textarea, 'first try')
+    await user.click(screen.getByRole('button', { name: /ask assistant/i }))
+
+    // First send: create resolves, listMessages throws, error surfaces.
+    await screen.findByRole('alert')
+
+    // Retry — listMessages would succeed now, but the implementation
+    // should short-circuit via the cached annotationId and skip create
+    // entirely.
+    listMessagesMock.mockResolvedValueOnce([])
+    await user.click(screen.getByRole('button', { name: /^retry$/i }))
+
+    await waitFor(() => expect(streamMessageMock).toHaveBeenCalledTimes(1))
+    // The whole point of this test: create must NOT have been called a
+    // second time. The annotation row was minted on first send and
+    // persists on the server regardless of the verification outcome.
+    expect(createMock).toHaveBeenCalledTimes(1)
+    expect(streamMessageMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        annotationId: 'ann_no_dup',
+        content: 'first try',
+      }),
+    )
+  })
+
   it('does NOT call onChatCreated when the first stream errors before completing — keeps the body alive for retry', async () => {
     const user = userEvent.setup()
     const onChatCreated = vi.fn()
