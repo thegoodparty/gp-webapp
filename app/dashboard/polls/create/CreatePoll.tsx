@@ -1,6 +1,6 @@
 'use client'
 import DashboardLayout from '../../shared/DashboardLayout'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { StepIndicator } from '@shared/stepper'
 import { useRouter } from 'next/navigation'
@@ -125,8 +125,18 @@ const FormContent: React.FC<{
 )
 
 const useEvent = (event: string, props?: Record<string, any>) => {
+  // Mount-only by intent (these are page-view / completion events that should
+  // fire exactly once), but the effect runs after the first commit — by which
+  // point a re-render may have produced fresher props (e.g. async user data
+  // resolving). Read through refs so the effect captures the latest values
+  // at fire time without retriggering on every prop change.
+  const eventRef = useRef(event)
+  const propsRef = useRef(props)
+  eventRef.current = event
+  propsRef.current = props
+
   useEffect(() => {
-    trackEvent(event, props)
+    trackEvent(eventRef.current, propsRef.current)
   }, [])
 }
 

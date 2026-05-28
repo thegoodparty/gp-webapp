@@ -34,7 +34,7 @@ test('"I won my race" creates an EO org and auto-selects it', async ({
     .getByRole('button', { name: 'I won my race' })
     .click({ timeout: 10_000 })
 
-  await page.waitForURL('**/polls/welcome', { timeout: 15_000 })
+  await page.waitForURL('**/dashboard/briefings', { timeout: 15_000 })
 
   await NavigationHelper.navigateToPage(page, '/dashboard/polls')
   await NavigationHelper.dismissOverlays(page)
