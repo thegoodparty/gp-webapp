@@ -9,14 +9,9 @@ import {
 } from 'react'
 import { noop } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import {
-  isP2pUxEnabled,
-  p2pCutoffDatetime,
-} from 'app/dashboard/components/tasks/flows/util/isP2pUxEnabled.util'
 import { useTcrComplianceCheck } from 'app/dashboard/components/tasks/flows/hooks/useTcrComplianceCheck'
 
 interface P2pUxEnabledContextValue {
-  p2pCutoffDatetime: Date
   proUpdatedAtDate: Date
   p2pUxEnabled: boolean
   tcrCompliant: boolean
@@ -24,7 +19,6 @@ interface P2pUxEnabledContextValue {
 }
 
 export const P2pUxEnabledContext = createContext<P2pUxEnabledContextValue>({
-  p2pCutoffDatetime: p2pCutoffDatetime,
   proUpdatedAtDate: new Date(),
   p2pUxEnabled: false,
   tcrCompliant: false,
@@ -43,24 +37,18 @@ export const P2pUxEnabledProvider = ({
   const { details: campaignDetails } = campaign || {}
   const { isProUpdatedAt } = campaignDetails || {}
   const proUpdatedAtDate = new Date(isProUpdatedAt || '')
-  const [p2pUxEnabled, setP2pUxEnabled] = useState(
-    isP2pUxEnabled(proUpdatedAtDate, tcrCompliant),
-  )
+  const [p2pUxEnabled, setP2pUxEnabled] = useState(true)
 
   useEffect(() => {
-    setP2pUxEnabled(isP2pUxEnabled(proUpdatedAtDate, tcrCompliant))
+    setP2pUxEnabled(true)
   }, [proUpdatedAtDate, tcrCompliant])
 
-  const resetP2pUxEnabled = useMemo(
-    () => () => setP2pUxEnabled(isP2pUxEnabled(proUpdatedAtDate, tcrCompliant)),
-    [proUpdatedAtDate, tcrCompliant],
-  )
+  const resetP2pUxEnabled = useMemo(() => () => setP2pUxEnabled(true), [])
 
   return (
     <P2pUxEnabledContext.Provider
       value={{
         resetP2pUxEnabled,
-        p2pCutoffDatetime,
         proUpdatedAtDate,
         p2pUxEnabled,
         tcrCompliant,
