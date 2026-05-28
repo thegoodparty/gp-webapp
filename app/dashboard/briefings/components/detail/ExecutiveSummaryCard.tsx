@@ -12,6 +12,13 @@ import ReadAloudButton from './ReadAloudButton'
 
 type Props = {
   summary: MeetingBriefingOutput['executive_summary']
+  /**
+   * Ordered list of agenda item ids from the top-level `items[]`. Used to
+   * sort the executive summary's items into agenda order — the upstream
+   * generator is supposed to emit them in that order already, but in
+   * practice sometimes returns them out of sequence.
+   */
+  agendaItemIds: string[]
   domId: string
   /**
    * Pre-rendered plain-text version of the briefing for the speech
@@ -44,6 +51,7 @@ const onJump = (
  */
 export default function ExecutiveSummaryCard({
   summary,
+  agendaItemIds,
   domId,
   speechText,
   analyticsLabel,
@@ -56,6 +64,15 @@ export default function ExecutiveSummaryCard({
       jsonPath: BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH,
       titleJsonPath: BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
       title: 'Executive Summary',
+    })
+  const orderIndex = new Map(agendaItemIds.map((id, i) => [id, i]))
+  const orderedItems = summary.items
+    .map((item, originalIndex) => ({ item, originalIndex }))
+    .sort((a, b) => {
+      const ai = orderIndex.get(a.item.item_id) ?? Number.MAX_SAFE_INTEGER
+      const bi = orderIndex.get(b.item.item_id) ?? Number.MAX_SAFE_INTEGER
+      if (ai !== bi) return ai - bi
+      return a.originalIndex - b.originalIndex
     })
   return (
     <article
@@ -92,15 +109,15 @@ export default function ExecutiveSummaryCard({
       >
         {summary.lead_in}
       </p>
-      {summary.items.length > 0 ? (
+      {orderedItems.length > 0 ? (
         <ul className="list-disc! flex flex-col gap-2 pl-5 text-sm leading-6">
-          {summary.items.map((item, i) => {
+          {orderedItems.map(({ item, originalIndex }) => {
             const itemDomId = briefingItemDomId(item.item_id)
             return (
               <li
                 key={item.item_id}
                 className="list-item!"
-                data-briefing-json-path={`/executive_summary/items/${i}`}
+                data-briefing-json-path={`/executive_summary/items/${originalIndex}`}
               >
                 <a
                   href={`#${itemDomId}`}

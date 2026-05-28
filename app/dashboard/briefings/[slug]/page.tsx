@@ -60,6 +60,7 @@ export default async function Page({
       <TrackBriefingViewed briefingId={slug} />
       <ExecutiveSummaryCard
         summary={briefing.executive_summary}
+        agendaItemIds={briefing.items.map((item) => item.id)}
         domId={BRIEFING_EXECUTIVE_SUMMARY_DOM_ID}
         speechText={speechText}
         analyticsLabel="briefing"
