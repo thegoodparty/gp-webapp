@@ -114,6 +114,36 @@ describe('resolveSelection', () => {
     })
   })
 
+  it('resolves via endContainer when startContainer has no anchor ancestor', () => {
+    // Selection begins in non-anchored chrome and ends inside a passage. The
+    // start is necessarily before the passage in document order, so clamping
+    // start to 0 captures exactly the in-passage slice (not wrong text).
+    document.body.innerHTML =
+      '<div>' +
+      '<span>preamble </span>' +
+      '<p data-briefing-json-path="/items/2/body">hello world</p>' +
+      '</div>'
+    const preamble = document.querySelector('span')?.firstChild as Node
+    const bodyText = document.querySelector('p')?.firstChild as Node
+    const anchor = resolveSelection(
+      asSelection(rangeBetween([preamble, 0], [bodyText, 5])),
+    )
+    expect(anchor).toMatchObject({
+      jsonPath: '/items/2/body',
+      start: 0,
+      end: 5,
+      quote: 'hello',
+    })
+  })
+
+  it('returns null when neither startContainer nor endContainer has an anchor ancestor', () => {
+    document.body.innerHTML = '<span>no anchor here</span>'
+    const text = document.querySelector('span')?.firstChild as Node
+    expect(
+      resolveSelection(asSelection(rangeBetween([text, 0], [text, 8]))),
+    ).toBeNull()
+  })
+
   it('returns null for a collapsed selection', () => {
     document.body.innerHTML = '<li data-briefing-json-path="/x">hello</li>'
     const text = document.querySelector('li')?.firstChild as Node
