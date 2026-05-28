@@ -1,9 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import ContentEditor from './ContentEditor'
-import useVersions, {
-  CampaignVersions,
-} from 'app/onboarding/shared/useVersions'
+import ContentEditor, { Versions } from './ContentEditor'
+import useVersions from 'app/onboarding/shared/useVersions'
 import { fetchCampaignVersions } from 'app/onboarding/shared/ajaxActions'
 import { kebabToCamel } from 'helpers/stringHelper'
 import LoadingContent from './LoadingContent'
@@ -23,9 +21,9 @@ const EditContentPage = ({
 
   const { data: versions, error: versionsError } = useVersions()
   const { errorSnackbar } = useSnackbar()
-  const [updatedVersions, setUpdatedVersions] = useState<
-    CampaignVersions | false
-  >(false)
+  const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(
+    false,
+  )
   const versionsErrorReportedRef = useRef(false)
 
   useEffect(() => {
@@ -36,7 +34,7 @@ const EditContentPage = ({
   }, [versionsError, errorSnackbar])
 
   const updateVersionsCallback = async () => {
-    const fetchedVersions: CampaignVersions = await fetchCampaignVersions()
+    const fetchedVersions = await fetchCampaignVersions()
     setUpdatedVersions(fetchedVersions)
   }
 

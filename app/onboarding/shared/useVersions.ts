@@ -1,24 +1,18 @@
 'use client'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
+import { clientRequest } from 'gpApi/typed-request'
+import type { CampaignVersions } from 'helpers/types'
 
-export type CampaignVersions = Partial<
-  Record<string, string | number | boolean | object | null>
->
+export type { CampaignVersions } from 'helpers/types'
 
 export const campaignVersionsQueryOptions = queryOptions({
   queryKey: ['campaign', 'plan-version'] as const,
   queryFn: async (): Promise<CampaignVersions> => {
-    const res = await clientFetch<CampaignVersions>(
-      apiRoutes.campaign.planVersion,
+    const { data } = await clientRequest(
+      'GET /v1/campaigns/mine/plan-version',
+      {},
     )
-    if (!res.ok) {
-      throw new Error(
-        `Failed to fetch campaign versions (${res.status} ${res.statusText})`,
-      )
-    }
-    return res.data
+    return data
   },
 })
 
