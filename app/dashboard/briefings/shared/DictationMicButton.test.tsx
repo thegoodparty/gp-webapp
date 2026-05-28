@@ -47,6 +47,21 @@ describe('<DictationMicButton>', () => {
     ).toBeInTheDocument()
   })
 
+  it('renders a red, blinking stop icon while recording', () => {
+    render(
+      <DictationMicButton
+        dictation={makeDictation({ status: 'recording', active: true })}
+        idleLabel="Dictate note"
+        recordingLabel="Stop dictation"
+      />,
+    )
+    const icon = screen
+      .getByRole('button', { name: /stop dictation/i })
+      .querySelector('svg')
+    expect(icon?.getAttribute('class')).toMatch(/text-red-500/)
+    expect(icon?.getAttribute('class')).toMatch(/animate-pulse/)
+  })
+
   it('invokes toggle when clicked', async () => {
     const user = userEvent.setup()
     const toggle = vi.fn(async () => undefined)
