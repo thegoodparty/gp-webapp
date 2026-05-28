@@ -304,7 +304,14 @@ export type APIEndpoints = {
     Response: { feedback: ApiArtifactFeedback[] }
   }
   'PUT /v1/meetings/:date/briefing/items/:itemId/feedback': {
-    Request: { date: string; itemId: string; feedback: ApiArtifactFeedbackKind }
+    Request: {
+      date: string
+      itemId: string
+      feedback: ApiArtifactFeedbackKind
+      // Optional free-text. Omit to leave the existing comment untouched;
+      // pass `null` to clear it; pass a string to set / replace it.
+      comment?: string | null
+    }
     Response: ApiArtifactFeedback
   }
   'DELETE /v1/meetings/:date/briefing/items/:itemId/feedback': {
@@ -452,6 +459,7 @@ export interface ApiArtifactFeedback {
   artifact_type: ApiArtifactResourceType
   artifact_id: string
   feedback: ApiArtifactFeedbackKind
+  comment: string | null
   created_at: string
   updated_at: string
 }
