@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
-import type { Annotation } from '@shared/briefings/types'
+import type { Annotation, Item } from '@shared/briefings/types'
 import { BriefingAssistantSurface } from './BriefingAssistantSurface'
 
 vi.mock('./AskAiChatBody', () => ({
@@ -48,6 +48,12 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
     Element.prototype.scrollIntoView = vi.fn()
   })
 
+  afterEach(() => {
+    document
+      .querySelectorAll('[data-briefing-json-path]')
+      .forEach((el) => el.remove())
+  })
+
   it('preempts the cycler with a fresh anchored composer when pendingAnchor is set, even if other chats exist', () => {
     render(
       <BriefingAssistantSurface
@@ -92,6 +98,36 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
     const body = screen.getByTestId('chat-body')
     expect(body.getAttribute('data-json-path')).toBe('/items/3/title')
     expect(body.getAttribute('data-annotation-id')).toBe('none')
+  })
+
+  it('shows the section label and quoted text above the empty-state composer when starting from a selection', () => {
+    // resolveQuoteFromAnchor rebuilds the quote from the live DOM, so the
+    // anchored passage must exist in the document for the quote to resolve.
+    const passage = document.createElement('p')
+    passage.setAttribute('data-briefing-json-path', '/items/0/display/summary')
+    passage.textContent = 'The council will vote on the budget.'
+    document.body.appendChild(passage)
+
+    render(
+      <BriefingAssistantSurface
+        open
+        onClose={vi.fn()}
+        meetingDate="2026-05-14"
+        briefingItems={[{ title: 'Budget Vote' }] as unknown as Item[]}
+        annotations={[]}
+        onDeleteChat={vi.fn()}
+        pendingAnchor={{
+          jsonPath: '/items/0/display/summary',
+          start: 4,
+          end: 11,
+        }}
+      />,
+    )
+
+    // start=4,end=11 of "The council will vote..." → "council", rendered as
+    // the anchored quote (distinct from the source passage in the document).
+    expect(screen.getByText(/“council”/)).toBeInTheDocument()
+    expect(screen.getByText('BUDGET VOTE')).toBeInTheDocument()
   })
 
   it('falls back to the cycler view when pendingAnchor is undefined and chats exist', () => {
