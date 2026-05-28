@@ -203,8 +203,17 @@ export default function ActiveCardScrollSpy({
         // has finished. The original LOCK_MAX_MS countdown was a safety
         // net for the no-scroll-events case; once scrolls start arriving
         // we can use a tighter bound.
+        //
+        // Snapshot the lock-triggering key so a click that happens mid-
+        // scroll (which updates `lockedForKeyRef` to the new key and
+        // re-arms the activation-effect's safety timer) isn't undone
+        // when the OLD click's tail scroll-events finally settle. Without
+        // this guard, the stale settle callback would release the lock
+        // and run pick() while the new click's scroll is still playing.
+        const keyAtScrollEvent = lockedForKeyRef.current
         if (lockTimerRef.current !== null) clearTimeout(lockTimerRef.current)
         lockTimerRef.current = setTimeout(() => {
+          if (lockedForKeyRef.current !== keyAtScrollEvent) return
           isLockedRef.current = false
           lockTimerRef.current = null
           if (raf === 0) raf = requestAnimationFrame(pick)
