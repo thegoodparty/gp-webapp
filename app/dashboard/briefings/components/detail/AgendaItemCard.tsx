@@ -239,7 +239,7 @@ const AgendaItemCard = ({
       }`}
     >
       <header className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
+        <div className="flex min-w-0 flex-col gap-1">
           {/* Clicking the title selects its full text so the
               HighlightToolbar surfaces anchored to the title — the same
               anchor openCardLevelChat uses — without the user having to
@@ -253,11 +253,13 @@ const AgendaItemCard = ({
           </h3>
         </div>
         {speechText ? (
-          <ReadAloudButton
-            text={speechText}
-            analyticsLabel={analyticsLabel}
-            compact
-          />
+          <div className="shrink-0">
+            <ReadAloudButton
+              text={speechText}
+              analyticsLabel={analyticsLabel}
+              compact
+            />
+          </div>
         ) : null}
       </header>
 
