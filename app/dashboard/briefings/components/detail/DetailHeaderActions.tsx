@@ -1,12 +1,18 @@
 'use client'
 
-import { Button, ShareIcon } from '@styleguide'
+import { Button, IconButton, ShareIcon } from '@styleguide'
 import { useShareScope } from './ShareScope'
 
 /**
  * Sticky header actions on the briefing detail page. Renders at every
- * breakpoint — mobile keeps the share affordance in the sub-header
- * (matching desktop) instead of duplicating it in MobileBottomBar.
+ * breakpoint:
+ *  - mobile (< lg): an icon-only `IconButton` keeps the sub-header
+ *    compact next to the meeting title block.
+ *  - desktop (lg+): a labelled `Button` with the icon + "Share" text.
+ *
+ * Both call the same `openShareDrawer` and share the same `aria-label`,
+ * so screen readers see one share affordance per page regardless of
+ * width.
  *
  * Share opens the bottom drawer whose Copy/Email/Message/Download
  * buttons all point at the public PDF URL served by `gp-api` via the
@@ -26,7 +32,21 @@ export default function DetailHeaderActions(): React.JSX.Element | null {
 
   return (
     <div className="flex items-center gap-2">
-      <Button variant="outline" onClick={openShareDrawer}>
+      <IconButton
+        type="button"
+        size="medium"
+        variant="outline"
+        aria-label="Share briefing"
+        onClick={openShareDrawer}
+        className="lg:hidden"
+      >
+        <ShareIcon className="size-5" aria-hidden />
+      </IconButton>
+      <Button
+        variant="outline"
+        onClick={openShareDrawer}
+        className="hidden lg:inline-flex"
+      >
         <ShareIcon className="size-4" aria-hidden />
         Share
       </Button>
