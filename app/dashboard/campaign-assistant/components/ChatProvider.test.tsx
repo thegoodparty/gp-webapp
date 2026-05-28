@@ -233,6 +233,55 @@ describe('<ChatProvider>', () => {
     expect(screen.getByTestId('should-type')).toHaveTextContent('true')
   })
 
+  it('handleRegenerate replaces the last assistant message via the update endpoint', async () => {
+    const user = userEvent.setup()
+    mswServer.use(
+      http.get(CHAT_THREAD_URL, () =>
+        HttpResponse.json({
+          threadId: 'thread-2',
+          chat: [
+            { role: 'user', content: 'first question' },
+            { role: 'assistant', content: 'original reply' },
+          ],
+        }),
+      ),
+      http.put(CHAT_THREAD_URL, () =>
+        HttpResponse.json({
+          message: { role: 'assistant', content: 'regenerated reply' },
+        }),
+      ),
+    )
+
+    renderProvider()
+    await user.click(screen.getByRole('button', { name: 'switch' }))
+    await screen.findByText('original reply')
+
+    await user.click(screen.getByRole('button', { name: 'regen' }))
+
+    expect(await screen.findByText('regenerated reply')).toBeInTheDocument()
+    const messages = screen.getByTestId('chat-messages').children
+    expect(messages).toHaveLength(2)
+    expect(messages[0]).toHaveTextContent('first question')
+    expect(messages[1]).toHaveTextContent('regenerated reply')
+    expect(screen.queryByText('original reply')).not.toBeInTheDocument()
+    expect(screen.getByTestId('should-type')).toHaveTextContent('true')
+    expect(screen.getByTestId('loading')).toHaveTextContent('false')
+  })
+
+  it('handleRegenerate is a no-op when there is no active threadId', async () => {
+    const user = userEvent.setup()
+    // No msw handlers registered: a real PUT would 500 (unhandled) and
+    // the test would fail. The provider must short-circuit before the
+    // network call.
+    renderProvider()
+
+    await user.click(screen.getByRole('button', { name: 'regen' }))
+
+    expect(screen.getByTestId('chat-messages').children).toHaveLength(0)
+    expect(screen.getByTestId('loading')).toHaveTextContent('false')
+    expect(screen.getByTestId('should-type')).toHaveTextContent('true')
+  })
+
   it('finishTyping flips shouldType back to false', async () => {
     const user = userEvent.setup()
     mswServer.use(
