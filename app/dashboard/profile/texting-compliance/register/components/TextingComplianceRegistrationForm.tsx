@@ -311,6 +311,7 @@ const TextingComplianceRegistrationForm = ({
           value={phone}
           onChange={(e) => handleChange({ phone: e.target.value })}
         />
+        <div className="h-32"></div>
       </TextingComplianceForm>
       <TextingComplianceFooter>
         <TextingComplianceSubmitButton

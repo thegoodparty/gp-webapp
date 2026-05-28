@@ -11,7 +11,7 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
 import { Organization } from 'gpApi/api-endpoints'
-import { setCookie } from 'helpers/cookieHelper'
+import { getCookie, setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { useSelectedOrgSlug } from '@shared/hooks/useSelectedOrgSlug'
 import {
@@ -20,6 +20,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  ProBadge,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -60,6 +61,7 @@ export const useSetOrganizationSlug = () => {
 interface OrganizationProviderProps {
   children: ReactNode
   initialOrganizations: Organization[]
+  initialSlug?: string | null
 }
 
 export const ORGANIZATIONS_QUERY_KEY = ['organizations']
@@ -67,6 +69,7 @@ export const ORGANIZATIONS_QUERY_KEY = ['organizations']
 export const OrganizationProvider = ({
   children,
   initialOrganizations,
+  initialSlug = null,
 }: OrganizationProviderProps) => {
   const queryClient = useQueryClient()
 
@@ -79,8 +82,10 @@ export const OrganizationProvider = ({
     initialData: initialOrganizations,
   })
 
-  const [selectedSlug, setRawSelectedSlug] =
-    useSelectedOrgSlug(initialOrganizations)
+  const [selectedSlug, setRawSelectedSlug] = useSelectedOrgSlug(
+    initialOrganizations,
+    initialSlug,
+  )
 
   const selectedOrganization = useMemo(
     () =>
@@ -88,11 +93,20 @@ export const OrganizationProvider = ({
     [organizations, selectedSlug],
   )
 
+  // If the resolved slug diverges from the cookie (e.g. cookie pointed at an
+  // org the user no longer has access to, so pickSlug fell back to
+  // organizations[0]), rewrite the cookie. gpFetch, clientFetch, and middleware
+  // read the cookie directly for the X-Organization-Slug header, so a stale
+  // cookie would make the API see the wrong slug while the UI shows the
+  // fallback. This fires only on a genuine mismatch — SSR/client agree on
+  // first render because initialSlug is sourced from the cookie server-side.
   useEffect(() => {
-    if (selectedOrganization) {
-      setCookie(ORG_SLUG_COOKIE, selectedOrganization.slug)
+    const resolved = selectedOrganization?.slug
+    if (!resolved) return
+    if (resolved !== getCookie(ORG_SLUG_COOKIE)) {
+      setCookie(ORG_SLUG_COOKIE, resolved)
     }
-  }, [selectedOrganization])
+  }, [selectedOrganization?.slug])
 
   const setSelectedSlug = useCallback(
     (slug: string) => {
@@ -140,7 +154,7 @@ export const OrganizationPicker = () => {
 
     const isOnSharedPage = SHARED_PATHS.some((p) => pathname?.startsWith(p))
     if (!isOnSharedPage) {
-      router.push(org.electedOfficeId ? '/dashboard/polls' : '/dashboard')
+      router.push(org.electedOfficeId ? '/dashboard/briefings' : '/dashboard')
     }
   }
 
@@ -159,11 +173,7 @@ export const OrganizationPicker = () => {
                   <p className="truncate text-sm font-opensans">
                     GoodParty.org
                   </p>
-                  {campaign?.isPro && (
-                    <div className="bg-primary text-white text-[8px]/[12px] font-opensans font-bold rounded h-[12px] px-1">
-                      PRO
-                    </div>
-                  )}
+                  {campaign?.isPro && <ProBadge size="small" />}
                 </div>
                 <span className="truncate text-sm font-opensans font-semibold">
                   {selected.name}

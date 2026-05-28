@@ -1,5 +1,4 @@
-import { GrRadial, GrRadialSelected } from 'react-icons/gr'
-import { LoaderCircle } from 'lucide-react'
+import { Circle, CircleDot, LoaderCircle } from 'lucide-react'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import H5 from '@shared/typography/H5'
@@ -43,9 +42,9 @@ export default function RaceCard({
     >
       <div className="flex items-center">
         {selected ? (
-          <GrRadialSelected className="text-primary text-xl" />
+          <CircleDot className="text-primary size-5" />
         ) : (
-          <GrRadial className="text-xl text-indigo" />
+          <Circle className="text-indigo size-5" />
         )}
         {isHydrating ? (
           <LoaderCircle size={16} className="ml-2 animate-spin" />

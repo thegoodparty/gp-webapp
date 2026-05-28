@@ -12,9 +12,7 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerTitle,
-  DrawerClose,
 } from '@styleguide/components/ui/drawer'
-import { XMarkIcon } from '@styleguide/components/ui/icons'
 
 interface ModalOrDrawerProps {
   open: boolean
@@ -51,10 +49,6 @@ export function ModalOrDrawer({
               {description}
             </DrawerDescription>
           ) : null}
-          <DrawerClose className="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden">
-            <XMarkIcon />
-            <span className="sr-only">Close</span>
-          </DrawerClose>
           {children}
         </DrawerContent>
       </Drawer>

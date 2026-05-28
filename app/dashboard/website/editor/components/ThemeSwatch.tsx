@@ -92,7 +92,7 @@ export const ThemeSwatch = ({
         ))}
       </div>
       {!displayOnly && (
-        <Body2 className="group-hover:bg-indigo-100 !font-outfit capitalize flex h-10 rounded-b-md text-center items-center justify-center border-t border-black/[0.12] gap-2">
+        <Body2 className="group-hover:bg-indigo-100 capitalize flex h-10 rounded-b-md text-center items-center justify-center border-t border-black/[0.12] gap-2">
           {selected && (
             <LuCheck
               className="text-white rounded-full bg-blue-500 font-bold border-2 border-blue-500"

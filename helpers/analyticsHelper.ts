@@ -513,12 +513,21 @@ export const EVENTS = {
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
   Briefings: {
+    ListViewed: 'Briefings - List Viewed',
     BriefingViewed: 'Briefings - Briefing Viewed',
     IssueDetailViewed: 'Briefings - Issue Detail Viewed',
     ClickDownload: 'Briefings - Click Download',
     FeedbackHelpful: 'Briefings - Feedback: Helpful',
     FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
     ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
+    ReadAloudStarted: 'Briefings - Read Aloud Started',
+    ReadAloudStopped: 'Briefings - Read Aloud Stopped',
+    ReadAloudCompleted: 'Briefings - Read Aloud Completed',
+    ReadAloudFailed: 'Briefings - Read Aloud Failed',
+    DictationStarted: 'Briefings - Dictation Started',
+    DictationStopped: 'Briefings - Dictation Stopped',
+    DictationFailed: 'Briefings - Dictation Failed',
+    DictationMaxDurationReached: 'Briefings - Dictation Max Duration Reached',
   },
 } as const
 
@@ -564,10 +573,12 @@ export const trackRegistrationCompleted = async ({
       if (typeof analyticsInstance.ready === 'function') {
         await analyticsInstance.ready()
       }
+      const hutk = cookie.get('hubspotutk')
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
         ...(email ? { email } : {}),
+        ...(hutk ? { hutk } : {}),
       })
     }
   } catch (error) {

@@ -284,6 +284,10 @@ export const apiRoutes = {
         path: '/campaigns/tcr-compliance',
         method: 'POST',
       },
+      createAgentic: {
+        path: '/campaigns/tcr-compliance/agentic',
+        method: 'POST',
+      },
       submitCvPin: {
         path: '/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
         method: 'POST',

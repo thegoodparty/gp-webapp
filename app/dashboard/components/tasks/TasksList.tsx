@@ -571,7 +571,7 @@ const TasksList = ({
         {isLegacyList ? (
           <>
             <H2>Tasks for this week</H2>
-            <Body2 className="font-outfit! mt-1">
+            <Body2 className="mt-1">
               Election day: {electionDate ? dateUsHelper(electionDate) : ''}
             </Body2>
           </>

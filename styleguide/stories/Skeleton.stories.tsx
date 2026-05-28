@@ -11,6 +11,34 @@ export default meta
 
 type Story = StoryObj<typeof Skeleton>
 
+type PlaygroundArgs = {
+  width: number
+  height: number
+  rounded: boolean
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    width: 200,
+    height: 16,
+    rounded: true,
+  },
+  argTypes: {
+    width: { control: { type: 'number', min: 16, max: 600, step: 1 } },
+    height: { control: { type: 'number', min: 4, max: 200, step: 1 } },
+    rounded: {
+      control: 'boolean',
+      description: 'Use the default rounded-md radius or a sharp rectangle.',
+    },
+  },
+  render: ({ width, height, rounded }) => (
+    <Skeleton
+      className={rounded ? undefined : 'rounded-none'}
+      style={{ width, height }}
+    />
+  ),
+}
+
 export const Default: Story = {
   render: () => <Skeleton className="h-4 w-32" />,
 }

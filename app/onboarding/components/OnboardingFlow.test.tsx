@@ -91,7 +91,7 @@ describe('new onboarding flow shell', () => {
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: /official party designation/i,
+        name: /party designation/i,
       }),
     ).toBeInTheDocument()
     expect(continueButton).toBeDisabled()

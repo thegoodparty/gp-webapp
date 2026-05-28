@@ -1,5 +1,4 @@
-import { Open_Sans, Outfit } from 'next/font/google'
-import localFont from 'next/font/local'
+import { Open_Sans } from 'next/font/google'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import PageWrapper from './shared/layouts/PageWrapper'
@@ -9,37 +8,10 @@ import { APP_BASE, IS_PROD } from 'appEnv'
 import RouteTracker from '@shared/scripts/RouteTrackerScript'
 import AnalyticsSessionReplayMiddleware from '@shared/AnalyticsSessionReplayMiddleware'
 
-const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
-const openSans = Open_Sans({ subsets: ['latin'], variable: '--open-sans-font' })
-
-const sfPro = localFont({
-  // @ts-expect-error - localFont types are not correct
+const openSans = Open_Sans({
   subsets: ['latin'],
-  src: [
-    {
-      path: '../public/fonts/SFProDisplay-Light.woff2',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/SFProDisplay-Semibold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-  ],
-  formatHint: 'woff2',
-  variable: '--sfpro-font',
-  display: 'swap',
+  variable: '--open-sans-font',
+  adjustFontFallback: false,
 })
 
 export const metadata = {
@@ -51,10 +23,7 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <html
-    lang="en"
-    className={`${outfit.variable} ${sfPro.variable} ${openSans.variable}`}
-  >
+  <html lang="en" className={openSans.variable}>
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
