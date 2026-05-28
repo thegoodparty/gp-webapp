@@ -1,12 +1,5 @@
 'use client'
-import {
-  createContext,
-  useMemo,
-  useState,
-  useContext,
-  useEffect,
-  ReactNode,
-} from 'react'
+import { createContext, useContext, ReactNode } from 'react'
 import { noop } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useTcrComplianceCheck } from 'app/dashboard/components/tasks/flows/hooks/useTcrComplianceCheck'
@@ -37,20 +30,13 @@ export const P2pUxEnabledProvider = ({
   const { details: campaignDetails } = campaign || {}
   const { isProUpdatedAt } = campaignDetails || {}
   const proUpdatedAtDate = new Date(isProUpdatedAt || '')
-  const [p2pUxEnabled, setP2pUxEnabled] = useState(true)
-
-  useEffect(() => {
-    setP2pUxEnabled(true)
-  }, [proUpdatedAtDate, tcrCompliant])
-
-  const resetP2pUxEnabled = useMemo(() => () => setP2pUxEnabled(true), [])
 
   return (
     <P2pUxEnabledContext.Provider
       value={{
-        resetP2pUxEnabled,
+        resetP2pUxEnabled: noop,
         proUpdatedAtDate,
-        p2pUxEnabled,
+        p2pUxEnabled: true,
         tcrCompliant,
       }}
     >
