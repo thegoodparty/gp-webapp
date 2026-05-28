@@ -151,12 +151,19 @@ function messageToItem(msg: ChatMessage): ChatItem | null {
  * anchored selection, and reopening an existing chat annotation.
  *
  * Lifecycle:
- *  1. On mount, mint a briefing chat (annotationId + conversationId) unless
- *     `annotationIdOverride` is provided, then load prior messages.
- *  2. Empty state shows the three suggested pills + composer.
- *  3. Sending streams text deltas progressively. Errors render inline with a
- *     Retry button if the error is retryable.
- *  4. When `active` flips to false, abort the in-flight stream.
+ *  1. On mount:
+ *      - If `annotationIdOverride` is set, load its prior messages.
+ *      - Otherwise, do nothing. We defer `createBriefingChat` until the
+ *        user actually sends a first message — opening + dismissing the
+ *        sheet without typing no longer leaves an empty chat row in the
+ *        DB.
+ *  2. Empty state shows the three suggested pills + composer. Composer
+ *     is interactive even before any annotation exists.
+ *  3. Sending: if we don't have an `annotationId` yet (deferred case),
+ *     mint one via `chatApi.createBriefingChat`, then stream the user's
+ *     first turn. Subsequent sends reuse the minted id.
+ *  4. Errors render inline with a Retry button when retryable.
+ *  5. When `active` flips to false, abort the in-flight stream.
  */
 export default function AskAiChatBody({
   meetingDate,
@@ -180,7 +187,13 @@ export default function AskAiChatBody({
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
-  const initRequestedRef = useRef(false)
+  // `loadRequestedRef` is the override-path latch: we kick off
+  // `loadExistingChat` once per mount and skip subsequent runs even if
+  // deps change. `creatingRef` is the deferred-create latch: it stops a
+  // double-tap from minting two chat rows back-to-back inside
+  // `ensureAnnotationId`.
+  const loadRequestedRef = useRef(false)
+  const creatingRef = useRef(false)
   const sendingRef = useRef(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const wasAtBottomRef = useRef(true)
@@ -192,25 +205,17 @@ export default function AskAiChatBody({
     onChange: setComposer,
   })
 
-  const initialize = useCallback(async () => {
-    if (initRequestedRef.current) return
-    initRequestedRef.current = true
+  // Override path only — load prior messages for an existing chat
+  // annotation. New / deferred chats skip this entirely (they have no
+  // messages to load).
+  const loadExistingChat = useCallback(async () => {
+    if (!annotationIdOverride) return
+    if (loadRequestedRef.current) return
+    loadRequestedRef.current = true
     setCreating(true)
     try {
-      let activeId = annotationIdOverride ?? null
-      if (!activeId) {
-        const created = await chatApi.createBriefingChat({
-          meetingDate,
-          anchor: anchor ?? EMPTY_ANCHOR,
-        })
-        activeId = created.annotationId
-        onChatCreated?.({
-          annotationId: created.annotationId,
-          conversationId: created.conversationId,
-        })
-      }
-      setAnnotationId(activeId)
-      const msgs = await chatApi.listMessages(activeId)
+      setAnnotationId(annotationIdOverride)
+      const msgs = await chatApi.listMessages(annotationIdOverride)
       const items: ChatItem[] = []
       for (const m of msgs) {
         const it = messageToItem(m)
@@ -224,9 +229,9 @@ export default function AskAiChatBody({
         meetingDate,
         annotationIdOverride,
       })
-      initRequestedRef.current = false
+      loadRequestedRef.current = false
       setError({
-        message: 'Could not start chat. Try again.',
+        message: 'Could not load this chat. Try again.',
         retryable: true,
         lastUserContent: '',
         lastClientMessageId: '',
@@ -235,13 +240,47 @@ export default function AskAiChatBody({
     } finally {
       setCreating(false)
     }
-  }, [anchor, annotationIdOverride, meetingDate, onChatCreated])
+  }, [annotationIdOverride, meetingDate])
+
+  // Deferred create. Returns the existing annotationId if we already
+  // have one, otherwise mints a new chat row and returns its id. Null
+  // means "create failed" — the caller is responsible for surfacing the
+  // error with the right send context (last user content + client id).
+  const ensureAnnotationId = useCallback(async (): Promise<string | null> => {
+    if (annotationId) return annotationId
+    if (creatingRef.current) return null
+    creatingRef.current = true
+    setCreating(true)
+    try {
+      const created = await chatApi.createBriefingChat({
+        meetingDate,
+        anchor: anchor ?? EMPTY_ANCHOR,
+      })
+      setAnnotationId(created.annotationId)
+      onChatCreated?.({
+        annotationId: created.annotationId,
+        conversationId: created.conversationId,
+      })
+      return created.annotationId
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-ask-ai',
+        phase: 'init',
+        meetingDate,
+      })
+      return null
+    } finally {
+      creatingRef.current = false
+      setCreating(false)
+    }
+  }, [annotationId, anchor, meetingDate, onChatCreated])
 
   useEffect(() => {
-    if (active && !initRequestedRef.current) {
-      void initialize()
-    }
-  }, [active, initialize])
+    if (!active) return
+    if (!annotationIdOverride) return
+    if (loadRequestedRef.current) return
+    void loadExistingChat()
+  }, [active, annotationIdOverride, loadExistingChat])
 
   // Notify the host surface whenever `sending || creating` flips, so it
   // can gate destructive actions (Delete chat) on the active annotation.
@@ -421,22 +460,47 @@ export default function AskAiChatBody({
     [meetingDate],
   )
 
+  // Stage 2 of a user turn — ensure we have an annotation id (lazy
+  // create when in deferred mode), then stream the message. Split from
+  // `sendContent` so the retry path can re-run this without re-adding
+  // the user's optimistic bubble to the history.
+  const executeUserTurn = useCallback(
+    async (content: string, clientMessageId: string) => {
+      let id = annotationId
+      if (!id) {
+        id = await ensureAnnotationId()
+        if (!id) {
+          setError({
+            message: 'Could not start chat. Try again.',
+            retryable: true,
+            lastUserContent: content,
+            lastClientMessageId: clientMessageId,
+            kind: 'init',
+          })
+          sendingRef.current = false
+          return
+        }
+      }
+      await runStream(id, content, clientMessageId)
+    },
+    [annotationId, ensureAnnotationId, runStream],
+  )
+
   const sendContent = useCallback(
     async (content: string) => {
       const trimmed = content.trim()
       if (!trimmed) return false
-      if (!annotationId) return false
-      if (sendingRef.current) return false
+      if (sendingRef.current || creatingRef.current) return false
       sendingRef.current = true
       const clientMessageId = newClientMessageId()
       setHistory((prev) => [
         ...prev,
         { kind: 'user', id: `local_${clientMessageId}`, content: trimmed },
       ])
-      await runStream(annotationId, trimmed, clientMessageId)
+      await executeUserTurn(trimmed, clientMessageId)
       return true
     },
-    [annotationId, runStream],
+    [executeUserTurn],
   )
 
   const onSend = useCallback(async () => {
@@ -448,16 +512,26 @@ export default function AskAiChatBody({
   const onRetry = useCallback(async () => {
     if (!error) return
     if (error.kind === 'init') {
+      // Two flavors of init failure:
+      //   - Override mode (no lastUserContent): the loader failed.
+      //     Re-run loadExistingChat.
+      //   - Deferred mode (lastUserContent set): create-on-send failed
+      //     AFTER we already pushed the user bubble onto history.
+      //     Re-run executeUserTurn so we don't duplicate the bubble.
       setError(null)
-      initRequestedRef.current = false
-      await initialize()
+      if (!error.lastUserContent || !error.lastClientMessageId) {
+        loadRequestedRef.current = false
+        await loadExistingChat()
+        return
+      }
+      await executeUserTurn(error.lastUserContent, error.lastClientMessageId)
       return
     }
     if (!annotationId) return
     const { lastUserContent, lastClientMessageId } = error
     if (!lastUserContent || !lastClientMessageId) return
     await runStream(annotationId, lastUserContent, lastClientMessageId)
-  }, [annotationId, error, initialize, runStream])
+  }, [annotationId, error, executeUserTurn, loadExistingChat, runStream])
 
   const onRetryInterrupted = useCallback(
     async (interruptedId: string) => {
@@ -699,12 +773,12 @@ export default function AskAiChatBody({
                 ) {
                   return
                 }
-                if (!annotationId || composer.trim().length === 0) return
+                if (composer.trim().length === 0) return
                 e.preventDefault()
                 void onSend()
               }}
               placeholder="Ask anything..."
-              disabled={sending || creating || !annotationId}
+              disabled={sending || creating}
               rows={3}
               className="min-h-[96px] resize-none rounded-2xl pr-12"
               aria-label="Ask Assistant message"
@@ -721,7 +795,7 @@ export default function AskAiChatBody({
             onClick={() => {
               void onSend()
             }}
-            disabled={!annotationId || composer.trim().length === 0}
+            disabled={composer.trim().length === 0 || sending || creating}
             loading={sending || creating}
             icon={<Sparkles className="size-4" aria-hidden />}
             iconPosition="left"
@@ -739,7 +813,7 @@ export default function AskAiChatBody({
             onChange={(e) => setComposer(e.target.value)}
             onKeyDown={onComposerKeyDown}
             placeholder="Ask anything about this briefing..."
-            disabled={sending || creating || !annotationId}
+            disabled={sending || creating}
             aria-label="Ask AI message"
           />
           <IconButton
@@ -750,7 +824,7 @@ export default function AskAiChatBody({
             onClick={() => {
               void onSend()
             }}
-            disabled={!annotationId || composer.trim().length === 0}
+            disabled={composer.trim().length === 0 || sending || creating}
             loading={sending || creating}
           >
             <Send className="size-4" aria-hidden />
