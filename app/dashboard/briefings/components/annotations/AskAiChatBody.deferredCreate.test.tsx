@@ -303,7 +303,7 @@ describe('<AskAiChatBody> deferred creation', () => {
     await user.click(screen.getByRole('button', { name: /ask assistant/i }))
     await waitFor(() => expect(streamMessageMock).toHaveBeenCalledTimes(2))
     expect(createMock).toHaveBeenCalledTimes(1)
-    expect(streamMessageMock.mock.calls[1][0]).toMatchObject({
+    expect(streamMessageMock.mock.calls[1]?.[0]).toMatchObject({
       annotationId: 'ann_reuse',
       content: 'second',
     })

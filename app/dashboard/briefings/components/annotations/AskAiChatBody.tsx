@@ -66,6 +66,15 @@ type Props = {
    * annotation from being removed mid-network-call.
    */
   onSendingChange?: (sending: boolean) => void
+  /**
+   * Fires as soon as the deferred `createBriefingChat` resolves, well
+   * before the first stream completes (and before `onChatCreated`,
+   * which is intentionally deferred to stream success to avoid
+   * unmounting us mid-stream). The host surface uses this to render
+   * the Delete chat button against the freshly-minted annotation while
+   * the user is still in the empty-state composer.
+   */
+  onAnnotationIdReady?: (annotationId: string) => void
 }
 
 type StreamingMessage = {
@@ -175,6 +184,7 @@ export default function AskAiChatBody({
   onChatCreated,
   composerVariant = 'inline',
   onSendingChange,
+  onAnnotationIdReady,
 }: Props): React.JSX.Element {
   const [annotationId, setAnnotationId] = useState<string | null>(null)
   const [history, setHistory] = useState<ChatItem[]>([])
@@ -272,6 +282,12 @@ export default function AskAiChatBody({
       // Empty result for a freshly-minted chat is expected.
       await chatApi.listMessages(created.annotationId)
       setAnnotationId(created.annotationId)
+      // Tell the host the annotation now exists so it can render
+      // Delete chat against it. Distinct from `onChatCreated` (which
+      // triggers the overlay swap and is intentionally deferred to
+      // stream success). `onAnnotationIdReady` fires here so the
+      // delete affordance is visible the moment the chat is minted.
+      onAnnotationIdReady?.(created.annotationId)
       // Defer `onChatCreated` until the first stream lands `done` —
       // firing it here triggers the host's pending-anchor → cycler-
       // focused overlay swap, which unmounts this `AskAiChatBody`
@@ -292,7 +308,7 @@ export default function AskAiChatBody({
       creatingRef.current = false
       setCreating(false)
     }
-  }, [annotationId, anchor, meetingDate])
+  }, [annotationId, anchor, meetingDate, onAnnotationIdReady])
 
   useEffect(() => {
     if (!active) return
