@@ -197,6 +197,42 @@ describe('<ChatProvider>', () => {
     expect(await screen.findByText('switched thread reply')).toBeInTheDocument()
   })
 
+  it('handleNewInput updates an existing thread on follow-up messages', async () => {
+    const user = userEvent.setup()
+    mswServer.use(
+      http.get(CHAT_THREAD_URL, () =>
+        HttpResponse.json({
+          threadId: 'thread-2',
+          chat: [{ role: 'assistant', content: 'switched thread reply' }],
+        }),
+      ),
+      http.put(CHAT_THREAD_URL, () =>
+        HttpResponse.json({
+          message: { role: 'assistant', content: 'follow-up reply' },
+        }),
+      ),
+    )
+
+    renderProvider()
+    await user.click(screen.getByRole('button', { name: 'switch' }))
+    expect(await screen.findByText('thread-2')).toBeInTheDocument()
+    await screen.findByText('switched thread reply')
+
+    // threadId is now 'thread-2' and chat has one assistant message, so the
+    // !threadId || chat.length === 0 branch routes to updateChat (PUT), not
+    // createInitialChat.
+    await user.click(screen.getByRole('button', { name: 'send' }))
+
+    expect(await screen.findByText('follow-up reply')).toBeInTheDocument()
+    const messages = screen.getByTestId('chat-messages').children
+    expect(messages).toHaveLength(3)
+    expect(messages[0]).toHaveTextContent('switched thread reply')
+    expect(messages[1]).toHaveTextContent('hello world')
+    expect(messages[2]).toHaveTextContent('follow-up reply')
+    expect(screen.getByTestId('loading')).toHaveTextContent('false')
+    expect(screen.getByTestId('should-type')).toHaveTextContent('true')
+  })
+
   it('finishTyping flips shouldType back to false', async () => {
     const user = userEvent.setup()
     mswServer.use(
