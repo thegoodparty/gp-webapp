@@ -106,7 +106,8 @@ export default function OfficeStep({
       step,
     })
 
-    const { position, election, id, filingPeriods, city } = state.ballotOffice
+    const { position, election, id, brPositionId, filingPeriods, city } =
+      state.ballotOffice
 
     const attr = [
       { key: 'details.electionId', value: election?.id },
@@ -168,10 +169,15 @@ export default function OfficeStep({
     const resolvedOrgSlug =
       organizationSlug ?? (campaign ? `campaign-${campaign.id}` : undefined)
 
-    if (resolvedOrgSlug && position?.id) {
+    // Prefer the top-level race.brPositionId — that's the BR position id the
+    // office-picker matches against (rowKey, matchesSelected). The nested
+    // position.id can differ (it's the RacePosition sub-object id) and would
+    // break the page-reload highlight if we persisted it here.
+    const ballotReadyPositionId = brPositionId ?? position?.id
+    if (resolvedOrgSlug && ballotReadyPositionId) {
       await clientRequest('PATCH /v1/organizations/:slug', {
         slug: resolvedOrgSlug,
-        ballotReadyPositionId: position.id,
+        ballotReadyPositionId,
       })
     }
 
@@ -192,7 +198,7 @@ export default function OfficeStep({
       })
       const createAttr = [
         ...attr,
-        { key: 'ballotReadyPositionId', value: position?.id },
+        { key: 'ballotReadyPositionId', value: ballotReadyPositionId },
       ]
       const newCampaign = await createCampaignWithOffice(createAttr)
       if (!newCampaign) {
@@ -234,15 +240,27 @@ export default function OfficeStep({
     }
   }
 
+  // Enrich with electionDay + brPositionId so matchesSelected can use the
+  // composite path on page reload for campaigns saved in the new BR-hash
+  // format. partisanType isn't carried — the lean list shape doesn't have
+  // it either, so the composite stops at (brPositionId, electionDay).
   const selectedOffice:
     | {
         id: string | number | undefined
-        election: { id: string | number | null | undefined }
+        election: {
+          id: string | number | null | undefined
+          electionDay?: string
+        }
+        brPositionId?: string
       }
     | false = existingRaceId
     ? {
         id: existingRaceId,
-        election: { id: existingElectionId },
+        election: {
+          id: existingElectionId,
+          electionDay: campaign?.details?.electionDate,
+        },
+        brPositionId: campaign?.organization?.positionId ?? undefined,
       }
     : false
 

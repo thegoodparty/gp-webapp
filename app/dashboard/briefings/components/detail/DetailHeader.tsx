@@ -1,40 +1,26 @@
 import Link from 'next/link'
-import { format, parseISO } from 'date-fns'
 import { ArrowLeftIcon } from '@styleguide'
 import { briefingsLandingHref } from '@shared/briefings/routes'
+import { formatBriefingMeetingDate } from '@shared/briefings/dateHelpers'
 import type { Briefing } from '@shared/briefings/types'
 import DetailHeaderActions from './DetailHeaderActions'
 
 type Props = {
   briefing: Briefing
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
-}
-
-function formatMeetingDate(meetingDate: string): string {
-  try {
-    return format(parseISO(meetingDate), 'EEE MMM d, yyyy')
-  } catch {
-    return meetingDate
-  }
 }
 
 /**
- * Sticky top bar on the briefing detail page. Layout matches Lovable:
- *  - Small back-arrow link (icon-only) on the far left.
+ * Sticky top bar on the briefing detail page. Layout matches the Lovable
+ * design:
+ *  - Small back-arrow link on the far left.
  *  - Three-line title block: meeting body name, formatted meeting date,
  *    location. Meeting time is intentionally omitted until the
  *    MeetingBriefingFull contract exposes it.
- *  - Desktop-only Download button on the right.
+ *  - Desktop-only Share / Add note / Briefing assistant buttons on the
+ *    right (mobile equivalents live in MobileBottomBar).
  */
-export default function DetailHeader({
-  briefing,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
-}: Props): React.JSX.Element {
-  const formattedDate = formatMeetingDate(briefing.meeting_date)
+export default function DetailHeader({ briefing }: Props): React.JSX.Element {
+  const formattedDate = formatBriefingMeetingDate(briefing.meeting_date)
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
       <div className="flex w-full items-start gap-3 px-4 py-4 lg:px-8">
@@ -54,12 +40,7 @@ export default function DetailHeader({
             <p className="text-sm text-muted-foreground">{briefing.location}</p>
           ) : null}
         </div>
-        <DetailHeaderActions
-          briefing={briefing}
-          preparedForLine={preparedForLine}
-          meetingMetaLine={meetingMetaLine}
-          liveBriefingUrl={liveBriefingUrl}
-        />
+        <DetailHeaderActions />
       </div>
     </div>
   )

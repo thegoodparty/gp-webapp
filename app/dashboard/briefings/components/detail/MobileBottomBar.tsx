@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { List, ChevronUp, MessageSquare, Sparkles } from 'lucide-react'
 import {
   Button,
+  IconButton,
+  Share2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -15,6 +17,7 @@ import {
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import { useShareScope } from './ShareScope'
 
 type Props = {
   briefingSlug: string
@@ -32,7 +35,7 @@ type Entry = {
  *
  *  - Left pill: name of the section currently in view + chevron, opens a
  *    bottom Sheet listing every section.
- *  - Right buttons: Notes and Ask AI.
+ *  - Right FABs: Share (opens the share drawer), Add notes, and Ask AI.
  *
  * Tapping an entry scrolls to that section on the same page; the Sheet
  * closes on tap.
@@ -42,7 +45,12 @@ export default function MobileBottomBar({
   items,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
+  // `openAddNoteTopLevel` / `openCardLevelChat` replaced the older
+  // `openNotesSurface` / `openChatsSurface` API on `develop` and now
+  // require an active card; the share drawer is independent of that.
+  const { openAddNoteTopLevel, openCardLevelChat, activeCard } =
+    useAnnotationsCtx()
+  const { canShare, openShareDrawer } = useShareScope()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -203,18 +211,44 @@ export default function MobileBottomBar({
           </SheetContent>
         </Sheet>
 
-        <Button
+        {canShare && (
+          <IconButton
+            type="button"
+            size="medium"
+            variant="outline"
+            aria-label="Share briefing"
+            onClick={openShareDrawer}
+          >
+            <Share2Icon className="size-5" aria-hidden />
+          </IconButton>
+        )}
+        <IconButton
           type="button"
+          size="medium"
           variant="outline"
-          onClick={() => openNotesSurface()}
+          aria-label={
+            activeCard
+              ? `Add a note to ${activeCard.title}`
+              : 'Click a card to make it active first'
+          }
+          onClick={openAddNoteTopLevel}
+          disabled={!activeCard}
         >
-          <MessageSquare className="size-4" aria-hidden />
-          Notes
-        </Button>
-        <Button type="button" onClick={() => openChatsSurface()}>
-          <Sparkles className="size-4" aria-hidden />
-          Ask AI
-        </Button>
+          <MessageSquare className="size-5" aria-hidden />
+        </IconButton>
+        <IconButton
+          type="button"
+          size="medium"
+          aria-label={
+            activeCard
+              ? `Ask AI about ${activeCard.title}`
+              : 'Click a card to make it active first'
+          }
+          onClick={openCardLevelChat}
+          disabled={!activeCard}
+        >
+          <Sparkles className="size-5" aria-hidden />
+        </IconButton>
       </div>
     </div>
   )

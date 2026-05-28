@@ -188,8 +188,12 @@ describe('OfficeSelectionStep', () => {
     await waitFor(() => {
       expect(onSelect).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          raceId: 'race-1',
-          positionId: 'pos-1',
+          // After hydration, raceId is the BallotReady race hash returned by
+          // /race-by-position (no longer overridden by the lean search row's id).
+          // positionId prefers brPositionId to stay aligned with `rowKey` so the
+          // radio's selected key matches the row's key after hydration.
+          raceId: 'race-server',
+          positionId: 'br-pos-1',
           positionName: 'City Council',
           officeTermLength: '4 years',
           electionDay: '2026-11-03',
@@ -318,5 +322,50 @@ describe('OfficeSelectionStep', () => {
   it('shows an empty state until a search has been run', () => {
     renderStep()
     expect(screen.getByText(/enter your zip code/i)).toBeInTheDocument()
+  })
+
+  it('pre-highlights the matching radio when mounted with a persisted selected office', async () => {
+    // selectedRowKey(selected) must equal rowKey(race) for the lean list row
+    // to render checked on first render — covers the page-reload restore path
+    // for campaigns saved in the new BR-hash format.
+    mockClientFetch.mockResolvedValueOnce({
+      data: [
+        sampleRace(),
+        sampleRace({
+          id: 'race-2',
+          brPositionId: 'br-pos-2',
+          position: {
+            id: 'pos-2',
+            name: /mayor election date/i,
+            level: 'local',
+            state: 'WY',
+            electionFrequencies: [{ frequency: 4 }],
+            partisanType: 'nonpartisan',
+          },
+        }),
+      ],
+      ok: true,
+    } as unknown as Awaited<ReturnType<typeof clientFetch>>)
+
+    renderStep({
+      zip: '82001',
+      selected: {
+        raceId: 'persisted-br-hash',
+        positionId: 'br-pos-2',
+        positionName: 'Mayor',
+        electionDay: '2026-11-03',
+        partisanType: 'nonpartisan',
+      },
+    })
+
+    const mayorRadio = await screen.findByRole('radio', {
+      name: /mayor election date/i,
+    })
+    const councilRadio = await screen.findByRole('radio', {
+      name: /city council election date/i,
+    })
+
+    expect(mayorRadio).toBeChecked()
+    expect(councilRadio).not.toBeChecked()
   })
 })
