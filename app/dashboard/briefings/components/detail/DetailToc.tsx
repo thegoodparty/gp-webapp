@@ -29,16 +29,15 @@ type Entry = {
  * Sidebar TOC. All agenda items render inline on the briefing detail
  * page, so the TOC scrolls within the page rather than navigating.
  *
- * The active entry is whichever card the user most recently clicked —
- * via the legend or via the card itself. General scrolling does NOT
- * change the active card, so the legend stays in sync with user intent
- * rather than scroll position.
+ * The active entry is owned by `ActiveCardScrollSpy`, which tracks scroll
+ * position. Clicking an entry only triggers the smooth-scroll — the spy
+ * updates the highlight as the page passes each card on the way down.
  */
 export default function DetailToc({
   briefingSlug,
   items,
 }: Props): React.JSX.Element {
-  const { activeCard, setActiveCard } = useAnnotationsCtx()
+  const { activeCard } = useAnnotationsCtx()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -65,12 +64,12 @@ export default function DetailToc({
   function onJump(e: React.MouseEvent<HTMLAnchorElement>, entry: Entry) {
     if (typeof window === 'undefined') return
     e.preventDefault()
-    setActiveCard({
-      key: entry.key,
-      jsonPath: entry.jsonPath,
-      titleJsonPath: entry.titleJsonPath,
-      title: entry.label,
-    })
+    // Don't preemptively mark the destination as active. The scrollspy
+    // updates `activeCard` as the smooth-scroll passes each card, so an
+    // up-front `setActiveCard` would only flash the destination as active
+    // for one frame before the spy rewinds the highlight back to the card
+    // currently at the active line. Letting the spy own the transition
+    // produces a single continuous scroll-through highlight.
     const target = document.getElementById(entry.domId)
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
