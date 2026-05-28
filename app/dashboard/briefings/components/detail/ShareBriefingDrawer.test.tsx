@@ -90,7 +90,7 @@ describe('<ShareBriefingDrawer>', () => {
       screen.getByRole('link', { name: /share via message/i }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: /download pdf/i }),
+      screen.getByRole('button', { name: /download pdf/i }),
     ).toBeInTheDocument()
   })
 
@@ -123,11 +123,31 @@ describe('<ShareBriefingDrawer>', () => {
     )
   })
 
-  it('Download button links to the same share URL with the download hint', () => {
+  it('Download button fetches the share URL and triggers a save-as via a blob', async () => {
+    // gp-api serves the PDF with `Content-Disposition: inline`, which makes
+    // `<a download>` unreliable across browsers. The drawer fetches the
+    // bytes and triggers a download against an object URL instead.
+    const pdfBytes = new Uint8Array([1, 2, 3])
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      blob: async () => new Blob([pdfBytes], { type: 'application/pdf' }),
+    }))
+    vi.stubGlobal('fetch', fetchMock)
+    const createObjectURL = vi
+      .spyOn(URL, 'createObjectURL')
+      .mockReturnValue('blob:mock-url')
+    const revokeObjectURL = vi
+      .spyOn(URL, 'revokeObjectURL')
+      .mockReturnValue(undefined)
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click')
+
     renderOpen()
-    const download = screen.getByRole('link', { name: /download pdf/i })
-    expect(download.getAttribute('href')).toBe(SHARE_URL)
-    expect(download.hasAttribute('download')).toBe(true)
+    await userEvent.click(screen.getByRole('button', { name: /download pdf/i }))
+
+    expect(fetchMock).toHaveBeenCalledWith(SHARE_URL, expect.any(Object))
+    expect(createObjectURL).toHaveBeenCalledTimes(1)
+    expect(clickSpy).toHaveBeenCalledTimes(1)
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
   })
 
   it('Copy link writes the share URL to the clipboard', async () => {
