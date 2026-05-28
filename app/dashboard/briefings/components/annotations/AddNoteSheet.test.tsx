@@ -43,6 +43,75 @@ function makeEditAnnotation(
   }
 }
 
+describe('<AddNoteSheet> card-level section header', () => {
+  // Anchored notes get the full AnchoredQuote (label + quoted text); the
+  // tests below assert the parallel behavior for card-level notes — no
+  // quote, but the same uppercase section header so the user can see
+  // which card the note belongs to.
+  it('shows the active card title as an uppercase section label when creating a card-level note (anchor null, no quote)', () => {
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(screen.getByText('EXECUTIVE SUMMARY')).toBeInTheDocument()
+    // No quoted text — no `“"` (curly open-quote) on the page.
+    expect(screen.queryByText(/“/)).not.toBeInTheDocument()
+  })
+
+  it('shows the section label (derived from jsonPath) when editing a card-level note that has no offsets', () => {
+    const annotation: Annotation = {
+      id: 'ann_card_edit',
+      kind: 'note',
+      resourceType: 'briefing',
+      resourceId: 'briefing_1',
+      authorUserId: 1,
+      // `/executive_summary` → sectionLabelFromPath returns
+      // "EXECUTIVE SUMMARY" without needing `briefingItems`.
+      jsonPath: '/executive_summary',
+      start: null,
+      end: null,
+      createdAt: '2026-05-26T00:00:00.000Z',
+      updatedAt: '2026-05-26T00:00:00.000Z',
+      note: {
+        id: 'note_card_edit',
+        body: 'card-level body',
+        attachments: [],
+        createdAt: '2026-05-26T00:00:00.000Z',
+        updatedAt: '2026-05-26T00:00:00.000Z',
+      },
+    }
+    const sheet: SheetState = { kind: 'add_note_edit', annotation }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle={null}
+      />,
+    )
+
+    expect(screen.getByText('EXECUTIVE SUMMARY')).toBeInTheDocument()
+  })
+})
+
 describe('<AddNoteSheet> error surfacing', () => {
   it('shows an inline error when onCreate rejects, keeps the sheet open, preserves the body, and reports to Sentry', async () => {
     reportErrorToSentryMock.mockReset()
