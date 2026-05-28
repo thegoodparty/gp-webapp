@@ -864,6 +864,7 @@ export default function AskAiChatBody({
           </div>
           <Button
             type="button"
+            size="small"
             onClick={() => {
               void onSend()
             }}

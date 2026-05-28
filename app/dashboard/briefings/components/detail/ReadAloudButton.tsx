@@ -76,6 +76,7 @@ export default function ReadAloudButton({
   return (
     <Button
       variant="outline"
+      size="small"
       aria-label={ariaLabel}
       aria-busy={status === 'loading'}
       disabled={status === 'loading'}

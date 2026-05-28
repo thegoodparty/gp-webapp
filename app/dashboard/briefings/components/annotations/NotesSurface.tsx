@@ -404,6 +404,7 @@ export function NotesSurface({
                   error={attachmentError}
                 />
                 <Button
+                  size="small"
                   onClick={() => startEdit(current)}
                   className="w-full gap-2"
                 >

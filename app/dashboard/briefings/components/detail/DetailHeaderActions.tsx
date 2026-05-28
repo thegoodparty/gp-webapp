@@ -44,6 +44,7 @@ export default function DetailHeaderActions(): React.JSX.Element | null {
       </IconButton>
       <Button
         variant="outline"
+        size="small"
         onClick={openShareDrawer}
         className="hidden lg:inline-flex"
       >

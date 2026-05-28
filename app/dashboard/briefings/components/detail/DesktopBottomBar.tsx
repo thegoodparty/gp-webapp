@@ -25,6 +25,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
       <div className="mx-auto flex w-full max-w-[1120px] items-center justify-end gap-2 px-8 py-3">
         <Button
           variant="outline"
+          size="small"
           onClick={openAddNoteTopLevel}
           disabled={!activeCard}
           title={
@@ -37,6 +38,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
           Notes
         </Button>
         <Button
+          size="small"
           onClick={openCardLevelChat}
           disabled={!activeCard}
           title={

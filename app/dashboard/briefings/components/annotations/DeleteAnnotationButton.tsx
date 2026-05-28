@@ -74,7 +74,7 @@ export function DeleteAnnotationButton({
     <>
       <Button
         variant="outline"
-        size="large"
+        size="small"
         onClick={() => {
           setErrorMessage(null)
           setPendingDelete(current)
