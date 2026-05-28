@@ -143,6 +143,30 @@ export default function ShareBriefingDrawer({
     }, COPIED_FEEDBACK_MS)
   }, [writeClipboard])
 
+  // A plain `<a href={pdfUrl} download>` is unreliable here: gp-api serves
+  // the PDF with `Content-Disposition: inline`, and browsers — especially
+  // Chrome with its built-in PDF viewer — frequently ignore the `download`
+  // hint and open the file inline instead. Fetching the bytes and
+  // triggering a download against a blob URL forces save-as behavior
+  // regardless of the server's disposition header.
+  const onDownload = useCallback(async () => {
+    try {
+      const res = await fetch(shareUrl, { credentials: 'include' })
+      if (!res.ok) return
+      const blob = await res.blob()
+      const objectUrl = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = objectUrl
+      anchor.download = `${briefing.title || 'briefing'}.pdf`
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      URL.revokeObjectURL(objectUrl)
+    } catch {
+      // Network/parse failures leave the UI unchanged; the user can retry.
+    }
+  }, [shareUrl, briefing.title])
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -183,13 +207,12 @@ export default function ShareBriefingDrawer({
             </a>
           </ShareAction>
 
-          <ShareAction asChild label="Download" ariaLabel="Download PDF">
-            {/* `download` hints the browser to save the file; the server
-                sends `Content-Disposition: inline` so a non-saving open
-                in a new tab also works fine. */}
-            <a href={shareUrl} download>
-              <DownloadIcon className="size-5" aria-hidden />
-            </a>
+          <ShareAction
+            label="Download"
+            ariaLabel="Download PDF"
+            onClick={onDownload}
+          >
+            <DownloadIcon className="size-5" aria-hidden />
           </ShareAction>
         </div>
 
