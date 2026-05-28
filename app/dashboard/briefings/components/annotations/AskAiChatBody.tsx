@@ -511,6 +511,14 @@ export default function AskAiChatBody({
   // the user's optimistic bubble to the history.
   const executeUserTurn = useCallback(
     async (content: string, clientMessageId: string) => {
+      // Show the "Thinking..." indicator immediately — covers the
+      // deferred-create gap (createBriefingChat + verification read)
+      // before runStream's own setStreaming kicks in. Without this the
+      // user sees their bubble, then ~1s of silence, then "Thinking..."
+      // pops in — which they read as jarring. runStream re-sets these
+      // to the same values, so this is purely a pre-flight signal.
+      setSending(true)
+      setStreaming({ role: 'assistant', content: '' })
       let id = annotationId
       if (!id) {
         id = await ensureAnnotationId()
@@ -522,6 +530,10 @@ export default function AskAiChatBody({
             lastClientMessageId: clientMessageId,
             kind: 'init',
           })
+          // Clear the pre-flight indicators so the user isn't stuck
+          // looking at "Thinking..." when the chat couldn't start.
+          setStreaming(null)
+          setSending(false)
           sendingRef.current = false
           return
         }
@@ -656,7 +668,15 @@ export default function AskAiChatBody({
           }
           data-testid="ask-ai-conversation"
         >
-          {creating && (
+          {/* "Loading chat..." is for the override path (reopening an
+              existing chat while we fetch its message list). In the
+              deferred-create path the user has already pushed their own
+              bubble onto `history` synchronously inside `sendContent`,
+              so showing "Loading chat..." above their message would
+              read as confusing — the chat is already underway. Gate on
+              empty history so the text only shows when there's nothing
+              else to look at. */}
+          {creating && history.length === 0 && !streaming && (
             <div className="text-sm text-muted-foreground">Loading chat...</div>
           )}
 

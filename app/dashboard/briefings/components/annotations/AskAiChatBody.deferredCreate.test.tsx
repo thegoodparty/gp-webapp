@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import type {
@@ -149,6 +149,63 @@ describe('<AskAiChatBody> deferred creation', () => {
       annotationId: 'ann_new_1',
       conversationId: 'conv_new_1',
     })
+  })
+
+  it('shows the "Thinking..." indicator and hides "Loading chat..." during the deferred-create gap', async () => {
+    const user = userEvent.setup()
+    // Hold create + verification read in flight so we can observe the
+    // gap UI between user click and runStream firing.
+    let resolveCreate!: (v: {
+      annotationId: string
+      conversationId: string
+    }) => void
+    createMock.mockImplementation(
+      () =>
+        new Promise<{ annotationId: string; conversationId: string }>(
+          (resolve) => {
+            resolveCreate = resolve
+          },
+        ),
+    )
+    listMessagesMock.mockResolvedValue([])
+    streamMessageMock.mockReturnValue(makeOkStream())
+
+    render(
+      <AskAiChatBody
+        meetingDate={MEETING_DATE}
+        anchor={null}
+        composerVariant="block"
+        active
+      />,
+    )
+
+    const textarea = await screen.findByLabelText(/ask assistant message/i)
+    await user.type(textarea, 'pre-flight gap test')
+    await user.click(screen.getByRole('button', { name: /ask assistant/i }))
+
+    // Pre-create gap: the user's bubble is inside the conversation
+    // scroll region (the textarea also still contains the typed text
+    // until `setComposer('')` runs post-send, so we scope to the
+    // conversation testid to avoid double-matches), AND "Thinking..."
+    // is already showing, NOT the override-path "Loading chat..." text.
+    const conversation = await screen.findByTestId('ask-ai-conversation')
+    expect(
+      within(conversation).getByText('pre-flight gap test'),
+    ).toBeInTheDocument()
+    expect(
+      await within(conversation).findByText(/^thinking\.\.\.$/i),
+    ).toBeInTheDocument()
+    expect(
+      within(conversation).queryByText(/loading chat/i),
+    ).not.toBeInTheDocument()
+
+    // Resolve create so the rest of the flow can finish without dangling
+    // async work.
+    resolveCreate({
+      annotationId: 'ann_gap',
+      conversationId: 'conv_gap',
+    })
+    await waitFor(() => expect(streamMessageMock).toHaveBeenCalledTimes(1))
   })
 
   it('does NOT call onChatCreated when the first stream errors before completing — keeps the body alive for retry', async () => {
