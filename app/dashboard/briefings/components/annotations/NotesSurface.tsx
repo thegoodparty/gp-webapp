@@ -341,7 +341,6 @@ export function NotesSurface({
             {isEditingCurrent ? null : (
               <>
                 <NoteAttachmentPicker
-                  triggerVariant="button"
                   items={[]}
                   onAdd={(file) => {
                     setAttachmentError(null)

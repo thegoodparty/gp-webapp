@@ -9,7 +9,7 @@ import { useAttachmentDownloadUrl } from '@shared/briefings/use-attachment-downl
  */
 type CommonItem = {
   id: string
-  /** File name; rendered as `aria-label` / `title` on the thumbnail. */
+  /** File name; rendered as the row's primary label. */
   label: string
   /** Mime type drives the image-preview vs file-icon thumbnail choice. */
   mimeType: string
@@ -29,7 +29,7 @@ type CommonItem = {
  *
  * Same shape powers both the editable picker and the read-only view in
  * NotesSurface; pass `onRemove` to render the X overlay, omit it to
- * render a view-only tile.
+ * render a view-only row.
  */
 export type AttachmentItem =
   | (CommonItem & { kind: 'staged'; file: File })
@@ -42,8 +42,8 @@ export type AttachmentItem =
 type Props = {
   item: AttachmentItem
   /**
-   * When supplied, renders an X overlay that calls back with the item
-   * id. Omit (or pass undefined) for a read-only thumbnail — used by
+   * When supplied, renders an X button at the right of the row that
+   * calls back with the item id. Omit for a read-only row — used by
    * the note-view surface where attachments are display-only.
    */
   onRemove?: (id: string) => void
@@ -54,10 +54,11 @@ type Props = {
 const isImageMime = (mime: string): boolean => mime.startsWith('image/')
 
 /**
- * One attachment rendered as a clickable thumbnail tile. Click opens
- * the file in a new tab via the resolved URL (blob URL for staged
- * items, signed S3 URL for server items). Layout is fixed-size so a
- * grid of tiles doesn't reflow as URLs resolve.
+ * One attachment rendered as a full-width clickable row: small thumbnail
+ * on the left (image preview for image MIMEs, document icon for the
+ * rest), filename in the middle, optional remove (X) button on the
+ * right. Click the row to open the file in a new tab via the resolved
+ * URL (blob URL for staged items, signed S3 URL for server items).
  */
 export default function AttachmentThumbnail({
   item,
@@ -90,7 +91,7 @@ export default function AttachmentThumbnail({
     return () => URL.revokeObjectURL(url)
   }, [stagedFile])
 
-  // Server items: lazy-fetch the signed URL. Disabled for staged tiles
+  // Server items: lazy-fetch the signed URL. Disabled for staged rows
   // so we don't fire a phantom request.
   const isServer = item.kind === 'server'
   const annotationId = isServer ? item.annotationId : ''
@@ -105,13 +106,13 @@ export default function AttachmentThumbnail({
     item.kind === 'staged' ? objectUrl : downloadUrlQuery.data?.url ?? null
   const isImage = isImageMime(item.mimeType)
 
-  const tileClass =
-    'group relative inline-flex size-20 shrink-0 flex-col overflow-hidden rounded-lg border border-border bg-muted text-muted-foreground'
+  const rowClass =
+    'group relative flex w-full items-center gap-3 rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-foreground'
 
-  // Icon-area sizing: the parent is a fixed-size flex column with a label
-  // strip at the bottom, so the icon container uses `min-h-0 flex-1` to
-  // claim the remaining space and centers its child both axes.
-  const iconAreaClass = 'flex min-h-0 flex-1 items-center justify-center'
+  // Square thumbnail well: the image fills via `object-cover`, the
+  // document/loading icon centers inside.
+  const thumbWellClass =
+    'flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted text-muted-foreground'
 
   // For images, fall back to a spinner (not the document icon) while we
   // resolve the URL — covers both the staged blob-URL effect setting on
@@ -121,57 +122,66 @@ export default function AttachmentThumbnail({
       // eslint-disable-next-line @next/next/no-img-element -- presigned S3 / blob URL, not a stable Next image route
       <img src={url} alt={item.label} className="size-full object-cover" />
     ) : isImage ? (
-      <Loader2 className="size-6 animate-spin" aria-hidden />
+      <Loader2 className="size-5 animate-spin" aria-hidden />
     ) : (
-      <FileText className="size-7" aria-hidden />
+      <FileText className="size-5" aria-hidden />
     )
 
   const showRemove = onRemove !== undefined
 
+  // The link wraps the thumb + filename so the click target is the
+  // whole row except the X button. When there's no URL yet (e.g.
+  // signed-URL still loading), we render the same layout without an
+  // anchor so the row doesn't briefly turn into a non-clickable shell
+  // and back.
+  const labelText = (
+    <span className="min-w-0 flex-1 truncate" title={item.label}>
+      {item.label}
+    </span>
+  )
+
   return (
-    <div className={tileClass} title={item.label}>
+    <div className={rowClass}>
       {url ? (
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className={iconAreaClass}
+          className="flex min-w-0 flex-1 items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={`Open ${item.label}`}
         >
-          {thumbnailContent}
+          <span className={thumbWellClass}>{thumbnailContent}</span>
+          {labelText}
         </a>
       ) : (
-        <span className={iconAreaClass}>{thumbnailContent}</span>
+        <span className="flex min-w-0 flex-1 items-center gap-3">
+          <span className={thumbWellClass}>{thumbnailContent}</span>
+          {labelText}
+        </span>
       )}
-      {/* Filename strip — single truncated line at the bottom of the
-          square. `text-[10px]` keeps an ~12-char filename readable in the
-          80px-wide tile without forcing the whole pill any wider. */}
-      <span className="block w-full truncate border-t border-border bg-card px-1 py-0.5 text-center text-[10px] leading-tight text-muted-foreground">
-        {item.label}
-      </span>
       {showRemove ? (
         item.busy ? (
           <span
             aria-hidden
-            className="absolute right-1 top-1 inline-flex size-5 items-center justify-center rounded-full bg-card text-muted-foreground"
+            className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
           >
-            <Loader2 className="size-3 animate-spin" />
+            <Loader2 className="size-3.5 animate-spin" />
           </span>
         ) : (
           <button
             type="button"
             onClick={(e) => {
               // Stops both bubble and default so the click doesn't also
-              // fire the thumbnail's `<a>` and open a tab.
+              // fire the row's `<a>` and open a tab.
               e.stopPropagation()
               e.preventDefault()
               onRemove(item.id)
             }}
             disabled={disabled}
             aria-label={`Remove ${item.label}`}
-            className="absolute right-1 top-1 inline-flex size-5 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <X className="size-3" aria-hidden />
+            <X className="size-3.5" aria-hidden />
           </button>
         )
       ) : null}
