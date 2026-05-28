@@ -96,6 +96,11 @@ export default function ActiveCardScrollSpy({
   const lastSpyPickKeyRef = useRef<string | null>(null)
   const isLockedRef = useRef(false)
   const lockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Key whose external set triggered the current lock. Used by the safety
+  // timer to distinguish "smooth-scroll completed" (scroll events arrived,
+  // viewport moved) from "no scroll happened at all" (card body click on
+  // an already-visible card).
+  const lockedForKeyRef = useRef<string | null>(null)
   // The scroll-watch effect publishes its `pick` function here so the
   // lock release path can run a final pick to sync the highlight to the
   // actual landed scroll position.
@@ -118,10 +123,17 @@ export default function ActiveCardScrollSpy({
     if (!activeCard) return
     if (activeCard.key === lastSpyPickKeyRef.current) return
     isLockedRef.current = true
+    lockedForKeyRef.current = activeCard.key
     if (lockTimerRef.current !== null) clearTimeout(lockTimerRef.current)
     lockTimerRef.current = setTimeout(() => {
       isLockedRef.current = false
       lockTimerRef.current = null
+      // Skip the reconcile pick if the active card is still the one that
+      // triggered the lock — no scroll events arrived (e.g. a card body
+      // click on an already-visible card), so the user's selection is
+      // the definitive state and running pick() would overwrite it with
+      // the spy's scroll-position guess.
+      if (activeKeyRef.current === lockedForKeyRef.current) return
       runPickRef.current?.()
     }, LOCK_MAX_MS)
   }, [activeCard])
