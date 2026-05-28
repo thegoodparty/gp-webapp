@@ -404,9 +404,8 @@ export function NotesSurface({
                   error={attachmentError}
                 />
                 <Button
-                  size="small"
                   onClick={() => startEdit(current)}
-                  className="w-full gap-2"
+                  className="w-full gap-2 text-sm"
                 >
                   <PencilIcon className="size-4" aria-hidden="true" />
                   Edit Note

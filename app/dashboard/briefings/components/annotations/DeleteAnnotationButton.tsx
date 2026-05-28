@@ -74,13 +74,13 @@ export function DeleteAnnotationButton({
     <>
       <Button
         variant="outline"
-        size="small"
+        size="large"
         onClick={() => {
           setErrorMessage(null)
           setPendingDelete(current)
         }}
         disabled={disabled}
-        className="w-full gap-2 border-transparent bg-transparent text-destructive hover:bg-destructive/10 hover:text-destructive"
+        className="w-full gap-2 border-transparent bg-transparent text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
       >
         <Trash2Icon className="size-4" aria-hidden="true" />
         {label}

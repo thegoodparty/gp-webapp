@@ -864,7 +864,6 @@ export default function AskAiChatBody({
           </div>
           <Button
             type="button"
-            size="small"
             onClick={() => {
               void onSend()
             }}
@@ -872,7 +871,7 @@ export default function AskAiChatBody({
             loading={sending || creating}
             icon={<Sparkles className="size-4" aria-hidden />}
             iconPosition="left"
-            className="w-full"
+            className="w-full text-sm"
           >
             Ask Assistant
           </Button>
