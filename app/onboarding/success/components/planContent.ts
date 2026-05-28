@@ -1,4 +1,5 @@
 import { dateUsHelper } from 'helpers/dateHelper'
+import type { StrategicLandscapeData } from 'gpApi/api-endpoints'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -57,6 +58,11 @@ export interface PlanInput {
   hubspotIncumbent: string | null
   filingFee: number | null
   filingRequirementsText: string | null
+  // Strategic landscape from /campaignStrategy/mine/strategic-landscape.
+  // Undefined while polling or on error; when present takes precedence over
+  // the legacy runningAgainst + hubspotIncumbent fallback for opponents and
+  // is the only source for opportunities + challenges.
+  strategicLandscape?: StrategicLandscapeData
 }
 
 export interface KeyTarget {
@@ -136,12 +142,16 @@ export interface GlossaryRow {
   definition: string
 }
 
+// Mirrors `StrategicLandscapeOpponent` from gp-api. Some pre-strategy
+// fallbacks (hubspotIncumbent, runningAgainst) still produce records with
+// `politicalSummary === ''` and `keyFacts === []` when no rich data is
+// available — the renderer hides empty fields.
 export interface Opponent {
-  name: string
-  party: string
-  isIncumbent: boolean
-  lastVoteShare: string
-  positions: string[]
+  fullName: string
+  partyAffiliation: string
+  incumbent: boolean | null
+  politicalSummary: string
+  keyFacts: string[]
   websites: string[]
 }
 
@@ -198,8 +208,8 @@ export interface PlanData {
   voterInsightsIssues: VoterInsightIssue[]
   voterInsightsSource: 'candidate' | 'stub'
 
-  opportunities: { title: string; body: string }[]
-  challenges: { title: string; body: string }[]
+  opportunities: string[]
+  challenges: string[]
   opponents: Opponent[]
   incumbent: Opponent | null
 
@@ -661,62 +671,44 @@ const buildPlanAtAGlance = (
   },
 ]
 
-const OPPORTUNITIES = [
-  {
-    title: 'Low absolute projected votes needed to win.',
-    body: 'A small win number is a target, not a ceiling. A disciplined turnout operation, not a media war, is the decisive lever (see Section 4).',
-  },
-  {
-    title: 'Accessible earned media.',
-    body: 'Credible local outlets cover town-council races closely. A single op-ed or profile can move a meaningful share of the votes (see Section 7).',
-  },
-  {
-    title: 'Strong civic calendar.',
-    body: 'High-value in-person opportunities fall inside the race window (see Section 7).',
-  },
-]
-
-const CHALLENGES = [
-  {
-    title: 'Vote-splitting risk.',
-    body: 'With multiple candidates on the ballot, a consolidated opposing base can win with as little as 35–40% of the votes. Our plan assumes the more conservative win-number target to absorb this risk.',
-  },
-  {
-    title: 'No party ballot affiliation.',
-    body: 'Nonpartisan ballots mean voters need repeated, standalone exposure to your name to recognize it when marking the ballot. Name recognition has to be built one voter contact at a time.',
-  },
-  {
-    title: 'Compressed contact window.',
-    body: 'Absentee, mail, or early ballots distribute weeks before Election Day. Voters who return early cannot be persuaded late — early contact is non-negotiable.',
-  },
-]
-
 const buildOpponents = (
+  strategicLandscape: StrategicLandscapeData | undefined,
   runningAgainst: PlanOpponentInput[],
   hubspotIncumbentName: string | null,
 ): Opponent[] => {
-  // Trust user-entered `runningAgainst` first. If absent but HubSpot shows an
-  // incumbent name, synthesize a single-row Opponent flagged as the incumbent
-  // so downstream variants can branch correctly.
+  // Strategy data is the source of truth when available — it covers the
+  // full opponent shape (politicalSummary, keyFacts, websites). Fall back
+  // to user-entered runningAgainst / HubSpot incumbent only while the
+  // strategy endpoint is still pending or has errored.
+  if (strategicLandscape?.opponents.length) {
+    return strategicLandscape.opponents.map((o) => ({
+      fullName: o.fullName,
+      partyAffiliation: o.partyAffiliation,
+      incumbent: o.incumbent,
+      politicalSummary: o.politicalSummary,
+      keyFacts: o.keyFacts,
+      websites: o.websites,
+    }))
+  }
   const fromRunningAgainst: Opponent[] = runningAgainst
     .filter((o) => (o.name ?? '').trim() !== '')
     .map((o) => ({
-      name: o.name?.trim() ?? '',
-      party: o.party?.trim() || '{party}',
-      isIncumbent: false,
-      lastVoteShare: '{last_vote_share}',
-      positions: o.description ? [o.description] : [],
+      fullName: o.name?.trim() ?? '',
+      partyAffiliation: o.party?.trim() ?? '',
+      incumbent: false,
+      politicalSummary: o.description?.trim() ?? '',
+      keyFacts: [],
       websites: [],
     }))
   if (fromRunningAgainst.length > 0) return fromRunningAgainst
   if (hubspotIncumbentName && hubspotIncumbentName.trim() !== '') {
     return [
       {
-        name: hubspotIncumbentName.trim(),
-        party: '{party}',
-        isIncumbent: true,
-        lastVoteShare: '{last_vote_share}',
-        positions: [],
+        fullName: hubspotIncumbentName.trim(),
+        partyAffiliation: '',
+        incumbent: true,
+        politicalSummary: '',
+        keyFacts: [],
         websites: [],
       },
     ]
@@ -973,9 +965,13 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     eventCount,
   )
 
-  const opponents = buildOpponents(input.runningAgainst, input.hubspotIncumbent)
+  const opponents = buildOpponents(
+    input.strategicLandscape,
+    input.runningAgainst,
+    input.hubspotIncumbent,
+  )
   const opponentCount = opponents.length
-  const incumbent = opponents.find((o) => o.isIncumbent) ?? null
+  const incumbent = opponents.find((o) => o.incumbent === true) ?? null
 
   const { issues: voterInsightsIssues, source: voterInsightsSource } =
     buildVoterInsights(input.customIssues, input.stances)
@@ -1081,8 +1077,10 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     keyDates,
     voterInsightsIssues,
     voterInsightsSource,
-    opportunities: OPPORTUNITIES,
-    challenges: CHALLENGES,
+    // Strategy data overrides — empty arrays while polling / on error, so
+    // Section 2 should suppress its render in those cases (see PlanSections).
+    opportunities: input.strategicLandscape?.opportunities ?? [],
+    challenges: input.strategicLandscape?.challenges ?? [],
     opponents,
     incumbent,
     metrics,

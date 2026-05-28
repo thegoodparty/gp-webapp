@@ -49,6 +49,29 @@ export interface MeetingBriefingAwaitingDto {
   durationMinutes: number
 }
 
+// Mirrors `OpponentSchema` in gp-api
+// (`src/campaignStrategy/schemas/strategicLandscape.schema.ts`). `incumbent`
+// is nullable because the LLM may legitimately not know.
+export interface StrategicLandscapeOpponent {
+  fullName: string
+  partyAffiliation: string
+  incumbent: boolean | null
+  politicalSummary: string
+  keyFacts: string[]
+  websites: string[]
+}
+
+export interface StrategicLandscapeData {
+  opportunities: string[]
+  challenges: string[]
+  opponents: StrategicLandscapeOpponent[]
+}
+
+// Discriminated union matching the polling response on gp-api.
+export type StrategicLandscapeResponse =
+  | { status: 'ready'; data: StrategicLandscapeData }
+  | { status: 'generating' }
+
 export type APIEndpoints = {
   'GET /v1/users/me': {
     Request: {}
@@ -94,6 +117,15 @@ export type APIEndpoints = {
       pin: string
     }
     Response: void
+  }
+
+  // Polling endpoint. 200 → ready, 202 → still generating (poll again ~3s).
+  // First-time generation runs three Gemini pipelines in parallel; on cache
+  // hit subsequent calls return 200 immediately. Mirrors
+  // `StrategicLandscapeResponseSchema` on gp-api.
+  'POST /v1/campaignStrategy/mine/strategic-landscape': {
+    Request: {}
+    Response: StrategicLandscapeResponse
   }
 
   'GET /v1/elected-office/current': {

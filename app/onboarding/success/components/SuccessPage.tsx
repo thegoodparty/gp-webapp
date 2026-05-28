@@ -15,6 +15,7 @@ import PlanSections from './PlanSections'
 import SharePlanModal from './SharePlanModal'
 import { buildPlanData, type PlanInput } from './planContent'
 import { downloadCampaignPlanPdf } from '../pdf/downloadCampaignPlanPdf'
+import { useStrategicLandscape } from '../hooks/useStrategicLandscape'
 
 interface SuccessPageProps {
   initialUser: User | null
@@ -67,6 +68,10 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
   const filingFee = metrics?.filingFee ?? null
   const filingRequirementsText = metrics?.filingRequirementsText ?? null
+  // 30-90s first generation, instant on cache hit. Hook returns
+  // { data | undefined, isGenerating, isPending, isError } — PlanSections
+  // decides skeleton vs hidden based on those flags.
+  const strategy = useStrategicLandscape()
   // The BR position ID is in-memory on `answers.structuredOffice.positionId`
   // during onboarding. After pledge submit, `OnboardingFlow` persists the
   // whole `answers` object under `campaign.data.onboarding`, so it survives
@@ -107,6 +112,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       hubspotIncumbent,
       filingFee,
       filingRequirementsText,
+      strategicLandscape: strategy.data,
     }
     return buildPlanData(input)
   }, [
@@ -128,6 +134,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     hubspotIncumbent,
     filingFee,
     filingRequirementsText,
+    strategy.data,
   ])
 
   const handleShare = () => setShareOpen(true)
@@ -163,6 +170,10 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
         <div className="mt-8 sm:mt-14">
           <PlanSections
             plan={plan}
+            strategyState={{
+              isGenerating: strategy.isPending || strategy.isGenerating,
+              isError: strategy.isError,
+            }}
             voterInsightsContext={{
               ballotReadyPositionId,
               city,

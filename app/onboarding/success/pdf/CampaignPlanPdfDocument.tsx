@@ -662,7 +662,7 @@ const theRaceCopy = (plan: PlanData): string => {
   }
   if (plan.incumbent) {
     const noun = plan.opponentCount === 1 ? 'opponent' : 'opponents'
-    return `You are running for ${plan.race}${district}. As of ${plan.planGenerationDate}, the race is ${electionTypeLabel} with ${plan.opponentCount} ${noun}, including the incumbent ${plan.incumbent.name}. Election Day is ${plan.electionDate}. Beating an incumbent requires giving voters a concrete reason to switch, not just an alternative to choose.`
+    return `You are running for ${plan.race}${district}. As of ${plan.planGenerationDate}, the race is ${electionTypeLabel} with ${plan.opponentCount} ${noun}, including the incumbent ${plan.incumbent.fullName}. Election Day is ${plan.electionDate}. Beating an incumbent requires giving voters a concrete reason to switch, not just an alternative to choose.`
   }
   const noun = plan.opponentCount === 1 ? 'opponent' : 'opponents'
   return `You are running for ${plan.race}${district}. As of ${plan.planGenerationDate}, the race is ${electionTypeLabel} with ${plan.opponentCount} ${noun}. Election Day is ${plan.electionDate}. Because the electorate is small and no party cue appears on the ballot, the race is decided by name recognition and turnout, not by ideological persuasion.`
@@ -762,11 +762,11 @@ export const CampaignPlanPdfDocument = ({
         <View style={styles.twoColRow}>
           <View style={styles.twoColCol}>
             <Text style={styles.h3}>Opportunities</Text>
-            <DefinitionList items={plan.opportunities} />
+            <Bullets items={plan.opportunities} />
           </View>
           <View style={styles.twoColCol}>
             <Text style={styles.h3}>Challenges</Text>
-            <DefinitionList items={plan.challenges} />
+            <Bullets items={plan.challenges} />
           </View>
         </View>
 
@@ -775,17 +775,16 @@ export const CampaignPlanPdfDocument = ({
           <Text style={styles.para}>{opposition}</Text>
         ) : (
           plan.opponents.map((opp) => (
-            <View key={opp.name} style={styles.para}>
-              <Text style={styles.paraBold}>{opp.name}</Text>
+            <View key={opp.fullName} style={styles.para}>
+              <Text style={styles.paraBold}>{opp.fullName}</Text>
               <Bullets
                 items={[
-                  `Party: ${opp.party}`,
-                  ...(opp.isIncumbent
-                    ? [
-                        `Incumbent — received ${opp.lastVoteShare} of the vote last cycle`,
-                      ]
+                  ...(opp.partyAffiliation
+                    ? [`Party: ${opp.partyAffiliation}`]
                     : []),
-                  ...opp.positions,
+                  ...(opp.incumbent === true ? ['Incumbent'] : []),
+                  ...(opp.politicalSummary ? [opp.politicalSummary] : []),
+                  ...opp.keyFacts,
                   ...opp.websites,
                 ]}
               />
