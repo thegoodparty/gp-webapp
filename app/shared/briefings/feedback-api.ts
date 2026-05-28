@@ -12,6 +12,8 @@ export interface ArtifactFeedback {
   submitterUserId: number
   artifactId: string
   feedback: ArtifactFeedbackKind
+  /** Optional free-text the submitter attached. `null` if none. */
+  comment: string | null
   createdAt: string
   updatedAt: string
 }
@@ -23,6 +25,7 @@ function fromApi(row: ApiArtifactFeedback): ArtifactFeedback {
     submitterUserId: row.submitter_user_id,
     artifactId: row.artifact_id,
     feedback: row.feedback,
+    comment: row.comment,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -41,10 +44,19 @@ export const briefingFeedbackApi = {
     meetingDate: string,
     itemId: string,
     feedback: ArtifactFeedbackKind,
+    // `undefined` (the default) means "leave any existing comment alone".
+    // Pass `null` to clear, a string to set/replace. Mirrors the API
+    // contract: `comment` is optional on the request body.
+    comment?: string | null,
   ): Promise<ArtifactFeedback> {
     const res = await clientRequest(
       'PUT /v1/meetings/:date/briefing/items/:itemId/feedback',
-      { date: meetingDate, itemId, feedback },
+      {
+        date: meetingDate,
+        itemId,
+        feedback,
+        ...(comment === undefined ? {} : { comment }),
+      },
     )
     return fromApi(res.data)
   },

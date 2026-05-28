@@ -23,7 +23,10 @@ export default function DetailHeader({ briefing }: Props): React.JSX.Element {
   const formattedDate = formatBriefingMeetingDate(briefing.meeting_date)
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
-      <div className="flex w-full items-start gap-3 px-4 py-4 lg:px-8">
+      {/* Match the body's content container (mx-auto max-w-[1120px] + same
+          padding) so the back arrow and Share button line up with the cards
+          below instead of sitting against the viewport edges. */}
+      <div className="mx-auto flex w-full max-w-[1120px] items-start gap-3 px-4 py-4 lg:px-8">
         <Link
           href={briefingsLandingHref()}
           aria-label="Back to meetings"

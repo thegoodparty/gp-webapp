@@ -888,6 +888,11 @@ export default function AnnotationsScope({
             annotationsQueryKey(meetingDate),
             (prev) => prev?.filter((a) => a.id !== ann.id),
           )
+          // Close the surface after a successful delete — the deleted
+          // chat is gone from the cycler, so keeping the sheet open
+          // would either show an empty state or jump to an unrelated
+          // chat. Match the user's mental model: confirm delete → done.
+          closeSheet()
         }}
       />
       <BugReportsSurface

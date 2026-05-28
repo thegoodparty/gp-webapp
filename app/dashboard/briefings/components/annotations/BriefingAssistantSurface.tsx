@@ -1,12 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type {
   Annotation,
   AnnotationAnchor,
   Item,
 } from '@shared/briefings/types'
-import { EMPTY_ANCHOR, isPageWideChat } from '@shared/briefings/anchorResolver'
+import {
+  EMPTY_ANCHOR,
+  isPageWideChat,
+  resolveQuoteFromAnchor,
+} from '@shared/briefings/anchorResolver'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import AskAiChatBody from './AskAiChatBody'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
@@ -117,6 +121,62 @@ export function BriefingAssistantSurface({
   // disabled so the user can't pull the annotation out from under an
   // in-flight stream / chat-create request.
   const [isStreaming, setIsStreaming] = useState(false)
+  // Track the freshly-minted chat id while we're still in pending-anchor
+  // (empty-state) mode. The empty-state `AskAiChatBody` fires
+  // `onAnnotationIdReady` the moment `createBriefingChat` resolves —
+  // which happens BEFORE the overlay swap (we defer `onChatCreated`
+  // until stream success to avoid mid-stream unmount). Without this,
+  // the Delete chat button only appears after the swap; users have
+  // observed the swap failing to fire reliably in production, so this
+  // also provides a fallback path: even if the swap never lands, the
+  // delete affordance is wired off the minted id directly.
+  const [emptyStateMintedId, setEmptyStateMintedId] = useState<string | null>(
+    null,
+  )
+  // Reset when the sheet closes or the overlay swaps away from the
+  // pending-anchor preempt — at that point the cycler-driven `current`
+  // takes over as the delete target.
+  useEffect(() => {
+    if (!pendingAnchor && emptyStateMintedId !== null) {
+      setEmptyStateMintedId(null)
+    }
+  }, [pendingAnchor, emptyStateMintedId])
+  // Synthesize a minimal annotation for the footer to render Delete
+  // chat against while the cycler still has empty items. We have the
+  // id (from the AskAiChatBody callback) and the anchor (from
+  // pendingAnchor); the other fields aren't read by DeleteAnnotation-
+  // Button or isPageWideChat, but typing them avoids a wider relaxation
+  // of the prop type. The button is disabled via `isStreaming` until
+  // the stream completes — see footer below.
+  const mintedAnnotation: EnrichedAnnotation | null =
+    emptyStateMintedId && pendingAnchor
+      ? {
+          id: emptyStateMintedId,
+          kind: 'chat',
+          resourceType: 'briefing',
+          resourceId: '',
+          authorUserId: 0,
+          jsonPath: pendingAnchor.jsonPath,
+          start: pendingAnchor.start,
+          end: pendingAnchor.end,
+          createdAt: '',
+          updatedAt: '',
+          docOrderIndex: 0,
+          highlightedText: null,
+        }
+      : null
+  // Section label + quoted text for the empty-state composer when the chat is
+  // being started from a selection. The pending anchor carries only
+  // jsonPath/start/end, so rebuild the quote from the live DOM the same way
+  // existing anchored chats and notes do.
+  const pendingSectionLabel = sectionLabelFromPath(
+    pendingAnchor?.jsonPath ?? null,
+    briefingItems,
+  )
+  const pendingQuote =
+    pendingAnchor && pendingAnchor.jsonPath !== null
+      ? resolveQuoteFromAnchor(pendingAnchor)
+      : null
   return (
     <AnnotationSurfaceSheet
       open={open}
@@ -135,14 +195,19 @@ export function BriefingAssistantSurface({
           briefingItems={briefingItems}
         />
       )}
-      footer={(current) =>
+      footer={(current) => {
+        // Prefer the cycler's `current` once it lands; fall back to the
+        // synthetic minted annotation while we're still in pending-
+        // anchor empty-state mode (overlay swap hasn't happened yet,
+        // but the row exists on the server).
+        const target = current ?? mintedAnnotation
         // Hide Delete chat for the page-wide (unanchored) AI chat — that
         // conversation is the briefing's primary assistant thread and
         // deleting it from the cycler would lose context with no recovery
         // path. Anchored chats remain deletable.
-        current && !isPageWideChat(current) ? (
+        return target && !isPageWideChat(target) ? (
           <DeleteAnnotationButton
-            current={current}
+            current={target}
             label="Delete chat"
             title="Delete this chat?"
             description="The conversation and all its messages will be permanently removed. You can't undo this."
@@ -150,17 +215,33 @@ export function BriefingAssistantSurface({
             disabled={isStreaming}
           />
         ) : null
-      }
+      }}
       emptyState={
-        <AskAiChatBody
-          meetingDate={meetingDate}
-          anchor={pendingAnchor ?? EMPTY_ANCHOR}
-          showInlineHeader={false}
-          bodyClassName="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
-          composerVariant="block"
-          active={open}
-          onChatCreated={onChatCreated}
-        />
+        <div className="flex h-full min-h-0 flex-col gap-3">
+          {pendingQuote ? (
+            <AnchoredQuote
+              text={pendingQuote}
+              variant="primary"
+              showLabel={pendingSectionLabel !== null}
+              label={pendingSectionLabel ?? undefined}
+            />
+          ) : null}
+          <AskAiChatBody
+            meetingDate={meetingDate}
+            anchor={pendingAnchor ?? EMPTY_ANCHOR}
+            showInlineHeader={false}
+            bodyClassName="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
+            composerVariant="block"
+            active={open}
+            onChatCreated={onChatCreated}
+            onAnnotationIdReady={setEmptyStateMintedId}
+            // Wire isStreaming for the empty-state body too — when the
+            // user fires the first send the row exists (Delete chat is
+            // visible) but the stream is still in flight; the button must
+            // stay disabled until the conversation is durable.
+            onSendingChange={setIsStreaming}
+          />
+        </div>
       }
       initialAnnotationId={initialAnnotationId}
     />

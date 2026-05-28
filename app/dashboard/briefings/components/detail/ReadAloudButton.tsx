@@ -79,6 +79,7 @@ export default function ReadAloudButton({
       aria-label={ariaLabel}
       aria-busy={status === 'loading'}
       disabled={status === 'loading'}
+      className="text-sm!"
       onClick={onClick}
     >
       {status === 'error' ? (

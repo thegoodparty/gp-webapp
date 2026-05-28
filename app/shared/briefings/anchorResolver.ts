@@ -39,20 +39,26 @@ function nearestAnchorEl(node: Node | null): HTMLElement | null {
 }
 
 /**
- * Character offset of the first character of `node` within
- * `container.textContent`. Returns -1 if `node` is not inside `container`.
+ * Character offset of a selection boundary within `container`'s plain text.
+ * Returns -1 if `node` is not inside `container`.
+ *
+ * `node`/`nodeOffset` is a DOM boundary point. For a text node it's an offset
+ * into the character data; for an element node it's a child index. Block-level
+ * selections (triple-click, "select the whole line") set the boundary on the
+ * element itself rather than a text node, so we measure with a Range — from
+ * the container's start to the boundary — instead of walking text nodes (which
+ * never match an element boundary and would return -1, dropping the toolbar).
  */
 function textOffsetIn(container: Node, node: Node, nodeOffset: number): number {
-  if (!container.contains(node)) return -1
-  let offset = 0
-  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT)
-  let cur: Node | null = walker.nextNode()
-  while (cur) {
-    if (cur === node) return offset + nodeOffset
-    offset += cur.textContent?.length ?? 0
-    cur = walker.nextNode()
+  if (node !== container && !container.contains(node)) return -1
+  const range = document.createRange()
+  range.setStart(container, 0)
+  try {
+    range.setEnd(node, nodeOffset)
+  } catch {
+    return -1
   }
-  return -1
+  return range.toString().length
 }
 
 export function resolveSelection(
@@ -61,21 +67,51 @@ export function resolveSelection(
   if (!selection || selection.isCollapsed || selection.rangeCount === 0)
     return null
   const range = selection.getRangeAt(0)
-  const quote = range.toString()
-  if (quote.trim().length === 0) return null
+  if (range.toString().trim().length === 0) return null
 
-  const startEl = nearestAnchorEl(range.startContainer)
-  const endEl = nearestAnchorEl(range.endContainer)
-  if (!startEl || startEl !== endEl) return null // selection crosses sections; skip
+  // Anchor to the passage the selection STARTS in. Selecting to (or through)
+  // the end of a paragraph routinely places the end boundary just past that
+  // passage — on the enclosing card root or a trailing sibling node — so the
+  // end's nearest anchor element differs from the start's. Rejecting on that
+  // mismatch dropped every full-passage highlight (the toolbar only showed for
+  // mid-passage selections). Instead, resolve against the start passage and
+  // clamp the offsets to it.
+  const anchorEl =
+    nearestAnchorEl(range.startContainer) ?? nearestAnchorEl(range.endContainer)
+  if (!anchorEl) return null
 
-  const jsonPath = startEl.getAttribute(ANCHOR_ATTR)
+  const jsonPath = anchorEl.getAttribute(ANCHOR_ATTR)
   if (!jsonPath) return null
 
-  const start = textOffsetIn(startEl, range.startContainer, range.startOffset)
-  const end = textOffsetIn(startEl, range.endContainer, range.endOffset)
+  const fullText = anchorEl.textContent ?? ''
+  const start = anchorEl.contains(range.startContainer)
+    ? textOffsetIn(anchorEl, range.startContainer, range.startOffset)
+    : 0
+  const end = anchorEl.contains(range.endContainer)
+    ? textOffsetIn(anchorEl, range.endContainer, range.endOffset)
+    : fullText.length
   if (start < 0 || end <= start) return null
 
+  const quote = fullText.slice(start, end)
+  if (quote.trim().length === 0) return null
+
   return { jsonPath, start, end, quote, rect: range.getBoundingClientRect() }
+}
+
+/**
+ * Make an element's full text the live document selection. Used so clicking a
+ * card title highlights the whole title and surfaces the HighlightToolbar —
+ * the selection flows through useSelection → resolveSelection exactly as a
+ * manual drag would, anchoring to the title's jsonPath.
+ */
+export function selectElementContents(el: HTMLElement): void {
+  if (typeof window === 'undefined') return
+  const selection = window.getSelection()
+  if (!selection) return
+  const range = document.createRange()
+  range.selectNodeContents(el)
+  selection.removeAllRanges()
+  selection.addRange(range)
 }
 
 /**

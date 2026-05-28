@@ -381,7 +381,18 @@ export default function AddNoteSheet({
           >
             {isEdit ? 'Edit note' : 'Add a note'}
           </DrawerTitle>
-          {position ? (
+          {/* In create mode the counter is meaningless (the note doesn't
+              exist yet, so there's no position to report) — show a "New
+              Note" pill instead. The "Note N of M" counter only renders
+              when editing an existing note where the cycler position is
+              real and useful. */}
+          {!isEdit ? (
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-sm font-medium text-foreground">
+                New Note
+              </span>
+            </div>
+          ) : position ? (
             <div className="flex items-center justify-center gap-3">
               <span className="text-sm font-medium text-foreground">
                 Note {position.position} of {position.total}
@@ -400,6 +411,14 @@ export default function AddNoteSheet({
           data-vaul-no-drag
           className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-3 pt-4"
         >
+          {/* Section header. For anchored notes (`quote` set) we render
+              the full AnchoredQuote — label + quoted text. For card-level
+              notes (no quote) we still want the user to see WHICH card
+              they're noting; show the same uppercase label by itself.
+              `sectionLabel` is derived from `jsonPath` (works for edit
+              mode and selection-anchored new notes); `activeCardTitle`
+              is the fallback for top-level "Add notes" where `anchor`
+              is null and jsonPath is resolved at save time. */}
           {quote ? (
             <AnchoredQuote
               text={quote}
@@ -407,11 +426,10 @@ export default function AddNoteSheet({
               showLabel={sectionLabel !== null}
               label={sectionLabel ?? undefined}
             />
-          ) : !isEdit && activeCardTitle ? (
-            <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
-              Note on{' '}
-              <span className="font-medium not-italic">{activeCardTitle}</span>
-            </p>
+          ) : sectionLabel || activeCardTitle ? (
+            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {sectionLabel ?? activeCardTitle?.toUpperCase()}
+            </span>
           ) : null}
         </div>
 

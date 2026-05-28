@@ -1,5 +1,157 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { EMPTY_ANCHOR, scrollAnchorIntoView } from './anchorResolver'
+import {
+  EMPTY_ANCHOR,
+  resolveSelection,
+  scrollAnchorIntoView,
+  selectElementContents,
+} from './anchorResolver'
+
+describe('selectElementContents', () => {
+  it('makes the element’s full text the document selection', () => {
+    document.body.innerHTML =
+      '<h3 data-briefing-json-path="/items/0/title">My Title</h3>'
+    const h3 = document.querySelector('h3') as HTMLElement
+    const removeAllRanges = vi.fn()
+    const addRange = vi.fn()
+    const spy = vi
+      .spyOn(window, 'getSelection')
+      .mockReturnValue({ removeAllRanges, addRange } as unknown as Selection)
+
+    selectElementContents(h3)
+
+    expect(removeAllRanges).toHaveBeenCalledOnce()
+    expect(addRange).toHaveBeenCalledOnce()
+    const range = addRange.mock.calls[0]?.[0] as Range
+    expect(range.toString()).toBe('My Title')
+    spy.mockRestore()
+  })
+})
+
+describe('resolveSelection', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  // resolveSelection only reads isCollapsed / rangeCount / getRangeAt, so a
+  // real jsdom Range wrapped in this stub exercises the offset math without
+  // depending on jsdom's partial window.getSelection() implementation.
+  const asSelection = (range: Range): Selection =>
+    ({
+      isCollapsed: range.collapsed,
+      rangeCount: 1,
+      getRangeAt: () => range,
+    } as unknown as Selection)
+
+  const rangeBetween = (start: [Node, number], end: [Node, number]): Range => {
+    const range = document.createRange()
+    range.setStart(start[0], start[1])
+    range.setEnd(end[0], end[1])
+    // jsdom Range has no layout; resolveSelection only stores the rect.
+    range.getBoundingClientRect = () =>
+      ({
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 0,
+        toJSON: () => ({}),
+      } as DOMRect)
+    return range
+  }
+
+  it('resolves a text-node selection (drag / double-click word)', () => {
+    document.body.innerHTML =
+      '<ul><li data-briefing-json-path="/items/0/talking_points/0">hello world</li></ul>'
+    const text = document.querySelector('li')?.firstChild as Node
+    const anchor = resolveSelection(
+      asSelection(rangeBetween([text, 0], [text, 11])),
+    )
+    expect(anchor).toMatchObject({
+      jsonPath: '/items/0/talking_points/0',
+      start: 0,
+      end: 11,
+      quote: 'hello world',
+    })
+  })
+
+  it('resolves a block selection whose boundary is the element node (triple-click / full-highlight)', () => {
+    document.body.innerHTML =
+      '<ul><li data-briefing-json-path="/items/0/talking_points/0">hello world</li></ul>'
+    const li = document.querySelector('li') as HTMLElement
+    // Block selections set the boundary on the element itself (child index),
+    // not a text node: start before child 0, end after child 0.
+    const anchor = resolveSelection(asSelection(rangeBetween([li, 0], [li, 1])))
+    expect(anchor).toMatchObject({
+      jsonPath: '/items/0/talking_points/0',
+      start: 0,
+      end: 11,
+    })
+  })
+
+  it('clamps to the start passage when the end boundary spills past it (full-passage highlight)', () => {
+    // Mirrors the real DOM: a passage <p> inside a card root, followed by a
+    // trailing sibling. Selecting to the end of the passage lands the end
+    // boundary on that sibling, whose nearest anchor is the card — not the
+    // passage. We must still resolve against the passage.
+    document.body.innerHTML =
+      '<article data-briefing-json-path="/items/1">' +
+      '<p data-briefing-json-path="/items/1/display/summary">hello world</p>' +
+      '<span>source</span>' +
+      '</article>'
+    const summaryText = document.querySelector('p')?.firstChild as Node
+    const trailing = document.querySelector('span')?.firstChild as Node
+    const anchor = resolveSelection(
+      asSelection(rangeBetween([summaryText, 0], [trailing, 3])),
+    )
+    expect(anchor).toMatchObject({
+      jsonPath: '/items/1/display/summary',
+      start: 0,
+      end: 11,
+      quote: 'hello world',
+    })
+  })
+
+  it('resolves via endContainer when startContainer has no anchor ancestor', () => {
+    // Selection begins in non-anchored chrome and ends inside a passage. The
+    // start is necessarily before the passage in document order, so clamping
+    // start to 0 captures exactly the in-passage slice (not wrong text).
+    document.body.innerHTML =
+      '<div>' +
+      '<span>preamble </span>' +
+      '<p data-briefing-json-path="/items/2/body">hello world</p>' +
+      '</div>'
+    const preamble = document.querySelector('span')?.firstChild as Node
+    const bodyText = document.querySelector('p')?.firstChild as Node
+    const anchor = resolveSelection(
+      asSelection(rangeBetween([preamble, 0], [bodyText, 5])),
+    )
+    expect(anchor).toMatchObject({
+      jsonPath: '/items/2/body',
+      start: 0,
+      end: 5,
+      quote: 'hello',
+    })
+  })
+
+  it('returns null when neither startContainer nor endContainer has an anchor ancestor', () => {
+    document.body.innerHTML = '<span>no anchor here</span>'
+    const text = document.querySelector('span')?.firstChild as Node
+    expect(
+      resolveSelection(asSelection(rangeBetween([text, 0], [text, 8]))),
+    ).toBeNull()
+  })
+
+  it('returns null for a collapsed selection', () => {
+    document.body.innerHTML = '<li data-briefing-json-path="/x">hello</li>'
+    const text = document.querySelector('li')?.firstChild as Node
+    expect(
+      resolveSelection(asSelection(rangeBetween([text, 2], [text, 2]))),
+    ).toBeNull()
+  })
+})
 
 describe('EMPTY_ANCHOR', () => {
   it('is frozen so consumers cannot mutate the shared sentinel', () => {

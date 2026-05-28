@@ -39,7 +39,7 @@ export function DictationMicButton({
       {dictation.busy ? (
         <Loader2Icon className="size-4 animate-spin" aria-hidden />
       ) : isRecording ? (
-        <SquareIcon className="size-4" aria-hidden />
+        <SquareIcon className="size-4 animate-pulse text-red-500" aria-hidden />
       ) : (
         <MicIcon className="size-4" aria-hidden />
       )}

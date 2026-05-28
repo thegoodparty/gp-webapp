@@ -6,6 +6,7 @@ import {
   BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
   briefingItemDomId,
 } from '@shared/briefings/routes'
+import { selectElementContents } from '@shared/briefings/anchorResolver'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import CardLevelNotesList from './CardLevelNotesList'
 import ReadAloudButton from './ReadAloudButton'
@@ -91,17 +92,19 @@ export default function ExecutiveSummaryCard({
     >
       <div className="flex items-start justify-between gap-3">
         {/* `data-briefing-json-path` makes the title resolvable as an
-            anchor target — card-level chats hang off this element.
-            `select-none` reserves the title for that role: the user
-            doesn't need to highlight it themselves; the "Briefing
-            assistant" button anchors here automatically. */}
+            anchor target — card-level chats hang off this element. Clicking
+            the title selects its full text so the HighlightToolbar surfaces
+            anchored to the title, the same as highlighting it by hand. */}
         <h2
-          className="select-none text-2xl font-semibold text-foreground"
+          className="min-w-0 cursor-pointer text-2xl font-semibold text-foreground"
           data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
+          onClick={(e) => selectElementContents(e.currentTarget)}
         >
           Executive Summary
         </h2>
-        <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
+        <div className="shrink-0">
+          <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
+        </div>
       </div>
       <p
         className="text-sm text-muted-foreground"

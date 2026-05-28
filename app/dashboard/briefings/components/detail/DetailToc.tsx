@@ -11,6 +11,7 @@ import {
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type Props = {
   briefingSlug: string
@@ -29,15 +30,16 @@ type Entry = {
  * Sidebar TOC. All agenda items render inline on the briefing detail
  * page, so the TOC scrolls within the page rather than navigating.
  *
- * The active entry is owned by `ActiveCardScrollSpy`, which tracks scroll
- * position. Clicking an entry only triggers the smooth-scroll — the spy
- * updates the highlight as the page passes each card on the way down.
+ * Clicking an entry immediately marks it active and starts the
+ * smooth-scroll. `ActiveCardScrollSpy` detects the external set, locks
+ * itself off so the spy doesn't fight the click destination during the
+ * scroll, and resumes scroll-driven updates once the scroll settles.
  */
 export default function DetailToc({
   briefingSlug,
   items,
 }: Props): React.JSX.Element {
-  const { activeCard } = useAnnotationsCtx()
+  const { activeCard, setActiveCard } = useAnnotationsCtx()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -64,12 +66,16 @@ export default function DetailToc({
   function onJump(e: React.MouseEvent<HTMLAnchorElement>, entry: Entry) {
     if (typeof window === 'undefined') return
     e.preventDefault()
-    // Don't preemptively mark the destination as active. The scrollspy
-    // updates `activeCard` as the smooth-scroll passes each card, so an
-    // up-front `setActiveCard` would only flash the destination as active
-    // for one frame before the spy rewinds the highlight back to the card
-    // currently at the active line. Letting the spy own the transition
-    // produces a single continuous scroll-through highlight.
+    // Set active immediately so the highlight tracks user intent. The
+    // scrollspy detects an external set and locks during the smooth-
+    // scroll so it doesn't fight back as the page passes intermediate
+    // cards.
+    setActiveCard({
+      key: entry.key,
+      jsonPath: entry.jsonPath,
+      titleJsonPath: entry.titleJsonPath,
+      title: entry.label,
+    })
     const target = document.getElementById(entry.domId)
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -81,13 +87,25 @@ export default function DetailToc({
 
   return (
     <ul className="flex list-none flex-col gap-0.5" data-testid={briefingSlug}>
-      {entries.map((e) => {
+      {entries.map((e, index) => {
         const isActive = activeCard?.key === e.key
+        const entryType =
+          e.key === BRIEFING_EXECUTIVE_SUMMARY_DOM_ID
+            ? 'executive_summary'
+            : 'agenda_item'
         return (
           <li key={e.key}>
             <a
               href={`#${e.domId}`}
-              onClick={(ev) => onJump(ev, e)}
+              onClick={(ev) => {
+                trackEvent(EVENTS.BriefingAssistant.TocItemClicked, {
+                  briefingSlug,
+                  entryKey: e.key,
+                  entryIndex: index,
+                  entryType,
+                })
+                onJump(ev, e)
+              }}
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 transition-colors ${
                 isActive
                   ? 'bg-muted font-semibold text-foreground'

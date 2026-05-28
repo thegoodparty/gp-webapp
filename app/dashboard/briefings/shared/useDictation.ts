@@ -259,7 +259,7 @@ export const useDictation = (
           sawErrorRef.current = true
           setError(event.message)
           updateStatus('error')
-          trackEvent(EVENTS.Briefings.DictationFailed, {
+          trackEvent(EVENTS.BriefingAssistant.DictationFailed, {
             label: analyticsLabelRef.current,
             code: event.code,
           })
@@ -268,11 +268,6 @@ export const useDictation = (
           teardown()
           return
         case 'closed':
-          if (event.reason === 'max_duration') {
-            trackEvent(EVENTS.Briefings.DictationMaxDurationReached, {
-              label: analyticsLabelRef.current,
-            })
-          }
           setWarningSecondsRemaining(null)
           if (!sawErrorRef.current) {
             updateStatus('idle')
@@ -325,7 +320,7 @@ export const useDictation = (
       sawErrorRef.current = true
       setError(message)
       updateStatus('error')
-      trackEvent(EVENTS.Briefings.DictationFailed, {
+      trackEvent(EVENTS.BriefingAssistant.DictationFailed, {
         label: analyticsLabelRef.current,
         code: 'MIC_DENIED',
       })
@@ -358,7 +353,7 @@ export const useDictation = (
       sawErrorRef.current = true
       setError(message)
       updateStatus('error')
-      trackEvent(EVENTS.Briefings.DictationFailed, {
+      trackEvent(EVENTS.BriefingAssistant.DictationFailed, {
         label: analyticsLabelRef.current,
         code: 'SESSION_FAILED',
       })
@@ -409,7 +404,7 @@ export const useDictation = (
       sawErrorRef.current = true
       setError('WebSocket error')
       updateStatus('error')
-      trackEvent(EVENTS.Briefings.DictationFailed, {
+      trackEvent(EVENTS.BriefingAssistant.DictationFailed, {
         label: analyticsLabelRef.current,
         code: 'WS_ERROR',
       })
@@ -456,7 +451,7 @@ export const useDictation = (
         }
         sourceNode.connect(workletNode)
         workletNode.connect(audioContext.destination)
-        trackEvent(EVENTS.Briefings.DictationStarted, {
+        trackEvent(EVENTS.BriefingAssistant.DictationStarted, {
           label: analyticsLabelRef.current,
         })
       } catch (err) {
@@ -472,7 +467,7 @@ export const useDictation = (
         sawErrorRef.current = true
         setError(message)
         updateStatus('error')
-        trackEvent(EVENTS.Briefings.DictationFailed, {
+        trackEvent(EVENTS.BriefingAssistant.DictationFailed, {
           label: analyticsLabelRef.current,
           code: 'AUDIO_PIPELINE_FAILED',
         })
@@ -490,10 +485,6 @@ export const useDictation = (
     // post-await cancellation checks fire.
     generationRef.current += 1
     updateStatus('stopping')
-    trackEvent(EVENTS.Briefings.DictationStopped, {
-      label: analyticsLabelRef.current,
-      transcriptChars: transcript.length,
-    })
 
     const socket = wsRef.current
     if (socket?.readyState !== WebSocket.OPEN) {
@@ -518,7 +509,7 @@ export const useDictation = (
         updateStatus('idle')
       }
     }, STOP_TIMEOUT_MS)
-  }, [teardown, transcript.length, updateStatus])
+  }, [teardown, updateStatus])
 
   useEffect(
     () => () => {

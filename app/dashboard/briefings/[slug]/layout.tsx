@@ -93,7 +93,12 @@ export default async function BriefingChromeLayout({
                     // equivalent web API; its floating selection action
                     // bar still appears.
                     style={{ WebkitTouchCallout: 'none' }}
-                    className="flex flex-col gap-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+                    // `lg:p-0.5` leaves room for the active card's
+                    // `ring-2` highlight. Without it `overflow-y: auto`
+                    // forces `overflow-x: auto` (per CSS spec) and the
+                    // ring renders clipped against the pane's left/right
+                    // edges.
+                    className="flex flex-col gap-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:p-0.5"
                   >
                     {children}
                   </div>

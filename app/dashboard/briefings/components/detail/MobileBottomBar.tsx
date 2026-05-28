@@ -5,7 +5,6 @@ import { List, ChevronUp, MessageSquare, Sparkles } from 'lucide-react'
 import {
   Button,
   IconButton,
-  Share2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -17,7 +16,6 @@ import {
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import { useShareScope } from './ShareScope'
 
 type Props = {
   briefingSlug: string
@@ -35,7 +33,10 @@ type Entry = {
  *
  *  - Left pill: name of the section currently in view + chevron, opens a
  *    bottom Sheet listing every section.
- *  - Right FABs: Share (opens the share drawer), Add notes, and Ask AI.
+ *  - Right FABs: Add notes and Ask AI.
+ *
+ * Share lives in the sub-header (`DetailHeaderActions`) on every
+ * breakpoint, so it isn't duplicated here.
  *
  * Tapping an entry scrolls to that section on the same page; the Sheet
  * closes on tap.
@@ -47,10 +48,9 @@ export default function MobileBottomBar({
   const [open, setOpen] = useState(false)
   // `openAddNoteTopLevel` / `openCardLevelChat` replaced the older
   // `openNotesSurface` / `openChatsSurface` API on `develop` and now
-  // require an active card; the share drawer is independent of that.
+  // require an active card.
   const { openAddNoteTopLevel, openCardLevelChat, activeCard } =
     useAnnotationsCtx()
-  const { canShare, openShareDrawer } = useShareScope()
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -190,7 +190,7 @@ export default function MobileBottomBar({
                     <a
                       href={`#${e.domId}`}
                       onClick={(ev) => onJump(ev, e)}
-                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
+                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 no-underline hover:no-underline ${
                         isActive
                           ? 'bg-muted font-semibold text-foreground'
                           : 'text-foreground hover:bg-muted/60'
@@ -211,17 +211,6 @@ export default function MobileBottomBar({
           </SheetContent>
         </Sheet>
 
-        {canShare && (
-          <IconButton
-            type="button"
-            size="medium"
-            variant="outline"
-            aria-label="Share briefing"
-            onClick={openShareDrawer}
-          >
-            <Share2Icon className="size-5" aria-hidden />
-          </IconButton>
-        )}
         <IconButton
           type="button"
           size="medium"

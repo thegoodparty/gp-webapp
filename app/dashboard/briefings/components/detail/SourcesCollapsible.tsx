@@ -9,6 +9,7 @@ import {
 } from '@styleguide'
 import type { Source } from '@shared/briefings/types'
 import { toDisplaySource } from '@shared/briefings/displaySource'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type Props = {
   sources: Source[]
@@ -18,8 +19,17 @@ const SourcesCollapsible = ({ sources }: Props): React.JSX.Element | null => {
   const [open, setOpen] = useState(false)
   if (sources.length === 0) return null
 
+  const handleOpenChange = (next: boolean): void => {
+    setOpen(next)
+    if (next) {
+      trackEvent(EVENTS.BriefingAssistant.SourcesExpanded, {
+        sourceCount: sources.length,
+      })
+    }
+  }
+
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
+    <Collapsible open={open} onOpenChange={handleOpenChange}>
       <CollapsibleTrigger
         data-state={open ? 'open' : 'closed'}
         className="flex w-full items-center justify-between rounded-md py-2 text-left text-sm font-semibold text-foreground transition-colors [&[data-state=open]>svg]:rotate-45"
