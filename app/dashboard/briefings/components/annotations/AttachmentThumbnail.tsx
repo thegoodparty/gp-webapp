@@ -54,11 +54,15 @@ type Props = {
 const isImageMime = (mime: string): boolean => mime.startsWith('image/')
 
 /**
- * One attachment rendered as a full-width clickable row: small thumbnail
- * on the left (image preview for image MIMEs, document icon for the
- * rest), filename in the middle, optional remove (X) button on the
- * right. Click the row to open the file in a new tab via the resolved
- * URL (blob URL for staged items, signed S3 URL for server items).
+ * One attachment rendered as a full-width clickable card: a large
+ * `aspect-video` preview well on top (image at full container width for
+ * image MIMEs, large document icon centered for the rest), a filename
+ * strip beneath, and an optional remove (X) button overlaid on the
+ * top-right corner. Click the preview to open the file in a new tab
+ * via the resolved URL (blob URL for staged items, signed S3 URL for
+ * server items). The preview is intentionally big — the parent dropped
+ * inline tiles in favor of stacked full-width cards so users can
+ * actually see what they're attaching before saving.
  */
 export default function AttachmentThumbnail({
   item,
@@ -106,82 +110,75 @@ export default function AttachmentThumbnail({
     item.kind === 'staged' ? objectUrl : downloadUrlQuery.data?.url ?? null
   const isImage = isImageMime(item.mimeType)
 
-  const rowClass =
-    'group relative flex w-full items-center gap-3 rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-foreground'
+  const cardClass =
+    'group relative flex w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/40 text-foreground'
 
-  // Square thumbnail well: the image fills via `object-cover`, the
-  // document/loading icon centers inside.
-  const thumbWellClass =
-    'flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted text-muted-foreground'
+  // Big preview well: full container width with a 16:9 aspect ratio so
+  // the image is large enough to read on mobile (~360px wide → ~200px
+  // tall preview) without needing fixed pixel heights. Image stretches
+  // via `object-cover`; document icon centers at a generous `size-12`.
+  const previewAreaClass =
+    'relative flex aspect-video w-full items-center justify-center overflow-hidden bg-muted text-muted-foreground'
 
   // For images, fall back to a spinner (not the document icon) while we
   // resolve the URL — covers both the staged blob-URL effect setting on
   // mount and the server-side signed-URL query in flight.
-  const thumbnailContent =
+  const previewContent =
     isImage && url ? (
       // eslint-disable-next-line @next/next/no-img-element -- presigned S3 / blob URL, not a stable Next image route
       <img src={url} alt={item.label} className="size-full object-cover" />
     ) : isImage ? (
-      <Loader2 className="size-5 animate-spin" aria-hidden />
+      <Loader2 className="size-8 animate-spin" aria-hidden />
     ) : (
-      <FileText className="size-5" aria-hidden />
+      <FileText className="size-12" aria-hidden />
     )
 
   const showRemove = onRemove !== undefined
 
-  // The link wraps the thumb + filename so the click target is the
-  // whole row except the X button. When there's no URL yet (e.g.
-  // signed-URL still loading), we render the same layout without an
-  // anchor so the row doesn't briefly turn into a non-clickable shell
-  // and back.
-  const labelText = (
-    <span className="min-w-0 flex-1 truncate" title={item.label}>
-      {item.label}
-    </span>
-  )
-
   return (
-    <div className={rowClass}>
+    <div className={cardClass}>
       {url ? (
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-w-0 flex-1 items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className={`${previewAreaClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
           aria-label={`Open ${item.label}`}
         >
-          <span className={thumbWellClass}>{thumbnailContent}</span>
-          {labelText}
+          {previewContent}
         </a>
       ) : (
-        <span className="flex min-w-0 flex-1 items-center gap-3">
-          <span className={thumbWellClass}>{thumbnailContent}</span>
-          {labelText}
-        </span>
+        <span className={previewAreaClass}>{previewContent}</span>
       )}
+      <span
+        className="block w-full truncate border-t border-border bg-card px-3 py-2 text-sm text-foreground"
+        title={item.label}
+      >
+        {item.label}
+      </span>
       {showRemove ? (
         item.busy ? (
           <span
             aria-hidden
-            className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+            className="absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-full bg-card/90 text-muted-foreground shadow-sm"
           >
-            <Loader2 className="size-3.5 animate-spin" />
+            <Loader2 className="size-4 animate-spin" />
           </span>
         ) : (
           <button
             type="button"
             onClick={(e) => {
               // Stops both bubble and default so the click doesn't also
-              // fire the row's `<a>` and open a tab.
+              // fire the preview's `<a>` and open a tab.
               e.stopPropagation()
               e.preventDefault()
               onRemove(item.id)
             }}
             disabled={disabled}
             aria-label={`Remove ${item.label}`}
-            className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+            className="absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-full bg-card/90 text-muted-foreground shadow-sm transition-colors hover:bg-card hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <X className="size-3.5" aria-hidden />
+            <X className="size-4" aria-hidden />
           </button>
         )
       ) : null}
