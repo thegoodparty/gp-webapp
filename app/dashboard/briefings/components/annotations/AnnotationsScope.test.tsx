@@ -167,6 +167,36 @@ vi.mock('@shared/briefings/chat-api', () => ({
   },
 }))
 
+// Force the desktop pathway so AnnotationSurfaceSheet renders the drawer
+// inline (not a portal-routed mobile bottom sheet) and NoteAttachmentPicker
+// surfaces a stable trigger.
+vi.mock('@styleguide/hooks/use-mobile', () => ({
+  useIsMobile: () => false,
+}))
+
+// Mock NoteAttachmentPicker so we can capture the `onAdd` / `onRemove`
+// callbacks AnnotationsScope wires through NotesSurface, without driving
+// the hidden file-input UI. Renders existing attachment pills as buttons
+// so tests can click them by name to fire onRemove.
+type AttachmentPickerCallbacks = {
+  onAdd?: (file: File, source: 'photos' | 'camera' | 'document') => void
+  onRemove?: (id: string) => void
+}
+let captured_NoteAttachmentPicker: AttachmentPickerCallbacks = {}
+vi.mock('./NoteAttachmentPicker', () => ({
+  default: ({
+    onAdd,
+    onRemove,
+  }: {
+    items: Array<{ id: string; label: string }>
+    onAdd: AttachmentPickerCallbacks['onAdd']
+    onRemove: AttachmentPickerCallbacks['onRemove']
+  }) => {
+    captured_NoteAttachmentPicker = { onAdd, onRemove }
+    return null
+  },
+}))
+
 function ContextChatCreatedTrigger() {
   const { onChatCreated } = useAnnotationsCtx()
   return (
@@ -367,6 +397,7 @@ describe('<AnnotationsScope>', () => {
     captured_ReportErrorSheet = {}
     captured_BriefingAssistantSurface = { open: false }
     captured_HighlightToolbar_onAskAi = null
+    captured_NoteAttachmentPicker = {}
     mockUseSelection.mockReset()
     mockUseSelection.mockReturnValue(null)
     addNoteSheetIsMounted = false
@@ -1133,6 +1164,168 @@ describe('<AnnotationsScope>', () => {
       // If they hit Save, the existing error-banner path surfaces the issue.
       expect(addNoteSheetIsMounted).toBe(true)
       expect(captured_AddNoteSheet.sheet?.kind).toBe('add_note_edit')
+    })
+  })
+
+  // Boundary tests for the in-place edit + attachment wiring AnnotationsScope
+  // hands to NotesSurface. NotesSurface.test.tsx only injects fake props
+  // (unit-level); these confirm the real production handlers call the right
+  // mutation / API with the right arg shape and invalidate the right key.
+  // Compromise: NoteAttachmentPicker is mocked to capture onAdd / onRemove
+  // directly so we don't have to drive the hidden file-input UI inside the
+  // surface drawer. We still exercise the props AnnotationsScope passes
+  // down to NotesSurface, which is the layer the finding is about.
+  describe('NotesSurface in-place edit + attachment wiring', () => {
+    async function openNotesSurfaceForAnnotation(
+      annotation: Annotation,
+    ): Promise<void> {
+      const user = userEvent.setup()
+      testQueryClient.setQueryData(annotationsQueryKey('briefing_x'), [
+        annotation,
+      ])
+      mockAnnotationsApi.list.mockResolvedValue([annotation])
+
+      render(
+        <AnnotationsScope meetingDate="briefing_x">
+          <OpenNotesSurfaceTrigger annotationId={annotation.id} />
+        </AnnotationsScope>,
+      )
+
+      await user.click(
+        await screen.findByRole('button', { name: /open notes surface/i }),
+      )
+      await waitFor(() => {
+        expect(screen.getByTestId('notes-count')).toHaveTextContent('1')
+      })
+    }
+
+    it('Edit Note → Save calls annotationsApi.updateNote with (id, body) so the production wiring matches the {id, body} mutation contract', async () => {
+      const user = userEvent.setup()
+      const ann = makeNoteAnnotation('ann_edit_target')
+      const updated: Annotation = {
+        ...ann,
+        note: {
+          ...ann.note!,
+          body: 'edited body',
+        },
+      }
+      mockAnnotationsApi.updateNote.mockResolvedValue(updated)
+
+      await openNotesSurfaceForAnnotation(ann)
+
+      await user.click(
+        await screen.findByRole('button', { name: /edit note/i }),
+      )
+
+      const textarea = (await screen.findByPlaceholderText(
+        /write a note/i,
+      )) as HTMLTextAreaElement
+      await user.clear(textarea)
+      await user.type(textarea, 'edited body')
+
+      await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+      // The wiring calls updateNote.mutateAsync({ id, body }) which fans
+      // out to annotationsApi.updateNote(id, body). If anyone flips arg
+      // order or renames a key (e.g. { id, body } → { annotationId, body }),
+      // this assertion fails before the change ships.
+      await waitFor(() => {
+        expect(mockAnnotationsApi.updateNote).toHaveBeenCalledWith(
+          'ann_edit_target',
+          'edited body',
+        )
+      })
+      expect(mockAnnotationsApi.updateNote).toHaveBeenCalledTimes(1)
+      // NOTE: The production save-edit wiring intentionally does NOT call
+      // queryClient.invalidateQueries — useAnnotations' updateNote mutation
+      // patches the cache via setQueryData onSuccess instead, so an
+      // invalidate-spy assertion here would lock in the wrong contract.
+    })
+
+    it('Add attachment fires the NotesSurface upload handler with the focused note id + file and invalidates the annotations query', async () => {
+      const ann = makeNoteAnnotation('ann_attach_target')
+      mockUploadAttachment.mockResolvedValue({ attachmentId: 'att_new' })
+      const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
+
+      await openNotesSurfaceForAnnotation(ann)
+
+      // Wait for NoteAttachmentPicker (mounted in the surface footer) to
+      // expose its captured onAdd before driving the upload.
+      await waitFor(() => {
+        expect(captured_NoteAttachmentPicker.onAdd).toBeDefined()
+      })
+
+      const file = new File(['x'], 'memo.pdf', { type: 'application/pdf' })
+      await act(async () => {
+        captured_NoteAttachmentPicker.onAdd?.(file, 'document')
+        // Let the void-async block inside the picker's onAdd handler in
+        // NotesSurface settle so the upload + invalidate fire.
+        await Promise.resolve()
+        await Promise.resolve()
+      })
+
+      await waitFor(() => {
+        expect(mockUploadAttachment).toHaveBeenCalledWith({
+          annotationId: 'ann_attach_target',
+          file,
+        })
+      })
+      await waitFor(() => {
+        expect(invalidateSpy).toHaveBeenCalledWith({
+          queryKey: annotationsQueryKey('briefing_x'),
+        })
+      })
+    })
+
+    it('Delete attachment fires the NotesSurface delete handler with (annotationId, attachmentId) and invalidates the annotations query', async () => {
+      const annWithAttachment: Annotation = {
+        ...makeNoteAnnotation('ann_with_att'),
+        note: {
+          id: 'note_ann_with_att',
+          body: 'has attachment',
+          attachments: [
+            {
+              id: 'att_to_remove',
+              fileName: 'doc.pdf',
+              mimeType: 'application/pdf',
+              sizeBytes: 1,
+              ocrStatus: 'completed',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: '2025-01-01T00:00:00.000Z',
+            },
+          ],
+          createdAt: '2025-01-01T00:00:00.000Z',
+          updatedAt: '2025-01-01T00:00:00.000Z',
+        },
+      }
+      mockDeleteAttachment.mockResolvedValue(undefined)
+      const invalidateSpy = vi.spyOn(testQueryClient, 'invalidateQueries')
+
+      await openNotesSurfaceForAnnotation(annWithAttachment)
+
+      await waitFor(() => {
+        expect(captured_NoteAttachmentPicker.onRemove).toBeDefined()
+      })
+
+      await act(async () => {
+        captured_NoteAttachmentPicker.onRemove?.('att_to_remove')
+        await Promise.resolve()
+        await Promise.resolve()
+      })
+
+      await waitFor(() => {
+        expect(mockDeleteAttachment).toHaveBeenCalledWith({
+          annotationId: 'ann_with_att',
+          attachmentId: 'att_to_remove',
+        })
+      })
+      await waitFor(() => {
+        expect(invalidateSpy).toHaveBeenCalledWith({
+          queryKey: annotationsQueryKey('briefing_x'),
+        })
+      })
     })
   })
 })

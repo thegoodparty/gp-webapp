@@ -56,6 +56,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -72,6 +73,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -85,6 +87,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open={false}
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -97,6 +100,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -119,6 +123,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -149,6 +154,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -173,6 +179,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={initialItems}
         renderItem={renderItem}
@@ -196,6 +203,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={refetchedItems}
         renderItem={renderItem}
@@ -226,6 +234,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[a, b, c]}
         renderItem={renderItem}
@@ -241,6 +250,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[a, c]}
         renderItem={renderItem}
@@ -267,6 +277,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[a, b, c]}
         renderItem={renderItem}
@@ -280,6 +291,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[a, b]}
         renderItem={renderItem}
@@ -298,6 +310,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[a]}
         renderItem={renderItem}
@@ -311,6 +324,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={[]}
         renderItem={renderItem}
@@ -336,6 +350,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}
@@ -350,6 +365,7 @@ describe('<AnnotationSurfaceSheet>', () => {
         open
         onClose={vi.fn()}
         title="Notes"
+        accessibleTitle="Notes"
         subtitle="sub"
         items={items}
         renderItem={renderItem}

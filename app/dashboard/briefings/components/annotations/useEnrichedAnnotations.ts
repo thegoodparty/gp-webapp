@@ -17,6 +17,25 @@ function signatureOf(
   for (const a of annotations) {
     if (a.kind !== kind) continue
     s += `|${a.id}:${a.updatedAt}:${a.jsonPath ?? ''}`
+    // Note edits update Note.updatedAt but not Annotation.updatedAt
+    // (Prisma's @updatedAt fires per-row, and the parent row's fields
+    // don't change on a nested note body update). Include note.updatedAt
+    // so an in-place body edit re-runs enrichment and the surface stops
+    // displaying the pre-edit body.
+    if (a.note) {
+      s += `;n=${a.note.updatedAt}`
+    }
+    // Attachments mutate independently of `updatedAt` on the parent
+    // annotation (presign/complete + delete don't bump it before the
+    // 5s OCR poll lands), so include their ids in the signature.
+    // Without this, the cycler keeps showing pills for deleted
+    // attachments and clicking X again hits the server with a stale
+    // id and 404s.
+    if (a.note) {
+      for (const att of a.note.attachments) {
+        s += `;${att.id}`
+      }
+    }
   }
   return s
 }

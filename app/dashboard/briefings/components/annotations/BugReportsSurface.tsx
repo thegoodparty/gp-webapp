@@ -46,6 +46,8 @@ export function BugReportsSurface({
       open={open}
       onClose={onClose}
       title="Bug reports"
+      accessibleTitle="Bug reports"
+      subtitle="Spot an error? Describe what's wrong and we'll fix it."
       positionLabel="Bug"
       items={items}
       renderItem={(item) => <BugReportBody item={item} />}

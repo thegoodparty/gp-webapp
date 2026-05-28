@@ -94,4 +94,78 @@ describe('<AgendaItemCard>', () => {
     const btn = screen.getByRole('button', { name: /read aloud/i })
     expect(btn.textContent?.trim()).toBe('')
   })
+
+  it('renders sections in Lovable order: What to expect → Budget → Sentiment → News → Talking points', () => {
+    const item = makeItem({
+      title: 'Public Safety Camera Expansion',
+      display: {
+        summary:
+          'The motion bundles vendor selection and the citywide camera location map.',
+        constituent_sentiment: {
+          haystaq_status: 'ok',
+          haystaq_column: 'pub_safety_camera_support',
+          mean_score: 72,
+          score_direction: 'supports cameras',
+          voter_count: 1000,
+          summary: 'Northside support climbs to 81%.',
+          detail: null,
+          source_ids: [],
+        },
+        budget_impact: {
+          summary: '$1.2M one-time install plus $180K/yr ops.',
+          figures: [
+            {
+              label: 'One-time install',
+              source_id: 'src_1',
+              value: '$1.2M',
+            },
+          ],
+          source_ids: [],
+        },
+        recent_news: [
+          {
+            article_type: 'reporting',
+            headline: 'Council weighs camera expansion',
+            publication: 'Burnsville Sentinel',
+            url: 'https://example.com/news',
+          },
+        ],
+        talking_points: [
+          '72% citywide support and 81% on the Northside.',
+          'Vendor selection bundled with map.',
+          '$1.2M one-time plus $180K/yr ops.',
+        ],
+      },
+    })
+
+    const { container } = render(
+      <AgendaItemCard
+        item={item}
+        itemIndex={0}
+        sources={noSources}
+        domId="briefing-item-item_1"
+        meetingDate="2026-05-18"
+        showFeedback={false}
+      />,
+    )
+
+    const html = container.innerHTML
+    const positions = [
+      'What to expect',
+      'Budget impact',
+      'Constituent sentiment',
+      'Recent news',
+      'Talking points',
+    ].map((label) => ({ label, index: html.indexOf(label) }))
+
+    expect(positions.every((p) => p.index >= 0)).toBe(true)
+    const sorted = [...positions].sort((a, b) => a.index - b.index)
+    expect(sorted.map((p) => p.label)).toEqual([
+      'What to expect',
+      'Budget impact',
+      'Constituent sentiment',
+      'Recent news',
+      'Talking points',
+    ])
+  })
 })

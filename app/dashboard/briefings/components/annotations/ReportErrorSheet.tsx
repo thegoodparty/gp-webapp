@@ -16,6 +16,9 @@ import type { SheetState } from './AnnotationsScope'
 import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
 import { AnchoredQuote } from './AnchoredQuote'
+import { useDictationAppend } from '../../shared/useDictationAppend'
+import { DictationMicButton } from '../../shared/DictationMicButton'
+import { DictationFeedback } from '../../shared/DictationFeedback'
 
 type Props = {
   sheet: SheetState
@@ -62,6 +65,12 @@ export default function ReportErrorSheet({
   const [description, setDescription] = useState(initialDescription)
   const [saving, setSaving] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const dictation = useDictationAppend({
+    analyticsLabel: 'report_error_sheet',
+    value: description,
+    onChange: setDescription,
+  })
 
   useEffect(() => {
     if (sheet.kind === 'report_error_view') {
@@ -124,20 +133,25 @@ export default function ReportErrorSheet({
       direction={direction}
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
-        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
+        <DrawerHeader className="gap-2 border-b border-border px-6 pb-4 pr-12 pt-6">
           <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
             Report or Correct an Error
           </DrawerTitle>
           {position ? (
-            <p className="text-center text-sm font-medium text-foreground">
-              Bug {position.position} of {position.total}
-            </p>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-sm font-medium text-foreground">
+                Bug {position.position} of {position.total}
+              </span>
+            </div>
           ) : null}
+          <p className="text-balance text-center text-sm leading-relaxed text-muted-foreground">
+            Spot an error? Describe what&apos;s wrong and we&apos;ll fix it.
+          </p>
         </DrawerHeader>
 
         <div
           data-vaul-no-drag
-          className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4"
+          className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4 pt-4"
         >
           {quote ? (
             <AnchoredQuote
@@ -147,17 +161,28 @@ export default function ReportErrorSheet({
             />
           ) : null}
 
-          <Textarea
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value)
-              if (!isView) setErrorMessage(null)
-            }}
-            disabled={isView}
-            placeholder="Describe the error or suggested correction…"
-            rows={6}
-            className="min-h-[160px] resize-none rounded-2xl disabled:cursor-default disabled:opacity-90"
-          />
+          <div className="relative">
+            <Textarea
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value)
+                if (!isView) setErrorMessage(null)
+              }}
+              disabled={isView}
+              placeholder="Describe the error or suggested correction…"
+              rows={6}
+              className="min-h-[160px] w-full resize-none rounded-2xl pr-12 disabled:cursor-default disabled:opacity-90"
+            />
+            {!isView ? (
+              <DictationMicButton
+                dictation={dictation}
+                idleLabel="Dictate error report"
+                recordingLabel="Stop dictation"
+                disabled={saving}
+              />
+            ) : null}
+          </div>
+          {!isView ? <DictationFeedback dictation={dictation} /> : null}
         </div>
 
         <div

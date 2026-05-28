@@ -1,22 +1,58 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import { Button, PencilIcon } from '@styleguide'
-import type { Annotation } from '@shared/briefings/types'
+import {
+  Button,
+  Loader2Icon,
+  PencilIcon,
+  Textarea,
+  Trash2Icon,
+} from '@styleguide'
+import type { Annotation, Item } from '@shared/briefings/types'
+import { reportErrorToSentry } from '@shared/sentry'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
 import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { SurfaceEmptyState } from './SurfaceEmptyState'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'
+import { sectionLabelFromPath } from './sectionLabel'
+import { useDictationAppend } from '../../shared/useDictationAppend'
+import { DictationMicButton } from '../../shared/DictationMicButton'
+import { DictationFeedback } from '../../shared/DictationFeedback'
+import NoteAttachmentPicker from './NoteAttachmentPicker'
+import { useIsMobile } from '@styleguide/hooks/use-mobile'
 
 interface Props {
   open: boolean
   onClose: () => void
   annotations: Annotation[]
-  onEditNote: (annotation: Annotation) => void
+  /**
+   * Persist an in-place body edit. NotesSurface keeps draft state local
+   * and only calls this once the user clicks Save; on success it returns
+   * to view mode. On rejection it surfaces the error and keeps the
+   * card in edit mode so the user can retry without losing their text.
+   */
+  onSaveEdit: (annotationId: string, body: string) => Promise<void>
+  /**
+   * Upload one attachment file against an existing note. NotesSurface
+   * fires this in-place via the lifted NoteAttachmentPicker (no
+   * AddNoteSheet drawer routing).
+   */
+  onUploadAttachment: (annotationId: string, file: File) => Promise<void>
+  /** Delete one attachment from an existing note, in-place. */
+  onDeleteAttachment: (
+    annotationId: string,
+    attachmentId: string,
+  ) => Promise<void>
   onDeleteNote: (annotation: Annotation) => Promise<void>
   initialAnnotationId?: string
+  /**
+   * Agenda items used to resolve the uppercase section label that sits
+   * above an anchored note's quoted text (e.g. "COLONIAL THEATRE...").
+   */
+  briefingItems?: readonly Item[]
 }
 
 function relativeTime(iso: string): string {
@@ -29,11 +65,49 @@ function relativeTime(iso: string): string {
   }
 }
 
-function NoteBody({ item }: { item: EnrichedAnnotation }) {
+function NoteBody({
+  item,
+  briefingItems,
+  editing,
+  draftBody,
+  onDraftChange,
+  onCancelEdit,
+  onCommitEdit,
+  saving,
+  saveError,
+  onRemoveAttachment,
+  busyAttachmentIds,
+}: {
+  item: EnrichedAnnotation
+  briefingItems?: readonly Item[]
+  editing: boolean
+  draftBody: string
+  onDraftChange: (next: string) => void
+  onCancelEdit: () => void
+  onCommitEdit: () => void
+  saving: boolean
+  saveError: string | null
+  onRemoveAttachment: (attachmentId: string) => void
+  busyAttachmentIds: ReadonlySet<string>
+}) {
+  const attachments = item.note?.attachments ?? []
+  const sectionLabel = sectionLabelFromPath(item.jsonPath, briefingItems)
+  const dictation = useDictationAppend({
+    analyticsLabel: 'notes_surface_edit',
+    value: draftBody,
+    onChange: onDraftChange,
+  })
+  const canSave = draftBody.trim().length > 0 && !saving
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
       {item.highlightedText ? (
-        <AnchoredQuote text={item.highlightedText} showLabel={false} filled />
+        <AnchoredQuote
+          text={item.highlightedText}
+          showLabel={sectionLabel !== null}
+          label={sectionLabel ?? undefined}
+          filled
+        />
       ) : null}
       <div className="flex flex-col gap-2 rounded-md border border-border bg-card p-4 text-card-foreground">
         <div className="flex items-baseline gap-2 text-sm">
@@ -42,9 +116,103 @@ function NoteBody({ item }: { item: EnrichedAnnotation }) {
             {relativeTime(item.updatedAt)}
           </span>
         </div>
-        <div className="whitespace-pre-wrap text-base">
-          {item.note?.body ?? ''}
-        </div>
+        {editing ? (
+          <>
+            <div className="relative">
+              <Textarea
+                value={draftBody}
+                onChange={(e) => onDraftChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (
+                    e.key !== 'Enter' ||
+                    e.shiftKey ||
+                    e.nativeEvent.isComposing
+                  ) {
+                    return
+                  }
+                  e.preventDefault()
+                  if (canSave) onCommitEdit()
+                }}
+                placeholder="Write a note, then tap Save..."
+                rows={3}
+                disabled={saving}
+                className="max-h-[180px] min-h-[96px] w-full resize-none rounded-2xl pr-12"
+              />
+              <DictationMicButton
+                dictation={dictation}
+                idleLabel="Dictate note"
+                recordingLabel="Stop dictation"
+                disabled={saving}
+              />
+            </div>
+            <DictationFeedback dictation={dictation} />
+            {saveError ? (
+              <p role="alert" className="text-sm text-destructive">
+                {saveError}
+              </p>
+            ) : null}
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="link"
+                size="small"
+                onClick={onCancelEdit}
+                disabled={saving}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={onCommitEdit}
+                disabled={!canSave}
+                loading={saving}
+              >
+                Save
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div className="whitespace-pre-wrap text-base">
+            {item.note?.body ?? ''}
+          </div>
+        )}
+        {!editing && attachments.length > 0 ? (
+          <ul className="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+            {attachments.map((a) => {
+              const busy = busyAttachmentIds.has(a.id)
+              return (
+                <li key={a.id}>
+                  <div
+                    title={a.fileName}
+                    className="inline-flex max-w-[240px] items-center gap-2 rounded-full bg-muted py-1 pl-3 pr-1 text-sm text-foreground"
+                  >
+                    <span className="truncate">{a.fileName}</span>
+                    {busy ? (
+                      <span
+                        aria-hidden
+                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
+                      >
+                        <Loader2Icon
+                          className="size-3.5 animate-spin"
+                          aria-hidden
+                        />
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => onRemoveAttachment(a.id)}
+                        aria-label={`Remove ${a.fileName}`}
+                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <Trash2Icon className="size-3.5" aria-hidden />
+                      </button>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        ) : null}
       </div>
     </div>
   )
@@ -54,38 +222,209 @@ export function NotesSurface({
   open,
   onClose,
   annotations,
-  onEditNote,
+  onSaveEdit,
+  onUploadAttachment,
+  onDeleteAttachment,
   onDeleteNote,
   initialAnnotationId,
+  briefingItems,
 }: Props) {
+  const isMobile = useIsMobile()
   const items = useEnrichedAnnotations(open, annotations, 'note')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [draftBody, setDraftBody] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [busyAttachmentIds, setBusyAttachmentIds] = useState<Set<string>>(
+    () => new Set(),
+  )
+  const [attachmentError, setAttachmentError] = useState<string | null>(null)
+  // Tracks the id of the currently-focused annotation so async attachment
+  // callbacks can verify the user hasn't cycled away before surfacing
+  // attachment errors against a different note.
+  const currentIdRef = useRef<string | null>(null)
+
+  function markBusy(id: string, busy: boolean) {
+    setBusyAttachmentIds((prev) => {
+      const next = new Set(prev)
+      if (busy) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  function startEdit(item: EnrichedAnnotation) {
+    setEditingId(item.id)
+    setDraftBody(item.note?.body ?? '')
+    setSaveError(null)
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+    setDraftBody('')
+    setSaveError(null)
+  }
+
+  async function commitEdit(item: EnrichedAnnotation) {
+    if (saving) return
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await onSaveEdit(item.id, draftBody)
+      setEditingId(null)
+      setDraftBody('')
+    } catch (err) {
+      reportErrorToSentry(err, {
+        surface: 'briefing-annotations',
+        op: 'updateNote',
+        annotationId: item.id,
+      })
+      const msg = err instanceof Error ? err.message : String(err)
+      setSaveError(`Couldn't save your note: ${msg}`)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <AnnotationSurfaceSheet
       open={open}
       onClose={onClose}
-      title="Note"
-      subtitle="Highlight any text to add a note."
+      title={isMobile ? null : 'Note'}
+      accessibleTitle="Notes"
+      subtitle="Add a note to this agenda item or highlight any text to add a note for just that part."
       positionLabel="Note"
       items={items}
-      renderItem={(item) => <NoteBody item={item} />}
-      footer={(current) =>
-        current ? (
+      onActiveAnnotationChange={(nextId) => {
+        // Clear per-annotation UI state so an error on one note doesn't
+        // bleed into the next when the user cycles to a different note.
+        // Only clear the edit draft when the focused annotation actually
+        // changes — transient refetches that produce a fresh annotation
+        // reference with the same id must not wipe the user's in-progress
+        // typing.
+        currentIdRef.current = nextId
+        setSaveError(null)
+        setAttachmentError(null)
+        setBusyAttachmentIds(new Set())
+        if (editingId && nextId !== editingId && !saving) {
+          setEditingId(null)
+          setDraftBody('')
+        }
+      }}
+      renderItem={(item) => (
+        <NoteBody
+          item={item}
+          briefingItems={briefingItems}
+          editing={editingId === item.id}
+          draftBody={draftBody}
+          onDraftChange={setDraftBody}
+          onCancelEdit={cancelEdit}
+          onCommitEdit={() => void commitEdit(item)}
+          saving={saving}
+          saveError={editingId === item.id ? saveError : null}
+          busyAttachmentIds={busyAttachmentIds}
+          onRemoveAttachment={(attachmentId) => {
+            setAttachmentError(null)
+            markBusy(attachmentId, true)
+            const startedAtId = item.id
+            void (async () => {
+              try {
+                await onDeleteAttachment(startedAtId, attachmentId)
+              } catch (err) {
+                reportErrorToSentry(err, {
+                  surface: 'briefing-annotations',
+                  op: 'deleteAttachment',
+                  annotationId: startedAtId,
+                  attachmentId,
+                })
+                const msg = err instanceof Error ? err.message : String(err)
+                if (currentIdRef.current === startedAtId) {
+                  setAttachmentError(`Couldn't remove attachment: ${msg}`)
+                }
+              } finally {
+                if (currentIdRef.current === startedAtId) {
+                  markBusy(attachmentId, false)
+                }
+              }
+            })()
+          }}
+        />
+      )}
+      footer={(current) => {
+        if (!current) return null
+        const isEditingCurrent = editingId === current.id
+        return (
           <div className="flex flex-col gap-2">
-            {/*
-              "Add attachment" used to live here as a separate button, but it
-              routed to the same `onEditNote` handler as "Edit Note" — both
-              opened the edit sheet, which already exposes the attachment
-              picker. Dropping the duplicate avoids UX confusion. Edit Note
-              is the single entry point for body edits and attachment
-              management.
-            */}
-            <Button
-              onClick={() => onEditNote(current)}
-              className="w-full gap-2"
-            >
-              <PencilIcon className="size-4" aria-hidden="true" />
-              Edit Note
-            </Button>
+            {/* While editing, Save/Cancel live inside the note card.
+                Add attachment + Edit Note hide; Delete note stays so the
+                user can still trash the note mid-edit (matches Lovable). */}
+            {isEditingCurrent ? null : (
+              <>
+                <NoteAttachmentPicker
+                  triggerVariant="button"
+                  items={[]}
+                  onAdd={(file) => {
+                    setAttachmentError(null)
+                    const startedAtId = current.id
+                    void (async () => {
+                      try {
+                        await onUploadAttachment(startedAtId, file)
+                      } catch (err) {
+                        reportErrorToSentry(err, {
+                          surface: 'briefing-annotations',
+                          op: 'uploadAttachment',
+                          annotationId: startedAtId,
+                          fileName: file.name,
+                        })
+                        const msg =
+                          err instanceof Error ? err.message : String(err)
+                        if (currentIdRef.current === startedAtId) {
+                          setAttachmentError(
+                            `Couldn't attach ${file.name}: ${msg}`,
+                          )
+                        }
+                      }
+                    })()
+                  }}
+                  onRemove={(attachmentId) => {
+                    setAttachmentError(null)
+                    markBusy(attachmentId, true)
+                    const startedAtId = current.id
+                    void (async () => {
+                      try {
+                        await onDeleteAttachment(startedAtId, attachmentId)
+                      } catch (err) {
+                        reportErrorToSentry(err, {
+                          surface: 'briefing-annotations',
+                          op: 'deleteAttachment',
+                          annotationId: startedAtId,
+                          attachmentId,
+                        })
+                        const msg =
+                          err instanceof Error ? err.message : String(err)
+                        if (currentIdRef.current === startedAtId) {
+                          setAttachmentError(
+                            `Couldn't remove attachment: ${msg}`,
+                          )
+                        }
+                      } finally {
+                        if (currentIdRef.current === startedAtId) {
+                          markBusy(attachmentId, false)
+                        }
+                      }
+                    })()
+                  }}
+                  error={attachmentError}
+                />
+                <Button
+                  onClick={() => startEdit(current)}
+                  className="w-full gap-2"
+                >
+                  <PencilIcon className="size-4" aria-hidden="true" />
+                  Edit Note
+                </Button>
+              </>
+            )}
             <DeleteAnnotationButton
               current={current}
               label="Delete note"
@@ -94,8 +433,8 @@ export function NotesSurface({
               onDelete={onDeleteNote}
             />
           </div>
-        ) : null
-      }
+        )
+      }}
       emptyState={
         <SurfaceEmptyState
           label="No notes yet"
