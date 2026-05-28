@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { render, testQueryClient } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { annotationsQueryKey } from '@shared/briefings/use-annotations'
+import { chatApi } from '@shared/briefings/chat-api'
 import type { Annotation } from '@shared/briefings/types'
 import type { ResolvedAnchor } from '@shared/briefings/anchorResolver'
 import type { StagedAttachment } from './NoteAttachmentPicker'
@@ -116,6 +117,7 @@ type BriefingAssistantSurfaceProps = {
     annotationId: string
     conversationId: string
   }) => void
+  onDeleteChat?: (annotation: Annotation) => Promise<void>
 }
 let captured_BriefingAssistantSurface: BriefingAssistantSurfaceProps = {
   open: false,
@@ -294,6 +296,15 @@ function ReportErrorThenSwitchSurfacesTrigger() {
         close sheet
       </button>
     </>
+  )
+}
+
+function OpenChatsSurfaceTrigger() {
+  const { openChatsSurface } = useAnnotationsCtx()
+  return (
+    <button type="button" onClick={() => openChatsSurface()}>
+      open chats surface
+    </button>
   )
 }
 
@@ -1325,6 +1336,68 @@ describe('<AnnotationsScope>', () => {
         expect(invalidateSpy).toHaveBeenCalledWith({
           queryKey: annotationsQueryKey('briefing_x'),
         })
+      })
+    })
+  })
+
+  describe('Chat delete', () => {
+    // After a chat is soft-deleted from the cycler footer the surface
+    // should close. Without this, the user would either see an empty
+    // state (last chat) or jump to an unrelated neighbor chat. Matches
+    // the user's mental model: confirm delete → done.
+    it('closes the chats surface after the chat soft-delete resolves', async () => {
+      const chatAnnotation: Annotation = {
+        id: 'ann_chat_delete',
+        kind: 'chat',
+        resourceType: 'briefing',
+        resourceId: 'briefing_x',
+        authorUserId: 1,
+        jsonPath: 'agenda.0.title',
+        start: 0,
+        end: 5,
+        createdAt: '2026-05-27T00:00:00.000Z',
+        updatedAt: '2026-05-27T00:00:00.000Z',
+      }
+      mockAnnotationsApi.list.mockResolvedValue([chatAnnotation])
+      const softDeleteMock = vi.mocked(chatApi.softDelete)
+      softDeleteMock.mockResolvedValue(undefined)
+
+      render(
+        <AnnotationsScope
+          meetingDate="briefing_x"
+          initialActiveCard={{
+            key: 'briefing-executive-summary',
+            jsonPath: '/executiveSummary',
+            titleJsonPath: '/executive_summary/title',
+            title: 'Executive Summary',
+          }}
+        >
+          <OpenChatsSurfaceTrigger />
+        </AnnotationsScope>,
+      )
+
+      // Wait for the chat annotation to be in the cache, then open the
+      // cycler surface focused on it.
+      await waitFor(() => {
+        expect(mockAnnotationsApi.list).toHaveBeenCalled()
+      })
+      await userEvent.click(
+        screen.getByRole('button', { name: /open chats surface/i }),
+      )
+      await waitFor(() => {
+        expect(captured_BriefingAssistantSurface.open).toBe(true)
+      })
+      expect(captured_BriefingAssistantSurface.onDeleteChat).toBeDefined()
+
+      // Fire the delete handler the inline footer wires through.
+      await act(async () => {
+        await captured_BriefingAssistantSurface.onDeleteChat?.(chatAnnotation)
+      })
+
+      // softDelete was invoked AND the surface closed.
+      expect(softDeleteMock).toHaveBeenCalledWith('ann_chat_delete')
+      await waitFor(() => {
+        expect(captured_BriefingAssistantSurface.open).toBe(false)
       })
     })
   })

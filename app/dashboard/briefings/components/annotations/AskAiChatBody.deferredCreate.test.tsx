@@ -101,6 +101,8 @@ describe('<AskAiChatBody> deferred creation', () => {
       annotationId: 'ann_new_1',
       conversationId: 'conv_new_1',
     })
+    // Verification read after create — returns empty for a fresh chat.
+    listMessagesMock.mockResolvedValue([])
     streamMessageMock.mockReturnValue(makeOkStream())
 
     render(
@@ -123,7 +125,13 @@ describe('<AskAiChatBody> deferred creation', () => {
       anchor: EMPTY_ANCHOR,
     })
 
-    // After create, stream fires with the freshly-minted annotation id.
+    // Verification listMessages fires AFTER create, BEFORE stream — guards
+    // against the post-create settling race that surfaced as 100% first
+    // message failure before the warm-up read was reintroduced.
+    await waitFor(() => expect(listMessagesMock).toHaveBeenCalledTimes(1))
+    expect(listMessagesMock).toHaveBeenCalledWith('ann_new_1')
+
+    // After create + verification, stream fires with the freshly-minted id.
     await waitFor(() => expect(streamMessageMock).toHaveBeenCalledTimes(1))
     expect(streamMessageMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -156,6 +164,7 @@ describe('<AskAiChatBody> deferred creation', () => {
           },
         ),
     )
+    listMessagesMock.mockResolvedValue([])
     streamMessageMock.mockReturnValue(makeOkStream())
 
     render(
@@ -206,12 +215,14 @@ describe('<AskAiChatBody> deferred creation', () => {
     // The optimistic user bubble stays so the retry can resume.
     expect(screen.getByText('first try')).toBeInTheDocument()
 
-    // Now retry — create succeeds, stream emits.
+    // Now retry — create succeeds, verification read returns empty,
+    // stream emits.
     createMock.mockReset()
     createMock.mockResolvedValue({
       annotationId: 'ann_retry',
       conversationId: 'conv_retry',
     })
+    listMessagesMock.mockResolvedValue([])
     streamMessageMock.mockReturnValue(makeOkStream())
     await user.click(screen.getByRole('button', { name: /^retry$/i }))
 
@@ -231,6 +242,7 @@ describe('<AskAiChatBody> deferred creation', () => {
       annotationId: 'ann_reuse',
       conversationId: 'conv_reuse',
     })
+    listMessagesMock.mockResolvedValue([])
     streamMessageMock
       .mockReturnValueOnce(makeOkStream())
       .mockReturnValueOnce(makeOkStream())

@@ -256,6 +256,14 @@ export default function AskAiChatBody({
         meetingDate,
         anchor: anchor ?? EMPTY_ANCHOR,
       })
+      // Issue a verification GET before returning the id. The eager
+      // pre-refactor flow always did `listMessages` right after create;
+      // dropping it exposed a server-side settling window where the
+      // very next `POST /messages` would fail with the new annotation
+      // still not yet visible to its loadContext check. The GET both
+      // confirms readability and gives the server a beat to settle.
+      // Empty result for a freshly-minted chat is expected.
+      await chatApi.listMessages(created.annotationId)
       setAnnotationId(created.annotationId)
       onChatCreated?.({
         annotationId: created.annotationId,
