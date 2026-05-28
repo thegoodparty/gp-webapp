@@ -26,7 +26,7 @@ Post-signup onboarding flow. New users land here after registration to pick the 
 
 - `[slug]/[step]/` route is dynamic; URLs look like `/onboarding/onboarding-1/...`. Don't link to `step` numerically — go through the constants.
 - Tests exist for the office-selection steps — run them when changing office logic (`OfficeSelectionStep.test.tsx`, `ManualOfficeEntryStep.test.tsx`, `OnboardingFlow.test.tsx`).
-- Versioning helper (`shared/useVerisons.ts`) — note the typo, don't auto-rename without grepping callers.
+- Versioning helper lives at `shared/useVersions.ts` (renamed from the old `useVerisons.ts` typo); a single dashboard consumer imports it.
 
 ## Related
 

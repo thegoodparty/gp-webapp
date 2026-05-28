@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import ContentEditor from './ContentEditor'
-import useVersions from 'app/onboarding/shared/useVerisons'
+import useVersions from 'app/onboarding/shared/useVersions'
 import { fetchCampaignVersions } from 'app/onboarding/shared/ajaxActions'
 import { kebabToCamel } from 'helpers/stringHelper'
 import LoadingContent from './LoadingContent'
