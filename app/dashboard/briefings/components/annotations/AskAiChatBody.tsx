@@ -871,7 +871,7 @@ export default function AskAiChatBody({
             loading={sending || creating}
             icon={<Sparkles className="size-4" aria-hidden />}
             iconPosition="left"
-            className="w-full text-sm"
+            className="w-full text-sm!"
           >
             Ask Assistant
           </Button>

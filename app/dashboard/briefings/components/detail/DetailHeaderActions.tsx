@@ -45,7 +45,7 @@ export default function DetailHeaderActions(): React.JSX.Element | null {
       <Button
         variant="outline"
         onClick={openShareDrawer}
-        className="hidden text-sm lg:inline-flex"
+        className="hidden text-sm! lg:inline-flex"
       >
         <ShareIcon className="size-4" aria-hidden />
         Share

@@ -32,7 +32,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
               ? `Add a note to ${activeCard.title}`
               : 'Click a card to make it active first'
           }
-          className="text-sm"
+          className="text-sm!"
         >
           <MessageSquare className="size-4" aria-hidden />
           Notes
@@ -45,7 +45,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
               ? `Ask AI about ${activeCard.title}`
               : 'Click a card to make it active first'
           }
-          className="text-sm"
+          className="text-sm!"
         >
           <Sparkles className="size-4" aria-hidden />
           Ask AI
