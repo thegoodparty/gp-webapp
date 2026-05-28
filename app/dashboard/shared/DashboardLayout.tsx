@@ -104,7 +104,10 @@ const MOBILE_PAGE_TITLES: Array<[string, string]> = [
   ['/dashboard/briefings', 'Briefing Assistant'],
   ['/dashboard/outreach', 'Voter Outreach'],
   ['/dashboard/voter-records', 'Voter Data'],
-  ['/dashboard/contacts', 'Contacts'],
+  // Sidebar renders this item's `v2Name` ("Constituents") in place of its
+  // `label` ("Contacts") via `item.v2Name || label`. Keep the mobile title
+  // in sync so the same page reads the same name in both surfaces.
+  ['/dashboard/contacts', 'Constituents'],
   ['/dashboard/polls', 'Polls'],
   ['/dashboard/website', 'Website'],
   ['/dashboard/campaign-details', 'My Profile'],
