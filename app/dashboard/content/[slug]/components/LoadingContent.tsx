@@ -19,9 +19,7 @@ export default function LoadingContent({
           width={48}
           height={48}
         />
-        <div className="mr-3 text-xl font-sfpro text-purple-500">
-          {subtitle}
-        </div>
+        <div className="mr-3 text-xl text-purple-500">{subtitle}</div>
       </div>
     </div>
   )

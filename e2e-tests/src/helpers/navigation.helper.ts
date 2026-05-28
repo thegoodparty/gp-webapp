@@ -10,35 +10,16 @@ export const blockSlowScripts = async (page: Page) => {
 
 export class NavigationHelper {
   /**
-   * Opens the mobile nav drawer. New dashboard sidebar uses an "Open menu" button;
-   * legacy layouts use the Hamburger (`data-testid="tilt"`).
+   * Opens the mobile nav drawer. The trigger is a button with an
+   * accessible name of "Open menu" (aria-label) in every layout.
    */
   static async openMobileNavMenu(page: Page): Promise<void> {
-    const openMenu = page.getByRole('button', { name: /open menu/i })
+    const openMenu = page.getByRole('button', { name: /open menu/i }).first()
     if (await openMenu.isVisible().catch(() => false)) {
       await openMenu.click()
       return
     }
-
-    const tilts = page.getByTestId('tilt')
-    const count = await tilts.count()
-    if (count === 0) {
-      throw new Error('No mobile menu trigger found (Open menu or tilt)')
-    }
-    for (let i = 0; i < count; i++) {
-      const t = tilts.nth(i)
-      if (await t.isVisible().catch(() => false)) {
-        await t.click()
-        return
-      }
-    }
-    // Legacy layouts sometimes attach two tilt nodes (e.g. desktop + mobile); the
-    // actionable one may only match index 1, or need force when CSS hides duplicates.
-    if (count >= 2) {
-      await tilts.nth(1).click({ force: true })
-      return
-    }
-    await tilts.first().click({ force: true })
+    throw new Error('No mobile menu trigger found')
   }
 
   static async navigateToPage(page: Page, path: string): Promise<void> {

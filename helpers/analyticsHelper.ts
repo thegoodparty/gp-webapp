@@ -512,13 +512,25 @@ export const EVENTS = {
     DidYouWinModalCompleted: 'Candidacy - Did You Win Modal Completed',
     CampaignCompleted: 'Candidacy - Campaign Completed',
   },
-  Briefings: {
-    BriefingViewed: 'Briefings - Briefing Viewed',
-    IssueDetailViewed: 'Briefings - Issue Detail Viewed',
-    ClickDownload: 'Briefings - Click Download',
-    FeedbackHelpful: 'Briefings - Feedback: Helpful',
-    FeedbackNotHelpful: 'Briefings - Feedback: Not Helpful',
-    ClickReadFullBriefing: 'Briefings - Click Read Full Briefing',
+  BriefingAssistant: {
+    ListViewed: 'Briefing Assistant - List Viewed',
+    BriefingViewed: 'Briefing Assistant - Briefing Viewed',
+    IssueDetailViewed: 'Briefing Assistant - Issue Detail Viewed',
+    DownloadClicked: 'Briefing Assistant - Download Clicked',
+    FeedbackCompleted: 'Briefing Assistant - Feedback Completed',
+    FeedbackSubmissionFailed: 'Briefing Assistant - Feedback Submission Failed',
+    ReadFullBriefingClicked: 'Briefing Assistant - Read Full Briefing Clicked',
+    ReadAloudStarted: 'Briefing Assistant - Read Aloud Started',
+    ReadAloudStopped: 'Briefing Assistant - Read Aloud Stopped',
+    ReadAloudCompleted: 'Briefing Assistant - Read Aloud Completed',
+    ReadAloudFailed: 'Briefing Assistant - Read Aloud Failed',
+    DictationStarted: 'Briefing Assistant - Dictation Started',
+    DictationFailed: 'Briefing Assistant - Dictation Failed',
+    ShareDrawerOpened: 'Briefing Assistant - Share Drawer Opened',
+    ShareCompleted: 'Briefing Assistant - Share Completed',
+    AttachmentClicked: 'Briefing Assistant - Attachment Clicked',
+    SourcesExpanded: 'Briefing Assistant - Sources Expanded',
+    TocItemClicked: 'Briefing Assistant - TOC Item Clicked',
   },
 } as const
 
@@ -564,10 +576,12 @@ export const trackRegistrationCompleted = async ({
       if (typeof analyticsInstance.ready === 'function') {
         await analyticsInstance.ready()
       }
+      const hutk = cookie.get('hubspotutk')
       analyticsInstance.identify(userId, {
         signUpDate,
         signUpMethod,
         ...(email ? { email } : {}),
+        ...(hutk ? { hutk } : {}),
       })
     }
   } catch (error) {

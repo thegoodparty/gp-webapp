@@ -28,7 +28,7 @@ export const NumberInsight = ({
       <CardContent>
         <div className="flex items-center justify-between">
           <p>{title}</p>
-          <div className="text-lg text-slate-600 ">{icon}</div>
+          <div className="text-slate-600 [&_svg]:size-5">{icon}</div>
         </div>
         {showSkeleton && (
           <div className="mt-3 h-8 w-40 rounded bg-slate-100 animate-pulse" />

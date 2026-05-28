@@ -13,31 +13,52 @@ const meta: Meta<typeof Label> = {
 export default meta
 type Story = StoryObj<typeof Label>
 
-function DefaultLabel() {
-  return (
+type PlaygroundArgs = {
+  text: string
+  htmlFor: string
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    text: 'Email',
+    htmlFor: 'playground-email',
+  },
+  argTypes: {
+    text: { control: 'text' },
+    htmlFor: {
+      control: 'text',
+      description:
+        'Element id the label is bound to. Clicking the label should focus the input below.',
+    },
+  },
+  render: ({ text, htmlFor }) => (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor={htmlFor}>{text}</Label>
+      <Input type="email" id={htmlFor} placeholder="Enter your email" />
+    </div>
+  ),
+}
+
+export const Default: Story = {
+  render: () => (
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor="email">Email</Label>
       <Input type="email" id="email" placeholder="Enter your email" />
     </div>
-  )
+  ),
 }
 
-function CheckboxLabel() {
-  return (
+export const WithCheckbox: Story = {
+  render: () => (
     <div className="flex items-center space-x-2">
       <Checkbox id="terms" />
-      <Label
-        htmlFor="terms"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      >
-        Accept terms and conditions
-      </Label>
+      <Label htmlFor="terms">Accept terms and conditions</Label>
     </div>
-  )
+  ),
 }
 
-function RadioGroupLabel() {
-  return (
+export const WithRadioGroup: Story = {
+  render: () => (
     <RadioGroup defaultValue="comfortable">
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="default" id="r1" />
@@ -52,37 +73,5 @@ function RadioGroupLabel() {
         <Label htmlFor="r3">Compact</Label>
       </div>
     </RadioGroup>
-  )
-}
-
-function CustomStylesLabel() {
-  return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="username" className="text-lg font-semibold text-primary">
-        Username
-      </Label>
-      <Input
-        type="text"
-        id="username"
-        placeholder="Enter your username"
-        className="border-primary"
-      />
-    </div>
-  )
-}
-
-export const Default: Story = {
-  render: () => <DefaultLabel />,
-}
-
-export const WithCheckbox: Story = {
-  render: () => <CheckboxLabel />,
-}
-
-export const WithRadioGroup: Story = {
-  render: () => <RadioGroupLabel />,
-}
-
-export const WithCustomStyles: Story = {
-  render: () => <CustomStylesLabel />,
+  ),
 }

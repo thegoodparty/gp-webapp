@@ -24,9 +24,7 @@
   --breakpoint-xs: 400px;
 
   /* Font families */
-  --font-outfit: var(--outfit-font);
-  --font-sfpro: var(--sfpro-font);
-  --font-opensans: var(--open-sans-font);
+  --font-opensans: var(--open-sans-font), sans-serif;
   --font-geist: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
 
@@ -456,4 +454,76 @@
   --color-components-input-focus: rgba(37, 99, 235, 0.3);
   --color-components-tooltip-base: #262626;
   --color-components-tooltip-foreground: #ffffff;
+
+  /* ==========================================================================
+   * RADIX COLLAPSIBLE ANIMATIONS
+   * Use: data-[state=open]:animate-collapsible-down,
+   *      data-[state=closed]:animate-collapsible-up
+   * Reads --radix-collapsible-content-height set by Radix on the content node.
+   * ========================================================================== */
+  --animate-collapsible-down: collapsible-down 250ms ease-out;
+  --animate-collapsible-up: collapsible-up 250ms ease-out;
+
+  /* ==========================================================================
+   * RADIX ACCORDION ANIMATIONS
+   * Use: data-[state=open]:animate-accordion-down,
+   *      data-[state=closed]:animate-accordion-up
+   * Reads --radix-accordion-content-height set by Radix on the content node.
+   * ========================================================================== */
+  --animate-accordion-down: accordion-down 250ms ease-out;
+  --animate-accordion-up: accordion-up 250ms ease-out;
+
+  /* ==========================================================================
+   * INPUT OTP CARET BLINK
+   * Use: animate-caret-blink on the synthetic caret element.
+   * ========================================================================== */
+  --animate-caret-blink: caret-blink 1s ease-out infinite;
+}
+
+@keyframes collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  50% {
+    opacity: 0;
+  }
 }

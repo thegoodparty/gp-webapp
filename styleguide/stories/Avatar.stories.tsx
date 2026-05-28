@@ -1,26 +1,86 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { UserIcon, CheckIcon, StarIcon } from '../components/ui/icons'
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
-  AvatarIcon,
   AvatarBadge,
+  AvatarFallback,
+  AvatarIcon,
+  AvatarImage,
 } from '../components/ui/avatar'
+import { CheckIcon, StarIcon, UserIcon } from '../components/ui/icons'
 
 const meta: Meta<typeof Avatar> = {
   component: Avatar,
   title: 'Components/Avatar',
-  parameters: {
-    layout: 'centered',
-  },
+  parameters: { layout: 'centered' },
   tags: ['autodocs'],
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['xSmall', 'small', 'medium', 'large', 'xLarge'],
+    },
+    variant: {
+      control: 'select',
+      options: [
+        'default',
+        'brightyellow',
+        'lavender',
+        'halogreen',
+        'blue',
+        'waxflower',
+      ],
+    },
+  },
 }
 export default meta
 
 type Story = StoryObj<typeof Avatar>
 
-// Basic Examples
+type PlaygroundArgs = {
+  size: 'xSmall' | 'small' | 'medium' | 'large' | 'xLarge'
+  variant:
+    | 'default'
+    | 'brightyellow'
+    | 'lavender'
+    | 'halogreen'
+    | 'blue'
+    | 'waxflower'
+  showImage: boolean
+  showBadge: boolean
+}
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  args: {
+    size: 'medium',
+    variant: 'default',
+    showImage: false,
+    showBadge: false,
+  },
+  argTypes: {
+    showImage: {
+      control: 'boolean',
+      description:
+        'Render an image. When false, falls back to the JD initials inside an AvatarFallback.',
+    },
+    showBadge: {
+      control: 'boolean',
+      description: 'Render a check badge in the bottom-right corner.',
+    },
+  },
+  render: ({ size, variant, showImage, showBadge }) => (
+    <Avatar size={size} variant={variant}>
+      {showImage ? (
+        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+      ) : null}
+      <AvatarFallback>JD</AvatarFallback>
+      {showBadge ? (
+        <AvatarBadge>
+          <CheckIcon className="h-3 w-3 text-success-main" />
+        </AvatarBadge>
+      ) : null}
+    </Avatar>
+  ),
+}
+
 export const Default: Story = {
   render: () => (
     <Avatar>
@@ -48,31 +108,17 @@ export const WithIcon: Story = {
   ),
 }
 
-// Compound Component Pattern Examples
 export const WithBadge: Story = {
   render: () => (
     <Avatar size="large">
       <AvatarFallback>JD</AvatarFallback>
       <AvatarBadge>
-        <CheckIcon className="h-3 w-3 text-green-600" />
+        <CheckIcon className="h-3 w-3 text-success-main" />
       </AvatarBadge>
     </Avatar>
   ),
 }
 
-export const CompoundComponentPattern: Story = {
-  render: () => (
-    <Avatar size="large">
-      <Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
-      <Avatar.Fallback>CN</Avatar.Fallback>
-      <Avatar.Badge position="top-right" size="small">
-        <StarIcon className="h-2 w-2 text-yellow-500" />
-      </Avatar.Badge>
-    </Avatar>
-  ),
-}
-
-// Size Variants
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
@@ -95,7 +141,6 @@ export const Sizes: Story = {
   ),
 }
 
-// Color Variants
 export const ColorVariants: Story = {
   render: () => (
     <div className="flex items-center gap-4">
@@ -121,39 +166,37 @@ export const ColorVariants: Story = {
   ),
 }
 
-// Badge Positioning Examples
 export const BadgePositions: Story = {
   render: () => (
     <div className="flex items-center gap-8">
       <Avatar size="large">
         <AvatarFallback>TL</AvatarFallback>
         <AvatarBadge position="top-left" size="small">
-          <div className="h-2 w-2 bg-red-500 rounded-full" />
+          <div className="h-2 w-2 rounded-full bg-destructive" />
         </AvatarBadge>
       </Avatar>
       <Avatar size="large">
         <AvatarFallback>TR</AvatarFallback>
         <AvatarBadge position="top-right" size="small">
-          <div className="h-2 w-2 bg-green-500 rounded-full" />
+          <div className="h-2 w-2 rounded-full bg-success-main" />
         </AvatarBadge>
       </Avatar>
       <Avatar size="large">
         <AvatarFallback>BL</AvatarFallback>
         <AvatarBadge position="bottom-left" size="small">
-          <div className="h-2 w-2 bg-blue-500 rounded-full" />
+          <div className="h-2 w-2 rounded-full bg-info-main" />
         </AvatarBadge>
       </Avatar>
       <Avatar size="large">
         <AvatarFallback>BR</AvatarFallback>
         <AvatarBadge position="bottom-right" size="small">
-          <div className="h-2 w-2 bg-yellow-500 rounded-full" />
+          <div className="h-2 w-2 rounded-full bg-warning-main" />
         </AvatarBadge>
       </Avatar>
     </div>
   ),
 }
 
-// Badge Sizes
 export const BadgeSizes: Story = {
   render: () => (
     <div className="flex items-center gap-8">
@@ -179,7 +222,6 @@ export const BadgeSizes: Story = {
   ),
 }
 
-// Complex Examples
 export const IconWithColorAndBadge: Story = {
   render: () => (
     <div className="flex items-center gap-4">
@@ -188,7 +230,7 @@ export const IconWithColorAndBadge: Story = {
           <UserIcon className="h-6 w-6" />
         </AvatarIcon>
         <AvatarBadge>
-          <CheckIcon className="h-3 w-3 text-green-600" />
+          <CheckIcon className="h-3 w-3 text-success-main" />
         </AvatarBadge>
       </Avatar>
       <Avatar variant="blue" size="large">
@@ -196,7 +238,7 @@ export const IconWithColorAndBadge: Story = {
           <UserIcon className="h-6 w-6" />
         </AvatarIcon>
         <AvatarBadge position="top-right">
-          <StarIcon className="h-3 w-3 text-yellow-500" />
+          <StarIcon className="h-3 w-3 text-warning-main" />
         </AvatarBadge>
       </Avatar>
       <Avatar variant="halogreen" size="large">
@@ -204,28 +246,8 @@ export const IconWithColorAndBadge: Story = {
           <UserIcon className="h-6 w-6" />
         </AvatarIcon>
         <AvatarBadge position="bottom-left">
-          <div className="h-3 w-3 bg-red-500 rounded-full" />
+          <div className="h-3 w-3 rounded-full bg-destructive" />
         </AvatarBadge>
-      </Avatar>
-    </div>
-  ),
-}
-
-// Fallback Examples
-export const FallbackExamples: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Avatar>
-        <AvatarImage src="/broken-image.jpg" alt="Broken" />
-        <AvatarFallback>JD</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarImage src="/broken-image.jpg" alt="Broken" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarImage src="/broken-image.jpg" alt="Broken" />
-        <AvatarFallback>AB</AvatarFallback>
       </Avatar>
     </div>
   ),

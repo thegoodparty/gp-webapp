@@ -90,6 +90,10 @@ const CommitteeCheckPage = ({
       setLoadingCampaignUpdate(true)
       await updateCampaign([
         {
+          key: 'details.campaignCommittee',
+          value: campaignCommittee,
+        },
+        {
           key: 'details.einNumber',
           value: einInputValue,
         },

@@ -1,8 +1,10 @@
 import type { Race } from 'app/onboarding/[slug]/[step]/components/ballotOffices/types'
 import type {
-  Briefing,
-  BriefingListItem,
-} from 'app/dashboard/briefings/shared/briefing-types'
+  SynthesizeSpeechRequest,
+  SynthesizeSpeechResponse,
+  TranscribeSessionRequest,
+  TranscribeSessionResponse,
+} from 'app/dashboard/briefings/shared/speech-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
 import { Campaign, CampaignDetails, User } from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
@@ -14,6 +16,38 @@ import type {
   GetConstituentIssuesResponse,
   GetIndividualActivitiesResponse,
 } from 'app/dashboard/contacts/[[...attr]]/components/shared/contacts-types'
+import type { AnnotationAnchor, ChatMessage } from 'app/shared/briefings/types'
+import { MeetingBriefingOutput } from './generated/agent-job-contracts'
+
+export interface MeetingsListItemDto {
+  meetingDate: string
+  meetingTime: string
+  meetingTimezone: string
+  durationMinutes: number
+  meetingName: string
+  location: string
+  hasBriefing: boolean
+}
+
+export interface MeetingsListResponseDto {
+  scheduleKnown: boolean
+  meetings: MeetingsListItemDto[]
+}
+
+/**
+ * gp-api emits this shape (not part of the agent artifact) when no
+ * MeetingBriefing row exists for the requested date. Distinguished from a
+ * `MeetingBriefingPlaceholder` artifact by the top-level `status` field.
+ */
+export interface MeetingBriefingAwaitingDto {
+  status: 'awaiting_agenda'
+  meetingDate: string
+  meetingName: string
+  meetingTime: string
+  meetingTimezone: string
+  location: string
+  durationMinutes: number
+}
 
 export type APIEndpoints = {
   'GET /v1/users/me': {
@@ -72,6 +106,14 @@ export type APIEndpoints = {
     Response: ElectedOffice
   }
 
+  'POST /v1/meetings/briefings/dispatch': {
+    Request: {
+      electedOfficeId: string
+      kind: 'schedule' | 'briefing'
+    }
+    Response: { dispatched: true; kind: 'schedule' | 'briefing' }
+  }
+
   'GET /v1/contacts/stats': {
     Request: {}
     Response: ContactsStats
@@ -91,13 +133,19 @@ export type APIEndpoints = {
       state: string
       office: string
     }
-    Response: {
-      outlets: Array<{
-        name: string
-        type: 'TV' | 'print' | 'radio'
-        description: string
-      }>
-    }
+    Response:
+      | { status: 'pending' }
+      | {
+          status: 'ready'
+          outlets: Array<{
+            name: string
+            type: 'TV' | 'print' | 'radio'
+            description: string
+            email?: string | null
+            phone?: string | null
+            address?: string | null
+          }>
+        }
   }
 
   'GET /v1/onboarding/voter-issues': {
@@ -198,14 +246,81 @@ export type APIEndpoints = {
     Response: GetIndividualActivitiesResponse
   }
 
-  'GET /v1/meetings/briefings': {
+  'GET /v1/meetings': {
     Request: {}
-    Response: BriefingListItem[]
+    Response: MeetingsListResponseDto
   }
 
-  'GET /v1/meetings/briefings/:date': {
+  'GET /v1/meetings/:date/briefing': {
+    Request: { date: string }
+    Response: MeetingBriefingOutput | MeetingBriefingAwaitingDto
+  }
+
+  'POST /v1/speech/synthesize': {
+    Request: SynthesizeSpeechRequest
+    Response: SynthesizeSpeechResponse
+  }
+
+  'POST /v1/speech/transcribe/session': {
+    Request: TranscribeSessionRequest
+    Response: TranscribeSessionResponse
+  }
+
+  // Briefing annotations. Backend ships responses in snake_case. The
+  // frontend AnnotationsApi client translates these to the camelCase
+  // Annotation shape consumed by components. Briefings are addressed
+  // by meeting date (YYYY-MM-DD), matching `GET /v1/meetings/:date/briefing`.
+  'GET /v1/meetings/:date/briefing/annotations': {
+    Request: { date: string }
+    Response: { annotations: ApiAnnotation[] }
+  }
+  'POST /v1/meetings/:date/briefing/annotations': {
+    Request: ApiCreateAnnotationInput & { date: string }
+    Response: ApiAnnotation
+  }
+  'PUT /v1/annotations/:annotationId/note': {
+    Request: { body: string }
+    Response: ApiAnnotation
+  }
+  'DELETE /v1/annotations/:annotationId': {
     Request: {}
-    Response: Briefing
+    Response: void
+  }
+  'POST /v1/annotations/:annotationId/note/attachments/presign': {
+    Request: { annotationId: string } & ApiAttachmentPresignRequest
+    Response: ApiAttachmentPresignResponse
+  }
+  'POST /v1/annotations/:annotationId/note/attachments/:attachmentId/complete': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: void
+  }
+  'DELETE /v1/annotations/:annotationId/note/attachments/:attachmentId': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: void
+  }
+  'GET /v1/annotations/:annotationId/note/attachments/:attachmentId/download-url': {
+    Request: { annotationId: string; attachmentId: string }
+    Response: ApiAttachmentDownloadUrlResponse
+  }
+
+  'GET /v1/meetings/:date/briefing/feedback': {
+    Request: { date: string }
+    Response: { feedback: ApiArtifactFeedback[] }
+  }
+  'PUT /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: {
+      date: string
+      itemId: string
+      feedback: ApiArtifactFeedbackKind
+      // Optional free-text. Omit to leave the existing comment untouched;
+      // pass `null` to clear it; pass a string to set / replace it.
+      comment?: string | null
+    }
+    Response: ApiArtifactFeedback
+  }
+  'DELETE /v1/meetings/:date/briefing/items/:itemId/feedback': {
+    Request: { date: string; itemId: string }
+    Response: void
   }
 
   'GET /v1/elections/race-by-position': {
@@ -216,6 +331,146 @@ export type APIEndpoints = {
     }
     Response: Race
   }
+
+  // Briefing chat routes — cross-repo contract with gp-api PR #1607.
+  // Request/response shapes mirror gp-api's createBriefingChatSchema,
+  // getConversationResponseSchema, and sendMessageSchema. SSE message
+  // streaming is intentionally not modeled here because clientRequest
+  // can't consume an SSE body — see chat-api.ts streamMessage for the
+  // raw fetch path.
+  'POST /v1/briefing-chats': {
+    Request: {
+      meetingDate: string
+      anchor: AnnotationAnchor
+    }
+    Response: {
+      annotationId: string
+      conversationId: string
+    }
+  }
+  'GET /v1/briefing-chats/:annotationId': {
+    Request: {}
+    Response: {
+      conversationId: string
+      messages: ChatMessage[]
+    }
+  }
+  'DELETE /v1/briefing-chats/:annotationId': {
+    Request: {}
+    Response: void
+  }
+}
+
+// Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts
+// in gp-api. The AnnotationsApi client maps to/from the camelCase shape
+// the rest of the frontend uses.
+export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report'
+export type ApiAnnotationResourceType = 'briefing'
+
+export interface ApiAnnotationAnchorInput {
+  json_path: string | null
+  start: number | null
+  end: number | null
+}
+
+export type ApiOcrStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'skipped'
+
+export interface ApiAnnotationNoteAttachment {
+  id: string
+  file_name: string
+  mime_type: string
+  size_bytes: number
+  ocr_status: ApiOcrStatus
+  ocr_text: string | null
+  ocr_error: string | null
+  ocr_completed_at: string | null
+  created_at: string
+}
+
+export interface ApiAnnotationNote {
+  id: string
+  /** Optional once attachment-only notes ship (Phase 2). */
+  body: string | null
+  attachments: ApiAnnotationNoteAttachment[]
+  created_at: string
+  updated_at: string
+}
+
+export interface ApiAttachmentPresignRequest {
+  file_name: string
+  mime_type: string
+  size_bytes: number
+}
+
+export interface ApiAttachmentPresignResponse {
+  attachment_id: string
+  upload_url: string
+  storage_key: string
+}
+
+export interface ApiAttachmentDownloadUrlResponse {
+  download_url: string
+  expires_at: string
+}
+
+export interface ApiAnnotationBugReport {
+  id: string
+  description: string
+  submitted_at: string
+}
+
+export interface ApiAnnotationChat {
+  id: string
+  created_at: string
+}
+
+export interface ApiAnnotation {
+  id: string
+  kind: ApiAnnotationKind
+  resource_type: ApiAnnotationResourceType
+  resource_id: string
+  author_user_id: number
+  json_path: string | null
+  start: number | null
+  end: number | null
+  created_at: string
+  updated_at: string
+  note?: ApiAnnotationNote
+  bug_report?: ApiAnnotationBugReport
+  chat?: ApiAnnotationChat
+}
+
+export type ApiCreateAnnotationInput =
+  | {
+      kind: 'note'
+      anchor: ApiAnnotationAnchorInput
+      /** body is optional for attachment-only notes (Phase 2). */
+      payload: { body?: string }
+    }
+  | {
+      kind: 'bug_report'
+      anchor: ApiAnnotationAnchorInput
+      payload: { description: string }
+    }
+
+export type ApiArtifactResourceType = 'agenda_item'
+export type ApiArtifactFeedbackKind = 'positive' | 'negative'
+
+export interface ApiArtifactFeedback {
+  id: string
+  organization_slug: string
+  submitter_user_id: number
+  artifact_type: ApiArtifactResourceType
+  artifact_id: string
+  feedback: ApiArtifactFeedbackKind
+  comment: string | null
+  created_at: string
+  updated_at: string
 }
 
 export type Organization = {

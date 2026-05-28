@@ -124,9 +124,15 @@ jobs:
         working-directory: e2e-tests
         run: npx playwright install --with-deps chromium
 
+      # Always proceed to the commit step, even if some tests fail. The
+      # purpose of this workflow is to regenerate visual snapshots — unrelated
+      # test failures (network, auth, flakes) should not block the commit of
+      # updated baselines.
       - name: Run tests with --update-snapshots
+        id: run_tests
         working-directory: e2e-tests
         run: npx playwright test --update-snapshots
+        continue-on-error: true
         env:
           BASE_URL: ${{ steps.preview.outputs.url }}
           TEST_RUN_NAME: "Update Visual Snapshots"
@@ -134,19 +140,22 @@ jobs:
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Commit updated baselines
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add e2e-tests/tests/__visual_snapshots__
           if git diff --cached --quiet; then
             echo "No snapshot changes to commit"
+            echo "committed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore: update visual snapshots from CI"
             git push origin HEAD:${{ steps.pr.outputs.branch }}
+            echo "committed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: React with success
-        if: success()
+      - name: React when snapshots were committed
+        if: steps.commit.outputs.committed == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -162,6 +171,44 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: '✅ Visual snapshots have been updated and pushed to this branch.'
+            });
+
+      - name: React when no snapshot changes were needed
+        if: steps.commit.outputs.committed == 'false' && steps.run_tests.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: '+1'
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'ℹ️ No snapshot changes needed — visual baselines are already up to date.'
+            });
+
+      - name: React when tests failed but no snapshots changed
+        if: steps.commit.outputs.committed == 'false' && steps.run_tests.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'confused'
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '⚠️ Tests failed and no snapshots were updated. [View logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
             });
 
       - name: React with failure
