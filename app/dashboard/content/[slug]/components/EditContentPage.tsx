@@ -1,16 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ContentEditor from './ContentEditor'
-import useVersions from 'app/onboarding/shared/useVersions'
+import useVersions, {
+  CampaignVersions,
+} from 'app/onboarding/shared/useVersions'
 import { fetchCampaignVersions } from 'app/onboarding/shared/ajaxActions'
 import { kebabToCamel } from 'helpers/stringHelper'
 import LoadingContent from './LoadingContent'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { Campaign } from 'helpers/types'
-
-type Versions = Partial<
-  Record<string, string | number | boolean | object | null>
->
 
 interface EditContentPageProps {
   slug: string
@@ -25,18 +23,20 @@ const EditContentPage = ({
 
   const { data: versions, error: versionsError } = useVersions()
   const { errorSnackbar } = useSnackbar()
-  const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(
-    false,
-  )
+  const [updatedVersions, setUpdatedVersions] = useState<
+    CampaignVersions | false
+  >(false)
+  const versionsErrorReportedRef = useRef(false)
 
   useEffect(() => {
-    if (!versionsError) return
+    if (!versionsError || versionsErrorReportedRef.current) return
+    versionsErrorReportedRef.current = true
     console.error('Failed to load campaign versions', versionsError)
     errorSnackbar('Could not load version history. You can still edit content.')
   }, [versionsError, errorSnackbar])
 
   const updateVersionsCallback = async () => {
-    const fetchedVersions: Versions = await fetchCampaignVersions()
+    const fetchedVersions: CampaignVersions = await fetchCampaignVersions()
     setUpdatedVersions(fetchedVersions)
   }
 
