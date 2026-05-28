@@ -16,11 +16,9 @@ const trackEventMock = vi.fn()
 vi.mock('helpers/analyticsHelper', () => ({
   trackEvent: (...args: unknown[]) => trackEventMock(...args),
   EVENTS: {
-    Briefings: {
+    BriefingAssistant: {
       DictationStarted: 'DictationStarted',
-      DictationStopped: 'DictationStopped',
       DictationFailed: 'DictationFailed',
-      DictationMaxDurationReached: 'DictationMaxDurationReached',
     },
   },
 }))
@@ -413,7 +411,7 @@ describe('useDictation', () => {
     expect(onFinal).toHaveBeenCalledWith('hello world')
   })
 
-  it('warning events expose secondsRemaining and max_duration emits analytics', async () => {
+  it('warning events expose secondsRemaining and max_duration tears down cleanly', async () => {
     happyPathSession()
     const { result } = renderHook(() =>
       useDictation({ analyticsLabel: ANALYTICS_LABEL }),
@@ -442,10 +440,7 @@ describe('useDictation', () => {
         JSON.stringify({ type: 'closed', reason: 'max_duration' }),
       )
     })
-    expect(trackEventMock).toHaveBeenCalledWith(
-      'DictationMaxDurationReached',
-      expect.objectContaining({ label: ANALYTICS_LABEL }),
-    )
+    expect(result.current.warningSecondsRemaining).toBeNull()
   })
 
   it('ignores malformed server frames without crashing', async () => {

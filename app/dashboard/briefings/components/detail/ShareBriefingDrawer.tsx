@@ -23,6 +23,7 @@ import {
   formatBriefingMeetingDate,
   formatBriefingMeetingTime,
 } from '@shared/briefings/dateHelpers'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type Props = {
   briefing: Briefing
@@ -94,7 +95,12 @@ export default function ShareBriefingDrawer({
   // expired. Cancel any pending timer and reset the labels every time the
   // drawer closes so each open starts clean.
   useEffect(() => {
-    if (open) return
+    if (open) {
+      trackEvent(EVENTS.BriefingAssistant.ShareDrawerOpened, {
+        briefingId: briefing.briefing_id,
+      })
+      return
+    }
     if (copiedIconTimerRef.current !== null) {
       clearTimeout(copiedIconTimerRef.current)
       copiedIconTimerRef.current = null
@@ -121,6 +127,10 @@ export default function ShareBriefingDrawer({
 
   const onCopyIcon = useCallback(async () => {
     if (!(await writeClipboard())) return
+    trackEvent(EVENTS.BriefingAssistant.ShareCompleted, {
+      briefingId: briefing.briefing_id,
+      channel: 'link',
+    })
     setCopiedIcon(true)
     if (copiedIconTimerRef.current !== null) {
       clearTimeout(copiedIconTimerRef.current)
@@ -129,10 +139,14 @@ export default function ShareBriefingDrawer({
       setCopiedIcon(false)
       copiedIconTimerRef.current = null
     }, COPIED_FEEDBACK_MS)
-  }, [writeClipboard])
+  }, [writeClipboard, briefing.briefing_id])
 
   const onCopyInline = useCallback(async () => {
     if (!(await writeClipboard())) return
+    trackEvent(EVENTS.BriefingAssistant.ShareCompleted, {
+      briefingId: briefing.briefing_id,
+      channel: 'link',
+    })
     setCopiedInline(true)
     if (copiedInlineTimerRef.current !== null) {
       clearTimeout(copiedInlineTimerRef.current)
@@ -141,7 +155,7 @@ export default function ShareBriefingDrawer({
       setCopiedInline(false)
       copiedInlineTimerRef.current = null
     }, COPIED_FEEDBACK_MS)
-  }, [writeClipboard])
+  }, [writeClipboard, briefing.briefing_id])
 
   // A plain `<a href={pdfUrl} download>` is unreliable here: gp-api serves
   // the PDF with `Content-Disposition: inline`, and browsers — especially
@@ -150,6 +164,9 @@ export default function ShareBriefingDrawer({
   // triggering a download against a blob URL forces save-as behavior
   // regardless of the server's disposition header.
   const onDownload = useCallback(async () => {
+    trackEvent(EVENTS.BriefingAssistant.DownloadClicked, {
+      briefingId: briefing.briefing_id,
+    })
     try {
       const res = await fetch(shareUrl, { credentials: 'include' })
       if (!res.ok) return
@@ -196,13 +213,29 @@ export default function ShareBriefingDrawer({
           </ShareAction>
 
           <ShareAction asChild label="Email" ariaLabel="Share via email">
-            <a href={mailtoHref}>
+            <a
+              href={mailtoHref}
+              onClick={() =>
+                trackEvent(EVENTS.BriefingAssistant.ShareCompleted, {
+                  briefingId: briefing.briefing_id,
+                  channel: 'email',
+                })
+              }
+            >
               <MailIcon className="size-5" aria-hidden />
             </a>
           </ShareAction>
 
           <ShareAction asChild label="Message" ariaLabel="Share via message">
-            <a href={smsHref}>
+            <a
+              href={smsHref}
+              onClick={() =>
+                trackEvent(EVENTS.BriefingAssistant.ShareCompleted, {
+                  briefingId: briefing.briefing_id,
+                  channel: 'sms',
+                })
+              }
+            >
               <MessageSquareIcon className="size-5" aria-hidden />
             </a>
           </ShareAction>
