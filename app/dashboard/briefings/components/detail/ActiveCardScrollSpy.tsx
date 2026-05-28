@@ -34,6 +34,18 @@ const ACTIVE_LINE_FRACTION = 0.35
 // so the active line lands inside the visible briefing content.
 const MOBILE_HEADER_BAND = 88
 
+// Once an external `setActiveCard` fires (TOC click, card body click), the
+// spy locks itself off while the smooth-scroll plays out so its
+// scroll-driven picks don't fight the user's destination. A single
+// timer governs the lock lifecycle:
+//   - Set to LOCK_MAX_MS at lock activation. This is the safety net for
+//     the "destination already in view, no scroll events fire" case.
+//   - Reset to SCROLL_SETTLE_MS on every scroll event during the lock.
+//     Once scroll events stop arriving for SCROLL_SETTLE_MS, the
+//     programmatic smooth-scroll has finished and the lock releases.
+const SCROLL_SETTLE_MS = 200
+const LOCK_MAX_MS = 1500
+
 /**
  * Watches the briefing scroll container and updates `activeCard` to
  * whichever card is currently at the top of the viewport. Pure side
@@ -41,8 +53,9 @@ const MOBILE_HEADER_BAND = 88
  * briefing items in so we can address them by domId / jsonPath.
  *
  * The spy intentionally does NOT scroll; it only reads scroll position.
- * Activation via card click and legend click stays in those components
- * and continues to work — the spy then takes over as the user scrolls.
+ * Activation via TOC click and card click sets `activeCard` directly and
+ * the spy backs off for the duration of the smooth-scroll so it doesn't
+ * rewind the highlight to the card currently at the active line.
  */
 export default function ActiveCardScrollSpy({
   items,
@@ -78,6 +91,41 @@ export default function ActiveCardScrollSpy({
     activeKeyRef.current = activeCard?.key ?? null
   }, [activeCard])
 
+  // Lock state shared between the activation effect (below) and the
+  // scroll-watch effect (further down).
+  const lastSpyPickKeyRef = useRef<string | null>(null)
+  const isLockedRef = useRef(false)
+  const lockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // The scroll-watch effect publishes its `pick` function here so the
+  // lock release path can run a final pick to sync the highlight to the
+  // actual landed scroll position.
+  const runPickRef = useRef<(() => void) | null>(null)
+
+  // Activate the lock whenever `activeCard` changes to a key the spy
+  // didn't dispatch itself. Start the safety timer immediately so the
+  // lock releases even if no scroll events ever arrive (e.g. clicking a
+  // TOC entry whose target is already in view).
+  //
+  // First run is treated as "the spy already agrees" so an initial
+  // hash-deep-link doesn't suppress the mount-time sync pick.
+  const hasInitedActiveSyncRef = useRef(false)
+  useEffect(() => {
+    if (!hasInitedActiveSyncRef.current) {
+      hasInitedActiveSyncRef.current = true
+      lastSpyPickKeyRef.current = activeCard?.key ?? null
+      return
+    }
+    if (!activeCard) return
+    if (activeCard.key === lastSpyPickKeyRef.current) return
+    isLockedRef.current = true
+    if (lockTimerRef.current !== null) clearTimeout(lockTimerRef.current)
+    lockTimerRef.current = setTimeout(() => {
+      isLockedRef.current = false
+      lockTimerRef.current = null
+      runPickRef.current?.()
+    }, LOCK_MAX_MS)
+  }, [activeCard])
+
   useEffect(() => {
     if (typeof window === 'undefined') return
     if (entries.length === 0) return
@@ -87,6 +135,7 @@ export default function ActiveCardScrollSpy({
 
     function pick() {
       raf = 0
+      if (isLockedRef.current) return
       const paneScrolls =
         !!pane && window.matchMedia('(min-width: 1024px)').matches
       const containerRect = paneScrolls
@@ -121,6 +170,7 @@ export default function ActiveCardScrollSpy({
       if (bestKey === null || bestKey === activeKeyRef.current) return
       const matched = entries.find((e) => e.key === bestKey)
       if (!matched) return
+      lastSpyPickKeyRef.current = matched.key
       setActiveCard({
         key: matched.key,
         jsonPath: matched.jsonPath,
@@ -129,7 +179,26 @@ export default function ActiveCardScrollSpy({
       })
     }
 
+    runPickRef.current = () => {
+      if (raf === 0) raf = requestAnimationFrame(pick)
+    }
+
     function onScroll() {
+      if (isLockedRef.current) {
+        // While locked, scroll events restart the timer with the shorter
+        // settle window. The lock releases SCROLL_SETTLE_MS after the
+        // last scroll event — i.e. once the programmatic smooth-scroll
+        // has finished. The original LOCK_MAX_MS countdown was a safety
+        // net for the no-scroll-events case; once scrolls start arriving
+        // we can use a tighter bound.
+        if (lockTimerRef.current !== null) clearTimeout(lockTimerRef.current)
+        lockTimerRef.current = setTimeout(() => {
+          isLockedRef.current = false
+          lockTimerRef.current = null
+          if (raf === 0) raf = requestAnimationFrame(pick)
+        }, SCROLL_SETTLE_MS)
+        return
+      }
       if (raf === 0) raf = requestAnimationFrame(pick)
     }
 
@@ -152,6 +221,7 @@ export default function ActiveCardScrollSpy({
       window.removeEventListener('resize', onScroll)
       pane?.removeEventListener('scroll', onScroll)
       if (raf !== 0) cancelAnimationFrame(raf)
+      runPickRef.current = null
     }
   }, [entries, setActiveCard])
 
