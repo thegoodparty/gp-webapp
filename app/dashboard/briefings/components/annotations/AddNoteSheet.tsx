@@ -381,7 +381,18 @@ export default function AddNoteSheet({
           >
             {isEdit ? 'Edit note' : 'Add a note'}
           </DrawerTitle>
-          {position ? (
+          {/* In create mode the counter is meaningless (the note doesn't
+              exist yet, so there's no position to report) — show a "New
+              Note" pill instead. The "Note N of M" counter only renders
+              when editing an existing note where the cycler position is
+              real and useful. */}
+          {!isEdit ? (
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-sm font-medium text-foreground">
+                New Note
+              </span>
+            </div>
+          ) : position ? (
             <div className="flex items-center justify-center gap-3">
               <span className="text-sm font-medium text-foreground">
                 Note {position.position} of {position.total}

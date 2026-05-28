@@ -226,13 +226,15 @@ describe('<AddNoteSheet> error surfacing', () => {
   })
 })
 
-describe('<AddNoteSheet> create-mode counter', () => {
-  it('renders the "Note N of M" counter text but NO chevron buttons (cycler owns navigation)', async () => {
+describe('<AddNoteSheet> header status pill', () => {
+  it('shows "New Note" while creating (the counter is meaningless before save) and no cycler chevrons', async () => {
     const sheet: SheetState = { kind: 'add_note_new', anchor: null }
 
     render(
       <AddNoteSheet
         sheet={sheet}
+        // Even when the parent passes a position (some flows do, some
+        // don't), create mode ignores it — the note doesn't exist yet.
         position={{ position: 3, total: 3 }}
         onClose={vi.fn()}
         onCreate={vi.fn()}
@@ -244,13 +246,38 @@ describe('<AddNoteSheet> create-mode counter', () => {
       />,
     )
 
-    expect(await screen.findByText(/note 3 of 3/i)).toBeInTheDocument()
+    expect(await screen.findByText(/^new note$/i)).toBeInTheDocument()
+    expect(screen.queryByText(/note 3 of 3/i)).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /previous note/i }),
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /next note/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('shows the "Note N of M" counter in edit mode where the position is real', async () => {
+    const sheet: SheetState = {
+      kind: 'add_note_edit',
+      annotation: makeEditAnnotation(),
+    }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={{ position: 2, total: 5 }}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(await screen.findByText(/note 2 of 5/i)).toBeInTheDocument()
+    expect(screen.queryByText(/^new note$/i)).not.toBeInTheDocument()
   })
 })
 
