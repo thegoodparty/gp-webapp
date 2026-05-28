@@ -77,9 +77,10 @@ describe('<AddNoteSheet> card-level section header', () => {
       resourceType: 'briefing',
       resourceId: 'briefing_1',
       authorUserId: 1,
-      // `/executive_summary` → sectionLabelFromPath returns
-      // "EXECUTIVE SUMMARY" without needing `briefingItems`.
-      jsonPath: '/executive_summary',
+      // `/executiveSummary` is the canonical card jsonPath the rest of
+      // the app uses (see ActiveCard in AnnotationsScope). The label
+      // helper accepts the camelCase form without needing `briefingItems`.
+      jsonPath: '/executiveSummary',
       start: null,
       end: null,
       createdAt: '2026-05-26T00:00:00.000Z',

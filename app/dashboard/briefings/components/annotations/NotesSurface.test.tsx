@@ -115,7 +115,9 @@ describe('NotesSurface', () => {
       const note: Annotation = {
         ...makeNote(),
         id: 'card-level-exec',
-        jsonPath: '/executive_summary',
+        // Canonical card jsonPath (camelCase) — matches what
+        // `ActiveCard.jsonPath` and the create flow store on the DB.
+        jsonPath: '/executiveSummary',
         start: null,
         end: null,
       }
