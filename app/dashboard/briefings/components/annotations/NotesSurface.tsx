@@ -109,6 +109,10 @@ function NoteBody({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+      {/* Anchored notes get the full AnchoredQuote (label + quoted text).
+          Card-level notes (no `highlightedText`) still get the uppercase
+          section label by itself so the viewer can see which card the
+          note belongs to — matches the parity behavior in AddNoteSheet. */}
       {item.highlightedText ? (
         <AnchoredQuote
           text={item.highlightedText}
@@ -116,6 +120,10 @@ function NoteBody({
           label={sectionLabel ?? undefined}
           filled
         />
+      ) : sectionLabel ? (
+        <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          {sectionLabel}
+        </span>
       ) : null}
       <div className="flex flex-col gap-2 rounded-md border border-border bg-card p-4 text-card-foreground">
         <div className="flex items-baseline gap-2 text-sm">
@@ -185,7 +193,7 @@ function NoteBody({
           </div>
         )}
         {!editing && attachmentItems.length > 0 ? (
-          <ul className="flex list-none flex-wrap items-start gap-2 pt-2">
+          <ul className="flex list-none flex-col gap-2 pt-2">
             {attachmentItems.map((att) => (
               <li key={att.id}>
                 <AttachmentThumbnail item={att} onRemove={onRemoveAttachment} />
@@ -341,7 +349,6 @@ export function NotesSurface({
             {isEditingCurrent ? null : (
               <>
                 <NoteAttachmentPicker
-                  triggerVariant="button"
                   items={[]}
                   onAdd={(file) => {
                     setAttachmentError(null)

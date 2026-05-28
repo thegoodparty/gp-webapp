@@ -43,6 +43,76 @@ function makeEditAnnotation(
   }
 }
 
+describe('<AddNoteSheet> card-level section header', () => {
+  // Anchored notes get the full AnchoredQuote (label + quoted text); the
+  // tests below assert the parallel behavior for card-level notes — no
+  // quote, but the same uppercase section header so the user can see
+  // which card the note belongs to.
+  it('shows the active card title as an uppercase section label when creating a card-level note (anchor null, no quote)', () => {
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(screen.getByText('EXECUTIVE SUMMARY')).toBeInTheDocument()
+    // No quoted text — no `“"` (curly open-quote) on the page.
+    expect(screen.queryByText(/“/)).not.toBeInTheDocument()
+  })
+
+  it('shows the section label (derived from jsonPath) when editing a card-level note that has no offsets', () => {
+    const annotation: Annotation = {
+      id: 'ann_card_edit',
+      kind: 'note',
+      resourceType: 'briefing',
+      resourceId: 'briefing_1',
+      authorUserId: 1,
+      // `/executiveSummary` is the canonical card jsonPath the rest of
+      // the app uses (see ActiveCard in AnnotationsScope). The label
+      // helper accepts the camelCase form without needing `briefingItems`.
+      jsonPath: '/executiveSummary',
+      start: null,
+      end: null,
+      createdAt: '2026-05-26T00:00:00.000Z',
+      updatedAt: '2026-05-26T00:00:00.000Z',
+      note: {
+        id: 'note_card_edit',
+        body: 'card-level body',
+        attachments: [],
+        createdAt: '2026-05-26T00:00:00.000Z',
+        updatedAt: '2026-05-26T00:00:00.000Z',
+      },
+    }
+    const sheet: SheetState = { kind: 'add_note_edit', annotation }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle={null}
+      />,
+    )
+
+    expect(screen.getByText('EXECUTIVE SUMMARY')).toBeInTheDocument()
+  })
+})
+
 describe('<AddNoteSheet> error surfacing', () => {
   it('shows an inline error when onCreate rejects, keeps the sheet open, preserves the body, and reports to Sentry', async () => {
     reportErrorToSentryMock.mockReset()
@@ -156,13 +226,15 @@ describe('<AddNoteSheet> error surfacing', () => {
   })
 })
 
-describe('<AddNoteSheet> create-mode counter', () => {
-  it('renders the "Note N of M" counter text but NO chevron buttons (cycler owns navigation)', async () => {
+describe('<AddNoteSheet> header status pill', () => {
+  it('shows "New Note" while creating (the counter is meaningless before save) and no cycler chevrons', async () => {
     const sheet: SheetState = { kind: 'add_note_new', anchor: null }
 
     render(
       <AddNoteSheet
         sheet={sheet}
+        // Even when the parent passes a position (some flows do, some
+        // don't), create mode ignores it — the note doesn't exist yet.
         position={{ position: 3, total: 3 }}
         onClose={vi.fn()}
         onCreate={vi.fn()}
@@ -174,13 +246,38 @@ describe('<AddNoteSheet> create-mode counter', () => {
       />,
     )
 
-    expect(await screen.findByText(/note 3 of 3/i)).toBeInTheDocument()
+    expect(await screen.findByText(/^new note$/i)).toBeInTheDocument()
+    expect(screen.queryByText(/note 3 of 3/i)).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /previous note/i }),
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: /next note/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('shows the "Note N of M" counter in edit mode where the position is real', async () => {
+    const sheet: SheetState = {
+      kind: 'add_note_edit',
+      annotation: makeEditAnnotation(),
+    }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={{ position: 2, total: 5 }}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(await screen.findByText(/note 2 of 5/i)).toBeInTheDocument()
+    expect(screen.queryByText(/^new note$/i)).not.toBeInTheDocument()
   })
 })
 

@@ -37,6 +37,7 @@ export {
   Search as SearchIcon,
   Send as SendIcon,
   Settings as SettingsIcon,
+  Share as ShareIcon,
   Share2 as Share2Icon,
   Square as SquareIcon,
   Star as StarIcon,

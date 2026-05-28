@@ -28,14 +28,6 @@ type Props = {
   disabled?: boolean
   /** Surfaced inline; the caller is expected to render rejection reasons too. */
   error?: string | null
-  /**
-   * `pill` (default): compact rounded-full chip the user discovers
-   *  alongside other inline actions (used inside AddNoteSheet's composer
-   *  cluster).
-   * `button`: full-width outline Button matching the surrounding
-   *  cycler-footer buttons (Edit Note, Delete note) in NotesSurface.
-   */
-  triggerVariant?: 'pill' | 'button'
 }
 
 const PHOTOS_ACCEPT = 'image/*'
@@ -47,17 +39,17 @@ const newId = (): string =>
     : `att-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 /**
- * "Add attachment" pill + the list of attachment thumbnails below it.
+ * Full-width "Add attachment" button + a vertical stack of attachment
+ * rows below it.
  *
- * On desktop the pill opens the native OS file dialog directly. On
- * mobile the pill opens a bottom drawer with three sources — Photos
- * (gallery), Camera (capture), and Document (native document picker) —
+ * On desktop the button opens the native OS file dialog directly. On
+ * mobile it opens a bottom drawer with three sources — Photos
+ * (gallery), Camera (capture), and Files (native document picker) —
  * matching the WhatsApp-style attachment menu.
  *
- * Each attachment renders as a small thumbnail tile (image preview for
- * image MIME types, file-icon for everything else). Clicking the
- * thumbnail opens the file in a new tab via the corresponding S3 URL.
- * The X overlay in the corner removes the attachment.
+ * Each attachment renders as a `AttachmentThumbnail` row (small thumb
+ * left, filename middle, optional X right). Clicking the row opens the
+ * file in a new tab via the corresponding S3 / blob URL.
  */
 export default function NoteAttachmentPicker({
   items,
@@ -65,7 +57,6 @@ export default function NoteAttachmentPicker({
   onRemove,
   disabled = false,
   error = null,
-  triggerVariant = 'pill',
 }: Props): React.JSX.Element {
   const isMobile = useIsMobile()
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -105,26 +96,22 @@ export default function NoteAttachmentPicker({
   }
 
   const triggerClassName =
-    triggerVariant === 'button'
-      ? 'inline-flex w-full items-center justify-center gap-2 rounded-full border border-input bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
-      : 'inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
+    'inline-flex w-full items-center justify-center gap-2 rounded-full border border-input bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
 
   return (
     <div className="flex flex-col gap-2">
-      <div>
-        <button
-          type="button"
-          onClick={openPicker}
-          disabled={disabled}
-          className={triggerClassName}
-        >
-          <Paperclip className="size-4" aria-hidden />
-          Add attachment
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={openPicker}
+        disabled={disabled}
+        className={triggerClassName}
+      >
+        <Paperclip className="size-4" aria-hidden />
+        Add attachment
+      </button>
 
       {items.length > 0 ? (
-        <ul className="flex list-none flex-wrap items-start gap-2">
+        <ul className="flex list-none flex-col gap-2">
           {items.map((it) => (
             <li key={it.id}>
               <AttachmentThumbnail

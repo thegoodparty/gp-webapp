@@ -39,6 +39,21 @@ describe('<DetailHeaderActions>', () => {
     expect(openShareDrawer).toHaveBeenCalledTimes(1)
   })
 
+  it('renders an icon-only IconButton for mobile and a labelled Button for desktop, gated by width-aware Tailwind classes', () => {
+    // Mobile (icon-only) and desktop (icon + "Share" text) both live in
+    // the DOM under jsdom; visibility is controlled by Tailwind utility
+    // classes. Asserting the class gating here pins the responsive
+    // contract so a future refactor can't accidentally drop one side.
+    setShareScope()
+    render(<DetailHeaderActions />)
+
+    const mobileBtn = screen.getByRole('button', { name: /share briefing/i })
+    expect(mobileBtn).toHaveClass('lg:hidden')
+
+    const desktopBtn = screen.getByRole('button', { name: /^share$/i })
+    expect(desktopBtn).toHaveClass('hidden', 'lg:inline-flex')
+  })
+
   it('renders nothing when share scope reports !canShare', () => {
     // Rolling-deploy window: gp-webapp has the share-drawer code but
     // gp-api's response hasn't grown `briefing_id` yet. `canShare` is
