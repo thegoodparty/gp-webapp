@@ -11,6 +11,7 @@ import ActiveCardScrollSpy from '../components/detail/ActiveCardScrollSpy'
 import DetailHeader from '../components/detail/DetailHeader'
 import DetailToc from '../components/detail/DetailToc'
 import MobileBottomBar from '../components/detail/MobileBottomBar'
+import DesktopBottomBar from '../components/detail/DesktopBottomBar'
 import ShareScope from '../components/detail/ShareScope'
 import AnnotationsScope from '../components/annotations/AnnotationsScope'
 import BriefingAwaitingPage from '../components/BriefingAwaitingPage'
@@ -74,7 +75,7 @@ export default async function BriefingChromeLayout({
                 visually fixed because it doesn't scroll; only the content
                 pane scrolls. Mobile keeps the original document-scroll
                 model so the bottom bar / page chrome behave as before. */}
-            <div className="flex min-h-full flex-col bg-muted pb-20 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-0">
+            <div className="flex min-h-full flex-col bg-muted pb-20 lg:h-svh lg:min-h-0 lg:overflow-hidden lg:pb-20">
               <DetailHeader briefing={briefing} />
 
               <div className="mx-auto w-full max-w-[1120px] px-4 py-6 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:px-8">
@@ -101,6 +102,7 @@ export default async function BriefingChromeLayout({
             </div>
 
             <MobileBottomBar briefingSlug={slug} items={briefing.items} />
+            <DesktopBottomBar />
           </div>
         </ShareScope>
       </AnnotationsScope>
