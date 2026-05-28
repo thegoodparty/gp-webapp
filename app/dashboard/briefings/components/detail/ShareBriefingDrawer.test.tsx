@@ -11,6 +11,17 @@ vi.mock('appEnv', () => ({
   APP_BASE: 'https://goodparty.example',
 }))
 
+vi.mock('helpers/analyticsHelper', () => ({
+  trackEvent: vi.fn(),
+  EVENTS: {
+    BriefingAssistant: {
+      ShareDrawerOpened: 'ShareDrawerOpened',
+      ShareCompleted: 'ShareCompleted',
+      DownloadClicked: 'DownloadClicked',
+    },
+  },
+}))
+
 const BRIEFING_ID = '01923456-7891-7abc-8def-0123456789ab'
 const SHARE_URL = `https://goodparty.example/api/v1/briefings/${BRIEFING_ID}`
 
