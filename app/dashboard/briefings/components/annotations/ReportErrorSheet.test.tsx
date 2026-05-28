@@ -182,4 +182,58 @@ describe('<ReportErrorSheet>', () => {
     expect(blockquote?.textContent).toMatch(/[“”]/)
     expect(blockquote?.className).toContain('border-destructive')
   })
+
+  it('renders the subtitle explaining what the user should describe', () => {
+    render(
+      <ReportErrorSheet
+        sheet={makeNewSheet()}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    )
+
+    expect(
+      screen.getByText(
+        /spot an error\? describe what's wrong and we'll fix it\./i,
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('renders the "Bug N of M" counter text but NO chevron buttons (cycler owns navigation)', () => {
+    render(
+      <ReportErrorSheet
+        sheet={makeNewSheet()}
+        position={{ position: 1, total: 3 }}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText(/bug 1 of 3/i)).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /previous bug/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /next bug/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('renders a mic dictation button inside the composer', () => {
+    render(
+      <ReportErrorSheet
+        sheet={makeNewSheet()}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: /dictate (error|report|bug)/i }),
+    ).toBeInTheDocument()
+  })
 })

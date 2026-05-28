@@ -68,10 +68,10 @@ describe('<AddNoteSheet> error surfacing', () => {
       />,
     )
 
-    const textarea = await screen.findByPlaceholderText(/write your note/i)
+    const textarea = await screen.findByPlaceholderText(/write a note/i)
     await user.type(textarea, 'a new note')
 
-    await user.click(screen.getByRole('button', { name: /^save$/i }))
+    await user.click(screen.getByRole('button', { name: /^add note$/i }))
 
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent(/couldn't save your note/i)
@@ -107,7 +107,7 @@ describe('<AddNoteSheet> error surfacing', () => {
       />,
     )
 
-    const textarea = await screen.findByPlaceholderText(/write your note/i)
+    const textarea = await screen.findByPlaceholderText(/write a note/i)
     await user.clear(textarea)
     await user.type(textarea, 'edited body')
 
@@ -153,6 +153,111 @@ describe('<AddNoteSheet> error surfacing', () => {
     expect(alert).toHaveTextContent(/couldn't delete this note/i)
     expect(onClose).not.toHaveBeenCalled()
     expect(reportErrorToSentryMock).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('<AddNoteSheet> create-mode counter', () => {
+  it('renders the "Note N of M" counter text but NO chevron buttons (cycler owns navigation)', async () => {
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={{ position: 3, total: 3 }}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(await screen.findByText(/note 3 of 3/i)).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /previous note/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /next note/i }),
+    ).not.toBeInTheDocument()
+  })
+})
+
+describe('<AddNoteSheet> composer keyboard + dictation', () => {
+  it('saves a new note when Enter is pressed in the textarea', async () => {
+    const user = userEvent.setup()
+    const onCreate = vi.fn().mockResolvedValue(undefined)
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={onCreate}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    const textarea = await screen.findByPlaceholderText(/write a note/i)
+    await user.type(textarea, 'a saved-on-enter note{Enter}')
+
+    expect(onCreate).toHaveBeenCalledTimes(1)
+  })
+
+  it('inserts a newline (does not save) when Shift+Enter is pressed', async () => {
+    const user = userEvent.setup()
+    const onCreate = vi.fn().mockResolvedValue(undefined)
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={onCreate}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    const textarea = (await screen.findByPlaceholderText(
+      /write a note/i,
+    )) as HTMLTextAreaElement
+    await user.type(textarea, 'line 1{Shift>}{Enter}{/Shift}line 2')
+
+    expect(onCreate).not.toHaveBeenCalled()
+    expect(textarea.value).toBe('line 1\nline 2')
+  })
+
+  it('renders a dictation (microphone) button next to the textarea', async () => {
+    const sheet: SheetState = { kind: 'add_note_new', anchor: null }
+
+    render(
+      <AddNoteSheet
+        sheet={sheet}
+        position={null}
+        onClose={vi.fn()}
+        onCreate={vi.fn()}
+        onUpdate={vi.fn()}
+        onDelete={vi.fn()}
+        onAttachmentAdd={vi.fn()}
+        onAttachmentDelete={vi.fn()}
+        activeCardTitle="Executive Summary"
+      />,
+    )
+
+    expect(
+      await screen.findByRole('button', { name: /dictate|start dictation/i }),
+    ).toBeInTheDocument()
   })
 })
 

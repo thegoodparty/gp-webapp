@@ -28,6 +28,14 @@ type Props = {
   disabled?: boolean
   /** Surfaced inline; the caller is expected to render rejection reasons too. */
   error?: string | null
+  /**
+   * `pill` (default): compact rounded-full chip the user discovers
+   *  alongside other inline actions (used inside AddNoteSheet's composer
+   *  cluster).
+   * `button`: full-width outline Button matching the surrounding
+   *  cycler-footer buttons (Edit Note, Delete note) in NotesSurface.
+   */
+  triggerVariant?: 'pill' | 'button'
 }
 
 const PHOTOS_ACCEPT = 'image/*'
@@ -57,6 +65,7 @@ export default function NoteAttachmentPicker({
   onRemove,
   disabled = false,
   error = null,
+  triggerVariant = 'pill',
 }: Props): React.JSX.Element {
   const isMobile = useIsMobile()
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -95,6 +104,11 @@ export default function NoteAttachmentPicker({
     })
   }
 
+  const triggerClassName =
+    triggerVariant === 'button'
+      ? 'inline-flex w-full items-center justify-center gap-2 rounded-full border border-input bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
+      : 'inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
+
   return (
     <div className="flex flex-col gap-2">
       <div>
@@ -102,7 +116,7 @@ export default function NoteAttachmentPicker({
           type="button"
           onClick={openPicker}
           disabled={disabled}
-          className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+          className={triggerClassName}
         >
           <Paperclip className="size-4" aria-hidden />
           Add attachment
@@ -220,7 +234,7 @@ export default function NoteAttachmentPicker({
                 >
                   <FileText className="size-5" />
                 </span>
-                Document
+                Files
               </button>
             </li>
           </ul>

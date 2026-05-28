@@ -34,6 +34,14 @@ describe('<AnchoredQuote>', () => {
     expect(blockquote?.className).toContain('border-destructive')
   })
 
+  it('uses a 2px (border-l-2) left bar on the destructive variant to match the design spec', () => {
+    const { container } = render(
+      <AnchoredQuote text="x" variant="destructive" />,
+    )
+    const blockquote = container.querySelector('blockquote')
+    expect(blockquote?.className).toContain('border-l-2')
+  })
+
   it('uses border-primary on the primary variant', () => {
     const { container } = render(<AnchoredQuote text="x" variant="primary" />)
     const blockquote = container.querySelector('blockquote')

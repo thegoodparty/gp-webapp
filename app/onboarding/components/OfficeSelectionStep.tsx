@@ -157,7 +157,13 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
   const filingPeriod = race.filingPeriods?.[0]
   return {
     raceId: race.id,
-    positionId: race.position?.id,
+    // Lean RaceListItem carries the BR position id at the top level
+    // (`brPositionId`); the hydrated RaceFull surfaces it as `position.id`.
+    // Priority matches `rowKey` below so `selectedRowKey` and `rowKey` always
+    // resolve to the same string for the same race — otherwise the radio
+    // loses its highlight after hydration when both fields exist with
+    // different values.
+    positionId: race.brPositionId ?? race.position?.id,
     positionName: race.position?.name ?? '',
     level: race.position?.level,
     city: race.city ?? undefined,
@@ -173,6 +179,20 @@ const toSelectedOffice = (race: Race): SelectedOffice => {
     filingPeriodsEnd: filingPeriod?.endOn,
   }
 }
+
+// Composite (brPositionId, electionDay) row key — both fields exist on the
+// lean RaceListItem and the hydrated RaceFull, so the key stays stable
+// across the optimistic→hydrated transition. partisanType is intentionally
+// NOT included: the lean schema doesn't carry it, so adding it would make
+// selectedRowKey (which picks up partisanType after hydration) diverge
+// from rowKey on the lean list and drop the radio's highlight.
+const rowKey = (race: Race): string =>
+  `${race.brPositionId ?? race.position?.id ?? ''}|${
+    race.election?.electionDay ?? ''
+  }`
+
+const selectedRowKey = (selected: SelectedOffice | undefined): string =>
+  selected ? `${selected.positionId ?? ''}|${selected.electionDay ?? ''}` : ''
 
 const RaceListSkeleton = () => (
   <div aria-label="Loading offices" className="space-y-6" role="status">
@@ -310,7 +330,12 @@ export const OfficeSelectionStep = ({
           electionDate: race.election.electionDay,
         },
       )
-      return { ...data, id: race.id }
+      // Pass the hydrated race through unchanged so `data.id` (the BallotReady
+      // race hash) ends up on `selected.raceId`. The radio's selection state
+      // doesn't depend on race-row id any more — it's keyed on
+      // (brPositionId, electionDay) via `rowKey` — so dropping the previous
+      // `id: race.id` override no longer breaks the picker.
+      return data
     } catch {
       errorSnackbar('Could not load race details. Please try again.')
       return null
@@ -318,7 +343,7 @@ export const OfficeSelectionStep = ({
   }
 
   const handleSelectRace = async (race: Race) => {
-    if (selected?.raceId === race.id) {
+    if (selectedRowKey(selected) === rowKey(race)) {
       pendingHydrationRaceIdRef.current = null
       onSelect(undefined)
       onHydratingChange?.(false)
@@ -447,9 +472,9 @@ export const OfficeSelectionStep = ({
               <RadioGroup
                 aria-label="Available offices"
                 className="flex flex-col"
-                value={selected?.raceId ?? ''}
-                onValueChange={(raceId) => {
-                  const race = races.find((r) => r.id === raceId)
+                value={selectedRowKey(selected)}
+                onValueChange={(key) => {
+                  const race = races.find((r) => rowKey(r) === key)
                   if (race) void handleSelectRace(race)
                 }}
               >
@@ -478,11 +503,12 @@ export const OfficeSelectionStep = ({
                       {yearRaces.map((race) => {
                         const positionName = race.position?.name ?? 'Office'
                         const cityLabel = race.city ? ` — ${race.city}` : ''
+                        const key = rowKey(race)
                         return (
                           <RadioCardItem
-                            key={race.id}
-                            value={race.id}
-                            id={`race-${race.id}`}
+                            key={key}
+                            value={key}
+                            id={`race-${key}`}
                             title={`${positionName}${cityLabel}`}
                             description={formatElectionDate(
                               race.election?.electionDay,

@@ -82,9 +82,9 @@ export function AnnotationCycler<T>({
       tabIndex={0}
       className={cn('flex h-full min-h-0 flex-col outline-none', className)}
     >
-      <header className="flex flex-col gap-2 px-6 pb-3 pt-6">
+      <header className="flex flex-col gap-2 border-b border-border px-6 pb-4 pt-6">
         {title ? (
-          <div className="text-center text-2xl font-semibold leading-tight tracking-tight text-foreground">
+          <div className="text-2xl font-semibold leading-tight tracking-tight text-foreground">
             {title}
           </div>
         ) : null}
@@ -121,7 +121,7 @@ export function AnnotationCycler<T>({
         ) : null}
       </header>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 pt-4">
         {isEmpty ? (
           emptyState ?? null
         ) : current !== null ? (
@@ -134,7 +134,7 @@ export function AnnotationCycler<T>({
         ) : null}
       </div>
 
-      {footer ? <div className="px-6 pb-6 pt-0">{footer}</div> : null}
+      {footer ? <div className="px-6 pb-6 pt-2">{footer}</div> : null}
     </div>
   )
 }

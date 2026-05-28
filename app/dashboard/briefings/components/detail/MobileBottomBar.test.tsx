@@ -3,16 +3,15 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import MobileBottomBar from './MobileBottomBar'
-import type { Briefing, Item } from '@shared/briefings/types'
+import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
+import { useShareScope } from './ShareScope'
 
 vi.mock('../annotations/AnnotationsScope', () => ({
   useAnnotationsCtx: vi.fn(),
 }))
-
-vi.mock('@shared/briefings/pdf/downloadBriefingPdf', () => ({
-  downloadBriefingPdf: vi.fn(),
+vi.mock('./ShareScope', () => ({
+  useShareScope: vi.fn(),
 }))
 
 vi.mock('next/navigation', async () => {
@@ -24,9 +23,16 @@ vi.mock('next/navigation', async () => {
 })
 
 const mockedUseAnnotationsCtx = vi.mocked(useAnnotationsCtx)
-const mockedDownloadBriefingPdf = vi.mocked(downloadBriefingPdf)
+const mockedUseShareScope = vi.mocked(useShareScope)
 
 type AnnotationsCtxValue = ReturnType<typeof useAnnotationsCtx>
+
+const ACTIVE_CARD = {
+  key: 'briefing-executive-summary',
+  jsonPath: '/executiveSummary',
+  titleJsonPath: '/executive_summary/title',
+  title: 'Executive Summary',
+}
 
 function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
   const ctx: AnnotationsCtxValue = {
@@ -54,6 +60,14 @@ function setCtx(overrides: Partial<AnnotationsCtxValue> = {}) {
   mockedUseAnnotationsCtx.mockReturnValue(ctx)
 }
 
+function setShareScope({
+  canShare = true,
+  openShareDrawer = vi.fn(),
+}: { canShare?: boolean; openShareDrawer?: () => void } = {}) {
+  mockedUseShareScope.mockReturnValue({ canShare, openShareDrawer })
+  return openShareDrawer
+}
+
 function makeItems(n: number): Item[] {
   return Array.from(
     { length: n },
@@ -70,91 +84,43 @@ function makeItems(n: number): Item[] {
   )
 }
 
-// Minimal briefing stub — the component only forwards it to the PDF download
-// path, which tests assert is called but don't exercise end-to-end. Typed as
-// the full `Briefing` so the test fails to compile if the contract grows new
-// required fields.
-const briefingStub = {
-  experiment_id: 'x',
-  briefing_type: 'city_council_meeting',
-  briefing_status: 'briefing_ready',
-  generated_at: '2026-01-01T00:00:00.000Z',
-  official_name: 'Town Hall',
-  meeting_date: '2026-01-01',
-  estimated_read_minutes: 5,
-  executive_summary: { items: [], lead_in: '' },
-  items: [],
-  sources: [],
-  title: 'City Council — Jan 1',
-} as unknown as Briefing
-
 describe('<MobileBottomBar>', () => {
   beforeEach(() => {
     mockedUseAnnotationsCtx.mockReset()
-    mockedDownloadBriefingPdf.mockReset()
+    mockedUseShareScope.mockReset()
   })
 
-  it('renders the page-selector pill, Download, and Ask AI as siblings in one row on a solid panel', () => {
-    setCtx({
-      activeCard: {
-        key: 'briefing-executive-summary',
-        jsonPath: '/executiveSummary',
-        titleJsonPath: '/executive_summary/title',
-        title: 'Executive Summary',
-      },
-    })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(2)}
-      />,
-    )
+  it('renders the page-selector pill, Share, Add note, and Ask AI in a single dock row', () => {
+    setCtx({ activeCard: ACTIVE_CARD })
+    setShareScope()
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(2)} />)
 
+    // The selector pill and the Ask AI button both contain "Executive
+    // Summary"; the pill is the first match (it's the leftmost element).
     const selectorMatches = screen.getAllByRole('button', {
       name: /executive summary/i,
     })
-    // The page-selector pill is the first button whose label is just the
-    // section name; the "Ask AI about Executive Summary" button also matches.
     const selector = selectorMatches[0]
     if (!selector) throw new Error('selector button not rendered')
-    const download = screen.getByRole('button', { name: /download pdf/i })
+    const share = screen.getByRole('button', { name: /share briefing/i })
     const askAi = screen.getByRole('button', {
       name: /ask ai about executive summary/i,
     })
 
-    // All three controls share a common ancestor (the dock row) so they
-    // render as a single horizontal group instead of being scattered.
+    // All controls share a common ancestor (the dock row) so they render as
+    // a single horizontal group instead of being scattered.
     const row = selector.parentElement
     expect(row).not.toBeNull()
-    expect(row).toContainElement(download)
+    expect(row).toContainElement(share)
     expect(row).toContainElement(askAi)
-
-    // The dock itself must be a solid panel with a top border — not a
-    // pointer-events-none overlay of floating FABs.
-    const dock = row?.parentElement
-    expect(dock?.className ?? '').toMatch(/border-t/)
-    expect(dock?.className ?? '').not.toMatch(/pointer-events-none/)
   })
 
-  it('calls openAddNoteTopLevel when the Add note button is clicked with an active card', async () => {
+  it('calls openAddNoteTopLevel when the Add note button is tapped with an active card', async () => {
     const openAddNoteTopLevel = vi.fn()
-    setCtx({
-      openAddNoteTopLevel,
-      activeCard: {
-        key: 'briefing-executive-summary',
-        jsonPath: '/executiveSummary',
-        titleJsonPath: '/executive_summary/title',
-        title: 'Executive Summary',
-      },
-    })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-      />,
-    )
+    setCtx({ openAddNoteTopLevel, activeCard: ACTIVE_CARD })
+    setShareScope()
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+
     await userEvent.click(
       screen.getByRole('button', { name: /add a note to executive summary/i }),
     )
@@ -163,47 +129,42 @@ describe('<MobileBottomBar>', () => {
 
   it('calls openCardLevelChat when the Briefing assistant button is tapped with an active card', async () => {
     const openCardLevelChat = vi.fn()
-    setCtx({
-      openCardLevelChat,
-      activeCard: {
-        key: 'briefing-executive-summary',
-        jsonPath: '/executiveSummary',
-        titleJsonPath: '/executive_summary/title',
-        title: 'Executive Summary',
-      },
-    })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-      />,
-    )
+    setCtx({ openCardLevelChat, activeCard: ACTIVE_CARD })
+    setShareScope()
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+
     await userEvent.click(
       screen.getByRole('button', { name: /ask ai about executive summary/i }),
     )
     expect(openCardLevelChat).toHaveBeenCalledTimes(1)
   })
 
-  it('calls downloadBriefingPdf with the briefing and lines when Download is clicked', async () => {
+  it('asks the share scope to open the drawer when Share is clicked', async () => {
     setCtx()
-    mockedDownloadBriefingPdf.mockResolvedValue(undefined)
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-        preparedForLine="Mayor Jane Doe"
-        meetingMetaLine="City Council — Jan 1"
-        liveBriefingUrl="https://example.com/briefings/town-hall"
-      />,
+    const openShareDrawer = setShareScope()
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /share briefing/i }),
     )
-    await userEvent.click(screen.getByRole('button', { name: /download pdf/i }))
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledTimes(1)
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledWith(briefingStub, {
-      preparedForLine: 'Mayor Jane Doe',
-      meetingMetaLine: 'City Council — Jan 1',
-      liveBriefingUrl: 'https://example.com/briefings/town-hall',
-    })
+    expect(openShareDrawer).toHaveBeenCalledTimes(1)
+  })
+
+  it('hides the share icon when share scope reports !canShare', () => {
+    // During a rolling-deploy window where the briefing artifact lacks
+    // `briefing_id`, the dock must not render a Share button — clicking
+    // one would otherwise produce a broken `/api/v1/briefings/undefined`
+    // URL via the drawer.
+    setCtx({ activeCard: ACTIVE_CARD })
+    setShareScope({ canShare: false })
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+
+    expect(
+      screen.queryByRole('button', { name: /share briefing/i }),
+    ).not.toBeInTheDocument()
+    // Other dock controls still render so the rest of the toolbar works.
+    expect(
+      screen.getByRole('button', { name: /add a note to executive summary/i }),
+    ).toBeInTheDocument()
   })
 })

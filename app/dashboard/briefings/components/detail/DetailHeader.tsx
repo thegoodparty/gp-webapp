@@ -1,42 +1,46 @@
+import Link from 'next/link'
+import { ArrowLeftIcon } from '@styleguide'
+import { briefingsLandingHref } from '@shared/briefings/routes'
+import { formatBriefingMeetingDate } from '@shared/briefings/dateHelpers'
 import type { Briefing } from '@shared/briefings/types'
 import DetailHeaderActions from './DetailHeaderActions'
 
 type Props = {
   briefing: Briefing
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
 }
 
 /**
- * Sticky top bar on the briefing detail page. Title + reading time on the
- * left; desktop-only Download and Ask AI buttons on the right.
- *
- * Mobile actions live in MobileFabs.
+ * Sticky top bar on the briefing detail page. Layout matches the Lovable
+ * design:
+ *  - Small back-arrow link on the far left.
+ *  - Three-line title block: meeting body name, formatted meeting date,
+ *    location. Meeting time is intentionally omitted until the
+ *    MeetingBriefingFull contract exposes it.
+ *  - Desktop-only Share / Add note / Briefing assistant buttons on the
+ *    right (mobile equivalents live in MobileBottomBar).
  */
-export default function DetailHeader({
-  briefing,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
-}: Props): React.JSX.Element {
+export default function DetailHeader({ briefing }: Props): React.JSX.Element {
+  const formattedDate = formatBriefingMeetingDate(briefing.meeting_date)
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
-      <div className="flex w-full items-center justify-between gap-4 px-4 py-4 lg:px-8">
-        <div className="flex min-w-0 flex-col">
-          <h1 className="text-base font-semibold text-foreground lg:truncate lg:text-lg">
-            {briefing.title}
+      <div className="flex w-full items-start gap-3 px-4 py-4 lg:px-8">
+        <Link
+          href={briefingsLandingHref()}
+          aria-label="Back to meetings"
+          className="mt-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <ArrowLeftIcon className="size-5" aria-hidden />
+        </Link>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <h1 className="text-lg font-semibold leading-tight text-foreground lg:text-xl">
+            {briefing.meeting_name}
           </h1>
-          <p className="whitespace-nowrap text-sm text-muted-foreground">
-            {briefing.estimated_read_minutes} minute read
-          </p>
+          <p className="text-sm text-muted-foreground">{formattedDate}</p>
+          {briefing.location ? (
+            <p className="text-sm text-muted-foreground">{briefing.location}</p>
+          ) : null}
         </div>
-        <DetailHeaderActions
-          briefing={briefing}
-          preparedForLine={preparedForLine}
-          meetingMetaLine={meetingMetaLine}
-          liveBriefingUrl={liveBriefingUrl}
-        />
+        <DetailHeaderActions />
       </div>
     </div>
   )
