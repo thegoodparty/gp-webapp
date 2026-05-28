@@ -5,8 +5,8 @@ import { render } from 'helpers/test-utils/render'
 import PersonOverlay from './PersonOverlay'
 import { useContactsTable } from '../../hooks/ContactsTableProvider'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
+import { makePerson } from '../shared/test-fixtures'
 import type {
-  Person,
   ConstituentIssue,
   ConstituentActivity,
 } from '../shared/contacts-types'
@@ -31,45 +31,6 @@ const mockedUseFlagOn = vi.mocked(useFlagOn)
 
 type ContextValue = ReturnType<typeof useContactsTable>
 type SelectedPerson = ContextValue['currentlySelectedPerson']
-
-function makePerson(overrides: Partial<Person> = {}): Person {
-  return {
-    id: 'p_1',
-    lalVoterId: 'lal_1',
-    firstName: 'Jane',
-    middleName: null,
-    lastName: 'Doe',
-    nameSuffix: null,
-    age: 42,
-    state: 'CA',
-    address: {
-      line1: '123 Main St',
-      line2: null,
-      city: 'Townsville',
-      state: 'CA',
-      zip: '90210',
-      zipPlus4: null,
-      latitude: null,
-      longitude: null,
-    },
-    cellPhone: '555-0100',
-    landline: '555-0101',
-    gender: 'Female',
-    politicalParty: 'Independent',
-    registeredVoter: 'Yes',
-    estimatedIncomeAmount: null,
-    voterStatus: 'Likely',
-    maritalStatus: null,
-    hasChildrenUnder18: null,
-    veteranStatus: null,
-    homeowner: null,
-    businessOwner: null,
-    levelOfEducation: null,
-    ethnicityGroup: null,
-    language: 'English',
-    ...overrides,
-  }
-}
 
 function setContext({
   selectedPersonId = 'p_1',

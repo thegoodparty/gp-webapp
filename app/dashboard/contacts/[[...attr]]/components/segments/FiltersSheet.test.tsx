@@ -256,6 +256,76 @@ describe('<FiltersSheet>', () => {
     ).toBeInTheDocument()
   })
 
+  it('PUTs the segment, selects it, and closes the sheet when Update Segment succeeds in edit mode', async () => {
+    const user = userEvent.setup()
+    const handleClose = vi.fn()
+    const selectSegment = vi.fn()
+    const refreshCustomSegments = vi.fn().mockResolvedValue(undefined)
+    setContext({ selectSegment, refreshCustomSegments })
+    const { successSnackbar } = setSnackbar()
+    api.mock('PUT /v1/voters/voter-file/filter/:id', {
+      status: 200,
+      data: { id: 42, name: 'My Saved Segment' },
+    })
+
+    render(
+      <FiltersSheet
+        open
+        handleClose={handleClose}
+        mode={SHEET_MODES.EDIT}
+        editSegment={editableSegment()}
+        handleOpenChange={vi.fn()}
+        resetSelect={vi.fn()}
+        afterSave={vi.fn()}
+      />,
+    )
+
+    // editableSegment seeds genderMale=true, so Update is enabled
+    // immediately without needing a checkbox click.
+    await user.click(screen.getByRole('button', { name: /update segment/i }))
+
+    await vi.waitFor(() => {
+      expect(successSnackbar).toHaveBeenCalledWith(
+        'Segment updated successfully',
+      )
+    })
+    expect(refreshCustomSegments).toHaveBeenCalled()
+    expect(selectSegment).toHaveBeenCalledWith('42')
+    expect(handleClose).toHaveBeenCalled()
+  })
+
+  it('shows an error snackbar and keeps the sheet open when the update API fails in edit mode', async () => {
+    const user = userEvent.setup()
+    const handleClose = vi.fn()
+    const selectSegment = vi.fn()
+    setContext({ selectSegment })
+    const { errorSnackbar } = setSnackbar()
+    api.mock('PUT /v1/voters/voter-file/filter/:id', {
+      status: 500,
+      data: { message: 'server exploded' },
+    })
+
+    render(
+      <FiltersSheet
+        open
+        handleClose={handleClose}
+        mode={SHEET_MODES.EDIT}
+        editSegment={editableSegment()}
+        handleOpenChange={vi.fn()}
+        resetSelect={vi.fn()}
+        afterSave={vi.fn()}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /update segment/i }))
+
+    await vi.waitFor(() => {
+      expect(errorSnackbar).toHaveBeenCalledWith('Failed to update segment')
+    })
+    expect(selectSegment).not.toHaveBeenCalled()
+    expect(handleClose).not.toHaveBeenCalled()
+  })
+
   it('hides the Political Party section for elected officials', () => {
     setContext({ isElectedOfficial: true })
     setSnackbar()
