@@ -185,7 +185,7 @@ function NoteBody({
           </div>
         )}
         {!editing && attachmentItems.length > 0 ? (
-          <ul className="flex list-none flex-wrap items-start gap-2 pt-2">
+          <ul className="flex list-none flex-col gap-2 pt-2">
             {attachmentItems.map((att) => (
               <li key={att.id}>
                 <AttachmentThumbnail item={att} onRemove={onRemoveAttachment} />
