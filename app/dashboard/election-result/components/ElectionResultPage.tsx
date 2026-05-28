@@ -91,7 +91,7 @@ export default function ElectionResultPage(): React.JSX.Element {
 
       setSelectedSlug(newOrg.slug)
 
-      router.replace('/polls/welcome')
+      router.replace('/dashboard/briefings')
     },
   })
 
