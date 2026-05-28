@@ -273,6 +273,50 @@ describe('useEnrichedAnnotations', () => {
     expect(spy).toHaveBeenCalledTimes(2)
   })
 
+  it('re-runs enrichForCycler when a note body changes (note.updatedAt bumped, annotation.updatedAt unchanged)', () => {
+    const spy = vi.spyOn(enrichModule, 'enrichForCycler')
+    const initial = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'before',
+          attachments: [],
+          createdAt: 't1',
+          updatedAt: 't1',
+        },
+      }),
+    ]
+
+    const { rerender } = renderHook(
+      ({ annotations }: { annotations: Annotation[] }) =>
+        useEnrichedAnnotations(true, annotations, 'note'),
+      { initialProps: { annotations: initial } },
+    )
+
+    expect(spy).toHaveBeenCalledTimes(1)
+
+    const withEditedBody = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'after',
+          attachments: [],
+          createdAt: 't1',
+          updatedAt: 't2',
+        },
+      }),
+    ]
+    rerender({ annotations: withEditedBody })
+
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+
   it('re-runs enrichForCycler when an annotation is removed', () => {
     const spy = vi.spyOn(enrichModule, 'enrichForCycler')
     const initial = [

@@ -169,8 +169,7 @@ describe('<AddNoteSheet> create-mode counter', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
-        onEditNote={vi.fn()}
+        activeCardTitle="Executive Summary"
       />,
     )
 
@@ -200,8 +199,7 @@ describe('<AddNoteSheet> composer keyboard + dictation', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
-        onEditNote={vi.fn()}
+        activeCardTitle="Executive Summary"
       />,
     )
 
@@ -226,8 +224,7 @@ describe('<AddNoteSheet> composer keyboard + dictation', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
-        onEditNote={vi.fn()}
+        activeCardTitle="Executive Summary"
       />,
     )
 
@@ -253,8 +250,7 @@ describe('<AddNoteSheet> composer keyboard + dictation', () => {
         onDelete={vi.fn()}
         onAttachmentAdd={vi.fn()}
         onAttachmentDelete={vi.fn()}
-        topLevelNotes={[]}
-        onEditNote={vi.fn()}
+        activeCardTitle="Executive Summary"
       />,
     )
 
