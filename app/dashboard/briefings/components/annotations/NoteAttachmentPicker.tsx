@@ -1,16 +1,10 @@
 'use client'
 
 import { useId, useRef, useState } from 'react'
-import {
-  Camera,
-  FileText,
-  ImageIcon,
-  Loader2,
-  Paperclip,
-  X,
-} from 'lucide-react'
+import { Camera, FileText, ImageIcon, Paperclip } from 'lucide-react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
+import AttachmentThumbnail, { type AttachmentItem } from './AttachmentThumbnail'
 
 type Source = 'photos' | 'camera' | 'document'
 
@@ -20,14 +14,11 @@ export type StagedAttachment = {
   source: Source
 }
 
-/** Generic shape rendered as a pill. The caller maps its own data (staged
- * File objects, server-side AnnotationNoteAttachmentData, etc.) into this. */
-export type PickerItem = {
-  id: string
-  label: string
-  /** When true, renders a spinner inside the pill in place of the X. */
-  busy?: boolean
-}
+/**
+ * Picker items reuse the shared `AttachmentThumbnail` shape so the same
+ * data drives both the editable picker and the read-only view surface.
+ */
+export type PickerItem = AttachmentItem
 
 type Props = {
   items: PickerItem[]
@@ -56,18 +47,17 @@ const newId = (): string =>
     : `att-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 /**
- * "Add attachment" pill + the list of attachment pills below it.
+ * "Add attachment" pill + the list of attachment thumbnails below it.
  *
- * On desktop the pill opens the native OS file dialog directly. On mobile
- * the pill opens a bottom drawer with three sources — Photos (gallery),
- * Camera (capture), and Document (native document picker) — matching the
- * WhatsApp-style attachment menu the spec calls for.
+ * On desktop the pill opens the native OS file dialog directly. On
+ * mobile the pill opens a bottom drawer with three sources — Photos
+ * (gallery), Camera (capture), and Document (native document picker) —
+ * matching the WhatsApp-style attachment menu.
  *
- * The component is data-agnostic: it renders whatever items the caller
- * gives it and emits add/remove events. New-note flows stage files
- * locally and commit on Save; edit-mode flows upload/delete immediately
- * against an existing annotation. Both map their state into the same
- * `PickerItem` shape.
+ * Each attachment renders as a small thumbnail tile (image preview for
+ * image MIME types, file-icon for everything else). Clicking the
+ * thumbnail opens the file in a new tab via the corresponding S3 URL.
+ * The X overlay in the corner removes the attachment.
  */
 export default function NoteAttachmentPicker({
   items,
@@ -134,33 +124,14 @@ export default function NoteAttachmentPicker({
       </div>
 
       {items.length > 0 ? (
-        <ul className="flex list-none flex-wrap items-center gap-2">
+        <ul className="flex list-none flex-wrap items-start gap-2">
           {items.map((it) => (
             <li key={it.id}>
-              <div
-                className="inline-flex max-w-[240px] items-center gap-2 rounded-full bg-muted py-1 pl-3 pr-1 text-sm text-foreground"
-                title={it.label}
-              >
-                <span className="truncate">{it.label}</span>
-                {it.busy ? (
-                  <span
-                    aria-hidden
-                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
-                  >
-                    <Loader2 className="size-3.5 animate-spin" />
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => onRemove(it.id)}
-                    disabled={disabled}
-                    aria-label={`Remove ${it.label}`}
-                    className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    <X className="size-3.5" aria-hidden />
-                  </button>
-                )}
-              </div>
+              <AttachmentThumbnail
+                item={it}
+                onRemove={onRemove}
+                disabled={disabled}
+              />
             </li>
           ))}
         </ul>

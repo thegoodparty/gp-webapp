@@ -2,18 +2,13 @@
 
 import { useRef, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import {
-  Button,
-  Loader2Icon,
-  PencilIcon,
-  Textarea,
-  Trash2Icon,
-} from '@styleguide'
+import { Button, PencilIcon, Textarea } from '@styleguide'
 import type { Annotation, Item } from '@shared/briefings/types'
 import { reportErrorToSentry } from '@shared/sentry'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
+import AttachmentThumbnail, { type AttachmentItem } from './AttachmentThumbnail'
 import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { SurfaceEmptyState } from './SurfaceEmptyState'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'
@@ -91,6 +86,19 @@ function NoteBody({
   busyAttachmentIds: ReadonlySet<string>
 }) {
   const attachments = item.note?.attachments ?? []
+  // Map server attachments into the shared thumbnail shape so the same
+  // tile drives both the picker and the read-only view. The X overlay
+  // is wired to `onRemoveAttachment` so removal stays inline (no edit-
+  // mode required); `busy` reflects the lifted busy-id set.
+  const attachmentItems: AttachmentItem[] = attachments.map((att) => ({
+    kind: 'server',
+    id: att.id,
+    label: att.fileName,
+    mimeType: att.mimeType,
+    annotationId: item.id,
+    attachmentId: att.id,
+    busy: busyAttachmentIds.has(att.id),
+  }))
   const sectionLabel = sectionLabelFromPath(item.jsonPath, briefingItems)
   const dictation = useDictationAppend({
     analyticsLabel: 'notes_surface_edit',
@@ -176,41 +184,13 @@ function NoteBody({
             {item.note?.body ?? ''}
           </div>
         )}
-        {!editing && attachments.length > 0 ? (
-          <ul className="m-0 flex list-none flex-wrap items-center gap-2 p-0">
-            {attachments.map((a) => {
-              const busy = busyAttachmentIds.has(a.id)
-              return (
-                <li key={a.id}>
-                  <div
-                    title={a.fileName}
-                    className="inline-flex max-w-[240px] items-center gap-2 rounded-full bg-muted py-1 pl-3 pr-1 text-sm text-foreground"
-                  >
-                    <span className="truncate">{a.fileName}</span>
-                    {busy ? (
-                      <span
-                        aria-hidden
-                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground"
-                      >
-                        <Loader2Icon
-                          className="size-3.5 animate-spin"
-                          aria-hidden
-                        />
-                      </span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => onRemoveAttachment(a.id)}
-                        aria-label={`Remove ${a.fileName}`}
-                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/10 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        <Trash2Icon className="size-3.5" aria-hidden />
-                      </button>
-                    )}
-                  </div>
-                </li>
-              )
-            })}
+        {!editing && attachmentItems.length > 0 ? (
+          <ul className="flex list-none flex-wrap items-start gap-2 pt-2">
+            {attachmentItems.map((att) => (
+              <li key={att.id}>
+                <AttachmentThumbnail item={att} onRemove={onRemoveAttachment} />
+              </li>
+            ))}
           </ul>
         ) : null}
       </div>
