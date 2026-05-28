@@ -106,6 +106,37 @@ describe('NotesSurface', () => {
     ).toBeInTheDocument()
   })
 
+  describe('Card-level section header', () => {
+    // Anchored notes already render the AnchoredQuote with a label. For
+    // card-level notes (jsonPath set, no quote/offsets), we still want
+    // the uppercase section label so the user can see which card the
+    // note is attached to as they cycle.
+    it('renders the section label for a card-level note on the executive summary (no highlightedText)', () => {
+      const note: Annotation = {
+        ...makeNote(),
+        id: 'card-level-exec',
+        jsonPath: '/executive_summary',
+        start: null,
+        end: null,
+      }
+      render(
+        <NotesSurface
+          open
+          onClose={vi.fn()}
+          annotations={[note]}
+          onSaveEdit={vi.fn(() => Promise.resolve())}
+          onUploadAttachment={vi.fn(() => Promise.resolve())}
+          onDeleteAttachment={vi.fn(() => Promise.resolve())}
+          onDeleteNote={vi.fn()}
+        />,
+      )
+
+      expect(screen.getByText('EXECUTIVE SUMMARY')).toBeInTheDocument()
+      // No anchored-quote glyph since there's no highlighted text.
+      expect(screen.queryByText(/“/)).not.toBeInTheDocument()
+    })
+  })
+
   describe('Delete confirmation', () => {
     it('opens a confirm dialog instead of deleting immediately when Delete is clicked', async () => {
       const onDeleteNote = vi.fn()
