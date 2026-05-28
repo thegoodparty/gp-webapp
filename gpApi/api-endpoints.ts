@@ -6,7 +6,12 @@ import type {
   TranscribeSessionResponse,
 } from 'app/dashboard/briefings/shared/speech-types'
 import type { Poll } from 'app/dashboard/polls/shared/poll-types'
-import { Campaign, CampaignDetails, CampaignVersions, User } from 'helpers/types'
+import {
+  Campaign,
+  CampaignDetails,
+  CampaignVersions,
+  User,
+} from 'helpers/types'
 import type { ContactsStats } from 'app/dashboard/polls/shared/queries'
 import type { GetPollIssuesResponse } from 'app/dashboard/polls/shared/serverApiCalls'
 import type {
