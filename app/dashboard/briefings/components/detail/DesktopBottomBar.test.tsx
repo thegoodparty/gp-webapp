@@ -59,31 +59,31 @@ describe('<DesktopBottomBar>', () => {
     mockedUseAnnotationsCtx.mockReset()
   })
 
-  it('renders Add note and Briefing assistant buttons', () => {
+  it('renders Notes and Ask AI buttons', () => {
     setCtx()
     render(<DesktopBottomBar />)
     expect(
-      screen.getByRole('button', { name: /add note/i }),
+      screen.getByRole('button', { name: /^notes$/i }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /briefing assistant/i }),
+      screen.getByRole('button', { name: /ask ai/i }),
     ).toBeInTheDocument()
   })
 
-  it('calls openAddNoteTopLevel when Add note is clicked with an active card', async () => {
+  it('calls openAddNoteTopLevel when Notes is clicked with an active card', async () => {
     const openAddNoteTopLevel = vi.fn()
     setCtx({ openAddNoteTopLevel })
     render(<DesktopBottomBar />)
-    await userEvent.click(screen.getByRole('button', { name: /add note/i }))
+    await userEvent.click(screen.getByRole('button', { name: /^notes$/i }))
     expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
   })
 
-  it('calls openCardLevelChat when Briefing assistant is clicked with an active card', async () => {
+  it('calls openCardLevelChat when Ask AI is clicked with an active card', async () => {
     const openCardLevelChat = vi.fn()
     setCtx({ openCardLevelChat })
     render(<DesktopBottomBar />)
     await userEvent.click(
-      screen.getByRole('button', { name: /briefing assistant/i }),
+      screen.getByRole('button', { name: /ask ai/i }),
     )
     expect(openCardLevelChat).toHaveBeenCalledTimes(1)
   })
@@ -91,9 +91,9 @@ describe('<DesktopBottomBar>', () => {
   it('disables both buttons when no card is active', () => {
     setCtx({ activeCard: null })
     render(<DesktopBottomBar />)
-    expect(screen.getByRole('button', { name: /add note/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /^notes$/i })).toBeDisabled()
     expect(
-      screen.getByRole('button', { name: /briefing assistant/i }),
+      screen.getByRole('button', { name: /ask ai/i }),
     ).toBeDisabled()
   })
 })

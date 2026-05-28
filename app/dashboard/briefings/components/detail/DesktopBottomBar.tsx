@@ -34,7 +34,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
           }
         >
           <MessageSquare className="size-4" aria-hidden />
-          Add note
+          Notes
         </Button>
         <Button
           onClick={openCardLevelChat}
@@ -46,7 +46,7 @@ export default function DesktopBottomBar(): React.JSX.Element {
           }
         >
           <Sparkles className="size-4" aria-hidden />
-          Briefing assistant
+          Ask AI
         </Button>
       </div>
     </div>
