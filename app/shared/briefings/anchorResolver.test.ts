@@ -3,7 +3,29 @@ import {
   EMPTY_ANCHOR,
   resolveSelection,
   scrollAnchorIntoView,
+  selectElementContents,
 } from './anchorResolver'
+
+describe('selectElementContents', () => {
+  it('makes the element’s full text the document selection', () => {
+    document.body.innerHTML =
+      '<h3 data-briefing-json-path="/items/0/title">My Title</h3>'
+    const h3 = document.querySelector('h3') as HTMLElement
+    const removeAllRanges = vi.fn()
+    const addRange = vi.fn()
+    const spy = vi
+      .spyOn(window, 'getSelection')
+      .mockReturnValue({ removeAllRanges, addRange } as unknown as Selection)
+
+    selectElementContents(h3)
+
+    expect(removeAllRanges).toHaveBeenCalledOnce()
+    expect(addRange).toHaveBeenCalledOnce()
+    const range = addRange.mock.calls[0]?.[0] as Range
+    expect(range.toString()).toBe('My Title')
+    spy.mockRestore()
+  })
+})
 
 describe('resolveSelection', () => {
   beforeEach(() => {

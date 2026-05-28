@@ -99,6 +99,22 @@ export function resolveSelection(
 }
 
 /**
+ * Make an element's full text the live document selection. Used so clicking a
+ * card title highlights the whole title and surfaces the HighlightToolbar —
+ * the selection flows through useSelection → resolveSelection exactly as a
+ * manual drag would, anchoring to the title's jsonPath.
+ */
+export function selectElementContents(el: HTMLElement): void {
+  if (typeof window === 'undefined') return
+  const selection = window.getSelection()
+  if (!selection) return
+  const range = document.createRange()
+  range.selectNodeContents(el)
+  selection.removeAllRanges()
+  selection.addRange(range)
+}
+
+/**
  * Locate the text-bearing element for a given jsonPath in the current DOM.
  */
 export function findAnchorEl(jsonPath: string): HTMLElement | null {

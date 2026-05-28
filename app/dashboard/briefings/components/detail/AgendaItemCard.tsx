@@ -12,6 +12,7 @@ import {
   briefingItemCardPath,
   briefingItemTitlePath,
 } from '@shared/briefings/routes'
+import { selectElementContents } from '@shared/briefings/anchorResolver'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
@@ -239,13 +240,14 @@ const AgendaItemCard = ({
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          {/* `select-none` reserves the title as the card-level chat
-              anchor — see openCardLevelChat. Users don't need (and we
-              don't want) to highlight it themselves. Body text inside
-              the card remains selectable. */}
+          {/* Clicking the title selects its full text so the
+              HighlightToolbar surfaces anchored to the title — the same
+              anchor openCardLevelChat uses — without the user having to
+              drag-highlight it by hand. */}
           <h3
-            className="select-none text-lg font-semibold text-foreground"
+            className="w-fit cursor-pointer text-lg font-semibold text-foreground"
             data-briefing-json-path={titlePath}
+            onClick={(e) => selectElementContents(e.currentTarget)}
           >
             {item.title}
           </h3>
