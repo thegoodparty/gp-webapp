@@ -8,6 +8,11 @@ export const setImpersonating = (value: boolean): void => {
   isImpersonating = value
 }
 
+let userEmail: string | undefined
+export const setUserEmail = (value: string | undefined): void => {
+  userEmail = value
+}
+
 const UTM_KEYS = [
   'utm_source',
   'utm_medium',
@@ -694,6 +699,7 @@ export const trackEvent = (
   try {
     const commonProperties = {
       ...getPersistedUtms(),
+      ...(userEmail ? { email: userEmail } : {}),
       ...properties,
       impersonation: isImpersonating,
     }
