@@ -205,9 +205,10 @@ describe('<ContactsTable>', () => {
     const { container } = render(<ContactsTable />)
 
     // Cell phone, landline, and address are wrapped in a blurred span for
-    // non-pro users. Match by class to keep the assertion structural.
+    // non-pro users. Exactly three fields blur per row — assert the exact
+    // count so accidentally blurring more cells fails the test.
     const blurredEls = container.querySelectorAll('.blur-\\[6px\\]')
-    expect(blurredEls.length).toBeGreaterThanOrEqual(3)
+    expect(blurredEls).toHaveLength(3)
   })
 
   it('does not blur sensitive cells for pro users', () => {
