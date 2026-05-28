@@ -75,7 +75,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
       const segments = segmentsRef.current
       if (startIndex >= segments.length) {
         setStatus('idle')
-        trackEvent(EVENTS.Briefings.ReadAloudCompleted, {
+        trackEvent(EVENTS.BriefingAssistant.ReadAloudCompleted, {
           label: input.analyticsLabel,
           segmentCount: segments.length,
         })
@@ -107,7 +107,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         }
         setStatus('error')
         setError('Audio playback failed')
-        trackEvent(EVENTS.Briefings.ReadAloudFailed, {
+        trackEvent(EVENTS.BriefingAssistant.ReadAloudFailed, {
           label: input.analyticsLabel,
           reason: 'audio_error',
         })
@@ -120,7 +120,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         }
         setStatus('error')
         setError(err.message || 'Playback was blocked')
-        trackEvent(EVENTS.Briefings.ReadAloudFailed, {
+        trackEvent(EVENTS.BriefingAssistant.ReadAloudFailed, {
           label: input.analyticsLabel,
           reason: 'play_rejected',
         })
@@ -136,7 +136,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     cleanupAudio()
     setError(null)
     setStatus('loading')
-    trackEvent(EVENTS.Briefings.ReadAloudStarted, {
+    trackEvent(EVENTS.BriefingAssistant.ReadAloudStarted, {
       label: input.analyticsLabel,
     })
 
@@ -170,7 +170,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         err instanceof Error ? err.message : 'Failed to load audio'
       setStatus('error')
       setError(message)
-      trackEvent(EVENTS.Briefings.ReadAloudFailed, {
+      trackEvent(EVENTS.BriefingAssistant.ReadAloudFailed, {
         label: input.analyticsLabel,
         reason: 'synthesize_failed',
       })
@@ -187,7 +187,7 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   const stop = useCallback(() => {
     generationRef.current += 1
     if (status === 'playing' || status === 'loading') {
-      trackEvent(EVENTS.Briefings.ReadAloudStopped, {
+      trackEvent(EVENTS.BriefingAssistant.ReadAloudStopped, {
         label: input.analyticsLabel,
         atSegmentIndex: indexRef.current,
         totalSegments: segmentsRef.current.length,

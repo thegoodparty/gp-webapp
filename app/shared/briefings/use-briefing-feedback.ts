@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import {
   briefingFeedbackApi,
   type ArtifactFeedback,
@@ -79,10 +80,16 @@ export function useBriefingFeedback(meetingDate: string) {
       qc.setQueryData<ArtifactFeedback[]>(queryKey, next)
       return { previous }
     },
-    onError: (_err, _vars, ctx) => {
+    onError: (_err, vars, ctx) => {
       if (ctx?.previous) {
         qc.setQueryData(queryKey, ctx.previous)
       }
+      trackEvent(EVENTS.BriefingAssistant.FeedbackSubmissionFailed, {
+        meetingDate,
+        itemId: vars.itemId,
+        feedback: vars.feedback === 'positive' ? 'good' : 'bad',
+        operation: 'set',
+      })
     },
     onSettled: async () => {
       await qc.cancelQueries({ queryKey })
@@ -100,10 +107,15 @@ export function useBriefingFeedback(meetingDate: string) {
       qc.setQueryData<ArtifactFeedback[]>(queryKey, next)
       return { previous }
     },
-    onError: (_err, _vars, ctx) => {
+    onError: (_err, itemId, ctx) => {
       if (ctx?.previous) {
         qc.setQueryData(queryKey, ctx.previous)
       }
+      trackEvent(EVENTS.BriefingAssistant.FeedbackSubmissionFailed, {
+        meetingDate,
+        itemId,
+        operation: 'clear',
+      })
     },
     onSettled: async () => {
       await qc.cancelQueries({ queryKey })

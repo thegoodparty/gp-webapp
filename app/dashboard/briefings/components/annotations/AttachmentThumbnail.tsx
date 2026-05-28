@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { FileText, Loader2, X } from 'lucide-react'
 import { useAttachmentDownloadUrl } from '@shared/briefings/use-attachment-download-url'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 /**
  * Common identity + display shared by both attachment variants.
@@ -137,6 +138,18 @@ export default function AttachmentThumbnail({
           rel="noopener noreferrer"
           className={iconAreaClass}
           aria-label={`Open ${item.label}`}
+          onClick={() =>
+            trackEvent(EVENTS.BriefingAssistant.AttachmentClicked, {
+              kind: item.kind,
+              mimeType: item.mimeType,
+              ...(item.kind === 'server'
+                ? {
+                    annotationId: item.annotationId,
+                    attachmentId: item.attachmentId,
+                  }
+                : {}),
+            })
+          }
         >
           {thumbnailContent}
         </a>

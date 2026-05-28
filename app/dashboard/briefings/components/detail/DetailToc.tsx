@@ -11,6 +11,7 @@ import {
 } from '@shared/briefings/routes'
 import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type Props = {
   briefingSlug: string
@@ -86,13 +87,25 @@ export default function DetailToc({
 
   return (
     <ul className="flex list-none flex-col gap-0.5" data-testid={briefingSlug}>
-      {entries.map((e) => {
+      {entries.map((e, index) => {
         const isActive = activeCard?.key === e.key
+        const entryType =
+          e.key === BRIEFING_EXECUTIVE_SUMMARY_DOM_ID
+            ? 'executive_summary'
+            : 'agenda_item'
         return (
           <li key={e.key}>
             <a
               href={`#${e.domId}`}
-              onClick={(ev) => onJump(ev, e)}
+              onClick={(ev) => {
+                trackEvent(EVENTS.BriefingAssistant.TocItemClicked, {
+                  briefingSlug,
+                  entryKey: e.key,
+                  entryIndex: index,
+                  entryType,
+                })
+                onJump(ev, e)
+              }}
               className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 transition-colors ${
                 isActive
                   ? 'bg-muted font-semibold text-foreground'

@@ -5,7 +5,7 @@ import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const TrackBriefingListViewed = (): null => {
   useEffect(() => {
-    trackEvent(EVENTS.Briefings.ListViewed)
+    trackEvent(EVENTS.BriefingAssistant.ListViewed)
   }, [])
   return null
 }

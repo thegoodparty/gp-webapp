@@ -16,7 +16,7 @@ const trackEventMock = vi.fn()
 vi.mock('helpers/analyticsHelper', () => ({
   trackEvent: (...args: unknown[]) => trackEventMock(...args),
   EVENTS: {
-    Briefings: {
+    BriefingAssistant: {
       ReadAloudStarted: 'ReadAloudStarted',
       ReadAloudStopped: 'ReadAloudStopped',
       ReadAloudCompleted: 'ReadAloudCompleted',

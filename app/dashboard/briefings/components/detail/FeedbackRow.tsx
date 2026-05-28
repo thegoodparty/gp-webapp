@@ -12,6 +12,7 @@ import {
 } from '@styleguide'
 import { useBriefingFeedback } from '@shared/briefings/use-briefing-feedback'
 import type { ArtifactFeedbackKind } from '@shared/briefings/feedback-api'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 type Props = {
   meetingDate: string
@@ -45,6 +46,12 @@ export default function FeedbackRow({
       // Cast the vote immediately so the row reflects the user's choice
       // even if they dismiss the composer without saving.
       setFeedback(itemId, target)
+      trackEvent(EVENTS.BriefingAssistant.FeedbackCompleted, {
+        meetingDate,
+        itemId,
+        feedback: 'bad',
+        comment: commentByItemId[itemId] ?? '',
+      })
       // Prefill from any previously-stored comment so the user can edit
       // rather than retype. Empty string when there isn't one (also when
       // the row was just optimistically created).
@@ -53,6 +60,12 @@ export default function FeedbackRow({
       return
     }
     setFeedback(itemId, target)
+    trackEvent(EVENTS.BriefingAssistant.FeedbackCompleted, {
+      meetingDate,
+      itemId,
+      feedback: 'good',
+      comment: '',
+    })
   }
 
   function saveComment() {
@@ -61,6 +74,12 @@ export default function FeedbackRow({
     // already stored.
     const trimmed = draftComment.trim()
     setFeedback(itemId, 'negative', trimmed.length === 0 ? null : trimmed)
+    trackEvent(EVENTS.BriefingAssistant.FeedbackCompleted, {
+      meetingDate,
+      itemId,
+      feedback: 'bad',
+      comment: trimmed,
+    })
     setComposerOpen(false)
   }
 
