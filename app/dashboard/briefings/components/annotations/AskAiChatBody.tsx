@@ -191,9 +191,16 @@ export default function AskAiChatBody({
   // `loadExistingChat` once per mount and skip subsequent runs even if
   // deps change. `creatingRef` is the deferred-create latch: it stops a
   // double-tap from minting two chat rows back-to-back inside
-  // `ensureAnnotationId`.
+  // `ensureAnnotationId`. `pendingChatCreatedRef` stashes the create
+  // payload until the FIRST stream lands its `done` event — firing
+  // `onChatCreated` immediately would race the host surface's
+  // pending-anchor → cycler-focused swap and unmount us mid-stream.
   const loadRequestedRef = useRef(false)
   const creatingRef = useRef(false)
+  const pendingChatCreatedRef = useRef<{
+    annotationId: string
+    conversationId: string
+  } | null>(null)
   const sendingRef = useRef(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const wasAtBottomRef = useRef(true)
@@ -265,10 +272,14 @@ export default function AskAiChatBody({
       // Empty result for a freshly-minted chat is expected.
       await chatApi.listMessages(created.annotationId)
       setAnnotationId(created.annotationId)
-      onChatCreated?.({
+      // Defer `onChatCreated` until the first stream lands `done` —
+      // firing it here triggers the host's pending-anchor → cycler-
+      // focused overlay swap, which unmounts this `AskAiChatBody`
+      // mid-stream and discards the in-flight assistant response.
+      pendingChatCreatedRef.current = {
         annotationId: created.annotationId,
         conversationId: created.conversationId,
-      })
+      }
       return created.annotationId
     } catch (err) {
       reportErrorToSentry(err, {
@@ -281,7 +292,7 @@ export default function AskAiChatBody({
       creatingRef.current = false
       setCreating(false)
     }
-  }, [annotationId, anchor, meetingDate, onChatCreated])
+  }, [annotationId, anchor, meetingDate])
 
   useEffect(() => {
     if (!active) return
@@ -442,6 +453,16 @@ export default function AskAiChatBody({
             },
           ])
           setStreaming(null)
+          // First successful stream for a deferred-create chat — the
+          // conversation is now durable on the server. Safe to notify
+          // the host so it can swap the overlay from pending-anchor
+          // preempt to the cycler-focused view (which mounts a fresh
+          // body keyed on the new annotation id).
+          const pending = pendingChatCreatedRef.current
+          if (pending) {
+            pendingChatCreatedRef.current = null
+            onChatCreated?.(pending)
+          }
         }
       } catch (err) {
         reportErrorToSentry(err, {
@@ -465,7 +486,7 @@ export default function AskAiChatBody({
         abortRef.current = null
       }
     },
-    [meetingDate],
+    [meetingDate, onChatCreated],
   )
 
   // Stage 2 of a user turn — ensure we have an annotation id (lazy

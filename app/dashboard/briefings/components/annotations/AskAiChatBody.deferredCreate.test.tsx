@@ -141,12 +141,48 @@ describe('<AskAiChatBody> deferred creation', () => {
     )
 
     // The cache-invalidation callback is fired exactly once, AFTER the
-    // first user send (not on mount).
+    // first stream lands `done` (not on mount, and not immediately after
+    // create — firing it earlier triggers the host's overlay swap and
+    // unmounts the body mid-stream).
     await waitFor(() => expect(onChatCreated).toHaveBeenCalledTimes(1))
     expect(onChatCreated).toHaveBeenCalledWith({
       annotationId: 'ann_new_1',
       conversationId: 'conv_new_1',
     })
+  })
+
+  it('does NOT call onChatCreated when the first stream errors before completing — keeps the body alive for retry', async () => {
+    const user = userEvent.setup()
+    const onChatCreated = vi.fn()
+    createMock.mockResolvedValue({
+      annotationId: 'ann_errored',
+      conversationId: 'conv_errored',
+    })
+    listMessagesMock.mockResolvedValue([])
+    // Stream emits a retryable error event (no `done`).
+    streamMessageMock.mockReturnValue(makeErrorStream('upstream_unavailable'))
+
+    render(
+      <AskAiChatBody
+        meetingDate={MEETING_DATE}
+        anchor={null}
+        composerVariant="block"
+        onChatCreated={onChatCreated}
+        active
+      />,
+    )
+
+    const textarea = await screen.findByLabelText(/ask assistant message/i)
+    await user.type(textarea, 'will fail')
+    await user.click(screen.getByRole('button', { name: /ask assistant/i }))
+
+    // Stream fires, errors. The Retry affordance appears.
+    await screen.findByRole('alert')
+    expect(screen.getByRole('button', { name: /^retry$/i })).toBeInTheDocument()
+
+    // Crucially, onChatCreated did NOT fire — otherwise the host would
+    // swap the overlay and unmount us mid-error.
+    expect(onChatCreated).not.toHaveBeenCalled()
   })
 
   it('does not call create twice if the user double-taps Send', async () => {
@@ -296,8 +332,5 @@ describe('<AskAiChatBody> override path still works', () => {
     expect(createMock).not.toHaveBeenCalled()
     expect(await screen.findByText('historical question')).toBeInTheDocument()
     expect(screen.getByText('historical answer')).toBeInTheDocument()
-
-    // Suppress unused-variable lint on the error-path stub.
-    void makeErrorStream
   })
 })
