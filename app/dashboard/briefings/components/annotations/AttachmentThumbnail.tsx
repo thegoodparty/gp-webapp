@@ -113,25 +113,29 @@ export default function AttachmentThumbnail({
   const cardClass =
     'group relative flex w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/40 text-foreground'
 
-  // Big preview well: full container width with a 16:9 aspect ratio so
-  // the image is large enough to read on mobile (~360px wide → ~200px
-  // tall preview) without needing fixed pixel heights. Image stretches
-  // via `object-cover`; document icon centers at a generous `size-12`.
-  const previewAreaClass =
-    'relative flex aspect-video w-full items-center justify-center overflow-hidden bg-muted text-muted-foreground'
+  // When we have a real image to show, the preview wrapper drops its
+  // fixed aspect ratio and lets the `<img>` render at its natural
+  // proportions (full container width, height set by the image's own
+  // ratio). This avoids cropping that `object-cover` would impose and
+  // matches the user expectation: see the whole image, not a slice.
+  //
+  // For documents and for images whose URL is still resolving, we keep
+  // the 16:9 well so the card has substantial presence and a centered
+  // icon / spinner. Once a server-side image URL resolves we transition
+  // out of the aspect-video well into the natural-ratio image.
+  const isImageReady = isImage && url !== null
+  const previewWrapperClass = isImageReady
+    ? 'relative block w-full overflow-hidden bg-muted'
+    : 'relative flex aspect-video w-full items-center justify-center overflow-hidden bg-muted text-muted-foreground'
 
-  // For images, fall back to a spinner (not the document icon) while we
-  // resolve the URL — covers both the staged blob-URL effect setting on
-  // mount and the server-side signed-URL query in flight.
-  const previewContent =
-    isImage && url ? (
-      // eslint-disable-next-line @next/next/no-img-element -- presigned S3 / blob URL, not a stable Next image route
-      <img src={url} alt={item.label} className="size-full object-cover" />
-    ) : isImage ? (
-      <Loader2 className="size-8 animate-spin" aria-hidden />
-    ) : (
-      <FileText className="size-12" aria-hidden />
-    )
+  const previewContent = isImageReady ? (
+    // eslint-disable-next-line @next/next/no-img-element -- presigned S3 / blob URL, not a stable Next image route
+    <img src={url} alt={item.label} className="block h-auto w-full" />
+  ) : isImage ? (
+    <Loader2 className="size-8 animate-spin" aria-hidden />
+  ) : (
+    <FileText className="size-12" aria-hidden />
+  )
 
   const showRemove = onRemove !== undefined
 
@@ -142,13 +146,13 @@ export default function AttachmentThumbnail({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${previewAreaClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+          className={`${previewWrapperClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
           aria-label={`Open ${item.label}`}
         >
           {previewContent}
         </a>
       ) : (
-        <span className={previewAreaClass}>{previewContent}</span>
+        <span className={previewWrapperClass}>{previewContent}</span>
       )}
       <span
         className="block w-full truncate border-t border-border bg-card px-3 py-2 text-sm text-foreground"
