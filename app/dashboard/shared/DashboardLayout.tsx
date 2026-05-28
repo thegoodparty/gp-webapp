@@ -100,18 +100,51 @@ const DashboardLayout = ({
   )
 }
 
+const MOBILE_PAGE_TITLES: Array<[string, string]> = [
+  ['/dashboard/briefings', 'Briefing Assistant'],
+  ['/dashboard/outreach', 'Voter Outreach'],
+  ['/dashboard/voter-records', 'Voter Data'],
+  // Sidebar renders this item's `v2Name` ("Constituents") in place of its
+  // `label` ("Contacts") via `item.v2Name || label`. Keep the mobile title
+  // in sync so the same page reads the same name in both surfaces.
+  ['/dashboard/contacts', 'Constituents'],
+  ['/dashboard/polls', 'Polls'],
+  ['/dashboard/website', 'Website'],
+  ['/dashboard/campaign-details', 'My Profile'],
+  ['/dashboard/campaign-assistant', 'AI Assistant'],
+  ['/dashboard/content', 'Content Builder'],
+  ['/dashboard/door-knocking', 'Door Knocking'],
+]
+
+const getMobilePageTitle = (pathname: string | null): string | null => {
+  if (!pathname) return null
+  for (const [prefix, title] of MOBILE_PAGE_TITLES) {
+    if (pathname === prefix || pathname.startsWith(`${prefix}/`)) return title
+  }
+  return null
+}
+
 const MobileMenuTrigger = () => {
   const { setOpenMobile, openMobile } = useSidebar()
+  const pathname = usePathname()
+  const pageTitle = getMobilePageTitle(pathname)
   return (
     <>
       <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-sidebar border-b border-sidebar-border">
-        <Link href="/dashboard">
-          <img
-            src="/images/logo/heart.svg"
-            alt="GoodParty.org"
-            className="h-6 w-8 object-contain"
-          />
-        </Link>
+        <div className="flex items-center gap-3 min-w-0">
+          <Link href="/dashboard" className="shrink-0">
+            <img
+              src="/images/logo/heart.svg"
+              alt="GoodParty.org"
+              className="h-6 w-8 object-contain"
+            />
+          </Link>
+          {pageTitle && (
+            <h1 className="truncate text-base font-semibold text-foreground">
+              {pageTitle}
+            </h1>
+          )}
+        </div>
         <button
           data-testid="mobile-menu-trigger"
           onClick={() => setOpenMobile(true)}

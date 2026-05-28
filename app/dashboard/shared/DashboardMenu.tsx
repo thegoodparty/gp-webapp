@@ -211,7 +211,7 @@ const POLLS_MENU_ITEM: MenuItem = {
 
 const BRIEFINGS_MENU_ITEM: MenuItem = {
   id: 'briefings-dashboard',
-  label: 'Meetings',
+  label: 'Briefing Assistant',
   link: '/dashboard/briefings',
   icon: <MdFactCheck />,
   v2Icon: ClipboardList,
