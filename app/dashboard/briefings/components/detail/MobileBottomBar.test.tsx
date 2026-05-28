@@ -3,16 +3,11 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import MobileBottomBar from './MobileBottomBar'
-import type { Briefing, Item } from '@shared/briefings/types'
+import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 
 vi.mock('../annotations/AnnotationsScope', () => ({
   useAnnotationsCtx: vi.fn(),
-}))
-
-vi.mock('@shared/briefings/pdf/downloadBriefingPdf', () => ({
-  downloadBriefingPdf: vi.fn(),
 }))
 
 vi.mock('next/navigation', async () => {
@@ -24,7 +19,6 @@ vi.mock('next/navigation', async () => {
 })
 
 const mockedUseAnnotationsCtx = vi.mocked(useAnnotationsCtx)
-const mockedDownloadBriefingPdf = vi.mocked(downloadBriefingPdf)
 
 type AnnotationsCtxValue = ReturnType<typeof useAnnotationsCtx>
 
@@ -66,51 +60,24 @@ function makeItems(n: number): Item[] {
   )
 }
 
-// Minimal briefing stub — the component only forwards it to the PDF download
-// path, which tests assert is called but don't exercise end-to-end. Typed as
-// the full `Briefing` so the test fails to compile if the contract grows new
-// required fields.
-const briefingStub = {
-  experiment_id: 'x',
-  briefing_type: 'city_council_meeting',
-  briefing_status: 'briefing_ready',
-  generated_at: '2026-01-01T00:00:00.000Z',
-  official_name: 'Town Hall',
-  meeting_date: '2026-01-01',
-  estimated_read_minutes: 5,
-  executive_summary: { items: [], lead_in: '' },
-  items: [],
-  sources: [],
-  title: 'City Council — Jan 1',
-} as unknown as Briefing
-
 describe('<MobileBottomBar>', () => {
   beforeEach(() => {
     mockedUseAnnotationsCtx.mockReset()
-    mockedDownloadBriefingPdf.mockReset()
   })
 
-  it('renders the page-selector pill, Download, and Ask AI as siblings in one row on a solid panel', () => {
+  it('renders the page-selector pill, Notes, and Ask AI as siblings in one row on a solid panel', () => {
     setCtx()
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(2)}
-      />,
-    )
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(2)} />)
 
     const selector = screen.getByRole('button', { name: /executive summary/i })
-    const download = screen.getByRole('button', { name: /download pdf/i })
-    const askAi = screen.getByRole('button', {
-      name: /open briefing assistant/i,
-    })
+    const notes = screen.getByRole('button', { name: /^notes$/i })
+    const askAi = screen.getByRole('button', { name: /^ask ai$/i })
 
     // All three controls share a common ancestor (the dock row) so they
     // render as a single horizontal group instead of being scattered.
     const row = selector.parentElement
     expect(row).not.toBeNull()
-    expect(row).toContainElement(download)
+    expect(row).toContainElement(notes)
     expect(row).toContainElement(askAi)
 
     // The dock itself must be a solid panel with a top border — not a
@@ -120,55 +87,27 @@ describe('<MobileBottomBar>', () => {
     expect(dock?.className ?? '').not.toMatch(/pointer-events-none/)
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
+  it('does not render a Download button (download moved off the mobile bar to match Lovable)', () => {
+    setCtx()
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+    expect(
+      screen.queryByRole('button', { name: /download/i }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('opens the notes surface when Notes is clicked', async () => {
     const openNotesSurface = vi.fn()
     setCtx({ openNotesSurface })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-      />,
-    )
-    await userEvent.click(screen.getByRole('button', { name: /open notes/i }))
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+    await userEvent.click(screen.getByRole('button', { name: /^notes$/i }))
     expect(openNotesSurface).toHaveBeenCalledTimes(1)
   })
 
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
+  it('opens the chats surface when Ask AI is clicked', async () => {
     const openChatsSurface = vi.fn()
     setCtx({ openChatsSurface })
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-      />,
-    )
-    await userEvent.click(
-      screen.getByRole('button', { name: /open briefing assistant/i }),
-    )
+    render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
+    await userEvent.click(screen.getByRole('button', { name: /^ask ai$/i }))
     expect(openChatsSurface).toHaveBeenCalledTimes(1)
-  })
-
-  it('calls downloadBriefingPdf with the briefing and lines when Download is clicked', async () => {
-    setCtx()
-    mockedDownloadBriefingPdf.mockResolvedValue(undefined)
-    render(
-      <MobileBottomBar
-        briefing={briefingStub}
-        briefingSlug="town-hall"
-        items={makeItems(1)}
-        preparedForLine="Mayor Jane Doe"
-        meetingMetaLine="City Council — Jan 1"
-        liveBriefingUrl="https://example.com/briefings/town-hall"
-      />,
-    )
-    await userEvent.click(screen.getByRole('button', { name: /download pdf/i }))
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledTimes(1)
-    expect(mockedDownloadBriefingPdf).toHaveBeenCalledWith(briefingStub, {
-      preparedForLine: 'Mayor Jane Doe',
-      meetingMetaLine: 'City Council — Jan 1',
-      liveBriefingUrl: 'https://example.com/briefings/town-hall',
-    })
   })
 })

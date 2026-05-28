@@ -1,12 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, MessageSquare, Sparkles } from 'lucide-react'
+import { Download } from 'lucide-react'
 import { Button, Loader2Icon } from '@styleguide'
 import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
 import { reportErrorToSentry } from '@shared/sentry'
 import type { Briefing } from '@shared/briefings/types'
-import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
 type Props = {
   briefing: Briefing
@@ -17,9 +16,8 @@ type Props = {
 
 /**
  * Sticky header actions on desktop. Download builds the briefing PDF in the
- * browser via @react-pdf/renderer; the "Add notes" and "Briefing assistant"
- * buttons open the cycler surfaces (notes / chats) so the user lands on
- * existing annotations first, with a new-item CTA inside the empty state.
+ * browser via @react-pdf/renderer. Notes + Ask AI live in the sticky
+ * bottom-right footer (DesktopBottomBar) instead.
  */
 export default function DetailHeaderActions({
   briefing,
@@ -27,7 +25,6 @@ export default function DetailHeaderActions({
   meetingMetaLine,
   liveBriefingUrl,
 }: Props): React.JSX.Element {
-  const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
   const [downloading, setDownloading] = useState(false)
 
   const onDownload = async () => {
@@ -54,14 +51,6 @@ export default function DetailHeaderActions({
           <Download className="size-4" aria-hidden />
         )}
         {downloading ? 'Preparing…' : 'Download'}
-      </Button>
-      <Button variant="outline" onClick={() => openNotesSurface()}>
-        <MessageSquare className="size-4" aria-hidden />
-        Notes
-      </Button>
-      <Button onClick={() => openChatsSurface()}>
-        <Sparkles className="size-4" aria-hidden />
-        Briefing assistant
       </Button>
     </div>
   )

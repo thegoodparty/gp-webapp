@@ -119,7 +119,7 @@ describe('<BriefingAssistantSurface>', () => {
   })
 
   describe('header', () => {
-    it('renders the "Briefing assistant" title when open', () => {
+    it('does not render a visible "Briefing assistant" panel title (sr-only label allowed for a11y)', () => {
       render(
         <BriefingAssistantSurface
           open={true}
@@ -130,7 +130,12 @@ describe('<BriefingAssistantSurface>', () => {
         />,
       )
 
-      expect(screen.getByText('Briefing assistant')).toBeInTheDocument()
+      // Radix Dialog requires a Title for screen readers; ours is sr-only.
+      // What we DO NOT want is the old, visually-styled heading.
+      const matches = screen.queryAllByText('Briefing assistant')
+      for (const el of matches) {
+        expect(el).toHaveClass('sr-only')
+      }
     })
   })
 

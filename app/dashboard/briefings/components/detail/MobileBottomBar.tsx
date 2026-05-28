@@ -1,17 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import {
-  List,
-  ChevronUp,
-  Download,
-  MessageSquare,
-  Sparkles,
-} from 'lucide-react'
+import { List, ChevronUp, MessageSquare, Sparkles } from 'lucide-react'
 import {
   Button,
-  IconButton,
-  Loader2Icon,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -21,18 +13,12 @@ import {
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
   briefingItemDomId,
 } from '@shared/briefings/routes'
-import type { Briefing, Item } from '@shared/briefings/types'
-import { downloadBriefingPdf } from '@shared/briefings/pdf/downloadBriefingPdf'
-import { reportErrorToSentry } from '@shared/sentry'
+import type { Item } from '@shared/briefings/types'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 
 type Props = {
-  briefing: Briefing
   briefingSlug: string
   items: Item[]
-  preparedForLine?: string
-  meetingMetaLine?: string
-  liveBriefingUrl?: string
 }
 
 type Entry = {
@@ -46,37 +32,17 @@ type Entry = {
  *
  *  - Left pill: name of the section currently in view + chevron, opens a
  *    bottom Sheet listing every section.
- *  - Right FABs: Download, Add notes, and Ask AI.
+ *  - Right buttons: Notes and Ask AI.
  *
  * Tapping an entry scrolls to that section on the same page; the Sheet
  * closes on tap.
  */
 export default function MobileBottomBar({
-  briefing,
   briefingSlug,
   items,
-  preparedForLine,
-  meetingMetaLine,
-  liveBriefingUrl,
 }: Props): React.JSX.Element {
   const [open, setOpen] = useState(false)
-  const [downloading, setDownloading] = useState(false)
   const { openNotesSurface, openChatsSurface } = useAnnotationsCtx()
-
-  const onDownload = async () => {
-    setDownloading(true)
-    try {
-      await downloadBriefingPdf(briefing, {
-        preparedForLine,
-        meetingMetaLine,
-        liveBriefingUrl,
-      })
-    } catch (err) {
-      reportErrorToSentry(err, { experimentId: briefing.experiment_id })
-    } finally {
-      setDownloading(false)
-    }
-  }
 
   const entries: Entry[] = useMemo(() => {
     const list: Entry[] = [
@@ -237,37 +203,18 @@ export default function MobileBottomBar({
           </SheetContent>
         </Sheet>
 
-        <IconButton
+        <Button
           type="button"
-          size="medium"
           variant="outline"
-          aria-label="Download PDF"
-          onClick={onDownload}
-          disabled={downloading}
-        >
-          {downloading ? (
-            <Loader2Icon className="size-5 animate-spin" aria-hidden />
-          ) : (
-            <Download className="size-5" aria-hidden />
-          )}
-        </IconButton>
-        <IconButton
-          type="button"
-          size="medium"
-          variant="outline"
-          aria-label="Open notes"
           onClick={() => openNotesSurface()}
         >
-          <MessageSquare className="size-5" aria-hidden />
-        </IconButton>
-        <IconButton
-          type="button"
-          size="medium"
-          aria-label="Open briefing assistant"
-          onClick={() => openChatsSurface()}
-        >
-          <Sparkles className="size-5" aria-hidden />
-        </IconButton>
+          <MessageSquare className="size-4" aria-hidden />
+          Notes
+        </Button>
+        <Button type="button" onClick={() => openChatsSurface()}>
+          <Sparkles className="size-4" aria-hidden />
+          Ask AI
+        </Button>
       </div>
     </div>
   )

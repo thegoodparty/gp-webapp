@@ -5,6 +5,9 @@ import { ArrowDown, Search, Send, Sparkles } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Button, IconButton, Input, Textarea } from '@styleguide'
+import { useDictationAppend } from '../../shared/useDictationAppend'
+import { DictationMicButton } from '../../shared/DictationMicButton'
+import { DictationFeedback } from '../../shared/DictationFeedback'
 import { chatApi } from '@shared/briefings/chat-api'
 import { EMPTY_ANCHOR } from '@shared/briefings/anchorResolver'
 import { reportErrorToSentry } from '@shared/sentry'
@@ -182,6 +185,12 @@ export default function AskAiChatBody({
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const wasAtBottomRef = useRef(true)
   const [isAtBottom, setIsAtBottom] = useState(true)
+
+  const dictation = useDictationAppend({
+    analyticsLabel: 'ask_ai_chat',
+    value: composer,
+    onChange: setComposer,
+  })
 
   const initialize = useCallback(async () => {
     if (initRequestedRef.current) return
@@ -532,28 +541,14 @@ export default function AskAiChatBody({
             <div className="text-sm text-muted-foreground">Loading chat...</div>
           )}
 
-          {showEmptyState && (
-            <div className="flex flex-col gap-3">
-              {showInlineHeader && (
-                <div className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Sparkles className="size-4" aria-hidden />
-                  </span>
-                  <span className="text-sm font-semibold">
-                    Briefing assistant
-                  </span>
-                </div>
-              )}
-              <p className="text-sm leading-5 text-muted-foreground">
-                Ask anything about this briefing — I can summarize sections,
-                compare options, or pull out the asks.
-              </p>
-              <AskAiSuggestedPills
-                onSelect={onSelectSuggestion}
-                disabled={sending}
-              />
+          {showEmptyState && showInlineHeader ? (
+            <div className="flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Sparkles className="size-4" aria-hidden />
+              </span>
+              <span className="text-sm font-semibold">Briefing assistant</span>
             </div>
-          )}
+          ) : null}
 
           {displayedHistory.map((item) => {
             if (item.kind === 'interrupted') {
@@ -686,15 +681,41 @@ export default function AskAiChatBody({
 
       {composerVariant === 'block' ? (
         <div className="flex flex-col gap-3 border-t border-base-border bg-background pb-2 pt-4">
-          <Textarea
-            value={composer}
-            onChange={(e) => setComposer(e.target.value)}
-            placeholder="Ask anything..."
-            disabled={sending || creating || !annotationId}
-            rows={3}
-            className="min-h-[96px] resize-none rounded-2xl"
-            aria-label="Ask Assistant message"
-          />
+          {showEmptyState && (
+            <AskAiSuggestedPills
+              onSelect={onSelectSuggestion}
+              disabled={sending}
+            />
+          )}
+          <div className="relative">
+            <Textarea
+              value={composer}
+              onChange={(e) => setComposer(e.target.value)}
+              onKeyDown={(e) => {
+                if (
+                  e.key !== 'Enter' ||
+                  e.shiftKey ||
+                  e.nativeEvent.isComposing
+                ) {
+                  return
+                }
+                if (!annotationId || composer.trim().length === 0) return
+                e.preventDefault()
+                void onSend()
+              }}
+              placeholder="Ask anything..."
+              disabled={sending || creating || !annotationId}
+              rows={3}
+              className="min-h-[96px] resize-none rounded-2xl pr-12"
+              aria-label="Ask Assistant message"
+            />
+            <DictationMicButton
+              dictation={dictation}
+              idleLabel="Dictate message"
+              recordingLabel="Stop dictation"
+              disabled={sending || creating}
+            />
+          </div>
           <Button
             type="button"
             onClick={() => {
@@ -708,6 +729,7 @@ export default function AskAiChatBody({
           >
             Ask Assistant
           </Button>
+          <DictationFeedback dictation={dictation} />
         </div>
       ) : (
         <div className="flex items-center gap-2 border-t border-base-border px-3 py-3">

@@ -17,6 +17,17 @@ function signatureOf(
   for (const a of annotations) {
     if (a.kind !== kind) continue
     s += `|${a.id}:${a.updatedAt}:${a.jsonPath ?? ''}`
+    // Attachments mutate independently of `updatedAt` on the parent
+    // annotation (presign/complete + delete don't bump it before the
+    // 5s OCR poll lands), so include their ids in the signature.
+    // Without this, the cycler keeps showing pills for deleted
+    // attachments and clicking X again hits the server with a stale
+    // id and 404s.
+    if (a.note) {
+      for (const att of a.note.attachments) {
+        s += `;${att.id}`
+      }
+    }
   }
   return s
 }

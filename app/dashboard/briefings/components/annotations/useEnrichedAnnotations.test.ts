@@ -161,6 +161,118 @@ describe('useEnrichedAnnotations', () => {
     expect(spy).toHaveBeenCalledTimes(2)
   })
 
+  it('re-runs enrichForCycler when a note annotation gains an attachment', () => {
+    const spy = vi.spyOn(enrichModule, 'enrichForCycler')
+    const initial = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'b',
+          attachments: [],
+          createdAt: 't1',
+          updatedAt: 't1',
+        },
+      }),
+    ]
+
+    const { rerender } = renderHook(
+      ({ annotations }: { annotations: Annotation[] }) =>
+        useEnrichedAnnotations(true, annotations, 'note'),
+      { initialProps: { annotations: initial } },
+    )
+
+    expect(spy).toHaveBeenCalledTimes(1)
+
+    const withAttachment = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'b',
+          attachments: [
+            {
+              id: 'att-1',
+              fileName: 'file.pdf',
+              mimeType: 'application/pdf',
+              sizeBytes: 1,
+              ocrStatus: 'pending',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: 't2',
+            },
+          ],
+          createdAt: 't1',
+          updatedAt: 't1',
+        },
+      }),
+    ]
+    rerender({ annotations: withAttachment })
+
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+
+  it('re-runs enrichForCycler when a note annotation loses an attachment', () => {
+    const spy = vi.spyOn(enrichModule, 'enrichForCycler')
+    const initial = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'b',
+          attachments: [
+            {
+              id: 'att-1',
+              fileName: 'file.pdf',
+              mimeType: 'application/pdf',
+              sizeBytes: 1,
+              ocrStatus: 'pending',
+              ocrText: null,
+              ocrError: null,
+              ocrCompletedAt: null,
+              createdAt: 't1',
+            },
+          ],
+          createdAt: 't1',
+          updatedAt: 't1',
+        },
+      }),
+    ]
+
+    const { rerender } = renderHook(
+      ({ annotations }: { annotations: Annotation[] }) =>
+        useEnrichedAnnotations(true, annotations, 'note'),
+      { initialProps: { annotations: initial } },
+    )
+
+    expect(spy).toHaveBeenCalledTimes(1)
+
+    const withoutAttachment = [
+      makeAnnotation({
+        id: 'a',
+        kind: 'note',
+        updatedAt: 't1',
+        note: {
+          id: 'd',
+          body: 'b',
+          attachments: [],
+          createdAt: 't1',
+          updatedAt: 't1',
+        },
+      }),
+    ]
+    rerender({ annotations: withoutAttachment })
+
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+
   it('re-runs enrichForCycler when an annotation is removed', () => {
     const spy = vi.spyOn(enrichModule, 'enrichForCycler')
     const initial = [

@@ -1,6 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import type { Briefing } from '@shared/briefings/types'
 import DetailHeaderActions from './DetailHeaderActions'
@@ -57,30 +56,22 @@ describe('<DetailHeaderActions>', () => {
     mockedUseAnnotationsCtx.mockReset()
   })
 
-  it('renders Notes and Briefing assistant buttons', () => {
+  it('renders the Download button', () => {
     setCtx()
     render(<DetailHeaderActions briefing={briefingStub} />)
-    expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /briefing assistant/i }),
+      screen.getByRole('button', { name: /^download/i }),
     ).toBeInTheDocument()
   })
 
-  it('opens the notes surface when the Notes button is clicked', async () => {
-    const openNotesSurface = vi.fn()
-    setCtx({ openNotesSurface })
+  it('does not render Notes or Briefing assistant buttons (those live in the sticky footer now)', () => {
+    setCtx()
     render(<DetailHeaderActions briefing={briefingStub} />)
-    await userEvent.click(screen.getByRole('button', { name: /^notes$/i }))
-    expect(openNotesSurface).toHaveBeenCalledTimes(1)
-  })
-
-  it('opens the chats surface when the Briefing assistant button is clicked', async () => {
-    const openChatsSurface = vi.fn()
-    setCtx({ openChatsSurface })
-    render(<DetailHeaderActions briefing={briefingStub} />)
-    await userEvent.click(
-      screen.getByRole('button', { name: /briefing assistant/i }),
-    )
-    expect(openChatsSurface).toHaveBeenCalledTimes(1)
+    expect(
+      screen.queryByRole('button', { name: /^notes$/i }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /briefing assistant/i }),
+    ).not.toBeInTheDocument()
   })
 })

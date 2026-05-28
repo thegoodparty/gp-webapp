@@ -24,6 +24,7 @@ import type {
   Annotation,
   AnnotationAnchor,
   AnnotationNoteAttachmentData,
+  Item,
 } from '@shared/briefings/types'
 import HighlightToolbar from './HighlightToolbar'
 import AddNoteSheet from './AddNoteSheet'
@@ -127,6 +128,13 @@ type Props = {
    * `:date` param in the meeting briefing endpoints.
    */
   meetingDate: string
+  /**
+   * Agenda items from the briefing. Used to derive the section label
+   * shown above the anchored quote in the chat panel ("EXECUTIVE
+   * SUMMARY" style headings). Optional so callers that don't have the
+   * briefing loaded yet (or who don't need section labels) can omit it.
+   */
+  items?: readonly Item[]
   children: React.ReactNode
 }
 
@@ -150,6 +158,7 @@ function anchorPayload(anchor: PendingAnchor): AnnotationAnchor {
  */
 export default function AnnotationsScope({
   meetingDate,
+  items: briefingItems,
   children,
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
@@ -631,6 +640,7 @@ export default function AnnotationsScope({
           }}
           topLevelNotes={topLevelNotes}
           onEditNote={openEditNote}
+          briefingItems={briefingItems}
         />
       )}
       {(overlay.kind === 'report_error_new' ||
@@ -663,9 +673,24 @@ export default function AnnotationsScope({
         open={overlay.kind === 'surface_notes'}
         onClose={closeSheet}
         annotations={annotations}
-        onEditNote={(ann) =>
-          setOverlay({ kind: 'add_note_edit', annotation: ann })
-        }
+        briefingItems={briefingItems}
+        onSaveEdit={async (id, body) => {
+          await updateNote.mutateAsync({ id, body })
+        }}
+        onUploadAttachment={async (annotationId, file) => {
+          await uploadAttachment({ annotationId, file })
+          // Refetch annotations so the new attachment shows up in the
+          // current note's attachments array.
+          await queryClient.invalidateQueries({
+            queryKey: annotationsQueryKey(meetingDate),
+          })
+        }}
+        onDeleteAttachment={async (annotationId, attachmentId) => {
+          await deleteAttachment({ annotationId, attachmentId })
+          await queryClient.invalidateQueries({
+            queryKey: annotationsQueryKey(meetingDate),
+          })
+        }}
         onDeleteNote={(ann) => remove.mutateAsync(ann.id).then(() => undefined)}
         initialAnnotationId={
           overlay.kind === 'surface_notes'
@@ -677,6 +702,7 @@ export default function AnnotationsScope({
         open={overlay.kind === 'surface_chats'}
         onClose={closeSheet}
         meetingDate={meetingDate}
+        briefingItems={briefingItems}
         annotations={annotations}
         initialAnnotationId={
           overlay.kind === 'surface_chats'

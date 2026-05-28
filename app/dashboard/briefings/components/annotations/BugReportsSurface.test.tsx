@@ -54,6 +54,26 @@ describe('<BugReportsSurface>', () => {
     expect(screen.getByText(/no bug reports yet/i)).toBeInTheDocument()
   })
 
+  it('renders the subtitle explaining the surface', () => {
+    render(
+      <BugReportsSurface
+        open
+        onClose={vi.fn()}
+        annotations={[bugReport()]}
+        onDeleteBugReport={vi.fn()}
+      />,
+    )
+
+    // AnnotationSurfaceSheet renders the subtitle twice: once visibly in
+    // the cycler header and once in an sr-only DrawerDescription for a11y.
+    // Confirm at least one is present.
+    expect(
+      screen.getAllByText(
+        /spot an error\? describe what's wrong and we'll fix it\./i,
+      ).length,
+    ).toBeGreaterThan(0)
+  })
+
   it('renders the description for a bug report', () => {
     const annotation = bugReport({
       id: 'ann_1',

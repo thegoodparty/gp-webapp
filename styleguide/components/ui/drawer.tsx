@@ -64,10 +64,6 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div
-          aria-hidden
-          className="mx-auto mt-3 hidden h-1.5 w-12 shrink-0 rounded-full bg-muted-foreground/30 group-data-[vaul-drawer-direction=bottom]/drawer-content:block"
-        />
         <DrawerPrimitive.Close
           className="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none z-10"
           aria-label="Close"

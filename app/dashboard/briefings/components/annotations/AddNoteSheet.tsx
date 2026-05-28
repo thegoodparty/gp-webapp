@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Paperclip, Trash2, X } from 'lucide-react'
 import {
   Button,
+  cn,
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -11,13 +12,16 @@ import {
   Loader2Icon,
   Textarea,
 } from '@styleguide'
+import { useDictationAppend } from '../../shared/useDictationAppend'
+import { DictationMicButton } from '../../shared/DictationMicButton'
+import { DictationFeedback } from '../../shared/DictationFeedback'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { reportErrorToSentry } from '@shared/sentry'
 import {
   resolveQuoteFromAnchor,
   type ResolvedAnchor,
 } from '@shared/briefings/anchorResolver'
-import type { Annotation } from '@shared/briefings/types'
+import type { Annotation, Item } from '@shared/briefings/types'
 import type { SheetState } from './AnnotationsScope'
 import type { PredictedPosition } from './enrichForCycler'
 import { useClearSelectionOnOpen } from './useClearSelectionOnOpen'
@@ -27,6 +31,7 @@ import NoteAttachmentPicker, {
   type PickerItem,
   type StagedAttachment,
 } from './NoteAttachmentPicker'
+import { sectionLabelFromPath } from './sectionLabel'
 
 const MAX_BYTES = 20 * 1024 * 1024
 
@@ -63,6 +68,11 @@ type Props = {
   topLevelNotes: Annotation[]
   /** Open an existing note in edit mode (from the top-level list). */
   onEditNote: (annotation: Annotation) => void
+  /**
+   * Agenda items used to derive the uppercase section label (e.g.
+   * "COLONIAL THEATRE...") that sits above the anchored quote.
+   */
+  briefingItems?: readonly Item[]
 }
 
 function quoteFor(state: SheetState): string | null {
@@ -102,6 +112,7 @@ export default function AddNoteSheet({
   onAttachmentDelete,
   topLevelNotes,
   onEditNote,
+  briefingItems,
 }: Props): React.JSX.Element {
   const open = isAddNoteState(sheet)
   const isDesktop = !useIsMobile()
@@ -111,6 +122,12 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
+
+  const dictation = useDictationAppend({
+    analyticsLabel: 'add_note_sheet',
+    value: body,
+    onChange: setBody,
+  })
   // New-note mode only. Edit mode talks to the server directly via
   // onAttachmentAdd / onAttachmentDelete and shows the live attachments
   // from `sheet.annotation.note.attachments`.
@@ -163,6 +180,13 @@ export default function AddNoteSheet({
   useClearSelectionOnOpen(open)
 
   const quote = quoteFor(sheet)
+  const anchorJsonPath =
+    sheet.kind === 'add_note_edit'
+      ? sheet.annotation.jsonPath
+      : sheet.kind === 'add_note_new'
+      ? sheet.anchor?.jsonPath ?? null
+      : null
+  const sectionLabel = sectionLabelFromPath(anchorJsonPath, briefingItems)
   const isEdit = sheet.kind === 'add_note_edit'
   const existingAttachments =
     sheet.kind === 'add_note_edit'
@@ -372,28 +396,43 @@ export default function AddNoteSheet({
       direction={direction}
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
-        <DrawerHeader className="gap-2 px-6 pb-4 pr-12 pt-6">
-          <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
-            {isEdit ? 'Edit note' : 'Add a Note'}
+        <DrawerHeader className="gap-2 border-b border-border px-6 pb-4 pr-12 pt-6">
+          <DrawerTitle
+            className={cn(
+              'text-2xl font-semibold tracking-tight text-foreground',
+              // Mobile drops the visible title to match Lovable. The
+              // DrawerTitle still renders for Radix a11y, just sr-only.
+              !isDesktop && 'sr-only',
+            )}
+          >
+            {isEdit ? 'Edit note' : 'Add a note'}
           </DrawerTitle>
           {position ? (
-            <p className="text-center text-sm font-medium text-foreground">
-              Note {position.position} of {position.total}
-            </p>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-sm font-medium text-foreground">
+                Note {position.position} of {position.total}
+              </span>
+            </div>
           ) : null}
           {!isEdit ? (
             <p className="text-balance text-center text-sm leading-relaxed text-muted-foreground">
-              Highlight any text to add a note.
+              Add a note to this agenda item or highlight any text to add a note
+              for just that part.
             </p>
           ) : null}
         </DrawerHeader>
 
         <div
           data-vaul-no-drag
-          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-3"
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-3 pt-4"
         >
           {quote ? (
-            <AnchoredQuote text={quote} showLabel={false} />
+            <AnchoredQuote
+              text={quote}
+              variant="primary"
+              showLabel={sectionLabel !== null}
+              label={sectionLabel ?? undefined}
+            />
           ) : !isEdit ? (
             <p className="rounded-md bg-muted px-3 py-2 text-sm italic text-muted-foreground">
               This note is for the whole briefing.
@@ -488,23 +527,47 @@ export default function AddNoteSheet({
             disabled={saving}
             error={attachmentError}
           />
-          <div className="flex items-end gap-2">
+          <div className="relative">
             <Textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder="Write your note…"
+              onKeyDown={(e) => {
+                if (
+                  e.key !== 'Enter' ||
+                  e.shiftKey ||
+                  e.nativeEvent.isComposing
+                ) {
+                  return
+                }
+                e.preventDefault()
+                if (canSave) void handleSave()
+              }}
+              placeholder="Write a note, then tap Add Note..."
               rows={3}
-              className="max-h-[180px] min-h-[60px] flex-1 resize-none rounded-2xl"
+              className="max-h-[180px] min-h-[96px] w-full resize-none rounded-2xl pr-12"
             />
-            <Button
-              type="button"
-              disabled={!canSave}
-              onClick={handleSave}
-              className="shrink-0"
-            >
-              {saving ? 'Saving…' : 'Save'}
-            </Button>
+            <DictationMicButton
+              dictation={dictation}
+              idleLabel="Dictate note"
+              recordingLabel="Stop dictation"
+              disabled={saving}
+            />
           </div>
+          <Button
+            type="button"
+            disabled={!canSave}
+            onClick={handleSave}
+            className="w-full"
+          >
+            {saving
+              ? isEdit
+                ? 'Saving…'
+                : 'Adding…'
+              : isEdit
+              ? 'Save'
+              : 'Add Note'}
+          </Button>
+          <DictationFeedback dictation={dictation} />
           {saveError ? (
             <p role="alert" className="text-sm text-destructive">
               {saveError}

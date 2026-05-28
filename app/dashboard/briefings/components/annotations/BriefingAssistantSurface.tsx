@@ -1,19 +1,31 @@
 'use client'
 
 import { useState } from 'react'
-import type { Annotation, AnnotationAnchor } from '@shared/briefings/types'
+import type {
+  Annotation,
+  AnnotationAnchor,
+  Item,
+} from '@shared/briefings/types'
 import { EMPTY_ANCHOR, isPageWideChat } from '@shared/briefings/anchorResolver'
+import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import AskAiChatBody from './AskAiChatBody'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
 import { AnchoredQuote } from './AnchoredQuote'
 import { DeleteAnnotationButton } from './DeleteAnnotationButton'
 import { useEnrichedAnnotations } from './useEnrichedAnnotations'
+import { sectionLabelFromPath } from './sectionLabel'
 
 interface Props {
   open: boolean
   onClose: () => void
   meetingDate: string
+  /**
+   * Agenda items used to resolve the section title that sits above the
+   * anchored quote (e.g. "EXECUTIVE SUMMARY"). Optional — when absent the
+   * quote renders without a section label.
+   */
+  briefingItems?: readonly Item[]
   annotations: Annotation[]
   initialAnnotationId?: string
   /**
@@ -48,19 +60,23 @@ function ChatBody({
   meetingDate,
   active,
   onSendingChange,
+  briefingItems,
 }: {
   item: EnrichedAnnotation
   meetingDate: string
   active: boolean
   onSendingChange: (sending: boolean) => void
+  briefingItems?: readonly Item[]
 }) {
+  const sectionLabel = sectionLabelFromPath(item.jsonPath, briefingItems)
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
       {item.highlightedText && item.jsonPath !== null ? (
         <AnchoredQuote
           text={item.highlightedText}
           variant="primary"
-          showLabel={false}
+          showLabel={sectionLabel !== null}
+          label={sectionLabel ?? undefined}
         />
       ) : null}
       <AskAiChatBody
@@ -81,12 +97,14 @@ export function BriefingAssistantSurface({
   open,
   onClose,
   meetingDate,
+  briefingItems,
   annotations,
   initialAnnotationId,
   pendingAnchor,
   onChatCreated,
   onDeleteChat,
 }: Props) {
+  const isMobile = useIsMobile()
   const items = useEnrichedAnnotations(open, annotations, 'chat')
   // When the user is mid-selection-to-anchored-chat, preempt the cycler with
   // the empty-state composer carrying the live anchor. Otherwise the cycler
@@ -103,7 +121,9 @@ export function BriefingAssistantSurface({
     <AnnotationSurfaceSheet
       open={open}
       onClose={onClose}
-      title="Briefing assistant"
+      title={isMobile ? null : 'Assistant highlight'}
+      accessibleTitle="Briefing assistant"
+      subtitle="Ask anything about this section, or highlight some text to ask or get help about just that text."
       positionLabel="Chat"
       items={itemsForCycler}
       renderItem={(item) => (
@@ -112,6 +132,7 @@ export function BriefingAssistantSurface({
           meetingDate={meetingDate}
           active={open}
           onSendingChange={setIsStreaming}
+          briefingItems={briefingItems}
         />
       )}
       footer={(current) =>

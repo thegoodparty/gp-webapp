@@ -1,7 +1,12 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { Drawer, DrawerContent } from '@styleguide'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerTitle,
+} from '@styleguide'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import { cn } from '@styleguide/lib/utils'
 import { scrollAnchorIntoView } from '@shared/briefings/anchorResolver'
@@ -13,6 +18,13 @@ interface Props {
   onClose: () => void
   title: ReactNode
   subtitle?: ReactNode
+  /**
+   * Required for screen-reader users when `title` is not a plain string.
+   * Radix Dialog (which Drawer wraps) demands a Title inside Content. If
+   * the surface chooses not to render a visible title, we still render a
+   * sr-only DrawerTitle using this label.
+   */
+  accessibleTitle: string
   positionLabel?: string
   items: EnrichedAnnotation[]
   renderItem: (item: EnrichedAnnotation, index: number) => ReactNode
@@ -20,6 +32,14 @@ interface Props {
   emptyState?: ReactNode
   contentClassName?: string
   initialAnnotationId?: string
+  /**
+   * Fires when the cycler's focused annotation changes (user pressed
+   * prev/next, or items refetched and the selected id resolved to a
+   * different annotation). Surfaces use this to clear per-annotation
+   * UI state (error banners, draft body, edit mode) so it doesn't
+   * leak across notes.
+   */
+  onActiveAnnotationChange?: (id: string | null) => void
 }
 
 /**
@@ -33,6 +53,7 @@ export function AnnotationSurfaceSheet({
   onClose,
   title,
   subtitle,
+  accessibleTitle,
   positionLabel,
   items,
   renderItem,
@@ -40,6 +61,7 @@ export function AnnotationSurfaceSheet({
   emptyState,
   contentClassName,
   initialAnnotationId,
+  onActiveAnnotationChange,
 }: Props) {
   const isDesktop = !useIsMobile()
   const direction = isDesktop ? 'right' : 'bottom'
@@ -100,6 +122,17 @@ export function AnnotationSurfaceSheet({
   const safeIndex = foundIndex >= 0 ? foundIndex : 0
   const current = foundIndex >= 0 ? items[foundIndex] ?? null : null
 
+  // Notify parent on focused-annotation transitions so it can clear
+  // per-annotation UI state (error banners, draft body, edit mode).
+  // Only fires when the resolved id actually changes, not on every render.
+  const lastNotifiedIdRef = useRef<string | null>(null)
+  useEffect(() => {
+    const nextId = current ? current.id : null
+    if (lastNotifiedIdRef.current === nextId) return
+    lastNotifiedIdRef.current = nextId
+    onActiveAnnotationChange?.(nextId)
+  }, [current, onActiveAnnotationChange])
+
   const handleIndexChange = useCallback(
     (next: number) => {
       const target = items[next]
@@ -122,6 +155,10 @@ export function AnnotationSurfaceSheet({
           contentClassName,
         )}
       >
+        <DrawerTitle className="sr-only">{accessibleTitle}</DrawerTitle>
+        <DrawerDescription className="sr-only">
+          {typeof subtitle === 'string' ? subtitle : accessibleTitle}
+        </DrawerDescription>
         <AnnotationCycler
           title={title}
           subtitle={subtitle}

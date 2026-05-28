@@ -167,7 +167,7 @@ const formatSentimentLine = (meanScore: number): string => {
 
 /**
  * One item card on the briefing detail page. Sections rendered, in order:
- * Summary, Constituent Sentiment, Recent News, Budget Impact, Talking Points,
+ * Summary, Budget Impact, Constituent Sentiment, Recent News, Talking Points,
  * Sources collapsible, feedback row.
  *
  * Every string rendered as body text carries a `data-briefing-json-path`
@@ -240,6 +240,24 @@ const AgendaItemCard = ({
 
       {isWhatToExpectOnly ? null : (
         <>
+          {budget ? (
+            <section className="flex flex-col gap-2">
+              <SectionLabel>Budget impact</SectionLabel>
+              <p
+                className="text-sm leading-6 text-foreground"
+                data-briefing-json-path={`${base}/display/budget_impact/summary`}
+              >
+                {budget.summary}
+              </p>
+              {budget.source_ids.length > 0 ? (
+                <SectionSourcePills
+                  sourceIds={budget.source_ids}
+                  sourceById={sourceById}
+                />
+              ) : null}
+            </section>
+          ) : null}
+
           {sentiment ? (
             <section className="flex flex-col gap-2">
               <SectionLabel>Constituent sentiment</SectionLabel>
@@ -283,24 +301,6 @@ const AgendaItemCard = ({
                 items={news}
                 pathPrefix={`${base}/display/recent_news`}
               />
-            </section>
-          ) : null}
-
-          {budget ? (
-            <section className="flex flex-col gap-2">
-              <SectionLabel>Budget impact</SectionLabel>
-              <p
-                className="text-sm leading-6 text-foreground"
-                data-briefing-json-path={`${base}/display/budget_impact/summary`}
-              >
-                {budget.summary}
-              </p>
-              {budget.source_ids.length > 0 ? (
-                <SectionSourcePills
-                  sourceIds={budget.source_ids}
-                  sourceById={sourceById}
-                />
-              ) : null}
             </section>
           ) : null}
 
