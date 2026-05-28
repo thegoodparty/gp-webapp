@@ -344,7 +344,13 @@ const AgendaItemCard = ({
               />
             </section>
           ) : null}
+        </>
+      )}
 
+      <CardLevelNotesList cardPath={base} />
+
+      {isWhatToExpectOnly ? null : (
+        <>
           {itemSources.length > 0 ? (
             <div className="border-y border-border py-2">
               <SourcesCollapsible sources={itemSources} />
@@ -355,7 +361,6 @@ const AgendaItemCard = ({
           ) : null}
         </>
       )}
-      <CardLevelNotesList cardPath={base} />
     </article>
   )
 }

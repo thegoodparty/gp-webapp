@@ -96,12 +96,14 @@ export default function ExecutiveSummaryCard({
             doesn't need to highlight it themselves; the "Briefing
             assistant" button anchors here automatically. */}
         <h2
-          className="select-none text-2xl font-semibold text-foreground"
+          className="min-w-0 select-none text-2xl font-semibold text-foreground"
           data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
         >
           Executive Summary
         </h2>
-        <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
+        <div className="shrink-0">
+          <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
+        </div>
       </div>
       <p
         className="text-sm text-muted-foreground"
