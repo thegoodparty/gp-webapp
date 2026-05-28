@@ -190,7 +190,7 @@ export default function MobileBottomBar({
                     <a
                       href={`#${e.domId}`}
                       onClick={(ev) => onJump(ev, e)}
-                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 ${
+                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 no-underline hover:no-underline ${
                         isActive
                           ? 'bg-muted font-semibold text-foreground'
                           : 'text-foreground hover:bg-muted/60'

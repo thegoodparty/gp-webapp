@@ -6,7 +6,11 @@ import type {
   AnnotationAnchor,
   Item,
 } from '@shared/briefings/types'
-import { EMPTY_ANCHOR, isPageWideChat } from '@shared/briefings/anchorResolver'
+import {
+  EMPTY_ANCHOR,
+  isPageWideChat,
+  resolveQuoteFromAnchor,
+} from '@shared/briefings/anchorResolver'
 import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import AskAiChatBody from './AskAiChatBody'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
@@ -161,6 +165,18 @@ export function BriefingAssistantSurface({
           highlightedText: null,
         }
       : null
+  // Section label + quoted text for the empty-state composer when the chat is
+  // being started from a selection. The pending anchor carries only
+  // jsonPath/start/end, so rebuild the quote from the live DOM the same way
+  // existing anchored chats and notes do.
+  const pendingSectionLabel = sectionLabelFromPath(
+    pendingAnchor?.jsonPath ?? null,
+    briefingItems,
+  )
+  const pendingQuote =
+    pendingAnchor && pendingAnchor.jsonPath !== null
+      ? resolveQuoteFromAnchor(pendingAnchor)
+      : null
   return (
     <AnnotationSurfaceSheet
       open={open}
@@ -201,21 +217,31 @@ export function BriefingAssistantSurface({
         ) : null
       }}
       emptyState={
-        <AskAiChatBody
-          meetingDate={meetingDate}
-          anchor={pendingAnchor ?? EMPTY_ANCHOR}
-          showInlineHeader={false}
-          bodyClassName="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
-          composerVariant="block"
-          active={open}
-          onChatCreated={onChatCreated}
-          onAnnotationIdReady={setEmptyStateMintedId}
-          // Wire isStreaming for the empty-state body too — when the
-          // user fires the first send the row exists (Delete chat is
-          // visible) but the stream is still in flight; the button must
-          // stay disabled until the conversation is durable.
-          onSendingChange={setIsStreaming}
-        />
+        <div className="flex h-full min-h-0 flex-col gap-3">
+          {pendingQuote ? (
+            <AnchoredQuote
+              text={pendingQuote}
+              variant="primary"
+              showLabel={pendingSectionLabel !== null}
+              label={pendingSectionLabel ?? undefined}
+            />
+          ) : null}
+          <AskAiChatBody
+            meetingDate={meetingDate}
+            anchor={pendingAnchor ?? EMPTY_ANCHOR}
+            showInlineHeader={false}
+            bodyClassName="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
+            composerVariant="block"
+            active={open}
+            onChatCreated={onChatCreated}
+            onAnnotationIdReady={setEmptyStateMintedId}
+            // Wire isStreaming for the empty-state body too — when the
+            // user fires the first send the row exists (Delete chat is
+            // visible) but the stream is still in flight; the button must
+            // stay disabled until the conversation is durable.
+            onSendingChange={setIsStreaming}
+          />
+        </div>
       }
       initialAnnotationId={initialAnnotationId}
     />
