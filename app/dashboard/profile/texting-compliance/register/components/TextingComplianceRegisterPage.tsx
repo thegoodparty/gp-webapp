@@ -79,6 +79,9 @@ const TextingComplianceRegisterPage = ({
 
   const handleFormSubmit = async (formData: FormDataState) => {
     setLoading(true)
+    // Clear any prior failure so a retry isn't permanently blocked by a stale
+    // error state.
+    setHasSubmissionError(false)
     try {
       await submitTcrCompliance(
         apiRoutes.campaign.tcrCompliance.create,
