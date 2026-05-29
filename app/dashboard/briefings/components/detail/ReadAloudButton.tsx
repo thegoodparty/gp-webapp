@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { Volume2, Square, TriangleAlert } from 'lucide-react'
 import { Button, IconButton } from '@styleguide'
 import { useReadAloud } from '../../shared/useReadAloud'
@@ -32,7 +33,16 @@ export default function ReadAloudButton({
   analyticsLabel,
   compact = false,
 }: Props): React.JSX.Element {
-  const { status, error, play, stop } = useReadAloud({ text, analyticsLabel })
+  const { status, error, play, stop, prefetch } = useReadAloud({
+    text,
+    analyticsLabel,
+  })
+
+  // Warm the server-side audio cache as soon as the control is on screen so the
+  // first click plays (near-)instantly instead of waiting on Polly synthesis.
+  useEffect(() => {
+    void prefetch()
+  }, [prefetch])
 
   const isBusy = status === 'loading' || status === 'playing'
   const ariaLabel =

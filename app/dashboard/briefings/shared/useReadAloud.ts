@@ -29,6 +29,12 @@ export type UseReadAloudResult = {
   error: string | null
   play: () => Promise<void>
   stop: () => void
+  /**
+   * Best-effort cache warm. Synthesizes the same text/voice/engine the play
+   * path will request so the server-side S3 cache is hot by the time the user
+   * clicks. Fire-and-forget: never changes playback state and swallows errors.
+   */
+  prefetch: () => Promise<void>
 }
 
 export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
@@ -44,6 +50,24 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   // stop() or play() bumps the counter, causing in-flight async work from the
   // prior call to detect the mismatch and bail out instead of racing.
   const generationRef = useRef(0)
+  // Tracks the last text we kicked off a prefetch for, so mounting/re-rendering
+  // doesn't re-fire synthesis for text we've already warmed.
+  const prefetchedTextRef = useRef<string | null>(null)
+
+  const buildRequestBody = useCallback(
+    () => ({
+      text: input.text,
+      ...(input.voiceId || input.engine
+        ? {
+            options: {
+              ...(input.voiceId ? { voiceId: input.voiceId } : {}),
+              ...(input.engine ? { engine: input.engine } : {}),
+            },
+          }
+        : {}),
+    }),
+    [input.text, input.voiceId, input.engine],
+  )
 
   const cleanupAudio = useCallback(() => {
     const audio = currentAudioRef.current
@@ -141,17 +165,10 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     })
 
     try {
-      const response = await clientRequest('POST /v1/speech/synthesize', {
-        text: input.text,
-        ...(input.voiceId || input.engine
-          ? {
-              options: {
-                ...(input.voiceId ? { voiceId: input.voiceId } : {}),
-                ...(input.engine ? { engine: input.engine } : {}),
-              },
-            }
-          : {}),
-      })
+      const response = await clientRequest(
+        'POST /v1/speech/synthesize',
+        buildRequestBody(),
+      )
       if (myGeneration !== generationRef.current) {
         return
       }
@@ -175,14 +192,22 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
         reason: 'synthesize_failed',
       })
     }
-  }, [
-    cleanupAudio,
-    input.analyticsLabel,
-    input.engine,
-    input.text,
-    input.voiceId,
-    playFromIndex,
-  ])
+  }, [buildRequestBody, cleanupAudio, input.analyticsLabel, playFromIndex])
+
+  const prefetch = useCallback(async () => {
+    if (prefetchedTextRef.current === input.text) {
+      return
+    }
+    prefetchedTextRef.current = input.text
+    try {
+      await clientRequest('POST /v1/speech/synthesize', buildRequestBody())
+    } catch {
+      // Prefetch is a pure optimization: if warming the cache fails, play()
+      // will make its own request and surface any real error to the user.
+      // Clear the marker so a later play() (or remount) can retry.
+      prefetchedTextRef.current = null
+    }
+  }, [buildRequestBody, input.text])
 
   const stop = useCallback(() => {
     generationRef.current += 1
@@ -205,5 +230,5 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     [cleanupAudio],
   )
 
-  return { status, error, play, stop }
+  return { status, error, play, stop, prefetch }
 }
