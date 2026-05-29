@@ -285,6 +285,14 @@ const TextingComplianceRegistrationForm = ({
   return (
     <>
       <TextingComplianceForm>
+        {hasSubmissionError && (
+          <StyledAlert severity="error">
+            <Body2>
+              Form submission failed. Contact your Political Assistant to
+              complete this process or report the issue.
+            </Body2>
+          </StyledAlert>
+        )}
         {attemptedSubmit && !isValid && (
           <StyledAlert severity="error">
             <Body2>
@@ -424,26 +432,17 @@ const TextingComplianceRegistrationForm = ({
         <div className="h-32"></div>
       </TextingComplianceForm>
       <TextingComplianceFooter>
-        {hasSubmissionError ? (
-          <StyledAlert severity="error">
-            <Body2>
-              Form submission failed. Contact your Political Assistant to
-              complete this process or report the issue.
-            </Body2>
-          </StyledAlert>
-        ) : (
-          <Button
-            {...{
-              color: 'primary',
-              size: 'large',
-              disabled: loading,
-              loading,
-              onClick: handleOnSubmit,
-            }}
-          >
-            Submit
-          </Button>
-        )}
+        <Button
+          {...{
+            color: 'primary',
+            size: 'large',
+            disabled: loading,
+            loading,
+            onClick: handleOnSubmit,
+          }}
+        >
+          Submit
+        </Button>
       </TextingComplianceFooter>
     </>
   )

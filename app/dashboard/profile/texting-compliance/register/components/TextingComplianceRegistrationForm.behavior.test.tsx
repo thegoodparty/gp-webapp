@@ -22,7 +22,7 @@ const validInitialState = (
   ein: '12-3456789',
   phone: '5555550123',
   address: { formatted_address: '123 Main St', place_id: 'abc' },
-  website: '',
+  website: 'https://janeforcity.com',
   email: 'jane@example.com',
   ...overrides,
 })
@@ -78,7 +78,9 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
 
   it('submits the (non-federal) form when it is valid', async () => {
     const user = userEvent.setup()
-    const onSubmit = renderForm(validInitialState())
+    // Use the production default (requireWebsite=true) with a real website so
+    // the test exercises the same validation path users hit.
+    const onSubmit = renderForm(validInitialState(), undefined, true)
 
     const button = screen.getByRole('button', { name: /submit/i })
     expect(button).toBeEnabled()
@@ -119,5 +121,31 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
     ).toBeInTheDocument()
     // ...but `website` (no input here) is not — neither its name nor message.
     expect(screen.queryByText('Valid URL')).toBeNull()
+  })
+
+  it('submits a valid federal form with fecCommitteeId and committeeType verbatim', async () => {
+    const user = userEvent.setup()
+    const onSubmit = renderForm(
+      validInitialState({
+        officeLevel: 'federal',
+        electionFilingLink: 'https://fec.gov/data/committee/C00123456',
+        fecCommitteeId: 'C00123456',
+        committeeType: 'HOUSE',
+      }),
+      undefined,
+      true,
+    )
+
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    // Federal payload keeps fecCommitteeId and the entered committeeType,
+    // rather than forcing committeeType to 'CANDIDATE' (the non-federal case).
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fecCommitteeId: 'C00123456',
+        committeeType: 'HOUSE',
+      }),
+    )
   })
 })
