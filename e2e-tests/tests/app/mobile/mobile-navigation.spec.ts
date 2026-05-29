@@ -56,8 +56,10 @@ test.describe('Mobile Navigation', () => {
 
     await NavigationHelper.openMobileMenu(page)
     await page.getByRole('link', { name: 'AI Assistant' }).click()
+    // The mobile header renders the page title as a heading in addition to the
+    // page's own heading, so scope to the first match to avoid strict mode.
     await expect(
-      page.getByRole('heading', { name: 'AI Assistant' }),
+      page.getByRole('heading', { name: 'AI Assistant' }).first(),
     ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
@@ -71,8 +73,10 @@ test.describe('Mobile Navigation', () => {
 
     await NavigationHelper.openMobileMenu(page)
     await page.locator('#my-content-dashboard').click()
+    // The mobile header renders the page title as a heading in addition to the
+    // page's own heading, so scope to the first match to avoid strict mode.
     await expect(
-      page.getByRole('heading', { name: 'Content Builder' }),
+      page.getByRole('heading', { name: 'Content Builder' }).first(),
     ).toBeVisible({ timeout: 5000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
