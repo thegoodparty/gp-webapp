@@ -254,27 +254,12 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     })
 
     try {
-      const body = buildRequestBody()
-      const key = synthesisCacheKey(body)
-      // Reuse a result a prefetch already fetched (or one still in flight) so a
-      // click that lands after — or during — the mount-time prefetch plays
-      // without a second round-trip or a second hit on the synthesize rate
-      // limit. Falls back to its own request when nothing is warm, which keeps
-      // each play() independent (and the rapid play/stop race handling intact).
-      const cached = getFreshCachedSynthesis(key)
-      const inFlight = inFlightSynthesis.get(key)
-      const data = cached
-        ? cached
-        : inFlight
-        ? await inFlight
-        : await (async () => {
-            const response = await clientRequest(
-              'POST /v1/speech/synthesize',
-              body,
-            )
-            cacheSynthesisResult(key, response.data)
-            return response.data
-          })()
+      // Route through the shared coordinator so a click reuses a result the
+      // mount-time prefetch already fetched (or is still fetching), and so two
+      // concurrent play() calls collapse into one request instead of each
+      // debiting the per-user synthesize rate limit. The generation guard below
+      // still discards any stale/duplicate playback.
+      const data = await requestSynthesis(buildRequestBody())
       if (myGeneration !== generationRef.current) {
         return
       }

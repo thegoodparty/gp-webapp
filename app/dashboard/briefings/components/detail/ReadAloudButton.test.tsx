@@ -30,6 +30,15 @@ function setHook(state: HookState): void {
 }
 
 describe('<ReadAloudButton>', () => {
+  it('prefetches audio on mount to warm the cache before the first click', () => {
+    prefetchMock.mockClear()
+    setHook({ status: 'idle', error: null })
+
+    render(<ReadAloudButton text="hello" />)
+
+    expect(prefetchMock).toHaveBeenCalledTimes(1)
+  })
+
   describe('compact variant', () => {
     it('renders a spinner and is busy + disabled while loading', () => {
       setHook({ status: 'loading', error: null })
