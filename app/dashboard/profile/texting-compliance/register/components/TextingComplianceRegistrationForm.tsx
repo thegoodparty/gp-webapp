@@ -8,7 +8,7 @@ import {
   getFecCommitteeIdValidation,
 } from 'app/dashboard/profile/texting-compliance/register/components/FecCommitteeIdInput'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useState, type ComponentProps } from 'react'
+import { useEffect, useRef, useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceForm'
 import { EinCheckInput } from 'app/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
@@ -233,6 +233,14 @@ const TextingComplianceRegistrationForm = ({
   const showError = (field: ValidationField): boolean =>
     attemptedSubmit && !validations[field]
 
+  // Synchronous double-submit guard. `loading` is a parent prop that only
+  // reflects the submission after a re-render, so it can't block a second click
+  // fired within the same render cycle. A ref flips immediately.
+  const submittingRef = useRef(false)
+  useEffect(() => {
+    if (!loading) submittingRef.current = false
+  }, [loading])
+
   const addressValue = isAddressValue(address) ? address : null
   const [addressInputValue, setAddressInputValue] = useState<
     string | undefined
@@ -263,10 +271,11 @@ const TextingComplianceRegistrationForm = ({
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
-    // Guard against a double-submit: `loading` is a parent prop that only flips
-    // to true on a re-render, so two rapid clicks can both read it as false and
-    // fire duplicate submissions before the button disables.
-    if (loading) return
+    // Block a double-submit. The ref is set synchronously below, so a second
+    // rapid click within the same render cycle is caught even before `loading`
+    // propagates from the parent.
+    if (submittingRef.current || loading) return
+    submittingRef.current = true
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId: _, committeeType: __, ...baseFormData } = formData

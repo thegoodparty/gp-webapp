@@ -148,4 +148,51 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
       }),
     )
   })
+
+  it('shows the submission error banner when hasSubmissionError is true', () => {
+    render(
+      <FormDataProvider
+        initialState={validInitialState()}
+        validator={(d) => validateRegistrationForm(d)}
+      >
+        <TextingComplianceRegistrationForm
+          onSubmit={vi.fn()}
+          hasSubmissionError
+        />
+      </FormDataProvider>,
+    )
+
+    expect(screen.getByText(/form submission failed/i)).toBeInTheDocument()
+    // The Submit button stays available so the user can retry.
+    expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
+  })
+
+  it('hides the submission error banner when hasSubmissionError is false', () => {
+    render(
+      <FormDataProvider
+        initialState={validInitialState()}
+        validator={(d) => validateRegistrationForm(d)}
+      >
+        <TextingComplianceRegistrationForm
+          onSubmit={vi.fn()}
+          hasSubmissionError={false}
+        />
+      </FormDataProvider>,
+    )
+
+    expect(screen.queryByText(/form submission failed/i)).toBeNull()
+  })
+
+  it('does not double-submit on two rapid clicks', async () => {
+    const user = userEvent.setup()
+    const onSubmit = renderForm(validInitialState(), undefined, true)
+
+    const button = screen.getByRole('button', { name: /submit/i })
+    await user.click(button)
+    await user.click(button)
+
+    // The synchronous ref guard blocks the second click even though the parent
+    // `loading` prop never flips in this isolated render.
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+  })
 })
