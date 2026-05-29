@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import {
-  resetSpeechSynthesisCacheForTests,
-  useReadAloud,
-} from './useReadAloud'
+import { resetSpeechSynthesisCacheForTests, useReadAloud } from './useReadAloud'
 
 vi.mock('appEnv', () => ({
   API_ROOT: 'https://api.example.test',
