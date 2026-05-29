@@ -27,7 +27,8 @@ export default function TextComplianceStep({
       className={`p-3 md:p-4 flex items-center justify-between ${
         isLast ? '' : 'border-b border-gray-200'
       }
-      ${isDisabled ? 'cursor-not-allowed bg-muted' : ''}
+      ${isDisabled || isCompleted ? 'bg-muted' : ''}
+      ${isDisabled ? 'cursor-not-allowed' : ''}
       ${isActive ? 'hover:bg-blue-50' : ''} transition-colors`}
     >
       <div className="flex items-center gap-3">
@@ -44,7 +45,7 @@ export default function TextComplianceStep({
             <span className="text-base font-normal">{number}</span>
           </div>
         )}
-        <h4>{title}</h4>
+        <h4 className={isCompleted ? 'text-gray-400' : ''}>{title}</h4>
       </div>
       {isActive && <ChevronRight />}
     </div>
