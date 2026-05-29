@@ -251,7 +251,8 @@ export default function DashboardMenu({
   const { data: electedOffice } = useElectedOffice()
   const { ready: _flagsReady, on: serveAccessEnabled } =
     useFlagOn('serve-access')
-  const { enabled: proUpgradeEnabled } = useProUpgradeFlag()
+  const { ready: proUpgradeReady, enabled: proUpgradeEnabled } =
+    useProUpgradeFlag()
 
   const menuItems = useMemo(() => {
     const items = getDashboardMenuItems(
@@ -264,10 +265,17 @@ export default function DashboardMenu({
       items.push(ECANVASSER_MENU_ITEM)
     }
 
-    return proUpgradeEnabled
+    return proUpgradeReady && proUpgradeEnabled
       ? items.filter((item) => item !== WEBSITE_MENU_ITEM)
       : items
-  }, [campaign, serveAccessEnabled, ecanvasser, electedOffice, proUpgradeEnabled])
+  }, [
+    campaign,
+    serveAccessEnabled,
+    ecanvasser,
+    electedOffice,
+    proUpgradeReady,
+    proUpgradeEnabled,
+  ])
 
   useEffect(() => {
     if (campaign && ecanvasser) {
