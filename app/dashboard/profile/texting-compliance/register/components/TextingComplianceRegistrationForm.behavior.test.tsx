@@ -71,8 +71,12 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
     ).toBeInTheDocument()
     // Field-specific guidance (only rendered in the error banner) is shown.
     expect(screen.getByText(/select an option/i)).toBeInTheDocument()
-    // The invalid field is marked with MUI's error styling.
-    expect(document.querySelector('.Mui-error')).not.toBeNull()
+    // The invalid Office Level select (the only combobox in this state) is
+    // marked with an error state.
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
   })
 
   it('submits the (non-federal) form when it is valid', async () => {

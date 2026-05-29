@@ -263,6 +263,10 @@ const TextingComplianceRegistrationForm = ({
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
+    // Guard against a double-submit: `loading` is a parent prop that only flips
+    // to true on a re-render, so two rapid clicks can both read it as false and
+    // fire duplicate submissions before the button disables.
+    if (loading) return
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId: _, committeeType: __, ...baseFormData } = formData
@@ -421,12 +425,12 @@ const TextingComplianceRegistrationForm = ({
       </TextingComplianceForm>
       <TextingComplianceFooter>
         {hasSubmissionError ? (
-          <div className="py-4 px-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600">
+          <StyledAlert severity="error">
+            <Body2>
               Form submission failed. Contact your Political Assistant to
               complete this process or report the issue.
-            </p>
-          </div>
+            </Body2>
+          </StyledAlert>
         ) : (
           <Button
             {...{
