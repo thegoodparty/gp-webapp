@@ -151,8 +151,10 @@ describe('renderBriefingForSpeech', () => {
         ],
       }),
     )
+    // No lead-in and no summary items, so the "Executive Summary." heading
+    // is omitted — it would otherwise announce a header into the next item.
     expect(text).toBe(
-      'City Council. June 1, 2026. City Hall\n\nExecutive Summary.\n\nProcedural matters. What to expect. Routine roll call.',
+      'City Council. June 1, 2026. City Hall\n\nProcedural matters. What to expect. Routine roll call.',
     )
   })
 })

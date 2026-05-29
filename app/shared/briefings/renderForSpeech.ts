@@ -36,12 +36,18 @@ export const renderBriefingForSpeech = (briefing: Briefing): string => {
     .join('. ')
   if (header) sections.push(header)
 
-  // Executive summary: heading, lead-in, then each summary item.
-  sections.push('Executive Summary.')
+  // Executive summary: heading, lead-in, then each summary item. Only emit
+  // the heading when the section actually has content — otherwise the audio
+  // announces "Executive Summary." straight into the first agenda item.
+  const execSummary: string[] = []
   if (briefing.executive_summary.lead_in)
-    sections.push(briefing.executive_summary.lead_in)
+    execSummary.push(briefing.executive_summary.lead_in)
   for (const summaryItem of briefing.executive_summary.items) {
-    sections.push(`${summaryItem.title}. ${summaryItem.overview}`)
+    execSummary.push(`${summaryItem.title}. ${summaryItem.overview}`)
+  }
+  if (execSummary.length > 0) {
+    sections.push('Executive Summary.')
+    sections.push(...execSummary)
   }
 
   // Every agenda item, in page order.
