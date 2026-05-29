@@ -59,11 +59,13 @@ describe('<DesktopBottomBar>', () => {
     mockedUseAnnotationsCtx.mockReset()
   })
 
-  it('renders Notes and Ask AI buttons', () => {
+  it('renders Notes and Assistant buttons', () => {
     setCtx()
     render(<DesktopBottomBar />)
     expect(screen.getByRole('button', { name: /^notes$/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /ask ai/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /assistant/i }),
+    ).toBeInTheDocument()
   })
 
   it('calls openAddNoteTopLevel when Notes is clicked with an active card', async () => {
@@ -74,11 +76,11 @@ describe('<DesktopBottomBar>', () => {
     expect(openAddNoteTopLevel).toHaveBeenCalledTimes(1)
   })
 
-  it('calls openCardLevelChat when Ask AI is clicked with an active card', async () => {
+  it('calls openCardLevelChat when Assistant is clicked with an active card', async () => {
     const openCardLevelChat = vi.fn()
     setCtx({ openCardLevelChat })
     render(<DesktopBottomBar />)
-    await userEvent.click(screen.getByRole('button', { name: /ask ai/i }))
+    await userEvent.click(screen.getByRole('button', { name: /assistant/i }))
     expect(openCardLevelChat).toHaveBeenCalledTimes(1)
   })
 
@@ -86,6 +88,6 @@ describe('<DesktopBottomBar>', () => {
     setCtx({ activeCard: null })
     render(<DesktopBottomBar />)
     expect(screen.getByRole('button', { name: /^notes$/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /ask ai/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /assistant/i })).toBeDisabled()
   })
 })

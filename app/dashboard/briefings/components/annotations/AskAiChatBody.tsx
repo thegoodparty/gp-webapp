@@ -886,7 +886,7 @@ export default function AskAiChatBody({
             onKeyDown={onComposerKeyDown}
             placeholder="Ask anything about this briefing..."
             disabled={sending || creating}
-            aria-label="Ask AI message"
+            aria-label="Ask a question"
           />
           <IconButton
             type="button"

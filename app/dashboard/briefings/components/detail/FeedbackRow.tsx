@@ -59,7 +59,10 @@ export default function FeedbackRow({
       setComposerOpen(true)
       return
     }
-    setFeedback(itemId, target)
+    // Switching to a thumbs-up clears any note left on a prior thumbs-down —
+    // the "what was wrong" comment no longer applies once the rating flips
+    // positive. Passing `null` tells the API to drop the stored comment.
+    setFeedback(itemId, target, null)
     trackEvent(EVENTS.BriefingAssistant.FeedbackCompleted, {
       meetingDate,
       itemId,

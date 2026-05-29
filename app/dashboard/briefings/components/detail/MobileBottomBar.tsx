@@ -230,7 +230,7 @@ export default function MobileBottomBar({
           size="medium"
           aria-label={
             activeCard
-              ? `Ask AI about ${activeCard.title}`
+              ? `Ask about ${activeCard.title}`
               : 'Click a card to make it active first'
           }
           onClick={openCardLevelChat}

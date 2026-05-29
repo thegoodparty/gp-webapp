@@ -134,8 +134,11 @@ export default function ReportErrorSheet({
     >
       <DrawerContent className="flex flex-col gap-0 p-0 data-[vaul-drawer-direction=right]:sm:max-w-[480px]">
         <DrawerHeader className="gap-2 border-b border-border px-6 pb-4 pr-12 pt-6">
-          <DrawerTitle className="text-2xl font-semibold tracking-tight text-foreground">
-            Report or Correct an Error
+          {/* Heading is kept for screen readers only — visually omitted to
+              match the other annotation surfaces, which lead with the byline
+              rather than a left-aligned title. */}
+          <DrawerTitle className="sr-only">
+            Report or correct an error
           </DrawerTitle>
           {position ? (
             <div className="flex items-center justify-center gap-3">
@@ -145,7 +148,8 @@ export default function ReportErrorSheet({
             </div>
           ) : null}
           <p className="text-balance text-center text-sm leading-relaxed text-muted-foreground">
-            Spot an error? Describe what&apos;s wrong and we&apos;ll fix it.
+            Spot an error? Mark it in your briefing, and your bug report will
+            help us improve.
           </p>
         </DrawerHeader>
 

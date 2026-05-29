@@ -42,13 +42,13 @@ export default function DesktopBottomBar(): React.JSX.Element {
           disabled={!activeCard}
           title={
             activeCard
-              ? `Ask AI about ${activeCard.title}`
+              ? `Ask about ${activeCard.title}`
               : 'Click a card to make it active first'
           }
           className="text-sm!"
         >
           <Sparkles className="size-4" aria-hidden />
-          Ask AI
+          Assistant
         </Button>
       </div>
     </div>
