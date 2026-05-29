@@ -8,6 +8,7 @@ import { extractClids } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 import { identifyUser } from '@shared/utils/analytics'
 import { buildUserTraits } from 'helpers/buildUserTraits'
+import { setUserEmail } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 
 const identify = async (
@@ -15,6 +16,7 @@ const identify = async (
   searchParams: ReturnType<typeof useSearchParams>,
 ) => {
   persistUtmsOnce()
+  setUserEmail(user?.email)
 
   const traits = {
     ...getPersistedUtms(),

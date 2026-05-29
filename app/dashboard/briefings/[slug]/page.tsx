@@ -2,10 +2,6 @@ import { notFound } from 'next/navigation'
 import pageMetaData from 'helpers/metadataHelper'
 import { getBriefingBySlug, isFullBriefing } from '@shared/briefings/server'
 import {
-  renderBriefingForSpeech,
-  renderItemForSpeech,
-} from '@shared/briefings/renderForSpeech'
-import {
   BRIEFING_EXECUTIVE_SUMMARY_DOM_ID,
   briefingItemDomId,
 } from '@shared/briefings/routes'
@@ -49,12 +45,6 @@ export default async function Page({
   if (!result || !isFullBriefing(result)) notFound()
   const briefing = result
 
-  // Pre-render the briefing into a single plain-text blob for the speech
-  // service. Doing this here (rather than in the button) keeps the speech
-  // module a pure pipe: it accepts text and returns audio, with zero
-  // briefing-schema knowledge.
-  const speechText = renderBriefingForSpeech(briefing)
-
   return (
     <>
       <TrackBriefingViewed briefingId={slug} />
@@ -62,8 +52,6 @@ export default async function Page({
         summary={briefing.executive_summary}
         agendaItemIds={briefing.items.map((item) => item.id)}
         domId={BRIEFING_EXECUTIVE_SUMMARY_DOM_ID}
-        speechText={speechText}
-        analyticsLabel="briefing"
       />
 
       {briefing.items.map((item, index) => {
@@ -78,8 +66,6 @@ export default async function Page({
             meetingDate={slug}
             showFeedback={isFeatured}
             variant={isFeatured ? 'full' : 'whatToExpectOnly'}
-            speechText={isFeatured ? renderItemForSpeech(item) : undefined}
-            analyticsLabel={`briefing-item-${item.id}`}
           />
         )
       })}

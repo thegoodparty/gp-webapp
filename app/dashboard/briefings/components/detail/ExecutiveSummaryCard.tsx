@@ -9,7 +9,6 @@ import {
 import { selectElementContents } from '@shared/briefings/anchorResolver'
 import { useAnnotationsCtx } from '../annotations/AnnotationsScope'
 import CardLevelNotesList from './CardLevelNotesList'
-import ReadAloudButton from './ReadAloudButton'
 
 type Props = {
   summary: MeetingBriefingOutput['executive_summary']
@@ -21,14 +20,6 @@ type Props = {
    */
   agendaItemIds: string[]
   domId: string
-  /**
-   * Pre-rendered plain-text version of the briefing for the speech
-   * service. Built by the page via `renderBriefingForSpeech` and
-   * threaded down so the read-aloud control stays a thin UI shell.
-   */
-  speechText: string
-  /** Optional label forwarded to analytics so usage can be sliced by surface. */
-  analyticsLabel?: string
 }
 
 const onJump = (
@@ -54,11 +45,17 @@ export default function ExecutiveSummaryCard({
   summary,
   agendaItemIds,
   domId,
-  speechText,
-  analyticsLabel,
 }: Props): React.JSX.Element {
-  const { activeCard, setActiveCard } = useAnnotationsCtx()
+  const { activeCard, setActiveCard, annotations, openChatsSurface } =
+    useAnnotationsCtx()
   const isActive = activeCard?.key === domId
+  // If the assistant already has a thread anchored to this title, clicking
+  // the title opens that thread directly rather than re-surfacing the
+  // selection toolbar.
+  const titleChat = annotations.find(
+    (a) =>
+      a.kind === 'chat' && a.jsonPath === BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH,
+  )
   const activate = () =>
     setActiveCard({
       key: domId,
@@ -90,22 +87,24 @@ export default function ExecutiveSummaryCard({
           : 'border-border hover:border-foreground/20'
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        {/* `data-briefing-json-path` makes the title resolvable as an
-            anchor target — card-level chats hang off this element. Clicking
-            the title selects its full text so the HighlightToolbar surfaces
-            anchored to the title, the same as highlighting it by hand. */}
-        <h2
-          className="min-w-0 cursor-pointer text-2xl font-semibold text-foreground"
-          data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
-          onClick={(e) => selectElementContents(e.currentTarget)}
-        >
-          Executive Summary
-        </h2>
-        <div className="shrink-0">
-          <ReadAloudButton text={speechText} analyticsLabel={analyticsLabel} />
-        </div>
-      </div>
+      {/* `data-briefing-json-path` makes the title resolvable as an anchor
+          target — card-level chats hang off this element. With no chat yet,
+          clicking selects its full text so the HighlightToolbar surfaces
+          anchored to the title; with a chat, it opens that thread. */}
+      <h2
+        className="min-w-0 cursor-pointer text-2xl font-semibold text-foreground"
+        data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
+        onClick={(e) => {
+          if (titleChat) {
+            e.stopPropagation()
+            openChatsSurface(titleChat.id)
+          } else {
+            selectElementContents(e.currentTarget)
+          }
+        }}
+      >
+        Executive Summary
+      </h2>
       <p
         className="text-sm text-muted-foreground"
         data-briefing-json-path="/executive_summary/lead_in"
