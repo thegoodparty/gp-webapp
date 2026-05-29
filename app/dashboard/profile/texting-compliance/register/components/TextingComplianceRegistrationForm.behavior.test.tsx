@@ -73,10 +73,7 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
     expect(screen.getByText(/select an option/i)).toBeInTheDocument()
     // The invalid Office Level select (the only combobox in this state) is
     // marked with an error state.
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'aria-invalid',
-      'true',
-    )
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('submits the (non-federal) form when it is valid', async () => {
@@ -96,9 +93,7 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
       }),
     )
     // No error banner when the form is valid.
-    expect(
-      screen.queryByText(/please fix the following fields/i),
-    ).toBeNull()
+    expect(screen.queryByText(/please fix the following fields/i)).toBeNull()
   })
 
   it('never lists `website` in the banner, even when requireWebsite is true', async () => {
