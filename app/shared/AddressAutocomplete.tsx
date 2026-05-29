@@ -19,12 +19,14 @@ interface AddressAutocompleteProps
   value?: string
   onChange?: (inputValue: string) => void
   onSelect?: (place: GooglePlace) => void
+  dropdownClassName?: string
 }
 
 export default function AddressAutocomplete({
   value,
   onChange = noop,
   onSelect = noop,
+  dropdownClassName,
   ...restProps
 }: AddressAutocompleteProps): React.JSX.Element {
   const [inputValue, setInputValue] = useState(value || '')
@@ -57,6 +59,9 @@ export default function AddressAutocomplete({
         if (container instanceof HTMLElement) {
           container.classList.add('needsclick')
           container.style.touchAction = 'manipulation'
+          if (dropdownClassName) {
+            container.classList.add(dropdownClassName)
+          }
         }
       })
     }
@@ -73,7 +78,7 @@ export default function AddressAutocomplete({
     addMobileClassToAutocomplete()
 
     return (): void => observer.disconnect()
-  }, [])
+  }, [dropdownClassName])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const newValue = e.target.value
