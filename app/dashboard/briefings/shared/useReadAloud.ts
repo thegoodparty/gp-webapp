@@ -45,6 +45,17 @@ const cacheSynthesisResult = (
   key: string,
   response: SynthesizeSpeechResponse,
 ): void => {
+  if (response.segments.length === 0) {
+    // Briefly cache an empty result so repeated prefetch/play calls for the
+    // same text (e.g. the two responsive buttons, or a remount) don't keep
+    // hammering the rate-limited synthesize endpoint when the server returns
+    // nothing (text too short, content filtered, etc.).
+    synthesisResultCache.set(key, {
+      response,
+      expiresAt: Date.now() + SYNTHESIS_CACHE_SAFETY_MS,
+    })
+    return
+  }
   const minExpiresInSeconds = response.segments.reduce(
     (min, segment) => Math.min(min, segment.expiresInSeconds),
     Number.POSITIVE_INFINITY,

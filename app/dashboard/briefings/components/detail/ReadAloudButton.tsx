@@ -1,8 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Volume2, Square, TriangleAlert } from 'lucide-react'
-import { Button, IconButton } from '@styleguide'
+import {
+  Button,
+  IconButton,
+  SquareIcon,
+  TriangleAlertIcon,
+  Volume2Icon,
+} from '@styleguide'
 import { useReadAloud } from '../../shared/useReadAloud'
 
 type Props = {
@@ -73,11 +78,11 @@ export default function ReadAloudButton({
         onClick={onClick}
       >
         {status === 'error' ? (
-          <TriangleAlert className="size-4 text-destructive" aria-hidden />
+          <TriangleAlertIcon className="size-4 text-destructive" aria-hidden />
         ) : status === 'playing' ? (
-          <Square className="size-4" aria-hidden />
+          <SquareIcon className="size-4" aria-hidden />
         ) : (
-          <Volume2 className="size-4" aria-hidden />
+          <Volume2Icon className="size-4" aria-hidden />
         )}
       </IconButton>
     )
@@ -94,17 +99,17 @@ export default function ReadAloudButton({
     >
       {status === 'error' ? (
         <>
-          <TriangleAlert className="size-4 text-destructive" aria-hidden />
+          <TriangleAlertIcon className="size-4 text-destructive" aria-hidden />
           Try again
         </>
       ) : isBusy ? (
         <>
-          <Square className="size-4" aria-hidden />
+          <SquareIcon className="size-4" aria-hidden />
           {status === 'loading' ? 'Loading\u2026' : 'Stop'}
         </>
       ) : (
         <>
-          <Volume2 className="size-4" aria-hidden />
+          <Volume2Icon className="size-4" aria-hidden />
           Read aloud
         </>
       )}
