@@ -537,6 +537,12 @@ const buildBudgetBreakdown = (
 const VOLUNTEERS_PER_WEEK = 45
 const VOLUNTEER_HOURS_PER_SHIFT = 3
 const CANDIDATE_HOURS_PER_WEEK = 14
+const DOORS_PER_HOUR = 15
+const MAX_CAMPAIGN_WEEKS = 12
+// Share of voter contacts assumed to come from door knocking (vs. text /
+// robocall). Drives both the volunteer-hour target and the per-week door
+// load below.
+const CANVASS_SHARE_OF_CONTACTS = 0.2
 
 const buildTimeBreakdown = (
   weeksRemaining: number,
@@ -895,10 +901,13 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     0,
     Math.round(projectedTurnout * PLACEHOLDER_MATCH_RATE_LANDLINE * 2),
   )
-  const volunteerHourTarget = Math.max(
-    100,
-    Math.round((winNumber || 0) / 3 / 10) * 10,
-  )
+  // Total volunteer-canvass hours over the campaign, derived from the
+  // voter contact goal. Assumes CANVASS_SHARE_OF_CONTACTS of contacts come
+  // through door knocking at DOORS_PER_HOUR. Rounded to the nearest 10.
+  const volunteerHourTarget =
+    Math.round(
+      (voterContactGoal * CANVASS_SHARE_OF_CONTACTS) / DOORS_PER_HOUR / 10,
+    ) * 10
   const averageTouchesPerVoter =
     projectedTurnout > 0
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
@@ -910,8 +919,6 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.filingFee,
   )
 
-  const DOORS_PER_HOUR = 15
-  const MAX_CAMPAIGN_WEEKS = 12
   let weeksRemaining = MAX_CAMPAIGN_WEEKS
   if (electionDateValid) {
     const ms = electionDateValid.getTime() - Date.now()
@@ -922,7 +929,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       )
     }
   }
-  const totalDoors = Math.round(voterContactGoal * 0.2)
+  const totalDoors = Math.round(voterContactGoal * CANVASS_SHARE_OF_CONTACTS)
   const doorsPerWeek = totalDoors / weeksRemaining
   const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
   const volunteerDoorsPerWeek = Math.max(
