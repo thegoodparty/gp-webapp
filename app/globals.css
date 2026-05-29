@@ -803,6 +803,9 @@ strong {
      bottom of the page on mobile. Only affects dropdowns tagged with this class. */
   .pac-container.texting-compliance-address-dropdown {
     position: absolute !important;
+    left: unset !important;
+    right: unset !important;
+    width: unset !important;
   }
 
   .pac-item {

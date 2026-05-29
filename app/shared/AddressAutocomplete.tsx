@@ -31,7 +31,7 @@ export default function AddressAutocomplete({
 }: AddressAutocompleteProps): React.JSX.Element {
   const [inputValue, setInputValue] = useState(value || '')
 
-  const { ref } = usePlacesWidget({
+  const { ref } = usePlacesWidget<HTMLInputElement>({
     apiKey: MAPS_API_KEY,
     onPlaceSelected: (place: GooglePlace) => {
       if (place && place.formatted_address) {
@@ -59,9 +59,6 @@ export default function AddressAutocomplete({
         if (container instanceof HTMLElement) {
           container.classList.add('needsclick')
           container.style.touchAction = 'manipulation'
-          if (dropdownClassName) {
-            container.classList.add(dropdownClassName)
-          }
         }
       })
     }
@@ -78,7 +75,46 @@ export default function AddressAutocomplete({
     addMobileClassToAutocomplete()
 
     return (): void => observer.disconnect()
-  }, [dropdownClassName])
+  }, [])
+
+  // Google appends the `.pac-container` dropdown to <body>, so it can't be
+  // matched via this component's DOM subtree. Tag it only while this input is
+  // focused (the only time its dropdown is visible) so a caller-supplied
+  // `dropdownClassName` can't bleed into other AddressAutocomplete instances.
+  useEffect(() => {
+    const inputEl = ref.current
+    if (!inputEl || !dropdownClassName) return
+
+    const tagDropdown = (): void => {
+      if (document.activeElement !== inputEl) return
+      document.querySelectorAll('.pac-container').forEach((container) => {
+        if (container instanceof HTMLElement) {
+          container.classList.add(dropdownClassName)
+        }
+      })
+    }
+
+    const untagDropdown = (): void => {
+      document.querySelectorAll('.pac-container').forEach((container) => {
+        if (container instanceof HTMLElement) {
+          container.classList.remove(dropdownClassName)
+        }
+      })
+    }
+
+    inputEl.addEventListener('focus', tagDropdown)
+    inputEl.addEventListener('blur', untagDropdown)
+
+    const observer = new MutationObserver(tagDropdown)
+    observer.observe(document.body, { childList: true, subtree: true })
+
+    return (): void => {
+      inputEl.removeEventListener('focus', tagDropdown)
+      inputEl.removeEventListener('blur', untagDropdown)
+      observer.disconnect()
+      untagDropdown()
+    }
+  }, [dropdownClassName, ref])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const newValue = e.target.value
