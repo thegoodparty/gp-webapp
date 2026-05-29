@@ -51,8 +51,8 @@ export const AccountSettingsSection = (): React.JSX.Element => {
         />
       )}
       <Paper>
-        <div className="flex justify-between">
-          <div>
+        <div className="md:flex justify-between">
+          <div className="mb-8 md:mb-0">
             <H5> GoodParty.org - {plan} </H5>
             <Body2 className="mt-2 text-gray-600">
               Need help?
