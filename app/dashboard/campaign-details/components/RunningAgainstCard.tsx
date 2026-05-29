@@ -41,15 +41,15 @@ export default function RunningAgainstCard({
   }
 
   return (
-    <div className="my-6 border rounded-xl p-4 border-gray-300 flex justify-between gap-4">
+    <div className="my-6 border rounded-xl p-4 border-gray-300 flex justify-between">
       {!showEdit ? (
         <>
-          <div className="min-w-0 break-words">
+          <div>
             <div className="font-bold mb-2">{name}</div>
             <div>{party}</div>
             <div>{description}</div>
           </div>
-          <div className="shrink-0">
+          <div>
             <IconButton
               title="Delete"
               className="flex items-center"
