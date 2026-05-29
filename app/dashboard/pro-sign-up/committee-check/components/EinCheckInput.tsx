@@ -23,6 +23,7 @@ interface EinCheckInputProps {
   onChange?: (val: string) => void
   helperText?: React.ReactNode
   name?: string
+  error?: boolean
 }
 
 export const EinCheckInput = ({

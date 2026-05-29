@@ -1,7 +1,13 @@
 'use client'
 
-import { Volume2, Square, TriangleAlert } from 'lucide-react'
-import { Button, IconButton } from '@styleguide'
+import { useEffect } from 'react'
+import {
+  Button,
+  IconButton,
+  SquareIcon,
+  TriangleAlertIcon,
+  Volume2Icon,
+} from '@styleguide'
 import { useReadAloud } from '../../shared/useReadAloud'
 
 type Props = {
@@ -32,7 +38,16 @@ export default function ReadAloudButton({
   analyticsLabel,
   compact = false,
 }: Props): React.JSX.Element {
-  const { status, error, play, stop } = useReadAloud({ text, analyticsLabel })
+  const { status, error, play, stop, prefetch } = useReadAloud({
+    text,
+    analyticsLabel,
+  })
+
+  // Warm the server-side audio cache as soon as the control is on screen so the
+  // first click plays (near-)instantly instead of waiting on Polly synthesis.
+  useEffect(() => {
+    void prefetch()
+  }, [prefetch])
 
   const isBusy = status === 'loading' || status === 'playing'
   const ariaLabel =
@@ -63,11 +78,11 @@ export default function ReadAloudButton({
         onClick={onClick}
       >
         {status === 'error' ? (
-          <TriangleAlert className="size-4 text-destructive" aria-hidden />
+          <TriangleAlertIcon className="size-4 text-destructive" aria-hidden />
         ) : status === 'playing' ? (
-          <Square className="size-4" aria-hidden />
+          <SquareIcon className="size-4" aria-hidden />
         ) : (
-          <Volume2 className="size-4" aria-hidden />
+          <Volume2Icon className="size-4" aria-hidden />
         )}
       </IconButton>
     )
@@ -84,17 +99,17 @@ export default function ReadAloudButton({
     >
       {status === 'error' ? (
         <>
-          <TriangleAlert className="size-4 text-destructive" aria-hidden />
+          <TriangleAlertIcon className="size-4 text-destructive" aria-hidden />
           Try again
         </>
       ) : isBusy ? (
         <>
-          <Square className="size-4" aria-hidden />
+          <SquareIcon className="size-4" aria-hidden />
           {status === 'loading' ? 'Loading\u2026' : 'Stop'}
         </>
       ) : (
         <>
-          <Volume2 className="size-4" aria-hidden />
+          <Volume2Icon className="size-4" aria-hidden />
           Read aloud
         </>
       )}

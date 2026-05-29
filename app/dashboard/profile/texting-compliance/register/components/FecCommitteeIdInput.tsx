@@ -30,12 +30,14 @@ interface FecCommitteeIdInputProps {
   value?: string
   validated?: boolean | null
   onChange?: (val: string) => void
+  error?: boolean
 }
 
 export const FecCommitteeIdInput = ({
   value = '',
   validated,
   onChange = noop,
+  error,
 }: FecCommitteeIdInputProps): React.JSX.Element => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     let newVal = e.currentTarget.value.toUpperCase()
@@ -60,6 +62,7 @@ export const FecCommitteeIdInput = ({
       value={value}
       onChange={handleOnChange}
       maxLength={9}
+      error={error}
       InputProps={{
         endAdornment: (
           <AsyncValidationIcon

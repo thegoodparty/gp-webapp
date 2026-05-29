@@ -92,7 +92,7 @@ export default function EnterPin(): React.JSX.Element {
         <H5 className="flex-1 text-center md:hidden">Enter your PIN</H5>
       </TextingComplianceHeader>
 
-      <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8">
+      <div className="mx-auto max-w-2xl px-4 py-6 md:px-8 md:py-8 mt-16 md:mt-0">
         <H2 className="mb-6 hidden md:block">Enter your PIN</H2>
 
         {isPending || shouldRedirect ? (
