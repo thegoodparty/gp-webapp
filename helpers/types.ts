@@ -110,7 +110,6 @@ export interface CampaignDetails {
   ballotLevel?: string
   electionDate?: string
   primaryElectionDate?: string
-  primaryResult?: 'won' | 'lost' | null
   zip?: string
   knowRun?: 'yes' | null
   runForOffice?: 'yes' | 'no' | null
@@ -377,6 +376,7 @@ export interface Campaign {
   isPro?: boolean | null
   isDemo: boolean
   didWin?: boolean | null
+  primaryResult?: 'won' | 'lost' | null
   dateVerified?: Date | string | null
   tier?: CampaignTier | null
   formattedAddress?: string | null
