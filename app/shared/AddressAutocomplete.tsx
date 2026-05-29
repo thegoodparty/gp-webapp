@@ -77,29 +77,32 @@ export default function AddressAutocomplete({
     return (): void => observer.disconnect()
   }, [])
 
-  // Google appends the `.pac-container` dropdown to <body>, so it can't be
-  // matched via this component's DOM subtree. Tag it only while this input is
-  // focused (the only time its dropdown is visible) so a caller-supplied
-  // `dropdownClassName` can't bleed into other AddressAutocomplete instances.
+  // Google appends the `.pac-container` dropdown to <body>, outside this
+  // component's subtree, so it can't be matched via a ref. We tag it only while
+  // this input is focused — the only time its dropdown is visible — and track
+  // exactly which containers we tagged so blur/unmount removes only our own
+  // additions, never stripping the class from another instance's dropdown.
   useEffect(() => {
     const inputEl = ref.current
     if (!inputEl || !dropdownClassName) return
+
+    const taggedContainers = new Set<HTMLElement>()
 
     const tagDropdown = (): void => {
       if (document.activeElement !== inputEl) return
       document.querySelectorAll('.pac-container').forEach((container) => {
         if (container instanceof HTMLElement) {
           container.classList.add(dropdownClassName)
+          taggedContainers.add(container)
         }
       })
     }
 
     const untagDropdown = (): void => {
-      document.querySelectorAll('.pac-container').forEach((container) => {
-        if (container instanceof HTMLElement) {
-          container.classList.remove(dropdownClassName)
-        }
+      taggedContainers.forEach((container) => {
+        container.classList.remove(dropdownClassName)
       })
+      taggedContainers.clear()
     }
 
     inputEl.addEventListener('focus', tagDropdown)
