@@ -1,16 +1,12 @@
 'use client'
-import { useState } from 'react'
-import ContentEditor from './ContentEditor'
-import useVersions from 'app/onboarding/shared/useVerisons'
+import { useEffect, useRef, useState } from 'react'
+import ContentEditor, { Versions } from './ContentEditor'
+import useVersions from 'app/onboarding/shared/useVersions'
 import { fetchCampaignVersions } from 'app/onboarding/shared/ajaxActions'
 import { kebabToCamel } from 'helpers/stringHelper'
 import LoadingContent from './LoadingContent'
+import { useSnackbar } from 'helpers/useSnackbar'
 import { Campaign } from 'helpers/types'
-
-// useVersions returns a loose type that we need to accept
-type Versions = Partial<
-  Record<string, string | number | boolean | object | null>
->
 
 interface EditContentPageProps {
   slug: string
@@ -23,13 +19,22 @@ const EditContentPage = ({
 }: EditContentPageProps): React.JSX.Element => {
   const section = kebabToCamel(slug)
 
-  const versions = useVersions()
+  const { data: versions, error: versionsError } = useVersions()
+  const { errorSnackbar } = useSnackbar()
   const [updatedVersions, setUpdatedVersions] = useState<Versions | false>(
     false,
   )
+  const versionsErrorReportedRef = useRef(false)
+
+  useEffect(() => {
+    if (!versionsError || versionsErrorReportedRef.current) return
+    versionsErrorReportedRef.current = true
+    console.error('Failed to load campaign versions', versionsError)
+    errorSnackbar('Could not load version history. You can still edit content.')
+  }, [versionsError, errorSnackbar])
 
   const updateVersionsCallback = async () => {
-    const fetchedVersions: Versions = await fetchCampaignVersions()
+    const fetchedVersions = await fetchCampaignVersions()
     setUpdatedVersions(fetchedVersions)
   }
 
@@ -39,7 +44,7 @@ const EditContentPage = ({
         <ContentEditor
           section={section}
           campaign={campaign}
-          versions={updatedVersions || versions}
+          versions={updatedVersions || versions || {}}
           updateVersionsCallback={updateVersionsCallback}
         />
       ) : (

@@ -409,6 +409,7 @@ const TextingComplianceRegistrationForm = ({
             placeholder: 'Filing Address *',
             variant: 'outlined',
             error: showError('address'),
+            dropdownClassName: 'texting-compliance-address-dropdown',
           }}
         />
         <TextField
