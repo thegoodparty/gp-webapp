@@ -44,7 +44,8 @@ describe('<FeedbackRow> thumbs-up path', () => {
 
     await user.click(screen.getByRole('button', { name: /^yes$/i }))
 
-    expect(setFeedbackMock).toHaveBeenCalledWith(ITEM_ID, 'positive')
+    // A thumbs-up clears any prior thumbs-down note (null comment).
+    expect(setFeedbackMock).toHaveBeenCalledWith(ITEM_ID, 'positive', null)
     // Composer should never render for a positive vote.
     expect(
       screen.queryByPlaceholderText(/tell us what was off/i),

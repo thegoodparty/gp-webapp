@@ -61,7 +61,7 @@ export default function HighlightToolbar({
     >
       <Button type="button" size="small" onClick={onAskAi}>
         <Sparkles className="size-3.5" aria-hidden />
-        Ask AI
+        Ask
       </Button>
       <Button type="button" size="small" variant="outline" onClick={onAddNote}>
         <MessageSquare className="size-3.5" aria-hidden />

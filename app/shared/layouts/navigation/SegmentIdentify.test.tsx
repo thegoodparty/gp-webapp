@@ -6,6 +6,7 @@ import {
   persistUtmsOnce,
   getPersistedUtms,
   extractClids,
+  setUserEmail,
 } from 'helpers/analyticsHelper'
 import { buildUserTraits } from 'helpers/buildUserTraits'
 
@@ -29,6 +30,7 @@ vi.mock('helpers/analyticsHelper', () => ({
   persistUtmsOnce: vi.fn(),
   getPersistedUtms: vi.fn(() => ({})),
   extractClids: vi.fn(() => ({})),
+  setUserEmail: vi.fn(),
 }))
 
 vi.mock('helpers/buildUserTraits', () => ({
@@ -65,6 +67,7 @@ beforeEach(() => {
   vi.mocked(getPersistedUtms).mockReset().mockReturnValue({})
   vi.mocked(extractClids).mockReset().mockReturnValue({})
   vi.mocked(buildUserTraits).mockReset().mockReturnValue(fullUserTraits)
+  vi.mocked(setUserEmail).mockReset()
 })
 
 describe('SegmentIdentify', () => {
@@ -110,6 +113,26 @@ describe('SegmentIdentify', () => {
         utm_source_first: 'twitter',
         gclid: 'abc123',
       })
+    })
+  })
+
+  it('sets the user email for event tracking when logged in', async () => {
+    mockUser = fullUser
+
+    render(<SegmentIdentify />)
+
+    await vi.waitFor(() => {
+      expect(setUserEmail).toHaveBeenCalledWith('jane@example.com')
+    })
+  })
+
+  it('clears the user email for event tracking when no user', async () => {
+    mockUser = null
+
+    render(<SegmentIdentify />)
+
+    await vi.waitFor(() => {
+      expect(setUserEmail).toHaveBeenCalledWith(undefined)
     })
   })
 

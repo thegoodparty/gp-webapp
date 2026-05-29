@@ -353,7 +353,7 @@ describe('NotesSurface', () => {
   })
 
   describe('Header', () => {
-    it('renders the "Note" panel title on desktop (matches Lovable design)', () => {
+    it('renders no visible panel title on desktop — only the sr-only "Notes" label', () => {
       render(
         <NotesSurface
           open
@@ -366,9 +366,11 @@ describe('NotesSurface', () => {
         />,
       )
 
-      // The visible big heading; sr-only DrawerTitle ("Notes") is separate.
-      const titles = screen.getAllByText(/^Note$/)
-      expect(titles.some((el) => !el.classList.contains('sr-only'))).toBe(true)
+      // The visible "Note" heading was removed to match the other annotation
+      // surfaces; the Radix DrawerTitle keeps the sr-only "Notes" label for
+      // a11y.
+      expect(screen.queryByText(/^Note$/)).not.toBeInTheDocument()
+      expect(screen.getByText(/^Notes$/)).toHaveClass('sr-only')
     })
 
     it('does not render a visible "Note" panel title on mobile (sr-only label only)', async () => {

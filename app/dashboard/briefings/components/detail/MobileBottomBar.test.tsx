@@ -80,7 +80,7 @@ describe('<MobileBottomBar>', () => {
     setCtx({ activeCard: ACTIVE_CARD })
     render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(2)} />)
 
-    // The selector pill and the Ask AI button both contain "Executive
+    // The selector pill and the assistant button both contain "Executive
     // Summary"; the pill is the first match (it's the leftmost element).
     const selectorMatches = screen.getAllByRole('button', {
       name: /executive summary/i,
@@ -88,7 +88,7 @@ describe('<MobileBottomBar>', () => {
     const selector = selectorMatches[0]
     if (!selector) throw new Error('selector button not rendered')
     const askAi = screen.getByRole('button', {
-      name: /ask ai about executive summary/i,
+      name: /ask about executive summary/i,
     })
 
     // Selector + Ask AI share a common ancestor (the dock row).
@@ -123,7 +123,7 @@ describe('<MobileBottomBar>', () => {
     render(<MobileBottomBar briefingSlug="town-hall" items={makeItems(1)} />)
 
     await userEvent.click(
-      screen.getByRole('button', { name: /ask ai about executive summary/i }),
+      screen.getByRole('button', { name: /ask about executive summary/i }),
     )
     expect(openCardLevelChat).toHaveBeenCalledTimes(1)
   })

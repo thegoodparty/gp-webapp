@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowLeftIcon } from '@styleguide'
 import { briefingsLandingHref } from '@shared/briefings/routes'
 import { formatBriefingMeetingDate } from '@shared/briefings/dateHelpers'
+import { renderBriefingForSpeech } from '@shared/briefings/renderForSpeech'
 import type { Briefing } from '@shared/briefings/types'
 import DetailHeaderActions from './DetailHeaderActions'
 
@@ -21,6 +22,7 @@ type Props = {
  */
 export default function DetailHeader({ briefing }: Props): React.JSX.Element {
   const formattedDate = formatBriefingMeetingDate(briefing.meeting_date)
+  const speechText = renderBriefingForSpeech(briefing)
   return (
     <div className="sticky top-0 z-20 border-b border-border bg-sidebar">
       {/* Match the body's content container (mx-auto max-w-[1120px] + same
@@ -43,7 +45,7 @@ export default function DetailHeader({ briefing }: Props): React.JSX.Element {
             <p className="text-sm text-muted-foreground">{briefing.location}</p>
           ) : null}
         </div>
-        <DetailHeaderActions />
+        <DetailHeaderActions speechText={speechText} />
       </div>
     </div>
   )

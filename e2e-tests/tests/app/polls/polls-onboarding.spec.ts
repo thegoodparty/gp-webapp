@@ -328,6 +328,9 @@ test.describe.serial('poll onboarding', () => {
     sharedUser = user
     await NavigationHelper.dismissOverlays(page)
 
+    // Elected office users now land on /dashboard/briefings after winning their
+    // race, so navigate to the polls welcome screen before onboarding.
+    await page.goto('/polls/welcome')
     await page.getByRole('button', { name: "Let's get started" }).click()
 
     // Confirm constituent count.

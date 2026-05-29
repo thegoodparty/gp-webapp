@@ -18,7 +18,6 @@ import RecentNewsList from './RecentNewsList'
 import TalkingPointsList from './TalkingPointsList'
 import SourcesCollapsible from './SourcesCollapsible'
 import FeedbackRow from './FeedbackRow'
-import ReadAloudButton from './ReadAloudButton'
 import CardLevelNotesList from './CardLevelNotesList'
 
 type Variant = 'full' | 'whatToExpectOnly'
@@ -31,14 +30,6 @@ type Props = {
   meetingDate: string
   showFeedback: boolean
   variant?: Variant
-  /**
-   * Pre-rendered plain-text for the speech service. When provided, the
-   * card header renders a compact read-aloud control. Featured items on
-   * the overview pass this; non-featured items omit it.
-   */
-  speechText?: string
-  /** Optional label forwarded to analytics so usage can be sliced by surface. */
-  analyticsLabel?: string
 }
 
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
@@ -189,13 +180,18 @@ const AgendaItemCard = ({
   meetingDate,
   showFeedback,
   variant = 'full',
-  speechText,
-  analyticsLabel,
 }: Props): React.JSX.Element => {
   const base = briefingItemCardPath(itemIndex)
   const titlePath = briefingItemTitlePath(itemIndex)
-  const { activeCard, setActiveCard } = useAnnotationsCtx()
+  const { activeCard, setActiveCard, annotations, openChatsSurface } =
+    useAnnotationsCtx()
   const isActive = activeCard?.key === domId
+  // If the assistant already has a thread anchored to this item's title,
+  // clicking the title opens that thread directly rather than re-surfacing
+  // the selection toolbar.
+  const titleChat = annotations.find(
+    (a) => a.kind === 'chat' && a.jsonPath === titlePath,
+  )
   const activate = () =>
     setActiveCard({
       key: domId,
@@ -240,27 +236,26 @@ const AgendaItemCard = ({
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
-          {/* Clicking the title selects its full text so the
-              HighlightToolbar surfaces anchored to the title — the same
+          {/* With no chat yet, clicking the title selects its full text so
+              the HighlightToolbar surfaces anchored to the title — the same
               anchor openCardLevelChat uses — without the user having to
-              drag-highlight it by hand. */}
+              drag-highlight it by hand. With a chat already attached, it
+              opens that thread directly. */}
           <h3
             className="w-fit cursor-pointer text-lg font-semibold text-foreground"
             data-briefing-json-path={titlePath}
-            onClick={(e) => selectElementContents(e.currentTarget)}
+            onClick={(e) => {
+              if (titleChat) {
+                e.stopPropagation()
+                openChatsSurface(titleChat.id)
+              } else {
+                selectElementContents(e.currentTarget)
+              }
+            }}
           >
             {item.title}
           </h3>
         </div>
-        {speechText ? (
-          <div className="shrink-0">
-            <ReadAloudButton
-              text={speechText}
-              analyticsLabel={analyticsLabel}
-              compact
-            />
-          </div>
-        ) : null}
       </header>
 
       <section className="flex flex-col gap-2">

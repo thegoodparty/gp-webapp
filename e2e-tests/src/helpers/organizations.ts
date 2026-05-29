@@ -31,7 +31,7 @@ export const setupElectedOfficeUser = async (
   await page
     .getByRole('button', { name: 'I won my race' })
     .click({ timeout: 10000 })
-  await page.waitForURL('**/polls/welcome', { timeout: 15000 })
+  await page.waitForURL('**/dashboard/briefings', { timeout: 15000 })
 
   const electedOfficeOrgSlug = await eventually(
     { that: 'an elected office organization is created' },

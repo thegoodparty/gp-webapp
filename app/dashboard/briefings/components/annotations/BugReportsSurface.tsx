@@ -45,9 +45,9 @@ export function BugReportsSurface({
     <AnnotationSurfaceSheet
       open={open}
       onClose={onClose}
-      title="Bug reports"
+      title={null}
       accessibleTitle="Bug reports"
-      subtitle="Spot an error? Describe what's wrong and we'll fix it."
+      subtitle="Spot an error? Mark it in your briefing, and your bug report will help us improve."
       positionLabel="Bug"
       items={items}
       renderItem={(item) => <BugReportBody item={item} />}
