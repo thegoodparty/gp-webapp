@@ -42,9 +42,11 @@ export {
   Square as SquareIcon,
   Star as StarIcon,
   Trash2 as Trash2Icon,
+  TriangleAlert as TriangleAlertIcon,
   User as UserIcon,
   UserCog as UserCogIcon,
   UsersRound as UsersRoundIcon,
+  Volume2 as Volume2Icon,
   X as XMarkIcon,
   XCircle as XCircleIcon,
 } from 'lucide-react'
