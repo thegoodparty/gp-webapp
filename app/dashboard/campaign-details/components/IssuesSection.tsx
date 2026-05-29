@@ -162,7 +162,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                   <>
                     <div className="opacity-40 p-4 mb-4">
                       <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
-                      <div className="ml-5">
+                      <div className="ml-5 break-words">
                         {typeof issue.position === 'object'
                           ? issue.position?.name
                           : issue.position}
@@ -182,7 +182,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                 ) : (
                   <div className="opacity-40 p-4">
                     <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
-                    <div className="ml-5">
+                    <div className="ml-5 break-words">
                       {typeof issue.position === 'string'
                         ? issue.position
                         : issue.position?.name}
