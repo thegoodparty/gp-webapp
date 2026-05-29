@@ -217,7 +217,14 @@ const TextingComplianceRegistrationForm = ({
   } = formData
   const formValidation = validateRegistrationForm(formData, { requireWebsite })
   const { isValid, validations } = formValidation
-  const failingFields = getFailingFields(validations)
+  // `website` is validated but has no input in this form — it is derived from
+  // the campaign's purchased domain upstream (the register page redirects to
+  // domain purchase when absent, and the election-filing flow passes
+  // requireWebsite=false). Exclude it so the error banner never tells the user
+  // to fix a field they cannot see or interact with.
+  const failingFields = getFailingFields(validations).filter(
+    (field) => field !== 'website',
+  )
 
   // The Submit button is always enabled so the user can attempt submission and
   // receive guiding errors. Errors (banner + red field borders) only surface

@@ -32,15 +32,16 @@ type SubmitMock = ReturnType<typeof vi.fn<(formData: FormDataState) => void>>
 const renderForm = (
   initialState: FormDataState,
   onSubmit: SubmitMock = vi.fn<(formData: FormDataState) => void>(),
+  requireWebsite = false,
 ): SubmitMock => {
   render(
     <FormDataProvider
       initialState={initialState}
-      validator={(d) => validateRegistrationForm(d, { requireWebsite: false })}
+      validator={(d) => validateRegistrationForm(d, { requireWebsite })}
     >
       <TextingComplianceRegistrationForm
         onSubmit={onSubmit}
-        requireWebsite={false}
+        requireWebsite={requireWebsite}
       />
     </FormDataProvider>,
   )
@@ -94,5 +95,30 @@ describe('TextingComplianceRegistrationForm — submit behavior', () => {
     expect(
       screen.queryByText(/please fix the following fields/i),
     ).toBeNull()
+  })
+
+  it('never lists `website` in the banner, even when requireWebsite is true', async () => {
+    const user = userEvent.setup()
+    // requireWebsite=true makes an empty website invalid, but this form renders
+    // no website input, so it must not appear in the banner. Email is also left
+    // empty so the banner has a real, fixable field to show.
+    const onSubmit = renderForm(
+      validInitialState({ website: '', email: '' }),
+      undefined,
+      true,
+    )
+
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(
+      screen.getByText(/please fix the following fields/i),
+    ).toBeInTheDocument()
+    // The fixable field's guidance is shown...
+    expect(
+      screen.getByText(/valid email address as it appears/i),
+    ).toBeInTheDocument()
+    // ...but `website` (no input here) is not — neither its name nor message.
+    expect(screen.queryByText('Valid URL')).toBeNull()
   })
 })
