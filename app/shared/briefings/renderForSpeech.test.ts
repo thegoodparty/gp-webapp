@@ -46,9 +46,19 @@ const featuredItem = (overrides: Record<string, unknown> = {}): Item =>
   } as unknown as Item)
 
 describe('renderBriefingForSpeech', () => {
-  it('joins title, executive summary, and featured items into a single text blob', () => {
+  it('reads the header, executive summary, and every item section in page order', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
+        executive_summary: {
+          lead_in: 'Three big items tonight.',
+          items: [
+            {
+              item_id: 'a-1',
+              title: 'Approve budget',
+              overview: 'Adopts FY27.',
+            },
+          ],
+        },
         items: [
           featuredItem({
             display: {
@@ -58,7 +68,7 @@ describe('renderBriefingForSpeech', () => {
                 detail: null,
                 district_note: null,
                 haystaq_column: 'fiscal_responsibility',
-                mean_score: 0.6,
+                mean_score: 60,
                 score_direction: 'positive',
                 voter_count: 1200,
                 haystaq_status: 'ok',
@@ -83,15 +93,28 @@ describe('renderBriefingForSpeech', () => {
       }),
     )
 
-    expect(text).toContain('City Council meeting briefing for June 1, 2026')
+    // Header line mirrors the detail header: name, date, location.
+    expect(text).toContain('City Council. June 1, 2026. City Hall')
+    expect(text).toContain('Executive Summary.')
     expect(text).toContain('Three big items tonight.')
-    expect(text).toContain('Agenda item: Approve budget.')
+    expect(text).toContain('Approve budget. Adopts FY27.')
+    expect(text).toContain('What to expect.')
     expect(text).toContain('Adopts the FY27 operating budget.')
-    expect(text).toContain('Constituent sentiment: Mostly favorable.')
-    expect(text).toContain('Budget impact: +$2M to capital reserves.')
+    expect(text).toContain('Budget impact.')
+    expect(text).toContain('+$2M to capital reserves.')
+    expect(text).toContain('Constituent sentiment.')
+    expect(text).toContain('60 percent support, 40 percent oppose.')
+    expect(text).toContain('Mostly favorable.')
     expect(text).toContain('Talking points.')
     expect(text).toContain('Lock in school funding.')
-    expect(text).toContain('Defer the new park.')
+
+    // Order: header before the executive summary before the agenda item.
+    const headerIdx = text.indexOf('City Council. June 1, 2026. City Hall')
+    const summaryIdx = text.indexOf('Executive Summary.')
+    const whatIdx = text.indexOf('What to expect.')
+    expect(headerIdx).toBeGreaterThanOrEqual(0)
+    expect(headerIdx).toBeLessThan(summaryIdx)
+    expect(summaryIdx).toBeLessThan(whatIdx)
   })
 
   it('strips markdown markers and link syntax that Polly would otherwise read literally', () => {
@@ -111,21 +134,11 @@ describe('renderBriefingForSpeech', () => {
     expect(text).toContain('Bold italic code and a link.')
   })
 
-  it('skips non-featured items and empty optional sections', () => {
+  it('reads non-featured items too (the page renders them as "What to expect")', () => {
     const text = renderBriefingForSpeech(
       baseBriefing({
         executive_summary: { items: [], lead_in: '' },
         items: [
-          featuredItem({
-            title: 'Quiet item',
-            display: {
-              summary: '',
-              constituent_sentiment: null,
-              recent_news: null,
-              budget_impact: null,
-              talking_points: null,
-            },
-          }),
           {
             id: 'q-1',
             item_number: '2',
@@ -138,8 +151,10 @@ describe('renderBriefingForSpeech', () => {
         ],
       }),
     )
+    // No lead-in and no summary items, so the "Executive Summary." heading
+    // is omitted — it would otherwise announce a header into the next item.
     expect(text).toBe(
-      'City Council meeting briefing for June 1, 2026\n\nAgenda item: Quiet item.',
+      'City Council. June 1, 2026. City Hall\n\nProcedural matters. What to expect. Routine roll call.',
     )
   })
 })
@@ -163,7 +178,7 @@ const itemWithDisplay = (overrides: Record<string, unknown> = {}): Item =>
   } as unknown as Item)
 
 describe('renderItemForSpeech', () => {
-  it('joins title, summary, sentiment, budget, and talking points with single spaces', () => {
+  it('joins title, section headers, and bodies with single spaces in page order', () => {
     const item = {
       id: 'i-2',
       item_number: '3',
@@ -178,7 +193,7 @@ describe('renderItemForSpeech', () => {
           detail: null,
           district_note: null,
           haystaq_column: 'parks',
-          mean_score: 0.7,
+          mean_score: 70,
           score_direction: 'positive',
           voter_count: 800,
           haystaq_status: 'ok',
@@ -199,7 +214,7 @@ describe('renderItemForSpeech', () => {
     } as unknown as Item
 
     expect(renderItemForSpeech(item)).toBe(
-      'Agenda item: Approve new park funding. Council will vote on a 2 million dollar park proposal. Constituent sentiment: Strong support across the district. Budget impact: Adds 2 million to the capital budget. Talking points. Parks improve public health. Funding comes from reserves. Construction begins in spring.',
+      'Approve new park funding. What to expect. Council will vote on a 2 million dollar park proposal. Budget impact. Adds 2 million to the capital budget. Constituent sentiment. 70 percent support, 30 percent oppose. Strong support across the district. Talking points. Parks improve public health. Funding comes from reserves. Construction begins in spring.',
     )
   })
 
@@ -213,7 +228,7 @@ describe('renderItemForSpeech', () => {
 
     expect(output).not.toMatch(/[*_`#>~]/)
     expect(output).toBe(
-      'Agenda item: Ordinance review. bold italic code heading quote strike',
+      'Ordinance review. What to expect. bold italic code heading quote strike',
     )
   })
 
@@ -229,11 +244,11 @@ describe('renderItemForSpeech', () => {
     expect(output).not.toMatch(/\t/)
     expect(output).not.toMatch(/ {2,}/)
     expect(output).toBe(
-      'Agenda item: Zoning update. First line. Second line. Third line.',
+      'Zoning update. What to expect. First line. Second line. Third line.',
     )
   })
 
-  it('omits optional section labels when sentiment, budget, and talking points are missing', () => {
+  it('omits optional section headers when sentiment, budget, and talking points are missing', () => {
     const item = itemWithDisplay({
       summary: 'Procedural items only.',
     })
@@ -241,11 +256,11 @@ describe('renderItemForSpeech', () => {
 
     const output = renderItemForSpeech(item)
 
-    expect(output).not.toContain('Constituent sentiment:')
-    expect(output).not.toContain('Budget impact:')
+    expect(output).not.toContain('Constituent sentiment.')
+    expect(output).not.toContain('Budget impact.')
     expect(output).not.toContain('Talking points.')
     expect(output).toBe(
-      'Agenda item: Routine consent agenda. Procedural items only.',
+      'Routine consent agenda. What to expect. Procedural items only.',
     )
   })
 })

@@ -11,7 +11,6 @@ import {
   isPageWideChat,
   resolveQuoteFromAnchor,
 } from '@shared/briefings/anchorResolver'
-import { useIsMobile } from '@styleguide/hooks/use-mobile'
 import AskAiChatBody from './AskAiChatBody'
 import { AnnotationSurfaceSheet } from './AnnotationSurfaceSheet'
 import type { EnrichedAnnotation } from './enrichForCycler'
@@ -108,7 +107,6 @@ export function BriefingAssistantSurface({
   onChatCreated,
   onDeleteChat,
 }: Props) {
-  const isMobile = useIsMobile()
   const items = useEnrichedAnnotations(open, annotations, 'chat')
   // When the user is mid-selection-to-anchored-chat, preempt the cycler with
   // the empty-state composer carrying the live anchor. Otherwise the cycler
@@ -181,7 +179,7 @@ export function BriefingAssistantSurface({
     <AnnotationSurfaceSheet
       open={open}
       onClose={onClose}
-      title={isMobile ? null : 'Assistant highlight'}
+      title={null}
       accessibleTitle="Briefing assistant"
       subtitle="Ask anything about this section, or highlight some text to ask or get help about just that text."
       positionLabel="Chat"

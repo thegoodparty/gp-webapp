@@ -196,7 +196,7 @@ describe('<ReportErrorSheet>', () => {
 
     expect(
       screen.getByText(
-        /spot an error\? describe what's wrong and we'll fix it\./i,
+        /spot an error\? mark it in your briefing, and your bug report will help us improve\./i,
       ),
     ).toBeInTheDocument()
   })

@@ -17,7 +17,6 @@ import { useDictationAppend } from '../../shared/useDictationAppend'
 import { DictationMicButton } from '../../shared/DictationMicButton'
 import { DictationFeedback } from '../../shared/DictationFeedback'
 import NoteAttachmentPicker from './NoteAttachmentPicker'
-import { useIsMobile } from '@styleguide/hooks/use-mobile'
 
 interface Props {
   open: boolean
@@ -217,7 +216,6 @@ export function NotesSurface({
   initialAnnotationId,
   briefingItems,
 }: Props) {
-  const isMobile = useIsMobile()
   const items = useEnrichedAnnotations(open, annotations, 'note')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draftBody, setDraftBody] = useState('')
@@ -278,7 +276,7 @@ export function NotesSurface({
     <AnnotationSurfaceSheet
       open={open}
       onClose={onClose}
-      title={isMobile ? null : 'Note'}
+      title={null}
       accessibleTitle="Notes"
       subtitle="Add a note to this agenda item or highlight any text to add a note for just that part."
       positionLabel="Note"

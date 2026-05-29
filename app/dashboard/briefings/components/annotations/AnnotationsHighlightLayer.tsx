@@ -159,7 +159,7 @@ const MARKER_ICON_FOR_KIND: Record<MarkerKind, string> = {
 
 const MARKER_ARIA_LABEL_FOR_KIND: Record<MarkerKind, string> = {
   note: 'Open note',
-  chat: 'Open AI chat',
+  chat: 'Open chat',
   bug_report: 'Open bug report',
 }
 
