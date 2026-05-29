@@ -4,10 +4,102 @@ import { clientRequest } from 'gpApi/typed-request'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import type {
   SpeechSynthesisEngine,
+  SynthesizeSpeechRequest,
+  SynthesizeSpeechResponse,
   SynthesizeSpeechSegment,
 } from './speech-types'
 
 export type ReadAloudStatus = 'idle' | 'loading' | 'playing' | 'error'
+
+// Presigned segment URLs are short-lived, so a cached synthesis result is only
+// safe to replay until shortly before its URLs expire. We shave a buffer off
+// the soonest-expiring segment to avoid handing playback a URL that 404s.
+const SYNTHESIS_CACHE_SAFETY_MS = 30_000
+
+// Coordinates synthesize requests across every hook instance on the page. The
+// briefing detail header renders two ReadAloudButtons (responsive mobile +
+// desktop) with identical text, and the play path can fire while a mount-time
+// prefetch is still in flight; without coordination each of those would be a
+// separate POST that debits the per-user synthesize rate limit. Keyed on the
+// full request body (text + voice + engine) so different voices never collide.
+const inFlightSynthesis = new Map<string, Promise<SynthesizeSpeechResponse>>()
+const synthesisResultCache = new Map<
+  string,
+  { response: SynthesizeSpeechResponse; expiresAt: number }
+>()
+
+const synthesisCacheKey = (body: SynthesizeSpeechRequest): string =>
+  JSON.stringify(body)
+
+const getFreshCachedSynthesis = (
+  key: string,
+): SynthesizeSpeechResponse | undefined => {
+  const cached = synthesisResultCache.get(key)
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.response
+  }
+  return undefined
+}
+
+const cacheSynthesisResult = (
+  key: string,
+  response: SynthesizeSpeechResponse,
+): void => {
+  const minExpiresInSeconds = response.segments.reduce(
+    (min, segment) => Math.min(min, segment.expiresInSeconds),
+    Number.POSITIVE_INFINITY,
+  )
+  if (!Number.isFinite(minExpiresInSeconds)) {
+    return
+  }
+  const ttlMs = minExpiresInSeconds * 1000 - SYNTHESIS_CACHE_SAFETY_MS
+  if (ttlMs > 0) {
+    synthesisResultCache.set(key, {
+      response,
+      expiresAt: Date.now() + ttlMs,
+    })
+  }
+}
+
+/**
+ * Warm the cache for a request body, de-duplicating concurrent and repeat
+ * calls. Returns a fresh cached result, an already in-flight request, or
+ * starts a new one. Used by both the mount-time prefetch and (for reuse) the
+ * play path.
+ */
+const requestSynthesis = (
+  body: SynthesizeSpeechRequest,
+): Promise<SynthesizeSpeechResponse> => {
+  const key = synthesisCacheKey(body)
+
+  const cached = getFreshCachedSynthesis(key)
+  if (cached) {
+    return Promise.resolve(cached)
+  }
+
+  const existing = inFlightSynthesis.get(key)
+  if (existing) {
+    return existing
+  }
+
+  const request = clientRequest('POST /v1/speech/synthesize', body)
+    .then((response) => {
+      cacheSynthesisResult(key, response.data)
+      return response.data
+    })
+    .finally(() => {
+      inFlightSynthesis.delete(key)
+    })
+
+  inFlightSynthesis.set(key, request)
+  return request
+}
+
+/** Clears module-level synthesis coordination state. Test-only. */
+export const resetSpeechSynthesisCacheForTests = (): void => {
+  inFlightSynthesis.clear()
+  synthesisResultCache.clear()
+}
 
 /**
  * Domain-agnostic input. Callers render their own text from whatever
@@ -50,12 +142,9 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   // stop() or play() bumps the counter, causing in-flight async work from the
   // prior call to detect the mismatch and bail out instead of racing.
   const generationRef = useRef(0)
-  // Tracks the last text we kicked off a prefetch for, so mounting/re-rendering
-  // doesn't re-fire synthesis for text we've already warmed.
-  const prefetchedTextRef = useRef<string | null>(null)
 
   const buildRequestBody = useCallback(
-    () => ({
+    (): SynthesizeSpeechRequest => ({
       text: input.text,
       ...(input.voiceId || input.engine
         ? {
@@ -165,14 +254,31 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
     })
 
     try {
-      const response = await clientRequest(
-        'POST /v1/speech/synthesize',
-        buildRequestBody(),
-      )
+      const body = buildRequestBody()
+      const key = synthesisCacheKey(body)
+      // Reuse a result a prefetch already fetched (or one still in flight) so a
+      // click that lands after — or during — the mount-time prefetch plays
+      // without a second round-trip or a second hit on the synthesize rate
+      // limit. Falls back to its own request when nothing is warm, which keeps
+      // each play() independent (and the rapid play/stop race handling intact).
+      const cached = getFreshCachedSynthesis(key)
+      const inFlight = inFlightSynthesis.get(key)
+      const data = cached
+        ? cached
+        : inFlight
+        ? await inFlight
+        : await (async () => {
+            const response = await clientRequest(
+              'POST /v1/speech/synthesize',
+              body,
+            )
+            cacheSynthesisResult(key, response.data)
+            return response.data
+          })()
       if (myGeneration !== generationRef.current) {
         return
       }
-      segmentsRef.current = response.data.segments
+      segmentsRef.current = data.segments
       if (segmentsRef.current.length === 0) {
         setStatus('idle')
         return
@@ -195,19 +301,16 @@ export const useReadAloud = (input: ReadAloudInput): UseReadAloudResult => {
   }, [buildRequestBody, cleanupAudio, input.analyticsLabel, playFromIndex])
 
   const prefetch = useCallback(async () => {
-    if (prefetchedTextRef.current === input.text) {
-      return
-    }
-    prefetchedTextRef.current = input.text
     try {
-      await clientRequest('POST /v1/speech/synthesize', buildRequestBody())
+      // De-dup, caching, and "already warmed" handling all live in
+      // requestSynthesis, so this stays a thin fire-and-forget call. Errors
+      // are swallowed: prefetch is a pure optimization, and play() will make
+      // its own request and surface any real error to the user.
+      await requestSynthesis(buildRequestBody())
     } catch {
-      // Prefetch is a pure optimization: if warming the cache fails, play()
-      // will make its own request and surface any real error to the user.
-      // Clear the marker so a later play() (or remount) can retry.
-      prefetchedTextRef.current = null
+      // Intentionally ignored — see above.
     }
-  }, [buildRequestBody, input.text])
+  }, [buildRequestBody])
 
   const stop = useCallback(() => {
     generationRef.current += 1

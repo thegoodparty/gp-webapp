@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import { useReadAloud } from './useReadAloud'
+import {
+  resetSpeechSynthesisCacheForTests,
+  useReadAloud,
+} from './useReadAloud'
 
 vi.mock('appEnv', () => ({
   API_ROOT: 'https://api.example.test',
@@ -93,6 +96,7 @@ beforeEach(() => {
   MockAudio.reset()
   clientRequestMock.mockReset()
   trackEventMock.mockReset()
+  resetSpeechSynthesisCacheForTests()
   vi.stubGlobal('Audio', MockAudio)
 })
 
@@ -415,5 +419,154 @@ describe('useReadAloud', () => {
     )
     expect(cursorsForFirst).toHaveLength(0)
     expect(cursorsForSecond).toHaveLength(1)
+  })
+
+  describe('prefetch (warm on view)', () => {
+    const liveSegment = (url: string) => ({
+      index: 0,
+      url,
+      expiresInSeconds: 600,
+    })
+
+    it('issues a synthesize request and leaves playback state untouched', async () => {
+      clientRequestMock.mockResolvedValue({
+        data: { format: 'audio/mpeg', segments: [] },
+      })
+      const { result } = renderHook(() => useReadAloud({ text: TEXT }))
+
+      await act(async () => {
+        await result.current.prefetch()
+      })
+
+      expect(clientRequestMock).toHaveBeenCalledWith(
+        'POST /v1/speech/synthesize',
+        { text: TEXT },
+      )
+      expect(result.current.status).toBe('idle')
+      expect(result.current.error).toBeNull()
+    })
+
+    it('swallows request failures without entering the error state', async () => {
+      clientRequestMock.mockRejectedValue(new Error('prefetch boom'))
+      const { result } = renderHook(() => useReadAloud({ text: TEXT }))
+
+      await act(async () => {
+        await result.current.prefetch()
+      })
+
+      expect(result.current.status).toBe('idle')
+      expect(result.current.error).toBeNull()
+      expect(trackEventMock).not.toHaveBeenCalledWith(
+        'ReadAloudFailed',
+        expect.anything(),
+      )
+    })
+
+    it('de-duplicates concurrent identical prefetches into one request (responsive twin buttons)', async () => {
+      let resolveReq!: (value: unknown) => void
+      clientRequestMock.mockReturnValue(
+        new Promise((resolve) => {
+          resolveReq = resolve
+        }),
+      )
+      const first = renderHook(() => useReadAloud({ text: TEXT }))
+      const second = renderHook(() => useReadAloud({ text: TEXT }))
+
+      await act(async () => {
+        void first.result.current.prefetch()
+        void second.result.current.prefetch()
+      })
+
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+
+      await act(async () => {
+        resolveReq({ data: { format: 'audio/mpeg', segments: [] } })
+        await flush()
+      })
+    })
+
+    it('lets play() reuse an in-flight prefetch rather than issuing a second request', async () => {
+      let resolveReq!: (value: unknown) => void
+      clientRequestMock.mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveReq = resolve
+        }),
+      )
+      const { result } = renderHook(() => useReadAloud({ text: TEXT }))
+
+      let prefetchPromise: Promise<void>
+      act(() => {
+        prefetchPromise = result.current.prefetch()
+      })
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+
+      let playPromise: Promise<void>
+      act(() => {
+        playPromise = result.current.play()
+      })
+      // play() must reuse the in-flight prefetch, not fire its own request.
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+
+      await act(async () => {
+        resolveReq({
+          data: {
+            format: 'audio/mpeg',
+            segments: [liveSegment('https://cdn.test/a.mp3')],
+          },
+        })
+        await prefetchPromise
+        await playPromise
+        await flush()
+      })
+
+      expect(result.current.status).toBe('playing')
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('lets play() reuse a completed prefetch result from cache', async () => {
+      clientRequestMock.mockResolvedValue({
+        data: {
+          format: 'audio/mpeg',
+          segments: [liveSegment('https://cdn.test/a.mp3')],
+        },
+      })
+      const { result } = renderHook(() => useReadAloud({ text: TEXT }))
+
+      await act(async () => {
+        await result.current.prefetch()
+      })
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+
+      await act(async () => {
+        await result.current.play()
+      })
+
+      expect(result.current.status).toBe('playing')
+      expect(clientRequestMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not reuse a cached result across different voices (cache key includes options)', async () => {
+      clientRequestMock.mockResolvedValue({
+        data: {
+          format: 'audio/mpeg',
+          segments: [liveSegment('https://cdn.test/a.mp3')],
+        },
+      })
+      const warmed = renderHook(() =>
+        useReadAloud({ text: TEXT, voiceId: 'Matthew', engine: 'standard' }),
+      )
+      await act(async () => {
+        await warmed.result.current.prefetch()
+      })
+
+      const other = renderHook(() =>
+        useReadAloud({ text: TEXT, voiceId: 'Joanna', engine: 'standard' }),
+      )
+      await act(async () => {
+        await other.result.current.play()
+      })
+
+      expect(clientRequestMock).toHaveBeenCalledTimes(2)
+    })
   })
 })

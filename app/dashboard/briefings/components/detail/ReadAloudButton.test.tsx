@@ -12,6 +12,7 @@ type HookState = {
 const hookState: HookState = { status: 'idle', error: null }
 const playMock = vi.fn()
 const stopMock = vi.fn()
+const prefetchMock = vi.fn()
 
 vi.mock('../../shared/useReadAloud', () => ({
   useReadAloud: () => ({
@@ -19,6 +20,7 @@ vi.mock('../../shared/useReadAloud', () => ({
     error: hookState.error,
     play: playMock,
     stop: stopMock,
+    prefetch: prefetchMock,
   }),
 }))
 
