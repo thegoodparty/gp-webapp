@@ -45,17 +45,19 @@ beforeEach(() => {
 
 describe('CandidateProfile — submit validation messaging', () => {
   it('keeps the Submit button enabled when the profile is incomplete', async () => {
-    getUserWebsite.mockResolvedValue(null)
+    getUserWebsite.mockResolvedValue(websiteWith('', 0))
     render(<CandidateProfile />)
     expect(await screen.findByRole('button', { name: /submit/i })).toBeEnabled()
   })
 
   it('surfaces bio and policy-priority errors and does not save an incomplete profile', async () => {
     const user = userEvent.setup()
-    getUserWebsite.mockResolvedValue(null)
+    getUserWebsite.mockResolvedValue(websiteWith('', 0))
     render(<CandidateProfile />)
 
-    await user.click(await screen.findByRole('button', { name: /submit/i }))
+    // Wait for the editor to mount (profile seeded) before submitting.
+    await screen.findByTestId('rich-editor')
+    await user.click(screen.getByRole('button', { name: /submit/i }))
 
     expect(saveAboutFields).not.toHaveBeenCalled()
     expect(screen.getByText('Please add your bio')).toBeInTheDocument()

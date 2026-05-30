@@ -49,6 +49,13 @@ export default function CandidateProfile(): React.JSX.Element {
   // get a guiding error rather than a silently-disabled button. Errors (alert
   // + red bio border) only surface once they've tried to submit.
   const [attemptedSubmit, setAttemptedSubmit] = useState(false)
+  // `initialBio` must be captured exactly once and never change afterward.
+  // RichEditor re-pastes its content whenever `initialText` changes by value,
+  // so deriving it live from the query would clobber the user's in-progress
+  // edits whenever a refetch lands (e.g. the post-submit `invalidateQueries`
+  // or a window-focus refetch). `null` means "not seeded yet" so we defer
+  // mounting the editor until we have the real value.
+  const [initialBio, setInitialBio] = useState<string | null>(null)
   const seededRef = useRef(false)
 
   useEffect(() => {
@@ -58,11 +65,10 @@ export default function CandidateProfile(): React.JSX.Element {
     // Seed length up-front so Submit doesn't show a false "add your bio" error
     // before the dynamically-imported editor emits its first onTextLengthChange.
     setBioPlainLength(getBioPlainLength(initialBioValue))
+    setInitialBio(initialBioValue)
     setIssues(normalizeIssues(website.content?.about?.issues))
     seededRef.current = true
   }, [website])
-
-  const initialBio = website?.content?.about?.bio ?? ''
 
   const bioError = getBioError(bioPlainLength)
   const prioritiesError = getPolicyPrioritiesError(issues.length)
@@ -115,12 +121,14 @@ export default function CandidateProfile(): React.JSX.Element {
           <div className="mb-1.5 block text-sm font-medium">
             Why are you running?
           </div>
-          <RichEditor
-            initialText={initialBio}
-            onChangeCallback={setBio}
-            onTextLengthChange={setBioPlainLength}
-            error={attemptedSubmit && !!bioError}
-          />
+          {initialBio !== null && (
+            <RichEditor
+              initialText={initialBio}
+              onChangeCallback={setBio}
+              onTextLengthChange={setBioPlainLength}
+              error={attemptedSubmit && !!bioError}
+            />
+          )}
           <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
             <span>{MIN_BIO_LENGTH} character minimum</span>
             <span>{bioPlainLength}</span>
