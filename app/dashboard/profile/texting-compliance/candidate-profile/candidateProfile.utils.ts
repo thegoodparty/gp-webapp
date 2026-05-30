@@ -56,6 +56,10 @@ export const getPolicyFormValidation = (
   let message: string | null = null
   if (missing.length === 2) {
     message = 'Please add a Policy title and Policy focus'
+  } else if (titleInvalid && focusInvalid && focusPlainLength > 0) {
+    // Title is empty AND the focus has content but is too short: both fields
+    // render red, so the message must explain both, not just the empty title.
+    message = `Please add a Policy title. Policy focus requires ${MIN_POLICY_FOCUS_LENGTH} characters`
   } else if (missing.length === 1) {
     message = `Please add a ${missing[0]}`
   } else if (focusInvalid) {

@@ -69,6 +69,15 @@ describe('getPolicyFormValidation', () => {
     expect(result.focusInvalid).toBe(true)
   })
 
+  it('surfaces both problems when the title is missing and the focus is present but too short', () => {
+    const result = getPolicyFormValidation(0, MIN_POLICY_FOCUS_LENGTH - 1)
+    expect(result.titleInvalid).toBe(true)
+    expect(result.focusInvalid).toBe(true)
+    // Both fields render red, so the message must explain both.
+    expect(result.message).toContain('Policy title')
+    expect(result.message).toContain('Policy focus')
+  })
+
   it('returns no message when both fields satisfy their requirements', () => {
     const result = getPolicyFormValidation(5, MIN_POLICY_FOCUS_LENGTH)
     expect(result.message).toBeNull()

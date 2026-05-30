@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 interface RichEditorMockProps {
   initialText?: string
   onChangeCallback?: (value: string, flag?: number) => void
@@ -18,6 +16,13 @@ interface RichEditorMockProps {
  * is reflected onto `data-error` so tests can assert the red-border wiring
  * without rendering real Quill.
  *
+ * It intentionally does NOT report a length on mount from `initialText`. The
+ * real editor is dynamically imported and only emits its first
+ * `onTextLengthChange` once Quill has initialized, so there is a window where
+ * server-provided content exists but no length has been reported. Consumers
+ * that gate a Submit/Save on the length must seed it themselves from the
+ * server value; this mock holds them to that.
+ *
  * Use via:
  *   vi.mock('app/shared/utils/RichEditor', async () => ({
  *     default: (await import('helpers/test-utils/RichEditorMock')).RichEditorMock,
@@ -29,15 +34,6 @@ export const RichEditorMock = ({
   onTextLengthChange,
   error = false,
 }: RichEditorMockProps): React.JSX.Element => {
-  useEffect(() => {
-    if (initialText) {
-      onTextLengthChange?.(initialText.trim().length)
-    }
-    // Mirror the real editor, which re-seeds its length whenever `initialText`
-    // changes by value (e.g. after an async data fetch resolves).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialText])
-
   return (
     <textarea
       data-testid="rich-editor"

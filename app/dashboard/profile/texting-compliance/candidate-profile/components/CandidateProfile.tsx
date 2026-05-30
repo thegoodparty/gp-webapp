@@ -17,6 +17,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import {
   MIN_BIO_LENGTH,
   getBioError,
+  getBioPlainLength,
   getPolicyPrioritiesError,
   normalizeIssues,
 } from '../candidateProfile.utils'
@@ -52,7 +53,11 @@ export default function CandidateProfile(): React.JSX.Element {
 
   useEffect(() => {
     if (seededRef.current || !website) return
-    setBio(website.content?.about?.bio ?? '')
+    const initialBioValue = website.content?.about?.bio ?? ''
+    setBio(initialBioValue)
+    // Seed length up-front so Submit doesn't show a false "add your bio" error
+    // before the dynamically-imported editor emits its first onTextLengthChange.
+    setBioPlainLength(getBioPlainLength(initialBioValue))
     setIssues(normalizeIssues(website.content?.about?.issues))
     seededRef.current = true
   }, [website])
