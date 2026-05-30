@@ -86,4 +86,30 @@ describe('PolicyForm — validation messaging', () => {
     })
     expect(screen.queryByText(/Please add a Policy/)).not.toBeInTheDocument()
   })
+
+  it('saves an existing policy without re-typing, before the editor reports a length', async () => {
+    const user = userEvent.setup()
+    const onSave = vi.fn()
+    const existing = {
+      title: 'Education',
+      description: 'x'.repeat(MIN_POLICY_FOCUS_LENGTH),
+    }
+    render(
+      <PolicyForm
+        initial={existing}
+        showDelete
+        onSave={onSave}
+        onDelete={vi.fn()}
+      />,
+    )
+
+    // No typing: the description length must be seeded from `initial` so a
+    // valid existing policy isn't falsely blocked before the dynamic editor
+    // fires its first onTextLengthChange.
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onSave).toHaveBeenCalledWith(existing)
+    expect(screen.queryByText(/Please add a Policy/)).not.toBeInTheDocument()
+  })
 })

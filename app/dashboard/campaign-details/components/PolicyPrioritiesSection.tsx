@@ -61,6 +61,9 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
     }
     await queryClient.invalidateQueries({ queryKey: USER_WEBSITE_QUERY_KEY })
     successSnackbar('Policy priorities saved')
+    // Clear the attempted-save flag so a later edit back to an invalid state
+    // doesn't re-show the error before the user tries to save again.
+    setAttemptedSave(false)
     setSaving(false)
   }
 

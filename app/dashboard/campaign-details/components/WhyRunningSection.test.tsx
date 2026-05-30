@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import type { Website } from 'helpers/types'
@@ -66,6 +66,33 @@ describe('WhyRunningSection — save validation messaging', () => {
 
     await waitFor(() => expect(saveAboutFields).toHaveBeenCalledTimes(1))
     expect(saveAboutFields).toHaveBeenCalledWith({ bio: validBio })
+    expect(screen.queryByText('Please add your bio')).not.toBeInTheDocument()
+  })
+
+  it('does not re-show the error on a later invalid edit after a successful save', async () => {
+    const user = userEvent.setup()
+    getUserWebsite.mockResolvedValue(websiteWithBio(''))
+    saveAboutFields.mockResolvedValue(true)
+    render(<WhyRunningSection />)
+
+    const editor = await screen.findByTestId('rich-editor')
+
+    // Trigger the error state.
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(screen.getByText('Please add your bio')).toBeInTheDocument()
+
+    // Fix the content and save successfully.
+    fireEvent.change(editor, { target: { value: 'a'.repeat(MIN_BIO_LENGTH) } })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await waitFor(() => expect(saveAboutFields).toHaveBeenCalledTimes(1))
+    // Save settled (button re-enabled), so attemptedSave has been reset.
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled(),
+    )
+
+    // Editing back to an invalid state must NOT re-show the error until the
+    // user attempts to save again.
+    fireEvent.change(editor, { target: { value: '' } })
     expect(screen.queryByText('Please add your bio')).not.toBeInTheDocument()
   })
 })

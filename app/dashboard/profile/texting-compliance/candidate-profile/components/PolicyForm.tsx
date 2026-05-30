@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { WebsiteIssue } from 'helpers/types'
 import {
   MIN_POLICY_FOCUS_LENGTH,
+  getBioPlainLength,
   getPolicyFormValidation,
 } from '../candidateProfile.utils'
 
@@ -38,7 +39,12 @@ export default function PolicyForm({
 }: PolicyFormProps): React.JSX.Element {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [description, setDescription] = useState(initial?.description ?? '')
-  const [descriptionPlainLength, setDescriptionPlainLength] = useState(0)
+  // Seed the length from the existing description so Save isn't falsely
+  // blocked before the dynamically-loaded editor fires its first
+  // onTextLengthChange when editing an existing policy.
+  const [descriptionPlainLength, setDescriptionPlainLength] = useState(() =>
+    getBioPlainLength(initial?.description),
+  )
   const [initialDescription] = useState(initial?.description ?? '')
   // The Save button is always enabled so the user can attempt to save and get
   // a guiding error instead of a silently-disabled button. Errors (alert +
