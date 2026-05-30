@@ -13,6 +13,7 @@ export {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   ChevronsUpDown as ChevronsUpDownIcon,
+  CircleAlert as CircleAlertIcon,
   CircleUserRound as CircleUserRoundIcon,
   ClipboardList as ClipboardListIcon,
   Copy as CopyIcon,
