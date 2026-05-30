@@ -66,7 +66,7 @@ export default function PolicyForm({
   }
 
   return (
-    <div className="flex flex-col gap-4 p-6">
+    <div className="flex min-w-0 flex-col gap-4 p-6">
       <h2 className="text-lg font-semibold">Policy priority</h2>
 
       {attemptedSave && message && (
