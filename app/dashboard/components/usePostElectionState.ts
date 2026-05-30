@@ -40,9 +40,7 @@ export function usePostElectionState(): PostElectionState {
   // are always respected after they load — local state only tracks the
   // current session's modal interaction.
   const primaryResult =
-    primaryResultState.overrideResult ??
-    campaign?.details?.primaryResult ??
-    null
+    primaryResultState.overrideResult ?? campaign?.primaryResult ?? null
   const { modalDismissed } = primaryResultState
 
   const weeksUntil = weeksTill(resolvedDate)
