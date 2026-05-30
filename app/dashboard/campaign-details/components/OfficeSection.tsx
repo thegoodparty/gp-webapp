@@ -18,9 +18,13 @@ import { useQueryClient } from '@tanstack/react-query'
 
 interface OfficeSectionProps {
   campaign?: Campaign
+  // When rendered inside a Card (pro path), the card supplies the section
+  // separation, so the top divider and bottom margin are dropped.
+  carded?: boolean
 }
 
 const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
+  const { carded = false } = props
   const organization = useOrganization()
   const positionName = usePositionName()
   const queryClient = useQueryClient()
@@ -81,7 +85,11 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
   return (
     <section
       className={
-        organization?.electedOfficeId ? 'pt-6' : 'border-t pt-6 border-gray-600'
+        carded
+          ? ''
+          : organization?.electedOfficeId
+          ? 'pt-6'
+          : 'border-t pt-6 border-gray-600'
       }
     >
       <H3 className="pb-6">Office Details</H3>
@@ -96,7 +104,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
           }
         />
       </div>
-      <div className="flex justify-end mb-6 mt-2">
+      <div className={`flex justify-end mt-2 ${carded ? '' : 'mb-6'}`}>
         <PrimaryButton onClick={handleEdit}>Edit Office Details</PrimaryButton>
       </div>
       <CampaignOfficeSelectionModal
