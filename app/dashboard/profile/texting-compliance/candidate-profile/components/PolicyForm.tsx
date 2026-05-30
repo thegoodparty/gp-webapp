@@ -1,9 +1,18 @@
 'use client'
-import { Button, Input } from '@styleguide'
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  CircleAlertIcon,
+  Input,
+} from '@styleguide'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { WebsiteIssue } from 'helpers/types'
-import { MIN_POLICY_FOCUS_LENGTH } from '../candidateProfile.utils'
+import {
+  MIN_POLICY_FOCUS_LENGTH,
+  getPolicyFormValidation,
+} from '../candidateProfile.utils'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
@@ -31,14 +40,34 @@ export default function PolicyForm({
   const [description, setDescription] = useState(initial?.description ?? '')
   const [descriptionPlainLength, setDescriptionPlainLength] = useState(0)
   const [initialDescription] = useState(initial?.description ?? '')
+  // The Save button is always enabled so the user can attempt to save and get
+  // a guiding error instead of a silently-disabled button. Errors (alert +
+  // red field borders) only surface once they've tried to save.
+  const [attemptedSave, setAttemptedSave] = useState(false)
 
   const trimmedTitle = title.trim()
-  const canSave =
-    trimmedTitle.length > 0 && descriptionPlainLength >= MIN_POLICY_FOCUS_LENGTH
+  const { titleInvalid, focusInvalid, message } = getPolicyFormValidation(
+    trimmedTitle.length,
+    descriptionPlainLength,
+  )
+
+  const handleSave = () => {
+    if (message) {
+      setAttemptedSave(true)
+      return
+    }
+    onSave({ title: trimmedTitle, description })
+  }
 
   return (
     <div className="flex flex-col gap-4 p-6">
       <h2 className="text-lg font-semibold">Policy priority</h2>
+
+      {attemptedSave && message && (
+        <Alert variant="destructive" icon={<CircleAlertIcon />}>
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex flex-col gap-2">
         <label htmlFor="policy-title" className="text-sm font-medium">
@@ -48,6 +77,7 @@ export default function PolicyForm({
           id="policy-title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          aria-invalid={attemptedSave && titleInvalid}
           autoFocus
         />
       </div>
@@ -58,6 +88,7 @@ export default function PolicyForm({
           initialText={initialDescription}
           onChangeCallback={setDescription}
           onTextLengthChange={setDescriptionPlainLength}
+          error={attemptedSave && focusInvalid}
         />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{MIN_POLICY_FOCUS_LENGTH} character minimum</span>
@@ -78,12 +109,7 @@ export default function PolicyForm({
         ) : (
           <span />
         )}
-        <Button
-          type="button"
-          size="medium"
-          disabled={!canSave}
-          onClick={() => onSave({ title: trimmedTitle, description })}
-        >
+        <Button type="button" size="medium" onClick={handleSave}>
           Save
         </Button>
       </div>

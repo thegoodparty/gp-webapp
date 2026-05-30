@@ -3,6 +3,7 @@
 import H3 from '@shared/typography/H3'
 import Body1 from '@shared/typography/Body1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Alert, AlertDescription, CircleAlertIcon } from '@styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -14,7 +15,7 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Website, WebsiteIssue } from 'helpers/types'
 import {
-  MIN_POLICY_PRIORITIES,
+  getPolicyPrioritiesError,
   normalizeIssues,
 } from 'app/dashboard/profile/texting-compliance/candidate-profile/candidateProfile.utils'
 import PolicyPriorities from 'app/dashboard/profile/texting-compliance/candidate-profile/components/PolicyPriorities'
@@ -29,6 +30,10 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
 
   const [issues, setIssues] = useState<WebsiteIssue[]>([])
   const [saving, setSaving] = useState(false)
+  // The Save button is always enabled so the user can attempt to save and get
+  // a guiding error rather than a silently-disabled button. The error only
+  // surfaces once they've tried to save.
+  const [attemptedSave, setAttemptedSave] = useState(false)
   const seededRef = useRef(false)
 
   const websiteIssues = website?.content?.about?.issues
@@ -38,10 +43,14 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
     seededRef.current = true
   }, [website, websiteIssues])
 
-  const canSave = issues.length >= MIN_POLICY_PRIORITIES && !saving
+  const prioritiesError = getPolicyPrioritiesError(issues.length)
 
   const handleSave = async () => {
-    if (!canSave) return
+    if (saving) return
+    if (prioritiesError) {
+      setAttemptedSave(true)
+      return
+    }
     trackEvent(EVENTS.Profile.PolicyPriorities.ClickSave)
     setSaving(true)
     const ok = await saveAboutFields({ issues })
@@ -61,17 +70,22 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
       <Body1 className="text-gray-600 mt-2 pb-6 mb-6">
         Tell potential voters about the policy priorities you&apos;ll focus on.
       </Body1>
+      {attemptedSave && prioritiesError && (
+        <Alert
+          variant="destructive"
+          icon={<CircleAlertIcon />}
+          className="mb-4"
+        >
+          <AlertDescription>{prioritiesError}</AlertDescription>
+        </Alert>
+      )}
       <PolicyPriorities
         issues={issues}
         onChange={setIssues}
         disabled={saving}
       />
       <div className="flex justify-end mt-6">
-        <PrimaryButton
-          loading={saving}
-          disabled={!canSave}
-          onClick={handleSave}
-        >
+        <PrimaryButton loading={saving} disabled={saving} onClick={handleSave}>
           {saving ? 'Saving...' : 'Save'}
         </PrimaryButton>
       </div>

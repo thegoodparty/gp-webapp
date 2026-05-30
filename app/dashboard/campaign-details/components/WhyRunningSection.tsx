@@ -3,6 +3,7 @@
 import H3 from '@shared/typography/H3'
 import Body1 from '@shared/typography/Body1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Alert, AlertDescription, CircleAlertIcon } from '@styleguide'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -16,6 +17,7 @@ import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Website } from 'helpers/types'
 import {
   MIN_BIO_LENGTH,
+  getBioError,
   getBioPlainLength,
 } from 'app/dashboard/profile/texting-compliance/candidate-profile/candidateProfile.utils'
 
@@ -46,6 +48,10 @@ export default function WhyRunningSection(): React.JSX.Element {
   // refetch. `null` means "not seeded yet" so we can defer mounting the
   // editor until we have the real value.
   const [initialBio, setInitialBio] = useState<string | null>(null)
+  // The Save button is always enabled so the user can attempt to save and get
+  // a guiding error rather than a silently-disabled button. The error (alert +
+  // red bio border) only surfaces once they've tried to save.
+  const [attemptedSave, setAttemptedSave] = useState(false)
   const seededRef = useRef(false)
 
   useEffect(() => {
@@ -59,10 +65,14 @@ export default function WhyRunningSection(): React.JSX.Element {
     seededRef.current = true
   }, [website])
 
-  const canSave = bioPlainLength >= MIN_BIO_LENGTH && !saving
+  const bioError = getBioError(bioPlainLength)
 
   const handleSave = async () => {
-    if (!canSave) return
+    if (saving) return
+    if (bioError) {
+      setAttemptedSave(true)
+      return
+    }
     trackEvent(EVENTS.Profile.WhyRunning.ClickSave)
     setSaving(true)
     const ok = await saveAboutFields({ bio })
@@ -82,11 +92,21 @@ export default function WhyRunningSection(): React.JSX.Element {
       <Body1 className="text-gray-600 mt-2 pb-6 mb-6">
         Tell potential voters why you&apos;re running for office.
       </Body1>
+      {attemptedSave && bioError && (
+        <Alert
+          variant="destructive"
+          icon={<CircleAlertIcon />}
+          className="mb-4"
+        >
+          <AlertDescription>{bioError}</AlertDescription>
+        </Alert>
+      )}
       {initialBio !== null && (
         <RichEditor
           initialText={initialBio}
           onChangeCallback={setBio}
           onTextLengthChange={setBioPlainLength}
+          error={attemptedSave && !!bioError}
         />
       )}
       <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
@@ -94,11 +114,7 @@ export default function WhyRunningSection(): React.JSX.Element {
         <span>{bioPlainLength}</span>
       </div>
       <div className="flex justify-end mt-6">
-        <PrimaryButton
-          loading={saving}
-          disabled={!canSave}
-          onClick={handleSave}
-        >
+        <PrimaryButton loading={saving} disabled={saving} onClick={handleSave}>
           {saving ? 'Saving...' : 'Save'}
         </PrimaryButton>
       </div>

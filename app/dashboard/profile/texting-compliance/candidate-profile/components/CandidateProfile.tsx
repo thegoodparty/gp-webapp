@@ -1,5 +1,5 @@
 'use client'
-import { Button } from '@styleguide'
+import { Alert, AlertDescription, Button, CircleAlertIcon } from '@styleguide'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -16,7 +16,8 @@ import { Website, WebsiteIssue } from 'helpers/types'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import {
   MIN_BIO_LENGTH,
-  MIN_POLICY_PRIORITIES,
+  getBioError,
+  getPolicyPrioritiesError,
   normalizeIssues,
 } from '../candidateProfile.utils'
 import PolicyPriorities from './PolicyPriorities'
@@ -43,6 +44,10 @@ export default function CandidateProfile(): React.JSX.Element {
   const [bioPlainLength, setBioPlainLength] = useState(0)
   const [issues, setIssues] = useState<WebsiteIssue[]>([])
   const [submitting, setSubmitting] = useState(false)
+  // The Submit button is always enabled so the user can attempt to submit and
+  // get a guiding error rather than a silently-disabled button. Errors (alert
+  // + red bio border) only surface once they've tried to submit.
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false)
   const seededRef = useRef(false)
 
   useEffect(() => {
@@ -54,13 +59,15 @@ export default function CandidateProfile(): React.JSX.Element {
 
   const initialBio = website?.content?.about?.bio ?? ''
 
-  const canSubmit =
-    bioPlainLength >= MIN_BIO_LENGTH &&
-    issues.length >= MIN_POLICY_PRIORITIES &&
-    !submitting
+  const bioError = getBioError(bioPlainLength)
+  const prioritiesError = getPolicyPrioritiesError(issues.length)
 
   const handleSubmit = async () => {
-    if (!canSubmit) return
+    if (submitting) return
+    if (bioError || prioritiesError) {
+      setAttemptedSubmit(true)
+      return
+    }
     trackEvent(EVENTS.Profile.CandidateProfile.ClickSubmit)
     setSubmitting(true)
     const ok = await saveAboutFields({ bio, issues })
@@ -86,6 +93,19 @@ export default function CandidateProfile(): React.JSX.Element {
           <div>&nbsp;</div>
         </div>
 
+        {attemptedSubmit && (bioError || prioritiesError) && (
+          <Alert
+            variant="destructive"
+            icon={<CircleAlertIcon />}
+            className="mt-6"
+          >
+            <AlertDescription>
+              {bioError && <p>{bioError}</p>}
+              {prioritiesError && <p>{prioritiesError}</p>}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="mt-10">
           <div className="mb-1.5 block text-sm font-medium">
             Why are you running?
@@ -94,6 +114,7 @@ export default function CandidateProfile(): React.JSX.Element {
             initialText={initialBio}
             onChangeCallback={setBio}
             onTextLengthChange={setBioPlainLength}
+            error={attemptedSubmit && !!bioError}
           />
           <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
             <span>{MIN_BIO_LENGTH} character minimum</span>
@@ -118,7 +139,6 @@ export default function CandidateProfile(): React.JSX.Element {
           variant="secondary"
           type="button"
           onClick={handleSubmit}
-          disabled={!canSubmit}
           loading={submitting}
           loadingText="Submitting"
         >
