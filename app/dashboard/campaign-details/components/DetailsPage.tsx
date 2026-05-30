@@ -13,6 +13,7 @@ import PolicyPrioritiesSection from './PolicyPrioritiesSection'
 import { CandidatePositionsProvider } from 'app/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { Campaign, User, CandidatePosition } from 'helpers/types'
+import { Card } from '@styleguide'
 
 interface TopIssue {
   id: number
@@ -39,23 +40,33 @@ export default function DetailsPage(
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
-        <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
-          {campaign && <CampaignSection {...campaignProps} />}
-          <OfficeSection campaign={campaign ?? undefined} />
-          {useNewSections ? (
-            <>
+        {useNewSections ? (
+          <div className="max-w-[940px] mx-auto flex flex-col gap-4 py-5">
+            {campaign && (
+              <Card className="p-6">
+                <CampaignSection {...campaignProps} carded />
+              </Card>
+            )}
+            <Card className="p-6">
+              <OfficeSection campaign={campaign ?? undefined} carded />
+            </Card>
+            <Card className="p-6">
               <WhyRunningSection />
+            </Card>
+            <Card className="p-6">
               <PolicyPrioritiesSection />
-            </>
-          ) : (
-            <>
-              {campaign && <RunningAgainstSection {...campaignProps} />}
-              {campaign && <WhySection {...campaignProps} />}
-              {campaign && <FunFactSection {...campaignProps} />}
-              {campaign && <IssuesSection {...campaignProps} />}
-            </>
-          )}
-        </div>
+            </Card>
+          </div>
+        ) : (
+          <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
+            {campaign && <CampaignSection {...campaignProps} />}
+            <OfficeSection campaign={campaign ?? undefined} />
+            {campaign && <RunningAgainstSection {...campaignProps} />}
+            {campaign && <WhySection {...campaignProps} />}
+            {campaign && <FunFactSection {...campaignProps} />}
+            {campaign && <IssuesSection {...campaignProps} />}
+          </div>
+        )}
       </CandidatePositionsProvider>
     </DashboardLayout>
   )

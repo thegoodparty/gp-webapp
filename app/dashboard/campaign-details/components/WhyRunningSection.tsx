@@ -77,7 +77,7 @@ export default function WhyRunningSection(): React.JSX.Element {
   }
 
   return (
-    <section className="border-t pt-6 border-gray-600">
+    <section>
       <H3>Why are you running?</H3>
       <Body1 className="text-gray-600 mt-2 pb-6 mb-6">
         Tell potential voters why you&apos;re running for office.
@@ -93,7 +93,7 @@ export default function WhyRunningSection(): React.JSX.Element {
         <span>{MIN_BIO_LENGTH} character minimum</span>
         <span>{bioPlainLength}</span>
       </div>
-      <div className="flex justify-end mt-6 mb-6">
+      <div className="flex justify-end mt-6">
         <PrimaryButton
           loading={saving}
           disabled={!canSave}

@@ -56,7 +56,7 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
   }
 
   return (
-    <section className="border-t pt-6 border-gray-600">
+    <section>
       <H3>Your policy priorities</H3>
       <Body1 className="text-gray-600 mt-2 pb-6 mb-6">
         Tell potential voters about the policy priorities you&apos;ll focus on.
@@ -66,7 +66,7 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
         onChange={setIssues}
         disabled={saving}
       />
-      <div className="flex justify-end mt-6 mb-6">
+      <div className="flex justify-end mt-6">
         <PrimaryButton
           loading={saving}
           disabled={!canSave}

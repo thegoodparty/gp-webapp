@@ -30,6 +30,9 @@ interface FieldConfig {
 
 interface CampaignSectionProps {
   campaign?: Campaign
+  // When rendered inside a Card (pro path), the card supplies the surrounding
+  // spacing, so the section drops its own bottom margin.
+  carded?: boolean
 }
 
 interface FieldState {
@@ -88,7 +91,7 @@ export default function CampaignSection(
   }
   const [state, setState] = useState<FieldState>(initialState)
   const [saving, setSaving] = useState(false)
-  const { campaign } = props
+  const { campaign, carded = false } = props
 
   useEffect(() => {
     if (campaign?.details) {
@@ -178,7 +181,7 @@ export default function CampaignSection(
           )
         })}
       </div>
-      <div className="flex justify-end mb-6">
+      <div className={`flex justify-end ${carded ? '' : 'mb-6'}`}>
         {saving ? (
           <PrimaryButton disabled>
             <div className="px-3">
