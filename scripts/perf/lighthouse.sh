@@ -49,10 +49,19 @@ else
   LAST_IDX=$(( ${#ARGS[@]} - 1 ))
   LAST="${ARGS[$LAST_IDX]}"
   if [[ "$LAST" == -* ]]; then
+    # Last arg is itself a flag (`--foo`) — assume no path given, run against /.
     TARGET="/"
-  else
+  elif [[ "$LAST" =~ ^(/|https?://) ]]; then
     TARGET="$LAST"
     unset 'ARGS[$LAST_IDX]'
+  else
+    # Last arg looks like a flag value (e.g. `--form-factor desktop`) rather
+    # than a path. Without this check we'd benchmark http://host/<flag-value>
+    # silently (404), matching the bug class fixed in bench-route.sh.
+    echo "✗ Last argument must be a path (e.g. /pricing) or full URL — got: '$LAST'" >&2
+    echo "  Usage: scripts/perf/lighthouse.sh [lighthouse-flags...] [path-or-url]" >&2
+    echo "  (omit the trailing path to audit '/').";
+    exit 2
   fi
 fi
 
