@@ -29,9 +29,15 @@ export default async function LoginPage({
     : null
 
   if (userId) {
-    // Already signed in: honor an explicit deep link if present, otherwise fall
-    // back to the role-aware post-auth resolver.
-    redirect(redirectUrl ?? (await getPostAuthRedirectPath()))
+    // Already signed in: honor an explicit deep link if present, routing it
+    // through /post-auth-redirect (same as the unauthenticated path) so the
+    // org slug cookie is established before landing on org-scoped pages.
+    // Otherwise fall back to the role-aware post-auth resolver.
+    redirect(
+      redirectUrl
+        ? `/post-auth-redirect?next=${encodeURIComponent(redirectUrl)}`
+        : await getPostAuthRedirectPath(),
+    )
   }
 
   // We can't send the user straight to the deep link after sign-in:

@@ -138,10 +138,19 @@ const PostAuthRedirectPage = () => {
           hasElectedOffice,
         )
         // Honor the explicit deep-link destination now that the org slug cookie
-        // is set and the session is established.
+        // is set and the session is established. Re-derive a same-origin
+        // relative path before navigating: `safeNext` is already validated, but
+        // rebuilding from `URL().pathname` strips any host an attacker could
+        // smuggle in, keeping the redirect provably same-origin.
+        const destination = new URL(
+          safeNext ?? resolvedPath,
+          window.location.origin,
+        )
         // Hard nav so the destination renders with fresh auth'd server
         // state (PageWrapper re-runs with isAuthed=true and real orgs).
-        window.location.replace(safeNext ?? resolvedPath)
+        window.location.replace(
+          `${destination.pathname}${destination.search}${destination.hash}`,
+        )
       } catch (e) {
         console.error('post-auth-redirect error', e)
         // Don't strand new users on a blank /dashboard if the resolver
