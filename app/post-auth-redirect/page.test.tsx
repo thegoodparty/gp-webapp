@@ -209,6 +209,86 @@ describe('PostAuthRedirectPage', () => {
     expect(mockTrackRegistration).not.toHaveBeenCalled()
   })
 
+  it('next param: honors a same-origin deep link over the resolved path', async () => {
+    setLocation('?next=%2Fdashboard%2Fbriefings')
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      data: { organizations: [orgFixture] },
+    })
+    api.mock('GET /v1/users/me', { status: 200, data: { roles: [] } as any })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 404,
+      data: { message: 'none' },
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() =>
+      expect(replaceSpy).toHaveBeenCalledWith('/dashboard/briefings'),
+    )
+    // Org context is still established before navigating to the deep link.
+    expect(mockSetCookie).toHaveBeenCalledWith('organization-slug', 'org-one')
+  })
+
+  it('next param: selects the elected-office org for a briefings deep link', async () => {
+    setLocation('?next=%2Fdashboard%2Fbriefings')
+    const electedOfficeOrg = {
+      ...orgFixture,
+      slug: 'serve-org',
+      name: 'Serve Org',
+      electedOfficeId: 'eo-123',
+    }
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      // Campaign org first (resolveSlug would otherwise pick this one).
+      data: { organizations: [orgFixture, electedOfficeOrg] },
+    })
+    api.mock('GET /v1/users/me', { status: 200, data: { roles: [] } as any })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 200,
+      data: { id: 'eo-123', swornInDate: '2026-01-01' } as any,
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() =>
+      expect(mockSetCookie).toHaveBeenCalledWith(
+        'organization-slug',
+        'serve-org',
+      ),
+    )
+    expect(replaceSpy).toHaveBeenCalledWith('/dashboard/briefings')
+  })
+
+  it('next param: ignores protocol-relative/open-redirect values', async () => {
+    setLocation('?next=%2F%2Fevil.com')
+    api.mock('GET /v1/organizations', {
+      status: 200,
+      data: { organizations: [orgFixture] },
+    })
+    api.mock('GET /v1/users/me', { status: 200, data: { roles: [] } as any })
+    api.mock('GET /v1/campaigns/mine/status', {
+      status: 200,
+      data: { status: 'candidate', slug: 'org-one' },
+    })
+    api.mock('GET /v1/elected-office/current', {
+      status: 404,
+      data: { message: 'none' },
+    })
+
+    render(<PostAuthRedirectPage />)
+
+    await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/dashboard'))
+  })
+
   it('login (no source param): does not fire trackRegistrationCompleted', async () => {
     api.mock('GET /v1/organizations', {
       status: 200,
