@@ -2,6 +2,15 @@
 # Run Lighthouse against a URL or local path.
 # Backs up ai-rules/performance-tools.md §8.
 #
+# Requires: a *production* server running on the target URL — Lighthouse
+# against `npm run dev` gives meaningless numbers because dev mode disables
+# minification and bundle splitting. Build and start first:
+#   npm run build && npm run start-local &
+#   sleep 5
+#
+# lighthouse is preferred installed globally; this script falls back to
+# `npx --yes lighthouse` automatically when it isn't.
+#
 # Usage:
 #   scripts/perf/lighthouse.sh                  # http://localhost:4000/
 #   scripts/perf/lighthouse.sh /pricing
@@ -24,9 +33,11 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
-if ! command -v lighthouse >/dev/null 2>&1; then
-  echo "✗ lighthouse not found. Install: npm i -g lighthouse" >&2
-  exit 1
+if command -v lighthouse >/dev/null 2>&1; then
+  LIGHTHOUSE=(lighthouse)
+else
+  echo "→ lighthouse not on PATH; falling back to 'npx --yes lighthouse' (first run installs)" >&2
+  LIGHTHOUSE=(npx --yes lighthouse)
 fi
 
 mkdir -p "$OUT_DIR"
@@ -55,9 +66,9 @@ STAMP="$(date +%Y%m%d-%H%M%S)"
 SAFE="$(echo "$URL" | sed 's|[^A-Za-z0-9._-]|_|g')"
 OUT_BASE="$OUT_DIR/lh-${STAMP}-${SAFE}"
 
-echo "→ lighthouse $URL"
+echo "→ ${LIGHTHOUSE[*]} $URL"
 echo "  Reports: ${OUT_BASE}.report.{html,json}"
-exec lighthouse "$URL" \
+exec "${LIGHTHOUSE[@]}" "$URL" \
   --output html --output json \
   --output-path "$OUT_BASE" \
   --chrome-flags="--headless --no-sandbox" \

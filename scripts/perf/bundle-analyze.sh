@@ -2,14 +2,16 @@
 # Inspect Next.js bundle composition using source-map-explorer.
 # Backs up ai-rules/performance-tools.md §9.
 #
+# Requires:
+#   1. `npm run build` (or build-local) must have been run — needs .next/static/chunks
+#      with source maps. `productionBrowserSourceMaps: true` in next.config.ts
+#      is already set, so this works on the default build.
+#   2. No global install needed; source-map-explorer is always run via npx.
+#
 # Usage:
 #   scripts/perf/bundle-analyze.sh                # text summary (top contributors)
 #   scripts/perf/bundle-analyze.sh --html         # interactive treemap (opens HTML)
 #   scripts/perf/bundle-analyze.sh --json         # machine-readable, for diffing
-#
-# Prereqs:
-#   1. `npm run build` (or build-local) must have been run.
-#   2. `productionBrowserSourceMaps: true` in next.config.ts (already set).
 #
 # Output directory: $PERF_OUT (default ./perf-reports)
 set -euo pipefail

@@ -4,18 +4,38 @@ Performance tooling wrappers for the Next.js webapp. Convenience scripts behind 
 
 | Script | What it does | Cookbook section |
 |---|---|---|
+| `setup-check.sh` | Audit the local env — what can/can't be measured right now | §11.6 |
 | `lighthouse.sh` | Web Vitals + perf audit for a page (headless Chrome) | §8 |
 | `bundle-analyze.sh` | Inspect what's bloating the JS bundle (`source-map-explorer`) | §9 |
 | `bench-route.sh` | SSR load test for a route (autocannon) | §1 |
 
 `productionBrowserSourceMaps: true` is already set in `next.config.ts`, so `source-map-explorer` works on the production build out of the box.
 
-## Prereqs
+Every script supports `-h` / `--help` and prints its prerequisites at the top of the help block.
+
+## Quick start
 
 ```bash
-brew install hyperfine
-npm i -g lighthouse autocannon         # or use npx
+# What's available locally?
+scripts/perf/setup-check.sh
 ```
+
+If `setup-check.sh` is clean, the rest will work. If something is ✗, the script tells you the install command (or the no-install fallback).
+
+## Prereqs
+
+The scripts try hard not to require global installs:
+
+- **autocannon / lighthouse / source-map-explorer** — `npx --yes <tool>` fallback is automatic when not installed globally. First `npx` run downloads (and `npx --yes lighthouse` also pulls headless Chrome the first time, which is slow).
+- **hyperfine** — no convenient `npx` equivalent; install if you want statistical comparison runs:
+  ```bash
+  brew install hyperfine        # mac
+  cargo install hyperfine       # linux / cross-platform
+  ```
+
+**Don't benchmark `npm run dev`.** All measurements should be against a production build (`npm run build && npm run start-local`). Dev mode disables minification, adds HMR overhead, and runs extra dev-only React work — the numbers are not representative.
+
+For agents working in a fresh `git worktree`, also see `ai-rules/performance-tools.md` §11.6 — `.env` and the `ai-rules` submodule are common first-time stumbling blocks.
 
 ## Examples
 
@@ -25,7 +45,7 @@ npm run build
 npm run start-local &
 sleep 5   # let it boot
 
-# Audit a page
+# Audit a page (npx fallback if lighthouse isn't on PATH)
 scripts/perf/lighthouse.sh /                    # home page
 scripts/perf/lighthouse.sh /pricing
 scripts/perf/lighthouse.sh --form-factor desktop /
@@ -50,3 +70,5 @@ Per the [performance critic rules](../../ai-rules/performance.md):
 - **SSR throughput claims** need `bench-route.sh` numbers (or `autocannon` directly).
 
 Without one of those, downgrade the claim to "refactor."
+
+When the critic itself is an agent with shell access, it should run `setup-check.sh` first, then use any GREEN tool it has the prerequisites for (see the readiness table in `performance-tools.md`). It should never fabricate measurements.
