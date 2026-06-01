@@ -8,47 +8,30 @@ import {
   RefObject,
 } from 'react'
 import {
-  createInitialChat,
   fetchChatHistory,
   getChatThread,
-  regenerateChatThread,
+  streamChat,
   ChatMessage,
   Chat,
   ChatThread,
   Feedback,
+  StreamChatParams,
 } from 'app/dashboard/campaign-assistant/components/ajaxActions'
 import { noop, noopAsync } from '@shared/utils/noop'
 import { trackEvent } from 'helpers/analyticsHelper'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
 
-export async function updateChat(
-  threadId: string,
-  input: string,
-): Promise<{ message: ChatMessage } | false> {
-  try {
-    const payload = {
-      threadId,
-      message: input,
-    }
-    const resp = await clientFetch<{ message: ChatMessage }>(
-      apiRoutes.campaign.chat.update,
-      payload,
-    )
-    return resp.data
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
+export interface ChatStreamError {
+  message: string
+  retryable: boolean
 }
 
 interface ChatContextValue {
   chat: ChatMessage[]
   chats: Chat[]
   loading: boolean
-  shouldType: boolean
+  streamingContent: string | null
+  error: ChatStreamError | null
   loadInitialChats: () => Promise<void>
-  setShouldType: (v: boolean) => void
   threadId: string | null
   setThreadId: (v: string | null) => void
   setChat: (v: ChatMessage[]) => void
@@ -57,18 +40,21 @@ interface ChatContextValue {
   loadChatByThreadId: (threadId: string) => Promise<void>
   handleNewInput: (input: string) => Promise<void>
   handleRegenerate: () => Promise<void>
+  retryLast: () => Promise<void>
+  dismissError: () => void
+  stopStream: () => void
+  onThreadScroll: () => void
   feedback: Feedback | null
   scrollingThreadRef: RefObject<HTMLDivElement | null>
-  finishTyping: () => void
 }
 
 export const ChatContext = createContext<ChatContextValue>({
   chat: [],
   chats: [],
   loading: false,
-  shouldType: false,
+  streamingContent: null,
+  error: null,
   loadInitialChats: noopAsync,
-  setShouldType: noop,
   threadId: null,
   setThreadId: noop,
   setChat: noop,
@@ -77,9 +63,12 @@ export const ChatContext = createContext<ChatContextValue>({
   loadChatByThreadId: noopAsync,
   handleNewInput: noopAsync,
   handleRegenerate: noopAsync,
+  retryLast: noopAsync,
+  dismissError: noop,
+  stopStream: noop,
+  onThreadScroll: noop,
   feedback: null,
   scrollingThreadRef: { current: null },
-  finishTyping: noop,
 })
 
 interface ChatProviderProps {
@@ -92,10 +81,16 @@ export const ChatProvider = ({
   const [chat, setChat] = useState<ChatMessage[]>([])
   const [chats, setChats] = useState<Chat[]>([])
   const [loading, setLoading] = useState(false)
-  const [shouldType, setShouldType] = useState(false)
+  const [streamingContent, setStreamingContent] = useState<string | null>(null)
+  const [error, setError] = useState<ChatStreamError | null>(null)
   const [threadId, setThreadId] = useState<string | null>('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const scrollingThreadRef = useRef<HTMLDivElement | null>(null)
+  const lastParamsRef = useRef<StreamChatParams | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
+  // Whether the thread is pinned to the bottom. Starts true and flips off when
+  // the user scrolls up so live token streaming doesn't yank them back down.
+  const stickToBottomRef = useRef(true)
 
   const scrollDown = () =>
     scrollingThreadRef.current &&
@@ -111,13 +106,25 @@ export const ChatProvider = ({
       top: 0,
     })
 
-  const finishTyping = () => {
-    setShouldType(false)
+  // Tracks the user's scroll position; re-pins to bottom only when they're
+  // already near the bottom (within 120px).
+  const onThreadScroll = () => {
+    const el = scrollingThreadRef.current
+    if (!el) return
+    stickToBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < 120
   }
 
   useEffect(() => {
-    chat?.length && scrollDown()
-  }, [chat, shouldType])
+    if (chat?.length && stickToBottomRef.current) scrollDown()
+  }, [chat, streamingContent])
+
+  useEffect(
+    () => () => {
+      abortRef.current?.abort()
+    },
+    [],
+  )
 
   const loadInitialChats = async () => {
     const result = await fetchChatHistory()
@@ -137,27 +144,82 @@ export const ChatProvider = ({
     setThreadId(threadId || null)
   }
 
-  const handleNewInput = async (input: string) => {
-    const userMessage: ChatMessage = { role: 'user', content: input }
-    const updatedChat = [...chat, userMessage]
-    trackEvent('campaign_assistant_chatbot_input', { input })
-    setChat(updatedChat)
+  // Consumes the SSE stream: accumulates text deltas into `streamingContent`,
+  // commits the final assistant message on `done`, and surfaces `error`.
+  // Resolves to `true` if any assistant message was committed (a full `done`
+  // or a partial commit on user-stop), `false` if the stream errored with
+  // nothing to show — callers use this to roll back optimistic UI.
+  const runStream = async (params: StreamChatParams): Promise<boolean> => {
+    lastParamsRef.current = params
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+
+    // A fresh send/regenerate should always re-pin to the bottom.
+    stickToBottomRef.current = true
+    setError(null)
     setLoading(true)
-    if (!threadId || chat.length === 0) {
-      const result = await createInitialChat(input)
-      if (result) {
-        const { threadId: newThreadId, chat: newChat } = result
-        setThreadId(newThreadId)
-        setChat(newChat)
+    setStreamingContent('')
+
+    let accumulated = ''
+    let committed = false
+    try {
+      for await (const event of streamChat({
+        ...params,
+        signal: controller.signal,
+      })) {
+        if (event.type === 'text') {
+          accumulated += event.delta
+          setStreamingContent(accumulated)
+        } else if (event.type === 'done') {
+          committed = true
+          if (event.threadId) setThreadId(event.threadId)
+          setChat((prev) => [
+            ...prev,
+            { role: 'assistant', content: event.message.content },
+          ])
+          setFeedback(null)
+        } else if (event.type === 'error') {
+          if (event.code !== 'aborted') {
+            setError({ message: event.message, retryable: event.retryable })
+          }
+        }
       }
-    } else {
-      const result = await updateChat(threadId, input)
-      if (result) {
-        setChat([...updatedChat, result.message])
+      if (!committed && accumulated) {
+        committed = true
+        setChat((prev) => [
+          ...prev,
+          { role: 'assistant', content: accumulated },
+        ])
       }
+    } catch {
+      setError({
+        message: 'Something went wrong. Please try again.',
+        retryable: true,
+      })
+    } finally {
+      setStreamingContent(null)
+      setLoading(false)
+      abortRef.current = null
     }
-    setLoading(false)
-    setShouldType(true)
+    return committed
+  }
+
+  const handleNewInput = async (input: string) => {
+    if (loading) return
+    const trimmed = input.trim()
+    if (!trimmed) return
+    const userMessage: ChatMessage = { role: 'user', content: trimmed }
+    trackEvent('campaign_assistant_chatbot_input', { input: trimmed })
+    setChat((prev) => [...prev, userMessage])
+
+    // Structured so TS narrows `threadId` to a non-null string on the
+    // follow-up branch (no cast needed).
+    await runStream(
+      threadId && chat.length > 0
+        ? { message: trimmed, threadId }
+        : { message: trimmed, initial: true },
+    )
   }
 
   const loadChatByThreadId = async (threadId: string) => {
@@ -169,26 +231,33 @@ export const ChatProvider = ({
       setChat([])
       setFeedback(null)
     }
+    setError(null)
     setThreadId(threadId)
   }
 
-  const regenerateChat = async () => {
-    if (!threadId) return
-    const result = await regenerateChatThread(threadId)
-    if (result) {
-      const updatedChat = chat.slice(0, -1)
-      updatedChat.push(result.message)
-      setChat(updatedChat)
-    }
+  const handleRegenerate = async () => {
+    if (!threadId || loading) return
+    // Optimistically drop the last reply, but snapshot the thread so we can
+    // restore it if the regenerate stream fails with nothing committed —
+    // otherwise the message would be lost from the UI until a reload.
+    const previousChat = chat
+    setChat((prev) => prev.slice(0, -1))
+    const committed = await runStream({ threadId, regenerate: true })
+    if (!committed) setChat(previousChat)
   }
 
-  const handleRegenerate = async () => {
-    setLoading(true)
-    setChat(chat.slice(0, -1))
-    await regenerateChat()
-    setShouldType(true)
-    setLoading(false)
+  const retryLast = async () => {
+    if (loading) return
+    const params = lastParamsRef.current
+    if (!params) return
+    await runStream(params)
   }
+
+  // Aborts the in-flight stream; the generator emits an `aborted` event which
+  // `runStream` ignores, and the partial text is committed on stream close.
+  const stopStream = () => abortRef.current?.abort()
+
+  const dismissError = () => setError(null)
 
   return (
     <ChatContext.Provider
@@ -196,8 +265,9 @@ export const ChatProvider = ({
         chat,
         chats,
         loading,
+        streamingContent,
+        error,
         feedback,
-        shouldType,
         threadId,
         setThreadId,
         setChat,
@@ -208,8 +278,10 @@ export const ChatProvider = ({
         loadChatByThreadId,
         handleNewInput,
         handleRegenerate,
-        finishTyping,
-        setShouldType,
+        retryLast,
+        dismissError,
+        stopStream,
+        onThreadScroll,
       }}
     >
       {children}
