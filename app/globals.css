@@ -798,6 +798,16 @@ strong {
     margin-top: 4px;
   }
 
+  /* Scoped override (see AddressAutocomplete `dropdownClassName`): anchor the
+     dropdown under its input instead of viewport-fixed, which renders at the
+     bottom of the page on mobile. Only affects dropdowns tagged with this class. */
+  .pac-container.texting-compliance-address-dropdown {
+    position: absolute !important;
+    left: unset !important;
+    right: unset !important;
+    width: unset !important;
+  }
+
   .pac-item {
     padding: 8px !important;
     font-size: 14px !important;

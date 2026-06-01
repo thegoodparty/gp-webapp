@@ -8,7 +8,7 @@ import {
   getFecCommitteeIdValidation,
 } from 'app/dashboard/profile/texting-compliance/register/components/FecCommitteeIdInput'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useState, type ComponentProps } from 'react'
+import { useEffect, useRef, useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceForm'
 import { EinCheckInput } from 'app/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
@@ -19,15 +19,62 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceFooter'
-import {
-  TextingComplianceSubmitButton,
-  type ValidationField,
-} from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceSubmitButton'
+import Button from '@shared/buttons/Button'
 
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
 import type { FormDataState } from '@shared/hooks/useFormData'
+
+export type ValidationField =
+  | 'electionFilingLink'
+  | 'campaignCommitteeName'
+  | 'officeLevel'
+  | 'ein'
+  | 'phone'
+  | 'address'
+  | 'website'
+  | 'email'
+  | 'fecCommitteeId'
+  | 'committeeType'
+
+type ValidationMessages = Record<ValidationField, string>
+
+const fieldDisplayNames: ValidationMessages = {
+  electionFilingLink: 'Election Filing Link',
+  campaignCommitteeName: 'Campaign Committee Name',
+  officeLevel: 'Office Level',
+  ein: 'EIN',
+  phone: 'Filing Phone',
+  address: 'Filing Address',
+  website: 'Website',
+  email: 'Filing Email',
+  fecCommitteeId: 'FEC Committee ID',
+  committeeType: 'Committee Type',
+}
+
+const getValidationMessage = (
+  field: ValidationField,
+  officeLevel?: string,
+): string => {
+  const messages: ValidationMessages = {
+    electionFilingLink:
+      officeLevel === 'federal'
+        ? 'Must be from FEC.gov (e.g., https://fec.gov/data/committee/C00123456)'
+        : 'Enter a valid URL with a path (e.g., https://example.com/candidates)',
+    campaignCommitteeName:
+      'Your official committee name (e.g., "Smith for Council")',
+    officeLevel: 'Select an option',
+    ein: 'Valid format (XX-XXXXXXX)',
+    phone: 'Valid US phone number as it appears on your election filing',
+    address: 'Select a valid address as it appears on your election filing',
+    website: 'Valid URL',
+    email: 'Valid email address as it appears on your election filing',
+    fecCommitteeId: 'Must be "C" followed by 8 digits (e.g., C00123456)',
+    committeeType: 'Select House, Senate, or Presidential',
+  }
+  return messages[field]
+}
 
 type AddressValue = Parameters<
   NonNullable<ComponentProps<typeof AddressAutocomplete>['onSelect']>
@@ -170,7 +217,29 @@ const TextingComplianceRegistrationForm = ({
   } = formData
   const formValidation = validateRegistrationForm(formData, { requireWebsite })
   const { isValid, validations } = formValidation
-  const failingFields = getFailingFields(validations)
+  // `website` is validated but has no input in this form — it is derived from
+  // the campaign's purchased domain upstream (the register page redirects to
+  // domain purchase when absent, and the election-filing flow passes
+  // requireWebsite=false). Exclude it so the error banner never tells the user
+  // to fix a field they cannot see or interact with.
+  const failingFields = getFailingFields(validations).filter(
+    (field) => field !== 'website',
+  )
+
+  // The Submit button is always enabled so the user can attempt submission and
+  // receive guiding errors. Errors (banner + red field borders) only surface
+  // once they've actually tried to submit an invalid form.
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false)
+  const showError = (field: ValidationField): boolean =>
+    attemptedSubmit && !validations[field]
+
+  // Synchronous double-submit guard. `loading` is a parent prop that only
+  // reflects the submission after a re-render, so it can't block a second click
+  // fired within the same render cycle. A ref flips immediately.
+  const submittingRef = useRef(false)
+  useEffect(() => {
+    if (!loading) submittingRef.current = false
+  }, [loading])
 
   const addressValue = isAddressValue(address) ? address : null
   const [addressInputValue, setAddressInputValue] = useState<
@@ -194,6 +263,19 @@ const TextingComplianceRegistrationForm = ({
   }
 
   const handleOnSubmit = () => {
+    // Always-enabled button: block submission of an invalid form and reveal the
+    // guiding errors instead. The footer is fixed at the bottom of a long form,
+    // so scroll the error banner (rendered at the top) into view.
+    if (!isValid) {
+      setAttemptedSubmit(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    // Block a double-submit. The ref is set synchronously below, so a second
+    // rapid click within the same render cycle is caught even before `loading`
+    // propagates from the parent.
+    if (submittingRef.current || loading) return
+    submittingRef.current = true
     // Federal: include fecCommitteeId and committeeType (HOUSE/SENATE/PRESIDENTIAL) as entered
     // Non-federal: exclude fecCommitteeId, set committeeType to 'CANDIDATE'
     const { fecCommitteeId: _, committeeType: __, ...baseFormData } = formData
@@ -212,7 +294,40 @@ const TextingComplianceRegistrationForm = ({
   return (
     <>
       <TextingComplianceForm>
-        <FormControl fullWidth required variant="outlined">
+        {hasSubmissionError && (
+          <StyledAlert severity="error">
+            <Body2>
+              Form submission failed. Contact your Political Assistant to
+              complete this process or report the issue.
+            </Body2>
+          </StyledAlert>
+        )}
+        {attemptedSubmit && !isValid && (
+          <StyledAlert severity="error">
+            <Body2>
+              <span className="font-medium">
+                Please fix the following fields:
+              </span>
+              <ul className="mt-1 list-disc pl-5">
+                {failingFields.map((field) => (
+                  <li key={field}>
+                    <span className="font-medium">
+                      {fieldDisplayNames[field]}
+                    </span>
+                    {' — '}
+                    {getValidationMessage(field, getStringValue(officeLevel))}
+                  </li>
+                ))}
+              </ul>
+            </Body2>
+          </StyledAlert>
+        )}
+        <FormControl
+          fullWidth
+          required
+          variant="outlined"
+          error={showError('officeLevel')}
+        >
           <InputLabel>Office Level</InputLabel>
           <Select
             label="Office Level"
@@ -229,6 +344,7 @@ const TextingComplianceRegistrationForm = ({
           placeholder="Jane for Council"
           fullWidth
           required
+          error={showError('campaignCommitteeName')}
           value={campaignCommitteeName}
           onChange={(e) =>
             handleChange({ campaignCommitteeName: e.target.value })
@@ -240,6 +356,7 @@ const TextingComplianceRegistrationForm = ({
             onChange: handleEINChange,
             validated: validEin,
             label: 'EIN *',
+            error: showError('ein'),
           }}
         />
         {officeLevel === 'federal' && (
@@ -248,8 +365,14 @@ const TextingComplianceRegistrationForm = ({
               value={getStringValue(formData.fecCommitteeId)}
               validated={validFecCommitteeId}
               onChange={handleFecCommitteeIdChange}
+              error={showError('fecCommitteeId')}
             />
-            <FormControl fullWidth required variant="outlined">
+            <FormControl
+              fullWidth
+              required
+              variant="outlined"
+              error={showError('committeeType')}
+            >
               <InputLabel>Committee Type</InputLabel>
               <Select
                 label="Committee Type"
@@ -278,6 +401,7 @@ const TextingComplianceRegistrationForm = ({
           label="Election Filing Link"
           fullWidth
           required
+          error={showError('electionFilingLink')}
           endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
           value={electionFilingLink}
           onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
@@ -293,6 +417,8 @@ const TextingComplianceRegistrationForm = ({
             },
             placeholder: 'Filing Address *',
             variant: 'outlined',
+            error: showError('address'),
+            dropdownClassName: 'texting-compliance-address-dropdown',
           }}
         />
         <TextField
@@ -300,6 +426,7 @@ const TextingComplianceRegistrationForm = ({
           placeholder="jane@gmail.com"
           fullWidth
           required
+          error={showError('email')}
           value={email}
           onChange={(e) => handleChange({ email: e.target.value })}
         />
@@ -308,22 +435,24 @@ const TextingComplianceRegistrationForm = ({
           placeholder="(555) 555-5555"
           required
           fullWidth
+          error={showError('phone')}
           value={phone}
           onChange={(e) => handleChange({ phone: e.target.value })}
         />
         <div className="h-32"></div>
       </TextingComplianceForm>
       <TextingComplianceFooter>
-        <TextingComplianceSubmitButton
+        <Button
           {...{
-            onClick: handleOnSubmit,
+            color: 'primary',
+            size: 'large',
+            disabled: loading,
             loading,
-            isValid,
-            hasSubmissionError,
-            failingFields,
-            officeLevel: getStringValue(officeLevel),
+            onClick: handleOnSubmit,
           }}
-        />
+        >
+          Submit
+        </Button>
       </TextingComplianceFooter>
     </>
   )

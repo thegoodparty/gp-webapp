@@ -57,7 +57,7 @@ const RichEditor = ({
   }, [quill, onChangeCallback, onTextLengthChange])
 
   return (
-    <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base">
+    <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base [&_.ql-editor]:wrap-anywhere">
       <div ref={quillRef} />
     </div>
   )

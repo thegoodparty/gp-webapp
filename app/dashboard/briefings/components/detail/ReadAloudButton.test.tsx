@@ -12,6 +12,7 @@ type HookState = {
 const hookState: HookState = { status: 'idle', error: null }
 const playMock = vi.fn()
 const stopMock = vi.fn()
+const prefetchMock = vi.fn()
 
 vi.mock('../../shared/useReadAloud', () => ({
   useReadAloud: () => ({
@@ -19,6 +20,7 @@ vi.mock('../../shared/useReadAloud', () => ({
     error: hookState.error,
     play: playMock,
     stop: stopMock,
+    prefetch: prefetchMock,
   }),
 }))
 
@@ -28,6 +30,15 @@ function setHook(state: HookState): void {
 }
 
 describe('<ReadAloudButton>', () => {
+  it('prefetches audio on mount to warm the cache before the first click', () => {
+    prefetchMock.mockClear()
+    setHook({ status: 'idle', error: null })
+
+    render(<ReadAloudButton text="hello" />)
+
+    expect(prefetchMock).toHaveBeenCalledTimes(1)
+  })
+
   describe('compact variant', () => {
     it('renders a spinner and is busy + disabled while loading', () => {
       setHook({ status: 'loading', error: null })
