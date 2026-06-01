@@ -99,12 +99,24 @@ else
   printf "  %s  node_modules missing (run: npm ci)\n" "$NO"
 fi
 
-if [[ -f ai-rules/performance.md ]]; then
-  printf "  %s  ai-rules/performance.md present (submodule initialized)\n" "$OK"
+# Check the file these wrapper scripts actually reference: performance-tools.md
+# (the tools cookbook). performance.md is the critic rule; both should be
+# present on a healthy submodule pointer, but performance-tools.md is what
+# the scripts in this directory header-cite — so checking it gives a more
+# faithful "is the submodule aligned with what this toolchain depends on"
+# answer.
+if [[ -f ai-rules/performance-tools.md ]]; then
+  printf "  %s  ai-rules/performance-tools.md present (submodule initialized)\n" "$OK"
+  # Sanity-check the critic rule file too — different file, same submodule;
+  # if one is present and the other isn't, the pointer is partially stale.
+  if [[ ! -f ai-rules/performance.md ]]; then
+    printf "  %s  ai-rules/performance.md missing — submodule pointer may be partially stale\n" "$WARN"
+    echo "       Sync: git submodule update ai-rules"
+  fi
 elif [[ -f ai-rules/README.md ]]; then
-  printf "  %s  ai-rules submodule initialized but performance.md missing — submodule out of sync with the recorded pointer\n" "$WARN"
+  printf "  %s  ai-rules submodule initialized but performance-tools.md missing — submodule out of sync with the recorded pointer\n" "$WARN"
   echo "       Sync: git submodule update ai-rules"
-  echo "       (Don't 'git checkout origin/main' inside the submodule — that lands at a tree that may not contain performance.md.)"
+  echo "       (Don't 'git checkout origin/main' inside the submodule — that lands at a tree that may not contain performance-tools.md.)"
 elif [[ -e ai-rules ]] || git config -f .gitmodules --get submodule.ai-rules.url >/dev/null 2>&1; then
   printf "  %s  ai-rules submodule NOT initialized\n" "$NO"
   echo "       Run: git submodule update --init --recursive"
