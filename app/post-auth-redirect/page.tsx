@@ -30,6 +30,18 @@ const PostAuthRedirectPage = () => {
     ranRef.current = true
     ;(async () => {
       try {
+        // An explicit deep-link destination forwarded by the login flow when
+        // the middleware bounced an unauthenticated deep link (e.g.
+        // /dashboard/briefings from a marketing email). Only same-origin
+        // relative paths are honored so this can't be an open redirect.
+        const nextParam = new URLSearchParams(window.location.search).get(
+          'next',
+        )
+        const safeNext =
+          nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')
+            ? nextParam
+            : null
+
         // First authenticated call after a fresh sign-up may race the gp-api
         // JIT-provisioning of the local user record. Retry once on failure
         // before falling back to an empty list.
@@ -51,7 +63,19 @@ const PostAuthRedirectPage = () => {
           if (retry.ok) organizations = retry.data.organizations
         }
 
-        const slug = resolveSlug(organizations)
+        // The briefings / "serve" experience is scoped to the org that owns the
+        // user's elected office (the gp-api elected-office + meetings endpoints
+        // resolve by the X-Organization-Slug header). When the deep link points
+        // there, select that org explicitly — otherwise `resolveSlug` falls
+        // back to the first org and the briefings page can't find the elected
+        // office, bouncing the user to /dashboard.
+        const electedOrg = organizations.find((o) => o.electedOfficeId)
+        const wantsServe =
+          !!safeNext && safeNext.startsWith('/dashboard/briefings')
+        const slug =
+          wantsServe && electedOrg
+            ? electedOrg.slug
+            : resolveSlug(organizations)
         if (slug) {
           setCookie(ORG_SLUG_COOKIE, slug)
         }
@@ -110,14 +134,16 @@ const PostAuthRedirectPage = () => {
           }
         }
 
-        const path = resolvePostAuthRedirectPath(
+        const resolvedPath = resolvePostAuthRedirectPath(
           user,
           campaignStatus,
           hasElectedOffice,
         )
+        // Honor the explicit deep-link destination now that the org slug cookie
+        // is set and the session is established.
         // Hard nav so the destination renders with fresh auth'd server
         // state (PageWrapper re-runs with isAuthed=true and real orgs).
-        window.location.replace(path)
+        window.location.replace(safeNext ?? resolvedPath)
       } catch (e) {
         console.error('post-auth-redirect error', e)
         // Don't strand new users on a blank /dashboard if the resolver

@@ -31,7 +31,22 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   }
 
   if (!isPublicRoute(req)) {
-    await auth.protect()
+    const { userId } = await auth()
+    if (!userId) {
+      // Redirect unauthenticated users to the sign-in page explicitly instead
+      // of relying on `auth.protect()`. When Clerk can't resolve the sign-in
+      // URL on the server it responds with a 404 rather than redirecting (see
+      // clerk/javascript#8302), which breaks deep links like
+      // `/dashboard/briefings` shared in marketing emails. Preserving the
+      // original path in `redirect_url` lets `<SignIn>` route the user back to
+      // the requested page after they log in.
+      const signInUrl = new URL('/login', req.url)
+      signInUrl.searchParams.set(
+        'redirect_url',
+        `${req.nextUrl.pathname}${req.nextUrl.search}`,
+      )
+      return NextResponse.redirect(signInUrl)
+    }
   }
 
   return NextResponse.next({
