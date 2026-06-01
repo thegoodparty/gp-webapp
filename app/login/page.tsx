@@ -45,19 +45,23 @@ export default async function LoginPage({
   // ORG_SLUG_COOKIE that server requests need, so skipping it leaves pages like
   // briefings without org context (blank render / server-side bounce to
   // /dashboard). Route through `/post-auth-redirect` and forward the requested
-  // path as `next` so it can land the user there once setup is done.
-  const forceRedirectUrl = redirectUrl
-    ? `/post-auth-redirect?next=${encodeURIComponent(redirectUrl)}`
+  // path as `next` so it can land the user there once setup is done. Set both
+  // sign-in and sign-up redirect props since the embedded "create account" flow
+  // on this page uses the sign-up props; the sign-up variant also carries the
+  // `source=signup` hint so registration tracking still fires.
+  const nextQuery = redirectUrl
+    ? `next=${encodeURIComponent(redirectUrl)}`
     : null
+  const redirectProps = nextQuery
+    ? {
+        forceRedirectUrl: `/post-auth-redirect?${nextQuery}`,
+        signUpForceRedirectUrl: `/post-auth-redirect?${nextQuery}&source=signup`,
+      }
+    : { fallbackRedirectUrl: '/post-auth-redirect' }
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-8">
-      <SignIn
-        {...(forceRedirectUrl
-          ? { forceRedirectUrl }
-          : { fallbackRedirectUrl: '/post-auth-redirect' })}
-        routing="hash"
-      />
+      <SignIn {...redirectProps} routing="hash" />
     </div>
   )
 }
