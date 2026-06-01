@@ -13,6 +13,8 @@ import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { resolveSlug } from '@shared/hooks/useSelectedOrgSlug'
 import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
 import { getReadyAnalytics } from '@shared/utils/analytics'
+import { isSafeInternalPath } from 'helpers/isSafeInternalPath'
+import { isServeRoutePath } from 'app/dashboard/shared/serveRoutes'
 import { LoaderCircle } from 'lucide-react'
 
 const PostAuthRedirectPage = () => {
@@ -37,10 +39,7 @@ const PostAuthRedirectPage = () => {
         const nextParam = new URLSearchParams(window.location.search).get(
           'next',
         )
-        const safeNext =
-          nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')
-            ? nextParam
-            : null
+        const safeNext = isSafeInternalPath(nextParam) ? nextParam : null
 
         // First authenticated call after a fresh sign-up may race the gp-api
         // JIT-provisioning of the local user record. Retry once on failure
@@ -63,15 +62,14 @@ const PostAuthRedirectPage = () => {
           if (retry.ok) organizations = retry.data.organizations
         }
 
-        // The briefings / "serve" experience is scoped to the org that owns the
-        // user's elected office (the gp-api elected-office + meetings endpoints
-        // resolve by the X-Organization-Slug header). When the deep link points
-        // there, select that org explicitly — otherwise `resolveSlug` falls
-        // back to the first org and the briefings page can't find the elected
-        // office, bouncing the user to /dashboard.
+        // The "serve" experience (briefings, polls) is scoped to the org that
+        // owns the user's elected office (the gp-api elected-office + meetings
+        // endpoints resolve by the X-Organization-Slug header). When the deep
+        // link points there, select that org explicitly — otherwise
+        // `resolveSlug` falls back to the first org and those pages can't find
+        // the elected office, bouncing the user to /dashboard.
         const electedOrg = organizations.find((o) => o.electedOfficeId)
-        const wantsServe =
-          !!safeNext && safeNext.startsWith('/dashboard/briefings')
+        const wantsServe = !!safeNext && isServeRoutePath(safeNext)
         const slug =
           wantsServe && electedOrg
             ? electedOrg.slug

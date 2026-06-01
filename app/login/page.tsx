@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { SignIn } from '@clerk/nextjs'
 import { getPostAuthRedirectPath } from 'app/dashboard/shared/candidateAccess'
+import { isSafeInternalPath } from 'helpers/isSafeInternalPath'
 import pageMetaData from 'helpers/metadataHelper'
 
 const meta = pageMetaData({
@@ -14,28 +15,31 @@ export const metadata = meta
 export default async function LoginPage({
   searchParams,
 }: PageProps<any>): Promise<React.JSX.Element> {
-  const { userId } = await auth()
-  if (userId) {
-    redirect(await getPostAuthRedirectPath())
-  }
+  const [{ userId }, { redirect_url: redirectUrlParam }] = await Promise.all([
+    auth(),
+    searchParams,
+  ])
 
   // When the middleware bounces an unauthenticated deep link (e.g.
   // /dashboard/briefings from a marketing email) through here, it preserves
-  // the original path in `redirect_url`. We can't send the user straight there
-  // after sign-in: `/post-auth-redirect` is what resolves the user's org and
-  // sets the ORG_SLUG_COOKIE that server requests need, so skipping it leaves
-  // pages like briefings without org context (blank render / server-side
-  // bounce to /dashboard). Instead, always route through `/post-auth-redirect`
-  // and forward the requested path as `next` so it can land the user there
-  // once setup is done. Only same-origin relative paths are honored so the
-  // param can't be abused as an open redirect.
-  const { redirect_url: redirectUrlParam } = await searchParams
-  const redirectUrl =
-    typeof redirectUrlParam === 'string' &&
-    redirectUrlParam.startsWith('/') &&
-    !redirectUrlParam.startsWith('//')
-      ? redirectUrlParam
-      : null
+  // the original path in `redirect_url`. Only same-origin relative paths are
+  // honored so the param can't be abused as an open redirect.
+  const redirectUrl = isSafeInternalPath(redirectUrlParam)
+    ? redirectUrlParam
+    : null
+
+  if (userId) {
+    // Already signed in: honor an explicit deep link if present, otherwise fall
+    // back to the role-aware post-auth resolver.
+    redirect(redirectUrl ?? (await getPostAuthRedirectPath()))
+  }
+
+  // We can't send the user straight to the deep link after sign-in:
+  // `/post-auth-redirect` is what resolves the user's org and sets the
+  // ORG_SLUG_COOKIE that server requests need, so skipping it leaves pages like
+  // briefings without org context (blank render / server-side bounce to
+  // /dashboard). Route through `/post-auth-redirect` and forward the requested
+  // path as `next` so it can land the user there once setup is done.
   const forceRedirectUrl = redirectUrl
     ? `/post-auth-redirect?next=${encodeURIComponent(redirectUrl)}`
     : null

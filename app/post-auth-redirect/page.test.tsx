@@ -254,7 +254,7 @@ describe('PostAuthRedirectPage', () => {
     })
     api.mock('GET /v1/elected-office/current', {
       status: 200,
-      data: { id: 'eo-123' },
+      data: { id: 'eo-123', swornInDate: '2026-01-01' } as any,
     })
 
     render(<PostAuthRedirectPage />)
