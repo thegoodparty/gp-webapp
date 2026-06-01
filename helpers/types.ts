@@ -327,6 +327,33 @@ export interface CampaignAiContent {
     | undefined
 }
 
+export interface RaceCandidate {
+  gpCandidateId: string | null
+  firstName: string
+  lastName: string
+  fullName: string
+  email: string | null
+  websiteUrl: string | null
+  party: string | null
+  isIncumbent: boolean | null
+}
+
+export interface MilestoneWindow {
+  start: string | null
+  end: string | null
+}
+
+/**
+ * Per-category milestone windows sourced live from BallotReady. Each
+ * category nullable when BR has no data for it; the whole object nullable
+ * when the upstream call failed.
+ */
+export interface RaceMilestones {
+  voter_registration: MilestoneWindow | null
+  early_voting: MilestoneWindow | null
+  request_ballot: MilestoneWindow | null
+}
+
 export interface RaceTargetMetrics {
   projectedTurnout: number
   winNumber: number
@@ -345,6 +372,23 @@ export interface RaceTargetMetrics {
    * text" even when `filingFee` is null.
    */
   filingRequirementsText?: string | null
+  // Fields sourced from election-api's /campaign-strategy-context via gp-api.
+  // All nullable — null when the race hash didn't resolve to a
+  // Position+District or upstream data is sparse. Optional for forward-compat
+  // with API responses that pre-date the unified endpoint.
+  registeredVoters?: number | null
+  uniqueCellphones?: number | null
+  uniqueLandlines?: number | null
+  projectedVoterTurnout?: number | null
+  candidates?: RaceCandidate[]
+  generalElectionDate?: string | null
+  primaryElectionDate?: string | null
+  relevantElectionDate?: string | null
+  officialOfficeName?: string | null
+  officeLevel?: string | null
+  officeType?: string | null
+  numberOfSeats?: number | null
+  milestones?: RaceMilestones | null
 }
 
 export interface IssuePosition {

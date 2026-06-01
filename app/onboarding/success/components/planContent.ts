@@ -1,5 +1,6 @@
 import { dateUsHelper } from 'helpers/dateHelper'
 import type { StrategicLandscapeData } from 'gpApi/api-endpoints'
+import type { RaceCandidate, RaceMilestones } from 'helpers/types'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -58,10 +59,22 @@ export interface PlanInput {
   hubspotIncumbent: string | null
   filingFee: number | null
   filingRequirementsText: string | null
+  // From raceTargetMetrics (election-api campaign-strategy-context). All
+  // nullable — null when the BR race hash didn't resolve or upstream data is
+  // sparse. When null, fallback heuristics kick in.
+  registeredVoters: number | null
+  uniqueCellphones: number | null
+  uniqueLandlines: number | null
+  raceCandidates: RaceCandidate[]
+  // Per-category BR milestone windows. Null when election-api couldn't
+  // fetch them; individual category nullable when BR has no data for it.
+  // Drives Section 6 Campaign Timeline dates; falls back to E-offset
+  // approximations when null.
+  milestones: RaceMilestones | null
   // Strategic landscape from /campaignStrategy/mine/strategic-landscape.
   // Undefined while polling or on error; when present takes precedence over
-  // the legacy runningAgainst + hubspotIncumbent fallback for opponents and
-  // is the only source for opportunities + challenges.
+  // raceCandidates + the legacy runningAgainst + hubspotIncumbent fallback
+  // for opponents and is the only source for opportunities + challenges.
   strategicLandscape?: StrategicLandscapeData
 }
 
@@ -248,6 +261,7 @@ const buildTimeline = (
   electionDate: Date | null,
   filingDateStart: Date | null,
   filingDateEnd: Date | null,
+  milestones: RaceMilestones | null,
 ): {
   timeline: TimelineRow[]
   keyDates: KeyDate[]
@@ -255,43 +269,103 @@ const buildTimeline = (
   if (!electionDate) {
     return { timeline: [], keyDates: [] }
   }
-  // Prefer real filing dates from BallotReady; fall back to E-40 / E-25
-  // approximations only when neither is known.
+
+  // Row order, copy, and source mapping per ClickUp Campaign Plan
+  // Template § 6 (2026-05-30):
+  //   1. filing_end_date           — Nomination papers filed
+  //   2. EARLY_VOTING.OPEN         — Early voting begins
+  //   3. EARLY_VOTING.CLOSE        — Early voting ends
+  //   4. REQUEST_BALLOT.OPEN       — Absentee ballot request opens
+  //   5. REGISTRATION.OPEN         — Voter registration opens
+  //   6. REGISTRATION.CLOSE        — Voter registration deadline
+  //   7. REQUEST_BALLOT.CLOSE      — Absentee ballot request deadline
+  //   8. VOTING.CLOSE              — Election Day
+  //
+  // Source priority per row: real BR milestone date if present (>90% fill
+  // rate per Nigel's screenshot), else E-offset approximation. Notes
+  // column flags which one is in play so the candidate knows.
   const filing = filingDateEnd ?? filingDateStart ?? addDays(electionDate, -40)
-  const messagingLocked = addDays(electionDate, -27)
-  const ballotsStart = addDays(electionDate, -25)
-  const voterRegDeadline = addDays(electionDate, -10)
-  const absenteeDeadline = addDays(electionDate, -7)
+  const filingIsReal = filingDateEnd != null
+  const earlyVotingStart =
+    parseDateIso(milestones?.early_voting?.start ?? null) ??
+    addDays(electionDate, -14)
+  const earlyVotingStartIsReal = milestones?.early_voting?.start != null
+  const earlyVotingEnd =
+    parseDateIso(milestones?.early_voting?.end ?? null) ??
+    addDays(electionDate, -2)
+  const earlyVotingEndIsReal = milestones?.early_voting?.end != null
+  const requestBallotStart =
+    parseDateIso(milestones?.request_ballot?.start ?? null) ??
+    addDays(electionDate, -45)
+  const requestBallotStartIsReal = milestones?.request_ballot?.start != null
+  const voterRegOpen = parseDateIso(
+    milestones?.voter_registration?.start ?? null,
+  )
+  const voterRegDeadline =
+    parseDateIso(milestones?.voter_registration?.end ?? null) ??
+    addDays(electionDate, -15)
+  const voterRegDeadlineIsReal = milestones?.voter_registration?.end != null
+  const requestBallotEnd =
+    parseDateIso(milestones?.request_ballot?.end ?? null) ??
+    addDays(electionDate, -7)
+  const requestBallotEndIsReal = milestones?.request_ballot?.end != null
+
+  const sourceNote = (isReal: boolean, baseNote: string): string =>
+    isReal ? `Per BallotReady. ${baseNote}` : `Approximate. ${baseNote}`
 
   const timeline: TimelineRow[] = [
     {
       date: formatDate(filing),
       milestone: 'Nomination papers filed with Town Clerk',
-      notes: filingDateEnd
+      notes: filingIsReal
         ? 'Filing deadline per BallotReady. Bring two backup copies.'
         : 'Bring two backup copies.',
     },
     {
-      date: formatDate(messagingLocked),
-      milestone: 'Messaging, branding, and printed materials finalized',
-      notes: 'Lock down before first voter contact campaign.',
+      date: formatDate(earlyVotingStart),
+      milestone: 'Early voting begins',
+      notes: sourceNote(
+        earlyVotingStartIsReal,
+        'Persuasion contact should be wrapping up.',
+      ),
     },
     {
-      date: formatDate(ballotsStart),
-      milestone:
-        'Absentee / mail-in ballot distribution begins (by Town Clerk)',
-      notes:
-        'Plan introduction text and robocall campaigns to be sent before this deadline.',
+      date: formatDate(earlyVotingEnd),
+      milestone: 'Early voting ends',
+      notes: sourceNote(
+        earlyVotingEndIsReal,
+        'Last day for in-person early voting in most jurisdictions.',
+      ),
     },
+    {
+      date: formatDate(requestBallotStart),
+      milestone: 'Absentee ballot request opens',
+      notes: sourceNote(
+        requestBallotStartIsReal,
+        'Plan introduction text and robocall campaigns to land before this date.',
+      ),
+    },
+    // REGISTRATION.OPEN is the only row with no good E-offset fallback —
+    // registration is year-round in most states. Show only when BR has a
+    // real date so we don't render an invented one.
+    ...(voterRegOpen
+      ? [
+          {
+            date: formatDate(voterRegOpen),
+            milestone: 'Voter registration opens',
+            notes: 'Per BallotReady.',
+          },
+        ]
+      : []),
     {
       date: formatDate(voterRegDeadline),
       milestone: 'Voter registration deadline',
-      notes: 'Push via robocall campaign.',
+      notes: sourceNote(voterRegDeadlineIsReal, 'Push via robocall campaign.'),
     },
     {
-      date: formatDate(absenteeDeadline),
+      date: formatDate(requestBallotEnd),
       milestone: 'Absentee ballot request deadline',
-      notes: 'Push via text campaign.',
+      notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
     },
     {
       date: formatDate(electionDate),
@@ -306,9 +380,9 @@ const buildTimeline = (
       description: 'Nomination papers filed with Town Clerk.',
     },
     {
-      date: formatDate(ballotsStart),
+      date: formatDate(requestBallotStart),
       description:
-        'Absentee / mail ballots begin distributing. First voter contact must land by this date.',
+        'Absentee / mail ballot requests open. First voter contact must land by this date.',
     },
     {
       date: formatDate(addDays(electionDate, -20)),
@@ -319,7 +393,7 @@ const buildTimeline = (
       description: 'Voter registration deadline.',
     },
     {
-      date: formatDate(absenteeDeadline),
+      date: formatDate(requestBallotEnd),
       description: 'Absentee ballot request deadline.',
     },
     {
@@ -679,13 +753,18 @@ const buildPlanAtAGlance = (
 
 const buildOpponents = (
   strategicLandscape: StrategicLandscapeData | undefined,
+  raceCandidates: RaceCandidate[],
   runningAgainst: PlanOpponentInput[],
   hubspotIncumbentName: string | null,
 ): Opponent[] => {
-  // Strategy data is the source of truth when available — it covers the
-  // full opponent shape (politicalSummary, keyFacts, websites). Fall back
-  // to user-entered runningAgainst / HubSpot incumbent only while the
-  // strategy endpoint is still pending or has errored.
+  // Source priority:
+  //   1. strategicLandscape — full shape (politicalSummary, keyFacts,
+  //      websites). The LLM endpoint is the richest source.
+  //   2. raceCandidates — BR/election-api filings via raceTargetMetrics.
+  //      Authoritative for who's on the ballot + incumbent flag, but no
+  //      narrative fields.
+  //   3. runningAgainst — user-entered onboarding answers.
+  //   4. hubspotIncumbent — last-ditch incumbent name from HubSpot.
   if (strategicLandscape?.opponents.length) {
     return strategicLandscape.opponents.map((o) => ({
       fullName: o.fullName,
@@ -696,6 +775,17 @@ const buildOpponents = (
       websites: o.websites,
     }))
   }
+  const fromRaceCandidates: Opponent[] = raceCandidates
+    .filter((c) => c.fullName.trim() !== '')
+    .map((c) => ({
+      fullName: c.fullName.trim(),
+      partyAffiliation: c.party?.trim() ?? '',
+      incumbent: c.isIncumbent,
+      politicalSummary: '',
+      keyFacts: [],
+      websites: c.websiteUrl ? [c.websiteUrl] : [],
+    }))
+  if (fromRaceCandidates.length > 0) return fromRaceCandidates
   const fromRunningAgainst: Opponent[] = runningAgainst
     .filter((o) => (o.name ?? '').trim() !== '')
     .map((o) => ({
@@ -885,21 +975,37 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const projectedTurnoutLow = Math.max(0, Math.round(projectedTurnout * 0.9))
   const projectedTurnoutHigh = Math.round(projectedTurnout * 1.1)
 
-  // Placeholder registered-voter count derived from projected turnout
-  // assuming ~22% turnout. The real registered-voter count is not yet on
-  // RaceTargetMetrics — see Slack convo (mart_civics work in flight).
+  // Prefer the real registered-voter count from election-api when present.
+  // Falls back to the ~22%-turnout heuristic on projectedTurnout when the
+  // race hash didn't resolve or upstream data is sparse.
   const registeredVoters =
-    projectedTurnout > 0 ? Math.round(projectedTurnout / 0.22) : 0
+    input.registeredVoters && input.registeredVoters > 0
+      ? input.registeredVoters
+      : projectedTurnout > 0
+      ? Math.round(projectedTurnout / 0.22)
+      : 0
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 
+  // Real phone-match counts when available. Each L2 record can carry up to
+  // 4 cell numbers and 2 landlines per household — keep the same multipliers
+  // the placeholder heuristic used so downstream budget math stays
+  // consistent regardless of source.
+  const cellMatchRate =
+    input.uniqueCellphones != null && registeredVoters > 0
+      ? input.uniqueCellphones / registeredVoters
+      : PLACEHOLDER_MATCH_RATE_CELL
+  const landlineMatchRate =
+    input.uniqueLandlines != null && registeredVoters > 0
+      ? input.uniqueLandlines / registeredVoters
+      : PLACEHOLDER_MATCH_RATE_LANDLINE
   const matchedCellRecords = Math.max(
     0,
-    Math.round(projectedTurnout * PLACEHOLDER_MATCH_RATE_CELL * 4),
+    Math.round(projectedTurnout * cellMatchRate * 4),
   )
   const matchedLandlineRecords = Math.max(
     0,
-    Math.round(projectedTurnout * PLACEHOLDER_MATCH_RATE_LANDLINE * 2),
+    Math.round(projectedTurnout * landlineMatchRate * 2),
   )
   // Total volunteer-canvass hours over the campaign, derived from the
   // voter contact goal. Assumes CANVASS_SHARE_OF_CONTACTS of contacts come
@@ -947,6 +1053,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     electionDateValid,
     filingDateStart,
     filingDateEnd,
+    input.milestones,
   )
   const contactSchedule = buildContactSchedule(electionDateValid)
   const civicEvents = buildCivicEvents(electionDateValid, input.city)
@@ -974,6 +1081,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
 
   const opponents = buildOpponents(
     input.strategicLandscape,
+    input.raceCandidates,
     input.runningAgainst,
     input.hubspotIncumbent,
   )

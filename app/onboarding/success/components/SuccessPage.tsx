@@ -44,7 +44,11 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     .filter(Boolean)
     .join(' ')
     .trim()
+  const metrics = campaign?.raceTargetMetrics
+  // Prefer election-api's officialOfficeName when present — it matches the
+  // BR canonical office name and is what voters will see on the ballot.
   const race =
+    metrics?.officialOfficeName ||
     campaign?.positionName ||
     campaign?.organization?.customPositionName ||
     campaign?.office ||
@@ -53,8 +57,14 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const city = campaign?.details?.city ?? campaign?.city ?? ''
   const district = campaign?.details?.district ?? ''
   const partisanType = campaign?.details?.partisanType ?? ''
+  // Stage-anchored election date from the race lookup; falls back to the
+  // user-entered onboarding date when the race hash didn't resolve.
   const electionDateIso =
-    campaign?.details?.electionDate ?? campaign?.electionDate ?? null
+    metrics?.relevantElectionDate ??
+    metrics?.generalElectionDate ??
+    campaign?.details?.electionDate ??
+    campaign?.electionDate ??
+    null
   const filingDateStartIso = campaign?.details?.filingPeriodsStart ?? null
   const filingDateEndIso = campaign?.details?.filingPeriodsEnd ?? null
   const runningAgainstRef = campaign?.details?.runningAgainst
@@ -62,12 +72,16 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const stancesRef = campaign?.Stances
   const hubspotIncumbent =
     campaign?.data?.hubSpotUpdates?.incumbent?.trim() || null
-  const metrics = campaign?.raceTargetMetrics
   const winNumber = metrics?.winNumber ?? 0
   const projectedTurnout = metrics?.projectedTurnout ?? 0
   const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
   const filingFee = metrics?.filingFee ?? null
   const filingRequirementsText = metrics?.filingRequirementsText ?? null
+  const registeredVoters = metrics?.registeredVoters ?? null
+  const uniqueCellphones = metrics?.uniqueCellphones ?? null
+  const uniqueLandlines = metrics?.uniqueLandlines ?? null
+  const raceCandidatesRef = metrics?.candidates
+  const milestonesRef = metrics?.milestones ?? null
   // 30-90s first generation, instant on cache hit. Hook returns
   // { data | undefined, isGenerating, isPending, isError } — PlanSections
   // decides skeleton vs hidden based on those flags.
@@ -112,6 +126,11 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       hubspotIncumbent,
       filingFee,
       filingRequirementsText,
+      registeredVoters,
+      uniqueCellphones,
+      uniqueLandlines,
+      raceCandidates: raceCandidatesRef ?? [],
+      milestones: milestonesRef,
       strategicLandscape: strategy.data,
     }
     return buildPlanData(input)
@@ -134,6 +153,11 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     hubspotIncumbent,
     filingFee,
     filingRequirementsText,
+    registeredVoters,
+    uniqueCellphones,
+    uniqueLandlines,
+    raceCandidatesRef,
+    milestonesRef,
     strategy.data,
   ])
 
