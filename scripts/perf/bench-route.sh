@@ -78,5 +78,33 @@ else
   URL="${PROTO}://${HOST}:${PORT}${TARGET}"
 fi
 
-echo "→ ${AUTOCANNON[*]} ${ARGS[*]} $URL"
+# Redact `-H` header and `-b` body values from the printed command. They
+# commonly carry secrets (`-H 'authorization: Bearer <token>'`) or PII
+# (`-b '{"name":"...","dob":"..."}'`) that would otherwise land in
+# terminal output, CI logs, and shell history. The exec() below uses the
+# unmodified ARGS, so autocannon still sends the real values — only the
+# display is sanitised.
+DISPLAY_ARGS=()
+skip_next=false
+for a in "${ARGS[@]}"; do
+  if $skip_next; then
+    DISPLAY_ARGS+=("<redacted>")
+    skip_next=false
+  elif [[ "$a" == "-H" || "$a" == "--header" || "$a" == "-b" || "$a" == "--body" ]]; then
+    DISPLAY_ARGS+=("$a")
+    skip_next=true
+  elif [[ "$a" == "-H"?* ]]; then
+    DISPLAY_ARGS+=("-H<redacted>")
+  elif [[ "$a" == "--header="* ]]; then
+    DISPLAY_ARGS+=("--header=<redacted>")
+  elif [[ "$a" == "-b"?* ]]; then
+    DISPLAY_ARGS+=("-b<redacted>")
+  elif [[ "$a" == "--body="* ]]; then
+    DISPLAY_ARGS+=("--body=<redacted>")
+  else
+    DISPLAY_ARGS+=("$a")
+  fi
+done
+
+echo "→ ${AUTOCANNON[*]} ${DISPLAY_ARGS[*]} $URL"
 exec "${AUTOCANNON[@]}" "${ARGS[@]}" "$URL"
