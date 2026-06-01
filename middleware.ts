@@ -12,10 +12,14 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  const { pathname } = req.nextUrl
-  // This is a workaround to pass the pathname to SSR pages
+  const { pathname, search } = req.nextUrl
+  // This is a workaround to pass the pathname to SSR pages. `x-search` carries
+  // the query string separately so server components (e.g. serveAccess) can
+  // reconstruct the full requested URL without changing the `x-pathname`
+  // semantics other consumers rely on.
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('x-pathname', pathname)
+  requestHeaders.set('x-search', search)
 
   // Handle API request rewrites
   const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`)

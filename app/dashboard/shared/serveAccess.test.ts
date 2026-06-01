@@ -61,10 +61,12 @@ const setCookieSlug = (slug?: string) =>
     name === 'organization-slug' && slug ? { value: slug } : undefined,
   )
 
-const setPathname = (pathname: string) =>
-  mockHeadersGet.mockImplementation((name: string) =>
-    name === 'x-pathname' ? pathname : null,
-  )
+const setPathname = (pathname: string, search = '') =>
+  mockHeadersGet.mockImplementation((name: string) => {
+    if (name === 'x-pathname') return pathname
+    if (name === 'x-search') return search
+    return null
+  })
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -113,6 +115,22 @@ describe('serveAccess', () => {
 
     expect(mockRedirect).toHaveBeenCalledWith(
       '/post-auth-redirect?next=%2Fdashboard%2Fpolls%2F42',
+    )
+  })
+
+  it('preserves query parameters on serve routes as next', async () => {
+    mockServerFetch.mockResolvedValue({ ok: false, data: null })
+    mockGetCurrentUserOrganizations.mockResolvedValue([
+      campaignOrg,
+      electedOfficeOrg,
+    ])
+    setCookieSlug('campaign-1')
+    setPathname('/dashboard/polls', '?tab=open')
+
+    await serveAccess()
+
+    expect(mockRedirect).toHaveBeenCalledWith(
+      '/post-auth-redirect?next=%2Fdashboard%2Fpolls%3Ftab%3Dopen',
     )
   })
 
