@@ -72,7 +72,7 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
 
     await NavigationHelper.openMobileMenu(page)
-    await page.locator('#my-content-dashboard').click()
+    await page.getByRole('link', { name: 'Content Builder' }).click()
     // The mobile header renders the page title as a heading in addition to the
     // page's own heading, so scope to the first match to avoid strict mode.
     await expect(

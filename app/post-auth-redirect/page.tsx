@@ -13,6 +13,8 @@ import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { resolveSlug } from '@shared/hooks/useSelectedOrgSlug'
 import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
 import { getReadyAnalytics } from '@shared/utils/analytics'
+import { isSafeInternalPath } from 'helpers/isSafeInternalPath'
+import { isServeRoutePath } from 'app/dashboard/shared/serveRoutes'
 import { LoaderCircle } from 'lucide-react'
 
 const PostAuthRedirectPage = () => {
@@ -30,6 +32,15 @@ const PostAuthRedirectPage = () => {
     ranRef.current = true
     ;(async () => {
       try {
+        // An explicit deep-link destination forwarded by the login flow when
+        // the middleware bounced an unauthenticated deep link (e.g.
+        // /dashboard/briefings from a marketing email). Only same-origin
+        // relative paths are honored so this can't be an open redirect.
+        const nextParam = new URLSearchParams(window.location.search).get(
+          'next',
+        )
+        const safeNext = isSafeInternalPath(nextParam) ? nextParam : null
+
         // First authenticated call after a fresh sign-up may race the gp-api
         // JIT-provisioning of the local user record. Retry once on failure
         // before falling back to an empty list.
@@ -51,7 +62,18 @@ const PostAuthRedirectPage = () => {
           if (retry.ok) organizations = retry.data.organizations
         }
 
-        const slug = resolveSlug(organizations)
+        // The "serve" experience (briefings, polls) is scoped to the org that
+        // owns the user's elected office (the gp-api elected-office + meetings
+        // endpoints resolve by the X-Organization-Slug header). When the deep
+        // link points there, select that org explicitly — otherwise
+        // `resolveSlug` falls back to the first org and those pages can't find
+        // the elected office, bouncing the user to /dashboard.
+        const electedOrg = organizations.find((o) => o.electedOfficeId)
+        const wantsServe = !!safeNext && isServeRoutePath(safeNext)
+        const slug =
+          wantsServe && electedOrg
+            ? electedOrg.slug
+            : resolveSlug(organizations)
         if (slug) {
           setCookie(ORG_SLUG_COOKIE, slug)
         }
@@ -110,14 +132,25 @@ const PostAuthRedirectPage = () => {
           }
         }
 
-        const path = resolvePostAuthRedirectPath(
+        const resolvedPath = resolvePostAuthRedirectPath(
           user,
           campaignStatus,
           hasElectedOffice,
         )
+        // Honor the explicit deep-link destination now that the org slug cookie
+        // is set and the session is established. Re-derive a same-origin
+        // relative path before navigating: `safeNext` is already validated, but
+        // rebuilding from `URL().pathname` strips any host an attacker could
+        // smuggle in, keeping the redirect provably same-origin.
+        const destination = new URL(
+          safeNext ?? resolvedPath,
+          window.location.origin,
+        )
         // Hard nav so the destination renders with fresh auth'd server
         // state (PageWrapper re-runs with isAuthed=true and real orgs).
-        window.location.replace(path)
+        window.location.replace(
+          `${destination.pathname}${destination.search}${destination.hash}`,
+        )
       } catch (e) {
         console.error('post-auth-redirect error', e)
         // Don't strand new users on a blank /dashboard if the resolver

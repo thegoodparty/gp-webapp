@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useQuill } from 'react-quilljs'
 import 'quill/dist/quill.bubble.css'
+import { cn } from '@styleguide'
 import { noop } from './noop'
 
 interface RichEditorProps {
@@ -9,12 +10,15 @@ interface RichEditorProps {
   onChangeCallback?: (value: string, flag?: number) => void
   onTextLengthChange?: (length: number) => void
   useOnChange?: boolean
+  // Renders the editor with a destructive border to flag a validation error.
+  error?: boolean
 }
 
 const RichEditor = ({
   initialText = '',
   onChangeCallback = noop,
   onTextLengthChange,
+  error = false,
 }: RichEditorProps): React.JSX.Element => {
   const { quill, quillRef } = useQuill({
     theme: 'bubble',
@@ -57,7 +61,12 @@ const RichEditor = ({
   }, [quill, onChangeCallback, onTextLengthChange])
 
   return (
-    <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base [&_.ql-editor]:wrap-anywhere">
+    <div
+      className={cn(
+        'p-3 border rounded-lg [&>.quill>.ql-container]:text-base [&_.ql-editor]:wrap-anywhere',
+        error ? 'border-destructive' : 'border-gray-200',
+      )}
+    >
       <div ref={quillRef} />
     </div>
   )

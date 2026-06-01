@@ -91,7 +91,7 @@ export default function PrimaryResultModal({
 
     try {
       const updatedCampaign = await updateCampaign([
-        { key: 'details.primaryResult', value: primaryResult },
+        { key: 'primaryResult', value: primaryResult },
       ])
       if (updatedCampaign) {
         queryClient.setQueryData(CAMPAIGN_QUERY_KEY, updatedCampaign)

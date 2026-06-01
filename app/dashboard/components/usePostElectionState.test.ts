@@ -26,10 +26,10 @@ const setCampaign = (overrides: {
   mockUseCampaign.mockReturnValue([
     {
       id: 'campaign-1',
+      primaryResult: overrides.primaryResult ?? null,
       details: {
         electionDate: overrides.electionDate,
         primaryElectionDate: overrides.primaryElectionDate,
-        primaryResult: overrides.primaryResult ?? null,
       },
       goals: overrides.goalsElectionDate
         ? { electionDate: overrides.goalsElectionDate }
