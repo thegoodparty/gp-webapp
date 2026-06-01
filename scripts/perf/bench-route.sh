@@ -44,10 +44,14 @@ fi
 
 ARGS=("$@")
 HAS_C=false; HAS_D=false
+# autocannon accepts -c/-d four ways: `-c 50`, `-c50` (joined short),
+# `--connections 50`, `--connections=50`. Match all four so we don't inject
+# a duplicate default — minimist/yargs-parser silently merge duplicates into
+# arrays or pick the last value, either of which breaks the run.
 for a in "${ARGS[@]}"; do
   case "$a" in
-    -c|--connections) HAS_C=true ;;
-    -d|--duration)    HAS_D=true ;;
+    -c|--connections|-c[0-9]*|-c=*|--connections=*) HAS_C=true ;;
+    -d|--duration|-d[0-9]*|-d=*|--duration=*)       HAS_D=true ;;
   esac
 done
 $HAS_C || ARGS=(-c 10 "${ARGS[@]}")
