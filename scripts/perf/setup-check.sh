@@ -102,8 +102,9 @@ fi
 if [[ -f ai-rules/performance.md ]]; then
   printf "  %s  ai-rules/performance.md present (submodule initialized)\n" "$OK"
 elif [[ -f ai-rules/README.md ]]; then
-  printf "  %s  ai-rules submodule initialized but performance.md missing — pointer may be stale\n" "$WARN"
-  echo "       Update: (cd ai-rules && git fetch && git checkout origin/main)"
+  printf "  %s  ai-rules submodule initialized but performance.md missing — submodule out of sync with the recorded pointer\n" "$WARN"
+  echo "       Sync: git submodule update ai-rules"
+  echo "       (Don't 'git checkout origin/main' inside the submodule — that lands at a tree that may not contain performance.md.)"
 elif [[ -e ai-rules ]] || git config -f .gitmodules --get submodule.ai-rules.url >/dev/null 2>&1; then
   printf "  %s  ai-rules submodule NOT initialized\n" "$NO"
   echo "       Run: git submodule update --init --recursive"
