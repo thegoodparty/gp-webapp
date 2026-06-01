@@ -98,6 +98,15 @@ async function* parseSseStream(
       }
     }
   } finally {
+    // On a `done`/`error` early return the fetch signal is never aborted, so
+    // cancel the reader to close the underlying stream — otherwise the SSE
+    // connection leaks until the server times out. `cancel()` is a no-op on an
+    // already-closed stream.
+    try {
+      await reader.cancel()
+    } catch {
+      // ignore — stream may already be closed
+    }
     try {
       reader.releaseLock()
     } catch {

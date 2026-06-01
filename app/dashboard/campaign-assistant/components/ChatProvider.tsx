@@ -161,6 +161,16 @@ export const ChatProvider = ({
     setLoading(true)
     setStreamingContent('')
 
+    // Regenerate replaces the last assistant reply: drop it optimistically and
+    // restore it if the stream fails with nothing committed. Centralized here
+    // (rather than in handleRegenerate) so a retryLast of a failed regenerate
+    // slices correctly too, instead of appending a duplicate reply.
+    let restoreChat: ChatMessage[] | null = null
+    if (params.regenerate) {
+      restoreChat = chat
+      setChat((prev) => prev.slice(0, -1))
+    }
+
     let accumulated = ''
     let committed = false
     try {
@@ -198,6 +208,7 @@ export const ChatProvider = ({
         retryable: true,
       })
     } finally {
+      if (!committed && restoreChat) setChat(restoreChat)
       setStreamingContent(null)
       setLoading(false)
       abortRef.current = null
@@ -213,10 +224,11 @@ export const ChatProvider = ({
     trackEvent('campaign_assistant_chatbot_input', { input: trimmed })
     setChat((prev) => [...prev, userMessage])
 
-    // Structured so TS narrows `threadId` to a non-null string on the
-    // follow-up branch (no cast needed).
+    // `threadId` alone determines follow-up vs. new thread (a non-empty
+    // threadId means the thread exists server-side, even if the local chat
+    // failed to load). Structured so TS narrows `threadId` to a string here.
     await runStream(
-      threadId && chat.length > 0
+      threadId
         ? { message: trimmed, threadId }
         : { message: trimmed, initial: true },
     )
@@ -237,13 +249,8 @@ export const ChatProvider = ({
 
   const handleRegenerate = async () => {
     if (!threadId || loading) return
-    // Optimistically drop the last reply, but snapshot the thread so we can
-    // restore it if the regenerate stream fails with nothing committed —
-    // otherwise the message would be lost from the UI until a reload.
-    const previousChat = chat
-    setChat((prev) => prev.slice(0, -1))
-    const committed = await runStream({ threadId, regenerate: true })
-    if (!committed) setChat(previousChat)
+    // runStream owns the optimistic drop + rollback for regenerate.
+    await runStream({ threadId, regenerate: true })
   }
 
   const retryLast = async () => {

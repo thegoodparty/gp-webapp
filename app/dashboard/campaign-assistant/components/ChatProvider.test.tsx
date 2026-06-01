@@ -395,6 +395,55 @@ describe('<ChatProvider>', () => {
     )
   })
 
+  it('replaces (does not duplicate) the reply when retrying a regenerate that first failed', async () => {
+    const user = userEvent.setup()
+    mswServer.use(
+      http.get(CHAT_THREAD_URL, () =>
+        HttpResponse.json({
+          threadId: 'thread-2',
+          chat: [
+            { role: 'user', content: 'first question' },
+            { role: 'assistant', content: 'original reply' },
+          ],
+        }),
+      ),
+    )
+
+    renderProvider()
+    await user.click(screen.getByRole('button', { name: 'switch' }))
+    await screen.findByText('original reply')
+
+    // First regenerate fails — the original reply is restored.
+    mockStream([
+      {
+        type: 'error',
+        code: 'upstream_unavailable',
+        message: 'temporarily down',
+        retryable: true,
+      },
+    ])
+    await user.click(screen.getByRole('button', { name: 'regen' }))
+    await screen.findByText('temporarily down')
+    expect(screen.getByText('original reply')).toBeInTheDocument()
+
+    // Retrying the regenerate must slice the restored reply, not append to it.
+    mockStream([
+      {
+        type: 'done',
+        threadId: 'thread-2',
+        message: { role: 'assistant', content: 'regenerated reply' },
+      },
+    ])
+    await user.click(screen.getByRole('button', { name: 'retry' }))
+
+    expect(await screen.findByText('regenerated reply')).toBeInTheDocument()
+    const messages = screen.getByTestId('chat-messages').children
+    expect(messages).toHaveLength(2)
+    expect(messages[0]).toHaveTextContent('first question')
+    expect(messages[1]).toHaveTextContent('regenerated reply')
+    expect(screen.queryByText('original reply')).not.toBeInTheDocument()
+  })
+
   it('handleRegenerate is a no-op when there is no active threadId', async () => {
     const user = userEvent.setup()
 
