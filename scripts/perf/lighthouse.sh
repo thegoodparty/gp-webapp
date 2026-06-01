@@ -49,7 +49,18 @@ else
   LAST_IDX=$(( ${#ARGS[@]} - 1 ))
   LAST="${ARGS[$LAST_IDX]}"
   if [[ "$LAST" == -* ]]; then
-    # Last arg is itself a flag (`--foo`) — assume no path given, run against /.
+    # Last arg is itself a flag (e.g. `--quiet`) — assume no path given,
+    # run against /. But if any *earlier* arg is also positional (not a
+    # flag), the user placed the path before the flags, which violates
+    # the "URL or path must be LAST" contract on line 25 and would
+    # forward two positional URLs to lighthouse. Error clearly.
+    for arg in "${ARGS[@]}"; do
+      if [[ "$arg" != -* ]]; then
+        echo "✗ Path argument '$arg' must be the LAST argument, not before flags." >&2
+        echo "  Usage: scripts/perf/lighthouse.sh [lighthouse-flags...] [path-or-url]" >&2
+        exit 2
+      fi
+    done
     TARGET="/"
   elif [[ "$LAST" =~ ^(/|https?://) ]]; then
     TARGET="$LAST"
