@@ -92,7 +92,7 @@ scripts/output
 
 # Performance tooling output (scripts/perf/*.sh)
 /perf-reports/
-profiles/
+/profiles/
 *.cpuprofile
 *.heapprofile
 *.heapsnapshot

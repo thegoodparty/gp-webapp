@@ -59,6 +59,17 @@ $HAS_D || ARGS=(-d 20 "${ARGS[@]}")
 
 LAST_IDX=$(( ${#ARGS[@]} - 1 ))
 TARGET="${ARGS[$LAST_IDX]}"
+
+# Reject flags-only invocations (e.g. `bench-route.sh -c 10 -d 20`): we'd
+# otherwise grab the last flag value (20) as the path and benchmark
+# http://host:port/20, which silently 404s and returns misleading numbers.
+# Valid targets must start with `/` (relative path) or `http(s)://`.
+if [[ ! "$TARGET" =~ ^(/|https?://) ]]; then
+  echo "✗ Last argument must be a path (e.g. /pricing) or full URL — got: '$TARGET'" >&2
+  echo "  Usage: scripts/perf/bench-route.sh [autocannon-flags...] <path-or-url>" >&2
+  exit 2
+fi
+
 unset 'ARGS[$LAST_IDX]'
 
 if [[ "$TARGET" =~ ^https?:// ]]; then

@@ -50,10 +50,24 @@ scripts/perf/lighthouse.sh /                    # home page
 scripts/perf/lighthouse.sh /pricing
 scripts/perf/lighthouse.sh --form-factor desktop /
 
-# Compare a route across two branches
-hyperfine --warmup 1 --runs 3 \
-  'git checkout main      && scripts/perf/bench-route.sh -c 10 -d 10 /pricing' \
-  'git checkout my-branch && scripts/perf/bench-route.sh -c 10 -d 10 /pricing'
+# Compare a route across two branches.
+#
+# IMPORTANT: a single hyperfine arm with `git checkout && bench-route.sh`
+# does NOT work for Next.js — `git checkout` only swaps source files, but
+# the already-running `npm run start-local` server keeps serving the
+# original compiled bundle. Both arms would hit identical code and the
+# delta would be meaningless.
+#
+# Correct flow: kill, checkout, rebuild, restart per branch. Two runs:
+git checkout main      && npm run build && npm run start-local &
+sleep 8
+scripts/perf/bench-route.sh -c 10 -d 10 /pricing | tee /tmp/bench-main.txt
+pkill -f 'next start' || true
+
+git checkout my-branch && npm run build && npm run start-local &
+sleep 8
+scripts/perf/bench-route.sh -c 10 -d 10 /pricing | tee /tmp/bench-branch.txt
+pkill -f 'next start' || true
 
 # What's in the bundle?
 scripts/perf/bundle-analyze.sh --summary          # text top-level summary
