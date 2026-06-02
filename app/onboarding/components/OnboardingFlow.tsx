@@ -33,6 +33,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
 import { prewarmCommunityEvents } from '../success/hooks/useCommunityEvents'
 import { prewarmStrategicLandscape } from '../success/hooks/useStrategicLandscape'
+import { useCampaignStrategyFlag } from '@shared/experiments/campaignStrategyFlag'
 import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
 import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
@@ -342,6 +343,10 @@ export default function OnboardingFlow({
   const [contextCampaign] = useCampaign()
   const campaign = contextCampaign ?? initialCampaign
   const [user] = useUser()
+  // Gates the post-pledge Campaign Plan flow. When off, we skip the LLM
+  // pre-warm calls and route the candidate directly to /dashboard after
+  // pledge instead of /onboarding/success.
+  const { enabled: campaignStrategyEnabled } = useCampaignStrategyFlag()
   // Only hydrate from campaign if explicitly resuming (not on first onboarding visit)
   // If the router has ?resume=1 or similar, you could use that; for now, always start fresh
   const [answers, setAnswers] = useState<OnboardingAnswers>({})
@@ -836,8 +841,14 @@ export default function OnboardingFlow({
         // — both helpers swallow errors and gp-api dedupes via the
         // per-pod inFlight slot, so pre-warm + success-page mount
         // collapse to a single LLM run.
-        void prewarmStrategicLandscape()
-        void prewarmCommunityEvents()
+        //
+        // Gated on the campaign-strategy flag: no point spending Gemini
+        // calls if the user will be routed straight to /dashboard
+        // post-pledge.
+        if (campaignStrategyEnabled) {
+          void prewarmStrategicLandscape()
+          void prewarmCommunityEvents()
+        }
         router.refresh()
       } finally {
         setIsSavingOffice(false)
@@ -886,7 +897,12 @@ export default function OnboardingFlow({
       if (!effectiveCampaign) return
       const ok = await persistPledgeAndComplete()
       if (!ok) return
-      router.push('/onboarding/success')
+      // Flag off → /dashboard (legacy behavior, no campaign plan).
+      // Flag on → /onboarding/success (Sections 1-10 with LLM-backed
+      // strategic landscape, community events, voter insights).
+      router.push(
+        campaignStrategyEnabled ? '/onboarding/success' : '/dashboard',
+      )
       return
     }
     if (nextStep) {
