@@ -2,12 +2,12 @@
 
 Performance tooling wrappers for the Next.js webapp. Convenience scripts behind the canonical commands in [`ai-rules/performance-tools.md`](../../ai-rules/performance-tools.md).
 
-| Script | What it does | Cookbook section |
-|---|---|---|
-| `setup-check.sh` | Audit the local env — what can/can't be measured right now | §11.6 |
-| `lighthouse.sh` | Web Vitals + perf audit for a page (headless Chrome) | §8 |
-| `bundle-analyze.sh` | Inspect what's bloating the JS bundle (`source-map-explorer`) | §9 |
-| `bench-route.sh` | SSR load test for a route (autocannon) | §1 |
+| Script              | What it does                                                  | Cookbook section |
+| ------------------- | ------------------------------------------------------------- | ---------------- |
+| `setup-check.sh`    | Audit the local env — what can/can't be measured right now    | §11.6            |
+| `lighthouse.sh`     | Web Vitals + perf audit for a page (headless Chrome)          | §8               |
+| `bundle-analyze.sh` | Inspect what's bloating the JS bundle (`source-map-explorer`) | §9               |
+| `bench-route.sh`    | SSR load test for a route (autocannon)                        | §1               |
 
 `productionBrowserSourceMaps: true` is already set in `next.config.ts`, so `source-map-explorer` works on the production build out of the box.
 
