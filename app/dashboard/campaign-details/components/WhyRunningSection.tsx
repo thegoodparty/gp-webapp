@@ -33,7 +33,7 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
 export default function WhyRunningSection(): React.JSX.Element {
   const queryClient = useQueryClient()
   const { errorSnackbar, successSnackbar } = useSnackbar()
-  const { data: website } = useQuery<Website | null>({
+  const { data: website, isSuccess } = useQuery<Website | null>({
     queryKey: USER_WEBSITE_QUERY_KEY,
     queryFn: getUserWebsite,
   })
@@ -55,15 +55,21 @@ export default function WhyRunningSection(): React.JSX.Element {
   const seededRef = useRef(false)
 
   useEffect(() => {
-    if (seededRef.current || !website) return
-    const initial = website.content?.about?.bio ?? ''
+    // Seed once the website query has settled, not only when `website` is
+    // truthy. A candidate who hasn't created a website yet resolves to `null`
+    // here (saveAboutFields creates the site on save), so gating on a truthy
+    // `website` would leave `initialBio` null forever and the bio editor would
+    // never mount — the field would be completely absent. Seed from an empty
+    // bio in that case so the editor renders and they can fill it in.
+    if (seededRef.current || !isSuccess) return
+    const initial = website?.content?.about?.bio ?? ''
     setBio(initial)
     // Seed length up-front so Save isn't falsely disabled before the editor
     // emits its first onTextLengthChange.
     setBioPlainLength(getBioPlainLength(initial))
     setInitialBio(initial)
     seededRef.current = true
-  }, [website])
+  }, [isSuccess, website])
 
   const bioError = getBioError(bioPlainLength)
 
