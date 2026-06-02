@@ -97,20 +97,60 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   // fires after office submit in onboarding, so the cache is usually warm
   // by the time the user lands here.
   const events = useCommunityEvents()
+  // The BR position ID is in-memory on `answers.structuredOffice.positionId`
+  // during onboarding. After pledge submit, `OnboardingFlow` persists the
+  // whole `answers` object under `campaign.data.onboarding`, so it survives
+  // the navigation to /onboarding/success.
+  //
+  // gp-api separately resolves the BR ID to an internal Position UUID and
+  // stores that on `organization.positionId` — which is NOT what the
+  // /onboarding/contacts/stats endpoint expects, so we read directly from
+  // the persisted onboarding answers instead.
+  //
+  // We also pull positionName / city / state from the same source for the
+  // local-news query below so the cache key matches what
+  // LocalNewsSourcesSection used during onboarding — see comment there.
+  const onboardingStructuredOffice = (
+    campaign?.data as
+      | {
+          onboarding?: {
+            structuredOffice?: {
+              positionId?: string
+              positionName?: string
+              city?: string
+              state?: string
+            }
+          }
+        }
+      | undefined
+  )?.onboarding?.structuredOffice
+  const ballotReadyPositionId = onboardingStructuredOffice?.positionId
+
   // Section 7 press outlets — reuse the onboarding local-news endpoint
   // that was already populated during the LocalNewsSourcesSection step.
-  // Cache key matches (city, state, office) so we hit the same persisted
-  // row from `campaign.data.onboarding.localMediaOutlets`.
+  // Cache key MUST match what onboarding sent for both halves of the
+  // hit to land:
+  //   - React Query cache (in the browser): same keyArgs → no refetch
+  //   - gp-api persisted cache (campaign.data.onboarding.localMediaOutlets):
+  //     same (office, city, state) → no re-generation
+  // Onboarding uses `answers.structuredOffice.{positionName, city, state}`
+  // verbatim. The success page's polished `race` (election-api's
+  // officialOfficeName, e.g. "Anytown Council") differs from BR's
+  // positionName ("City Council Member"), so reading from race here would
+  // miss both caches and trigger a fresh Gemini run.
   //
   // The endpoint's Zod schema rejects empty-string city/office/state
   // (min 1 char). Pass `undefined` for empty values so the request shape
   // omits the field — onboarding-only-typed `city` is optional, but
   // serializing `city: ''` hits the validator and 400s.
+  const localNewsOffice = onboardingStructuredOffice?.positionName || race
+  const localNewsCity = onboardingStructuredOffice?.city || city
+  const localNewsState = onboardingStructuredOffice?.state || stateValue
   const localNewsQuery = useQuery(
     localNewsQueryOptions({
-      city: city || undefined,
-      state: stateValue || undefined,
-      office: race || undefined,
+      city: localNewsCity || undefined,
+      state: localNewsState || undefined,
+      office: localNewsOffice || undefined,
     }),
   )
   const pressOutletsFromApi: ApiPressOutlet[] | undefined =
@@ -123,27 +163,6 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   // table or stale templated rows.
   const isLocalNewsGenerating =
     localNewsQuery.isPending || localNewsQuery.data?.status === 'pending'
-  // Section 3 voter insights — share the cache key with the on-screen
-  // TopVoterIssuesSection from the earlier onboarding step, so this is
-  // almost always a synchronous cache hit. When the cache misses (direct
-  // nav to /success), buildVoterInsights falls through to candidate
-  // customIssues/stances and finally the stub copy.
-  // The BR position ID is in-memory on `answers.structuredOffice.positionId`
-  // during onboarding. After pledge submit, `OnboardingFlow` persists the
-  // whole `answers` object under `campaign.data.onboarding`, so it survives
-  // the navigation to /onboarding/success.
-  //
-  // gp-api separately resolves the BR ID to an internal Position UUID and
-  // stores that on `organization.positionId` — which is NOT what the
-  // /onboarding/contacts/stats endpoint expects, so we read directly from
-  // the persisted onboarding answers instead.
-  const onboardingAnswers = (
-    campaign?.data as
-      | { onboarding?: { structuredOffice?: { positionId?: string } } }
-      | undefined
-  )?.onboarding
-  const ballotReadyPositionId =
-    onboardingAnswers?.structuredOffice?.positionId ?? undefined
 
   // Same cache key as TopVoterIssuesSection in onboarding — keeps the PDF's
   // Section 3 in sync with what the user already saw on screen.
