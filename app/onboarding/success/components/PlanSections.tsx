@@ -16,6 +16,9 @@ interface StrategyState {
 // "no results found" vs "generating").
 type EventsState = StrategyState
 
+// Same shape as StrategyState for the local-news (press outlets) pipeline.
+type PressOutletsState = StrategyState
+
 interface VoterInsightsContext {
   ballotReadyPositionId?: string
   city?: string
@@ -36,6 +39,7 @@ interface PlanSectionsProps {
   plan: PlanData
   strategyState?: StrategyState
   eventsState?: EventsState
+  pressOutletsState?: PressOutletsState
   onStuckChange?: (stuck: boolean) => void
   voterInsightsContext?: VoterInsightsContext
 }
@@ -386,6 +390,23 @@ const CommunityEventsSkeleton = (): React.JSX.Element => (
   </>
 )
 
+// Renders the Section 7 Press & Media Outlets table as a skeleton while the
+// local-news endpoint is polling. Mirrors CommunityEventsSkeleton so the two
+// Section 7 subsections feel consistent during loading.
+const PressOutletsSkeleton = (): React.JSX.Element => (
+  <>
+    <p className="text-sm text-muted-foreground italic">
+      Identifying local press &amp; media outlets&hellip; this can take up to a
+      minute.
+    </p>
+    <div className="space-y-3">
+      <Skeleton className="h-14 w-full rounded-md" />
+      <Skeleton className="h-14 w-full rounded-md" />
+      <Skeleton className="h-14 w-full rounded-md" />
+    </div>
+  </>
+)
+
 // Renders the three Section 2 subsections (Opportunities, Challenges,
 // Opposition Research) as skeletons. Used while the strategic-landscape
 // endpoint is polling.
@@ -431,6 +452,7 @@ const PlanSections = ({
   plan,
   strategyState,
   eventsState,
+  pressOutletsState,
   onStuckChange,
   voterInsightsContext,
 }: PlanSectionsProps): React.JSX.Element => {
@@ -438,6 +460,8 @@ const PlanSections = ({
   const isStrategyError = strategyState?.isError ?? false
   const isEventsGenerating = eventsState?.isGenerating ?? false
   const isEventsError = eventsState?.isError ?? false
+  const isPressOutletsGenerating = pressOutletsState?.isGenerating ?? false
+  const isPressOutletsError = pressOutletsState?.isError ?? false
   // Hide section 2 entirely on error (per product decision); keep it in
   // the nav only when we're either showing the skeleton or have data.
   const showSection2 = !isStrategyError
@@ -831,26 +855,38 @@ const PlanSections = ({
               op-ed drafts that can be tailored quickly to each outlet&apos;s
               editorial voice.
             </p>
-            <PlanTable
-              columns={['Outlet', 'Type', 'Pitch Angle', 'Contact Info']}
-              rows={plan.pressOutlets.map((o) => [
-                <span key="o" className="text-foreground">
-                  {o.outlet}
-                </span>,
-                <span key="t" className="text-muted-foreground">
-                  {o.type}
-                </span>,
-                <span key="a" className="text-muted-foreground">
-                  {o.angle}
-                </span>,
-                <span
-                  key="c"
-                  className="whitespace-pre-line text-muted-foreground"
-                >
-                  {o.contact}
-                </span>,
-              ])}
-            />
+            {isPressOutletsGenerating ? (
+              <PressOutletsSkeleton />
+            ) : isPressOutletsError || plan.pressOutlets.length === 0 ? (
+              // Empty state — either the LLM returned zero qualifying
+              // outlets or the endpoint errored. Either way no table to
+              // show; the user shouldn't see stale templated rows.
+              <p className="text-sm text-muted-foreground italic">
+                No local press &amp; media outlets found yet. We&apos;ll update
+                this section as we find them.
+              </p>
+            ) : (
+              <PlanTable
+                columns={['Outlet', 'Type', 'Pitch Angle', 'Contact Info']}
+                rows={plan.pressOutlets.map((o) => [
+                  <span key="o" className="text-foreground">
+                    {o.outlet}
+                  </span>,
+                  <span key="t" className="text-muted-foreground">
+                    {o.type}
+                  </span>,
+                  <span key="a" className="text-muted-foreground">
+                    {o.angle}
+                  </span>,
+                  <span
+                    key="c"
+                    className="whitespace-pre-line text-muted-foreground"
+                  >
+                    {o.contact}
+                  </span>,
+                ])}
+              />
+            )}
           </Subsection>
         </Section>
 

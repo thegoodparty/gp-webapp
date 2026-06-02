@@ -117,6 +117,12 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     localNewsQuery.data?.status === 'ready'
       ? localNewsQuery.data.outlets
       : undefined
+  // Mirror the events/strategy hooks: while the local-news endpoint is
+  // initialising or actively polling on a `pending` status, surface that
+  // as "generating" so PlanSections shows the skeleton instead of an empty
+  // table or stale templated rows.
+  const isLocalNewsGenerating =
+    localNewsQuery.isPending || localNewsQuery.data?.status === 'pending'
   // Section 3 voter insights — share the cache key with the on-screen
   // TopVoterIssuesSection from the earlier onboarding step, so this is
   // almost always a synchronous cache hit. When the cache misses (direct
@@ -255,6 +261,10 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             eventsState={{
               isGenerating: events.isPending || events.isGenerating,
               isError: events.isError,
+            }}
+            pressOutletsState={{
+              isGenerating: isLocalNewsGenerating,
+              isError: localNewsQuery.isError,
             }}
             voterInsightsContext={{
               ballotReadyPositionId,

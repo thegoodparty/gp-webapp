@@ -296,7 +296,6 @@ const PLACEHOLDER_MATCH_RATE_CELL = 0.65
 const PLACEHOLDER_MATCH_RATE_LANDLINE = 0.35
 
 const placeholderCity = (city: string): string => city || 'your district'
-const placeholderState = (state: string): string => state || 'your state'
 
 const buildTimeline = (
   electionDate: Date | null,
@@ -567,44 +566,22 @@ const formatOutletContact = (outlet: ApiPressOutlet): string =>
     )
     .join('\n') || 'Contact info not yet available'
 
+// Returns empty when the local-news endpoint hasn't resolved yet — the
+// renderer shows a skeleton on the empty + generating combination so the
+// user never sees stale templated rows. Mirrors the civicEvents handling.
 const buildPressOutlets = (
-  city: string,
-  state: string,
   outletsFromApi: ApiPressOutlet[] | undefined,
 ): PressOutlet[] => {
-  if (outletsFromApi) {
-    return outletsFromApi.map((o) => ({
-      outlet: o.name,
-      type: OUTLET_TYPE_LABEL[o.type],
-      // The local-news endpoint returns a one-sentence outlet description
-      // ("coverage area and focus"). Use it verbatim as the pitch angle —
-      // the candidate can tailor in Campaign Manager.
-      angle: o.description,
-      contact: formatOutletContact(o),
-    }))
-  }
-  const cityLabel = placeholderCity(city)
-  const stateLabel = placeholderState(state)
-  return [
-    {
-      outlet: `${cityLabel} Times`,
-      type: 'Daily newspaper. Broad area reach.',
-      angle: 'Candidate profile or op-ed on local policy priority.',
-      contact: '{address}\n{phone_number}\n{email}',
-    },
-    {
-      outlet: `The ${cityLabel} Weekly`,
-      type: 'Weekly. Deep local government coverage.',
-      angle: 'Candidate Q&A; respond quickly to any editorial coverage.',
-      contact: '{address}\n{phone_number}\n{email}',
-    },
-    {
-      outlet: `${stateLabel} Local Radio`,
-      type: 'Community radio.',
-      angle: 'Short interview segment; drive-time window.',
-      contact: '{address}\n{phone_number}\n{email}',
-    },
-  ]
+  if (!outletsFromApi) return []
+  return outletsFromApi.map((o) => ({
+    outlet: o.name,
+    type: OUTLET_TYPE_LABEL[o.type],
+    // The local-news endpoint returns a one-sentence outlet description
+    // ("coverage area and focus"). Use it verbatim as the pitch angle —
+    // the candidate can tailor in Campaign Manager.
+    angle: o.description,
+    contact: formatOutletContact(o),
+  }))
 }
 
 const DEFAULT_FILING_FEE = 100
@@ -1175,11 +1152,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.city,
     input.communityEvents,
   )
-  const pressOutlets = buildPressOutlets(
-    input.city,
-    input.state,
-    input.pressOutletsFromApi,
-  )
+  const pressOutlets = buildPressOutlets(input.pressOutletsFromApi)
   const eventCount = civicEvents.length
   const mediaCount = pressOutlets.length
 
