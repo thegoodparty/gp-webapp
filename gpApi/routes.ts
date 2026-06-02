@@ -182,6 +182,10 @@ export const apiRoutes = {
         path: '/campaigns/ai/chat',
         method: 'POST',
       },
+      stream: {
+        path: '/campaigns/ai/chat/stream',
+        method: 'POST',
+      },
       list: {
         path: '/campaigns/ai/chat',
         method: 'GET',
