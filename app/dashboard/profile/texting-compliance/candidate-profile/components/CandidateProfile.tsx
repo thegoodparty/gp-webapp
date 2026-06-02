@@ -36,7 +36,7 @@ export default function CandidateProfile(): React.JSX.Element {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { errorSnackbar } = useSnackbar()
-  const { data: website } = useQuery<Website | null>({
+  const { data: website, isSuccess } = useQuery<Website | null>({
     queryKey: USER_WEBSITE_QUERY_KEY,
     queryFn: getUserWebsite,
   })
@@ -59,16 +59,22 @@ export default function CandidateProfile(): React.JSX.Element {
   const seededRef = useRef(false)
 
   useEffect(() => {
-    if (seededRef.current || !website) return
-    const initialBioValue = website.content?.about?.bio ?? ''
+    // Seed once the website query has settled, not only when `website` is
+    // truthy. A candidate who hasn't created a website yet resolves to `null`
+    // here (saveAboutFields creates the site on submit), so gating on a truthy
+    // `website` would leave `initialBio` null forever and the bio editor would
+    // never mount — the field would be completely absent. Seed from an empty
+    // bio in that case so the editor renders and they can fill it in.
+    if (seededRef.current || !isSuccess) return
+    const initialBioValue = website?.content?.about?.bio ?? ''
     setBio(initialBioValue)
     // Seed length up-front so Submit doesn't show a false "add your bio" error
     // before the dynamically-imported editor emits its first onTextLengthChange.
     setBioPlainLength(getBioPlainLength(initialBioValue))
     setInitialBio(initialBioValue)
-    setIssues(normalizeIssues(website.content?.about?.issues))
+    setIssues(normalizeIssues(website?.content?.about?.issues))
     seededRef.current = true
-  }, [website])
+  }, [isSuccess, website])
 
   const bioError = getBioError(bioPlainLength)
   const prioritiesError = getPolicyPrioritiesError(issues.length)
