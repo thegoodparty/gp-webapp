@@ -579,7 +579,7 @@ const TasksList = ({
           <>
             <div className="flex flex-wrap gap-y-1 justify-between items-baseline border-b px-6 py-6">
               <div className="text-lg font-semibold font-opensans">
-                Campaign plan
+                Top priorities
               </div>
               <button
                 type="button"

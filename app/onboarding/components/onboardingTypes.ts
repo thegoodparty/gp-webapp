@@ -6,6 +6,7 @@ export type OnboardingStepId =
   | 'manual-office-entry'
   | 'path-to-victory'
   | 'voter-demographics'
+  | 'outreach-plan'
   | 'pledge'
 
 export type OnboardingOfficePath = 'structured' | 'manual'

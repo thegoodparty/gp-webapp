@@ -31,13 +31,18 @@ import { identifyUser } from '@shared/utils/analytics'
 import { reportErrorToSentry } from '@shared/sentry'
 import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
+import { prewarmCommunityEvents } from '../success/hooks/useCommunityEvents'
+import { prewarmStrategicLandscape } from '../success/hooks/useStrategicLandscape'
+import { useCampaignStrategyFlag } from '@shared/experiments/campaignStrategyFlag'
 import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
 import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
+import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
 import { PledgeStep } from './PledgeStep'
 import OnboardingTopBar from '../shared/OnboardingTopBar'
+import { WhyThisMatters } from './WhyThisMatters'
 import {
   VoterDemographicsStep,
   onboardingDistrictStatsQueryOptions,
@@ -187,25 +192,6 @@ const welcomeCards = [
   },
 ]
 
-interface WhyThisMattersProps {
-  text?: string
-  title?: string
-  children?: React.ReactNode
-}
-
-const WhyThisMatters = ({
-  text,
-  title = 'Why this matters',
-  children,
-}: WhyThisMattersProps): React.JSX.Element => (
-  <aside className="rounded-xl border border-base-border p-5 flex flex-col gap-2">
-    <span className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-      {title}
-    </span>
-    <p className="text-sm text-foreground">{children ?? text}</p>
-  </aside>
-)
-
 interface StepBodyProps {
   activeStep: OnboardingStepConfig
   answers: OnboardingAnswers
@@ -337,6 +323,10 @@ const StepBody = ({
     )
   }
 
+  if (activeStep.id === 'outreach-plan') {
+    return <OutreachPlanStep campaign={liveCampaign} />
+  }
+
   if (activeStep.id === 'pledge') {
     return <PledgeStep />
   }
@@ -353,6 +343,10 @@ export default function OnboardingFlow({
   const [contextCampaign] = useCampaign()
   const campaign = contextCampaign ?? initialCampaign
   const [user] = useUser()
+  // Gates the post-pledge Campaign Plan flow. When off, we skip the LLM
+  // pre-warm calls and route the candidate directly to /dashboard after
+  // pledge instead of /onboarding/success.
+  const { enabled: campaignStrategyEnabled } = useCampaignStrategyFlag()
   // Only hydrate from campaign if explicitly resuming (not on first onboarding visit)
   // If the router has ?resume=1 or similar, you could use that; for now, always start fresh
   const [answers, setAnswers] = useState<OnboardingAnswers>({})
@@ -840,6 +834,21 @@ export default function OnboardingFlow({
         trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
         const ok = await persistStructuredOffice(answers.structuredOffice)
         if (!ok) return
+        // Pre-warm the success-page LLM sections now that raceId +
+        // electionDate are persisted. Both endpoints poll on mount,
+        // but firing here gives them a ~15-90s head start so sections
+        // are usually ready by the time the user lands. Fire-and-forget
+        // — both helpers swallow errors and gp-api dedupes via the
+        // per-pod inFlight slot, so pre-warm + success-page mount
+        // collapse to a single LLM run.
+        //
+        // Gated on the campaign-strategy flag: no point spending Gemini
+        // calls if the user will be routed straight to /dashboard
+        // post-pledge.
+        if (campaignStrategyEnabled) {
+          void prewarmStrategicLandscape()
+          void prewarmCommunityEvents()
+        }
         router.refresh()
       } finally {
         setIsSavingOffice(false)
@@ -888,7 +897,12 @@ export default function OnboardingFlow({
       if (!effectiveCampaign) return
       const ok = await persistPledgeAndComplete()
       if (!ok) return
-      router.push('/dashboard')
+      // Flag off → /dashboard (legacy behavior, no campaign plan).
+      // Flag on → /onboarding/success (Sections 1-10 with LLM-backed
+      // strategic landscape, community events, voter insights).
+      router.push(
+        campaignStrategyEnabled ? '/onboarding/success' : '/dashboard',
+      )
       return
     }
     if (nextStep) {
@@ -958,6 +972,12 @@ export default function OnboardingFlow({
                         </span>
                         .
                       </>
+                    ) : activeStep.id === 'outreach-plan' ? (
+                      `You need ${numberFormatter(
+                        liveCampaign?.raceTargetMetrics?.winNumber ?? 0,
+                      )} projected voters to win with at least ${computeWeeksRemaining(
+                        liveCampaign?.details?.electionDate ?? null,
+                      )} weeks to campaign before Election Day.`
                     ) : (
                       activeStep.description
                     )}
