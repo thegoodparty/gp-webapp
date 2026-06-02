@@ -109,6 +109,24 @@ describe('CandidateProfile — bio editor mounts with no website yet (ENG-10283)
 
     expect(await screen.findByTestId('rich-editor')).toBeInTheDocument()
   })
+
+  it('seeds issues to [] so submit surfaces the policy-priority error', async () => {
+    // Guards the null-website seeding path: `setIssues(normalizeIssues(undefined))`
+    // must produce an empty array. If it ever seeded a phantom priority, the
+    // user would be silently blocked (no priority to add, yet submit fails), so
+    // assert the priority error fires rather than just that the editor mounts.
+    const user = userEvent.setup()
+    getUserWebsite.mockResolvedValue(null)
+    render(<CandidateProfile />)
+
+    await screen.findByTestId('rich-editor')
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+
+    expect(saveAboutFields).not.toHaveBeenCalled()
+    expect(
+      screen.getByText('Please add at least one policy priority'),
+    ).toBeInTheDocument()
+  })
 })
 
 describe('CandidateProfile — deleting a policy priority persists (ENG-10270)', () => {
