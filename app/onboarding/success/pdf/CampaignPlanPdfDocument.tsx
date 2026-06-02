@@ -430,7 +430,13 @@ const RunningFooterPageNumber = () => (
   <Text
     style={styles.runningFooterRight}
     fixed
-    render={({ pageNumber, totalPages }) => (
+    render={({
+      pageNumber,
+      totalPages,
+    }: {
+      pageNumber: number
+      totalPages: number
+    }) => (
       <>
         Page <Text style={styles.footerBoldWordmark}>{pageNumber}</Text> of{' '}
         {totalPages}

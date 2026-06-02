@@ -229,13 +229,16 @@ const BudgetAccordion = ({
   resources,
 }: BudgetAccordionProps): React.JSX.Element => (
   <ResourceAccordion
-    label="Total budget"
-    sublabel="For voter outreach, compliance, and fees"
+    label="Estimated budget"
+    sublabel="A preliminary projection — your campaign plan refines this with real voter data"
     total={formatCurrency(resources.totalBudget)}
     icon={<DollarSign className="size-5" aria-hidden="true" />}
   >
     <p className="px-5 pt-4 text-xs text-muted-foreground">
-      Based on a {resources.weeksRemaining}-week campaign.
+      Based on a {resources.weeksRemaining}-week campaign. The final
+      &ldquo;Recommended Budget&rdquo; in your campaign plan uses actual
+      phone-match counts from the voter file, so it may differ from this
+      estimate.
     </p>
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow

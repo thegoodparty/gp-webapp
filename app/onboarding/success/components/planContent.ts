@@ -302,6 +302,7 @@ const buildTimeline = (
   filingDateStart: Date | null,
   filingDateEnd: Date | null,
   milestones: RaceMilestones | null,
+  eventCount: number,
 ): {
   timeline: TimelineRow[]
   keyDates: KeyDate[]
@@ -426,7 +427,7 @@ const buildTimeline = (
     },
     {
       date: formatDate(addDays(electionDate, -20)),
-      description: '{N} community events that you should personally attend.',
+      description: `${eventCount} community events that you should personally attend.`,
     },
     {
       date: formatDate(voterRegDeadline),
@@ -1140,13 +1141,10 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const { rows: timeBreakdown, totalHours: totalCampaignHours } =
     buildTimeBreakdown(weeksRemaining)
 
-  const { timeline, keyDates } = buildTimeline(
-    electionDateValid,
-    filingDateStart,
-    filingDateEnd,
-    input.milestones,
-  )
-  const contactSchedule = buildContactSchedule(electionDateValid)
+  // civicEvents must be computed before buildTimeline so the Section 6
+  // keyDates entry can substitute the actual event count instead of a
+  // raw `{N}` placeholder. pressOutlets has no such dependency but is
+  // grouped here with civicEvents for clarity.
   const civicEvents = buildCivicEvents(
     electionDateValid,
     input.city,
@@ -1155,6 +1153,15 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const pressOutlets = buildPressOutlets(input.pressOutletsFromApi)
   const eventCount = civicEvents.length
   const mediaCount = pressOutlets.length
+
+  const { timeline, keyDates } = buildTimeline(
+    electionDateValid,
+    filingDateStart,
+    filingDateEnd,
+    input.milestones,
+    eventCount,
+  )
+  const contactSchedule = buildContactSchedule(electionDateValid)
 
   const confidenceEstimates = buildConfidenceEstimates(
     registeredVoters,

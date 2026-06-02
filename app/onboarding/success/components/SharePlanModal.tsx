@@ -30,6 +30,11 @@ interface ShareLink {
   label: string
   icon: React.ReactNode
   href: string
+  // Optional override for the click action. Defaults to opening `href`
+  // in a new tab; used by destinations like Instagram that have no
+  // web-share endpoint and need a side effect (copy URL to clipboard)
+  // before the user lands on the platform.
+  onClick?: () => void
 }
 
 interface ShareBodyProps {
@@ -61,9 +66,13 @@ const ShareBody = ({
           variant="outline"
           className="w-full justify-start"
           icon={item.icon}
-          onClick={() =>
+          onClick={() => {
+            if (item.onClick) {
+              item.onClick()
+              return
+            }
             window.open(item.href, '_blank', 'noopener,noreferrer')
-          }
+          }}
         >
           {item.label}
         </Button>
@@ -91,6 +100,16 @@ const SharePlanModal = ({
   const encodedUrl = encodeURIComponent(url)
   const encodedMessage = encodeURIComponent(message)
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard unavailable; do nothing.
+    }
+  }
+
   const links: ShareLink[] = [
     {
       label: 'Email',
@@ -110,21 +129,28 @@ const SharePlanModal = ({
       href: `https://twitter.com/share?url=${encodedUrl}&text=${encodedMessage}`,
     },
     {
+      // Instagram has no web-share endpoint, so we copy the plan URL to
+      // the clipboard first (matching the Copy link button's behavior)
+      // and then open instagram.com — the user can paste into DMs,
+      // Stories, or a post caption. Without the copy step the button
+      // is a silent dead end.
+      //
+      // Fire-and-forget the copy + call window.open synchronously inside
+      // the click handler so the browser still treats it as a user
+      // gesture and doesn't pop-up-block the new tab.
       label: 'Instagram',
       icon: <Instagram className="size-5" />,
       href: 'https://www.instagram.com/',
+      onClick: () => {
+        void handleCopy()
+        window.open(
+          'https://www.instagram.com/',
+          '_blank',
+          'noopener,noreferrer',
+        )
+      },
     },
   ]
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // Clipboard unavailable; do nothing.
-    }
-  }
 
   const title = 'Share your campaign plan'
   const description =
