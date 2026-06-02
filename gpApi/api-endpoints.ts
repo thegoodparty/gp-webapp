@@ -72,6 +72,27 @@ export type StrategicLandscapeResponse =
   | { status: 'ready'; data: StrategicLandscapeData }
   | { status: 'generating' }
 
+// Mirrors `CommunityEventSchema` in
+// `gp-api/src/campaignStrategy/schemas/communityEvents.schema.ts`.
+// `address` is the venue's physical street address and `url` is the
+// direct event-page URL. Either can be null when the search data
+// didn't surface it.
+export interface CommunityEvent {
+  title: string
+  description: string
+  date: string
+  address: string | null
+  url: string | null
+}
+
+export interface CommunityEventsData {
+  events: CommunityEvent[]
+}
+
+export type CommunityEventsResponse =
+  | { status: 'ready'; data: CommunityEventsData }
+  | { status: 'generating' }
+
 export type APIEndpoints = {
   'GET /v1/users/me': {
     Request: {}
@@ -126,6 +147,15 @@ export type APIEndpoints = {
   'POST /v1/campaignStrategy/mine/strategic-landscape': {
     Request: {}
     Response: StrategicLandscapeResponse
+  }
+
+  // Section 7 community events. Polling endpoint — same shape as
+  // strategic-landscape. 200 → ready (events array up to length 3), 202 →
+  // generating (poll again ~3s). Mirrors `CommunityEventsResponseSchema`
+  // in `gp-api/src/campaignStrategy/schemas/communityEvents.schema.ts`.
+  'POST /v1/campaignStrategy/mine/community-events': {
+    Request: {}
+    Response: CommunityEventsResponse
   }
 
   'GET /v1/elected-office/current': {

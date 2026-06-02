@@ -799,7 +799,9 @@ export const CampaignPlanPdfDocument = ({
         title="Voter Insights For Your District"
         headerMeta={headerMeta}
         intro={
-          plan.voterInsightsSource === 'candidate'
+          plan.voterInsightsSource === 'district'
+            ? 'The issues below come from district-level survey data on what voters here care about most right now. Personalize your platform around them in Campaign Manager.'
+            : plan.voterInsightsSource === 'candidate'
             ? 'The issues below are the ones you flagged during onboarding. Keep them updated in Campaign Manager as your platform evolves.'
             : 'These are common top issues in races at this level. Personalize them in Campaign Manager to align your plan with the actual race.'
         }

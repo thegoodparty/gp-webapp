@@ -2,19 +2,26 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 import { Button, IconButton } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import type { User } from 'helpers/types'
+import { localNewsQueryOptions } from '../../components/LocalNewsSourcesSection'
+import { voterIssuesQueryOptions } from '../../components/TopVoterIssuesSection'
 import ConfettiCanvas from './ConfettiCanvas'
 import HeroCard from './HeroCard'
 import PlanSections from './PlanSections'
 import SharePlanModal from './SharePlanModal'
-import { buildPlanData, type PlanInput } from './planContent'
+import {
+  buildPlanData,
+  type ApiPressOutlet,
+  type PlanInput,
+} from './planContent'
 import { downloadCampaignPlanPdf } from '../pdf/downloadCampaignPlanPdf'
+import { useCommunityEvents } from '../hooks/useCommunityEvents'
 import { useStrategicLandscape } from '../hooks/useStrategicLandscape'
 
 interface SuccessPageProps {
@@ -86,6 +93,35 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   // { data | undefined, isGenerating, isPending, isError } — PlanSections
   // decides skeleton vs hidden based on those flags.
   const strategy = useStrategicLandscape()
+  // Section 7 community events — same polling shape as strategy. Pre-warm
+  // fires after office submit in onboarding, so the cache is usually warm
+  // by the time the user lands here.
+  const events = useCommunityEvents()
+  // Section 7 press outlets — reuse the onboarding local-news endpoint
+  // that was already populated during the LocalNewsSourcesSection step.
+  // Cache key matches (city, state, office) so we hit the same persisted
+  // row from `campaign.data.onboarding.localMediaOutlets`.
+  //
+  // The endpoint's Zod schema rejects empty-string city/office/state
+  // (min 1 char). Pass `undefined` for empty values so the request shape
+  // omits the field — onboarding-only-typed `city` is optional, but
+  // serializing `city: ''` hits the validator and 400s.
+  const localNewsQuery = useQuery(
+    localNewsQueryOptions({
+      city: city || undefined,
+      state: stateValue || undefined,
+      office: race || undefined,
+    }),
+  )
+  const pressOutletsFromApi: ApiPressOutlet[] | undefined =
+    localNewsQuery.data?.status === 'ready'
+      ? localNewsQuery.data.outlets
+      : undefined
+  // Section 3 voter insights — share the cache key with the on-screen
+  // TopVoterIssuesSection from the earlier onboarding step, so this is
+  // almost always a synchronous cache hit. When the cache misses (direct
+  // nav to /success), buildVoterInsights falls through to candidate
+  // customIssues/stances and finally the stub copy.
   // The BR position ID is in-memory on `answers.structuredOffice.positionId`
   // during onboarding. After pledge submit, `OnboardingFlow` persists the
   // whole `answers` object under `campaign.data.onboarding`, so it survives
@@ -102,6 +138,18 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   )?.onboarding
   const ballotReadyPositionId =
     onboardingAnswers?.structuredOffice?.positionId ?? undefined
+
+  // Same cache key as TopVoterIssuesSection in onboarding — keeps the PDF's
+  // Section 3 in sync with what the user already saw on screen.
+  const voterIssuesQuery = useQuery(
+    voterIssuesQueryOptions({
+      ballotReadyPositionId,
+      city,
+      state: stateValue,
+      office: race,
+    }),
+  )
+  const voterIssuesFromApi = voterIssuesQuery.data?.issues
 
   const plan = useMemo(() => {
     const input: PlanInput = {
@@ -132,6 +180,9 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
       raceCandidates: raceCandidatesRef ?? [],
       milestones: milestonesRef,
       strategicLandscape: strategy.data,
+      communityEvents: events.data,
+      pressOutletsFromApi,
+      voterIssuesFromApi,
     }
     return buildPlanData(input)
   }, [
@@ -159,6 +210,9 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     raceCandidatesRef,
     milestonesRef,
     strategy.data,
+    events.data,
+    pressOutletsFromApi,
+    voterIssuesFromApi,
   ])
 
   const handleShare = () => setShareOpen(true)
@@ -197,6 +251,10 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             strategyState={{
               isGenerating: strategy.isPending || strategy.isGenerating,
               isError: strategy.isError,
+            }}
+            eventsState={{
+              isGenerating: events.isPending || events.isGenerating,
+              isError: events.isError,
             }}
             voterInsightsContext={{
               ballotReadyPositionId,

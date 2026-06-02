@@ -31,6 +31,8 @@ import { identifyUser } from '@shared/utils/analytics'
 import { reportErrorToSentry } from '@shared/sentry'
 import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
+import { prewarmCommunityEvents } from '../success/hooks/useCommunityEvents'
+import { prewarmStrategicLandscape } from '../success/hooks/useStrategicLandscape'
 import { ONBOARDING_STEPS, firstOnboardingStepId } from './onboardingConfig'
 import { getVisibleOnboardingSteps } from './onboardingHelpers'
 import { OfficeSelectionStep } from './OfficeSelectionStep'
@@ -827,6 +829,15 @@ export default function OnboardingFlow({
         trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
         const ok = await persistStructuredOffice(answers.structuredOffice)
         if (!ok) return
+        // Pre-warm the success-page LLM sections now that raceId +
+        // electionDate are persisted. Both endpoints poll on mount,
+        // but firing here gives them a ~15-90s head start so sections
+        // are usually ready by the time the user lands. Fire-and-forget
+        // — both helpers swallow errors and gp-api dedupes via the
+        // per-pod inFlight slot, so pre-warm + success-page mount
+        // collapse to a single LLM run.
+        void prewarmStrategicLandscape()
+        void prewarmCommunityEvents()
         router.refresh()
       } finally {
         setIsSavingOffice(false)

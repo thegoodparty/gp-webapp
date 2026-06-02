@@ -1,5 +1,8 @@
 import { dateUsHelper } from 'helpers/dateHelper'
-import type { StrategicLandscapeData } from 'gpApi/api-endpoints'
+import type {
+  CommunityEventsData,
+  StrategicLandscapeData,
+} from 'gpApi/api-endpoints'
 import type { RaceCandidate, RaceMilestones } from 'helpers/types'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
@@ -76,6 +79,44 @@ export interface PlanInput {
   // raceCandidates + the legacy runningAgainst + hubspotIncumbent fallback
   // for opponents and is the only source for opportunities + challenges.
   strategicLandscape?: StrategicLandscapeData
+  // Community events from /campaignStrategy/mine/community-events.
+  // Undefined while polling or on error; when present overrides the
+  // templated `buildCivicEvents` fallback rows. An empty events array is
+  // a meaningful "ready, found nothing" state — the section renders an
+  // empty state without falling back to templates.
+  communityEvents?: CommunityEventsData
+  // Press outlets from GET /v1/onboarding/local-news. Same semantics as
+  // communityEvents — undefined while polling or on error, real array
+  // (possibly empty) when ready. Falls back to `buildPressOutlets`
+  // templated rows when undefined.
+  pressOutletsFromApi?: ApiPressOutlet[]
+  // Top voter issues from GET /v1/onboarding/voter-issues. Already fetched
+  // in an earlier onboarding step (TopVoterIssuesSection), so we read it
+  // from the React Query cache rather than refetching. Undefined when the
+  // cache miss happens (e.g. direct nav to success without going through
+  // onboarding) — buildVoterInsights then falls through to candidate
+  // customIssues/stances and finally the stub.
+  voterIssuesFromApi?: ApiVoterIssue[]
+}
+
+// Subset of the GET /v1/onboarding/voter-issues response shape. Matches
+// the on-screen TopVoterIssuesSection consumer.
+export interface ApiVoterIssue {
+  label: string
+  score: number
+  priority: 'high' | 'medium' | 'low'
+}
+
+// Subset of the GET /v1/onboarding/local-news outlet shape we render.
+// Kept loose (all contact fields nullable) so callers don't have to
+// pre-normalize.
+export interface ApiPressOutlet {
+  name: string
+  type: 'TV' | 'print' | 'radio'
+  description: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
 }
 
 export interface KeyTarget {
@@ -219,7 +260,7 @@ export interface PlanData {
   keyDates: KeyDate[]
 
   voterInsightsIssues: VoterInsightIssue[]
-  voterInsightsSource: 'candidate' | 'stub'
+  voterInsightsSource: 'district' | 'candidate' | 'stub'
 
   opportunities: string[]
   challenges: string[]
@@ -470,7 +511,22 @@ const buildContactSchedule = (electionDate: Date | null): ContactSend[] => {
 const buildCivicEvents = (
   electionDate: Date | null,
   city: string,
+  communityEvents: CommunityEventsData | undefined,
 ): CivicEvent[] => {
+  // Real LLM-sourced events win when present. An empty array is still a
+  // meaningful "ready, found nothing" — pass it through so the renderer
+  // shows the empty state instead of falling back to templated rows.
+  // `address` is the venue's physical street address from BR/search,
+  // null when the search data had no address (per ClickUp Section 7
+  // spec — the column expects an address, not a URL).
+  if (communityEvents) {
+    return communityEvents.events.map((e) => ({
+      event: e.title,
+      address: e.address ?? '',
+      date: dateUsHelper(e.date),
+      why: e.description,
+    }))
+  }
   if (!electionDate) return []
   const cityLabel = placeholderCity(city)
   const event1 = addDays(electionDate, -23)
@@ -498,7 +554,35 @@ const buildCivicEvents = (
   ]
 }
 
-const buildPressOutlets = (city: string, state: string): PressOutlet[] => {
+const OUTLET_TYPE_LABEL: Record<ApiPressOutlet['type'], string> = {
+  TV: 'Television',
+  print: 'Print',
+  radio: 'Radio',
+}
+
+const formatOutletContact = (outlet: ApiPressOutlet): string =>
+  [outlet.address, outlet.phone, outlet.email]
+    .filter(
+      (part): part is string => typeof part === 'string' && part.length > 0,
+    )
+    .join('\n') || 'Contact info not yet available'
+
+const buildPressOutlets = (
+  city: string,
+  state: string,
+  outletsFromApi: ApiPressOutlet[] | undefined,
+): PressOutlet[] => {
+  if (outletsFromApi) {
+    return outletsFromApi.map((o) => ({
+      outlet: o.name,
+      type: OUTLET_TYPE_LABEL[o.type],
+      // The local-news endpoint returns a one-sentence outlet description
+      // ("coverage area and focus"). Use it verbatim as the pitch angle —
+      // the candidate can tailor in Campaign Manager.
+      angle: o.description,
+      contact: formatOutletContact(o),
+    }))
+  }
   const cityLabel = placeholderCity(city)
   const stateLabel = placeholderState(state)
   return [
@@ -812,10 +896,40 @@ const buildOpponents = (
   return []
 }
 
+const PRIORITY_PHRASE: Record<'high' | 'medium' | 'low', string> = {
+  high: 'top-priority',
+  medium: 'mid-priority',
+  low: 'lower-priority',
+}
+
+const describeApiIssue = (issue: ApiVoterIssue): string => {
+  const score = Math.round(issue.score)
+  return `Ranks as a ${
+    PRIORITY_PHRASE[issue.priority]
+  } concern for voters in this district — about ${score}% identify it among their top issues.`
+}
+
 const buildVoterInsights = (
   customIssues: PlanIssueInput[],
   stances: PlanStanceInput[],
-): { issues: VoterInsightIssue[]; source: 'candidate' | 'stub' } => {
+  voterIssuesFromApi: ApiVoterIssue[] | undefined,
+): {
+  issues: VoterInsightIssue[]
+  source: 'district' | 'candidate' | 'stub'
+} => {
+  // Prefer real district survey data when the cached query resolved. The
+  // on-screen TopVoterIssuesSection in onboarding shows the same labels;
+  // synthesizing a short description here keeps the PDF's title+body
+  // DefinitionList shape intact without forcing the API to add copy.
+  if (voterIssuesFromApi && voterIssuesFromApi.length > 0) {
+    return {
+      issues: voterIssuesFromApi.map((i) => ({
+        title: i.label,
+        description: describeApiIssue(i),
+      })),
+      source: 'district',
+    }
+  }
   const fromCustom = customIssues
     .filter((i) => (i.title ?? '').trim() !== '')
     .map((i) => ({
@@ -1056,8 +1170,16 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.milestones,
   )
   const contactSchedule = buildContactSchedule(electionDateValid)
-  const civicEvents = buildCivicEvents(electionDateValid, input.city)
-  const pressOutlets = buildPressOutlets(input.city, input.state)
+  const civicEvents = buildCivicEvents(
+    electionDateValid,
+    input.city,
+    input.communityEvents,
+  )
+  const pressOutlets = buildPressOutlets(
+    input.city,
+    input.state,
+    input.pressOutletsFromApi,
+  )
   const eventCount = civicEvents.length
   const mediaCount = pressOutlets.length
 
@@ -1089,7 +1211,11 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const incumbent = opponents.find((o) => o.incumbent === true) ?? null
 
   const { issues: voterInsightsIssues, source: voterInsightsSource } =
-    buildVoterInsights(input.customIssues, input.stances)
+    buildVoterInsights(
+      input.customIssues,
+      input.stances,
+      input.voterIssuesFromApi,
+    )
 
   const keyCampaignTargets: KeyTarget[] = [
     {

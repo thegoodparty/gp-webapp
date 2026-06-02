@@ -50,3 +50,18 @@ export function useStrategicLandscape(): StrategicLandscapeQueryResult {
     isError: query.isError,
   }
 }
+
+// Pre-warm hook: fire-and-forget POST that kicks off the background
+// generation without waiting for the result. Called after the user
+// submits their office in onboarding so the section is usually ready by
+// the time they reach the success page. Same idempotency guarantees as
+// the polling hook — gp-api dedupes via its per-pod inFlight slot, so
+// pre-warm + success-page mount collapse to a single LLM run.
+export async function prewarmStrategicLandscape(): Promise<void> {
+  try {
+    await clientRequest(STRATEGIC_LANDSCAPE_ROUTE, {})
+  } catch {
+    // Swallow — pre-warm is best-effort. The success page will re-call
+    // the endpoint and surface real errors via the polling hook.
+  }
+}

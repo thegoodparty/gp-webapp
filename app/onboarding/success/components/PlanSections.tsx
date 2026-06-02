@@ -10,6 +10,12 @@ interface StrategyState {
   isError: boolean
 }
 
+// Same shape as StrategyState — the polling hooks both produce it.
+// Kept as a distinct alias so the prop intent at call sites is clear and
+// so we can diverge later if events need an additional flag (e.g.
+// "no results found" vs "generating").
+type EventsState = StrategyState
+
 interface VoterInsightsContext {
   ballotReadyPositionId?: string
   city?: string
@@ -29,6 +35,7 @@ const GoodPartySourceLogo = (): React.JSX.Element => (
 interface PlanSectionsProps {
   plan: PlanData
   strategyState?: StrategyState
+  eventsState?: EventsState
   onStuckChange?: (stuck: boolean) => void
   voterInsightsContext?: VoterInsightsContext
 }
@@ -362,6 +369,23 @@ const OppositionResearch = ({
   )
 }
 
+// Renders the Section 7 Community Events table as a skeleton while the
+// community-events endpoint is polling. Three skeleton rows match the
+// MAX_EVENTS = 3 contract on the server so the layout shift on swap-in
+// is minimal.
+const CommunityEventsSkeleton = (): React.JSX.Element => (
+  <>
+    <p className="text-sm text-muted-foreground italic">
+      Generating local community events&hellip; this can take up to a minute.
+    </p>
+    <div className="space-y-3">
+      <Skeleton className="h-14 w-full rounded-md" />
+      <Skeleton className="h-14 w-full rounded-md" />
+      <Skeleton className="h-14 w-full rounded-md" />
+    </div>
+  </>
+)
+
 // Renders the three Section 2 subsections (Opportunities, Challenges,
 // Opposition Research) as skeletons. Used while the strategic-landscape
 // endpoint is polling.
@@ -406,11 +430,14 @@ const districtLabel = (plan: PlanData): string =>
 const PlanSections = ({
   plan,
   strategyState,
+  eventsState,
   onStuckChange,
   voterInsightsContext,
 }: PlanSectionsProps): React.JSX.Element => {
   const isStrategyGenerating = strategyState?.isGenerating ?? false
   const isStrategyError = strategyState?.isError ?? false
+  const isEventsGenerating = eventsState?.isGenerating ?? false
+  const isEventsError = eventsState?.isError ?? false
   // Hide section 2 entirely on error (per product decision); keep it in
   // the nav only when we're either showing the skeleton or have data.
   const showSection2 = !isStrategyError
@@ -760,23 +787,35 @@ const PlanSections = ({
             paid channel at this budget.
           </p>
           <Subsection title="Community Events">
-            <PlanTable
-              columns={['Event', 'Address', 'Date', 'Why It Matters']}
-              rows={plan.civicEvents.map((e) => [
-                <span key="e" className="text-foreground">
-                  {e.event}
-                </span>,
-                <span key="a" className="text-muted-foreground">
-                  {e.address}
-                </span>,
-                <span key="d" className="whitespace-nowrap text-foreground">
-                  {e.date}
-                </span>,
-                <span key="w" className="text-muted-foreground">
-                  {e.why}
-                </span>,
-              ])}
-            />
+            {isEventsGenerating ? (
+              <CommunityEventsSkeleton />
+            ) : isEventsError || plan.civicEvents.length === 0 ? (
+              // Empty state — either the LLM returned zero qualifying
+              // events or the endpoint errored. Either way no table to
+              // show; the user shouldn't see stale templated rows.
+              <p className="text-sm text-muted-foreground italic">
+                No community events found yet. We&apos;ll update this section as
+                we find them.
+              </p>
+            ) : (
+              <PlanTable
+                columns={['Event', 'Address', 'Date', 'Why It Matters']}
+                rows={plan.civicEvents.map((e) => [
+                  <span key="e" className="text-foreground">
+                    {e.event}
+                  </span>,
+                  <span key="a" className="text-muted-foreground">
+                    {e.address}
+                  </span>,
+                  <span key="d" className="whitespace-nowrap text-foreground">
+                    {e.date}
+                  </span>,
+                  <span key="w" className="text-muted-foreground">
+                    {e.why}
+                  </span>,
+                ])}
+              />
+            )}
           </Subsection>
           <Subsection title="Press & Media Outlets">
             <p>
