@@ -32,6 +32,19 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
+describe('WhyRunningSection — bio editor mounts with no website yet (ENG-10284)', () => {
+  it('renders the "Why are you running?" editor when getUserWebsite resolves to null', async () => {
+    // A candidate who has not created a website yet gets `null` from
+    // getUserWebsite (saveAboutFields creates the website on save). The bio
+    // editor must still mount so they can fill it in — otherwise the field is
+    // completely absent and there is no way to edit it from this page.
+    getUserWebsite.mockResolvedValue(null)
+    render(<WhyRunningSection />)
+
+    expect(await screen.findByTestId('rich-editor')).toBeInTheDocument()
+  })
+})
+
 describe('WhyRunningSection — save validation messaging', () => {
   it('keeps the Save button enabled when the bio is incomplete', async () => {
     getUserWebsite.mockResolvedValue(websiteWithBio(''))
