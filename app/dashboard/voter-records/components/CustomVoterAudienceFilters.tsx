@@ -304,7 +304,11 @@ const CustomVoterAudienceFilters = ({
           className="col-span-12 mt-2 rounded-lg"
           label="Audience Request"
           placeholder="Is there a specific area in your district you are trying to target? Are you interested in reaching out to veterans in your community? Let us know here. "
-          value={state.audience_request || ''}
+          value={
+            typeof state.audience_request === 'string'
+              ? state.audience_request
+              : ''
+          }
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChangeAudience('audience_request', e.target.value)
           }
