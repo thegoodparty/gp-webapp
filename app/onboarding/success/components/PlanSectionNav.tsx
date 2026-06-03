@@ -47,6 +47,22 @@ const PlanSectionNav = ({
     onStuckChange?.(isStuck)
   }, [isStuck, onStuckChange])
 
+  // When sections changes (e.g. Section 2 drops out after strategy
+  // resolves ready-but-empty), the previously-tracked activeId may no
+  // longer be in the list. The controlled <Select value={activeId}>
+  // would then have no matching <SelectItem> — Radix renders an empty
+  // trigger with no label until the user clicks. Snap activeId back to
+  // the first available section whenever the list shrinks past it.
+  useEffect(() => {
+    if (sections.length === 0) return
+    if (!sections.some((s) => s.id === activeId)) {
+      setActiveId(sections[0]?.id ?? '')
+    }
+    // Intentionally omit activeId from deps — we only want to re-check
+    // when sections changes, not every time we update activeId here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sections])
+
   useEffect(() => {
     if (sections.length === 0) return
 
