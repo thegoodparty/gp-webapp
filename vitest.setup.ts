@@ -3,6 +3,22 @@ import { testQueryClient } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { beforeEach, vi } from 'vitest'
 
+if (typeof window !== 'undefined' && !window.matchMedia) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    }),
+  })
+}
+
 if (typeof Element !== 'undefined' && !Element.prototype.setPointerCapture) {
   const noop = (): void => undefined
   Element.prototype.setPointerCapture = noop
