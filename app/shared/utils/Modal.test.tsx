@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest'
 import { render } from 'helpers/test-utils/render'
 import { screen, fireEvent } from '@testing-library/react'
 import Modal from '@shared/utils/Modal'
